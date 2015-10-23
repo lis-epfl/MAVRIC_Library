@@ -81,9 +81,9 @@ typedef struct
 	uint16_t number_of_waypoints;								///< The total number of waypoints
 	int8_t current_waypoint_count;								///< The number of the current waypoint
 	
-	local_coordinates_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-	local_coordinates_t waypoint_hold_coordinates;				///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-	local_coordinates_t waypoint_critical_coordinates;			///< The coordinates of the waypoint in critical state
+	local_position_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+	local_position_t waypoint_hold_coordinates;				///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+	local_position_t waypoint_critical_coordinates;			///< The coordinates of the waypoint in critical state
 	float dist2wp_sqr;											///< The square of the distance to the waypoint
 	
 	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoint is set
@@ -165,7 +165,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  *
  * \return	The waypoint in local coordinate frame
  */
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
+local_position_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
 
 /**
  * \brief	Sends the travel time between the last two waypoints

@@ -48,6 +48,8 @@ extern "C"
 {
 #endif
 
+#include <stdbool.h>
+
 #include "streams.h"
 #include "quaternions.h"
 
@@ -219,6 +221,7 @@ void print_util_dbg_print_vector(float const v[], int32_t after_digits);
  */
 void print_util_dbg_print_quaternion(quat_t const *quat, int32_t after_digits); 
 
+
 /**
  * \brief              Writes a number in any base to the debug stream
  * 
@@ -226,6 +229,25 @@ void print_util_dbg_print_quaternion(quat_t const *quat, int32_t after_digits);
  * \param base         Base in which the number should be printed
  */
 void print_util_dbg_print_long(int64_t c, char base);
+
+
+/**
+ * \brief              	Writes a debug message at module init
+ * 
+ * \param module_name  	Module name, ex "[MYMODULE]"
+ * \param init_success 	Flag returned by the module init function         
+ */
+void print_util_dbg_init_msg(const char* module_name, bool init_success);
+
+
+/**
+ * \brief              	Writes a separation line on debug port
+ * 
+ * \param c 			Character the line is made of
+ */
+void print_util_dbg_sep(char c);
+
+
 
 #ifdef __cplusplus
 }

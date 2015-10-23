@@ -30,74 +30,152 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file bmp085.h
+ * \file bmp085.hpp
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
+ * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the barometer module: BMP085
+ * \brief 	Driver for the BMP085 barometer
  * 
  ******************************************************************************/
 
 
-#ifndef BMP085_H_
-#define BMP085_H_
+#ifndef BMP085_HPP_
+#define BMP085_HPP_
 
 #include <stdint.h>
 #include <stdbool.h>
+
 #include "i2c.hpp"
 #include "barometer.hpp"
 
-extern "C" 
-{
-	#include "scheduler.h"
-}
 
-class Bmp085 : public Barometer
+/**
+ * \brief 	Sensor state
+*/
+typedef enum
+{
+	BMP085_IDLE,			///< Idle state
+	BMP085_GET_TEMP,		///< Getting temperature state
+	BMP085_GET_PRESSURE		///< Getting pressure state
+} bmp085_state_t;
+
+
+/**
+ * \brief 	Driver for the BMP085 barometer
+ */
+class Bmp085: public Barometer
 {
 public:
 	/**
-	 * @brief  	Constructor
+	 * \brief  	Constructor
 	 * 
-	 * @param 	i2c 	Reference to I2C device 
+	 * \param 	i2c 	Reference to I2C device 
 	 */
-	Bmp085(	I2c& i2c);
+	Bmp085(	I2c& i2c );
+
 
 	/**
-	 * @brief   Initialise the sensor
-	 * @details Sends configuration via I2C, the I2C peripheral must be 
-	 * 			activated before this method is called
+	 * \brief   Initialise the sensor
 	 * 			
-	 * @return 	true 	Success
-	 * @return 	false 	Failed
+	 * \return 	Success
 	 */	
 	bool init(void);
 
+
 	/**
-	 * @brief   Main update function
-	 * @details Get new data from the sensor
+	 * \brief 	Main update function
+	 * \detail 	Reads new values from sensor
 	 * 
-	 * @return 	true 	Success
-	 * @return 	false 	Failed
+	 * \return 	Success
 	 */
 	bool update(void);
-	
+
+
+	/**
+	 * \brief   Get the last update time in microseconds
+	 * 
+	 * \return 	Value
+	 */
+	const float& last_update_us(void) const;
+
+
+	/**
+	 * \brief   Return the pressure
+	 * 
+	 * \return 	Value
+	 */
+	const float& pressure(void)  const;
+
+
+	/**
+	 * \brief   Get the altitude in meters
+	 * 
+	 * \detail 	Not NED frame: (>0 means upward)
+	 * 
+	 * \return 	Value
+	 */
+	const float& altitude(void) const;
+
+
+	/**
+	 * \brief   Get the vertical speed in meters/second
+	 * 
+	 * \detail 	Not NED frame: (>0 means upward)
+	 * 
+	 * \return 	Value
+	 */
+	const float& vario_vz(void) const;
+
+
+	/**
+	 * \brief   Return the temperature
+	 * 
+	 * \return 	Value
+	 */
+	const float& temperature(void) const;
+
+
+	/**
+	 * \brief   Reset the origin altitude
+	 * 
+	 * \param	origin_altitude 	New origin altitude
+	 * 
+	 * \return 	success
+	 */
+	bool reset_origin_altitude(float origin_altitude);	
+
 
 private:
-	I2c&		i2c_;
+	I2c&		i2c_;					///< Reference to I2C peripheral
 	
-	///< Declare configuration values for the barometer, given by the datasheet of the sensor
-	int16_t 	ac1_;
-	int16_t 	ac2_;
-	int16_t 	ac3_; 
-	int16_t 	b1_; 
-	int16_t 	b2_;
-	int16_t 	mb_; 
-	int16_t 	mc_; 
-	int16_t 	md_;		
-	uint16_t 	ac4_; 
-	uint16_t 	ac5_; 
-	uint16_t 	ac6_;
+	int16_t 	ac1_;					///< Configuration values for the
+	int16_t 	ac2_;					///< barometer, given by the datasheet
+	int16_t 	ac3_; 					///< of the sensor
+	uint16_t 	ac4_; 					///< ..
+	uint16_t 	ac5_; 					///< ..
+	uint16_t 	ac6_;					///< TODO: constants?
+	int16_t 	mb_; 					///< => move to constants in cpp
+	int16_t		mc_; 					///<    or
+	int16_t 	md_;					///<    move to configuration structure
+	int16_t 	b1_; 					///< ..
+	int16_t 	b2_;					///< ..
+
+	uint8_t 	raw_pressure_[3];		///< Raw pressure contained in 3 uint8_t
+	uint8_t 	raw_temperature_[2];	///< Raw temperature contained in 2 uint8_t
+	
+	float 		pressure_;				///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
+	float 		temperature_;			///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
+	float 		altitude_;				///< Measured altitude as the median filter of the 3 last_altitudes
+	float 		altitude_offset_;		///< Offset of the barometer sensor for matching GPS altitude value
+	float 		vario_vz_;				///< Vario altitude speed
+	float 		last_altitudes_[3];		///< Array to store previous value of the altitude for low pass filtering the output
+	
+	float	 	last_update_us_;		///< Time of the last update of the barometer
+	float 		last_state_update_us_;	///< Time of the last state update
+	float 		dt_s_;					///< Time step for the derivative
+	bmp085_state_t 	state_;				///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 };
 
-#endif /* BMP085_H_ */
+#endif /* BMP085_HPP_ */

@@ -43,11 +43,6 @@
 
 #include "gps_ublox_telemetry.hpp"
 
-extern "C"
-{
-	#include "time_keeper.h"
-}
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
@@ -60,19 +55,19 @@ extern "C"
  * 
  * \return	The MAV_RESULT of the command
  */
-static mav_result_t gps_ublox_start_configuration(gps_t* gps, mavlink_command_long_t* packet);
+static mav_result_t gps_ublox_start_configuration(Gps_ublox* gps, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t gps_ublox_start_configuration(gps_t* gps, mavlink_command_long_t* packet)
+static mav_result_t gps_ublox_start_configuration(Gps_ublox* gps, mavlink_command_long_t* packet)
 {
 	mav_result_t result = MAV_RESULT_TEMPORARILY_REJECTED;
 	
 	if (packet->param1 == 1)
 	{
-		gps->configure_gps = true;
+		gps->start_configuration();
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
@@ -84,7 +79,7 @@ static mav_result_t gps_ublox_start_configuration(gps_t* gps, mavlink_command_lo
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool gps_ublox_telemetry_init(gps_t* gps, mavlink_message_handler_t* message_handler)
+bool gps_ublox_telemetry_init(Gps_ublox* gps, mavlink_message_handler_t* message_handler)
 {
 	bool init_success = true;
 	
@@ -100,40 +95,4 @@ bool gps_ublox_telemetry_init(gps_t* gps, mavlink_message_handler_t* message_han
 	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
 	return init_success;
-}
-
-void gps_ublox_telemetry_send_raw(const gps_t* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
-{
-	if (gps->status == GPS_OK)
-	{
-		mavlink_msg_gps_raw_int_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										msg,
-										1000 * gps->time_last_msg,
-										gps->status,
-										gps->latitude * 10000000.0f,
-										gps->longitude * 10000000.0f,
-										gps->altitude * 1000.0f,
-										gps->hdop * 100.0f,
-										gps->speed_accuracy * 100.0f,
-										gps->ground_speed * 100.0f,
-										gps->course,
-										gps->num_sats	);
-	}
-	else
-	{
-		mavlink_msg_gps_raw_int_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										msg,
-										time_keeper_get_micros(),
-										gps->status,
-										46.5193f * 10000000,
-										6.56507f * 10000000,
-										400 * 1000,
-										0,
-										0,
-										0,
-										0,
-										gps->num_sats);
-	}
 }

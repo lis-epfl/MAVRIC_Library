@@ -480,8 +480,6 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 
 	data_logging->logging_time = time_keeper_get_millis();
 	
-	print_util_dbg_print("[DATA LOGGING] initialised.\r\n");
-
 	return init_success;
 }
 

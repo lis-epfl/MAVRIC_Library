@@ -30,74 +30,104 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file barometer.cpp
+ * \file barometer_sim.hpp
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief This file defines the barometer enum and structure, independently from which sensor is used
+ * \brief Simulation for barometers
  *
  ******************************************************************************/
 
-#include <stdint.h>
-#include "barometer.hpp"
+
+#include "barometer_sim.hpp"
+
+extern "C"
+{
+	#include "constants.h"
+	#include "time_keeper.h"
+}
 
 
-Barometer::Barometer( )
+Barometer_sim::Barometer_sim(Dynamic_model& dynamic_model ):
+	dynamic_model_( dynamic_model ),
+	pressure_( 0.0f ),
+	vario_vz_( 0.0f ),
+	temperature_( 24.0f ),	// Nice day
+	altitude_offset_( 0.0f ),
+	last_update_us_( time_keeper_get_micros() )
 {}
 
 
- void Barometer::reset_origin_altitude(float origin_altitude)
+bool Barometer_sim::init(void)
 {
-	altitude_offset_ = - (altitude_ - altitude_offset_ - origin_altitude );
+	return true;
 }
 
-float Barometer::get_pressure(void) const
+
+bool Barometer_sim::update(void)
+{
+	bool success = true;
+
+	// Update dynamic model
+	success &= dynamic_model_.update();
+
+	// Get delta t
+	float dt_s = (dynamic_model_.last_update_us() - last_update_us_) / 1000000.0f;
+
+	if( dt_s > 0.0f )
+	{
+		// Get altitude
+		// float new_altitude = dynamic_model_.position_gf().altitude - altitude_offset_;
+		float new_altitude = dynamic_model_.position_gf().altitude;
+		
+		// Get variation of altitude
+		vario_vz_ = (new_altitude - altitude_) / dt_s;
+		altitude_ = new_altitude;
+
+		// Get pressure
+		pressure_ = 0.0f; // TODO
+
+		// Save timing
+		last_update_us_ = dynamic_model_.last_update_us();
+	}
+
+	return success;
+}
+
+
+const float& Barometer_sim::last_update_us(void) const
+{
+	return last_update_us_;
+}
+
+
+const float& Barometer_sim::pressure(void)  const
 {
 	return pressure_;
 }
 
-float Barometer::get_vario_vz(void) const
-{
-	return vario_vz_;
-}
 
-float Barometer::get_temperature(void) const
-{
-	return temperature_;
-}
-
-uint32_t Barometer::get_last_update(void) const
-{
-	return last_update_;
-}
-
-float Barometer::get_altitude(void) const
+const float& Barometer_sim::altitude(void) const
 {
 	return altitude_;
 }
 
-float Barometer::get_altitude_offset(void) const
+
+const float& Barometer_sim::vario_vz(void) const
 {
-	return altitude_offset_;
+	return vario_vz_;
 }
 
-void Barometer::set_vario_vz(float simulated_vario_vz)
+
+const float& Barometer_sim::temperature(void) const
 {
-	vario_vz_ = simulated_vario_vz;
+	return temperature_;
 }
 
-void Barometer::set_altitude(float simulated_altitude)
-{
-	altitude_ = simulated_altitude;
-}
 
-void Barometer::set_altitude_offset(float simulated_altitude_offset)
+bool Barometer_sim::reset_origin_altitude(float origin_altitude)
 {
-	altitude_offset_ = simulated_altitude_offset;
-}
-
-void Barometer::set_last_update(uint32_t simulated_last_update)
-{
-	last_update_ = simulated_last_update;
+	altitude_offset_ = origin_altitude;
+	return true;
 }

@@ -67,18 +67,14 @@ extern "C"
 
 bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
-							simulation_model_t *sim_model, 
-							const gps_t* gps,
+							const Gps* gps,
 							manual_control_t* manual_control)
 {
 	bool init_success = true;
 	
 	state_machine->state 			= state;
-	state_machine->sim_model 		= sim_model;
 	state_machine->gps 				= gps;
 	state_machine->manual_control 	= manual_control;
-	
-	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
 	
 	return init_success;
 }
@@ -214,7 +210,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 
 			// check GPS status
-			if (!state_machine->gps->healthy)
+			if( state_machine->gps->healthy() == false )
 			{
 				print_util_dbg_print("GPS bad!\r\n");
 				state_new = MAV_STATE_CRITICAL;
@@ -235,7 +231,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 						!state_machine->state->connection_lost && 
 						!state_machine->state->out_of_fence_1 && 
 						!state_machine->state->out_of_fence_2 &&
-						state_machine->gps->healthy)
+						state_machine->gps->healthy())
 					{
 						state_new = MAV_STATE_ACTIVE;
 						// Reset all custom flags except collision avoidance flag
@@ -300,7 +296,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 
 			// check GPS status
-			if (!state_machine->gps->healthy)
+			if (!state_machine->gps->healthy())
 			{
 				mode_custom_new |= CUST_GPS_BAD;
 			}
@@ -358,29 +354,29 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 
 
 	// Check if we need to switch between simulation and reality	
-	if ( mode_current.HIL != mode_new.HIL )
-	{
-		if ( mode_new.HIL == HIL_ON )
-		{
-			// reality -> simulation
-			simulation_switch_from_reality_to_simulation( state_machine->sim_model );
+	// if ( mode_current.HIL != mode_new.HIL )
+	// {
+	// 	if ( mode_new.HIL == HIL_ON )
+	// 	{
+	// 		// reality -> simulation
+	// 		simulation_switch_from_reality_to_simulation( state_machine->sim_model );
 			
-			state_new = MAV_STATE_STANDBY;
-			mode_new.byte = MAV_MODE_MANUAL_DISARMED;
-			mode_new.HIL = HIL_ON;
-		}
-		else
-		{
-			// simulation -> reality
-			simulation_switch_from_simulation_to_reality( state_machine->sim_model );
+	// 		state_new = MAV_STATE_STANDBY;
+	// 		mode_new.byte = MAV_MODE_MANUAL_DISARMED;
+	// 		mode_new.HIL = HIL_ON;
+	// 	}
+	// 	else
+	// 	{
+	// 		// simulation -> reality
+	// 		simulation_switch_from_simulation_to_reality( state_machine->sim_model );
 
-			state_new = MAV_STATE_STANDBY;
-			mode_new.byte = MAV_MODE_SAFE;
+	// 		state_new = MAV_STATE_STANDBY;
+	// 		mode_new.byte = MAV_MODE_SAFE;
 
-			// For safety, switch off the motors
-			print_util_dbg_print("Switching off motors!\n");
-		}
-	}
+	// 		// For safety, switch off the motors
+	// 		print_util_dbg_print("Switching off motors!\n");
+	// 	}
+	// }
 	
 
 	// Finally, write new modes and states

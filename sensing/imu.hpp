@@ -35,8 +35,9 @@
  * \author MAV'RIC Team
  * \author Felix Schill
  * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief This file implements the IMU data structure
+ * \brief Inertial measurement unit (IMU)
  *
  ******************************************************************************/
 
@@ -44,15 +45,17 @@
 #ifndef IMU_H_
 #define IMU_H_
 
+#include <array>
+
+#include "accelerometer.hpp"
+#include "gyroscope.hpp"
+#include "magnetometer.hpp"
 #include "state.hpp"
 
 extern "C" 
 {
 	#include <stdint.h>
 	#include <stdbool.h>
-	#include "gyroscope.h"
-	#include "accelerometer.h"
-	#include "magnetometer.h"
 	#include "quaternions.h"
 	#include "scheduler.h"
 }
@@ -63,32 +66,18 @@ extern "C"
 
 
 /**
- * \brief Structure containing the accelero, gyro and magnetometer sensors' gains
+ * \brief Sensor configuration 
  */
 typedef struct
 {
-	float bias[3];							///< The biais of the sensor
-	float scale_factor[3];					///< The scale factors of the sensor
-	float orientation[3];					///< The orientation of the sensor
-	uint8_t axis[3];						///< The axis number (X,Y,Z) referring to the sensor datasheet
-	
-	float max_oriented_values[3];			///< Values uses for calibration
-	float min_oriented_values[3];			///< Values uses for calibration
-	bool calibration;						///< In calibration mode, true
-} sensor_calib_t;
-
-
-/**
- * \brief Structure containing the configuration 
- * accelero, gyro and magnetometer sensors' gains
- */
-typedef struct
-{
-	float bias[3];							///< The biais of the sensor
-	float scale_factor[3];					///< The scale factors of the sensor
-	float orientation[3];					///< The orientation of the sensor
-	uint8_t axis[3];						///< The axis number (X,Y,Z) referring to the sensor datasheet
-} sensor_config_t;
+	std::array<float,3> bias;			///< The biais of the sensor
+	std::array<float,3> scale_factor;	///< The scale factors of the sensor
+	std::array<float,3>	sign;			///< The orientation of the sensor (+1 or -1)
+	std::array<uint8_t,3> axis;			///< The axis number (X,Y,Z) referring to the sensor datasheet
+	std::array<float,3> max_values;		///< Used only during calibration: max scaled value
+	std::array<float,3> min_values;		///< Used only during calibration: min scaled value
+	std::array<float,3> mean_values;	///< Used only during calibration: mean scaled value
+} imu_sensor_config_t;
 
 
 /**
@@ -96,65 +85,323 @@ typedef struct
  */
 typedef struct
 {
-	sensor_config_t accelerometer;		   ///< The gyroscope configuration structure
-	sensor_config_t gyroscope;			   ///< The accelerometer configuration structure
-	sensor_config_t magnetometer;		   ///< The compass configuration structure
+	imu_sensor_config_t accelerometer;	///< The gyroscope configuration structure
+	imu_sensor_config_t gyroscope;		///< The accelerometer configuration structure
+	imu_sensor_config_t magnetometer;	///< The compass configuration structure
+	float lpf_acc;						///< Low pass filter gain for accelerometer		
+	float lpf_gyro;						///< Low pass filter gain for accelerometer
+	float lpf_mag;						///< Low pass filter gain for accelerometer
 } imu_conf_t;
 
 
 /**
- * \brief The IMU structure
+ * @brief 	Default configuration
+ * 
+ * @return 	Config structure
  */
+static inline imu_conf_t imu_default_config(void);
+
+
+/**
+ * \brief 	Inertial measurement unit (IMU)
+ * 
+ * \details This module gathers new data from inertial sensors and takes care of 
+ * 			rotating, removing bias, and scaling raw sensor values (in this order)
+ * 			
+ * 			If this module is used, then it is not needed to call each sensor's
+ * 			update function.
+ */
+class Imu
+{
+public:
+	/**
+	 * \brief Constructor
+	 */
+	Imu(Accelerometer& accelerometer, 
+		Gyroscope& gyroscope, 
+		Magnetometer& magnetometer,
+		imu_conf_t config = imu_default_config());
+
+
+	/**
+	 * \brief 	Main update 
+	 * 
+	 * \return 	Success
+	 */
+	bool update(void);
+
+
+	/**
+	 * \brief 	Get last update time in microseconds
+	 * 
+	 * \return 	Value
+	 */	
+	const float& last_update_us(void) const;
+
+
+	/**
+	 * \brief 	Get time between two last updates in seconds
+	 * 
+	 * \return 	Value
+	 */	
+	const float& dt_s(void) const;
+
+
+	/**
+	 * \brief 	Get X, Y and Z components of acceleration in g
+	 * 
+	 * \return 	Value
+	 */	
+	const std::array<float, 3>& acc(void) const;
+
+
+	/**
+	 * \brief 	Get X, Y and Z components of angular velocity in rad/s
+	 * 
+	 * \return 	Value
+	 */	
+	const std::array<float, 3>& gyro(void) const;
+
+
+	/**
+	 * \brief 	Get X, Y and Z components of magnetic field (normalized)
+	 * 
+	 * \return 	Value
+	 */	
+	const std::array<float, 3>& mag(void) const;
+
+
+
+	/**
+	 * \brief 	Temporary method to get pointer to configuration
+	 * 
+	 * \detail 	Used to add onboard parameters for the biases and scales
+	 * 			TODO: make it possible to set/get parameters via methods calls
+	 * 			instead of via pointers and remove this method
+	 */
+	 imu_conf_t* get_config(void);
+
+	// -------------------------------------------------------------------------
+	//
+	// TODO implement calibration
+	//
+	// -------------------------------------------------------------------------
+
+	/**
+	 * \brief 	Start accelerometer bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			Keep the platform perfectly level during the calibration phase
+	 * 			
+	 * 			WARNING:
+	 * 			Compatible with gyroscope bias calibration
+	 * 			Incompatible with magnetometer bias calibration
+	 * 
+	 * \return 	Success if not already started and no incompatible calibration ongoing
+	 */
+	bool start_accelerometer_bias_calibration(void);
+
+
+	/**
+	 * \brief 	Start gyroscope bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			Keep the platform perfectly level during the calibration phase
+	 * 			
+	 * 			WARNING:
+	 * 			Compatible with accelerometer bias calibration
+	 * 			Incompatible with magnetometer bias calibration
+	 * 
+	 * \return 	Success if not already started and no incompatible calibration ongoing
+	 */
+	bool start_gyroscope_bias_calibration(void);
+
+	
+	/**
+	 * \brief 	Start magnetometer bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			Rotate the platform in all possible orientation during calibration
+	 * 			The goal is to capture the maximum and minimum values for each axis,
+	 * 			(ie. have X, Y and Z axis of the UAV). Consecutively, each axis 
+	 * 			should be perfectly aligned, then perfectly opposed to the 
+	 * 			magnetic field. Note that the magnetic field is not horizontal !
+	 * 			
+	 * 			WARNING:
+	 * 			Incompatible with accelerometer and gyroscope bias calibration
+	 * 
+	 * \return 	Success if not already started and no incompatible calibration ongoing
+	 */
+	bool start_magnetometer_bias_calibration(void);
+	
+
+	/**
+	 * \brief 	Stop accelerometer bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 
+	 * \return 	Success if not already stopped
+	 */
+	bool stop_accelerometer_bias_calibration(void);
+
+	
+	/**
+	 * \brief 	Stop gyroscope bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 
+	 * \return 	Success if not already stopped
+	 */
+	bool stop_gyroscope_bias_calibration(void);
+
+	
+	/**
+	 * \brief 	Stop magnetometer bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			This function updates the magnetometer bias with the 
+	 * 
+	 * \return 	Success if not already stopped
+	 */
+	bool stop_magnetometer_bias_calibration(void);
+
+
+
+private:
+	Accelerometer& 	accelerometer_;		///< Reference to accelerometer sensor
+	Gyroscope& 		gyroscope_;			///< Reference to gyroscope sensor
+	Magnetometer& 	magnetometer_;		///< Reference to magnetometer sensor
+
+	imu_conf_t 		config_; 			///< Configuration
+
+	std::array<float, 3> oriented_acc_;	///< Oriented acceleration
+	std::array<float, 3> oriented_gyro_;///< Oriented angular velocity
+	std::array<float, 3> oriented_mag_; ///< Oriented magnetic field
+
+	std::array<float, 3> scaled_acc_;	///< Scaled acceleration
+	std::array<float, 3> scaled_gyro_; 	///< Scaled angular velocity
+	std::array<float, 3> scaled_mag_; 	///< Scaled magnetic field
+
+	bool do_accelerometer_bias_calibration_;	///< Flag indicating if calibration should be done
+	bool do_gyroscope_bias_calibration_;		///< Flag indicating if calibration should be done
+	bool do_magnetometer_bias_calibration_;		///< Flag indicating if calibration should be done
+
+	float dt_s_;						///< Time interval between two updates (in microseconds)
+	float last_update_us_;				///< Last update time in microseconds
+};
+
+
+
+/**
+ * @brief 	Default configuration
+ * 
+ * @return 	Config structure
+ */
+static inline imu_conf_t imu_default_config()
+{
+	imu_conf_t conf = {};
+
+	// Accelerometer
+	// Bias
+	conf.accelerometer.bias[0] = 0.0f;		///< Positive or negative
+	conf.accelerometer.bias[1] = 0.0f;
+	conf.accelerometer.bias[2] = 0.0f;
+	
+	// Scale
+	conf.accelerometer.scale_factor[0] = 1.0f;		///< Should be >0
+	conf.accelerometer.scale_factor[1] = 1.0f;
+	conf.accelerometer.scale_factor[2] = 1.0f;
+	
+	// Axis and sign
+	conf.accelerometer.sign[0] = +1.0f;	///< +1 or -1
+	conf.accelerometer.sign[1] = +1.0f;
+	conf.accelerometer.sign[2] = +1.0f;
+	conf.accelerometer.axis[0] = 0;		///< Should be 0, 1, or 2
+	conf.accelerometer.axis[1] = 1;
+	conf.accelerometer.axis[2] = 2;
+
+	// Min and max values
+	conf.accelerometer.max_values[0] = -10000.0f;
+	conf.accelerometer.max_values[1] = -10000.0f;
+	conf.accelerometer.max_values[2] = -10000.0f;
+	conf.accelerometer.min_values[0] = 10000.0f;
+	conf.accelerometer.min_values[1] = 10000.0f;
+	conf.accelerometer.min_values[2] = 10000.0f;
+	conf.accelerometer.mean_values[0] = 0.0f;
+	conf.accelerometer.mean_values[1] = 0.0f;
+	conf.accelerometer.mean_values[2] = 0.0f;
+
+	// Gyroscope
+	// Bias
+	conf.gyroscope.bias[0] = 0.0f;		///< Positive or negative
+	conf.gyroscope.bias[1] = 0.0f;
+	conf.gyroscope.bias[2] = 0.0f;
+	
+	// Scale
+	conf.gyroscope.scale_factor[0] = 1.0f;		///< Should be >0
+	conf.gyroscope.scale_factor[1] = 1.0f;
+	conf.gyroscope.scale_factor[2] = 1.0f;
+	
+	// Axis and sign
+	conf.gyroscope.sign[0] = +1.0f;	///< +1 or -1
+	conf.gyroscope.sign[1] = +1.0f;
+	conf.gyroscope.sign[2] = +1.0f;
+	conf.gyroscope.axis[0] = 0;		///< Should be 0, 1, or 2
+	conf.gyroscope.axis[1] = 1;
+	conf.gyroscope.axis[2] = 2;
+
+	// Min and max values
+	conf.gyroscope.max_values[0] = -10000.0f;
+	conf.gyroscope.max_values[1] = -10000.0f;
+	conf.gyroscope.max_values[2] = -10000.0f;
+	conf.gyroscope.min_values[0] = 10000.0f;
+	conf.gyroscope.min_values[1] = 10000.0f;
+	conf.gyroscope.min_values[2] = 10000.0f;
+	conf.gyroscope.mean_values[0] = 0.0f;
+	conf.gyroscope.mean_values[1] = 0.0f;
+	conf.gyroscope.mean_values[2] = 0.0f;
+	
+	// Magnetometer
+	// Bias
+	conf.magnetometer.bias[0] = 0.0f;		///< Positive or negative
+	conf.magnetometer.bias[1] = 0.0f;
+	conf.magnetometer.bias[2] = 0.0f;
+	
+	// Scale
+	conf.magnetometer.scale_factor[0] = 1.0f;		///< Should be >0
+	conf.magnetometer.scale_factor[1] = 1.0f;
+	conf.magnetometer.scale_factor[2] = 1.0f;
+	
+	// Axis and sign
+	conf.magnetometer.sign[0] = +1.0f;	///< +1 or -1
+	conf.magnetometer.sign[1] = +1.0f;
+	conf.magnetometer.sign[2] = +1.0f;
+	conf.magnetometer.axis[0] = 0;		///< Should be 0, 1, or 2
+	conf.magnetometer.axis[1] = 1;
+	conf.magnetometer.axis[2] = 2;
+
+	// Min and max values
+	conf.magnetometer.max_values[0] = -10000.0f;
+	conf.magnetometer.max_values[1] = -10000.0f;
+	conf.magnetometer.max_values[2] = -10000.0f;
+	conf.magnetometer.min_values[0] = 10000.0f;
+	conf.magnetometer.min_values[1] = 10000.0f;
+	conf.magnetometer.min_values[2] = 10000.0f;
+	conf.magnetometer.mean_values[0] = 0.0f;
+	conf.magnetometer.mean_values[1] = 0.0f;
+	conf.magnetometer.mean_values[2] = 0.0f;
+
+	// Low pass filter
+	conf.lpf_acc 	= 0.1f;
+	conf.lpf_gyro 	= 0.05f;
+	conf.lpf_mag 	= 0.1f;
+	
+	return conf;
+}
+
 typedef struct
 {
-	sensor_calib_t 	 calib_gyro;			///< The gyroscope calibration structure
-	sensor_calib_t   calib_accelero;		///< The accelerometer calibration structure
-	sensor_calib_t   calib_compass;			///< The compass calibration structure
 	
-	gyroscope_t      raw_gyro;				///< The gyroscope raw values structure
-	gyroscope_t      oriented_gyro;			///< The gyroscope oriented values structure
-	gyroscope_t      scaled_gyro;			///< The gyroscope scaled values structure
-	
-	accelerometer_t  raw_accelero;			///< The accelerometer raw values structure
-	accelerometer_t  oriented_accelero;		///< The accelerometer oriented values structure
-	accelerometer_t  scaled_accelero;		///< The accelerometer scaled values structure
-	
-	magnetometer_t   raw_magneto;			///< The compass raw values structure
-	magnetometer_t   oriented_magneto;		///< The compass oriented values structure
-	magnetometer_t   scaled_magneto;		///< The compass scaled values structure
-	
-	float dt;								///< The time interval between two IMU updates
-	uint32_t last_update;					///< The time of the last IMU update in ms
-
-	state_t* state;							///< The pointer to the state structure
 } imu_t;
-
-
-/** 
- * \brief	Initialize the IMU module
- *
- * \param	imu						The pointer to the IMU structure
- * \param	conf_imu				The pointer to the configuration IMU structure
- * \param	state					The pointer to the state structure
- *
- * \return	True if the init succeed, false otherwise
- */
-bool imu_init( imu_t *imu, imu_conf_t conf_imu, state_t* state);
-
-
-/**
- * \brief	To calibrate the gyros at startup (not used know)
- *
- * \param	imu		The pointer to the IMU structure
- */
-void imu_calibrate_gyros( imu_t *imu );
-
-
-/**
- * \brief	Updates the scaled sensors values from raw measurements
- *
- * \param	imu		The pointer to the IMU structure
- */
-void imu_update(imu_t *imu);
 
 #endif /* IMU_H_ */

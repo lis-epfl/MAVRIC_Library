@@ -30,48 +30,81 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar.h
+ * \file gyroscope_sim.cpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Definition of structure for sonar, independent of the sensor used
- *
+ * \brief Simulated gyroscopes
+ * 
  ******************************************************************************/
 
 
-#ifndef SONAR_H_
-#define SONAR_H_
+#include "gyroscope_sim.hpp"
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "quaternions.h"
-
-#define LPF_SONAR_VARIO 0.4f
-
-/**
- * \brief Sonar structure, independent of the sensor used
-*/
-typedef struct 
+extern "C"
 {
-	uint32_t last_update; 		///< Last time we updated the sensor measurement
-	quat_t 	orientation; 		///< Direction the sensor faces from FIXME enum.
-	float 	min_distance; 		///< Minimum distance the sensor can measure in centimeters
-	float 	max_distance; 		///< Maximum distance the sensor can measure in centimeters
-	float 	current_distance;	///< Measured distance in meters
-	float	current_velocity;	///< Computed velocity in m/s
-	float 	covariance; 		///< Measurement covariance in centimeters, 0 for unknown / invalid readings
-	bool 	healthy;			///< Indicates whether the current measurement can be trusted
-	bool	healthy_vel;		///< Indicated whether the velocity estimation can be trusted
-} sonar_t;
+	#include "constants.h"
+}
+
+Gyroscope_sim::Gyroscope_sim(Dynamic_model& dynamic_model):
+	dynamic_model_( dynamic_model ),
+	rates_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	temperature_(24.0f) // Nice day
+{}
 
 
-#ifdef __cplusplus
-	}
-#endif
+bool Gyroscope_sim::init(void)
+{
+	return true;
+}
 
-#endif /* SONAR_H */
+
+bool Gyroscope_sim::update(void)
+{
+	bool success = true;
+
+	// Update dynamic model
+	success &= dynamic_model_.update();
+
+	// Get angular velocity
+	rates_ = dynamic_model_.angular_velocity_bf();
+
+	return success;
+}
+
+
+const float& Gyroscope_sim::last_update_us(void) const
+{
+	return dynamic_model_.last_update_us();
+}
+
+
+const std::array<float, 3>& Gyroscope_sim::gyro(void) const
+{
+	return rates_;
+}
+
+
+const float& Gyroscope_sim::gyro_X(void) const
+{
+	return rates_[X];
+}
+
+
+const float& Gyroscope_sim::gyro_Y(void) const
+{
+	return rates_[Y];
+}
+
+
+const float& Gyroscope_sim::gyro_Z(void) const
+{
+	return rates_[Z];
+}
+
+
+const float& Gyroscope_sim::temperature(void) const
+{
+	return temperature_;
+}

@@ -247,8 +247,6 @@ bool mavlink_message_handler_init(	mavlink_message_handler_t* message_handler,
 		init_success &= false;	
 	}
 	
-	print_util_dbg_print("[MESSAGE HANDLER] Initialised.\r\n");
-	
 	return init_success;
 }
 
@@ -388,37 +386,17 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 {
 	mavlink_message_t* msg = &rec->msg;	
 
-	if ( message_handler->debug )
-	{
-		mavlink_message_handler_msg_default_dbg(msg);
-	}
-
 	if (msg->msgid == MAVLINK_MSG_ID_COMMAND_LONG)
 	{
 		// The message is a command
 		mavlink_command_long_t cmd;
 		mavlink_msg_command_long_decode(msg, &cmd);
 		
-		 //print packet command and parameters for debug
-		 print_util_dbg_print("target sysID:");
-		 print_util_dbg_print_num(cmd.target_system,10);
-		 print_util_dbg_print(", target compID:");
-		 print_util_dbg_print_num(cmd.target_component,10);
-		 print_util_dbg_print("\r\n");
-		 print_util_dbg_print("parameters: ");
-		 print_util_dbg_print_num(cmd.param1,10);
-		 print_util_dbg_print_num(cmd.param2,10);
-		 print_util_dbg_print_num(cmd.param3,10);
-		 print_util_dbg_print_num(cmd.param4,10);
-		 print_util_dbg_print_num(cmd.param5,10);
-		 print_util_dbg_print_num(cmd.param6,10);
-		 print_util_dbg_print_num(cmd.param7,10);
-		 print_util_dbg_print("\r\n");
-		 print_util_dbg_print("command id:");
-		 print_util_dbg_print_num(cmd.command,10);
-		 print_util_dbg_print(", confirmation:");
-		 print_util_dbg_print_num(cmd.confirmation,10);
-		 print_util_dbg_print("\r\n");
+		//print packet command and parameters for debug
+		if ( message_handler->debug )
+		{
+			mavlink_message_handler_cmd_default_dbg(&cmd);
+		}
 		
 		if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
 		{
@@ -457,6 +435,11 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 	}
 	else if ( msg->msgid >= 0 && msg->msgid < MAV_MSG_ENUM_END )
 	{
+		if ( message_handler->debug )
+		{
+			mavlink_message_handler_msg_default_dbg(msg);
+		}
+
 		// The message has a valid message ID, and is not a command
 		for (uint32_t i = 0; i < message_handler->msg_callback_set->callback_count; ++i)
 		{

@@ -250,8 +250,7 @@ void Serial_avr32::irq_handler(void)
 	}
 
 	// Outgoing data
-	// if( csr & AVR32_USART_CSR_TXRDY_MASK ) 
-	else
+	if( csr & AVR32_USART_CSR_TXRDY_MASK ) 
 	{
 		if( buffer_bytes_available( &tx_buffer_ ) > 0 ) 
 		{

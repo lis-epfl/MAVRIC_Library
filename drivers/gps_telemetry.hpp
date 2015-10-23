@@ -30,31 +30,30 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file bmp085_telemetry.c
+ * \file gps_telemetry.hpp
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the pressure sensor
+ * \brief GPS telemetry
  *
  ******************************************************************************/
 
+#ifndef GPS_TELEMETRY_H_
+#define GPS_TELEMETRY_H_
 
-#include "bmp085_telemetry.hpp"
+#include "mavlink_stream.hpp"
+#include "mavlink_message_handler.hpp"
+#include "gps.hpp"
 
-extern "C"
-{
-	#include "time_keeper.h"
-}
+/**
+ * \brief	Function to send the MAVLink gps raw message
+ * 
+ * \param	gps						Pointer to the GPS
+ * \param	mavlink_stream			Pointer to the MAVLink stream structure
+ * \param	msg						Pointer to the MAVLink message
+ */
+void gps_telemetry_send_raw(const Gps* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
-void bmp085_telemetry_send_pressure(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
-{
-	mavlink_msg_scaled_pressure_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										msg,
-										time_keeper_get_millis(),
-										barometer->get_pressure() / 100.0f,
-										barometer->get_vario_vz(),
-										barometer->get_temperature() * 100.0f);
-}
+
+#endif /* GPS_TELEMETRY_H_ */

@@ -34,8 +34,9 @@
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
+ * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the barometer module: BMP085
+ * \brief 	Driver for the BMP085 barometer
  * 
  ******************************************************************************/
 
@@ -86,44 +87,47 @@ const uint8_t BMP085_READPRESSURECMD	= 0x34;			///< Read Pressure Command regist
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Bmp085::Bmp085(	I2c& i2c):
-		i2c_(i2c)
-{}
+
+Bmp085::Bmp085(	I2c& i2c ):
+	i2c_(i2c),
+	ac1_( 408 ),
+	ac2_( -72 ),
+	ac3_( -14383 ),
+	ac4_( 32741 ),
+	ac5_( 32757 ),
+	ac6_( 23153 ),
+	mb_( 1 ),		// TODO check value in datasheet
+	mc_( -8711 ),
+	md_( 2868 ),
+	b1_( 6190 ),
+	b2_( 4 ),
+	raw_pressure_{ 0, 0, 0 },
+	raw_temperature_{ 0, 0 },
+	pressure_( 0.0f ),
+	temperature_( 0.0f ),
+	altitude_( 0.0f ),
+	altitude_offset_( 0.0f ),
+	vario_vz_( 0.0f ),
+	last_altitudes_{0.0f, 0.0f, 0.0f},
+	last_update_us_( time_keeper_get_micros() ),
+	last_state_update_us_( time_keeper_get_micros() ),
+	dt_s_( 0.1f ), 
+	state_( BMP085_IDLE ) 
+{
+}
 
 
 bool Bmp085::init(void)
 {
 	bool res = true;
 
-	// test if the sensor if here
+	// Test if the sensor if here
 	res &= i2c_.probe(BMP085_SLAVE_ADDRESS);
-	
-	altitude_offset_ = 0.0f;
-
-	for (int32_t i = 0; i < 3; i++) 
-	{
-		last_altitudes_[i] = 0.0f;
-	}
-	
-	vario_vz_ = 0.0f;
 
 	///< Configure with datasheet values
-	ac1_ = 408;
-	ac2_ = -72;
-	ac3_ = -14383;
-	ac4_ = 32741;
-	ac5_ = 32757;
-	ac6_ = 23153;
-	//mb_  = 1; //TODO check value in datasheet
-	mc_ = -8711;
-	md_ = 2868;
-	b1_ = 6190;
-	b2_ = 4;
-
 	//TODO Reading is not working as it should
 /*	///< Address of those configuration values
 	uint8_t address[11] = {0xAA, 0xAC, 0xAE, 0xB0, 0xB2, 0xB4, 0xB6, 0xB8, 0xBA, 0xBC, 0xBE};
-
 	///< Try to update with Eprom values of the sensor
 	i2c_.write((uint8_t*)&(address[0]), 1, BMP085_SLAVE_ADDRESS);
 	i2c_.read( (uint8_t*)&ac1_, 2, BMP085_SLAVE_ADDRESS );
@@ -148,8 +152,9 @@ bool Bmp085::init(void)
 	i2c_.write((uint8_t*)&(address[9]), 1, BMP085_SLAVE_ADDRESS);
 	i2c_.read( (uint8_t*)&b2_ ,  2, BMP085_SLAVE_ADDRESS );
 */
-	//reset Bmp085 state
-	state_ = IDLE;
+
+	// Reset Bmp085 state
+	state_ = BMP085_IDLE;
 
 	return res;
 }
@@ -178,25 +183,24 @@ bool Bmp085::update(void)
 	};
 
 	int32_t sea_level_pressure = 101325;
-	float dt;
 
 	switch (state_) 
 	{
-		case IDLE:
+		case BMP085_IDLE:
 			res &= i2c_.write((uint8_t*) &start_command_temp, 2, BMP085_SLAVE_ADDRESS);
-			state_ = GET_TEMP;
+			state_ = BMP085_GET_TEMP;
 			break;
 
-		case GET_TEMP:
+		case BMP085_GET_TEMP:
 			start_address = BMP085_TEMPDATA;
 			res &= i2c_.write((uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS);
 			res &= i2c_.read((uint8_t*)&(raw_temperature_), 2, BMP085_SLAVE_ADDRESS);
 	
 			res &= i2c_.write((uint8_t*) &start_command_pressure, 2, BMP085_SLAVE_ADDRESS);
-			state_ = GET_PRESSURE;
+			state_ = BMP085_GET_PRESSURE;
 			break;
 
-		case GET_PRESSURE:
+		case BMP085_GET_PRESSURE:
 			start_address = BMP085_PRESSUREDATA;
 			res &= i2c_.write((uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS);
 			res &= i2c_.read((uint8_t*)&(raw_pressure_), 3, BMP085_SLAVE_ADDRESS);
@@ -263,9 +267,9 @@ bool Bmp085::update(void)
 				altitude_ = altitude;
 			}
 		
-			dt = (time_keeper_get_micros()-last_update_) / 1000000.0f;
-			dt_ = dt;
-			vertical_speed = -(altitude_-vertical_speed) / dt;
+			dt_s_ = (time_keeper_get_micros()-last_update_us_) / 1000000.0f;
+			
+			vertical_speed = - (altitude_ - vertical_speed) / dt_s_;
 		
 			if (maths_f_abs(vertical_speed) > 20) 
 			{
@@ -274,13 +278,49 @@ bool Bmp085::update(void)
 
 			vario_vz_ = (VARIO_LPF) * vario_vz_ + (1.0f - VARIO_LPF) * (vertical_speed);
 		
-			last_update_ = time_keeper_get_micros();
-			last_update_ = last_update_;
-			state_ = IDLE;
+			last_update_us_ = time_keeper_get_micros();
+			state_ = BMP085_IDLE;
 			break;
 	}
 
-	last_state_update_ = time_keeper_get_micros();
+	last_state_update_us_ = time_keeper_get_micros();
 
 	return res;
+}
+
+
+const float& Bmp085::last_update_us(void) const
+{
+	return last_update_us_;
+}
+
+
+const float& Bmp085::pressure(void)  const
+{
+	return pressure_;
+}
+
+
+const float& Bmp085::altitude(void) const
+{
+	return altitude_;
+}
+
+
+const float& Bmp085::vario_vz(void) const
+{
+	return vario_vz_;
+}
+
+
+const float& Bmp085::temperature(void) const
+{
+	return temperature_;
+}
+
+
+bool Bmp085::reset_origin_altitude(float origin_altitude)
+{
+	altitude_offset_ = - (altitude_ - altitude_offset_ - origin_altitude );
+	return true;
 }

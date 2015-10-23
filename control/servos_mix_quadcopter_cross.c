@@ -44,7 +44,7 @@
 #include "servos_mix_quadcopter_cross.h"
 
 
-bool servo_mix_quadcotper_cross_init(servo_mix_quadcotper_cross_t* mix, const servo_mix_quadcopter_cross_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos)
+bool servos_mix_quadcotper_cross_init(servos_mix_quadcotper_cross_t* mix, const servos_mix_quadcopter_cross_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos)
 {
 	// Init dependencies
 	mix->torque_command = torque_command;
@@ -69,7 +69,7 @@ bool servo_mix_quadcotper_cross_init(servo_mix_quadcotper_cross_t* mix, const se
 }
 
 
-bool servos_mix_quadcopter_cross_update(servo_mix_quadcotper_cross_t* mix)
+bool servos_mix_quadcopter_cross_update(servos_mix_quadcotper_cross_t* mix)
 {
 	float motor[4];
 	

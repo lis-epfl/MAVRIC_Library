@@ -73,11 +73,6 @@ bool flow_init(flow_t* flow, Serial* uart_)
 									&mavlink_stream_conf,
 									flow->uart);
 
-	if( success == true )
-	{
-		print_util_dbg_print("[FLOW] Initialized\r\n");	
-	}
-
 	return success;
 }
 

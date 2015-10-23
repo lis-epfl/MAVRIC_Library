@@ -30,35 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gyroscope.h
+ * \file barometer_telemetry.cpp
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief This file defines the gyroscope structure, independently from the sensor used
- * 
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the pressure sensor
+ *
  ******************************************************************************/
 
 
-#ifndef GYRO_H_
-#define GYRO_H_
+#include "barometer_telemetry.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \brief The gyroscope structure
- */
-typedef struct
+extern "C"
 {
-	float data[3];			///< The gyroscope's datas
-	float temperature;		///< The gyroscope's temperature
-	float last_update;		///< The gyroscope last update time
-} gyroscope_t;
-
-#ifdef __cplusplus
+	#include "time_keeper.h"
 }
-#endif
 
-#endif /* GYRO_H_ */
+void barometer_telemetry_send(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	mavlink_msg_scaled_pressure_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										barometer->altitude(),
+										barometer->vario_vz(),
+										barometer->temperature());
+}

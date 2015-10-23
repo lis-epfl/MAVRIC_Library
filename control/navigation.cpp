@@ -518,7 +518,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 	if ( navigation->state->battery.is_low || 
 		navigation->state->connection_lost || 
 		navigation->state->out_of_fence_2 ||
-		navigation->position_estimation->gps->status != GPS_OK)
+		navigation->position_estimation->gps->fix() == false)
 	{
 		if(navigation->critical_behavior != CRITICAL_LAND)
 		{
@@ -745,7 +745,7 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 			waypoint.y = packet->param6;
 			waypoint.z = packet->param7;
 			
-			local_coordinates_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(&waypoint,navigation->position_estimation->local_position.origin);
+			local_position_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(&waypoint,navigation->position_estimation->local_position.origin);
 			navigation_waypoint_hold_init(navigation->waypoint_handler, waypoint_goal);
 			
 			result = MAV_RESULT_ACCEPTED;
@@ -868,12 +868,10 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
 	callbackcmd.module_struct =									navigation;
 	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
-	print_util_dbg_print("[NAVIGATION] initialized.\r\n");
-	
 	return init_success;
 }
 
-void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos)
+void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_position_t local_pos)
 {
 	waypoint_handler->hold_waypoint_set = true;
 	

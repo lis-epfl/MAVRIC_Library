@@ -78,8 +78,6 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
 	
 	stabilisation_copter->thrust_hover_point = stabiliser_conf.thrust_hover_point;
 
-	print_util_dbg_print("[STABILISATION COPTER] initalised.\r\n");
-	
 	return init_success;
 }
 
@@ -129,6 +127,11 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 	int32_t i;
 	quat_t qtmp, q_rot;
 	aero_attitude_t attitude_yaw_inverse;
+
+	// Get up vector in body frame
+	quat_t up = {0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
+	quat_t up_vec = quaternions_global_to_local(  	stabilisation_copter->ahrs->qe,
+													up );
 
 	// set the controller input
 	input= *stabilisation_copter->controls;
@@ -192,7 +195,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		input.rpy[ROLL] = rpy_local.v[Y];
 		input.rpy[PITCH] = -rpy_local.v[X];
 
-		if ((!stabilisation_copter->pos_est->gps->healthy)||(stabilisation_copter->pos_est->state->out_of_fence_2))
+		if ((!stabilisation_copter->pos_est->gps->healthy())||(stabilisation_copter->pos_est->state->out_of_fence_2))
 		{
 			input.rpy[ROLL] = 0.0f;
 			input.rpy[PITCH] = 0.0f;
@@ -204,8 +207,8 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 	
 	case ATTITUDE_COMMAND_MODE:
 		// run absolute attitude_filter controller
-		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_copter->ahrs->up_vec.v[1] ); 
-		rpyt_errors[1]= input.rpy[1] - stabilisation_copter->ahrs->up_vec.v[0];
+		rpyt_errors[0]= input.rpy[0] + up_vec.v[1]; 
+		rpyt_errors[1]= input.rpy[1] - up_vec.v[0];
 		
 		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) 
 		{

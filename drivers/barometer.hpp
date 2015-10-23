@@ -30,12 +30,13 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file barometer.h
+ * \file barometer.hpp
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief This file defines the barometer enum and structure, independently from which sensor is used
+ * \brief Abstract class for barometers
  *
  ******************************************************************************/
 
@@ -43,127 +44,82 @@
 #ifndef BAROMETER_HPP_
 #define BAROMETER_HPP_
 
+
 /**
- * \brief bmp085_state_t can get three different state: Idle, get Temperature or get Pressure
-*/
-typedef enum bmp085_state_t
-{
-	IDLE,								///< Idle state
-	GET_TEMP,							///< Getting temperature state
-	GET_PRESSURE						///< Getting pressure state
-} barometer_state_t;
-
-
+ * \brief 	Abstract class for barometers
+ */
 class Barometer
 {
 public:
 	/**
-	 * @brief  	Constructor
-	 */
-	Barometer();
+	 * \brief   Initialise the sensor
+	 * 			
+	 * \return 	Success
+	 */	
+	virtual bool init(void) = 0;
+
 
 	/**
-	 * @brief   Reset the altitude to position estimation origin
+	 * \brief 	Main update function
+	 * \detail 	Reads new values from sensor
 	 * 
-	 * @param	origin_altitude 	Altitude corresponding to the origin
+	 * \return 	Success
 	 */
-	void reset_origin_altitude(float origin_altitude);
-	
+	virtual bool update(void) = 0;
+
+
+	 /**
+	 * \brief   Get the last update time in microseconds
+	 * 
+	 * \return 	Value
+	 */
+	virtual const float& last_update_us(void) const = 0;
+
+
 	/**
-	 * @brief   Return the pressure
+	 * \brief   Return the pressure
 	 * 
-	 * @return 	the pressure member
+	 * \return 	Value
 	 */
-	float get_pressure(void)  const;
+	virtual const float& pressure(void)  const = 0;
 
-	 /**
-	 * @brief   Return the altitude speed
+
+	/**
+	 * \brief   Get the altitude in meters
 	 * 
-	 * @return 	the vario_vz_ member
-	 */
-	 float get_vario_vz(void) const;
-
-	 /**
-	 * @brief   Return the temperature
+	 * \detail 	Not NED frame: (>0 means upward)
 	 * 
-	 * @return 	the temperature member
+	 * \return 	Value
 	 */
-	 float get_temperature(void) const;
+	virtual const float& altitude(void) const = 0;
 
-	 /**
-	 * @brief   Return the last update time
+
+	/**
+	 * \brief   Get the vertical speed in meters/second
 	 * 
-	 * @return 	the temperature member
-	 */
-	 uint32_t get_last_update(void) const;
-
-	 /**
-	 * @brief   Return the altitude
+	 * \detail 	Not NED frame: (>0 means upward)
 	 * 
-	 * @return 	the temperature member
+	 * \return 	Value
 	 */
-	 float get_altitude(void) const;
+	virtual const float& vario_vz(void) const = 0;
 
-	 /**
-	 * @brief   Return the altitude
+
+	/**
+	 * \brief   Get sensor temperature
 	 * 
-	 * @return 	the temperature member
+	 * \return 	Value
 	 */
-	 float get_altitude_offset(void) const;
+	virtual const float& temperature(void) const = 0;
 
-	 // FOR SIMULATION PURPOSES ONLY
-	 /**
-	 * @brief   Set the simulated altitude speed
+
+	/**
+	 * \brief   Reset the origin altitude
 	 * 
-	 * @param	origin_altitude 	Altitude corresponding to the origin
-	 *
-	 * @return 	the vario_vz_ member
-	 */
-	 void set_vario_vz(float simulated_vario_vz);
-
-	 /**
-	 * @brief   Set the simulated altitude
+	 * \param	origin_altitude 	New origin altitude
 	 * 
-	 * @param	origin_altitude 	Altitude corresponding to the origin
-	 *
-	 * @return 	the temperature member
+	 * \return 	success
 	 */
-	 void set_altitude(float simulated_altitude);
-
-	 /**
-	 * @brief   Set the simulated altitude offset
-	 * 
-	 * @param	origin_altitude 	Altitude corresponding to the origin
-	 *
-	 * @return 	the temperature member
-	 */
-	 void set_altitude_offset(float simulated_altitude_offset);
-
-	 /**
-	 * @brief   Return the last update time
-	 * 
-	 * @param	origin_altitude 	Altitude corresponding to the origin
-	 *
-	 * @return 	the temperature member
-	 */
-	 void set_last_update(uint32_t simulated_last_update);
-
-protected:
-	uint8_t 			raw_pressure_[3];		///< Raw pressure contained in 3 uint8_t
-	uint8_t 			raw_temperature_[2];	///< Raw temperature contained in 2 uint8_t
-	
-	float 				pressure_;				///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
-	float 				temperature_;			///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
-	float 				altitude_;				///< Measured altitude as the median filter of the 3 last_altitudes
-	float 				altitude_offset_;		///< Offset of the barometer sensor for matching GPS altitude value
-	float 				vario_vz_;				///< Vario altitude speed
-	
-	float 				last_altitudes_[3];		///< Array to store previous value of the altitude for low pass filtering the output
-	
-	uint32_t 			last_update_;			///< Time of the last update of the barometer
-	uint32_t 			last_state_update_;		///< Time of the last state update
-	barometer_state_t 	state_;			///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
-	float 				dt_;					///< Time step for the derivative
+	virtual bool reset_origin_altitude(float origin_altitude) = 0;
 };
 
 #endif /* BAROMETER_HPP_ */

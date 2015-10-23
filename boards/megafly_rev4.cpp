@@ -44,6 +44,23 @@ extern "C"
 {
 	#include "print_util.h"
 	#include "time_keeper.h"
+
+	#include "sysclk.h"
+	#include "sleepmgr.h"
+	#include "led.h"
+	#include "delay.h"
+
+	#include "pwm_servos.h"
+	#include "gpio.h"
+
+	#include "analog_monitor.h"
+	#include "analog_monitor_default_config.h"
+
+	#include "piezo_speaker.h"
+
+	#include "servos.h"
+	#include "pwm_servos.h"	
+	#include "servos_default_config.h"
 }
 
 
@@ -54,7 +71,7 @@ uint8_t serial2stream( stream_data_t data, uint8_t byte )
 	return 0;
 }
 
-Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
+Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 	dsm_receiver_pin( Gpio_avr32(config.dsm_receiver_pin_config) ),
 	dsm_power_pin( Gpio_avr32(config.dsm_power_pin_config) ),
 	uart0( Serial_avr32(config.uart0_config) ), 
@@ -63,106 +80,38 @@ Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
 	uart_usb( Serial_usb_avr32(config.uart_usb_config) ), 
 	i2c0( I2c_avr32(config.i2c0_config) ),
 	i2c1( I2c_avr32(config.i2c1_config) ),
-	magnetometer( Hmc5883l(i2c0, imu.raw_magneto) ),
-	lsm330dlc( Lsm330dlc(i2c0, imu.raw_accelero, imu.raw_gyro) ),
+	hmc5883l( Hmc5883l(i2c0) ),
+	lsm330dlc( Lsm330dlc(i2c0) ),
 	bmp085( Bmp085(i2c0) ),
 	spektrum_satellite( Spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin) ),
-	imu_(imu)
+	imu( Imu(lsm330dlc, lsm330dlc, hmc5883l, config.imu_config) ),
+	file_flash( File_flash_avr32("flash.bin") ),
+	gps_ublox( Gps_ublox(uart3) ),
+	sonar_i2cxl( Sonar_i2cxl(i2c1) )
 {}
 
 
 bool Megafly_rev4::init(void)
 {
 	bool init_success = true;
+	bool ret;
+
 
 	Disable_global_interrupt();
 
+	// -------------------------------------------------------------------------
+	// Legacy boardsupport init (TODO: remove)
+	// -------------------------------------------------------------------------
+	ret = boardsupport_init();
+	init_success &= ret;
+	
+
+	// -------------------------------------------------------------------------
 	// Init UART3
-	if( uart_usb.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[UART USB] INIT ERROR\r\n");
-	}
-
-	// Init GPIO dsm receiver
-	if( dsm_receiver_pin.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[DSM RX PIN] INIT ERROR\r\n");		
-	}
-
-	// Init GPIO dsm power
-	if( dsm_power_pin.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[DSM VCC PIN] INIT ERROR\r\n");		
-	}
-
-	// Init UART0
-	if( uart0.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[UART0] INIT ERROR\r\n");
-	}
-
-	// Init UART1
-	if( uart1.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[UART1] INIT ERROR\r\n");
-	}
-
-	// Init UART3
-	if( uart3.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[UART3] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	ret = uart_usb.init();
+	init_success &= ret;
 	
-	// Init I2C0
-	if( i2c0.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[I2C0] INIT ERROR\r\n");
-	}
-
-	// Init I2C1
-	if( i2c1.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[I2C1] INIT ERROR\r\n");
-	}
-	
-	Enable_global_interrupt();
-	
-	// Init magnetometer
-	if( magnetometer.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[HMC] INIT ERROR\r\n");
-	}
-
-	// Init gyro and accelero
-	if( lsm330dlc.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[LSM330] INIT ERROR\r\n");
-	}
-			
-	// Init barometer
-	if( bmp085.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[BMP085] INIT ERROR\r\n");
-	}
-
-	// Init spektrum_satelitte
-	if( spektrum_satellite.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[SAT] INIT ERROR\r\n");
-	}
-
 	// -------------------------------------------------------------------------
 	// Init stream for USB debug stream TODO: remove
 	p_uart_usb = &uart_usb;
@@ -174,5 +123,188 @@ bool Megafly_rev4::init(void)
 	print_util_dbg_print_init(&dbg_stream_);
 	// -------------------------------------------------------------------------
 
+
+	time_keeper_delay_ms(1000); 
+
+	print_util_dbg_sep('%');
+	time_keeper_delay_ms(100);
+	print_util_dbg_sep('-');
+	time_keeper_delay_ms(100); 
+	print_util_dbg_print("[MEGAFLY_REV4] ...\r\n");
+	time_keeper_delay_ms(100); 
+	print_util_dbg_sep('-');
+	time_keeper_delay_ms(100); 
+	
+	// -------------------------------------------------------------------------
+	// Init GPIO dsm receiver
+	// -------------------------------------------------------------------------
+	ret = dsm_receiver_pin.init();
+	print_util_dbg_init_msg("[DSM RX PIN]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+
+	// -------------------------------------------------------------------------
+	// Init GPIO dsm power
+	// -------------------------------------------------------------------------
+	ret = dsm_power_pin.init();
+	print_util_dbg_init_msg("[DSM VCC PIN]", ret);
+	init_success &= ret;
+	
+
+	// -------------------------------------------------------------------------
+	// Init UART0
+	// -------------------------------------------------------------------------
+	ret = uart0.init();
+	print_util_dbg_init_msg("[UART0]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
+
+	// -------------------------------------------------------------------------
+	// Init UART1
+	// -------------------------------------------------------------------------
+	ret = uart1.init();
+	print_util_dbg_init_msg("[UART1]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
+
+	// -------------------------------------------------------------------------
+	// Init UART3
+	// -------------------------------------------------------------------------
+	ret = uart3.init();
+	print_util_dbg_init_msg("[UART3]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
+
+	// -------------------------------------------------------------------------
+	// Init I2C0
+	// -------------------------------------------------------------------------
+	ret = i2c0.init();
+	print_util_dbg_init_msg("[I2C0]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
+
+	// -------------------------------------------------------------------------
+	// Init I2C1
+	// -------------------------------------------------------------------------
+	ret = i2c1.init();
+	print_util_dbg_init_msg("[I2C1]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+
+	
+	// -------------------------------------------------------------------------
+	// Init servos
+	// -------------------------------------------------------------------------
+	ret = servos_init( &servos, servos_default_config() );
+	print_util_dbg_init_msg("[SERVOS]", ret);
+	init_success &= ret;
+	if( ret )
+	{
+		servos_set_value_failsafe( &servos );
+		pwm_servos_write_to_hardware( &servos );	
+	}
+	time_keeper_delay_ms(100); 
+	
+
+	Enable_global_interrupt();
+	
+
+	// -------------------------------------------------------------------------
+	// Init magnetometer
+	// -------------------------------------------------------------------------
+	ret = hmc5883l.init();
+	print_util_dbg_init_msg("[HMC]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
+
+	// -------------------------------------------------------------------------
+	// Init gyro and accelero
+	// -------------------------------------------------------------------------
+	ret = lsm330dlc.init();
+	print_util_dbg_init_msg("[LSM]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
+			
+	// -------------------------------------------------------------------------
+	// Init barometer
+	// -------------------------------------------------------------------------
+	ret = bmp085.init();
+	print_util_dbg_init_msg("[BMP]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
+
+	// -------------------------------------------------------------------------
+	// Init spektrum_satelitte
+	// -------------------------------------------------------------------------
+	ret = spektrum_satellite.init();
+	print_util_dbg_init_msg("[SAT]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
+
+	// -------------------------------------------------------------------------
+	// Init sonar
+	// -------------------------------------------------------------------------
+	ret = sonar_i2cxl.init();
+	print_util_dbg_init_msg("[SONAR]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+		
+
+	print_util_dbg_sep('-');
+	time_keeper_delay_ms(100); 
+	print_util_dbg_init_msg("[MEGAFLY_REV4]", init_success);
+	time_keeper_delay_ms(100);
+	print_util_dbg_sep('-');
+	time_keeper_delay_ms(100);
+	
+
+	return init_success;
+}
+
+
+bool Megafly_rev4::boardsupport_init(void) 
+{
+	bool init_success = true;
+	
+	irq_initialize_vectors();
+	cpu_irq_enable();
+	Disable_global_interrupt();
+		
+	// Initialize the sleep manager
+	sleepmgr_init();
+	sysclk_init();
+
+	board_init();
+	delay_init(sysclk_get_cpu_hz());
+	time_keeper_init();
+		
+	INTC_init_interrupts();
+
+	// Switch on the red LED
+	LED_On(LED2);
+
+	// servo_pwm_hardware_init();
+	pwm_servos_init( true );
+	
+	// Init analog rails
+	analog_monitor_init(&analog_monitor, analog_monitor_default_config());
+
+	// init 6V enable
+	gpio_enable_gpio_pin(AVR32_PIN_PA04);
+	gpio_set_gpio_pin(AVR32_PIN_PA04);
+	
+	// Init piezo
+	piezo_speaker_init_binary();
+
+	Enable_global_interrupt();
+	
 	return init_success;
 }

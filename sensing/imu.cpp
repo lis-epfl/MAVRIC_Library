@@ -35,8 +35,9 @@
  * \author MAV'RIC Team
  * \author Felix Schill
  * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief This file implements the IMU data structure
+ * \brief Inertial measurement unit (IMU)
  *
  ******************************************************************************/
 
@@ -50,169 +51,245 @@ extern "C"
 	#include "constants.h"
 }
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-/**
- * \brief	Computes the oriented sensors values from the raw sensor values
- *
- * \param	imu		Pointer structure of the imu
- */
-static void imu_raw2oriented(imu_t *imu);
 
 
-/**
- * \brief	Computes the scaled sensors values from the oriented sensor values
- * 
- * \param	imu		Pointer structure of the imu
- */
-static void imu_oriented2scale(imu_t *imu);
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-static void imu_raw2oriented(imu_t *imu)
-{	
-	uint16_t i;
-	
-	for (i=0; i<3; i++)
-	{
-		imu->oriented_gyro.data[i]		= imu->raw_gyro.data[imu->calib_gyro.axis[i]]     * imu->calib_gyro.orientation[i];
-		imu->oriented_accelero.data[i]  = imu->raw_accelero.data[imu->calib_accelero.axis[i]] * imu->calib_accelero.orientation[i];
-		imu->oriented_magneto.data[i]	= imu->raw_magneto.data[imu->calib_compass.axis[i]]  * imu->calib_compass.orientation[i];
-	}
-	
-	/*if (imu->calib_gyro.calibration)
-	{
-		for (i=0; i<3; i++)
-		{
-			imu->calib_gyro.max_oriented_values[i] = maths_f_max(imu->calib_gyro.max_oriented_values[i],imu->oriented_gyro.data[i]);
-			imu->calib_gyro.min_oriented_values[i] = maths_f_min(imu->calib_gyro.min_oriented_values[i],imu->oriented_gyro.data[i]);
-}
-	}*/
-
-	/*if (imu->calib_accelero.calibration)
-	{
-		for (i=0; i<3; i++)
-		{
-			imu->calib_accelero.max_oriented_values[i] = maths_f_max(imu->calib_accelero.max_oriented_values[i],imu->oriented_accelero.data[i]);
-			imu->calib_accelero.min_oriented_values[i] = maths_f_min(imu->calib_accelero.min_oriented_values[i],imu->oriented_accelero.data[i]);
-		}
-	}*/
-
-	if (imu->calib_compass.calibration)
-	{
-		for (i=0; i<3; i++)
-		{
-			imu->calib_compass.max_oriented_values[i] = maths_f_max(imu->calib_compass.max_oriented_values[i],imu->oriented_magneto.data[i]);
-			imu->calib_compass.min_oriented_values[i] = maths_f_min(imu->calib_compass.min_oriented_values[i],imu->oriented_magneto.data[i]);
-		}
-	}
-}
+Imu::Imu(Accelerometer& accelerometer,
+		Gyroscope& gyroscope,
+		Magnetometer& magnetometer,
+		imu_conf_t config):
+	accelerometer_(accelerometer),
+	gyroscope_(gyroscope),
+	magnetometer_(magnetometer),
+	config_(config),
+	oriented_acc_( 	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	oriented_gyro_(	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	oriented_mag_( 	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	scaled_acc_(	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	scaled_gyro_(	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	scaled_mag_(	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	do_accelerometer_bias_calibration_(false),
+	do_gyroscope_bias_calibration_(false),
+	do_magnetometer_bias_calibration_(false),
+	dt_s_(0.004f),
+	last_update_us_(time_keeper_get_micros())
+{}
 
 
-static void imu_oriented2scale(imu_t *imu)
+bool Imu::update(void)
 {
-	for (int16_t i = 0; i < 3; i++)
+	bool success = false;
+
+	// Update timing
+	uint32_t t 		= time_keeper_get_micros();
+	dt_s_ 			= time_keeper_ticks_to_seconds( t - last_update_us_ );
+	last_update_us_ = t;
+
+	// Read new values from sensors
+	success &= accelerometer_.update();
+	success &= gyroscope_.update();
+	success &= magnetometer_.update();
+
+	// Retrieve data
+	std::array<float, 3> raw_acc  = accelerometer_.acc();
+	std::array<float, 3> raw_gyro = gyroscope_.gyro();
+	std::array<float, 3> raw_mag  = magnetometer_.mag();
+
+	// Rotate sensor values
+	for( uint8_t i=0; i<3; i++ )
 	{
-		imu->scaled_gyro.data[i]  		= (1.0f - GYRO_LPF) * imu->scaled_gyro.data[i] 		+ GYRO_LPF * ( ( imu->oriented_gyro.data[i]     - imu->calib_gyro.bias[i]     ) * imu->calib_gyro.scale_factor[i]     );
-		imu->scaled_accelero.data[i]   	= (1.0f - ACC_LPF)  * imu->scaled_accelero.data[i] 	+ ACC_LPF  * ( ( imu->oriented_accelero.data[i] - imu->calib_accelero.bias[i] ) * imu->calib_accelero.scale_factor[i] );
-		imu->scaled_magneto.data[i] 	= (1.0f - MAG_LPF)  * imu->scaled_magneto.data[i] 	+ MAG_LPF  * ( ( imu->oriented_magneto.data[i]  - imu->calib_compass.bias[i]  ) * imu->calib_compass.scale_factor[i]  );
+		oriented_acc_[i]  = raw_acc[  config_.accelerometer.axis[i]	] * config_.accelerometer.sign[i];
+		oriented_gyro_[i] = raw_gyro[ config_.gyroscope.axis[i]		] * config_.gyroscope.sign[i];
+		oriented_mag_[i]  = raw_mag[  config_.magnetometer.axis[i]	] * config_.magnetometer.sign[i];
 	}
-}
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+	// Scale sensor values
+	float new_scaled_acc[3];
+	float new_scaled_gyro[3];
+	float new_scaled_mag[3];
+	for( int8_t i = 0; i < 3; i++ )
+	{
+		// Scale, then remove bias
+		new_scaled_acc[i]  = oriented_acc_[i]  / config_.accelerometer.scale_factor[i] - config_.accelerometer.bias[i];
+		new_scaled_gyro[i] = oriented_gyro_[i] / config_.gyroscope.scale_factor[i]     - config_.gyroscope.bias[i];
+		new_scaled_mag[i]  = oriented_mag_[i]  / config_.magnetometer.scale_factor[i]  - config_.magnetometer.bias[i];
 
-bool imu_init( imu_t *imu, imu_conf_t conf_imu, state_t* state)
-{	
-	bool init_success = true;
-	
-	//init dependency
-	imu->state 			= state;
+		// Low pass filter
+		scaled_acc_[i]  = config_.lpf_acc  	* new_scaled_acc[i]  + (1.0f - config_.lpf_acc ) * scaled_acc_[i];
+		scaled_gyro_[i] = config_.lpf_gyro  * new_scaled_gyro[i] + (1.0f - config_.lpf_gyro) * scaled_gyro_[i];
+		scaled_mag_[i] 	= config_.lpf_mag   * new_scaled_mag[i]  + (1.0f - config_.lpf_mag ) * scaled_mag_[i];
+	}
 
-	//init gyro
-	imu->calib_gyro.scale_factor[X] =  1.0f / conf_imu.gyroscope.scale_factor[X];
-	imu->calib_gyro.scale_factor[Y] =  1.0f / conf_imu.gyroscope.scale_factor[Y];
-	imu->calib_gyro.scale_factor[Z] =  1.0f / conf_imu.gyroscope.scale_factor[Z];
-	imu->calib_gyro.bias[X]			= conf_imu.gyroscope.bias[X];
-	imu->calib_gyro.bias[Y]			= conf_imu.gyroscope.bias[Y];
-	imu->calib_gyro.bias[Z]			= conf_imu.gyroscope.bias[Z];
-	imu->calib_gyro.orientation[X]	= conf_imu.gyroscope.orientation[X];
-	imu->calib_gyro.orientation[Y]	= conf_imu.gyroscope.orientation[Y];
-	imu->calib_gyro.orientation[Z]	= conf_imu.gyroscope.orientation[Z];
-	imu->calib_gyro.axis[X]			= conf_imu.gyroscope.axis[X];
-	imu->calib_gyro.axis[Y]			= conf_imu.gyroscope.axis[Y];
-	imu->calib_gyro.axis[Z]			= conf_imu.gyroscope.axis[Z];
-	imu->calib_gyro.max_oriented_values[X] = -10000.0f;
-	imu->calib_gyro.max_oriented_values[Y] = -10000.0f;
-	imu->calib_gyro.max_oriented_values[Z] = -10000.0f;
-	imu->calib_gyro.min_oriented_values[X] =  10000.0f;
-	imu->calib_gyro.min_oriented_values[Y] =  10000.0f;
-	imu->calib_gyro.min_oriented_values[Z] =  10000.0f;
-	imu->calib_gyro.calibration = false;
-	
-	//init accelero
-	imu->calib_accelero.scale_factor[X]		=  1.0f / conf_imu.accelerometer.scale_factor[X];
-	imu->calib_accelero.scale_factor[Y]		=  1.0f / conf_imu.accelerometer.scale_factor[Y];
-	imu->calib_accelero.scale_factor[Z]		=  1.0f / conf_imu.accelerometer.scale_factor[Z];
-	imu->calib_accelero.bias[X]				= conf_imu.accelerometer.bias[X];
-	imu->calib_accelero.bias[Y]				= conf_imu.accelerometer.bias[Y];
-	imu->calib_accelero.bias[Z]				= conf_imu.accelerometer.bias[Z];
-	imu->calib_accelero.orientation[X]		= conf_imu.accelerometer.orientation[X];
-	imu->calib_accelero.orientation[Y]		= conf_imu.accelerometer.orientation[Y];
-	imu->calib_accelero.orientation[Z]		= conf_imu.accelerometer.orientation[Z];
-	imu->calib_accelero.axis[X]				= conf_imu.accelerometer.axis[X];
-	imu->calib_accelero.axis[Y]				= conf_imu.accelerometer.axis[Y];
-	imu->calib_accelero.axis[Z]				= conf_imu.accelerometer.axis[Z];
-	imu->calib_accelero.max_oriented_values[X] = -10000.0f;
-	imu->calib_accelero.max_oriented_values[Y] = -10000.0f;
-	imu->calib_accelero.max_oriented_values[Z] = -10000.0f;
-	imu->calib_accelero.min_oriented_values[X] =  10000.0f;
-	imu->calib_accelero.min_oriented_values[Y] =  10000.0f;
-	imu->calib_accelero.min_oriented_values[Z] =  10000.0f;
-	imu->calib_accelero.calibration = false;
-	
-	//init compass
-	imu->calib_compass.scale_factor[X]		=  1.0f / conf_imu.magnetometer.scale_factor[X];
-	imu->calib_compass.scale_factor[Y]		=  1.0f / conf_imu.magnetometer.scale_factor[Y];
-	imu->calib_compass.scale_factor[Z]		=  1.0f / conf_imu.magnetometer.scale_factor[Z];
-	imu->calib_compass.bias[X]				= conf_imu.magnetometer.bias[X];
-	imu->calib_compass.bias[Y]				= conf_imu.magnetometer.bias[Y];
-	imu->calib_compass.bias[Z]				= conf_imu.magnetometer.bias[Z];
-	imu->calib_compass.orientation[X]		= conf_imu.magnetometer.orientation[X];
-	imu->calib_compass.orientation[Y]		= conf_imu.magnetometer.orientation[Y];
-	imu->calib_compass.orientation[Z]		= conf_imu.magnetometer.orientation[Z];
-	imu->calib_compass.axis[X]				= conf_imu.magnetometer.axis[X];
-	imu->calib_compass.axis[Y]				= conf_imu.magnetometer.axis[Y];
-	imu->calib_compass.axis[Z]				= conf_imu.magnetometer.axis[Z];
-	imu->calib_compass.max_oriented_values[X] = -10000.0f;
-	imu->calib_compass.max_oriented_values[Y] = -10000.0f;
-	imu->calib_compass.max_oriented_values[Z] = -10000.0f;
-	imu->calib_compass.min_oriented_values[X] =  10000.0f;
-	imu->calib_compass.min_oriented_values[Y] =  10000.0f;
-	imu->calib_compass.min_oriented_values[Z] =  10000.0f;
-	imu->calib_compass.calibration = false;
-	
-	imu->last_update = time_keeper_get_time_ticks();
-	imu->dt = 0.004;
-	
-	print_util_dbg_print("[IMU] Initialised\r\n");
-	
-	return init_success;
+	// Do accelero bias calibration
+	if( do_accelerometer_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.accelerometer.mean_values[i] = 0.5 * ( config_.accelerometer.mean_values[i] + scaled_acc_[i] );
+		}
+	}
+
+	// Do gyroscope bias calibration
+	if( do_gyroscope_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.gyroscope.mean_values[i] = 0.5 * ( config_.gyroscope.mean_values[i] + scaled_gyro_[i] );
+		}
+	}
+
+
+	// Do magnetometer bias calibration
+	if( do_magnetometer_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.magnetometer.max_values[i]  = maths_f_max(config_.magnetometer.max_values[i], scaled_mag_[i]);
+			config_.magnetometer.min_values[i]  = maths_f_min(config_.magnetometer.min_values[i], scaled_mag_[i]);
+		}
+	}
+
+	return success;
 }
 
 
-void imu_update(imu_t *imu)
+const float& Imu::last_update_us(void) const
 {
-	uint32_t t = time_keeper_get_time_ticks();
-	
-	imu->dt = time_keeper_ticks_to_seconds(t - imu->last_update);
-	imu->last_update = t;
+	return last_update_us_;
+}
 
-	imu_raw2oriented(imu);
-	imu_oriented2scale(imu);
+
+const float& Imu::dt_s(void) const
+{
+	return dt_s_;
+}
+
+
+const std::array<float, 3>& Imu::acc(void) const
+{
+	return scaled_acc_;
+}
+
+
+const std::array<float, 3>& Imu::gyro(void) const
+{
+	return scaled_gyro_;
+}
+
+
+const std::array<float, 3>& Imu::mag(void) const
+{
+	return scaled_mag_;
+}
+
+
+imu_conf_t* Imu::get_config(void)
+{
+	return &config_;
+}
+
+
+bool Imu::start_accelerometer_bias_calibration(void)
+{
+	// Success if not already doing magnetometer calibration
+	bool success = !do_magnetometer_bias_calibration_;
+
+	if( success )
+	{
+		do_accelerometer_bias_calibration_ 		= true;
+		config_.accelerometer.mean_values[X] 	= scaled_acc_[X];
+		config_.accelerometer.mean_values[Y] 	= scaled_acc_[Y];
+		config_.accelerometer.mean_values[Z] 	= scaled_acc_[Z];
+	}
+
+	return success;
+}
+
+
+bool Imu::start_gyroscope_bias_calibration(void)
+{
+	// Success if not already doing magnetometer calibration
+	bool success = !do_magnetometer_bias_calibration_;
+
+	if( success )
+	{
+		do_gyroscope_bias_calibration_ 		= true;
+		config_.gyroscope.mean_values[X] 	= scaled_gyro_[X];
+		config_.gyroscope.mean_values[Y] 	= scaled_gyro_[Y];
+		config_.gyroscope.mean_values[Z] 	= scaled_gyro_[Z];
+	}
+
+	return success;
+}
+
+
+bool Imu::start_magnetometer_bias_calibration(void)
+{
+	// Success if not already doing accelerometer or gyroscope calibration
+	bool success  = true;
+	success &= !do_accelerometer_bias_calibration_;
+	success &= !do_gyroscope_bias_calibration_;
+
+	if( success )
+	{
+		do_magnetometer_bias_calibration_ 	= true;
+		config_.magnetometer.max_values[X] 	= -10000.0f;
+		config_.magnetometer.max_values[Y] 	= -10000.0f;
+		config_.magnetometer.max_values[Z] 	= -10000.0f;
+		config_.magnetometer.min_values[X] 	=  10000.0f;
+		config_.magnetometer.min_values[Y] 	=  10000.0f;
+		config_.magnetometer.min_values[Z] 	=  10000.0f;
+	}
+
+	return success;
+}
+
+
+bool Imu::stop_accelerometer_bias_calibration(void)
+{
+	// Success if calibration is ongoing
+	bool success = do_accelerometer_bias_calibration_;
+	
+	// Stop calibrating
+	do_accelerometer_bias_calibration_ = false;
+
+	// Update biases
+	config_.accelerometer.bias[X] = config_.accelerometer.mean_values[X];
+	config_.accelerometer.bias[Y] = config_.accelerometer.mean_values[Y];
+	config_.accelerometer.bias[Z] = config_.accelerometer.mean_values[Z] - (-1.0f);
+
+	return success;
+}
+
+
+bool Imu::stop_gyroscope_bias_calibration(void)
+{
+	// Success if calibration is ongoing
+	bool success = do_gyroscope_bias_calibration_;
+
+	// Stop calibrating
+	do_gyroscope_bias_calibration_ = false;
+
+	// Update biases
+	config_.gyroscope.bias[X] = config_.gyroscope.mean_values[X];
+	config_.gyroscope.bias[Y] = config_.gyroscope.mean_values[Y];
+	config_.gyroscope.bias[Z] = config_.gyroscope.mean_values[Z];
+
+	return success;
+}
+
+
+bool Imu::stop_magnetometer_bias_calibration(void)
+{
+	// Success if calibration is ongoing
+	bool success = do_magnetometer_bias_calibration_;
+
+	// Stop calibrating
+	do_magnetometer_bias_calibration_ = false;
+
+	// Update biases
+	config_.magnetometer.bias[X] = 0.5f * (config_.magnetometer.max_values[X] + config_.magnetometer.min_values[X]);
+	config_.magnetometer.bias[Y] = 0.5f * (config_.magnetometer.max_values[Y] + config_.magnetometer.min_values[Y]);
+	config_.magnetometer.bias[Z] = 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
+
+	return success;
 }

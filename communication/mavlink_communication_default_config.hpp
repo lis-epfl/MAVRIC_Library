@@ -52,18 +52,18 @@ static inline mavlink_communication_conf_t mavlink_communication_default_config(
 	conf.scheduler_config                              = {};
 	conf.scheduler_config.max_task_count               = 30;
 	conf.scheduler_config.schedule_strategy            = ROUND_ROBIN;
-	conf.scheduler_config.debug                        = true;
+	conf.scheduler_config.debug                        = false;
 	conf.mavlink_stream_config                         = {};
 	conf.mavlink_stream_config.sysid                   = 1;
 	conf.mavlink_stream_config.compid                  = 50;
-	conf.mavlink_stream_config.debug 		   = true,
+	conf.mavlink_stream_config.debug 		   		   = false,
 	conf.message_handler_config                        = {};
 	conf.message_handler_config.max_msg_callback_count = 20;
 	conf.message_handler_config.max_cmd_callback_count = 20;
-	conf.message_handler_config.debug                  = true;
+	conf.message_handler_config.debug                  = false;
 	conf.onboard_parameters_config                     = {};
 	conf.onboard_parameters_config.max_param_count     = MAX_ONBOARD_PARAM_COUNT;
-	conf.onboard_parameters_config.debug               = true;
+	conf.onboard_parameters_config.debug               = false	;
 	conf.max_msg_sending_count                         = 22;
 
 	return conf;

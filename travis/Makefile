@@ -25,6 +25,7 @@ LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/mavric
 LIB_INC += -I$(MAVRIC_LIB)/libs/FatFs/src
 LIB_INC += -I$(MAVRIC_LIB)/libs
 LIB_INC += -I$(MAVRIC_LIB)/sensing
+LIB_INC += -I$(MAVRIC_LIB)/simulation
 LIB_INC += -I$(MAVRIC_LIB)/runtime
 LIB_INC += -I$(MAVRIC_LIB)/util
 
@@ -39,11 +40,11 @@ LIB_SRCS += util/string_util.c
 
 # LIB_SRCS += boards/megafly_rev4.cpp
 
-LIB_SRCS += drivers/barometer.cpp                    
 LIB_SRCS += drivers/battery.c                    
+LIB_SRCS += drivers/barometer_telemetry.cpp          
 LIB_SRCS += drivers/bmp085.cpp                    
-LIB_SRCS += drivers/bmp085_telemetry.cpp          
 LIB_SRCS += drivers/flow.cpp                  
+LIB_SRCS += drivers/gps_telemetry.cpp       
 LIB_SRCS += drivers/gps_ublox.cpp                 
 LIB_SRCS += drivers/gps_ublox_telemetry.cpp       
 LIB_SRCS += drivers/hmc5883l.cpp             
@@ -78,15 +79,16 @@ LIB_SRCS += sensing/imu_telemetry.c
 LIB_SRCS += sensing/position_estimation.c            
 LIB_SRCS += sensing/position_estimation_telemetry.c
 LIB_SRCS += sensing/qfilter.c
-LIB_SRCS += sensing/simulation.c
-LIB_SRCS += sensing/simulation_telemetry.c   
+
+
+# LIB_SRCS += sensing/simulation.c
+# LIB_SRCS += sensing/simulation_telemetry.c   
+
+
 
 LIB_SRCS += runtime/scheduler.cpp  
 LIB_SRCS += runtime/scheduler_telemetry.c
-
-# LIB_SRCS += communication/acoustic.c                      
-# LIB_SRCS += communication/acoustic_telemetry.c      
-# LIB_SRCS += communication/console.c                 
+                
 LIB_SRCS += communication/data_logging.c            
 LIB_SRCS += communication/hud_telemetry.c           
 LIB_SRCS += communication/mavlink_communication.c     
@@ -97,9 +99,18 @@ LIB_SRCS += communication/onboard_parameters.c
 LIB_SRCS += communication/remote.c
 LIB_SRCS += communication/remote_telemetry.c
 LIB_SRCS += communication/state.c
+
 LIB_SRCS += communication/state_machine.c
 LIB_SRCS += communication/state_telemetry.c
 
+LIB_SRCS += simulation/simulation.cpp
+LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
+LIB_SRCS += simulation/accelerometer_sim.cpp
+LIB_SRCS += simulation/gyroscope_sim.cpp
+LIB_SRCS += simulation/magnetometer_sim.cpp
+LIB_SRCS += simulation/barometer_sim.cpp
+LIB_SRCS += simulation/sonar_sim.cpp
+LIB_SRCS += simulation/gps_sim.cpp
 
 LIB_SRCS += libs/FatFs/src/ff.c  
 LIB_SRCS += libs/FatFs/src/diskio.c

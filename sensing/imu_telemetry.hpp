@@ -30,10 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file imu_telemetry.h
+ * \file imu_telemetry.hpp
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
  * \brief This module takes care of sending periodic telemetric messages for
  * the IMU
@@ -56,7 +57,8 @@
  *
  * \return	True if the init succeed, false otherwise
  */
-bool imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler);
+bool imu_telemetry_init(Imu* imu, mavlink_message_handler_t* message_handler);
+
 
 /**
  * \brief	Function to send the MAVLink scaled IMU message
@@ -65,25 +67,6 @@ bool imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler);
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-void imu_telemetry_send_scaled(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
-
-/**
- * \brief	Function to send the MAVLink raw IMU message
- * 
- * \param	imu						The pointer to the IMU structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void imu_telemetry_send_raw(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
-/**
- * \brief	Function to send the MAVLink debug vector message with biaises
- * 
- * \param	imu						The pointer to the IMU structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void imu_telemetry_send_biais(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void imu_telemetry_send_scaled(const Imu* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* IMU_TELEMETRY_H_ */

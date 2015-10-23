@@ -70,7 +70,7 @@ typedef struct
 	rot_dir_t 	motor_rear_left_dir;		///< Rear  motor turning direction
 	float 		min_thrust;					///< Minimum thrust
 	float		max_thrust;					///< Maximum thrust
-} servo_mix_quadcopter_diag_conf_t;
+} servos_mix_quadcopter_diag_conf_t;
 
 
 /**
@@ -91,7 +91,7 @@ typedef struct
 	const torque_command_t* torque_command;			///< Pointer to the torque command structure
 	const thrust_command_t* thrust_command;			///< Pointer to the thrust command structure
 	servos_t*          		servos;				///< Pointer to the servos structure
-} servo_mix_quadcotper_diag_t;
+} servos_mix_quadcotper_diag_t;
 
 
 /**
@@ -105,8 +105,8 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix, 
-									const servo_mix_quadcopter_diag_conf_t config, 
+bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix, 
+									const servos_mix_quadcopter_diag_conf_t config, 
 									const torque_command_t* torque_command, 
 									const thrust_command_t* thrust_command, 
 									servos_t* servos);
@@ -117,7 +117,7 @@ bool servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix,
  * 
  * \param mix				The pointer to the servos mix structure
  */
-void servos_mix_quadcopter_diag_update(servo_mix_quadcotper_diag_t* mix);
+void servos_mix_quadcopter_diag_update(servos_mix_quadcotper_diag_t* mix);
 
 
 #ifdef __cplusplus

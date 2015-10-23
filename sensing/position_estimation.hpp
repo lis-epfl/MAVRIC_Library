@@ -48,6 +48,7 @@
 #include "gps_ublox.hpp"
 #include "bmp085.hpp"
 #include "data_logging.hpp"
+#include "sonar.hpp"
 
 extern "C" 
 {
@@ -55,7 +56,6 @@ extern "C"
 	#include "ahrs.h"
 	#include "coord_conventions.h"
 	#include "constants.h"
-	#include "sonar.h"
 }
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
@@ -79,59 +79,59 @@ typedef struct
  */
 typedef struct
 {
-	float kp_vel_gps[3];							///< The gain to correct the velocity estimation from the GPS
-	float kp_pos_gps[3];							///< The gain to correct the position estimation from the GPS
-	float kp_alt_baro;								///< The gain to correct the Z position estimation from the barometer
-	float kp_vel_baro;								///< The gain to correct the Z velocity estimation from the barometer
-	float kp_alt_sonar;								///< The gain to correct the Z position estimation from the sonar
-	float kp_vel_sonar;								///< The gain to correct the Z velocity estimation from the sonar
+	float kp_vel_gps[3];					///< Gain to correct the velocity estimation from the GPS
+	float kp_pos_gps[3];					///< Gain to correct the position estimation from the GPS
+	float kp_alt_baro;						///< Gain to correct the Z position estimation from the barometer
+	float kp_vel_baro;						///< Gain to correct the Z velocity estimation from the barometer
+	float kp_alt_sonar;						///< Gain to correct the Z position estimation from the sonar
+	float kp_vel_sonar;						///< Gain to correct the Z velocity estimation from the sonar
 
-	uint32_t time_last_gps_posllh_msg;						///< The time at which we received the last GPS POSLLH message in ms
-	uint32_t time_last_gps_velned_msg;						///< The time at which we received the last GPS VELNED message in ms
-	uint32_t time_last_barometer_msg;				///< The time at which we received the last barometer message in ms
-	bool init_gps_position;							///< The boolean flag ensuring that the GPS was initialized
-	bool init_barometer;							///< The boolean flag ensuring that the barometer was initialized
+	uint32_t time_last_gps_posllh_msg;		///< Time at which we received the last GPS POSLLH message in ms
+	uint32_t time_last_gps_velned_msg;		///< Time at which we received the last GPS VELNED message in ms
+	uint32_t time_last_barometer_msg;		///< Time at which we received the last barometer message in ms
+	bool init_gps_position;					///< Boolean flag ensuring that the GPS was initialized
+	bool init_barometer;					///< Boolean flag ensuring that the barometer was initialized
 	
-	float vel_bf[3];								///< The 3D velocity in body frame
-	float vel[3];									///< The 3D velocity in global frame
+	float vel_bf[3];						///< 3D velocity in body frame
+	float vel[3];							///< 3D velocity in global frame
 
-	float last_alt;									///< The value of the last altitude estimation
-	float last_vel[3];								///< The last 3D velocity
+	float last_alt;							///< Value of the last altitude estimation
+	float last_vel[3];						///< Last 3D velocity
 
-	local_coordinates_t local_position;				///< The local position
-	local_coordinates_t last_gps_pos;				///< The coordinates of the last GPS position
+	local_position_t local_position;		///< Local position
+	local_position_t last_gps_pos;			///< Coordinates of the last GPS position
 	
-	bool fence_set;
-	local_coordinates_t fence_position;
+	bool fence_set;							///< Indicates if fence is set
+	local_position_t fence_position;		///< Position of the fence
 
-	float gravity;									///< The value of the gravity
+	float gravity;							///< Value of the gravity
 	
-	Barometer* barometer;							///< The pointer to the barometer structure
-	const sonar_t* sonar;							///< The pointer to the sonar structure
-	const gps_t* gps;								///< The pointer to the GPS structure
-	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
-	state_t* state;									///< The pointer to the state structure
-	data_logging_t* stat_logging;					///< The pointer to the stat logging structure
+	Barometer* barometer;					///< Pointer to the barometer structure
+	const Sonar* sonar;						///< Pointer to the sonar structure
+	const Gps* gps;							///< Pointer to the GPS structure
+	const ahrs_t* ahrs;						///< Pointer to the attitude estimation structure
+	state_t* state;							///< Pointer to the state structure
+	data_logging_t* stat_logging;			///< Pointer to the stat logging structure
 
-	bool* nav_plan_active;							///< The pointer to the waypoint set flag
+	bool* nav_plan_active;					///< Pointer to the waypoint set flag
 } position_estimation_t;
 
 
 /**
  * \brief	Initialize the position estimation module
  *
- * \param	pos_est					The pointer to the position estimation structure
- * \param	config					The configuration for default home position and gravity value
- * \param	state					The pointer to the state structure
- * \param	barometer				The pointer to the barometer structure
- * \param	sonar 					The pointer to the sonar structure
- * \param	gps						The pointer to the GPS structure
- * \param	ahrs					The pointer to the attitude estimation structure
- * \param	stat_logging			The pointer to the stat logging structure
+ * \param	pos_est			Pointer to the position estimation structure
+ * \param	config			Configuration for default home position and gravity value
+ * \param	state			Pointer to the state structure
+ * \param	barometer		Pointer to the barometer structure
+ * \param	sonar 			Pointer to the sonar structure
+ * \param	gps				Pointer to the GPS structure
+ * \param	ahrs			Pointer to the attitude estimation structure
+ * \param	stat_logging	Pointer to the stat logging structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer* barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, data_logging_t* stat_logging);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer* barometer, const Sonar* sonar, const Gps* gps, const ahrs_t* ahrs, data_logging_t* stat_logging);
 
 
 /**

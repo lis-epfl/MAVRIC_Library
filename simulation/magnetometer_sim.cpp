@@ -30,31 +30,94 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file bmp085_telemetry.h
+ * \file magnetometer_sim.cpp
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the pressure sensor
- *
+ * \brief Simulated magnetometers
+ * 
  ******************************************************************************/
 
-#ifndef BMP085_TELEMETRY_H_
-#define BMP085_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "bmp085.hpp"
+#include "magnetometer_sim.hpp"
 
-
-/**
- * \brief	Function to send the MAVLink scaled pressure message
- * 
- * \param	barometer				The pointer to the barometer object
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void bmp085_telemetry_send_pressure(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+extern "C"
+{
+	#include "constants.h"
+}
 
 
-#endif /* REMOTE_TELEMETRY_H_ */
+Magnetometer_sim::Magnetometer_sim(Dynamic_model& dynamic_model):
+	dynamic_model_( dynamic_model ),
+	mag_field_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	temperature_(24.0f) // Nice day
+{}
+
+
+bool Magnetometer_sim::init(void)
+{
+	return true;
+}
+
+
+bool Magnetometer_sim::update(void)
+{
+	bool success = true;
+
+	// Update dynamic model
+	success &= dynamic_model_.update();
+
+	// Field pointing 60 degrees down to the north (NED)
+	const float mag_field_gf[3] 	= { 0.5f, 0.0f, 0.86f };	
+	float mag_field_bf[3];
+
+	// Get current attitude
+	quat_t attitude = dynamic_model_.attitude();
+
+	// Get magnetic field in body frame
+	quaternions_rotate_vector( quaternions_inverse(attitude), mag_field_gf, mag_field_bf);
+
+	// Save in member array
+	mag_field_[X] = mag_field_bf[X];
+	mag_field_[Y] = mag_field_bf[Y];
+	mag_field_[Z] = mag_field_bf[Z];
+
+	return success;
+}
+
+
+const float& Magnetometer_sim::last_update_us(void) const
+{
+	return dynamic_model_.last_update_us();
+}
+
+
+const std::array<float, 3>& Magnetometer_sim::mag(void) const
+{
+	return mag_field_;
+}
+
+
+const float& Magnetometer_sim::mag_X(void) const
+{
+	return mag_field_[X];
+}
+
+
+const float& Magnetometer_sim::mag_Y(void) const
+{
+	return mag_field_[Y];
+}
+
+
+const float& Magnetometer_sim::mag_Z(void) const
+{
+	return mag_field_[Z];
+}
+
+
+const float& Magnetometer_sim::temperature(void) const
+{
+	return temperature_;
+}

@@ -64,7 +64,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool qfilter_init(qfilter_t* qf, const qfilter_conf_t config, imu_t* imu, ahrs_t* ahrs)
+bool qfilter_init(qfilter_t* qf, const qfilter_conf_t config, const Imu* imu, ahrs_t* ahrs)
 {
 	bool init_success = true;
 	
@@ -78,8 +78,8 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t config, imu_t* imu, ahrs_t
 	qf->kp_mag = config.kp_mag;
 	qf->ki_mag = config.ki_mag;
 	
-	print_util_dbg_print("[QFILTER] Initialised.\r\n");
-	
+	qf->gyro_bias = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
+
 	return init_success;
 }
 
@@ -117,16 +117,26 @@ void qfilter_update(qfilter_t *qf)
 	up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;
 	up_bf = quaternions_global_to_local(qf->ahrs->qe, up);
 	
+	// Get data from IMU
+	std::array<float,3> acc  = qf->imu->acc();
+	std::array<float,3> gyro = qf->imu->gyro();
+	std::array<float,3> mag  = qf->imu->mag();
+
+	// Remove estimated bias from gyros
+	gyro[X] -= qf->gyro_bias[X];
+	gyro[Y] -= qf->gyro_bias[Y];
+	gyro[Z] -= qf->gyro_bias[Z];
+
 	// calculate norm of acceleration vector
-	s_acc_norm = qf->imu->scaled_accelero.data[X] * qf->imu->scaled_accelero.data[X] + qf->imu->scaled_accelero.data[Y] * qf->imu->scaled_accelero.data[Y] + qf->imu->scaled_accelero.data[Z] * qf->imu->scaled_accelero.data[Z];
+	s_acc_norm =  acc[X]*acc[X] + acc[Y]*acc[Y] + acc[Z]*acc[Z];
 	if ( (s_acc_norm > 0.7f * 0.7f) && (s_acc_norm < 1.3f * 1.3f) ) 
 	{
 		// approximate square root by running 2 iterations of newton method
 		acc_norm = maths_fast_sqrt(s_acc_norm);
 
-		tmp[X] = qf->imu->scaled_accelero.data[X] / acc_norm;
-		tmp[Y] = qf->imu->scaled_accelero.data[Y] / acc_norm;
-		tmp[Z] = qf->imu->scaled_accelero.data[Z] / acc_norm;
+		tmp[X] = acc[X] / acc_norm;
+		tmp[Y] = acc[Y] / acc_norm;
+		tmp[Z] = acc[Z] / acc_norm;
 
 		// omc = a x up_bf.v
 		CROSS(tmp, up_bf.v, omc);
@@ -140,7 +150,7 @@ void qfilter_update(qfilter_t *qf)
 
 	// Heading computation
 	// transfer 
-	qtmp1 = quaternions_create_from_vector(qf->imu->scaled_magneto.data); 
+	qtmp1 = quat_t{0.0f, {mag[X], mag[Y], mag[Z]}}; 
 	mag_global = quaternions_local_to_global(qf->ahrs->qe, qtmp1);
 	
 	// calculate norm of compass vector
@@ -156,12 +166,12 @@ void qfilter_update(qfilter_t *qf)
 		mag_global.v[Z] = 0.0f;   // set z component in global frame to 0
 
 		// transfer magneto vector back to body frame 
-		qf->ahrs->north_vec = quaternions_global_to_local(qf->ahrs->qe, front_vec_global);		
+		quat_t north_vec = quaternions_global_to_local(qf->ahrs->qe, front_vec_global);		
 		
 		mag_corrected_local = quaternions_global_to_local(qf->ahrs->qe, mag_global);		
 		
 		// omc = a x up_bf.v
-		CROSS(mag_corrected_local.v, qf->ahrs->north_vec.v,  omc_mag);
+		CROSS(mag_corrected_local.v, north_vec.v,  omc_mag);
 		
 	}
 	else
@@ -187,7 +197,7 @@ void qfilter_update(qfilter_t *qf)
 			{
 				convergence_update_count = 0;
 				qf->ahrs->internal_state = AHRS_CONVERGING;
-				print_util_dbg_print("End of AHRS attitude initialization.\r\n");
+				print_util_dbg_print("[QFILTER] End of AHRS attitude initialization.\r\n");
 			}
 			break;
 			
@@ -203,7 +213,7 @@ void qfilter_update(qfilter_t *qf)
 			{
 				convergence_update_count = 0;
 				qf->ahrs->internal_state = AHRS_READY;
-				print_util_dbg_print("End of AHRS leveling.\r\n");
+				print_util_dbg_print("[QFILTER] End of AHRS leveling.\r\n");
 			}
 			break;
 
@@ -219,7 +229,7 @@ void qfilter_update(qfilter_t *qf)
 
 	for (uint8_t i = 0; i < 3; i++)
 	{
-		qtmp1.v[i] = 0.5f * (qf->imu->scaled_gyro.data[i] + kp * omc[i] + kp_mag * omc_mag[i]);
+		qtmp1.v[i] = 0.5f * (gyro[i] + kp * omc[i] + kp_mag * omc_mag[i]);
 	}
 	qtmp1.s = 0;
 
@@ -248,26 +258,21 @@ void qfilter_update(qfilter_t *qf)
 	qf->ahrs->qe.v[Z] /= norm;
 
 	// bias estimate update
-	qf->imu->calib_gyro.bias[X] += - dt * ki * omc[X] / qf->imu->calib_gyro.scale_factor[X];
-	qf->imu->calib_gyro.bias[Y] += - dt * ki * omc[Y] / qf->imu->calib_gyro.scale_factor[Y];
-	qf->imu->calib_gyro.bias[Z] += - dt * ki * omc[Z] / qf->imu->calib_gyro.scale_factor[Z];
+	qf->gyro_bias[X] += - dt * ki * omc[X];
+	qf->gyro_bias[Y] += - dt * ki * omc[Y];
+	qf->gyro_bias[Z] += - dt * ki * omc[Z];
 	
-	qf->imu->calib_gyro.bias[X] += - dt * ki_mag * omc_mag[X] / qf->imu->calib_compass.scale_factor[X];
-	qf->imu->calib_gyro.bias[Y] += - dt * ki_mag * omc_mag[Y] / qf->imu->calib_compass.scale_factor[Y];
-	qf->imu->calib_gyro.bias[Z] += - dt * ki_mag * omc_mag[Z] / qf->imu->calib_compass.scale_factor[Z];
+	qf->gyro_bias[X] += - dt * ki_mag * omc_mag[X];
+	qf->gyro_bias[Y] += - dt * ki_mag * omc_mag[Y];
+	qf->gyro_bias[Z] += - dt * ki_mag * omc_mag[Z];
 	
-	// set up-vector (bodyframe) in attitude
-	qf->ahrs->up_vec.v[X] = up_bf.v[X];
-	qf->ahrs->up_vec.v[Y] = up_bf.v[Y];
-	qf->ahrs->up_vec.v[Z] = up_bf.v[Z];
-
 	// Update linear acceleration
-	qf->ahrs->linear_acc[X] = 9.81f * (qf->imu->scaled_accelero.data[X] - qf->ahrs->up_vec.v[X]) ;							// TODO: review this line!
-	qf->ahrs->linear_acc[Y] = 9.81f * (qf->imu->scaled_accelero.data[Y] - qf->ahrs->up_vec.v[Y]) ;							// TODO: review this line!
-	qf->ahrs->linear_acc[Z] = 9.81f * (qf->imu->scaled_accelero.data[Z] - qf->ahrs->up_vec.v[Z]) ;							// TODO: review this line!
+	qf->ahrs->linear_acc[X] = 9.81f * (acc[X] - up_bf.v[X]) ;
+	qf->ahrs->linear_acc[Y] = 9.81f * (acc[Y] - up_bf.v[Y]) ;
+	qf->ahrs->linear_acc[Z] = 9.81f * (acc[Z] - up_bf.v[Z]) ;
 
-	//update angular_speed.
-	qf->ahrs->angular_speed[X] = qf->imu->scaled_gyro.data[X];
-	qf->ahrs->angular_speed[Y] = qf->imu->scaled_gyro.data[Y];
-	qf->ahrs->angular_speed[Z] = qf->imu->scaled_gyro.data[Z];
+	// Update angular_speed.
+	qf->ahrs->angular_speed[X] = gyro[X] - qf->gyro_bias[X];
+	qf->ahrs->angular_speed[Y] = gyro[Y] - qf->gyro_bias[Y];
+	qf->ahrs->angular_speed[Z] = gyro[Z] - qf->gyro_bias[Z];
 }

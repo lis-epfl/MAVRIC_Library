@@ -57,16 +57,7 @@
  *
  * \return	True if the init succeed, false otherwise
  */
-bool gps_ublox_telemetry_init(gps_t* gps, mavlink_message_handler_t* message_handler);
+bool gps_ublox_telemetry_init(Gps_ublox* gps, mavlink_message_handler_t* message_handler);
 
-
-/**
- * \brief	Function to send the MAVLink gps raw message
- * 
- * \param	gps						The pointer to the GPS structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void gps_ublox_telemetry_send_raw(const gps_t* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* GPS_UBLOX_TELEMETRY_H_ */

@@ -30,36 +30,94 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file magnetometer.h
+ * \file accelerometer_sim.cpp 
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief This file define the compass's data type
- * 
+ * \brief Simulated accelerometers
+ *
  ******************************************************************************/
 
 
-#ifndef MAGNETOMETER_H_
-#define MAGNETOMETER_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "accelerometer_sim.hpp"
 
-/**
- * \brief The magnetometer structure
- */
-typedef struct
+
+extern "C"
 {
-	float data[3];			///< The magnetometer's datas
-	float temperature;		///< The magnetometer's temperature
-	float last_update;		///< The magnetometer last update time
-} magnetometer_t;
-
-
-#ifdef __cplusplus
+	#include "constants.h"
 }
-#endif
 
-#endif /* MAGNETOMETER_H_ */
+
+Accelerometer_sim::Accelerometer_sim(Dynamic_model& dynamic_model):
+	dynamic_model_( dynamic_model ),
+	acceleration_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	temperature_(24.0f) // Nice day
+{}
+
+
+bool Accelerometer_sim::init(void)
+{
+	return true;
+}
+
+
+bool Accelerometer_sim::update(void)
+{
+	bool success = true;
+
+	// Update dynamic model
+	success &= dynamic_model_.update();
+
+	// Get linear acceleration in m/s^2
+	std::array<float,3> acceleration_ms2 = dynamic_model_.acceleration_bf();
+	
+	// Add gravity
+	quat_t attitude = dynamic_model_.attitude();
+	const quat_t up = { 0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z} };
+	quat_t up_vec  	= quaternions_global_to_local(attitude, up);
+	for( uint8_t i = 0; i < 3; ++i )
+	{
+		// acceleration in g
+		acceleration_[i] = (acceleration_ms2[i] / 9.81f) + up_vec.v[i];
+	}
+
+	return success;
+}
+
+
+const float& Accelerometer_sim::last_update_us(void) const
+{
+	return dynamic_model_.last_update_us();
+}
+
+
+const std::array<float, 3>& Accelerometer_sim::acc(void) const
+{
+	return acceleration_;
+}
+
+
+const float& Accelerometer_sim::acc_X(void) const
+{
+	return acceleration_[X];
+}
+
+
+const float& Accelerometer_sim::acc_Y(void) const
+{
+	return acceleration_[Y];
+}
+
+
+const float& Accelerometer_sim::acc_Z(void) const
+{
+	return acceleration_[Z];
+}
+
+
+const float& Accelerometer_sim::temperature(void) const
+{
+	return temperature_;
+}

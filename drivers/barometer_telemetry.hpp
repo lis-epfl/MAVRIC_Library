@@ -30,37 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file accelerometer.h 
+ * \file barometer_5telemetry.hpp
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief This file define the accelerometer's data type, independently of the sensor used
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the pressure sensor
  *
  ******************************************************************************/
 
+#ifndef BAROMETER_TELEMETRY_HPP_
+#define BAROMETER_TELEMETRY_HPP_
 
-#ifndef ACCELEROMETER_H_
-#define ACCELEROMETER_H_
+#include "mavlink_stream.hpp"
+#include "bmp085.hpp"
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
- * \brief Accelerometer structure
+ * \brief	Function to send the MAVLink scaled pressure message
+ * 
+ * \param	barometer				The pointer to the barometer object
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
  */
-typedef struct
-{
-	float data[3];				///< Array containing the accelerometer datas
-	float temperature;			///< Temperature of the accelerometer
-	float last_update;			///< Last update time
-} accelerometer_t;
+void barometer_telemetry_send(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* ACCELEROMETER_H_ */
+#endif /* BAROMETER_TELEMETRY_HPP_ */

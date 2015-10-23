@@ -30,12 +30,15 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file hmc5883l.c
+ * \file hmc5883l.cpp
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
+ * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the magnetometer HMC58831
+ * \brief 	Driver for the magnetometer HMC58831
+ * 
+ * \detail 	This driver does not support temperature
  *
  ******************************************************************************/
 
@@ -44,9 +47,10 @@
 
 extern "C"
 {
-	// #include "twim.h"
 	#include "print_util.h"
+	#include "time_keeper.h"
 }
+
 
 const uint8_t CONF_REG_A              = 0x00;					///< Configuration Register A
 const uint8_t CONF_REG_B              = 0x01;					///< Configuration Register B
@@ -135,17 +139,21 @@ enum
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Hmc5883l::Hmc5883l(I2c& i2c, magnetometer_t& data):
+
+Hmc5883l::Hmc5883l(I2c& i2c):
 	i2c_(i2c),
-	data_(data)
+	data_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	last_update_us_(0.0f),
+	temperature_(0.0f)
 {}
+
 
 bool Hmc5883l::init(void)
 {
-	bool res = true;
+	bool success = true;
 
 	// test if the sensor if here
-	res &= i2c_.probe(HMC5883_SLAVE_ADDRESS);
+	success &= i2c_.probe(HMC5883_SLAVE_ADDRESS);
 	
 	static uint8_t compass_default_configuration[4] =
 	{
@@ -156,22 +164,64 @@ bool Hmc5883l::init(void)
 	};
 	
 	// Write configuration to the sensor
-	res &= i2c_.write(compass_default_configuration, 4, HMC5883_SLAVE_ADDRESS);
+	success &= i2c_.write(compass_default_configuration, 4, HMC5883_SLAVE_ADDRESS);
 
-	return res;
+	return success;
 }
+
 
 bool Hmc5883l::update(void) 
 {
-	bool res 			= true;	
-	uint16_t data[3] 	= {0, 0, 0};
+	bool success		= true;	
+	uint16_t buffer[3] 	= {0, 0, 0};
 
- 	res &= i2c_.write( &DATA_REG_BEGIN, 1, HMC5883_SLAVE_ADDRESS );
-	res &= i2c_.read( (uint8_t*)data, 6, HMC5883_SLAVE_ADDRESS );
+	// Read data from sensor
+ 	success &= i2c_.write( &DATA_REG_BEGIN, 1, HMC5883_SLAVE_ADDRESS );
+	success &= i2c_.read( (uint8_t*)buffer, 6, HMC5883_SLAVE_ADDRESS );
 	
-	data_.data[0] = (float)((int16_t)data[0]);
-	data_.data[1] = (float)((int16_t)data[1]);
-	data_.data[2] = (float)((int16_t)data[2]);
+	// Copy to member data
+	data_[0] = (float)((int16_t)buffer[0]);
+	data_[1] = (float)((int16_t)buffer[1]);
+	data_[2] = (float)((int16_t)buffer[2]);
 
-	return res;
+	// Save last update time
+	last_update_us_ = time_keeper_get_micros();
+
+	return success;
+}
+
+
+const float& Hmc5883l::last_update_us(void) const
+{
+	return last_update_us_;
+}
+
+
+const std::array<float, 3>& Hmc5883l::mag(void) const
+{
+	return data_;
+}
+
+
+const float& Hmc5883l::mag_X(void) const
+{
+	return data_[0];
+}
+
+
+const float& Hmc5883l::mag_Y(void) const
+{
+	return data_[1];
+}
+
+
+const float& Hmc5883l::mag_Z(void) const
+{
+	return data_[2];
+}
+
+
+const float& Hmc5883l::temperature(void) const
+{
+	return temperature_;
 }

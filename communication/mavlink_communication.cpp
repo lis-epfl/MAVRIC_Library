@@ -193,8 +193,6 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	callback.module_struct 	= (handling_module_struct_t)		&mavlink_communication->scheduler;
 	init_success &= mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
 
-	print_util_dbg_print("[MAVLINK COMMUNICATION] Initialised\r\n");
-	
 	return init_success;
 }
 
