@@ -57,8 +57,6 @@ bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, cons
 	hud_telemetry_structure->controls	= controls;
 	hud_telemetry_structure->pos_est    = pos_est;
 	
-	print_util_dbg_print("[HUD TELEMETRY] initialised.\r\n");
-	
 	return init_success;
 }
 

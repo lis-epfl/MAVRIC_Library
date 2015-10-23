@@ -868,8 +868,6 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
 	callbackcmd.module_struct =									navigation;
 	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
-	print_util_dbg_print("[NAVIGATION] initialized.\r\n");
-	
 	return init_success;
 }
 

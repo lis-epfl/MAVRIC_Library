@@ -67,8 +67,6 @@ bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix, const se
 	mix->min_thrust 	   = config.min_thrust;
 	mix->max_thrust 	   = config.max_thrust;
 	
-	print_util_dbg_print("[SERVOS MIX QUAD] initialised \r\n");
-	
 	return init_success;
 }
 

@@ -109,11 +109,11 @@ void fat_fs_mounting_mount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
 			{
 				if (fat_fs_mounting->fr == FR_OK)
 				{
-					print_util_dbg_print("SD card mounted\r\n");
+					print_util_dbg_print("[FAT] SD card mounted\r\n");
 				}
 				else
 				{
-					print_util_dbg_print("Mounting error:");
+					print_util_dbg_print("[FAT] [ERROR] Mounting");
 					fat_fs_mounting_print_error_signification(fat_fs_mounting->fr);
 				}
 			}
@@ -138,11 +138,11 @@ void fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
 		{
 			if (fat_fs_mounting->fr == FR_OK)
 			{
-				print_util_dbg_print("SD card unmounted. \r\n");
+				print_util_dbg_print("[FAT] SD card unmounted. \r\n");
 			}
 			else
 			{
-				print_util_dbg_print("Unmounting error:");
+				print_util_dbg_print("[FAT] [ERROR] Unmounting");
 				fat_fs_mounting_print_error_signification(fat_fs_mounting->fr);
 			}
 		}

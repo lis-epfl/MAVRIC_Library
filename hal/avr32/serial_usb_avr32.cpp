@@ -100,9 +100,12 @@ void Serial_usb_avr32::flush(void)
 	// Block until everything is sent
 	while( !buffer_empty( &tx_buffer_ ) )
 	{
-		if (udi_cdc_is_tx_ready())
+		if( udi_cdc_is_tx_ready() )
 		{
+			// Get one byte
 			uint8_t byte = buffer_get( &tx_buffer_ );
+			
+			// Write byte
 			stdio_usb_putchar(NULL, (int)byte);
 		}
 	}
@@ -130,14 +133,22 @@ bool Serial_usb_avr32::write(const uint8_t* bytes, const uint32_t size)
 		ret = true;
 	}
 
-	// Try to flush "softly":  do not block if fails more than 3 times
-	for(uint8_t i=0; i<3; i++)
+
+	// Try to flush "softly":  do not block if fails more than size times
+	for(uint8_t i=0; i<size; i++)
 	{
 		while( udi_cdc_is_tx_ready() && (!buffer_empty(&tx_buffer_)) )
 		{
 			uint8_t byte = buffer_get( &tx_buffer_ );
 			stdio_usb_putchar(NULL, (int)byte);
 		}
+	}
+
+
+	// If buffer is almost full, flush
+	if( writeable() < 80 )
+	{
+		flush();
 	}
 
 	return ret;

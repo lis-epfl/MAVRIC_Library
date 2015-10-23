@@ -80,8 +80,6 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t config, const Imu* imu, ah
 	
 	qf->gyro_bias = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
 
-	print_util_dbg_print("[QFILTER] Initialised.\r\n");
-	
 	return init_success;
 }
 
@@ -199,7 +197,7 @@ void qfilter_update(qfilter_t *qf)
 			{
 				convergence_update_count = 0;
 				qf->ahrs->internal_state = AHRS_CONVERGING;
-				print_util_dbg_print("End of AHRS attitude initialization.\r\n");
+				print_util_dbg_print("[QFILTER] End of AHRS attitude initialization.\r\n");
 			}
 			break;
 			
@@ -215,7 +213,7 @@ void qfilter_update(qfilter_t *qf)
 			{
 				convergence_update_count = 0;
 				qf->ahrs->internal_state = AHRS_READY;
-				print_util_dbg_print("End of AHRS leveling.\r\n");
+				print_util_dbg_print("[QFILTER] End of AHRS leveling.\r\n");
 			}
 			break;
 

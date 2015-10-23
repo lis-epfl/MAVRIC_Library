@@ -175,8 +175,6 @@ bool battery_init(battery_t* battery, battery_type_t type, float low_level_limit
     battery->do_LPF				= true;
 	battery->lpf_gain			= 0.99f;
 	
-	print_util_dbg_print("[BATTERY]: Initialized.\r\n");
-	
 	return init_success;
 }
 

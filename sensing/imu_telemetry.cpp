@@ -74,8 +74,6 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
 {
 	bool success = true;
 	mav_result_t result = MAV_RESULT_UNSUPPORTED;
-
-	print_util_dbg_print("Calibration cmd received");
 	
 	/** Trigger calibration. 
 	 * | Gyro calibration: 0: no, 1: yes
@@ -93,19 +91,18 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
 		success &= imu->start_gyroscope_bias_calibration();
 		if( success )
 		{
-			print_util_dbg_print("Start gyroscope calibration\r\n");
+			print_util_dbg_print("[IMU CALIB] Start gyroscope calibration\r\n");
 		}
 		else
 		{
-			print_util_dbg_print("[ERROR] Failed to start gyroscope calibration\r\n");
+			print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start gyroscope calibration\r\n");
 		}
 	}
 	else
 	{
-		success &= imu->stop_gyroscope_bias_calibration();
-		if( success )
+		if( imu->stop_gyroscope_bias_calibration() )
 		{		
-			print_util_dbg_print("Stop gyroscope calibration\r\n");
+			print_util_dbg_print("[IMU CALIB] Stop gyroscope calibration\r\n");
 		}
 	}
 	
@@ -116,19 +113,18 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
 		success &= imu->start_magnetometer_bias_calibration();
 		if( success )
 		{
-			print_util_dbg_print("Start magnetometer calibration\r\n");
+			print_util_dbg_print("[IMU CALIB] Start magnetometer calibration\r\n");
 		}
 		else
 		{
-			print_util_dbg_print("[ERROR] Failed to start magnetometer calibration\r\n");
+			print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start magnetometer calibration\r\n");
 		}
 	}
 	else
 	{
-		success &= imu->stop_magnetometer_bias_calibration();
-		if( success )
+		if( imu->stop_magnetometer_bias_calibration() )
 		{		
-			print_util_dbg_print("Stop magnetometer calibration\r\n");
+			print_util_dbg_print("[IMU CALIB] Stop magnetometer calibration\r\n");
 		}
 	}
 	
@@ -137,7 +133,7 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
 	if (packet->param3 == 1)
 	{
 		success = false;
-		print_util_dbg_print("[ERROR] Barometer calibration unsupported\r\n");
+		print_util_dbg_print("[IMU CALIB] [ERROR] Barometer calibration unsupported\r\n");
 	}
 
 
@@ -145,7 +141,7 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
 	if (packet->param4 == 1)
 	{
 		success = false;
-		print_util_dbg_print("[ERROR] Barometer calibration unsupported\r\n");
+		print_util_dbg_print("[IMU CALIB] [ERROR] Barometer calibration unsupported\r\n");
 	}
 	
 
@@ -155,19 +151,18 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
 		success &= imu->start_accelerometer_bias_calibration();
 		if( success )
 		{
-			print_util_dbg_print("Start accelerometer calibration\r\n");
+			print_util_dbg_print("[IMU CALIB] Start accelerometer calibration\r\n");
 		}
 		else
 		{
-			print_util_dbg_print("[ERROR] Failed to start accelerometer calibration\r\n");
+			print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start accelerometer calibration\r\n");
 		}
 	}
 	else
 	{
-		success &= imu->stop_accelerometer_bias_calibration();
-		if( success )
+		if( imu->stop_accelerometer_bias_calibration() )
 		{		
-			print_util_dbg_print("Stop accelerometer calibration\r\n");
+			print_util_dbg_print("[IMU CALIB] Stop accelerometer calibration\r\n");
 		}
 	}
 

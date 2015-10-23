@@ -102,9 +102,6 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
 	ahrs_madgwick->beta = config->beta;
 	ahrs_madgwick->zeta = config->zeta;
 
-	// Notify success
-	print_util_dbg_print("[AHRS MADGWICK] Initialised.\r\n");
-
 	return true;
 }
 

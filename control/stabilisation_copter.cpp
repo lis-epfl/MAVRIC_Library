@@ -78,8 +78,6 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
 	
 	stabilisation_copter->thrust_hover_point = stabiliser_conf.thrust_hover_point;
 
-	print_util_dbg_print("[STABILISATION COPTER] initalised.\r\n");
-	
 	return init_success;
 }
 

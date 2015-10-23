@@ -94,18 +94,24 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 bool Megafly_rev4::init(void)
 {
 	bool init_success = true;
+	bool ret;
+
 
 	Disable_global_interrupt();
 
+	// -------------------------------------------------------------------------
 	// Legacy boardsupport init (TODO: remove)
-	init_success &= boardsupport_init();
+	// -------------------------------------------------------------------------
+	ret = boardsupport_init();
+	init_success &= ret;
+	
 
+	// -------------------------------------------------------------------------
 	// Init UART3
-	if( uart_usb.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[UART USB] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	ret = uart_usb.init();
+	init_success &= ret;
+	
 	// -------------------------------------------------------------------------
 	// Init stream for USB debug stream TODO: remove
 	p_uart_usb = &uart_usb;
@@ -117,105 +123,148 @@ bool Megafly_rev4::init(void)
 	print_util_dbg_print_init(&dbg_stream_);
 	// -------------------------------------------------------------------------
 
+
 	time_keeper_delay_ms(1000); 
 
+	print_util_dbg_sep('%');
+	time_keeper_delay_ms(100);
+	print_util_dbg_sep('-');
+	time_keeper_delay_ms(100); 
+	print_util_dbg_print("[MEGAFLY_REV4] ...\r\n");
+	time_keeper_delay_ms(100); 
+	print_util_dbg_sep('-');
+	time_keeper_delay_ms(100); 
+	
+	// -------------------------------------------------------------------------
 	// Init GPIO dsm receiver
-	if( dsm_receiver_pin.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[DSM RX PIN] INIT ERROR\r\n");		
-	}
+	// -------------------------------------------------------------------------
+	ret = dsm_receiver_pin.init();
+	print_util_dbg_init_msg("[DSM RX PIN]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
 
+	// -------------------------------------------------------------------------
 	// Init GPIO dsm power
-	if( dsm_power_pin.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[DSM VCC PIN] INIT ERROR\r\n");		
-	}
+	// -------------------------------------------------------------------------
+	ret = dsm_power_pin.init();
+	print_util_dbg_init_msg("[DSM VCC PIN]", ret);
+	init_success &= ret;
+	
 
+	// -------------------------------------------------------------------------
 	// Init UART0
-	if( uart0.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[UART0] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	ret = uart0.init();
+	print_util_dbg_init_msg("[UART0]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
 
+	// -------------------------------------------------------------------------
 	// Init UART1
-	if( uart1.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[UART1] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	ret = uart1.init();
+	print_util_dbg_init_msg("[UART1]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
 
+	// -------------------------------------------------------------------------
 	// Init UART3
-	if( uart3.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[UART3] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	ret = uart3.init();
+	print_util_dbg_init_msg("[UART3]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
 	
-	// Init I2C0
-	if( i2c0.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[I2C0] INIT ERROR\r\n");
-	}
 
-	// Init I2C1
-	if( i2c1.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[I2C1] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	// Init I2C0
+	// -------------------------------------------------------------------------
+	ret = i2c0.init();
+	print_util_dbg_init_msg("[I2C0]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
 	
+
+	// -------------------------------------------------------------------------
+	// Init I2C1
+	// -------------------------------------------------------------------------
+	ret = i2c1.init();
+	print_util_dbg_init_msg("[I2C1]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+
+	
+	// -------------------------------------------------------------------------
 	// Init servos
-	if( servos_init( &servos, servos_default_config() ) == true )
+	// -------------------------------------------------------------------------
+	ret = servos_init( &servos, servos_default_config() );
+	print_util_dbg_init_msg("[SERVOS]", ret);
+	init_success &= ret;
+	if( ret )
 	{
 		servos_set_value_failsafe( &servos );
 		pwm_servos_write_to_hardware( &servos );	
 	}
-	else
-	{
-		init_success = false;
-		print_util_dbg_print("[SERVOS] INIT ERROR\r\n");
-	}
+	time_keeper_delay_ms(100); 
+	
 
 	Enable_global_interrupt();
 	
+
+	// -------------------------------------------------------------------------
 	// Init magnetometer
-	if( hmc5883l.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[HMC] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	ret = hmc5883l.init();
+	print_util_dbg_init_msg("[HMC]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
 
+	// -------------------------------------------------------------------------
 	// Init gyro and accelero
-	if( lsm330dlc.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[LSM330] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	ret = lsm330dlc.init();
+	print_util_dbg_init_msg("[LSM]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
 			
+	// -------------------------------------------------------------------------
 	// Init barometer
-	if( bmp085.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[BMP085] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	ret = bmp085.init();
+	print_util_dbg_init_msg("[BMP]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
 
+	// -------------------------------------------------------------------------
 	// Init spektrum_satelitte
-	if( spektrum_satellite.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[SAT] INIT ERROR\r\n");
-	}
+	// -------------------------------------------------------------------------
+	ret = spektrum_satellite.init();
+	print_util_dbg_init_msg("[SAT]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+	
 
+	// -------------------------------------------------------------------------
 	// Init sonar
-	if( sonar_i2cxl.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[SONAR] INIT ERROR\r\n");		
-	}		
+	// -------------------------------------------------------------------------
+	ret = sonar_i2cxl.init();
+	print_util_dbg_init_msg("[SONAR]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(100); 
+		
+
+	print_util_dbg_sep('-');
+	time_keeper_delay_ms(100); 
+	print_util_dbg_init_msg("[MEGAFLY_REV4]", init_success);
+	time_keeper_delay_ms(100);
+	print_util_dbg_sep('-');
+	time_keeper_delay_ms(100);
+	
 
 	return init_success;
 }

@@ -76,7 +76,5 @@ bool ahrs_init(ahrs_t* ahrs)
 	
 	ahrs->internal_state = AHRS_UNLEVELED;
 	
-	print_util_dbg_print("[AHRS] Initialised.\r\n");
-	
 	return init_success;
 }

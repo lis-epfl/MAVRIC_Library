@@ -73,8 +73,6 @@ bool manual_control_init(manual_control_t* manual_control, Satellite* sat, manua
 	init_success &= remote_init(&manual_control->remote, sat, remote_config);
 	init_success &= joystick_init(&manual_control->joystick);
 
-	print_util_dbg_print("[MANUAL_CONTROL] Initialized\r\n");
-
 	return init_success;
 }
 

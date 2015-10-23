@@ -242,7 +242,7 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 										100000,
 										RUN_REGULAR,
 										PERIODIC_ABSOLUTE,
-										PRIORITY_NORMAL,
+										PRIORITY_HIGHEST,
 										(task_function_t)&onboard_parameters_send_scheduled_parameters,
 										(task_argument_t)onboard_parameters,
 										MAVLINK_MSG_ID_PARAM_VALUE);
@@ -281,9 +281,6 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&onboard_parameters_preflight_storage;
 	callbackcmd.module_struct =									onboard_parameters;
 	init_success &= mavlink_message_handler_add_cmd_callback( message_handler, &callbackcmd);
-	
-
-	print_util_dbg_print("[ONBOARD PARAMETERS] Initialised.\r\n");
 	
 	return init_success;
 }
@@ -456,15 +453,16 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 			// Check if matched
 			if (match) 
 			{
-				// Only write and emit changes if there is actually a difference
+				// Only write if there is actually a difference
 				if (*(param->param) != set.param_value && set.param_type == param->data_type) 
 				{
 					// onboard_parameters_update_parameter(onboard_parameters, i, set.param_value);
 					(*param->param) = set.param_value;
-
-					// schedule parameter for transmission downstream
-					param->schedule_for_transmission=true;
+					print_util_dbg_print("... OK \r\n");
 				}
+
+				// schedule parameter for transmission downstream
+				param->schedule_for_transmission=true;
 				break;
 			}
 		}
@@ -551,7 +549,7 @@ bool onboard_parameters_read_parameters_from_storage(onboard_parameters_t* onboa
 		&&	(cksum1 == values[param_set->param_count + 1])
 		&&	(cksum2 == values[param_set->param_count + 2]) )
 	{
-		print_util_dbg_print("Flash read successful! New Parameters inserted.\r\n");
+		print_util_dbg_print("[FLASH] Read successful\r\n");
 		for( uint32_t i = 1; i < (param_set->param_count + 1); i++ )
 		{
 			*(param_set->parameters[i-1].param) = values[i];
@@ -560,7 +558,7 @@ bool onboard_parameters_read_parameters_from_storage(onboard_parameters_t* onboa
 	}
 	else
 	{
-		print_util_dbg_print("Flash memory corrupted! Hardcoded values taken.\r\n");
+		print_util_dbg_print("[FLASH] [ERROR] Failed to read\r\n");
 	}
 
 	// Free memory

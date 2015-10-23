@@ -90,11 +90,6 @@ bool mavlink_stream_init(	mavlink_stream_t* mavlink_stream,
 		success = false;
 	}
 
-	if( success == true )
-	{
-		print_util_dbg_print("[MAVLINK STREAM] Initialized\r\n");	
-	}
-
 	return success;
 }
 

@@ -76,8 +76,6 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->gps 				= gps;
 	state_machine->manual_control 	= manual_control;
 	
-	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
-	
 	return init_success;
 }
 

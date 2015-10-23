@@ -1436,8 +1436,6 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callbackcmd.module_struct =									waypoint_handler;
 	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
-	print_util_dbg_print("[WAYPOINT HANDLER] Initialised.\r\n");
-	
 	return init_success;
 }
 

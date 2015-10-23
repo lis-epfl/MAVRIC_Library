@@ -416,8 +416,6 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	pos_est->kp_vel_sonar = 2.0f;
 	
 	gps_position_init(pos_est);
-
-	print_util_dbg_print("[POSITION ESTIMATION] initialised.\r\n");
 	
 	return init_success;
 }

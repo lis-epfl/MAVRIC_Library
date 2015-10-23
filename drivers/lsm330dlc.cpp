@@ -47,7 +47,6 @@
 
 extern "C"
 {
-	#include "print_util.h"
 	#include "time_keeper.h"
 }
 
@@ -215,13 +214,8 @@ bool Lsm330dlc::init(void)
 	success &= i2c_.probe(LSM330_ACC_SLAVE_ADDRESS);
 	success &= i2c_.probe(LSM330_GYRO_SLAVE_ADDRESS);
 
-	if( success == true )
+	if( success == false )
 	{
-		print_util_dbg_print("LSM330 sensor found (0x18) \r\n");
-	}
-	else
-	{
-		print_util_dbg_print("LSM330 sensor not responding (0x18) \r\n");
 		return success;
 	} 
 	

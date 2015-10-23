@@ -72,8 +72,6 @@ bool servos_init(servos_t* servos, const servos_conf_t config)
 		init_success &= false;
 	}
 	
-	print_util_dbg_print("[SERVOS] Init.\r\n");
-	
 	return init_success;
 }
 
