@@ -48,7 +48,6 @@ extern "C"
 	#include "time_keeper.h"
 	#include <stdbool.h>
 	#include <stdlib.h>
-	#include <stdio.h>
 	#include <math.h>
 }
 
