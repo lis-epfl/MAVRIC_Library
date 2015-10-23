@@ -141,8 +141,6 @@ bool joystick_init(joystick_t* joystick)
 	
 	joystick->mav_mode_desired.byte = MAV_MODE_SAFE;
 	joystick->arm_action = ARM_ACTION_NONE;
-	
-	print_util_dbg_print("Joystick initialised\r");
 
 	return init_success;
 }
