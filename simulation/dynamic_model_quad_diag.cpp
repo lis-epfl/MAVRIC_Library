@@ -95,7 +95,7 @@ bool Dynamic_model_quad_diag::update(void)
 	last_update_us_ = now;
 
 	// Do nothing if updated too often
-	if( dt_s_ < 0.0001f )
+	if( dt_s_ < 0.004f )
 	{
 		return true;
 	}
