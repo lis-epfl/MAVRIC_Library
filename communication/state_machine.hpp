@@ -46,15 +46,9 @@
 
 #include "mavlink_waypoint_handler.hpp"
 #include "state.hpp"
-// #include "simulation.hpp"
 #include "manual_control.hpp"
 #include "remote.hpp"
 #include "gps.hpp"
-
-extern "C" 
-{
-	#include "scheduler.h"
-}
 
 
 /**
@@ -92,7 +86,7 @@ bool state_machine_init(	state_machine_t *state_machine,
  *
  * \return Returns the result of the task
  */
-task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine);
+bool state_machine_set_mav_mode_n_state(state_machine_t* state_machine);
 
 /**
  * \brief   Updates the state machine
@@ -101,7 +95,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
  * 
  * \return Returns the result of the task
  */
-task_return_t state_machine_update(state_machine_t* state_machine);
+bool state_machine_update(state_machine_t* state_machine);
 
 
 #endif // STATE_MACHINE_H_

@@ -43,13 +43,10 @@
 #ifndef I2CXL_SONAR_H_
 #define I2CXL_SONAR_H_
 
+#include <stdint.h>
+
 #include "sonar.hpp"
 #include "i2c.hpp"
-
-extern "C" {
-	#include <stdint.h>
-	#include "scheduler.h"
-}
 
 
 /**

@@ -49,10 +49,6 @@
 #include "mavlink_message_handler.hpp"
 #include "file.hpp"
 
-extern "C" 
-{
-	#include "scheduler.h"
-}
 
 /**
  * \brief 		Pointer a module's data structure
@@ -140,7 +136,7 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
  *
  * \return	Task status return
  */
-task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_communication);
+bool mavlink_communication_update(mavlink_communication_t* mavlink_communication);
 
 
 /**
@@ -174,7 +170,7 @@ bool mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_commun
  *
  * \return	The result of execution of the task
  */
-task_return_t mavlink_communication_send_message(mavlink_send_msg_handler_t* msg_send);
+bool mavlink_communication_send_message(mavlink_send_msg_handler_t* msg_send);
 
 
 #endif /* MAVLINK_COMMUNICATION_H_ */

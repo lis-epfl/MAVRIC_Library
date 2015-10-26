@@ -75,7 +75,7 @@ void epuck_communication_init(epuck_communication_t* epuck_communication, const 
 }
 
 
-task_return_t epuck_communication_update(epuck_communication_t* epuck_communication)
+bool epuck_communication_update(epuck_communication_t* epuck_communication)
 {
 	mavlink_message_t msg;
 	
@@ -97,5 +97,5 @@ task_return_t epuck_communication_update(epuck_communication_t* epuck_communicat
 	
 	mavlink_stream_send(&(epuck_communication->mavlink_stream), &msg);
 
-	return TASK_RUN_SUCCESS;
+	return true;
 }

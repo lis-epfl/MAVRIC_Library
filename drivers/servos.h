@@ -49,8 +49,8 @@
 #endif
 
 #include <stdint.h>
-#include "scheduler.h"
-
+#include <stdbool.h>
+		
 #define MAX_SERVO_COUNT 8		///< Maximum number of servos available
 
 

@@ -50,7 +50,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "scheduler.h"
 
 #define MONITOR_CHANNELS 10
 #define MONITOR_SAMPLES  10
@@ -110,9 +109,9 @@ void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_
  * 
  * \param	analog_monitor	The pointer to the analog monitor structure
  *
- * \return	Returns the task result, currently only TASK_RUN_SUCCESS
+ * \return	Returns the task result
  */
-task_return_t analog_monitor_update(analog_monitor_t* analog_monitor);
+bool analog_monitor_update(analog_monitor_t* analog_monitor);
 
 #ifdef __cplusplus
 	}

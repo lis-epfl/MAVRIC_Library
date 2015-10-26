@@ -1580,7 +1580,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 	}
 }
 
-task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler)
+bool waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler)
 {
 	if (waypoint_handler->waypoint_sending || waypoint_handler->waypoint_receiving)
 	{
@@ -1604,7 +1604,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
 			}
 		}
 	}
-	return TASK_RUN_SUCCESS;
+	return true;
 }
 
 local_position_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin)

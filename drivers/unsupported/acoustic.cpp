@@ -376,7 +376,7 @@ void acoustic_init(	audio_t*			audio_data,
 	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(audio_data->audio_stream_in));
 }
 
-task_return_t acoustic_update(audio_t* audio_data)
+bool acoustic_update(audio_t* audio_data)
 {
 	uint8_t buffer[6];
 	
@@ -413,5 +413,5 @@ task_return_t acoustic_update(audio_t* audio_data)
 	
 	acoustic_process(audio_data);
 	
-	return TASK_RUN_SUCCESS;
+	return true;
 }

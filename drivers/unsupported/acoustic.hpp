@@ -43,6 +43,9 @@
 #ifndef ACOUSTIC_H_
 #define ACOUSTIC_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "mavlink_waypoint_handler.hpp"
 #include "stabilisation_copter.hpp"
 #include "navigation.hpp"
@@ -51,13 +54,10 @@
 
 extern "C" 
 {
-	#include <stdint.h>
-	#include <stdbool.h>
 	#include "streams.h"
 	#include "buffer.h"
 	#include "ahrs.h"
 	#include "stabilisation.h"
-	#include "scheduler.h"
 }
 
 #define STORE_SIZE			4		///< number of azimuth/elevation values stored for reliability test
@@ -124,9 +124,9 @@ void acoustic_init(	audio_t*			audio_data,
  * 
  * \param	audio_data	The pointer to the acoustic structure
  *
- * \return	TASK_RUN_SUCCESS
+ * \return	Success
  */
-task_return_t acoustic_update(audio_t* audio_data);
+bool acoustic_update(audio_t* audio_data);
 
 
 /**

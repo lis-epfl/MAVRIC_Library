@@ -43,17 +43,17 @@
 #ifndef ONBOARD_PARAMETERS_H_
 #define ONBOARD_PARAMETERS_H_
 
+#include <stdbool.h>
+
 #include "mavlink_stream.hpp"
 #include "mavlink_message_handler.hpp"
 #include "state.hpp"
 #include "file.hpp"
 
-extern "C" 
+extern "C"
 {
 	#include "scheduler.h"
-	#include <stdbool.h>
 }
-
 
 #define MAX_ONBOARD_PARAM_COUNT 120	// should be < 122 to fit on user page on AT32UC3C1512
 												

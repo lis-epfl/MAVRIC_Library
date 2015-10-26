@@ -48,7 +48,6 @@
 extern "C" 
 {
 	#include "stabilisation.h"
-	#include "scheduler.h"
 }
 
 /**

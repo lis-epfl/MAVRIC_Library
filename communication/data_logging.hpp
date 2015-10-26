@@ -50,7 +50,6 @@
 extern "C" 
 {
 	#include "libs/FatFs/src/ff.h"
-	#include "scheduler.h"
 }
 
 /**
@@ -147,7 +146,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging);
  *
  * \return	The result of the task execution
  */
-task_return_t data_logging_update(data_logging_t* data_logging);
+bool data_logging_update(data_logging_t* data_logging);
 
 /**
  * \brief	Registers parameter to log on the SD card

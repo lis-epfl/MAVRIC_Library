@@ -45,6 +45,8 @@
 #ifndef IMU_H_
 #define IMU_H_
 
+#include <stdint.h>
+#include <stdbool.h>
 #include <array>
 
 #include "accelerometer.hpp"
@@ -54,10 +56,7 @@
 
 extern "C" 
 {
-	#include <stdint.h>
-	#include <stdbool.h>
 	#include "quaternions.h"
-	#include "scheduler.h"
 }
 
 #define GYRO_LPF 0.1f						///< The gyroscope linear pass filter gain

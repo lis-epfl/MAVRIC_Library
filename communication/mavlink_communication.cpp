@@ -197,7 +197,7 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 }
 
 
-task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_communication) 
+bool mavlink_communication_update(mavlink_communication_t* mavlink_communication) 
 {
 	mavlink_stream_t* mavlink_stream = &mavlink_communication->mavlink_stream;
 	mavlink_message_handler_t* handler = &mavlink_communication->message_handler;
@@ -218,7 +218,7 @@ task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_comm
 		scheduler_update(&mavlink_communication->scheduler);
 	}
 	
-	return TASK_RUN_SUCCESS;
+	return true;
 }
 
 
@@ -278,7 +278,7 @@ bool mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_commun
 }
 
 
-task_return_t mavlink_communication_send_message(mavlink_send_msg_handler_t* msg_send)
+bool mavlink_communication_send_message(mavlink_send_msg_handler_t* msg_send)
 {
 	mavlink_send_msg_function_t function = msg_send->function;
 	handling_telemetry_module_struct_t module_struct = msg_send->module_struct;
@@ -288,5 +288,5 @@ task_return_t mavlink_communication_send_message(mavlink_send_msg_handler_t* msg
 	
 	mavlink_stream_send(msg_send->mavlink_stream,&msg);
 	
-	return TASK_RUN_SUCCESS;
+	return true;
 }

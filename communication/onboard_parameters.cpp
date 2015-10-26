@@ -58,9 +58,9 @@ extern "C"
  *
  * \param	onboard_parameters		The pointer to the onboard parameter structure
  *
- * \return	task_return_t			Returns the result of the task, currently only TASK_RUN_SUCCESS
+ * \return	Returns the result of the task, currently only TASK_RUN_SUCCESS
  */
-static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters);
+static bool onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters);
 
 
 /**
@@ -97,7 +97,7 @@ static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_p
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters) 
+static bool onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters) 
 {
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
@@ -121,7 +121,7 @@ static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parame
 		}			
 	}//end of for loop
 	
-	return TASK_RUN_SUCCESS;
+	return true;
 }
 
 

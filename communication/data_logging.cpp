@@ -728,7 +728,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 	return create_success;
 }
 
-task_return_t data_logging_update(data_logging_t* data_logging)
+bool data_logging_update(data_logging_t* data_logging)
 {
 	if (data_logging->fat_fs_mounting->log_data == 1)
 	{
@@ -773,8 +773,8 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 		else
 		{
 			fat_fs_mounting_mount(data_logging->fat_fs_mounting, data_logging->debug);
-		}//end of else if (sys_mounted)
-	}//end of if (data_logging->fat_fs_mounting->log_data == 1)
+		} //end of else if (sys_mounted)
+	} //end of if (data_logging->fat_fs_mounting->log_data == 1)
 	else
 	{
 		if (data_logging->file_opened)
@@ -820,13 +820,13 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 						print_util_dbg_print("Error closing file\r\n");	
 					}
 				}
-			}//end of if (data_logging->fr != FR_NO_FILE)
+			} //end of if (data_logging->fr != FR_NO_FILE)
 			else
 			{
 				data_logging->file_opened = false;
 				data_logging->file_init = false;
 			}
-		}//end of if (data_logging->file_opened)
+		} //end of if (data_logging->file_opened)
 
 		fat_fs_mounting_unmount(data_logging->fat_fs_mounting, data_logging->debug);
 
@@ -836,8 +836,9 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			//data_logging->sys_mounted = false;
 			data_logging->file_init = false;
 		}
-	}//end of else (data_logging->fat_fs_mounting->log_data != 1)
-	return TASK_RUN_SUCCESS;
+	} //end of else (data_logging->fat_fs_mounting->log_data != 1)
+	
+	return true;
 }
 
 

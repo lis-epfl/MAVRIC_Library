@@ -186,7 +186,7 @@ void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_
 	}
 }
 
-task_return_t analog_monitor_update(analog_monitor_t* analog_monitor)
+bool analog_monitor_update(analog_monitor_t* analog_monitor)
 {
 
 	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
@@ -199,5 +199,5 @@ task_return_t analog_monitor_update(analog_monitor_t* analog_monitor)
 
 	trigger_analog_monitor();
 
-	return TASK_RUN_SUCCESS;
+	return true;
 }

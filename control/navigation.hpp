@@ -43,6 +43,7 @@
 #ifndef NAVIGATION_H_
 #define NAVIGATION_H_
 
+#include <stdbool.h>
 
 #include "mavlink_waypoint_handler.hpp"
 #include "mavlink_communication.hpp"
@@ -55,9 +56,8 @@ extern "C"
 	#include "stabilisation.h"
 	#include "quaternions.h"
 	#include "pid_controller.h"
-	#include "scheduler.h"
-	#include <stdbool.h>
 }
+
 
 /**
  * \brief The navigation structure
@@ -155,9 +155,9 @@ void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler,
  *
  * \param	navigation		The pointer to the navigation structure in central_data
  *
- * \return	Task result, currently only TASK_RUN_SUCCESS
+ * \return	Success
  */
-task_return_t navigation_update(navigation_t* navigation);
+bool navigation_update(navigation_t* navigation);
 
 
 #endif // NAVIGATION_H_
