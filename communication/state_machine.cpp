@@ -50,7 +50,6 @@ extern "C"
 	#include "led.h"
 	#include "print_util.h"
 	#include "time_keeper.h"
-	#include "battery.h"
 }
 
 //------------------------------------------------------------------------------
@@ -104,14 +103,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 
 	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 
-	if (mode_current.HIL == HIL_OFF)
-	{
-		battery_update(&state_machine->state->battery,state_machine->state->analog_monitor->avg[ANALOG_RAIL_10]);
-	}
-	else
-	{
-		state_machine->state->battery.is_low = false;
-	}
+	state_machine->state->battery->update();
 
 	state_connection_status(state_machine->state);
 
@@ -162,7 +154,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 
 			// check battery level
-			if( state_machine->state->battery.is_low )
+			if( state_machine->state->battery->is_low() )
 			{
 				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
 				state_new = MAV_STATE_CRITICAL;
@@ -227,7 +219,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			switch ( rc_check )
 			{
 				case SIGNAL_GOOD:
-					if( !state_machine->state->battery.is_low && 
+					if( !state_machine->state->battery->is_low() && 
 						!state_machine->state->connection_lost && 
 						!state_machine->state->out_of_fence_1 && 
 						!state_machine->state->out_of_fence_2 &&
@@ -256,7 +248,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 
 			//check battery level
-			if( state_machine->state->battery.is_low )
+			if( state_machine->state->battery->is_low() )
 			{
 				mode_custom_new |= CUST_BATTERY_LOW;
 			}
@@ -315,7 +307,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			// Recovery is not possible -> switch off motors
 			mode_new.ARMED = ARMED_OFF;
 			
-			if( !state_machine->state->battery.is_low)
+			if( !state_machine->state->battery->is_low() )
 			{
 				// To get out of this state, if we are in the wrong use_mode_from_remote
 				if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)

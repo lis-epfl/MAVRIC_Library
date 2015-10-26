@@ -228,9 +228,6 @@ void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t
 
 void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	float battery_voltage = state->battery.current_voltage;
-	float battery_remaining = state->battery.current_level;
-	
 	mavlink_msg_sys_status_pack(mavlink_stream->sysid,
 								mavlink_stream->compid,
 								msg,
@@ -238,9 +235,9 @@ void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* m
 								state->sensor_enabled, 						// sensors enabled
 								state->sensor_health, 						// sensors health
 								0,                  						// load
-								(int32_t)(1000.0f * battery_voltage), 		// bat voltage (mV)
+								(int32_t)(1000.0f * state->battery->voltage()),	// bat voltage (mV)
 								0,               							// current (mA)
-								battery_remaining,							// battery remaining
+								state->battery->level(),					// battery remaining
 								0, 0,  										// comms drop, comms errors
 								0, 0, 0, 0);        						// autopilot specific errors
 }

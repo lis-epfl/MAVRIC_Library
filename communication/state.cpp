@@ -62,12 +62,12 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_init(state_t *state, state_t state_config, const analog_monitor_t* analog_monitor)
+bool state_init(state_t *state, state_t state_config, Battery* battery)
 {
 	bool init_success = true;
 	
 	// Init dependencies
-	state->analog_monitor = analog_monitor;
+	state->battery = battery;
 	
 	// Init parameters
 	state->autopilot_type = state_config.autopilot_type;
@@ -79,8 +79,6 @@ bool state_init(state_t *state, state_t state_config, const analog_monitor_t* an
 	state->mav_mode_custom = state_config.mav_mode_custom;
 	
 	state->simulation_mode = state_config.simulation_mode;
-	
-	init_success &= battery_init(&state->battery,state_config.battery.type,state_config.battery.low_level_limit);
 	
 	if (state->simulation_mode == HIL_ON)
 	{

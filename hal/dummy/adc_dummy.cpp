@@ -30,33 +30,34 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file fat_fs_mounting_telemetry.h
+ * \file 	adc_dummy.cpp
  * 
- * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author 	MAV'RIC Team
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the fat_fs_mounting module
+ * \brief 	Dummy implementation for Analog to digital converters
  *
  ******************************************************************************/
 
+#include "adc_dummy.hpp"
 
-#ifndef fat_fs_mounting_TELEMETRY_HPP_
-#define fat_fs_mounting_TELEMETRY_HPP_
-
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "fat_fs_mounting.hpp"
+Adc_dummy::Adc_dummy(float voltage):
+	voltage_(voltage)
+{}
 
 
-/**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	fat_fs_mounting					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool fat_fs_mounting_telemetry_init(fat_fs_mounting_t* fat_fs_mounting, mavlink_message_handler_t* message_handler);
+bool Adc_dummy::init(void)
+{
+	return true;
+}
 
-#endif /* fat_fs_mounting_TELEMETRY_HPP_ */
+
+bool Adc_dummy::update(void)
+{
+	return true;
+}
+
+
+const float& Adc_dummy::voltage(void) const
+{
+	return voltage_;
+}

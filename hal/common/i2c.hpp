@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef I2C_H_
-#define I2C_H_
+#ifndef I2C_HPP_
+#define I2C_HPP_
 
 #include <stdint.h>
 
@@ -94,4 +94,4 @@ public:
 };
 
 
-#endif /* I2C_H_ */
+#endif /* I2C_HPP_ */

@@ -87,7 +87,9 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 	imu( Imu(lsm330dlc, lsm330dlc, hmc5883l, config.imu_config) ),
 	file_flash( File_flash_avr32("flash.bin") ),
 	gps_ublox( Gps_ublox(uart3) ),
-	sonar_i2cxl( Sonar_i2cxl(i2c1) )
+	sonar_i2cxl( Sonar_i2cxl(i2c1) ),
+	adc_battery( Adc_avr32( analog_monitor, {ANALOG_RAIL_10} )),
+	battery( Battery(adc_battery))
 {}
 
 

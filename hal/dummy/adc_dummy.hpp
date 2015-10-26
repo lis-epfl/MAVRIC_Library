@@ -30,104 +30,56 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial.hpp
+ * \file 	adc_dummy.hpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Abstract class for serial peripherals
+ * \brief 	Dummy implementation for Analog to digital converters
  *
  ******************************************************************************/
 
-#ifndef SERIAL_HPP_
-#define SERIAL_HPP_
+#ifndef ADC_DUMMY_HPP_
+#define ADC_DUMMY_HPP_
 
-#include <stdint.h>
+#include "adc.hpp"
 
-class Serial;
-typedef void(*serial_interrupt_callback_t)(Serial* serial);
-
-class Serial
+class Adc_dummy: public Adc
 {
 public:
+	/**
+	 * \brief  	Constructor
+	 * 
+	 * \param 	voltage		Dummy voltage in volts
+	 */
+	Adc_dummy(float voltage);
+
 
 	/**
 	 * \brief 	Hardware initialization
 	 * 
-	 * \return  true Success
-	 * \return  false Error
+	 * \return  success
 	 */
-	virtual bool init(void) = 0;
+	bool init(void);
 
 
 	/**
-	 * \brief 	Test if there are bytes available to read
+	 * \brief 	Update function
 	 * 
-	 * \return 	Number of incoming bytes available
-	 */	
-	virtual uint32_t readable(void) = 0;
-
-
-	/**
-	 * \brief 	Test if there is space available to write bytes
-	 * 
-	 * \return 	Number of bytes available for writing
-	 */	
-	virtual uint32_t writeable(void) = 0;
-
-
-	/**
-	 * \brief 	Sends instantaneously all outgoing bytes
-	 * 
-	 * \return 	Number of bytes available for writing
-	 */	
-	virtual void flush(void) = 0;
-
-
-	/**
-	 * \brief 	Attach a function to call after a receive interrupt is generated
-	 * 
-	 * \details A default handler should be provided by the implementation to 
-	 * 			add the incoming data in a buffer, so is not mandatory to call 
-	 * 			this method. The function callback will be called after the 
-	 * 			interrupt handler
-	 * 
-	 * \param  	func	 	Pointer to the callback function
-	 * 
-	 * \return 	true		Success
-	 * \return 	false		Failed
+	 * \return  success
 	 */
-	virtual bool attach(serial_interrupt_callback_t func) = 0; 
+	bool update(void);
 
 
 	/**
-	 * \brief 	Write bytes on the serial line
+	 * \brief 	Get the voltage in volts
 	 * 
-	 * \param 	byte 		Outgoing bytes
-	 * \param 	size 		Number of bytes to write
-	 * 
-	 * \return 	true		Data successfully written
-	 * \return 	false		Data not written
-	 */
-	virtual bool write(const uint8_t* bytes, const uint32_t size=1) = 0;
-
-
-	/**
-	 * \brief 	Read bytes from the serial line
-	 * 
-	 * \param 	bytes 		Incoming bytes
-	 * \param 	size 		Number of bytes to read
-	 * 
-	 * \return 	true		Data successfully read
-	 * \return 	false		Data not read
+	 * \return	Value
 	 */	
-	virtual bool read(uint8_t* bytes, const uint32_t size=1) = 0;
+	const float& voltage(void) const;
 
-	/**
-	 * \brief 	write newline character to stream ('\n\r')
-	 *
-	 * \return 	success
-	 */
-	virtual bool newline();
+private:
+	float voltage_; 	///< Dummy voltage
 };
 
-#endif /* SERIAL_HPP_ */
+
+#endif /* ADC_DUMMY_HPP_ */

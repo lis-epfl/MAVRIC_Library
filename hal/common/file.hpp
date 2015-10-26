@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef FILE_H_
-#define FILE_H_
+#ifndef FILE_HPP_
+#define FILE_HPP_
 
 #include <stdint.h>
 
@@ -152,4 +152,4 @@ public:
 	 bool newline();
 };
 
-#endif /* FILE_H_ */
+#endif /* FILE_HPP_ */

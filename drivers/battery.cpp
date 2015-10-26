@@ -30,22 +30,26 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file battery.c
+ * \file battery.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  * \author Julien Lecoeur
  *   
- * \brief Takes care of the battery level
+ * \brief Battery voltage monitor
  *
  ******************************************************************************/
  
-#include "battery.h"
-#include "print_util.h"
-#include "time_keeper.h"
- 
 #include <stdint.h>
 
+#include "battery.hpp"
+
+extern "C"
+{
+	#include "print_util.h"
+	#include "time_keeper.h"
+}
+ 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -58,7 +62,8 @@
  *
  * \return	The voltage of the full battery
  */
-static float battery_get_full_voltage(battery_type_t type);
+static float get_full_voltage(battery_type_t type);
+
 
 /**
  * \brief	Returns the value of a low battery level
@@ -67,13 +72,78 @@ static float battery_get_full_voltage(battery_type_t type);
  *
  * \return	The voltage of a low battery
  */
-static float battery_get_low_voltage(battery_type_t type);
+static float get_low_voltage(battery_type_t type);
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Battery::Battery(Adc& adc, battery_conf_t config):
+	adc_( adc ),
+	config_( config ),
+	voltage_( get_full_voltage(config_.type) ),
+	level_( 100.0f ),
+	last_update_us_( time_keeper_get_micros() ),
+	is_low_( false )
+{}
+
+
+bool Battery::update(void)
+{
+	// Update ADC
+	adc_.update();
+
+    // Update voltage
+    voltage_ =  config_.lpf_gain * voltage_ +
+                (1.0f - config_.lpf_gain) * adc_.voltage();
+    
+    // Update current level
+    level_ = 100.0f * ( voltage_ - get_low_voltage(config_.type) ) / 
+			( get_full_voltage(config_.type) - get_low_voltage(config_.type) );
+
+
+	// Update low level flag
+	if( voltage_ < get_low_voltage(config_.type) )
+	{
+		is_low_ = true;
+	}
+	else
+	{
+		is_low_ = false;
+	}
+
+	// Save last update
+    last_update_us_ = time_keeper_get_micros();
+
+    return true;
+}
+
+
+const float& Battery::voltage(void) const
+{
+	return voltage_;
+}
+
+
+const float& Battery::level(void) const
+{
+	return level_;
+}
+
+
+
+bool Battery::is_low(void) const
+{
+	return is_low_;
+}
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static float battery_get_full_voltage(battery_type_t type)
+static float get_full_voltage(battery_type_t type)
 {
 	float full_voltage = 0.0f;
 	
@@ -116,7 +186,7 @@ static float battery_get_full_voltage(battery_type_t type)
 }
 
 
-static float battery_get_low_voltage(battery_type_t type)
+static float get_low_voltage(battery_type_t type)
 {
 	float low_voltage = 0.0f;
 
@@ -156,67 +226,4 @@ static float battery_get_low_voltage(battery_type_t type)
     }
 	
 	return low_voltage;
-}
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool battery_init(battery_t* battery, battery_type_t type, float low_level_limit)
-{
-	bool init_success = true;
-	
-    battery->type				= type;
-    battery->current_voltage	= battery_get_low_voltage(battery->type);
-    battery->current_level		= 0.0f;
-	battery->low_level_limit	= low_level_limit;
-    battery->is_low				= false;
-    battery->last_update_ms		= 0;
-    battery->do_LPF				= true;
-	battery->lpf_gain			= 0.99f;
-	
-	return init_success;
-}
-
-
-float battery_get_level(battery_t* battery)
-{
-    float level =   100.0f * ( battery->current_voltage - battery_get_low_voltage(battery->type) ) / 
-                    ( battery_get_full_voltage(battery->type) - battery_get_low_voltage(battery->type) );
-
-    return level;
-}
-
-
-void battery_update(battery_t* battery, float voltage)
-{
-    uint32_t now = time_keeper_get_millis();
-
-    // Update voltage
-    if(battery->do_LPF == true)
-    {
-        battery->current_voltage =  battery->lpf_gain * battery->current_voltage +
-                                    (1.0f - battery->lpf_gain) * voltage;
-    }
-    else
-    {
-        battery->current_voltage =  voltage;
-    }
-
-    // Update current level
-    battery->current_level = battery_get_level(battery);    
-
-
-    // Check if low level
-    if( battery->current_level < battery->low_level_limit )
-    {
-        battery->is_low = true;
-    }
-    else
-    {
-        battery->is_low = false;
-    }
-
-    // Save last update
-    battery->last_update_ms = now;
 }

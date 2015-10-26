@@ -54,17 +54,20 @@
 #include "file_flash_avr32.hpp"
 #include "gps_ublox.hpp"
 #include "sonar_i2cxl.hpp"
- 
+#include "adc_avr32.hpp"
+#include "battery.hpp"
+
 extern "C"
 {
 	#include "twim_default_config.h"
 	#include "streams.h"
 	#include "servos.h"
+	#include "analog_monitor.h"
 }
 
 
 /**
- * @brief 	Configuration structure
+ * \brief 	Configuration structure
  */
 typedef struct
 {
@@ -81,35 +84,35 @@ typedef struct
 
 
 /**
- * @brief 	Default configuration for the board
+ * \brief 	Default configuration for the board
  * 
- * @return 	Config structure
+ * \return 	Config structure
  */
 static inline megafly_rev4_conf_t megafly_rev4_default_config();
 
 
 /**
- * @brief  Boardsupport for the MegaFly board (rev4)
+ * \brief  Boardsupport for the MegaFly board (rev4)
  * 
  */
 class Megafly_rev4
 {
 public:
 	/**
-	 * @brief  			Constructor
-	 * @details  		Only copies configuration to contained modules, no hardware initalisation
+	 * \brief  			Constructor
+	 * \details  		Only copies configuration to contained modules, no hardware initalisation
 	 * 
-	 * @param 	imu 	Reference to imu structure
-	 * @param 	config 	Board configuration
+	 * \param 	imu 	Reference to imu structure
+	 * \param 	config 	Board configuration
 	 */
 	Megafly_rev4( megafly_rev4_conf_t config = megafly_rev4_default_config() );
 
 
 	/**
-	 * @brief  	Hardware initialisation 
+	 * \brief  	Hardware initialisation 
 
-	 * @return 	true 	Success
-	 * @return 	false 	Failed
+	 * \return 	true 	Success
+	 * \return 	false 	Failed
 	 */
 	bool init(void);
 
@@ -133,6 +136,8 @@ public:
 	Gps_ublox			gps_ublox;
 	Sonar_i2cxl			sonar_i2cxl;
 	analog_monitor_t	analog_monitor;
+	Adc_avr32			adc_battery;
+	Battery 			battery;
 	servos_t			servos;
 
 private:
@@ -154,9 +159,9 @@ private:
 
 
 /**
- * @brief 	Default configuration for the board
+ * \brief 	Default configuration for the board
  * 
- * @return 	Config structure
+ * \return 	Config structure
  */
 static inline megafly_rev4_conf_t megafly_rev4_default_config()
 {

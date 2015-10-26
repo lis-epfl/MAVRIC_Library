@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef GPIO_H_
-#define GPIO_H_
+#ifndef GPIO_HPP_
+#define GPIO_HPP_
 
 /**
  * \brief 	GPIO direction
@@ -134,4 +134,4 @@ public:
 };
 
 
-#endif /* GPIO_H_ */
+#endif /* GPIO_HPP_ */

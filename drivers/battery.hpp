@@ -36,82 +36,125 @@
  * \author Nicolas Dousse
  * \author Julien Lecoeur
  *   
- * \brief Takes care of the battery level
+ * \brief Battery voltage monitor
  *
  ******************************************************************************/
 
 
-#ifndef BATTERY_H_
-#define BATTERY_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef BATTERY_HPP_
+#define BATTERY_HPP_
 
 
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "adc.hpp"
+
 /**
- * \brief Defines the battery type (number of cells)
+ * \brief Battery type
  */
 typedef enum
 {
-    BATTERY_LIPO_1S,
-    BATTERY_LIPO_2S,
-    BATTERY_LIPO_3S,
-    BATTERY_LIPO_4S,
-    BATTERY_LIFE_1S,
-    BATTERY_LIFE_2S,
-    BATTERY_LIFE_3S,
-    BATTERY_LIFE_4S,
+	BATTERY_LIPO_1S,
+	BATTERY_LIPO_2S,
+	BATTERY_LIPO_3S,
+	BATTERY_LIPO_4S,
+	BATTERY_LIFE_1S,
+	BATTERY_LIFE_2S,
+	BATTERY_LIFE_3S,
+	BATTERY_LIFE_4S,
 } battery_type_t;
 
+
 /**
- * \brief Defines the battery structure
+ * \brief Configuration for Battery
  */
 typedef struct
 {
-    battery_type_t  type;							///< The battery type
-    float           current_voltage;				///< The current voltage of the battery in V
-    float           current_level;					///< The current level of the battery in %
-	float			low_level_limit;				///< The lower limit in %
-    bool            is_low;							///< Flag to tell whether the battery is low
-    uint32_t        last_update_ms;					///< The time of the last update in ms
-    bool            do_LPF;							///< Flag to low-pass filter the battery input or not
-	float			lpf_gain;						///< The value of the low-pass filter gain
-} battery_t;
+	battery_type_t 	type;				///< Battery type
+	float 			low_level_limit;	///< Level from which the battery is considered low (in percents) 
+	float 			lpf_gain;			///< Low pass filter gain
+} battery_conf_t;
+
 
 /**
- * \brief Initialize the battery module
- *
- * \param battery		Pointer to the battery structure
- * \param type			The type of battery (number of cells)
- * \param low_limit		Lower limit of the battery level that will trigger the low battery flag
- *
- * \return	True if the init succeed, false otherwise
+ * \brief Defautl configuration
  */
-bool battery_init(battery_t* battery, battery_type_t type, float low_limit);
+static inline battery_conf_t battery_default_config();
+
 
 /**
- * \brief	Returns the level of the battery in percentage
- *
- * \param battery	Pointer to the battery structure
- *
- * \return	The level of the battery
+ * \brief Battery voltage monitor
  */
-float battery_get_level(battery_t* battery);
+class Battery
+{
+public:
+	/**
+	 * \brief Constructor
+	 * 
+	 * \param   adc     Reference to analog to digital converter
+	 * \param  config  Configuration
+	 */
+	 Battery(Adc& adc, battery_conf_t config = battery_default_config() );
 
-/**
- * \brief	Updates the battery voltage level
- *
- * \param battery	Pointer to the battery structure
- * \param voltage	Update measured battery voltage
- */
-void battery_update(battery_t* battery, float voltage);
 
-#ifdef __cplusplus
+	/**
+	 * \brief   Updates the battery voltage level
+	 *
+	 * \param 	battery   Pointer to the battery structure
+	 * \param 	voltage   Update measured battery voltage
+	 *
+	 * \return Success
+	 */
+	bool update(void);
+
+
+	/**
+	 * \brief   Returns the level of the battery in volts
+	 *
+	 * \return  Voltage of the battery
+	 */
+	const float& voltage(void) const;
+
+
+	/**
+	 * \brief   Returns the level of the battery in percents (from 0 to 100)
+	 *
+	 * \return  Level of the battery
+	 */
+	const float& level(void) const;
+
+
+	/**
+	 * \brief 	Indicates if the battery is low
+	 * 
+	 * \return 	True if low
+	 */
+	bool is_low(void) const;
+
+
+private:
+	Adc&            adc_;				///< Reference to analog to digital converter
+
+	battery_conf_t 	config_;			///< Configuration
+
+	float           voltage_;			///< Current voltage of the battery in V
+	float           level_;				///< Current level of the battery in % (from 0 to 100)
+	float			last_update_us_;	///< Last update time in microseconds
+	bool			is_low_;			///< Indiciates if the battery level is low 
+};
+
+
+
+static inline battery_conf_t battery_default_config()
+{
+	battery_conf_t conf = {};
+
+	conf.type 				= BATTERY_LIPO_3S;
+	conf.low_level_limit 	= 13.3f;
+	conf.lpf_gain		 	= 0.5f;
+
+	return conf;
 }
-#endif
 
-#endif // BATTERY_H_
+#endif // BATTERY_HPP_

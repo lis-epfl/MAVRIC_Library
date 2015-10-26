@@ -515,7 +515,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 	
 	//Check whether we entered critical mode due to a battery low level or a lost
 	// connection with the GND station or are out of fence control
-	if ( navigation->state->battery.is_low || 
+	if ( navigation->state->battery->is_low() || 
 		navigation->state->connection_lost || 
 		navigation->state->out_of_fence_2 ||
 		navigation->position_estimation->gps->fix() == false)

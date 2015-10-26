@@ -43,15 +43,12 @@
 #ifndef STATE_H_
 #define STATE_H_
 
-#include "mav_modes.hpp"
+#include "stdint.h"
+#include <stdbool.h>
 
-extern "C"
-{
-	#include "stdint.h"
-	#include "analog_monitor.h"
-	#include "battery.h"
-	#include <stdbool.h>
-}
+#include "mav_modes.hpp"
+#include "battery.hpp"
+
 
 /**
  * \brief	The critical behavior enum
@@ -105,7 +102,6 @@ typedef struct
 	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
 	bool reset_position;								///< Flag to enable the reset of the position estimation
 		
-	battery_t battery;									///< The battery structure
 	
 	double last_heartbeat_msg;							///< Time of reception of the last heartbeat message from the ground station
 	double max_lost_connection;							///< Maximum time without reception of a heartbeat message from the ground station
@@ -115,33 +111,33 @@ typedef struct
 	bool connection_lost;								///< Flag to tell if we have connection with the GND station or not
 	bool first_connection_set;							///< Flag to tell that we received a first message from the GND station
 	
-	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
+	Battery* battery;									///< Pointer to battery structure
 } state_t;
 
 
 /**
  * \brief					Initialize the state of the MAV
  *
- * \param	state			The pointer to the state structure
- * \param	state_config	The state configuration structure
- * \param	analog_monitor	The pointer to the analog monitor structure
+ * \param	state			Pointer to the state structure
+ * \param	state_config	State configuration structure
+ * \param	battery			Pointer to battery
  *
  * \return	True if the init succeed, false otherwise
  */
-bool state_init(state_t *state, state_t state_config, const analog_monitor_t* analog_monitor);
+bool state_init(state_t *state, state_t state_config, Battery* battery);
 
 /**
  * \brief					Makes the switch to active mode
  *
- * \param	state			The pointer to the state structure
- * \param	mav_state		The MAV state
+ * \param	state			Pointer to the state structure
+ * \param	mav_state		MAV state
  */
 void state_switch_to_active_mode(state_t* state,mav_state_t* mav_state);
 
 /**
  * \brief					Check the connection status with the GND station
  *
- * \param	state			The pointer to the state structure
+ * \param	state			Pointer to the state structure
  */
 void state_connection_status(state_t* state);
 

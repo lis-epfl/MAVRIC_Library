@@ -30,33 +30,39 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file fat_fs_mounting_telemetry.h
+ * \file 	adc_avr32.cpp
  * 
- * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author 	MAV'RIC Team
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the fat_fs_mounting module
+ * \brief 	Implementation of Analog to digital converters on avr32
  *
  ******************************************************************************/
 
-
-#ifndef fat_fs_mounting_TELEMETRY_HPP_
-#define fat_fs_mounting_TELEMETRY_HPP_
-
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "fat_fs_mounting.hpp"
+#include "adc_avr32.hpp"
 
 
-/**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	fat_fs_mounting					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool fat_fs_mounting_telemetry_init(fat_fs_mounting_t* fat_fs_mounting, mavlink_message_handler_t* message_handler);
+Adc_avr32::Adc_avr32(analog_monitor_t& analog_monitor, adc_avr32_conf_t config):
+	analog_monitor_( analog_monitor ),
+	config_( config ),
+	voltage_( 0.0f )
+{}
 
-#endif /* fat_fs_mounting_TELEMETRY_HPP_ */
+
+bool Adc_avr32::init(void)
+{
+	return true;
+}
+
+
+bool Adc_avr32::update(void)
+{
+	analog_monitor_update(&analog_monitor_);
+	voltage_ = analog_monitor_.avg[config_.rail];
+	return true;
+}
+
+
+const float& Adc_avr32::voltage(void) const 
+{
+	return voltage_;
+} 

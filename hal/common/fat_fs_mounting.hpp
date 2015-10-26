@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef FAT_FS_MOUNTING_H__
-#define FAT_FS_MOUNTING_H__
+#ifndef FAT_FS_MOUNTING_HPP_
+#define FAT_FS_MOUNTING_HPP_
 
 #include "state.hpp"
 
@@ -116,4 +116,4 @@ void fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug);
  */
 void fat_fs_mounting_print_error_signification(FRESULT fr);
 
-#endif /* FAT_FS_MOUNTING_H__ */
+#endif /* FAT_FS_MOUNTING_HPP_ */

@@ -59,9 +59,6 @@ static inline state_t state_default_config()
 	conf.sensor_enabled          = 0b1111110000100111;
 	conf.sensor_health           = 0b1111110000100111;
 	conf.max_lost_connection     = 60.0f;
-	conf.battery                 = {}; 	
-	conf.battery.type            = BATTERY_LIPO_3S;
-	conf.battery.low_level_limit = 13.3;
 	conf.fence_1_xy 	     	 = 100.0f;
 	conf.fence_1_z 		     	 = 75.0f;
 	conf.fence_2_xy 	     	 = 125.0f;
