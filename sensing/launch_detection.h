@@ -78,7 +78,7 @@ typedef struct
 	sma_t sma; 							//< Simple moving average of acceleration norm
 	int16_t t_launch; 					//< Launch detection threshold
 	int16_t c_idle;						//< Norm of idle thrust value
-	launch_status_t status; 			//< Launch status
+	int16_t status; 					//< Launch status
 	float acc[3];						//< Acceleration values
 	bool enabled;						//< 1 if launch detection is enabled, 0 otherwise
 } launch_detection_t;
