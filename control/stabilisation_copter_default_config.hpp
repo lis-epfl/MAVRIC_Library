@@ -56,8 +56,6 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 	// #############################################################################
 	// ######  RATE CONTROL  #######################################################
 	// #############################################################################
-	conf.stabiliser_stack.rate_stabiliser 							= {};
-	conf.stabiliser_stack.rate_stabiliser.rpy_controller 					= {};
 	// -----------------------------------------------------------------
 	// ------ ROLL PID -------------------------------------------------
 	// -----------------------------------------------------------------
@@ -143,9 +141,13 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 	// ------ OUTPUT -------------------------------------------------------	
 	// ---------------------------------------------------------------------	
 	conf.stabiliser_stack.rate_stabiliser.output 						= {};
-	conf.stabiliser_stack.rate_stabiliser.output.rpy 					= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.rate_stabiliser.output.rpy[0] 				= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.output.rpy[1] 				= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.output.rpy[2] 				= 0.0f;
 	conf.stabiliser_stack.rate_stabiliser.output.thrust 					= 0.0f;
-	conf.stabiliser_stack.rate_stabiliser.output.tvel 					= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.rate_stabiliser.output.tvel[0] 					= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.output.tvel[1] 					= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.output.tvel[2] 					= 0.0f;
 	conf.stabiliser_stack.rate_stabiliser.output.theading 					= 0.0f;
 	conf.stabiliser_stack.rate_stabiliser.output.control_mode 				=  RATE_COMMAND_MODE;
 	conf.stabiliser_stack.rate_stabiliser.output.yaw_mode 					= YAW_RELATIVE;
@@ -154,8 +156,6 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 	// #############################################################################
 	// ######  ATTITUDE CONTROL  ###################################################
 	// #############################################################################
-	conf.stabiliser_stack.attitude_stabiliser 						= {};
-	conf.stabiliser_stack.attitude_stabiliser.rpy_controller 				= {};
 	// -----------------------------------------------------------------
 	// ------ ROLL PID -------------------------------------------------
 	// -----------------------------------------------------------------
@@ -241,9 +241,13 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 	// ------ OUTPUT -------------------------------------------------------	
 	// ---------------------------------------------------------------------	
 	conf.stabiliser_stack.attitude_stabiliser.output 										= {};
-	conf.stabiliser_stack.attitude_stabiliser.output.rpy 					= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.attitude_stabiliser.output.rpy[0] 				= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.output.rpy[1] 				= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.output.rpy[2] 				= 0.0f;
 	conf.stabiliser_stack.attitude_stabiliser.output.thrust 				= 0.0f;
-	conf.stabiliser_stack.attitude_stabiliser.output.tvel 					= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.attitude_stabiliser.output.tvel[0] 				= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.output.tvel[1] 				= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.output.tvel[2] 				= 0.0f;
 	conf.stabiliser_stack.attitude_stabiliser.output.theading 				= 0.0f;
 	conf.stabiliser_stack.attitude_stabiliser.output.control_mode 				= RATE_COMMAND_MODE;
 	conf.stabiliser_stack.attitude_stabiliser.output.yaw_mode 				= YAW_RELATIVE;
@@ -253,8 +257,6 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 // #############################################################################
 // ######  VELOCITY CONTROL  ###################################################
 // #############################################################################
-	conf.stabiliser_stack.velocity_stabiliser 												= {};
-	conf.stabiliser_stack.velocity_stabiliser.rpy_controller 								= {};
 	// -----------------------------------------------------------------
 	// ------ ROLL PID -------------------------------------------------
 	// -----------------------------------------------------------------
@@ -340,9 +342,13 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 	// ------ OUTPUT -------------------------------------------------------	
 	// ---------------------------------------------------------------------	
 	conf.stabiliser_stack.velocity_stabiliser.output 					= {};
-	conf.stabiliser_stack.velocity_stabiliser.output.rpy 					= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.velocity_stabiliser.output.rpy[0] 				= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.output.rpy[1] 				= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.output.rpy[2] 				= 0.0f;
 	conf.stabiliser_stack.velocity_stabiliser.output.thrust 				= 0.0f;
-	conf.stabiliser_stack.velocity_stabiliser.output.tvel 					= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.velocity_stabiliser.output.tvel[0] 				= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.output.tvel[1] 				= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.output.tvel[2] 				= 0.0f;
 	conf.stabiliser_stack.velocity_stabiliser.output.theading 				= 0.0f;
 	conf.stabiliser_stack.velocity_stabiliser.output.control_mode 				= RATE_COMMAND_MODE;
 	conf.stabiliser_stack.velocity_stabiliser.output.yaw_mode 				= YAW_RELATIVE;
@@ -353,8 +359,6 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 // #############################################################################
 // ######  POSITION CONTROL  ###################################################
 // #############################################################################
-	conf.stabiliser_stack.position_stabiliser 						= {}; //TODO check gains before using
-	conf.stabiliser_stack.position_stabiliser.rpy_controller 				= {};
 	// -----------------------------------------------------------------
 	// ------ ROLL PID -------------------------------------------------
 	// -----------------------------------------------------------------
@@ -440,9 +444,13 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 	// ------ OUTPUT -------------------------------------------------------	
 	// ---------------------------------------------------------------------	
 	conf.stabiliser_stack.position_stabiliser.output 					= {};
-	conf.stabiliser_stack.position_stabiliser.output.rpy 					= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.position_stabiliser.output.rpy[0] 				= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.output.rpy[1] 				= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.output.rpy[2] 				= 0.0f;
 	conf.stabiliser_stack.position_stabiliser.output.thrust 				= 0.0f;
-	conf.stabiliser_stack.position_stabiliser.output.tvel 					= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.position_stabiliser.output.tvel[0] 				= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.output.tvel[1] 				= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.output.tvel[2] 				= 0.0f;
 	conf.stabiliser_stack.position_stabiliser.output.theading 				= 0.0f;
 	conf.stabiliser_stack.position_stabiliser.output.control_mode 				= RATE_COMMAND_MODE;
 	conf.stabiliser_stack.position_stabiliser.output.yaw_mode 				= YAW_RELATIVE;

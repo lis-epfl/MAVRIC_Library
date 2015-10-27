@@ -45,9 +45,8 @@
 
 
 #include "state.hpp"
-#include "gps_ublox.hpp"
-#include "bmp085.hpp"
-#include "data_logging.hpp"
+#include "gps.hpp"
+#include "barometer.hpp"
 #include "sonar.hpp"
 
 extern "C" 
@@ -111,8 +110,7 @@ typedef struct
 	const Gps* gps;							///< Pointer to the GPS structure
 	const ahrs_t* ahrs;						///< Pointer to the attitude estimation structure
 	state_t* state;							///< Pointer to the state structure
-	data_logging_t* stat_logging;			///< Pointer to the stat logging structure
-
+	
 	bool* nav_plan_active;					///< Pointer to the waypoint set flag
 } position_estimation_t;
 
@@ -127,11 +125,10 @@ typedef struct
  * \param	sonar 			Pointer to the sonar structure
  * \param	gps				Pointer to the GPS structure
  * \param	ahrs			Pointer to the attitude estimation structure
- * \param	stat_logging	Pointer to the stat logging structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer* barometer, const Sonar* sonar, const Gps* gps, const ahrs_t* ahrs, data_logging_t* stat_logging);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer* barometer, const Sonar* sonar, const Gps* gps, const ahrs_t* ahrs);
 
 
 /**

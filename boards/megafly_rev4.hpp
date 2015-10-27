@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	megafly_rev4.h
+ * \file 	megafly_rev4.hpp
  * 
  * \author 	MAV'RIC Team
  *   
@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#ifndef MEGAFLY_REV4_H_
-#define MEGAFLY_REV4_H_
+#ifndef MEGAFLY_REV4_HPP_
+#define MEGAFLY_REV4_HPP_
 
 #include "gpio_avr32.hpp"
 #include "serial_avr32.hpp"
@@ -100,9 +100,7 @@ class Megafly_rev4
 public:
 	/**
 	 * \brief  			Constructor
-	 * \details  		Only copies configuration to contained modules, no hardware initalisation
-	 * 
-	 * \param 	imu 	Reference to imu structure
+	 *
 	 * \param 	config 	Board configuration
 	 */
 	Megafly_rev4( megafly_rev4_conf_t config = megafly_rev4_default_config() );
@@ -111,8 +109,7 @@ public:
 	/**
 	 * \brief  	Hardware initialisation 
 
-	 * \return 	true 	Success
-	 * \return 	false 	Failed
+	 * \return 	Success
 	 */
 	bool init(void);
 
@@ -322,4 +319,4 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 }
 
 
-#endif /* MEGAFLY_REV4_H_ */
+#endif /* MEGAFLY_REV4_HPP_ */

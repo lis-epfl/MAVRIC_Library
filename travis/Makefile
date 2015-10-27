@@ -4,6 +4,9 @@
 # Configure only the first part of this makefile
 ################################################################################
 
+# Binaries will be generated with this name
+PROJ_NAME=Mavrinux
+
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
 # ------------------------------------------------------------------------------
@@ -39,6 +42,12 @@ LIB_SRCS += util/quick_trig.c
 LIB_SRCS += util/string_util.c
 
 # LIB_SRCS += boards/megafly_rev4.cpp
+LIB_SRCS += boards/mavrinux.cpp
+
+LIB_SRCS += tests/LEQuad/main.cpp
+LIB_SRCS += tests/LEQuad/central_data.cpp
+LIB_SRCS += tests/LEQuad/tasks.cpp
+LIB_SRCS += tests/LEQuad/mavlink_telemetry.cpp
 
 LIB_SRCS += drivers/battery.c                    
 LIB_SRCS += drivers/barometer_telemetry.cpp          
@@ -163,6 +172,14 @@ CXXFLAGS  = -g -O2 -Wall -std=c++11
 CXXFLAGS += -I.
 CXXFLAGS += ${LIB_INC}
 
+# Include files from MAVRIC library and source folder
+LDFLAGS += -I.
+LDFLAGS += ${LIB_INC}
+LDFLAGS += ${SRCS_INC}
+
+LINKER = g++
+SIZER = size
+
 ################################################################################
 # Normally you shouldn't need to change anything below this line!
 ################################################################################
@@ -199,7 +216,19 @@ BUILD_CMD = LOG=$$($(CMD) 2>&1) ; if [ $$? -eq 1 ]; then $(PRINT_ERROR); elif [ 
 # ------------------------------------------------------------------------------
 
 # Main rule
+all: proj
+
+# Main rule
 lib: ${OBJS}
+
+proj: $(PROJ_NAME).elf
+	@$(SIZER) $^
+
+# Linking
+${PROJ_NAME}.elf: ${OBJS}
+	@echo Linking...
+	@$(CXX) $(LDFLAGS) $^ -o $@  
+	@$(BUILD_CMD)
 	
 # C files in Library
 ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.c
