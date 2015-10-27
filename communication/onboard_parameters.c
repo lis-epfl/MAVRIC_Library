@@ -89,15 +89,6 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
  */
 static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
 
-/**
- * \brief	Sets onboard parameter name and length with bounds checking
- *
- * \param   new_param				Pointer to the onboard parameter entry
- * \param	param_name				The name assigned to the onboard parameter
- */
-static void onboard_parameters_set_parameter_name_and_length(onboard_parameters_entry_t * new_param, const char * param_name);
-
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -205,35 +196,6 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 	} //end of if ((uint8_t)request.target_system == (uint8_t)sysid)
 }
 
-static void onboard_parameters_set_parameter_name_and_length(onboard_parameters_entry_t * new_param, const char * param_name)
-{
-	if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
-	{
-		strcpy( new_param->param_name, param_name );
-		new_param->param_name_length = strlen(param_name);
-	}
-	else
-	{
-		print_util_dbg_print("[ONBOARD PARAMETER] Warning: param name ");
-		print_util_dbg_print(param_name);
-		print_util_dbg_print(" is too long. It will be truncated to 16 chars.\r\n");
-
-		char buffer[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];
-		int8_t i = 0;
-
-		for (i = 0; i < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN - 1; i++) //Add to buffer until we reach max length - 1 
-		{
-			buffer[i] = param_name[i];
-		}
-
-		buffer[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN - 1] = '\0'; //Append null character terminator to buffer
-
-		strcpy( new_param->param_name, buffer );
-		new_param->param_name_length = MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN;
-	}
-}
-
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -337,16 +299,29 @@ bool onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_param
 	{
 		if( param_set->param_count < param_set->max_param_count )
 		{
-			onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
 
-			new_param->param                     = (float*) val;
-			new_param->data_type                 = MAV_PARAM_TYPE_UINT32;
-			new_param->schedule_for_transmission = true;
-			onboard_parameters_set_parameter_name_and_length(new_param, param_name);
+				new_param->param                     = (float*) val;
+				strcpy( new_param->param_name, 		param_name );
+				new_param->data_type                 = MAV_PARAM_TYPE_UINT32;
+				new_param->param_name_length         = strlen(param_name);
+				new_param->schedule_for_transmission = true;
+				
 
-			param_set->param_count += 1;
-			
-			add_success &= true;
+				param_set->param_count += 1;
+				
+				add_success &= true;
+			} 
+			else 
+			{
+				print_util_dbg_print("[ONBOARD PARAMETER] Error: parameter name ");
+				print_util_dbg_print(param_name);
+				print_util_dbg_print(" is too long.\r\n");
+
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -376,17 +351,28 @@ bool onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parame
 	{
 		if( param_set->param_count < param_set->max_param_count )
 		{
-			onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
 
-			new_param->param                     = (float*) val;
-			new_param->data_type                 = MAV_PARAM_TYPE_INT32;
-			new_param->schedule_for_transmission = true;
-			
-			onboard_parameters_set_parameter_name_and_length(new_param, param_name);
+				new_param->param                     = (float*) val;				
+				strcpy( new_param->param_name, 		param_name );
+				new_param->data_type                 = MAV_PARAM_TYPE_INT32;
+				new_param->param_name_length         = strlen(param_name);
+				new_param->schedule_for_transmission = true;
 
-			param_set->param_count += 1;
-			
-			add_success &= true;
+				param_set->param_count += 1;
+				
+				add_success &= true;
+			}
+			else 
+			{
+				print_util_dbg_print("[ONBOARD PARAMETER] Error: parameter name ");
+				print_util_dbg_print(param_name);
+				print_util_dbg_print(" is too long.\r\n");
+
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -416,17 +402,29 @@ bool onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parame
 	{
 		if( param_set->param_count < param_set->max_param_count )
 		{
-			onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
 
-			new_param->param                     = val;
-			new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
-			new_param->schedule_for_transmission = true;
+				new_param->param                     = val;
+				strcpy( new_param->param_name, 		param_name );
+				new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
+				new_param->schedule_for_transmission = true;
+				new_param->param_name_length         = strlen(param_name);
 
-			onboard_parameters_set_parameter_name_and_length(new_param, param_name);
 
-			param_set->param_count += 1;
-			
-			add_success &= true;
+				param_set->param_count += 1;
+				
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[ONBOARD PARAMETER] Error: parameter name ");
+				print_util_dbg_print(param_name);
+				print_util_dbg_print(" is too long.\r\n");
+
+				add_success &= false;
+			}
 		}
 		else
 		{
