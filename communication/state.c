@@ -72,9 +72,7 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	state->mav_state = state_config->mav_state;
 	state->mav_mode = state_config->mav_mode;
 	
-	state->source_mode = state_config->source_mode;
-	
-	state->mav_mode_custom = CUSTOM_BASE_MODE;
+	state->mav_mode_custom = state_config->mav_mode_custom;
 	
 	state->simulation_mode = state_config->simulation_mode;
 	
@@ -110,9 +108,7 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	state->first_connection_set = false;
 	
 	state->msg_count = 0;
-	
-	state->remote_active = state_config->remote_active;
-	
+
 	print_util_dbg_print("[STATE] Initialized.\r\n");
 	
 	return init_success;

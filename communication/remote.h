@@ -54,6 +54,7 @@
 
 #define REMOTE_CHANNEL_COUNT 14
 
+
 /**
  * \brief The signal's quality
  */
@@ -64,6 +65,7 @@ typedef enum
 	SIGNAL_LOST = 0,
 } signal_quality_t;
 
+
 /**
  * \brief The channels' direction
  */
@@ -72,6 +74,7 @@ typedef enum
 	NORMAL 		= 1,
 	INVERTED 	= -1,
 } channel_inv_t;
+
 
 /**
  * \brief The mapping of the channels
@@ -94,6 +97,7 @@ typedef enum
 	CHANNEL_AUX8     = 13
 } remote_channel_t;
 
+
 /**
  * \brief The type of the remote
  */
@@ -102,6 +106,7 @@ typedef enum
 	REMOTE_TURNIGY	= 0,
 	REMOTE_SPEKTRUM = 1,
 } remote_type_t;
+
 
 /**
  * \brief The configuration structure of the remote mode
@@ -122,6 +127,7 @@ typedef struct
 	remote_channel_t	disable_remote_mode_channel;		///< See remote_mode_t for documentation
 } remote_mode_conf_t;
 
+
 /**
  * \brief The structure of the remote mode
  */
@@ -140,7 +146,9 @@ typedef struct
 	bool				use_disable_remote_mode_switch;		///< Indicates whether a switch should be used to use/override the mode indicated by the remote
 	remote_channel_t	disable_remote_mode_channel;		///< Channel to use as 2-way switch. When 100%: follow mode indicated by the remote, when -100%: override what the remote indicates
 	mav_mode_t			current_desired_mode;				///< Mav mode indicated by the remote
+	arm_action_t			arm_action;
 } remote_mode_t;
+
 
 /**
  * \brief The configuration structure of the remote
@@ -150,6 +158,7 @@ typedef struct
 	remote_type_t type;										///< The type of remote used
 	remote_mode_conf_t mode_config;							///< The configuration structure
 } remote_conf_t;
+
 
 /**
  * \brief The configuration structure of the remote
@@ -167,6 +176,7 @@ typedef struct
 	remote_mode_t mode;										///< The remote mode structure
 } remote_t;
 
+
 /**
  * \brief	Initialise the remote structure
  * 
@@ -176,6 +186,7 @@ typedef struct
  * \return	True if the init succeed, false otherwise
  */
 bool remote_init(remote_t* remote, const remote_conf_t* config);
+
 
 /**
  * \brief	Returns the throttle value from the remote
@@ -280,7 +291,7 @@ void remote_mode_update(remote_t* remote);
  *
  * \return	The value of the mode
  */
-mav_mode_t remote_mode_get(const remote_t* remote);
+mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t mode_current);
 
 
 /**
@@ -289,7 +300,7 @@ mav_mode_t remote_mode_get(const remote_t* remote);
  * \param	remote				The pointer to the remote structure
  * \param	controls			The pointer to the controls structure
  */
-void remote_get_command_from_remote(remote_t* remote, control_command_t * controls);
+void remote_get_control_command(remote_t* remote, control_command_t * controls);
 
 
 /**
@@ -298,7 +309,7 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t * contro
  * \param	remote	The pointer to the remote structure
  * \param	controls			The pointer to the controls structure
  */
-void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls);
+void remote_get_velocity_vector(remote_t* remote, control_command_t* controls);
 
 
 /**

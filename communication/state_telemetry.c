@@ -78,16 +78,6 @@ static void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink
  */
 static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_command_long_t* packet );
 
-/**
- * \brief	Activate/Disactivate the use of the remote controller
- *
- * \param	state				The pointer to the state structure
- * \param	packet				The pointer to the decoded MAVLink message long
- * 
- * \return	The MAV_RESULT of the command
- */
-static mav_result_t state_telemetry_toggle_remote_use(state_t* state, mavlink_command_long_t* packet);
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -181,32 +171,6 @@ static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_co
 	return result;
 }
 
-static mav_result_t state_telemetry_toggle_remote_use(state_t* state, mavlink_command_long_t* packet)
-{
-	mav_result_t result = MAV_RESULT_UNSUPPORTED;
-	
-	if ( packet->param1 == 1)
-	{
-		state->remote_active = 1;
-		state->source_mode = REMOTE;
-		
-		print_util_dbg_print("Remote control activated\r\n");
-		
-		result = MAV_RESULT_ACCEPTED;
-	}
-	else if (packet->param1 == 0)
-	{
-		state->remote_active = 0;
-		state->source_mode = GND_STATION;
-		
-		print_util_dbg_print("Remote control disactivated\r\n");
-		
-		result = MAV_RESULT_ACCEPTED;
-	}
-	
-	return result;
-}
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -240,14 +204,6 @@ bool state_telemetry_init(state_t* state, mavlink_message_handler_t *message_han
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&state_telemetry_set_mode_from_cmd;
-	callbackcmd.module_struct =									state;
-	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
-	
-	callbackcmd.command_id = MAV_CMD_DO_PARACHUTE; // 208
-	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_SYSTEM_CONTROL; // 250
-	callbackcmd.function = (mavlink_cmd_callback_function_t)	&state_telemetry_toggle_remote_use;
 	callbackcmd.module_struct =									state;
 	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
