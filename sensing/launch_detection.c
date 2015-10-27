@@ -86,8 +86,7 @@ bool launch_detection_launch_detected(launch_detection_t * ld)
 bool launch_detection_init(launch_detection_t * ld, const launch_detection_conf_t* config)
 {
  	sma_init(&ld->sma, SAMPLING_PERIOD);
- 	print_util_dbg_log_value("t_launch = ", (int32_t)(config->t_launch), 10);
-	print_util_dbg_print("\r");
+
  	ld->t_launch = config->t_launch;
  	ld->c_idle = config->c_idle;
  	ld->status = LAUNCH_IDLE;
@@ -110,11 +109,6 @@ task_return_t launch_detection_update(launch_detection_t * ld, float acc[3])
  	{
  		ld->status = LAUNCHING;
  	}
- 	// TEMP : for logging purposes need to let the status stay at launching to detect it
- 	// else 
- 	// {
- 	// 	ld->status = LAUNCH_IDLE;
- 	// }
 
  	return TASK_RUN_SUCCESS;
 }

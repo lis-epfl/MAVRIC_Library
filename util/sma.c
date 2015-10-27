@@ -40,7 +40,6 @@
  ******************************************************************************/
 
 #include "sma.h"
-#include "print_util.h"
 
 
 //------------------------------------------------------------------------------
@@ -65,9 +64,6 @@ void sma_init(sma_t * sma, uint16_t period)
 
 void sma_update(sma_t * sma, int16_t sample)
 {
-	// print_util_dbg_log_value("sma = ", (int32_t)(sma->current_avg), 10);
-	// print_util_dbg_print("\r");
-
 	if (sma->nb_samples < SAMPLING_PERIOD)
 	{
 		sma->buffer[sma->nb_samples] = sample;
