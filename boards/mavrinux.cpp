@@ -64,7 +64,6 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
 	adc_battery( Adc_dummy( 12.34f ) ),
 	battery( Battery(adc_battery) ),
 	spektrum_satellite( Spektrum_satellite(dsm_serial, dsm_receiver_pin, dsm_power_pin) ),
-	// file_flash( File_linux("flash.bin") )
 	file_flash( "flash.bin" )
 {}
 
