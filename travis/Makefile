@@ -177,8 +177,8 @@ LDFLAGS += -I.
 LDFLAGS += ${LIB_INC}
 LDFLAGS += ${SRCS_INC}
 
-LINKER = g++
-SIZER = size
+# LINKER = g++
+# SIZER = size
 
 ################################################################################
 # Normally you shouldn't need to change anything below this line!
@@ -222,7 +222,6 @@ all: proj
 lib: ${OBJS}
 
 proj: $(PROJ_NAME).elf
-	@$(SIZER) $^
 
 # Linking
 ${PROJ_NAME}.elf: ${OBJS}
