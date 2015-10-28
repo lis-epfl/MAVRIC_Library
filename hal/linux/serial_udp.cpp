@@ -105,7 +105,7 @@ void Serial_udp::flush(void)
 
 	while( n_bytes_to_send > 0 )
 	{
-		uint32_t ret = tx_udp_.send((const char*)&to_send[n_sent], n_bytes_to_send);
+		int32_t ret = tx_udp_.send((const char*)&to_send[n_sent], n_bytes_to_send);
 		if( ret != -1 )
 		{
 			n_sent += ret;
