@@ -81,7 +81,7 @@ static const analog_monitor_conf_t analog_monitor_default_config =
 		true,		//ANALOG_RAIL_10
 		true,		//ANALOG_RAIL_11
 		true,		//ANALOG_RAIL_12
-		false,		//ANALOG_RAIL_13
+		true,		//ANALOG_RAIL_13
 	},
 	.conv_factor =
 	{
@@ -93,8 +93,8 @@ static const analog_monitor_conf_t analog_monitor_default_config =
 		(0.00023485f * INV_VOLTAGE_DIVIDER_1),	//.conv_factor_7 =
 		(-0.0002409f * INV_VOLTAGE_DIVIDER_2),	//.conv_factor_10 =
 		(-0.0002409f * INV_VOLTAGE_DIVIDER_2),	//.conv_factor_11 =
-		-0.00025f,								//.conv_factor_12 =
-		-1.0f									//.conv_factor_13 =
+		-0.000315f,								//.conv_factor_12 =
+		-0.000315f									//.conv_factor_13 =
 	}
 };
 
