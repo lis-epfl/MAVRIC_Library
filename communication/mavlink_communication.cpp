@@ -213,10 +213,7 @@ bool mavlink_communication_update(mavlink_communication_t* mavlink_communication
 	}
 
 	// Send messages
-	if( mavlink_stream->serial->writeable() == 256 ) 
-	{
-		scheduler_update(&mavlink_communication->scheduler);
-	}
+	scheduler_update(&mavlink_communication->scheduler);
 	
 	return true;
 }
@@ -280,13 +277,15 @@ bool mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_commun
 
 bool mavlink_communication_send_message(mavlink_send_msg_handler_t* msg_send)
 {
+	bool success = true;
+
 	mavlink_send_msg_function_t function = msg_send->function;
 	handling_telemetry_module_struct_t module_struct = msg_send->module_struct;
 	
 	mavlink_message_t msg;
 	function(module_struct, msg_send->mavlink_stream, &msg);
 	
-	mavlink_stream_send(msg_send->mavlink_stream,&msg);
+	success &= mavlink_stream_send(msg_send->mavlink_stream,&msg);
 	
-	return true;
+	return success;
 }

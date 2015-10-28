@@ -51,7 +51,7 @@ static inline mavlink_communication_conf_t mavlink_communication_default_config(
 
 	conf.scheduler_config                              = {};
 	conf.scheduler_config.max_task_count               = 30;
-	conf.scheduler_config.schedule_strategy            = ROUND_ROBIN;
+	conf.scheduler_config.schedule_strategy            = FIXED_PRIORITY;
 	conf.scheduler_config.debug                        = false;
 	conf.mavlink_stream_config                         = {};
 	conf.mavlink_stream_config.sysid                   = 1;

@@ -46,7 +46,6 @@
 
 extern "C"
 {
-	#include "buffer.h"
 	#include "print_util.h"
 	#include "time_keeper.h"
 }
@@ -58,8 +57,6 @@ extern "C"
 bool mavlink_stream_init(	mavlink_stream_t* mavlink_stream, 
 							const mavlink_stream_conf_t* config, 
 							Serial* serial)
-							// byte_stream_t* rx_stream, 
-							// byte_stream_t* tx_stream)
 {
 	bool success = false;
 
@@ -94,15 +91,18 @@ bool mavlink_stream_init(	mavlink_stream_t* mavlink_stream,
 }
 
 
-void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
+	bool success = true;
 	uint8_t buf[MAVLINK_MAX_PACKET_LEN];
 
 	// Copy the message to the send buffer
 	uint16_t len = mavlink_msg_to_send_buffer(buf, msg);
 
 	// Send byte per byte
-	mavlink_stream->serial->write(buf, len);
+	success &= mavlink_stream->serial->write(buf, len);
+
+	return success;
 }
 
 

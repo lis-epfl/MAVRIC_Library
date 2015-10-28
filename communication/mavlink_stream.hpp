@@ -118,8 +118,10 @@ bool mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_
  *
  * \param 	mavlink_stream		Pointer to the MAVLink stream structure
  * \param 	msg					msg to stream
+ * 
+ * \return success
  */
-void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
