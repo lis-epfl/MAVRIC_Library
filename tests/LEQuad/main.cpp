@@ -85,7 +85,9 @@ int main (void)
 	// -------------------------------------------------------------------------
 	// Create board
 	// -------------------------------------------------------------------------
-	Mavrinux board = Mavrinux();
+	mavrinux_conf_t board_config = mavrinux_default_config(); 
+	Mavrinux board(board_config);
+	// Mavrinux board();
 
 
 	// -------------------------------------------------------------------------
