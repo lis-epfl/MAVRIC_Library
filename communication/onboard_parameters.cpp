@@ -99,6 +99,7 @@ static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_p
 
 static bool onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters) 
 {
+	bool success = true;
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
 	for (uint8_t i = 0; i < param_set->param_count; i++)
@@ -115,10 +116,13 @@ static bool onboard_parameters_send_scheduled_parameters(onboard_parameters_t* o
 											param_set->parameters[i].data_type,
 											param_set->param_count,
 											i 	);
-			mavlink_stream_send(onboard_parameters->mavlink_stream, &msg);
-										
-			param_set->parameters[i].schedule_for_transmission=false;
-		}			
+			success = mavlink_stream_send(onboard_parameters->mavlink_stream, &msg);
+					
+			if( success )	
+			{				
+				param_set->parameters[i].schedule_for_transmission=false;
+			}	
+		}		
 	}//end of for loop
 	
 	return true;
