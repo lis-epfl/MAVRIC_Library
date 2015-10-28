@@ -55,6 +55,7 @@ static inline scheduler_conf_t scheduler_default_config()
 	scheduler_conf_t conf  = {};
 	
 	conf.max_task_count    = 15;
+	// conf.schedule_strategy = FIXED_PRIORITY;
 	conf.schedule_strategy = ROUND_ROBIN;
 	conf.debug             = true;
 

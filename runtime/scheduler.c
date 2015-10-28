@@ -212,20 +212,23 @@ int32_t scheduler_update(scheduler_t* scheduler)
 			function_argument = ts->tasks[i].function_argument;
 
 			// Execute task
-		    call_task(function_argument);
+		    bool task_success = call_task(function_argument);
 	
 			// Set the next execution time of the task
-			switch (ts->tasks[i].timing_mode) 
+			if(task_success)
 			{
-				case PERIODIC_ABSOLUTE:
-					// Do not take delays into account
-					ts->tasks[i].next_run += ts->tasks[i].repeat_period;
-				break;
+				switch (ts->tasks[i].timing_mode) 
+				{
+					case PERIODIC_ABSOLUTE:
+						// Do not take delays into account
+						ts->tasks[i].next_run += ts->tasks[i].repeat_period;
+					break;
 
-				case PERIODIC_RELATIVE:
-					// Take delays into account
-					ts->tasks[i].next_run = time_keeper_get_micros() + ts->tasks[i].repeat_period;
-				break;
+					case PERIODIC_RELATIVE:
+						// Take delays into account
+						ts->tasks[i].next_run = time_keeper_get_micros() + ts->tasks[i].repeat_period;
+					break;
+				}
 			}
 			
 			// Set the task to inactive if it has to run only once
@@ -261,13 +264,14 @@ int32_t scheduler_update(scheduler_t* scheduler)
 	
 				case ROUND_ROBIN:
 					// Round robin scheme - scheduler will pick up where it left.
-					if (i >= ts->task_count)
-					{ 
-						ts->current_schedule_slot = 0;
-					}
-				break;
-
-				default:
+					// if (i >= ts->task_count - 1)
+					// { 
+					// 	ts->current_schedule_slot = 0;
+					// }
+					// else
+					// {
+					ts->current_schedule_slot = 0;
+					// }
 				break;
 			}
 
