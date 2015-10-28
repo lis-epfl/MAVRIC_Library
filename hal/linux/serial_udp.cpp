@@ -55,10 +55,6 @@ Serial_udp::Serial_udp(serial_udp_conf_t config):
 {
 	config = config;
 
-	// Init buffers
-	buffer_init(&tx_buffer_);
-	buffer_init(&rx_buffer_);
-
 	// Set rx as non blocking
 	int sock = rx_udp_.get_socket();
 	int flags = fcntl (sock, F_GETFL, 0 );
@@ -74,42 +70,46 @@ bool Serial_udp::init(void)
 	
 uint32_t Serial_udp::readable(void)
 {
-	int32_t recsize;
-	char 	buf[BUFFER_SIZE];
+	int32_t  recsize;
+	uint32_t n_bytes_to_read = rx_buffer_.writeable();
+	char 	 buf[n_bytes_to_read];
 	
-	recsize = rx_udp_.recv(buf, BUFFER_SIZE);
+	recsize = rx_udp_.recv(buf, n_bytes_to_read);
 
 	for( int32_t i=0; i<recsize; i++ ) 
 	{
-		buffer_put( &rx_buffer_, buf[i] );
+		rx_buffer_.put(buf[i]);
 	}
 
-	return buffer_bytes_available(&rx_buffer_);
+	return rx_buffer_.available();
 }
 
 
 
 uint32_t Serial_udp::writeable(void)
 {
-	return buffer_bytes_free( &tx_buffer_ );
+	return tx_buffer_.writeable();
 }
 
 
 void Serial_udp::flush(void)
 {
-	int32_t bytes_sent; 
+	uint32_t n_bytes_to_send = tx_buffer_.available(); 
+	uint8_t to_send[n_bytes_to_send];
+	uint32_t n_sent = 0;
 
-	bytes_sent = tx_udp_.send((const char*)tx_buffer_.Buffer, buffer_bytes_available(&tx_buffer_));
-	
-	if( bytes_sent == (int32_t)buffer_bytes_available( &tx_buffer_ ) ) 
+	for( uint32_t i=0; i<n_bytes_to_send; ++i )
 	{
-		buffer_clear( &tx_buffer_ );
-	}
-	else 
+		tx_buffer_.get(to_send[i]);
+	} 
+
+	while( n_bytes_to_send > 0 )
 	{
-		for(int32_t i=0; i<bytes_sent; i++ ) 
+		uint32_t ret = tx_udp_.send((const char*)&to_send[n_sent], n_bytes_to_send);
+		if( ret != -1 )
 		{
-			buffer_get( &tx_buffer_ );
+			n_sent += ret;
+			n_bytes_to_send -= ret; 
 		}
 	}
 }
@@ -129,11 +129,11 @@ bool Serial_udp::write(const uint8_t* bytes, const uint32_t size)
 	// Queue byte
 	for (uint32_t i = 0; i < size; ++i)
 	{
-		ret &= buffer_put( &tx_buffer_, bytes[i] );
+		ret &= tx_buffer_.put(bytes[i]);
 	}
 
 	// Start transmission
-	if( buffer_bytes_available( &tx_buffer_ ) >= 1 )
+	if( tx_buffer_.available() >= 1 )
 	{ 
 		flush();
 	}
@@ -148,17 +148,12 @@ bool Serial_udp::read(uint8_t bytes[], const uint32_t size)
 
 	if( readable() >= size )
 	{
-		for (uint32_t i = 0; i < size; ++i)
-		{
-			bytes[i] = buffer_get( &rx_buffer_ );
-		}
 		ret = true;
+		for( uint32_t i = 0; i < size; ++i )
+		{
+			ret &= rx_buffer_.get(bytes[i]);
+		}
 	}
 
 	return ret;
 }
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------

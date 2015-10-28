@@ -68,10 +68,7 @@ Serial_usb_avr32::Serial_usb_avr32(serial_usb_avr32_conf_t config)
 
 
 bool Serial_usb_avr32::init(void)
-{
-	// Init transmission buffer
-	buffer_init( &tx_buffer_ );
-	
+{	
 	// Init usb hardware
 	stdio_usb_init(NULL);
 	stdio_usb_enable();
@@ -91,19 +88,21 @@ uint32_t Serial_usb_avr32::readable(void)
 
 uint32_t Serial_usb_avr32::writeable(void)
 {
-	return buffer_bytes_free( &tx_buffer_ );
+	return tx_buffer_.writeable();
 }
 
 
 void Serial_usb_avr32::flush(void)
 {
+	uint8_t byte = 0;
+
 	// Block until everything is sent
-	while( !buffer_empty( &tx_buffer_ ) )
+	while( !tx_buffer_.empty() )
 	{
 		if( udi_cdc_is_tx_ready() )
 		{
 			// Get one byte
-			uint8_t byte = buffer_get( &tx_buffer_ );
+			tx_buffer_.get(byte);
 			
 			// Write byte
 			stdio_usb_putchar(NULL, (int)byte);
@@ -124,22 +123,23 @@ bool Serial_usb_avr32::write(const uint8_t* bytes, const uint32_t size)
 	bool ret = false;
 
 	// Queue bytes
-	if (writeable() >= size)
+	if( writeable() >= size )
 	{
-		for (uint32_t i = 0; i < size; ++i)
+		for( uint32_t i = 0; i < size; ++i )
 		{
-			buffer_put( &tx_buffer_, bytes[i] );
+			tx_buffer_.put(bytes[i]);
 		}
 		ret = true;
 	}
 
 
 	// Try to flush "softly":  do not block if fails more than size times
-	for(uint8_t i=0; i<size; i++)
+	for( uint8_t i=0; i<size; i++ )
 	{
-		while( udi_cdc_is_tx_ready() && (!buffer_empty(&tx_buffer_)) )
+		while( udi_cdc_is_tx_ready() && (!tx_buffer_.empty()) )
 		{
-			uint8_t byte = buffer_get( &tx_buffer_ );
+			uint8_t byte = 0;
+			tx_buffer_.get(byte);
 			stdio_usb_putchar(NULL, (int)byte);
 		}
 	}

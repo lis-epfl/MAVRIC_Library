@@ -45,7 +45,6 @@
 extern "C" {
 #endif
 
-#include "uart_int.h"
 
 static inline usart_config_t usart_default_config_console()
 {

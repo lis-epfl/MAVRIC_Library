@@ -45,11 +45,6 @@
 
 #include "serial.hpp"
 
-extern "C"
-{
-	#include "buffer.h"
-}
-
 
 /**
  * \brief 	Configuration structure

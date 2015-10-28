@@ -48,12 +48,12 @@
 #include "satellite.hpp"
 #include "serial.hpp"
 #include "gpio.hpp"
+#include "buffer.hpp"
 
 extern "C" 
 {
 	#include <stdint.h>
 	#include <stdbool.h>
-	#include "buffer.h"
 }
 
 
@@ -132,7 +132,7 @@ private:
 	Serial&					uart_;					///< Serial port
 	Gpio&					receiver_pin_;			///< Receiver signal pin
 	Gpio&					power_pin_;				///< Receiver power enable pin
-	buffer_t 				receiver_;				///< Buffer for incoming data
+	Buffer 					receiver_;				///< Buffer for incoming data
 	int16_t 				channels_[16];			///< Array to contain the 16 remote channels
 	uint32_t 				last_interrupt_;		///< Last time a byte was received
 	uint32_t 				last_update_;			///< Last update time 

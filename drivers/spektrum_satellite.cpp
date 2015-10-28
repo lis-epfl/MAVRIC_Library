@@ -183,7 +183,9 @@ uint32_t Spektrum_satellite::dt(void) const
 
 void Spektrum_satellite::handle_interrupt(void)
 {
-	uint8_t c1, c2, i;
+	uint8_t c1 = 0;
+	uint8_t c2 = 0;
+	uint8_t i = 0;
 	uint16_t sw;
 	uint8_t channel;
 	uint32_t now = time_keeper_get_micros() ;
@@ -197,34 +199,34 @@ void Spektrum_satellite::handle_interrupt(void)
 		// the shorter frame period is 11'000us (11bits encoding) and the longer frame period is 22'000 us(10bits encoding) 
 		// the inter byte period within a frame is 77us
 		// Clear buffer if the new byte of the on-going frame came after 2times the inter-byte period
-		if ( (buffer_bytes_available(&receiver_)!=0) && (dt_interrupt > 150))
+		if ( (receiver_.available()!=0) && (dt_interrupt > 150))
 		{
-			buffer_clear(&receiver_);
+			receiver_.clear();
 		}
 
 		// Add new byte to buffer
 		uart_.read(&c1);
-		buffer_put(&receiver_, c1);
+		receiver_.put(c1);
 		
 		// If frame is complete, decode channels
-		if( buffer_bytes_available(&receiver_) == 16 )
+		if( receiver_.available() == 16 )
 		{
 			if( protocol_ != RADIO_PROTOCOL_UNKNOWN ) 
 			{
 				// first two bytes are status info,
-				c1 = buffer_get(&receiver_);
-				c2 = buffer_get(&receiver_);
-				
+				receiver_.get(c1);
+				receiver_.get(c2);
+
 				if( (protocol_ == RADIO_PROTOCOL_DSM2_10BITS) && ((c1 != 0x03) || (c2 != 0xB2)) ) //correspond to DSM2 10bits header
 				{
-					buffer_clear(&receiver_);
+					receiver_.clear();
 					return;
 				}
 					
 				for (i = 0; i < 7; i++) // 7 channels per frame
 				{
-					c1 = buffer_get(&receiver_);
-					c2 = buffer_get(&receiver_);
+					receiver_.get(c1);
+					receiver_.get(c2);
 					sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
 									
 					if ( protocol_ == RADIO_PROTOCOL_DSM2_10BITS )  //10 bits
@@ -254,8 +256,8 @@ void Spektrum_satellite::handle_interrupt(void)
 				// The protocol is unknown => check the radio protocol
 				
 				// First two bytes are status info,
-				c1 = buffer_get(&receiver_);
-				c2 = buffer_get(&receiver_);
+				receiver_.get(c1);
+				receiver_.get(c2);
 				
 				// Increment probability for one of the protocols
 				if (c1 == 0x03 && c2 == 0xB2)
@@ -264,7 +266,7 @@ void Spektrum_satellite::handle_interrupt(void)
 					protocol_proba_.proba_10bits++;
 
 					// Empty_the buffer, because we don't know the protocol yet
-					buffer_clear(&receiver_);
+					receiver_.clear();
 				}
 				else
 				{
@@ -272,7 +274,7 @@ void Spektrum_satellite::handle_interrupt(void)
 					protocol_proba_.proba_11bits++;
 					
 					// Empty_the buffer, because we don't know the protocol yet
-					buffer_clear(&receiver_);
+					receiver_.clear();
 				}
 				
 				// Check if enough frames were received

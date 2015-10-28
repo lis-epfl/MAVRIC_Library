@@ -43,6 +43,7 @@
 
 #include "serial.hpp"
 #include "udp_client_server.hpp"
+#include "buffer.hpp"
 
 extern "C"
 {
@@ -51,7 +52,6 @@ extern "C"
 	#include <sys/socket.h>
 	// #include <sys/types.h>
 	#include <arpa/inet.h>
-	#include "buffer.h"
 }
 
 /**
@@ -160,10 +160,11 @@ public:
 private:
 	serial_udp_conf_t 	config_;
 	
-	buffer_t 	tx_buffer_;
+	// Buffer_tpl<256> 		tx_buffer_;
+	Buffer_tpl<1024> 		tx_buffer_;
 	udp_client 	tx_udp_;
 
-	buffer_t 	rx_buffer_;
+	Buffer 		rx_buffer_;
 	udp_server 	rx_udp_;
 };
 

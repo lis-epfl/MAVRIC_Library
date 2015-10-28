@@ -50,10 +50,10 @@
 #define SERIAL_USB_AVR32_H_
 
 #include "serial.hpp"
+#include "buffer.hpp"
 
 extern "C"
 {
-	#include "buffer.h"
 }
 
 
@@ -161,7 +161,7 @@ public:
 
 private:
 	serial_usb_avr32_conf_t		config_;		///< Configuration
-	buffer_t 					tx_buffer_;		///< Transmission buffer
+	Buffer 						tx_buffer_;		///< Transmission buffer
 };
 
 

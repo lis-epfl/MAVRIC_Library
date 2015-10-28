@@ -1,4 +1,4 @@
-	/*******************************************************************************
+/*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
  * 
@@ -30,77 +30,120 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file satellite.hpp
+ * \file buffer.cpp
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Felix Schill
+ * \author Julien Lecoeur
  *   
- * \brief This declare the global satellite struct
- * enable usage of different satellite receiver (ie. spektrum, emulated...)
+ * \brief Buffer
  *
  ******************************************************************************/
 
-#ifndef SATELLITE_HPP_
-#define SATELLITE_HPP_
+#ifndef BUFFER_HXX_
+#define BUFFER_HXX_
 
-#include <stdint.h>
-#include <stdbool.h>
- 
-/**
- * \brief Radio protocols
- */ 
-typedef enum
+
+template<uint32_t S, typename T>
+Buffer_tpl<S, T>::Buffer_tpl(void):
+	head_(0),
+	tail_(0)
+{}
+
+
+template<uint32_t S, typename T>
+bool Buffer_tpl<S, T>::put_lossy(const T& data) 
 {
-	RADIO_PROTOCOL_DSM2_10BITS 	= 0,
-	RADIO_PROTOCOL_DSM2_11BITS 	= 1,
-	RADIO_PROTOCOL_DSMX			= 2,
-	RADIO_PROTOCOL_UNKNOWN		= 3,
-} radio_protocol_t;
+	uint32_t tmp;
+	
+	tmp = (head_ + 1)%(S+1);
+
+	if( tmp == tail_ ) 
+	{
+		// error: receive buffer overflow!!
+		// lose old incoming data at the end of the buffer
+		tail_ = (tail_ + 1)%(S+1);
+	}
+
+	// store incoming data in buffer
+	buffer_[head_] = data;
+	head_ = tmp;
+	
+	return true;
+}
 
 
-class Satellite
+template<uint32_t S, typename T>
+bool Buffer_tpl<S, T>::put(const T& data) 
 {
-public:
+	uint32_t tmp;
+	tmp = (head_ + 1)%(S+1);
 
-	/**
-	* \brief 	Virtual function to intialize a satellite receiver
-	*/
-	virtual bool init(void) = 0;
+	if( tmp == tail_ ) 
+	{
+		// error: buffer full!
+		return false;
+	}
+	else
+	{
+		// store incoming data in buffer
+		buffer_[head_] = data;
+		head_ = tmp;
+		
+		return true;
+	}
+}
 
 
-	/**
-	* \brief 	Virtual function to bind a satellite with a remote
-	*
-	* \param 	radio_protocol	Define in which protocol the remote has to be binded
-	*/
-	virtual void bind(const radio_protocol_t radio_protocol) = 0;
-
+template<uint32_t S, typename T>
+bool Buffer_tpl<S, T>::get(T& data) 
+{
+	bool ret = false;
 	
-	/**
-	* \brief 	Return a channels' value
-	*
-	* \param 	channel_number		The channel ID
-	*
-	* \return 	Value for channel channel_number
-	*/
-	virtual	int16_t	channel(const uint8_t channel_number) const = 0;
+	if (head_ != tail_)
+	{
+		data  = buffer_[tail_];
+		tail_ = (tail_ + 1)%(S+1);
+		ret = true;
+	}
 
-	
-	/**
-	* \brief 	Return the last update time in microseconds
-	*
-	* \return 	Last update time
-	*/
-	virtual uint32_t last_update(void) const = 0;
-
-	
-	/**
-	* \brief 	Return the time difference between the last 2 updates in microseconds
-	*
-	* \return 	dt
-	*/
-	virtual uint32_t dt(void) const = 0;
-};
+	return ret;
+}
 
 
-#endif //SATELLITE_HPP_
+template<uint32_t S, typename T>
+void Buffer_tpl<S, T>::clear(void) 
+{
+	head_ = 0;
+	tail_ = 0;
+}
+
+
+template<uint32_t S, typename T>
+uint32_t Buffer_tpl<S, T>::available(void) const
+{
+	return (S + 1 + head_ - tail_)%(S+1);
+}
+
+
+template<uint32_t S, typename T>
+uint32_t Buffer_tpl<S, T>::writeable(void) const
+{
+	return S - available();
+}
+
+
+template<uint32_t S, typename T>
+bool Buffer_tpl<S, T>::full(void) const
+{
+	return (((head_ + 1)%(S+1)) == tail_);
+}
+
+
+template<uint32_t S, typename T>
+bool Buffer_tpl<S, T>::empty(void) const
+{
+	return (head_ == tail_);
+}
+
+#endif /* BUFFER_HXX_ */

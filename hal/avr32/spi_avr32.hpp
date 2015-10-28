@@ -46,7 +46,6 @@
 extern "C"
 {
 	#include "spi.h"
-	#include "buffer.h"
 }
 
 /**

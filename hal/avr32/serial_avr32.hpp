@@ -42,11 +42,11 @@
 #define SERIAL_AVR32_H_
 
 #include "serial.hpp"
+#include "buffer.hpp"
 
 extern "C"
 {
 	#include "usart.h"
-	#include "buffer.h"
 }
 
 /**
@@ -194,8 +194,8 @@ public:
 private:
 	serial_avr32_conf_t			config_;			///< Configuration
 	volatile avr32_usart_t* 	uart_;				///< Hardware peripheral
-	buffer_t					tx_buffer_;			///< Transmission buffer
-	buffer_t					rx_buffer_;			///< Reception buffer
+	Buffer_tpl<1024>			tx_buffer_;			///< Transmission buffer
+	Buffer						rx_buffer_;			///< Reception buffer
 
 	static Serial_avr32*		handlers_[AVR32_SERIAL_MAX_NUMBER]; 	///< Array of 'this' pointers used for interrupt handling
 

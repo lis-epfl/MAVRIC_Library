@@ -48,12 +48,10 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "buffer.h"
 	#include "time_keeper.h"
 	#include "endianness.h"
 	#include <string.h>
 	#include "maths.h"
-	#include "buffer.h"
 }
 
 
@@ -1627,12 +1625,6 @@ static ubx_nav_dgps_t * ubx_get_nav_dgps(void);
 
 static void gps_ublox_init(gps_t *gps, Serial* serial)
 {
-	
-	// uart_int_init(UID);
-	// buffer_make_buffered_stream(&(gps->gps_buffer), &(gps->gps_stream_in));
-	// uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_in));
-	// uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_out));
-	
 	gps->serial = serial;
 
 	gps->disable_counter = 1;

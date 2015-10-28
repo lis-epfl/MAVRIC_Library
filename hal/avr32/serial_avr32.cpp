@@ -106,9 +106,6 @@ bool Serial_avr32::init(void)
 	// Init peripheral
 	usart_init_rs232( uart_, &config_.options, sysclk_get_cpu_hz() ); 
 	
-	// Init buffers
-	buffer_init( &tx_buffer_ );
-	buffer_init( &rx_buffer_  );
 	
 	if( config_.mode==AVR32_SERIAL_IN || config_.mode==AVR32_SERIAL_IN_OUT )
 	{
@@ -122,14 +119,14 @@ bool Serial_avr32::init(void)
 	
 uint32_t Serial_avr32::readable(void)
 {
-	return buffer_bytes_available( &rx_buffer_ );
+	return rx_buffer_.available();
 }
 
 
 
 uint32_t Serial_avr32::writeable(void)
 {
-	return buffer_bytes_free( &tx_buffer_ );
+	return tx_buffer_.writeable();
 }
 
 
@@ -138,7 +135,7 @@ void Serial_avr32::flush(void)
 	uart_->ier = AVR32_USART_IER_TXRDY_MASK;
 
 	// Wait until the transmit buffer is empty
-	while( !buffer_empty( &tx_buffer_ ) )
+	while( !tx_buffer_.empty() )
 	{
 		;
 	}
@@ -161,13 +158,13 @@ bool Serial_avr32::write(const uint8_t* bytes, const uint32_t size)
 	{
 		for (uint32_t i = 0; i < size; ++i)
 		{
-			buffer_put( &tx_buffer_, bytes[i] );
+			tx_buffer_.put(bytes[i]);
 		}
 		ret = true;
 	}
 
 	// // Start transmission								TODO: check if this should not be at the begining of the function to avoid infinite while loop
-	if( buffer_bytes_available( &tx_buffer_ ) >= 1 )
+	if( tx_buffer_.available() >= 1 )
 	{ 
 		uart_->ier = AVR32_USART_IER_TXRDY_MASK;
 	}
@@ -182,11 +179,11 @@ bool Serial_avr32::read(uint8_t* bytes, const uint32_t size)
 
 	if (readable() >= size)
 	{
-		for (uint32_t i = 0; i < size; ++i)
-		{
-			bytes[i] = buffer_get( &rx_buffer_ );
-		}
 		ret = true;
+		for( uint32_t i = 0; i < size; ++i )
+		{
+			ret &= rx_buffer_.get(bytes[i]);
+		}
 	}
 	
 	return ret;
@@ -237,7 +234,7 @@ void Serial_avr32::irq4(void)
 
 void Serial_avr32::irq_handler(void)
 {
-	uint8_t c1;
+	uint8_t c1 = 0;
 	int32_t csr = uart_->csr;
 	
 	// Incoming data
@@ -246,15 +243,15 @@ void Serial_avr32::irq_handler(void)
 		c1 = (uint8_t)uart_->rhr;
 		// usart_read_char(uart_, (int*)&c1);
 
-		buffer_put_lossy( &rx_buffer_, c1 );
+		rx_buffer_.put_lossy(c1);
 	}
 
 	// Outgoing data
 	if( csr & AVR32_USART_CSR_TXRDY_MASK ) 
 	{
-		if( buffer_bytes_available( &tx_buffer_ ) > 0 ) 
+		if( tx_buffer_.available() > 0 ) 
 		{
-			c1 = buffer_get( &tx_buffer_ );
+			tx_buffer_.get(c1);
 			uart_->thr = c1;
 		}
 		else

@@ -33,7 +33,6 @@ LIB_INC += -I$(MAVRIC_LIB)/runtime
 LIB_INC += -I$(MAVRIC_LIB)/util
 
 # Library source files (*.c and *.cpp)
-LIB_SRCS += util/buffer.c
 LIB_SRCS += util/coord_conventions.c
 LIB_SRCS += util/kalman.c
 LIB_SRCS += util/linear_algebra.c
