@@ -42,7 +42,6 @@
 #include <stdlib.h>
 
 #include "launch_detection.h"
-#include "print_util.h"
 #include "vectors.h"
 
 
