@@ -52,6 +52,18 @@
 #include "analog_monitor.h"
 #include "tasks.h"
 
+
+
+/**
+ * \brief  Configuration for the airspeed sensor
+ */
+typedef struct 
+{
+	analog_rails_t analog_rail;	///< Analog rail on which the sensor is connected
+	float filter_gain;			///< Gain for the low-pass filter
+	float pressure_offset;		///< Default pressure offset
+} airspeed_analog_conf_t;
+
 /**
  * \brief Structure containing the analog airspeed sensor datas
 */
@@ -66,6 +78,12 @@ typedef struct {
 	float raw_airspeed;						///< Unfiltered airspeed
 	float airspeed;							///< Filtered measure airspeed
 	float alpha;							///< Filter coefficient
+	
+	bool calibrating;						///< True if the sensor is currently in calibration
+	uint8_t calibration_counter;			///< Counter used for the calibration average
+	float calibration_pressure;				///< Pressure used during the calibration
+	
+	int32_t currently_turning;				///< Used for debugging, if we are doing some turning
 } airspeed_analog_t;
 
 /**
@@ -76,7 +94,7 @@ typedef struct {
  * \param analog_channel set which channel of the ADC is map to the airspeed sensor
  *
 */
-bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel);
+bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, const airspeed_analog_conf_t* config);
 
 /**
  * \brief Calibrates the airspeed sensor offset at 0 speed.
@@ -84,7 +102,7 @@ bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* 
  * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
  *
 */
-void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog);
+void airspeed_analog_start_calibration(airspeed_analog_t* airspeed_analog);
 
 /**
  * \brief Updates the values in the airspeed structure
