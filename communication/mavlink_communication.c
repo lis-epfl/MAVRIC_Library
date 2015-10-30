@@ -137,7 +137,7 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 									&config->scheduler_config);
 
 	// Init MAVLink stream
-	mavlink_stream_init(	&mavlink_communication->mavlink_stream, 
+	init_success &= mavlink_stream_init(	&mavlink_communication->mavlink_stream, 
 							&config->mavlink_stream_config,
 							rx_stream,
 							tx_stream	);
