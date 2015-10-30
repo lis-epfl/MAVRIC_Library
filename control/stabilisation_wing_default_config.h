@@ -67,7 +67,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 					.clip_min = -1.0f,
 					.clip_max = 1.0f,
 					.integrator={
-						.gain = 0.01f,
+						.gain = 0.0f,
 						.clip_pre = 6.0f,
 						.accumulator = 0.0f,
 						.clip = 0.7f,
@@ -91,7 +91,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 					.clip_min = -1.0f,
 					.clip_max = 1.0f,
 					.integrator={
-						.gain = 0.01f,
+						.gain = 0.0f,
 						.clip_pre = 6.0f,
 						.accumulator = 0.0f,
 						.clip = 0.7f,
@@ -177,17 +177,17 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 8.0f,
+					.p_gain = 15.0f,
 					.clip_min = -100.0f,
 					.clip_max = 100.0f,
 					.integrator={
-						.gain = 0.5f,
+						.gain = 0.0f,
 						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 4.0f,
 					},
 					.differentiator={
-						.gain = 0.0f,
+						.gain = 0.15f,
 						.previous = 0.0f,
 						.clip = 4.0f
 					},
@@ -205,7 +205,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 					.clip_min = -100.0f,
 					.clip_max = 100.0f,
 					.integrator={
-						.gain = 0.5f,
+						.gain = 0.0f,
 						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 4.0f,

@@ -119,5 +119,5 @@ void servos_mix_wing_update_command(servo_mix_wing_t* mix, control_command_t* co
 	servos_set_value(mix->servos, mix->config.motor, tmp_motor);
 	servos_set_value(mix->servos, mix->config.servo_right, tmp_right_servo);
 	servos_set_value(mix->servos, mix->config.servo_left, tmp_left_servo);
-	servos_set_value(mix->servos, mix->config.servo_left + 1, tmp_left_servo);	// This one is used only for the third one to work properly...
+	servos_set_value(mix->servos, 4, tmp_left_servo);	// This one is used only for the third one to work properly...
 }
