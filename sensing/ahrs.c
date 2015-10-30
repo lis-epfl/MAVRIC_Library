@@ -74,7 +74,8 @@ bool ahrs_init(ahrs_t* ahrs)
 	ahrs->linear_acc[Y] = 0.0f;
 	ahrs->linear_acc[Z] = 0.0f;
 	
-	ahrs->internal_state = AHRS_UNLEVELED;
+	//ahrs->internal_state = AHRS_UNLEVELED;
+	ahrs->internal_state = AHRS_READY;
 
 	ahrs->north_vec.s    = 0.0f;
 	ahrs->north_vec.v[X] = 1.0f;

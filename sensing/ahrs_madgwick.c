@@ -335,8 +335,8 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 	ahrs_madgwick->ahrs->angular_speed[Z] = ahrs_madgwick->imu->scaled_gyro.data[Z] - (-w_bz_);
 
 	// Up vector
-	float up_glob[3] = {0.0f, 0.0f, -1.0f}; 
-	quaternions_rotate_vector(ahrs_madgwick->ahrs->qe, up_glob, ahrs_madgwick->ahrs->up_vec.v);
+	float up_loc[3] = {0.0f, 0.0f, -1.0f}; 
+	quaternions_rotate_vector(quaternions_inverse(ahrs_madgwick->ahrs->qe), up_loc, ahrs_madgwick->ahrs->up_vec.v);
 
 	// Update linear acceleration
 	ahrs_madgwick->ahrs->linear_acc[X] = 9.81f * (ahrs_madgwick->imu->scaled_accelero.data[X] - ahrs_madgwick->ahrs->up_vec.v[X]) ;							// TODO: review this line!
@@ -345,7 +345,7 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 
 	// North vector 
 	// TODO: Remove as never used
-	float north_glob[3] = {1.0f, 0.0f, 0.0f}; 
-	quaternions_rotate_vector(ahrs_madgwick->ahrs->qe, north_glob, ahrs_madgwick->ahrs->north_vec.v);
+	float north_loc[3] = {1.0f, 0.0f, 0.0f}; 
+	quaternions_rotate_vector(quaternions_inverse(ahrs_madgwick->ahrs->qe), north_loc, ahrs_madgwick->ahrs->north_vec.v);
 }
 
