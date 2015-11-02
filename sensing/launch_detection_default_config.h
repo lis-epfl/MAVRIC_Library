@@ -51,7 +51,7 @@ extern "C" {
 
 launch_detection_conf_t launch_detection_default_config =
 {
-	.t_launch = 210,
+	.t_launch = 380,
 	.c_idle = 20
 };
 
