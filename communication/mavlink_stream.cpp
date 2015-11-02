@@ -113,23 +113,38 @@ bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message
 }
 
 
-void mavlink_stream_receive(mavlink_stream_t* mavlink_stream) 
+bool mavlink_stream_receive(mavlink_stream_t* mavlink_stream) 
 {
 	uint8_t byte;
 	mavlink_received_t* rec = &mavlink_stream->rec;
 
-	if(mavlink_stream->msg_available == false)
-	{
-		while( mavlink_stream->serial->readable() > 0 ) 
-		{
-			mavlink_stream->serial->read(&byte);
+	// if(mavlink_stream->msg_available == false)
+	// {
+	// 	while( mavlink_stream->serial->readable() > 0 ) 
+	// 	{
+	// 		mavlink_stream->serial->read(&byte);
 			
-			if(mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status)) 
-			{
-				mavlink_stream->msg_available = true;
-			}
+	// 		if(mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status)) 
+	// 		{
+	// 			mavlink_stream->msg_available = true;
+	// 		}
+	// 	}
+	// }
+
+	while( (mavlink_stream->msg_available == false) && (mavlink_stream->serial->readable() > 0) )
+	{
+		// read one byte
+		mavlink_stream->serial->read(&byte);
+		
+		// Use the byte to decode current message 
+		if( mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status) ) 
+		{
+			// If message was sucessfully decoded, exit while loop
+			mavlink_stream->msg_available = true;
 		}
 	}
+
+	return mavlink_stream->msg_available;
 }
 
 
