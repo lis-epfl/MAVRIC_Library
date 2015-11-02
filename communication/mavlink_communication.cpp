@@ -215,6 +215,9 @@ bool mavlink_communication_update(mavlink_communication_t* mavlink_communication
 	// Send messages
 	scheduler_update(&mavlink_communication->scheduler);
 	
+	// Flush
+	// mavlink_stream_flush(mavlink_stream);
+
 	return true;
 }
 

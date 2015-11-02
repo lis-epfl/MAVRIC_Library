@@ -185,7 +185,8 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 	conf.uart0_config.serial_device 		= AVR32_SERIAL_0;
 	conf.uart0_config.mode 					= AVR32_SERIAL_IN_OUT;
  	conf.uart0_config.options				= {};
-	conf.uart0_config.options.baudrate  	= 57600;
+	// conf.uart0_config.options.baudrate  	= 57600;
+	conf.uart0_config.options.baudrate  	= 115200;
 	conf.uart0_config.options.charlength	= 8;
 	conf.uart0_config.options.paritytype 	= USART_NO_PARITY;
 	conf.uart0_config.options.stopbits		= USART_1_STOPBIT;
