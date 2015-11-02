@@ -35,7 +35,14 @@
  * \author MAV'RIC Team
  * \author Dylan Bourgeois
  *   
- * \brief Custom values for cascade PID controller used for horizontal stabilisation
+ * \brief Custom values for cascade PID controller used for horizontal
+ * 		  stabilisation in the implentation of the paper :
+ * 
+ *		Automatic Re-Initialization and Failure Recovery for Aggressive
+ *		Flight with a Monocular Vision-Based Quadrotor
+ *		M. Faessler, F. Fontana, C. Forster, D. Scaramuzza
+ *		IEEE International Conference on Robotics and Automation (ICRA), Seattle, 2015.
+ * 		http://rpg.ifi.uzh.ch/docs/ICRA15_Faessler.pdf
  *
  ******************************************************************************/
 

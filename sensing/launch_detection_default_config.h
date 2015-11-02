@@ -35,7 +35,13 @@
  * \author MAV'RIC Team
  * \author Dylan Bourgeois
  *   
- * \brief Default values for launch detection
+ * \brief Default values for launch detection, used in the implementation of paper :
+ *
+ *		Automatic Re-Initialization and Failure Recovery for Aggressive
+ *		Flight with a Monocular Vision-Based Quadrotor
+ *		M. Faessler, F. Fontana, C. Forster, D. Scaramuzza
+ *		IEEE International Conference on Robotics and Automation (ICRA), Seattle, 2015.
+ * 		http://rpg.ifi.uzh.ch/docs/ICRA15_Faessler.pdf
  *
  ******************************************************************************/
 
