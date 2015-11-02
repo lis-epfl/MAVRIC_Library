@@ -45,26 +45,84 @@
  *
  ******************************************************************************/
 
+// #include "stabilisation_copter_default_config.h"
+// #include "stabilisation_copter_custom_config.h"
+
 #include "state_machine_custom.h"
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
+/**
+ * \brief	Resets the state machine
+ *
+ * \param	state_machine			The pointer to the state_machine structure
+ */
+void state_machine_reset(state_machine_custom_t * state_machine);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+void state_machine_reset(state_machine_custom_t * state_machine)
+{
+	state_machine->state = STATE_IDLE;
+	state_machine->enabled = 0;
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_custom_init(state_machine_custom_t * state_machine)
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, launch_detection_t * ld)
 {
-	return 1;
+	bool init_success = true;
+
+	state_machine->state = STATE_IDLE;
+	state_machine->enabled = 0;
+
+	state_machine->remote = remote;
+	state_machine->ld = ld;
+
+	return init_success;
 }
 
-task_return_t state_machine_custom_update(state_machine_custom_t * state_machine)
+task_return_t state_machine_custom_update(state_machine_custom_t * state_machine, control_command_t * controls)
 {
+	bool switch_enabled = ((int32_t)(state_machine->remote->channels[CHANNEL_AUX1] + 1.0f) > 0);
+
+	switch (state_machine->state) 
+	{
+		case STATE_IDLE:
+			if (switch_enabled && (state_machine->enabled==0))
+			{
+				state_machine->enabled = 1;
+				state_machine->state = STATE_LAUNCH_DETECTION;
+			} 
+		break;
+
+		case STATE_LAUNCH_DETECTION:
+			if (state_machine->ld->status == LAUNCHING)
+			{
+				state_machine->state = STATE_ATTITUDE_CONTROL;
+			}
+		break;
+
+		case STATE_ATTITUDE_CONTROL:
+			controls->rpy[ROLL] = 0.0f;
+			controls->rpy[PITCH] = 0.0f;
+			// controls.thrust = stabilisation_copter->thrust_hover_point; // TODO !!!!
+			controls->control_mode = ATTITUDE_COMMAND_MODE;
+			controls->yaw_mode=YAW_RELATIVE;
+		break;
+	}
+
+	// Final check if algorithm was aborted
+	if (!switch_enabled)
+	{
+		state_machine_reset(state_machine);
+	}
+
 	return TASK_RUN_SUCCESS;
 }

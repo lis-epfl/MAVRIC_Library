@@ -52,42 +52,51 @@
 extern "C" {
 #endif
 
+#include "launch_detection.h"
+#include "remote.h"
 #include "scheduler.h"
+#include "stabilisation.h"
 #include "stabilisation_copter.h"
 
-typedef enum {
-	STATE_IDLE,
-	STATE_LAUNCH_DETECTION,
-	STATE_ATTITUDE_CONTROL
-} module_state_t;
 
-typedef struct {
-	module_state_t module;
-	stabilisation_copter_conf_t stabilisation_copter_conf;
+typedef enum {
+	STATE_IDLE = 0,
+	STATE_LAUNCH_DETECTION = 1,
+	STATE_ATTITUDE_CONTROL = 2
 } state_custom_t;
 
 typedef struct {
 	state_custom_t state;
+	bool enabled;
+
+	stabilisation_copter_conf_t * stabilisation_copter_conf;
+
+	remote_t * remote;
+	launch_detection_t * ld;
 } state_machine_custom_t;
+
 
 /**
  * \brief Initialize the state machine
  *
  * \param state_machine				Pointer to the state machine structure
+ * \param remote					Pointer to the remote
+ * \param ld 						Pointer to the launch detection structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool state_machine_custom_init(state_machine_custom_t * state_machine);
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, launch_detection_t * ld);
 
 
 /**
  * \brief Update the state machine
  *
  * \param state_machine				Pointer to the state machine structure
+ * \param controls					Pointer to the controls to set
  *
  * \return	Returns the result of the task
  */
-task_return_t state_machine_custom_update(state_machine_custom_t * state_machine);
+task_return_t state_machine_custom_update(state_machine_custom_t * state_machine, control_command_t * controls);
 
 
 
