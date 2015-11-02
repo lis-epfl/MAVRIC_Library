@@ -49,7 +49,7 @@
 // #include "stabilisation_copter_custom_config.h"
 
 #include "state_machine_custom.h"
-
+#include "launch_detection_default_config.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -69,13 +69,14 @@ void state_machine_reset(state_machine_custom_t * state_machine)
 {
 	state_machine->state = STATE_IDLE;
 	state_machine->enabled = 0;
+	state_machine->ld.status = 0;
 }
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, launch_detection_t * ld)
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu)
 {
 	bool init_success = true;
 
@@ -83,7 +84,8 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 	state_machine->enabled = 0;
 
 	state_machine->remote = remote;
-	state_machine->ld = ld;
+	
+	launch_detection_init(&state_machine->ld, &launch_detection_default_config);
 
 	return init_success;
 }
@@ -103,7 +105,10 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 		break;
 
 		case STATE_LAUNCH_DETECTION:
-			if (state_machine->ld->status == LAUNCHING)
+
+			launch_detection_update(&state_machine->ld, (state_machine->imu->scaled_accelero.data));
+
+			if (state_machine->ld.status == LAUNCHING)
 			{
 				state_machine->state = STATE_ATTITUDE_CONTROL;
 			}

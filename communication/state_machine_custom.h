@@ -72,7 +72,8 @@ typedef struct {
 	stabilisation_copter_conf_t * stabilisation_copter_conf;
 
 	remote_t * remote;
-	launch_detection_t * ld;
+	launch_detection_t ld;
+	imu_t * imu;
 } state_machine_custom_t;
 
 
@@ -81,11 +82,11 @@ typedef struct {
  *
  * \param state_machine				Pointer to the state machine structure
  * \param remote					Pointer to the remote
- * \param ld 						Pointer to the launch detection structure
+ * \param imu 						Pointer to the IMU structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, launch_detection_t * ld);
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu);
 
 
 /**
