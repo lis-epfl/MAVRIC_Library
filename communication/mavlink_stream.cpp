@@ -100,7 +100,14 @@ bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message
 	uint16_t len = mavlink_msg_to_send_buffer(buf, msg);
 
 	// Send byte per byte
-	success &= mavlink_stream->serial->write(buf, len);
+	if( mavlink_stream->serial->writeable() >= len )
+	{
+		success &= mavlink_stream->serial->write(buf, len);
+	}
+	else
+	{
+		success = false;
+	}
 
 	return success;
 }

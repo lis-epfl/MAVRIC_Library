@@ -124,11 +124,17 @@ static bool onboard_parameters_send_one_parameter_now(onboard_parameters_t* onbo
 									param_set->parameters[index].data_type,
 									param_set->param_count,
 									index 	);
+	
+	// Schedule for transmission
+	param_set->parameters[index].schedule_for_transmission = true;
+
+	// Try to send
 	success = mavlink_stream_send(onboard_parameters->mavlink_stream, &msg);
 			
 	if( success )	
-	{				
-		param_set->parameters[index].schedule_for_transmission=false;
+	{			
+		// If successfully sent, un-schedule	
+		param_set->parameters[index].schedule_for_transmission = false;
 	}	
 	
 	return success;
@@ -145,15 +151,10 @@ static bool onboard_parameters_send_all_scheduled_parameters(onboard_parameters_
 		if (param_set->parameters[i].schedule_for_transmission) 
 		{
 			success = onboard_parameters_send_one_parameter_now(onboard_parameters, i);
-					
-			if( success )	
-			{				
-				param_set->parameters[i].schedule_for_transmission=false;
-			}	
 		}		
 	}//end of for loop
 	
-	return true;
+	return success;
 }
 
 
@@ -190,9 +191,6 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 			// Control if the index is in the range of existing parameters and schedule it for transmission
 			if ( (uint32_t)request.param_index <= param_set->param_count)
 			{
-				// Schedule for transmission
-				param_set->parameters[request.param_index].schedule_for_transmission = true;
-				
 				// Send now
 				onboard_parameters_send_one_parameter_now(onboard_parameters, request.param_index);
 			}
@@ -226,9 +224,6 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 				// Check if matched
 				if ( match ) 
 				{
-					// Schedule for transmission
-					param->schedule_for_transmission = true;
-
 					// Send now
 					onboard_parameters_send_one_parameter_now(onboard_parameters, i);
 
@@ -300,9 +295,6 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 					print_util_dbg_print("... OK \r\n");
 				}
 
-				// schedule parameter for transmission downstream
-				param->schedule_for_transmission=true;
-
 				// Send now
 				onboard_parameters_send_one_parameter_now(onboard_parameters, i);
 
@@ -363,7 +355,7 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 										100000,
 										RUN_REGULAR,
 										PERIODIC_ABSOLUTE,
-										PRIORITY_HIGHEST,
+										PRIORITY_LOWEST,
 										(task_function_t)&onboard_parameters_send_all_scheduled_parameters,
 										(task_argument_t)onboard_parameters,
 										MAVLINK_MSG_ID_PARAM_VALUE);
