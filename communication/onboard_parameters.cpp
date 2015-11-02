@@ -240,7 +240,7 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 
 
 
-void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg) 
+static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg) 
 {
 	bool match = true;
 	
