@@ -101,7 +101,10 @@ bool Central_data::init(void)
 	// Init mavlink communication
 	// -------------------------------------------------------------------------
 	mavlink_communication_conf_t mavlink_communication_config = mavlink_communication_default_config();
-	mavlink_communication_config.mavlink_stream_config.sysid = 0;
+	mavlink_communication_config.mavlink_stream_config.sysid = 1;
+	mavlink_communication_config.message_handler_config.debug = true;
+	mavlink_communication_config.onboard_parameters_config.debug = true;
+	mavlink_communication_config.mavlink_stream_config.debug = true;
 	ret = mavlink_communication_init(	&mavlink_communication, 
 										mavlink_communication_config, 
 										&serial_mavlink,
