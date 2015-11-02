@@ -55,22 +55,11 @@
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-/**
- * \brief	Resets the state machine
- *
- * \param	state_machine			The pointer to the state_machine structure
- */
-void state_machine_reset(state_machine_custom_t * state_machine);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-void state_machine_reset(state_machine_custom_t * state_machine)
-{
-	state_machine->state = STATE_IDLE;
-	state_machine->enabled = 0;
-	state_machine->ld.status = 0;
-}
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -126,8 +115,15 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 	// Final check if algorithm was aborted
 	if (!switch_enabled)
 	{
-		state_machine_reset(state_machine);
+		state_machine_custom_reset(state_machine);
 	}
 
 	return TASK_RUN_SUCCESS;
+}
+
+void state_machine_custom_reset(state_machine_custom_t * state_machine)
+{
+	state_machine->state = STATE_IDLE;
+	state_machine->enabled = 0;
+	state_machine->ld.status = 0;
 }

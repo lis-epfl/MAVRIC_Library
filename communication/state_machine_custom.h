@@ -99,6 +99,12 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
  */
 task_return_t state_machine_custom_update(state_machine_custom_t * state_machine, control_command_t * controls);
 
+/**
+ * \brief	Resets the state machine and launch detection
+ *
+ * \param	state_machine			The pointer to the state_machine structure
+ */
+void state_machine_custom_reset(state_machine_custom_t * state_machine);
 
 
 #ifdef __cplusplus
