@@ -39,7 +39,13 @@
  *
  ******************************************************************************/
 
-#define START_UP_ACCUM 5000
+#define DEBUG 1
+
+#if DEBUG == 1
+	#define START_UP_ACCUM 1500 //Preload the accumulator to avoid false detection on start-up when debugging
+#else
+	#define START_UP_ACCUM 0
+#endif
 
 #include "sma.h"
 
@@ -60,7 +66,7 @@ void sma_init(sma_t * sma, uint16_t period)
 {
 	sma->current_avg = 0; 
 	sma->nb_samples = 0;
-	sma->sum = START_UP_ACCUM; //Preload the accumulator to avoid false detection on start-up
+	sma->sum = START_UP_ACCUM; 
 	sma->period = SAMPLING_PERIOD;
 }
 
