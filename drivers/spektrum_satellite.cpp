@@ -199,7 +199,7 @@ void Spektrum_satellite::handle_interrupt(void)
 		// the shorter frame period is 11'000us (11bits encoding) and the longer frame period is 22'000 us(10bits encoding) 
 		// the inter byte period within a frame is 77us
 		// Clear buffer if the new byte of the on-going frame came after 2times the inter-byte period
-		if ( (receiver_.available()!=0) && (dt_interrupt > 150))
+		if ( (receiver_.readable()!=0) && (dt_interrupt > 150))
 		{
 			receiver_.clear();
 		}
@@ -209,7 +209,7 @@ void Spektrum_satellite::handle_interrupt(void)
 		receiver_.put(c1);
 		
 		// If frame is complete, decode channels
-		if( receiver_.available() == 16 )
+		if( receiver_.readable() == 16 )
 		{
 			if( protocol_ != RADIO_PROTOCOL_UNKNOWN ) 
 			{

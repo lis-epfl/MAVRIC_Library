@@ -81,7 +81,7 @@ uint32_t Serial_udp::readable(void)
 		rx_buffer_.put(buf[i]);
 	}
 
-	return rx_buffer_.available();
+	return rx_buffer_.readable();
 }
 
 
@@ -94,7 +94,7 @@ uint32_t Serial_udp::writeable(void)
 
 void Serial_udp::flush(void)
 {
-	uint32_t n_bytes_to_send = tx_buffer_.available(); 
+	uint32_t n_bytes_to_send = tx_buffer_.readable(); 
 	uint8_t to_send[n_bytes_to_send];
 	uint32_t n_sent = 0;
 
@@ -133,7 +133,7 @@ bool Serial_udp::write(const uint8_t* bytes, const uint32_t size)
 	}
 
 	// Start transmission
-	if( tx_buffer_.available() >= 1 )
+	if( tx_buffer_.readable() >= 1 )
 	{ 
 		flush();
 	}

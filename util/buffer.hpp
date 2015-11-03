@@ -110,7 +110,7 @@ public:
 	 * 
 	 * \return       	Number of available bytes
 	 */
-	uint32_t available(void) const;
+	uint32_t readable(void) const;
 
 
 	/**

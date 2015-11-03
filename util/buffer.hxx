@@ -120,7 +120,7 @@ void Buffer_tpl<S, T>::clear(void)
 
 
 template<uint32_t S, typename T>
-uint32_t Buffer_tpl<S, T>::available(void) const
+uint32_t Buffer_tpl<S, T>::readable(void) const
 {
 	return (S + 1 + head_ - tail_)%(S+1);
 }
@@ -129,7 +129,7 @@ uint32_t Buffer_tpl<S, T>::available(void) const
 template<uint32_t S, typename T>
 uint32_t Buffer_tpl<S, T>::writeable(void) const
 {
-	return S - available();
+	return S - readable();
 }
 
 

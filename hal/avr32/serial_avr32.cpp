@@ -119,7 +119,7 @@ bool Serial_avr32::init(void)
 	
 uint32_t Serial_avr32::readable(void)
 {
-	return rx_buffer_.available();
+	return rx_buffer_.readable();
 }
 
 
@@ -164,7 +164,7 @@ bool Serial_avr32::write(const uint8_t* bytes, const uint32_t size)
 	}
 
 	// // Start transmission								TODO: check if this should not be at the begining of the function to avoid infinite while loop
-	if( tx_buffer_.available() >= 1 )
+	if( tx_buffer_.readable() >= 1 )
 	{ 
 		uart_->ier = AVR32_USART_IER_TXRDY_MASK;
 	}
@@ -249,7 +249,7 @@ void Serial_avr32::irq_handler(void)
 	// Outgoing data
 	if( csr & AVR32_USART_CSR_TXRDY_MASK ) 
 	{
-		if( tx_buffer_.available() > 0 ) 
+		if( tx_buffer_.readable() > 0 ) 
 		{
 			tx_buffer_.get(c1);
 			uart_->thr = c1;
