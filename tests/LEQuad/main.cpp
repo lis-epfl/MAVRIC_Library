@@ -39,14 +39,12 @@
  ******************************************************************************/
 
 #include "mavrinux.hpp"
-
 #include "central_data.hpp"
 #include "mavlink_telemetry.hpp"
 #include "tasks.hpp"
 
 extern "C" 
 {
-	#include "time_keeper.h"
 	#include "print_util.h"
 }
 
@@ -78,10 +76,6 @@ void initialisation(Central_data& central_data, Mavrinux& board)
 	print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 }
 
-#include <array>
-
-#define S 3
-
 int main (void)
 {
 	// -------------------------------------------------------------------------
@@ -106,41 +100,6 @@ int main (void)
 
 
 	initialisation(cd, board);
-
-	Buffer_tpl<S, uint32_t> buf;
-	// Buffer buf;
-	for( uint32_t i = 0; i < 2*S+2; ++i )
-	{
-		// buf.put_lossy(i);
-		buf.put_lossy(i);
-		print_util_dbg_print("Put");
-		print_util_dbg_print_num(i, 10);
-		print_util_dbg_print(", available ");
-		print_util_dbg_print_num(buf.available(), 10);		
-		print_util_dbg_print(", writeable  ");
-		print_util_dbg_print_num(buf.writeable(), 10);
-		print_util_dbg_print("\r\n");
-	}
-	print_util_dbg_print("\r\n");	
-	for(uint32_t i = 0; i < S; ++i)
-	{
-		uint32_t byte = 0;
-		if( buf.get(byte) )
-		{
-			print_util_dbg_print("Get");
-			print_util_dbg_print_num(byte, 10);
-			print_util_dbg_print(", available ");
-			print_util_dbg_print_num(buf.available(), 10);		
-			print_util_dbg_print(", writeable  ");
-			print_util_dbg_print_num(buf.writeable(), 10);
-			print_util_dbg_print("\r\n");
-		}
-		else
-		{
-			print_util_dbg_print("Could not get byte\r\n");
-		}
-	}
-
 
 	while (1 == 1) 
 	{
