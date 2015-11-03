@@ -138,6 +138,7 @@ static bool onboard_parameters_send_one_parameter_now(onboard_parameters_t* onbo
 static bool onboard_parameters_send_all_scheduled_parameters(onboard_parameters_t* onboard_parameters) 
 {
 	bool success = true;
+
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
 	for (uint8_t i = 0; i < param_set->param_count; i++)
@@ -227,6 +228,9 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 			} //end of for (uint16_t i = 0; i < param_set->param_count; i++)
 		} //end of else
 	} //end of if ((uint8_t)request.target_system == (uint8_t)sysid)
+
+	// Send now
+	onboard_parameters_send_all_scheduled_parameters(onboard_parameters);
 }
 
 //------------------------------------------------------------------------------
