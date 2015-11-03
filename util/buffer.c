@@ -136,6 +136,10 @@ uint32_t buffer_bytes_available(buffer_t * buffer)
 	return (BUFFER_SIZE + buffer->buffer_head - buffer->buffer_tail)&BUFFER_MASK;
 }
 
+uint32_t buffer_bytes_writeable(buffer_t *buffer)
+{
+	return (BUFFER_SIZE - buffer_bytes_available(buffer));
+}
 
 void buffer_init(buffer_t * buffer) 
 {
@@ -160,6 +164,7 @@ void buffer_make_buffered_stream(buffer_t *buffer, byte_stream_t *stream)
 	stream->flush = NULL;													// but buffer_get and buffer_put take buffer_t* as first argument
 	stream->data = buffer;
 	stream->bytes_available = ( uint32_t(*)(stream_data_t*) ) &buffer_bytes_available;
+	stream->bytes_writeable = ( uint32_t(*)(stream_data_t*) ) &buffer_bytes_writeable;
 }
 
 
@@ -170,4 +175,5 @@ void buffer_make_buffered_stream_lossy(buffer_t *buffer, byte_stream_t *stream)
 	stream->flush = NULL;
 	stream->data = buffer;
 	stream->bytes_available = (uint32_t(*)(stream_data_t*)) &buffer_bytes_available;
+	stream->bytes_writeable = ( uint32_t(*)(stream_data_t*) ) &buffer_bytes_writeable;
 }
