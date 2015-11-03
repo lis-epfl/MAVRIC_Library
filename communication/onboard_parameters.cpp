@@ -232,9 +232,6 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 			} //end of for (uint16_t i = 0; i < param_set->param_count; i++)
 		} //end of else
 	} //end of if ((uint8_t)request.target_system == (uint8_t)sysid)
-
-	// Send now
-	onboard_parameters_send_all_scheduled_parameters(onboard_parameters);
 }
 
 
