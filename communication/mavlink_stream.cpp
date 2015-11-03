@@ -118,19 +118,7 @@ bool mavlink_stream_receive(mavlink_stream_t* mavlink_stream)
 	uint8_t byte;
 	mavlink_received_t* rec = &mavlink_stream->rec;
 
-	// if(mavlink_stream->msg_available == false)
-	// {
-	// 	while( mavlink_stream->serial->readable() > 0 ) 
-	// 	{
-	// 		mavlink_stream->serial->read(&byte);
-			
-	// 		if(mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status)) 
-	// 		{
-	// 			mavlink_stream->msg_available = true;
-	// 		}
-	// 	}
-	// }
-
+	// Try to decode bytes until a message is complete, or there is nothing left to read
 	while( (mavlink_stream->msg_available == false) && (mavlink_stream->serial->readable() > 0) )
 	{
 		// read one byte
