@@ -153,6 +153,15 @@ int8_t  uart_int_get_byte(usart_config_t *usart_conf);
 int32_t uart_int_bytes_available(usart_config_t *usart_conf);
 
 /**
+ * \brief returns number of writeable bytes in the receive buffer
+ *
+ * \param	usart_conf	The pointer to the UART line
+ *
+ * \return	the number of writeable bytes in the receive buffer
+ */
+int32_t uart_int_bytes_writeable(usart_config_t *usart_conf);
+
+/**
  * \brief Non-blocking operation to append a byte to the uart send buffer if buffer is full, the command has no effect  (returns -1).
  *
  * \param	usart_conf	The pointer to the UART line

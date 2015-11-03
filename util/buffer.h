@@ -125,6 +125,16 @@ uint32_t buffer_bytes_available(buffer_t * buffer);
 
 
 /**
+ * \brief        	Returns the number of writeable bytes in the buffer
+ * 
+ * \param buffer 	Pointer to buffer
+ *
+ * \return       	Number of writeable bytes
+ */
+uint32_t buffer_bytes_writeable(buffer_t *buffer);
+
+
+/**
  * \brief        	Tests whether the buffer is full
  * 
  * \param buffer 	Pointer to buffer

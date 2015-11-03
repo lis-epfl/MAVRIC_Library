@@ -193,7 +193,12 @@ int8_t  uart_int_get_byte(usart_config_t *usart_conf)
 
 int32_t uart_int_bytes_available(usart_config_t *usart_conf) 
 {
-	return buffer_bytes_available(&(usart_conf->uart_device.receive_buffer));
+	return buffer_bytes_available(&(usart_conf->uart_device.transmit_buffer));
+}
+
+int32_t uart_int_bytes_writeable(usart_config_t *usart_conf)
+{
+	return buffer_bytes_writeable(&(usart_conf->uart_device.transmit_buffer));
 }
 
 void uart_int_send_byte(usart_config_t *usart_conf, uint8_t data) 
@@ -206,7 +211,7 @@ void uart_int_send_byte(usart_config_t *usart_conf, uint8_t data)
 		 // kick-start transmission
 //		usart_conf->uart_device.uart->thr='c';//buffer_get(&(usart_conf->uart_device.transmit_buffer));
 		usart_conf->uart_device.uart->ier = AVR32_USART_IER_TXRDY_MASK;
-	}		
+	}	
 }
 
 void uart_int_flush(usart_config_t *usart_conf) 
@@ -222,6 +227,8 @@ void uart_int_register_write_stream(usart_config_t *usart_conf, byte_stream_t *s
 	stream->put = (uint8_t(*)(stream_data_t*, uint8_t))&uart_int_send_byte;			// Here we need to explicitly cast the function to match the prototype
 	stream->flush = (void(*)(stream_data_t*))&uart_int_flush;						// stream->get and stream->put expect stream_data_t* as first argument
 	stream->buffer_empty = (int32_t(*)(stream_data_t*))&uart_out_buffer_empty;			// but buffer_get and buffer_put take buffer_t* as first argument
+	stream->bytes_available = (uint32_t(*)(stream_data_t*)) &uart_int_bytes_available;
+	stream->bytes_writeable = (uint32_t(*)(stream_data_t*)) &uart_int_bytes_writeable;
 	stream->data = usart_conf;
 }
 

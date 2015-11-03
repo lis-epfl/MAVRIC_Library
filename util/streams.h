@@ -66,6 +66,7 @@ typedef struct
 	void    	(*flush)(stream_data_t *data);					///<	Pointer to flush function
 	int32_t     (*buffer_empty)(stream_data_t *data);			///<	Pointer to buffer_empty function
 	uint32_t 	(*bytes_available)(stream_data_t *data);		///<	Pointer to bytes_available function
+	uint32_t	(*bytes_writeable)(stream_data_t *data);		///<	Pointer to bytes_writeable function
 	volatile stream_data_t data;								///<	Data
 } byte_stream_t;
 

@@ -200,20 +200,18 @@ task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_comm
 	mavlink_message_handler_t* handler = &mavlink_communication->message_handler;
 
 	// Receive new message
-	mavlink_stream_receive(mavlink_stream);
+	while( mavlink_stream_receive(mavlink_stream) )
+	{
+		// Handle message
+		if (mavlink_stream->msg_available == true)
+		{
+			mavlink_message_handler_receive(handler, &mavlink_stream->rec);
+			mavlink_stream->msg_available = false;
+		}
+	}
 
-	// Handle message
-	if (mavlink_stream->msg_available == true)
-	{
-		mavlink_message_handler_receive(handler, &mavlink_stream->rec);
-		mavlink_stream->msg_available = false;
-	}
-	
 	// Send messages
-	if (mavlink_stream->tx->buffer_empty(mavlink_stream->tx->data) == true) 
-	{
-		result = scheduler_update(&mavlink_communication->scheduler);
-	}
+	result = scheduler_update(&mavlink_communication->scheduler);
 	
 	return result;
 }
