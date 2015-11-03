@@ -45,11 +45,11 @@
  *
  ******************************************************************************/
 
-// #include "stabilisation_copter_default_config.h"
-// #include "stabilisation_copter_custom_config.h"
+#include "stabilisation_copter_default_config.h"
 
 #include "state_machine_custom.h"
 #include "launch_detection_default_config.h"
+#include "print_util.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -72,7 +72,10 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 	state_machine->state = STATE_IDLE;
 	state_machine->enabled = 0;
 
+	state_machine->stabilisation_copter_conf = &stabilisation_copter_default_config;
+
 	state_machine->remote = remote;
+	state_machine->imu = imu;
 	
 	launch_detection_init(&state_machine->ld, &launch_detection_default_config);
 
@@ -82,11 +85,16 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 task_return_t state_machine_custom_update(state_machine_custom_t * state_machine, control_command_t * controls)
 {
 	bool switch_enabled = ((int32_t)(state_machine->remote->channels[CHANNEL_AUX1] + 1.0f) > 0);
+	// bool is_armed = state_machine->imu->state->mav_mode.ARMED == ARMED_ON;
+
+	// DEBUG MODE
+	// bool switch_enabled = 1; 
+	bool is_armed = 1;
 
 	switch (state_machine->state) 
 	{
 		case STATE_IDLE:
-			if (switch_enabled && (state_machine->enabled==0))
+			if (is_armed && switch_enabled && (state_machine->enabled==0))
 			{
 				state_machine->enabled = 1;
 				state_machine->state = STATE_LAUNCH_DETECTION;
@@ -104,9 +112,10 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 		break;
 
 		case STATE_ATTITUDE_CONTROL:
+			state_machine->stabilisation_copter_conf = &stabilisation_copter_custom_config;
 			controls->rpy[ROLL] = 0.0f;
 			controls->rpy[PITCH] = 0.0f;
-			// controls.thrust = stabilisation_copter->thrust_hover_point; // TODO !!!!
+			controls->thrust = state_machine->stabilisation_copter_conf->thrust_hover_point;
 			controls->control_mode = ATTITUDE_COMMAND_MODE;
 			controls->yaw_mode=YAW_RELATIVE;
 		break;
