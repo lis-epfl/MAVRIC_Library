@@ -73,6 +73,7 @@ typedef enum {
 typedef struct {
 	state_custom_t state;
 	bool enabled;
+	bool debug;
 
 	stabilisation_copter_conf_t * stabilisation_copter_conf;
 

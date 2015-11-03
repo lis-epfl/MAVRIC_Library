@@ -74,6 +74,7 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 
 	state_machine->state = STATE_IDLE;
 	state_machine->enabled = 0;
+	state_machine->debug = 0;
 
 	state_machine->stabilisation_copter_conf = &stabilisation_copter_default_config;
 
@@ -88,12 +89,8 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 
 task_return_t state_machine_custom_update(state_machine_custom_t * state_machine, control_command_t * controls)
 {
-	bool switch_enabled = ((int32_t)(state_machine->remote->channels[CHANNEL_AUX1] + 1.0f) > 0);
-	// bool is_armed = state_machine->imu->state->mav_mode.ARMED == ARMED_ON;
-
-	// DEBUG MODE
-	// bool switch_enabled = 1; 
-	bool is_armed = 1;
+	bool switch_enabled = state_machine->debug ? 1 : ((int32_t)(state_machine->remote->channels[CHANNEL_AUX1] + 1.0f) > 0);
+	bool is_armed = state_machine->debug ? 1 : state_machine->imu->state->mav_mode.ARMED == ARMED_ON;
 
 	switch (state_machine->state) 
 	{
@@ -132,7 +129,6 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 			{
 				state_machine->state = STATE_VERTICAL_VELOCITY;
 			}
-
 		break;
 
 		case STATE_VERTICAL_VELOCITY:
