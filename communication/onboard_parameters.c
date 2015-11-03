@@ -51,13 +51,24 @@
 //------------------------------------------------------------------------------
 
 /**
+ * \brief 	Sends immediately one parameter
+ * 
+ * \param 	onboard_parameters 	Pointer to onbard_parameter structure
+ * \param 	index 				Index of the parameter to send
+ * 
+ * \return 	Success
+ */
+static bool onboard_parameters_send_one_parameter_now(onboard_parameters_t* onboard_parameters, uint32_t index);
+
+
+/**
  * \brief	Sends all parameters that have been scheduled via MAVlink
  *
  * \param	onboard_parameters		The pointer to the onboard parameter structure
  *
- * \return	task_return_t			Returns the result of the task, currently only TASK_RUN_SUCCESS
+ * \return	True if the parameter was successully sent, false otherwise
  */
-static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters);
+static bool onboard_parameters_send_all_scheduled_parameters(onboard_parameters_t* onboard_parameters);
 
 
 /**
@@ -67,7 +78,7 @@ static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parame
  * \param	sysid					The system ID
  * \param   msg 					Incoming MAVLink message
  */
-static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
+static void onboard_parameters_schedule_all_parameters(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
 
 
 /**
@@ -93,35 +104,55 @@ static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_p
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters) 
+static bool onboard_parameters_send_one_parameter_now(onboard_parameters_t* onboard_parameters, uint32_t index) 
 {
+	bool success = true;
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
+	mavlink_message_t msg;
+	mavlink_msg_param_value_pack(	onboard_parameters->mavlink_stream->sysid,
+									onboard_parameters->mavlink_stream->compid,
+									&msg,
+									(char*)param_set->parameters[index].param_name,
+									*(param_set->parameters[index].param),
+									// onboard_parameters_read_parameter(onboard_parameters, index),
+									param_set->parameters[index].data_type,
+									param_set->param_count,
+									index 	);
+	
+	// Schedule for transmission
+	param_set->parameters[index].schedule_for_transmission = true;
+
+	// Try to send
+	success = mavlink_stream_send(onboard_parameters->mavlink_stream, &msg);
+			
+	if( success )	
+	{			
+		// If successfully sent, un-schedule	
+		param_set->parameters[index].schedule_for_transmission = false;
+	}	
+	
+	return success;
+}
+
+static bool onboard_parameters_send_all_scheduled_parameters(onboard_parameters_t* onboard_parameters) 
+{
+	bool success = true;
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
 	for (uint8_t i = 0; i < param_set->param_count; i++)
 	{
 		if (param_set->parameters[i].schedule_for_transmission) 
 		{
-			mavlink_message_t msg;
-			mavlink_msg_param_value_pack(	onboard_parameters->mavlink_stream->sysid,
-											onboard_parameters->mavlink_stream->compid,
-											&msg,
-											(char*)param_set->parameters[i].param_name,
-											*(param_set->parameters[i].param),
-											// onboard_parameters_read_parameter(onboard_parameters, i),
-											param_set->parameters[i].data_type,
-											param_set->param_count,
-											i 	);
-			mavlink_stream_send(onboard_parameters->mavlink_stream, &msg);
-										
-			param_set->parameters[i].schedule_for_transmission=false;
-		}			
+			success = onboard_parameters_send_one_parameter_now(onboard_parameters, i);
+		}		
 	}//end of for loop
 	
-	return TASK_RUN_SUCCESS;
+	return success;
 }
 
 
-static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg) 
+static void onboard_parameters_schedule_all_parameters(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg) 
 {
 	mavlink_param_request_list_t packet;
 	mavlink_msg_param_request_list_decode(msg, &packet);
@@ -152,9 +183,10 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 		if(request.param_index != -1) 
 		{	
 			// Control if the index is in the range of existing parameters and schedule it for transmission
-			if ( request.param_index <= param_set->param_count)
+			if ( (uint32_t)request.param_index <= param_set->param_count)
 			{
-				param_set->parameters[request.param_index].schedule_for_transmission = true;
+				// Send now
+				onboard_parameters_send_one_parameter_now(onboard_parameters, request.param_index);
 			}
 		}
 		else 
@@ -186,7 +218,8 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 				// Check if matched
 				if ( match ) 
 				{
-					param->schedule_for_transmission = true;
+					// Send now
+					onboard_parameters_send_one_parameter_now(onboard_parameters, i);
 
 					// Exit external (i) for() loop
 					break;
@@ -236,8 +269,8 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 										100000,
 										RUN_REGULAR,
 										PERIODIC_ABSOLUTE,
-										PRIORITY_NORMAL,
-										(task_function_t)&onboard_parameters_send_scheduled_parameters,
+										PRIORITY_HIGHEST,
+										(task_function_t)&onboard_parameters_send_all_scheduled_parameters,
 										(task_argument_t)onboard_parameters,
 										MAVLINK_MSG_ID_PARAM_VALUE);
 
@@ -247,7 +280,7 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	callback.message_id 	= MAVLINK_MSG_ID_PARAM_REQUEST_LIST; // 21
 	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
-	callback.function 		= (mavlink_msg_callback_function_t)	&onboard_parameters_send_all_parameters;
+	callback.function 		= (mavlink_msg_callback_function_t)	&onboard_parameters_schedule_all_parameters;
 	callback.module_struct 	= (handling_module_struct_t)		onboard_parameters;
 	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
 	
@@ -494,6 +527,10 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 					// schedule parameter for transmission downstream
 					param->schedule_for_transmission=true;
 				}
+
+				// Send now
+				onboard_parameters_send_one_parameter_now(onboard_parameters, i);
+
 				break;
 			}
 		}
