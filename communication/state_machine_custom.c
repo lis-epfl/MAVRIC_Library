@@ -51,6 +51,9 @@
 #include "launch_detection_default_config.h"
 #include "print_util.h"
 
+#define RP_THRESHOLD 0.08f
+#define ANGULAR_SPEED_THRESHOLD 0.5f
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
@@ -65,7 +68,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu)
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs)
 {
 	bool init_success = true;
 
@@ -76,6 +79,7 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 
 	state_machine->remote = remote;
 	state_machine->imu = imu;
+	state_machine->ahrs = ahrs;
 	
 	launch_detection_init(&state_machine->ld, &launch_detection_default_config);
 
@@ -118,10 +122,26 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 			controls->thrust = state_machine->stabilisation_copter_conf->thrust_hover_point;
 			controls->control_mode = ATTITUDE_COMMAND_MODE;
 			controls->yaw_mode=YAW_RELATIVE;
+
+			bool roll_predicate = state_machine->ahrs->qe.v[0] < RP_THRESHOLD;
+			bool pitch_predicate = state_machine->ahrs->qe.v[1] < RP_THRESHOLD;
+			bool angular_speed_x_predicate = state_machine->ahrs->angular_speed[0] < ANGULAR_SPEED_THRESHOLD;
+			bool angular_speed_y_predicate = state_machine->ahrs->angular_speed[1] < ANGULAR_SPEED_THRESHOLD;
+
+			if (roll_predicate && pitch_predicate && angular_speed_x_predicate && angular_speed_y_predicate)
+			{
+				state_machine->state = STATE_VERTICAL_VELOCITY;
+			}
+
 		break;
 
 		case STATE_VERTICAL_VELOCITY:
 			state_machine->stabilisation_copter_conf = &stabilisation_copter_default_config;
+		break;
+
+		case STATE_HEIGHT_CONTROL:
+		case STATE_HORIZONTAL_VELOCITY:
+		case STATE_POSITION_LOCKING:
 		break;
 	}
 

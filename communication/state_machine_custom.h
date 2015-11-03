@@ -52,6 +52,7 @@
 extern "C" {
 #endif
 
+#include "ahrs.h"
 #include "launch_detection.h"
 #include "remote.h"
 #include "scheduler.h"
@@ -78,6 +79,7 @@ typedef struct {
 	remote_t * remote;
 	launch_detection_t ld;
 	imu_t * imu;
+	ahrs_t * ahrs;
 } state_machine_custom_t;
 
 
@@ -87,10 +89,11 @@ typedef struct {
  * \param state_machine				Pointer to the state machine structure
  * \param remote					Pointer to the remote
  * \param imu 						Pointer to the IMU structure
+ * \param ahrs 						Pointer to the AHRS structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu);
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs);
 
 
 /**
