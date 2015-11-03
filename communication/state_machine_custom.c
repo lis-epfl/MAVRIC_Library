@@ -119,6 +119,10 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 			controls->control_mode = ATTITUDE_COMMAND_MODE;
 			controls->yaw_mode=YAW_RELATIVE;
 		break;
+
+		case STATE_VERTICAL_VELOCITY:
+			state_machine->stabilisation_copter_conf = &stabilisation_copter_default_config;
+		break;
 	}
 
 	// Final check if algorithm was aborted
