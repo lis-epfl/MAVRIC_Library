@@ -42,8 +42,8 @@
  ******************************************************************************/
 
 
-#ifndef IMU_H_
-#define IMU_H_
+#ifndef IMU_HPP_
+#define IMU_HPP_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -398,9 +398,4 @@ static inline imu_conf_t imu_default_config()
 	return conf;
 }
 
-typedef struct
-{
-	
-} imu_t;
-
-#endif /* IMU_H_ */
+#endif /* IMU_HPP_ */

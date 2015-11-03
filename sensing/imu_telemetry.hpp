@@ -42,8 +42,8 @@
  ******************************************************************************/
 
 
-#ifndef IMU_TELEMETRY_H_
-#define IMU_TELEMETRY_H_
+#ifndef IMU_TELEMETRY_HPP_
+#define IMU_TELEMETRY_HPP_
 
 #include "mavlink_stream.hpp"
 #include "mavlink_message_handler.hpp"
@@ -69,4 +69,4 @@ bool imu_telemetry_init(Imu* imu, mavlink_message_handler_t* message_handler);
  */
 void imu_telemetry_send_scaled(const Imu* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* IMU_TELEMETRY_H_ */
+#endif /* IMU_TELEMETRY_HPP_ */
