@@ -93,38 +93,51 @@ bool mavlink_stream_init(	mavlink_stream_t* mavlink_stream,
 }
 
 
-void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
+	bool success = true;
 	uint8_t buf[MAVLINK_MAX_PACKET_LEN];
 
 	// Copy the message to the send buffer
 	uint16_t len = mavlink_msg_to_send_buffer(buf, msg);
 
-	// Send byte per byte
-	for (int i = 0; i < len; ++i)
+	if (mavlink_stream->tx->bytes_writeable(mavlink_stream->tx->data) >= len)
 	{
-		mavlink_stream->tx->put(mavlink_stream->tx->data, buf[i]);
+		// Send byte per byte
+		for (int i = 0; i < len; ++i)
+		{
+			mavlink_stream->tx->put(mavlink_stream->tx->data, buf[i]);
+		}
 	}
+	else
+	{
+	 	success = false;
+	}
+
+	return success;
 }
 
 
-void mavlink_stream_receive(mavlink_stream_t* mavlink_stream) 
+bool mavlink_stream_receive(mavlink_stream_t* mavlink_stream) 
 {
 	uint8_t byte;
 	byte_stream_t* stream = mavlink_stream->rx;
 	mavlink_received_t* rec = &mavlink_stream->rec;
 
-	if(mavlink_stream->msg_available == false)
+	while( (mavlink_stream->msg_available == false) && (stream->bytes_available(stream->data) > 0) ) 
 	{
-		while(stream->bytes_available(stream->data) > 0) 
+		// read one byte
+		byte = stream->get(stream->data);
+
+		// Use the byte to decode current message 
+		if(mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status)) 
 		{
-			byte = stream->get(stream->data);
-			if(mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status)) 
-			{
-				mavlink_stream->msg_available = true;
-			}
+			// If message was sucessfully decoded, exit while loop
+			mavlink_stream->msg_available = true;
 		}
 	}
+
+	return mavlink_stream->msg_available;
 }
 
 
