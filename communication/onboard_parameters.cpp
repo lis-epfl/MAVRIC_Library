@@ -103,7 +103,6 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
  */
 static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -313,7 +312,6 @@ static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_p
 	}
 }
 
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -415,17 +413,29 @@ bool onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_param
 	{
 		if( param_set->param_count < param_set->max_param_count )
 		{
-			onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
 
-			new_param->param                     = (float*) val;
-			strcpy( new_param->param_name, 		param_name );
-			new_param->data_type                 = MAVLINK_TYPE_UINT32_T;
-			new_param->param_name_length         = strlen(param_name);
-			new_param->schedule_for_transmission = true;
-			
-			param_set->param_count += 1;
-			
-			add_success &= true;
+				new_param->param                     = (float*) val;
+				strcpy( new_param->param_name, 		param_name );
+				new_param->data_type                 = MAVLINK_TYPE_UINT32_T;
+				new_param->param_name_length         = strlen(param_name);
+				new_param->schedule_for_transmission = true;
+				
+
+				param_set->param_count += 1;
+				
+				add_success &= true;
+			} 
+			else 
+			{
+				print_util_dbg_print("[ONBOARD PARAMETER] Error: parameter name ");
+				print_util_dbg_print(param_name);
+				print_util_dbg_print(" is too long.\r\n");
+
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -455,17 +465,28 @@ bool onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parame
 	{
 		if( param_set->param_count < param_set->max_param_count )
 		{
-			onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
 
-			new_param->param                     = (float*) val;
-			strcpy( new_param->param_name, 		param_name );
-			new_param->data_type                 = MAVLINK_TYPE_INT32_T;
-			new_param->param_name_length         = strlen(param_name);
-			new_param->schedule_for_transmission = true;
-			
-			param_set->param_count += 1;
-			
-			add_success &= true;
+				new_param->param                     = (float*) val;				
+				strcpy( new_param->param_name, 		param_name );
+				new_param->data_type                 = MAVLINK_TYPE_INT32_T;
+				new_param->param_name_length         = strlen(param_name);
+				new_param->schedule_for_transmission = true;
+
+				param_set->param_count += 1;
+				
+				add_success &= true;
+			}
+			else 
+			{
+				print_util_dbg_print("[ONBOARD PARAMETER] Error: parameter name ");
+				print_util_dbg_print(param_name);
+				print_util_dbg_print(" is too long.\r\n");
+
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -495,17 +516,29 @@ bool onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parame
 	{
 		if( param_set->param_count < param_set->max_param_count )
 		{
-			onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
 
-			new_param->param                     = val;
-			strcpy( new_param->param_name, 		param_name );
-			new_param->data_type                 = MAVLINK_TYPE_FLOAT;
-			new_param->param_name_length         = strlen(param_name);
-			new_param->schedule_for_transmission = true;
-			
-			param_set->param_count += 1;
-			
-			add_success &= true;
+				new_param->param                     = val;
+				strcpy( new_param->param_name, 		param_name );
+				new_param->data_type                 = MAVLINK_TYPE_FLOAT;
+				new_param->schedule_for_transmission = true;
+				new_param->param_name_length         = strlen(param_name);
+
+
+				param_set->param_count += 1;
+				
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[ONBOARD PARAMETER] Error: parameter name ");
+				print_util_dbg_print(param_name);
+				print_util_dbg_print(" is too long.\r\n");
+
+				add_success &= false;
+			}
 		}
 		else
 		{
