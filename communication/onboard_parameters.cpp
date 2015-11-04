@@ -85,6 +85,17 @@ static void onboard_parameters_schedule_all_parameters(onboard_parameters_t* onb
 
 
 /**
+ * \brief 	Schedules one parameter after the other, used to maintain parameter 
+ * 			list on newer versions of QGC
+ * 
+ * \details Should be called at ~10Hz
+ * 
+ * \param onboard_parameters [description]
+ */
+static void onboard_parameters_schedule_next_parameter(onboard_parameters_t* onboard_parameters);
+
+
+/**
  * \brief	Callback to a MAVlink parameter request
  *
  * \param   onboard_parameters		Pointer to module structure
@@ -171,6 +182,23 @@ static void onboard_parameters_schedule_all_parameters(onboard_parameters_t* onb
 		{
 			param_set->parameters[i].schedule_for_transmission=true;
 		}
+	}
+}
+
+
+static void onboard_parameters_schedule_next_parameter(onboard_parameters_t* onboard_parameters)
+{
+	static uint32_t index = 0;
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
+	if(index < param_set->param_count)
+	{
+		param_set->parameters[index].schedule_for_transmission=true;
+		index ++;
+	}
+	else
+	{
+		index = 0;
 	}
 }
 
@@ -354,6 +382,15 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 										(task_function_t)&onboard_parameters_send_all_scheduled_parameters,
 										(task_argument_t)onboard_parameters,
 										MAVLINK_MSG_ID_PARAM_VALUE);
+
+	init_success &= scheduler_add_task(	scheduler, 
+										100000,
+										RUN_REGULAR,
+										PERIODIC_ABSOLUTE,
+										PRIORITY_HIGHEST,
+										(task_function_t)&onboard_parameters_schedule_next_parameter,
+										(task_argument_t)onboard_parameters,
+										999);
 
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
