@@ -58,6 +58,7 @@
  */
 static void data_logging_add_header_name(data_logging_t* data_logging);
 
+
 /**
  * \brief	Function to put a floating point number in the file fp
  *
@@ -68,6 +69,7 @@ static void data_logging_add_header_name(data_logging_t* data_logging);
  * \return	The result : 0 if it fails otherwise EOF (-1)
  */
 static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits);
+
 
 /**
  * \brief	Function to put a floating point number in the file fp
@@ -80,6 +82,7 @@ static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits);
  */
 static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits);
 
+
 /**
  * \brief	Function to put a uint64_t number in the file fp
  *
@@ -89,6 +92,7 @@ static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits)
  * \return	The result : 0 if it fails otherwise EOF (-1)
  */
 static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c);
+
 
 /**
  * \brief	Function to put a int64_t number in the file fp
@@ -100,6 +104,7 @@ static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c);
  */
 static int32_t data_logging_put_int64_t(FIL* fp, int64_t c);
 
+
 /**
  * \brief	Function to put a \r or a \n after the data logging parameter value (\r between them and \n and the end)
  *
@@ -108,6 +113,7 @@ static int32_t data_logging_put_int64_t(FIL* fp, int64_t c);
  */
 static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param_num);
 
+
 /**
  * \brief	Function to log a new line of values
  *
@@ -115,12 +121,14 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
  */
 static void data_logging_log_parameters(data_logging_t* data_logging);
 
+
 /**
  * \brief	Seek the end of an open file to append
  *
  * \param	data_logging			The pointer to the data logging structure
  */
 static void data_logging_f_seek(data_logging_t* data_logging);
+
 
 /**
 * \brief	Appends ".txt" to the end of a character string. If not enough 
@@ -134,7 +142,8 @@ static void data_logging_f_seek(data_logging_t* data_logging);
 *
 * \return	success		Bool stating if the entire output was written
 */
-static bool data_logging_filename_append_extension(char* output, char* filename, int length);
+static bool data_logging_filename_append_extension(char* output, char* filename, uint32_t length);
+
 
 /**
 * \brief	Appends a uint32_t to a character string with an underscore between.
@@ -149,7 +158,7 @@ static bool data_logging_filename_append_extension(char* output, char* filename,
 *
 * \return	success		Bool stating if the entire output was written
 */
-static bool data_logging_filename_append_int(char* output, const char* filename, uint32_t num, int length);
+static bool data_logging_filename_append_int(char* output, const char* filename, uint32_t num, uint32_t length);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -183,6 +192,7 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 	}
 	data_logging->file_init = init;
 }
+
 
 static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits)
 {
@@ -229,6 +239,7 @@ static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits)
 	return res;
 }
 
+
 static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits)
 {
 	uint32_t i;
@@ -270,6 +281,7 @@ static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits)
 	return res;
 }
 
+
 static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c)
 {
 	int32_t res = EOF;
@@ -296,6 +308,7 @@ static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c)
 	return res;
 }
 
+
 static int32_t data_logging_put_int64_t(FIL* fp, int64_t c)
 {
 	int32_t res = 0;
@@ -315,6 +328,7 @@ static int32_t data_logging_put_int64_t(FIL* fp, int64_t c)
 	
 	return res;
 }
+
 
 static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param_num)
 {
@@ -340,6 +354,7 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 	}
 }
 
+
 static void data_logging_log_parameters(data_logging_t* data_logging)
 {
 	uint16_t i;
@@ -351,59 +366,59 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 		data_logging_entry_t* param = &data_set->data_log[i];
 		switch(param->data_type)
 		{
-			case MAV_PARAM_TYPE_UINT8:
+			case MAVLINK_TYPE_UINT8_T:
 				res = f_printf(&data_logging->fil, "%d", *((uint8_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
-			case MAV_PARAM_TYPE_INT8:
+			case MAVLINK_TYPE_INT8_T:
 				res = f_printf(&data_logging->fil, "%d", *((int8_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
-			case MAV_PARAM_TYPE_UINT16:
+			case MAVLINK_TYPE_UINT16_T:
 				res = f_printf(&data_logging->fil, "%d", *((uint16_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
-			case MAV_PARAM_TYPE_INT16:
+			case MAVLINK_TYPE_INT16_T:
 				res = f_printf(&data_logging->fil, "%d", *((int16_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 					
-			case MAV_PARAM_TYPE_UINT32:
+			case MAVLINK_TYPE_UINT32_T:
 				res = f_printf(&data_logging->fil, "%d", *((uint32_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
-			case MAV_PARAM_TYPE_INT32:
+			case MAVLINK_TYPE_INT32_T:
 				res = f_printf(&data_logging->fil, "%d", *((int32_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
-			case MAV_PARAM_TYPE_UINT64:
+			case MAVLINK_TYPE_UINT64_T:
 				res = data_logging_put_uint64_t(&data_logging->fil,*((uint64_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
-			case MAV_PARAM_TYPE_INT64:
+			case MAVLINK_TYPE_INT64_T:
 				res = data_logging_put_int64_t(&data_logging->fil,*((int64_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 					
-			case MAV_PARAM_TYPE_REAL32:
+			case MAVLINK_TYPE_FLOAT:
 				res = data_logging_put_float(&data_logging->fil,*((float*)param->param),param->precision);
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 					
-			case MAV_PARAM_TYPE_REAL64:
+			case MAVLINK_TYPE_DOUBLE:
 				res = data_logging_put_double(&data_logging->fil,*((double*)param->param),param->precision);
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 			default:
 				print_util_dbg_print("Data type not supported!\r\n");
 		}
-		if (res == EOF)
+		if (res == (uint32_t)EOF)
 		{
 			if (data_logging->debug)
 			{
@@ -415,6 +430,7 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 		}
 	}
 }
+
 
 static void data_logging_f_seek(data_logging_t* data_logging)
 {
@@ -431,13 +447,14 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 	}
 }
 
-static bool data_logging_filename_append_extension(char* output, char* filename, int length)
+
+static bool data_logging_filename_append_extension(char* output, char* filename, uint32_t length)
 {
 	// Success flag
 	bool is_success = true;
 
 	// Declare counter for char location
-	int i = 0;
+	uint32_t i = 0;
 
 	// Copy characters to output from filename until null character is reached
 	while (filename[i] != '\0')
@@ -482,7 +499,8 @@ static bool data_logging_filename_append_extension(char* output, char* filename,
 	return is_success;
 }
 
-static bool data_logging_filename_append_int(char* output, const char* filename, uint32_t num, int length)
+
+static bool data_logging_filename_append_int(char* output, const char* filename, uint32_t num, uint32_t length)
 {
 	// Success flag
 	bool is_success = true;
@@ -512,7 +530,7 @@ static bool data_logging_filename_append_int(char* output, const char* filename,
 	output[i] = '_';
 
 	// Count number of digits
-	int num_digits = 0;
+	uint32_t num_digits = 0;
 	uint32_t num_copy = num;
 	do // Do while loop to have 0 written as 1 digit
 	{
@@ -566,7 +584,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	data_logging->fat_fs_mounting = fat_fs_mounting;
 
 	// Allocate memory for the onboard data_log
-	data_logging->data_logging_set = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
+	data_logging->data_logging_set = (data_logging_set_t*)malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
 	
 	if ( data_logging->data_logging_set != NULL )
 	{
@@ -600,8 +618,8 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	data_logging->buffer_add_size = 8;
 	#endif
 	
-	data_logging->file_name = malloc(data_logging->buffer_name_size);
-	data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
+	data_logging->file_name = (char*)malloc(data_logging->buffer_name_size);
+	data_logging->name_n_extension = (char*)malloc(data_logging->buffer_name_size);
 	
 	if (data_logging->file_name == NULL)
 	{
@@ -630,9 +648,9 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 {
 	bool create_success = true;
 
-	int32_t i = 0;
+	uint32_t i = 0;
 	
-	char *file_add = malloc(data_logging->buffer_add_size);
+	char *file_add = (char*)malloc(data_logging->buffer_add_size);
 	
 	if (file_add == NULL)
 	{
@@ -648,10 +666,10 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 			bool successful_filename = true;
 
 			// Add iteration number to name_n_extension (does not yet have extension)
-			successful_filename &= data_logging_filename_append_int(data_logging->name_n_extension, data_logging->file_name, i, data_logging->name_n_extension);
+			successful_filename &= data_logging_filename_append_int(data_logging->name_n_extension, data_logging->file_name, i, data_logging->buffer_name_size);
 
 			// Add extension (.txt) to name_n_extension
-			successful_filename &= data_logging_filename_append_extension(data_logging->name_n_extension, data_logging->name_n_extension, data_logging->name_n_extension);
+			successful_filename &= data_logging_filename_append_extension(data_logging->name_n_extension, data_logging->file_name, data_logging->buffer_name_size);
 
 			// Check if there wasn't enough memory allocated to name_n_extension
 			if (successful_filename)
@@ -676,7 +694,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 			++i;
 		
 		//}while((i < data_logging->data_logging_set->max_data_logging_count)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
-		} while( (i < data_logging->data_logging_set->max_data_logging_count) && (data_logging->fr == FR_EXIST) );
+		} while( (i < data_logging->data_logging_set->max_data_logging_count) && (data_logging->fr == (uint32_t)FR_EXIST) );
 	
 		if (data_logging->fr == FR_OK)
 		{
@@ -837,7 +855,7 @@ bool data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val
 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_UINT8;
+			new_param->data_type                 = MAVLINK_TYPE_UINT8_T;
 			
 			data_logging_set->data_logging_count += 1;
 			
@@ -874,7 +892,7 @@ bool data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, 
 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_INT8;
+			new_param->data_type                 = MAVLINK_TYPE_INT8_T;
 			
 			data_logging_set->data_logging_count += 1;
 			
@@ -911,7 +929,7 @@ bool data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* v
 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_UINT16;
+			new_param->data_type                 = MAVLINK_TYPE_UINT16_T;
 			
 			data_logging_set->data_logging_count += 1;
 			
@@ -948,7 +966,7 @@ bool data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val
 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_INT16;
+			new_param->data_type                 = MAVLINK_TYPE_INT16_T;
 			
 			data_logging_set->data_logging_count += 1;
 			
@@ -985,7 +1003,7 @@ bool data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* v
 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_UINT32;
+			new_param->data_type                 = MAVLINK_TYPE_UINT32_T;
 			
 			data_logging_set->data_logging_count += 1;
 			
@@ -1021,7 +1039,7 @@ bool data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val
 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_INT32;
+			new_param->data_type                 = MAVLINK_TYPE_INT32_T;
 			
 			data_logging_set->data_logging_count += 1;
 			
@@ -1058,7 +1076,7 @@ bool data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* v
 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_UINT64;
+			new_param->data_type                 = MAVLINK_TYPE_UINT64_T;
 			
 			data_logging_set->data_logging_count += 1;
 			
@@ -1095,7 +1113,7 @@ bool data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val
 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_INT64;
+			new_param->data_type                 = MAVLINK_TYPE_INT64_T;
 			
 			data_logging_set->data_logging_count += 1;
 			
@@ -1132,7 +1150,7 @@ bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
+			new_param->data_type                 = MAVLINK_TYPE_FLOAT;
 			new_param->precision				 = precision;
 			
 			data_logging_set->data_logging_count += 1;
@@ -1170,7 +1188,7 @@ bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val
 
 			new_param->param					 = val;
 			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAV_PARAM_TYPE_REAL64;
+			new_param->data_type                 = MAVLINK_TYPE_DOUBLE;
 			new_param->precision				 = precision;
 
 			data_logging_set->data_logging_count += 1;
