@@ -30,30 +30,88 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_hybrid.h
+ * \file ahrs_madgwick.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author SOH Madgwick
  * \author Julien Lecoeur
  *   
- * \brief This file handles the stabilization of hybrid platforms
+ * \brief Implementation of Madgwick's AHRS algorithms.
+ *
+ * See: http://www.x-io.co.uk/node/8#open_source_ahrs_and_imu_algorithms
+ *
+ * Date			Author          Notes
+ * 29/09/2011	SOH Madgwick    Initial release
+ * 02/10/2011	SOH Madgwick	Optimised for reduced CPU load
+ * 19/02/2012	SOH Madgwick	Magnetometer measurement is normalised
+ * 04/02/2014	Julien Lecoeur	Adapt to MAVRIC
  *
  ******************************************************************************/
 
 
-#ifndef STABILISATION_HYBRID_H_
-#define STABILISATION_HYBRID_H_
+/**
+ *   Disclaimer: this WIP
+ */
 
-#include "stabilisation.h"
 
-typedef struct {
-	stabiliser_t rate_stabiliser;
-	stabiliser_t attitude_stabiliser;
-} Stabiliser_Stack_hybrid_t;
+#ifndef AHRS_MADGWICK_H_
+#define AHRS_MADGWICK_H_
 
-void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimation_t *pos_est, control_command_t *control_input);
-void stabilisation_hybrid_mix_to_servos_xwing(control_command_t *control);
 
-#endif /* STABILISATION_HYBRID_H_ */
+#include "ahrs.h"
+#include "imu.h"
+
+
+/**
+ * \brief 	Configuration for ahrs _madgwick
+ */
+typedef struct
+{
+	float 	beta;		// 2 * proportional gain (Kp)	
+	float 	zeta;			// Gain for gyro drift compensation
+} ahrs_madgwick_conf_t;
+
+
+/**
+ * \brief 	Structure for the Madgwick attitude estimation filter
+ */
+typedef struct
+{
+	imu_t* 	imu;			// Pointer to IMU sensors
+	ahrs_t* ahrs;			// Estimated attitude
+	float 	ref_b[3]; 		// Reference direction of magnetic flux in earth frame (x component)
+	float 	beta;			// 2 * proportional gain (Kp)
+	float 	zeta;			// Gain for gyro drift compensation
+} ahrs_madgwick_t;
+
+
+/**
+ * \brief  	Init function
+ * 
+ * \param 	ahrs_madgwick 	Pointer to data structure
+ * \param 	config 			Pointer to config structure
+ * \param 	ahrs 			Pointer to AHRS structure
+ * \param 	imu 			Pointer to IMU structure
+ * 
+ * \return 	True if success, false if not
+ */
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
+
+
+/**
+ * \brief 	Main update function
+ * 
+ * \param 	ahrs_madgwick 	Pointer to data structure
+ */
+void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* AHRS_MADGWICK_H_ */

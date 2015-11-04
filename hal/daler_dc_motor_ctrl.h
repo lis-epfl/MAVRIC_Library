@@ -30,66 +30,56 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file kalman.h
+ * \file dc_motor_ctrl.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Ludovic Daler
  *   
- * \brief 2D kalman filter
+ * \brief This file configures the dc_motor_ctrl UART communication
  *
  ******************************************************************************/
 
 
-#ifndef KALMAN_H_
-#define KALMAN_H_
+#ifndef DC_MOTOR_CTRL_H_
+#define DC_MOTOR_CTRL_H_
 
+#include "streams.h"
+#include "buffer.h"
+#include "mavlink_stream.h"
+#include "scheduler.h"
 
-#ifdef __cplusplus
-extern "C" 
+/**
+ * \brief structure of the i2cxl_sonar module
+*/
+typedef struct
 {
-#endif
-
-
-#include "small_matrix.h"
-#include "linear_algebra.h"
-
-
-/**
- * \brief Kalman filter 
- */
-typedef struct kalman_filter_2D_t 
-{
-	matrix_2x2_t system_model;			///<	Model matrix
-	matrix_2x2_t control_model;			///<	Control matrix
-	matrix_2x2_t observation_model;		///<	Observation matrix
-	matrix_2x2_t noise_prediction;		///<	Model noise matrix
-	matrix_2x2_t noise_measurement;		///<	Measurement noise  matrix
-	matrix_2x2_t covariance;			///<	Covariance matrix
-	vector_2_t   state;					///<	State vector
-} kalman_filter_2D_t;
+	buffer_t dc_motor_ctrl_in_buffer;			///< The dc_motor_ctrl incoming buffer
+	byte_stream_t dc_motor_ctrl_out_stream;		///< The dc_motor_ctrl outgoing byte stream
+	byte_stream_t dc_motor_ctrl_in_stream;		///< The dc_motor_ctrl incoming byte stream
+	float wingrons_angle[2];                    ///< Angles wanted for the wingrons dc_motors
+	float wingrons_speed[2];					///< Wanted speed for the wingrons dc_motors
+	const mavlink_stream_t* mavlink_stream;		///< Pointer to mavlink stream
+} daler_dc_motor_ctrl_t;
 
 
 /**
- * \brief 	Kalman prediction step
+ * \brief Initialize the dc_motor_ctrl module
+ *
+ * \param dc_motor_ctrl pointer to DC motor controller structure
+ * \param UID uart device number
  * 
- * \param 	kalman 		Pointer to kalman structure
- * \param 	control 	Control vector
+ * \return 	success
  */
-void kalman_2D_prediction(kalman_filter_2D_t *kalman, vector_2_t control);
+bool daler_dc_motor_ctrl_init(daler_dc_motor_ctrl_t* dc_motor_ctrl, int32_t UID);
 
 
 /**
- * \brief 	Kalman update step
+ * \brief Update the dc_motor_ctrl module
+ *
+ * \param dc_motor_ctrl pointer to DC motor controller structure
  * 
- * \param 	kalman 			Pointer to kalman structure
- * \param 	measurement 	Measurement vector
+ * \return success
  */
-void kalman_2D_update(kalman_filter_2D_t *kalman, vector_2_t measurement);
+bool daler_dc_motor_ctrl_update(daler_dc_motor_ctrl_t* dc_motor );//, const float wingrons[2] );
 
-
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif /* KALMAN_H_ */
+#endif /* DC_MOTOR_CTRL_H_ */

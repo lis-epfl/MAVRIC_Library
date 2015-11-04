@@ -53,6 +53,7 @@ extern "C" {
 #include "position_estimation.h"
 #include "servos.h"
 #include "mavlink_waypoint_handler.h"
+#include "control_command.h"
 
 /**
  * \brief Motor Layout (cross or diag)
@@ -88,7 +89,8 @@ typedef struct
 	const imu_t* imu;											///< The pointer to the IMU structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
 	const position_estimation_t* pos_est;						///< The pointer to the position estimation structure
-	servos_t* servos;											///< The pointer to the servos structure
+	torque_command_t* torque_command;							///< The pointer to the torque command structure
+	thrust_command_t* thrust_command;							///< The pointer to the thrust command structure
 } stabilisation_copter_t;
 
 /**
@@ -110,11 +112,12 @@ typedef struct
  * \param	imu						The pointer to the IMU structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	pos_est					The pointer to the position estimation structure
- * \param	servos					The pointer to the array of servos command values
+ * \param	torque_command			The pointer to the torque command values structure
+ * \param	thrust_command			The pointer to the thrust command values structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos);
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, torque_command_t* torque, thrust_command_t* thrust);
 
 /**
  * \brief							Main Controller for controlling and stabilizing the quad in position (not using velocity control)
@@ -132,22 +135,6 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
  * \param	stabilisation_copter	The stabilisation structure
  */
 void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisation_copter);
-
-/**
- * \brief							Mix to servo for quad configuration diagonal
- *
- * \param	control					Pointer to controlling inputs
- * \param	servos					The array of servos structure
- */
-void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, servos_t* servos);
-
-/**
- * \brief							Mix to servo for quad configuration cross
- *
- * \param	control					Pointer to controlling inputs
- * \param	servos					The array of servos structure
- */
-void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, servos_t* servos);
 
 #ifdef __cplusplus
 }

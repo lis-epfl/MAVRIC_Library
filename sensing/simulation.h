@@ -59,6 +59,7 @@ extern "C" {
 #include "sonar.h"
 #include "position_estimation.h"
 #include "state.h"
+#include "servos_mix_quadcopter_diag.h"
 
 #define AIR_DENSITY 1.2								///< The air density
 #define ROTORCOUNT 4								///< Define number of motors
@@ -124,9 +125,9 @@ typedef struct
 	gps_t* gps;												///< The pointer to the GPS structure
 	sonar_t* sonar;											///< The pointer to the sonar structure
 	const state_t* state;									///< The pointer to the state structure
-	const servos_t* servos;									///< The pointer to the servos structure
 	const ahrs_t *estimated_attitude;						///< The pointer to the attitude estimation structure
 	bool* nav_plan_active;									///< The pointer to the waypoint set flag
+	const servo_mix_quadcotper_diag_t* mix;					///< The pointer to the mix to servos structure
 } simulation_model_t;
 
 
@@ -142,8 +143,8 @@ typedef struct
  * \param	gps				The pointer to the GPS structure
  * \param	sonar			The pointer to the sonar structure
  * \param	state			The pointer to the state structure
- * \param	servos			The pointer to the servos structure
  * \param	waypoint_set	The pointer to the waypoint_set boolean value
+ * \param	mix				The pointer to the mix to servos diag structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -156,8 +157,8 @@ bool simulation_init(	simulation_model_t* sim,
 						gps_t* gps, 
 						sonar_t* sonar, 
 						state_t* state, 
-						const servos_t* servos, 
-						bool* waypoint_set);
+						bool* waypoint_set,
+						const servo_mix_quadcotper_diag_t* mix);
 
 
 /**
