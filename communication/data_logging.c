@@ -122,6 +122,35 @@ static void data_logging_log_parameters(data_logging_t* data_logging);
  */
 static void data_logging_f_seek(data_logging_t* data_logging);
 
+/**
+* \brief	Appends ".txt" to the end of a character string. If not enough 
+*			memory allocated in output, will write as many letters from
+*			filename as possible, will not include .txt\0 unless entire
+*			.txt\0 can fit. 
+*
+* \param	output		The output character string
+* \param	filename	The input string
+* \param	length		The maximum length of output
+*
+* \return	success		Bool stating if the entire output was written
+*/
+static bool data_logging_filename_append_extension(char* output, char* filename, int length);
+
+/**
+* \brief	Appends a uint32_t to a character string with an underscore between.
+*			If not enough memory allocated in output, will write as many letters
+*			from filename as possible, will not include num\0 unless entire number
+*			and null character can fit.
+*
+* \param	output		The output character string
+* \param	filename	The input string
+* \param	num			The uint32_t to be appended to filename
+* \param	length		The maximum length of the output string, must be positive
+*
+* \return	success		Bool stating if the entire output was written
+*/
+static bool data_logging_filename_append_int(char* output, const char* filename, uint32_t num, int length);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -402,19 +431,7 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 	}
 }
 
-/**
-* \brief	Appends ".txt" to the end of a character string. If not enough 
-*			memory allocated in output, will write as many letters from
-*			filename as possible, will not include .txt\0 unless entire
-*			.txt\0 can fit. 
-*
-* \param	output		The output character string
-* \param	filename	The input string
-* \param	length		The maximum length of output
-*
-* \return	success		Bool stating if the entire output was written
-*/
-bool data_logging_filename_append_extension(char* output, char* filename, int length)
+static bool data_logging_filename_append_extension(char* output, char* filename, int length)
 {
 	// Success flag
 	bool is_success = true;
@@ -465,20 +482,7 @@ bool data_logging_filename_append_extension(char* output, char* filename, int le
 	return is_success;
 }
 
-/**
-* \brief	Appends a uint32_t to a character string with an underscore between.
-*			If not enough memory allocated in output, will write as many letters
-*			from filename as possible, will not include num\0 unless entire number
-*			and null character can fit.
-*
-* \param	output		The output character string
-* \param	filename	The input string
-* \param	num			The uint32_t to be appended to filename
-* \param	length		The maximum length of the output string, must be positive
-*
-* \return	success		Bool stating if the entire output was written
-*/
-bool data_logging_filename_append_int(char* output, char* filename, uint32_t num, int length)
+static bool data_logging_filename_append_int(char* output, const char* filename, uint32_t num, int length)
 {
 	// Success flag
 	bool is_success = true;
@@ -582,7 +586,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 		init_success &= false;
 	}
 
-	// Automaticly add the time as first logging parameter
+	// Automatically add the time as first logging parameter
 	data_logging_add_parameter_uint32(data_logging,&data_logging->time_ms,"time");
 	
 	data_logging->file_init = false;
