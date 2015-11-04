@@ -133,6 +133,9 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 
 		case STATE_VERTICAL_VELOCITY:
 			state_machine->stabilisation_copter_conf = &stabilisation_copter_default_config;
+
+			controls->tvel[Z] = 0.0f;
+			controls->control_mode = VELOCITY_COMMAND_MODE;
 		break;
 
 		case STATE_HEIGHT_CONTROL:
