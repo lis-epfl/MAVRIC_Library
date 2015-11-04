@@ -672,7 +672,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 			successful_filename &= data_logging_filename_append_extension(data_logging->name_n_extension, data_logging->name_n_extension, data_logging->buffer_name_size);
 
 			// Check if there wasn't enough memory allocated to name_n_extension
-			if (successful_filename)
+			if (!successful_filename)
 			{
 				print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
 				print_util_dbg_print_num(data_logging->buffer_name_size,10);
