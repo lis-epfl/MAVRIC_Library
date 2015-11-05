@@ -49,6 +49,8 @@
 #include "mavlink_message_handler.hpp"
 #include "state.hpp"
 #include "qfilter.hpp"
+#include "manual_control.hpp"
+#include "navigation.hpp"
 
 #define MAX_WAYPOINTS 10		///< The maximal size of the waypoint list
 
@@ -81,10 +83,9 @@ typedef struct
 	uint16_t number_of_waypoints;								///< The total number of waypoints
 	int8_t current_waypoint_count;								///< The number of the current waypoint
 	
-	local_position_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-	local_position_t waypoint_hold_coordinates;				///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-	local_position_t waypoint_critical_coordinates;			///< The coordinates of the waypoint in critical state
-	float dist2wp_sqr;											///< The square of the distance to the waypoint
+	local_position_t waypoint_coordinates;						///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+	local_position_t waypoint_hold_coordinates;					///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+	local_position_t waypoint_critical_coordinates;				///< The coordinates of the waypoint in critical state
 	
 	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoint is set
 
@@ -102,12 +103,18 @@ typedef struct
 	uint32_t start_wpt_time;									///< The time at which the MAV starts to travel towards its waypoint
 	uint32_t travel_time;										///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
+	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
+	bool auto_landing_next_state;								///< Flag to change critical state in its dedicated state machine
+
+	mav_mode_t mode;											///< The mode of the MAV to have a memory of its evolution
+
 	position_estimation_t* position_estimation;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
 	state_t* state;												///< The pointer to the state structure
+	navigation_t* navigation;									///< The pointer to the navigation structure
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the MAVLink communication structure
-	const mavlink_stream_t* mavlink_stream;						///< Pointer to MAVLink stream
-
+	const mavlink_stream_t* mavlink_stream;						///< The pointer to MAVLink stream
+	const manual_control_t* manual_control;						///< The pointer to the manual_control structure 
 } mavlink_waypoint_handler_t;
 
 /**
@@ -131,13 +138,17 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  * \param	position_estimation		The pointer to the position estimator structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	state					The pointer to the state structure
+ * \param	manual_control			The pointer to the manual control structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
  *
  * \return	True if the init succeed, false otherwise
  */
 bool waypoint_handler_init(	mavlink_waypoint_handler_t* waypoint_handler, 
-							position_estimation_t* position_estimation, 
-							const ahrs_t* ahrs, state_t* state, 
+							position_estimation_t* position_estimation,
+							navigation_t* navigation, 
+							const ahrs_t* ahrs, 
+							state_t* state, 
+							const manual_control_t* manual_control,
 							mavlink_communication_t* mavlink_communication, 
 							const mavlink_stream_t* mavlink_stream);
 
@@ -166,6 +177,14 @@ bool waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* 
  * \return	The waypoint in local coordinate frame
  */
 local_position_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
+
+/**
+ * \brief	Initialise the position hold mode
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param	local_pos				The position where the position will be held
+ */
+void waypoint_handler_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_position_t local_pos);
 
 /**
  * \brief	Sends the travel time between the last two waypoints

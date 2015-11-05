@@ -72,6 +72,18 @@ typedef enum
 
 typedef enum MAV_MODE_FLAG mav_flag_t;
 
+typedef enum
+{
+	NAV_ON_GND,
+	NAV_TAKEOFF,
+	NAV_MANUAL_CTRL,
+	NAV_NAVIGATING,
+	NAV_HOLD_POSITION,
+	NAV_STOP_ON_POSITION,
+	NAV_STOP_THERE,
+	NAV_LANDING,
+}navigation_internal_state_t;
+
 /**
  * \brief The state structure
  */

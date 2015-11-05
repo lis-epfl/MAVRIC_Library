@@ -181,7 +181,6 @@ bool Central_data::init(void)
 							navigation_default_config(),
 							&controls_nav,
 							&ahrs.qe,
-							&waypoint_handler,
 							&position_estimation,
 							&state,
 							&manual_control,
@@ -197,6 +196,7 @@ bool Central_data::init(void)
 	// -------------------------------------------------------------------------
 	ret = waypoint_handler_init(	&waypoint_handler,
 									&position_estimation,
+									&navigation,
 									&ahrs,
 									&state,
 									&mavlink_communication,
