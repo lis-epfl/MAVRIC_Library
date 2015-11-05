@@ -199,6 +199,7 @@ bool Central_data::init(void)
 									&navigation,
 									&ahrs,
 									&state,
+									&manual_control,
 									&mavlink_communication,
 									&mavlink_communication.mavlink_stream);
 	waypoint_handler_init_homing_waypoint(&waypoint_handler);
