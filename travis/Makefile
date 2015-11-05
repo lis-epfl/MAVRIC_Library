@@ -70,6 +70,7 @@ LIB_SRCS += control/attitude_error_estimator.c
 LIB_SRCS += control/joystick.cpp         
 LIB_SRCS += control/joystick_telemetry.cpp  
 LIB_SRCS += control/manual_control.cpp
+LIB_SRCS += control/manual_control_telemetry.cpp
 LIB_SRCS += control/navigation.c                   
 LIB_SRCS += control/pid_controller.c               
 LIB_SRCS += control/servos_mix_quadcopter_cross.c  

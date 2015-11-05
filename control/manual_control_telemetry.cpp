@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file manual_control_telemetry.c
+ * \file manual_control_telemetry.cpp
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -41,10 +41,10 @@
  ******************************************************************************/
 
 
-#include "manual_control_telemetry.h"
-#include "manual_control.h"
-#include "remote_telemetry.h"
-#include "joystick_telemetry.h"
+#include "manual_control_telemetry.hpp"
+#include "manual_control.hpp"
+#include "remote_telemetry.hpp"
+#include "joystick_telemetry.hpp"
 #include "print_util.h"
 #include "time_keeper.h"
 

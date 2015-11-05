@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_telemetry.c
+ * \file mavlink_telemetry.cpp
  *
  * \author MAV'RIC Team
  *   
@@ -63,10 +63,11 @@
 #include "scheduler_telemetry.hpp"
 #include "sonar_telemetry.hpp"
 #include "fat_fs_mounting_telemetry.hpp"
+#include "manual_control_telemetry.hpp"
 
 extern "C"
 {
-	// #include "scheduler.h"
+	// #include "scheduler.h"	
 }
 
 //------------------------------------------------------------------------------
@@ -147,6 +148,8 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 	init_success &= position_estimation_telemetry_init(	&central_data->position_estimation,
 	&central_data->mavlink_communication.message_handler);
 	
+	init_success &= manual_control_telemetry_init( &central_data->manual_control,
+	&central_data->mavlink_communication.message_handler);
 	
 	return init_success;
 }
