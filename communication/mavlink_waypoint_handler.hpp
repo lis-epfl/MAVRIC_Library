@@ -159,6 +159,8 @@ bool waypoint_handler_init(	mavlink_waypoint_handler_t* waypoint_handler,
  */
 void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler);
 
+bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler);
+
 /**
  * \brief	Control if time is over timeout and change sending/receiving flags to false
  *
