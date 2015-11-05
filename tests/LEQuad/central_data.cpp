@@ -183,7 +183,6 @@ bool Central_data::init(void)
 							&ahrs.qe,
 							&position_estimation,
 							&state,
-							&manual_control,
 							&mavlink_communication);/*,
 							&sonar_i2cxl);*/
 	print_util_dbg_init_msg("[NAV]", ret);
