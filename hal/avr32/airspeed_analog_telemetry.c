@@ -67,9 +67,18 @@ static mav_result_t airspeed_analog_telemetry_offset(airspeed_analog_t* airspeed
 
 static mav_result_t airspeed_analog_telemetry_offset(airspeed_analog_t* airspeed_analog, mavlink_command_long_t* packet)
 {
-	mav_result_t result = MAV_RESULT_ACCEPTED;
+	mav_result_t result = MAV_RESULT_DENIED;
 	
-	airspeed_analog_start_calibration(airspeed_analog);
+	if( packet->param1 == 1) // Start calib
+	{
+		airspeed_analog_start_calibration(airspeed_analog);
+		result = MAV_RESULT_ACCEPTED;
+	}
+	if(packet->param2 == 1)	// Stop calib
+	{
+		airspeed_analog_stop_calibration(airspeed_analog);
+		result = MAV_RESULT_ACCEPTED;
+	}
 	
 	return result;
 }
@@ -106,7 +115,7 @@ void airspeed_analog_telemetry_send(airspeed_analog_t* airspeed_analog, const ma
 									msg,
 									"Airspd",
 									time_keeper_get_micros(),
-									(float)airspeed_analog->airspeed,
 									(float)airspeed_analog->raw_airspeed,
-									(float)airspeed_analog->pressure_offset);
+									(float)airspeed_analog->scaled_airspeed,
+									(float)airspeed_analog->airspeed);
 }

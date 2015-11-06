@@ -55,7 +55,10 @@ airspeed_analog_conf_t airspeed_analog_default_config =
 {
 	.analog_rail = ANALOG_RAIL_13,
 	.filter_gain = 0.7f,
-	.pressure_offset = 0.08048f
+	.airspeed_offset = 11.15f,
+	.correction_gain = 1.9708f,
+	.correction_offset = -3.6994f,
+	.calibration_gain = 0.9f
 };
 
 

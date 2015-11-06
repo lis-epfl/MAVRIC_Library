@@ -50,7 +50,7 @@
 
 #include <stdint.h>
 #include "analog_monitor.h"
-#include "tasks.h"
+#include "scheduler.h"
 
 
 
@@ -59,31 +59,34 @@
  */
 typedef struct 
 {
-	analog_rails_t analog_rail;	///< Analog rail on which the sensor is connected
-	float filter_gain;			///< Gain for the low-pass filter
-	float pressure_offset;		///< Default pressure offset
+	analog_rails_t analog_rail;		///< Analog rail on which the sensor is connected
+	float filter_gain;				///< Gain for the low-pass filter
+	float airspeed_offset;			///< Default airspeed offset
+	float correction_gain;			///< Gain obtained by the fitted relation (Airspeed_measured = gain * Airspeed_true + offset)
+	float correction_offset;		///< Offset obtained by the fitted relation
+	float calibration_gain;			///< Gain used for the calibration of the offset (low-pass)
 } airspeed_analog_conf_t;
 
 /**
- * \brief Structure containing the analog airspeed sensor datas
+ * \brief Structure containing the analog airspeed sensor data
 */
 typedef struct {
 	analog_monitor_t* analog_monitor;		///< pointer to the structure of analog monitor module
 	uint8_t analog_channel;					///< analog channel of the ADC
 	float voltage;							///< Voltage read by the ADC
 	
-	float differential_pressure;			///< true dynamical pressure (in kPa)
-	float pressure_offset;					///< offset of the pressure sensor
-	
-	float raw_airspeed;						///< Unfiltered airspeed
-	float airspeed;							///< Filtered measure airspeed
+	float differential_pressure;			///< True dynamical pressure (in kPa)
+	float airspeed_offset;					///< Offset of the airspeed module
+	float correction_gain;					///< Gain used to correct estimation
+	float correction_offset;				///< Offset used to correct estimation
 	float alpha;							///< Filter coefficient
 	
-	bool calibrating;						///< True if the sensor is currently in calibration
-	uint8_t calibration_counter;			///< Counter used for the calibration average
-	float calibration_pressure;				///< Pressure used during the calibration
+	float raw_airspeed;						///< Unfiltered and uncorrected airspeed
+	float scaled_airspeed;					///< Corrected airspeed, using offset and fitted relation
+	float airspeed;							///< Filtered corrected airspeed
 	
-	int32_t currently_turning;				///< Used for debugging, if we are doing some turning
+	bool calibrating;						///< True if the sensor is currently in calibration
+	float calibration_gain;					///< Gain used for the calibration of the offset (low-pass)
 } airspeed_analog_t;
 
 /**
@@ -97,12 +100,20 @@ typedef struct {
 bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, const airspeed_analog_conf_t* config);
 
 /**
- * \brief Calibrates the airspeed sensor offset at 0 speed.
+ * \brief Calibrates the airspeed sensor offset at 0 speed. It will continue calibrating until it is asked to stop.
  * 
  * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
  *
 */
 void airspeed_analog_start_calibration(airspeed_analog_t* airspeed_analog);
+
+/**
+ * \brief Stop the calibration procedure and keep the last offset.
+ * 
+ * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+ *
+*/
+void airspeed_analog_stop_calibration(airspeed_analog_t* airspeed_analog);
 
 /**
  * \brief Updates the values in the airspeed structure
