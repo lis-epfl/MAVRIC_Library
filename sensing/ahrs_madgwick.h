@@ -91,7 +91,7 @@ typedef struct
 
 
 /**
- * \brief  	Init function
+ * \brief  	Init function. This function has to be called after ahrs init to overwrite flags
  * 
  * \param 	ahrs_madgwick 	Pointer to data structure
  * \param 	config 			Pointer to config structure

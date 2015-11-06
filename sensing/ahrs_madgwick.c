@@ -271,6 +271,9 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
 	ahrs_madgwick->ahrs->up_vec.v[X] = 0.0f;
 	ahrs_madgwick->ahrs->up_vec.v[Y] = 0.0f;
 	ahrs_madgwick->ahrs->up_vec.v[Z] = -1.0f;
+	
+	// Set flag
+	ahrs_madgwick->ahrs->internal_state = AHRS_READY;
 
 	// Notify success
 	print_util_dbg_print("[AHRS MADGWICK] Initialised.\r\n");
