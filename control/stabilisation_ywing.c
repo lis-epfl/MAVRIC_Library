@@ -30,30 +30,45 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_hybrid.h
+ * \file stabilisation_ywing.c
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
  * \author Julien Lecoeur
  *   
- * \brief This file handles the stabilization of hybrid platforms
+ * \brief Ywing stabilisation
  *
  ******************************************************************************/
 
+/**
+ *   Disclaimer: this WIP
+ */
 
-#ifndef STABILISATION_HYBRID_H_
-#define STABILISATION_HYBRID_H_
+#include "stabilisation_ywing.h"
+#include "time_keeper.h"
 
-#include "stabilisation.h"
 
-typedef struct {
-	stabiliser_t rate_stabiliser;
-	stabiliser_t attitude_stabiliser;
-} Stabiliser_Stack_hybrid_t;
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
-void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack);
 
-void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimation_t *pos_est, control_command_t *control_input);
-void stabilisation_hybrid_mix_to_servos_xwing(control_command_t *control);
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-#endif /* STABILISATION_HYBRID_H_ */
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool stabilisation_ywing_init(stabilisation_ywing_t* stabilisation_ywing, stabilisation_ywing_conf_t* config)
+{
+	return true;
+}
+
+
+void stabilisation_ywing_update(stabilisation_ywing_t* stabilisation_ywing)
+{
+	;
+}
+

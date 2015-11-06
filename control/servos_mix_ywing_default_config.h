@@ -30,93 +30,45 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file piezo_speaker.h
+ * \file servos_mix_ywing_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the piezzo speaker
+ * \brief Default configuration for Ywing servo mix
  *
  ******************************************************************************/
 
 
-#ifndef PIEZO_SPEAKER_H_
-#define PIEZO_SPEAKER_H_
+#ifndef SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
+#define SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
-#include <stdint.h>
 
-#define PIEZO_HIGH_PIN AVR32_PIN_PA12			///< Define the Microcontroller pin associated with the high pin of the piezo speaker
-#define PIEZO_LOW_PIN AVR32_PIN_PA15			///< Define the Microcontroller pin associated with the low pin of the piezo speaker
+#include "servos_mix_ywing.h"
 
 
-/**
- * \brief Initialize the piezo speaker
- */
-void piezo_speaker_init(void);
-
-
-/**
- * \brief Initialize the speaker in a binary(?) mode
- */
-void piezo_speaker_init_binary(void);
-
-
-/**
- * \brief Beep at a given frequency for a duration
- *
- * \param	duration_ms		Duration of the piezo_speaker_beep
- * \param	frequency		Frequency of the piezo_speaker_beep
- */
-void piezo_speaker_beep(int32_t duration_ms, int32_t frequency);
-
-
-/**
- * \brief Startup melody
- */
-void piezo_speaker_startup_melody(void);
-
-
-/**
- * \brief Critical error melody
- */
-void piezo_speaker_critical_error_melody(void);
-
-
-/**
- * \brief Quick startup melody
- */
-void piezo_speaker_quick_startup(void);
-
-/**
- * \brief Quick startup melody
- */
-void piezo_speaker_startup_bb(void);
-
-/**
- * \brief Startup melody for bumblebot
- */
-void piezo_speaker_startup_bumblebot(void);
-
-
-/**
- * \brief Star wars melody
- */
-void piezo_speaker_star_wars(void);
-
-
-/**
- * \brief Mario melody
- */
-void piezo_speaker_mario_melody(void);
-
+servo_mix_ywing_conf_t servo_mix_ywing_default_config =
+{
+	.motor			= 0,			
+	.flap_top		= 1,		
+	.flap_right		= 2,		
+	.flap_left		= 3,		
+	.flap_top_dir	= FLAP_INVERTED,	
+	.flap_right_dir	= FLAP_INVERTED,	
+	.flap_left_dir	= FLAP_INVERTED,	
+	.min_thrust		= -0.9f,		
+	.max_thrust		= 1.0f,		
+	.min_deflection	= -1.0f,	
+	.max_deflection	= 1.0f,	
+};
 
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
-#endif /* PIEZO_SPEAKER_H_ */
+#endif // SERVOS_MIX_YWING_DEFAULT_CONFIG_H_

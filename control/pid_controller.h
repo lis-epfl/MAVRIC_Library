@@ -48,6 +48,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <math.h>
 
 
@@ -111,8 +112,10 @@ typedef struct
  *
  * \param	controller 		A PID controller structure
  * \param	config 			Configuration
+ * 
+ * \return 	success
  */
-void pid_controller_init(pid_controller_t* controller, const pid_controller_conf_t* config);
+bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf_t* config);
 
 
 /**

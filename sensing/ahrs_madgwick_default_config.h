@@ -33,7 +33,7 @@
  * \file ahrs_madgwick_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur, Simon Pyroth
+ * \author Julien Lecoeur
  *   
  * \brief Default config for Madgwick's AHRS algorithms.
  *
@@ -54,7 +54,7 @@ extern "C" {
 static const ahrs_madgwick_conf_t ahrs_madgwick_default_config =
 {
     .beta = 0.06f,
-	.zeta = 0.0f,
+    .zeta = 0.01f,
 };
 
 

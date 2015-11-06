@@ -78,8 +78,10 @@ typedef struct
  * 
  * \param 	estimator    	Pointer to data structure
  * \param 	ahrs		 	Pointer to the estimated attitude
+ * 
+ * \return success
  */
-void attitude_error_estimator_init(attitude_error_estimator_t* estimator, const ahrs_t* ahrs);
+bool attitude_error_estimator_init(attitude_error_estimator_t* estimator, const ahrs_t* ahrs);
 
 
 /**
@@ -113,8 +115,10 @@ void attitude_error_estimator_set_quat_ref_from_rpy(attitude_error_estimator_t* 
  * \brief               	Main update function, computes the local angular errors is roll, pitch and yaw
  * 
  * \param 	estimator    	Pointer to data structure
+ * 
+ * \return  success
  */
-void attitude_error_estimator_update(attitude_error_estimator_t* estimator);
+bool attitude_error_estimator_update(attitude_error_estimator_t* estimator);
 
 
 #ifdef __cplusplus

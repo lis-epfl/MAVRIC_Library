@@ -185,6 +185,18 @@ void piezo_speaker_critical_error_melody(void)
 }
 
 
+void piezo_speaker_startup_bumblebot(void)
+{
+	piezo_speaker_beep(100, 880);
+	time_keeper_delay_ms(25);
+	piezo_speaker_beep(100, 220);
+	time_keeper_delay_ms(25);
+	piezo_speaker_beep(100, 440);
+	time_keeper_delay_ms(25);
+	piezo_speaker_beep(100, 880);
+}
+
+
 void piezo_speaker_star_wars(void)
 {
 	//3x beep(a, 500);
