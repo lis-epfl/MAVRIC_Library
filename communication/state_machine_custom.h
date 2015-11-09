@@ -53,7 +53,9 @@ extern "C" {
 #endif
 
 #include "ahrs.h"
+#include "bmp085.h"
 #include "launch_detection.h"
+#include "position_estimation.h"
 #include "remote.h"
 #include "scheduler.h"
 #include "stabilisation.h"
@@ -81,6 +83,8 @@ typedef struct {
 	launch_detection_t ld;
 	imu_t * imu;
 	ahrs_t * ahrs;
+	barometer_t * baro;
+	position_estimation_t * pos_est;
 } state_machine_custom_t;
 
 
@@ -91,10 +95,12 @@ typedef struct {
  * \param remote					Pointer to the remote
  * \param imu 						Pointer to the IMU structure
  * \param ahrs 						Pointer to the AHRS structure
+ * \param baro 						Pointer to the barometer structure
+ * \param pos_est 					Pointer to the position estimation structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs);
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, barometer_t * baro, position_estimation_t * pos_est);
 
 
 /**

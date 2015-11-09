@@ -68,7 +68,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs)
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, barometer_t * baro, position_estimation_t * pos_est)
 {
 	bool init_success = true;
 
@@ -81,6 +81,8 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 	state_machine->remote = remote;
 	state_machine->imu = imu;
 	state_machine->ahrs = ahrs;
+	state_machine->baro = baro;
+	state_machine->pos_est = pos_est;
 	
 	launch_detection_init(&state_machine->ld, &launch_detection_default_config);
 
@@ -134,8 +136,15 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 		case STATE_VERTICAL_VELOCITY:
 			state_machine->stabilisation_copter_conf = &stabilisation_copter_default_config;
 
+			controls->tvel[X] = state_machine->pos_est->vel[X];
+			controls->tvel[Y] = state_machine->pos_est->vel[Y];
 			controls->tvel[Z] = 0.0f;
 			controls->control_mode = VELOCITY_COMMAND_MODE;
+
+			// if (state_machine->baro.vario_vz < 0.5)
+			// {
+			// 	state_machine->state = STATE_HEIGHT_CONTROL;
+			// }
 		break;
 
 		case STATE_HEIGHT_CONTROL:
