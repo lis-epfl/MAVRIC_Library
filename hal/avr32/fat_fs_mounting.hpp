@@ -43,43 +43,27 @@
 #ifndef FAT_FS_MOUNTING_HPP_
 #define FAT_FS_MOUNTING_HPP_
 
-#include "state.hpp"
-
 extern "C"
 {
+	#include "stdbool.h"
+	#include "stdint.h"
 	#include "libs/FatFs/src/ff.h"
 }
 
-
-/**
- * \brief 	Configuration for the module data logging
- */
-typedef struct
-{
-	uint32_t max_data_logging_count;			///< Maximum number of parameters
-	uint16_t max_logs;							///< The max number of logged files with the same name on the SD card
-	bool debug;									///< Indicates if debug messages should be printed for each param change
-	uint32_t log_data;							///< The initial state of writing a file
-} data_logging_conf_t;
 
 /**
  * \brief 	The fat_fs mounting structure
  */
 typedef struct 
 {
-	data_logging_conf_t data_logging_conf;		///< The data logging configuration structre
-
 	FRESULT fr;									///< The result of the fatfs functions
-	FATFS fs;									///< The fatfs handler
+	FATFS* fs;									///< The fatfs handler
 
 	uint32_t loop_count;						///< Counter to try to mount the SD card many times
-	uint32_t log_data;							///< A flag to stop/start writing to file
 
-	bool sys_mounted;							///< A flag to tell whether the file system is mounted
-	
 	uint32_t num_file_opened;					///< Number of open files to now when the system can be unmounted
 
-	const state_t* state;						///< The pointer to the state structure
+	bool sys_mounted;							///< A flag to tell whether the file system is mounted
 }fat_fs_mounting_t;
 
 /**
@@ -87,11 +71,10 @@ typedef struct
  *
  * \param	fat_fs_mounting			The pointer to the SD card mounting structure
  * \param	data_logging_conf		The pointer to the configuration structure
- * \param	state					The pointer to the state structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_t data_logging_conf, const state_t* state);
+bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, bool debug, FATFS* fs);
 
 /**
  * \brief	Mount the fat_fs system file

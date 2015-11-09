@@ -41,6 +41,7 @@
 
 #include "tasks.hpp"
 #include "central_data.hpp"
+#include "data_logging.hpp"
 
 extern "C"
 {
@@ -193,6 +194,8 @@ bool tasks_create_tasks(Central_data* central_data)
 
 	init_success &= scheduler_add_task(scheduler, 500000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW	, (task_function_t)&tasks_run_sonar_update							, (task_argument_t)central_data							, 11);
 	
+	init_success &= scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL	, (task_function_t)&data_logging_update								, (task_argument_t)&central_data->data_logging 			, 12);
+
 	scheduler_sort_tasks(scheduler);
 	
 	return init_success;

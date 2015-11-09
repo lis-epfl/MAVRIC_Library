@@ -65,7 +65,7 @@ public:
 	 * 
 	 * \return  success
 	 */
-	virtual bool open(const char* path) = 0;
+	virtual bool open(const char* path, bool new_file) = 0;
 
 
 	/**
