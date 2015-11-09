@@ -86,6 +86,7 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 	spektrum_satellite( Spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin) ),
 	imu( Imu(lsm330dlc, lsm330dlc, hmc5883l, config.imu_config) ),
 	file_flash( File_flash_avr32("flash.bin") ),
+	file_log( File_fat_fs()),
 	gps_ublox( Gps_ublox(uart3) ),
 	sonar_i2cxl( Sonar_i2cxl(i2c1) ),
 	adc_battery( Adc_avr32( analog_monitor, {ANALOG_RAIL_10} )),
@@ -258,7 +259,7 @@ bool Megafly_rev4::init(void)
 	print_util_dbg_init_msg("[SONAR]", ret);
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
-		
+
 
 	print_util_dbg_sep('-');
 	time_keeper_delay_ms(100); 

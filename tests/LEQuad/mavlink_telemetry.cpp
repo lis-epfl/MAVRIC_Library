@@ -62,7 +62,8 @@
 // #include "simulation_telemetry.hpp"
 #include "scheduler_telemetry.hpp"
 #include "sonar_telemetry.hpp"
-#include "fat_fs_mounting_telemetry.hpp"
+#include "toggle_logging_telemetry.hpp"
+#include "manual_control_telemetry.hpp"
 
 extern "C"
 {
@@ -107,9 +108,9 @@ bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging,
 	//init_success &= data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Y], "acc_y", 4);
 	//init_success &= data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Z], "acc_z", 4);
 	
-	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.latitude,	"origin_latitude", 7);
-	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.longitude, "origin_longitude", 7);
-	init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.origin.altitude,	"origin_altitude", 3);
+	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.latitude,	"origin_lat", 7);
+	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.longitude, "origin_lon", 7);
+	init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.origin.altitude,	"origin_alt", 3);
 	
 	init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.pos[0], "local_x", 3);
 	init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.pos[1], "local_y", 3);
@@ -148,6 +149,9 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 	&central_data->mavlink_communication.message_handler);
 	
 	
+	init_success &= toggle_logging_telemetry_init( &central_data->toggle_logging,
+	&central_data->mavlink_communication.message_handler);
+
 	return init_success;
 }
 
@@ -342,7 +346,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
 {
 	bool init_success = true;
 	
-//	init_success &= mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging, central_data);
+	init_success &= mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging, central_data);
 
 	init_success &= mavlink_telemetry_init_communication_module(central_data);
 	

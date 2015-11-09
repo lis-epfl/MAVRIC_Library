@@ -95,6 +95,7 @@ int main (void)
 									board.mavlink_serial,
 									board.spektrum_satellite,
 									board.file_flash,
+									board.file_log,
 									board.battery,
 									board.servos );
 

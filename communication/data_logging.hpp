@@ -30,7 +30,7 @@
  ******************************************************************************/
  
 /*******************************************************************************
- * \file data_logging.h
+ * \file data_logging.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -45,12 +45,8 @@
 
 #include "mavlink_communication.hpp"
 #include "state.hpp"
-#include "fat_fs_mounting.hpp"
- 
-extern "C" 
-{
-	#include "libs/FatFs/src/ff.h"
-}
+#include "toggle_logging.hpp"
+#include "file.hpp"
 
 /**
  * \brief	Structure of data logging parameter.
@@ -90,9 +86,6 @@ typedef struct
 	bool debug;									///< Indicates if debug messages should be printed for each param change
 
 	data_logging_set_t* data_logging_set;		///< Pointer to a set of parameters, needs memory allocation
-	
-	FRESULT fr;									///< The result of the fatfs functions
-	FIL fil;									///< The fatfs file handler
 
 	uint32_t time_ms;							///< The microcontroller time in ms
 
@@ -112,8 +105,10 @@ typedef struct
 	
 	uint32_t sys_id;							///< the system ID
 	
+	File* file;
+
 	const state_t* state;						///< The pointer to the state structure	
-	fat_fs_mounting_t* fat_fs_mounting;			//< The pointer to the SD card mounting structure
+	toggle_logging_t* toggle_logging;			///< The pointer to the toggle logging structure
 } data_logging_t;
 
 
@@ -121,14 +116,14 @@ typedef struct
  * \brief	Initialise the data logging module
  *
  * \param	data_logging			The pointer to the data logging structure
- * \param	file_name			The pointer to name of the file to create
+ * \param	file_name				The pointer to name of the file to create
  * \param	continuous_write		Boolean to state whether writing should be continous or not
- * \param	fat_fs_mounting			The pointer to fat fs mounting table
- * \param	sysid				The pointer to the system identification number of the MAV
+ * \param	toggle_logging			The pointer to toggle logging structure
+ * \param	sysid					The pointer to the system identification number of the MAV
  *
  * \return	True if the init succeed, false otherwise
  */
-bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, bool continuous_write, fat_fs_mounting_t* fat_fs_mounting, uint32_t sysid);
+bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, File* file, bool continuous_write, toggle_logging_t* toggle_logging, uint32_t sysid);
 
 /**
  * \brief	Create and open a new file

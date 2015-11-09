@@ -66,7 +66,7 @@ File_flash_avr32::File_flash_avr32(const char* path)
 }
 
 
-bool File_flash_avr32::open(const char* path)
+bool File_flash_avr32::open(const char* path, bool new_file)
 {
 	offset_ = 0;
 

@@ -30,34 +30,48 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	file_flash_avr32.hpp
+ * \file  	file_fat_fs.hpp
  * 
  * \author  MAV'RIC Team
  *   
- * \brief   Class to read and write to flash memory on avr32
+ * \brief   Class for files on linux platforms
  *
  ******************************************************************************/
 
-#ifndef FILE_FLASH_AVR32_H_
-#define FILE_FLASH_AVR32_H_
+
+#ifndef FILE_FAT_FS_H_
+#define FILE_FAT_FS_H_
 
 #include "file.hpp"
+#include "fat_fs_mounting.hpp"
+
+extern "C" 
+{
+	#include "libs/FatFs/src/ff.h"
+	#include "string.h"
+}
 
 
 /**
  * \brief 	File objects on linux platforms
  */
-class File_flash_avr32: public File
+class File_fat_fs: public File
 {
 private:
-	uint32_t offset_;	///< Current position in flash memory
+	FIL file_;										///< File handle
+
+	fat_fs_mounting_t* fat_fs_mounting_;			///< The pointer to the SD card mounting structure
+	char *file_name;								///< The file name
 
 public:
+	FATFS fs;
+	
 	/**
 	 * \brief 	Constructor 
 	 */
-    File_flash_avr32(const char* path);
+    File_fat_fs();
 
+    void init(fat_fs_mounting_t* fat_fs_mounting);
 
 	/**
 	 * \brief 	Open the file
@@ -137,4 +151,4 @@ public:
 	uint32_t length();
 };
 
-#endif /* FILE_FLASH_AVR32_H_ */
+#endif /* FILE_FAT_FS_H_ */

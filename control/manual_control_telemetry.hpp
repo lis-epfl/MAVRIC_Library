@@ -44,9 +44,9 @@
 #ifndef MANUAL_CONTROL_TELEMETRY_H_
 #define MANUAL_CONTROL_TELEMETRY_H_
 
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "manual_control.h"
+#include "mavlink_stream.hpp"
+#include "mavlink_message_handler.hpp"
+#include "manual_control.hpp"
 
 #ifdef __cplusplus
 extern "C" {

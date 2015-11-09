@@ -57,7 +57,7 @@ public:
 	/**
 	 * \brief 	Constructor 
 	 */
-    File_linux(const char* path);
+    File_linux(const char* path, bool open_now);
 
 
 	/**
@@ -65,7 +65,7 @@ public:
 	 * 
 	 * \return  true if the file is open, false otherwise
 	 */
-	bool open(const char* path);
+	bool open(const char* path, bool new_file);
 
 
 	/**
