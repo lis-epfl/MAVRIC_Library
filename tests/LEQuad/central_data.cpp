@@ -48,7 +48,6 @@
 #include "remote_default_config.hpp"
 #include "state_default_config.hpp"
 #include "manual_control_default_config.hpp"
-#include "toggle_logging.hpp"
 
 extern "C" 
 {
@@ -62,7 +61,7 @@ extern "C"
 }
 
 
-Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, File& file_log, Battery& battery, servos_t& servos):
+Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, servos_t& servos):
 	imu( imu ),
 	barometer( barometer ),
 	gps( gps ),
@@ -70,7 +69,6 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
 	serial_mavlink( serial_mavlink ),
 	satellite( satellite ),
 	file_flash( file_flash ),
-	file_log ( file_log),
 	battery( battery ),
 	servos( servos )
 {}
@@ -270,24 +268,6 @@ bool Central_data::init(void)
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
 
-	// -------------------------------------------------------------------------
-	// Init data logging
-	// -------------------------------------------------------------------------
-	//TODO: not working here
-	ret = toggle_logging_init( &toggle_logging,
-								data_logging_default_config(),
-								&state);
-
-
-
-	ret = data_logging_create_new_log_file(	&data_logging,
-											"Log_file",
-											&file_log,
-											true,
-											&toggle_logging,
-											mavlink_communication.mavlink_stream.sysid);
-	print_util_dbg_init_msg("[DATA LOGGING]", ret);
-	init_success &= ret;
 
 	print_util_dbg_sep('-');
 	time_keeper_delay_ms(100); 

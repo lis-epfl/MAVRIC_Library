@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
- *
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright notice, 
  * this list of conditions and the following disclaimer in the documentation 
  * and/or other materials provided with the distribution.
@@ -28,30 +28,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
- 
+
 /*******************************************************************************
- * \file toggle_logging.cpp
- *
+ * \file fat_fs_mounting_telemetry.h
+ * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
- * 
- * \brief Toggle the logging of data
+ *   
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the fat_fs_mounting module
  *
  ******************************************************************************/
 
-#include "toggle_logging.hpp"
+
+#ifndef fat_fs_mounting_TELEMETRY_HPP_
+#define fat_fs_mounting_TELEMETRY_HPP_
+
+#include "mavlink_stream.hpp"
+#include "mavlink_message_handler.hpp"
+#include "fat_fs_mounting.hpp"
 
 
+/**
+ * \brief	Initialize the MAVLink communication module for the remote
+ * 
+ * \param	fat_fs_mounting					The pointer to the data logging structure
+ * \param	message_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool fat_fs_mounting_telemetry_init(fat_fs_mounting_t* fat_fs_mounting, mavlink_message_handler_t* message_handler);
 
-bool toggle_logging_init(toggle_logging_t* toggle_logging, data_logging_conf_t data_logging_conf, const state_t* state)
-{
-	bool init_success = true;
-
-	toggle_logging->data_logging_conf = data_logging_conf;
-
-	toggle_logging->log_data = data_logging_conf.log_data;
-
-	toggle_logging->state = state;
-
-	return init_success;
-}
+#endif /* fat_fs_mounting_TELEMETRY_HPP_ */

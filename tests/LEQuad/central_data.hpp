@@ -59,7 +59,6 @@
 #include "hud_telemetry.hpp"
 #include "state_machine.hpp"
 #include "data_logging.hpp"
-#include "toggle_logging.hpp"
 #include "qfilter.hpp"
 #include "mavlink_stream.hpp"
 #include "simulation.hpp"
@@ -94,7 +93,7 @@ public:
 	/**
 	 * \brief   Constructor
 	 */
-	Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, File& file_log, Battery& battery, servos_t& servos);
+	Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, servos_t& servos);
 
 
 	/**
@@ -114,7 +113,6 @@ public:
 	Serial&			serial_mavlink;		///< Reference to telemetry serial
 	Satellite&		satellite;			///< Reference to remote control satellite
 	File& 			file_flash;			///< Reference to flash storage
-	File& 			file_log;			///< Reference to log storage
 	Battery& 		battery;			///< Reference to battery
 	servos_t& 		servos;				///< Reference to servos structure
 
@@ -143,9 +141,6 @@ public:
 	state_machine_t state_machine;								///< The structure for the state machine
 		
 	hud_telemetry_structure_t hud_structure;					///< The HUD structure
-
-	toggle_logging_t toggle_logging;
-	data_logging_t data_logging;
 };
 
 

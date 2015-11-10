@@ -40,22 +40,14 @@
 
 #include "file_linux.hpp"
 
-extern "C"
-{
-	#include "print_util.h"
-}
-
 using namespace std;
 
-File_linux::File_linux(const char* path, bool open_now)
+File_linux::File_linux(const char* path)
 {
-	if (open_now)
-	{
-		open(path,false);
-	}	
+	open(path);
 }
 
-bool File_linux::open(const char* path, bool new_file)
+bool File_linux::open(const char* path)
 {
 	bool success = true;
 
@@ -65,35 +57,22 @@ bool File_linux::open(const char* path, bool new_file)
 		file_.close();
 	}
 
-	print_util_dbg_print(path);
-	print_util_dbg_print("\r\n");
-
 	// Try opening file in input/output mode
-	//file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
-	file_.open(path, ios::in | ios::out | ios::ate );
+	file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
 	
-	if (new_file && file_.is_open())
-	{
-		file_.close();
-		success = false;
-
-		return success;
-	}
-
 	// If it fails, create the file
 	if( ~file_.is_open() )
 	{
-		print_util_dbg_print("Creating file...\r\n");
 		// open in output mode
 		file_.open(path, ios::out | ios::trunc);
-
 		file_.close();
 
 		// and reopen in input/output mode
 		file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
 	}
 
-	success = file_.is_open();
+	// If it fails, create the file
+	success &= file_.is_open();
 
 	return success;
 }
@@ -108,20 +87,8 @@ bool File_linux::is_open()
 
 bool File_linux::close()
 {
-	bool success;
-
 	file_.close();
-
-	if (file_.is_open())
-	{
-		success = false;
-	}
-	else
-	{
-		success = true;
-	}
-
-	return success;
+	return false;
 }
 
 
@@ -136,13 +103,6 @@ bool File_linux::read(uint8_t* data, uint32_t size)
 
 bool File_linux::write(const uint8_t* data, uint32_t size)
 {
-	print_util_dbg_print("writing:");
-	print_util_dbg_print_num(*data,10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print((char*)data);
-	print_util_dbg_print("\r\n");
-
-
 	file_.write((const char*)data, size);
 	return true;
 }

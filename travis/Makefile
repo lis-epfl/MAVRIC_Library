@@ -98,20 +98,19 @@ LIB_SRCS += sensing/qfilter.c
 LIB_SRCS += runtime/scheduler.cpp  
 LIB_SRCS += runtime/scheduler_telemetry.c
                 
-LIB_SRCS += communication/data_logging.cpp
-LIB_SRCS += communication/hud_telemetry.cpp
-LIB_SRCS += communication/mavlink_communication.cpp
-LIB_SRCS += communication/mavlink_message_handler.cpp   
+LIB_SRCS += communication/data_logging.c            
+LIB_SRCS += communication/hud_telemetry.c           
+LIB_SRCS += communication/mavlink_communication.c     
+LIB_SRCS += communication/mavlink_message_handler.c   
 LIB_SRCS += communication/mavlink_stream.cpp            
-LIB_SRCS += communication/mavlink_waypoint_handler.cpp  
-LIB_SRCS += communication/onboard_parameters.cpp
-LIB_SRCS += communication/remote.cpp
-LIB_SRCS += communication/remote_telemetry.cpp
-LIB_SRCS += communication/state.cpp
-LIB_SRCS += communication/toggle_logging.cpp
+LIB_SRCS += communication/mavlink_waypoint_handler.c  
+LIB_SRCS += communication/onboard_parameters.c
+LIB_SRCS += communication/remote.c
+LIB_SRCS += communication/remote_telemetry.c
+LIB_SRCS += communication/state.c
 
-LIB_SRCS += communication/state_machine.cpp
-LIB_SRCS += communication/state_telemetry.cpp
+LIB_SRCS += communication/state_machine.c
+LIB_SRCS += communication/state_telemetry.c
 
 LIB_SRCS += simulation/simulation.cpp
 LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
@@ -136,7 +135,8 @@ LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
 LIB_SRCS += hal/dummy/file_dummy.cpp
 
-LIB_SRCS += hal/common/toggle_logging_telemetry.cpp
+LIB_SRCS += hal/common/fat_fs_mounting.cpp
+LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
 LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
