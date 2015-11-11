@@ -60,7 +60,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, bool debug, FATFS* fs)
+bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, bool debug)
 {
 	bool init_success = true;
 
@@ -70,9 +70,7 @@ bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, bool debug, FATFS*
 
 	fat_fs_mounting->sys_mounted = false;
 
-	fat_fs_mounting->fs = fs;
-
-	fat_fs_mounting_mount(fat_fs_mounting, debug);
+	fat_fs_mounting->num_file_opened = 0;
 
 	return init_success;
 }
@@ -82,6 +80,7 @@ void fat_fs_mounting_mount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
 	if (!fat_fs_mounting->sys_mounted)
 	{
 		print_util_dbg_print("Trying to mount SD card\r\n");
+
 		if ((fat_fs_mounting->fr != FR_OK)&&(fat_fs_mounting->loop_count < 10))
 		{
 			fat_fs_mounting->loop_count += 1;
@@ -89,8 +88,7 @@ void fat_fs_mounting_mount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
 
 		if (fat_fs_mounting->loop_count < 10)
 		{
-			fat_fs_mounting->fr = f_mount(fat_fs_mounting->fs, "1:", 1);
-			//fat_fs_mounting->fr = f_mount(&fat_fs_mounting->fs, 0, 1);
+			fat_fs_mounting->fr = f_mount(&fat_fs_mounting->fs, "1:", 1);
 			
 			if (fat_fs_mounting->fr == FR_OK)
 			{
@@ -121,17 +119,24 @@ void fat_fs_mounting_mount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
 	}
 }
 
-void fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
+bool fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
 {
+	bool success = false;
+
 	if ( (fat_fs_mounting->num_file_opened == 0) && fat_fs_mounting->sys_mounted )
 	{
 		fat_fs_mounting->loop_count = 0;
 
-		fat_fs_mounting->fr = f_mount(fat_fs_mounting->fs,"",0);
+		fat_fs_mounting->fr = f_mount(&fat_fs_mounting->fs,"1:",0);
 
 		if (fat_fs_mounting->fr == FR_OK)
 		{
 			fat_fs_mounting->sys_mounted = false;
+			success = true;
+		}
+		else
+		{
+			success = false;
 		}
 
 		if (debug)
@@ -147,6 +152,8 @@ void fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
 			}
 		}
 	}
+
+	return success;
 }
 
 void fat_fs_mounting_print_error_signification(FRESULT fr)

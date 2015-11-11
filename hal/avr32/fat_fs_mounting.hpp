@@ -57,7 +57,7 @@ extern "C"
 typedef struct 
 {
 	FRESULT fr;									///< The result of the fatfs functions
-	FATFS* fs;									///< The fatfs handler
+	FATFS fs;									///< The fatfs handler
 
 	uint32_t loop_count;						///< Counter to try to mount the SD card many times
 
@@ -74,7 +74,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, bool debug, FATFS* fs);
+bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, bool debug);
 
 /**
  * \brief	Mount the fat_fs system file
@@ -89,8 +89,10 @@ void fat_fs_mounting_mount(fat_fs_mounting_t* fat_fs_mounting, bool debug);
  *
  * \param	fat_fs_mounting			The pointer to the SD card mounting structure
  * \param	debug					A flag to tell if we print the result or not for debug purposes
+ *
+ * \return	True if unmounting succeeded 
  */
-void fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug);
+bool fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug);
 
 /**
  * \brief	Prints on debug port the result's value of the fatfs operation
