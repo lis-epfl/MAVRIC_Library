@@ -47,6 +47,7 @@
 #include "state.hpp"
 #include "toggle_logging.hpp"
 #include "file.hpp"
+#include "console.hpp"
 
 /**
  * \brief	Structure of data logging parameter.
@@ -90,7 +91,6 @@ typedef struct
 	uint32_t time_ms;							///< The microcontroller time in ms
 
 	int buffer_name_size;						///< The buffer for the size of the file's name
-	int buffer_add_size;						///< The buffer for the size of the file's extension char*
 
 	char *file_name;							///< The file name
 	char *name_n_extension;						///< Stores the name of the file
@@ -105,7 +105,7 @@ typedef struct
 	
 	uint32_t sys_id;							///< the system ID
 	
-	File* file;
+	Console<File>* console;
 
 	const state_t* state;						///< The pointer to the state structure	
 	toggle_logging_t* toggle_logging;			///< The pointer to the toggle logging structure
@@ -123,7 +123,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, File* file, bool continuous_write, toggle_logging_t* toggle_logging, uint32_t sysid);
+bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, Console<File>* console, bool continuous_write, toggle_logging_t* toggle_logging, uint32_t sysid);
 
 /**
  * \brief	Create and open a new file

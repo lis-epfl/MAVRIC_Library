@@ -131,7 +131,6 @@ public:
 	Spektrum_satellite	spektrum_satellite;
 	Imu 				imu;
 	File_flash_avr32	file_flash;
-	File_fat_fs			file_log;
 	Gps_ublox			gps_ublox;
 	Sonar_i2cxl			sonar_i2cxl;
 	analog_monitor_t	analog_monitor;
