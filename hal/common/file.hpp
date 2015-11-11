@@ -123,10 +123,10 @@ public:
 
 
 	/**
-	* \brief 	Get current location in file
-	*
-	* \return 	Offset in bytes
-	*/
+	 * \brief 	Get current location in file
+	 *
+	 * \return 	Offset in bytes
+	 */
 	virtual uint32_t offset() = 0;
 
 
@@ -142,14 +142,21 @@ public:
 	 *
 	 * \return 	success	(always false)
 	 */
-	 bool flush();
+	bool flush();
 
 	/**
 	 * \brief 	write newline character to file ('\n')
 	 *
 	 * \return 	success
 	 */
-	 bool newline();
+	bool newline();
+
+	/**
+	 * \brief	sync the file
+	 *
+	 * \return success
+	 */
+	virtual bool sync() = 0;
 };
 
 #endif /* FILE_HPP_ */

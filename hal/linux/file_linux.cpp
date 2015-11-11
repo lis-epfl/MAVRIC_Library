@@ -65,9 +65,6 @@ bool File_linux::open(const char* path, bool new_file)
 		file_.close();
 	}
 
-	print_util_dbg_print(path);
-	print_util_dbg_print("\r\n");
-
 	// Try opening file in input/output mode
 	//file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
 	file_.open(path, ios::in | ios::out | ios::ate );
@@ -83,7 +80,6 @@ bool File_linux::open(const char* path, bool new_file)
 	// If it fails, create the file
 	if( ~file_.is_open() )
 	{
-		print_util_dbg_print("Creating file...\r\n");
 		// open in output mode
 		file_.open(path, ios::out | ios::trunc);
 
@@ -136,13 +132,6 @@ bool File_linux::read(uint8_t* data, uint32_t size)
 
 bool File_linux::write(const uint8_t* data, uint32_t size)
 {
-	print_util_dbg_print("writing:");
-	print_util_dbg_print_num(*data,10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print((char*)data);
-	print_util_dbg_print("\r\n");
-
-
 	file_.write((const char*)data, size);
 	return true;
 }
@@ -202,4 +191,9 @@ uint32_t File_linux::length()
 	file_.seekg(current, ios::beg);
 
 	return end - begin;
+}
+
+bool File_linux::sync()
+{
+	return true;
 }

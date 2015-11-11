@@ -47,7 +47,7 @@ File_dummy::File_dummy(const char* path)
 	;
 }
 
-bool File_dummy::open(const char* path)
+bool File_dummy::open(const char* path, bool new_file)
 {
 	return false;
 }
@@ -96,4 +96,9 @@ uint32_t File_dummy::offset()
 uint32_t File_dummy::length()
 {
 	return 0;
+}
+
+bool File_dummy::sync()
+{
+	return false;
 }

@@ -195,3 +195,8 @@ uint32_t File_flash_avr32::length()
 {
 	return MAVERIC_FLASHC_USER_PAGE_FREE_SPACE;
 }
+
+bool File_flash_avr32::sync()
+{
+	return true;
+}

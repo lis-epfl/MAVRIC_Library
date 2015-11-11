@@ -57,8 +57,7 @@ void File_fat_fs::init(fat_fs_mounting_t* fat_fs_mounting)
 {
 	fat_fs_mounting_ = fat_fs_mounting;
 
-	file_.fs = &fs;
-	fat_fs_mounting_init(fat_fs_mounting_,true, &fs);
+	fat_fs_mounting_init(fat_fs_mounting_,true);
 }
 
 bool File_fat_fs::open(const char* path, bool new_file)
@@ -66,11 +65,15 @@ bool File_fat_fs::open(const char* path, bool new_file)
 	bool success = true;
 	FRESULT fr;
 
-	file_name = (char*)malloc(sizeof(path));
-	strcpy(file_name, path);
+	file_name = (char*)malloc(sizeof(path)+2);
+	strcpy(file_name, "1:");
+	strcat(file_name, path);
+
+	// file_name = (char*)malloc(sizeof(path));
+	// strcpy(file_name,path);
 
 	print_util_dbg_print("Opening file:");
-	print_util_dbg_print(path);
+	print_util_dbg_print(file_name);
 	print_util_dbg_print("\r\n");
 
 	fat_fs_mounting_mount(fat_fs_mounting_,true);
@@ -140,7 +143,7 @@ bool File_fat_fs::close()
 		success = false;
 	}
 
-	fat_fs_mounting_unmount(fat_fs_mounting_,true);
+	success &= fat_fs_mounting_unmount(fat_fs_mounting_,true);
 
 	return success;
 }
@@ -219,8 +222,6 @@ bool File_fat_fs::seek(int32_t offset, file_seekfrom_t origin)
   		break;
 	}
 
-	fat_fs_mounting_print_error_signification(fr);
-
 	if (fr == FR_OK)
 	{
 		success = true;
@@ -228,6 +229,7 @@ bool File_fat_fs::seek(int32_t offset, file_seekfrom_t origin)
 	else
 	{
 		success = false;
+		fat_fs_mounting_print_error_signification(fr);
 	}
 
 	return success;
@@ -251,4 +253,22 @@ uint32_t File_fat_fs::length()
 	fsize = f_size(&file_);
 
 	return fsize;
+}
+
+bool File_fat_fs::sync()
+{
+	bool success = true;
+	FRESULT fr;
+
+	fr = f_sync(&file_);
+
+	if (fr == FR_OK)
+	{
+		success = true;
+	}
+	else
+	{
+		success = false;
+		fat_fs_mounting_print_error_signification(fr);
+	}
 }

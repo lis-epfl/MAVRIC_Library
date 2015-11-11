@@ -61,7 +61,7 @@ public:
 	 * 
 	 * \return  true if the file is open, false otherwise
 	 */
-	bool open(const char* path);
+	bool open(const char* path, bool new_file);
 
 
 	/**
@@ -119,10 +119,10 @@ public:
 
 
 	/**
-	* \brief 	Get current location in file
-	*
-	* \return 	Offset in bytes
-	*/
+	 * \brief 	Get current location in file
+	 *
+	 * \return 	Offset in bytes
+	 */
 	uint32_t offset();
 
 
@@ -132,6 +132,14 @@ public:
 	 * \return 	The file length up to the maximum supported 4Gb.
 	 */
 	uint32_t length();
+
+
+	/**
+	 * \brief	sync the file
+	 *
+	 * \return success
+	 */
+	bool sync();
 };
 
 #endif /* FILE_DUMMY_H_ */
