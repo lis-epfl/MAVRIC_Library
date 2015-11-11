@@ -353,7 +353,7 @@ static bool data_logging_put_int64_t(File* file, int64_t c)
 
 static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param_num)
 {
-	print_util_dbg_print("put_r_or_n \r\n");
+	//print_util_dbg_print("put_r_or_n \r\n");
 	bool success = true;
 	
 	uint8_t new_line = 10;
@@ -386,8 +386,6 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 	bool success = true;
 	data_logging_set_t* data_set = data_logging->data_logging_set;
 	File* file = data_logging->file;
-	
-	uint32_t paramuint;
 
 	for (i = 0; i < data_set->data_logging_count; i++)
 	{
@@ -419,7 +417,6 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 				break;
 					
 			case MAV_PARAM_TYPE_UINT32:
-				paramuint = *(uint32_t*)param->param;
 				//res = f_printf(&data_logging->fil, "%d", *((uint32_t*)param->param));
 				success = file->write((uint8_t*)&param,sizeof(uint32_t));
 				data_logging_put_r_or_n(data_logging,i);
