@@ -41,13 +41,16 @@
  ******************************************************************************/
 
 
-#include "manual_control_telemetry.h"
-#include "manual_control.h"
-#include "remote_telemetry.h"
-#include "joystick_telemetry.h"
-#include "print_util.h"
-#include "time_keeper.h"
+#include "manual_control_telemetry.hpp"
+#include "manual_control.hpp"
+#include "remote_telemetry.hpp"
+#include "joystick_telemetry.hpp"
 
+extern "C" 
+{
+	#include "print_util.h"
+	#include "time_keeper.h"
+}
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
