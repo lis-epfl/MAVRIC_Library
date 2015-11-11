@@ -40,8 +40,6 @@
 
 #include "file_dummy.hpp"
 
-using namespace std;
-
 File_dummy::File_dummy(const char* path)
 {
 	;
