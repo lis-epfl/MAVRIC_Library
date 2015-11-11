@@ -150,6 +150,7 @@ public:
 	 */
 	uint32_t length();
 
+
 	/**
 	 * \brief	sync the file
 	 *
