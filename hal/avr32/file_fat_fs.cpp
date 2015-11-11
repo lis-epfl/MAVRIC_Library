@@ -75,6 +75,7 @@ bool File_fat_fs::open(const char* path, bool new_file)
 	print_util_dbg_print("Opening file:");
 	print_util_dbg_print(file_name);
 	print_util_dbg_print("\r\n");
+	
 
 	fat_fs_mounting_mount(fat_fs_mounting_,true);
 
@@ -86,7 +87,6 @@ bool File_fat_fs::open(const char* path, bool new_file)
 	{
 		fr = f_open(&file_, file_name, FA_WRITE | FA_OPEN_ALWAYS);
 	}
-	
 
 	if (fr == FR_OK)
 	{
@@ -177,16 +177,23 @@ bool File_fat_fs::read(uint8_t* data, uint32_t size)
 bool File_fat_fs::write(const uint8_t* data, uint32_t size)
 {
 	bool success;
-	int32_t fr_puts;
-	FRESULT fr;
+	int32_t fr = 1;
+	FRESULT fr_stat;
 
-	fr_puts = f_puts((char*)data,&file_);
+	for (uint32_t i = 0; i < size; ++i)
+	{
+		fr = f_putc((char)*(data++),&file_);
+		if (fr == EOF)
+		{
+			break;
+		}
+	}
 
-	if (fr_puts == EOF)
+	if (fr == EOF)
 	{
 		success = false;
-		fr = f_stat(file_name,NULL);
-		fat_fs_mounting_print_error_signification(fr);
+		fr_stat = f_stat(file_name,NULL);
+		fat_fs_mounting_print_error_signification(fr_stat);
 	}
 	else
 	{
@@ -271,4 +278,6 @@ bool File_fat_fs::sync()
 		success = false;
 		fat_fs_mounting_print_error_signification(fr);
 	}
+
+	return success;
 }
