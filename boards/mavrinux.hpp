@@ -126,7 +126,6 @@ public:
 	Serial_linux_io 	debug_serial;
 
 	File_linux 			file_flash;
-	File_linux 			file_log;
 
 private:
 	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
