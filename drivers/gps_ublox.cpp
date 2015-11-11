@@ -3680,7 +3680,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 				print_util_dbg_print("\r\n");
 			}
 
-			if (++(gps->disable_counter) == 256)
+			if (++(gps->disable_counter) == 255)
 			{
 				gps->disable_counter = 1;
 
