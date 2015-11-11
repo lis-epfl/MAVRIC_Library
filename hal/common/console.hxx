@@ -257,4 +257,10 @@ static Console<Writeable>& endl(Console<Writeable>& console)
 	return console;
 }
 
+template <typename Writeable>
+Writeable* Console<Writeable>::get_stream()
+{
+	return &stream_;
+}
+
 #endif /* CONSOLE_HXX_ */
