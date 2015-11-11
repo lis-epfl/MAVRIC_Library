@@ -3358,7 +3358,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 			print_util_dbg_print_num(msg_id,10);
 			print_util_dbg_print("02x\r\n");
 		}
-		if (++gps->disable_counter == 256)
+		if (++gps->disable_counter == 255)
 		{
 			// disable future sends of this message id, but
 			// only do this every 256 messages, as some
