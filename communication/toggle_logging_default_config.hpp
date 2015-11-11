@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_default_config.h
+ * \file toggle_logging_default_config.h
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
@@ -40,14 +40,14 @@
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_DEFAULT_CONFIG_H_
-#define DATA_LOGGING_DEFAULT_CONFIG_H_
+#ifndef TOGGLE_LOGGING_DEFAULT_CONFIG_H_
+#define TOGGLE_LOGGING_DEFAULT_CONFIG_H_
 
-#include "data_logging.hpp"
+#include "toggle_logging.hpp"
 
-static inline data_logging_conf_t data_logging_default_config()
+static inline toggle_logging_conf_t toggle_logging_default_config()
 {
-	data_logging_conf_t conf    = {};
+	toggle_logging_conf_t conf    = {};
 	
 	conf.debug                  = true;
 	conf.max_data_logging_count = 50;
@@ -57,4 +57,4 @@ static inline data_logging_conf_t data_logging_default_config()
 	return conf;
 };
 
-#endif // DATA_LOGGING_DEFAULT_CONFIG_H_
+#endif // TOGGLE_LOGGING_DEFAULT_CONFIG_H_

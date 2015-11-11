@@ -43,13 +43,13 @@
 
 
 
-bool toggle_logging_init(toggle_logging_t* toggle_logging, data_logging_conf_t data_logging_conf, const state_t* state)
+bool toggle_logging_init(toggle_logging_t* toggle_logging, toggle_logging_conf_t toggle_logging_conf, const state_t* state)
 {
 	bool init_success = true;
 
-	toggle_logging->data_logging_conf = data_logging_conf;
+	toggle_logging->toggle_logging_conf = toggle_logging_conf;
 
-	toggle_logging->log_data = data_logging_conf.log_data;
+	toggle_logging->log_data = toggle_logging_conf.log_data;
 
 	toggle_logging->state = state;
 

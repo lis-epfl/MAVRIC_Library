@@ -59,14 +59,14 @@ typedef struct
 	uint16_t max_logs;							///< The max number of logged files with the same name on the SD card
 	bool debug;									///< Indicates if debug messages should be printed for each param change
 	uint32_t log_data;							///< The initial state of writing a file
-} data_logging_conf_t;
+} toggle_logging_conf_t;
 
 /**
  * \brief 	The fat_fs mounting structure
  */
 typedef struct 
 {
-	data_logging_conf_t data_logging_conf;		///< The data logging configuration structure
+	toggle_logging_conf_t toggle_logging_conf;	///< The data logging configuration structure
 
 	uint32_t log_data;							///< A flag to stop/start writing to file
 
@@ -82,7 +82,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool toggle_logging_init(toggle_logging_t* toggle_logging, data_logging_conf_t data_logging_conf, const state_t* state);
+bool toggle_logging_init(toggle_logging_t* toggle_logging, toggle_logging_conf_t toggle_logging_conf, const state_t* state);
 
 
 #endif /* fat_fs_mounting_TELEMETRY_HPP_ */
