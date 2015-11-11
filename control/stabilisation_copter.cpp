@@ -210,7 +210,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		rpyt_errors[0]= input.rpy[0] + up_vec.v[1]; 
 		rpyt_errors[1]= input.rpy[1] - up_vec.v[0];
 		
-		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) 
+		if (stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE ) 
 		{
 			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- stabilisation_copter->pos_est->local_position.heading);
 		}
