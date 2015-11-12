@@ -44,7 +44,6 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
 	#include "print_util.h"
 }
 

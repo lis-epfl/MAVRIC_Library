@@ -77,7 +77,7 @@ typedef struct
  * \brief	Initialise the toggle logging system file
  *
  * \param	toggle_logging			The pointer to the toggle telemetry structure
- * \param	data_logging_conf		The pointer to the configuration structure
+ * \param	toggle_logging_conf		The pointer to the configuration structure
  * \param	state					The pointer to the state structure
  *
  * \return	True if the init succeed, false otherwise

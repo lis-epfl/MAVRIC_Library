@@ -108,6 +108,7 @@ LIB_SRCS += communication/remote.cpp
 LIB_SRCS += communication/remote_telemetry.cpp
 LIB_SRCS += communication/state.cpp
 LIB_SRCS += communication/toggle_logging.cpp
+LIB_SRCS += communication/toggle_logging_telemetry.cpp
 
 LIB_SRCS += communication/state_machine.cpp
 LIB_SRCS += communication/state_telemetry.cpp
@@ -136,7 +137,6 @@ LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
 LIB_SRCS += hal/dummy/file_dummy.cpp
 
-LIB_SRCS += hal/common/toggle_logging_telemetry.cpp
 LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
