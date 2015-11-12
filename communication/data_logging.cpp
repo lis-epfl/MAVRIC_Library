@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief Performs the data logging on the SD card
+ * \brief Performs the data logging on a file
  *
  ******************************************************************************/
 
@@ -102,7 +102,7 @@ static void data_logging_seek(data_logging_t* data_logging);
 *
 * \return	success		Bool stating if the entire output was written
 */
-bool data_logging_filename_append_extension(char* output, char* filename, uint32_t length);
+static bool data_logging_filename_append_extension(char* output, char* filename, uint32_t length);
 
 
 /**
@@ -118,7 +118,7 @@ bool data_logging_filename_append_extension(char* output, char* filename, uint32
 *
 * \return	success		Bool stating if the entire output was written
 */
-bool data_logging_filename_append_int(char* output, char* filename, uint32_t num, uint32_t length);
+static bool data_logging_filename_append_int(char* output, char* filename, uint32_t num, uint32_t length);
 
 
 //------------------------------------------------------------------------------
@@ -135,9 +135,6 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 	for (i = 0; i < data_set->data_logging_count; i++)
 	{
 		data_logging_entry_t* param = &data_set->data_log[i];
-		
-		//int32_t res = f_printf(&data_logging->fil,param->param_name);
-		//init &= data_logging->file->write(reinterpret_cast<uint8_t*>(param->param_name),strlen(param->param_name));
 
 		init &= data_logging->console->write(reinterpret_cast<uint8_t*>(param->param_name),strlen(param->param_name));
 
@@ -161,6 +158,7 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 {
 	bool success = true;
 
+	// Writes a tab character or a end of line character to the file depending on the parameter current number
 	if (param_num == (data_logging->data_logging_set->data_logging_count-1))
 	{
 		success &= data_logging->console->write("\n");
@@ -187,6 +185,7 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 
 	for (i = 0; i < data_set->data_logging_count; i++)
 	{
+		// Writing the value of the parameter to the file, separate values by tab character
 		data_logging_entry_t* param = &data_set->data_log[i];
 		switch(param->data_type)
 		{
@@ -264,20 +263,19 @@ static void data_logging_seek(data_logging_t* data_logging)
 	/* Seek to end of the file to append data */
 	success &= data_logging->console->get_stream()->seek(0,FILE_SEEK_END);
 
-
-	//if (data_logging->fr != FR_OK)
 	if (!success)
 	{
 		if (data_logging->debug)
 		{
 			print_util_dbg_print("lseek error:");
 		}
+		// Closing the file if we could not seek the end of the file
 		data_logging->console->get_stream()->close();
 	}
 }
 
 
-bool data_logging_filename_append_extension(char* output, char* filename, uint32_t length)
+static bool data_logging_filename_append_extension(char* output, char* filename, uint32_t length)
 {
 	// Success flag
 	bool is_success = true;
@@ -329,7 +327,7 @@ bool data_logging_filename_append_extension(char* output, char* filename, uint32
 }
 
 
-bool data_logging_filename_append_int(char* output, char* filename, uint32_t num, uint32_t length)
+static bool data_logging_filename_append_int(char* output, char* filename, uint32_t num, uint32_t length)
 {
 	// Success flag
 	bool is_success = true;
@@ -442,6 +440,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	data_logging->file_init = false;
 	data_logging->file_opened = false;
 	
+	// Setting the maximal size of the name string
 	#if _USE_LFN
 	data_logging->buffer_name_size = _MAX_LFN;
 	#else
@@ -452,6 +451,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	#endif
 	#endif
 	
+	// Allocating memory for the file name string
 	data_logging->file_name = (char*)malloc(data_logging->buffer_name_size);
 	data_logging->name_n_extension = (char*)malloc(data_logging->buffer_name_size);
 	
@@ -508,6 +508,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 				create_success = false;
 			}
 
+			// If the filename was successfully created, try to open a file
 			if (successful_filename)
 			{
 				create_success = data_logging->console->get_stream()->open(data_logging->name_n_extension,true);
@@ -521,8 +522,6 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 			}
 
 			++i;
-		
-		//} while( (i < data_logging->data_logging_set->max_data_logging_count) && (data_logging->fr == (uint32_t)FR_EXIST) );
 		} while( (i < data_logging->data_logging_set->max_data_logging_count) && (!create_success) );
 
 		if (create_success)

@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  * 
- * \brief Performs the data logging on the SD card
+ * \brief Performs the data logging on a file
  *
  ******************************************************************************/
 
@@ -54,8 +54,7 @@
  */
 typedef struct
 {
-	double* param_double;										///< Pointer to the parameter value
-	double* param;
+	double* param;												///< Pointer to the parameter value
 	char param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];	///< Parameter name composed of 16 characters
 	mavlink_message_type_t data_type;							///< Parameter type
 	uint8_t precision;											///< Number of digit after the zero
@@ -105,7 +104,7 @@ typedef struct
 	
 	uint32_t sys_id;							///< the system ID
 	
-	Console<File>* console;
+	Console<File>* console;						///< The pointer to the console containing the file to write data to
 
 	const state_t* state;						///< The pointer to the state structure	
 	toggle_logging_t* toggle_logging;			///< The pointer to the toggle logging structure
@@ -117,6 +116,7 @@ typedef struct
  *
  * \param	data_logging			The pointer to the data logging structure
  * \param	file_name				The pointer to name of the file to create
+ * \param 	console 				The pointer to the console containing the file to write to
  * \param	continuous_write		Boolean to state whether writing should be continous or not
  * \param	toggle_logging			The pointer to toggle logging structure
  * \param	sysid					The pointer to the system identification number of the MAV
