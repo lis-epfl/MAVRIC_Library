@@ -60,11 +60,12 @@
 typedef struct 
 {
 	analog_rails_t analog_rail;		///< Analog rail on which the sensor is connected
-	float filter_gain;				///< Gain for the low-pass filter
-	float airspeed_offset;			///< Default airspeed offset
+	float pressure_offset;			///< Default airspeed offset
+	float calibration_gain;			///< Gain used for the calibration of the offset (low-pass)
+	float conversion_factor;		///< Factor used for conversion between differential pressure P and square speed v^2.
 	float correction_gain;			///< Gain obtained by the fitted relation (Airspeed_measured = gain * Airspeed_true + offset)
 	float correction_offset;		///< Offset obtained by the fitted relation
-	float calibration_gain;			///< Gain used for the calibration of the offset (low-pass)
+	float filter_gain;				///< Gain for the low-pass filter
 } airspeed_analog_conf_t;
 
 /**
@@ -75,15 +76,17 @@ typedef struct {
 	uint8_t analog_channel;					///< analog channel of the ADC
 	float voltage;							///< Voltage read by the ADC
 	
-	float differential_pressure;			///< True dynamical pressure (in kPa)
-	float airspeed_offset;					///< Offset of the airspeed module
+	float pressure_offset;					///< Offset of the pressure sensor
+	float differential_pressure;			///< True differential pressure in Pa (raw sensor compensated with offset)
+	float conversion_factor;				///< Factor used for conversion between differential pressure P and square speed v^2. Is influenced by real sensitivity of the sensor and by air density !
 	float correction_gain;					///< Gain used to correct estimation
 	float correction_offset;				///< Offset used to correct estimation
 	float alpha;							///< Filter coefficient
 	
 	float raw_airspeed;						///< Unfiltered and uncorrected airspeed
-	float scaled_airspeed;					///< Corrected airspeed, using offset and fitted relation
+	float scaled_airspeed;					///< Corrected airspeed, using fitted relation
 	float airspeed;							///< Filtered corrected airspeed
+	float last_airspeed;					///< Airspeed from previous loop
 	
 	bool calibrating;						///< True if the sensor is currently in calibration
 	float calibration_gain;					///< Gain used for the calibration of the offset (low-pass)

@@ -115,7 +115,7 @@ void airspeed_analog_telemetry_send(airspeed_analog_t* airspeed_analog, const ma
 									msg,
 									"Airspd",
 									time_keeper_get_micros(),
+									(float)airspeed_analog->differential_pressure,
 									(float)airspeed_analog->raw_airspeed,
-									(float)airspeed_analog->scaled_airspeed,
 									(float)airspeed_analog->airspeed);
 }
