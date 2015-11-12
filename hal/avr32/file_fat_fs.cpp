@@ -50,7 +50,7 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void File_fat_fs::mount_system(bool debug)
+void File_fat_fs::mount_system()
 {
 	if (!sys_mounted)
 	{
@@ -94,7 +94,7 @@ void File_fat_fs::mount_system(bool debug)
 	}
 }
 
-bool File_fat_fs::unmount_system(bool debug)
+bool File_fat_fs::unmount_system()
 {
 	bool success = false;
 
@@ -225,7 +225,7 @@ void File_fat_fs::print_error_signification(FRESULT fr)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-File_fat_fs::File_fat_fs()
+File_fat_fs::File_fat_fs(bool debug_)
 {
 	fr = FR_NO_FILE;
 
@@ -234,6 +234,8 @@ File_fat_fs::File_fat_fs()
 	sys_mounted = false;
 
 	num_file_opened = 0;
+
+	debug = debug_;
 }
 
 bool File_fat_fs::open(const char* path, bool new_file)
@@ -245,12 +247,14 @@ bool File_fat_fs::open(const char* path, bool new_file)
 	strcpy(file_name, "1:");
 	strcat(file_name, path);
 
-	print_util_dbg_print("Opening file:");
-	print_util_dbg_print(file_name);
-	print_util_dbg_print("\r\n");
-	
+	if (debug)
+	{
+		print_util_dbg_print("Opening file:");
+		print_util_dbg_print(file_name);
+		print_util_dbg_print("\r\n");
+	}
 
-	mount_system(true);
+	mount_system();
 
 	if (new_file)
 	{
@@ -270,8 +274,12 @@ bool File_fat_fs::open(const char* path, bool new_file)
 	}
 	else
 	{
-		print_util_dbg_print("Opening error:");
-		print_error_signification(fr);
+		if (debug)
+		{
+			print_util_dbg_print("Opening error:");
+			print_error_signification(fr);
+		}
+		
 		success = false;
 	}
 
@@ -312,11 +320,16 @@ bool File_fat_fs::close()
 	}
 	else
 	{
-		print_error_signification(fr);
+		if (debug)
+		{
+			print_util_dbg_print("Closing error:");
+			print_error_signification(fr);
+		}
+		
 		success = false;
 	}
 
-	success &= unmount_system(true);
+	success &= unmount_system();
 
 	return success;
 }
@@ -338,7 +351,12 @@ bool File_fat_fs::read(uint8_t* data, uint32_t size)
 	}
 	else
 	{
-		print_error_signification(fr);
+		if (debug)
+		{
+			print_util_dbg_print("Reading error:");
+			print_error_signification(fr);
+		}
+		
 		success = false;
 	}
 
@@ -364,9 +382,14 @@ bool File_fat_fs::write(const uint8_t* data, uint32_t size)
 
 	if (fr == EOF)
 	{
-		success = false;
 		fr_stat = f_stat(file_name,NULL);
-		print_error_signification(fr_stat);
+		if (debug)
+		{
+			print_util_dbg_print("Writing error:");
+			print_error_signification(fr_stat);
+		}
+
+		success = false;
 	}
 	else
 	{
@@ -408,8 +431,13 @@ bool File_fat_fs::seek(int32_t offset, file_seekfrom_t origin)
 	}
 	else
 	{
+		if (debug)
+		{
+			print_util_dbg_print("Seeking error:");
+			print_error_signification(fr);
+		}
+
 		success = false;
-		print_error_signification(fr);
 	}
 
 	return success;
@@ -448,8 +476,13 @@ bool File_fat_fs::sync()
 	}
 	else
 	{
-		success = false;
-		print_error_signification(fr);
+		if (debug)
+		{
+			print_util_dbg_print("Syncing error:");
+			print_error_signification(fr);
+		}
+		
+		success = false;	
 	}
 
 	return success;

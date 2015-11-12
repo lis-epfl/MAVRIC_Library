@@ -70,17 +70,19 @@ private:
 
 	bool sys_mounted;								///< A flag to tell whether the file system is mounted
 
+	bool debug;										///< A flag to tell whether we print the debug messages
+
 	/**
 	 * \brief	Mounting the fat_fs file system
 	 */
-	void mount_system(bool debug);
+	void mount_system();
 
 	/**
 	 * \brief	Unmounting the fat_fs file system
 	 *
 	 * \return 	True if succeeded, false otherwise
 	 */
-	bool unmount_system(bool debug);
+	bool unmount_system();
 
 	/**
 	 * \brief	Printing fat_fs error
@@ -92,7 +94,7 @@ public:
 	/**
 	 * \brief 	Constructor 
 	 */
-    File_fat_fs();
+    File_fat_fs(bool debug_);
 
 	/**
 	 * \brief 	Open the file
