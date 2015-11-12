@@ -308,6 +308,14 @@ void remote_get_rate_command_from_remote(remote_t* remote, control_command_t * c
  */
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls);
 
+/**
+ * \brief	Sets the velocity command vector from the remote, for a wing platform
+ * 
+ * \param	remote	The pointer to the remote structure
+ * \param	controls			The pointer to the controls structure
+ */
+void remote_get_velocity_vector_from_remote_wing(remote_t* remote, control_command_t* controls);
+
 
 /**
  * \brief	Compute torque command from the remote

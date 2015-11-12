@@ -52,6 +52,7 @@ extern "C" {
 
 stabilisation_wing_conf_t stabilisation_wing_default_config =
 {
+	.thrust_apriori = 0.25f,
 	.stabiliser_stack 	= 
 	{
 		// #############################################################################
@@ -293,17 +294,17 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.15f,
+					.p_gain = 0.0f,
 					.clip_min = -0.5f,
 					.clip_max = 0.5f,
 					.integrator={
-						.gain = 0.0125f,
+						.gain = 0.0f,
 						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
 						.clip = 0.5f,
 					},
 					.differentiator={
-						.gain = 0.001f,
+						.gain = 0.0f,
 						.previous = 0.0f,
 						.clip = 1.0f
 					},
@@ -317,17 +318,17 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.2f,
+					.p_gain = 0.0f,
 					.clip_min = -0.5f,
 					.clip_max = 0.5f,
 					.integrator={
-						.gain = 0.0125f,
+						.gain = 0.0f,
 						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
 						.clip = 0.5f,
 					},
 					.differentiator={
-						.gain = 0.001f,
+						.gain = 0.0f,
 						.previous = 0.0f,
 						.clip = 1.0f
 					},
@@ -341,7 +342,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ YAW PID --------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 1.0f,
+					.p_gain = 0.0f,
 					.clip_min = -1,
 					.clip_max = 1,
 					.integrator={
@@ -367,16 +368,16 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 			// ---------------------------------------------------------------------
 			.thrust_controller={
 				.p_gain = 0.20f,
-				.clip_min = -0.9f,
-				.clip_max = 0.65f,
+				.clip_min = -1.0f,
+				.clip_max = 1.0f,
 				.integrator={
-					.gain = 0.01f,
+					.gain = 0.0f,
 					.clip_pre = 2.0f,
 					.accumulator = 0.0f,
 					.clip = 0.3f,
 				},
 				.differentiator={
-					.gain = 0.08f,
+					.gain = 0.0f,
 					.previous = 0.0f,
 					.clip = 0.04f
 				},

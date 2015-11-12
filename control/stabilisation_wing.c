@@ -50,7 +50,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos, servo_mix_wing_t* servo_mix)
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const airspeed_analog_t* airspeed_analog, servos_t* servos, servo_mix_wing_t* servo_mix)
 {
 	bool init_success = true;
 	
@@ -60,8 +60,10 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 	stabilisation_wing->imu = imu;
 	stabilisation_wing->ahrs = ahrs;
 	stabilisation_wing->pos_est = pos_est;
+	stabilisation_wing->airspeed_analog = airspeed_analog;
 	stabilisation_wing->servos = servos;
 	stabilisation_wing->servo_mix = servo_mix;
+	stabilisation_wing->thrust_apriori = stabiliser_conf->thrust_apriori;
 	stabilisation_wing->tuning = stabiliser_conf->tuning;
 	stabilisation_wing->tuning_axis = stabiliser_conf->tuning_axis;
 	stabilisation_wing->tuning_steps = stabiliser_conf->tuning_steps;
@@ -124,7 +126,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		rpyt_errors[Y] = input.tvel[Y] - stabilisation_wing->pos_est->vel[Y];
 		rpyt_errors[3] = -(input.tvel[Z] - stabilisation_wing->pos_est->vel[Z]);
 		
-		if (stabilisation_wing->controls->yaw_mode == YAW_COORDINATED) 
+		if (stabilisation_wing->controls->yaw_mode == YAW_COORDINATED)
 		{
 			float rel_heading_coordinated;
 			if ((maths_f_abs(stabilisation_wing->pos_est->vel_bf[X])<0.001f)&&(maths_f_abs(stabilisation_wing->pos_est->vel_bf[Y])<0.001f))
@@ -167,6 +169,21 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 
 		//input.thrust = stabilisation_wing->controls->tvel[Z];
 		*/
+		
+		// Compute velocity errors
+		rpyt_errors[0] = 0.0f;
+		rpyt_errors[1] = 0.0f;
+		rpyt_errors[2] = 0.0f;
+		rpyt_errors[3] = input.tvel[X] - stabilisation_wing->airspeed_analog->airspeed;
+		
+		// run PID update on all velocity controllers
+		stabilisation_run(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->imu->dt, rpyt_errors);
+		
+		// Add thrust a priori
+		stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_wing->thrust_apriori;
+		
+		// Set input for next layer
+		input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	

@@ -53,6 +53,7 @@ extern "C" {
 #include "servos.h"
 #include "mavlink_waypoint_handler.h"
 #include "servos_mix_wing.h"
+#include "airspeed_analog.h"
 
 
 
@@ -77,8 +78,10 @@ typedef struct
 	const imu_t* imu;											///< The pointer to the IMU structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
 	const position_estimation_t* pos_est;						///< The pointer to the position estimation structure
+	const airspeed_analog_t* airspeed_analog;					///< The pointer to the analog airspeed sensor structure
 	servos_t* servos;											///< The pointer to the servos structure
 	servo_mix_wing_t* servo_mix;								///< The pointer to the servos mixer
+	float thrust_apriori;										///< A priori on the thrust for velocity control
 	int32_t tuning;												///< Are we tuning the controllers?		0: nothing		1: rate		2: attitude
 	int32_t tuning_axis;										///< Which axis are we tuning ?			0: roll			1: pitch
 	int32_t tuning_steps;										///< Is the user allowed to create steps with the remote ?
@@ -93,6 +96,7 @@ typedef struct
  */
 typedef struct  
 {
+	float thrust_apriori;										///< A priori thrust
 	stabiliser_stack_wing_t stabiliser_stack;					///< The pointer to the PID parameters values and output for the stacked controller
 	int32_t tuning;												///< Are we tuning the controllers?
 	int32_t tuning_axis;										///< Which axis are we tuning ?
@@ -112,12 +116,13 @@ typedef struct
  * \param	imu						The pointer to the IMU structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	pos_est					The pointer to the position estimation structure
+ * \param	airspeed_analog			The pointer to the analog airspeed sensor structure
  * \param	servos					The pointer to the array of servos command values
  * \param	servo_mix				The pointer to the servo mix structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos, servo_mix_wing_t* servo_mix);
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const airspeed_analog_t* airspeed_analog, servos_t* servos, servo_mix_wing_t* servo_mix);
 
 /**
  * \brief						Main Controller for controlling and stabilizing the wing
