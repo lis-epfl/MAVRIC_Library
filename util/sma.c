@@ -39,7 +39,7 @@
  *
  ******************************************************************************/
 
-#define DEBUG 1
+#define DEBUG 0
 
 #if DEBUG == 1
 	#define START_UP_ACCUM 1500 //Preload the accumulator to avoid false detection on start-up when debugging
