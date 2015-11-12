@@ -34,7 +34,7 @@
  * 
  * \author  MAV'RIC Team
  *   
- * \brief   Class for files on linux platforms
+ * \brief   Class for files on avr32 platforms
  *
  ******************************************************************************/
 
@@ -43,7 +43,6 @@
 #define FILE_FAT_FS_H_
 
 #include "file.hpp"
-#include "fat_fs_mounting.hpp"
 
 extern "C" 
 {
@@ -60,18 +59,40 @@ class File_fat_fs: public File
 private:
 	FIL file_;										///< File handle
 
-	fat_fs_mounting_t* fat_fs_mounting_;			///< The pointer to the SD card mounting structure
 	char *file_name;								///< The file name
 
+	FRESULT fr;										///< The result of the fatfs functions
+	FATFS fs;										///< The fatfs handler
+
+	uint32_t loop_count;							///< Counter to try to mount the SD card many times
+
+	uint32_t num_file_opened;						///< Number of open files to now when the system can be unmounted
+
+	bool sys_mounted;								///< A flag to tell whether the file system is mounted
+
+	/**
+	 * \brief	Mounting the fat_fs file system
+	 */
+	void mount_system(bool debug);
+
+	/**
+	 * \brief	Unmounting the fat_fs file system
+	 *
+	 * \return 	True if succeeded, false otherwise
+	 */
+	bool unmount_system(bool debug);
+
+	/**
+	 * \brief	Printing fat_fs error
+	 */
+	void print_error_signification(FRESULT fr);
+
 public:
-	FATFS fs;
 	
 	/**
 	 * \brief 	Constructor 
 	 */
     File_fat_fs();
-
-    void init(fat_fs_mounting_t* fat_fs_mounting);
 
 	/**
 	 * \brief 	Open the file

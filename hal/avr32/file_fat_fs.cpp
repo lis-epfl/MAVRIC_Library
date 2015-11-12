@@ -34,7 +34,7 @@
  * 
  * \author  MAV'RIC Team
  *   
- * \brief   Class for files on linux platforms
+ * \brief   Class for files on avr32 platforms
  *
  ******************************************************************************/
 
@@ -46,18 +46,194 @@ extern "C"
 	#include "print_util.h"
 }
 
-//using namespace fa;
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void File_fat_fs::mount_system(bool debug)
+{
+	if (!sys_mounted)
+	{
+		print_util_dbg_print("Trying to mount SD card\r\n");
+
+		if ((fr != FR_OK)&&(loop_count < 10))
+		{
+			loop_count += 1;
+		}
+
+		if (loop_count < 10)
+		{
+			fr = f_mount(&fs, "1:", 1);
+			
+			if (fr == FR_OK)
+			{
+				sys_mounted = true;
+			}
+			else
+			{
+				sys_mounted = false;
+			}
+			
+			if (debug)
+			{
+				if (fr == FR_OK)
+				{
+					print_util_dbg_print("[FAT] SD card mounted\r\n");
+				}
+				else
+				{
+					print_util_dbg_print("[FAT] [ERROR] Mounting");
+					print_error_signification(fr);
+				}
+			}
+		}
+	}
+	else
+	{
+		print_util_dbg_print("System already mounted \r\n");
+	}
+}
+
+bool File_fat_fs::unmount_system(bool debug)
+{
+	bool success = false;
+
+	if ( (num_file_opened == 0) && sys_mounted )
+	{
+		loop_count = 0;
+
+		fr = f_mount(&fs,"1:",0);
+
+		if (fr == FR_OK)
+		{
+			sys_mounted = false;
+			success = true;
+		}
+		else
+		{
+			success = false;
+		}
+
+		if (debug)
+		{
+			if (fr == FR_OK)
+			{
+				print_util_dbg_print("[FAT] SD card unmounted. \r\n");
+			}
+			else
+			{
+				print_util_dbg_print("[FAT] [ERROR] Unmounting");
+				print_error_signification(fr);
+			}
+		}
+	}
+
+	return success;
+}
+
+void File_fat_fs::print_error_signification(FRESULT fr)
+{
+	switch(fr)
+	{
+		case FR_OK:
+			print_util_dbg_print("FR_OK\r\n");
+			break;
+			
+		case FR_DISK_ERR:
+			print_util_dbg_print("FR_DISK_ERR\r\n");
+			break;
+			
+		case FR_INT_ERR:
+			print_util_dbg_print("FR_INT_ERR\r\n");
+			break;
+			
+		case FR_NOT_READY:
+			print_util_dbg_print("FR_NOT_READY\r\n");
+			break;
+			
+		case FR_NO_FILE:
+			print_util_dbg_print("FR_NO_FILE\r\n");
+			break;
+			
+		case FR_NO_PATH:
+			print_util_dbg_print("FR_NO_PATH\r\n");
+			break;
+			
+		case FR_INVALID_NAME:
+			print_util_dbg_print("FR_INVALID_NAME\r\n");
+			break;
+			
+		case FR_DENIED:
+			print_util_dbg_print("FR_DENIED\r\n");
+			break;
+			
+		case FR_EXIST:
+			print_util_dbg_print("FR_EXIST\r\n");
+			break;
+			
+		case FR_INVALID_OBJECT:
+			print_util_dbg_print("FR_INVALID_OBJECT\r\n");
+			break;
+			
+		case FR_WRITE_PROTECTED:
+			print_util_dbg_print("FR_WRITE_PROTECTED\r\n");
+			break;
+			
+		case FR_INVALID_DRIVE:
+			print_util_dbg_print("FR_INVALID_DRIVE\r\n");
+			break;
+			
+		case FR_NOT_ENABLED:
+			print_util_dbg_print("FR_NOT_ENABLED\r\n");
+			break;
+			
+		case FR_NO_FILESYSTEM:
+			print_util_dbg_print("FR_NO_FILESYSTEM\r\n");
+			break;
+			
+		case FR_MKFS_ABORTED:
+			print_util_dbg_print("FR_MKFS_ABORTED\r\n");
+			break;
+			
+		case FR_TIMEOUT:
+			print_util_dbg_print("FR_TIMEOUT\r\n");
+			break;
+			
+		case FR_LOCKED:
+			print_util_dbg_print("FR_LOCKED\r\n");
+			break;
+			
+		case FR_NOT_ENOUGH_CORE:
+			print_util_dbg_print("FR_NOT_ENOUGH_CORE\r\n");
+			break;
+			
+		case FR_TOO_MANY_OPEN_FILES:
+			print_util_dbg_print("FR_TOO_MANY_OPEN_FILES\r\n");
+			break;
+			
+		case FR_INVALID_PARAMETER:
+			print_util_dbg_print("FR_INVALID_PARAMETER\r\n");
+			break;
+			
+		default:
+			print_util_dbg_print("Error unknown\r\n");
+			break;
+	}
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 File_fat_fs::File_fat_fs()
 {
-	
-}
+	fr = FR_NO_FILE;
 
-void File_fat_fs::init(fat_fs_mounting_t* fat_fs_mounting)
-{
-	fat_fs_mounting_ = fat_fs_mounting;
+	loop_count = 0;
 
-	fat_fs_mounting_init(fat_fs_mounting_,true);
+	sys_mounted = false;
+
+	num_file_opened = 0;
 }
 
 bool File_fat_fs::open(const char* path, bool new_file)
@@ -69,15 +245,12 @@ bool File_fat_fs::open(const char* path, bool new_file)
 	strcpy(file_name, "1:");
 	strcat(file_name, path);
 
-	// file_name = (char*)malloc(sizeof(path));
-	// strcpy(file_name,path);
-
 	print_util_dbg_print("Opening file:");
 	print_util_dbg_print(file_name);
 	print_util_dbg_print("\r\n");
 	
 
-	fat_fs_mounting_mount(fat_fs_mounting_,true);
+	mount_system(true);
 
 	if (new_file)
 	{
@@ -92,13 +265,13 @@ bool File_fat_fs::open(const char* path, bool new_file)
 	{
 		success = true;
 
-		fat_fs_mounting_->num_file_opened++;
+		num_file_opened++;
 
 	}
 	else
 	{
 		print_util_dbg_print("Opening error:");
-		fat_fs_mounting_print_error_signification(fr);
+		print_error_signification(fr);
 		success = false;
 	}
 
@@ -135,15 +308,15 @@ bool File_fat_fs::close()
 	{
 		success = true;
 
-		fat_fs_mounting_->num_file_opened--;
+		num_file_opened--;
 	}
 	else
 	{
-		fat_fs_mounting_print_error_signification(fr);
+		print_error_signification(fr);
 		success = false;
 	}
 
-	success &= fat_fs_mounting_unmount(fat_fs_mounting_,true);
+	success &= unmount_system(true);
 
 	return success;
 }
@@ -165,7 +338,7 @@ bool File_fat_fs::read(uint8_t* data, uint32_t size)
 	}
 	else
 	{
-		fat_fs_mounting_print_error_signification(fr);
+		print_error_signification(fr);
 		success = false;
 	}
 
@@ -193,7 +366,7 @@ bool File_fat_fs::write(const uint8_t* data, uint32_t size)
 	{
 		success = false;
 		fr_stat = f_stat(file_name,NULL);
-		fat_fs_mounting_print_error_signification(fr_stat);
+		print_error_signification(fr_stat);
 	}
 	else
 	{
@@ -236,7 +409,7 @@ bool File_fat_fs::seek(int32_t offset, file_seekfrom_t origin)
 	else
 	{
 		success = false;
-		fat_fs_mounting_print_error_signification(fr);
+		print_error_signification(fr);
 	}
 
 	return success;
@@ -276,7 +449,7 @@ bool File_fat_fs::sync()
 	else
 	{
 		success = false;
-		fat_fs_mounting_print_error_signification(fr);
+		print_error_signification(fr);
 	}
 
 	return success;
