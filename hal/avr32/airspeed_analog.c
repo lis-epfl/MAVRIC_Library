@@ -148,7 +148,7 @@ task_return_t airspeed_analog_update(airspeed_analog_t* airspeed_analog)
 	}
 
 	// Correct the raw pressure
-	airspeed_analog->differential_pressure = airspeed_analog->differential_pressure - airspeed_analog->pressure_offset;
+	airspeed_analog->differential_pressure = raw_differential_pressure - airspeed_analog->pressure_offset;
 	
 	// First airspeed estimation, avoiding negative pressure
 	// TODO: Plug the tube in the correct way and use max(pres, 0) instead of abs to have better results !
