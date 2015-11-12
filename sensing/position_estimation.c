@@ -413,7 +413,7 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	pos_est->kp_vel_baro = 0.5f;
 
 	pos_est->kp_alt_sonar = 2.0f;
-	pos_est->kp_vel_sonar = 2.0f;
+	pos_est->kp_vel_sonar = 0.0f;
 	
 	gps_position_init(pos_est);
 
