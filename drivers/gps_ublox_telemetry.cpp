@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_ublox_telemetry.c
+ * \file gps_ublox_telemetry.cpp
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -79,7 +79,7 @@ static mav_result_t gps_ublox_start_configuration(Gps_ublox* gps, mavlink_comman
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool gps_ublox_telemetry_init(Gps_ublox* gps, mavlink_message_handler_t* message_handler)
+bool gps_ublox_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler)
 {
 	bool init_success = true;
 	

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_ublox_telemetry.c
+ * \file gps_ublox_telemetry.hpp
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -46,6 +46,7 @@
 
 #include "mavlink_stream.hpp"
 #include "mavlink_message_handler.hpp"
+#include "gps.hpp"
 #include "gps_ublox.hpp"
 
 
@@ -57,7 +58,7 @@
  *
  * \return	True if the init succeed, false otherwise
  */
-bool gps_ublox_telemetry_init(Gps_ublox* gps, mavlink_message_handler_t* message_handler);
+bool gps_ublox_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler);
 
 
 #endif /* GPS_UBLOX_TELEMETRY_H_ */
