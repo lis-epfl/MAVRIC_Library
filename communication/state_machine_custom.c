@@ -136,19 +136,27 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 		case STATE_VERTICAL_VELOCITY:
 			state_machine->stabilisation_copter_conf = &stabilisation_copter_default_config;
 
-			controls->tvel[X] = state_machine->pos_est->vel[X];
-			controls->tvel[Y] = state_machine->pos_est->vel[Y];
+			controls->tvel[X] = 0.0f;
+			controls->tvel[Y] = 0.0f;
 			controls->tvel[Z] = 0.0f;
 			controls->control_mode = VELOCITY_COMMAND_MODE;
 
-			// if (state_machine->baro.vario_vz < 0.5)
+			// if (state_machine->pos_est.vel[2] < 0.5f)
 			// {
 			// 	state_machine->state = STATE_HEIGHT_CONTROL;
 			// }
 		break;
 
 		case STATE_HEIGHT_CONTROL:
+		break;
+
 		case STATE_HORIZONTAL_VELOCITY:
+			// controls->tvel[X] = 0.0f;
+			// controls->tvel[Y] = 0.0f;
+
+			// controls->control_mode = VELOCITY_COMMAND_MODE;
+		break;
+
 		case STATE_POSITION_LOCKING:
 		break;
 	}
