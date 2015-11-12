@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file toggle_logging_default_config.h
+ * \file toggle_logging_default_config.hpp
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
