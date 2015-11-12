@@ -229,11 +229,12 @@ void ahrs_madgwick_algo(float gx, float gy, float gz, float ax, float ay, float 
 //------------------------------------------------------------------------------
 
 
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs)
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs, airspeed_analog_t* airspeed_analog)
 {
 	// Init dependencies
 	ahrs_madgwick->imu 	= imu;
 	ahrs_madgwick->ahrs = ahrs;
+	ahrs_madgwick->airspeed_analog = airspeed_analog;
 	
 	// Init config
 	ahrs_madgwick->beta = config->beta;
@@ -284,23 +285,40 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
 
 void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 {
-	/////////////////////////////////////////////
-	// Get measurements, in the MADGWICK FRAME //
-	/////////////////////////////////////////////
 	// Compute time
 	uint32_t t = time_keeper_get_time_ticks();			// Warning: time is given in uint32_t here !
 	float dt = time_keeper_ticks_to_seconds(t - ahrs_madgwick->ahrs->last_update);
 	
+	
+	////////////////////////////////////////////////////
+	// Compute correction for parasitic accelerations //
+	////////////////////////////////////////////////////
+	// Based on Adrien Briod report about EKF for Quaternion-based orientation estimation, using speed and inertial sensors
+	// Centrifugal force
+	float hc_y =  - (ahrs_madgwick->airspeed_analog->airspeed * ahrs_madgwick->imu->scaled_gyro.data[Z]);
+	float hc_z = ahrs_madgwick->airspeed_analog->airspeed * ahrs_madgwick->imu->scaled_gyro.data[Y];
+	
+	// Longitudinal accelerations
+	float hdv_x = - (ahrs_madgwick->airspeed_analog->airspeed - ahrs_madgwick->airspeed_analog->last_airspeed)/dt;
+	
+	
+	/////////////////////////////////////////////////////////////
+	// Get measurements with correction, in the MADGWICK FRAME //
+	/////////////////////////////////////////////////////////////
 	// Transform sensor measurements
-	float gx =  ahrs_madgwick->imu->scaled_gyro.data[X];
-	float gy = -ahrs_madgwick->imu->scaled_gyro.data[Y];
-	float gz = -ahrs_madgwick->imu->scaled_gyro.data[Z];
-	float ax =  ahrs_madgwick->imu->scaled_accelero.data[X];
-	float ay = -ahrs_madgwick->imu->scaled_accelero.data[Y];
-	float az = -ahrs_madgwick->imu->scaled_accelero.data[Z];
-	float mx =  ahrs_madgwick->imu->scaled_compass.data[X];
-	float my = -ahrs_madgwick->imu->scaled_compass.data[Y];
-	float mz = -ahrs_madgwick->imu->scaled_compass.data[Z];
+	float gx =   ahrs_madgwick->imu->scaled_gyro.data[X];
+	float gy = - ahrs_madgwick->imu->scaled_gyro.data[Y];
+	float gz = - ahrs_madgwick->imu->scaled_gyro.data[Z];
+	float ax =   ahrs_madgwick->imu->scaled_accelero.data[X];
+	float ay = - ahrs_madgwick->imu->scaled_accelero.data[Y];
+	float az = - ahrs_madgwick->imu->scaled_accelero.data[Z];
+	// TODO: Fix this before uncommenting !
+// 	float ax =   (ahrs_madgwick->imu->scaled_accelero.data[X] + hdv_x);
+// 	float ay = - (ahrs_madgwick->imu->scaled_accelero.data[Y] + hc_y);
+// 	float az = - (ahrs_madgwick->imu->scaled_accelero.data[Z] + hc_z);
+	float mx =   ahrs_madgwick->imu->scaled_compass.data[X];
+	float my = - ahrs_madgwick->imu->scaled_compass.data[Y];
+	float mz = - ahrs_madgwick->imu->scaled_compass.data[Z];
 
 	
 	//////////////////////////////////////////////

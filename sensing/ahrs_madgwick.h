@@ -66,6 +66,7 @@ extern "C" {
 
 #include "ahrs.h"
 #include "imu.h"
+#include "airspeed_analog.h"
 
 
 /**
@@ -83,10 +84,11 @@ typedef struct
  */
 typedef struct
 {
-	imu_t* 	imu;			// Pointer to IMU sensors
-	ahrs_t* ahrs;			// Estimated attitude
-	float 	beta;			// 2 * proportional gain (Kp)
-	float	zeta;			// Gyro drift bias gain
+	imu_t* 	imu;							// Pointer to IMU sensors
+	ahrs_t* ahrs;							// Estimated attitude
+	airspeed_analog_t* airspeed_analog;		// Pointer to the airspeed sensor
+	float 	beta;							// 2 * proportional gain (Kp)
+	float	zeta;							// Gyro drift bias gain
 } ahrs_madgwick_t;
 
 
@@ -100,7 +102,7 @@ typedef struct
  * 
  * \return 	True if success, false if not
  */
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs, airspeed_analog_t* airspeed_analog);
 
 
 /**
