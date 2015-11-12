@@ -257,6 +257,11 @@ static Console<Writeable>& endl(Console<Writeable>& console)
 	return console;
 }
 
+/**
+ * \brief Returns a pointer to writeable
+ *
+ * \return writeable
+ */
 template <typename Writeable>
 Writeable* Console<Writeable>::get_stream()
 {
