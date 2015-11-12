@@ -185,10 +185,10 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		quat_t rpy_local;
 		quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
 		
-		input.rpy[ROLL] = rpy_local.v[Y];
-		input.rpy[PITCH] = -rpy_local.v[X];
+		// input.rpy[ROLL] = rpy_local.v[Y];
+		// input.rpy[PITCH] = -rpy_local.v[X];
 
-		if ((!stabilisation_copter->pos_est->gps->healthy)||(stabilisation_copter->pos_est->state->out_of_fence_2))
+		// if ((!stabilisation_copter->pos_est->gps->healthy)||(stabilisation_copter->pos_est->state->out_of_fence_2))
 		{
 			input.rpy[ROLL] = 0.0f;
 			input.rpy[PITCH] = 0.0f;
