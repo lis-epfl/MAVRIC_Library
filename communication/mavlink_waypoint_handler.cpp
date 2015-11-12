@@ -1486,7 +1486,7 @@ static mav_result_t waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t
 	
 	if (waypoint_handler->navigation->internal_state == NAV_ON_GND)
 	{
-		print_util_dbg_print("Starting automatic take-off from button\n");
+		print_util_dbg_print("Starting automatic take-off from button\r\n");
 		waypoint_handler->navigation->internal_state = NAV_TAKEOFF;
 		waypoint_handler->hold_waypoint_set = false;
 
@@ -2164,6 +2164,7 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
 {
 	mav_mode_t mode_local = waypoint_handler->state->mav_mode;
 	
+
 	switch (waypoint_handler->state->mav_state)
 	{
 		case MAV_STATE_STANDBY:
@@ -2205,7 +2206,7 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
 	}
 	
 	waypoint_handler->mode = mode_local;
-	
+
 	return true;
 }
 
