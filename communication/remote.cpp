@@ -72,7 +72,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 {
 	remote_mode_t* remote_mode = &remote->mode;
 	mode_flag_armed_t armed;
-	if ( (remote_mode->current_desired_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_SAFETY)==MAV_MODE_FLAG_DECODE_POSITION_SAFETY )
+	if ( (remote_mode->current_desired_mode & MAV_MODE_FLAG_DECODE_POSITION_SAFETY)==MAV_MODE_FLAG_DECODE_POSITION_SAFETY )
 	{
 		armed = ARMED_ON;
 	}
@@ -308,7 +308,7 @@ void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t confi
 	// Init state to safety state, disarmed
 	remote_mode->current_desired_mode 		= remote_mode->safety_mode;
 	remote_mode->arm_action						= ARM_ACTION_NONE;
-	remote_mode->current_desired_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+	remote_mode->current_desired_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 }
 
 
@@ -353,11 +353,11 @@ void remote_mode_update(remote_t* remote)
 			// Allow arm and disarm in safety mode
 			if (flag_armed == ARMED_ON)
 			{
-				new_desired_mode.byte |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+				new_desired_mode |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 			}
 			else
 			{
-				new_desired_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+				new_desired_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 			}
 			
 		}
@@ -389,12 +389,12 @@ void remote_mode_update(remote_t* remote)
 				if ( remote->channels[remote_mode->custom_switch_channel] > 0.0f )
 				{
 					// Custom channel at 100% => CUSTOM_ON;
-					new_desired_mode.byte |= MAV_MODE_FLAG_DECODE_POSITION_CUSTOM_MODE;
+					new_desired_mode |= MAV_MODE_FLAG_DECODE_POSITION_CUSTOM_MODE;
 				}
 				else
 				{
 					// Custom channel at -100% => CUSTOM_OFF;
-					new_desired_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_CUSTOM_MODE;
+					new_desired_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_CUSTOM_MODE;
 				}
 			}
 
@@ -404,24 +404,24 @@ void remote_mode_update(remote_t* remote)
 				if ( remote->channels[remote_mode->test_switch_channel] > 0.0f )
 				{
 					// Test channel at 100% => TEST_ON
-					new_desired_mode.byte |= MAV_MODE_FLAG_DECODE_POSITION_TEST;
+					new_desired_mode |= MAV_MODE_FLAG_DECODE_POSITION_TEST;
 				}
 				else
 				{
 					// Test channel at -100% => TEST_OFF;
-					new_desired_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_TEST;
+					new_desired_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_TEST;
 				}
 			}
 
 			// Allow only disarm in normal mode
 			if ( flag_armed == ARMED_OFF )
 			{
-				new_desired_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+				new_desired_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 			}
 			else
 			{
 				// Keep current armed flag
-				new_desired_mode.byte |= (remote_mode->current_desired_mode.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY);
+				new_desired_mode |= (remote_mode->current_desired_mode&MAV_MODE_FLAG_DECODE_POSITION_SAFETY);
 			}
 		}
 
@@ -434,17 +434,17 @@ void remote_mode_update(remote_t* remote)
 mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t current_mode)
 {
 	mav_mode_t new_mode = current_mode;
-	new_mode.byte = (current_mode.byte & 0b10100000) + (remote->mode.current_desired_mode.byte & 0b01011111);
+	new_mode = (current_mode & 0b10100000) + (remote->mode.current_desired_mode & 0b01011111);
 	
 	if(remote->mode.arm_action == ARM_ACTION_ARMING)
 	{
-		new_mode.byte |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+		new_mode |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 
 		remote->mode.arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Arming in new fct\r\n");
 	}else if(remote->mode.arm_action == ARM_ACTION_DISARMING)
 	{
-		new_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+		new_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 		remote->mode.arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Disarming in new fct\r\n");
 	}

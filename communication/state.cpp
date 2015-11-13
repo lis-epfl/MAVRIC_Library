@@ -62,75 +62,80 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_init(state_t *state, state_t state_config, Battery* battery)
+state_t::state_t()
+{
+
+}
+
+bool state_t::state_init(state_t state_config, Battery* battery_)
 {
 	bool init_success = true;
 	
 	// Init dependencies
-	state->battery = battery;
+	battery = battery_;
 	
 	// Init parameters
-	state->autopilot_type = state_config.autopilot_type;
-	state->autopilot_name = state_config.autopilot_name;
+	autopilot_type = state_config.autopilot_type;
+	autopilot_name = state_config.autopilot_name;
 	
-	state->mav_state = state_config.mav_state;
-	state->mav_mode = state_config.mav_mode;
+	mav_state = state_config.mav_state;
+	mav_mode = state_config.mav_mode;
 	
-	state->mav_mode_custom = state_config.mav_mode_custom;
+	mav_mode_custom = state_config.mav_mode_custom;
 	
-	state->simulation_mode = state_config.simulation_mode;
+	simulation_mode = state_config.simulation_mode;
 	
-	if (state->simulation_mode == HIL_ON)
+	if (simulation_mode == HIL_ON)
 	{
-		state->mav_mode.byte |= MAV_MODE_FLAG_HIL_ENABLED;
+		mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	else
 	{
-		state->mav_mode.byte &= ~MAV_MODE_FLAG_HIL_ENABLED;
+		mav_mode &= ~MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	
-	state->fence_1_xy = state_config.fence_1_xy;
-	state->fence_1_z = state_config.fence_1_z;
-	state->fence_2_xy = state_config.fence_2_xy;
-	state->fence_2_z = state_config.fence_2_z;
-	state->out_of_fence_1 = false;
-	state->out_of_fence_2 = false;
+	fence_1_xy = state_config.fence_1_xy;
+	fence_1_z = state_config.fence_1_z;
+	fence_2_xy = state_config.fence_2_xy;
+	fence_2_z = state_config.fence_2_z;
+	out_of_fence_1 = false;
+	out_of_fence_2 = false;
 
-	state->nav_plan_active = false;
+	nav_plan_active = false;
 	
-	state->in_the_air = false;
+	in_the_air = false;
 	
-	state->reset_position = false;
+	reset_position = false;
 	
-	state->last_heartbeat_msg = time_keeper_get_time();
-	state->max_lost_connection = state_config.max_lost_connection;
-	state->connection_lost = false;
-	state->first_connection_set = false;
+	last_heartbeat_msg = time_keeper_get_time();
+	max_lost_connection = state_config.max_lost_connection;
+	connection_lost = false;
+	first_connection_set = false;
 	
-	state->msg_count = 0;
+	msg_count = 0;
 
 	return init_success;
 }
 
-void state_switch_to_active_mode(state_t* state, mav_state_t* mav_state)
+void state_t::state_switch_to_active_mode(mav_state_t* mav_state)
 {
 	*mav_state = MAV_STATE_ACTIVE;
 	
 	// Tell other modules to reset position and re-compute waypoints
-	state->reset_position = true;
-	state->nav_plan_active = false;
+	reset_position = true;
+	nav_plan_active = false;
 	
 	print_util_dbg_print("Switching to active mode.\r\n");
 }
 
-void state_connection_status(state_t* state)
+void state_t::state_connection_status()
 {
-	if ( ((time_keeper_get_time()-state->last_heartbeat_msg) > state->max_lost_connection)&&(state->first_connection_set) )
+	if ( ((time_keeper_get_time()-last_heartbeat_msg) > max_lost_connection)&&(first_connection_set) )
 	{
-		state->connection_lost = true;
+		connection_lost = true;
 	}
 	else
 	{
-		state->connection_lost = false;
+		connection_lost = false;
 	}
 }

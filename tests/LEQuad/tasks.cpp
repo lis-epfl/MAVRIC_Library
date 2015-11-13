@@ -62,9 +62,9 @@ bool tasks_run_stabilisation(Central_data* central_data)
 	
 	mav_mode_t mode = central_data->state.mav_mode;
 
-	if  ( (mode.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY)==MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
+	if  ( (mode&MAV_MODE_FLAG_DECODE_POSITION_SAFETY)==MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 	{
-		if ( (mode.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO) == MAV_MODE_FLAG_DECODE_POSITION_AUTO )
+		if ( (mode&MAV_MODE_FLAG_DECODE_POSITION_AUTO) == MAV_MODE_FLAG_DECODE_POSITION_AUTO )
 		{
 			central_data->controls = central_data->controls_nav;
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
@@ -86,7 +86,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
 				servos_mix_quadcopter_diag_update( &central_data->servo_mix );
 			}
 		}
-		else if ( (mode.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED)==MAV_MODE_FLAG_DECODE_POSITION_GUIDED)
+		else if ( (mode&MAV_MODE_FLAG_DECODE_POSITION_GUIDED)==MAV_MODE_FLAG_DECODE_POSITION_GUIDED)
 		{
 			central_data->controls = central_data->controls_nav;
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
@@ -106,7 +106,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
 				servos_mix_quadcopter_diag_update( &central_data->servo_mix );
 			}
 		}
-		else if ( (mode.byte&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)==MAV_MODE_FLAG_DECODE_POSITION_STABILIZE )
+		else if ( (mode&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)==MAV_MODE_FLAG_DECODE_POSITION_STABILIZE )
 		{
 			manual_control_get_velocity_vector(&central_data->manual_control, &central_data->controls);
 			
@@ -119,7 +119,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
 				servos_mix_quadcopter_diag_update( &central_data->servo_mix );
 			}
 		}
-		else if ( (mode.byte&MAV_MODE_FLAG_DECODE_POSITION_MANUAL)== MAV_MODE_FLAG_DECODE_POSITION_MANUAL)
+		else if ( (mode&MAV_MODE_FLAG_DECODE_POSITION_MANUAL)== MAV_MODE_FLAG_DECODE_POSITION_MANUAL)
 		{
 			manual_control_get_control_command(&central_data->manual_control, &central_data->controls);
 			

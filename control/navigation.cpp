@@ -243,7 +243,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_bf[Y] /= norm_rel_dist;
 	dir_desired_bf[Z] /= norm_rel_dist;
 
-	if (((mode.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO) == MAV_MODE_FLAG_DECODE_POSITION_AUTO) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
+	if (((mode&MAV_MODE_FLAG_DECODE_POSITION_AUTO) == MAV_MODE_FLAG_DECODE_POSITION_AUTO) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		
 		if( ((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f)) || ((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)) )
@@ -367,9 +367,9 @@ static bool navigation_mode_change(navigation_t* navigation)
 	
 	bool result = false;
 	
-	if ( ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==(mode_nav.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)) 
-		&& ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == (mode_nav.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED))
-		&& ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE) == (mode_nav.byte&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)) )
+	if ( ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==(mode_nav&MAV_MODE_FLAG_DECODE_POSITION_AUTO)) 
+		&& ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == (mode_nav&MAV_MODE_FLAG_DECODE_POSITION_GUIDED))
+		&& ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE) == (mode_nav&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)) )
 	{
 		result = true;
 	}
@@ -388,7 +388,7 @@ static void navigation_waypoint_take_off_handler(navigation_t* navigation)
 		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
 	}
 	
-	//if (navigation->mode == navigation->state->mav_mode.byte)
+	//if (navigation->mode == navigation->state->mav_mode)
 	if (navigation_mode_change(navigation))
 	{
 		if (navigation->waypoint_handler->dist2wp_sqr <= 16.0f)
@@ -406,7 +406,7 @@ static void navigation_waypoint_take_off_handler(navigation_t* navigation)
 
 static void navigation_hold_position_handler(navigation_t* navigation)
 {
-	//if (navigation->mode != navigation->state->mav_mode.byte)
+	//if (navigation->mode != navigation->state->mav_mode)
 	if (!navigation_mode_change(navigation))
 	{
 		navigation->waypoint_handler->hold_waypoint_set = false;
@@ -425,7 +425,7 @@ static void navigation_hold_position_handler(navigation_t* navigation)
 
 static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 {
-	//if (navigation->mode != navigation->state->mav_mode.byte)
+	//if (navigation->mode != navigation->state->mav_mode)
 	if (!navigation_mode_change(navigation))
 	{
 		navigation->waypoint_handler->hold_waypoint_set = false;
@@ -632,7 +632,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				navigation->state->in_the_air = false;
-				navigation->state->mav_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+				navigation->state->mav_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 				navigation->state->mav_state = MAV_STATE_EMERGENCY;
 				break;
 		}
@@ -713,7 +713,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				navigation->waypoint_handler->hold_waypoint_set = false;
 				navigation->auto_landing = false;
 				navigation->state->in_the_air = false;
-				navigation->state->mav_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+				navigation->state->mav_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 				navigation->state->mav_state = MAV_STATE_STANDBY;
 				break;
 		}
@@ -814,7 +814,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
 	navigation->wpt_nav_controller = nav_config.wpt_nav_controller;
 	navigation->hovering_controller = nav_config.hovering_controller;
 	
-	navigation->mode.byte = state->mav_mode.byte;
+	navigation->mode = state->mav_mode;
 	
 	navigation->auto_takeoff = false;
 	navigation->auto_landing = false;
@@ -919,7 +919,7 @@ bool navigation_update(navigation_t* navigation)
 			break;
 			
 		case MAV_STATE_ACTIVE:
-			if((mode_local.byte & 0b11011100) == MAV_MODE_ATTITUDE_CONTROL)
+			if((mode_local & 0b11011100) == MAV_MODE_ATTITUDE_CONTROL)
 			{
 				navigation->auto_landing = false;
 				navigation->auto_takeoff = false;
@@ -935,7 +935,7 @@ bool navigation_update(navigation_t* navigation)
 			{
 				if (navigation->auto_landing)
 				{
-					if ( ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO) || ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED) )
+					if ( ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO) || ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED) )
 					{
 						navigation_auto_landing_handler(navigation);
 						
@@ -951,7 +951,7 @@ bool navigation_update(navigation_t* navigation)
 				}
 				else
 				{
-					if((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO)
+					if((mode_local&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO)
 					{
 						navigation_waypoint_navigation_handler(navigation);
 						
@@ -976,7 +976,7 @@ bool navigation_update(navigation_t* navigation)
 							navigation_run(navigation);
 						}
 					}
-					else if ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED)
+					else if ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED)
 					{
 						navigation_hold_position_handler(navigation);
 						
@@ -992,7 +992,7 @@ bool navigation_update(navigation_t* navigation)
 
 				if (thrust > -0.7f)
 				{
-					if ( ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO) || ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED) )
+					if ( ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO) || ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED) )
 					{
 						if (!navigation->auto_takeoff)
 						{
@@ -1006,7 +1006,7 @@ bool navigation_update(navigation_t* navigation)
 					}
 				}
 				
-				if ( ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO) || ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED) )
+				if ( ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO) || ((mode_local&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED) )
 				{
 					if (navigation->auto_takeoff)
 					{
@@ -1021,7 +1021,7 @@ bool navigation_update(navigation_t* navigation)
 
 		case MAV_STATE_CRITICAL:
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-			if ( (mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)==MAV_MODE_FLAG_DECODE_POSITION_STABILIZE )
+			if ( (mode_local&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)==MAV_MODE_FLAG_DECODE_POSITION_STABILIZE )
 			{
 				if (navigation->state->in_the_air)
 				{

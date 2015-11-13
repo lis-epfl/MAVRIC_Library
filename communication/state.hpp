@@ -75,8 +75,39 @@ typedef enum MAV_MODE_FLAG mav_flag_t;
 /**
  * \brief The state structure
  */
-typedef struct  
+class state_t
 {
+public:
+
+	state_t();
+	
+	/**
+	 * \brief					Initialize the state of the MAV
+	 *
+	 * \param	state			Pointer to the state structure
+	 * \param	state_config	State configuration structure
+	 * \param	battery			Pointer to battery
+	 *
+	 * \return	True if the init succeed, false otherwise
+	 */
+	bool state_init(state_t state_config, Battery* battery_);
+
+	/**
+	 * \brief					Makes the switch to active mode
+	 *
+	 * \param	state			Pointer to the state structure
+	 * \param	mav_state		MAV state
+	 */
+	void state_switch_to_active_mode(mav_state_t* mav_state);
+
+	/**
+	 * \brief					Check the connection status with the GND station
+	 *
+	 * \param	state			Pointer to the state structure
+	 */
+	void state_connection_status();
+
+
 	mav_mode_t mav_mode;								///< The value of the MAV mode 
 	mav_state_t mav_state;								///< The value of the MAV state
 	
@@ -112,33 +143,6 @@ typedef struct
 	bool first_connection_set;							///< Flag to tell that we received a first message from the GND station
 	
 	Battery* battery;									///< Pointer to battery structure
-} state_t;
-
-
-/**
- * \brief					Initialize the state of the MAV
- *
- * \param	state			Pointer to the state structure
- * \param	state_config	State configuration structure
- * \param	battery			Pointer to battery
- *
- * \return	True if the init succeed, false otherwise
- */
-bool state_init(state_t *state, state_t state_config, Battery* battery);
-
-/**
- * \brief					Makes the switch to active mode
- *
- * \param	state			Pointer to the state structure
- * \param	mav_state		MAV state
- */
-void state_switch_to_active_mode(state_t* state,mav_state_t* mav_state);
-
-/**
- * \brief					Check the connection status with the GND station
- *
- * \param	state			Pointer to the state structure
- */
-void state_connection_status(state_t* state);
+};
 
 #endif //STATE_H_

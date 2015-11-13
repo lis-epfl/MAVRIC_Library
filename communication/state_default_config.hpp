@@ -49,8 +49,7 @@ static inline state_t state_default_config()
 {
 	state_t conf                 = {};
 
-	conf.mav_mode                = {};
-	conf.mav_mode.byte           = MAV_MODE_SAFE;
+	conf.mav_mode           	 = MAV_MODE_SAFE;
 	conf.mav_state               = MAV_STATE_BOOT;
 	conf.simulation_mode         = HIL_OFF;
 	conf.autopilot_type          = MAV_TYPE_QUADROTOR;

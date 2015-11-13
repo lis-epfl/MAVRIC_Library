@@ -123,7 +123,7 @@ bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging,
 	//init_success &= data_logging_add_parameter_uint32(data_logging, (uint32_t*)&central_data->state_machine.rc_check, "rc_check");
 	
 	//init_success &= data_logging_add_parameter_uint32(data_logging, (uint32_t*)&central_data->state.mav_state, "mav_state");
-	init_success &= data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode.byte, "mav_mode");
+	init_success &= data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode, "mav_mode");
 	
 	return init_success;
 };

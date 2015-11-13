@@ -81,18 +81,18 @@ static void joystick_button_1(joystick_t* joystick, bool button_1)
 	{
 		if ((joystick->buttons.button_mask& 0x0001)!=0x0001)
 		{
-			if ( (joystick->mav_mode_desired.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
+			if ( (joystick->mav_mode_desired&MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 			{
 				print_util_dbg_print("Disarming from joystick\r\n");
-				joystick->mav_mode_desired.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+				joystick->mav_mode_desired &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 				joystick->arm_action = ARM_ACTION_DISARMING;
 			}
 			else
 			{
 				print_util_dbg_print("Arming from joystick\r\n");
-				if ((joystick->mav_mode_desired.byte&0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
+				if ((joystick->mav_mode_desired&0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
 				{
-					joystick->mav_mode_desired.byte |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+					joystick->mav_mode_desired |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 					joystick->arm_action = ARM_ACTION_ARMING;
 				}
 			}
@@ -116,8 +116,8 @@ static void joystick_button(joystick_t* joystick, bool button, mav_flag_mask_t m
 {
 	if (button)
 	{
-		joystick->mav_mode_desired.byte &= 0b10100011;
-		joystick->mav_mode_desired.byte += mode_flag;
+		joystick->mav_mode_desired &= 0b10100011;
+		joystick->mav_mode_desired += mode_flag;
 	}
 }
 
@@ -139,7 +139,7 @@ bool joystick_init(joystick_t* joystick)
 	//joystick buttons init
 	joystick->buttons.button_mask = 0;
 	
-	joystick->mav_mode_desired.byte = MAV_MODE_SAFE;
+	joystick->mav_mode_desired = MAV_MODE_SAFE;
 	joystick->arm_action = ARM_ACTION_NONE;
 
 	return init_success;
@@ -173,16 +173,16 @@ float joystick_get_yaw(const joystick_t* joystick)
 mav_mode_t joystick_get_mode(joystick_t* joystick, const mav_mode_t current_mode)
 {
 	mav_mode_t new_mode = current_mode;
-	new_mode.byte = (current_mode.byte & 0b10100000) + (joystick->mav_mode_desired.byte & 0b01011111);
+	new_mode = (current_mode & 0b10100000) + (joystick->mav_mode_desired & 0b01011111);
 	
 	if(joystick->arm_action == ARM_ACTION_ARMING)
 	{
-		new_mode.byte |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+		new_mode |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 		joystick->arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Arming in new fct\r\n");
 	}else if(joystick->arm_action == ARM_ACTION_DISARMING)
 	{
-		new_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+		new_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 		joystick->arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Disarming in new fct\r\n");
 	}
