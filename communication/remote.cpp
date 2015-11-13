@@ -416,12 +416,12 @@ void remote_mode_update(remote_t* remote)
 			// Allow only disarm in normal mode
 			if ( flag_armed == ARMED_OFF )
 			{
-				new_desired_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+				new_desired_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 			}
 			else
 			{
 				// Keep current armed flag
-				new_desired_mode |= (remote_mode->current_desired_mode&MAV_MODE_FLAG_DECODE_POSITION_SAFETY);
+				new_desired_mode |= (remote_mode->current_desired_mode&MAV_MODE_FLAG_SAFETY_ARMED);
 			}
 		}
 
@@ -438,13 +438,13 @@ mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t current_mode)
 	
 	if(remote->mode.arm_action == ARM_ACTION_ARMING)
 	{
-		new_mode |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+		new_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
 
 		remote->mode.arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Arming in new fct\r\n");
 	}else if(remote->mode.arm_action == ARM_ACTION_DISARMING)
 	{
-		new_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+		new_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 		remote->mode.arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Disarming in new fct\r\n");
 	}

@@ -125,7 +125,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			
 			mode_custom_new = CUSTOM_BASE_MODE;
 			
-			if ((mode_new&MAV_MODE_FLAG_DECODE_POSITION_SAFETY)==MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
+			if ( mav_modes_is_armed(mode_new) )
 			{
 				print_util_dbg_print("Switching from state_machine.\r\n");
 				state_machine->state->state_switch_to_active_mode(&state_new);
@@ -145,7 +145,7 @@ bool state_machine_update(state_machine_t* state_machine)
 				{
 					mode_custom_new &= ~CUST_REMOTE_LOST;
 
-					if ((mode_new&MAV_MODE_FLAG_DECODE_POSITION_SAFETY)!= MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
+					if ( !mav_modes_is_armed(mode_new) )
 					{
 						state_new = MAV_STATE_STANDBY;
 						print_util_dbg_print("Switching off motors from state_machine!\r\n");
@@ -237,7 +237,7 @@ bool state_machine_update(state_machine_t* state_machine)
 
 				case SIGNAL_LOST:
 					// If in manual mode, do emergency landing (cut off motors)
-					if ( ((mode_current&MAV_MODE_FLAG_DECODE_POSITION_MANUAL)==MAV_MODE_FLAG_DECODE_POSITION_MANUAL) && ((mode_current&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)!=MAV_MODE_FLAG_DECODE_POSITION_STABILIZE) )
+					if ( mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilise(mode_current)) )
 					{
 						print_util_dbg_print("Switch to Emergency mode!\r\n");
 						state_new = MAV_STATE_EMERGENCY;
@@ -297,7 +297,7 @@ bool state_machine_update(state_machine_t* state_machine)
 				mode_custom_new &= ~CUST_GPS_BAD;
 			}
 
-			if ( (mode_new&MAV_MODE_FLAG_DECODE_POSITION_SAFETY)!=MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
+			if ( !mav_modes_is_armed(mode_new) )
 			{
 				state_new = MAV_STATE_STANDBY;
 			}

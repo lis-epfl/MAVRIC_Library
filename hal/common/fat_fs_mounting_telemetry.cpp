@@ -66,7 +66,7 @@ static mav_result_t fat_fs_mounting_telemetry_toggle_logging(fat_fs_mounting_t* 
 {
 	mav_result_t result = MAV_RESULT_TEMPORARILY_REJECTED;
 	
-	if (fat_fs_mounting->state->mav_mode.ARMED == ARMED_OFF)
+	if (!mav_modes_is_armed(fat_fs_mounting->state->mav_mode))
 	{
 		if(packet->param1 == 1)
 		{

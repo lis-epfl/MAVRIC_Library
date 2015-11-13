@@ -81,7 +81,7 @@ static void joystick_button_1(joystick_t* joystick, bool button_1)
 	{
 		if ((joystick->buttons.button_mask& 0x0001)!=0x0001)
 		{
-			if ( (joystick->mav_mode_desired&MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
+			if ( mav_modes_is_armed(joystick->mav_mode_desired) )
 			{
 				print_util_dbg_print("Disarming from joystick\r\n");
 				joystick->mav_mode_desired &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
