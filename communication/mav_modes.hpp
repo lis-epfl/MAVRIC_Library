@@ -142,18 +142,6 @@ inline mav_mode_custom_t operator~(mav_mode_custom_t a)
 }
 
 
-
-
-// MAV_MODE_FLAG_CUSTOM_MODE_ENABLED
-// MAV_MODE_FLAG_TEST_ENABLED
-// MAV_MODE_FLAG_AUTO_ENABLED
-// MAV_MODE_FLAG_GUIDED_ENABLED
-// MAV_MODE_FLAG_STABILIZE_ENABLED
-// MAV_MODE_FLAG_HIL_ENABLED
-// MAV_MODE_FLAG_MANUAL_INPUT_ENABLED
-// MAV_MODE_FLAG_SAFETY_ARMED
-
-
 /*
  * \brief Returns whether motors are armed or not
  * 
@@ -198,7 +186,7 @@ static inline bool mav_modes_is_hil(const mav_mode_t mav_mode)
  * 
  * \param mav_mode	correspond to the mode in which the MAV is
  *
- * \return true if MAv is in manual piloting mode, false otherwise
+ * \return true if MAV is in manual piloting mode, false otherwise
  */
 static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
 {
@@ -218,7 +206,7 @@ static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
  * 
  * \param mav_mode	correspond to the mode in which the MAV is
  *
- * \return true if MAv is in stabilise piloting mode, false otherwise
+ * \return true if MAV is in stabilise piloting mode, false otherwise
  */
 static inline bool mav_modes_is_stabilise(const mav_mode_t mav_mode)
 {
@@ -238,7 +226,7 @@ static inline bool mav_modes_is_stabilise(const mav_mode_t mav_mode)
  * 
  * \param mav_mode	correspond to the mode in which the MAV is
  *
- * \return true if MAv is in hover piloting mode, false otherwise
+ * \return true if MAV is in hover piloting mode, false otherwise
  */
 static inline bool mav_modes_is_guided(const mav_mode_t mav_mode)
 {
@@ -257,7 +245,7 @@ static inline bool mav_modes_is_guided(const mav_mode_t mav_mode)
  * 
  * \param mav_mode	correspond to the mode in which the MAV is
  *
- * \return true if MAv is in waypoint navigation piloting mode, false otherwise
+ * \return true if MAV is in waypoint navigation piloting mode, false otherwise
  */
 static inline bool mav_modes_is_auto(const mav_mode_t mav_mode)
 {
@@ -277,7 +265,7 @@ static inline bool mav_modes_is_auto(const mav_mode_t mav_mode)
  * 
  * \param mav_mode	correspond to the mode in which the MAV is
  *
- * \return true if MAv is in test mode, false otherwise
+ * \return true if MAV is in test mode, false otherwise
  */
 static inline bool mav_modes_is_test(const mav_mode_t mav_mode)
 {
@@ -297,7 +285,7 @@ static inline bool mav_modes_is_test(const mav_mode_t mav_mode)
  * 
  * \param mav_mode	correspond to the mode in which the MAV is
  *
- * \return true if MAv is in custom mode, false otherwise
+ * \return true if MAV is in custom mode, false otherwise
  */
 static inline bool mav_modes_is_custom(const mav_mode_t mav_mode)
 {
