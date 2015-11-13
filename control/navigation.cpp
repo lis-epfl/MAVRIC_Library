@@ -276,26 +276,26 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_bf[Y] *= v_desired;
 	dir_desired_bf[Z] *= v_desired;
 	
-	static uint32_t loop_count = 0;
-	loop_count = loop_count++ %50;
-	if (loop_count == 0)
-	{
-		print_util_dbg_print("Desired_vel_Bf(x100): (");
-		print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
-		print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
-		print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
-		print_util_dbg_print("). \r\n");
-		print_util_dbg_print("Actual_vel_bf(x100): (");
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
-		print_util_dbg_print("). \r\n");
-		// print_util_dbg_print("Actual_pos(x100): (");
-		// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
-		// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
-		// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
-		// print_util_dbg_print("). \r\n");
-	}
+	// static uint32_t loop_count = 0;
+	// loop_count = loop_count++ %50;
+	// if (loop_count == 0)
+	// {
+	// 	print_util_dbg_print("Desired_vel_Bf(x100): (");
+	// 	print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
+	// 	print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
+	// 	print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
+	// 	print_util_dbg_print("). \r\n");
+	// 	print_util_dbg_print("Actual_vel_bf(x100): (");
+	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
+	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
+	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
+	// 	print_util_dbg_print("). \r\n");
+	// 	// print_util_dbg_print("Actual_pos(x100): (");
+	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
+	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
+	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
+	// 	// print_util_dbg_print("). \r\n");
+	// }
 	
 
 	navigation->controls_nav->tvel[X] = dir_desired_bf[X];
