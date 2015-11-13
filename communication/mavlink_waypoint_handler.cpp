@@ -1180,7 +1180,7 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 {
 	mavlink_set_gps_global_origin_t packet;
 	
-	if(waypoint_handler->state->mav_mode.ARMED == ARMED_OFF)
+	if( (waypoint_handler->state->mav_mode.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY) != MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 	{
 		mavlink_msg_set_gps_global_origin_decode(msg,&packet);
 	
@@ -1308,6 +1308,8 @@ static mav_result_t waypoint_handler_is_arrived(mavlink_waypoint_handler_t* wayp
 	
 	return result;
 }
+
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -1439,6 +1441,7 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	return init_success;
 }
 
+
 void waypoint_handler_init_homing_waypoint(mavlink_waypoint_handler_t* waypoint_handler)
 {
 	waypoint_struct_t waypoint;
@@ -1552,8 +1555,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 	float rel_pos[3];
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
-	//&& (waypoint_handler->position_estimation->init_gps_position || (*waypoint_handler->simulation_mode==HIL_ON))
-	&& (waypoint_handler->position_estimation->init_gps_position || (waypoint_handler->state->mav_mode.HIL == HIL_ON))
+	&& (waypoint_handler->position_estimation->init_gps_position || ((waypoint_handler->state->mav_mode.byte&MAV_MODE_FLAG_DECODE_POSITION_HIL) == MAV_MODE_FLAG_DECODE_POSITION_HIL))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{
 		for (uint8_t i = 0; i<waypoint_handler->number_of_waypoints; i++)

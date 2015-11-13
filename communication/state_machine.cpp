@@ -125,7 +125,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			
 			mode_custom_new = CUSTOM_BASE_MODE;
 			
-			if ( mode_new.ARMED == ARMED_ON )
+			if ((mode_new.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY)==MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 			{
 				print_util_dbg_print("Switching from state_machine.\r\n");
 				state_switch_to_active_mode(state_machine->state, &state_new);
@@ -145,7 +145,7 @@ bool state_machine_update(state_machine_t* state_machine)
 				{
 					mode_custom_new &= ~CUST_REMOTE_LOST;
 
-					if ( mode_new.ARMED == ARMED_OFF )
+					if ((mode_new.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY)!= MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 					{
 						state_new = MAV_STATE_STANDBY;
 						print_util_dbg_print("Switching off motors from state_machine!\r\n");
@@ -237,7 +237,7 @@ bool state_machine_update(state_machine_t* state_machine)
 
 				case SIGNAL_LOST:
 					// If in manual mode, do emergency landing (cut off motors)
-					if ( (mode_current.MANUAL == MANUAL_ON) && (mode_current.STABILISE == STABILISE_OFF) )
+					if ( ((mode_current.byte&MAV_MODE_FLAG_DECODE_POSITION_MANUAL)==MAV_MODE_FLAG_DECODE_POSITION_MANUAL) && ((mode_current.byte&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)!=MAV_MODE_FLAG_DECODE_POSITION_STABILIZE) )
 					{
 						print_util_dbg_print("Switch to Emergency mode!\r\n");
 						state_new = MAV_STATE_EMERGENCY;
@@ -297,7 +297,7 @@ bool state_machine_update(state_machine_t* state_machine)
 				mode_custom_new &= ~CUST_GPS_BAD;
 			}
 
-			if (mode_new.ARMED == ARMED_OFF)
+			if ( (mode_new.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY)!=MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 			{
 				state_new = MAV_STATE_STANDBY;
 			}
@@ -305,7 +305,7 @@ bool state_machine_update(state_machine_t* state_machine)
 		
 		case MAV_STATE_EMERGENCY:
 			// Recovery is not possible -> switch off motors
-			mode_new.ARMED = ARMED_OFF;
+			mode_new.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 			
 			if( !state_machine->state->battery->is_low() )
 			{
@@ -337,11 +337,11 @@ bool state_machine_update(state_machine_t* state_machine)
 	// Check simulation mode
 	if ( state_machine->state->simulation_mode == true )
 	{
-		mode_new.HIL = HIL_ON;
+		mode_new.byte |= MAV_MODE_FLAG_DECODE_POSITION_HIL;
 	}
 	else
 	{
-		mode_new.HIL = HIL_OFF;
+		mode_new.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_HIL;
 	}
 
 

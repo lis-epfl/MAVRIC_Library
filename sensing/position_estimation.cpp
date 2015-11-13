@@ -474,7 +474,7 @@ void position_estimation_update(position_estimation_t *pos_est)
 		
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
-		if ( (pos_est->state->mav_mode.ARMED == ARMED_ON)&&(pos_est->fence_set) )
+		if ( ((pos_est->state->mav_mode.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY)&&(pos_est->fence_set) )
 		{
 			position_estimation_fence_control(pos_est);
 		}

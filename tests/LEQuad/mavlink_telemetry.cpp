@@ -331,7 +331,7 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 	
 //	init_success &= onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&central_data->state_machine.low_battery_counter			, "safe_count"     );
 
-	init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_control_src");
+	init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_ctrl_src");
 	init_success = onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source, 	"COM_RC_IN_MODE");
    
 	return init_success;

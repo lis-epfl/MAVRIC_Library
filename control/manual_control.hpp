@@ -68,8 +68,8 @@ typedef enum
  */
 typedef enum
 {
-	CONTROL_SOURCE_NONE 		= 0,
-	CONTROL_SOURCE_REMOTE 		= 1,
+	CONTROL_SOURCE_REMOTE 		= 0,
+	CONTROL_SOURCE_NONE 		= 1,
 	CONTROL_SOURCE_JOYSTICK 	= 2,
 } control_source_t;
 

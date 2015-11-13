@@ -743,7 +743,7 @@ bool data_logging_update(data_logging_t* data_logging)
 
 				data_logging->time_ms = time_keeper_get_millis();
 				
-				if (data_logging->state->mav_mode.ARMED == ARMED_OFF)
+				if ( (data_logging->state->mav_mode.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY) != MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 				{
 					if ( (data_logging->time_ms - data_logging->logging_time) > 5000)
 					{

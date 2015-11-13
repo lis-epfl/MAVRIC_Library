@@ -69,7 +69,7 @@ static mav_result_t position_estimation_set_new_home_position(position_estimatio
 {
 	mav_result_t result;
 	
-	if(pos_est->state->mav_mode.ARMED == ARMED_OFF)
+	if( (pos_est->state->mav_mode.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 	{
 		if (packet->param1 == 1)
 		{

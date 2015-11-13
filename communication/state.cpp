@@ -82,13 +82,11 @@ bool state_init(state_t *state, state_t state_config, Battery* battery)
 	
 	if (state->simulation_mode == HIL_ON)
 	{
-		// state->mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
-		state->mav_mode.HIL = HIL_ON;
+		state->mav_mode.byte |= MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	else
 	{
-		// state->mav_mode |= !MAV_MODE_FLAG_HIL_ENABLED;
-		state->mav_mode.HIL = HIL_OFF;
+		state->mav_mode.byte &= ~MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	
 	state->fence_1_xy = state_config.fence_1_xy;

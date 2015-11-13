@@ -243,7 +243,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_bf[Y] /= norm_rel_dist;
 	dir_desired_bf[Z] /= norm_rel_dist;
 
-	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
+	if (((mode.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO) == MAV_MODE_FLAG_DECODE_POSITION_AUTO) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		
 		if( ((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f)) || ((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)) )
@@ -276,29 +276,27 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_bf[Y] *= v_desired;
 	dir_desired_bf[Z] *= v_desired;
 	
-	/*
+	static uint32_t loop_count = 0;
 	loop_count = loop_count++ %50;
 	if (loop_count == 0)
 	{
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigation->position_estimation->vel_bf)*100);
 		print_util_dbg_print("Desired_vel_Bf(x100): (");
 		print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
 		print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
 		print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
-		print_util_dbg_print("). \n");
+		print_util_dbg_print("). \r\n");
 		print_util_dbg_print("Actual_vel_bf(x100): (");
 		print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
 		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
 		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
-		print_util_dbg_print("). \n");
-		print_util_dbg_print("Actual_pos(x100): (");
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
-		print_util_dbg_print("). \n");
+		print_util_dbg_print("). \r\n");
+		// print_util_dbg_print("Actual_pos(x100): (");
+		// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
+		// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
+		// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
+		// print_util_dbg_print("). \r\n");
 	}
-	*/
+	
 
 	navigation->controls_nav->tvel[X] = dir_desired_bf[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_bf[Y];
@@ -369,7 +367,9 @@ static bool navigation_mode_change(navigation_t* navigation)
 	
 	bool result = false;
 	
-	if ((mode_local.STABILISE == mode_nav.STABILISE)&&(mode_local.GUIDED == mode_nav.GUIDED)&&(mode_local.AUTO == mode_nav.AUTO))
+	if ( ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==(mode_nav.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)) 
+		&& ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == (mode_nav.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED))
+		&& ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE) == (mode_nav.byte&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)) )
 	{
 		result = true;
 	}
@@ -632,7 +632,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				navigation->state->in_the_air = false;
-				navigation->state->mav_mode.ARMED = ARMED_OFF;
+				navigation->state->mav_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 				navigation->state->mav_state = MAV_STATE_EMERGENCY;
 				break;
 		}
@@ -713,7 +713,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				navigation->waypoint_handler->hold_waypoint_set = false;
 				navigation->auto_landing = false;
 				navigation->state->in_the_air = false;
-				navigation->state->mav_mode.ARMED = ARMED_OFF;
+				navigation->state->mav_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 				navigation->state->mav_state = MAV_STATE_STANDBY;
 				break;
 		}
@@ -935,7 +935,7 @@ bool navigation_update(navigation_t* navigation)
 			{
 				if (navigation->auto_landing)
 				{
-					if ( (mode_local.AUTO == AUTO_ON) || (mode_local.GUIDED == GUIDED_ON) )
+					if ( ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO) || ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED) )
 					{
 						navigation_auto_landing_handler(navigation);
 						
@@ -951,7 +951,7 @@ bool navigation_update(navigation_t* navigation)
 				}
 				else
 				{
-					if(mode_local.AUTO == AUTO_ON)
+					if((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO)
 					{
 						navigation_waypoint_navigation_handler(navigation);
 						
@@ -976,7 +976,7 @@ bool navigation_update(navigation_t* navigation)
 							navigation_run(navigation);
 						}
 					}
-					else if(mode_local.GUIDED == GUIDED_ON)
+					else if ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED)
 					{
 						navigation_hold_position_handler(navigation);
 						
@@ -992,7 +992,7 @@ bool navigation_update(navigation_t* navigation)
 
 				if (thrust > -0.7f)
 				{
-					if ((mode_local.GUIDED == GUIDED_ON)||(mode_local.AUTO == AUTO_ON))
+					if ( ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO) || ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED) )
 					{
 						if (!navigation->auto_takeoff)
 						{
@@ -1006,7 +1006,7 @@ bool navigation_update(navigation_t* navigation)
 					}
 				}
 				
-				if ((mode_local.GUIDED == GUIDED_ON)||(mode_local.AUTO == AUTO_ON))
+				if ( ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_AUTO)==MAV_MODE_FLAG_DECODE_POSITION_AUTO) || ((mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_GUIDED) == MAV_MODE_FLAG_DECODE_POSITION_GUIDED) )
 				{
 					if (navigation->auto_takeoff)
 					{
@@ -1021,7 +1021,7 @@ bool navigation_update(navigation_t* navigation)
 
 		case MAV_STATE_CRITICAL:
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-			if (mode_local.STABILISE == STABILISE_ON)
+			if ( (mode_local.byte&MAV_MODE_FLAG_DECODE_POSITION_STABILIZE)==MAV_MODE_FLAG_DECODE_POSITION_STABILIZE )
 			{
 				if (navigation->state->in_the_air)
 				{

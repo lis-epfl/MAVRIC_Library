@@ -553,7 +553,7 @@ mav_result_t onboard_parameters_preflight_storage(onboard_parameters_t* onboard_
 {
 	mav_result_t result = MAV_RESULT_DENIED;
 	
-	if (onboard_parameters->state->mav_mode.ARMED == ARMED_OFF)
+	if ( (onboard_parameters->state->mav_mode.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY) != MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 	{
 		// Onboard parameters storage
 		if (msg->param1 == 0)

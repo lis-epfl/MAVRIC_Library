@@ -56,35 +56,35 @@ extern "C"
  * \brief				Arming/Disarming the motors when button 1 is pressed
  *
  * \param	joystick	The pointer to the joystick structure
- * \param	button_1	The button 1 value
+ * \param	button_1	The button 1 value (true if pressed)
  */
-static void joystick_button_1(joystick_t* joystick, button_pressed_t button_1);
+static void joystick_button_1(joystick_t* joystick, bool button_1);
 
 
 /**
  * \brief				Do operations when a button is pressed
  *
  * \param	joystick	The pointer to the joystick structure
- * \param	button		The value of the button pressed
+ * \param	button		The value of the button pressed (true if pressed)
  * \param	mode_flag	The flag mode to be set
  */
-static void joystick_button(joystick_t* joystick, button_pressed_t button, mav_flag_mask_t mode_flag);
+static void joystick_button(joystick_t* joystick, bool button, mav_flag_mask_t mode_flag);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void joystick_button_1(joystick_t* joystick, button_pressed_t button_1)
+static void joystick_button_1(joystick_t* joystick, bool button_1)
 {
-	if (button_1 == BUTTON_PRESSED)
+	if (button_1)
 	{
-		if (joystick->buttons.button_1 == BUTTON_UNPRESSED)
+		if ((joystick->buttons.button_mask& 0x0001)!=0x0001)
 		{
-			if (joystick->mav_mode_desired.ARMED == ARMED_ON)
+			if ( (joystick->mav_mode_desired.byte&MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY)
 			{
 				print_util_dbg_print("Disarming from joystick\r\n");
-				joystick->mav_mode_desired.ARMED = ARMED_OFF;
+				joystick->mav_mode_desired.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 				joystick->arm_action = ARM_ACTION_DISARMING;
 			}
 			else
@@ -92,29 +92,29 @@ static void joystick_button_1(joystick_t* joystick, button_pressed_t button_1)
 				print_util_dbg_print("Arming from joystick\r\n");
 				if ((joystick->mav_mode_desired.byte&0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
 				{
-					joystick->mav_mode_desired.ARMED = ARMED_ON;
+					joystick->mav_mode_desired.byte |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 					joystick->arm_action = ARM_ACTION_ARMING;
 				}
 			}
-			joystick->buttons.button_1 = BUTTON_PRESSED;
+			joystick->buttons.button_mask |= 0x0001;
 		}
 	}
 	else
 	{
-		if (button_1 == BUTTON_UNPRESSED )
+		if (!button_1)
 		{
-			if (joystick->buttons.button_1 == BUTTON_PRESSED)
+			if ( (joystick->buttons.button_mask&0x0001)== 0x0001)
 			{
-				joystick->buttons.button_1 = BUTTON_UNPRESSED;
+				joystick->buttons.button_mask &= ~0x0001;
 			}
 		}
 	}
 }
 
 
-static void joystick_button(joystick_t* joystick, button_pressed_t button, mav_flag_mask_t mode_flag)
+static void joystick_button(joystick_t* joystick, bool button, mav_flag_mask_t mode_flag)
 {
-	if (button == BUTTON_PRESSED)
+	if (button)
 	{
 		joystick->mav_mode_desired.byte &= 0b10100011;
 		joystick->mav_mode_desired.byte += mode_flag;
@@ -177,12 +177,12 @@ mav_mode_t joystick_get_mode(joystick_t* joystick, const mav_mode_t current_mode
 	
 	if(joystick->arm_action == ARM_ACTION_ARMING)
 	{
-		new_mode.ARMED = ARMED_ON;
+		new_mode.byte |= MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 		joystick->arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Arming in new fct\r\n");
 	}else if(joystick->arm_action == ARM_ACTION_DISARMING)
 	{
-		new_mode.ARMED = ARMED_OFF;
+		new_mode.byte &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
 		joystick->arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Disarming in new fct\r\n");
 	}
@@ -214,12 +214,23 @@ void joystick_button_mask(joystick_t* joystick, uint16_t buttons)
 	joystick_button_t button_local;
 	button_local.button_mask = buttons;
 	
-	joystick_button_1(joystick, button_local.button_1);
+	print_util_dbg_print_num(button_local.button_mask,10);
+
+	bool but;
+	but = ((button_local.button_mask&0x0001)==0x0001);
+	joystick_button_1(joystick, but);
+
+	but = ((button_local.button_mask&0x0002)==0x0002);
+	joystick_button(joystick, but, (mav_flag_mask_t)(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED));  // MAV_MODE_POSITION_HOLD
 	
-	joystick_button(joystick, button_local.button_2, (mav_flag_mask_t)(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED));  // MAV_MODE_POSITION_HOLD
-	joystick_button(joystick, button_local.button_5, (mav_flag_mask_t)(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED)); 								// MAV_MODE_VELOCITY_CONTROL
-	joystick_button(joystick, button_local.button_6, (mav_flag_mask_t)(MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED)); 			// MAV_MODE_GPS_NAVIGATION
-	joystick_button(joystick, button_local.button_3, (mav_flag_mask_t)(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)); 																	// MAV_MODE_ATTITUDE_CONTROL
+	but = ((button_local.button_mask&0x0010)==0x0010);
+	joystick_button(joystick, but, (mav_flag_mask_t)(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED)); 								// MAV_MODE_VELOCITY_CONTROL
+
+	but = ((button_local.button_mask&0x0020)==0x0020);
+	joystick_button(joystick, but, (mav_flag_mask_t)(MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED)); 			// MAV_MODE_GPS_NAVIGATION
+	
+	but = ((button_local.button_mask&0x0004)==0x0004);
+	joystick_button(joystick, but, (mav_flag_mask_t)(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)); 																	// MAV_MODE_ATTITUDE_CONTROL
 	
 	joystick->buttons.button_mask = buttons;
 }

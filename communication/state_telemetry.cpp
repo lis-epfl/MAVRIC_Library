@@ -104,7 +104,7 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 	// No component ID in mavlink_set_mode_t so no control
 	if ((uint8_t)packet.target_system == (uint8_t)sysid)
 	{
-		print_util_dbg_print("base_mode:");
+		print_util_dbg_print("base_mode from msg:");
 		print_util_dbg_print_num(packet.base_mode,10);
 		print_util_dbg_print(", custom mode:");
 		print_util_dbg_print_num(packet.custom_mode,10);
@@ -113,9 +113,11 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 		mav_mode_t new_mode;
 		new_mode.byte = packet.base_mode;
 		
-		if (new_mode.ARMED == ARMED_ON)
+		//if (new_mode.ARMED == ARMED_ON)
+		if ( (new_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY )
 		{
-			if (state->mav_mode.ARMED == ARMED_OFF)
+			//if (state->mav_mode.ARMED == ARMED_OFF)
+			if ( (state->mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == 0 )
 			{
 				state_switch_to_active_mode(state, &state->mav_state);
 			}
@@ -125,15 +127,17 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 			state->mav_state = MAV_STATE_STANDBY;
 		}
 		
-		state->mav_mode.ARMED = new_mode.ARMED;
-		state->mav_mode.MANUAL = new_mode.MANUAL;
-		//state->mav_mode.HIL = new_mode.HIL;
-		state->mav_mode.STABILISE = new_mode.STABILISE;
-		state->mav_mode.GUIDED = new_mode.GUIDED;
-		state->mav_mode.AUTO = new_mode.AUTO;
-		state->mav_mode.TEST = new_mode.TEST;
-		state->mav_mode.CUSTOM = new_mode.CUSTOM;
+		// state->mav_mode.ARMED = new_mode.ARMED;
+		// state->mav_mode.MANUAL = new_mode.MANUAL;
+		// //state->mav_mode.HIL = new_mode.HIL;
+		// state->mav_mode.STABILISE = new_mode.STABILISE;
+		// state->mav_mode.GUIDED = new_mode.GUIDED;
+		// state->mav_mode.AUTO = new_mode.AUTO;
+		// state->mav_mode.TEST = new_mode.TEST;
+		// state->mav_mode.CUSTOM = new_mode.CUSTOM;
 		
+		state->mav_mode.byte = (new_mode.byte & (~MAV_MODE_FLAG_DECODE_POSITION_HIL)) + (state->mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_HIL);
+
 		//state->mav_mode_custom = packet.custom_mode;
 		
 		print_util_dbg_print("New mav mode:");
@@ -150,9 +154,17 @@ static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_co
 	mav_mode_t new_mode;
 	new_mode.byte = packet->param1;
 	
-	if (new_mode.ARMED == ARMED_ON)
+	print_util_dbg_print("base_mode from cmd:");
+	print_util_dbg_print_num(packet->param1,10);
+	//print_util_dbg_print(", custom mode:");
+	//print_util_dbg_print_num(packet->param2,10);
+	print_util_dbg_print("\r\n");
+
+	//if (new_mode.ARMED == ARMED_ON)
+	if ( (new_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY )
 	{
-		if (state->mav_mode.ARMED == ARMED_OFF)
+		//if (state->mav_mode.ARMED == ARMED_OFF)
+		if ( (state->mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == 0 )
 		{
 			state_switch_to_active_mode(state, &state->mav_state);
 		}
@@ -162,16 +174,22 @@ static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_co
 		state->mav_state = MAV_STATE_STANDBY;
 	}
 	
-	state->mav_mode.ARMED = new_mode.ARMED;
-	state->mav_mode.MANUAL = new_mode.MANUAL;
-	state->mav_mode.STABILISE = new_mode.STABILISE;
-	state->mav_mode.GUIDED = new_mode.GUIDED;
-	state->mav_mode.AUTO = new_mode.AUTO;
-	state->mav_mode.TEST = new_mode.TEST;
-	state->mav_mode.CUSTOM = new_mode.CUSTOM;
+	state->mav_mode.byte = (new_mode.byte & (~MAV_MODE_FLAG_DECODE_POSITION_HIL)) + (state->mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_HIL);
+
+	// state->mav_mode.ARMED = new_mode.ARMED;
+	// state->mav_mode.MANUAL = new_mode.MANUAL;
+	// state->mav_mode.STABILISE = new_mode.STABILISE;
+	// state->mav_mode.GUIDED = new_mode.GUIDED;
+	// state->mav_mode.AUTO = new_mode.AUTO;
+	// state->mav_mode.TEST = new_mode.TEST;
+	// state->mav_mode.CUSTOM = new_mode.CUSTOM;
 	
 	//state->mav_mode_custom = packet->param2;
 	
+	print_util_dbg_print("New mav mode:");
+	print_util_dbg_print_num(state->mav_mode.byte,10);
+	print_util_dbg_print("\r\n");
+
 	return result;
 }
 
