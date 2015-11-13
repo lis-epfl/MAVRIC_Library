@@ -113,11 +113,9 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 		mav_mode_t new_mode;
 		new_mode = packet.base_mode;
 		
-		//if (new_mode.ARMED == ARMED_ON)
-		if ( (new_mode & MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY )
+		if ( mav_modes_is_armed(new_mode) )
 		{
-			//if (state->mav_mode.ARMED == ARMED_OFF)
-			if ( (state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == 0 )
+			if ( !mav_modes_is_armed(state->mav_mode)  )
 			{
 				state->state_switch_to_active_mode(&state->mav_state);
 			}
@@ -136,7 +134,7 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 		// state->mav_mode.TEST = new_mode.TEST;
 		// state->mav_mode.CUSTOM = new_mode.CUSTOM;
 		
-		state->mav_mode = (new_mode & (~MAV_MODE_FLAG_DECODE_POSITION_HIL)) + (state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL);
+		state->mav_mode = (new_mode & (~MAV_MODE_FLAG_HIL_ENABLED)) + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
 
 		//state->mav_mode_custom = packet.custom_mode;
 		
@@ -160,11 +158,9 @@ static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_co
 	//print_util_dbg_print_num(packet->param2,10);
 	print_util_dbg_print("\r\n");
 
-	//if (new_mode.ARMED == ARMED_ON)
-	if ( (new_mode & MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == MAV_MODE_FLAG_DECODE_POSITION_SAFETY )
+	if ( mav_modes_is_armed(new_mode) )
 	{
-		//if (state->mav_mode.ARMED == ARMED_OFF)
-		if ( (state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_SAFETY) == 0 )
+		if ( !mav_modes_is_armed(state->mav_mode) )
 		{
 			state->state_switch_to_active_mode(&state->mav_state);
 		}
@@ -174,7 +170,7 @@ static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_co
 		state->mav_state = MAV_STATE_STANDBY;
 	}
 	
-	state->mav_mode = (new_mode & (~MAV_MODE_FLAG_DECODE_POSITION_HIL)) + (state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL);
+	state->mav_mode = (new_mode & (~MAV_MODE_FLAG_HIL_ENABLED)) + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
 
 	// state->mav_mode.ARMED = new_mode.ARMED;
 	// state->mav_mode.MANUAL = new_mode.MANUAL;

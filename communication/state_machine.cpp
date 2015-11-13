@@ -305,7 +305,7 @@ bool state_machine_update(state_machine_t* state_machine)
 		
 		case MAV_STATE_EMERGENCY:
 			// Recovery is not possible -> switch off motors
-			mode_new &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+			mode_new &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 			
 			if( !state_machine->state->battery->is_low() )
 			{
@@ -337,11 +337,11 @@ bool state_machine_update(state_machine_t* state_machine)
 	// Check simulation mode
 	if ( state_machine->state->simulation_mode == true )
 	{
-		mode_new |= MAV_MODE_FLAG_DECODE_POSITION_HIL;
+		mode_new |= MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	else
 	{
-		mode_new &= ~MAV_MODE_FLAG_DECODE_POSITION_HIL;
+		mode_new &= ~MAV_MODE_FLAG_HIL_ENABLED;
 	}
 
 

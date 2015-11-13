@@ -623,7 +623,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				navigation->state->in_the_air = false;
-				navigation->state->mav_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+				navigation->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 				navigation->state->mav_state = MAV_STATE_EMERGENCY;
 				break;
 		}
@@ -704,7 +704,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				navigation->waypoint_handler->hold_waypoint_set = false;
 				navigation->auto_landing = false;
 				navigation->state->in_the_air = false;
-				navigation->state->mav_mode &= ~MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+				navigation->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 				navigation->state->mav_state = MAV_STATE_STANDBY;
 				break;
 		}
