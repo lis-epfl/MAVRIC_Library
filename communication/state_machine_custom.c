@@ -68,7 +68,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, barometer_t * baro, position_estimation_t * pos_est)
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est)
 {
 	bool init_success = true;
 
@@ -81,7 +81,6 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 	state_machine->remote = remote;
 	state_machine->imu = imu;
 	state_machine->ahrs = ahrs;
-	state_machine->baro = baro;
 	state_machine->pos_est = pos_est;
 	
 	launch_detection_init(&state_machine->ld, &launch_detection_default_config);
