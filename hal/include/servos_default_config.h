@@ -162,6 +162,62 @@ servos_conf_t servos_default_config_wing =
 	}
 };
 
+servos_conf_t servos_default_config_adaptive_morph =
+{
+	.servos_count = 6,
+	.servo =
+	{
+		{ //servo_entry_default_standard
+			.value 			= 0.0f,
+			.trim 			= 0.0f,
+			.min 			= -1.0f,
+			.max 			= 1.0f,
+			.failsafe 		= 0.0f,
+			.repeat_freq 	= 50,
+		},
+		{ //servo_entry_default_standard
+			.value 			= 0.0f,
+			.trim 			= 0.0f,
+			.min 			= -1.0f,
+			.max 			= 1.0f,
+			.failsafe 		= 0.0f,
+			.repeat_freq 	= 50,
+		},
+		{ //servo_entry_default_esc
+			.value 			= 0.0f,
+			.trim 			= 0.0f,
+			.min 			= -0.9f,
+			.max 			= 1.0f,
+			.failsafe 		= -1.0f,
+			.repeat_freq 	= 200,
+		},
+		{ //servo_entry_default_standard
+			.value 			= 0.0f,
+			.trim 			= 0.0f,
+			.min 			= -1.0f,
+			.max 			= 1.0f,
+			.failsafe 		= 0.0f,
+			.repeat_freq 	= 50,
+		},
+		{ //servo_entry_default_standard
+			.value 			= 0.0f,
+			.trim 			= 0.0f,
+			.min 			= -1.0f,
+			.max 			= 1.0f,
+			.failsafe 		= 0.0f,
+			.repeat_freq 	= 50,
+		},
+		{ //servo_entry_default_standard --> This one is created only for the third one to work properly...
+			.value 			= 0.0f,
+			.trim 			= 0.0f,
+			.min 			= -1.0f,
+			.max 			= 1.0f,
+			.failsafe 		= 0.0f,
+			.repeat_freq 	= 50,
+		}
+	}
+};
+
 
 #ifdef __cplusplus
 	}
