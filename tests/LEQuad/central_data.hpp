@@ -137,7 +137,7 @@ public:
 	mavlink_waypoint_handler_t waypoint_handler;
 	navigation_t navigation;									///< The structure to perform GPS navigation
 	
-	state_t state;												///< The structure with all state information
+	State state;												///< The structure with all state information
 	state_machine_t state_machine;								///< The structure for the state machine
 		
 	hud_telemetry_structure_t hud_structure;					///< The HUD structure

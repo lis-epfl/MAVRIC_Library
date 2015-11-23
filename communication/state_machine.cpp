@@ -65,7 +65,7 @@ extern "C"
 //------------------------------------------------------------------------------
 
 bool state_machine_init(	state_machine_t *state_machine,
-							state_t* state, 
+							State* state, 
 							const Gps* gps,
 							manual_control_t* manual_control)
 {
@@ -103,9 +103,9 @@ bool state_machine_update(state_machine_t* state_machine)
 
 	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 
-	state_machine->state->battery->update();
+	state_machine->state->battery_.update();
 
-	state_machine->state->state_connection_status();
+	state_machine->state->connection_status();
 
 	// Change state according to signal strength
 	switch ( state_current )
@@ -128,7 +128,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			if ( mav_modes_is_armed(mode_new) )
 			{
 				print_util_dbg_print("Switching from state_machine.\r\n");
-				state_machine->state->state_switch_to_active_mode(&state_new);
+				state_machine->state->switch_to_active_mode(&state_new);
 			}
 			break;
 		
@@ -154,7 +154,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			}
 
 			// check battery level
-			if( state_machine->state->battery->is_low() )
+			if( state_machine->state->battery_.is_low() )
 			{
 				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
 				state_new = MAV_STATE_CRITICAL;
@@ -219,7 +219,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			switch ( rc_check )
 			{
 				case SIGNAL_GOOD:
-					if( !state_machine->state->battery->is_low() && 
+					if( !state_machine->state->battery_.is_low() && 
 						!state_machine->state->connection_lost && 
 						!state_machine->state->out_of_fence_1 && 
 						!state_machine->state->out_of_fence_2 &&
@@ -248,7 +248,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			}
 
 			//check battery level
-			if( state_machine->state->battery->is_low() )
+			if( state_machine->state->battery_.is_low() )
 			{
 				mode_custom_new |= CUST_BATTERY_LOW;
 			}
@@ -307,7 +307,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			// Recovery is not possible -> switch off motors
 			mode_new &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 			
-			if( !state_machine->state->battery->is_low() )
+			if( !state_machine->state->battery_.is_low() )
 			{
 				// To get out of this state, if we are in the wrong use_mode_from_remote
 				if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)

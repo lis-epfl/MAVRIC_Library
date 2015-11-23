@@ -313,7 +313,7 @@ static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_p
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, File* file, const state_t* state, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
+bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, File* file, const State* state, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
 {
 	bool init_success = true;
 	

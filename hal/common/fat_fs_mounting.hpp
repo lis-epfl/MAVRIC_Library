@@ -79,7 +79,7 @@ typedef struct
 	
 	uint32_t num_file_opened;					///< Number of open files to now when the system can be unmounted
 
-	const state_t* state;						///< The pointer to the state structure
+	const State* state;						///< The pointer to the state structure
 }fat_fs_mounting_t;
 
 /**
@@ -91,7 +91,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_t data_logging_conf, const state_t* state);
+bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_t data_logging_conf, const State* state);
 
 /**
  * \brief	Mount the fat_fs system file

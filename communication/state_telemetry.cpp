@@ -61,7 +61,7 @@ extern "C"
  * \param	sysid				The system ID
  * \param	msg					The received MAVLink message structure
  */
-void state_telemetry_heartbeat_received(state_t* state, uint32_t sysid, mavlink_message_t* msg);
+void state_telemetry_heartbeat_received(State* state, uint32_t sysid, mavlink_message_t* msg);
 
 /**
  * \brief						Set the state and the mode of the vehicle
@@ -70,7 +70,7 @@ void state_telemetry_heartbeat_received(state_t* state, uint32_t sysid, mavlink_
  * \param	sysid				The system ID
  * \param	msg					The received MAVLink message structure
  */
-static void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_message_t* msg);
+static void state_telemetry_set_mav_mode(State* state, uint32_t sysid, mavlink_message_t* msg);
 
 /**
  * \brief	Set the MAV mode from a command message
@@ -80,13 +80,13 @@ static void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink
  * 
  * \return	The MAV_RESULT of the command
  */
-static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_command_long_t* packet );
+static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_command_long_t* packet );
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void state_telemetry_heartbeat_received(state_t* state, uint32_t sysid, mavlink_message_t* msg)
+void state_telemetry_heartbeat_received(State* state, uint32_t sysid, mavlink_message_t* msg)
 {
 	state->first_connection_set = true;
 	
@@ -94,7 +94,7 @@ void state_telemetry_heartbeat_received(state_t* state, uint32_t sysid, mavlink_
 	state->msg_count++;
 }
 
-void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_message_t* msg)
+void state_telemetry_set_mav_mode(State* state, uint32_t sysid, mavlink_message_t* msg)
 {
 	mavlink_set_mode_t packet;
 	
@@ -117,7 +117,7 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 		{
 			if ( !mav_modes_is_armed(state->mav_mode)  )
 			{
-				state->state_switch_to_active_mode(&state->mav_state);
+				state->switch_to_active_mode(&state->mav_state);
 			}
 		}
 		else
@@ -145,7 +145,7 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 	}
 }
 
-static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_command_long_t* packet )
+static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_command_long_t* packet )
 {
 	mav_result_t result = MAV_RESULT_ACCEPTED;
 	
@@ -162,7 +162,7 @@ static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_co
 	{
 		if ( !mav_modes_is_armed(state->mav_mode) )
 		{
-			state->state_switch_to_active_mode(&state->mav_state);
+			state->switch_to_active_mode(&state->mav_state);
 		}
 	}
 	else
@@ -193,7 +193,7 @@ static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_co
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_telemetry_init(state_t* state, mavlink_message_handler_t *message_handler)
+bool state_telemetry_init(State* state, mavlink_message_handler_t *message_handler)
 {
 	bool init_success = true;
 	
@@ -228,7 +228,7 @@ bool state_telemetry_init(state_t* state, mavlink_message_handler_t *message_han
 	return init_success;
 }
 
-void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void state_telemetry_send_heartbeat(const State* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {	
 	mavlink_msg_heartbeat_pack(	mavlink_stream->sysid,
 								mavlink_stream->compid,
@@ -240,7 +240,7 @@ void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t
 								state->mav_state);
 }
 
-void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void state_telemetry_send_status(const State* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	mavlink_msg_sys_status_pack(mavlink_stream->sysid,
 								mavlink_stream->compid,
@@ -249,9 +249,9 @@ void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* m
 								state->sensor_enabled, 						// sensors enabled
 								state->sensor_health, 						// sensors health
 								0,                  						// load
-								(int32_t)(1000.0f * state->battery->voltage()),	// bat voltage (mV)
+								(int32_t)(1000.0f * state->battery_.voltage()),	// bat voltage (mV)
 								0,               							// current (mA)
-								state->battery->level(),					// battery remaining
+								state->battery_.level(),					// battery remaining
 								0, 0,  										// comms drop, comms errors
 								0, 0, 0, 0);        						// autopilot specific errors
 }

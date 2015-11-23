@@ -586,7 +586,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	data_logging->continuous_write = continuous_write;
 	data_logging->data_write = true;
 
-	data_logging->state = fat_fs_mounting->state;
+	data_logging->state = fat_fs_mounting->state;		// Wow dangerous !
 	data_logging->fat_fs_mounting = fat_fs_mounting;
 
 	// Allocate memory for the onboard data_log

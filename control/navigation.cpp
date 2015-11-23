@@ -506,7 +506,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 	
 	//Check whether we entered critical mode due to a battery low level or a lost
 	// connection with the GND station or are out of fence control
-	if ( navigation->state->battery->is_low() || 
+	if ( navigation->state->battery_.is_low() || 
 		navigation->state->connection_lost || 
 		navigation->state->out_of_fence_2 ||
 		navigation->position_estimation->gps->fix() == false)
@@ -773,7 +773,7 @@ static void navigation_stopping_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const manual_control_t* manual_control, mavlink_communication_t* mavlink_communication)
+bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, State* state, const manual_control_t* manual_control, mavlink_communication_t* mavlink_communication)
 {
 	bool init_success = true;
 	

@@ -62,28 +62,19 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-state_t::state_t()
+State::State(Battery& battery, state_conf_t config):
+	battery_(battery)
 {
-
-}
-
-bool state_t::state_init(state_t state_config, Battery* battery_)
-{
-	bool init_success = true;
-	
-	// Init dependencies
-	battery = battery_;
-	
 	// Init parameters
-	autopilot_type = state_config.autopilot_type;
-	autopilot_name = state_config.autopilot_name;
+	autopilot_type = config.autopilot_type;
+	autopilot_name = config.autopilot_name;
 	
-	mav_state = state_config.mav_state;
-	mav_mode = state_config.mav_mode;
+	mav_state = config.mav_state;
+	mav_mode = config.mav_mode;
 	
-	mav_mode_custom = state_config.mav_mode_custom;
+	mav_mode_custom = config.mav_mode_custom;
 	
-	simulation_mode = state_config.simulation_mode;
+	simulation_mode = config.simulation_mode;
 	
 	if (simulation_mode == HIL_ON)
 	{
@@ -94,10 +85,10 @@ bool state_t::state_init(state_t state_config, Battery* battery_)
 		mav_mode &= ~MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	
-	fence_1_xy = state_config.fence_1_xy;
-	fence_1_z = state_config.fence_1_z;
-	fence_2_xy = state_config.fence_2_xy;
-	fence_2_z = state_config.fence_2_z;
+	fence_1_xy = config.fence_1_xy;
+	fence_1_z = config.fence_1_z;
+	fence_2_xy = config.fence_2_xy;
+	fence_2_z = config.fence_2_z;
 	out_of_fence_1 = false;
 	out_of_fence_2 = false;
 
@@ -108,16 +99,14 @@ bool state_t::state_init(state_t state_config, Battery* battery_)
 	reset_position = false;
 	
 	last_heartbeat_msg = time_keeper_get_time();
-	max_lost_connection = state_config.max_lost_connection;
+	max_lost_connection = config.max_lost_connection;
 	connection_lost = false;
 	first_connection_set = false;
 	
 	msg_count = 0;
-
-	return init_success;
 }
 
-void state_t::state_switch_to_active_mode(mav_state_t* mav_state)
+void State::switch_to_active_mode(mav_state_t* mav_state)
 {
 	*mav_state = MAV_STATE_ACTIVE;
 	
@@ -128,7 +117,7 @@ void state_t::state_switch_to_active_mode(mav_state_t* mav_state)
 	print_util_dbg_print("Switching to active mode.\r\n");
 }
 
-void state_t::state_connection_status()
+void State::connection_status()
 {
 	if ( ((time_keeper_get_time()-last_heartbeat_msg) > max_lost_connection)&&(first_connection_set) )
 	{
