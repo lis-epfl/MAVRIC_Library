@@ -49,14 +49,3 @@ bool File::newline()
 	const uint8_t newline = '\n';
 	return write(&newline,1);
 }
-
-/**
- * \brief 	flush buffer to file; Not implemented;
- *
- * \return 	success	(always false)
- */
-
-bool File::flush()
-{
-	return false;
-}

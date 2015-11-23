@@ -463,7 +463,7 @@ uint32_t File_fat_fs::length()
 	return fsize;
 }
 
-bool File_fat_fs::sync()
+bool File_fat_fs::flush()
 {
 	bool success = true;
 	FRESULT fr;

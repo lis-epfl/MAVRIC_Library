@@ -193,7 +193,7 @@ uint32_t File_linux::length()
 	return end - begin;
 }
 
-bool File_linux::sync()
+bool File_linux::flush()
 {
 	return true;
 }

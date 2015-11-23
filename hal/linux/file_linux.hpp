@@ -137,13 +137,13 @@ public:
 	 */
 	uint32_t length();
 
-
 	/**
-	 * \brief	sync the file
+	 * \brief 	flush buffer to file
 	 *
-	 * \return success
+	 * \return 	success	(always true)
 	 */
-	bool sync();
+	bool flush();
+
 };
 
 #endif /* FILE_LINUX_H_ */

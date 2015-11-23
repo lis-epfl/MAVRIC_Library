@@ -140,9 +140,9 @@ public:
 	/**
 	 * \brief 	flush buffer to file; Not implemented;
 	 *
-	 * \return 	success	(always false)
+	 * \return 	success
 	 */
-	bool flush();
+	virtual bool flush() = 0;
 
 	/**
 	 * \brief 	write newline character to file ('\n')
@@ -150,13 +150,6 @@ public:
 	 * \return 	success
 	 */
 	bool newline();
-
-	/**
-	 * \brief	sync the file
-	 *
-	 * \return success
-	 */
-	virtual bool sync() = 0;
 };
 
 #endif /* FILE_HPP_ */

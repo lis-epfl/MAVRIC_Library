@@ -137,11 +137,11 @@ public:
 	uint32_t length();
 
 	/**
-	 * \brief	sync the file
+	 * \brief 	flush buffer to file
 	 *
-	 * \return success
+	 * \return 	success	(always true)
 	 */
-	bool sync();
+	bool flush();
 };
 
 #endif /* FILE_FLASH_AVR32_H_ */

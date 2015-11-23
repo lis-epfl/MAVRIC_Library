@@ -175,11 +175,11 @@ public:
 
 
 	/**
-	 * \brief	sync the file
+	 * \brief	flush buffer to file
 	 *
 	 * \return success
 	 */
-	bool sync();
+	bool flush();
 };
 
 #endif /* FILE_FAT_FS_H_ */

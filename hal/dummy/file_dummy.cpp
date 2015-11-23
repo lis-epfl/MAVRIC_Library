@@ -96,7 +96,7 @@ uint32_t File_dummy::length()
 	return 0;
 }
 
-bool File_dummy::sync()
+bool File_dummy::flush()
 {
 	return false;
 }

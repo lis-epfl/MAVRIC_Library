@@ -563,8 +563,7 @@ bool data_logging_update(data_logging_t* data_logging)
 			{
 				if ( (data_logging->time_ms - data_logging->logging_time) > 5000)
 				{
-					//data_logging->fr = f_sync(&data_logging->fil);
-					data_logging->console->get_stream()->sync();
+					data_logging->console->get_stream()->flush();
 					data_logging->logging_time = data_logging->time_ms;
 				}
 			}
