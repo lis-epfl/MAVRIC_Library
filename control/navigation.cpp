@@ -243,7 +243,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_bf[Y] /= norm_rel_dist;
 	dir_desired_bf[Z] /= norm_rel_dist;
 
-	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
+	if (mav_modes_is_auto(mode) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		
 		if( ((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f)) || ((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)) )
@@ -276,29 +276,27 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_bf[Y] *= v_desired;
 	dir_desired_bf[Z] *= v_desired;
 	
-	/*
-	loop_count = loop_count++ %50;
-	if (loop_count == 0)
-	{
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigation->position_estimation->vel_bf)*100);
-		print_util_dbg_print("Desired_vel_Bf(x100): (");
-		print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
-		print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
-		print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
-		print_util_dbg_print("). \n");
-		print_util_dbg_print("Actual_vel_bf(x100): (");
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
-		print_util_dbg_print("). \n");
-		print_util_dbg_print("Actual_pos(x100): (");
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
-		print_util_dbg_print("). \n");
-	}
-	*/
+	// static uint32_t loop_count = 0;
+	// loop_count = loop_count++ %50;
+	// if (loop_count == 0)
+	// {
+	// 	print_util_dbg_print("Desired_vel_Bf(x100): (");
+	// 	print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
+	// 	print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
+	// 	print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
+	// 	print_util_dbg_print("). \r\n");
+	// 	print_util_dbg_print("Actual_vel_bf(x100): (");
+	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
+	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
+	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
+	// 	print_util_dbg_print("). \r\n");
+	// 	// print_util_dbg_print("Actual_pos(x100): (");
+	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
+	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
+	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
+	// 	// print_util_dbg_print("). \r\n");
+	// }
+	
 
 	navigation->controls_nav->tvel[X] = dir_desired_bf[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_bf[Y];
@@ -367,14 +365,7 @@ static bool navigation_mode_change(navigation_t* navigation)
 	mav_mode_t mode_local = navigation->state->mav_mode;
 	mav_mode_t mode_nav = navigation->mode;
 	
-	bool result = false;
-	
-	if ((mode_local.STABILISE == mode_nav.STABILISE)&&(mode_local.GUIDED == mode_nav.GUIDED)&&(mode_local.AUTO == mode_nav.AUTO))
-	{
-		result = true;
-	}
-	
-	return result;
+	return mav_modes_are_equal_autonous_modes(mode_local,mode_nav);
 }
 
 static void navigation_waypoint_take_off_handler(navigation_t* navigation)
@@ -388,7 +379,7 @@ static void navigation_waypoint_take_off_handler(navigation_t* navigation)
 		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
 	}
 	
-	//if (navigation->mode == navigation->state->mav_mode.byte)
+	//if (navigation->mode == navigation->state->mav_mode)
 	if (navigation_mode_change(navigation))
 	{
 		if (navigation->waypoint_handler->dist2wp_sqr <= 16.0f)
@@ -406,7 +397,7 @@ static void navigation_waypoint_take_off_handler(navigation_t* navigation)
 
 static void navigation_hold_position_handler(navigation_t* navigation)
 {
-	//if (navigation->mode != navigation->state->mav_mode.byte)
+	//if (navigation->mode != navigation->state->mav_mode)
 	if (!navigation_mode_change(navigation))
 	{
 		navigation->waypoint_handler->hold_waypoint_set = false;
@@ -425,7 +416,7 @@ static void navigation_hold_position_handler(navigation_t* navigation)
 
 static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 {
-	//if (navigation->mode != navigation->state->mav_mode.byte)
+	//if (navigation->mode != navigation->state->mav_mode)
 	if (!navigation_mode_change(navigation))
 	{
 		navigation->waypoint_handler->hold_waypoint_set = false;
@@ -515,7 +506,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 	
 	//Check whether we entered critical mode due to a battery low level or a lost
 	// connection with the GND station or are out of fence control
-	if ( navigation->state->battery->is_low() || 
+	if ( navigation->state->battery_.is_low() || 
 		navigation->state->connection_lost || 
 		navigation->state->out_of_fence_2 ||
 		navigation->position_estimation->gps->fix() == false)
@@ -632,7 +623,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				navigation->state->in_the_air = false;
-				navigation->state->mav_mode.ARMED = ARMED_OFF;
+				navigation->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 				navigation->state->mav_state = MAV_STATE_EMERGENCY;
 				break;
 		}
@@ -713,7 +704,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				navigation->waypoint_handler->hold_waypoint_set = false;
 				navigation->auto_landing = false;
 				navigation->state->in_the_air = false;
-				navigation->state->mav_mode.ARMED = ARMED_OFF;
+				navigation->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 				navigation->state->mav_state = MAV_STATE_STANDBY;
 				break;
 		}
@@ -782,7 +773,7 @@ static void navigation_stopping_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const manual_control_t* manual_control, mavlink_communication_t* mavlink_communication)
+bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, State* state, const manual_control_t* manual_control, mavlink_communication_t* mavlink_communication)
 {
 	bool init_success = true;
 	
@@ -814,7 +805,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
 	navigation->wpt_nav_controller = nav_config.wpt_nav_controller;
 	navigation->hovering_controller = nav_config.hovering_controller;
 	
-	navigation->mode.byte = state->mav_mode.byte;
+	navigation->mode = state->mav_mode;
 	
 	navigation->auto_takeoff = false;
 	navigation->auto_landing = false;
@@ -919,7 +910,7 @@ bool navigation_update(navigation_t* navigation)
 			break;
 			
 		case MAV_STATE_ACTIVE:
-			if((mode_local.byte & 0b11011100) == MAV_MODE_ATTITUDE_CONTROL)
+			if((mode_local & 0b11011100) == MAV_MODE_ATTITUDE_CONTROL)
 			{
 				navigation->auto_landing = false;
 				navigation->auto_takeoff = false;
@@ -935,7 +926,7 @@ bool navigation_update(navigation_t* navigation)
 			{
 				if (navigation->auto_landing)
 				{
-					if ( (mode_local.AUTO == AUTO_ON) || (mode_local.GUIDED == GUIDED_ON) )
+					if ( mav_modes_is_auto(mode_local) || mav_modes_is_guided(mode_local) )
 					{
 						navigation_auto_landing_handler(navigation);
 						
@@ -951,7 +942,7 @@ bool navigation_update(navigation_t* navigation)
 				}
 				else
 				{
-					if(mode_local.AUTO == AUTO_ON)
+					if( mav_modes_is_auto(mode_local) )
 					{
 						navigation_waypoint_navigation_handler(navigation);
 						
@@ -976,7 +967,7 @@ bool navigation_update(navigation_t* navigation)
 							navigation_run(navigation);
 						}
 					}
-					else if(mode_local.GUIDED == GUIDED_ON)
+					else if (mav_modes_is_guided(mode_local) )
 					{
 						navigation_hold_position_handler(navigation);
 						
@@ -992,7 +983,7 @@ bool navigation_update(navigation_t* navigation)
 
 				if (thrust > -0.7f)
 				{
-					if ((mode_local.GUIDED == GUIDED_ON)||(mode_local.AUTO == AUTO_ON))
+					if ( mav_modes_is_auto(mode_local) || mav_modes_is_guided(mode_local) )
 					{
 						if (!navigation->auto_takeoff)
 						{
@@ -1006,7 +997,7 @@ bool navigation_update(navigation_t* navigation)
 					}
 				}
 				
-				if ((mode_local.GUIDED == GUIDED_ON)||(mode_local.AUTO == AUTO_ON))
+				if ( mav_modes_is_auto(mode_local) || mav_modes_is_guided(mode_local) )
 				{
 					if (navigation->auto_takeoff)
 					{
@@ -1021,7 +1012,7 @@ bool navigation_update(navigation_t* navigation)
 
 		case MAV_STATE_CRITICAL:
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-			if (mode_local.STABILISE == STABILISE_ON)
+			if ( mav_modes_is_stabilise(mode_local) )
 			{
 				if (navigation->state->in_the_air)
 				{

@@ -62,9 +62,9 @@ bool tasks_run_stabilisation(Central_data* central_data)
 	
 	mav_mode_t mode = central_data->state.mav_mode;
 
-	if( mode.ARMED == ARMED_ON )
+	if  ( mav_modes_is_armed(mode) )
 	{
-		if ( mode.AUTO == AUTO_ON )
+		if ( mav_modes_is_auto(mode) )
 		{
 			central_data->controls = central_data->controls_nav;
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
@@ -86,7 +86,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
 				servos_mix_quadcopter_diag_update( &central_data->servo_mix );
 			}
 		}
-		else if ( mode.GUIDED == GUIDED_ON )
+		else if ( mav_modes_is_guided(mode) )
 		{
 			central_data->controls = central_data->controls_nav;
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
@@ -106,7 +106,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
 				servos_mix_quadcopter_diag_update( &central_data->servo_mix );
 			}
 		}
-		else if ( mode.STABILISE == STABILISE_ON )
+		else if ( mav_modes_is_stabilise(mode) )
 		{
 			manual_control_get_velocity_vector(&central_data->manual_control, &central_data->controls);
 			
@@ -117,9 +117,9 @@ bool tasks_run_stabilisation(Central_data* central_data)
 			{
 				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
 				servos_mix_quadcopter_diag_update( &central_data->servo_mix );
-			}		
+			}
 		}
-		else if ( mode.MANUAL == MANUAL_ON )
+		else if ( mav_modes_is_manual(mode) )
 		{
 			manual_control_get_control_command(&central_data->manual_control, &central_data->controls);
 			

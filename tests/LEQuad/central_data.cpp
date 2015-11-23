@@ -46,7 +46,6 @@
 
 #include "position_estimation_default_config.hpp"
 #include "remote_default_config.hpp"
-#include "state_default_config.hpp"
 #include "manual_control_default_config.hpp"
 
 extern "C" 
@@ -70,7 +69,8 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
 	satellite( satellite ),
 	file_flash( file_flash ),
 	battery( battery ),
-	servos( servos )
+	servos( servos ),
+	state( battery, state_default_config() )
 {}
 
 
@@ -111,17 +111,6 @@ bool Central_data::init(void)
 										&state,
 										&file_flash );
 	print_util_dbg_init_msg("[MAVLINK]", ret);
-	init_success &= ret;
-	time_keeper_delay_ms(100); 
-
-
-	// -------------------------------------------------------------------------
-	// Init state structure
-	// -------------------------------------------------------------------------
-	ret = state_init(	&state,
-						state_default_config(),
-						&battery); 
-	print_util_dbg_init_msg("[STATE]", ret);
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
 

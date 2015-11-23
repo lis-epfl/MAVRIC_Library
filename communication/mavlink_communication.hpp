@@ -126,7 +126,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t config, Serial* serial, const state_t* state, File* file_storage);
+bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t config, Serial* serial, const State* state, File* file_storage);
 
 
 /**

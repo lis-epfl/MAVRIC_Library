@@ -60,7 +60,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_t data_logging_conf, const state_t* state)
+bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_t data_logging_conf, const State* state)
 {
 	bool init_success = true;
 
