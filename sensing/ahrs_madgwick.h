@@ -74,8 +74,10 @@ extern "C" {
  */
 typedef struct
 {
-	float 	beta;			// 2 * proportional gain (Kp)
-	float	zeta;			// Gyro drift bias gain
+	float 	beta;						// 2 * proportional gain (Kp)
+	float	zeta;						// Gyro drift bias gain
+	bool acceleration_correction;		// Enable the correction of the parasitic accelerations ?
+	float correction_speed;				// Airspeed from which the correction should start
 } ahrs_madgwick_conf_t;
 
 
@@ -89,6 +91,8 @@ typedef struct
 	airspeed_analog_t* airspeed_analog;		// Pointer to the airspeed sensor
 	float 	beta;							// 2 * proportional gain (Kp)
 	float	zeta;							// Gyro drift bias gain
+	uint32_t acceleration_correction;		// Enable the correction of the parasitic accelerations ?
+	float correction_speed;					// Airspeed from which the correction should start
 } ahrs_madgwick_t;
 
 
