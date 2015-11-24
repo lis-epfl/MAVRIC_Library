@@ -73,3 +73,12 @@ void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[])
 	}		
 	stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
 }
+
+void stabilisation_run_feedforward(stabiliser_t *stabiliser, float dt, float errors[], float feedforward[])
+{
+	for (int32_t i = 0; i < 3; i++)
+	{
+		stabiliser->output.rpy[i] =	pid_controller_update_feedforward_dt(&(stabiliser->rpy_controller[i]),  errors[i], feedforward[i], dt);
+	}
+	stabiliser->output.thrust = pid_controller_update_feedforward_dt(&(stabiliser->thrust_controller),  errors[3], feedforward[3], dt);
+}

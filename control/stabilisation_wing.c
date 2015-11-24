@@ -95,6 +95,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 	float rpyt_errors[4];
 	control_command_t input;
 	int32_t i;
+	float feedforward[4];
 	//quat_t qtmp, q_rot;
 	//aero_attitude_t attitude_yaw_inverse;
 
@@ -176,11 +177,14 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		rpyt_errors[2] = 0.0f;
 		rpyt_errors[3] = input.tvel[X] - stabilisation_wing->airspeed_analog->airspeed;
 		
-		// run PID update on all velocity controllers
-		stabilisation_run(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->imu->dt, rpyt_errors);
+		// Compute the feedforward
+		feedforward[0] = 0.0f;
+		feedforward[1] = 0.0f;
+		feedforward[2] = 0.0f;
+		feedforward[3] = (input.tvel[X] - 13.0f)/8.0f + 0.2f;
 		
-		// Add thrust a priori
-		stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_wing->thrust_apriori;
+		// run PID update on all velocity controllers
+		stabilisation_run_feedforward(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->imu->dt, rpyt_errors, feedforward);
 		
 		// Set input for next layer
 		input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
