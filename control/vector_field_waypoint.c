@@ -412,7 +412,43 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 	/**
 	 *  Student code Here
 	 */
+	// Compute vector from MAV to goal
+	float mav_to_obj[3] = { pos_obj[X] - pos_mav[X],
+							pos_obj[Y] - pos_mav[Y],
+							pos_obj[Z] - pos_mav[Z] };
 
+	// Compute norm of this vector
+	float dist_to_object = vectors_norm(mav_to_obj);
+	
+	// Compute distance to circle
+	float dist_to_circle = (dist_to_object >= radius) ? (dist_to_object - radius) : (radius - dist_to_object);
+	
+	// Compute radial direction
+	direction_radial[X] = mav_to_obj[X]/dist_to_object;
+	direction_radial[Y] = mav_to_obj[Y]/dist_to_object;
+	direction_radial[Z] = mav_to_obj[Z]/dist_to_object;
+	if(dist_to_object < radius)
+	{
+		direction_radial[X] = -direction_radial[X];
+		direction_radial[Y] = -direction_radial[Y];
+		direction_radial[Z] = -direction_radial[Z];
+	}
+	
+	// Compute radial speed
+	speed_radial = attractiveness * dist_to_circle;
+	
+	// Compute tangential direction (using cross-product)
+	float tan_to_circle[3] = { -direction_radial[Y],
+							   direction_radial[X],
+							   0.0f };
+	float tan_norm = vectors_norm(tan_to_circle);
+	float rotation_direction = (radius >= 0) ? 1.0f : -1.0f;	// 1: Clockwise		-1: Counter-clockwise
+	direction_tangential[X] = rotation_direction*tan_to_circle[X]/tan_norm;
+	direction_tangential[Y] = rotation_direction*tan_to_circle[Y]/tan_norm;
+	direction_tangential[Z] = rotation_direction*tan_to_circle[Z]/tan_norm;
+	
+	// Compute tangential speed
+	speed_tangential = cruise_speed/(1 + dist_to_circle);
 
  	/**
 	 *  End of Student code
