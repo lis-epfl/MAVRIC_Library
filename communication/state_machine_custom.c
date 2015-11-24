@@ -176,7 +176,13 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 
 void state_machine_custom_reset(state_machine_custom_t * state_machine)
 {
-	state_machine->state = STATE_IDLE;
+	bool is_armed = state_machine->debug ? 1 : state_machine->imu->state->mav_mode.ARMED == ARMED_ON;
+	
+	if (!is_armed)
+	{
+		state_machine->state = STATE_IDLE;
+	}
+	
 	state_machine->enabled = 0;
 	state_machine->ld.status = 0;
 }
