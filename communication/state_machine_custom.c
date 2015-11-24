@@ -68,7 +68,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est)
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter)
 {
 	bool init_success = true;
 
@@ -82,6 +82,7 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 	state_machine->imu = imu;
 	state_machine->ahrs = ahrs;
 	state_machine->pos_est = pos_est;
+	state_machine->stabilisation_copter = stabilisation_copter;
 	
 	launch_detection_init(&state_machine->ld, &launch_detection_default_config);
 
@@ -140,7 +141,11 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 			controls->tvel[Z] = 0.0f;
 			controls->control_mode = VELOCITY_COMMAND_MODE;
 
-			// if (state_machine->pos_est.vel[2] < 0.5f)
+			bool est_speed_predicate = state_machine->pos_est->vel[2] < 0.3f;
+			bool err_predicate = state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller.error < 0.3f;
+			bool acc_predicate = state_machine->imu->scaled_accelero.data[Z] < 0.3f;
+			
+			// if (est_speed_predicate && err_predicate && acc_predicate)
 			// {
 			// 	state_machine->state = STATE_HEIGHT_CONTROL;
 			// }
