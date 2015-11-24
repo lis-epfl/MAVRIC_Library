@@ -177,7 +177,7 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 void state_machine_custom_reset(state_machine_custom_t * state_machine)
 {
 	bool is_armed = state_machine->debug ? 1 : state_machine->imu->state->mav_mode.ARMED == ARMED_ON;
-	
+
 	if (!is_armed)
 	{
 		state_machine->state = STATE_IDLE;
@@ -185,4 +185,6 @@ void state_machine_custom_reset(state_machine_custom_t * state_machine)
 	
 	state_machine->enabled = 0;
 	state_machine->ld.status = 0;
+
+	pid_controller_reset_integrator(&state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller);
 }
