@@ -65,7 +65,7 @@ extern "C"
 //------------------------------------------------------------------------------
 
 bool state_machine_init(	state_machine_t *state_machine,
-							state_t* state, 
+							State* state, 
 							const Gps* gps,
 							manual_control_t* manual_control)
 {
@@ -103,9 +103,9 @@ bool state_machine_update(state_machine_t* state_machine)
 
 	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 
-	state_machine->state->battery->update();
+	state_machine->state->battery_.update();
 
-	state_connection_status(state_machine->state);
+	state_machine->state->connection_status();
 
 	// Change state according to signal strength
 	switch ( state_current )
@@ -125,10 +125,10 @@ bool state_machine_update(state_machine_t* state_machine)
 			
 			mode_custom_new = CUSTOM_BASE_MODE;
 			
-			if ( mode_new.ARMED == ARMED_ON )
+			if ( mav_modes_is_armed(mode_new) )
 			{
 				print_util_dbg_print("Switching from state_machine.\r\n");
-				state_switch_to_active_mode(state_machine->state, &state_new);
+				state_machine->state->switch_to_active_mode(&state_new);
 			}
 			break;
 		
@@ -145,7 +145,7 @@ bool state_machine_update(state_machine_t* state_machine)
 				{
 					mode_custom_new &= ~CUST_REMOTE_LOST;
 
-					if ( mode_new.ARMED == ARMED_OFF )
+					if ( !mav_modes_is_armed(mode_new) )
 					{
 						state_new = MAV_STATE_STANDBY;
 						print_util_dbg_print("Switching off motors from state_machine!\r\n");
@@ -154,7 +154,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			}
 
 			// check battery level
-			if( state_machine->state->battery->is_low() )
+			if( state_machine->state->battery_.is_low() )
 			{
 				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
 				state_new = MAV_STATE_CRITICAL;
@@ -219,7 +219,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			switch ( rc_check )
 			{
 				case SIGNAL_GOOD:
-					if( !state_machine->state->battery->is_low() && 
+					if( !state_machine->state->battery_.is_low() && 
 						!state_machine->state->connection_lost && 
 						!state_machine->state->out_of_fence_1 && 
 						!state_machine->state->out_of_fence_2 &&
@@ -237,7 +237,7 @@ bool state_machine_update(state_machine_t* state_machine)
 
 				case SIGNAL_LOST:
 					// If in manual mode, do emergency landing (cut off motors)
-					if ( (mode_current.MANUAL == MANUAL_ON) && (mode_current.STABILISE == STABILISE_OFF) )
+					if ( mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilise(mode_current)) )
 					{
 						print_util_dbg_print("Switch to Emergency mode!\r\n");
 						state_new = MAV_STATE_EMERGENCY;
@@ -248,7 +248,7 @@ bool state_machine_update(state_machine_t* state_machine)
 			}
 
 			//check battery level
-			if( state_machine->state->battery->is_low() )
+			if( state_machine->state->battery_.is_low() )
 			{
 				mode_custom_new |= CUST_BATTERY_LOW;
 			}
@@ -297,7 +297,7 @@ bool state_machine_update(state_machine_t* state_machine)
 				mode_custom_new &= ~CUST_GPS_BAD;
 			}
 
-			if (mode_new.ARMED == ARMED_OFF)
+			if ( !mav_modes_is_armed(mode_new) )
 			{
 				state_new = MAV_STATE_STANDBY;
 			}
@@ -305,9 +305,9 @@ bool state_machine_update(state_machine_t* state_machine)
 		
 		case MAV_STATE_EMERGENCY:
 			// Recovery is not possible -> switch off motors
-			mode_new.ARMED = ARMED_OFF;
+			mode_new &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 			
-			if( !state_machine->state->battery->is_low() )
+			if( !state_machine->state->battery_.is_low() )
 			{
 				// To get out of this state, if we are in the wrong use_mode_from_remote
 				if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)
@@ -337,11 +337,11 @@ bool state_machine_update(state_machine_t* state_machine)
 	// Check simulation mode
 	if ( state_machine->state->simulation_mode == true )
 	{
-		mode_new.HIL = HIL_ON;
+		mode_new |= MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	else
 	{
-		mode_new.HIL = HIL_OFF;
+		mode_new &= ~MAV_MODE_FLAG_HIL_ENABLED;
 	}
 
 
@@ -354,7 +354,7 @@ bool state_machine_update(state_machine_t* state_machine)
 	// 		simulation_switch_from_reality_to_simulation( state_machine->sim_model );
 			
 	// 		state_new = MAV_STATE_STANDBY;
-	// 		mode_new.byte = MAV_MODE_MANUAL_DISARMED;
+	// 		mode_new = MAV_MODE_MANUAL_DISARMED;
 	// 		mode_new.HIL = HIL_ON;
 	// 	}
 	// 	else
@@ -363,7 +363,7 @@ bool state_machine_update(state_machine_t* state_machine)
 	// 		simulation_switch_from_simulation_to_reality( state_machine->sim_model );
 
 	// 		state_new = MAV_STATE_STANDBY;
-	// 		mode_new.byte = MAV_MODE_SAFE;
+	// 		mode_new = MAV_MODE_SAFE;
 
 	// 		// For safety, switch off the motors
 	// 		print_util_dbg_print("Switching off motors!\n");

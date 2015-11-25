@@ -110,8 +110,9 @@ typedef struct
 
 	position_estimation_t* position_estimation;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
-	state_t* state;												///< The pointer to the state structure
+
 	navigation_t* navigation;									///< The pointer to the navigation structure
+	State* state;												///< The pointer to the state structure
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the MAVLink communication structure
 	const mavlink_stream_t* mavlink_stream;						///< The pointer to MAVLink stream
 	const manual_control_t* manual_control;						///< The pointer to the manual_control structure 
@@ -147,7 +148,7 @@ bool waypoint_handler_init(	mavlink_waypoint_handler_t* waypoint_handler,
 							position_estimation_t* position_estimation,
 							navigation_t* navigation, 
 							const ahrs_t* ahrs, 
-							state_t* state, 
+							State* state, 
 							const manual_control_t* manual_control,
 							mavlink_communication_t* mavlink_communication, 
 							const mavlink_stream_t* mavlink_stream);

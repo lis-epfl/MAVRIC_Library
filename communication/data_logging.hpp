@@ -112,7 +112,7 @@ typedef struct
 	
 	uint32_t sys_id;							///< the system ID
 	
-	const state_t* state;						///< The pointer to the state structure	
+	const State* state;						///< The pointer to the state structure	
 	fat_fs_mounting_t* fat_fs_mounting;			//< The pointer to the SD card mounting structure
 } data_logging_t;
 

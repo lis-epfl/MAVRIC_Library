@@ -131,7 +131,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_sg[Y] /= norm_rel_dist;
 	dir_desired_sg[Z] /= norm_rel_dist;
 
-	if ( ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(navigation->internal_state == NAV_NAVIGATING))||(navigation->internal_state == NAV_STOP_THERE))) || ((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP)) )
+	if ( (mav_modes_is_auto(mode) && ((navigation->state->nav_plan_active&&(navigation->internal_state == NAV_NAVIGATING))||(navigation->internal_state == NAV_STOP_THERE))) || ((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP)) )
 	{
 		
 		if( ((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f)) || ((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)) )
@@ -164,29 +164,26 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_sg[Y] *= v_desired;
 	dir_desired_sg[Z] *= v_desired;
 	
-	/*
-	loop_count = loop_count++ %50;
-	if (loop_count == 0)
-	{
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigation->position_estimation->vel_bf)*100);
-		print_util_dbg_print("Desired_vel_Bf(x100): (");
-		print_util_dbg_print_num(dir_desired_sg[X] * 100,10);
-		print_util_dbg_print_num(dir_desired_sg[Y] * 100,10);
-		print_util_dbg_print_num(dir_desired_sg[Z] * 100,10);
-		print_util_dbg_print("). \n");
-		print_util_dbg_print("Actual_vel_bf(x100): (");
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
-		print_util_dbg_print("). \n");
-		print_util_dbg_print("Actual_pos(x100): (");
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
-		print_util_dbg_print("). \n");
-	}
-	*/
+	// static uint32_t loop_count = 0;
+	// loop_count = loop_count++ %50;
+	// if (loop_count == 0)
+	// {
+	// 	print_util_dbg_print("Desired_vel_Bf(x100): (");
+	// 	print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
+	// 	print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
+	// 	print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
+	// 	print_util_dbg_print("). \r\n");
+	// 	print_util_dbg_print("Actual_vel_bf(x100): (");
+	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
+	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
+	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
+	// 	print_util_dbg_print("). \r\n");
+	// 	// print_util_dbg_print("Actual_pos(x100): (");
+	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
+	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
+	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
+	// 	// print_util_dbg_print("). \r\n");
+	// }
 
 	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
@@ -217,7 +214,7 @@ static void navigation_run(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, const position_estimation_t* position_estimation, state_t* state, mavlink_communication_t* mavlink_communication)
+bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, const position_estimation_t* position_estimation, State* state, mavlink_communication_t* mavlink_communication)
 {
 	bool init_success = true;
 	
@@ -282,17 +279,15 @@ bool navigation_update(navigation_t* navigation)
 			break;
 			
 		case MAV_STATE_ACTIVE:
-
 			if (navigation->internal_state > NAV_ON_GND)
 			{
 				navigation_run(navigation);
 			}
-
 			break;
 
 		case MAV_STATE_CRITICAL:
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-			if (mode_local.STABILISE == STABILISE_ON)
+			if ( mav_modes_is_stabilise(mode_local) )
 			{
 				if ( (navigation->internal_state == NAV_NAVIGATING) || (navigation->internal_state == NAV_LANDING) ) 
 				{

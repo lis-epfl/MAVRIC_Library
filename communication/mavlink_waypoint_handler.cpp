@@ -1256,7 +1256,7 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 {
 	mavlink_set_gps_global_origin_t packet;
 	
-	if(waypoint_handler->state->mav_mode.ARMED == ARMED_OFF)
+	if( !mav_modes_is_armed(waypoint_handler->state->mav_mode))
 	{
 		mavlink_msg_set_gps_global_origin_decode(msg,&packet);
 	
@@ -1464,11 +1464,11 @@ static mav_result_t waypoint_handler_start_stop_navigation(mavlink_waypoint_hand
 	else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
 	{
 
-		if (waypoint_handler->mode.AUTO == AUTO_ON)
+		if ( mav_modes_is_auto(waypoint_handler->mode) )
 		{
 			waypoint_handler->navigation->internal_state = NAV_NAVIGATING;
 		}
-		else if(waypoint_handler->mode.GUIDED == GUIDED_ON)
+		else if( mav_modes_is_guided(waypoint_handler->mode) )
 		{
 			waypoint_handler->navigation->internal_state = NAV_HOLD_POSITION;
 		}
@@ -1598,7 +1598,7 @@ static void waypoint_handler_auto_landing_handler(mavlink_waypoint_handler_t* wa
 				waypoint_handler->hold_waypoint_set = false;
 				waypoint_handler->navigation->internal_state = NAV_ON_GND;
 				waypoint_handler->state->in_the_air = false;
-				waypoint_handler->state->mav_mode.ARMED = ARMED_OFF;
+				waypoint_handler->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 				waypoint_handler->state->mav_state = MAV_STATE_STANDBY;
 				break;
 		}
@@ -1620,7 +1620,7 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 
 			if (thrust > -0.7f)
 			{
-				if ((mode_local.GUIDED == GUIDED_ON)||(mode_local.AUTO == AUTO_ON))
+				if ( mav_modes_is_guided(mode_local)||mav_modes_is_auto(mode_local) )
 				{
 					waypoint_handler->hold_waypoint_set = false;
 					waypoint_handler->navigation->internal_state = NAV_TAKEOFF;
@@ -1640,28 +1640,28 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 			if (takeoff_result)
 			{
 				waypoint_handler->state->in_the_air = true;
-				if (mode_local.AUTO == AUTO_ON)
+				if (mav_modes_is_auto(mode_local))
 				{
 					waypoint_handler->navigation->internal_state = NAV_NAVIGATING;
 				}
-				else if (mode_local.GUIDED == GUIDED_ON)
+				else if (mav_modes_is_guided(mode_local))
 				{
 					waypoint_handler->navigation->internal_state = NAV_HOLD_POSITION;
 				}
 			}
 
-			if ( (mode_local.GUIDED == GUIDED_OFF)&&(mode_local.AUTO == AUTO_OFF) )
+			if ( (!mav_modes_is_guided(mode_local))&&(!mav_modes_is_auto(mode_local)) )
 			{
 				waypoint_handler->navigation->internal_state = NAV_MANUAL_CTRL;
 			}
 			break;
 
 		case NAV_MANUAL_CTRL:
-			if (mode_local.AUTO == AUTO_ON)
+			if (mav_modes_is_auto(mode_local))
 			{
 				waypoint_handler->navigation->internal_state = NAV_NAVIGATING;
 			}
-			else if (mode_local.GUIDED == GUIDED_ON)
+			else if (mav_modes_is_guided(mode_local))
 			{
 				waypoint_handler->navigation->internal_state = NAV_HOLD_POSITION;
 			}
@@ -1677,7 +1677,7 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 			
 			waypoint_handler->navigation->goal = waypoint_handler->waypoint_coordinates; 
 
-			if(mode_local.GUIDED == GUIDED_ON)
+			if(mav_modes_is_guided(mode_local))
 			{
 				waypoint_handler->navigation->internal_state = NAV_HOLD_POSITION;
 			}
@@ -1696,7 +1696,7 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 
 			waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
 
-			if (mode_local.AUTO == AUTO_ON)
+			if ( mav_modes_is_auto(mode_local) )
 			{
 				waypoint_handler->navigation->internal_state = NAV_NAVIGATING;
 			}
@@ -1709,7 +1709,7 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 		case NAV_STOP_ON_POSITION:
 			waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
 
-			if ( (mode_local.AUTO == AUTO_OFF) && (mode_local.GUIDED == GUIDED_OFF) )
+			if ( (!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)) )
 			{
 				waypoint_handler->navigation->internal_state = NAV_MANUAL_CTRL;
 			}
@@ -1720,7 +1720,7 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 
 			waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
 
-			if ( (mode_local.AUTO == AUTO_OFF) && (mode_local.GUIDED == GUIDED_OFF) )
+			if ( (!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)) )
 			{
 				waypoint_handler->navigation->internal_state = NAV_MANUAL_CTRL;
 			}
@@ -1731,7 +1731,7 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 
 			waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
 
-			if ( (mode_local.AUTO == AUTO_OFF) && (mode_local.GUIDED == GUIDED_OFF) )
+			if ( (!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)) )
 			{
 				waypoint_handler->navigation->internal_state = NAV_MANUAL_CTRL;
 			}
@@ -1763,7 +1763,7 @@ static void waypoint_handler_critical_handler(mavlink_waypoint_handler_t* waypoi
 	
 	//Check whether we entered critical mode due to a battery low level or a lost
 	// connection with the GND station or are out of fence control
-	if ( waypoint_handler->state->battery->is_low() || 
+	if ( waypoint_handler->state->battery_.is_low() || 
 		waypoint_handler->state->connection_lost || 
 		waypoint_handler->state->out_of_fence_2 ||
 		waypoint_handler->position_estimation->gps->fix() == false)
@@ -1884,7 +1884,7 @@ static void waypoint_handler_critical_handler(mavlink_waypoint_handler_t* waypoi
 				waypoint_handler->navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 				waypoint_handler->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				waypoint_handler->state->in_the_air = false;
-				waypoint_handler->state->mav_mode.ARMED = ARMED_OFF;
+				waypoint_handler->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 				waypoint_handler->state->mav_state = MAV_STATE_EMERGENCY;
 				break;
 		}
@@ -1984,7 +1984,7 @@ static bool waypoint_handler_mode_change(mavlink_waypoint_handler_t* waypoint_ha
 	
 	bool result = false;
 	
-	if ((mode_local.STABILISE == mode_nav.STABILISE)&&(mode_local.GUIDED == mode_nav.GUIDED)&&(mode_local.AUTO == mode_nav.AUTO))
+	if ( mav_modes_are_equal_autonomous_modes(mode_local,mode_nav) )
 	{
 		result = true;
 	}
@@ -1996,7 +1996,7 @@ static bool waypoint_handler_mode_change(mavlink_waypoint_handler_t* waypoint_ha
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* position_estimation, navigation_t* navigation, const ahrs_t* ahrs, state_t* state, const manual_control_t* manual_control, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream)
+bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* position_estimation, navigation_t* navigation, const ahrs_t* ahrs, State* state, const manual_control_t* manual_control, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream)
 {
 	bool init_success = true;
 	
@@ -2036,7 +2036,7 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler->critical_next_state = false;
 	waypoint_handler->auto_landing_next_state = false;
 
-	waypoint_handler->mode.byte = state->mav_mode.byte;
+	waypoint_handler->mode = state->mav_mode;
 
 	// Add callbacks for waypoint handler messages requests
 	mavlink_message_handler_msg_callback_t callback;
@@ -2189,7 +2189,7 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
 
 		case MAV_STATE_CRITICAL:
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-			if (mode_local.STABILISE == STABILISE_ON)
+			if (mav_modes_is_stabilise(mode_local))
 			{
 				if ( (waypoint_handler->navigation->internal_state == NAV_NAVIGATING) || (waypoint_handler->navigation->internal_state == NAV_LANDING) ) 
 				{
@@ -2323,8 +2323,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 	float rel_pos[3];
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
-	//&& (waypoint_handler->position_estimation->init_gps_position || (*waypoint_handler->simulation_mode==HIL_ON))
-	&& (waypoint_handler->position_estimation->init_gps_position || (waypoint_handler->state->mav_mode.HIL == HIL_ON))
+	&& (waypoint_handler->position_estimation->init_gps_position || mav_modes_is_hil(waypoint_handler->state->mav_mode))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{
 		for (uint8_t i = 0; i<waypoint_handler->number_of_waypoints; i++)

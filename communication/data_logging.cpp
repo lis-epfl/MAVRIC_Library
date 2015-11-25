@@ -586,7 +586,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	data_logging->continuous_write = continuous_write;
 	data_logging->data_write = true;
 
-	data_logging->state = fat_fs_mounting->state;
+	data_logging->state = fat_fs_mounting->state;		// Wow dangerous !
 	data_logging->fat_fs_mounting = fat_fs_mounting;
 
 	// Allocate memory for the onboard data_log
@@ -743,7 +743,7 @@ bool data_logging_update(data_logging_t* data_logging)
 
 				data_logging->time_ms = time_keeper_get_millis();
 				
-				if (data_logging->state->mav_mode.ARMED == ARMED_OFF)
+				if ( !mav_modes_is_armed(data_logging->state->mav_mode))
 				{
 					if ( (data_logging->time_ms - data_logging->logging_time) > 5000)
 					{

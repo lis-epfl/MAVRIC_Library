@@ -356,7 +356,7 @@ static void position_estimation_fence_control(position_estimation_t* pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer* barometer, const Sonar* sonar, const Gps* gps, const ahrs_t* ahrs)
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, State* state, Barometer* barometer, const Sonar* sonar, const Gps* gps, const ahrs_t* ahrs)
 {
 	bool init_success = true;
 	
@@ -474,7 +474,7 @@ void position_estimation_update(position_estimation_t *pos_est)
 		
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
-		if ( (pos_est->state->mav_mode.ARMED == ARMED_ON)&&(pos_est->fence_set) )
+		if ( mav_modes_is_armed(pos_est->state->mav_mode) && pos_est->fence_set )
 		{
 			position_estimation_fence_control(pos_est);
 		}
