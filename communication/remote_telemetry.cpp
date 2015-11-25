@@ -138,7 +138,7 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 										remote->sat->channel(5) + 1024,
 										remote->sat->channel(6) + 1024,
 										remote->sat->channel(7) + 1024,
-										// remote->mode.current_desired_mode.byte);
+										// remote->mode.current_desired_mode);
 										remote->signal_quality	);
 	
 	mavlink_stream_send(mavlink_stream, msg);
@@ -156,7 +156,7 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 										remote->sat->channel(13) + 1024,
 										UINT16_MAX,
 										UINT16_MAX,
-										// remote->mode.current_desired_mode.byte);
+										// remote->mode.current_desired_mode);
 										remote->signal_quality	);
 }
 
@@ -176,7 +176,7 @@ void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t
 											remote->channels[5] * 10000.0f,
 											remote->channels[6] * 10000.0f,
 											remote->channels[7] * 10000.0f,
-											remote->mode.current_desired_mode.byte );
+											remote->mode.current_desired_mode );
 											// remote->signal_quality	);
 	
 	mavlink_stream_send(mavlink_stream, msg);
@@ -194,5 +194,5 @@ void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t
 											remote->channels[13] * 10000.0f,
 											INT16_MAX, // 14 channels max 
 											INT16_MAX,
-											remote->mode.current_desired_mode.byte );
+											remote->mode.current_desired_mode );
 }

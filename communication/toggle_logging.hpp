@@ -70,8 +70,8 @@ typedef struct
 
 	uint32_t log_data;							///< A flag to stop/start writing to file
 
-	const state_t* state;						///< The pointer to the state structure
-}toggle_logging_t;
+	const State* state;							///< The pointer to the state structure
+}toggle_logging_t;	
 
 /**
  * \brief	Initialise the toggle logging system file
@@ -82,7 +82,6 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool toggle_logging_init(toggle_logging_t* toggle_logging, toggle_logging_conf_t toggle_logging_conf, const state_t* state);
-
+bool toggle_logging_init(toggle_logging_t* toggle_logging, toggle_logging_conf_t toggle_logging_conf, const State* state);
 
 #endif /* fat_fs_mounting_TELEMETRY_HPP_ */

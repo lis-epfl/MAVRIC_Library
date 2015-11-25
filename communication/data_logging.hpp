@@ -106,7 +106,7 @@ typedef struct
 	
 	Console<File>* console;						///< The pointer to the console containing the file to write data to
 
-	const state_t* state;						///< The pointer to the state structure	
+	const State* state;						///< The pointer to the state structure	
 	toggle_logging_t* toggle_logging;			///< The pointer to the toggle logging structure
 } data_logging_t;
 

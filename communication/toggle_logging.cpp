@@ -56,7 +56,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool toggle_logging_init(toggle_logging_t* toggle_logging, toggle_logging_conf_t toggle_logging_conf, const state_t* state)
+bool toggle_logging_init(toggle_logging_t* toggle_logging, toggle_logging_conf_t toggle_logging_conf, const State* state)
 {
 	bool init_success = true;
 

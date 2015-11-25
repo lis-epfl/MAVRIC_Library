@@ -124,7 +124,7 @@ bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging,
 	//init_success &= data_logging_add_parameter_uint32(data_logging, (uint32_t*)&central_data->state_machine.rc_check, "rc_check");
 	
 	//init_success &= data_logging_add_parameter_uint32(data_logging, (uint32_t*)&central_data->state.mav_state, "mav_state");
-	init_success &= data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode.byte, "mav_mode");
+	init_success &= data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode, "mav_mode");
 	
 	return init_success;
 };
@@ -335,7 +335,7 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 	
 //	init_success &= onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&central_data->state_machine.low_battery_counter			, "safe_count"     );
 
-	init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_control_src");
+	init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_ctrl_src");
 	init_success = onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source, 	"COM_RC_IN_MODE");
    
 	return init_success;

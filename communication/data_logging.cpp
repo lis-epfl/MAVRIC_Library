@@ -556,10 +556,10 @@ bool data_logging_update(data_logging_t* data_logging)
 			{
 				data_logging_add_header_name(data_logging);
 			}
-
+			
 			data_logging->time_ms = time_keeper_get_millis();
 			
-			if (data_logging->state->mav_mode.ARMED == ARMED_OFF)
+			if ( !mav_modes_is_armed(data_logging->state->mav_mode) )
 			{
 				if ( (data_logging->time_ms - data_logging->logging_time) > 5000)
 				{

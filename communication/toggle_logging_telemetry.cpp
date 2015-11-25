@@ -65,7 +65,7 @@ static mav_result_t toggle_logging_telemetry_toggle_logging(toggle_logging_t* to
 {
 	mav_result_t result = MAV_RESULT_TEMPORARILY_REJECTED;
 	
-	if (toggle_logging->state->mav_mode.ARMED == ARMED_OFF)
+	if (!mav_modes_is_armed(toggle_logging->state->mav_mode))
 	{
 		if(packet->param1 == 1)
 		{

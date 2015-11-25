@@ -50,7 +50,15 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+<<<<<<< HEAD:hal/avr32/file_fat_fs.cpp
 void File_fat_fs::mount_system()
+=======
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_t data_logging_conf, const State* state)
+>>>>>>> dev_cpp:hal/common/fat_fs_mounting.cpp
 {
 	if (!sys_mounted)
 	{
