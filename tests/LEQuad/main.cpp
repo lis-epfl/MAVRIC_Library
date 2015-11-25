@@ -48,36 +48,21 @@ extern "C"
 	#include "print_util.h"
 }
 
-void initialisation(Central_data& central_data, Mavrinux& board) 
-{	
-	bool init_success = true;
 
-	// Board initialisation
-	init_success &= board.init();
-
-	// Init central data
-	init_success &= central_data.init();
-
-	init_success &= mavlink_telemetry_add_onboard_parameters(&central_data.mavlink_communication.onboard_parameters, &central_data);
-
-	// Try to read from flash, if unsuccessful, write to flash
-	if( onboard_parameters_read_parameters_from_storage(&central_data.mavlink_communication.onboard_parameters) == false )
+int main(int argc, char** argv)
+{
+	uint8_t sysid = 0;
+	
+	// -------------------------------------------------------------------------
+	// Get command line parameters
+	// -------------------------------------------------------------------------
+	// System id
+	if(argc > 1)
 	{
-		onboard_parameters_write_parameters_to_storage(&central_data.mavlink_communication.onboard_parameters);
-		init_success = false; 
+		sysid = atoi( argv[1] );
+		printf("%i", sysid);
 	}
 
-	init_success &= mavlink_telemetry_init(&central_data);
-
-	central_data.state.mav_state = MAV_STATE_STANDBY;	
-	
-	init_success &= tasks_create_tasks(&central_data);	
-
-	print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
-}
-
-int main (void)
-{
 	// -------------------------------------------------------------------------
 	// Create board
 	// -------------------------------------------------------------------------
@@ -88,7 +73,8 @@ int main (void)
 	// Create central data
 	// -------------------------------------------------------------------------
 	// Create central data using real sensors
-	Central_data cd = Central_data( board.imu, 
+	Central_data cd = Central_data( sysid,
+									board.imu, 
 									board.sim.barometer(),
 									board.sim.gps(), 
 									board.sim.sonar(),
@@ -99,8 +85,37 @@ int main (void)
 									board.servos );
 
 
-	initialisation(cd, board);
+	// -------------------------------------------------------------------------
+	// Initialisation
+	// -------------------------------------------------------------------------
+	bool init_success = true;
 
+	// Board initialisation
+	init_success &= board.init();
+
+	// Init central data
+	init_success &= cd.init();
+
+	init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+
+	// Try to read from flash, if unsuccessful, write to flash
+	if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
+	{
+		onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+		init_success = false; 
+	}
+
+	init_success &= mavlink_telemetry_init(&cd);
+
+	cd.state.mav_state = MAV_STATE_STANDBY;	
+	
+	init_success &= tasks_create_tasks(&cd);	
+
+	print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
+
+	// -------------------------------------------------------------------------
+	// Main loop
+	// -------------------------------------------------------------------------
 	while (1 == 1) 
 	{
 		scheduler_update(&cd.scheduler);

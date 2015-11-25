@@ -93,7 +93,7 @@ public:
 	/**
 	 * \brief   Constructor
 	 */
-	Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, servos_t& servos);
+	Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, servos_t& servos);
 
 
 	/**
@@ -141,6 +141,9 @@ public:
 	state_machine_t state_machine;								///< The structure for the state machine
 		
 	hud_telemetry_structure_t hud_structure;					///< The HUD structure
+
+private:
+	uint8_t sysid_;		///< System ID
 };
 
 

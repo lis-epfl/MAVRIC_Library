@@ -60,7 +60,7 @@ extern "C"
 }
 
 
-Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, servos_t& servos):
+Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, servos_t& servos):
 	imu( imu ),
 	barometer( barometer ),
 	gps( gps ),
@@ -70,7 +70,8 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
 	file_flash( file_flash ),
 	battery( battery ),
 	servos( servos ),
-	state( battery, state_default_config() )
+	state( battery, state_default_config() ),
+	sysid_( sysid )
 {}
 
 
@@ -101,7 +102,7 @@ bool Central_data::init(void)
 	// Init mavlink communication
 	// -------------------------------------------------------------------------
 	mavlink_communication_conf_t mavlink_communication_config = mavlink_communication_default_config();
-	mavlink_communication_config.mavlink_stream_config.sysid = 1;
+	mavlink_communication_config.mavlink_stream_config.sysid = sysid_;
 	mavlink_communication_config.message_handler_config.debug = true;
 	mavlink_communication_config.onboard_parameters_config.debug = true;
 	mavlink_communication_config.mavlink_stream_config.debug = true;
