@@ -650,15 +650,24 @@ bool data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = (double*) val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_UINT8_T;
+				new_param->param					 = (double*) val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_UINT8_T;
+
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			data_logging_set->data_logging_count += 1;
-			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -688,15 +697,24 @@ bool data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, 
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = (double*) val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_INT8_T;
+				new_param->param					 = (double*) val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_INT8_T;
+
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			data_logging_set->data_logging_count += 1;
-			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -726,15 +744,24 @@ bool data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* v
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = (double*) val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_UINT16_T;
+				new_param->param					 = (double*) val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_UINT16_T;
+
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			data_logging_set->data_logging_count += 1;
-			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -764,15 +791,24 @@ bool data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = (double*) val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_INT16_T;
+				new_param->param					 = (double*) val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_INT16_T;
+
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			data_logging_set->data_logging_count += 1;
-			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -802,15 +838,24 @@ bool data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* v
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = (double*) val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_UINT32_T;
+				new_param->param					 = (double*) val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_UINT32_T;
+
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			data_logging_set->data_logging_count += 1;
-			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -839,15 +884,24 @@ bool data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = (double*) val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_INT32_T;
+				new_param->param					 = (double*) val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_INT32_T;
+
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			data_logging_set->data_logging_count += 1;
-			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -877,15 +931,24 @@ bool data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* v
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = (double*) val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_UINT64_T;
+				new_param->param					 = (double*) val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_UINT64_T;
+
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			data_logging_set->data_logging_count += 1;
-			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -915,15 +978,24 @@ bool data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = (double*) val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_INT64_T;
+				new_param->param					 = (double*) val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_INT64_T;
+
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			data_logging_set->data_logging_count += 1;
-			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -953,16 +1025,25 @@ bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = (double*) val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_FLOAT;
-			new_param->precision				 = precision;
+				new_param->param					 = (double*) val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_FLOAT;
+				new_param->precision				 = precision;
+
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			data_logging_set->data_logging_count += 1;
-			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
@@ -992,16 +1073,25 @@ bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val
 	{
 		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
 		{
-			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+			if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
+			{
+				data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-			new_param->param					 = val;
-			strcpy( new_param->param_name, 		 param_name );
-			new_param->data_type                 = MAVLINK_TYPE_DOUBLE;
-			new_param->precision				 = precision;
+				new_param->param					 = val;
+				strcpy( new_param->param_name, 		 param_name );
+				new_param->data_type                 = MAVLINK_TYPE_DOUBLE;
+				new_param->precision				 = precision;
 
-			data_logging_set->data_logging_count += 1;
+				data_logging_set->data_logging_count += 1;
+
+				add_success &= true;
+			}
+			else
+			{
+				print_util_dbg_print("[DATA LOGGING] Error: Param name too long.\r\n");
 			
-			add_success &= true;
+				add_success &= false;
+			}
 		}
 		else
 		{
