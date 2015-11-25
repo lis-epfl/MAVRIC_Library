@@ -71,6 +71,12 @@ public:
 	 */
 	bool is_open();
 
+	/**
+	 * \brief 	Indicates if the file exits
+	 * 
+	 * \return  true if the file exists, false otherwise
+	 */
+	bool exists(const char* path);
 
 	/**
 	 * \brief 	Close the file

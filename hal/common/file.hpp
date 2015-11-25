@@ -75,6 +75,12 @@ public:
 	 */
 	virtual bool is_open() = 0;
 
+	/**
+	 * \brief 	Indicates if the file exits
+	 * 
+	 * \return  true if the file exists, false otherwise
+	 */
+	virtual bool exists(const char* path) = 0;
 
 	/**
 	 * \brief 	Close the file

@@ -69,13 +69,7 @@ bool File_linux::open(const char* path, bool new_file)
 	//file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
 	file_.open(path, ios::in | ios::out | ios::ate );
 	
-	if (new_file && file_.is_open())
-	{
-		file_.close();
-		success = false;
-
-		return success;
-	}
+	
 
 	// If it fails, create the file
 	if( ~file_.is_open() )
@@ -100,6 +94,32 @@ bool File_linux::is_open()
 	return file_.is_open();
 }
 
+
+bool File_linux::exists(const char* path)
+{
+	bool success = true;
+
+	if( !file_.is_open() )
+	{
+		file_.open(path, ios::in | ios::out | ios::ate );
+		
+		if (file_.is_open())
+		{
+			success = true;
+			file_.close();
+		}
+		else
+		{
+			success = false;
+		}
+	}
+	else
+	{
+		success = true;
+	}
+
+	return success;
+}
 
 
 bool File_linux::close()

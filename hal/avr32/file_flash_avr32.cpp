@@ -80,6 +80,11 @@ bool File_flash_avr32::is_open()
 }
 
 
+bool File_flash_avr32::exists(const char* path)
+{
+	return true;
+}
+
 
 bool File_flash_avr32::close()
 {

@@ -61,7 +61,7 @@ private:
 
 	char *file_name;								///< The file name
 
-	FRESULT fr;										///< The result of the fatfs functions
+	//FRESULT fr;										///< The result of the fatfs functions
 	FATFS fs;										///< The fatfs handler
 
 	uint32_t loop_count;							///< Counter to try to mount the SD card many times
@@ -111,6 +111,12 @@ public:
 	 */
 	bool is_open();
 
+	/**
+	 * \brief 	Indicates if the file exits
+	 * 
+	 * \return  true if the file exists, false otherwise
+	 */
+	bool exists(const char* path);
 
 	/**
 	 * \brief 	Close the file

@@ -50,16 +50,10 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-<<<<<<< HEAD:hal/avr32/file_fat_fs.cpp
 void File_fat_fs::mount_system()
-=======
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_t data_logging_conf, const State* state)
->>>>>>> dev_cpp:hal/common/fat_fs_mounting.cpp
 {
+	FRESULT fr = FR_NO_FILESYSTEM;
+
 	if (!sys_mounted)
 	{
 		print_util_dbg_print("Trying to mount SD card\r\n");
@@ -104,6 +98,8 @@ bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_
 
 bool File_fat_fs::unmount_system()
 {
+	FRESULT fr;
+
 	bool success = false;
 
 	if ( (num_file_opened == 0) && sys_mounted )
@@ -235,8 +231,6 @@ void File_fat_fs::print_error_signification(FRESULT fr)
 
 File_fat_fs::File_fat_fs(bool debug_)
 {
-	fr = FR_NO_FILE;
-
 	loop_count = 0;
 
 	sys_mounted = false;
@@ -264,14 +258,7 @@ bool File_fat_fs::open(const char* path, bool new_file)
 
 	mount_system();
 
-	if (new_file)
-	{
-		fr = f_open(&file_, file_name, FA_WRITE | FA_CREATE_NEW);
-	}
-	else
-	{
-		fr = f_open(&file_, file_name, FA_WRITE | FA_OPEN_ALWAYS);
-	}
+	fr = f_open(&file_, file_name, FA_WRITE | FA_OPEN_ALWAYS);
 
 	if (fr == FR_OK)
 	{
@@ -311,7 +298,30 @@ bool File_fat_fs::is_open()
 	return success;
 }
 
+bool File_fat_fs::exists(const char* path)
+{
+	bool success = true;
+	FRESULT fr;
+	FILINFO fno;
 
+	fr = f_stat(path,&fno);
+
+	if (fr == FR_NO_FILE)
+	{
+		success = false;
+	}
+	else if (fr == FR_OK)
+	{
+		success = true;
+	}
+	else
+	{
+		print_util_dbg_print("Exists status:");
+		print_error_signification(fr);
+	}
+
+	return success;
+}
 
 bool File_fat_fs::close()
 {

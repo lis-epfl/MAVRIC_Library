@@ -57,6 +57,11 @@ bool File_dummy::is_open()
 }
 
 
+bool File_dummy::exists(const char* path)
+{
+	return false;
+}
+
 
 bool File_dummy::close()
 {
