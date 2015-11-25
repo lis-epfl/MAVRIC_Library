@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, 
  * this list of conditions and the following disclaimer in the documentation 
  * and/or other materials provided with the distribution.
@@ -28,80 +28,76 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-
+ 
 /*******************************************************************************
- * \file  	file_dummy.cpp
- * 
- * \author  MAV'RIC Team
+ * \file fat_fs_mounting.hpp
+ *
+ * \author MAV'RIC Team
+ * \author Nicolas Dousse
  *   
- * \brief   Dummy implementation of files
+ * \brief Performs the mounting/unmounting of the fat_fs file system
  *
  ******************************************************************************/
 
-#include "file_dummy.hpp"
 
-File_dummy::File_dummy(const char* path)
+#ifndef FAT_FS_MOUNTING_HPP_
+#define FAT_FS_MOUNTING_HPP_
+
+extern "C"
 {
-	;
-}
-
-bool File_dummy::open(const char* path)
-{
-	return false;
-}
-
-
-bool File_dummy::is_open()
-{
-	return false;
+	#include <stdint.h>
+	#include "libs/FatFs/src/ff.h"
 }
 
 
-bool File_dummy::exists(const char* path)
+/**
+ * \brief 	The fat_fs mounting structure
+ */
+typedef struct 
 {
-	return false;
-}
+	FATFS fs;									///< The fatfs handler
 
+	uint32_t loop_count;						///< Counter to try to mount the SD card many times
 
-bool File_dummy::close()
-{
-	return false;
-}
+	bool sys_mounted;							///< A flag to tell whether the file system is mounted
+	
+	uint32_t num_file_opened;					///< Number of open files to now when the system can be unmounted
+}fat_fs_mounting_t;
 
+/**
+ * \brief	Initialise the fat_fs system file
+ *
+ * \param	fat_fs_mounting			The pointer to the SD card mounting structure
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting);
 
+/**
+ * \brief	Mount the fat_fs system file
+ *
+ * \param	fat_fs_mounting			The pointer to the SD card mounting structure
+ * \param	debug					A flag to tell if we print the result or not for debug purposes
+ *
+ * \return	True if system was mounted, false otherwise
+ */
+bool fat_fs_mounting_mount(fat_fs_mounting_t* fat_fs_mounting, bool debug);
 
-bool File_dummy::read(uint8_t* data, uint32_t size)
-{
-	return true;
-}
+/**
+ * \brief	Unmount the fat_fs system file
+ *
+ * \param	fat_fs_mounting			The pointer to the SD card mounting structure
+ * \param	debug					A flag to tell if we print the result or not for debug purposes
+ *
+ * \return	True if system was unmounted, false otherwise
+ */
+bool fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug);
 
+/**
+ * \brief	Prints on debug port the result's value of the fatfs operation
+ *
+ * \param	fat_fs_mounting			The pointer to the SD card mounting structure
+ */
+void fat_fs_mounting_print_error_signification(FRESULT fr);
 
-
-bool File_dummy::write(const uint8_t* data, uint32_t size)
-{
-	return false;
-}
-
-
-
-bool File_dummy::seek(int32_t offset, file_seekfrom_t origin)
-{
-	return false;
-}
-
-
-uint32_t File_dummy::offset()
-{
-	return 0;
-}
-
-
-uint32_t File_dummy::length()
-{
-	return 0;
-}
-
-bool File_dummy::flush()
-{
-	return false;
-}
+#endif /* FAT_FS_MOUNTING_HPP_ */

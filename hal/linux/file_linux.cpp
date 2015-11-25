@@ -51,11 +51,11 @@ File_linux::File_linux(const char* path, bool open_now)
 {
 	if (open_now)
 	{
-		open(path,false);
+		open(path);
 	}	
 }
 
-bool File_linux::open(const char* path, bool new_file)
+bool File_linux::open(const char* path)
 {
 	bool success = true;
 
@@ -68,8 +68,6 @@ bool File_linux::open(const char* path, bool new_file)
 	// Try opening file in input/output mode
 	//file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
 	file_.open(path, ios::in | ios::out | ios::ate );
-	
-	
 
 	// If it fails, create the file
 	if( ~file_.is_open() )

@@ -145,6 +145,7 @@ public:
 
 	toggle_logging_t toggle_logging;
 	data_logging_t data_logging;
+	data_logging_t data_logging2;
 };
 
 

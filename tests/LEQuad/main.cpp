@@ -49,7 +49,7 @@ extern "C"
 	#include "print_util.h"
 }
 
-void initialisation(Central_data& central_data, Mavrinux& board, Console<File>& console) 
+void initialisation(Central_data& central_data, Mavrinux& board, Console<File>& console, Console<File>& console_stat) 
 {	
 	bool init_success = true;
 
@@ -74,6 +74,13 @@ void initialisation(Central_data& central_data, Mavrinux& board, Console<File>& 
 														true,
 														&central_data.toggle_logging,
 														central_data.mavlink_communication.mavlink_stream.sysid);
+
+	init_success &=	data_logging_create_new_log_file(	&central_data.data_logging2,
+														"Log_stat",
+														&console_stat,
+														false,
+														&central_data.toggle_logging,
+														central_data.mavlink_communication.mavlink_stream.sysid);	
 
 	init_success &= mavlink_telemetry_init(&central_data);
 
@@ -109,7 +116,10 @@ int main (void)
 	File_linux file_log("", false);
 	Console<File> console(file_log);
 
-	initialisation(cd, board, console);
+	File_linux file_stat("", false);
+	Console<File> console_stat(file_stat);
+
+	initialisation(cd, board, console, console_stat);
 
 	while (1 == 1) 
 	{

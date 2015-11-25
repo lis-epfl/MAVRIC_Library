@@ -513,7 +513,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 			{
 				if (!data_logging->console->get_stream()->exists(data_logging->name_n_extension))
 				{
-					create_success = data_logging->console->get_stream()->open(data_logging->name_n_extension,true);
+					create_success = data_logging->console->get_stream()->open(data_logging->name_n_extension);
 				}
 				else
 				{

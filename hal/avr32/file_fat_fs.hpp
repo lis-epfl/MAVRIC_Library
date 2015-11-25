@@ -43,6 +43,7 @@
 #define FILE_FAT_FS_H_
 
 #include "file.hpp"
+#include "fat_fs_mounting.hpp"
 
 extern "C" 
 {
@@ -61,47 +62,23 @@ private:
 
 	char *file_name;								///< The file name
 
-	//FRESULT fr;										///< The result of the fatfs functions
-	FATFS fs;										///< The fatfs handler
-
-	uint32_t loop_count;							///< Counter to try to mount the SD card many times
-
-	uint32_t num_file_opened;						///< Number of open files to now when the system can be unmounted
-
-	bool sys_mounted;								///< A flag to tell whether the file system is mounted
-
 	bool debug;										///< A flag to tell whether we print the debug messages
 
-	/**
-	 * \brief	Mounting the fat_fs file system
-	 */
-	void mount_system();
-
-	/**
-	 * \brief	Unmounting the fat_fs file system
-	 *
-	 * \return 	True if succeeded, false otherwise
-	 */
-	bool unmount_system();
-
-	/**
-	 * \brief	Printing fat_fs error
-	 */
-	void print_error_signification(FRESULT fr);
+	fat_fs_mounting_t* fat_fs_mounting;
 
 public:
 	
 	/**
 	 * \brief 	Constructor 
 	 */
-    File_fat_fs(bool debug_);
+    File_fat_fs(bool debug_, fat_fs_mounting_t* fat_fs_mounting_);
 
 	/**
 	 * \brief 	Open the file
 	 * 
 	 * \return  true if the file is open, false otherwise
 	 */
-	bool open(const char* path, bool new_file);
+	bool open(const char* path);
 
 
 	/**

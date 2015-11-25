@@ -84,6 +84,15 @@ extern "C"
 bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging, Central_data* central_data);
 
 /**
+ * \brief	Add onboard logging parameters
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ *
+ * \return	The initialization status of the module, succeed == true
+ */
+bool mavlink_telemetry_add_data_logging_parameters_stat(data_logging_t* data_logging, Central_data* central_data);
+
+/**
  * \brief   Initialise the callback functions
  * 
  * \param   p_central_data_            The pointer to the p_central_data structure
@@ -128,6 +137,17 @@ bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging,
 	
 	return init_success;
 };
+
+bool mavlink_telemetry_add_data_logging_parameters_stat(data_logging_t* data_logging, Central_data* central_data)
+{
+	bool init_success = true;
+
+	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.latitude, "origin_latitude", 7);
+	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.latitude, "origin_longitude", 7);
+	init_success &= data_logging_add_parameter_float(data_logging, &central_data->position_estimation.local_position.origin.altitude, "origin_altitude", 3);
+
+	return init_success;
+}
 
 bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 {
@@ -347,6 +367,8 @@ bool mavlink_telemetry_init(Central_data* central_data)
 	bool init_success = true;
 	
 	init_success &= mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging, central_data);
+
+	init_success &= mavlink_telemetry_add_data_logging_parameters_stat(&central_data->data_logging2, central_data);
 
 	init_success &= mavlink_telemetry_init_communication_module(central_data);
 	

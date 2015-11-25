@@ -65,7 +65,7 @@ public:
 	 * 
 	 * \return  true if the file is open, false otherwise
 	 */
-	bool open(const char* path, bool new_file);
+	bool open(const char* path);
 
 
 	/**
