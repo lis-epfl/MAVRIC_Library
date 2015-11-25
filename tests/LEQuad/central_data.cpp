@@ -261,7 +261,6 @@ bool Central_data::init(void)
 	// -------------------------------------------------------------------------
 	// Init data logging
 	// -------------------------------------------------------------------------
-	//TODO: not working here
 	ret = toggle_logging_init( &toggle_logging,
 								toggle_logging_default_config(),
 								&state);
