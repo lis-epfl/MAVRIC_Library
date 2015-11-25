@@ -110,7 +110,7 @@ bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging,
 {
 	bool init_success = true;
 	
-	// Add your logging parameters here, name length max = MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN = 16
+	// Add your logging parameters here, name length max < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN = 16
 	// Supported type: all numeric types included in mavlink_message_type_t (i.e. all except MAVLINK_TYPE_CHAR)
 	
 	//init_success &= data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[X], "acc_x", 4);
@@ -140,11 +140,14 @@ bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging,
 
 bool mavlink_telemetry_add_data_logging_parameters_stat(data_logging_t* data_logging, Central_data* central_data)
 {
+	// Add your logging parameters here, name length max < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN = 16
+	// Supported type: all numeric types included in mavlink_message_type_t (i.e. all except MAVLINK_TYPE_CHAR)
+	
 	bool init_success = true;
 
-	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.latitude, "origin_latitude", 7);
-	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.latitude, "origin_longitude", 7);
-	init_success &= data_logging_add_parameter_float(data_logging, &central_data->position_estimation.local_position.origin.altitude, "origin_altitude", 3);
+	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.latitude,	"origin_lat", 7);
+	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.longitude, "origin_lon", 7);
+	init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.origin.altitude,	"origin_alt", 3);
 
 	return init_success;
 }
@@ -365,7 +368,7 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 bool mavlink_telemetry_init(Central_data* central_data)
 {
 	bool init_success = true;
-	
+
 	init_success &= mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging, central_data);
 
 	init_success &= mavlink_telemetry_add_data_logging_parameters_stat(&central_data->data_logging2, central_data);
