@@ -38,27 +38,53 @@
  *
  ******************************************************************************/
 
+#include <stdexcept>
+#include <unistd.h>
+#include <fcntl.h>
+
 #include "serial_udp.hpp"
 
-extern "C"
-{
-	#include <fcntl.h>
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Serial_udp::Serial_udp(serial_udp_conf_t config):
-	tx_udp_(udp_client(config.ip, config.tx_port)),
-	rx_udp_(udp_server(config.ip, config.rx_port))
+Serial_udp::Serial_udp(serial_udp_conf_t config)
 {
-	config = config;
+	// Copy config
+	config_ = config;
 
-	// Set rx as non blocking
-	int sock = rx_udp_.get_socket();
-	int flags = fcntl (sock, F_GETFL, 0 );
-	fcntl( sock, F_SETFL, flags | O_NONBLOCK );
+	// Create udp socket
+	socket_ = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if(socket_ == -1)
+    {
+        throw std::runtime_error("could not create UDP socket");
+    }
+
+    // Set local address and port
+	local_addr_.sin_family 		= AF_INET;						// Internet socket
+	local_addr_.sin_addr.s_addr = INADDR_ANY;					// Any host ip
+	local_addr_.sin_port 		= htons(config_.local_port);	// Port provided by config
+
+	// Bind the socket local port - necessary to receive packets from qgroundcontrol
+	int r = bind(socket_, (struct sockaddr *)&local_addr_, sizeof(struct sockaddr));
+    if( r != 0 )
+    {
+        close(socket_);
+        throw std::runtime_error("could not bind UDP socket");
+    }
+
+	// Attempt to make it non blocking
+	if( fcntl(socket_, F_SETFL, O_NONBLOCK | FASYNC) < 0 )
+    {
+		close(socket_);
+		throw std::runtime_error("could set non blocking UDP socket");
+    }
+
+    // Set target address and port
+    target_addr_.sin_family 		= AF_INET;
+	target_addr_.sin_addr.s_addr 	= inet_addr(config_.target_ip);
+	target_addr_.sin_port 			= htons(config_.target_port);
 }
 
 
@@ -74,7 +100,7 @@ uint32_t Serial_udp::readable(void)
 	uint32_t n_bytes_to_read = rx_buffer_.writeable();
 	char 	 buf[n_bytes_to_read];
 	
-	recsize = rx_udp_.recv(buf, n_bytes_to_read);
+	recsize = recv( socket_, buf, n_bytes_to_read, 0);
 
 	for( int32_t i=0; i<recsize; i++ ) 
 	{
@@ -105,7 +131,13 @@ void Serial_udp::flush(void)
 
 	while( n_bytes_to_send > 0 )
 	{
-		int32_t ret = tx_udp_.send((const char*)&to_send[n_sent], n_bytes_to_send);
+		int32_t ret = sendto(	socket_, 
+								(const char*)&to_send[n_sent], 
+								n_bytes_to_send, 
+								0, 
+								(struct sockaddr*)&target_addr_, 
+								sizeof(struct sockaddr_in) );
+
 		if( ret != -1 )
 		{
 			n_sent += ret;

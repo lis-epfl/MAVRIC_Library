@@ -72,6 +72,8 @@ extern "C"
 typedef struct
 {
 	imu_conf_t				imu_config;
+	serial_udp_conf_t		serial_udp_config;
+	std::string		 		flash_filename;
 } mavrinux_conf_t;
 
 
@@ -145,6 +147,17 @@ static inline mavrinux_conf_t mavrinux_default_config()
 	// Imu config
 	// -------------------------------------------------------------------------
 	conf.imu_config	= imu_default_config();
+
+
+	// -------------------------------------------------------------------------
+	// UDP config
+	// -------------------------------------------------------------------------
+	conf.serial_udp_config	= serial_udp_default_config();
+
+	// -------------------------------------------------------------------------
+	// Flash config
+	// -------------------------------------------------------------------------
+	conf.flash_filename = "flash000.bin";
 
 	return conf;
 }

@@ -60,19 +60,24 @@ int main(int argc, char** argv)
 	if(argc > 1)
 	{
 		sysid = atoi( argv[1] );
-		printf("%i", sysid);
 	}
 
 	// -------------------------------------------------------------------------
 	// Create board
 	// -------------------------------------------------------------------------
 	mavrinux_conf_t board_config = mavrinux_default_config(); 
+	
+	// Set correct sysid for UDP port and flash filename
+	board_config.serial_udp_config.local_port 	= 14000 + sysid;
+	board_config.flash_filename 				= std::string("flash") + std::to_string(sysid) + std::string(".bin");
+	
+	// Create board
 	Mavrinux board(board_config);
 
 	// -------------------------------------------------------------------------
 	// Create central data
 	// -------------------------------------------------------------------------
-	// Create central data using real sensors
+	// Create central data using simulated sensors
 	Central_data cd = Central_data( sysid,
 									board.imu, 
 									board.sim.barometer(),
