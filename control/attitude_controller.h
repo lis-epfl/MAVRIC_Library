@@ -100,7 +100,7 @@ typedef struct
  * \brief               		Initialises the attitude controller structure
  * 
  * \param 	controller    		Pointer to data structure
- * \param 	config				Pointer to configuration
+ * \param 	config				Configuration
  * \param 	ahrs		 		Pointer to the estimated attitude
  * \param 	attitude_command	Pointer to attitude command (input)
  * \param 	rate_command		Pointer to rate command (input/output)
@@ -108,7 +108,7 @@ typedef struct
  * 
  * \return 	init_success		Returns the initialisation success or failure
  */
-bool attitude_controller_init(attitude_controller_t* controller, const attitude_controller_conf_t* config, const ahrs_t* ahrs, attitude_command_t* attitude_command, rate_command_t* rate_command, torque_command_t* torque_command);
+bool attitude_controller_init(attitude_controller_t* controller, attitude_controller_conf_t config, const ahrs_t* ahrs, attitude_command_t* attitude_command, rate_command_t* rate_command, torque_command_t* torque_command);
 
 
 /**

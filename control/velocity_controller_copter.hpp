@@ -88,14 +88,14 @@ typedef struct
  * \brief               		Initialises the velocity controller structure
  * 
  * \param 	controller    		Pointer to data structure
- * \param 	config				Pointer to configuration
+ * \param 	config				Configuration
  * \param 	ahrs		 		Pointer to the estimated attitude
  * \param 	pos_est		 		Pointer to the estimated speed and position
  * \param 	velocity_command	Pointer to velocity command (input)
  * \param 	attitude_command	Pointer to attitude command (output)
  * \param 	thrust_command		Pointer to thrust command (output)
  */
-void velocity_controller_copter_init(velocity_controller_copter_t* controller, const velocity_controller_copter_conf_t* config, const ahrs_t* ahrs, const position_estimation_t* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command);
+void velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const position_estimation_t* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command);
 
 
 /**

@@ -138,6 +138,78 @@ float manual_control_get_thrust(const manual_control_t* manual_control);
 
 
 /**
+ * \brief	Compute torque command from the manual input
+ * 
+ * \param	manual_control	Manual control structure (input)
+ * \param	command			Torque command (output)
+ * \param   scale			Scale (maximum output / max remote input)
+ */
+void manual_control_get_torque_command(const manual_control_t* manual_control, torque_command_t * command, float scale);
+
+
+/**
+ * \brief	Compute rate command from the manual input
+ * 
+ * \param	manual_control	Manual control structure (input)
+ * \param	command			Rate command (output)
+ * \param   scale			Scale (maximum output / max remote input)
+ */
+void manual_control_get_rate_command(const manual_control_t* manual_control, rate_command_t * command, float scale);
+
+
+/**
+ * \brief	Compute thrust command from the manual input
+ * 
+ * \param	manual_control	Manual control structure (input)
+ * \param	command			Thrust command (output)
+ */
+void manual_control_get_thrust_command(const manual_control_t* manual_control, thrust_command_t * command);
+
+
+/**
+ * \brief	Compute attitude command from the manual input (absolute angles)
+ * 
+ * \param	manual_control	Manual control structure (input)
+ * \param	command			Attitude command (output)
+ * \param   scale			Scale (maximum output / max remote input)
+ */
+void manual_control_get_attitude_command_absolute_yaw(const manual_control_t* manual_control, attitude_command_t * command, float scale);
+
+
+/**
+ * \brief	Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)
+ * 
+ * \param	manual_control	Manual control structure (input)
+ * \param 	k_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param	command			Attitude command (output)
+ * \param   scale			Scale (maximum output / max remote input)
+ */
+void manual_control_get_attitude_command(const manual_control_t* manual_control, const float k_yaw, attitude_command_t * command, float scale);
+
+
+/**
+ * \brief	Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)
+ * 
+ * \param	manual_control	Manual control structure (input)
+ * \param 	ki_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param	command			Attitude command (output)
+ * \param   scale			Scale (maximum output / max remote input)
+ * \param 	reference_pitch	Transition factor (0: forward flight, PI/2:hover)	
+ */
+void manual_control_get_attitude_command_vtol(const manual_control_t* manual_control, const float ki_yaw, attitude_command_t * command, float scale, float reference_pitch);
+
+
+/**
+ * \brief	Compute velocity command from the manual input
+ * 
+ * \param	manual_control	Manual control structure (input)
+ * \param	command			Velocity command (output)
+ * \param   scale			Scale (maximum output / max remote input)
+ */
+void manual_control_get_velocity_command(const manual_control_t* manual_control, velocity_command_t * command, float scale);
+
+
+/**
  * \brief	Returns the value of the mode from the desired source input
  *
  * \param	manual_control			The pointer to the manual_control structure
@@ -157,5 +229,6 @@ mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control,
  * \return	The current status of the remote controller
  */
 signal_quality_t manual_control_get_signal_strength(manual_control_t* manual_control);
+
 
 #endif /* MANUAL_CONTROL_H_ */
