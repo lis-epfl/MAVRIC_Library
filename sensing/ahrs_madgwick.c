@@ -247,9 +247,9 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
 	q1 = 0.0f;
 	q2 = 0.0f;
 	q3 = 0.0f;
-	w_bx_ = ahrs_madgwick->imu->calib_gyro.bias[X]*ahrs_madgwick->imu->calib_gyro.scale_factor[X];
-	w_by_ = -ahrs_madgwick->imu->calib_gyro.bias[Y]*ahrs_madgwick->imu->calib_gyro.scale_factor[Y];
-	w_bz_ = -ahrs_madgwick->imu->calib_gyro.bias[Z]*ahrs_madgwick->imu->calib_gyro.scale_factor[Z];
+	w_bx_ = 0.0f;
+	w_by_ = 0.0f;
+	w_bz_ = 0.0f;
 
 	// Init ahrs structure
 	ahrs_madgwick->ahrs->qe.s = 1.0f;
