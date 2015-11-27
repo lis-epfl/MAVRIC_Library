@@ -44,14 +44,9 @@
 #ifndef MANUAL_CONTROL_TELEMETRY_H_
 #define MANUAL_CONTROL_TELEMETRY_H_
 
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "manual_control.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+#include "mavlink_stream.hpp"
+#include "mavlink_message_handler.hpp"
+#include "manual_control.hpp"
 
 /**
  * \brief	Initialise the manual_control telemetry module
@@ -73,10 +68,5 @@ bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_mes
  * \param	msg						The pointer to the MAVLink message
  */
 void manual_control_telemetry_send(const manual_control_t* manual_control, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* MANUAL_CONTROL_TELEMETRY_H_ */

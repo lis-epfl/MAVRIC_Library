@@ -41,12 +41,16 @@
  ******************************************************************************/
 
 
-#include "manual_control_telemetry.h"
-#include "manual_control.h"
-#include "remote_telemetry.h"
-#include "joystick_telemetry.h"
-#include "print_util.h"
-#include "time_keeper.h"
+#include "manual_control_telemetry.hpp"
+#include "manual_control.hpp"
+#include "remote_telemetry.hpp"
+#include "joystick_telemetry.hpp"
+
+extern "C"
+{
+	#include "print_util.h"
+	#include "time_keeper.h"
+}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -143,7 +147,7 @@ void manual_control_telemetry_send(const manual_control_t* manual_control, const
 													manual_control->remote.channels[5] * 10000.0f,
 													manual_control->remote.channels[6] * 10000.0f,
 													manual_control->remote.channels[7] * 10000.0f,
-													manual_control->remote.mode.current_desired_mode.byte );
+													manual_control->remote.mode.current_desired_mode );
 			mavlink_stream_send(mavlink_stream, msg);
 			mavlink_msg_rc_channels_scaled_pack(	mavlink_stream->sysid,
 													mavlink_stream->compid,

@@ -54,7 +54,7 @@
 #include "state_telemetry.hpp"
 #include "gps_telemetry.hpp"
 #include "imu_telemetry.hpp"
- 
+#include "manual_control_telemetry.hpp"
 #include "barometer_telemetry.hpp"
 #include "ahrs_telemetry.hpp"
 #include "position_estimation_telemetry.hpp"
@@ -142,6 +142,9 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 	&central_data->mavlink_communication.message_handler);
 
 	init_success &= joystick_telemetry_init(&central_data->manual_control.joystick,
+	&central_data->mavlink_communication.message_handler);
+
+	init_success &= manual_control_telemetry_init(&central_data->manual_control,
 	&central_data->mavlink_communication.message_handler);
 
 	init_success &= position_estimation_telemetry_init(	&central_data->position_estimation,
