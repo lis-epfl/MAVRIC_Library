@@ -47,12 +47,9 @@ extern "C"
 
 using namespace std;
 
-File_linux::File_linux(const char* path, bool open_now)
+File_linux::File_linux()
 {
-	if (open_now)
-	{
-		open(path);
-	}	
+	;
 }
 
 bool File_linux::open(const char* path)

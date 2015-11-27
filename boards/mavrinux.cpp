@@ -64,7 +64,7 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
 	adc_battery( Adc_dummy( 12.34f ) ),
 	battery( Battery(adc_battery) ),
 	spektrum_satellite( Spektrum_satellite(dsm_serial, dsm_receiver_pin, dsm_power_pin) ),
-	file_flash( "flash.bin", true)
+	file_flash()
 {}
 
 
@@ -148,6 +148,10 @@ bool Mavrinux::init(void)
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
 
+	// -------------------------------------------------------------------------
+	// Init file flash
+	// -------------------------------------------------------------------------
+	file_flash.open("flash.bin");
 
 	print_util_dbg_sep('-');
 	time_keeper_delay_ms(100); 
@@ -155,7 +159,6 @@ bool Mavrinux::init(void)
 	time_keeper_delay_ms(100);
 	print_util_dbg_sep('-');
 	time_keeper_delay_ms(100);
-	
 
 	return init_success;
 }

@@ -57,7 +57,7 @@ public:
 	/**
 	 * \brief 	Constructor 
 	 */
-    File_linux(const char* path, bool open_now);
+    File_linux();
 
 
 	/**
