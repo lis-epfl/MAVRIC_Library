@@ -53,7 +53,7 @@ static inline velocity_controller_copter_conf_t velocity_controller_copter_defau
 {
 	velocity_controller_copter_conf_t conf = {};
 
-	conf.thrust_hover_point 				   = -0.3;
+	conf.thrust_hover_point 				   = -0.3f;
 	// -----------------------------------------------------------------
 	// ------ X PID -------------------------------------------------
 	// -----------------------------------------------------------------
