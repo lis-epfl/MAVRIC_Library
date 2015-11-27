@@ -142,6 +142,49 @@ bool tasks_run_stabilisation(Central_data* central_data)
 	return true;
 }
 
+bool tasks_run_stabilisation_quaternion(Central_data* central_data);
+bool tasks_run_stabilisation_quaternion(Central_data* central_data)
+{
+	tasks_run_imu_update(central_data);
+	
+	mav_mode_t mode = central_data->state.mav_mode;
+
+	if( mav_modes_is_armed(mode) == false )
+	{
+		// Set command to current heading
+		central_data->command.attitude.rpy[2] = coord_conventions_quat_to_aero(central_data->ahrs.qe).rpy[2];
+		servos_set_value_failsafe( &central_data->servos );
+	}
+	else if( mav_modes_is_auto(mode) )
+	{
+		vector_field_waypoint_update( &central_data->vector_field_waypoint );
+		velocity_controller_copter_update( &central_data->velocity_controller );
+		attitude_controller_update( &central_data->attitude_controller );
+		servos_mix_quadcopter_diag_update( &central_data->servo_mix );
+	}
+	else if( mav_modes_is_manual(mode) && mav_modes_is_guided(mode) )
+	{
+		manual_control_get_velocity_command(&central_data->manual_control, &central_data->command.velocity, 1.0f);
+		velocity_controller_copter_update( &central_data->velocity_controller );
+		attitude_controller_update( &central_data->attitude_controller );
+		servos_mix_quadcopter_diag_update( &central_data->servo_mix );
+	}
+	else if( mav_modes_is_manual(mode) && mav_modes_is_stabilise(mode) )
+	{	
+		manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
+		manual_control_get_thrust_command(&central_data->manual_control, &central_data->command.thrust);
+		attitude_controller_update( &central_data->attitude_controller );
+			
+		servos_mix_quadcopter_diag_update( &central_data->servo_mix );
+	}
+	else
+	{
+		servos_set_value_failsafe( &central_data->servos );
+	}
+
+	return true;
+} 
+
 
 bool tasks_run_gps_update(Central_data* central_data) 
 {
@@ -169,17 +212,27 @@ bool tasks_run_sonar_update(Central_data* central_data)
 }
 
 
+#include <unistd.h>
+bool tasks_sleep(Central_data* central_data)
+{
+	usleep(3900);
+	return true;
+}
+
 bool tasks_create_tasks(Central_data* central_data) 
 {	
 	bool init_success = true;
 	
 	scheduler_t* scheduler = &central_data->scheduler;
 
-	init_success &= scheduler_add_task(scheduler, 4000,		RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation							, (task_argument_t)central_data 						, 0);
+	// init_success &= scheduler_add_task(scheduler, 4000,		RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation							, (task_argument_t)central_data 						, 0);
+	init_success &= scheduler_add_task(scheduler, 4000,		RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation_quaternion				, (task_argument_t)central_data 						, 0);
 
 	init_success &= scheduler_add_task(scheduler, 15000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&tasks_run_barometer_update                      , (task_argument_t)central_data						, 2);
 	init_success &= scheduler_add_task(scheduler, 100000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&tasks_run_gps_update                            , (task_argument_t)central_data						, 3);
-	init_success &= scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update								, (task_argument_t)&central_data->navigation			, 4);
+	
+	// init_success &= scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update								, (task_argument_t)&central_data->navigation			, 4);
+	init_success &= scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&vector_field_waypoint_update					, (task_argument_t)&central_data->vector_field_waypoint	, 4);
 	
 	init_success &= scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_update              				, (task_argument_t)&central_data->state_machine         , 5);
 
@@ -189,6 +242,8 @@ bool tasks_create_tasks(Central_data* central_data)
 	init_success &= scheduler_add_task(scheduler, 20000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&remote_update 									, (task_argument_t)&central_data->manual_control.remote	, 12);
 
 	init_success &= scheduler_add_task(scheduler, 500000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW	, (task_function_t)&tasks_run_sonar_update							, (task_argument_t)central_data							, 13);
+
+	init_success &= scheduler_add_task(scheduler, 4000,		RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST	, (task_function_t)&tasks_sleep										, (task_argument_t)central_data							, 14);
 	
 	scheduler_sort_tasks(scheduler);
 	

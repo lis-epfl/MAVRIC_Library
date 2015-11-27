@@ -67,10 +67,6 @@
 #include "manual_control.hpp"
 #include "battery.hpp"
 
-
-
-
-
 extern "C" 
 {
 	#include "time_keeper.h"
@@ -80,9 +76,14 @@ extern "C"
 	#include "coord_conventions.h"
 	#include "stabilisation.h"
 	#include "servos_mix_quadcopter_diag.h"
-
-
 }
+
+extern "C"
+{
+	#include "attitude_controller.h"
+}
+#include "velocity_controller_copter.hpp"
+#include "vector_field_waypoint.hpp"
 
 /**
  * \brief The central data structure
@@ -141,6 +142,11 @@ public:
 	state_machine_t state_machine;								///< The structure for the state machine
 		
 	hud_telemetry_structure_t hud_structure;					///< The HUD structure
+
+
+	attitude_controller_t 			attitude_controller;
+	velocity_controller_copter_t 	velocity_controller;
+	vector_field_waypoint_t 		vector_field_waypoint;
 
 private:
 	uint8_t sysid_;		///< System ID

@@ -47,6 +47,8 @@
 #include "position_estimation_default_config.hpp"
 #include "remote_default_config.hpp"
 #include "manual_control_default_config.hpp"
+#include "attitude_controller_default_config.h"
+#include "velocity_controller_copter_default_config.h"
 
 extern "C" 
 {
@@ -258,6 +260,39 @@ bool Central_data::init(void)
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
 
+
+	//--------------------------------------------------------------------------	
+	// Init attitude controller
+	//--------------------------------------------------------------------------	
+	attitude_controller_init( 	&attitude_controller,
+								attitude_controller_default_config(),
+								&ahrs,
+								&command.attitude,
+								&command.rate,
+								&command.torque );
+
+	//--------------------------------------------------------------------------	
+	// Init velocity controller
+	//--------------------------------------------------------------------------
+	velocity_controller_copter_conf_t velocity_controller_copter_config = velocity_controller_copter_default_config();
+	velocity_controller_copter_config.thrust_hover_point = -0.8f;
+	velocity_controller_copter_init( 	&velocity_controller,
+										velocity_controller_copter_config,
+										&ahrs,
+										&position_estimation,
+										&command.velocity,
+										&command.attitude,
+										&command.thrust );
+
+	//--------------------------------------------------------------------------	
+	// Init vector field navigation
+	//--------------------------------------------------------------------------	
+	vector_field_waypoint_conf_t vector_field_config;
+	vector_field_waypoint_init( &vector_field_waypoint,
+								&vector_field_config,
+								&waypoint_handler,
+								&position_estimation,
+								&command.velocity );
 
 	print_util_dbg_sep('-');
 	time_keeper_delay_ms(100); 
