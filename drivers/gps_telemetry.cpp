@@ -64,7 +64,7 @@ void gps_telemetry_send_raw(const Gps* gps, const mavlink_stream_t* mavlink_stre
 									global_position.longitude * 10000000.0f,
 									global_position.altitude  * 1000.0f,
 									gps->horizontal_position_accuracy() * 100.0f,
-									gps->horizontal_position_accuracy() * 100.0f,
+									gps->vertical_position_accuracy() * 100.0f,
 									ground_speed * 100.0f,
 									gps->heading() * 100.0f,
 									gps->num_sats()	);
