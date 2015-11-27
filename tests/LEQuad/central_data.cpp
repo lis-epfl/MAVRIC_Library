@@ -275,7 +275,6 @@ bool Central_data::init(void)
 	// Init velocity controller
 	//--------------------------------------------------------------------------
 	velocity_controller_copter_conf_t velocity_controller_copter_config = velocity_controller_copter_default_config();
-	velocity_controller_copter_config.thrust_hover_point = -0.8f;
 	velocity_controller_copter_init( 	&velocity_controller,
 										velocity_controller_copter_config,
 										&ahrs,
