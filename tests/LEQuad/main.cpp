@@ -43,6 +43,7 @@
 #include "mavlink_telemetry.hpp"
 #include "tasks.hpp"
 #include "data_logging.hpp"
+#include "console.hpp"
 
 extern "C" 
 {
@@ -102,7 +103,7 @@ int main (void)
 	// -------------------------------------------------------------------------
 	// Create central data
 	// -------------------------------------------------------------------------
-	// Create central data using real sensors
+	// Create central data using emulated sensors
 	Central_data cd = Central_data( board.imu, 
 									board.sim.barometer(),
 									board.sim.gps(), 
@@ -113,10 +114,10 @@ int main (void)
 									board.battery,
 									board.servos );
 
-	File_linux file_log("", false);
+	File_linux file_log;
 	Console<File> console(file_log);
 
-	File_linux file_stat("", false);
+	File_linux file_stat;
 	Console<File> console_stat(file_stat);
 
 	initialisation(cd, board, console, console_stat);
