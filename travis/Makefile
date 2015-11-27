@@ -40,7 +40,6 @@ LIB_SRCS += util/print_util.c
 LIB_SRCS += util/quick_trig.c
 LIB_SRCS += util/string_util.c
 
-# LIB_SRCS += boards/megafly_rev4.cpp
 LIB_SRCS += boards/mavrinux.cpp
 
 LIB_SRCS += tests/LEQuad/main.cpp
@@ -87,12 +86,6 @@ LIB_SRCS += sensing/imu_telemetry.c
 LIB_SRCS += sensing/position_estimation.c            
 LIB_SRCS += sensing/position_estimation_telemetry.c
 LIB_SRCS += sensing/qfilter.c
-
-
-# LIB_SRCS += sensing/simulation.c
-# LIB_SRCS += sensing/simulation_telemetry.c   
-
-
 
 LIB_SRCS += runtime/scheduler.cpp  
 LIB_SRCS += runtime/scheduler_telemetry.c
@@ -175,9 +168,6 @@ CXXFLAGS += ${LIB_INC}
 LDFLAGS += -I.
 LDFLAGS += ${LIB_INC}
 LDFLAGS += ${SRCS_INC}
-
-# LINKER = g++
-# SIZER = size
 
 ################################################################################
 # Normally you shouldn't need to change anything below this line!
