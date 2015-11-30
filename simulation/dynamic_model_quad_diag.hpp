@@ -45,12 +45,12 @@
 
 
 #include "dynamic_model.hpp"
+#include "servo.hpp"
+#include "servos_mix_quadcopter_diag_default_config.hpp"
 
 extern "C"
 {
-	#include "servos.h"
 	#include "constants.h"
-	#include "servos_mix_quadcopter_diag_default_config.h"
 }
 
 
@@ -85,7 +85,8 @@ typedef struct
 	float gravity;						///< Gravity value used for the simulated forces
 	float air_density;					///< Air density in kg/m3
 
-	servos_mix_quadcopter_diag_conf_t servos_mix_config;	///< Configuration of servos
+	servos_mix_quadcopter_diag_conf_t  servos_mix_config;
+
 } dynamic_model_quad_diag_conf_t;
 
 
@@ -106,10 +107,17 @@ public:
 	/**
 	 * @brief 	Constructor
 	 * 
-	 * \param 	servos 	Reference to servos
-	 * \param 	config	Configuration 	 
+	 * \param 	servo_front_right	Reference to front right servo
+	 * \param   servo_front_left	Reference to front left servo
+	 * \param   servo_rear_right	Reference to rear right servo
+	 * \param   servo_rear_left		Reference to rear left servo, 
+	 * \param 	config				Configuration 	 
 	 */
-	Dynamic_model_quad_diag( servos_t& servos, dynamic_model_quad_diag_conf_t config = dynamic_model_quad_diag_default_config() );
+	Dynamic_model_quad_diag( 	Servo& servo_front_right,
+								Servo& servo_front_left,
+								Servo& servo_rear_right,
+								Servo& servo_rear_left,
+								dynamic_model_quad_diag_conf_t config = dynamic_model_quad_diag_default_config() );
 
 
 	/**
@@ -177,7 +185,10 @@ public:
 	const quat_t& attitude(void) const;
 
 private:
-	servos_t& servos_;						///< Reference to servos
+	Servo& servo_front_right_;				///< Reference to front right servo
+	Servo& servo_front_left_;				///< Reference to front left servo
+	Servo& servo_rear_right_;				///< Reference to rear right servo
+	Servo& servo_rear_left_;				///< Reference to rear left servo
 
 	dynamic_model_quad_diag_conf_t config_;	///< Configuration
 
@@ -246,7 +257,7 @@ static inline dynamic_model_quad_diag_conf_t dynamic_model_quad_diag_default_con
 	conf.home_coordinates[Y] 	= 6.566044801857777f;	///< Longitude of the simulation home waypoint
 	conf.home_coordinates[Z] 	= 400.0f;				///< Altitude of the simulation home waypoint
 	
-	conf.servos_mix_config 		= servos_mix_quadcopter_diag_default_config();
+	conf.servos_mix_config = servos_mix_quadcopter_diag_default_config();
 
 	return conf;
 }

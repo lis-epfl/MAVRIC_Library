@@ -66,7 +66,7 @@
 #include "state.hpp"
 #include "manual_control.hpp"
 #include "battery.hpp"
-#include "pwm_servos.hpp"
+#include "servos_mix_quadcopter_diag.hpp"
 
 extern "C" 
 {
@@ -76,7 +76,6 @@ extern "C"
 	#include "print_util.h"
 	#include "coord_conventions.h"
 	#include "stabilisation.h"
-	#include "servos_mix_quadcopter_diag.h"
 }
 
 extern "C"
@@ -95,7 +94,7 @@ public:
 	/**
 	 * \brief   Constructor
 	 */
-	Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, servos_t& servos, Pwm_servos& pwm_servos);
+	Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3);
 
 
 	/**
@@ -116,8 +115,10 @@ public:
 	Satellite&		satellite;			///< Reference to remote control satellite
 	File& 			file_flash;			///< Reference to flash storage
 	Battery& 		battery;			///< Reference to battery
-	servos_t& 		servos;				///< Reference to servos structure
-	Pwm_servos& 	pwm_servos;			///< Reference to pwm servos structure
+	Servo&	 		servo_0;			///< Reference to servos structure
+	Servo&	 		servo_1;			///< Reference to servos structure
+	Servo&	 		servo_2;			///< Reference to servos structure
+	Servo&	 		servo_3;			///< Reference to servos structure
 
 	scheduler_t	scheduler;
 	mavlink_communication_t mavlink_communication;

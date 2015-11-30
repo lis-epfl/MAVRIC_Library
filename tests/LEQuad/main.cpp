@@ -87,8 +87,10 @@ int main(int argc, char** argv)
 									board.spektrum_satellite,
 									board.file_flash,
 									board.battery,
-									board.servos,
-									board.pwm_servos );
+									board.servo_0,
+									board.servo_1,
+									board.servo_2,
+									board.servo_3 );
 
 
 	// -------------------------------------------------------------------------

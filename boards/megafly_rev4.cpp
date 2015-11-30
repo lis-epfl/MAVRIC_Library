@@ -39,7 +39,6 @@
  ******************************************************************************/
 
 #include "megafly_rev4.hpp"
-#include "pwm_servos_avr32.hpp"	
 
 extern "C"
 {
@@ -57,9 +56,6 @@ extern "C"
 	#include "analog_monitor_default_config.h"
 
 	#include "piezo_speaker.h"
-
-	#include "servos.h"
-	#include "servos_default_config.h"
 }
 
 
@@ -89,7 +85,22 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 	sonar_i2cxl( Sonar_i2cxl(i2c1) ),
 	adc_battery( Adc_avr32( analog_monitor, {ANALOG_RAIL_10} )),
 	battery( Battery(adc_battery)),
-	pwm_servos()
+	pwm_0(0),
+	pwm_1(1),
+	pwm_2(2),
+	pwm_3(3),
+	pwm_4(4),
+	pwm_5(5),
+	pwm_6(6),
+	pwm_7(7),
+	servo_0(pwm_0, config.servo_config[0]),
+	servo_1(pwm_1, config.servo_config[1]),
+	servo_2(pwm_2, config.servo_config[2]),
+	servo_3(pwm_3, config.servo_config[3]),
+	servo_4(pwm_4, config.servo_config[4]),
+	servo_5(pwm_5, config.servo_config[5]),
+	servo_6(pwm_6, config.servo_config[6]),
+	servo_7(pwm_7, config.servo_config[7])
 {}
 
 
@@ -199,18 +210,49 @@ bool Megafly_rev4::init(void)
 
 	
 	// -------------------------------------------------------------------------
-	// Init servos
+	// Init pwm
 	// -------------------------------------------------------------------------
-	ret = servos_init( &servos, servos_default_config() );
-	print_util_dbg_init_msg("[SERVOS]", ret);
+	ret = pwm_0.init();
+	print_util_dbg_init_msg("[PWM0]", ret);
 	init_success &= ret;
-	if( ret )
-	{
-		servos_set_value_failsafe( &servos );
-		pwm_servos.pwm_servos_write_to_hardware( &servos );	
-	}
+	servo_0.failsafe();
 	time_keeper_delay_ms(100); 
-	
+	ret = pwm_1.init();
+	print_util_dbg_init_msg("[PWM1]", ret);
+	init_success &= ret;
+	servo_1.failsafe();
+	time_keeper_delay_ms(100); 
+	ret = pwm_2.init();
+	print_util_dbg_init_msg("[PWM2]", ret);
+	init_success &= ret;
+	servo_2.failsafe();
+	time_keeper_delay_ms(100); 
+	ret = pwm_3.init();
+	print_util_dbg_init_msg("[PWM3]", ret);
+	init_success &= ret;
+	servo_3.failsafe();
+	time_keeper_delay_ms(100); 
+	ret = pwm_4.init();
+	print_util_dbg_init_msg("[PWM4]", ret);
+	init_success &= ret;
+	servo_4.failsafe();
+	time_keeper_delay_ms(100); 
+	ret = pwm_5.init();
+	print_util_dbg_init_msg("[PWM5]", ret);
+	init_success &= ret;
+	servo_5.failsafe();
+	time_keeper_delay_ms(100); 
+	ret = pwm_6.init();
+	print_util_dbg_init_msg("[PWM6]", ret);
+	init_success &= ret;
+	servo_6.failsafe();
+	time_keeper_delay_ms(100); 
+	ret = pwm_7.init();
+	print_util_dbg_init_msg("[PWM7]", ret);
+	init_success &= ret;
+	servo_7.failsafe();
+	time_keeper_delay_ms(100); 
+		
 
 	Enable_global_interrupt();
 	
@@ -293,9 +335,6 @@ bool Megafly_rev4::boardsupport_init(void)
 	// Switch on the red LED
 	LED_On(LED2);
 
-	// servo_pwm_hardware_init();
-	init_success &= pwm_servos.pwm_servos_init( true );
-	
 	// Init analog rails
 	analog_monitor_init(&analog_monitor, analog_monitor_default_config());
 

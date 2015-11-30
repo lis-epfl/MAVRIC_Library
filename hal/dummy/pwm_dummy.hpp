@@ -30,9 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file pwm_servos_dummy.cpp
+ * \file pwm_dummy.hpp
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Julien Lecoeur
  * \author Nicolas Dousse
  * 
  * \brief This file is the driver for pwm servos dummy
@@ -40,33 +42,50 @@
  ******************************************************************************/
 
 
-#include "pwm_servos_dummy.hpp"
+#ifndef PWM_DUMMY_H_
+#define PWM_DUMMY_H_
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
+#include "pwm.hpp"
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
 
-Pwm_servos_dummy::Pwm_servos_dummy()
+class Pwm_dummy: public Pwm
 {
-	;
-}
+public:	
+	/**
+	 * \brief	Initialize the hardware line for servos
+	 * 
+	 * \return 	Success
+	 */
+	bool init(void)
+	{
+		return true;
+	};
 
-bool Pwm_servos_dummy::pwm_servos_init(bool use_servos_7_8_param)
-{
-	return true;
-}
+
+	/**
+	 * \brief	Set pulse width
+	 * 
+	 * \param  pulse_us 	Pulse length in us
+	 * 
+	 * \return Success
+	 */
+	bool set_pulse_width_us(uint16_t pulse_us)
+	{
+		return true;
+	};
 
 
-void Pwm_servos_dummy::pwm_servos_write_to_hardware(const servos_t* servos)
-{
-	;
-}
+	/**
+	 * \brief	Set pulse period 
+	 *
+	 * \param 	period_us	Pulse period in us
+	 * 
+	 * \return 	Success
+	 */
+	bool set_period_us(uint16_t period_us)
+	{
+		return true;
+	};
+};
 
-void Pwm_servos_dummy::pwm_servos_calibrate_esc(const servos_t* servos)
-{
-	;
-}
+#endif /* PWM_DUMMY_H_ */

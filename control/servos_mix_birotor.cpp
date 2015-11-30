@@ -41,23 +41,21 @@
  ******************************************************************************/
 
 
-#include "servos_mix_birotor.h"
+#include "servos_mix_birotor.hpp"
 
 
-bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command,  servos_t* servos, daler_dc_motor_ctrl_t* dc_motors)
+bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command,  Servo* motor_left, Servo* motor_right, Servo* servo_left, Servo* servo_right, daler_dc_motor_ctrl_t* dc_motors)
 {
 	// Init dependencies
 	mix->torque_command = torque_command;
 	mix->thrust_command = thrust_command;
-	mix->servos      	= servos;
+	mix->motor_left		= motor_left;
+	mix->motor_right	= motor_right;
+	mix->servo_left		= servo_left;
+	mix->servo_right	= servo_right;
 	mix->dc_motors      = dc_motors;
 
 	// Init parameters
-	mix->motor_left			= config->motor_left;
-	mix->motor_right		= config->motor_right;
-	mix->servo_left			= config->servo_left;
-	mix->servo_right		= config->servo_right;
-
 	mix->motor_left_dir		= config->motor_left_dir;
 	mix->motor_right_dir	= config->motor_right_dir;
 	mix->servo_left_dir		= config->servo_left_dir;	
@@ -124,17 +122,13 @@ bool servos_mix_birotor_update(servo_mix_birotor_t* mix)
 			motor[i] = mix->max_servo;
 		}
 	}
+	*/
 	
-	servos_set_value(mix->servos, mix->motor_left	,	motor[0]);
-	servos_set_value(mix->servos, mix->motor_right 	,	motor[1]);
-	servos_set_value(mix->servos, mix->servo_left	,	motor[2]);
-	servos_set_value(mix->servos, mix->servo_right	,   motor[3]);*/
-	servos_set_value(mix->servos, 0		,	motor[0]);
-	servos_set_value(mix->servos, 1 	,	motor[1]);
-	servos_set_value(mix->servos, 2		,	motor[2]);
-	servos_set_value(mix->servos, 3		,   motor[3]);
+	mix->motor_left->write(motor[0]);
+	mix->motor_right->write(motor[1]);
+	mix->servo_left->write(motor[2]);
+	mix->servo_right->write(motor[3]);
 	
-
 	mix->dc_motors->wingrons_angle[0] =  motor[2];
 	mix->dc_motors->wingrons_angle[1] =  motor[3];
 	

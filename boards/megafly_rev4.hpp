@@ -56,13 +56,13 @@
 #include "sonar_i2cxl.hpp"
 #include "adc_avr32.hpp"
 #include "battery.hpp"
-#include "Pwm_servos_avr32.hpp"
+#include "pwm_avr32.hpp"
+#include "servo.hpp"
 
 extern "C"
 {
 	#include "twim_default_config.h"
 	#include "streams.h"
-	#include "servos.h"
 	#include "analog_monitor.h"
 }
 
@@ -81,6 +81,7 @@ typedef struct
 	i2c_avr32_conf_t 		i2c0_config;
 	i2c_avr32_conf_t 		i2c1_config;
 	imu_conf_t				imu_config;
+	servo_conf_t			servo_config[8];
 } megafly_rev4_conf_t;
 
 
@@ -136,8 +137,24 @@ public:
 	analog_monitor_t	analog_monitor;
 	Adc_avr32			adc_battery;
 	Battery 			battery;
-	servos_t			servos;
-	Pwm_servos_avr32	pwm_servos;
+	// Pwm_avr32			pwm[8];
+	Pwm_avr32			pwm_0;
+	Pwm_avr32			pwm_1;
+	Pwm_avr32			pwm_2;
+	Pwm_avr32			pwm_3;
+	Pwm_avr32			pwm_4;
+	Pwm_avr32			pwm_5;
+	Pwm_avr32			pwm_6;
+	Pwm_avr32			pwm_7;
+	// Servo				servo[8];
+	Servo				servo_0;
+	Servo				servo_1;
+	Servo				servo_2;
+	Servo				servo_3;
+	Servo				servo_4;
+	Servo				servo_5;
+	Servo				servo_6;
+	Servo				servo_7;
 
 private:
 	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
@@ -316,6 +333,20 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 	conf.imu_config.magnetometer.axis[0] = 2;		///< Should be 0, 1, or 2
 	conf.imu_config.magnetometer.axis[1] = 0;
 	conf.imu_config.magnetometer.axis[2] = 1;
+
+
+
+	// -------------------------------------------------------------------------
+	// Servo config
+	// -------------------------------------------------------------------------
+	conf.servo_config[0] = servo_default_config_esc();
+	conf.servo_config[1] = servo_default_config_esc();
+	conf.servo_config[2] = servo_default_config_esc();
+	conf.servo_config[3] = servo_default_config_esc();
+	conf.servo_config[4] = servo_default_config_esc();
+	conf.servo_config[5] = servo_default_config_esc();
+	conf.servo_config[6] = servo_default_config_esc();
+	conf.servo_config[7] = servo_default_config_esc();
 
 	return conf;
 }

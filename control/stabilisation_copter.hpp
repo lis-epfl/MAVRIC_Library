@@ -50,7 +50,6 @@
 extern "C" 
 {
 	#include "stabilisation.h"
-	#include "servos.h"
 	#include "control_command.h"
 }
 

@@ -49,6 +49,7 @@
 #include "manual_control_default_config.hpp"
 #include "attitude_controller_default_config.h"
 #include "velocity_controller_copter_default_config.h"
+#include "servos_mix_quadcopter_diag_default_config.hpp"
 
 extern "C" 
 {
@@ -56,13 +57,12 @@ extern "C"
 	#include "navigation_default_config.h"
 	#include "qfilter_default_config.h"
 	#include "scheduler_default_config.h"
-	#include "servos_mix_quadcopter_diag_default_config.h"
 
 	#include "print_util.h"
 }
 
 
-Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, servos_t& servos, Pwm_servos& pwm_servos):
+Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3):
 	imu( imu ),
 	barometer( barometer ),
 	gps( gps ),
@@ -71,8 +71,10 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
 	satellite( satellite ),
 	file_flash( file_flash ),
 	battery( battery ),
-	servos( servos ),
-	pwm_servos(pwm_servos),
+	servo_0( servo_0 ),
+	servo_1( servo_1 ),
+	servo_2( servo_2 ),
+	servo_3( servo_3 ),
 	state( battery, state_default_config() ),
 	sysid_( sysid )
 {}
@@ -244,7 +246,10 @@ bool Central_data::init(void)
 											servos_mix_quadcopter_diag_default_config(),
 											&command.torque,
 											&command.thrust,
-											&servos);
+											&servo_0,
+											&servo_1,
+											&servo_2,
+											&servo_3);
 	print_util_dbg_init_msg("[SERVOS MIX]", ret);
 	init_success &= ret;
 	time_keeper_delay_ms(100); 

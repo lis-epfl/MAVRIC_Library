@@ -30,56 +30,101 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file pwm_servos.hpp
+ * \file servo.cpp
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
  * \author Julien Lecoeur
- * \author Nicolas Dousse
+ *   
+ * \brief Driver for servomotors using PWM
  * 
- * \brief Abstract class for PWM 
- *
  ******************************************************************************/
 
 
-#ifndef PWM_SERVOS_H_
-#define PWM_SERVOS_H_
+#include "servo.hpp"
 
 extern "C"
 {
-	#include <stdint.h>
-	#include <stdbool.h>
-	#include "servos.h"
+	#include "time_keeper.h"
 }
 
-class Pwm_servos
+
+Servo::Servo(Pwm& pwm, const servo_conf_t config):
+	pwm_(pwm),
+	config_(config),
+	value_(config.failsafe)
 {
-public:
-
-	/**
-	 * \brief						Initialize the hardware line for servos
-	 *
-	 * \param use_servos_7_8_param	Definition if the line for servos 7 and 8 is used
-	 */
-	virtual bool pwm_servos_init(bool use_servos_7_8_param) = 0;
+	pwm_.set_period_us( 1000000.0f / config_.repeat_freq );
+	failsafe(true);
+}
 
 
-	/**
-	 * \brief						Set servos' values
-	 *
-	 * \param servos				Pointer to a structure containing the servos' data
-	 */
-	virtual void pwm_servos_write_to_hardware(const servos_t* servos) = 0;
+float Servo::read(void) const
+{
+	return value_;
+}
 
 
-	/**
-	 * \brief						Set speed controller set points 
-	 *
-	 * \param servos				Pointer to a structure containing the servos' data
-	 */
-	virtual void pwm_servos_calibrate_esc(const servos_t* servos) = 0;
+bool Servo::write(float value, bool to_hardware)
+{
+	bool success = false;
 
-};
+	float trimmed_value = value + config_.trim;
+
+	if( trimmed_value < config_.min )
+	{
+		value_ = config_.min;
+	}
+	else if( trimmed_value > config_.max )
+	{
+		value_ = config_.max;
+	}
+	else
+	{
+		value_ = trimmed_value;
+		success 	 = true;
+	}
+
+	if( to_hardware == true)
+	{
+		success &= write_to_hardware();
+	}
+
+	return success;
+}
 
 
-#endif /* PWM_SERVOS_H_ */
+bool Servo::failsafe(bool to_hardware)
+{
+	bool success = true;
+
+	value_ = config_.failsafe;
+
+	if( to_hardware == true )
+	{
+		success &= write_to_hardware();
+	}
+
+	return success;
+}
+
+
+bool Servo::write_to_hardware(void)
+{
+	bool success = true;
+
+	// Compute pulse length
+	uint16_t pulse_us = ( config_.pulse_magnitude_us * value_ ) + config_.pulse_center_us;
+	
+	// Write to pwm line
+	success &= pwm_.set_pulse_width_us(pulse_us);
+
+	return success;
+}
+
+
+void Servo::calibrate_esc(void)
+{
+	write( config_.max, true );
+	time_keeper_delay_ms(2000);
+	failsafe( true );
+}

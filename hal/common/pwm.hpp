@@ -30,85 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos.c
+ * \file pwm.hpp
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
  * \author Julien Lecoeur
- *   
- * \brief Abstraction layer for servomotors. This module does not write to 
- * hardware, it just holds data and configuration for servos.
+ * \author Nicolas Dousse
  * 
+ * \brief Abstract class for PWM 
+ *
  ******************************************************************************/
 
 
-#include "servos.h"
-#include "print_util.h"
+#ifndef PWM_HPP_
+#define PWM_HPP_
 
-bool servos_init(servos_t* servos, const servos_conf_t config)
+#include <stdbool.h>
+
+class Pwm
 {
-	bool init_success = true;
-	
-	// Init servo array
-	if ( config.servos_count <= MAX_SERVO_COUNT )
-	{
-		servos->servos_count = config.servos_count;
-	
-		for (int i = 0; i < servos->servos_count; ++i)
-		{
-			// Set default parameters for each type of servo
-			servos->servo[i] = config.servo[i];
-
-			// Set default value to failsafe
-			servos->servo[i].value = servos->servo[i].failsafe;
-		}
-		
-		init_success &= true;
-	}
-	else
-	{
-		servos->servos_count = 0;
-		print_util_dbg_print("[SERVOS] ERROR! Too many servos\r\n");
-		
-		init_success &= false;
-	}
-	
-	return init_success;
-}
+public:
+	/**
+	 * \brief	Initialize the hardware line for servos
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool init(void) = 0;
 
 
-void servos_set_value(servos_t* servos, uint32_t servo_id, float value)
-{
-	if ( servo_id <= servos->servos_count )
-	{
-		servo_entry_t* servo = &servos->servo[servo_id];
+	/**
+	 * \brief	Set pulse width
+	 * 
+	 * \param  pulse_us 	Pulse length in us
+	 * 
+	 * \return Success
+	 */
+	virtual bool set_pulse_width_us(uint16_t pulse_us) = 0;
 
-		servo_set_value(servo, value);
-	}
-}
+
+	/**
+	 * \brief	Set pulse period 
+	 *
+	 * \param 	period_us	Pulse period in us
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool set_period_us(uint16_t period_us) = 0;
+};
 
 
-void servo_set_value(servo_entry_t* servo, float value)
-{
-	float trimmed_value = value + servo->trim;
-
-	if ( trimmed_value < servo->min )
-	{
-		servo->value = servo->min;
-	}
-	else if ( trimmed_value > servo->max )
-	{
-		servo->value = servo->max;
-	}
-	else
-	{
-		servo->value = trimmed_value;
-	}
-}
-
-void servos_set_value_failsafe(servos_t* servos)
-{
-	for (int i = 0; i < servos->servos_count; ++i)
-	{
-		servos->servo[i].value = servos->servo[i].failsafe;
-	}
-}
+#endif /* PWM_HPP_ */

@@ -30,48 +30,80 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_default_config.h
+ * \file pwm_avr32.hpp
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
- *   
- * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
+ * \author Felix Schill
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
+ * 
+ * \brief 	This file is the driver for pwm servos
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
+#ifndef PWM_SERVOS_AVR32_H_
+#define PWM_SERVOS_AVR32_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdbool.h>
+#include <stdint.h>
 
-
-#include "servos_mix_quadcopter_diag.h"
+#include "pwm.hpp"
 
 
-static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
+class Pwm_avr32: public Pwm
 {
-	servos_mix_quadcopter_diag_conf_t conf 	= {};
-	
-	conf.motor_front_right					= 2;
-	conf.motor_front_left					= 1;
-	conf.motor_rear_right					= 3;
-	conf.motor_rear_left					= 0;
-	conf.motor_front_right_dir				= CW;
-	conf.motor_front_left_dir				= CCW;
-	conf.motor_rear_right_dir				= CCW;
-	conf.motor_rear_left_dir				= CW;
-	conf.min_thrust							= -0.9f;
-	conf.max_thrust							= 1.0f;
+public:
+	/**
+	 * \brief Constructor
+	 * 
+	 * \param Servo number (between 0 and 7)
+	 */
+	Pwm_avr32(uint8_t id);
 
-	return conf;
+
+	/**
+	 * \brief	Initialize the hardware line for servos
+	 * 
+	 * \return 	Success
+	 */
+	bool init(void);
+
+
+	/**
+	 * \brief	Set pulse width
+	 * 
+	 * \param  pulse_us 	Pulse length in us
+	 * 
+	 * \return Success
+	 */
+	bool set_pulse_width_us(uint16_t pulse_us);
+
+
+	/**
+	 * \brief	Set pulse period 
+	 *
+	 * \param 	period_us	Pulse period in us
+	 * 
+	 * \return 	Success
+	 */
+	bool set_period_us(uint16_t period_us);
+
+
+private:
+	/**
+	 * \brief	Output a PWM on one channel
+	 */
+	void write_channel(void);
+
+
+	uint8_t id_;			///< PWM line number
+	uint8_t channel_id_;	///< PWM channel number
+
+	// this is static because each channel controls 2 pwm lines and is thus
+	// shared by two objects 
+	static uint32_t pulse_us_[8];
+	static uint32_t period_us_[8];								
 };
 
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
+#endif /* PWM_AVR32_H_ */

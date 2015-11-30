@@ -58,12 +58,12 @@
 
 #include "adc_dummy.hpp"
 #include "battery.hpp"
-#include "pwm_servos_dummy.hpp"
+#include "pwm_dummy.hpp"
+#include "servo.hpp"
 
 extern "C"
 {
 	#include "streams.h"
-	#include "servos.h"
 }
 
 
@@ -112,10 +112,17 @@ public:
 	/**
 	 * Public Members
 	 */
-	servos_t					servos;
-	Dynamic_model_quad_diag		dynamic_model;
-	Simulation					sim;
-	Imu 						imu;
+	Pwm_dummy	pwm_0;
+	Pwm_dummy	pwm_1;
+	Pwm_dummy	pwm_2;
+	Pwm_dummy	pwm_3;
+	Servo		servo_0;
+	Servo		servo_1;
+	Servo		servo_2;
+	Servo		servo_3;
+	Dynamic_model_quad_diag	dynamic_model;
+	Simulation				sim;
+	Imu 					imu;
 
 	Adc_dummy 			adc_battery;
 	Battery 			battery;
@@ -129,7 +136,6 @@ public:
 	Serial_linux_io 	debug_serial;
 
 	File_linux 			file_flash;
-	Pwm_servos_dummy	pwm_servos;
 
 private:
 	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove

@@ -44,9 +44,6 @@ extern "C"
 {
 	#include "print_util.h"
 	#include "time_keeper.h"
-
-	#include "servos.h"
-	#include "servos_default_config.h"
 }
 
 
@@ -58,15 +55,18 @@ uint8_t serial2stream( stream_data_t data, uint8_t byte )
 }
 
 Mavrinux::Mavrinux(mavrinux_conf_t config):
-	dynamic_model( Dynamic_model_quad_diag(servos) ),
+	servo_0(pwm_0, servo_default_config_esc()),
+	servo_1(pwm_1, servo_default_config_esc()),
+	servo_2(pwm_2, servo_default_config_esc()),
+	servo_3(pwm_3, servo_default_config_esc()),
+	dynamic_model( Dynamic_model_quad_diag(servo_0, servo_1, servo_2, servo_3) ),
 	sim( Simulation(dynamic_model) ),
 	imu( Imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer(), config.imu_config) ),
 	adc_battery( Adc_dummy( 12.34f ) ),
 	battery( Battery(adc_battery) ),
 	spektrum_satellite( Spektrum_satellite(dsm_serial, dsm_receiver_pin, dsm_power_pin) ),
 	mavlink_serial( config.serial_udp_config ),
-	file_flash( config.flash_filename.c_str() ),
-	pwm_servos()
+	file_flash( config.flash_filename.c_str() )
 {}
 
 
@@ -127,20 +127,7 @@ bool Mavrinux::init(void)
 	print_util_dbg_init_msg("[UDP]", ret);
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
-	
-	
-	// -------------------------------------------------------------------------
-	// Init servos
-	// -------------------------------------------------------------------------
-	ret = servos_init( &servos, servos_default_config() );
-	print_util_dbg_init_msg("[SERVOS]", ret);
-	init_success &= ret;
-	if( ret )
-	{
-		servos_set_value_failsafe( &servos );
-	}
-	time_keeper_delay_ms(100); 
-	
+		
 
 	// -------------------------------------------------------------------------
 	// Init spektrum_satelitte

@@ -30,74 +30,35 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file pwm_servos_avr32.hpp
+ * \file servos_mix_quadcopter_default_config.hpp
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
- * \author Julien Lecoeur
- * \author Nicolas Dousse
- * 
- * \brief This file is the driver for pwm servos
+ * \author Gregoire Heitz
+ *   
+ * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
  *
  ******************************************************************************/
 
 
-#ifndef PWM_SERVOS_AVR32_H_
-#define PWM_SERVOS_AVR32_H_
+#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
+#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
 
-#include "pwm_servos.hpp"
+#include "servos_mix_quadcopter_diag.hpp"
 
-extern "C"
+
+static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
 {
-	#include <stdint.h>
-	#include <stdbool.h>
-	#include "servos.h"
-}
+	servos_mix_quadcopter_diag_conf_t conf 	= {};
+	
+	conf.motor_front_right_dir				= CW;
+	conf.motor_front_left_dir				= CCW;
+	conf.motor_rear_right_dir				= CCW;
+	conf.motor_rear_left_dir				= CW;
+	conf.min_thrust							= -0.9f;
+	conf.max_thrust							= 1.0f;
 
-class Pwm_servos_avr32: public Pwm_servos
-{
-public:
-
-	Pwm_servos_avr32();
-
-	/**
-	 * \brief						Initialize the hardware line for servos
-	 *
-	 * \param use_servos_7_8_param	Definition if the line for servos 7 and 8 is used
-	 */
-	bool pwm_servos_init(bool use_servos_7_8_param);
-
-
-	/**
-	 * \brief						Set servos' values
-	 *
-	 * \param servos				Pointer to a structure containing the servos' data
-	 */
-	void pwm_servos_write_to_hardware(const servos_t* servos);
-
-
-	/**
-	 * \brief						Set speed controller set points 
-	 *
-	 * \param servos				Pointer to a structure containing the servos' data
-	 */
-	void pwm_servos_calibrate_esc(const servos_t* servos);
-
-private:
-
-	/**
-	 * \brief	Output a PWM on one channel
-	 *
-	 * \param	channel			Corresponding channel
-	 * \param	pulse_us_a		Pulse a in micro sec
-	 * \param	pulse_us_b		Pulse b in micro sec
-	 * \param	frequency		Frequency in Hz
-	 */
-	void write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uint16_t frequency);
-
-	bool use_servos_7_8;
-
-
+	return conf;
 };
 
-#endif /* PWM_SERVOS_AVR32_H_ */
+
+#endif /* SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_ */
