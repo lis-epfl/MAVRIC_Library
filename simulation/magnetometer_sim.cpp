@@ -69,14 +69,15 @@ bool Magnetometer_sim::update(void)
 	success &= dynamic_model_.update();
 
 	// Field pointing 60 degrees down to the north (NED)
-	const float mag_field_gf[3] 	= { 0.5f, 0.0f, 0.86f };	
+	const float mag_field_lf[3] 	= { 0.5f, 0.0f, 0.86f };	
 	float mag_field_bf[3];
 
 	// Get current attitude
 	quat_t attitude = dynamic_model_.attitude();
 
 	// Get magnetic field in body frame
-	quaternions_rotate_vector( quaternions_inverse(attitude), mag_field_gf, mag_field_bf);
+	quaternions_rotate_vector( quaternions_inverse(attitude), mag_field_lf, mag_field_bf);
+	// quaternions_rotate_vector( attitude, mag_field_lf, mag_field_bf);
 
 	// Save in member array
 	mag_field_[X] = mag_field_bf[X];
