@@ -82,44 +82,30 @@ bool Pwm_avr32::init(void)
 	}
 
 	// Unlock registers
-	// if(channel_id_ == 0 )
-	// {
-	// 	AVR32_PWM.wpcr =  	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY ) 	|
-	// 						( AVR32_PWM_WPCR_WPRG0_MASK )							|
-	// 						( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
-	// }
-	// else if(channel_id_ == 1 )
-	// {
-	// 	AVR32_PWM.wpcr = 	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY )	|
-	// 						( AVR32_PWM_WPCR_WPRG1_MASK )							|
-	// 						( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
-	// }
-	// else if(channel_id_ == 2 )
-	// {
-	// 	AVR32_PWM.wpcr = 	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY )	|
-	// 						( AVR32_PWM_WPCR_WPRG2_MASK )							|
-	// 						( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
-	// }
-	// else if(channel_id_ == 3 )
-	// {
-	// 	AVR32_PWM.wpcr = 	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY )	|
-	// 						( AVR32_PWM_WPCR_WPRG3_MASK )							|
-	// 						( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
-	// }
-
-	// Unlock registers
-	AVR32_PWM.wpcr =  	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY ) 	|
-						( AVR32_PWM_WPCR_WPRG0_MASK )							|
-						( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
-	AVR32_PWM.wpcr = 	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY )	|
-						( AVR32_PWM_WPCR_WPRG1_MASK )							|
-						( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
-	AVR32_PWM.wpcr = 	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY )	|
-						( AVR32_PWM_WPCR_WPRG2_MASK )							|
-						( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
-	AVR32_PWM.wpcr = 	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY )	|
-						( AVR32_PWM_WPCR_WPRG3_MASK )							|
-						( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
+	if(channel_id_ == 0 )
+	{
+		AVR32_PWM.wpcr =  	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY ) 	|
+							( AVR32_PWM_WPCR_WPRG0_MASK )							|
+							( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
+	}
+	else if(channel_id_ == 1 )
+	{
+		AVR32_PWM.wpcr = 	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY )	|
+							( AVR32_PWM_WPCR_WPRG1_MASK )							|
+							( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
+	}
+	else if(channel_id_ == 2 )
+	{
+		AVR32_PWM.wpcr = 	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY )	|
+							( AVR32_PWM_WPCR_WPRG2_MASK )							|
+							( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
+	}
+	else if(channel_id_ == 3 )
+	{
+		AVR32_PWM.wpcr = 	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY )	|
+							( AVR32_PWM_WPCR_WPRG3_MASK )							|
+							( AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD );
+	}
 	
     // To setup the clock  
 	AVR32_PWM.clk = ( 1 <<AVR32_PWM_DIVA_OFFSET) |  // /1
@@ -144,91 +130,70 @@ bool Pwm_avr32::init(void)
 	AVR32_PWM.channel[channel_id_].dt 	= 1000 << 16 | 1000;	
 
 	// // Enable gpio
-	// if( id_ == 0 )
-	// {
-	// 	static const gpio_map_t PWM_GPIO_MAP =
-	// 	{
-	// 		{ AVR32_PWM_PWML_0_0_PIN, AVR32_PWM_PWML_0_0_FUNCTION },
-	// 	};			
-	// 	gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
-	// }
-	// else if( id_ == 1 )
-	// {
-	// 	static const gpio_map_t PWM_GPIO_MAP =
-	// 	{	
-	// 		{ AVR32_PWM_PWMH_0_0_PIN, AVR32_PWM_PWMH_0_0_FUNCTION },
-	// 	};			
-	// 	gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
-	// }
-	// else if( id_ == 2 )
-	// {
-	// 	static const gpio_map_t PWM_GPIO_MAP =
-	// 	{				
-	// 		{ AVR32_PWM_PWML_1_0_PIN, AVR32_PWM_PWML_1_0_FUNCTION },
-	// 	};			
-	// 	gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
-	// }
-	// else if( id_ == 3 )
-	// {
-	// 	static const gpio_map_t PWM_GPIO_MAP =
-	// 	{
-	// 		{ AVR32_PWM_PWMH_1_0_PIN, AVR32_PWM_PWMH_1_0_FUNCTION },
-	// 	};			
-	// 	gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
-	// }
-	// else if( id_ == 4 )
-	// {
-	// 	static const gpio_map_t PWM_GPIO_MAP =
-	// 	{			
-	// 		{ AVR32_PWM_PWML_2_0_PIN, AVR32_PWM_PWML_2_0_FUNCTION },
-	// 	};			
-	// 	gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
-	// }
-	// else if( id_ == 5 )
-	// {
-	// 	static const gpio_map_t PWM_GPIO_MAP =
-	// 	{
-	// 		{ AVR32_PWM_PWMH_2_0_PIN, AVR32_PWM_PWMH_2_0_FUNCTION },
-	// 	};			
-	// 	gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
-	// }
-	// else if( id_ == 6 )
-	// {
-	// 	static const gpio_map_t PWM_GPIO_MAP =
-	// 	{
-	// 		{ AVR32_PWM_PWML_3_0_PIN, AVR32_PWM_PWML_3_0_FUNCTION },
-	// 	};			
-	// 	gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
-	// }
-	// else if( id_ == 7 )
-	// {
-	// 	static const gpio_map_t PWM_GPIO_MAP =
-	// 	{
-	// 		{ AVR32_PWM_PWMH_3_0_PIN, AVR32_PWM_PWMH_3_0_FUNCTION }
-	// 	};			
-	// 	gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
-	// }
-
-	// Enable gpio
-	static const gpio_map_t PWM_GPIO_MAP =
+	if( id_ == 0 )
 	{
-		{ AVR32_PWM_PWML_0_0_PIN, AVR32_PWM_PWML_0_0_FUNCTION },
-
-		{ AVR32_PWM_PWMH_0_0_PIN, AVR32_PWM_PWMH_0_0_FUNCTION },
-		
-		{ AVR32_PWM_PWML_1_0_PIN, AVR32_PWM_PWML_1_0_FUNCTION },
-
-		{ AVR32_PWM_PWMH_1_0_PIN, AVR32_PWM_PWMH_1_0_FUNCTION },
-	
-		{ AVR32_PWM_PWML_2_0_PIN, AVR32_PWM_PWML_2_0_FUNCTION },
-
-		{ AVR32_PWM_PWMH_2_0_PIN, AVR32_PWM_PWMH_2_0_FUNCTION },
-
-		{ AVR32_PWM_PWML_3_0_PIN, AVR32_PWM_PWML_3_0_FUNCTION },
-
-		{ AVR32_PWM_PWMH_3_0_PIN, AVR32_PWM_PWMH_3_0_FUNCTION }
-	};			
-	gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+		static const gpio_map_t PWM_GPIO_MAP =
+		{
+			{ AVR32_PWM_PWML_0_0_PIN, AVR32_PWM_PWML_0_0_FUNCTION },
+		};			
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+	}
+	else if( id_ == 1 )
+	{
+		static const gpio_map_t PWM_GPIO_MAP =
+		{	
+			{ AVR32_PWM_PWMH_0_0_PIN, AVR32_PWM_PWMH_0_0_FUNCTION },
+		};			
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+	}
+	else if( id_ == 2 )
+	{
+		static const gpio_map_t PWM_GPIO_MAP =
+		{				
+			{ AVR32_PWM_PWML_1_0_PIN, AVR32_PWM_PWML_1_0_FUNCTION },
+		};			
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+	}
+	else if( id_ == 3 )
+	{
+		static const gpio_map_t PWM_GPIO_MAP =
+		{
+			{ AVR32_PWM_PWMH_1_0_PIN, AVR32_PWM_PWMH_1_0_FUNCTION },
+		};			
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+	}
+	else if( id_ == 4 )
+	{
+		static const gpio_map_t PWM_GPIO_MAP =
+		{			
+			{ AVR32_PWM_PWML_2_0_PIN, AVR32_PWM_PWML_2_0_FUNCTION },
+		};			
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+	}
+	else if( id_ == 5 )
+	{
+		static const gpio_map_t PWM_GPIO_MAP =
+		{
+			{ AVR32_PWM_PWMH_2_0_PIN, AVR32_PWM_PWMH_2_0_FUNCTION },
+		};			
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+	}
+	else if( id_ == 6 )
+	{
+		static const gpio_map_t PWM_GPIO_MAP =
+		{
+			{ AVR32_PWM_PWML_3_0_PIN, AVR32_PWM_PWML_3_0_FUNCTION },
+		};			
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+	}
+	else if( id_ == 7 )
+	{
+		static const gpio_map_t PWM_GPIO_MAP =
+		{
+			{ AVR32_PWM_PWMH_3_0_PIN, AVR32_PWM_PWMH_3_0_FUNCTION }
+		};			
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+	}
 
 	// Enable
 	AVR32_PWM.ena = 0b1111; // enable
