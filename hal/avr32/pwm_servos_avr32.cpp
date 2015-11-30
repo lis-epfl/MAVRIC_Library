@@ -30,55 +30,42 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file pwm_servos.c
+ * \file pwm_servos_avr32.cpp
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
  * \author Julien Lecoeur
  * \author Geraud L'Eplattenier
  * \author Basil Huber
+ * \author Nicolas Dousse
  * 
  * \brief This file is the driver for pwm servos
  *
  ******************************************************************************/
 
+#include "pwm_servos_avr32.hpp"
 
-#include "pwm_servos.h"
-#include "gpio.h"
-#include "print_util.h"
-#include "time_keeper.h"
-// #include "delay.h"
-#include <math.h>
-
-#include <stdint.h>
-#include <stdbool.h>
+extern "C"
+{
+	#include "gpio.h"
+	#include "print_util.h"
+	#include "time_keeper.h"
+	#include <math.h>
+}
 
 const uint32_t servo_timer_freq 	 = 1000000;		///< Timer frequency for the servos
 const uint16_t servo_center_pulse_us = 1500;		///< Pulse width in microseconds for neutral servo position
 const uint16_t servo_magnitude 		 = 500;			///< Amplitude of variation of the pulse width
 
-bool use_servos_7_8;
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
-
-/**
- * \brief	Output a PWM on one channel
- *
- * \param	channel			Corresponding channel
- * \param	pulse_us_a		Pulse a in micro sec
- * \param	pulse_us_b		Pulse b in micro sec
- * \param	frequency		Frequency in Hz
- */
-void write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uint16_t frequency);
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uint16_t frequency)
+void Pwm_servos_avr32::write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uint16_t frequency)
 {
 	int32_t period = servo_timer_freq / frequency;
 	int32_t deadtime = ( period - pulse_us_a - pulse_us_b ) / 2;
@@ -93,8 +80,14 @@ void write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uin
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void pwm_servos_init(bool use_servos_7_8_param)
+Pwm_servos_avr32::Pwm_servos_avr32()
+{}
+
+bool Pwm_servos_avr32::pwm_servos_init(bool use_servos_7_8_param)
 {
+	bool success = true;
+	int32_t gpio_success;
+
 	use_servos_7_8 = use_servos_7_8_param;
 
 	// To unlock registers
@@ -155,7 +148,7 @@ void pwm_servos_init(bool use_servos_7_8_param)
 			{ AVR32_PWM_PWML_3_0_PIN, AVR32_PWM_PWML_3_0_FUNCTION },
 			{ AVR32_PWM_PWMH_3_0_PIN, AVR32_PWM_PWMH_3_0_FUNCTION }
 	    };			
-		gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
 	}
 	else
 	{
@@ -170,14 +163,25 @@ void pwm_servos_init(bool use_servos_7_8_param)
 			{ AVR32_PWM_PWML_2_0_PIN, AVR32_PWM_PWML_2_0_FUNCTION },
 			{ AVR32_PWM_PWMH_2_0_PIN, AVR32_PWM_PWMH_2_0_FUNCTION }
 	    };			
-		gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));				
+		gpio_success = gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));				
 	}
 
 	AVR32_PWM.ena = 0b1111; // enable
+
+	if (gpio_success == GPIO_SUCCESS)
+	{
+		success = true;
+	}
+	else
+	{
+		success = false;
+	}
+
+	return success;
 }
 
 
-void pwm_servos_write_to_hardware(const servos_t* servos)
+void Pwm_servos_avr32::pwm_servos_write_to_hardware(const servos_t* servos)
 {
 	int servo_count = servos->servos_count;
 	int freq_count = (servo_count+1) / 2;
@@ -216,7 +220,7 @@ void pwm_servos_write_to_hardware(const servos_t* servos)
 	}
 }
 
-void pwm_servos_calibrate_esc(const servos_t* servos)
+void Pwm_servos_avr32::pwm_servos_calibrate_esc(const servos_t* servos)
 {
 	int16_t i;
 	

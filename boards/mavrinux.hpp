@@ -58,6 +58,7 @@
 
 #include "adc_dummy.hpp"
 #include "battery.hpp"
+#include "Pwm_servos_dummy.hpp"
 
 extern "C"
 {
@@ -128,6 +129,7 @@ public:
 	Serial_linux_io 	debug_serial;
 
 	File_linux 			file_flash;
+	Pwm_servos_dummy	pwm_servos;
 
 private:
 	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove

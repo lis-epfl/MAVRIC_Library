@@ -128,6 +128,7 @@ LIB_SRCS += hal/dummy/serial_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
 LIB_SRCS += hal/dummy/file_dummy.cpp
+LIB_SRCS += hal/dummy/pwm_servos_dummy.cpp
 
 LIB_SRCS += hal/common/fat_fs_mounting.cpp
 LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp

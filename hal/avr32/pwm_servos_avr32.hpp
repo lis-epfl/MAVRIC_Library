@@ -30,54 +30,74 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file pwm_servos.h
+ * \file pwm_servos_avr32.hpp
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
  * \author Julien Lecoeur
+ * \author Nicolas Dousse
  * 
  * \brief This file is the driver for pwm servos
  *
  ******************************************************************************/
 
 
-#ifndef PWM_SERVOS_H_
-#define PWM_SERVOS_H_
+#ifndef PWM_SERVOS_AVR32_H_
+#define PWM_SERVOS_AVR32_H_
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
+#include "pwm_servos.hpp"
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "servos.h"
+extern "C"
+{
+	#include <stdint.h>
+	#include <stdbool.h>
+	#include "servos.h"
+}
 
+class Pwm_servos_avr32: public Pwm_servos
+{
+public:
 
-/**
- * \brief						Initialize the hardware line for servos
- *
- * \param use_servos_7_8_param	Definition if the line for servos 7 and 8 is used
- */
-void pwm_servos_init(bool use_servos_7_8_param);
+	Pwm_servos_avr32();
 
-
-/**
- * \brief						Set servos' values
- *
- * \param servos				Pointer to a structure containing the servos' data
- */
-void pwm_servos_write_to_hardware(const servos_t* servos);
+	/**
+	 * \brief						Initialize the hardware line for servos
+	 *
+	 * \param use_servos_7_8_param	Definition if the line for servos 7 and 8 is used
+	 */
+	bool pwm_servos_init(bool use_servos_7_8_param);
 
 
-/**
- * \brief						Set speed controller set points 
- *
- * \param servos				Pointer to a structure containing the servos' data
- */
-void pwm_servos_calibrate_esc(const servos_t* servos);
+	/**
+	 * \brief						Set servos' values
+	 *
+	 * \param servos				Pointer to a structure containing the servos' data
+	 */
+	void pwm_servos_write_to_hardware(const servos_t* servos);
 
-#ifdef __cplusplus
-	}
-#endif
 
-#endif /* PWM_SERVOS_H_ */
+	/**
+	 * \brief						Set speed controller set points 
+	 *
+	 * \param servos				Pointer to a structure containing the servos' data
+	 */
+	void pwm_servos_calibrate_esc(const servos_t* servos);
+
+private:
+
+	/**
+	 * \brief	Output a PWM on one channel
+	 *
+	 * \param	channel			Corresponding channel
+	 * \param	pulse_us_a		Pulse a in micro sec
+	 * \param	pulse_us_b		Pulse b in micro sec
+	 * \param	frequency		Frequency in Hz
+	 */
+	void write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uint16_t frequency);
+
+	bool use_servos_7_8;
+
+
+};
+
+#endif /* PWM_SERVOS_AVR32_H_ */

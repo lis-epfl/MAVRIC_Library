@@ -39,6 +39,7 @@
  ******************************************************************************/
 
 #include "megafly_rev4.hpp"
+#include "pwm_servos_avr32.hpp"	
 
 extern "C"
 {
@@ -50,7 +51,6 @@ extern "C"
 	#include "led.h"
 	#include "delay.h"
 
-	#include "pwm_servos.h"
 	#include "gpio.h"
 
 	#include "analog_monitor.h"
@@ -59,7 +59,6 @@ extern "C"
 	#include "piezo_speaker.h"
 
 	#include "servos.h"
-	#include "pwm_servos.h"	
 	#include "servos_default_config.h"
 }
 
@@ -89,7 +88,8 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 	gps_ublox( Gps_ublox(uart3) ),
 	sonar_i2cxl( Sonar_i2cxl(i2c1) ),
 	adc_battery( Adc_avr32( analog_monitor, {ANALOG_RAIL_10} )),
-	battery( Battery(adc_battery))
+	battery( Battery(adc_battery)),
+	pwm_servos()
 {}
 
 
@@ -207,7 +207,7 @@ bool Megafly_rev4::init(void)
 	if( ret )
 	{
 		servos_set_value_failsafe( &servos );
-		pwm_servos_write_to_hardware( &servos );	
+		pwm_servos.pwm_servos_write_to_hardware( &servos );	
 	}
 	time_keeper_delay_ms(100); 
 	
@@ -294,7 +294,7 @@ bool Megafly_rev4::boardsupport_init(void)
 	LED_On(LED2);
 
 	// servo_pwm_hardware_init();
-	pwm_servos_init( true );
+	init_success &= pwm_servos.pwm_servos_init( true );
 	
 	// Init analog rails
 	analog_monitor_init(&analog_monitor, analog_monitor_default_config());

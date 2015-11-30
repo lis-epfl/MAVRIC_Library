@@ -65,7 +65,8 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
 	battery( Battery(adc_battery) ),
 	spektrum_satellite( Spektrum_satellite(dsm_serial, dsm_receiver_pin, dsm_power_pin) ),
 	mavlink_serial( config.serial_udp_config ),
-	file_flash( config.flash_filename.c_str() )
+	file_flash( config.flash_filename.c_str() ),
+	pwm_servos()
 {}
 
 

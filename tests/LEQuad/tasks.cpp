@@ -41,11 +41,11 @@
 
 #include "tasks.hpp"
 #include "central_data.hpp"
+#include "pwm_servos.hpp"
 
 extern "C"
 {
 	#include "led.h"
-	#include "pwm_servos.h"
 }
 
 
@@ -180,6 +180,12 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 	else
 	{
 		servos_set_value_failsafe( &central_data->servos );
+	}
+
+	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
+	if ( !mav_modes_is_hil(mode) )
+	{
+		central_data->pwm_servos.pwm_servos_write_to_hardware( &central_data->servos );
 	}
 
 	return true;

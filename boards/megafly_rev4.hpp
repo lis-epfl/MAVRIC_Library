@@ -56,6 +56,7 @@
 #include "sonar_i2cxl.hpp"
 #include "adc_avr32.hpp"
 #include "battery.hpp"
+#include "Pwm_servos_avr32.hpp"
 
 extern "C"
 {
@@ -136,6 +137,7 @@ public:
 	Adc_avr32			adc_battery;
 	Battery 			battery;
 	servos_t			servos;
+	Pwm_servos_avr32	pwm_servos;
 
 private:
 	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
