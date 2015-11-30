@@ -44,6 +44,7 @@
 #include "print_util.h"
 #include "time_keeper.h"
 #include "constants.h"
+#include "coord_conventions.h"
 
 #define KP_YAW 0.2f ///< Yaw gain for the navigation controller 
 
@@ -211,22 +212,22 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 {
 	float  norm_rel_dist;
 	float v_desired = 0.0f;
-	quat_t qtmp1, qtmp2;
 	
-	float dir_desired_bf[3];
+	float dir_desired_sg[3];
 	float rel_heading;
 	
 	mav_mode_t mode = navigation->state->mav_mode;
 	
 	norm_rel_dist = sqrt(navigation->waypoint_handler->dist2wp_sqr);
 	
-	// calculate dir_desired in local frame
-	// vel = qe-1 * rel_pos * qe
-	qtmp1 = quaternions_create_from_vector(rel_pos);
-	qtmp2 = quaternions_global_to_local(*navigation->qe,qtmp1);
-	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
-	
-	dir_desired_bf[2] = rel_pos[2];
+	// calculate dir_desired in semi-global frame
+	aero_attitude_t attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
+	attitude_yaw.rpy[0] = 0.0f;
+	attitude_yaw.rpy[1] = 0.0f;
+	attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+	quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+	quaternions_rotate_vector(q_rot,rel_pos,dir_desired_sg);
 	
 	// Avoiding division by zero
 	if (norm_rel_dist < 0.0005f)
@@ -235,9 +236,9 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	}
 
 	// Normalisation of the goal direction
-	dir_desired_bf[X] /= norm_rel_dist;
-	dir_desired_bf[Y] /= norm_rel_dist;
-	dir_desired_bf[Z] /= norm_rel_dist;
+	dir_desired_sg[X] /= norm_rel_dist;
+	dir_desired_sg[Y] /= norm_rel_dist;
+	dir_desired_sg[Z] /= norm_rel_dist;
 
 	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
@@ -261,16 +262,16 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		v_desired = pid_controller_update_dt(&navigation->hovering_controller, norm_rel_dist, navigation->dt);
 	}
 	
-	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate ) 
+	if (v_desired *  maths_f_abs(dir_desired_sg[Z]) > navigation->max_climb_rate ) 
 	{
-		v_desired = navigation->max_climb_rate / maths_f_abs(dir_desired_bf[Z]);
+		v_desired = navigation->max_climb_rate / maths_f_abs(dir_desired_sg[Z]);
 	}
 	
 	
 	// Scaling of the goal direction by the desired speed
-	dir_desired_bf[X] *= v_desired;
-	dir_desired_bf[Y] *= v_desired;
-	dir_desired_bf[Z] *= v_desired;
+	dir_desired_sg[X] *= v_desired;
+	dir_desired_sg[Y] *= v_desired;
+	dir_desired_sg[Z] *= v_desired;
 	
 	/*
 	loop_count = loop_count++ %50;
@@ -279,9 +280,9 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
 		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigation->position_estimation->vel_bf)*100);
 		print_util_dbg_print("Desired_vel_Bf(x100): (");
-		print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
-		print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
-		print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
+		print_util_dbg_print_num(dir_desired_sg[X] * 100,10);
+		print_util_dbg_print_num(dir_desired_sg[Y] * 100,10);
+		print_util_dbg_print_num(dir_desired_sg[Z] * 100,10);
 		print_util_dbg_print("). \n");
 		print_util_dbg_print("Actual_vel_bf(x100): (");
 		print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
@@ -296,9 +297,9 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	}
 	*/
 
-	navigation->controls_nav->tvel[X] = dir_desired_bf[X];
-	navigation->controls_nav->tvel[Y] = dir_desired_bf[Y];
-	navigation->controls_nav->tvel[Z] = dir_desired_bf[Z];		
+	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
+	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
+	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];		
 	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
