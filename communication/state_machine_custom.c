@@ -68,7 +68,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter)
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter, mavlink_waypoint_handler_t * waypoint_handler)
 {
 	bool init_success = true;
 
@@ -83,7 +83,8 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 	state_machine->ahrs = ahrs;
 	state_machine->pos_est = pos_est;
 	state_machine->stabilisation_copter = stabilisation_copter;
-	
+	state_machine->waypoint_handler = waypoint_handler;
+
 	launch_detection_init(&state_machine->ld, &launch_detection_default_config);
 
 	return init_success;
@@ -145,13 +146,36 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 			bool err_predicate = state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller.error < 0.3f;
 			bool acc_predicate = state_machine->imu->scaled_accelero.data[Z] < 0.3f;
 			
-			// if (est_speed_predicate && err_predicate && acc_predicate)
-			// {
-			// 	state_machine->state = STATE_HEIGHT_CONTROL;
-			// }
+			if (est_speed_predicate && err_predicate && acc_predicate)
+			{
+				state_machine->state = STATE_HEIGHT_CONTROL;
+			}
 		break;
 
 		case STATE_HEIGHT_CONTROL:
+			state_machine->waypoint_handler->waypoint_hold_coordinates = state_machine->pos_est->local_position;
+
+			float current_altitude = abs(state_machine->pos_est->local_position.pos[2]);
+			float desired_altitude = 3.0f;
+
+			if (current_altitude > 6.0f)
+			{
+				state_machine->waypoint_handler->waypoint_hold_coordinates.pos[Z] = - (current_altitude - desired_altitude);
+				waypoint_handler->dist2wp_sqr = (current_altitude - desired_altitude) * (current_altitude - desired_altitude); // same position, x m below => dist_sqr = x^2
+			} 
+			else if (current_altitude < 3.0f) 
+			{
+				state_machine->waypoint_handler->waypoint_hold_coordinates.pos[Z] = - (desired_altitude - current_altitude);
+				waypoint_handler->dist2wp_sqr = (current_altitude - desired_altitude) * (current_altitude - desired_altitude); // same position, x m above => dist_sqr = x^2
+			}
+			
+			waypoint_handler->hold_waypoint_set = true;
+
+			// bool altitude_predicate = abs(state_machine->pos_est->local_position.pos[2]) < 3.0f;
+			// if (altitude_predicate)
+			// {
+			// 	state_machine->state = STATE_HORIZONTAL_VELOCITY;
+			// }
 		break;
 
 		case STATE_HORIZONTAL_VELOCITY:

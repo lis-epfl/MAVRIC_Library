@@ -59,6 +59,7 @@ extern "C" {
 #include "scheduler.h"
 #include "stabilisation.h"
 #include "stabilisation_copter.h"
+#include "mavlink_waypoint_handler.h"
 
 
 typedef enum {
@@ -85,6 +86,7 @@ typedef struct {
 	barometer_t * baro;
 	position_estimation_t * pos_est;
 	stabilisation_copter_t * stabilisation_copter;
+	mavlink_waypoint_handler_t * waypoint_handler;
 } state_machine_custom_t;
 
 
@@ -97,10 +99,17 @@ typedef struct {
  * \param ahrs 						Pointer to the AHRS structure
  * \param pos_est 					Pointer to the position estimation structure
  * \param stabilisation_copter 		Pointer to the stabilisation copter structure
+ * \param waypoint_handler 			Pointer to the waypoint handler structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter);
+bool state_machine_custom_init(	state_machine_custom_t * state_machine,
+								remote_t * remote,
+								imu_t * imu, 
+								ahrs_t * ahrs, 
+								position_estimation_t * pos_est, 
+								stabilisation_copter_t * stabilisation_copter,
+								mavlink_waypoint_handler_t * waypoint_handler);
 
 
 /**
