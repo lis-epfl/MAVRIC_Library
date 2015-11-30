@@ -58,7 +58,7 @@
 
 #include "adc_dummy.hpp"
 #include "battery.hpp"
-#include "Pwm_servos_dummy.hpp"
+#include "pwm_servos_dummy.hpp"
 
 extern "C"
 {
