@@ -153,23 +153,9 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 		break;
 
 		case STATE_HEIGHT_CONTROL:
+			state_machine->waypoint_handler.frame = MAV_FRAME_LOCAL_NED
 			state_machine->waypoint_handler->waypoint_hold_coordinates = state_machine->pos_est->local_position;
-
-			float current_altitude = abs(state_machine->pos_est->local_position.pos[2]);
-			float desired_altitude = 3.0f;
-
-			if (current_altitude > 6.0f)
-			{
-				state_machine->waypoint_handler->waypoint_hold_coordinates.pos[Z] = - (current_altitude - desired_altitude);
-				waypoint_handler->dist2wp_sqr = (current_altitude - desired_altitude) * (current_altitude - desired_altitude); // same position, x m below => dist_sqr = x^2
-			} 
-			else if (current_altitude < 3.0f) 
-			{
-				state_machine->waypoint_handler->waypoint_hold_coordinates.pos[Z] = - (desired_altitude - current_altitude);
-				waypoint_handler->dist2wp_sqr = (current_altitude - desired_altitude) * (current_altitude - desired_altitude); // same position, x m above => dist_sqr = x^2
-			}
-			
-			waypoint_handler->hold_waypoint_set = true;
+			state_machine->waypoint_handler->waypoint_hold_coordinates.pos[Z] = - 3.0f;
 
 			// bool altitude_predicate = abs(state_machine->pos_est->local_position.pos[2]) < 3.0f;
 			// if (altitude_predicate)
