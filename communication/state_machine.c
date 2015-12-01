@@ -162,7 +162,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 
 	if (mode_current.HIL == HIL_OFF)
 	{
-		battery_update(&state_machine->state->battery,state_machine->state->analog_monitor->avg[ANALOG_RAIL_10]);
+		battery_update(&state_machine->state->battery,state_machine->state->analog_monitor->avg[ANALOG_RAIL_11]);
 	}
 	else
 	{
