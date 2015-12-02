@@ -54,7 +54,7 @@
 #include "state_telemetry.hpp"
 #include "gps_telemetry.hpp"
 #include "imu_telemetry.hpp"
- 
+#include "manual_control_telemetry.hpp"
 #include "barometer_telemetry.hpp"
 #include "ahrs_telemetry.hpp"
 #include "position_estimation_telemetry.hpp"
@@ -143,6 +143,9 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 	&central_data->mavlink_communication.message_handler);
 
 	init_success &= joystick_telemetry_init(&central_data->manual_control.joystick,
+	&central_data->mavlink_communication.message_handler);
+
+	init_success &= manual_control_telemetry_init(&central_data->manual_control,
 	&central_data->mavlink_communication.message_handler);
 
 	init_success &= position_estimation_telemetry_init(	&central_data->position_estimation,
@@ -365,7 +368,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
 	init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&position_estimation_telemetry_send_global_position,			&central_data->position_estimation, 	MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);// ID 33
 	init_success &= mavlink_communication_add_msg_send(mavlink_communication,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&remote_telemetry_send_scaled,									&central_data->manual_control.remote,	MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);// ID 34
 	init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&remote_telemetry_send_raw,									&central_data->manual_control.remote,	MAVLINK_MSG_ID_RC_CHANNELS_RAW		);// ID 35
-	init_success &= mavlink_communication_add_msg_send(mavlink_communication,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&servos_telemetry_mavlink_send,									&central_data->servos, 					MAVLINK_MSG_ID_SERVO_OUTPUT_RAW		);// ID 36
+	// init_success &= mavlink_communication_add_msg_send(mavlink_communication,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&servos_telemetry_mavlink_send,									&central_data->servos, 					MAVLINK_MSG_ID_SERVO_OUTPUT_RAW		);// ID 36
 	
 	init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,	 RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&joystick_telemetry_send_manual_ctrl_msg,						&central_data->manual_control.joystick,	MAVLINK_MSG_ID_MANUAL_CONTROL		);// ID 69
 	//init_success &= mavlink_communication_add_msg_send(mavlink_communication,  200000,   RUN_REGULAR,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&stabilisation_telemetry_send_control,						&central_data->controls, 				MAVLINK_MSG_ID_MANUAL_CONTROL		);// ID 69

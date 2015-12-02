@@ -46,6 +46,7 @@ extern "C"
 	#include "print_util.h"
 	#include "constants.h"
 	#include "coord_conventions.h"
+	#include "quick_trig.h"
 }
 
 //------------------------------------------------------------------------------
@@ -236,19 +237,19 @@ void joystick_button_mask(joystick_t* joystick, uint16_t buttons)
 }
 
 
-void joystick_get_torque_command(const joystick_t* joystick, torque_command_t * command)
+void joystick_get_torque_command(const joystick_t* joystick, torque_command_t * command, float scale)
 {
-	command->xyz[ROLL] 	= joystick_get_roll(joystick);
-	command->xyz[PITCH] = joystick_get_pitch(joystick);
-	command->xyz[YAW] 	= joystick_get_yaw(joystick);
+	command->xyz[ROLL] 	= scale * joystick_get_roll(joystick);
+	command->xyz[PITCH] = scale * joystick_get_pitch(joystick);
+	command->xyz[YAW] 	= scale * joystick_get_yaw(joystick);
 }
 
 
-void joystick_get_rate_command(const joystick_t* joystick, rate_command_t* command)
+void joystick_get_rate_command(const joystick_t* joystick, rate_command_t* command, float scale)
 {
-	command->xyz[ROLL] 	= joystick_get_roll(joystick);
-	command->xyz[PITCH] = joystick_get_pitch(joystick);
-	command->xyz[YAW] 	= joystick_get_yaw(joystick);
+	command->xyz[ROLL] 	= scale * joystick_get_roll(joystick);
+	command->xyz[PITCH] = scale * joystick_get_pitch(joystick);
+	command->xyz[YAW] 	= scale * joystick_get_yaw(joystick);
 }
 
 
@@ -258,11 +259,11 @@ void joystick_get_thrust_command(const joystick_t* joystick, thrust_command_t* c
 }
 
 
-void joystick_get_attitude_command(const joystick_t* joystick, const float ki_yaw, attitude_command_t* command)
+void joystick_get_attitude_command(const joystick_t* joystick, const float ki_yaw, attitude_command_t* command, float scale)
 {		
-	command->rpy[ROLL] 	= joystick_get_roll(joystick);
-	command->rpy[PITCH] = joystick_get_pitch(joystick);
-	command->rpy[YAW]  	+= ki_yaw * joystick_get_yaw(joystick);	
+	command->rpy[ROLL] 	= scale * joystick_get_roll(joystick);
+	command->rpy[PITCH] = scale * joystick_get_pitch(joystick);
+	command->rpy[YAW]  	+= ki_yaw * scale * joystick_get_yaw(joystick);	
 		
 	aero_attitude_t attitude;
 	attitude.rpy[ROLL] 	= command->rpy[ROLL]; 
@@ -272,22 +273,52 @@ void joystick_get_attitude_command(const joystick_t* joystick, const float ki_ya
 }
 
 
-void joystick_get_velocity_command(const joystick_t* joystick, velocity_command_t* command)
+void joystick_get_velocity_command(const joystick_t* joystick, velocity_command_t* command, float scale)
 {
-	command->xyz[X] = -10.0f 	* joystick_get_pitch(joystick);
-	command->xyz[Y] =  10.0f  	* joystick_get_roll(joystick);
-	command->xyz[Z] = -1.5f 	* joystick_get_throttle(joystick);
+	command->xyz[X] = -10.0f * scale * joystick_get_pitch(joystick);
+	command->xyz[Y] =  10.0f * scale * joystick_get_roll(joystick);
+	command->xyz[Z] = -1.5f  * scale * joystick_get_throttle(joystick);
 }
 
-void joystick_get_attitude_command_absolute_yaw(const joystick_t* joystick, attitude_command_t* command)
+
+void joystick_get_attitude_command_absolute_yaw(const joystick_t* joystick, attitude_command_t* command, float scale)
 {
-	command->rpy[ROLL] 	= joystick_get_roll(joystick);
-	command->rpy[PITCH] = joystick_get_pitch(joystick);
-	command->rpy[YAW]  	= joystick_get_yaw(joystick);
+	command->rpy[ROLL] 	= scale * joystick_get_roll(joystick);
+	command->rpy[PITCH] = scale * joystick_get_pitch(joystick);
+	command->rpy[YAW]  	= scale * joystick_get_yaw(joystick);
 			
 	aero_attitude_t attitude;
 	attitude.rpy[ROLL] 	= command->rpy[ROLL]; 
 	attitude.rpy[PITCH] = command->rpy[PITCH];
 	attitude.rpy[YAW] 	= command->rpy[YAW];
 	command->quat = coord_conventions_quaternion_from_aero(attitude);
+}
+
+
+void joystick_get_attitude_command_vtol(const joystick_t* joystick, const float ki_yaw, attitude_command_t * command, float scale, float reference_pitch)
+{
+	// Get Roll Pitch and Yaw from joystick
+	command->rpy[ROLL] 	= scale * joystick_get_roll(joystick);
+	command->rpy[PITCH] = scale * joystick_get_pitch(joystick) + reference_pitch;
+	command->rpy[YAW] 	+= ki_yaw * scale * joystick_get_yaw(joystick);
+
+	// Apply yaw and pitch first
+	aero_attitude_t attitude;
+	attitude.rpy[ROLL]	= 0.0f;
+	attitude.rpy[PITCH] = command->rpy[PITCH];
+	attitude.rpy[YAW] 	= command->rpy[YAW];
+	command->quat = coord_conventions_quaternion_from_aero(attitude);
+
+
+	// Apply roll according to transition factor
+	quat_t q_roll = { quick_trig_cos(0.5f * command->rpy[ROLL]),
+			  {
+				quick_trig_cos(reference_pitch) * quick_trig_sin( 0.5f * command->rpy[ROLL]),
+				0.0f,
+				quick_trig_sin(reference_pitch) * quick_trig_sin( 0.5f * command->rpy[ROLL]) 
+			  }
+			};
+
+	// q := q . q_rh . q_rf
+	command->quat = quaternions_multiply( command->quat, q_roll );	
 }

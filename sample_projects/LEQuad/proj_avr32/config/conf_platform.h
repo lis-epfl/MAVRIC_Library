@@ -30,48 +30,54 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_default_config.h
+ * \file conf_platform.h
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * 
+ * \brief  This file configures the imu for the rev 4 of the maveric autopilot
  *   
- * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
- *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
+#ifndef CONF_PLATFORM_H_
+#define CONF_PLATFORM_H_
 
 #ifdef __cplusplus
-extern "C" {
-#endif
+	extern "C" {
+#endif  
 
+#define MAVLINK_SYS_ID 0
 
-#include "servos_mix_quadcopter_diag.h"
+///< Definitions of Platform configuration
+#define M_REAR_LEFT 0		///< Define the index for the control
+#define M_FRONT_LEFT 1		///< Define the index for the control
+#define M_FRONT_RIGHT 2		///< Define the index for the control
+#define M_REAR_RIGHT 3		///< Define the index for the control
 
+#define M_FR_DIR ( 1)		///< Define the front right motor turn direction
+#define M_FL_DIR (-1)		///< Define the front left motor turn direction
+#define M_RR_DIR (-1)		///< Define the motor turn direction
+#define M_RL_DIR ( 1)		///< Define the motor turn direction
 
-static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
-{
-	servos_mix_quadcopter_diag_conf_t conf 	= {};
-	
-	conf.motor_front_right					= 2;
-	conf.motor_front_left					= 1;
-	conf.motor_rear_right					= 3;
-	conf.motor_rear_left					= 0;
-	conf.motor_front_right_dir				= CW;
-	conf.motor_front_left_dir				= CCW;
-	conf.motor_rear_right_dir				= CCW;
-	conf.motor_rear_left_dir				= CW;
-	conf.min_thrust							= -0.9f;
-	conf.max_thrust							= 1.0f;
+#define M_FRONT 0			///< Define the index for the movement control to go front
+#define M_RIGHT 1			///< Define the index for the movement control to go right
+#define M_REAR 2			///< Define the index for the movement control to go backward
+#define M_LEFT 3			///< Define the index for the movement control to go left
 
-	return conf;
-};
+#define M_FRONT_DIR ( 1)	///< Define the direction of control
+#define M_RIGHT_DIR (-1)	///< Define the direction of control
+#define M_REAR_DIR  ( 1)	///< Define the direction of control
+#define M_LEFT_DIR  (-1)	///< Define the direction of control
+
+#define MIN_THRUST -0.9f	///< Define the minimum thrust to apply
+#define MAX_THRUST 1.0f		///< Define the maximum thrust to apply
+
+///< define if servos 7 and 8 are used
+#define USE_SERVOS_7_8 false
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
+#endif /* CONF_PLATFORM_H_ */

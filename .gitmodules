@@ -4,3 +4,6 @@
 [submodule "libs/FatFs"]
 	path = libs/FatFs
 	url = https://github.com/lis-epfl/FatFs.git
+[submodule "libs/asf"]
+	path = libs/asf
+	url = https://github.com/lis-epfl/asf.git

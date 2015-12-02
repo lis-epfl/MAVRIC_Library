@@ -40,6 +40,7 @@
  ******************************************************************************/
  
 
+#include <unistd.h>
 #include <sys/time.h>
 #include "time_keeper.h"
 
@@ -114,4 +115,14 @@ void time_keeper_delay_ms(int32_t t)
 	{
 		;
 	}
+};
+
+#include <time.h>
+void time_keeper_sleep_us(int32_t t) 
+{
+	// usleep(t);
+	struct timespec reqtime;
+	reqtime.tv_sec = 0;
+	reqtime.tv_nsec = 1000 * t;
+	nanosleep(&reqtime, NULL);
 };

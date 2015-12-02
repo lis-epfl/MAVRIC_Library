@@ -74,13 +74,19 @@ bool Accelerometer_sim::update(void)
 	std::array<float,3> acceleration_ms2 = dynamic_model_.acceleration_bf();
 	
 	// Add gravity
+	const float up_lf[3] = { 0.0f, 0.0f, -1.0f };
+	float up_bf[3];
+
+	// Get current attitude
 	quat_t attitude = dynamic_model_.attitude();
-	const quat_t up = { 0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z} };
-	quat_t up_vec  	= quaternions_global_to_local(attitude, up);
+
+	// Get up vector in body frame
+	quaternions_rotate_vector( quaternions_inverse(attitude), up_lf, up_bf);
+	
 	for( uint8_t i = 0; i < 3; ++i )
 	{
 		// acceleration in g
-		acceleration_[i] = (acceleration_ms2[i] / 9.81f) + up_vec.v[i];
+		acceleration_[i] = (acceleration_ms2[i] / 9.81f) + up_bf[i];
 	}
 
 	return success;

@@ -238,7 +238,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 			
 			vel_error[X] = pos_est->gps->global_velocity()[X] - pos_est->vel[X]; 
 			vel_error[Y] = pos_est->gps->global_velocity()[Y] - pos_est->vel[Y]; 
-			vel_error[Z] = pos_est->gps->global_velocity()[Z] - pos_est->vel[Z]; 
+			vel_error[Z] = -pos_est->gps->global_velocity()[Z] - pos_est->vel[Z]; 
 
 			gps_gain = 1.0f;
 		

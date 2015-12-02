@@ -47,7 +47,7 @@
 #include "mavlink_stream.hpp"
 extern "C"
 {
-	#include "servos.h"
+	// #include "servos.h"
 }
 
 /**
@@ -57,6 +57,6 @@ extern "C"
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-void servos_telemetry_mavlink_send(servos_t* servos, mavlink_stream_t* mavlink_stream_t, mavlink_message_t* msg);
+// void servos_telemetry_mavlink_send(servos_t* servos, mavlink_stream_t* mavlink_stream_t, mavlink_message_t* msg);
 
 #endif /* SERVOS_TELEMETRY_H_ */

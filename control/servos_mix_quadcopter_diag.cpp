@@ -30,68 +30,83 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_cross.c
+ * \file servos_mix_quadcopter_diag.c
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
  * \brief Links between torque commands and servos PWM command for quadcopters 
- * in cross configuration
+ * in diagonal configuration
  *
  ******************************************************************************/
 
 
-#include "servos_mix_quadcopter_cross.h"
+#include "servos_mix_quadcopter_diag.hpp"
 
-
-bool servos_mix_quadcotper_cross_init(servos_mix_quadcotper_cross_t* mix, const servos_mix_quadcopter_cross_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos)
+extern "C"
 {
+	#include "print_util.h"
+}
+
+bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix, 
+									const servos_mix_quadcopter_diag_conf_t config, 
+									const torque_command_t* torque_command, 
+									const thrust_command_t* thrust_command, 
+									Servo* motor_front_right,	
+									Servo* motor_front_left,	
+									Servo* motor_rear_right,	
+									Servo* motor_rear_left)
+{
+	bool init_success = true;
+	
 	// Init dependencies
-	mix->torque_command = torque_command;
-	mix->thrust_command = thrust_command;
-	mix->servos      	= servos;
+	mix->torque_command 	= torque_command;
+	mix->thrust_command 	= thrust_command;
+	mix->motor_front_right  = motor_front_right;
+	mix->motor_front_left   = motor_front_left;
+	mix->motor_rear_right   = motor_rear_right;
+	mix->motor_rear_left    = motor_rear_left;
 
 	// Init parameters
-	mix->motor_front     = config->motor_front;
-	mix->motor_left      = config->motor_left;
-	mix->motor_right     = config->motor_right;
-	mix->motor_rear      = config->motor_rear;
+	mix->motor_front_right_dir = config.motor_front_right_dir;
+	mix->motor_front_left_dir  = config.motor_front_left_dir;
+	mix->motor_rear_right_dir  = config.motor_rear_right_dir;	
+	mix->motor_rear_left_dir   = config.motor_rear_left_dir;
 
-	mix->motor_front_dir = config->motor_front_dir;
-	mix->motor_left_dir  = config->motor_left_dir;
-	mix->motor_right_dir = config->motor_right_dir;	
-	mix->motor_rear_dir  = config->motor_rear_dir;
-
-	mix->min_thrust 	   = config->min_thrust;
-	mix->max_thrust 	   = config->max_thrust;
-
-	return true;
+	mix->min_thrust 	   = config.min_thrust;
+	mix->max_thrust 	   = config.max_thrust;
+	
+	return init_success;
 }
 
 
-bool servos_mix_quadcopter_cross_update(servos_mix_quadcotper_cross_t* mix)
+void servos_mix_quadcopter_diag_update(servos_mix_quadcotper_diag_t* mix)
 {
 	float motor[4];
 	
-	// Front motor
+	// Front Right motor
 	motor[0] = 	mix->thrust_command->thrust + 
-				mix->torque_command->xyz[1]  + 
-				mix->motor_front_dir * mix->torque_command->xyz[2];
+				( - mix->torque_command->xyz[0] ) +
+				( + mix->torque_command->xyz[1] ) + 
+				mix->motor_front_right_dir * mix->torque_command->xyz[2];
 
-	// Right motor
+	// Front Left motor
 	motor[1] = 	mix->thrust_command->thrust +
-				(- mix->torque_command->xyz[0]) + 
-				mix->motor_right_dir * mix->torque_command->xyz[2];
+				( + mix->torque_command->xyz[0] ) +
+				( + mix->torque_command->xyz[1] ) + 
+				mix->motor_front_left_dir * mix->torque_command->xyz[2];
 	
-	// Rear motor
+	// Rear Right motor
 	motor[2]  = mix->thrust_command->thrust +
+				(- mix->torque_command->xyz[0]) +
 				(- mix->torque_command->xyz[1]) +
-				mix->motor_rear_dir * mix->torque_command->xyz[2];
+				mix->motor_rear_right_dir * mix->torque_command->xyz[2];
 	
-	// Left motor
+	// Rear Left motor
 	motor[3]  = mix->thrust_command->thrust + 
-				mix->torque_command->xyz[0]  + 
-				mix->motor_left_dir * mix->torque_command->xyz[2];
+				( + mix->torque_command->xyz[0] ) + 
+				( - mix->torque_command->xyz[1] ) + 
+				mix->motor_rear_left_dir * mix->torque_command->xyz[2];
 	
 	// Clip values
 	for (int32_t i = 0; i < 4; i++) 
@@ -106,10 +121,8 @@ bool servos_mix_quadcopter_cross_update(servos_mix_quadcotper_cross_t* mix)
 		}
 	}
 
-	servos_set_value(mix->servos, mix->motor_front, motor[0]);
-	servos_set_value(mix->servos, mix->motor_right, motor[1]);
-	servos_set_value(mix->servos, mix->motor_rear,  motor[2]);
-	servos_set_value(mix->servos, mix->motor_left,  motor[3]);
-
-	return true;
+	mix->motor_front_right->write( motor[0] );
+	mix->motor_front_left->write(  motor[1] );
+	mix->motor_rear_right->write(  motor[2] );
+	mix->motor_rear_left->write(   motor[3] );
 }

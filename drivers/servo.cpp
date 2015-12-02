@@ -30,95 +30,101 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file magnetometer_sim.cpp
+ * \file servo.cpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Simulated magnetometers
+ * \brief Driver for servomotors using PWM
  * 
  ******************************************************************************/
 
 
-#include "magnetometer_sim.hpp"
+#include "servo.hpp"
 
 extern "C"
 {
-	#include "constants.h"
+	#include "time_keeper.h"
 }
 
 
-Magnetometer_sim::Magnetometer_sim(Dynamic_model& dynamic_model):
-	dynamic_model_( dynamic_model ),
-	mag_field_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
-	temperature_(24.0f) // Nice day
-{}
-
-
-bool Magnetometer_sim::init(void)
+Servo::Servo(Pwm& pwm, const servo_conf_t config):
+	pwm_(pwm),
+	config_(config),
+	value_(config.failsafe)
 {
-	return true;
+	pwm_.set_period_us( 1000000.0f / config_.repeat_freq );
+	failsafe(true);
 }
 
 
-bool Magnetometer_sim::update(void)
+float Servo::read(void) const
 {
-	bool success = true;
+	return value_;
+}
 
-	// Update dynamic model
-	success &= dynamic_model_.update();
 
-	// Field pointing 60 degrees down to the north (NED)
-	const float mag_field_lf[3] 	= { 0.5f, 0.0f, 0.86f };	
-	float mag_field_bf[3];
+bool Servo::write(float value, bool to_hardware)
+{
+	bool success = false;
 
-	// Get current attitude
-	quat_t attitude = dynamic_model_.attitude();
+	float trimmed_value = value + config_.trim;
 
-	// Get magnetic field in body frame
-	quaternions_rotate_vector( quaternions_inverse(attitude), mag_field_lf, mag_field_bf);
-	// quaternions_rotate_vector( attitude, mag_field_lf, mag_field_bf);
+	if( trimmed_value < config_.min )
+	{
+		value_ = config_.min;
+	}
+	else if( trimmed_value > config_.max )
+	{
+		value_ = config_.max;
+	}
+	else
+	{
+		value_ = trimmed_value;
+		success 	 = true;
+	}
 
-	// Save in member array
-	mag_field_[X] = mag_field_bf[X];
-	mag_field_[Y] = mag_field_bf[Y];
-	mag_field_[Z] = mag_field_bf[Z];
+	if( to_hardware == true)
+	{
+		success &= write_to_hardware();
+	}
 
 	return success;
 }
 
 
-const float& Magnetometer_sim::last_update_us(void) const
+bool Servo::failsafe(bool to_hardware)
 {
-	return dynamic_model_.last_update_us();
+	bool success = true;
+
+	value_ = config_.failsafe;
+
+	if( to_hardware == true )
+	{
+		success &= write_to_hardware();
+	}
+
+	return success;
 }
 
 
-const std::array<float, 3>& Magnetometer_sim::mag(void) const
+bool Servo::write_to_hardware(void)
 {
-	return mag_field_;
+	bool success = true;
+
+	// Compute pulse length
+	uint16_t pulse_us = ( config_.pulse_magnitude_us * value_ ) + config_.pulse_center_us;
+	
+	// Write to pwm line
+	success &= pwm_.set_pulse_width_us(pulse_us);
+
+	return success;
 }
 
 
-const float& Magnetometer_sim::mag_X(void) const
+void Servo::calibrate_esc(void)
 {
-	return mag_field_[X];
-}
-
-
-const float& Magnetometer_sim::mag_Y(void) const
-{
-	return mag_field_[Y];
-}
-
-
-const float& Magnetometer_sim::mag_Z(void) const
-{
-	return mag_field_[Z];
-}
-
-
-const float& Magnetometer_sim::temperature(void) const
-{
-	return temperature_;
+	write( config_.max, true );
+	time_keeper_delay_ms(2000);
+	failsafe( true );
 }
