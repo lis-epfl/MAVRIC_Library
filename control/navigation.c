@@ -966,6 +966,7 @@ task_return_t navigation_update(navigation_t* navigation)
 						navigation_auto_landing_handler(navigation);
 						navigation->auto_landing_behavior = HEIGHT_CONTROL;
 						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+						navigation->goal = navigation->waypoint_handler->position_estimation->local_position.heading;
 						navigation_run(navigation);
 					}
 				}
