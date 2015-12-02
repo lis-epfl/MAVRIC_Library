@@ -30,97 +30,54 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file time_keeper.c
+ * \file conf_platform.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
- *   
- * \brief This file is used to interact with the clock of the microcontroller
  * 
+ * \brief  This file configures the imu for the rev 4 of the maveric autopilot
+ *   
  ******************************************************************************/
 
 
-#include "time_keeper.h"
-#include "ast.h"
+#ifndef CONF_PLATFORM_H_
+#define CONF_PLATFORM_H_
 
-#define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
-#define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
+#ifdef __cplusplus
+	extern "C" {
+#endif  
+
+#define MAVLINK_SYS_ID 0
+
+///< Definitions of Platform configuration
+#define M_REAR_LEFT 0		///< Define the index for the control
+#define M_FRONT_LEFT 1		///< Define the index for the control
+#define M_FRONT_RIGHT 2		///< Define the index for the control
+#define M_REAR_RIGHT 3		///< Define the index for the control
+
+#define M_FR_DIR ( 1)		///< Define the front right motor turn direction
+#define M_FL_DIR (-1)		///< Define the front left motor turn direction
+#define M_RR_DIR (-1)		///< Define the motor turn direction
+#define M_RL_DIR ( 1)		///< Define the motor turn direction
+
+#define M_FRONT 0			///< Define the index for the movement control to go front
+#define M_RIGHT 1			///< Define the index for the movement control to go right
+#define M_REAR 2			///< Define the index for the movement control to go backward
+#define M_LEFT 3			///< Define the index for the movement control to go left
+
+#define M_FRONT_DIR ( 1)	///< Define the direction of control
+#define M_RIGHT_DIR (-1)	///< Define the direction of control
+#define M_REAR_DIR  ( 1)	///< Define the direction of control
+#define M_LEFT_DIR  (-1)	///< Define the direction of control
+
+#define MIN_THRUST -0.9f	///< Define the minimum thrust to apply
+#define MAX_THRUST 1.0f		///< Define the maximum thrust to apply
+
+///< define if servos 7 and 8 are used
+#define USE_SERVOS_7_8 false
 
 
-void time_keeper_init()
-{
-	ast_init_counter(&AVR32_AST, AST_OSC_PB, AST_PRESCALER_SETTING, 0);
-	ast_enable(&AVR32_AST);
+#ifdef __cplusplus
 }
+#endif
 
-
-uint32_t time_keeper_get_time_ticks()
-{
-	//raw timer ticks
-	return ast_get_counter_value(&AVR32_AST);
-}
-
-
-double time_keeper_get_time()
-{
-	// time in seconds since system start
-	return time_keeper_ticks_to_seconds(time_keeper_get_time_ticks());
-}
-
-
-uint32_t time_keeper_get_millis()
-{
-	//milliseconds since system start
-	return time_keeper_get_time_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
-}
-
-
-uint32_t time_keeper_get_micros()
-{
-	// microseconds since system start. Will run over after an hour.
-	return time_keeper_get_time_ticks() * (1000000 / TK_AST_FREQUENCY);
-}
-
-
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
-{
-	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
-}
-
-
-void time_keeper_delay_micros(int32_t microseconds)
-{
-	uint32_t now = time_keeper_get_micros();
-	while (time_keeper_get_micros() < now + microseconds);
-}
-
-
-void time_keeper_delay_until(uint32_t until_time)
-{
-	while (time_keeper_get_micros() < until_time)
-	{
-		;
-	}	
-}
-
-
-void time_keeper_delay_ms(int32_t t) 
-{
-	uint32_t now = time_keeper_get_micros();
-	
-	while (time_keeper_get_micros() < now + 1000 * t) 
-	{
-		;
-	}
-};
-
-
-void time_keeper_sleep_us(int32_t t) 
-{
-	uint32_t now = time_keeper_get_micros();
-	
-	while (time_keeper_get_micros() < now + t) 
-	{
-		;
-	}
-};
+#endif /* CONF_PLATFORM_H_ */

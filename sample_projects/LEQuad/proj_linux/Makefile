@@ -56,8 +56,8 @@ LIB_SRCS += drivers/gps_ublox.cpp
 LIB_SRCS += drivers/gps_ublox_telemetry.cpp       
 LIB_SRCS += drivers/hmc5883l.cpp             
 LIB_SRCS += drivers/lsm330dlc.cpp            
-LIB_SRCS += drivers/servos.c                              
-LIB_SRCS += drivers/servos_telemetry.c
+LIB_SRCS += drivers/servo.cpp                              
+# LIB_SRCS += drivers/servos_telemetry.c
 LIB_SRCS += drivers/sonar_i2cxl.cpp
 LIB_SRCS += drivers/sonar_telemetry.cpp
 LIB_SRCS += drivers/spektrum_satellite.cpp
@@ -147,7 +147,7 @@ LIB_SRCS += hal/linux/serial_linux_io.cpp
 # CC = gcc
 OBJCOPY = objcopy
 
-CFLAGS  = -g -O2 -Wall -std=c99
+CFLAGS  = -g -O2 -Wall -std=gnu99
 
 # Include files from MAVRIC library and source folder
 CFLAGS += -I.

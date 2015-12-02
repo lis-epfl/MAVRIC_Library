@@ -116,6 +116,14 @@ void time_keeper_delay_until(uint32_t until_time);
 void time_keeper_delay_ms(int32_t t);
 
 
+/**
+ * \brief	Sleep for X ms
+ *
+ * \param	until_time		The time during which the function will run
+ */
+void time_keeper_sleep_us(int32_t t);
+
+
 #ifdef __cplusplus
 }
 #endif
