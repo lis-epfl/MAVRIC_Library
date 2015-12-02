@@ -5,7 +5,7 @@
 ################################################################################
 
 # Binaries will be generated with this name
-PROJ_NAME=LEQuad
+PROJ_NAME=LEQuad_megafly
 
 # ------------------------------------------------------------------------------
 # PROJECT FOLDER
@@ -416,7 +416,7 @@ OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
  
-AWK_CMD = awk '{ printf "%-30s %-10s\n",$$1, $$2; }'
+AWK_CMD = awk '{ printf "%-60s %-10s\n",$$1, $$2; }'
 PRINT_ERROR = printf "$@ $(ERROR_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n" && false
 PRINT_WARNING = printf "$@ $(WARN_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n"
 PRINT_OK = printf "$@ $(OK_STRING)\n" | $(AWK_CMD)
