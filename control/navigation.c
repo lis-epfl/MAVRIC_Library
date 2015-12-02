@@ -78,6 +78,15 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
 static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation);
 
 /**
+ * \brief   					Computes the circular vector to the goal
+ * 
+ * \param 	navigation   		Pointer to navigation
+ * \param 	rel_pos 			The relative position between the MAV and the goal
+ * \param	radius				The radius of the circle
+ */
+static void navigation_set_vector_field_command(navigation_t* navigation, const float rel_pos[3], float radius);
+
+/**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
  * \param	navigation			The navigation structure
@@ -302,6 +311,35 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
+static void navigation_set_vector_field_command(navigation_t* navigation, const float rel_pos[3], float radius)
+{
+	float dir_desired[3];
+
+	// Compute the vector field circular
+	vector_field_circular_waypoint(	rel_pos, 
+									navigation->attractiveness, 	// attractiveness
+									navigation->cruise_speed, 	// cruise_speed
+									radius,	// radius
+									dir_desired );
+
+	// Transform the vector in the semi-global reference frame
+	
+	quat_t q_rot;
+	aero_attitude_t attitude_yaw;
+	attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
+	attitude_yaw.rpy[0] = 0.0f;
+	attitude_yaw.rpy[1] = 0.0f;
+	attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+	q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+	float dir_desired_sg[3];
+	quaternions_rotate_vector(q_rot, dir_desired, dir_desired_sg);
+
+	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
+	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
+	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
+}
+
 static void navigation_run(navigation_t* navigation)
 {
 	float rel_pos[3];
@@ -312,6 +350,8 @@ static void navigation_run(navigation_t* navigation)
 																					navigation->position_estimation->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
 	
+	navigation_set_vector_field_command(navigation, rel_pos, 5.0f);
+
 	navigation->controls_nav->theading=navigation->goal.heading;
 }
 
@@ -830,6 +870,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->dist2vel_gain = nav_config->dist2vel_gain;
 	navigation->cruise_speed = nav_config->cruise_speed;
 	navigation->max_climb_rate = nav_config->max_climb_rate;
+	navigation->attractiveness = nav_config->attractiveness;
 	
 	navigation->soft_zone_size = nav_config->soft_zone_size;
 	
