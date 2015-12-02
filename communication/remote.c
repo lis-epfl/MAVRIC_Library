@@ -461,6 +461,16 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t* control
 	controls->thrust 		= remote_get_throttle(remote);
 }
 
+void remote_get_angle_command_from_remote(remote_t* remote, control_command_t * controls)
+{
+	remote_update(remote);
+	
+	controls->rpy[ROLL] 	= asinf(remote_get_roll(remote));
+	controls->rpy[PITCH] 	= asinf(remote_get_pitch(remote));
+	controls->rpy[YAW] 		= asinf(remote_get_yaw(remote));
+	controls->thrust 		= remote_get_throttle(remote);
+}
+
 void remote_get_rate_command_from_remote(remote_t* remote, control_command_t* controls)
 {
 	remote_update(remote);

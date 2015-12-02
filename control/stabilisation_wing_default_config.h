@@ -53,6 +53,8 @@ extern "C" {
 stabilisation_wing_conf_t stabilisation_wing_default_config =
 {
 	.thrust_apriori = 0.25f,
+	.pitch_angle_apriori = 0.2f,
+	.pitch_angle_apriori_gain = 0.4f,
 	.stabiliser_stack 	= 
 	{
 		// #############################################################################
