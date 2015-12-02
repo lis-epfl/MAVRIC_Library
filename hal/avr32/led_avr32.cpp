@@ -30,79 +30,69 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file tasks.h
+ * \file led_avr32.cpp
  * 
  * \author MAV'RIC Team
- *   
- * \brief Definition of the tasks executed on the autopilot
+ * \author Felix Schill
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
+ * 
+ * \brief This file is the driver for the avr32 led
  *
  ******************************************************************************/
 
 
-#ifndef TASKS_H_
-#define TASKS_H_
+#include "led_avr32.hpp"
 
-#include "central_data.hpp"
-#include "led.hpp"
+extern "C"
+{
+	#include "led.h"
+}
 
-/**
- * \brief 			Initialises all the tasks
- *
- * \return	The initialization status, succeed == true
- */	
-bool tasks_create_tasks(Central_data* central_data);
+Led_avr32::Led_avr32()
+{
 
+}
 
-/**
- * \brief            Updates the IMU
- */
-void tasks_run_imu_update(Central_data* central_data);
-
-
-/**
- * \brief            	This function does bullshit
- * \details  			1) Switch on/off the motor
- * 						2) Check the receivers
- * 
- * \param	chan_switch	The pointer to set the switch mode
- * \param	rc_check	The pointer to the state of the remote
- * \param	motorstate	The pointer to the motor state
- */
-void tasks_rc_user_channels(uint8_t* chan_switch, signal_quality_t* rc_check, int8_t* motor_state);
+void Led_avr32::on(uint32_t leds)
+{
+	LED_On(led_id(leds));
+	//LED_On(LED1);
+	//LED_On(LED2);
+}
 
 
-/**
- * \brief            Run the main stabilisation loop
- */
-bool tasks_run_stabilisation(Central_data* central_data);
+void Led_avr32::off(uint32_t leds)
+{
+	LED_Off(led_id(leds));
+	//LED_Off(LED1);
+	//LED_Off(LED2);
+}
 
+void Led_avr32::toggle(uint32_t leds)
+{
+	LED_Toggle(led_id(leds));
+	//LED_Toggle(LED1);
+	//LED_Toggle(LED2);
+}
 
-/**
- * \brief            Run GPS update
- */
-bool tasks_run_gps_update(Central_data* central_data);
+uint32_t Led_avr32::led_id(uint32_t leds)
+{
+	uint32_t led_avr32;
 
+	switch (leds)
+	{
+		case 1:
+			led_avr32 = LED1;
+			break;
 
-/**
- * \brief            Run the navigation task
- */
-bool tasks_run_navigation_update(Central_data* central_data);
+		case 2:
+			led_avr32 = LED2;
+			break;
 
+		default:
+			led_avr32 = LED1;
+	}
 
-/**
- * \brief            Run the barometer task
- */
-bool tasks_run_barometer_update(Central_data* central_data);
-
-/**
- * \brief            Run the sonar task
- */
-bool sonar_update(Central_data* central_data);
-
-/**
- * \brief            Run the LED toggle task
- */
-bool tasks_led_toggle(Led* led);
-
-
-#endif /* TASKS_H_ */
+	return led_avr32;
+}

@@ -58,6 +58,7 @@
 #include "battery.hpp"
 #include "pwm_avr32.hpp"
 #include "servo.hpp"
+#include "led_avr32.hpp"
 
 extern "C"
 {
@@ -130,6 +131,7 @@ public:
 	Lsm330dlc			lsm330dlc;
 	Bmp085				bmp085;
 	Spektrum_satellite	spektrum_satellite;
+	Led_avr32			led;
 	Imu 				imu;
 	File_flash_avr32	file_flash;
 	Gps_ublox			gps_ublox;
