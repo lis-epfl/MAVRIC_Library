@@ -131,6 +131,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 	float input_turn_rate;
 	float input_roll_angle;
 	aero_attitude_t attitude, attitude_yaw;
+	quat_t q_rot;
 
 	// set the controller input
 	input= *stabilisation_wing->controls;
@@ -149,7 +150,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		gps_speed_global[Z] = -stabilisation_wing->pos_est->gps->vertical_speed;		// Convert to NED frame
 		
 		// Transform global to semi-local
-		attitude_yaw = coord_conventions_quat_to_aero(vector_field->ahrs->qe);
+		attitude_yaw = coord_conventions_quat_to_aero(stabilisation_wing->ahrs->qe);
 		attitude_yaw.rpy[0] = 0.0f;
 		attitude_yaw.rpy[1] = 0.0f;
 		attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];

@@ -581,7 +581,7 @@ task_return_t vector_field_waypoint_update(vector_field_waypoint_t* vector_field
 	
 	// Transform the velocity command into the correct frame
 	aero_attitude_t attitude_yaw;
-	quat_t q_rot;
+	quat_t q_rot, vel_local;
 	float tmp_command[3];
 	tmp_command[X] = vector_field->velocity_command->xyz[X];
 	tmp_command[Y] = vector_field->velocity_command->xyz[Y];
@@ -594,7 +594,10 @@ task_return_t vector_field_waypoint_update(vector_field_waypoint_t* vector_field
 			
 		case VELOCITY_COMMAND_MODE_LOCAL:
 			// Transform global to local
-			vector_field->velocity_command->xyz = quaternions_global_to_local(vector_field->ahrs->qe, tmp_command);
+			vel_local = quaternions_global_to_local(vector_field->ahrs->qe, quaternions_create_from_vector(tmp_command));
+			vector_field->velocity_command->xyz[0] = vel_local.v[0];
+			vector_field->velocity_command->xyz[1] = vel_local.v[1];
+			vector_field->velocity_command->xyz[2] = vel_local.v[2];
 			break;
 			
 		case VELOCITY_COMMAND_MODE_SEMI_LOCAL:
