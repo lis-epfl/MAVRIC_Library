@@ -60,10 +60,10 @@ servo_mix_adaptive_morph_conf_t servo_mix_adaptive_morph_default_config =
 	.servo_tail = M_ADAPTIVE_MORPH_TAIL,
 	.motor = M_ADAPTIVE_MORPH_THRUST,
 	
-	.servo_pitch_dir = DOWN2,
+	.servo_pitch_dir = UP2,
 	.servo_roll_left_dir = UP2,
 	.servo_roll_right_dir = UP2,
-	.servo_tail_dir = UP2,
+	.servo_tail_dir = DOWN2,
 	
 	.min_amplitude = -1.0f,
 	.max_amplitude = 1.0f,

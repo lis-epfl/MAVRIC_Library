@@ -72,14 +72,20 @@ static mav_result_t servo_mix_telemetry_trim(servo_mix_adaptive_morph_t* mix, ma
 	
 	if( packet->param1 == 1) // Set roll and pitch trims
 	{
-		mix->config.trim_roll = mix->config.trim_roll + remote_get_roll(mix->remote);
+		//TODO check signs
+		mix->config.trim_roll_left = mix->config.trim_roll_left + remote_get_roll(mix->remote);
+		mix->config.trim_roll_left = mix->config.trim_roll_right + remote_get_roll(mix->remote);
+		
 		mix->config.trim_pitch = mix->config.trim_pitch + remote_get_pitch(mix->remote);
+		mix->config.trim_tail = mix->config.trim_tail + remote_get_yaw(mix->remote);
 		result = MAV_RESULT_ACCEPTED;
 	}
 	if(packet->param2 == 1)	// Reset roll and pitch trims
 	{
-		mix->config.trim_roll = 0.0f;
-		mix->config.trim_pitch = 0.0f;
+		mix->config.trim_roll_left 	= 0.0f;
+		mix->config.trim_roll_right = 0.0f;
+		mix->config.trim_pitch 		= 0.0f;
+		mix->config.trim_tail 		= 0.0f;
 		result = MAV_RESULT_ACCEPTED;
 	}
 	
