@@ -87,8 +87,6 @@ typedef struct
 
 	data_logging_set_t* data_logging_set;		///< Pointer to a set of parameters, needs memory allocation
 
-	uint32_t time_ms;							///< The microcontroller time in ms
-
 	int buffer_name_size;						///< The buffer for the size of the file's name
 
 	char *file_name;							///< The file name
@@ -98,15 +96,17 @@ typedef struct
 	bool file_opened;							///< A flag to tell whether a file is opened or not
 
 	bool continuous_write;						///< A flag to tell whether we write continuously to the file or not
-	bool data_write;							///< A flag to write continously or not to the file
 
 	uint32_t logging_time;						///< The time that we've passed logging since the last f_close
+	
+	double cksum_a;								///< Checksum to see if the onboard parameters have changed values
+	double cksum_b;								///< Checksum to see if the onboard parameters have changed values
 	
 	uint32_t sys_id;							///< the system ID
 	
 	Console<File>* console;						///< The pointer to the console containing the file to write data to
 
-	const State* state;						///< The pointer to the state structure	
+	const State* state;							///< The pointer to the state structure	
 	toggle_logging_t* toggle_logging;			///< The pointer to the toggle logging structure
 } data_logging_t;
 

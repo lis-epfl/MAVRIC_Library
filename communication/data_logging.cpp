@@ -132,6 +132,9 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 	uint16_t i;
 	data_logging_set_t* data_set = data_logging->data_logging_set;
 	
+	init &= data_logging->console->write("time");
+	data_logging_put_r_or_n(data_logging, 0);
+
 	for (i = 0; i < data_set->data_logging_count; i++)
 	{
 		data_logging_entry_t* param = &data_set->data_log[i];
@@ -140,6 +143,7 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 
 		if (!init)
 		{
+			break;
 			if (data_logging->debug)
 			{
 				print_util_dbg_print("Error appending header!\r\n");
@@ -179,9 +183,14 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 
 static void data_logging_log_parameters(data_logging_t* data_logging)
 {
-	uint16_t i;
+	uint32_t i;
 	bool success = true;
 	data_logging_set_t* data_set = data_logging->data_logging_set;
+
+	// First parameter is always time
+	uint32_t time_ms = time_keeper_get_millis();
+	success &=  data_logging->console->write(time_ms);
+	data_logging_put_r_or_n(data_logging,0);
 
 	for (i = 0; i < data_set->data_logging_count; i++)
 	{
@@ -392,6 +401,105 @@ static bool data_logging_filename_append_int(char* output, char* filename, uint3
 	return is_success;
 }
 
+bool data_logging_checksum_control(data_logging_t* data_logging)
+{
+	bool new_values = false;
+	
+	double cksum_a = 0.0;
+	double cksum_b = 0.0;
+
+	float approx = 1.0f;
+
+	uint32_t j = 0;
+
+	data_logging_set_t* data_set = data_logging->data_logging_set;
+	for (uint32_t i = 0; i < data_set->data_logging_count; ++i)
+	{
+		data_logging_entry_t* param = &data_set->data_log[i];
+		switch(param->data_type)
+		{
+			case MAV_PARAM_TYPE_UINT8:
+				cksum_a += *((uint8_t*)param->param);
+				break;
+				
+			case MAV_PARAM_TYPE_INT8:
+				cksum_a += *((int8_t*)param->param);
+				break;
+				
+			case MAV_PARAM_TYPE_UINT16:
+				cksum_a += *((uint16_t*)param->param);
+				break;
+				
+			case MAV_PARAM_TYPE_INT16:
+				cksum_a += *((int16_t*)param->param);
+				break;
+					
+			case MAV_PARAM_TYPE_UINT32:
+				cksum_a += *((uint32_t*)param->param);
+				break;
+				
+			case MAV_PARAM_TYPE_INT32:
+				cksum_a += *((int32_t*)param->param);
+				break;
+				
+			case MAV_PARAM_TYPE_UINT64:
+				cksum_a += *((uint64_t*)param->param);
+				break;
+				
+			case MAV_PARAM_TYPE_INT64:
+				cksum_a += *((int64_t*)param->param);
+				break;
+					
+			case MAV_PARAM_TYPE_REAL32:
+				for (j = 0; j < param->precision; ++j)
+				{
+					approx *= 10;
+				}
+				approx = round((*((float*)param->param))*approx)/approx;
+				cksum_a += approx;
+				break;
+					
+			case MAV_PARAM_TYPE_REAL64:
+				for (j = 0; j < param->precision; ++j)
+				{
+					approx *= 10;
+				}
+				approx = round((*((double*)param->param))*approx)/approx;
+				cksum_a += approx;
+				break;
+			default:
+				cksum_a = 0.0;
+				cksum_b = 0.0;
+				print_util_dbg_print("Data type not supported!\r\n");
+				break;
+		}
+		cksum_b += cksum_a;
+	}
+
+	// 	print_util_dbg_print("cksum: (");
+	// 	print_util_dbg_print_num(cksum_a*100,10);
+	// 	print_util_dbg_print("==");
+	// 	print_util_dbg_print_num(data_logging->cksum_a*100,10);
+	// 	print_util_dbg_print(")&&(");
+	// 	print_util_dbg_print_num(cksum_b*100,10);
+	// 	print_util_dbg_print("==");
+	// 	print_util_dbg_print_num(data_logging->cksum_b*100,10);
+	// 	print_util_dbg_print(")\r\n");
+	
+
+	if ( (cksum_a == data_logging->cksum_a)&&(cksum_b == data_logging->cksum_b) )
+	{
+		new_values = false;
+	}
+	else
+	{
+		new_values = true;
+		data_logging->cksum_a = cksum_a;
+		data_logging->cksum_b = cksum_b;
+	}
+
+	return new_values;
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -406,7 +514,6 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	data_logging->debug = config->debug;
 
 	data_logging->continuous_write = continuous_write;
-	data_logging->data_write = true;
 
 	data_logging->state = toggle_logging->state;
 	data_logging->toggle_logging = toggle_logging;
@@ -415,7 +522,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 
 	// Allocate memory for the onboard data_log
 	data_logging->data_logging_set = (data_logging_set_t*)malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
-	
+
 	if ( data_logging->data_logging_set != NULL )
 	{
 		data_logging->data_logging_set->max_data_logging_count = config->max_data_logging_count;
@@ -433,13 +540,10 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 		
 		init_success &= false;
 	}
-
-	// Automaticly add the time as first logging parameter
-	data_logging_add_parameter_uint32(data_logging,&data_logging->time_ms,"time");
 	
 	data_logging->file_init = false;
 	data_logging->file_opened = false;
-	
+
 	// Setting the maximal size of the name string
 	#if _USE_LFN
 	data_logging->buffer_name_size = _MAX_LFN;
@@ -472,6 +576,9 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	init_success &= data_logging_open_new_log_file(data_logging);
 
 	data_logging->logging_time = time_keeper_get_millis();
+
+	data_logging->cksum_a = 0.0;
+	data_logging->cksum_b = 0.0;
 
 	return init_success;
 }
@@ -556,6 +663,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 
 bool data_logging_update(data_logging_t* data_logging)
 {
+	uint32_t time_ms = 0;
 	if (data_logging->toggle_logging->log_data == 1)
 	{
 		if (data_logging->file_opened)
@@ -565,29 +673,34 @@ bool data_logging_update(data_logging_t* data_logging)
 				data_logging_add_header_name(data_logging);
 			}
 			
-			data_logging->time_ms = time_keeper_get_millis();
-			
 			if ( !mav_modes_is_armed(data_logging->state->mav_mode) )
 			{
-				if ( (data_logging->time_ms - data_logging->logging_time) > 5000)
+				time_ms = time_keeper_get_millis();
+				if ( (time_ms - data_logging->logging_time) > 5000)
 				{
 					data_logging->console->get_stream()->flush();
-					data_logging->logging_time = data_logging->time_ms;
+					data_logging->logging_time = time_ms;
 				}
 			}
 			
-			if (data_logging->data_write)
+			if (data_logging->continuous_write)
 			{
 				data_logging_log_parameters(data_logging);
 			}
-			if (!data_logging->continuous_write)
+			else
 			{
-				data_logging->data_write = false;
+				if (data_logging_checksum_control(data_logging))
+				{
+					data_logging_log_parameters(data_logging);
+				}
 			}
+
 		} //end of if (data_logging->file_opened)
 		else
 		{
 			data_logging_open_new_log_file(data_logging);
+			data_logging->cksum_a = 0.0;
+			data_logging->cksum_b = 0.0;
 		}//end of else if (data_logging->file_opened)
 	} //end of if (data_logging->toggle_logging->log_data == 1)
 	else
@@ -611,7 +724,10 @@ bool data_logging_update(data_logging_t* data_logging)
 					break;
 				}
 			} //end for loop
-				
+			
+			data_logging->cksum_a = 0.0;
+			data_logging->cksum_b = 0.0;
+
 			data_logging->file_opened = false;
 			data_logging->file_init = false;
 
