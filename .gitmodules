@@ -7,3 +7,6 @@
 [submodule "libs/asf"]
 	path = libs/asf
 	url = https://github.com/lis-epfl/asf.git
+[submodule "libs/libopencm3"]
+	path = libs/libopencm3
+	url = https://github.com/libopencm3/libopencm3.git
