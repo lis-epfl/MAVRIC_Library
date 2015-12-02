@@ -224,10 +224,9 @@ bool tasks_run_sonar_update(Central_data* central_data)
 }
 
 
-#include <unistd.h>
 bool tasks_sleep(Central_data* central_data)
 {
-	usleep(3900);
+	time_keeper_sleep_us(3900);
 	return true;
 }
 

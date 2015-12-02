@@ -30,97 +30,98 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file time_keeper.c
+ * \file conf_imu_rev3.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
  *   
- * \brief This file is used to interact with the clock of the microcontroller
- * 
  ******************************************************************************/
 
 
-#include "time_keeper.h"
-#include "ast.h"
+#ifndef CONF_IMU_REV3_H_
+#define CONF_IMU_REV3_H_
 
-#define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
-#define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
-
-
-void time_keeper_init()
+#ifdef __cplusplus
+extern "C"
 {
-	ast_init_counter(&AVR32_AST, AST_OSC_PB, AST_PRESCALER_SETTING, 0);
-	ast_enable(&AVR32_AST);
+#endif
+
+#define GYRO_AXIS_X 1
+#define GYRO_AXIS_Y 0
+#define GYRO_AXIS_Z 2
+
+#define RAW_GYRO_X_SCALE   12600.0f
+#define RAW_GYRO_Y_SCALE  -12600.0f
+#define RAW_GYRO_Z_SCALE   12600.0f
+
+#define ACC_AXIS_X 0
+#define ACC_AXIS_Y 1
+#define ACC_AXIS_Z 2
+
+//#define RAW_ACC_X_SCALE  261.5f
+//#define RAW_ACC_Y_SCALE  262.5f
+//#define RAW_ACC_Z_SCALE  255.0f
+//#define RAW_ACC_X_SCALE  259.67f
+//#define RAW_ACC_Y_SCALE  261.324f
+//#define RAW_ACC_Z_SCALE  256.724f
+// Felix outside
+//#define RAW_ACC_X_SCALE  264.9173f
+#define RAW_ACC_X_SCALE  258.9173f
+#define RAW_ACC_Y_SCALE  258.9853f
+#define RAW_ACC_Z_SCALE  258.0829f
+
+#define MAG_AXIS_X 2
+#define MAG_AXIS_Y 0
+#define MAG_AXIS_Z 1
+
+// Inside values
+//#define RAW_MAG_X_SCALE 579.41f
+//#define RAW_MAG_Y_SCALE 540.3f
+//#define RAW_MAG_Z_SCALE 525.59f
+
+// Outside values
+//#define RAW_MAG_X_SCALE 534.90f
+//#define RAW_MAG_Y_SCALE 514.85f
+//#define RAW_MAG_Z_SCALE 478.57f
+
+// Felix Outside values
+#define RAW_MAG_X_SCALE 530.2771f
+#define RAW_MAG_Y_SCALE 525.2934f
+#define RAW_MAG_Z_SCALE 498.4476f
+
+#define ACC_BIAIS_X 18.0f
+#define ACC_BIAIS_Y 9.0f
+#define ACC_BIAIS_Z -16.0f
+ 
+//#define ACC_BIAIS_X 4.685f
+//#define ACC_BIAIS_Y 4.376f
+//#define ACC_BIAIS_Z -16.26f
+
+// Felix Outside values
+// #define ACC_BIAIS_X  21.5871f
+// #define ACC_BIAIS_Y  10.0884f
+// #define ACC_BIAIS_Z  -14.9891f
+
+
+// Inside values
+//#define MAG_BIAIS_X 34.20f
+//#define MAG_BIAIS_Y -47.07f
+//#define MAG_BIAIS_Z -76.93f
+
+// Outside values
+//#define MAG_BIAIS_X 47.62f
+//#define MAG_BIAIS_Y -47.29f
+//#define MAG_BIAIS_Z -74.38f
+
+// Felix Outside values
+#define MAG_BIAIS_X  131.7582f
+#define MAG_BIAIS_Y -26.1298f
+#define MAG_BIAIS_Z  61.1646f
+
+
+#ifdef __cplusplus
 }
+#endif
 
 
-uint32_t time_keeper_get_time_ticks()
-{
-	//raw timer ticks
-	return ast_get_counter_value(&AVR32_AST);
-}
 
-
-double time_keeper_get_time()
-{
-	// time in seconds since system start
-	return time_keeper_ticks_to_seconds(time_keeper_get_time_ticks());
-}
-
-
-uint32_t time_keeper_get_millis()
-{
-	//milliseconds since system start
-	return time_keeper_get_time_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
-}
-
-
-uint32_t time_keeper_get_micros()
-{
-	// microseconds since system start. Will run over after an hour.
-	return time_keeper_get_time_ticks() * (1000000 / TK_AST_FREQUENCY);
-}
-
-
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
-{
-	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
-}
-
-
-void time_keeper_delay_micros(int32_t microseconds)
-{
-	uint32_t now = time_keeper_get_micros();
-	while (time_keeper_get_micros() < now + microseconds);
-}
-
-
-void time_keeper_delay_until(uint32_t until_time)
-{
-	while (time_keeper_get_micros() < until_time)
-	{
-		;
-	}	
-}
-
-
-void time_keeper_delay_ms(int32_t t) 
-{
-	uint32_t now = time_keeper_get_micros();
-	
-	while (time_keeper_get_micros() < now + 1000 * t) 
-	{
-		;
-	}
-};
-
-
-void time_keeper_sleep_us(int32_t t) 
-{
-	uint32_t now = time_keeper_get_micros();
-	
-	while (time_keeper_get_micros() < now + t) 
-	{
-		;
-	}
-};
+#endif /* CONF_IMU_REV3_H_ */
