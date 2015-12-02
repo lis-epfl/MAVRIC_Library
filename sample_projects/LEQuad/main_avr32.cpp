@@ -69,8 +69,8 @@ int main (void)
 	// -------------------------------------------------------------------------
 	// Create board
 	// -------------------------------------------------------------------------
-	megafly_rev4_conf_t board_config = megafly_rev4_default_config();
-	board_config.imu_config = imu_config();								// Load custom imu config (cf conf_imu.h)
+	megafly_rev4_conf_t board_config 	= megafly_rev4_default_config();
+	board_config.imu_config 			= imu_config();							// Load custom imu config (cf conf_imu.h)
 	Megafly_rev4 board = Megafly_rev4( board_config );
 
 
@@ -148,7 +148,7 @@ int main (void)
 	init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
 	// Try to read from flash, if unsuccessful, write to flash
-	if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
+	// if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
 	{
 		onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
 		init_success = false; 

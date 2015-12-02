@@ -95,9 +95,11 @@ extern "C"
 #else
 #warning "Unknown IMU calibration for the board with ID MAVLINK_SYS_ID, falling back to imu_default_config"
 #include "imu.hpp"
+#include "megafly_rev4.hpp"
+
 static inline imu_conf_t imu_config(void)
 {
-	return imu_default_config();
+	return megafly_rev4_default_config().imu_config;
 }
 #endif
 
