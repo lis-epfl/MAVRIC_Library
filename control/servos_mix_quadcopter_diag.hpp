@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_diag.h
+ * \file servos_mix_quadcopter_diag.hpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -42,28 +42,22 @@
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_QUADCOPTER_DIAG_H_
-#define SERVOS_MIX_QUADCOPTER_DIAG_H_
+#ifndef SERVOS_MIX_QUADCOPTER_DIAG_HPP_
+#define SERVOS_MIX_QUADCOPTER_DIAG_HPP_
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
+#include "servo.hpp"
 
-
-#include "control_command.h"
-#include "servos.h"
-#include "constants.h"
-
+extern "C"
+{
+	#include "control_command.h"
+	#include "constants.h"
+}
 
 /**
  * \brief The servo mix structure for a quad in cross shape
  */
 typedef struct
 {
-	uint8_t 	motor_front_right;			///< Front motor
-	uint8_t 	motor_front_left;			///< Left  motor
-	uint8_t 	motor_rear_right;			///< Right motor
-	uint8_t		motor_rear_left;			///< Rear  motor
 	rot_dir_t 	motor_front_right_dir;		///< Front motor turning direction
 	rot_dir_t 	motor_front_left_dir;		///< Left  motor turning direction
 	rot_dir_t 	motor_rear_right_dir;		///< Right motor turning direction
@@ -78,19 +72,18 @@ typedef struct
  */
 typedef struct 
 {	
-	uint8_t   	motor_front_right;				///< Front motor
-	uint8_t   	motor_front_left;				///< Left  motor
-	uint8_t   	motor_rear_right;				///< Right motor
-	uint8_t   	motor_rear_left;				///< Rear  motor
 	rot_dir_t 	motor_front_right_dir;			///< Front motor turning direction
 	rot_dir_t 	motor_front_left_dir;			///< Left  motor turning direction
 	rot_dir_t 	motor_rear_right_dir;			///< Right motor turning direction
 	rot_dir_t 	motor_rear_left_dir;			///< Rear  motor turning direction
 	float 		min_thrust;						///< Minimum thrust
 	float		max_thrust;						///< Maximum thrust
-	const torque_command_t* torque_command;			///< Pointer to the torque command structure
-	const thrust_command_t* thrust_command;			///< Pointer to the thrust command structure
-	servos_t*          		servos;				///< Pointer to the servos structure
+	const torque_command_t* torque_command;		///< Pointer to the torque command structure
+	const thrust_command_t* thrust_command;		///< Pointer to the thrust command structure
+	Servo*	motor_front_right;				///< Pointer to servos for front right motor
+	Servo*	motor_front_left;				///< Pointer to servos for front right motor
+	Servo*	motor_rear_right;				///< Pointer to servos for front right motor
+	Servo*	motor_rear_left;				///< Pointer to servos for front right motor
 } servos_mix_quadcotper_diag_t;
 
 
@@ -101,7 +94,10 @@ typedef struct
  * \param config			The pointer to the configuration of servo mix structure
  * \param torque_command	The pointer to the torque command structure
  * \param thrust_command	The pointer to the thrust command structure
- * \param servos			The pointer to the servos structure
+ * \param motor_front_right	The pointer to the servos structure
+ * \param motor_front_left	The pointer to the servos structure
+ * \param motor_rear_right	The pointer to the servos structure
+ * \param motor_rear_left	The pointer to the servos structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -109,7 +105,10 @@ bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix,
 									const servos_mix_quadcopter_diag_conf_t config, 
 									const torque_command_t* torque_command, 
 									const thrust_command_t* thrust_command, 
-									servos_t* servos);
+									Servo* motor_front_right,	
+									Servo* motor_front_left,	
+									Servo* motor_rear_right,	
+									Servo* motor_rear_left);
 
 
 /**
@@ -119,9 +118,5 @@ bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix,
  */
 void servos_mix_quadcopter_diag_update(servos_mix_quadcotper_diag_t* mix);
 
-
-#ifdef __cplusplus
-	}
-#endif
 
 #endif

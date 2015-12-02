@@ -30,85 +30,101 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos.c
+ * \file servo.cpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Abstraction layer for servomotors. This module does not write to 
- * hardware, it just holds data and configuration for servos.
+ * \brief Driver for servomotors using PWM
  * 
  ******************************************************************************/
 
 
-#include "servos.h"
-#include "print_util.h"
+#include "servo.hpp"
 
-bool servos_init(servos_t* servos, const servos_conf_t config)
+extern "C"
 {
-	bool init_success = true;
-	
-	// Init servo array
-	if ( config.servos_count <= MAX_SERVO_COUNT )
-	{
-		servos->servos_count = config.servos_count;
-	
-		for (int i = 0; i < servos->servos_count; ++i)
-		{
-			// Set default parameters for each type of servo
-			servos->servo[i] = config.servo[i];
+	#include "time_keeper.h"
+}
 
-			// Set default value to failsafe
-			servos->servo[i].value = servos->servo[i].failsafe;
-		}
-		
-		init_success &= true;
+
+Servo::Servo(Pwm& pwm, const servo_conf_t config):
+	pwm_(pwm),
+	config_(config),
+	value_(config.failsafe)
+{
+	pwm_.set_period_us( 1000000.0f / config_.repeat_freq );
+	failsafe(true);
+}
+
+
+float Servo::read(void) const
+{
+	return value_;
+}
+
+
+bool Servo::write(float value, bool to_hardware)
+{
+	bool success = false;
+
+	float trimmed_value = value + config_.trim;
+
+	if( trimmed_value < config_.min )
+	{
+		value_ = config_.min;
+	}
+	else if( trimmed_value > config_.max )
+	{
+		value_ = config_.max;
 	}
 	else
 	{
-		servos->servos_count = 0;
-		print_util_dbg_print("[SERVOS] ERROR! Too many servos\r\n");
-		
-		init_success &= false;
+		value_ = trimmed_value;
+		success 	 = true;
 	}
+
+	if( to_hardware == true)
+	{
+		success &= write_to_hardware();
+	}
+
+	return success;
+}
+
+
+bool Servo::failsafe(bool to_hardware)
+{
+	bool success = true;
+
+	value_ = config_.failsafe;
+
+	if( to_hardware == true )
+	{
+		success &= write_to_hardware();
+	}
+
+	return success;
+}
+
+
+bool Servo::write_to_hardware(void)
+{
+	bool success = true;
+
+	// Compute pulse length
+	uint16_t pulse_us = ( config_.pulse_magnitude_us * value_ ) + config_.pulse_center_us;
 	
-	return init_success;
+	// Write to pwm line
+	success &= pwm_.set_pulse_width_us(pulse_us);
+
+	return success;
 }
 
 
-void servos_set_value(servos_t* servos, uint32_t servo_id, float value)
+void Servo::calibrate_esc(void)
 {
-	if ( servo_id <= servos->servos_count )
-	{
-		servo_entry_t* servo = &servos->servo[servo_id];
-
-		servo_set_value(servo, value);
-	}
-}
-
-
-void servo_set_value(servo_entry_t* servo, float value)
-{
-	float trimmed_value = value + servo->trim;
-
-	if ( trimmed_value < servo->min )
-	{
-		servo->value = servo->min;
-	}
-	else if ( trimmed_value > servo->max )
-	{
-		servo->value = servo->max;
-	}
-	else
-	{
-		servo->value = trimmed_value;
-	}
-}
-
-void servos_set_value_failsafe(servos_t* servos)
-{
-	for (int i = 0; i < servos->servos_count; ++i)
-	{
-		servos->servo[i].value = servos->servo[i].failsafe;
-	}
+	write( config_.max, true );
+	time_keeper_delay_ms(2000);
+	failsafe( true );
 }

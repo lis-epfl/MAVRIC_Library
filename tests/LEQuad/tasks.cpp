@@ -45,7 +45,6 @@
 extern "C"
 {
 	#include "led.h"
-	#include "pwm_servos.h"
 }
 
 
@@ -131,16 +130,23 @@ bool tasks_run_stabilisation(Central_data* central_data)
 		}
 		else
 		{
-			servos_set_value_failsafe( &central_data->servos );
+			central_data->servo_0.failsafe();
+			central_data->servo_1.failsafe();
+			central_data->servo_2.failsafe();
+			central_data->servo_3.failsafe();
 		}
 	}
 	else
 	{
-		servos_set_value_failsafe( &central_data->servos );
+		central_data->servo_0.failsafe();
+		central_data->servo_1.failsafe();
+		central_data->servo_2.failsafe();
+		central_data->servo_3.failsafe();
 	}
 	
 	return true;
 }
+
 
 bool tasks_run_stabilisation_quaternion(Central_data* central_data);
 bool tasks_run_stabilisation_quaternion(Central_data* central_data)
@@ -153,7 +159,10 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 	{
 		// Set command to current heading
 		central_data->command.attitude.rpy[2] = coord_conventions_quat_to_aero(central_data->ahrs.qe).rpy[2];
-		servos_set_value_failsafe( &central_data->servos );
+		central_data->servo_0.failsafe();
+		central_data->servo_1.failsafe();
+		central_data->servo_2.failsafe();
+		central_data->servo_3.failsafe();
 	}
 	else if( mav_modes_is_auto(mode) )
 	{
@@ -179,7 +188,10 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 	}
 	else
 	{
-		servos_set_value_failsafe( &central_data->servos );
+		central_data->servo_0.failsafe();
+		central_data->servo_1.failsafe();
+		central_data->servo_2.failsafe();
+		central_data->servo_3.failsafe();
 	}
 
 	return true;
