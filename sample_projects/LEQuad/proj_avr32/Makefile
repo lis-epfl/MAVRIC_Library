@@ -486,5 +486,5 @@ flash: ${PROJ_NAME}.elf
 .PHONY: clean
 clean:
 	@rm -f $(OBJS) $(PROJ_NAME).elf $(PROJ_NAME).hex $(PROJ_NAME).bin
-	@rm -r build/
+	@rm -rf build/
 	@$(PRINT_OK)

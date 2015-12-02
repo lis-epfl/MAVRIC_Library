@@ -234,5 +234,5 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 .PHONY: clean
 clean:
 	@rm -f $(OBJS)
-	@rm -r build/
+	@rm -rf build/
 	@$(PRINT_OK)
