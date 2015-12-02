@@ -190,56 +190,56 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 		switch(param->data_type)
 		{
 			case MAV_PARAM_TYPE_UINT8:
-				success = data_logging->console->write(*((uint8_t*)param->param));
+				success &= data_logging->console->write(*((uint8_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
 			case MAV_PARAM_TYPE_INT8:
-				success = data_logging->console->write(*((int8_t*)param->param));
+				success &= data_logging->console->write(*((int8_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
 			case MAV_PARAM_TYPE_UINT16:
-				success = data_logging->console->write(*((uint16_t*)param->param));
+				success &= data_logging->console->write(*((uint16_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
 			case MAV_PARAM_TYPE_INT16:
-				success = data_logging->console->write(*((int16_t*)param->param));
+				success &= data_logging->console->write(*((int16_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 					
 			case MAV_PARAM_TYPE_UINT32:
-				success = data_logging->console->write(*((uint32_t*)param->param));
+				success &= data_logging->console->write(*((uint32_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
 			case MAV_PARAM_TYPE_INT32:
-				success = data_logging->console->write(*((int32_t*)param->param));
+				success &= data_logging->console->write(*((int32_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
 			case MAV_PARAM_TYPE_UINT64:
-				success = data_logging->console->write(*((uint64_t*)param->param));
+				success &= data_logging->console->write(*((uint64_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 				
 			case MAV_PARAM_TYPE_INT64:
-				success = data_logging->console->write(*((int64_t*)param->param));
+				success &= data_logging->console->write(*((int64_t*)param->param));
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 					
 			case MAV_PARAM_TYPE_REAL32:
-				success = data_logging->console->write(*(float*)param->param,param->precision);
+				success &= data_logging->console->write(*(float*)param->param,param->precision);
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 					
 			case MAV_PARAM_TYPE_REAL64:
-				success = data_logging->console->write(*((double*)param->param),param->precision);
+				success &= data_logging->console->write(*((double*)param->param),param->precision);
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 			default:
-				success = false;
+				success &= false;
 				print_util_dbg_print("Data type not supported!\r\n");
 				break;
 		}
