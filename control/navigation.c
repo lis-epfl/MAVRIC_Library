@@ -659,7 +659,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 			case HEIGHT_CONTROL:
 				print_util_dbg_print("Cust: height control to 4m");
 				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
-				navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
+				navigation->state->mav_mode_custom = CUST_HEIGHT_CONTROL;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -4.0f;
 				break;

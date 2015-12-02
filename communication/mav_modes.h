@@ -229,7 +229,9 @@ typedef enum
     CUST_FENCE_2 = 256,							///< Fence 2 violation flag
     CUST_HEARTBEAT_LOST = 512,					///< Heartbeat loss flag
     CUST_REMOTE_LOST = 1024,					///< Remote lost flag
-    CUST_GPS_BAD = 2048							///< GPS loss flag
+    CUST_GPS_BAD = 2048,						///< GPS loss flag
+
+    CUST_HEIGHT_CONTROL = 4096 					///< Height control autolanding custom mode
 }mav_mode_custom_t;
 
 /*
