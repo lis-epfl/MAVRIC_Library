@@ -30,95 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file magnetometer_sim.cpp
+ * \file pwm.hpp
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
  * \author Julien Lecoeur
- *   
- * \brief Simulated magnetometers
+ * \author Nicolas Dousse
  * 
+ * \brief Abstract class for PWM 
+ *
  ******************************************************************************/
 
 
-#include "magnetometer_sim.hpp"
+#ifndef PWM_HPP_
+#define PWM_HPP_
 
-extern "C"
+#include <stdbool.h>
+
+class Pwm
 {
-	#include "constants.h"
-}
+public:
+	/**
+	 * \brief	Initialize the hardware line for servos
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool init(void) = 0;
 
 
-Magnetometer_sim::Magnetometer_sim(Dynamic_model& dynamic_model):
-	dynamic_model_( dynamic_model ),
-	mag_field_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
-	temperature_(24.0f) // Nice day
-{}
+	/**
+	 * \brief	Set pulse width
+	 * 
+	 * \param  pulse_us 	Pulse length in us
+	 * 
+	 * \return Success
+	 */
+	virtual bool set_pulse_width_us(uint16_t pulse_us) = 0;
 
 
-bool Magnetometer_sim::init(void)
-{
-	return true;
-}
+	/**
+	 * \brief	Set pulse period 
+	 *
+	 * \param 	period_us	Pulse period in us
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool set_period_us(uint16_t period_us) = 0;
+};
 
 
-bool Magnetometer_sim::update(void)
-{
-	bool success = true;
-
-	// Update dynamic model
-	success &= dynamic_model_.update();
-
-	// Field pointing 60 degrees down to the north (NED)
-	const float mag_field_lf[3] 	= { 0.5f, 0.0f, 0.86f };	
-	float mag_field_bf[3];
-
-	// Get current attitude
-	quat_t attitude = dynamic_model_.attitude();
-
-	// Get magnetic field in body frame
-	quaternions_rotate_vector( quaternions_inverse(attitude), mag_field_lf, mag_field_bf);
-	// quaternions_rotate_vector( attitude, mag_field_lf, mag_field_bf);
-
-	// Save in member array
-	mag_field_[X] = mag_field_bf[X];
-	mag_field_[Y] = mag_field_bf[Y];
-	mag_field_[Z] = mag_field_bf[Z];
-
-	return success;
-}
-
-
-const float& Magnetometer_sim::last_update_us(void) const
-{
-	return dynamic_model_.last_update_us();
-}
-
-
-const std::array<float, 3>& Magnetometer_sim::mag(void) const
-{
-	return mag_field_;
-}
-
-
-const float& Magnetometer_sim::mag_X(void) const
-{
-	return mag_field_[X];
-}
-
-
-const float& Magnetometer_sim::mag_Y(void) const
-{
-	return mag_field_[Y];
-}
-
-
-const float& Magnetometer_sim::mag_Z(void) const
-{
-	return mag_field_[Z];
-}
-
-
-const float& Magnetometer_sim::temperature(void) const
-{
-	return temperature_;
-}
+#endif /* PWM_HPP_ */

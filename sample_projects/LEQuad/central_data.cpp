@@ -48,6 +48,9 @@
 #include "remote_default_config.hpp"
 #include "manual_control_default_config.hpp"
 #include "toggle_logging.hpp"
+#include "attitude_controller_default_config.h"
+#include "velocity_controller_copter_default_config.h"
+#include "servos_mix_quadcopter_diag_default_config.hpp"
 
 extern "C" 
 {
@@ -55,13 +58,12 @@ extern "C"
 	#include "navigation_default_config.h"
 	#include "qfilter_default_config.h"
 	#include "scheduler_default_config.h"
-	#include "servos_mix_quadcopter_diag_default_config.h"
 
 	#include "print_util.h"
 }
 
 
-Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, servos_t& servos):
+Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3):
 	imu( imu ),
 	barometer( barometer ),
 	gps( gps ),
@@ -70,8 +72,12 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
 	satellite( satellite ),
 	file_flash( file_flash ),
 	battery( battery ),
-	servos( servos ),
-	state( battery, state_default_config() )
+	servo_0( servo_0 ),
+	servo_1( servo_1 ),
+	servo_2( servo_2 ),
+	servo_3( servo_3 ),
+	state( battery, state_default_config() ),
+	sysid_( sysid )
 {}
 
 
@@ -102,7 +108,7 @@ bool Central_data::init(void)
 	// Init mavlink communication
 	// -------------------------------------------------------------------------
 	mavlink_communication_conf_t mavlink_communication_config = mavlink_communication_default_config();
-	mavlink_communication_config.mavlink_stream_config.sysid = 1;
+	mavlink_communication_config.mavlink_stream_config.sysid = sysid_;
 	mavlink_communication_config.message_handler_config.debug = true;
 	mavlink_communication_config.onboard_parameters_config.debug = true;
 	mavlink_communication_config.mavlink_stream_config.debug = true;
@@ -241,7 +247,10 @@ bool Central_data::init(void)
 											servos_mix_quadcopter_diag_default_config(),
 											&command.torque,
 											&command.thrust,
-											&servos);
+											&servo_0,
+											&servo_1,
+											&servo_2,
+											&servo_3);
 	print_util_dbg_init_msg("[SERVOS MIX]", ret);
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
@@ -267,6 +276,38 @@ bool Central_data::init(void)
 
 	print_util_dbg_init_msg("[TOGGLE LOGGING]", ret);
 	init_success &= ret;
+
+	//--------------------------------------------------------------------------	
+	// Init attitude controller
+	//--------------------------------------------------------------------------	
+	attitude_controller_init( 	&attitude_controller,
+								attitude_controller_default_config(),
+								&ahrs,
+								&command.attitude,
+								&command.rate,
+								&command.torque );
+
+	//--------------------------------------------------------------------------	
+	// Init velocity controller
+	//--------------------------------------------------------------------------
+	velocity_controller_copter_conf_t velocity_controller_copter_config = velocity_controller_copter_default_config();
+	velocity_controller_copter_init( 	&velocity_controller,
+										velocity_controller_copter_config,
+										&ahrs,
+										&position_estimation,
+										&command.velocity,
+										&command.attitude,
+										&command.thrust );
+
+	//--------------------------------------------------------------------------	
+	// Init vector field navigation
+	//--------------------------------------------------------------------------	
+	vector_field_waypoint_conf_t vector_field_config;
+	vector_field_waypoint_init( &vector_field_waypoint,
+								&vector_field_config,
+								&waypoint_handler,
+								&position_estimation,
+								&command.velocity );
 
 	print_util_dbg_sep('-');
 	time_keeper_delay_ms(100); 

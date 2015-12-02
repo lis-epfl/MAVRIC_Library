@@ -30,85 +30,35 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos.c
+ * \file servos_mix_quadcopter_default_config.hpp
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Gregoire Heitz
  *   
- * \brief Abstraction layer for servomotors. This module does not write to 
- * hardware, it just holds data and configuration for servos.
- * 
+ * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
+ *
  ******************************************************************************/
 
 
-#include "servos.h"
-#include "print_util.h"
+#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
+#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
 
-bool servos_init(servos_t* servos, const servos_conf_t config)
+#include "servos_mix_quadcopter_diag.hpp"
+
+
+static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
 {
-	bool init_success = true;
+	servos_mix_quadcopter_diag_conf_t conf 	= {};
 	
-	// Init servo array
-	if ( config.servos_count <= MAX_SERVO_COUNT )
-	{
-		servos->servos_count = config.servos_count;
-	
-		for (int i = 0; i < servos->servos_count; ++i)
-		{
-			// Set default parameters for each type of servo
-			servos->servo[i] = config.servo[i];
+	conf.motor_front_right_dir				= CW;
+	conf.motor_front_left_dir				= CCW;
+	conf.motor_rear_right_dir				= CCW;
+	conf.motor_rear_left_dir				= CW;
+	conf.min_thrust							= -0.9f;
+	conf.max_thrust							= 1.0f;
 
-			// Set default value to failsafe
-			servos->servo[i].value = servos->servo[i].failsafe;
-		}
-		
-		init_success &= true;
-	}
-	else
-	{
-		servos->servos_count = 0;
-		print_util_dbg_print("[SERVOS] ERROR! Too many servos\r\n");
-		
-		init_success &= false;
-	}
-	
-	return init_success;
-}
+	return conf;
+};
 
 
-void servos_set_value(servos_t* servos, uint32_t servo_id, float value)
-{
-	if ( servo_id <= servos->servos_count )
-	{
-		servo_entry_t* servo = &servos->servo[servo_id];
-
-		servo_set_value(servo, value);
-	}
-}
-
-
-void servo_set_value(servo_entry_t* servo, float value)
-{
-	float trimmed_value = value + servo->trim;
-
-	if ( trimmed_value < servo->min )
-	{
-		servo->value = servo->min;
-	}
-	else if ( trimmed_value > servo->max )
-	{
-		servo->value = servo->max;
-	}
-	else
-	{
-		servo->value = trimmed_value;
-	}
-}
-
-void servos_set_value_failsafe(servos_t* servos)
-{
-	for (int i = 0; i < servos->servos_count; ++i)
-	{
-		servos->servo[i].value = servos->servo[i].failsafe;
-	}
-}
+#endif /* SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_ */

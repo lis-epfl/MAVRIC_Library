@@ -113,3 +113,14 @@ void time_keeper_delay_ms(int32_t t)
 		;
 	}
 };
+
+
+void time_keeper_sleep_us(int32_t t) 
+{
+	uint32_t now = time_keeper_get_micros();
+	
+	while (time_keeper_get_micros() < now + t) 
+	{
+		;
+	}
+};

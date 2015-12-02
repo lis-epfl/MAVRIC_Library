@@ -47,14 +47,13 @@
 extern "C" {
 #endif
 
-#include "velocity_controller_copter.h"
+#include "velocity_controller_copter.hpp"
 
 static inline velocity_controller_copter_conf_t velocity_controller_copter_default_config()
 {
 	velocity_controller_copter_conf_t conf = {};
 
-	conf.thrust_hover_point 				   = -0.3;
-	conf.pid_config 						   = {};
+	conf.thrust_hover_point 				   = -0.3f;
 	// -----------------------------------------------------------------
 	// ------ X PID -------------------------------------------------
 	// -----------------------------------------------------------------

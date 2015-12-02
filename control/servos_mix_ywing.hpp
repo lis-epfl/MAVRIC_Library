@@ -47,20 +47,19 @@
 	extern "C" {
 #endif
 
+#include "servo.hpp"
 
-#include "control_command.h"
-#include "servos.h"
-#include "constants.h"
+extern "C"
+{
+	#include "control_command.h"
+	#include "constants.h"
+}
 
 /**
  * \brief The servo mix structure for a Ywing
  */
 typedef struct
 {
-	uint8_t 	motor;				///< Main motor servo slot
-	uint8_t 	flap_top;			///< Top flap servo slot
-	uint8_t 	flap_right;			///< Right flap servo slot
-	uint8_t		flap_left;			///< Left flap servo slot
 	flap_dir_t 	flap_top_dir;		///< Left  flap turning direction
 	flap_dir_t 	flap_right_dir;		///< Right flap turning direction
 	flap_dir_t 	flap_left_dir;		///< Rear  flap turning direction
@@ -76,10 +75,6 @@ typedef struct
  */
 typedef struct 
 {	
-	uint8_t 	motor;				///< Main motor servo slot
-	uint8_t 	flap_top;			///< Top flap servo slot
-	uint8_t 	flap_right;			///< Right flap servo slot
-	uint8_t		flap_left;			///< Left flap servo slot
 	flap_dir_t 	flap_top_dir;		///< Left  flap turning direction
 	flap_dir_t 	flap_right_dir;		///< Right flap turning direction
 	flap_dir_t 	flap_left_dir;		///< Rear  flap turning direction
@@ -87,9 +82,12 @@ typedef struct
 	float		max_thrust;			///< Maximum thrust
 	float		min_deflection;		///< Minimum deflection for flaps
 	float		max_deflection;		///< Maximum deflection for flaps
-	const torque_command_t* torque_command;		///< Pointer to the torque command structure
-	const thrust_command_t* thrust_command;		///< Pointer to the thrust command structure
-	servos_t*          		servos;				///< Pointer to the servos structure
+	const torque_command_t* torque_command;	///< Pointer to the torque command structure
+	const thrust_command_t* thrust_command;	///< Pointer to the thrust command structure
+	Servo*          		motor;			///< Pointer to the servos structure for main motor
+	Servo*          		flap_top;		///< Pointer to the servos structure for top flap
+	Servo*          		flap_right;		///< Pointer to the servos structure for right flap
+	Servo*          		flap_left;		///< Pointer to the servos structure for left flap
 } servo_mix_ywing_t;
 
 
@@ -100,7 +98,10 @@ typedef struct
  * \param 	config			Pointer to the configuration
  * \param 	torque_command	Pointer to the torque command structure
  * \param 	thrust_command	Pointer to the thrust command structure
- * \param 	servos			Pointer to the servos structure
+ * \param 	servo_motor		Pointer to the servos structure
+ * \param 	servo_flap_top	Pointer to the servos structure
+ * \param 	servo_flap_right Pointer to the servos structure
+ * \param 	servo_flap_left	Pointer to the servos structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -108,7 +109,10 @@ bool servo_mix_ywing_init(	servo_mix_ywing_t* mix,
 							const servo_mix_ywing_conf_t* config, 
 							const torque_command_t* torque_command, 
 							const thrust_command_t* thrust_command, 
-							servos_t* servos);
+							Servo* servo_motor,
+							Servo* servo_flap_top,
+							Servo* servo_flap_right,
+							Servo* servo_motor_left);
 
 
 /**

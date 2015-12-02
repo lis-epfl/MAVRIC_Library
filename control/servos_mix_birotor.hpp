@@ -48,21 +48,20 @@
 	extern "C" {
 #endif
 
+#include "servo.hpp"
 
-#include "control_command.h"
-#include "servos.h"
-#include "constants.h"
-#include "daler_dc_motor_ctrl.h"
+extern "C"
+{
+	#include "control_command.h"
+	#include "constants.h"
+	#include "daler_dc_motor_ctrl.h"
+}
 
 /**
  * \brief Configuration structure
  */
 typedef struct
 {
-	uint8_t 	motor_left;			///< Left motor ID
-	uint8_t 	motor_right;		///< Right motor ID
-	uint8_t 	servo_left;			///< Left servo ID
-	uint8_t		servo_right;		///< Right motor ID
 	rot_dir_t 	motor_left_dir;		///< Left motor rotation direction
 	rot_dir_t 	motor_right_dir;	///< Right motor rotation direction
 	rot_dir_t 	servo_left_dir;		///< Left servo rotation direction
@@ -80,10 +79,6 @@ typedef struct
  */
 typedef struct 
 {	
-	uint8_t 	motor_left;						///< Left motor ID
-	uint8_t 	motor_right;					///< Right motor ID
-	uint8_t 	servo_left;						///< Left servo ID
-	uint8_t		servo_right;					///< Right motor ID
 	rot_dir_t 	motor_left_dir;					///< Left motor rotation direction
 	rot_dir_t 	motor_right_dir;				///< Right motor rotation direction
 	rot_dir_t 	servo_left_dir;					///< Left servo rotation direction
@@ -94,7 +89,10 @@ typedef struct
 	float		max_servo;						///< Maximum servo command
 	const torque_command_t* torque_command;		///< Pointer to torque command (input)
 	const thrust_command_t* thrust_command;		///< Pointer to thrust command (input)
-	servos_t*         		servos;				///< Pointer to servos (output)
+	Servo* motor_left;							///< Pointer to servos (output)
+	Servo* motor_right; 						///< Pointer to servos (output)
+	Servo* servo_left; 							///< Pointer to servos (output)
+	Servo* servo_right;							///< Pointer to servos (output)
 	daler_dc_motor_ctrl_t* 	dc_motors;			///< Pointer to DC motor controller (output)
 } servo_mix_birotor_t;
 

@@ -30,124 +30,125 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	mavrinux.cpp
+ * \file main.cpp
  * 
- * \author 	MAV'RIC Team
+ * \author MAV'RIC Team
  *   
- * \brief 	Emulated board running on linux
+ * \brief Main file
  *
  ******************************************************************************/
 
 #include "mavrinux.hpp"
+#include "central_data.hpp"
+#include "mavlink_telemetry.hpp"
+#include "tasks.hpp"
 
-extern "C"
+extern "C" 
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
 }
 
 
-static Serial_linux_io* p_uart_usb;
-uint8_t serial2stream( stream_data_t data, uint8_t byte )
+int main(int argc, char** argv)
 {
-	p_uart_usb->write(&byte);
-	return 0;
-}
+	uint8_t sysid = 0;
+	
+	// -------------------------------------------------------------------------
+	// Get command line parameters
+	// -------------------------------------------------------------------------
+	// System id
+	if(argc > 1)
+	{
+		sysid = atoi( argv[1] );
+	}
 
-Mavrinux::Mavrinux(mavrinux_conf_t config):
-	servo_0(pwm_0, servo_default_config_esc()),
-	servo_1(pwm_1, servo_default_config_esc()),
-	servo_2(pwm_2, servo_default_config_esc()),
-	servo_3(pwm_3, servo_default_config_esc()),
-	dynamic_model( Dynamic_model_quad_diag(servo_0, servo_1, servo_2, servo_3) ),
-	sim( Simulation(dynamic_model) ),
-	imu( Imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer(), config.imu_config) ),
-	adc_battery( Adc_dummy( 12.34f ) ),
-	battery( Battery(adc_battery) ),
-	spektrum_satellite( Spektrum_satellite(dsm_serial, dsm_receiver_pin, dsm_power_pin) ),
-	mavlink_serial( config.serial_udp_config ),
-	file_flash()
-{}
+	// -------------------------------------------------------------------------
+	// Create board
+	// -------------------------------------------------------------------------
+	mavrinux_conf_t board_config = mavrinux_default_config(); 
+	
+	// Set correct sysid for UDP port and flash filename
+	board_config.serial_udp_config.local_port 	= 14000 + sysid;
+	board_config.flash_filename 				= std::string("flash") + std::to_string(sysid) + std::string(".bin");
+	
+	// Create board
+	Mavrinux board(board_config);
+
+	// -------------------------------------------------------------------------
+	// Create central data
+	// -------------------------------------------------------------------------
+	// Create central data using simulated sensors
+	Central_data cd = Central_data( sysid,
+									board.imu, 
+									board.sim.barometer(),
+									board.sim.gps(), 
+									board.sim.sonar(),
+									board.mavlink_serial,
+									board.spektrum_satellite,
+									board.file_flash,
+									board.battery,
+									board.servo_0,
+									board.servo_1,
+									board.servo_2,
+									board.servo_3 );
 
 
-bool Mavrinux::init(void)
-{
+	// -------------------------------------------------------------------------
+	// Initialisation
+	// -------------------------------------------------------------------------
 	bool init_success = true;
-	bool ret;
 
-	// -------------------------------------------------------------------------
-	// Init UART3
-	// -------------------------------------------------------------------------
-	ret = debug_serial.init();
-	init_success &= ret;
+	// Board initialisation
+	init_success &= board.init();
+
+	// Init central data
+	init_success &= cd.init();
+
+	init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+
+	// Try to read from flash, if unsuccessful, write to flash
+	if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
+	{
+		onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+		init_success = false; 
+	}
+
+	File_linux file_log;
+	Console<File> console(file_log);
+
+	File_linux file_stat;
+	Console<File> console_stat(file_stat);
+
+	init_success &=	data_logging_create_new_log_file(	&cd.data_logging,
+														"Log_file",
+														&console,
+														true,
+														&cd.toggle_logging,
+														cd.mavlink_communication.mavlink_stream.sysid);
+
+	init_success &=	data_logging_create_new_log_file(	&cd.data_logging2,
+														"Log_stat",
+														&console_stat,
+														false,
+														&cd.toggle_logging,
+														cd.mavlink_communication.mavlink_stream.sysid);	
+
+
+	init_success &= mavlink_telemetry_init(&cd);
+
+	cd.state.mav_state = MAV_STATE_STANDBY;	
 	
-	// -------------------------------------------------------------------------
-	// Init stream for USB debug stream TODO: remove
-	p_uart_usb = &debug_serial;
-	dbg_stream_.get = NULL;
-	dbg_stream_.put = &serial2stream;
-	dbg_stream_.flush = NULL;
-	dbg_stream_.buffer_empty = NULL;
-	dbg_stream_.data = NULL;
-	print_util_dbg_print_init(&dbg_stream_);
-	// -------------------------------------------------------------------------
+	init_success &= tasks_create_tasks(&cd);	
 
-
-	time_keeper_delay_ms(1000); 
-
-	print_util_dbg_sep('%');
-	time_keeper_delay_ms(100);
-	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
-	print_util_dbg_print("[MAVRINUX] ...\r\n");
-	time_keeper_delay_ms(100); 
-	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
-	
-	// -------------------------------------------------------------------------
-	// Init GPIO dsm receiver
-	// -------------------------------------------------------------------------
-	ret = dsm_receiver_pin.init();
-	print_util_dbg_init_msg("[DSM RX PIN]", ret);
-	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
 	// -------------------------------------------------------------------------
-	// Init GPIO dsm power
+	// Main loop
 	// -------------------------------------------------------------------------
-	ret = dsm_power_pin.init();
-	print_util_dbg_init_msg("[DSM VCC PIN]", ret);
-	init_success &= ret;
-	
+	while (1 == 1) 
+	{
+		scheduler_update(&cd.scheduler);
+	}
 
-	// -------------------------------------------------------------------------
-	// Init UDP serial
-	// -------------------------------------------------------------------------
-	ret = mavlink_serial.init();
-	print_util_dbg_init_msg("[UDP]", ret);
-	init_success &= ret;
-	time_keeper_delay_ms(100); 
-		
-
-	// -------------------------------------------------------------------------
-	// Init spektrum_satelitte
-	// -------------------------------------------------------------------------
-	ret = spektrum_satellite.init();
-	print_util_dbg_init_msg("[SAT]", ret);
-	init_success &= ret;
-	time_keeper_delay_ms(100); 
-
-	// -------------------------------------------------------------------------
-	// Init file flash
-	// -------------------------------------------------------------------------
-	file_flash.open("flash.bin");
-
-	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
-	print_util_dbg_init_msg("[MAVRINUX]", init_success);
-	time_keeper_delay_ms(100);
-	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100);
-
-	return init_success;
+	return 0;
 }

@@ -116,7 +116,7 @@ static void get_velocity_command_from_semilocal_to_global(const velocity_control
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void velocity_controller_copter_init(velocity_controller_copter_t* controller, const velocity_controller_copter_conf_t* config, const ahrs_t* ahrs, const position_estimation_t* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
+void velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const position_estimation_t* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
 {
 	// Init dependencies
 	controller->velocity_command 	= velocity_command;
@@ -126,12 +126,12 @@ void velocity_controller_copter_init(velocity_controller_copter_t* controller, c
 	controller->pos_est 			= pos_est;
 
 	// Init hover point
-	controller->thrust_hover_point = config->thrust_hover_point;
+	controller->thrust_hover_point = config.thrust_hover_point;
 
 	// Init PID gains
-	pid_controller_init(&controller->pid[X], &config->pid_config[X]);
-	pid_controller_init(&controller->pid[Y], &config->pid_config[Y]);
-	pid_controller_init(&controller->pid[Z], &config->pid_config[Z]);
+	pid_controller_init(&controller->pid[X], &config.pid_config[X]);
+	pid_controller_init(&controller->pid[Y], &config.pid_config[Y]);
+	pid_controller_init(&controller->pid[Z], &config.pid_config[Z]);
 }
 
 

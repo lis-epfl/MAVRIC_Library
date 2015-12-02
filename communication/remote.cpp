@@ -554,7 +554,7 @@ void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw
 
 void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command, float scale)
 {
-	command->xyz[X] = - 10.0f 	* scale * remote_get_pitch(remote);
-	command->xyz[Y] = 10.0f  	* scale * remote_get_roll(remote);
-	command->xyz[Z] = - 1.5f 	* scale * remote_get_throttle(remote);
+	command->xyz[X] = - 10.0f * scale * remote_get_pitch(remote);
+	command->xyz[Y] =   10.0f * scale * remote_get_roll(remote);
+	command->xyz[Z] = - 1.5f  * scale * remote_get_throttle(remote);
 }

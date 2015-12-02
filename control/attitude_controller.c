@@ -110,7 +110,7 @@ static void attitude_controller_angle_loop(attitude_controller_t* controller)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool attitude_controller_init(attitude_controller_t* controller, const attitude_controller_conf_t* config, const ahrs_t* ahrs, attitude_command_t* attitude_command, rate_command_t* rate_command, torque_command_t* torque_command)
+bool attitude_controller_init(attitude_controller_t* controller, attitude_controller_conf_t config, const ahrs_t* ahrs, attitude_command_t* attitude_command, rate_command_t* rate_command, torque_command_t* torque_command)
 {
 	bool init_success = true;
 
@@ -127,14 +127,14 @@ bool attitude_controller_init(attitude_controller_t* controller, const attitude_
 	init_success &= attitude_error_estimator_init(&controller->attitude_error_estimator, ahrs);
 
 	// Init rate gains
-	init_success &= pid_controller_init(&controller->rate_pid[ROLL],  &config->rate_pid_config[ROLL]);
-	init_success &= pid_controller_init(&controller->rate_pid[PITCH], &config->rate_pid_config[PITCH]);
-	init_success &= pid_controller_init(&controller->rate_pid[YAW],   &config->rate_pid_config[YAW]);
+	init_success &= pid_controller_init(&controller->rate_pid[ROLL],  &config.rate_pid_config[ROLL]);
+	init_success &= pid_controller_init(&controller->rate_pid[PITCH], &config.rate_pid_config[PITCH]);
+	init_success &= pid_controller_init(&controller->rate_pid[YAW],   &config.rate_pid_config[YAW]);
 	
 	// Init angle gains
-	init_success &= pid_controller_init(&controller->angle_pid[ROLL],  &config->angle_pid_config[ROLL]);
-	init_success &= pid_controller_init(&controller->angle_pid[PITCH], &config->angle_pid_config[PITCH]);
-	init_success &= pid_controller_init(&controller->angle_pid[YAW],   &config->angle_pid_config[YAW]);
+	init_success &= pid_controller_init(&controller->angle_pid[ROLL],  &config.angle_pid_config[ROLL]);
+	init_success &= pid_controller_init(&controller->angle_pid[PITCH], &config.angle_pid_config[PITCH]);
+	init_success &= pid_controller_init(&controller->angle_pid[YAW],   &config.angle_pid_config[YAW]);
 
 	return init_success;
 }
