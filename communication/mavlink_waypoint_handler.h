@@ -80,6 +80,17 @@ typedef struct
 	double z;													///< The value on the z axis (depends on the reference frame)
 } waypoint_struct_t;
 
+/**
+ * \brief	The MAV?RIC waypoint structure
+ */
+typedef struct
+{
+	local_coordinates_t waypoint;								///< The local coordinates of the waypoint
+	float radius;												///< The radius to turn around the waypoint
+	float rotation_direction;									///< The rotation direction around the waypoint: positive value for clockwise orbit, negative value for counter-clockwise orbit
+	float loiter_time;											///< The loiter time at the waypoint
+}waypoint_local_struct_t;
+
 typedef struct
 {
 	waypoint_struct_t waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
@@ -87,9 +98,9 @@ typedef struct
 	uint16_t number_of_waypoints;								///< The total number of waypoints
 	int8_t current_waypoint_count;								///< The number of the current waypoint
 	
-	local_coordinates_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-	local_coordinates_t waypoint_hold_coordinates;				///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-	local_coordinates_t waypoint_critical_coordinates;			///< The coordinates of the waypoint in critical state
+	waypoint_local_struct_t waypoint_coordinates;				///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+	waypoint_local_struct_t waypoint_hold_coordinates;			///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+	waypoint_local_struct_t waypoint_critical_coordinates;		///< The coordinates of the waypoint in critical state
 	float dist2wp_sqr;											///< The square of the distance to the waypoint
 	
 	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoint is set
