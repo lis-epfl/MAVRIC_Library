@@ -655,6 +655,14 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -5.0f;
 				break;
+
+			case HEIGHT_CONTROL:
+				print_util_dbg_print("Cust: height control to 4m");
+				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
+				navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
+				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
+				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -4.0f;
+				break;
 			
 			case DESCENT_TO_GND:
 				print_util_dbg_print("Cust: descent to gnd");
@@ -714,6 +722,9 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				navigation->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
 				navigation->state->mav_state = MAV_STATE_STANDBY;
 				break;
+
+			case HEIGHT_CONTROL:
+			break;
 		}
 	}
 }
@@ -949,6 +960,13 @@ task_return_t navigation_update(navigation_t* navigation)
 							// Constant velocity to the ground
 							navigation->controls_nav->tvel[Z] = 0.3f;
 						}
+					} 
+					else if ((navigation->remote->channels[CHANNEL_AUX1] + 1.0f) > 0)
+					{
+						navigation_auto_landing_handler(navigation);
+						navigation->auto_landing_behavior = HEIGHT_CONTROL;
+						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+						navigation_run(navigation);
 					}
 				}
 				else

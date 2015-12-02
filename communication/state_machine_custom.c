@@ -68,7 +68,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter, mavlink_waypoint_handler_t * waypoint_handler)
+bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter, navigation_t * navigation)
 {
 	bool init_success = true;
 
@@ -83,7 +83,7 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 	state_machine->ahrs = ahrs;
 	state_machine->pos_est = pos_est;
 	state_machine->stabilisation_copter = stabilisation_copter;
-	state_machine->waypoint_handler = waypoint_handler;
+	state_machine->navigation = navigation;
 
 	launch_detection_init(&state_machine->ld, &launch_detection_default_config);
 
@@ -121,7 +121,7 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 			controls->rpy[PITCH] = 0.0f;
 			controls->thrust = state_machine->stabilisation_copter_conf->thrust_hover_point;
 			controls->control_mode = ATTITUDE_COMMAND_MODE;
-			controls->yaw_mode=YAW_RELATIVE;
+			controls->yaw_mode = YAW_RELATIVE;
 
 			bool roll_predicate = state_machine->ahrs->qe.v[0] < RP_THRESHOLD;
 			bool pitch_predicate = state_machine->ahrs->qe.v[1] < RP_THRESHOLD;
@@ -149,13 +149,17 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 			if (est_speed_predicate && err_predicate && acc_predicate)
 			{
 				state_machine->state = STATE_HEIGHT_CONTROL;
+
+				state_machine->navigation->state->in_the_air = true;
+				state_machine->navigation->auto_landing_behavior = HEIGHT_CONTROL;
+				state_machine->navigation->auto_landing = true;
+				state_machine->navigation->auto_landing_next_state = false;
 			}
 		break;
 
 		case STATE_HEIGHT_CONTROL:
-			state_machine->waypoint_handler.frame = MAV_FRAME_LOCAL_NED
-			state_machine->waypoint_handler->waypoint_hold_coordinates = state_machine->pos_est->local_position;
-			state_machine->waypoint_handler->waypoint_hold_coordinates.pos[Z] = - 3.0f;
+			controls->control_mode = VELOCITY_COMMAND_MODE;
+			controls->yaw_mode = YAW_RELATIVE;
 
 			// bool altitude_predicate = abs(state_machine->pos_est->local_position.pos[2]) < 3.0f;
 			// if (altitude_predicate)
