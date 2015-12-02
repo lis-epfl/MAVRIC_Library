@@ -86,8 +86,7 @@ typedef struct
 typedef struct
 {
 	local_coordinates_t waypoint;								///< The local coordinates of the waypoint
-	float radius;												///< The radius to turn around the waypoint
-	float rotation_direction;									///< The rotation direction around the waypoint: positive value for clockwise orbit, negative value for counter-clockwise orbit
+	float radius;												///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
 	float loiter_time;											///< The loiter time at the waypoint
 }waypoint_local_struct_t;
 
@@ -182,7 +181,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  *
  * \return	The waypoint in local coordinate frame
  */
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
+waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
 
 /**
  * \brief	Sends the travel time between the last two waypoints

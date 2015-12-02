@@ -1250,7 +1250,7 @@ static mav_result_t waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_
 		print_util_dbg_print("\r\n");
 		waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 1;
 		waypoint_handler->current_waypoint = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count];
-		waypoint_handler->waypoint_coordinates.waypoint = waypoint_handler_set_waypoint_from_frame(&waypoint_handler->current_waypoint, waypoint_handler->position_estimation->local_position.origin);
+		waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(&waypoint_handler->current_waypoint, waypoint_handler->position_estimation->local_position.origin);
 		
 		mavlink_message_t msg;
 		mavlink_msg_mission_current_pack( 	waypoint_handler->mavlink_stream->sysid,
@@ -1560,7 +1560,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 			{
 				waypoint_handler->current_waypoint_count = i;
 				waypoint_handler->current_waypoint = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count];
-				waypoint_handler->waypoint_coordinates.waypoint = waypoint_handler_set_waypoint_from_frame(&waypoint_handler->current_waypoint, waypoint_handler->position_estimation->local_position.origin);
+				waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(&waypoint_handler->current_waypoint, waypoint_handler->position_estimation->local_position.origin);
 				
 				print_util_dbg_print("Waypoint Nr");
 				print_util_dbg_print_num(i,10);
@@ -1605,9 +1605,10 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
 	return TASK_RUN_SUCCESS;
 }
 
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin)
+waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin)
 {
 	global_position_t waypoint_global;
+	waypoint_local_struct_t wpt;
 	local_coordinates_t waypoint_coor;
 	
 	for (uint8_t i = 0; i < 3; i++)
@@ -1694,7 +1695,11 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* 
 		
 	}
 	
-	return waypoint_coor;
+	wpt.waypoint = waypoint_coor;
+	wpt.radius = current_waypoint->param3;
+	wpt.loiter_time = current_waypoint->param1;
+
+	return wpt;
 }
 
 void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler,const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
