@@ -137,12 +137,14 @@ public:
 	 */
 	virtual uint32_t length() = 0;
 
+
 	/**
 	 * \brief 	flush buffer to file; Not implemented;
 	 *
 	 * \return 	success	(always false)
 	 */
 	 bool flush();
+
 
 	/**
 	 * \brief 	write newline character to file ('\n')
