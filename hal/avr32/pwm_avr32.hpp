@@ -30,37 +30,80 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_telemetry.c
+ * \file pwm_avr32.hpp
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Julien Lecoeur
  * \author Nicolas Dousse
- *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the servos
+ * 
+ * \brief 	This file is the driver for pwm servos
  *
  ******************************************************************************/
 
 
-#include "servos_telemetry.hpp"
+#ifndef PWM_SERVOS_AVR32_H_
+#define PWM_SERVOS_AVR32_H_
 
-extern "C"
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "pwm.hpp"
+
+
+class Pwm_avr32: public Pwm
 {
-	#include "time_keeper.h"
-}
+public:
+	/**
+	 * \brief Constructor
+	 * 
+	 * \param Servo number (between 0 and 7)
+	 */
+	Pwm_avr32(uint8_t id);
 
-// void servos_telemetry_mavlink_send(servos_t* servos, mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
-// {
-// 	mavlink_msg_servo_output_raw_pack(	mavlink_stream->sysid,
-// 										mavlink_stream->compid,
-// 										msg,
-// 										time_keeper_get_micros(),
-// 										0,
-// 										(uint16_t)( 1500 + 500 * servos->servo[0].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[1].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[2].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[3].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[4].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[5].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[6].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[7].value )	);
-// }
+
+	/**
+	 * \brief	Initialize the hardware line for servos
+	 * 
+	 * \return 	Success
+	 */
+	bool init(void);
+
+
+	/**
+	 * \brief	Set pulse width
+	 * 
+	 * \param  pulse_us 	Pulse length in us
+	 * 
+	 * \return Success
+	 */
+	bool set_pulse_width_us(uint16_t pulse_us);
+
+
+	/**
+	 * \brief	Set pulse period 
+	 *
+	 * \param 	period_us	Pulse period in us
+	 * 
+	 * \return 	Success
+	 */
+	bool set_period_us(uint16_t period_us);
+
+
+private:
+	/**
+	 * \brief	Output a PWM on one channel
+	 */
+	void write_channel(void);
+
+
+	uint8_t id_;			///< PWM line number
+	uint8_t channel_id_;	///< PWM channel number
+
+	// this is static because each channel controls 2 pwm lines and is thus
+	// shared by two objects 
+	static uint32_t pulse_us_[8];
+	static uint32_t period_us_[8];								
+};
+
+#endif /* PWM_AVR32_H_ */

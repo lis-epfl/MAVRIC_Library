@@ -30,48 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_default_config.h
+ * \file pwm.hpp
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
- *   
- * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
+ * \author Felix Schill
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
+ * 
+ * \brief Abstract class for PWM 
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
+#ifndef PWM_HPP_
+#define PWM_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdbool.h>
 
-
-#include "servos_mix_quadcopter_diag.h"
-
-
-static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
+class Pwm
 {
-	servos_mix_quadcopter_diag_conf_t conf 	= {};
-	
-	conf.motor_front_right					= 2;
-	conf.motor_front_left					= 1;
-	conf.motor_rear_right					= 3;
-	conf.motor_rear_left					= 0;
-	conf.motor_front_right_dir				= CW;
-	conf.motor_front_left_dir				= CCW;
-	conf.motor_rear_right_dir				= CCW;
-	conf.motor_rear_left_dir				= CW;
-	conf.min_thrust							= -0.9f;
-	conf.max_thrust							= 1.0f;
+public:
+	/**
+	 * \brief	Initialize the hardware line for servos
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool init(void) = 0;
 
-	return conf;
+
+	/**
+	 * \brief	Set pulse width
+	 * 
+	 * \param  pulse_us 	Pulse length in us
+	 * 
+	 * \return Success
+	 */
+	virtual bool set_pulse_width_us(uint16_t pulse_us) = 0;
+
+
+	/**
+	 * \brief	Set pulse period 
+	 *
+	 * \param 	period_us	Pulse period in us
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool set_period_us(uint16_t period_us) = 0;
 };
 
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif // SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
+#endif /* PWM_HPP_ */

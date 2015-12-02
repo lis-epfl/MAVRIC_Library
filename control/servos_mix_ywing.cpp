@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_ywing.h
+ * \file servos_mix_ywing.hpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,23 +40,26 @@
  ******************************************************************************/
 
 
-#include "servos_mix_ywing.h"
-#include "print_util.h"
+#include "servos_mix_ywing.hpp"
 
-bool servo_mix_ywing_init( servo_mix_ywing_t* mix, const servo_mix_ywing_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos)
+extern "C"
+{
+	#include "print_util.h"
+}
+
+bool servo_mix_ywing_init( servo_mix_ywing_t* mix, const servo_mix_ywing_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, Servo* motor, Servo* flap_top, Servo* flap_right, Servo* flap_left)
 {
 	bool init_success = true;
 	
 	// Init dependencies
 	mix->torque_command = torque_command;
 	mix->thrust_command = thrust_command;
-	mix->servos      	= servos;
+	mix->motor 			= motor;			
+	mix->flap_top 		= flap_top;		
+	mix->flap_right		= flap_right;		
+	mix->flap_left 		= flap_left;		
 
 	// Init parameters
-	mix->motor 			= config->motor;			
-	mix->flap_top 		= config->flap_top;		
-	mix->flap_right		= config->flap_right;		
-	mix->flap_left 		= config->flap_left;		
 	mix->flap_top_dir	= config->flap_top_dir;	
 	mix->flap_right_dir = config->flap_right_dir;
 	mix->flap_left_dir 	= config->flap_left_dir;
@@ -115,8 +118,8 @@ void servos_mix_ywing_update(servo_mix_ywing_t* mix)
 		}
 	}
 
-	servos_set_value(mix->servos, mix->motor, 		servos[0]);
-	servos_set_value(mix->servos, mix->flap_top,  	servos[1]);
-	servos_set_value(mix->servos, mix->flap_right,  servos[2]);
-	servos_set_value(mix->servos, mix->flap_left,   servos[3]);
+	mix->motor->write(		servos[0]);
+	mix->flap_top->write(	servos[1]);
+	mix->flap_right->write(	servos[2]);
+	mix->flap_left->write( 	servos[3]);
 }

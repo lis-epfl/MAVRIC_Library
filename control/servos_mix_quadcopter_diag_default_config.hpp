@@ -30,54 +30,35 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file pwm_servos.h
+ * \file servos_mix_quadcopter_default_config.hpp
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
- * \author Julien Lecoeur
- * 
- * \brief This file is the driver for pwm servos
+ * \author Gregoire Heitz
+ *   
+ * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
  *
  ******************************************************************************/
 
 
-#ifndef PWM_SERVOS_H_
-#define PWM_SERVOS_H_
+#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
+#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "servos.h"
+#include "servos_mix_quadcopter_diag.hpp"
 
 
-/**
- * \brief						Initialize the hardware line for servos
- *
- * \param use_servos_7_8_param	Definition if the line for servos 7 and 8 is used
- */
-void pwm_servos_init(bool use_servos_7_8_param);
+static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
+{
+	servos_mix_quadcopter_diag_conf_t conf 	= {};
+	
+	conf.motor_front_right_dir				= CW;
+	conf.motor_front_left_dir				= CCW;
+	conf.motor_rear_right_dir				= CCW;
+	conf.motor_rear_left_dir				= CW;
+	conf.min_thrust							= -0.9f;
+	conf.max_thrust							= 1.0f;
+
+	return conf;
+};
 
 
-/**
- * \brief						Set servos' values
- *
- * \param servos				Pointer to a structure containing the servos' data
- */
-void pwm_servos_write_to_hardware(const servos_t* servos);
-
-
-/**
- * \brief						Set speed controller set points 
- *
- * \param servos				Pointer to a structure containing the servos' data
- */
-void pwm_servos_calibrate_esc(const servos_t* servos);
-
-#ifdef __cplusplus
-	}
-#endif
-
-#endif /* PWM_SERVOS_H_ */
+#endif /* SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_ */

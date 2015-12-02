@@ -52,11 +52,7 @@ extern "C" {
 
 
 servo_mix_ywing_conf_t servo_mix_ywing_default_config =
-{
-	.motor			= 0,			
-	.flap_top		= 1,		
-	.flap_right		= 2,		
-	.flap_left		= 3,		
+{		
 	.flap_top_dir	= FLAP_INVERTED,	
 	.flap_right_dir	= FLAP_INVERTED,	
 	.flap_left_dir	= FLAP_INVERTED,	

@@ -30,37 +30,62 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_telemetry.c
+ * \file pwm_dummy.hpp
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Julien Lecoeur
  * \author Nicolas Dousse
- *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the servos
+ * 
+ * \brief This file is the driver for pwm servos dummy
  *
  ******************************************************************************/
 
 
-#include "servos_telemetry.hpp"
+#ifndef PWM_DUMMY_H_
+#define PWM_DUMMY_H_
 
-extern "C"
+#include "pwm.hpp"
+
+
+class Pwm_dummy: public Pwm
 {
-	#include "time_keeper.h"
-}
+public:	
+	/**
+	 * \brief	Initialize the hardware line for servos
+	 * 
+	 * \return 	Success
+	 */
+	bool init(void)
+	{
+		return true;
+	};
 
-// void servos_telemetry_mavlink_send(servos_t* servos, mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
-// {
-// 	mavlink_msg_servo_output_raw_pack(	mavlink_stream->sysid,
-// 										mavlink_stream->compid,
-// 										msg,
-// 										time_keeper_get_micros(),
-// 										0,
-// 										(uint16_t)( 1500 + 500 * servos->servo[0].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[1].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[2].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[3].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[4].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[5].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[6].value ),
-// 										(uint16_t)( 1500 + 500 * servos->servo[7].value )	);
-// }
+
+	/**
+	 * \brief	Set pulse width
+	 * 
+	 * \param  pulse_us 	Pulse length in us
+	 * 
+	 * \return Success
+	 */
+	bool set_pulse_width_us(uint16_t pulse_us)
+	{
+		return true;
+	};
+
+
+	/**
+	 * \brief	Set pulse period 
+	 *
+	 * \param 	period_us	Pulse period in us
+	 * 
+	 * \return 	Success
+	 */
+	bool set_period_us(uint16_t period_us)
+	{
+		return true;
+	};
+};
+
+#endif /* PWM_DUMMY_H_ */
