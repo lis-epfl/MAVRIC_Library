@@ -68,19 +68,10 @@ bool File_fat_fs::open(const char* path)
 {
 	bool success = true;
 	FRESULT fr;
-	char* file_name_;
-
-	file_name_ = (char*)malloc(sizeof(path)+2);
-	strcpy(file_name_, "1:");
-	strcat(file_name_, path);
-
-	if (strcmp(file_name,file_name_) != 0)
-	{
-		file_name = (char*)malloc(sizeof(path)+2);
-		strcpy(file_name, "1:");
-		strcat(file_name, path);
-	}
 	
+	file_name = (char*)malloc(sizeof(path)+2);
+	strcpy(file_name, "1:");
+	strcat(file_name, path);
 
 	if (debug)
 	{
@@ -135,18 +126,10 @@ bool File_fat_fs::exists(const char* path)
 {
 	bool success = true;
 	FRESULT fr;
-	char* file_name_;
 
-	file_name_ = (char*)malloc(sizeof(path)+2);
-	strcpy(file_name_, "1:");
-	strcat(file_name_, path);
-
-	if (strcmp(file_name,file_name_) != 0)
-	{
-		file_name = (char*)malloc(sizeof(path)+2);
-		strcpy(file_name, "1:");
-		strcat(file_name, path);
-	}
+	file_name = (char*)malloc(sizeof(path)+2);
+	strcpy(file_name, "1:");
+	strcat(file_name, path);
 
 	fat_fs_mounting_mount(fat_fs_mounting,debug);
 
