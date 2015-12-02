@@ -50,6 +50,8 @@ extern "C" {
 #include "mavlink_waypoint_handler.h"
 #include "position_estimation.h"
 #include "control_command.h"
+#include "ahrs.h"
+#include "scheduler.h"
 
 /**
  * \brief Vector field navigation
@@ -59,14 +61,21 @@ typedef struct
 	const mavlink_waypoint_handler_t* 	waypoint_handler;			///< Waypoint list (input)
 	const position_estimation_t*		pos_est;					///< Estimated position and speed (input)
 	velocity_command_t*					velocity_command;			///< Velocity command (output)
+	ahrs_t*								ahrs;						///< Pointer to the ahrs module
+	velocity_command_mode_t				command_mode;				///< Global, local or semi-local
+	float								floor_altitude;				///< Floor altitude for ground avoidance
+	float								velocity_max;				///< Maximum velocity (max boundary)
 } vector_field_waypoint_t;	
 
 
 /**
- * \brief Attitude controller configuration
+ * \brief Vector field configuration structure
  */
 typedef struct
 {
+	velocity_command_mode_t				command_mode;				///< Global, local or semi-local
+	float								floor_altitude;				///< Floor altitude for ground avoidance
+	float								velocity_max;				///< Maximum velocity (max boundary)
 } vector_field_waypoint_conf_t;	
 
 
@@ -79,15 +88,17 @@ typedef struct
  * \param 	pos_est		 		Pointer to the estimated speed and position (input)
  * \param 	velocity_command	Pointer to velocity command (output)
  */
-void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* pos_est, velocity_command_t* velocity_command);
+void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* pos_est, velocity_command_t* velocity_command, ahrs_t* ahrs);
 
 
 /**
  * \brief               	Main update function
  * 
  * \param 	vector_field    Pointer to data structure
+ *
+ * \return	Task result, currently only TASK_RUN_SUCCESS
  */
-void vector_field_waypoint_update(vector_field_waypoint_t* vector_field);
+task_return_t vector_field_waypoint_update(vector_field_waypoint_t* vector_field);
 
 
 #ifdef __cplusplus

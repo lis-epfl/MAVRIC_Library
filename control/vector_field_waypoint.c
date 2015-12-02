@@ -468,29 +468,35 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* pos_est, velocity_command_t* velocity_command)
+void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* pos_est, velocity_command_t* velocity_command, ahrs_t* ahrs)
 {
 	// Init dependencies
 	vector_field->waypoint_handler 	= waypoint_handler;
 	vector_field->pos_est 			= pos_est;
 	vector_field->velocity_command 	= velocity_command;
+	vector_field->ahrs				= ahrs;
+	
+	// Copy config
+	vector_field->command_mode = config->command_mode;
+	vector_field->floor_altitude = config->floor_altitude;
+	vector_field->velocity_max = config->velocity_max;
 }
 
 
-void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
+task_return_t vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 {
 	float tmp_vector[3];
 	float pos_obj[3];
 
 	// Re-init velocity command
-	vector_field->velocity_command->mode 	= VELOCITY_COMMAND_MODE_GLOBAL;
+	vector_field->velocity_command->mode 	= vector_field->command_mode;
 	vector_field->velocity_command->xyz[X] 	= 0.0f;
 	vector_field->velocity_command->xyz[Y] 	= 0.0f;
 	vector_field->velocity_command->xyz[Z] 	= 0.0f;
 
 	// Compute vector field for floor avoidance
 	vector_field_floor(	vector_field->pos_est->local_position.pos, 
-						20, 
+						vector_field->floor_altitude, 
 						tmp_vector );
 
 	// Add floor vector field to the velocity command
@@ -566,10 +572,43 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 
 	// Limit velocity
 	float vel_norm = vectors_norm(vector_field->velocity_command->xyz);
-	if( vel_norm > 5.0f )
+	if( vel_norm > vector_field->velocity_max )
 	{
-		vector_field->velocity_command->xyz[X] = 5.0f * vector_field->velocity_command->xyz[X] / vel_norm;
-		vector_field->velocity_command->xyz[Y] = 5.0f * vector_field->velocity_command->xyz[Y] / vel_norm;
-		vector_field->velocity_command->xyz[Z] = 5.0f * vector_field->velocity_command->xyz[Z] / vel_norm;
+		vector_field->velocity_command->xyz[X] = vector_field->velocity_max * vector_field->velocity_command->xyz[X] / vel_norm;
+		vector_field->velocity_command->xyz[Y] = vector_field->velocity_max * vector_field->velocity_command->xyz[Y] / vel_norm;
+		vector_field->velocity_command->xyz[Z] = vector_field->velocity_max * vector_field->velocity_command->xyz[Z] / vel_norm;
 	}
+	
+	// Transform the velocity command into the correct frame
+	aero_attitude_t attitude_yaw;
+	quat_t q_rot;
+	float tmp_command[3];
+	tmp_command[X] = vector_field->velocity_command->xyz[X];
+	tmp_command[Y] = vector_field->velocity_command->xyz[Y];
+	tmp_command[Z] = vector_field->velocity_command->xyz[Z];
+	switch(vector_field->command_mode)
+	{
+		case VELOCITY_COMMAND_MODE_GLOBAL:
+			// Already in global
+			break;
+			
+		case VELOCITY_COMMAND_MODE_LOCAL:
+			// Transform global to local
+			vector_field->velocity_command->xyz = quaternions_global_to_local(vector_field->ahrs->qe, tmp_command);
+			break;
+			
+		case VELOCITY_COMMAND_MODE_SEMI_LOCAL:
+		default:
+			// Transform global to semi-local
+			attitude_yaw = coord_conventions_quat_to_aero(vector_field->ahrs->qe);
+			attitude_yaw.rpy[0] = 0.0f;
+			attitude_yaw.rpy[1] = 0.0f;
+			attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+			q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+			quaternions_rotate_vector(q_rot, tmp_command, vector_field->velocity_command->xyz);
+			break;
+	}
+	
+	return TASK_RUN_SUCCESS;
 }
