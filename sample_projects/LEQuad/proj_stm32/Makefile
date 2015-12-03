@@ -53,7 +53,6 @@ LIB_SRCS += drivers/bmp085.cpp
 LIB_SRCS += drivers/flow.cpp                  
 LIB_SRCS += drivers/gps_telemetry.cpp       
 LIB_SRCS += drivers/gps_ublox.cpp                 
-LIB_SRCS += drivers/gps_ublox_telemetry.cpp       
 LIB_SRCS += drivers/hmc5883l.cpp             
 LIB_SRCS += drivers/lsm330dlc.cpp            
 LIB_SRCS += drivers/servo.cpp                              
