@@ -43,7 +43,7 @@
 
 #include "state_machine.h"
 #include "spektrum_satellite.h"
-#include "led.h"
+//#include "led.h"
 #include "print_util.h"
 #include "state.h"
 #include "time_keeper.h"
