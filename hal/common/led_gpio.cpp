@@ -30,79 +30,52 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file tasks.h
+ * \file led_gpio.cpp
  * 
  * \author MAV'RIC Team
- *   
- * \brief Definition of the tasks executed on the autopilot
+ * 
+ * \brief Implementation of led using gpio 
  *
  ******************************************************************************/
 
-
-#ifndef TASKS_H_
-#define TASKS_H_
-
-#include "central_data.hpp"
-#include "led.hpp"
-
-/**
- * \brief 			Initialises all the tasks
- *
- * \return	The initialization status, succeed == true
- */	
-bool tasks_create_tasks(Central_data* central_data);
+#include "led_gpio.hpp"
 
 
-/**
- * \brief            Updates the IMU
- */
-void tasks_run_imu_update(Central_data* central_data);
+Led_gpio::Led_gpio(Gpio& gpio, bool active_high):
+	gpio_(gpio),
+	active_high_(active_high)
+{
+	off();
+}
 
 
-/**
- * \brief            	This function does bullshit
- * \details  			1) Switch on/off the motor
- * 						2) Check the receivers
- * 
- * \param	chan_switch	The pointer to set the switch mode
- * \param	rc_check	The pointer to the state of the remote
- * \param	motorstate	The pointer to the motor state
- */
-void tasks_rc_user_channels(uint8_t* chan_switch, signal_quality_t* rc_check, int8_t* motor_state);
+void Led_gpio::on(void)
+{
+	if( active_high_ )
+	{
+		gpio_.set_high();
+	}
+	else
+	{
+		gpio_.set_low();
+	}
+}
 
 
-/**
- * \brief            Run the main stabilisation loop
- */
-bool tasks_run_stabilisation(Central_data* central_data);
+void Led_gpio::off(void)
+{
+	if( active_high_ )
+	{
+		gpio_.set_low();
+	}
+	else
+	{
+		gpio_.set_high();
+	}	
+}
 
 
-/**
- * \brief            Run GPS update
- */
-bool tasks_run_gps_update(Central_data* central_data);
-
-
-/**
- * \brief            Run the navigation task
- */
-bool tasks_run_navigation_update(Central_data* central_data);
-
-
-/**
- * \brief            Run the barometer task
- */
-bool tasks_run_barometer_update(Central_data* central_data);
-
-/**
- * \brief            Run the sonar task
- */
-bool sonar_update(Central_data* central_data);
-
-/**
- * \brief            Run the LED toggle task
- */
-bool tasks_led_toggle(Led* led);
-
-
-#endif /* TASKS_H_ */
+void Led_gpio::toggle(void)
+{
+	gpio_.toggle();
+}

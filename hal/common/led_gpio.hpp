@@ -30,79 +30,58 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file tasks.h
+ * \file led_gpio.hpp
  * 
  * \author MAV'RIC Team
- *   
- * \brief Definition of the tasks executed on the autopilot
+ * 
+ * \brief Implementation of led using gpio 
  *
  ******************************************************************************/
 
 
-#ifndef TASKS_H_
-#define TASKS_H_
+#ifndef LED_GPIO_HPP_
+#define LED_GPIO_HPP_
 
-#include "central_data.hpp"
+#include <stdbool.h>
+
 #include "led.hpp"
+#include "gpio.hpp"
 
-/**
- * \brief 			Initialises all the tasks
- *
- * \return	The initialization status, succeed == true
- */	
-bool tasks_create_tasks(Central_data* central_data);
-
-
-/**
- * \brief            Updates the IMU
- */
-void tasks_run_imu_update(Central_data* central_data);
-
-
-/**
- * \brief            	This function does bullshit
- * \details  			1) Switch on/off the motor
- * 						2) Check the receivers
- * 
- * \param	chan_switch	The pointer to set the switch mode
- * \param	rc_check	The pointer to the state of the remote
- * \param	motorstate	The pointer to the motor state
- */
-void tasks_rc_user_channels(uint8_t* chan_switch, signal_quality_t* rc_check, int8_t* motor_state);
+class Led_gpio: public Led
+{
+public:
+	/**
+	 * \brief Constructor
+	 * 
+	 * \param gpio				Reference to gpio
+	 * \param active_high		Indicates if the led is on for gpio high (true) of gpio low (false)
+	 */
+	Led_gpio(Gpio& gpio, bool active_high = true);
 
 
-/**
- * \brief            Run the main stabilisation loop
- */
-bool tasks_run_stabilisation(Central_data* central_data);
+	/**
+	 * \brief	Switch led on
+	 */
+	void on(void);
 
 
-/**
- * \brief            Run GPS update
- */
-bool tasks_run_gps_update(Central_data* central_data);
+	/**
+	 * \brief	Switch led off
+	 */
+	void off(void);
 
 
-/**
- * \brief            Run the navigation task
- */
-bool tasks_run_navigation_update(Central_data* central_data);
+	/**
+	 * \brief	Toggle led
+	 */
+	void toggle(void);
 
 
-/**
- * \brief            Run the barometer task
- */
-bool tasks_run_barometer_update(Central_data* central_data);
+private:
+	Gpio&	gpio_;			//< Reference to gpio
 
-/**
- * \brief            Run the sonar task
- */
-bool sonar_update(Central_data* central_data);
-
-/**
- * \brief            Run the LED toggle task
- */
-bool tasks_led_toggle(Led* led);
+	bool 	active_high_;	///< Indicates if the led is on for gpio high (true) of gpio low (false)
+};
 
 
-#endif /* TASKS_H_ */
+#endif /* LED_GPIO_HPP_ */

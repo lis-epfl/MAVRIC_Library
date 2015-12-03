@@ -132,6 +132,7 @@ LIB_SRCS += hal/dummy/file_dummy.cpp
 LIB_SRCS += hal/common/fat_fs_mounting.cpp
 LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
 LIB_SRCS += hal/common/dbg.cpp
+LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
 

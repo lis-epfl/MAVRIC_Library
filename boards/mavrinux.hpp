@@ -60,6 +60,7 @@
 #include "battery.hpp"
 #include "pwm_dummy.hpp"
 #include "servo.hpp"
+#include "led_dummy.hpp"
 
 extern "C"
 {
@@ -131,6 +132,7 @@ public:
 	Gpio_dummy			dsm_power_pin;
 	Serial_dummy 		dsm_serial;
 	Spektrum_satellite	spektrum_satellite;
+	Led_dummy 			led;
 
 	Serial_udp			mavlink_serial;		
 	Serial_linux_io 	debug_serial;

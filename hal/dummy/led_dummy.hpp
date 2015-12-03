@@ -30,79 +30,50 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file tasks.h
+ * \file led_dummy.hpp
  * 
  * \author MAV'RIC Team
- *   
- * \brief Definition of the tasks executed on the autopilot
+ * \author Felix Schill
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
+ * 
+ * \brief Dummy implementation of LED
  *
  ******************************************************************************/
 
 
-#ifndef TASKS_H_
-#define TASKS_H_
+#ifndef LED_DUMMY_HPP_
+#define LED_DUMMY_HPP_
 
-#include "central_data.hpp"
 #include "led.hpp"
 
-/**
- * \brief 			Initialises all the tasks
- *
- * \return	The initialization status, succeed == true
- */	
-bool tasks_create_tasks(Central_data* central_data);
+class Led_dummy : public Led
+{
+public:
+
+	Led_dummy()
+	{};
+
+	/**
+	 * \brief	Switch led on
+	 */
+	void on(void)
+	{};
 
 
-/**
- * \brief            Updates the IMU
- */
-void tasks_run_imu_update(Central_data* central_data);
+	/**
+	 * \brief	Switch led off
+	 */
+	void off(void)
+	{};
 
 
-/**
- * \brief            	This function does bullshit
- * \details  			1) Switch on/off the motor
- * 						2) Check the receivers
- * 
- * \param	chan_switch	The pointer to set the switch mode
- * \param	rc_check	The pointer to the state of the remote
- * \param	motorstate	The pointer to the motor state
- */
-void tasks_rc_user_channels(uint8_t* chan_switch, signal_quality_t* rc_check, int8_t* motor_state);
+	/**
+	 * \brief	Toggle led
+	 */
+	void toggle(void)
+	{};
+};
 
 
-/**
- * \brief            Run the main stabilisation loop
- */
-bool tasks_run_stabilisation(Central_data* central_data);
-
-
-/**
- * \brief            Run GPS update
- */
-bool tasks_run_gps_update(Central_data* central_data);
-
-
-/**
- * \brief            Run the navigation task
- */
-bool tasks_run_navigation_update(Central_data* central_data);
-
-
-/**
- * \brief            Run the barometer task
- */
-bool tasks_run_barometer_update(Central_data* central_data);
-
-/**
- * \brief            Run the sonar task
- */
-bool sonar_update(Central_data* central_data);
-
-/**
- * \brief            Run the LED toggle task
- */
-bool tasks_led_toggle(Led* led);
-
-
-#endif /* TASKS_H_ */
+#endif /* LED_DUMMY_HPP_ */
