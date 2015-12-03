@@ -131,15 +131,14 @@ void piezo_speaker_beep(int32_t duration_ms, int32_t frequency)
 	{
 		del_us = 100000;
 	}
-	uint32_t now = time_keeper_get_micros();
-	uint32_t start = now;
+
+	uint32_t start = time_keeper_get_us();
 	
-	while( time_keeper_get_micros() < start + 1000 * duration_ms) 
+	while( time_keeper_get_us() < start + 1000 * duration_ms) 
 	{
 		piezo_speaker_set_value_binary(val);
 		val = -val;
-		now+=del_us / 2;
-		time_keeper_delay_until(now);
+		time_keeper_delay_us(del_us / 2);
 	}
 	piezo_speaker_set_value_binary(0);
 }

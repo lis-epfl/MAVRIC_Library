@@ -52,7 +52,7 @@ void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
-										time_keeper_get_millis(),
+										time_keeper_get_ms(),
 										"sonar",
 										1000.0f/9.8f*2.54f*analog_monitor->avg[ANALOG_RAIL_12]);
 }

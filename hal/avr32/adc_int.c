@@ -155,8 +155,8 @@ static void process_data(void)
 		//|| ((adcifa->sr&ADC_INT_SEOS1) ==0) ) {}
 		else 
 		{
-			adc_int_period=(time_keeper_get_time_ticks() - last_adc_int_time);
-			last_adc_int_time=time_keeper_get_time_ticks();
+			adc_int_period=(time_keeper_get_us() - last_adc_int_time);
+			last_adc_int_time=time_keeper_get_us();
 		
 			if (sample_counter>=0) 
 			{

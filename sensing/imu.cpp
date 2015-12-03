@@ -71,7 +71,7 @@ Imu::Imu(Accelerometer& accelerometer,
 	do_gyroscope_bias_calibration_(false),
 	do_magnetometer_bias_calibration_(false),
 	dt_s_(0.004f),
-	last_update_us_(time_keeper_get_micros())
+	last_update_us_(time_keeper_get_us())
 {}
 
 
@@ -80,8 +80,8 @@ bool Imu::update(void)
 	bool success = false;
 
 	// Update timing
-	uint32_t t 		= time_keeper_get_micros();
-	dt_s_ 			= time_keeper_ticks_to_seconds( t - last_update_us_ );
+	uint32_t t 		= time_keeper_get_us();
+	dt_s_ 			= (float)( t - last_update_us_ ) / 1000000.0f;
 	last_update_us_ = t;
 
 	// Read new values from sensors

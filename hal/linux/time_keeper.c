@@ -48,13 +48,36 @@
 #define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
 
 
-void time_keeper_init() 
-{
-	;
-}
 
 
-uint32_t time_keeper_get_time_ticks()
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief	raw timer ticks
+ *
+ * \return	The raw timer ticks
+ */
+uint32_t time_keeper_get_s_ticks(void);
+
+
+/**
+ * \brief	Transforms the timer ticks into seconds
+ *
+ * \param	timer_ticks		The timer ticks
+ *
+ * \return	The time in seconds
+ */
+float time_keeper_ticks_to_seconds(uint32_t timer_ticks);
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+uint32_t time_keeper_get_s_ticks()
 { 	
 	//raw timer ticks
 	struct timeval tv;
@@ -64,54 +87,57 @@ uint32_t time_keeper_get_time_ticks()
 }
 
 
-double time_keeper_get_time()
-{
-	// time in seconds since system start
-	return time_keeper_ticks_to_seconds(time_keeper_get_time_ticks());
-}
-
-
-uint32_t time_keeper_get_millis()
-{
-	//milliseconds since system start
-	return time_keeper_get_time_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
-}
-
-
-uint32_t time_keeper_get_micros()
-{
-	// microseconds since system start. Will run over after an hour.
-	return time_keeper_get_time_ticks() * (1000000 / TK_AST_FREQUENCY);
-}
-
-
 float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
 {
 	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
 }
 
 
-void time_keeper_delay_micros(int32_t microseconds)
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void time_keeper_init() 
 {
-	uint32_t now = time_keeper_get_micros();
-	while (time_keeper_get_micros() < now + microseconds);
+	;
 }
 
 
-void time_keeper_delay_until(uint32_t until_time)
+double time_keeper_get_s()
 {
-	while (time_keeper_get_micros() < until_time)
-	{
-		;
-	}	
+	// time in seconds since system start
+	return time_keeper_ticks_to_seconds(time_keeper_get_s_ticks());
+}
+
+
+uint32_t time_keeper_get_ms()
+{
+	//milliseconds since system start
+	return time_keeper_get_s_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
+}
+
+
+uint32_t time_keeper_get_us()
+{
+	// microseconds since system start. Will run over after an hour.
+	return time_keeper_get_s_ticks() * (1000000 / TK_AST_FREQUENCY);
+}
+
+
+
+
+void time_keeper_delay_us(int32_t microseconds)
+{
+	uint32_t now = time_keeper_get_us();
+	while (time_keeper_get_us() < now + microseconds);
 }
 
 
 void time_keeper_delay_ms(int32_t t) 
 {
-	uint32_t now = time_keeper_get_micros();
+	uint32_t now = time_keeper_get_us();
 	
-	while (time_keeper_get_micros() < now + 1000 * t) 
+	while (time_keeper_get_us() < now + 1000 * t) 
 	{
 		;
 	}

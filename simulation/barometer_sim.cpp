@@ -55,7 +55,7 @@ Barometer_sim::Barometer_sim(Dynamic_model& dynamic_model ):
 	vario_vz_( 0.0f ),
 	temperature_( 24.0f ),	// Nice day
 	altitude_offset_( 0.0f ),
-	last_update_us_( time_keeper_get_micros() )
+	last_update_us_( time_keeper_get_us() )
 {}
 
 

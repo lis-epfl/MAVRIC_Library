@@ -72,7 +72,7 @@ Dynamic_model_quad_diag::Dynamic_model_quad_diag( 	Servo& servo_front_right,
 	vel_bf_( 		std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
 	vel_( 			std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
 	attitude_( 		quat_t{1.0f, {0.0f, 0.0f, 0.0f}} ),
-	last_update_us_( time_keeper_get_micros() ),
+	last_update_us_( time_keeper_get_us() ),
 	dt_s_( 0.004f )
 {
 	// Init local position
@@ -97,7 +97,7 @@ bool Dynamic_model_quad_diag::update(void)
 	const quat_t up 	= { 0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z} };
 	
 	// Update timing
-	float now	 	= time_keeper_get_micros();
+	float now	 	= time_keeper_get_us();
 	dt_s_ 	 		= (now - last_update_us_) / 1000000.0f;
 	last_update_us_ = now;
 

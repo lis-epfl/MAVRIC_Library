@@ -47,37 +47,26 @@ void time_keeper_init()
 }
 
 
-uint32_t time_keeper_get_time_ticks()
-{ 	
-	return 0;
-}
-
-
-double time_keeper_get_time()
+double time_keeper_get_s()
 {
 	return 0.0;
 }
 
 
-uint32_t time_keeper_get_millis()
+uint32_t time_keeper_get_ms()
 {
 	return 0;
 }
 
 
-uint32_t time_keeper_get_micros()
+uint32_t time_keeper_get_us()
 {
 return 0;
 }
 
 
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
-{
-	return 0.0f;
-}
 
-
-void time_keeper_delay_micros(int32_t microseconds)
+void time_keeper_delay_us(int32_t microseconds)
 {
 	;
 }

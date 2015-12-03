@@ -269,7 +269,7 @@ void spektrum_satellite_init(satellite_t* satellite, usart_config_t usart_conf_s
 
 	channel_center[RC_YAW] = 0;
 	joystick_filedescriptor = open_joystick(JOYSTICK_DEVICE);
-	last_update = time_keeper_get_millis();
+	last_update = time_keeper_get_ms();
 	
 	#ifdef KEYBOARD_ACTIVE
 	set_conio_terminal_mode();
@@ -285,9 +285,9 @@ void get_keyboard_input(int32_t *joystick_axes)
 {
 	if (!kbhit()) 
 	{
-		if( time_keeper_get_millis() - last_keypress < 1000 ) 
+		if( time_keeper_get_ms() - last_keypress < 1000 ) 
 		{	
-			if( time_keeper_get_millis() - last_keypress < 500 ) 
+			if( time_keeper_get_ms() - last_keypress < 500 ) 
 			{
 				joystick_axes[JOY_PITCH] 	/= 2;
 				joystick_axes[JOY_ROLL] 	/= 2;
@@ -307,7 +307,7 @@ void get_keyboard_input(int32_t *joystick_axes)
 	{
 		while (kbhit()) 
 		{
-			last_keypress=time_keeper_get_millis();
+			last_keypress=time_keeper_get_ms();
 			char c=getch();
 			if (c==3) 
 			{
@@ -388,7 +388,7 @@ int16_t spektrum_satellite_get_channel(uint8_t index) {
 	int32_t i;
 	int16_t channels[16];
 
-	if (time_keeper_get_millis() - last_update>20) 
+	if (time_keeper_get_ms() - last_update>20) 
 	{
 
 		#ifdef KEYBOARD_ACTIVE
@@ -416,7 +416,7 @@ int16_t spektrum_satellite_get_channel(uint8_t index) {
 		channels[RC_SAFETY] 	= joystick_axes[JOY_SAFETY] 	* J_GAIN / ( joy_max[JOY_SAFETY]  - joy_min[JOY_SAFETY]   );
 		channels[RC_ID_MODE] 	= joystick_axes[JOY_ID_MODE] 	* J_GAIN / ( joy_max[JOY_ID_MODE] - joy_min[JOY_ID_MODE]  );
 		
-		last_update = time_keeper_get_millis();
+		last_update = time_keeper_get_ms();
 	}	
 
 	return channels[index];

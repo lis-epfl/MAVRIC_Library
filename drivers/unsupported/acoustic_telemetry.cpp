@@ -54,7 +54,7 @@ void acoustic_telemetry_send (const audio_t* audio_data, const mavlink_stream_t*
 									mavlink_stream->compid,
 									msg,
 									"Audio",
-									time_keeper_get_micros(),
+									time_keeper_get_us(),
 									(float)audio_data->azimuth,
 									(float)audio_data->elevation,
 									(float)audio_data->reliabe_data);

@@ -56,7 +56,7 @@ Simulation::Simulation( Dynamic_model& dynamic_model, simulation_conf_t config )
 	barometer_( Barometer_sim(dynamic_model_) ),
 	sonar_( Sonar_sim(dynamic_model_) ),
 	gps_( Gps_sim(dynamic_model_) ),
-	last_update_us_( time_keeper_get_micros() )
+	last_update_us_( time_keeper_get_us() )
 {}
 
 
@@ -65,7 +65,7 @@ bool Simulation::update(void)
 	bool success = true;
 	
 	success &= dynamic_model_.update();
-	last_update_us_ = time_keeper_get_micros();
+	last_update_us_ = time_keeper_get_us();
 
 	return success;
 }

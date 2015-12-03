@@ -286,7 +286,7 @@ bool Lsm330dlc::update(void)
 		gyro_data_[2] = (float)((int16_t)gyro_buffer[3]);
 
 		// Save last update time
-		last_update_us_ = time_keeper_get_micros();
+		last_update_us_ = time_keeper_get_us();
 	}
 
 	return success;
