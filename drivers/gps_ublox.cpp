@@ -2204,7 +2204,7 @@ static void gps_ublox_init(gps_t *gps, Serial* serial)
 	gps->configure_gps = false;
 	gps->config_nav_msg_count = 0;
 	gps->config_loop_count = 0;
-	gps->configure_timer = time_keeper_get_millis();
+	gps->configure_timer = time_keeper_get_ms();
 	gps->acknowledged_received = true;
 }
 
@@ -2231,7 +2231,7 @@ static void gps_ublox_configure_gps(gps_t *gps)
 	ubx_cfg_usb_t gps_cfg_usb;
 	ubx_cfg_cfg_t gps_cfg_cfg;
 	
-	uint32_t tnow = time_keeper_get_millis();
+	uint32_t tnow = time_keeper_get_ms();
 
 	uint32_t time_out_config = 5000;
 
