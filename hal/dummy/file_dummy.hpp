@@ -53,7 +53,7 @@ public:
 	/**
 	 * \brief 	Constructor 
 	 */
-    File_dummy(const char* path)
+    File_dummy(void)
     {};
 
 
@@ -83,7 +83,10 @@ public:
 	 * 
 	 * \return  true if the file exists, false otherwise
 	 */
-	bool exists(const char* path);
+	bool exists(const char* path)
+	{
+		return true;
+	}
 
 	/**
 	 * \brief 	Close the file
