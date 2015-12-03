@@ -30,40 +30,46 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_telemetry.hpp
+ * \file led_avr32.cpp
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Julien Lecoeur
  * \author Nicolas Dousse
- *   
- * \brief GPS telemetry
+ * 
+ * \brief This file is the driver for the avr32 led
  *
  ******************************************************************************/
 
-#ifndef GPS_TELEMETRY_H_
-#define GPS_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "gps.hpp"
+#include "led_avr32.hpp"
 
-/**
- * \brief	Initialize the MAVLink communication module for the GPS
- * 
- * \param	gps						The pointer to the gps structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool gps_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler);
-
-/**
- * \brief	Function to send the MAVLink gps raw message
- * 
- * \param	gps						Pointer to the GPS
- * \param	mavlink_stream			Pointer to the MAVLink stream structure
- * \param	msg						Pointer to the MAVLink message
- */
-void gps_telemetry_send_raw(const Gps* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+extern "C"
+{
+	#include "led.h"
+}
 
 
-#endif /* GPS_TELEMETRY_H_ */
+Led_avr32::Led_avr32(led_avr32_id_t id):
+	id_(id)
+{
+	LED_Off(id_);
+}
+
+
+void Led_avr32::on(void)
+{
+	LED_On(id_);
+}
+
+
+void Led_avr32::off(void)
+{
+	LED_Off(id_);
+}
+
+
+void Led_avr32::toggle(void)
+{
+	LED_Toggle(id_);
+}

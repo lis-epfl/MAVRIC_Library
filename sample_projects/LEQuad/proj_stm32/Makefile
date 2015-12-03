@@ -5,7 +5,7 @@
 ################################################################################
 
 # Binaries will be generated with this name
-PROJ_NAME=LEQuad_mavrinux
+PROJ_NAME=LEQuad_mavrimini
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
@@ -40,9 +40,9 @@ LIB_SRCS += util/print_util.c
 LIB_SRCS += util/quick_trig.c
 LIB_SRCS += util/string_util.c
 
-LIB_SRCS += boards/mavrinux.cpp
+# LIB_SRCS += boards/mavrinux.cpp
 
-LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
+LIB_SRCS += sample_projects/LEQuad/main_stm32.cpp
 LIB_SRCS += sample_projects/LEQuad/central_data.cpp
 LIB_SRCS += sample_projects/LEQuad/tasks.cpp
 LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
@@ -52,7 +52,8 @@ LIB_SRCS += drivers/barometer_telemetry.cpp
 LIB_SRCS += drivers/bmp085.cpp                    
 LIB_SRCS += drivers/flow.cpp                  
 LIB_SRCS += drivers/gps_telemetry.cpp       
-LIB_SRCS += drivers/gps_ublox.cpp
+LIB_SRCS += drivers/gps_ublox.cpp                 
+LIB_SRCS += drivers/gps_ublox_telemetry.cpp       
 LIB_SRCS += drivers/hmc5883l.cpp             
 LIB_SRCS += drivers/lsm330dlc.cpp            
 LIB_SRCS += drivers/servo.cpp                              
@@ -100,10 +101,9 @@ LIB_SRCS += communication/onboard_parameters.c
 LIB_SRCS += communication/remote.c
 LIB_SRCS += communication/remote_telemetry.c
 LIB_SRCS += communication/state.c
+
 LIB_SRCS += communication/state_machine.c
 LIB_SRCS += communication/state_telemetry.c
-LIB_SRCS += communication/toggle_logging.cpp
-LIB_SRCS += communication/toggle_logging_telemetry.cpp
 
 LIB_SRCS += simulation/simulation.cpp
 LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
@@ -126,25 +126,56 @@ LIB_SRCS += hal/dummy/FatFs/usbdisk.c
 LIB_SRCS += hal/dummy/adc_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
+LIB_SRCS += hal/dummy/time_keeper.c
 
+LIB_SRCS += hal/common/fat_fs_mounting.cpp
+LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
 LIB_SRCS += hal/common/dbg.cpp
-LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
 
-LIB_SRCS += hal/linux/file_linux.cpp
-LIB_SRCS += hal/linux/serial_udp.cpp
-LIB_SRCS += hal/linux/time_keeper.c
-LIB_SRCS += hal/linux/serial_linux_io.cpp
+# LIB_SRCS += hal/linux/file_linux.cpp
+# LIB_SRCS += hal/linux/serial_udp.cpp
+# LIB_SRCS += hal/linux/time_keeper.c
+# LIB_SRCS += hal/linux/serial_linux_io.cpp
 
+
+# ------------------------------------------------------------------------------
+# LIBOPENCM3
+# ------------------------------------------------------------------------------
+OPENCM3_DIR 	= $(MAVRIC_LIB)/libs/libopencm3
+CM3_INCLUDE_DIR	= $(OPENCM3_DIR)/include
+CM3_LIB_DIR		= $(OPENCM3_DIR)/lib
+CM3_SCRIPT_DIR	= $(OPENCM3_DIR)/scripts
+CM3_LIBNAME 	= opencm3_stm32f4
+CM3_DEFS		= -DSTM32F4
+CM3_FP_FLAGS	?= -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CM3_ARCH_FLAGS	= -mthumb -mcpu=cortex-m4 $(CM3_FP_FLAGS)
+# CM3_LDSCRIPT 	= $(OPENCM3_DIR)/lib/libopencm3_stm32f4.ld
+# CM3_LDSCRIPT 	= mavrimini.ld
+CM3_LDSCRIPT 	= stm32f4-discovery.ld
+
+# ------------------------------------------------------------------------------
+# COMPILER
+# ------------------------------------------------------------------------------
+CC		:= arm-none-eabi-gcc
+CXX		:= arm-none-eabi-g++
+LD		:= arm-none-eabi-g++
+AR		:= arm-none-eabi-ar
+AS		:= arm-none-eabi-as
+OBJCOPY	:= arm-none-eabi-objcopy
+OBJDUMP	:= arm-none-eabi-objdump
+GDB		:= arm-none-eabi-gdb
+SIZER 	:= arm-none-eabi-size
 
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-# CC = gcc
-OBJCOPY = objcopy
-
-CFLAGS  = -g -O2 -Wall -std=gnu99
+CFLAGS	+= -Os -g -std=gnu99
+CFLAGS	+= -Wall
+# CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
+# CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
+CFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 
 # Include files from MAVRIC library and source folder
 CFLAGS += -I.
@@ -153,19 +184,43 @@ CFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-# CXX = g++
-OBJCOPY = objcopy
-
-CXXFLAGS  = -g -O2 -Wall -std=c++11
+CXXFLAGS	+= -Os -g -std=c++11
+CXXFLAGS	+= -Wall
+# CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
+CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 
 # Include files from MAVRIC library and source folder
 CXXFLAGS += -I.
 CXXFLAGS += ${LIB_INC}
 
+
+# ------------------------------------------------------------------------------
+# C & C++ preprocessor common flags
+# ------------------------------------------------------------------------------
+CPPFLAGS	+= -MD
+CPPFLAGS	+= -Wall -Wundef
+CPPFLAGS	+= -I$(CM3_INCLUDE_DIR) $(CM3_DEFS)
+
+
+# ------------------------------------------------------------------------------
+# Linker flags
+# ------------------------------------------------------------------------------
+LDFLAGS		+= --static -nostartfiles
+LDFLAGS		+= -L$(CM3_LIB_DIR)
+LDFLAGS		+= -T$(CM3_LDSCRIPT)
+LDFLAGS		+= -Wl,-Map=$(*).map
+LDFLAGS		+= -Wl,--gc-sections
+LDFLAGS		+= --specs=nosys.specs -z muldefs
+
+LDLIBS		+= -l$(CM3_LIBNAME)
+LDLIBS		+= -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
+
+
 # Include files from MAVRIC library and source folder
-LDFLAGS += -I.
-LDFLAGS += ${LIB_INC}
-LDFLAGS += ${SRCS_INC}
+# LDFLAGS += -I.
+# LDFLAGS += ${LIB_INC}
+# LDFLAGS += ${SRCS_INC}
+
 
 ################################################################################
 # Normally you shouldn't need to change anything below this line!
@@ -205,28 +260,37 @@ BUILD_CMD = LOG=$$($(CMD) 2>&1) ; if [ $$? -eq 1 ]; then $(PRINT_ERROR); elif [ 
 # Main rule
 all: proj
 
-# Main rule
-lib: ${OBJS}
-
 proj: $(PROJ_NAME).elf
+	@$(SIZER) $^
+
+# libopencm3
+$(CM3_LIB_DIR)/lib$(CM3_LIBNAME).a:
+	@echo Building libopencm3...
+	@cd $(OPENCM3_DIR) && make --silent
+	@$(BUILD_CMD)
 
 # Linking
-${PROJ_NAME}.elf: ${OBJS}
+${PROJ_NAME}.elf ${PROJ_NAME}.map: $(CM3_LIB_DIR)/lib$(CM3_LIBNAME).a ${OBJS} 
 	@echo Linking...
-	@$(CXX) $(LDFLAGS) $^ -o $@  
+	@$(LD) $(LDFLAGS) $(CM3_ARCH_FLAGS) $(OBJS) $(LDLIBS) ${OBJS} -o $@ 
+	@$(OBJCOPY) -O ihex $(PROJ_NAME).elf $(PROJ_NAME).hex
+	@$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
 	@$(BUILD_CMD)
 	
 # C files in Library
 ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) -c $< -o $@ $(CFLAGS)
+	@$(CC) $(CFLAGS) $(CPPFLAGS) $(CM3_ARCH_FLAGS) -c $< -o $@ $(CFLAGS)
 	@$(BUILD_CMD)
 
 # CPP files in Library
 ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 	@mkdir -p $(dir $@)
-	@$(CXX) -c $< -o $@ $(CXXFLAGS)
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(CM3_ARCH_FLAGS) -c $< -o $@ $(CXXFLAGS)
 	@$(BUILD_CMD)
+
+flash: proj
+	st-flash write $(PROJ_NAME).bin 0x8000000
 
 .PHONY: clean
 clean:

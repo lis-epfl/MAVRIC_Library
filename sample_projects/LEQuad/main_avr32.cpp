@@ -54,10 +54,10 @@
 
 extern "C" 
 {
-	#include "led.h"
 	#include "time_keeper.h"
 	#include "print_util.h"
 	#include "piezo_speaker.h"
+	#include "delay.h"
 
 	#include "conf_imu.hpp"
 }
@@ -105,12 +105,13 @@ int main (void)
 	Central_data cd = Central_data( MAVLINK_SYS_ID,
 									board.imu, 
 									board.bmp085,
-									// board.gps_ublox, 
-									sim.gps(), 
+									board.gps_ublox, 
+									//sim.gps(), 
 									// board.sonar_i2cxl,		// Warning:
 									sim.sonar(),				// this is simulated
 									board.uart0,
 									board.spektrum_satellite,
+									board.green_led,
 									board.file_flash,
 									board.battery,
 									// sim_battery,
@@ -147,6 +148,9 @@ int main (void)
 
 	init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
+	print_util_dbg_print("onboard_parameters\r\n");
+	delay_ms(150);
+
 	// Try to read from flash, if unsuccessful, write to flash
 	// if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
 	{
@@ -177,16 +181,22 @@ int main (void)
 
 	init_success &= mavlink_telemetry_init(&cd);
 
+	print_util_dbg_print("mavlink_telemetry_init\r\n");
+	delay_ms(150);
+
 	cd.state.mav_state = MAV_STATE_STANDBY;	
 	
-	init_success &= tasks_create_tasks(&cd);	
+	init_success &= tasks_create_tasks(&cd);
+
+	print_util_dbg_print("tasks_create_tasks\r\n");
+	delay_ms(150);
 
 	if (init_success)
 	{
 		piezo_speaker_quick_startup();
 		
 		// Switch off red LED
-		LED_Off(LED2);
+		board.red_led.off();
 	}
 	else
 	{

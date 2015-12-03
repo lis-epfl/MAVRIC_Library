@@ -30,40 +30,66 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_telemetry.hpp
+ * \file led_avr32.hpp
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Julien Lecoeur
  * \author Nicolas Dousse
- *   
- * \brief GPS telemetry
+ * 
+ * \brief This file is the driver for the avr32 led
  *
  ******************************************************************************/
 
-#ifndef GPS_TELEMETRY_H_
-#define GPS_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "gps.hpp"
+#ifndef LED_AVR32_HPP_
+#define LED_AVR32_HPP_
 
-/**
- * \brief	Initialize the MAVLink communication module for the GPS
- * 
- * \param	gps						The pointer to the gps structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool gps_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler);
-
-/**
- * \brief	Function to send the MAVLink gps raw message
- * 
- * \param	gps						Pointer to the GPS
- * \param	mavlink_stream			Pointer to the MAVLink stream structure
- * \param	msg						Pointer to the MAVLink message
- */
-void gps_telemetry_send_raw(const Gps* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+#include <stdint.h>
+#include "led.hpp"
 
 
-#endif /* GPS_TELEMETRY_H_ */
+typedef enum
+{
+	LED_AVR32_ID_0 = 0x01,
+	LED_AVR32_ID_1 = 0x02,
+	LED_AVR32_ID_2 = 0x04,
+	LED_AVR32_ID_3 = 0x08
+} led_avr32_id_t;
+
+
+class Led_avr32 : public Led
+{
+public:
+	/**
+	 * \brief 	Constructor
+	 * 
+	 * \param 	id 	id of the led (one of led_avr32_id_t enum)
+	 */
+	Led_avr32(led_avr32_id_t id);
+
+
+	/**
+	 * \brief	Switch led on
+	 */
+	void on(void);
+
+
+	/**
+	 * \brief	Switch led off
+	 */
+	void off(void);
+
+
+	/**
+	 * \brief	Toggle led
+	 */
+	void toggle(void);
+	
+
+private:
+	led_avr32_id_t id_; 			///< ID of the led
+};
+
+
+#endif /* LED_AVR32_HPP_ */

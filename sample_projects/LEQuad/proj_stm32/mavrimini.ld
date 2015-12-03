@@ -30,78 +30,20 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	file_dummy.cpp
+ * \file mavrimini.ld
  * 
- * \author  MAV'RIC Team
+ * \author MAV'RIC Team
  *   
- * \brief   Dummy implementation of files
+ * \brief Linker script for mavrimini board (STM32F415RG, 1024K flash, 192K RAM).
  *
  ******************************************************************************/
 
-#include "file_dummy.hpp"
-
-File_dummy::File_dummy(const char* path)
+/* Define memory regions. */
+MEMORY
 {
-	;
+	rom (rx) : ORIGIN = 0x08000000, LENGTH = 1024K
+	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 192K
 }
 
-bool File_dummy::open(const char* path)
-{
-	return false;
-}
-
-
-bool File_dummy::is_open()
-{
-	return false;
-}
-
-
-bool File_dummy::exists(const char* path)
-{
-	return false;
-}
-
-
-bool File_dummy::close()
-{
-	return false;
-}
-
-
-
-bool File_dummy::read(uint8_t* data, uint32_t size)
-{
-	return true;
-}
-
-
-
-bool File_dummy::write(const uint8_t* data, uint32_t size)
-{
-	return false;
-}
-
-
-
-bool File_dummy::seek(int32_t offset, file_seekfrom_t origin)
-{
-	return false;
-}
-
-
-uint32_t File_dummy::offset()
-{
-	return 0;
-}
-
-
-uint32_t File_dummy::length()
-{
-	return 0;
-}
-
-bool File_dummy::flush()
-{
-	return false;
-}
+/* Include the common ld script. */
+INCLUDE libopencm3_stm32f4.ld

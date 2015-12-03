@@ -30,40 +30,42 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_telemetry.hpp
+ * \file led.hpp
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Julien Lecoeur
  * \author Nicolas Dousse
- *   
- * \brief GPS telemetry
+ * 
+ * \brief Abstract class for led 
  *
  ******************************************************************************/
 
-#ifndef GPS_TELEMETRY_H_
-#define GPS_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "gps.hpp"
-
-/**
- * \brief	Initialize the MAVLink communication module for the GPS
- * 
- * \param	gps						The pointer to the gps structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool gps_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler);
-
-/**
- * \brief	Function to send the MAVLink gps raw message
- * 
- * \param	gps						Pointer to the GPS
- * \param	mavlink_stream			Pointer to the MAVLink stream structure
- * \param	msg						Pointer to the MAVLink message
- */
-void gps_telemetry_send_raw(const Gps* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+#ifndef LED_HPP_
+#define LED_HPP_
 
 
-#endif /* GPS_TELEMETRY_H_ */
+class Led
+{
+public:
+	/**
+	 * \brief	Switch led on
+	 */
+	virtual void on(void) = 0;
+
+
+	/**
+	 * \brief	Switch led off
+	 */
+	virtual void off(void) = 0;
+
+
+	/**
+	 * \brief	Toggle led
+	 */
+	virtual void toggle(void) = 0;
+};
+
+
+#endif /* LED_HPP_ */

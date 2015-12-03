@@ -171,6 +171,8 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 	init_success &= position_estimation_telemetry_init(	&central_data->position_estimation,
 	&central_data->mavlink_communication.message_handler);
 	
+	init_success &= gps_telemetry_init( &central_data->gps,
+	&central_data->mavlink_communication.message_handler);
 	
 	init_success &= toggle_logging_telemetry_init( &central_data->toggle_logging,
 	&central_data->mavlink_communication.message_handler);

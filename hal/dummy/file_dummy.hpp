@@ -53,7 +53,8 @@ public:
 	/**
 	 * \brief 	Constructor 
 	 */
-    File_dummy(const char* path);
+    File_dummy(const char* path)
+    {};
 
 
 	/**
@@ -61,7 +62,10 @@ public:
 	 * 
 	 * \return  true if the file is open, false otherwise
 	 */
-	bool open(const char* path);
+	bool open(const char* path)
+	{
+		return true;
+	};
 
 
 	/**
@@ -69,7 +73,10 @@ public:
 	 * 
 	 * \return  true if the file is open, false otherwise
 	 */
-	bool is_open();
+	bool is_open()
+	{
+		return true;
+	};
 
 	/**
 	 * \brief 	Indicates if the file exits
@@ -83,7 +90,10 @@ public:
 	 * 
 	 * \return  success
 	 */
-	bool close();
+	bool close()
+	{
+		return true;
+	};
 
 
 	/**
@@ -94,7 +104,10 @@ public:
 	 * 
 	 * \return 	success
 	 */
-	bool read(uint8_t* data, uint32_t size);
+	bool read(uint8_t* data, uint32_t size)
+	{
+		return true;
+	};
 
 
 	/**
@@ -105,7 +118,10 @@ public:
 	 * 
 	 * \return 	success
 	 */
-	bool write(const uint8_t* data, uint32_t size);
+	bool write(const uint8_t* data, uint32_t size)
+	{
+		return true;
+	};
 
 
 	/**
@@ -121,7 +137,10 @@ public:
 	 * 
 	 * \return 	success
 	 */
-	bool seek(int32_t offset, file_seekfrom_t origin);
+	bool seek(int32_t offset, file_seekfrom_t origin)
+	{
+		return true;
+	};
 
 
 	/**
@@ -129,15 +148,20 @@ public:
 	 *
 	 * \return 	Offset in bytes
 	 */
-	uint32_t offset();
-
+	uint32_t offset()
+	{
+		return 0;
+	};
 
 	/**
 	 * \brief 	Get the file length.
 	 * 
 	 * \return 	The file length up to the maximum supported 4Gb.
 	 */
-	uint32_t length();
+	uint32_t length()
+	{
+		return 0;
+	};
 
 
 	/**
@@ -145,7 +169,10 @@ public:
 	 *
 	 * \return success
 	 */
-	bool flush();
+	bool flush()
+	{
+		return 0;
+	};
 };
 
 #endif /* FILE_DUMMY_H_ */
