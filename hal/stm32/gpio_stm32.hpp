@@ -30,55 +30,90 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	gpio_avr32.hpp
+ * \file 	gpio_stm32.hpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Implementation of GPIO peripherals for avr32
+ * \brief 	Implementation of GPIO peripherals for STM32
  *
  ******************************************************************************/
 
-#ifndef GPIO_AVR32_H_
-#define GPIO_AVR32_H_
+#ifndef GPIO_STM32_H_
+#define GPIO_STM32_H_
 
+#include <libopencm3/stm32/gpio.h>
 #include "gpio.hpp"
 #include <stdint.h>
+
+
+typedef enum
+{
+	GPIO_STM32_PORT_A = GPIOA,
+	GPIO_STM32_PORT_B = GPIOB,
+	GPIO_STM32_PORT_C = GPIOC,
+	GPIO_STM32_PORT_D = GPIOD,
+	GPIO_STM32_PORT_E = GPIOE,
+	GPIO_STM32_PORT_F = GPIOF,
+} gpio_stm32_port_t;
+
+
+typedef enum
+{
+	GPIO_STM32_PIN_0  = GPIO0,
+	GPIO_STM32_PIN_1  = GPIO1,
+	GPIO_STM32_PIN_2  = GPIO2,
+	GPIO_STM32_PIN_3  = GPIO3,
+	GPIO_STM32_PIN_4  = GPIO4,
+	GPIO_STM32_PIN_5  = GPIO5,
+	GPIO_STM32_PIN_6  = GPIO6,
+	GPIO_STM32_PIN_7  = GPIO7,
+	GPIO_STM32_PIN_8  = GPIO8,
+	GPIO_STM32_PIN_9  = GPIO9,
+	GPIO_STM32_PIN_10 = GPIO10,
+	GPIO_STM32_PIN_11 = GPIO11,
+	GPIO_STM32_PIN_12 = GPIO12,
+	GPIO_STM32_PIN_13 = GPIO13,
+	GPIO_STM32_PIN_14 = GPIO14,
+	GPIO_STM32_PIN_15 = GPIO15,
+} gpio_stm32_pin_t;
+
 
 /**
  * 	Configuration structure
  */
 typedef struct
 {
-	uint32_t pin;			///< pin number
-	gpio_dir_t dir;
-	gpio_pull_updown_t pull;
-} gpio_avr32_conf_t;
+	gpio_stm32_port_t 	port;			///< port number
+	gpio_stm32_pin_t 	pin;			///< pin number
+	gpio_dir_t 			dir;			///< Direction
+	gpio_pull_updown_t 	pull;			///< Pull up/down 
+} gpio_stm32_conf_t;
 
 
 /**
- * @brief 	Default configuration
+ * \brief 	Default configuration
  * 
- * @return 	Config structure
+ * \return 	Config structure
  */
-static inline gpio_avr32_conf_t gpio_avr32_default_config();
+static inline gpio_stm32_conf_t gpio_stm32_default_config();
 
 
-class Gpio_avr32: public Gpio
+class Gpio_stm32: public Gpio
 {
 public:
 	/**
-	 * @brief 	Initialises the peripheral
+	 * \brief 	Initialises the peripheral
 	 * 
-	 * @param 	config 		Device configuration
+	 * \param 	config 		Device configuration
 	 */
-	Gpio_avr32(gpio_avr32_conf_t config = gpio_avr32_default_config());
+	Gpio_stm32(gpio_stm32_conf_t config = gpio_stm32_default_config());
 
 
 	/**
-	 * @brief 	Hardware initialization
+	 * \brief 	Hardware initialization
 	 * 
-	 * @return  true 		Success
-	 * @return  false 		Error
+	 * \return  true 		Success
+	 * \return  false 		Error
 	 */
 	bool init(void);
 
@@ -95,69 +130,69 @@ public:
 
 
 	/**
-	 * @brief 	Write 1 to the gpio
+	 * \brief 	Write 1 to the gpio
 	 * 
-	 * @return 	true		Success
-	 * @return 	false		Failed
+	 * \return 	true		Success
+	 * \return 	false		Failed
 	 */	
 	bool set_high(void);
 
 
 	/**
-	 * @brief 	Write 0 to the gpio
+	 * \brief 	Write 0 to the gpio
 	 * 
-	 * @return 	true		Success
-	 * @return 	false		Failed
+	 * \return 	true		Success
+	 * \return 	false		Failed
 	 */	
 	bool set_low(void);
 
 
 	/**
-	 * @brief 	Toggle the gpio value 
-	 * @details Writes 0 if currently high, writes 1 if currently low
+	 * \brief 	Toggle the gpio value 
+	 * \details Writes 0 if currently high, writes 1 if currently low
 	 * 
-	 * @return 	true		Success
-	 * @return 	false		Failed
+	 * \return 	true		Success
+	 * \return 	false		Failed
 	 */	
 	bool toggle(void);
 
 
 	/**
-	 * @brief 	Write to the gpio pin
+	 * \brief 	Write to the gpio pin
 	 * 
-	 * @param 	level 		Value to write
+	 * \param 	level 		Value to write
 	 *  
-	 * @return 	true		Success
-	 * @return 	false		Failed
+	 * \return 	true		Success
+	 * \return 	false		Failed
 	 */	
 	bool write(bool level);
 
 
 	/**
-	 * @brief 	Read the current gpio level
+	 * \brief 	Read the current gpio level
 	 * 
-	 * @return 	Level
+	 * \return 	Level
 	 */	
 	bool read(void);
 
 private:
-	gpio_avr32_conf_t 	config_;	///< Device configuration
+	gpio_stm32_conf_t 	config_;	///< Device configuration
 };
 
 
 /**
- * @brief 	Default configuration
+ * \brief 	Default configuration
  * 
- * @return 	Config structure
+ * \return 	Config structure
  */
-static inline gpio_avr32_conf_t gpio_avr32_default_config()
+static inline gpio_stm32_conf_t gpio_stm32_default_config()
 {
-	gpio_avr32_conf_t conf = {};
-	conf.pin 	= 0;
+	gpio_stm32_conf_t conf = {};
+	conf.port 	= GPIO_STM32_PORT_A;
+	conf.pin 	= GPIO_STM32_PIN_0;
 	conf.dir 	= GPIO_INPUT;
 	conf.pull 	= GPIO_PULL_UPDOWN_NONE;
-	
 	return conf;
 }
 
-#endif /* GPIO_AVR32_H_ */
+#endif /* GPIO_STM32_H_ */

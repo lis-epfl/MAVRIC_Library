@@ -30,50 +30,30 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file led_gpio.cpp
+ * \file endianness.h
  * 
  * \author MAV'RIC Team
- * 
- * \brief Implementation of led using gpio 
+ * \author Julien Lecoeur
+ *   
+ * \brief Definition of endianness for linux
  *
  ******************************************************************************/
 
-#include "led_gpio.hpp"
+#ifndef ENDIANNESS_H_
+#define ENDIANNESS_H_
 
 
-Led_gpio::Led_gpio(Gpio& gpio, bool active_high):
-	gpio_(gpio),
-	active_high_(active_high)
-{}
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define __MAVRIC_ENDIAN_LITTLE__ 
+
+#include "mavric_endian.h"
 
 
-void Led_gpio::on(void)
-{
-	if( active_high_ )
-	{
-		gpio_.set_high();
-	}
-	else
-	{
-		gpio_.set_low();
-	}
+#ifdef __cplusplus
 }
+#endif
 
-
-void Led_gpio::off(void)
-{
-	if( active_high_ )
-	{
-		gpio_.set_low();
-	}
-	else
-	{
-		gpio_.set_high();
-	}	
-}
-
-
-void Led_gpio::toggle(void)
-{
-	gpio_.toggle();
-}
+#endif /* ENDIANNESS_H_ */
