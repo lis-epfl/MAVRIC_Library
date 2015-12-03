@@ -149,6 +149,13 @@ static void navigation_critical_handler(navigation_t* navigation);
 static void navigation_auto_landing_handler(navigation_t* navigation);
 
 /**
+ * \brief	Drives the position control behavior for the last step of throw recovery algorithm
+ *
+ * \param	navigation		The pointer to the navigation structure in central_data
+ */
+static void navigation_throw_recovery_position_hold_handler(navigation_t* navigation);
+
+/**
  * \brief	Start/Stop the navigation
  *
  * \param	navigation			The pointer to the navigation structure
@@ -636,6 +643,30 @@ static void navigation_critical_handler(navigation_t* navigation)
 	}
 }
 
+static void navigation_throw_recovery_position_hold_handler(navigation_t* navigation)
+{
+	float rel_pos[3];
+
+	if (!navigation->throw_recovery_position_set)
+	{
+		navigation->throw_recovery_position_set = true;
+
+		print_util_dbg_print("Cust: height control to 2m");
+		navigation->state->mav_mode_custom &= 0xFFFFFFE0;
+		navigation->state->mav_mode_custom = CUST_HEIGHT_CONTROL;
+		navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
+		navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -2.0f;
+
+		for (uint8_t i = 0; i < 3; i++)
+		{
+			rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimation->local_position.pos[i];
+		}
+		
+		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
+	}
+
+}
+
 static void navigation_auto_landing_handler(navigation_t* navigation)
 {
 	float rel_pos[3];
@@ -654,14 +685,6 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -5.0f;
-				break;
-
-			case HEIGHT_CONTROL:
-				print_util_dbg_print("Cust: height control to 4m");
-				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
-				navigation->state->mav_mode_custom = CUST_HEIGHT_CONTROL;
-				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
-				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -4.0f;
 				break;
 			
 			case DESCENT_TO_GND:
@@ -722,9 +745,6 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				navigation->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
 				navigation->state->mav_state = MAV_STATE_STANDBY;
 				break;
-
-			case HEIGHT_CONTROL:
-			break;
 		}
 	}
 }
@@ -837,6 +857,9 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	
 	navigation->critical_next_state = false;
 	navigation->auto_landing_next_state = false;
+
+	navigation->throw_recovery_enabled = false;
+	navigation->throw_recovery_position_set = false;
 	
 	navigation->dist2vel_gain = nav_config->dist2vel_gain;
 	navigation->cruise_speed = nav_config->cruise_speed;
@@ -919,7 +942,6 @@ task_return_t navigation_update(navigation_t* navigation)
 	switch (navigation->state->mav_state)
 	{
 		case MAV_STATE_STANDBY:
-			
 			navigation->auto_landing = false;
 			navigation->auto_takeoff = false;
 			navigation->stop_nav = false;
@@ -932,7 +954,7 @@ task_return_t navigation_update(navigation_t* navigation)
 			break;
 			
 		case MAV_STATE_ACTIVE:
-			if((mode_local.byte & 0b11011100) == MAV_MODE_ATTITUDE_CONTROL)
+			if(((mode_local.byte & 0b11011100) == MAV_MODE_ATTITUDE_CONTROL) && (!navigation->throw_recovery_enabled))
 			{
 				navigation->auto_landing = false;
 				navigation->auto_takeoff = false;
@@ -961,14 +983,13 @@ task_return_t navigation_update(navigation_t* navigation)
 							navigation->controls_nav->tvel[Z] = 0.3f;
 						}
 					} 
-					else if ((navigation->remote->channels[CHANNEL_AUX1] + 1.0f) > 0)
-					{
-						navigation_auto_landing_handler(navigation);
-						navigation->auto_landing_behavior = HEIGHT_CONTROL;
-						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
-						navigation->goal.heading = navigation->waypoint_handler->position_estimation->local_position.heading;
-						navigation_run(navigation);
-					}
+				}
+				else if (navigation->throw_recovery_enabled)
+				{
+					navigation_throw_recovery_position_hold_handler(navigation);
+					navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+					navigation->goal.heading = navigation->waypoint_handler->position_estimation->local_position.heading;
+					navigation_run(navigation);
 				}
 				else
 				{

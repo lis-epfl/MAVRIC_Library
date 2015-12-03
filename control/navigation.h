@@ -94,6 +94,9 @@ typedef struct
 	bool critical_next_state;							///< Flag to change critical state in its dedicated state machine
 	
 	bool auto_landing_next_state;						///< Flag to change critical state in its dedicated state machine
+
+	bool throw_recovery_enabled; 						///< Flag to use navigation in throw recovery algorithm
+	bool throw_recovery_position_set; 					///< Flag to determine if hover position is set in throw recovery mode
 	
 	bool stop_nav;										///< Flag to start/stop the navigation from a button in case of problems
 	bool stop_nav_there;								///< Flag to stop the navigation and fly to the stopping waypoint

@@ -152,9 +152,8 @@ task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t
 				state_machine->state = STATE_HEIGHT_CONTROL;
 
 				state_machine->navigation->state->in_the_air = true;
-				state_machine->navigation->auto_landing_behavior = HEIGHT_CONTROL;
-				state_machine->navigation->auto_landing = true;
-				state_machine->navigation->auto_landing_next_state = false;
+				state_machine->navigation->throw_recovery_position_set = false;
+				state_machine->navigation->throw_recovery_enabled = true;
 			}
 		break;
 
@@ -188,6 +187,7 @@ void throw_recovery_state_machine_reset(throw_recovery_state_machine_t * state_m
 	state_machine->state = STATE_IDLE;
 	state_machine->is_initialised = 0;
 	state_machine->ld.status = 0;
+	state_machine->navigation->throw_recovery_enabled = 0;
 
 	pid_controller_reset_integrator(&state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller);
 }
