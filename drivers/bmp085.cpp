@@ -109,8 +109,8 @@ Bmp085::Bmp085(	I2c& i2c ):
 	altitude_offset_( 0.0f ),
 	vario_vz_( 0.0f ),
 	last_altitudes_{0.0f, 0.0f, 0.0f},
-	last_update_us_( time_keeper_get_micros() ),
-	last_state_update_us_( time_keeper_get_micros() ),
+	last_update_us_( time_keeper_get_us() ),
+	last_state_update_us_( time_keeper_get_us() ),
 	dt_s_( 0.1f ), 
 	state_( BMP085_IDLE ) 
 {
@@ -267,7 +267,7 @@ bool Bmp085::update(void)
 				altitude_ = altitude;
 			}
 		
-			dt_s_ = (time_keeper_get_micros()-last_update_us_) / 1000000.0f;
+			dt_s_ = (time_keeper_get_us()-last_update_us_) / 1000000.0f;
 			
 			vertical_speed = - (altitude_ - vertical_speed) / dt_s_;
 		
@@ -278,12 +278,12 @@ bool Bmp085::update(void)
 
 			vario_vz_ = (VARIO_LPF) * vario_vz_ + (1.0f - VARIO_LPF) * (vertical_speed);
 		
-			last_update_us_ = time_keeper_get_micros();
+			last_update_us_ = time_keeper_get_us();
 			state_ = BMP085_IDLE;
 			break;
 	}
 
-	last_state_update_us_ = time_keeper_get_micros();
+	last_state_update_us_ = time_keeper_get_us();
 
 	return res;
 }

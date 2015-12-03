@@ -49,24 +49,28 @@ extern "C" {
 
 #include <stdint.h>
 
+
 /** 
  * \brief	This function initialize the clock of the microcontroller
  */
 void time_keeper_init(void);
+
 
 /** 
  * \brief	This function returns the time in seconds since system start
  * 
  * \return	The time in seconds since system start
  */
-double time_keeper_get_time(void);
+double time_keeper_get_s(void);
+
 
 /**
  * \brief	This function returns the time in milliseconds since system start
  *
  * \return The time in milliseconds since system start
  */
-uint32_t time_keeper_get_millis(void);
+uint64_t time_keeper_get_ms(void);
+
 
 /**
  * \brief	This function returns the time in microseconds since system start. 
@@ -75,37 +79,15 @@ uint32_t time_keeper_get_millis(void);
  *
  * \return The time in microseconds since system start
  */
-uint32_t time_keeper_get_micros(void);
+uint64_t time_keeper_get_us(void);
 
-/**
- * \brief	raw timer ticks
- *
- * \return	The raw timer ticks
- */
-uint32_t time_keeper_get_time_ticks(void);
-
-/**
- * \brief	Transforms the timer ticks into seconds
- *
- * \param	timer_ticks		The timer ticks
- *
- * \return	The time in seconds
- */
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks);
 
 /**
  * \brief	Functions that runs for the parameters input microseconds before returning
  *
  * \param	microseconds		The number of microseconds to wait
  */
-void time_keeper_delay_micros(int32_t microseconds);
-
-/**
- * \brief	Wait until time pass the parameter input
- *
- * \param	until_time		The time until which the function will run
- */
-void time_keeper_delay_until(uint32_t until_time);
+void time_keeper_delay_us(uint64_t microseconds);
 
 
 /**
@@ -113,7 +95,7 @@ void time_keeper_delay_until(uint32_t until_time);
  *
  * \param	until_time		The time during which the function will run
  */
-void time_keeper_delay_ms(int32_t t);
+void time_keeper_delay_ms(uint64_t milliseconds);
 
 
 /**
@@ -121,7 +103,7 @@ void time_keeper_delay_ms(int32_t t);
  *
  * \param	until_time		The time during which the function will run
  */
-void time_keeper_sleep_us(int32_t t);
+void time_keeper_sleep_us(uint64_t microseconds);
 
 
 #ifdef __cplusplus

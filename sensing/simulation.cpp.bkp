@@ -247,7 +247,7 @@ bool simulation_init(simulation_model_t* sim, const simulation_config_t sim_conf
 	{
 		sim->rotorspeeds[i] = 0.0f;			
 	}
-	sim->last_update = time_keeper_get_micros();
+	sim->last_update = time_keeper_get_us();
 	sim->dt = 0.01f;
 	
 	simulation_reset_simulation(sim);
@@ -293,7 +293,7 @@ void simulation_update(simulation_model_t *sim)
 	const quat_t up = { 0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z} };
 	
 	
-	uint32_t now = time_keeper_get_micros();
+	uint32_t now = time_keeper_get_us();
 	sim->dt = (now - sim->last_update) / 1000000.0f;
 	if (sim->dt > 0.1f)
 	{
@@ -403,7 +403,7 @@ void simulation_simulate_barometer(simulation_model_t *sim)
 {
 	sim->pressure->set_altitude( sim->local_position.origin.altitude - sim->local_position.pos[Z] );
 	sim->pressure->set_vario_vz( sim->vel[Z] );
-	sim->pressure->set_last_update( time_keeper_get_millis() );
+	sim->pressure->set_last_update( time_keeper_get_ms() );
 	sim->pressure->set_altitude_offset(0.0f);
 }
 	
@@ -414,9 +414,9 @@ void simulation_simulate_gps(simulation_model_t *sim)
 	sim->gps->altitude = gpos.altitude;
 	sim->gps->latitude = gpos.latitude;
 	sim->gps->longitude = gpos.longitude;
-	sim->gps->time_last_msg = time_keeper_get_millis();
-	sim->gps->time_last_posllh_msg = time_keeper_get_millis();
-	sim->gps->time_last_velned_msg = time_keeper_get_millis();
+	sim->gps->time_last_msg = time_keeper_get_ms();
+	sim->gps->time_last_posllh_msg = time_keeper_get_ms();
+	sim->gps->time_last_velned_msg = time_keeper_get_ms();
 
 	sim->gps->north_speed = sim->vel[X];
 	sim->gps->east_speed = sim->vel[Y];
@@ -443,9 +443,9 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->latitude = gpos.latitude;
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->altitude = gpos.altitude;
-	sim->gps->time_last_msg = time_keeper_get_millis();
-	sim->gps->time_last_posllh_msg = time_keeper_get_millis();
-	sim->gps->time_last_velned_msg = time_keeper_get_millis();
+	sim->gps->time_last_msg = time_keeper_get_ms();
+	sim->gps->time_last_posllh_msg = time_keeper_get_ms();
+	sim->gps->time_last_velned_msg = time_keeper_get_ms();
 	
 	sim->gps->north_speed = 0.0f;
 	sim->gps->east_speed = 0.0f;
@@ -464,7 +464,7 @@ void simulation_simulate_sonar(simulation_model_t *sim)
 
 	if ( distance_m > sim->sonar->min_distance && distance_m < sim->sonar->max_distance )
 	{
-		dt = (time_keeper_get_micros() - sim->sonar->last_update)/1000000.0f;
+		dt = (time_keeper_get_us() - sim->sonar->last_update)/1000000.0f;
 		velocity = (distance_m - sim->sonar->current_distance)/dt;
 		if (maths_f_abs(velocity) > 20.0f)
 		{
@@ -472,7 +472,7 @@ void simulation_simulate_sonar(simulation_model_t *sim)
 		}
 		sim->sonar->current_velocity = LPF_SONAR_VARIO*sim->sonar->current_velocity + (1.0f-LPF_SONAR_VARIO)*velocity;
 		sim->sonar->current_distance = distance_m;
-		sim->sonar->last_update = time_keeper_get_micros();
+		sim->sonar->last_update = time_keeper_get_us();
 		sim->sonar->healthy = true;
 		sim->sonar->healthy_vel = true;
 	}

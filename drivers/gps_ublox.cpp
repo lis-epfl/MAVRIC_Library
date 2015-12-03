@@ -2193,8 +2193,8 @@ static void gps_ublox_init(gps_t *gps, Serial* serial)
 	gps->cksum_a = 0;
 	gps->cksum_b = 0;
 
-	gps->time_last_posllh_msg = time_keeper_get_millis();
-	gps->time_last_velned_msg = time_keeper_get_millis();
+	gps->time_last_posllh_msg = time_keeper_get_ms();
+	gps->time_last_velned_msg = time_keeper_get_ms();
 
 	gps->engine_nav_setting = GPS_ENGINE_AIRBORNE_4G;
 
@@ -2934,7 +2934,7 @@ static void gps_ublox_update(gps_t *gps)
 
 	result = gps_ublox_message_decode(gps);
 	
-	tnow = time_keeper_get_millis();
+	tnow = time_keeper_get_ms();
 	
 	if (tnow > 5000 && gps->configure_gps)
 	{
@@ -3985,7 +3985,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 				gps->horizontal_accuracy = ((float)gps_pos_llh->horizontal_accuracy) / 1000.0f;
 				gps->vertical_accuracy = ((float)gps_pos_llh->vertical_accuracy) / 1000.0f;
 				
-				gps->time_last_posllh_msg = time_keeper_get_millis();
+				gps->time_last_posllh_msg = time_keeper_get_ms();
 				
 				gps->new_position = true;
 			}
@@ -4104,7 +4104,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 				gps->speed_accuracy   = ((float)gps_vel_ned->speed_accuracy) / 100.;
 				gps->heading_accuracy = gps_vel_ned->heading_accuracy;
 				
-				gps->time_last_velned_msg = time_keeper_get_millis();
+				gps->time_last_velned_msg = time_keeper_get_ms();
 				
 				gps->new_speed            = true;
 			}
@@ -5272,9 +5272,9 @@ static ubx_nav_dgps_t * ubx_get_nav_dgps()
 
 Gps_ublox::Gps_ublox(Serial& serial):
 	serial_( serial ),
-	last_update_us_( time_keeper_get_micros() ),
-	last_position_update_us_( time_keeper_get_micros() ),
-	last_velocity_update_us_( time_keeper_get_micros() ),
+	last_update_us_( time_keeper_get_us() ),
+	last_position_update_us_( time_keeper_get_us() ),
+	last_velocity_update_us_( time_keeper_get_us() ),
 	global_position_( {0.0, 0.0, 0.0f, 0.0f} ),
 	horizontal_position_accuracy_( 0.0f ),
 	vertical_position_accuracy_( 0.0f ),
@@ -5297,7 +5297,7 @@ bool Gps_ublox::update(void)
 	gps_ublox_update(&gps);
 
 	// Copy relevant fields in class members
-	last_update_us_ 		 = time_keeper_get_micros();
+	last_update_us_ 		 = time_keeper_get_us();
 	last_position_update_us_ = 1000.0f * gps.time_last_posllh_msg;
 	last_velocity_update_us_ = 1000.0f * gps.time_last_velned_msg;
 	global_position_.longitude 	= gps.longitude;

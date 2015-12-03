@@ -30,69 +30,109 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_ublox_telemetry.c
+ * \file time_keeper.c
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Felix Schill
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the GPS UBlox
- *
+ * \brief This file is used to interact with the clock of the microcontroller
+ * 
+ * \detail 	Implementation for STM32
+ * 
+ * 
  ******************************************************************************/
 
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/cm3/systick.h>
 
-#include "gps_ublox_telemetry.hpp"
+#include "time_keeper.h"
+
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
 /**
- * \brief	Launch the configuration of the GPS
- *
- * \param	gps						The pointer to the gps structure
- * \param	packet					The pointer to the decoded MAVLink message long
- * 
- * \return	The MAV_RESULT of the command
+ * \brief 	Current system time in microseconds since system boot
  */
-static mav_result_t gps_ublox_start_configuration(Gps_ublox* gps, mavlink_command_long_t* packet);
+static volatile uint64_t system_us;
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
 
-static mav_result_t gps_ublox_start_configuration(Gps_ublox* gps, mavlink_command_long_t* packet)
+/**
+ * \brief 	Called when systick fires
+ * 
+ * \details Monotonically increasing number of microseconds from reset
+ */
+void sys_tick_handler(void)
 {
-	mav_result_t result = MAV_RESULT_TEMPORARILY_REJECTED;
-	
-	if (packet->param1 == 1)
-	{
-		gps->start_configuration();
-		
-		result = MAV_RESULT_ACCEPTED;
-	}
-	
-	return result;
+	system_us++;
 }
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool gps_ublox_telemetry_init(Gps_ublox* gps, mavlink_message_handler_t* message_handler)
+void time_keeper_init(void)
 {
-	bool init_success = true;
+	/* clock rate / 1000000 to get 1uS interrupt rate */
+	systick_set_reload(168);
+	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
+	systick_counter_enable();
+	/* this done last */
+	systick_interrupt_enable();
+}
+
+
+double time_keeper_get_s(void)
+{
+	// time in seconds since system start
+	return (float)(system_us) / 1000000.0f;
+}
+
+
+uint64_t time_keeper_get_ms(void)
+{
+	// milliseconds since system start
+	return system_us / 1000;
+}
+
+
+uint64_t time_keeper_get_us(void)
+{
+	// microseconds since system start. Will run over after an hour.
+	return system_us;
+}
+
+
+void time_keeper_delay_us(uint64_t microseconds)
+{
+	uint64_t now = time_keeper_get_us();
+	while (time_keeper_get_us() < now + microseconds)
+	{
+		;
+	}
+}
+
+
+void time_keeper_delay_ms(uint64_t milliseconds) 
+{
+	uint64_t now = time_keeper_get_us();
 	
-	// Add callbacks for fat_fs_mounting commands requests
-	mavlink_message_handler_cmd_callback_t callbackcmd;
+	while (time_keeper_get_us() < now + 1000 * milliseconds) 
+	{
+		;
+	}
+}
+
+
+void time_keeper_sleep_us(uint64_t microseconds) 
+{
+	uint64_t now = time_keeper_get_us();
 	
-	callbackcmd.command_id = MAV_CMD_PREFLIGHT_UAVCAN; // 243
-	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-	callbackcmd.function = (mavlink_cmd_callback_function_t)	&gps_ublox_start_configuration;
-	callbackcmd.module_struct =									gps;
-	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
-	
-	return init_success;
+	while (time_keeper_get_us() < now + microseconds) 
+	{
+		;
+	}
 }
