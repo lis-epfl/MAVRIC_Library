@@ -74,8 +74,10 @@ typedef enum {
 
 typedef struct {
 	state_custom_t state;
-	bool enabled;
-	bool debug;
+
+	bool enabled; 			///< True : Throw recovery algorithm is enabled
+	bool debug;				///< True : Debug mode activated
+	bool is_initialised;	///< True : Throw recovery state machine is ready to run
 
 	stabilisation_copter_conf_t * stabilisation_copter_conf;
 
@@ -129,6 +131,19 @@ task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t
  */
 void throw_recovery_state_machine_reset(throw_recovery_state_machine_t * state_machine);
 
+/**
+ * \brief	Returns true if the state machine should be reset
+ *
+ * \param	state_machine			The pointer to the state_machine structure
+ */
+bool throw_recovery_state_machine_should_reset(throw_recovery_state_machine_t * state_machine);
+
+/**
+ * \brief	Returns true if the switch enabling the state machine is on
+ *
+ * \param	state_machine			The pointer to the state_machine structure
+ */
+bool throw_recovery_state_machine_switch_enabled(throw_recovery_state_machine_t * state_machine);
 
 #ifdef __cplusplus
 }
