@@ -74,11 +74,8 @@ void sys_tick_handler(void)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void time_keeper_init()
+void time_keeper_init(void)
 {
-	/* clock rate / 1000 to get 1mS interrupt rate */
-	// systick_set_reload(168000);
-	
 	/* clock rate / 1000000 to get 1uS interrupt rate */
 	systick_set_reload(168);
 	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
@@ -88,51 +85,54 @@ void time_keeper_init()
 }
 
 
-double time_keeper_get_s()
+double time_keeper_get_s(void)
 {
 	// time in seconds since system start
 	return (float)(system_us) / 1000000.0f;
 }
 
 
-uint32_t time_keeper_get_ms()
+uint64_t time_keeper_get_ms(void)
 {
 	// milliseconds since system start
 	return system_us / 1000;
 }
 
 
-uint32_t time_keeper_get_us()
+uint64_t time_keeper_get_us(void)
 {
 	// microseconds since system start. Will run over after an hour.
 	return system_us;
 }
 
 
-void time_keeper_delay_us(int32_t microseconds)
+void time_keeper_delay_us(uint64_t microseconds)
 {
-	uint32_t now = time_keeper_get_us();
-	while (time_keeper_get_us() < now + microseconds);
+	uint64_t now = time_keeper_get_us();
+	while (time_keeper_get_us() < now + microseconds)
+	{
+		;
+	}
 }
 
 
-void time_keeper_delay_ms(int32_t t) 
+void time_keeper_delay_ms(uint64_t milliseconds) 
 {
-	uint32_t now = time_keeper_get_us();
+	uint64_t now = time_keeper_get_us();
 	
-	while (time_keeper_get_us() < now + 1000 * t) 
+	while (time_keeper_get_us() < now + 1000 * milliseconds) 
 	{
 		;
 	}
-};
+}
 
 
-void time_keeper_sleep_us(int32_t t) 
+void time_keeper_sleep_us(uint64_t microseconds) 
 {
-	uint32_t now = time_keeper_get_us();
+	uint64_t now = time_keeper_get_us();
 	
-	while (time_keeper_get_us() < now + t) 
+	while (time_keeper_get_us() < now + microseconds) 
 	{
 		;
 	}
-};
+}

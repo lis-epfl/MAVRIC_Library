@@ -69,7 +69,7 @@ double time_keeper_get_s(void);
  *
  * \return The time in milliseconds since system start
  */
-uint32_t time_keeper_get_ms(void);
+uint64_t time_keeper_get_ms(void);
 
 
 /**
@@ -79,7 +79,7 @@ uint32_t time_keeper_get_ms(void);
  *
  * \return The time in microseconds since system start
  */
-uint32_t time_keeper_get_us(void);
+uint64_t time_keeper_get_us(void);
 
 
 /**
@@ -87,7 +87,7 @@ uint32_t time_keeper_get_us(void);
  *
  * \param	microseconds		The number of microseconds to wait
  */
-void time_keeper_delay_us(int32_t microseconds);
+void time_keeper_delay_us(uint64_t microseconds);
 
 
 /**
@@ -95,7 +95,7 @@ void time_keeper_delay_us(int32_t microseconds);
  *
  * \param	until_time		The time during which the function will run
  */
-void time_keeper_delay_ms(int32_t t);
+void time_keeper_delay_ms(uint64_t milliseconds);
 
 
 /**
@@ -103,7 +103,7 @@ void time_keeper_delay_ms(int32_t t);
  *
  * \param	until_time		The time during which the function will run
  */
-void time_keeper_sleep_us(int32_t t);
+void time_keeper_sleep_us(uint64_t microseconds);
 
 
 #ifdef __cplusplus

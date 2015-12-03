@@ -58,7 +58,7 @@
  *
  * \return	The raw timer ticks
  */
-uint32_t time_keeper_get_s_ticks(void);
+uint64_t time_keeper_get_s_ticks(void);
 
 
 /**
@@ -68,7 +68,7 @@ uint32_t time_keeper_get_s_ticks(void);
  *
  * \return	The time in seconds
  */
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks);
+float time_keeper_ticks_to_seconds(uint64_t timer_ticks);
 
 
 //------------------------------------------------------------------------------
@@ -76,14 +76,14 @@ float time_keeper_ticks_to_seconds(uint32_t timer_ticks);
 //------------------------------------------------------------------------------
 
 
-uint32_t time_keeper_get_s_ticks()
+uint64_t time_keeper_get_s_ticks(void)
 {
 	//raw timer ticks
 	return ast_get_counter_value(&AVR32_AST);
 }
 
 
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
+float time_keeper_ticks_to_seconds(uint64_t timer_ticks)
 {
 	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
 }
@@ -93,7 +93,7 @@ float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void time_keeper_init()
+void time_keeper_init(void)
 {
 	ast_init_counter(&AVR32_AST, AST_OSC_PB, AST_PRESCALER_SETTING, 0);
 	ast_enable(&AVR32_AST);
@@ -101,55 +101,51 @@ void time_keeper_init()
 
 
 
-double time_keeper_get_s()
+double time_keeper_get_s(void)
 {
 	// time in seconds since system start
 	return time_keeper_ticks_to_seconds(time_keeper_get_s_ticks());
 }
 
 
-uint32_t time_keeper_get_ms()
+uint64_t time_keeper_get_ms(void)
 {
 	//milliseconds since system start
 	return time_keeper_get_s_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
 }
 
 
-uint32_t time_keeper_get_us()
+uint64_t time_keeper_get_us(void)
 {
 	// microseconds since system start. Will run over after an hour.
 	return time_keeper_get_s_ticks() * (1000000 / TK_AST_FREQUENCY);
 }
 
 
-
-
-
-void time_keeper_delay_us(int32_t microseconds)
+void time_keeper_delay_us(uint64_t microseconds)
 {
-	uint32_t now = time_keeper_get_us();
+	uint64_t now = time_keeper_get_us();
 	while (time_keeper_get_us() < now + microseconds);
 }
 
 
-
-void time_keeper_delay_ms(int32_t t) 
+void time_keeper_delay_ms(uint64_t t) 
 {
-	uint32_t now = time_keeper_get_us();
+	uint64_t now = time_keeper_get_us();
 	
 	while (time_keeper_get_us() < now + 1000 * t) 
 	{
 		;
 	}
-};
+}
 
 
-void time_keeper_sleep_us(int32_t t) 
+void time_keeper_sleep_us(uint64_t t) 
 {
-	uint32_t now = time_keeper_get_us();
+	uint64_t now = time_keeper_get_us();
 	
 	while (time_keeper_get_us() < now + t) 
 	{
 		;
 	}
-};
+}

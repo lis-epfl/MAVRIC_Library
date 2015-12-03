@@ -41,51 +41,43 @@
 #include "time_keeper.h"
 
 
-void time_keeper_init() 
+void time_keeper_init(void) 
 {
 	;
 }
 
 
-double time_keeper_get_s()
+double time_keeper_get_s(void)
 {
 	return 0.0;
 }
 
 
-uint32_t time_keeper_get_ms()
+uint64_t time_keeper_get_ms(void)
 {
 	return 0;
 }
 
 
-uint32_t time_keeper_get_us()
+uint64_t time_keeper_get_us(void)
 {
-return 0;
+	return 0;
 }
 
 
-
-void time_keeper_delay_us(int32_t microseconds)
-{
-	;
-}
-
-
-void time_keeper_delay_until(uint32_t until_time)
+void time_keeper_delay_us(uint64_t microseconds)
 {
 	;
 }
 
 
-void time_keeper_delay_ms(int32_t t) 
+void time_keeper_delay_ms(uint64_t milliseconds) 
 {
 	;
-};
+}
 
 
-#include <time.h>
-void time_keeper_sleep_us(int32_t t) 
+void time_keeper_sleep_us(uint64_t microseconds) 
 {
 	;
-};
+}
