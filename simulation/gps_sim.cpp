@@ -50,9 +50,9 @@ extern "C"
 
 Gps_sim::Gps_sim(Dynamic_model& dynamic_model):
 	dynamic_model_( dynamic_model ),
-	last_update_us_( time_keeper_get_micros() ),
-	last_position_update_us_( time_keeper_get_micros() ),
-	last_velocity_update_us_( time_keeper_get_micros() ),
+	last_update_us_( time_keeper_get_us() ),
+	last_position_update_us_( time_keeper_get_us() ),
+	last_velocity_update_us_( time_keeper_get_us() ),
 	global_position_( {0.0, 0.0, 0.0f, 0.0f} ),
 	horizontal_position_accuracy_( 0.0f ),
 	vertical_position_accuracy_( 0.0f ),

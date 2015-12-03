@@ -84,7 +84,7 @@ Battery::Battery(Adc& adc, battery_conf_t config):
 	config_( config ),
 	voltage_( get_full_voltage(config_.type) ),
 	level_( 100.0f ),
-	last_update_us_( time_keeper_get_micros() ),
+	last_update_us_( time_keeper_get_us() ),
 	is_low_( false )
 {}
 
@@ -114,7 +114,7 @@ bool Battery::update(void)
 	}
 
 	// Save last update
-    last_update_us_ = time_keeper_get_micros();
+    last_update_us_ = time_keeper_get_us();
 
     return true;
 }

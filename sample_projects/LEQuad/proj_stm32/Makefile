@@ -53,7 +53,6 @@ LIB_SRCS += drivers/bmp085.cpp
 LIB_SRCS += drivers/flow.cpp                  
 LIB_SRCS += drivers/gps_telemetry.cpp       
 LIB_SRCS += drivers/gps_ublox.cpp                 
-LIB_SRCS += drivers/gps_ublox_telemetry.cpp       
 LIB_SRCS += drivers/hmc5883l.cpp             
 LIB_SRCS += drivers/lsm330dlc.cpp            
 LIB_SRCS += drivers/servo.cpp                              
@@ -126,7 +125,6 @@ LIB_SRCS += hal/dummy/FatFs/usbdisk.c
 LIB_SRCS += hal/dummy/adc_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
-LIB_SRCS += hal/dummy/time_keeper.c
 
 LIB_SRCS += hal/common/fat_fs_mounting.cpp
 LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
@@ -134,10 +132,7 @@ LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
 
-# LIB_SRCS += hal/linux/file_linux.cpp
-# LIB_SRCS += hal/linux/serial_udp.cpp
-# LIB_SRCS += hal/linux/time_keeper.c
-# LIB_SRCS += hal/linux/serial_linux_io.cpp
+LIB_SRCS += hal/stm32/time_keeper.c
 
 
 # ------------------------------------------------------------------------------

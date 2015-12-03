@@ -42,19 +42,40 @@
 
 #include <unistd.h>
 #include <sys/time.h>
+#include <time.h>
 #include "time_keeper.h"
 
 #define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
 #define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
 
 
-void time_keeper_init() 
-{
-	;
-}
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief	raw timer ticks
+ *
+ * \return	The raw timer ticks
+ */
+uint64_t time_keeper_get_s_ticks(void);
 
 
-uint32_t time_keeper_get_time_ticks()
+/**
+ * \brief	Transforms the timer ticks into seconds
+ *
+ * \param	timer_ticks		The timer ticks
+ *
+ * \return	The time in seconds
+ */
+float time_keeper_ticks_to_seconds(uint64_t timer_ticks);
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+uint64_t time_keeper_get_s_ticks()
 { 	
 	//raw timer ticks
 	struct timeval tv;
@@ -64,65 +85,69 @@ uint32_t time_keeper_get_time_ticks()
 }
 
 
-double time_keeper_get_time()
-{
-	// time in seconds since system start
-	return time_keeper_ticks_to_seconds(time_keeper_get_time_ticks());
-}
-
-
-uint32_t time_keeper_get_millis()
-{
-	//milliseconds since system start
-	return time_keeper_get_time_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
-}
-
-
-uint32_t time_keeper_get_micros()
-{
-	// microseconds since system start. Will run over after an hour.
-	return time_keeper_get_time_ticks() * (1000000 / TK_AST_FREQUENCY);
-}
-
-
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
+float time_keeper_ticks_to_seconds(uint64_t timer_ticks)
 {
 	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
 }
 
 
-void time_keeper_delay_micros(int32_t microseconds)
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void time_keeper_init(void) 
 {
-	uint32_t now = time_keeper_get_micros();
-	while (time_keeper_get_micros() < now + microseconds);
+	;
 }
 
 
-void time_keeper_delay_until(uint32_t until_time)
+double time_keeper_get_s(void)
 {
-	while (time_keeper_get_micros() < until_time)
-	{
-		;
-	}	
+	// time in seconds since system start
+	return time_keeper_ticks_to_seconds(time_keeper_get_s_ticks());
 }
 
 
-void time_keeper_delay_ms(int32_t t) 
+uint64_t time_keeper_get_ms(void)
 {
-	uint32_t now = time_keeper_get_micros();
-	
-	while (time_keeper_get_micros() < now + 1000 * t) 
+	//milliseconds since system start
+	return time_keeper_get_s_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
+}
+
+
+uint64_t time_keeper_get_us(void)
+{
+	// microseconds since system start. Will run over after an hour.
+	return time_keeper_get_s_ticks() * (1000000 / TK_AST_FREQUENCY);
+}
+
+
+void time_keeper_delay_us(uint64_t microseconds)
+{
+	uint64_t now = time_keeper_get_us();
+	while (time_keeper_get_us() < now + microseconds)
 	{
 		;
 	}
-};
+}
 
-#include <time.h>
-void time_keeper_sleep_us(int32_t t) 
+
+void time_keeper_delay_ms(uint64_t milliseconds) 
 {
-	// usleep(t);
+	uint64_t now = time_keeper_get_us();
+	
+	while (time_keeper_get_us() < now + 1000 * milliseconds) 
+	{
+		;
+	}
+}
+
+
+void time_keeper_sleep_us(uint64_t microseconds) 
+{
 	struct timespec reqtime;
-	reqtime.tv_sec = 0;
-	reqtime.tv_nsec = 1000 * t;
+	reqtime.tv_sec 	= 0;
+	reqtime.tv_nsec = 1000 * microseconds;
+
 	nanosleep(&reqtime, NULL);
-};
+}

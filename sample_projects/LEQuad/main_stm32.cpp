@@ -130,7 +130,7 @@ int main(int argc, char** argv)
 	 * TO REMOVE (end)
 	 */
 
-
+	time_keeper_init();
 
 
 	// -------------------------------------------------------------------------
@@ -249,8 +249,9 @@ int main(int argc, char** argv)
 		 */
 		/* Toggle LEDs. */
 		gpio_toggle(GPIOD, GPIO12 | GPIO13 | GPIO14 | GPIO15);
-		for (int i = 0; i < 6000000; i++) { /* Wait a bit. */
-			__asm__("nop");
+
+		time_keeper_delay_ms(500);
+
 		/**
 		 * TO REMOVE (end)
 		 */
@@ -258,7 +259,6 @@ int main(int argc, char** argv)
 
 
 
-		}
 	}
 
 	return 0;

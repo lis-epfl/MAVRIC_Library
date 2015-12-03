@@ -55,7 +55,7 @@ void control_command_telemetry_send(const command_t* command, const mavlink_stre
 	mavlink_msg_control_command_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
-										time_keeper_get_micros(), 
+										time_keeper_get_us(), 
 										command->thrust.thrust, 
 										command->torque.xyz,
 										command->rate.xyz, 

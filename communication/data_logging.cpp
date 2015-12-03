@@ -188,7 +188,7 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 	data_logging_set_t* data_set = data_logging->data_logging_set;
 
 	// First parameter is always time
-	uint32_t time_ms = time_keeper_get_millis();
+	uint32_t time_ms = time_keeper_get_ms();
 	success &=  data_logging->console->write(time_ms);
 	data_logging_put_r_or_n(data_logging,0);
 
@@ -575,7 +575,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 
 	init_success &= data_logging_open_new_log_file(data_logging);
 
-	data_logging->logging_time = time_keeper_get_millis();
+	data_logging->logging_time = time_keeper_get_ms();
 
 	data_logging->cksum_a = 0.0;
 	data_logging->cksum_b = 0.0;
@@ -675,7 +675,7 @@ bool data_logging_update(data_logging_t* data_logging)
 			
 			if ( !mav_modes_is_armed(data_logging->state->mav_mode) )
 			{
-				time_ms = time_keeper_get_millis();
+				time_ms = time_keeper_get_ms();
 				if ( (time_ms - data_logging->logging_time) > 5000)
 				{
 					data_logging->console->get_stream()->flush();

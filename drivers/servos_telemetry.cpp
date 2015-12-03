@@ -53,7 +53,7 @@ extern "C"
 // 	mavlink_msg_servo_output_raw_pack(	mavlink_stream->sysid,
 // 										mavlink_stream->compid,
 // 										msg,
-// 										time_keeper_get_micros(),
+// 										time_keeper_get_us(),
 // 										0,
 // 										(uint16_t)( 1500 + 500 * servos->servo[0].value ),
 // 										(uint16_t)( 1500 + 500 * servos->servo[1].value ),

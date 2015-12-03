@@ -185,7 +185,7 @@ bool Hmc5883l::update(void)
 	data_[2] = (float)((int16_t)buffer[2]);
 
 	// Save last update time
-	last_update_us_ = time_keeper_get_micros();
+	last_update_us_ = time_keeper_get_us();
 
 	return success;
 }

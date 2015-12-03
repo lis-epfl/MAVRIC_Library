@@ -237,561 +237,1088 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 
 #define DEG2RAD PI/180
 
-// The UART bytes are sent in a little endian format from the GPS, if the processor is big endian, define BIG_ENDIAN
-// Otherwise comment the following line
-// #define BIG_ENDIAN
+#define GPS_LITTLE_ENDIAN
 
+// The UART bytes are sent in a little endian format from the GPS
+
+#ifdef __MAVRIC_ENDIAN_BIG__
+	/**
+	 * \brief The U-Blox header structure definition
+	 */
+	typedef struct
+	{
+		uint16_t length;					///< The length of the message
+		uint8_t msg_id_header;				///< The msg id header
+		uint8_t msg_class;					///< The class of the message
+		uint8_t preamble2;					///< The 2nd preamble of the message
+		uint8_t preamble1;					///< The 1st preamble of the message
+	}ubx_header_t;
+
+	/**
+	 * \brief The U-Blox CFG_NAV structure definition
+	 */
+	typedef struct
+	{
+		uint16_t timeref;					///< The time reference
+		uint16_t nav_rate;					///< The rate
+		uint16_t measure_rate_ms;			///< The measure rate of the cfg_nav message in ms
+	}ubx_cfg_nav_rate_t;
+	
+	// We still have to send to message in the correct order to the GPS
+	/**
+	 * \brief The U-Blox CFG_NAV rate send structure definition
+	 */
+	typedef struct
+	{
+		uint16_t measure_rate_ms;			///< The measure_rate
+		uint16_t nav_rate;					///< The rate
+		uint16_t timeref;					///< The time reference, 0:UTC time, 1:GPS time
+	}ubx_cfg_nav_rate_send_t;
+
+	/**
+	 * \brief The U-Blox CFG_MSG rate structure definition
+	 */
+	typedef struct
+	{
+		uint8_t rate;						///< The rate
+		uint8_t msg_id_rate;				///< The msg id
+		uint8_t msg_class;					///< The msg_class
+	}ubx_cfg_msg_rate_t;
+
+	// We still have to send to message in the correct order to the GPS
+	/**
+	 * \brief The U-Blox CFG_MSG rate send structure definition
+	 */
+	typedef struct
+	{
+		uint8_t msg_class;					///< The msg class
+		uint8_t msg_id_rate;				///< The msg id
+		uint8_t rate;						///< The rate of the message id
+	}ubx_cfg_msg_rate_send_t;
+
+	/**
+	 * \brief The U-Blox CFG_NAV settings structure definition
+	 */
+	typedef struct
+	{
+		uint32_t res4;						///< Reserved slot
+		uint32_t res3;						///< Reserved slot
+		uint32_t res2;						///< Reserved slot
+		uint8_t dgps_timeout;				///< DGPS timeout in sec
+		uint8_t static_hold_thresh;			///< Static hold threshold cm/s
+		uint16_t t_acc;						///< Time accuracy mask in m
+		uint16_t p_acc;						///< Position accuracy mask in m
+		uint16_t t_dop;						///< Time DOP mask to use
+		uint16_t p_dop;						///< Position DOP mask to use
+		uint8_t dr_limit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
+		int8_t min_elev;						///< Minimum elevation for a GNSS satellite to be used in NAV in deg
+		uint32_t fixed_alt_var;				///< Fixed altitude variance in 2D mode in m^2
+		int32_t fixed_alt;					///< Fixed altitude for 2D fix mode in m
+		uint8_t fix_mode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
+		uint8_t dyn_model;					///< UBX_PLATFORM_... type
+		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
+	}ubx_cfg_nav_settings_t;
+
+	/**
+	 * \brief The U-Blox CFG-NAVX5 settings structure definition
+	 */
+	typedef struct  
+	{
+		uint8_t res14;						///< Reserved slot
+		uint8_t res13;						///< Reserved slot
+		uint8_t aop_opb_max_err;			///< Maximum acceptable AssistNow Autonomus orbit error
+		uint8_t res12;						///< Reserved slot
+		uint8_t res11;						///< Reserved slot
+		uint8_t use_aop;					///< AssistNow Autonomous
+		uint8_t use_ppp;					///< use Precise Point Positioning flag
+		uint8_t res9;						///< Reserved slot
+		uint8_t res8;						///< Reserved slot
+		uint32_t res7;						///< Reserved slot
+		uint16_t wkn_roll_over;				///< GPS week rollover number
+		uint8_t res6;						///< Reserved slot
+		uint8_t res5;						///< Reserved slot
+		uint8_t res4;						///< Reserved slot
+		uint8_t ini_fix_3d;					///< Initial fix must be 3D flag (0=false/1=true)
+		uint8_t res3;						///< Reserved slot
+		uint8_t min_cn_o;					///< Minimum satellite signal level for navigation
+		uint8_t max_sv_s;					///< Maximum number of satellites for navigation
+		uint8_t min_sv_s;					///< Minimum number of satellites for navigation
+		uint8_t res2;						///< Reserved slot
+		uint8_t res1;						///< Reserved slot
+		uint16_t mak2;						///< Second parameter bitmask
+		uint16_t mask1;						///< First parameter bitmask
+		uint16_t version;					///< Message version
+	}ubx_cfg_nav_expert_settings_t;
+
+	/**
+	 * \brief The U-Blox CFG-PM structure definition
+	 */
+	typedef struct  
+	{
+		uint16_t min_acq_time; 				///< Minimal search time
+		uint16_t on_time;	   				///< On time after first succeful fix
+		uint32_t grid_offset;	   			///< Grid offset relative to GPS start of week
+		uint32_t search_period;				///< Acquisition retry period
+		uint32_t update_period;				///< Positin update period
+		uint32_t flags;						///< PSM configuation flags
+		uint8_t res3;						///< Reserved
+		uint8_t res2;						///< Reserved
+		uint8_t res1;						///< Reserved
+		uint8_t version;					///< Message version
+	}ubx_cfg_pm_t;
+
+	/**
+	 * \brief The U-Blox CFG-PM2 structure definition
+	 */
+	typedef struct  
+	{
+		uint32_t res11;						///< Reserved
+		uint16_t res10;						///< Reserved
+		int8_t res9;   						///< Reserved
+		int8_t res8;   						///< Reserved
+		uint32_t res7; 						///< Reserved
+		uint32_t res6; 						///< Reserved
+		uint16_t res5; 						///< Reserved
+		uint16_t res4; 						///< Reserved
+		uint16_t min_acq_time; 				///< Minimal search time
+		uint16_t on_time;	   				///< On time after first succeful fix
+		uint32_t grid_offset;	   			///< Grid offset relative to GPS start of week
+		uint32_t search_period;				///< Acquisition retry period
+		uint32_t update_period;				///< Positin update period
+		uint32_t flags;						///< PSM configuation flags
+		uint8_t res3;						///< Reserved
+		uint8_t res2;						///< Reserved
+		uint8_t res1;						///< Reserved
+		uint8_t version;					///< Message version
+	}ubx_cfg_pm2_t;
+
+	/**
+	 * \brief The U-Blox CFG-PRT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t res3;						///< Reserved, set to 0
+		uint16_t flags;						///< Reserved, set to 0
+		uint16_t out_proto_mask;			///< A mask describing which ouput protocols are active
+		uint16_t in_proto_mask;				///< A mask describing which input protocols are active
+		uint32_t baud_rate;					///< Baudrate in bits/second
+		uint32_t mode;						///< Bit mask describing UART mode
+		uint16_t tx_ready;					///< Reserved up to firmware 7.0
+		uint8_t res0;						///< Reserved
+		uint8_t port_id;					///< Port ID (=1 or 2 for UART ports)
+	}ubx_cfg_prt_t;
+
+	/**
+	 * \brief The U-Blox CFG-PRT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t time_ref;					///< Alignment to reference time, 0=UTC, 1=GPS time.
+		uint16_t nav_rate;					///< Navigation rate, in number of measurements cycles. Cannot be changed on u-blox 5 and 6, always equal 1.
+		uint16_t measure_rate;				///< Measurement rate, GPS measurements are taken every measure_rate milliseconds
+	}ubx_cfg_rate_t;
+
+	/**
+	 * \brief The U-Blox CFG-RINV structure definition
+	 */
+	typedef struct
+	{
+		uint8_t data23;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data22;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data21;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data20;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data19;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data18;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data17;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data16;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data15;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data14;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data13;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data12;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data11;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data10;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data9;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data8;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data7;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data6;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data5;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data4;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data3;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data2;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data;						///< Data to store/stored in Remote Inventory
+		uint8_t flags;						///< 0=dumb, 1=binary
+	}ubx_cfg_rinv_t;
+
+	/**
+	 * \brief The U-Blox CFG-RXM structure definition
+	 */
+	typedef struct
+	{
+		uint8_t lp_mode;					///< Low power mode
+		uint8_t res;						///< Reserved set to 8
+	}ubx_cfg_rxm_t;
+
+	/**
+	 * \brief The U-Blox CFG-SBAS structure definition
+	 */
+	typedef struct
+	{
+		uint32_t scan_mode1;				///< Which SBAS PRN numbers to search for, all bits to 0=auto_scan
+		uint8_t scan_mode2;					///< Continuation of scanmode bitmask
+		uint8_t max_sbas;					///< Maximum number of SBAS prioritized tracking channels
+		uint8_t usage;						///< SBAS usage
+		uint8_t mode;						///< SBAS mode
+	}ubx_cfg_sbas_t;
+
+	/**
+	 * \brief The U-Blox CFG-TP structure definition
+	 */
+	typedef struct
+	{
+		int32_t user_delay;					///< User time function delay
+		int16_t rf_group_delay;				///< Receiver RF group delay
+		int16_t antenna_cable_delay;		///< Antenna cable delay
+		uint8_t res;						///< Reserved
+		uint8_t flags;						///< Bitmask
+		uint8_t time_ref;					///< Alignment to reference time, 0=UTC, 1:GPS, 2:Local time
+		int8_t status;						///< Time pulse config setting, +1:positive, 0:off, -1:negative
+		uint32_t length;					///< Length of time pulse
+		uint32_t interval;					///< Time interval for time pulse
+	}ubx_cfg_tp_t;
+
+	/**
+	 * \brief The U-Blox CFG-TP5 structure definition
+	 */
+	typedef struct
+	{
+		uint32_t flags;						///< Configuratin flags
+		int32_t user_config_delay;			///< User configurable delay
+		uint32_t pulse_len_ratio_lock;		///< Pulse length or duty cycle when locked to GPS time, only used if 'lockedOtherSet' is set
+		uint32_t pulse_len_ratio;			///< Pulse length or duty cycle, depending on 'isLength'
+		uint32_t freq_perid_lock;			///< Frequency or period time when locked to GPS time, only used if 'lockedOtherSet' is set
+		uint32_t freq_period;				///< Frequency or period time, depending on setting of bit 'isFreq'
+		int16_t rf_group_delay;				///< RF group delay
+		int16_t ant_cable_delay;			///< Antenna cable delay
+		uint16_t res1;						///< Reserved
+		uint8_t res0;						///< Reserved
+		uint8_t tp_idx;						///< Timepulse selection
+	}ubx_cfg_tp5_t;
+
+	/**
+	 * \brief The U-Blox CFG-USB structure definition
+	 */
+	typedef struct
+	{
+		char serial_number[32];				///< String containing the serial number, including 0-termination
+		char product_string[32];			///< String containing the product name, including 0-termination
+		char vendor_string[32];				///< String containing the vendor name, including 0-termination
+		uint16_t flags;						///< Various configuration flag
+		uint16_t power_consumption;			///< Power consumed by the device in mA
+		uint16_t res2;						///< Reserved for special use, set to 1
+		uint16_t res1;						///< Reserved, set to 0
+		uint16_t product_id;				///< Product ID
+		uint16_t vendor_id;					///< Vendor ID. This field shall only be set to registered
+	}ubx_cfg_usb_t;
+
+	/**
+	 * \brief The U-Blox CFG-ITFM structure definition
+	 */
+	typedef struct
+	{
+		uint32_t config2;					///< Extra settings for jamming/interference monitor
+		uint32_t config;					///< Interference config word
+	}ubx_cfg_itfm_t;
+
+	/**
+	 * \brief The U-Blox CFG-INF structure definition
+	 */
+	typedef struct
+	{
+		uint8_t inf_msg_mask6;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask5;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask4;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask3;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask2;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask1;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint16_t res1;						///< Reserved
+		uint8_t res0;						///< Reserved
+		uint8_t protocol_id;				///< Protocol identifier, 0:UBX, 1:NMEA, 2-255:reserved
+	}ubx_cfg_inf_t;
+
+	/**
+	 * \brief The U-Blox CFG-FXN structure definition
+	 */
+	typedef struct
+	{
+		uint32_t base_tow;					///< Base time of week to which t_on/t_sleep are aligned if ABSOLUTE_SIGN is set
+		uint32_t res;						///< Reserved
+		uint32_t t_off;						///< Sleep time after normal ontime
+		uint32_t t_on;						///< On time
+		uint32_t t_acq_off;					///< Time the receiver stays in off-state, if acquisitin failed
+		uint32_t t_reacq_off;				///< Time the receiver stays in off-state, if re-acquisition failed
+		uint32_t t_acq;						///< Time the receiver tries to acquire satellites, before going to off state
+		uint32_t t_reacq;					///< Time the receiver tries to re-acquire satellites, before going to off state
+		uint32_t flags;						///< FXN configuration flags
+	}ubx_cfg_fxn_t;
+
+	/**
+	 * \brief The U-Blox CFG-DAT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t datum_num;					///< Geodetic Datum number, 0:WGS84, 1:WGS72, 2:ETH90, 3 ADI-M, ...
+	}ubx_cfg_dat_t;
+
+	/**
+	 * \brief The U-Blox CFG-ANT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t pins;						///< Antenna pin configuration
+		uint16_t flags;						///< Antenna flag mask
+	}ubx_cfg_ant_t;
+
+	/**
+	 * \brief The U-Blox MON-VER struture definition
+	 */
+	typedef struct
+	{
+		char rom_version[30];				///< Zero-terminated ROM version string
+		char hw_version[10];				///< Zero-terminated hardware version string
+		char sw_version[30];				///< Zero-terminated software version string
+	}ubx_mon_ver_t;
+
+	/**
+	 * \brief The U-Blox NAV-POSLLH message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t vertical_accuracy;			///< Vertical accuracy in mm
+		uint32_t horizontal_accuracy;		///< Horizontal accuracy in mm
+		int32_t altitude_msl;				///< Height above mean sea level in mm
+		int32_t altitude_ellipsoid;			///< Height above ellipsoid in mm
+		int32_t latitude;					///< Latitude in deg 1e-7
+		int32_t longitude;					///< Longitude in deg 1e-7
+		uint32_t itow;						///< GPS msToW
+	}ubx_nav_pos_llh_t;
+
+	/**
+	 * \brief The U-Blox NAV-STATUS message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t uptime;					///< Milliseconds since startup
+		uint32_t time_to_first_fix;			///< Time to first fix in milliseconds
+		uint8_t flags2;						///< Information about navigatio output
+		uint8_t fix_status;					///< Fix status information
+		uint8_t flags;						///< Nav status flag
+		uint8_t fix_type;					///< Fix type
+		uint32_t itow;						///< GPS msToW
+	}ubx_nav_status_t;
+
+	/**
+	 * \brief The U-Blox NAV-SOL message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t res2;						///< Reserved slot
+		uint8_t satellites;					///< Number of of SVs used in Nav solution
+		uint8_t res;						///< Reserved slot
+		uint16_t position_DOP;				///< Position DOP, scaling 0.01f
+		uint32_t speed_accuracy;			///< Speed accuracy estimate in cm/s
+		int32_t ecef_z_velocity;			///< Earth centered, earth frame, z velocity coordinate in cm/s
+		int32_t ecef_y_velocity;			///< Earth centered, earth frame, y velocity coordinate in cm/s
+		int32_t ecef_x_velocity;			///< Earth centered, earth frame, x velocity coordinate in cm/s
+		uint32_t position_accuracy_3d;		///< 3D position accuracy estimate in cm
+		int32_t ecef_z;						///< Earth centered, earth frame, z coordinate in cm
+		int32_t ecef_y;						///< Earth centered, earth frame, y coordinate in cm
+		int32_t ecef_x;						///< Earth centered, earth frame, x coordinate in cm
+		uint8_t fix_status;					///< The fix status
+		uint8_t fix_type;					///< The fix type
+		int16_t week;						///< GPS week (GPS time)
+		int32_t time_nsec;					///< Fractional nanoseconds remainder of rounded ms above
+		uint32_t itow;						///< GPS msToW
+	}ubx_nav_solution_t;
+
+	/**
+	 * \brief The U-Blox NAV-VELNED message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t heading_accuracy;			///< Course/heading estimate accuracy in deg 1e-5
+		uint32_t speed_accuracy;			///< Speed accuracy estimate cm/s
+		int32_t heading_2d;					///< Heading of motion in deg 1e-5
+		uint32_t ground_speed_2d;			///< Ground speed in cm/s
+		uint32_t speed_3d;					///< 3D speed in cm/s
+		int32_t ned_down;					///< NED Down velocity in cm/s
+		int32_t ned_east;					///< NED East velocity in cm/s
+		int32_t ned_north;					///< NED North velocity in cm/s
+		uint32_t itow;						///< GPS msToW
+	}ubx_nav_vel_ned_t;
+
+	/**
+	 * \brief The U-Blox NAV-SVINFO message structure definition
+	 */
+	typedef struct
+	{
+		/**
+		* \brief The structure definition defining a specific message from a GPS satellite
+		*/
+		struct
+		{
+			int32_t pr_res;					///< Pseudo range in residual in centimeters
+			int16_t azim;					///< Azimuth in integer degrees
+			int8_t elev;					///< Elevation in integer degrees
+			uint8_t cno;					///< Carrier to Noise ratio in dbHz
+			uint8_t quality;				///< Bitmask, see U-Blox 6 documentation
+			uint8_t flags;					///< Bitmask, see U-Blox 6 documentation
+			uint8_t svid;					///< Satellite ID
+			uint8_t chn;					///< GPS msToW
+		} channel_data[16];
+		
+		uint16_t reserved;					///< Reserved slot
+		uint8_t global_flags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
+		uint8_t num_ch;						///< Number of channels
+		uint32_t itow;						///< GPS msToW
+	}ubx_nav_sv_info_t;
+
+	/**
+	 * \brief The U-Blox NAV-DGPS message structure definition
+	 */
+	typedef struct
+	{
+		/**
+		 * \brief The structure definition of a particular GPS
+		 */
+		struct
+		{
+			float prrc;						///< Pseudo range rate correction
+			float prc;						///< Pseudo range correction
+			uint16_t age_c;					///< Age of the latest correction data
+			uint8_t flags;					///< Bitmask/channel number
+			uint8_t sv_id;					///< Satellite ID
+		}chan_data[16];
+
+		uint16_t res1;						///< Reservec
+		uint8_t status;						///< DGPS correction type status, 00:None, 01:PR+PRR correction
+		uint8_t num_channel;				///< Number of channels for which correction data is following
+		int16_t base_health;				///< DGPS base station health status
+		int16_t base_id;					///< DGPS base station ID
+		int32_t age;						///< Age of the newest correction data
+		uint32_t itow;						///< GPS msTow
+	}ubx_nav_dgps_t;
+
+	/**
+	 * \brief The U-Blox MON-RXR message structure definition
+	 */
+ 	typedef struct
+	 {
+ 		uint8_t awake_flag;					///< Receiver status flag
+ 	}ubx_mon_rxr_struct_t;
+
+	/**
+	 * \brief The U-Blox TIM-TP message structure definition
+	 */
+	typedef struct
+	{
+		uint8_t res;						///< Unused
+		uint8_t flags;						///< Bitmask, 0,1:gps timebase, UTC not available, 2,3:UTC timebase, UTC available
+		uint16_t week;						///< Timepulse week number according to timebase
+		int32_t q_err;						///< Quantization error of timepulse
+		uint32_t tow_sub_ms;					///< Sumbmillisecond part of ToWms scaling: 2^-32
+		uint32_t tow_ms;						///< Timepulse time of week according to time base in ms
+	}ubx_tim_tp_t;
+
+	/**
+	 * \brief The U-Blox TIM-VRFY message structure definition
+	 */
+	typedef struct
+	{
+		uint8_t res;						///< Reserved slot
+		uint8_t flags;						///< Aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
+		uint16_t wno;						///< Week number
+		int32_t delta_ns;					///< Sub-millisecond part of delta time
+		int32_t delta_ms;					///< Inter ms of delta time
+		int32_t frac;						///< Sub-millisecond part of ToW in ns
+		int32_t itow;						///< Integer ms ToW received by source
+	}ubx_tim_vrfy_t;
+
+	/** 
+	 *\brief The U-Blox NAV-TIMEUTC message structure definition
+	 */
+	typedef struct
+	{
+		uint8_t valid;						///< Validity of the time
+		uint8_t seconds;					///< Second of minute
+		uint8_t minute;						///< Minute of the hour
+		uint8_t hour;						///< Hour of the day
+		uint8_t day;						///< Day of month 
+		uint8_t month;						///< Month 1..12 (UTC)
+		uint16_t year;						///< Year range 1999..2099
+		int32_t nano;						///< Nanoseconds of second, range -1e9..1e9 (UTC)
+		uint32_t t_acc;						///< Time accuracy estimate
+		uint32_t itow;						///< GPS msToW		
+	}ubx_nav_timeutc_t;
+
+	/** 
+	 *\brief The U-Blox ACK-ACK and ACK-NACK message structure definition
+	 */
+	typedef struct  
+	{
+		uint8_t msg_id;						///< Message ID of the acknowledged messages
+		uint8_t class_id;					///< Class ID of the acknowledged messages
+	}ubx_ack_ack_t;
+
+	/** 
+	 *\brief The U-Blox CFG-CFG message structure definition
+	 */
+	typedef struct
+	{
+		uint8_t device_mask;				///< Mask which selects the devices for this command
+		uint32_t load_mask;					///< Mask with configuration sub-sections to load, i.e. loading permanent config to current config
+		uint32_t save_mask;					///< Mask with configuration sub-sections to save, i.e. saving current config to permanent non-volatile memory
+		uint32_t clear_mask;				///< Mask with configuration sub-sections to clear, i.e. loading default config to permanent non-volatile memory
+	}ubx_cfg_cfg_t;
+
+#else	
+
+	/**
+	 * \brief The U-Blox header structure definition
+	 */
+	typedef struct
+	{
+		uint8_t preamble1;					///< The 1st preamble of the message
+		uint8_t preamble2;					///< The 2nd preamble of the message
+		uint8_t msg_class;					///< The class of the message
+		uint8_t msg_id_header;				///< The msg id header
+		uint16_t length;					///< The length of the message
+	}ubx_header_t;
+
+	/**
+	 * \brief The U-Blox CFG-NAV structure definition
+	 */
+	typedef struct
+	{
+		uint16_t measure_rate_ms;			///< The measure rate of the cfg_nav message in ms
+		uint16_t nav_rate;					///< The rate
+		uint16_t timeref;					///< The time reference
+	}ubx_cfg_nav_rate_t;
 
 	/**
 	 * \brief The U-Blox CFG_NAV rate send structure definition
 	 */
-typedef struct
-{
-	uint16_t measure_rate_ms;			///< The measure_rate
-	uint16_t nav_rate;					///< The rate
-	uint16_t timeref;					///< The time reference, 0:UTC time, 1:GPS time
-} ubx_cfg_nav_rate_send_t;
-
-
-
-
-/**
- * \brief The U-Blox CFG_MSG rate send structure definition
- */
-typedef struct
-{
-	uint8_t msg_class;					///< The msg class
-	uint8_t msg_id_rate;				///< The msg id
-	uint8_t rate;						///< The rate of the message id
-} ubx_cfg_msg_rate_send_t;
-
-
-
-/** 
- *\brief The U-Blox ACK-ACK and ACK-NACK message structure definition
- */
-typedef struct  
-{
-	uint8_t msg_id;						///< Message ID of the acknowledged messages
-	uint8_t class_id;					///< Class ID of the acknowledged messages
-} ubx_ack_t;
-
-
-/**
- * \brief The U-Blox header structure definition
- */
-typedef struct
-{
-	uint8_t preamble1;					///< The 1st preamble of the message
-	uint8_t preamble2;					///< The 2nd preamble of the message
-	uint8_t msg_class;					///< The class of the message
-	uint8_t msg_id_header;				///< The msg id header
-	uint16_t length;					///< The length of the message
-} ubx_header_t;
-
-/**
- * \brief The U-Blox CFG-NAV structure definition
- */
-typedef struct
-{
-	uint16_t measure_rate_ms;			///< The measure rate of the cfg_nav message in ms
-	uint16_t nav_rate;					///< The rate
-	uint16_t timeref;					///< The time reference
-} ubx_cfg_nav_rate_t;
-
-/**
- * \brief The U-Blox CFG-NAV rate structure definition
- */
-typedef struct
-{
-	uint8_t msg_class;					///< The msg_class
-	uint8_t msg_id_rate;				///< The msg id
-	uint8_t rate;						///< The rate
-} ubx_cfg_msg_rate_t;
-
-/**
- * \brief The U-Blox CFG-NAV5 settings structure definition
- */
-typedef struct
-{
-	uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
-	uint8_t dyn_model;					///< UBX_PLATFORM_... type
-	uint8_t fix_mode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
-	int32_t fixed_alt;					///< Fixed altitude for 2D fix mode in m
-	uint32_t fixed_alt_var;				///< Fixed altitude variance in 2D mode in m^2
-	int8_t min_elev;					///< Minimum elevation for a GNSS satellite to be used in NAV in deg
-	uint8_t dr_limit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
-	uint16_t p_dop;						///< Position DOP mask to use
-	uint16_t t_dop;						///< Time DOP mask to use
-	uint16_t p_acc;						///< Position accuracy mask in m
-	uint16_t t_acc;						///< Time accuracy mask in m
-	uint8_t static_hold_thresh;			///< Static hold threshold cm/s
-	uint8_t dgps_timeout;				///< DGPS timeout in sec
-	uint32_t res2;						///< Reserved slot
-	uint32_t res3;						///< Reserved slot
-	uint32_t res4;						///< Reserved slot
-} ubx_cfg_nav_settings_t;
-
-/**
- * \brief The U-Blox CFG-NAVX5 settings structure definition
- */
-typedef struct  
-{
-	uint16_t version;					///< Message version
-	uint16_t mask1;						///< First parameter bitmask
-	uint16_t mak2;						///< Second parameter bitmask
-	uint8_t res1;						///< Reserved slot
-	uint8_t res2;						///< Reserved slot
-	uint8_t min_sv_s;					///< Minimum number of satellites for navigation
-	uint8_t max_sv_s;					///< Maximum number of satellites for navigation
-	uint8_t min_cn_o;					///< Minimum satellite signal level for navigation
-	uint8_t res3;						///< Reserved slot
-	uint8_t ini_fix_3d;					///< Initial fix must be 3D flag (0=false/1=true)
-	uint8_t res4;						///< Reserved slot
-	uint8_t res5;						///< Reserved slot
-	uint8_t res6;						///< Reserved slot
-	uint16_t wkn_roll_over;				///< GPS week rollover number
-	uint32_t res7;						///< Reserved slot
-	uint8_t res8;						///< Reserved slot
-	uint8_t res9;						///< Reserved slot
-	uint8_t use_ppp;					///< use Precise Point Positioning flag
-	uint8_t use_aop;					///< AssistNow Autonomous
-	uint8_t res11;						///< Reserved slot
-	uint8_t res12;						///< Reserved slot
-	uint8_t aop_opb_max_err;			///< Maximum acceptable AssistNow Autonomus orbit error
-	uint8_t res13;						///< Reserved slot
-	uint8_t res14;						///< Reserved slot
-} ubx_cfg_nav_expert_settings_t;
-
-/**
- * \brief The U-Blox CFG-PM structure definition
- */
-typedef struct  
-{
-	uint8_t version;					///< Message version
-	uint8_t res1;						///< Reserved
-	uint8_t res2;						///< Reserved
-	uint8_t res3;						///< Reserved
-	uint32_t flags;						///< PSM configuation flags
-	uint32_t update_period;				///< Positin update period
-	uint32_t search_period;				///< Acquisition retry period
-	uint32_t grid_offset;	   			///< Grid offset relative to GPS start of week
-	uint16_t on_time;	   				///< On time after first succeful fix
-	uint16_t min_acq_time; 				///< Minimal search time
-} ubx_cfg_pm_t;
-
-/**
- * \brief The U-Blox CFG-PM2 structure definition
- */
-typedef struct  
-{
-	uint8_t version;					///< Message version
-	uint8_t res1;						///< Reserved
-	uint8_t res2;						///< Reserved
-	uint8_t res3;						///< Reserved
-	uint32_t flags;						///< PSM configuation flags
-	uint32_t update_period;				///< Positin update period
-	uint32_t search_period;				///< Acquisition retry period
-	uint32_t grid_offset;	   			///< Grid offset relative to GPS start of week
-	uint16_t on_time;	   				///< On time after first succeful fix
-	uint16_t min_acq_time; 				///< Minimal search time
-	uint16_t res4; 						///< Reserved
-	uint16_t res5; 						///< Reserved
-	uint32_t res6; 						///< Reserved
-	uint32_t res7; 						///< Reserved
-	int8_t res8;   						///< Reserved
-	int8_t res9;   						///< Reserved
-	uint16_t res10;						///< Reserved
-	uint32_t res11;						///< Reserved
-} ubx_cfg_pm2_t;
-
-/**
- * \brief The U-Blox CFG-PRT structure definition
- */
-typedef struct
-{
-	uint8_t port_id;					///< Port ID (=1 or 2 for UART ports)
-	uint8_t res0;						///< Reserved
-	uint16_t tx_ready;					///< Reserved up to firmware 7.0
-	uint32_t mode;						///< Bit mask describing UART mode
-	uint32_t baud_rate;					///< Baudrate in bits/second
-	uint16_t in_proto_mask;				///< A mask describing which input protocols are active
-	uint16_t out_proto_mask;			///< A mask describing which ouput protocols are active
-	uint16_t flags;						///< Reserved, set to 0
-	uint16_t res3;						///< Reserved, set to 0
-} ubx_cfg_prt_t;
-
-/**
- * \brief The U-Blox CFG-PRT structure definition
- */
-typedef struct
-{
-	uint16_t measure_rate;				///< Measurement rate, GPS measurements are taken every measure_rate milliseconds
-	uint16_t nav_rate;					///< Navigation rate, in number of measurements cycles. Cannot be changed on u-blox 5 and 6, always equal 1.
-	uint16_t time_ref;					///< Alignment to reference time, 0=UTC, 1=GPS time.
-} ubx_cfg_rate_t;
-
-/**
- * \brief The U-Blox CFG-RINV structure definition
- */
-typedef struct
-{
-	uint8_t flags;						///< 0=dumb, 1=binary
-	uint8_t data;						///< Data to store/stored in Remote Inventory
-	uint8_t data2;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data3;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data4;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data5;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data6;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data7;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data8;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data9;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data10;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data11;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data12;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data13;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data14;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data15;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data16;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data17;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data18;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data19;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data20;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data21;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data22;	  					///< Data to store/stored in Remote Inventory
-	uint8_t data23;	  					///< Data to store/stored in Remote Inventory
-} ubx_cfg_rinv_t;
-
-/**
- * \brief The U-Blox CFG-RXM structure definition
- */
-typedef struct
-{
-	uint8_t res;						///< Reserved set to 8
-	uint8_t lp_mode;					///< Low power mode
-} ubx_cfg_rxm_t;
-
-/**
- * \brief The U-Blox CFG-SBAS structure definition
- */
-typedef struct
-{
-	uint8_t mode;						///< SBAS mode
-	uint8_t usage;						///< SBAS usage
-	uint8_t max_sbas;					///< Maximum number of SBAS prioritized tracking channels
-	uint8_t scan_mode2;					///< Continuation of scanmode bitmask
-	uint32_t scan_mode1;				///< Which SBAS PRN numbers to search for, all bits to 0=auto_scan
-} ubx_cfg_sbas_t;
-
-/**
- * \brief The U-Blox CFG-TP structure definition
- */
-typedef struct
-{
-	uint32_t interval;					///< Time interval for time pulse
-	uint32_t length;					///< Length of time pulse
-	int8_t status;						///< Time pulse config setting, +1:positive, 0:off, -1:negative
-	uint8_t time_ref;					///< Alignment to reference time, 0=UTC, 1:GPS, 2:Local time
-	uint8_t flags;						///< Bitmask
-	uint8_t res;						///< Reserved
-	int16_t antenna_cable_delay;		///< Antenna cable delay
-	int16_t rf_group_delay;				///< Receiver RF group delay
-	int32_t user_delay;					///< User time function delay
-} ubx_cfg_tp_t;
-
-/**
- * \brief The U-Blox CFG-TP5 structure definition
- */
-typedef struct
-{
-	uint8_t tp_idx;						///< Timepulse selection
-	uint8_t res0;						///< Reserved
-	uint16_t res1;						///< Reserved
-	int16_t ant_cable_delay;			///< Antenna cable delay
-	int16_t rf_group_delay;				///< RF group delay
-	uint32_t freq_period;				///< Frequency or period time, depending on setting of bit 'isFreq'
-	uint32_t freq_perid_lock;			///< Frequency or period time when locked to GPS time, only used if 'lockedOtherSet' is set
-	uint32_t pulse_len_ratio;			///< Pulse length or duty cycle, depending on 'isLength'
-	uint32_t pulse_len_ratio_lock;		///< Pulse length or duty cycle when locked to GPS time, only used if 'lockedOtherSet' is set
-	int32_t user_config_delay;			///< User configurable delay
-	uint32_t flags;						///< Configuratin flags
-} ubx_cfg_tp5_t;
-
-/**
- * \brief The U-Blox CFG-USB structure definition
- */
-typedef struct
-{
-	uint16_t vendor_id;					///< Vendor ID. This field shall only be set to registered
-	uint16_t product_id;				///< Product ID
-	uint16_t res1;						///< Reserved, set to 0
-	uint16_t res2;						///< Reserved for special use, set to 1
-	uint16_t power_consumption;			///< Power consumed by the device in mA
-	uint16_t flags;						///< Various configuration flag
-	char vendor_string[32];				///< String containing the vendor name, including 0-termination
-	char product_string[32];			///< String containing the product name, including 0-termination
-	char serial_number[32];				///< String containing the serial number, including 0-termination
-} ubx_cfg_usb_t;
-
-/**
- * \brief The U-Blox CFG-ITFM structure definition
- */
-typedef struct
-{
-	uint32_t config;					///< Interference config word
-	uint32_t config2;					///< Extra settings for jamming/interference monitor
-} ubx_cfg_itfm_t;
-
-/**
- * \brief The U-Blox CFG-INF structure definition
- */
-typedef struct
-{
-	uint8_t protocol_id;				///< Protocol identifier, 0:UBX, 1:NMEA, 2-255:reserved
-	uint8_t res0;						///< Reserved
-	uint16_t res1;						///< Reserved
-	uint8_t inf_msg_mask1;				///< A bit mask saying which information messages are enabled on each I/O target
-	uint8_t inf_msg_mask2;				///< A bit mask saying which information messages are enabled on each I/O target
-	uint8_t inf_msg_mask3;				///< A bit mask saying which information messages are enabled on each I/O target
-	uint8_t inf_msg_mask4;				///< A bit mask saying which information messages are enabled on each I/O target
-	uint8_t inf_msg_mask5;				///< A bit mask saying which information messages are enabled on each I/O target
-	uint8_t inf_msg_mask6;				///< A bit mask saying which information messages are enabled on each I/O target
-} ubx_cfg_inf_t;
-
-/**
- * \brief The U-Blox CFG-FXN structure definition
- */
-typedef struct
-{
-	uint32_t flags;						///< FXN configuration flags
-	uint32_t t_reacq;					///< Time the receiver tries to re-acquire satellites, before going to off state
-	uint32_t t_acq;						///< Time the receiver tries to acquire satellites, before going to off state
-	uint32_t t_reacq_off;				///< Time the receiver stays in off-state, if re-acquisition failed
-	uint32_t t_acq_off;					///< Time the receiver stays in off-state, if acquisitin failed
-	uint32_t t_on;						///< On time
-	uint32_t t_off;						///< Sleep time after normal ontime
-	uint32_t res;						///< Reserved
-	uint32_t base_tow;					///< Base time of week to which t_on/t_sleep are aligned if ABSOLUTE_SIGN is set
-} ubx_cfg_fxn_t;
-
-/**
- * \brief The U-Blox CFG-DAT structure definition
- */
-typedef struct
-{
-	uint16_t datum_num;					///< Geodetic Datum number, 0:WGS84, 1:WGS72, 2:ETH90, 3 ADI-M, ...
-} ubx_cfg_dat_t;
-
-/**
- * \brief The U-Blox CFG-ANT structure definition
- */
-typedef struct
-{
-	uint16_t flags;						///< Antenna flag mask
-	uint16_t pins;						///< Antenna pin configuration
-} ubx_cfg_ant_t;
-
-/**
- * \brief The U-Blox MON-VER struture definition
- */
-typedef struct
-{
-	char sw_version[30];				///< Zero-terminated software version string
-	char hw_version[10];				///< Zero-terminated hardware version string
-	char rom_version[30];				///< Zero-terminated ROM version string
-} ubx_mon_ver_t;
-
-/**
- * \brief The U-Blox NAV-POSLLH message structure definition
- */
-typedef struct
-{
-	uint32_t itow;						///< GPS msToW
-	int32_t longitude;					///< Longitude in deg 1e-7
-	int32_t latitude;					///< Latitude in deg 1e-7
-	int32_t altitude_ellipsoid;			///< Height above ellipsoid in mm
-	int32_t altitude_msl;				///< Height above mean sea level in mm
-	uint32_t horizontal_accuracy;		///< Horizontal accuracy in mm
-	uint32_t vertical_accuracy;			///< Vertical accuracy in mm
-} ubx_nav_pos_llh_t;
-
-/**
- * \brief The U-Blox NAV-STATUS message structure definition
- */
-typedef struct
-{
-	uint32_t itow;						///< GPS msToW
-	uint8_t fix_type;					///< Fix type
-	uint8_t flags;						///< Nav status flag
-	uint8_t fix_status;					///< Fix status information
-	uint8_t flags2;						///< Information about navigatio output
-	uint32_t time_to_first_fix;			///< Time to first fix in milliseconds
-	uint32_t uptime;					///< Milliseconds since startup
-} ubx_nav_status_t;
-
-/**
- * \brief The U-Blox NAV-SOL message structure definition
- */
-typedef struct
-{
-	uint32_t itow;						///< GPS msToW
-	int32_t time_nsec;					///< Fractional nanoseconds remainder of rounded ms above
-	int16_t week;						///< GPS week (GPS time)
-	uint8_t fix_type;					///< The fix type
-	uint8_t fix_status;					///< The fix status
-	int32_t ecef_x;						///< Earth centered, earth frame, x coordinate in cm
-	int32_t ecef_y;						///< Earth centered, earth frame, y coordinate in cm
-	int32_t ecef_z;						///< Earth centered, earth frame, z coordinate in cm
-	uint32_t position_accuracy_3d;		///< 3D position accuracy estimate in cm
-	int32_t ecef_x_velocity;			///< Earth centered, earth frame, x velocity coordinate in cm/s
-	int32_t ecef_y_velocity;			///< Earth centered, earth frame, y velocity coordinate in cm/s
-	int32_t ecef_z_velocity;			///< Earth centered, earth frame, z velocity coordinate in cm/s
-	uint32_t speed_accuracy;			///< Speed accuracy estimate in cm/s
-	uint16_t position_DOP;				///< Position DOP, scaling 0.01f
-	uint8_t res;						///< Reserved slot
-	uint8_t satellites;					///< Number of of SVs used in Nav solution
-	uint32_t res2;						///< Reserved slot
-} ubx_nav_solution_t;
-
-/**
- * \brief The U-Blox NAV-VELNED message structure definition
- */
-typedef struct
-{
-	uint32_t itow;						///< GPS msToW
-	int32_t ned_north;					///< NED North velocity in cm/s
-	int32_t ned_east;					///< NED East velocity in cm/s
-	int32_t ned_down;					///< NED Down velocity in cm/s
-	uint32_t speed_3d;					///< 3D speed in cm/s
-	uint32_t ground_speed_2d;			///< Ground speed in cm/s
-	int32_t heading_2d;					///< Heading of motion in deg 1e-5
-	uint32_t speed_accuracy;			///< Speed accuracy estimate cm/s
-	uint32_t heading_accuracy;			///< Course/heading estimate accuracy in deg 1e-5
-} ubx_nav_vel_ned_t;
-
-/**
- * \brief The U-Blox NAV-SVINFO message structure definition
- */
-typedef struct
-{
-	uint32_t itow;						///< GPS msToW
-	uint8_t num_ch;						///< Number of channels
-	uint8_t global_flags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
-	uint16_t reserved;					///< Reserved slot
-
-	/**
-	 * \brief The structure definition defining a specific message from a GPS satellite
-	*/
-	struct
+	typedef struct
 	{
-		uint8_t chn;					///< GPS msToW
-		uint8_t svid;					///< Satellite ID
-		uint8_t flags;					///< Bitmask, see U-Blox 6 documentation
-		uint8_t quality;				///< Bitmask, see U-Blox 6 documentation
-		uint8_t cno;					///< Carrier to Noise ratio in dbHz
-		int8_t elev;					///< Elevation in integer degrees
-		int16_t azim;					///< Azimuth in integer degrees
-		int32_t pr_res;					///< Pseudo range in residual in centimeters
-	} channel_data[16];
-} ubx_nav_sv_info_t;
-
-/**
- * \brief The U-Blox NAV-DGPS message structure definition
- */
-typedef struct
-{
-	uint32_t itow;						///< GPS msTow
-	int32_t age;						///< Age of the newest correction data
-	int16_t base_id;					///< DGPS base station ID
-	int16_t base_health;				///< DGPS base station health status
-	uint8_t num_channel;				///< Number of channels for which correction data is following
-	uint8_t status;						///< DGPS correction type status, 00:None, 01:PR+PRR correction
-	uint16_t res1;						///< Reservec
+		uint16_t measure_rate_ms;			///< The measure_rate
+		uint16_t nav_rate;					///< The rate
+		uint16_t timeref;					///< The time reference, 0:UTC time, 1:GPS time
+	}ubx_cfg_nav_rate_send_t;
 
 	/**
-	 * \brief The structure definition of a particular GPS
+	 * \brief The U-Blox CFG-NAV rate structure definition
 	 */
-	struct
+	typedef struct
 	{
-		uint8_t sv_id;					///< Satellite ID
-		uint8_t flags;					///< Bitmask/channel number
-		uint16_t age_c;					///< Age of the latest correction data
-		float prc;						///< Pseudo range correction
-		float prrc;						///< Pseudo range rate correction
-	}chan_data[16];
-} ubx_nav_dgps_t;
+		uint8_t msg_class;					///< The msg_class
+		uint8_t msg_id_rate;				///< The msg id
+		uint8_t rate;						///< The rate
+	}ubx_cfg_msg_rate_t;
 
-/**
- * \brief The U-Blox MON-RXR message structure definition
- */
-typedef struct
-{
-	uint8_t awake_flag;					///< Receiver status flag
-} ubx_mon_rxr_struct_t;
+	/**
+	 * \brief The U-Blox CFG_MSG rate send structure definition
+	 */
+	typedef struct
+	{
+		uint8_t msg_class;					///< The msg class
+		uint8_t msg_id_rate;				///< The msg id
+		uint8_t rate;						///< The rate of the message id
+	}ubx_cfg_msg_rate_send_t;
 
-/**
- * \brief The U-Blox TIM-TP message structure definition
- */
-typedef struct  
-{
-	uint32_t tow_ms;						///< Timepulse time of week according to time base in ms
-	uint32_t tow_sub_ms;					///< Sumbmillisecond part of ToWms scaling: 2^-32
-	int32_t q_err;						///< Quantization error of timepulse
-	uint16_t week;						///< Timepulse week number according to timebase
-	uint8_t flags;						///< Bitmask, 0,1:gps timebase, UTC not available, 2,3:UTC timebase, UTC available
-	uint8_t res;						///< Unused
-} ubx_tim_tp_t;
+	/**
+	 * \brief The U-Blox CFG-NAV5 settings structure definition
+	 */
+	typedef struct
+	{
+		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
+		uint8_t dyn_model;					///< UBX_PLATFORM_... type
+		uint8_t fix_mode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
+		int32_t fixed_alt;					///< Fixed altitude for 2D fix mode in m
+		uint32_t fixed_alt_var;				///< Fixed altitude variance in 2D mode in m^2
+		int8_t min_elev;					///< Minimum elevation for a GNSS satellite to be used in NAV in deg
+		uint8_t dr_limit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
+		uint16_t p_dop;						///< Position DOP mask to use
+		uint16_t t_dop;						///< Time DOP mask to use
+		uint16_t p_acc;						///< Position accuracy mask in m
+		uint16_t t_acc;						///< Time accuracy mask in m
+		uint8_t static_hold_thresh;			///< Static hold threshold cm/s
+		uint8_t dgps_timeout;				///< DGPS timeout in sec
+		uint32_t res2;						///< Reserved slot
+		uint32_t res3;						///< Reserved slot
+		uint32_t res4;						///< Reserved slot
+	}ubx_cfg_nav_settings_t;
+	
+	/**
+	 * \brief The U-Blox CFG-NAVX5 settings structure definition
+	 */
+	typedef struct  
+	{
+		uint16_t version;					///< Message version
+		uint16_t mask1;						///< First parameter bitmask
+		uint16_t mak2;						///< Second parameter bitmask
+		uint8_t res1;						///< Reserved slot
+		uint8_t res2;						///< Reserved slot
+		uint8_t min_sv_s;					///< Minimum number of satellites for navigation
+		uint8_t max_sv_s;					///< Maximum number of satellites for navigation
+		uint8_t min_cn_o;					///< Minimum satellite signal level for navigation
+		uint8_t res3;						///< Reserved slot
+		uint8_t ini_fix_3d;					///< Initial fix must be 3D flag (0=false/1=true)
+		uint8_t res4;						///< Reserved slot
+		uint8_t res5;						///< Reserved slot
+		uint8_t res6;						///< Reserved slot
+		uint16_t wkn_roll_over;				///< GPS week rollover number
+		uint32_t res7;						///< Reserved slot
+		uint8_t res8;						///< Reserved slot
+		uint8_t res9;						///< Reserved slot
+		uint8_t use_ppp;					///< use Precise Point Positioning flag
+		uint8_t use_aop;					///< AssistNow Autonomous
+		uint8_t res11;						///< Reserved slot
+		uint8_t res12;						///< Reserved slot
+		uint8_t aop_opb_max_err;			///< Maximum acceptable AssistNow Autonomus orbit error
+		uint8_t res13;						///< Reserved slot
+		uint8_t res14;						///< Reserved slot
+	}ubx_cfg_nav_expert_settings_t;
 
-/**
- * \brief The U-Blox TIM-VRFY message structure definition
- */
-typedef struct
-{
-	int32_t itow;						///< Integer ms ToW received by source
-	int32_t frac;						///< Sub-millisecond part of ToW in ns
-	int32_t delta_ms;					///< Inter ms of delta time
-	int32_t delta_ns;					///< Sub-millisecond part of delta time
-	uint16_t wno;						///< Week number
-	uint8_t flags;						///< Aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
-	uint8_t res;						///< Reserved slot
-} ubx_tim_vrfy_t;
+	/**
+	 * \brief The U-Blox CFG-PM structure definition
+	 */
+	typedef struct  
+	{
+		uint8_t version;					///< Message version
+		uint8_t res1;						///< Reserved
+		uint8_t res2;						///< Reserved
+		uint8_t res3;						///< Reserved
+		uint32_t flags;						///< PSM configuation flags
+		uint32_t update_period;				///< Positin update period
+		uint32_t search_period;				///< Acquisition retry period
+		uint32_t grid_offset;	   			///< Grid offset relative to GPS start of week
+		uint16_t on_time;	   				///< On time after first succeful fix
+		uint16_t min_acq_time; 				///< Minimal search time
+	}ubx_cfg_pm_t;
 
-/** 
- *\brief The U-Blox NAV-TIMEUTC message structure definition
- */
-typedef struct
-{
-	uint32_t itow;						///< GPS msToW
-	uint32_t t_acc;						///< Time accuracy estimate
-	int32_t nano;						///< Nanoseconds of second, range -1e9..1e9 (UTC)
-	uint16_t year;						///< Year range 1999..2099
-	uint8_t month;						///< Month 1..12 (UTC)
-	uint8_t day;						///< Day of month 
-	uint8_t hour;						///< Hour of the day
-	uint8_t minute;						///< Minute of the hour
-	uint8_t seconds;					///< Second of minute
-	uint8_t valid;						///< Validity of the time
-} ubx_nav_timeutc_t;
+	/**
+	 * \brief The U-Blox CFG-PM2 structure definition
+	 */
+	typedef struct  
+	{
+		uint8_t version;					///< Message version
+		uint8_t res1;						///< Reserved
+		uint8_t res2;						///< Reserved
+		uint8_t res3;						///< Reserved
+		uint32_t flags;						///< PSM configuation flags
+		uint32_t update_period;				///< Positin update period
+		uint32_t search_period;				///< Acquisition retry period
+		uint32_t grid_offset;	   			///< Grid offset relative to GPS start of week
+		uint16_t on_time;	   				///< On time after first succeful fix
+		uint16_t min_acq_time; 				///< Minimal search time
+		uint16_t res4; 						///< Reserved
+		uint16_t res5; 						///< Reserved
+		uint32_t res6; 						///< Reserved
+		uint32_t res7; 						///< Reserved
+		int8_t res8;   						///< Reserved
+		int8_t res9;   						///< Reserved
+		uint16_t res10;						///< Reserved
+		uint32_t res11;						///< Reserved
+	}ubx_cfg_pm2_t;
 
-/** 
- *\brief The U-Blox ACK-ACK and ACK-NACK message structure definition
- */
-typedef struct  
-{
-	uint8_t class_id;
-	uint8_t msg_id;
-} ubx_ack_ack_t;
+	/**
+	 * \brief The U-Blox CFG-PRT structure definition
+	 */
+	typedef struct
+	{
+		uint8_t port_id;					///< Port ID (=1 or 2 for UART ports)
+		uint8_t res0;						///< Reserved
+		uint16_t tx_ready;					///< Reserved up to firmware 7.0
+		uint32_t mode;						///< Bit mask describing UART mode
+		uint32_t baud_rate;					///< Baudrate in bits/second
+		uint16_t in_proto_mask;				///< A mask describing which input protocols are active
+		uint16_t out_proto_mask;			///< A mask describing which ouput protocols are active
+		uint16_t flags;						///< Reserved, set to 0
+		uint16_t res3;						///< Reserved, set to 0
+	}ubx_cfg_prt_t;
 
-/** 
- *\brief The U-Blox CFG-CFG message structure definition
- */
-typedef struct
-{
-	uint32_t clear_mask;				///< Mask with configuration sub-sections to clear, i.e. loading default config to permanent non-volatile memory
-	uint32_t save_mask;					///< Mask with configuration sub-sections to save, i.e. saving current config to permanent non-volatile memory
-	uint32_t load_mask;					///< Mask with configuration sub-sections to load, i.e. loading permanent config to current config
-	uint8_t device_mask;				///< Mask which selects the devices for this command
-} ubx_cfg_cfg_t;
+	/**
+	 * \brief The U-Blox CFG-PRT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t measure_rate;				///< Measurement rate, GPS measurements are taken every measure_rate milliseconds
+		uint16_t nav_rate;					///< Navigation rate, in number of measurements cycles. Cannot be changed on u-blox 5 and 6, always equal 1.
+		uint16_t time_ref;					///< Alignment to reference time, 0=UTC, 1=GPS time.
+	}ubx_cfg_rate_t;
+
+	/**
+	 * \brief The U-Blox CFG-RINV structure definition
+	 */
+	typedef struct
+	{
+		uint8_t flags;						///< 0=dumb, 1=binary
+		uint8_t data;						///< Data to store/stored in Remote Inventory
+		uint8_t data2;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data3;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data4;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data5;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data6;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data7;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data8;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data9;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data10;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data11;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data12;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data13;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data14;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data15;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data16;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data17;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data18;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data19;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data20;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data21;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data22;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data23;	  					///< Data to store/stored in Remote Inventory
+	}ubx_cfg_rinv_t;
+
+	/**
+	 * \brief The U-Blox CFG-RXM structure definition
+	 */
+	typedef struct
+	{
+		uint8_t res;						///< Reserved set to 8
+		uint8_t lp_mode;					///< Low power mode
+	}ubx_cfg_rxm_t;
+
+	/**
+	 * \brief The U-Blox CFG-SBAS structure definition
+	 */
+	typedef struct
+	{
+		uint8_t mode;						///< SBAS mode
+		uint8_t usage;						///< SBAS usage
+		uint8_t max_sbas;					///< Maximum number of SBAS prioritized tracking channels
+		uint8_t scan_mode2;					///< Continuation of scanmode bitmask
+		uint32_t scan_mode1;				///< Which SBAS PRN numbers to search for, all bits to 0=auto_scan
+	}ubx_cfg_sbas_t;
+
+	/**
+	 * \brief The U-Blox CFG-TP structure definition
+	 */
+	typedef struct
+	{
+		uint32_t interval;					///< Time interval for time pulse
+		uint32_t length;					///< Length of time pulse
+		int8_t status;						///< Time pulse config setting, +1:positive, 0:off, -1:negative
+		uint8_t time_ref;					///< Alignment to reference time, 0=UTC, 1:GPS, 2:Local time
+		uint8_t flags;						///< Bitmask
+		uint8_t res;						///< Reserved
+		int16_t antenna_cable_delay;		///< Antenna cable delay
+		int16_t rf_group_delay;				///< Receiver RF group delay
+		int32_t user_delay;					///< User time function delay
+	}ubx_cfg_tp_t;
+
+	/**
+	 * \brief The U-Blox CFG-TP5 structure definition
+	 */
+	typedef struct
+	{
+		uint8_t tp_idx;						///< Timepulse selection
+		uint8_t res0;						///< Reserved
+		uint16_t res1;						///< Reserved
+		int16_t ant_cable_delay;			///< Antenna cable delay
+		int16_t rf_group_delay;				///< RF group delay
+		uint32_t freq_period;				///< Frequency or period time, depending on setting of bit 'isFreq'
+		uint32_t freq_perid_lock;			///< Frequency or period time when locked to GPS time, only used if 'lockedOtherSet' is set
+		uint32_t pulse_len_ratio;			///< Pulse length or duty cycle, depending on 'isLength'
+		uint32_t pulse_len_ratio_lock;		///< Pulse length or duty cycle when locked to GPS time, only used if 'lockedOtherSet' is set
+		int32_t user_config_delay;			///< User configurable delay
+		uint32_t flags;						///< Configuratin flags
+	}ubx_cfg_tp5_t;
+
+	/**
+	 * \brief The U-Blox CFG-USB structure definition
+	 */
+	typedef struct
+	{
+		uint16_t vendor_id;					///< Vendor ID. This field shall only be set to registered
+		uint16_t product_id;				///< Product ID
+		uint16_t res1;						///< Reserved, set to 0
+		uint16_t res2;						///< Reserved for special use, set to 1
+		uint16_t power_consumption;			///< Power consumed by the device in mA
+		uint16_t flags;						///< Various configuration flag
+		char vendor_string[32];				///< String containing the vendor name, including 0-termination
+		char product_string[32];			///< String containing the product name, including 0-termination
+		char serial_number[32];				///< String containing the serial number, including 0-termination
+	}ubx_cfg_usb_t;
+
+	/**
+	 * \brief The U-Blox CFG-ITFM structure definition
+	 */
+	typedef struct
+	{
+		uint32_t config;					///< Interference config word
+		uint32_t config2;					///< Extra settings for jamming/interference monitor
+	}ubx_cfg_itfm_t;
+	
+	/**
+	 * \brief The U-Blox CFG-INF structure definition
+	 */
+	typedef struct
+	{
+		uint8_t protocol_id;				///< Protocol identifier, 0:UBX, 1:NMEA, 2-255:reserved
+		uint8_t res0;						///< Reserved
+		uint16_t res1;						///< Reserved
+		uint8_t inf_msg_mask1;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask2;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask3;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask4;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask5;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask6;				///< A bit mask saying which information messages are enabled on each I/O target
+	}ubx_cfg_inf_t;
+
+	/**
+	 * \brief The U-Blox CFG-FXN structure definition
+	 */
+	typedef struct
+	{
+		uint32_t flags;						///< FXN configuration flags
+		uint32_t t_reacq;					///< Time the receiver tries to re-acquire satellites, before going to off state
+		uint32_t t_acq;						///< Time the receiver tries to acquire satellites, before going to off state
+		uint32_t t_reacq_off;				///< Time the receiver stays in off-state, if re-acquisition failed
+		uint32_t t_acq_off;					///< Time the receiver stays in off-state, if acquisitin failed
+		uint32_t t_on;						///< On time
+		uint32_t t_off;						///< Sleep time after normal ontime
+		uint32_t res;						///< Reserved
+		uint32_t base_tow;					///< Base time of week to which t_on/t_sleep are aligned if ABSOLUTE_SIGN is set
+	}ubx_cfg_fxn_t;
+
+	/**
+	 * \brief The U-Blox CFG-DAT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t datum_num;					///< Geodetic Datum number, 0:WGS84, 1:WGS72, 2:ETH90, 3 ADI-M, ...
+	}ubx_cfg_dat_t;
+
+	/**
+	 * \brief The U-Blox CFG-ANT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t flags;						///< Antenna flag mask
+		uint16_t pins;						///< Antenna pin configuration
+	}ubx_cfg_ant_t;
+	
+	/**
+	 * \brief The U-Blox MON-VER struture definition
+	 */
+	typedef struct
+	{
+		char sw_version[30];				///< Zero-terminated software version string
+		char hw_version[10];				///< Zero-terminated hardware version string
+		char rom_version[30];				///< Zero-terminated ROM version string
+	}ubx_mon_ver_t;
+
+	/**
+	 * \brief The U-Blox NAV-POSLLH message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msToW
+		int32_t longitude;					///< Longitude in deg 1e-7
+		int32_t latitude;					///< Latitude in deg 1e-7
+		int32_t altitude_ellipsoid;			///< Height above ellipsoid in mm
+		int32_t altitude_msl;				///< Height above mean sea level in mm
+		uint32_t horizontal_accuracy;		///< Horizontal accuracy in mm
+		uint32_t vertical_accuracy;			///< Vertical accuracy in mm
+	}ubx_nav_pos_llh_t;
+
+	/**
+	 * \brief The U-Blox NAV-STATUS message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msToW
+		uint8_t fix_type;					///< Fix type
+		uint8_t flags;						///< Nav status flag
+		uint8_t fix_status;					///< Fix status information
+		uint8_t flags2;						///< Information about navigatio output
+		uint32_t time_to_first_fix;			///< Time to first fix in milliseconds
+		uint32_t uptime;					///< Milliseconds since startup
+	}ubx_nav_status_t;
+
+	/**
+	 * \brief The U-Blox NAV-SOL message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msToW
+		int32_t time_nsec;					///< Fractional nanoseconds remainder of rounded ms above
+		int16_t week;						///< GPS week (GPS time)
+		uint8_t fix_type;					///< The fix type
+		uint8_t fix_status;					///< The fix status
+		int32_t ecef_x;						///< Earth centered, earth frame, x coordinate in cm
+		int32_t ecef_y;						///< Earth centered, earth frame, y coordinate in cm
+		int32_t ecef_z;						///< Earth centered, earth frame, z coordinate in cm
+		uint32_t position_accuracy_3d;		///< 3D position accuracy estimate in cm
+		int32_t ecef_x_velocity;			///< Earth centered, earth frame, x velocity coordinate in cm/s
+		int32_t ecef_y_velocity;			///< Earth centered, earth frame, y velocity coordinate in cm/s
+		int32_t ecef_z_velocity;			///< Earth centered, earth frame, z velocity coordinate in cm/s
+		uint32_t speed_accuracy;			///< Speed accuracy estimate in cm/s
+		uint16_t position_DOP;				///< Position DOP, scaling 0.01f
+		uint8_t res;						///< Reserved slot
+		uint8_t satellites;					///< Number of of SVs used in Nav solution
+		uint32_t res2;						///< Reserved slot
+	}ubx_nav_solution_t;
+
+	/**
+	 * \brief The U-Blox NAV-VELNED message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msToW
+		int32_t ned_north;					///< NED North velocity in cm/s
+		int32_t ned_east;					///< NED East velocity in cm/s
+		int32_t ned_down;					///< NED Down velocity in cm/s
+		uint32_t speed_3d;					///< 3D speed in cm/s
+		uint32_t ground_speed_2d;			///< Ground speed in cm/s
+		int32_t heading_2d;					///< Heading of motion in deg 1e-5
+		uint32_t speed_accuracy;			///< Speed accuracy estimate cm/s
+		uint32_t heading_accuracy;			///< Course/heading estimate accuracy in deg 1e-5
+	}ubx_nav_vel_ned_t;
+
+	/**
+	 * \brief The U-Blox NAV-SVINFO message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msToW
+		uint8_t num_ch;						///< Number of channels
+		uint8_t global_flags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
+		uint16_t reserved;					///< Reserved slot
+	
+		/**
+		 * \brief The structure definition defining a specific message from a GPS satellite
+		*/
+		struct
+		{
+			uint8_t chn;					///< GPS msToW
+			uint8_t svid;					///< Satellite ID
+			uint8_t flags;					///< Bitmask, see U-Blox 6 documentation
+			uint8_t quality;				///< Bitmask, see U-Blox 6 documentation
+			uint8_t cno;					///< Carrier to Noise ratio in dbHz
+			int8_t elev;					///< Elevation in integer degrees
+			int16_t azim;					///< Azimuth in integer degrees
+			int32_t pr_res;					///< Pseudo range in residual in centimeters
+		} channel_data[16];
+	}ubx_nav_sv_info_t;
+
+	/**
+	 * \brief The U-Blox NAV-DGPS message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msTow
+		int32_t age;						///< Age of the newest correction data
+		int16_t base_id;					///< DGPS base station ID
+		int16_t base_health;				///< DGPS base station health status
+		uint8_t num_channel;				///< Number of channels for which correction data is following
+		uint8_t status;						///< DGPS correction type status, 00:None, 01:PR+PRR correction
+		uint16_t res1;						///< Reservec
+
+		/**
+		 * \brief The structure definition of a particular GPS
+		 */
+		struct
+		{
+			uint8_t sv_id;					///< Satellite ID
+			uint8_t flags;					///< Bitmask/channel number
+			uint16_t age_c;					///< Age of the latest correction data
+			float prc;						///< Pseudo range correction
+			float prrc;						///< Pseudo range rate correction
+		}chan_data[16];
+	}ubx_nav_dgps_t;
+
+	/**
+	 * \brief The U-Blox MON-RXR message structure definition
+	 */
+	typedef struct
+	{
+		uint8_t awake_flag;					///< Receiver status flag
+	}ubx_mon_rxr_struct_t;
+
+	/**
+	 * \brief The U-Blox TIM-TP message structure definition
+	 */
+	typedef struct  
+	{
+		uint32_t tow_ms;						///< Timepulse time of week according to time base in ms
+		uint32_t tow_sub_ms;					///< Sumbmillisecond part of ToWms scaling: 2^-32
+		int32_t q_err;						///< Quantization error of timepulse
+		uint16_t week;						///< Timepulse week number according to timebase
+		uint8_t flags;						///< Bitmask, 0,1:gps timebase, UTC not available, 2,3:UTC timebase, UTC available
+		uint8_t res;						///< Unused
+	}ubx_tim_tp_t;
+
+	/**
+	 * \brief The U-Blox TIM-VRFY message structure definition
+	 */
+	typedef struct
+	{
+		int32_t itow;						///< Integer ms ToW received by source
+		int32_t frac;						///< Sub-millisecond part of ToW in ns
+		int32_t delta_ms;					///< Inter ms of delta time
+		int32_t delta_ns;					///< Sub-millisecond part of delta time
+		uint16_t wno;						///< Week number
+		uint8_t flags;						///< Aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
+		uint8_t res;						///< Reserved slot
+	}ubx_tim_vrfy_t;
+	
+	/** 
+	 *\brief The U-Blox NAV-TIMEUTC message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msToW
+		uint32_t t_acc;						///< Time accuracy estimate
+		int32_t nano;						///< Nanoseconds of second, range -1e9..1e9 (UTC)
+		uint16_t year;						///< Year range 1999..2099
+		uint8_t month;						///< Month 1..12 (UTC)
+		uint8_t day;						///< Day of month 
+		uint8_t hour;						///< Hour of the day
+		uint8_t minute;						///< Minute of the hour
+		uint8_t seconds;					///< Second of minute
+		uint8_t valid;						///< Validity of the time
+	}ubx_nav_timeutc_t;
+
+	/** 
+	 *\brief The U-Blox ACK-ACK and ACK-NACK message structure definition
+	 */
+	typedef struct  
+	{
+		uint8_t class_id;
+		uint8_t msg_id;
+	}ubx_ack_ack_t;
+
+	/** 
+	 *\brief The U-Blox CFG-CFG message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t clear_mask;				///< Mask with configuration sub-sections to clear, i.e. loading default config to permanent non-volatile memory
+		uint32_t save_mask;					///< Mask with configuration sub-sections to save, i.e. saving current config to permanent non-volatile memory
+		uint32_t load_mask;					///< Mask with configuration sub-sections to load, i.e. loading permanent config to current config
+		uint8_t device_mask;				///< Mask which selects the devices for this command
+	}ubx_cfg_cfg_t;
+
+#endif
 
 
 #define NO_GPS 0							///< No GPS
@@ -925,9 +1452,10 @@ typedef struct
 	gps_engine_setting_t engine_nav_setting;	///< Enum GPS engine setting
 	ubx_cfg_nav_settings_t nav_settings;		///< CFG-NAV settings structure
 
-	bool configure_gps;								///< A flag to start the configuration of the GPS
+	bool configure_gps;							///< A flag to start the configuration of the GPS
 	uint16_t config_loop_count;					///< The counter for the configuration of the GPS
 	uint16_t config_nav_msg_count;				///< The counter for the configuration of the GPS when there is multiple message of the same kind
+	uint32_t configure_timer;					///< A timer to resend the configuration message if needed
 	bool acknowledged_received;					///< A flag to know if the GPS received the configuration message
 
 	Serial* serial;								///< Pointer to serial device
@@ -950,7 +1478,7 @@ ubx_mon_rxr_struct_t ubx_mon_rxr_message[2];		///<  The MON RXR message buffer
 ubx_tim_tp_t ubx_tim_tp_message[2];					///<  The TIM TP message buffer
 ubx_tim_vrfy_t ubx_tim_vrfy_message[2];				///<  The TIM VRFY message buffer
 ubx_nav_timeutc_t ubx_nav_timeutc_message[2];		///<  The NAV TIMEUTC message buffer
-ubx_ack_t ubx_ack_message[2];						///<  The ACK ACK message buffer
+ubx_ack_ack_t ubx_ack_message[2];						///<  The ACK ACK message buffer
 ubx_nav_dgps_t ubx_nav_dgps_message[2];				///<  The NAV DGPS message buffer
 
 // NAV-POSLLH
@@ -1014,8 +1542,8 @@ ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[1];		
 uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
 
 // ACK-ACK
-ubx_ack_t *ubx_current_ack_message = &ubx_ack_message[0];										///< The pointer to the ACK ACK message that is being filled (not usable)
-ubx_ack_t *ubx_last_ack_message = &ubx_ack_message[1];											///< The pointer to the last ACK ACK message that was completed
+ubx_ack_ack_t *ubx_current_ack_message = &ubx_ack_message[0];										///< The pointer to the ACK ACK message that is being filled (not usable)
+ubx_ack_ack_t *ubx_last_ack_message = &ubx_ack_message[1];											///< The pointer to the last ACK ACK message that was completed
 uint16_t ubx_number_of_valid_ack_message = 0;													///< Number of valid ACK message received
 
 // NAV-TIMEUTC
@@ -1608,7 +2136,7 @@ static ubx_nav_timeutc_t * ubx_get_nav_timeutc(void);
 *
 * \return	A pointer to the last valid status message, or 0.
 */
-static ubx_ack_t * ubx_get_ack(void);
+static ubx_ack_ack_t * ubx_get_ack(void);
 
 /**
 * \brief	This function returns a pointer to the last NAV DGPS message that was received
@@ -1665,8 +2193,8 @@ static void gps_ublox_init(gps_t *gps, Serial* serial)
 	gps->cksum_a = 0;
 	gps->cksum_b = 0;
 
-	gps->time_last_posllh_msg = time_keeper_get_millis();
-	gps->time_last_velned_msg = time_keeper_get_millis();
+	gps->time_last_posllh_msg = time_keeper_get_ms();
+	gps->time_last_velned_msg = time_keeper_get_ms();
 
 	gps->engine_nav_setting = GPS_ENGINE_AIRBORNE_4G;
 
@@ -1675,6 +2203,8 @@ static void gps_ublox_init(gps_t *gps, Serial* serial)
 	
 	gps->configure_gps = false;
 	gps->config_nav_msg_count = 0;
+	gps->config_loop_count = 0;
+	gps->configure_timer = time_keeper_get_ms();
 	gps->acknowledged_received = true;
 }
 
@@ -1701,13 +2231,43 @@ static void gps_ublox_configure_gps(gps_t *gps)
 	ubx_cfg_usb_t gps_cfg_usb;
 	ubx_cfg_cfg_t gps_cfg_cfg;
 	
-	if (!gps->acknowledged_received)
+	uint32_t tnow = time_keeper_get_ms();
+
+	uint32_t time_out_config = 5000;
+
+	if (!gps->acknowledged_received) 
 	{
-		return;
+		if ( (tnow - gps->configure_timer) < time_out_config )
+		{
+			return;
+		}
+		else
+		{
+			print_util_dbg_print("Ack not received, ack status:");
+			print_util_dbg_print_num(gps->acknowledged_received,10);
+			print_util_dbg_print(", timer diff:");
+			print_util_dbg_print_num(tnow - gps->configure_timer,10);
+			print_util_dbg_print(", resending same message...\r\n");
+			if (gps->config_nav_msg_count > 0)
+			{
+				gps->config_nav_msg_count--;
+				gps->config_loop_count++;
+			}
+		}
 	}
+	else
+	{
+		gps->config_loop_count++;
+		print_util_dbg_print("Next message...");
+		print_util_dbg_print_num(gps->acknowledged_received,10);
+		print_util_dbg_print(", timer diff:");
+		print_util_dbg_print_num(tnow - gps->configure_timer,10);
+		print_util_dbg_print("\r\n");
+	}
+
+	gps->configure_timer =  tnow;
 	
 	gps->acknowledged_received = false;
-	gps->config_loop_count++;
 	
 	uint8_t i;
 	switch(gps->config_loop_count)
@@ -2374,7 +2934,7 @@ static void gps_ublox_update(gps_t *gps)
 
 	result = gps_ublox_message_decode(gps);
 	
-	tnow = time_keeper_get_millis();
+	tnow = time_keeper_get_ms();
 	
 	if (tnow > 5000 && gps->configure_gps)
 	{
@@ -3110,7 +3670,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 				gps->cksum_a += data;
 				gps->cksum_b += gps->cksum_a; // checksum byte
 				
-				#ifdef BIG_ENDIAN
+				#ifdef __MAVRIC_ENDIAN_BIG__
 				(*ubx_current_message)[gps->payload_length - 1 - gps->payload_counter] = data;
 				#else
 				(*ubx_current_message)[gps->payload_counter] = data;
@@ -3188,7 +3748,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 
 	if (ubx_class == UBX_CLASS_ACK)
 	{
-		ubx_ack_t *gps_ack = ubx_get_ack();
+		ubx_ack_ack_t *gps_ack = ubx_get_ack();
 		if (gps_ack)
 		{
 			print_util_dbg_print("Answer for class: 0x");
@@ -3425,7 +3985,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 				gps->horizontal_accuracy = ((float)gps_pos_llh->horizontal_accuracy) / 1000.0f;
 				gps->vertical_accuracy = ((float)gps_pos_llh->vertical_accuracy) / 1000.0f;
 				
-				gps->time_last_posllh_msg = time_keeper_get_millis();
+				gps->time_last_posllh_msg = time_keeper_get_ms();
 				
 				gps->new_position = true;
 			}
@@ -3544,7 +4104,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 				gps->speed_accuracy   = ((float)gps_vel_ned->speed_accuracy) / 100.;
 				gps->heading_accuracy = gps_vel_ned->heading_accuracy;
 				
-				gps->time_last_velned_msg = time_keeper_get_millis();
+				gps->time_last_velned_msg = time_keeper_get_ms();
 				
 				gps->new_speed            = true;
 			}
@@ -3774,48 +4334,26 @@ static void ubx_send_uint8(gps_t *gps, uint8_t byte, uint8_t *ck_a, uint8_t *ck_
 
 static void ubx_send_uint16(gps_t *gps, uint16_t byte, uint8_t *ck_a, uint8_t *ck_b)
 {
-	#ifdef GPS_LITTLE_ENDIAN
-		uint8_t data = endian_lower_bytes_uint16(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_higher_bytes_uint16(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-	#else
-		uint8_t data = endian_higher_bytes_uint16(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_lower_bytes_uint16(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-	#endif
+	uint8_t data = endian_lower_bytes_uint16(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
+	
+	data = endian_higher_bytes_uint16(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
 }
 
 static void ubx_send_uint32(gps_t *gps, uint32_t byte, uint8_t *ck_a, uint8_t *ck_b)
 {
-	#ifdef GPS_LITTLE_ENDIAN
-		uint8_t data = endian_lower_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_mid_lower_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_mid_higher_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_higher_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-	#else
-		uint8_t data = endian_higher_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_mid_higher_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_mid_lower_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_lower_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-	#endif
+	uint8_t data = endian_lower_bytes_uint32(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
+	
+	data = endian_mid_lower_bytes_uint32(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
+	
+	data = endian_mid_higher_bytes_uint32(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
+	
+	data = endian_higher_bytes_uint32(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
 }
 
 static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint16_t size, uint8_t *ck_a, uint8_t *ck_b)
@@ -4681,7 +5219,7 @@ static ubx_nav_timeutc_t * ubx_get_nav_timeutc()
 	}
 }
 
-static ubx_ack_t * ubx_get_ack()
+static ubx_ack_ack_t * ubx_get_ack()
 {
 	if (ubx_number_of_valid_ack_message)
 	{
@@ -4712,9 +5250,9 @@ static ubx_nav_dgps_t * ubx_get_nav_dgps()
 
 Gps_ublox::Gps_ublox(Serial& serial):
 	serial_( serial ),
-	last_update_us_( time_keeper_get_micros() ),
-	last_position_update_us_( time_keeper_get_micros() ),
-	last_velocity_update_us_( time_keeper_get_micros() ),
+	last_update_us_( time_keeper_get_us() ),
+	last_position_update_us_( time_keeper_get_us() ),
+	last_velocity_update_us_( time_keeper_get_us() ),
 	global_position_( {0.0, 0.0, 0.0f, 0.0f} ),
 	horizontal_position_accuracy_( 0.0f ),
 	vertical_position_accuracy_( 0.0f ),
@@ -4737,7 +5275,7 @@ bool Gps_ublox::update(void)
 	gps_ublox_update(&gps);
 
 	// Copy relevant fields in class members
-	last_update_us_ 		 = time_keeper_get_micros();
+	last_update_us_ 		 = time_keeper_get_us();
 	last_position_update_us_ = 1000.0f * gps.time_last_posllh_msg;
 	last_velocity_update_us_ = 1000.0f * gps.time_last_velned_msg;
 	global_position_.longitude 	= gps.longitude;
@@ -4848,5 +5386,10 @@ const bool& Gps_ublox::healthy(void) const
 
 void Gps_ublox::configure(void)
 {
+	print_util_dbg_print("Starting gps configuration...\r\n");
+
+	gps.acknowledged_received = true;
+	gps.config_nav_msg_count = 0;
+	gps.config_loop_count = 0;
 	gps.configure_gps = true;
 }
