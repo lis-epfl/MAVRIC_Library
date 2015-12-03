@@ -125,9 +125,7 @@ LIB_SRCS += hal/avr32/file_flash_avr32.cpp
 
 LIB_SRCS += hal/dummy/adc_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
-LIB_SRCS += hal/dummy/serial_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
-LIB_SRCS += hal/dummy/file_dummy.cpp
 
 LIB_SRCS += hal/avr32/FatFs/atadrive.c
 LIB_SRCS += hal/avr32/FatFs/sdcard.c
