@@ -227,7 +227,7 @@ bool tasks_sleep(Central_data* central_data)
 
 bool tasks_led_toggle(Led* led)
 {
-	led->toggle(1);
+	led->toggle();
 	
 	return true;
 }

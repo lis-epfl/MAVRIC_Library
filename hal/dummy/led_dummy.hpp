@@ -37,7 +37,7 @@
  * \author Julien Lecoeur
  * \author Nicolas Dousse
  * 
- * \brief This file is the driver for the avr32 led
+ * \brief Dummy implementation of LED
  *
  ******************************************************************************/
 
@@ -45,33 +45,34 @@
 #ifndef LED_DUMMY_HPP_
 #define LED_DUMMY_HPP_
 
-#include <stdint.h>
 #include "led.hpp"
 
 class Led_dummy : public Led
 {
 public:
 
-	Led_dummy();
+	Led_dummy()
+	{};
 
 	/**
 	 * \brief	Switch led on
 	 */
-	void on(uint32_t leds);
+	void on(void)
+	{};
 
 
 	/**
 	 * \brief	Switch led off
 	 */
-	void off(uint32_t leds);
+	void off(void)
+	{};
+
 
 	/**
 	 * \brief	Toggle led
 	 */
-	void toggle(uint32_t leds);
-	
-private:
-
+	void toggle(void)
+	{};
 };
 
 

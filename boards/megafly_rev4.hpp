@@ -131,7 +131,8 @@ public:
 	Lsm330dlc			lsm330dlc;
 	Bmp085				bmp085;
 	Spektrum_satellite	spektrum_satellite;
-	Led_avr32			led;
+	Led_avr32 			red_led;
+	Led_avr32 			green_led;
 	Imu 				imu;
 	File_flash_avr32	file_flash;
 	Gps_ublox			gps_ublox;
@@ -139,7 +140,6 @@ public:
 	analog_monitor_t	analog_monitor;
 	Adc_avr32			adc_battery;
 	Battery 			battery;
-	// Pwm_avr32			pwm[8];
 	Pwm_avr32			pwm_0;
 	Pwm_avr32			pwm_1;
 	Pwm_avr32			pwm_2;
@@ -148,7 +148,6 @@ public:
 	Pwm_avr32			pwm_5;
 	Pwm_avr32			pwm_6;
 	Pwm_avr32			pwm_7;
-	// Servo				servo[8];
 	Servo				servo_0;
 	Servo				servo_1;
 	Servo				servo_2;
@@ -197,7 +196,7 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 	// -------------------------------------------------------------------------
 	conf.dsm_power_pin_config 	  = gpio_avr32_default_config();
 	conf.dsm_power_pin_config.pin = AVR32_PIN_PC01;
-
+	
 
 	// -------------------------------------------------------------------------
 	// UART0 configuration

@@ -48,38 +48,47 @@
 #include <stdint.h>
 #include "led.hpp"
 
+
+typedef enum
+{
+	LED_AVR32_ID_0 = 0x01,
+	LED_AVR32_ID_1 = 0x02,
+	LED_AVR32_ID_2 = 0x04,
+	LED_AVR32_ID_3 = 0x08
+} led_avr32_id_t;
+
+
 class Led_avr32 : public Led
 {
 public:
+	/**
+	 * \brief 	Constructor
+	 * 
+	 * \param 	id 	id of the led (one of led_avr32_id_t enum)
+	 */
+	Led_avr32(led_avr32_id_t id);
 
-	Led_avr32();
 
 	/**
 	 * \brief	Switch led on
 	 */
-	void on(uint32_t leds);
+	void on(void);
 
 
 	/**
 	 * \brief	Switch led off
 	 */
-	void off(uint32_t leds);
+	void off(void);
+
 
 	/**
 	 * \brief	Toggle led
 	 */
-	void toggle(uint32_t leds);
+	void toggle(void);
 	
-private:
 
-	/**
-	 * \brief	Returns the corresponding avr32 led ID
-	 *
-	 * \parameter 	leds 	The led ID
-	 *
-	 * \return The avr32 led ID
-	 */
-	uint32_t led_id(uint32_t leds);
+private:
+	led_avr32_id_t id_; 			///< ID of the led
 };
 
 

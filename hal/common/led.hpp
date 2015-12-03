@@ -45,7 +45,6 @@
 #ifndef LED_HPP_
 #define LED_HPP_
 
-#include <stdint.h>
 
 class Led
 {
@@ -53,19 +52,19 @@ public:
 	/**
 	 * \brief	Switch led on
 	 */
-	virtual void on(uint32_t leds) = 0;
+	virtual void on(void) = 0;
 
 
 	/**
 	 * \brief	Switch led off
 	 */
-	virtual void off(uint32_t leds) = 0;
+	virtual void off(void) = 0;
+
 
 	/**
 	 * \brief	Toggle led
 	 */
-	virtual void toggle(uint32_t leds) = 0;
-	
+	virtual void toggle(void) = 0;
 };
 
 

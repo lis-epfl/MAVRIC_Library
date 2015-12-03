@@ -30,37 +30,52 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file led_dummy.cpp
+ * \file led_gpio.cpp
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
- * \author Julien Lecoeur
- * \author Nicolas Dousse
  * 
- * \brief This file is the driver for the avr32 led
+ * \brief Implementation of led using gpio 
  *
  ******************************************************************************/
 
+#include "led_gpio.hpp"
 
-#include "led_dummy.hpp"
 
-Led_dummy::Led_dummy()
+Led_gpio::Led_gpio(Gpio& gpio, bool active_high):
+	gpio_(gpio),
+	active_high_(active_high)
 {
-
-}
-
-void Led_dummy::on(uint32_t leds)
-{
-	;
+	off();
 }
 
 
-void Led_dummy::off(uint32_t leds)
+void Led_gpio::on(void)
 {
-	;
+	if( active_high_ )
+	{
+		gpio_.set_high();
+	}
+	else
+	{
+		gpio_.set_low();
+	}
 }
 
-void Led_dummy::toggle(uint32_t leds)
+
+void Led_gpio::off(void)
 {
-	;
+	if( active_high_ )
+	{
+		gpio_.set_low();
+	}
+	else
+	{
+		gpio_.set_high();
+	}	
+}
+
+
+void Led_gpio::toggle(void)
+{
+	gpio_.toggle();
 }

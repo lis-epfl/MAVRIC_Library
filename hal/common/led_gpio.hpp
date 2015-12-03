@@ -30,46 +30,58 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file led_avr32.cpp
+ * \file led_gpio.hpp
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
- * \author Julien Lecoeur
- * \author Nicolas Dousse
  * 
- * \brief This file is the driver for the avr32 led
+ * \brief Implementation of led using gpio 
  *
  ******************************************************************************/
 
 
-#include "led_avr32.hpp"
+#ifndef LED_GPIO_HPP_
+#define LED_GPIO_HPP_
 
-extern "C"
+#include <stdbool.h>
+
+#include "led.hpp"
+#include "gpio.hpp"
+
+class Led_gpio: public Led
 {
-	#include "led.h"
-}
+public:
+	/**
+	 * \brief Constructor
+	 * 
+	 * \param gpio				Reference to gpio
+	 * \param active_high		Indicates if the led is on for gpio high (true) of gpio low (false)
+	 */
+	Led_gpio(Gpio& gpio, bool active_high = true);
 
 
-Led_avr32::Led_avr32(led_avr32_id_t id):
-	id_(id)
-{
-	LED_Off(id_);
-}
+	/**
+	 * \brief	Switch led on
+	 */
+	void on(void);
 
 
-void Led_avr32::on(void)
-{
-	LED_On(id_);
-}
+	/**
+	 * \brief	Switch led off
+	 */
+	void off(void);
 
 
-void Led_avr32::off(void)
-{
-	LED_Off(id_);
-}
+	/**
+	 * \brief	Toggle led
+	 */
+	void toggle(void);
 
 
-void Led_avr32::toggle(void)
-{
-	LED_Toggle(id_);
-}
+private:
+	Gpio&	gpio_;			//< Reference to gpio
+
+	bool 	active_high_;	///< Indicates if the led is on for gpio high (true) of gpio low (false)
+};
+
+
+#endif /* LED_GPIO_HPP_ */

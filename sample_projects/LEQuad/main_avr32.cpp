@@ -111,7 +111,7 @@ int main (void)
 									sim.sonar(),				// this is simulated
 									board.uart0,
 									board.spektrum_satellite,
-									board.led,
+									board.green_led,
 									board.file_flash,
 									board.battery,
 									// sim_battery,
@@ -175,7 +175,7 @@ int main (void)
 		piezo_speaker_quick_startup();
 		
 		// Switch off red LED
-		board.led.off(2);
+		board.red_led.off();
 	}
 	else
 	{
