@@ -66,6 +66,12 @@ public:
 	 */
 	virtual bool update(void) = 0;
 
+
+	/**
+	 * \brief 	Configure the GPS
+	 */
+	virtual void configure(void) = 0;
+
 	
 	/**
 	 * \brief 	Get last update time in microseconds
