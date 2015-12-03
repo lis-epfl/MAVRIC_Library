@@ -653,7 +653,7 @@ static void navigation_throw_recovery_position_hold_handler(navigation_t* naviga
 
 		print_util_dbg_print("Cust: height control to 2m");
 		navigation->state->mav_mode_custom &= 0xFFFFFFE0;
-		navigation->state->mav_mode_custom = CUST_HEIGHT_CONTROL;
+		navigation->state->mav_mode_custom = CUST_THROW_RECOVERY_POSITION_HOLD;
 		navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 		navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -2.0f;
 

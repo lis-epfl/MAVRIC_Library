@@ -231,7 +231,7 @@ typedef enum
     CUST_REMOTE_LOST = 1024,					///< Remote lost flag
     CUST_GPS_BAD = 2048,						///< GPS loss flag
 
-    CUST_HEIGHT_CONTROL = 4096 					///< Height control autolanding custom mode
+    CUST_THROW_RECOVERY_POSITION_HOLD = 4096 	///< Position hold mode for throw recovery
 }mav_mode_custom_t;
 
 /*
