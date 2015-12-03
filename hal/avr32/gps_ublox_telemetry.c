@@ -68,6 +68,9 @@ static mav_result_t gps_ublox_start_configuration(gps_t* gps, mavlink_command_lo
 	
 	if (packet->param1 == 1)
 	{
+		gps->acknowledged_received = true;
+		gps->config_nav_msg_count = 0;
+		gps->config_loop_count = 0;
 		gps->configure_gps = true;
 		
 		result = MAV_RESULT_ACCEPTED;

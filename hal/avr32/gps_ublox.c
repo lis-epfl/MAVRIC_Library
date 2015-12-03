@@ -1286,6 +1286,10 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					print_util_dbg_print_num(data,16);
 					print_util_dbg_print(" should be ");
 					print_util_dbg_print_num(gps->cksum_b,16);
+					print_util_dbg_print(" class : 0x");
+					print_util_dbg_print_num(gps->ubx_class,16);
+					print_util_dbg_print(" msg_id : 0x");
+					print_util_dbg_print_num(gps->msg_id,16);
 					print_util_dbg_print("\r\n");
 					break;
 				}
@@ -2904,7 +2908,9 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	
 	gps->configure_gps = false;
 	gps->config_nav_msg_count = 0;
+	gps->config_loop_count = 0;
 	gps->acknowledged_received = true;
+	gps->configure_timer = time_keeper_get_millis();
 }
 
 
@@ -2930,11 +2936,15 @@ void gps_ublox_configure_gps(gps_t *gps)
 	ubx_cfg_usb_t gps_cfg_usb;
 	ubx_cfg_cfg_t gps_cfg_cfg;
 	
-	if (!gps->acknowledged_received)
+	uint32_t tnow = time_keeper_get_millis();
+
+	if ( (!gps->acknowledged_received) && ((tnow - gps->configure_timer)<1000) )
 	{
 		return;
 	}
 	
+	gps->configure_timer =  tnow;
+
 	gps->acknowledged_received = false;
 	gps->config_loop_count++;
 	

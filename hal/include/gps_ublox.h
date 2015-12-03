@@ -807,6 +807,16 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	}ubx_cfg_nav_rate_t;
 
 	/**
+	 * \brief The U-Blox CFG_NAV rate send structure definition
+	 */
+	typedef struct
+	{
+		uint16_t measure_rate_ms;			///< The measure_rate
+		uint16_t nav_rate;					///< The rate
+		uint16_t timeref;					///< The time reference, 0:UTC time, 1:GPS time
+	}ubx_cfg_nav_rate_send_t;
+
+	/**
 	 * \brief The U-Blox CFG-NAV rate structure definition
 	 */
 	typedef struct
@@ -815,6 +825,16 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t msg_id_rate;				///< The msg id
 		uint8_t rate;						///< The rate
 	}ubx_cfg_msg_rate_t;
+
+	/**
+	 * \brief The U-Blox CFG_MSG rate send structure definition
+	 */
+	typedef struct
+	{
+		uint8_t msg_class;					///< The msg class
+		uint8_t msg_id_rate;				///< The msg id
+		uint8_t rate;						///< The rate of the message id
+	}ubx_cfg_msg_rate_send_t;
 
 	/**
 	 * \brief The U-Blox CFG-NAV5 settings structure definition
@@ -1440,6 +1460,7 @@ typedef struct
 	bool configure_gps;							///< A flag to start the configuration of the GPS
 	uint16_t config_loop_count;					///< The counter for the configuration of the GPS
 	uint16_t config_nav_msg_count;				///< The counter for the configuration of the GPS when there is multiple message of the same kind
+	uint32_t configure_timer;					///< A timer to resend the configuration message if needed
 	bool acknowledged_received;					///< A flag to know if the GPS received the configuration message
 
 	buffer_t gps_buffer;						///< The GPS buffer
