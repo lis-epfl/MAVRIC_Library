@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_machine.h
+ * \file throw_recovery_state_machine.h
  *
  * \author MAV'RIC Team
  * \author Dylan Bourgeois
@@ -46,8 +46,8 @@
  ******************************************************************************/
 
 
-#ifndef STATE_MACHINE_CUSTOM_H_
-#define STATE_MACHINE_CUSTOM_H_
+#ifndef THROW_RECOVERY_STATE_MACHINE_H_
+#define THROW_RECOVERY_STATE_MACHINE_H_
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -87,7 +87,7 @@ typedef struct {
 	position_estimation_t * pos_est;
 	stabilisation_copter_t * stabilisation_copter;
 	navigation_t * navigation;
-} state_machine_custom_t;
+} throw_recovery_state_machine_t;
 
 
 /**
@@ -103,13 +103,13 @@ typedef struct {
  *
  * \return	True if the init succeed, false otherwise
  */
-bool state_machine_custom_init(	state_machine_custom_t * state_machine,
-								remote_t * remote,
-								imu_t * imu, 
-								ahrs_t * ahrs, 
-								position_estimation_t * pos_est, 
-								stabilisation_copter_t * stabilisation_copter,
-								navigation_t * navigation);
+bool throw_recovery_state_machine_init(	throw_recovery_state_machine_t * state_machine,
+										remote_t * remote,
+										imu_t * imu, 
+										ahrs_t * ahrs, 
+										position_estimation_t * pos_est, 
+										stabilisation_copter_t * stabilisation_copter,
+										navigation_t * navigation);
 
 
 /**
@@ -120,18 +120,18 @@ bool state_machine_custom_init(	state_machine_custom_t * state_machine,
  *
  * \return	Returns the result of the task
  */
-task_return_t state_machine_custom_update(state_machine_custom_t * state_machine, control_command_t * controls);
+task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t * state_machine, control_command_t * controls);
 
 /**
  * \brief	Resets the state machine and launch detection
  *
  * \param	state_machine			The pointer to the state_machine structure
  */
-void state_machine_custom_reset(state_machine_custom_t * state_machine);
+void throw_recovery_state_machine_reset(throw_recovery_state_machine_t * state_machine);
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* STATE_MACHINE_CUSTOM_H_ */
+#endif /* THROW_RECOVERY_STATE_MACHINE_H_ */

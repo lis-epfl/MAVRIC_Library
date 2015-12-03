@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_machine.c
+ * \file throw_recovery_state_machine.c
  *
  * \author MAV'RIC Team
  * \author Dylan Bourgeois
@@ -47,7 +47,7 @@
 
 #include "stabilisation_copter_default_config.h"
 
-#include "state_machine_custom.h"
+#include "throw_recovery_state_machine.h"
 #include "launch_detection_default_config.h"
 #include "print_util.h"
 
@@ -68,7 +68,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter, navigation_t * navigation)
+bool throw_recovery_state_machine_init(throw_recovery_state_machine_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter, navigation_t * navigation)
 {
 	bool init_success = true;
 
@@ -90,7 +90,7 @@ bool state_machine_custom_init(state_machine_custom_t * state_machine, remote_t 
 	return init_success;
 }
 
-task_return_t state_machine_custom_update(state_machine_custom_t * state_machine, control_command_t * controls)
+task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t * state_machine, control_command_t * controls)
 {
 	bool switch_enabled = state_machine->debug ? 1 : ((int32_t)(state_machine->remote->channels[CHANNEL_AUX1] + 1.0f) > 0);
 	bool is_armed = state_machine->debug ? 1 : state_machine->imu->state->mav_mode.ARMED == ARMED_ON;
@@ -182,7 +182,7 @@ task_return_t state_machine_custom_update(state_machine_custom_t * state_machine
 	return TASK_RUN_SUCCESS;
 }
 
-void state_machine_custom_reset(state_machine_custom_t * state_machine)
+void throw_recovery_state_machine_reset(throw_recovery_state_machine_t * state_machine)
 {
 	state_machine->state = STATE_IDLE;
 	state_machine->enabled = 0;
