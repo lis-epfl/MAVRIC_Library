@@ -96,7 +96,7 @@ public:
 	/**
 	 * \brief   Constructor
 	 */
-	Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3);
+	Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2);
 
 
 	/**
@@ -150,8 +150,8 @@ public:
 	hud_telemetry_structure_t hud_structure;					///< The HUD structure
 
 	toggle_logging_t toggle_logging;
-	data_logging_t data_logging;
-	data_logging_t data_logging2;
+	Data_logging 	data_logging;
+	Data_logging 	data_logging2;
 
 	attitude_controller_t 			attitude_controller;
 	velocity_controller_copter_t 	velocity_controller;

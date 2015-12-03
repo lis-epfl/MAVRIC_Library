@@ -81,7 +81,7 @@ extern "C"
  *
  * \return	The initialization status of the module, succeed == true
  */
-bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging, Central_data* central_data);
+bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, Central_data* central_data);
 
 /**
  * \brief	Add onboard logging parameters
@@ -90,7 +90,7 @@ bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging,
  *
  * \return	The initialization status of the module, succeed == true
  */
-bool mavlink_telemetry_add_data_logging_parameters_stat(data_logging_t* data_logging, Central_data* central_data);
+bool mavlink_telemetry_add_data_logging_parameters_stat(Data_logging* data_logging, Central_data* central_data);
 
 /**
  * \brief   Initialise the callback functions
@@ -106,7 +106,7 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data);
 //------------------------------------------------------------------------------
 
 
-bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging, Central_data* central_data)
+bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, Central_data* central_data)
 {
 	bool init_success = true;
 	
@@ -121,30 +121,30 @@ bool mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging,
 	// init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.longitude, "origin_lon", 7);
 	// init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.origin.altitude,	"origin_alt", 3);
 	
-	init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.pos[0], "local_x", 3);
-	init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.pos[1], "local_y", 3);
-	init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.pos[2], "local_z", 3);
+	init_success &= data_logging->add_parameter_float(&central_data->position_estimation.local_position.pos[0], "local_x", 3);
+	init_success &= data_logging->add_parameter_float(&central_data->position_estimation.local_position.pos[1], "local_y", 3);
+	init_success &= data_logging->add_parameter_float(&central_data->position_estimation.local_position.pos[2], "local_z", 3);
 	
 	// init_success &= data_logging_add_parameter_double(data_logging, &central_data->gps.latitude, "latitude", 7);
 	// init_success &= data_logging_add_parameter_double(data_logging, &central_data->gps.longitude, "longitude", 7);
 	// init_success &= data_logging_add_parameter_float(data_logging,	&central_data->gps.altitude, "altitude", 3);
 	
-	init_success &= data_logging_add_parameter_uint32(data_logging, (uint32_t*)&central_data->state.mav_state, "mav_state");
-	init_success &= data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode, "mav_mode");
+	init_success &= data_logging->add_parameter_uint32((uint32_t*)&central_data->state.mav_state, "mav_state");
+	init_success &= data_logging->add_parameter_uint8(&central_data->state.mav_mode, "mav_mode");
 	
 	return init_success;
 };
 
-bool mavlink_telemetry_add_data_logging_parameters_stat(data_logging_t* data_logging, Central_data* central_data)
+bool mavlink_telemetry_add_data_logging_parameters_stat(Data_logging* data_logging, Central_data* central_data)
 {
 	// Add your logging parameters here, name length max < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN = 16
 	// Supported type: all numeric types included in mavlink_message_type_t (i.e. all except MAVLINK_TYPE_CHAR)
 	
 	bool init_success = true;
 
-	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.latitude,	"origin_lat", 7);
-	init_success &= data_logging_add_parameter_double(data_logging, &central_data->position_estimation.local_position.origin.longitude, "origin_lon", 7);
-	init_success &= data_logging_add_parameter_float(data_logging,	&central_data->position_estimation.local_position.origin.altitude,	"origin_alt", 3);
+	init_success &= data_logging->add_parameter_double(&central_data->position_estimation.local_position.origin.latitude,	"origin_lat", 7);
+	init_success &= data_logging->add_parameter_double(&central_data->position_estimation.local_position.origin.longitude, "origin_lon", 7);
+	init_success &= data_logging->add_parameter_float(&central_data->position_estimation.local_position.origin.altitude,	"origin_alt", 3);
 
 	return init_success;
 }

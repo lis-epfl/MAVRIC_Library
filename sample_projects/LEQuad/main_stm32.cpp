@@ -145,7 +145,7 @@ int main(int argc, char** argv)
 	Spektrum_satellite dummy_satellite(dummy_serial, dummy_gpio, dummy_gpio);
 
 	// Dummy file
-	File_dummy dummy_file("dummy.txt");
+	File_dummy dummy_file;
 
 	// Dummy led
 	Led_dummy dummy_led;
@@ -185,6 +185,8 @@ int main(int argc, char** argv)
 										sim.gyroscope(),
 										sim.magnetometer() );
 
+	File_dummy dummy_file1;
+	File_dummy dummy_file2;
 
 	// -------------------------------------------------------------------------
 	// Create central data
@@ -203,7 +205,10 @@ int main(int argc, char** argv)
 									sim_servo_0,
 									sim_servo_1,
 									sim_servo_2,
-									sim_servo_3 );
+									sim_servo_3,
+									dummy_file1,
+									dummy_file2 );
+
 
 
 	// -------------------------------------------------------------------------
@@ -225,6 +230,16 @@ int main(int argc, char** argv)
 		// onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
 		init_success = false; 
 	}
+
+	init_success &=	cd.data_logging.create_new_log_file("Log_file",
+														true,
+														&cd.toggle_logging,
+														cd.mavlink_communication.mavlink_stream.sysid);
+
+	init_success &=	cd.data_logging2.create_new_log_file("Log_stat",
+														false,
+														&cd.toggle_logging,
+														cd.mavlink_communication.mavlink_stream.sysid);	
 
 	init_success &= mavlink_telemetry_init(&cd);
 

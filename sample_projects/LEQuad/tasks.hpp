@@ -104,5 +104,9 @@ bool sonar_update(Central_data* central_data);
  */
 bool tasks_led_toggle(Led* led);
 
+/**
+ * \brief            Run the data_logging task
+ */
+bool tasks_data_logging_update(Central_data* central_data);
 
 #endif /* TASKS_H_ */

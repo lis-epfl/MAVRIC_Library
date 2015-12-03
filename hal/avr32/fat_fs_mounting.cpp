@@ -68,8 +68,6 @@ bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting)
 
 	fat_fs_mounting->num_file_opened = 0;
 
-	print_util_dbg_print("[FATFS]: init\r\n");
-
 	return init_success;
 }
 

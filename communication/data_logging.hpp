@@ -76,13 +76,237 @@ typedef struct
 } data_logging_set_t;
 
 /**
- * \brief	The structure to log the data
+ * \brief	The class of the log of the data
  *
  * \details  	data_logging_set is implemented as pointer because its memory will be
  * 				allocated during initialisation
  */
-typedef struct  
+class Data_logging
 {
+public:
+	/**
+	 * \brief	Data logging constructor
+	 */
+	Data_logging(File& file);
+
+
+	/**
+	 * \brief	Initialise the data logging module
+	 *
+	 * \param	file_name				The pointer to name of the file to create
+	 * \param	continuous_write		Boolean to state whether writing should be continous or not
+	 * \param	toggle_logging			The pointer to toggle logging structure
+	 * \param	sysid					The pointer to the system identification number of the MAV
+	 *
+	 * \return	True if the init succeed, false otherwise
+	 */
+	bool create_new_log_file(const char* file_name_, bool continuous_write_, toggle_logging_t* toggle_logging_, uint32_t sysid);
+
+	/**
+	 * \brief	The task to log the data to the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 *
+	 * \return	The result of the task execution
+	 */
+	bool update();
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_uint8(uint8_t* val, const char* param_name);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_int8(int8_t* val, const char* param_name);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_uint16(uint16_t* val, const char* param_name);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_int16(int16_t* val, const char* param_name);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_uint32(uint32_t* val, const char* param_name);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_int32(int32_t* val, const char* param_name);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_uint64(uint64_t* val, const char* param_name);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_int64(int64_t* val, const char* param_name);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 * \param 	precision				The number of digit after the zero
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_float(float* val, const char* param_name, uint32_t precision);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 * \param 	precision				The number of digit after the zero
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_parameter_double(double* val, const char* param_name, uint32_t precision);
+
+private:
+		/**
+	 * \brief	Add in the file fp the first line with the name of the parameter
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 */
+	void add_header_name(void);
+
+
+	/**
+	 * \brief	Function to put a \r or a \n after the data logging parameter value (\r between them and \n and the end)
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param	param_num				The index of the data logging parameter
+	 */
+	void put_r_or_n(uint16_t param_num);
+
+
+	/**
+	 * \brief	Function to log a new line of values
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 */
+	void log_parameters(void);
+
+
+	/**
+	 * \brief	Seek the end of an open file to append
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 */
+	void seek(void);
+
+
+	/**
+	* \brief	Appends ".txt" to the end of a character string. If not enough 
+	*			memory allocated in output, will write as many letters from
+	*			filename as possible, will not include .txt\0 unless entire
+	*			.txt\0 can fit. 
+	*
+	* \param	output		The output character string
+	* \param	filename	The input string
+	* \param	length		The maximum length of output
+	*
+	* \return	success		Bool stating if the entire output was written
+	*/
+	bool filename_append_extension(char* output, char* filename, uint32_t length);
+
+
+	/**
+	* \brief	Appends a uint32_t to a character string with an underscore between.
+	*			If not enough memory allocated in output, will write as many letters
+	*			from filename as possible, will not include num\0 unless entire number
+	*			and null character can fit.
+	*
+	* \param	output		The output character string
+	* \param	filename	The input string
+	* \param	num			The uint32_t to be appended to filename
+	* \param	length		The maximum length of the output string, must be positive
+	*
+	* \return	success		Bool stating if the entire output was written
+	*/
+	bool filename_append_int(char* output, char* filename, uint32_t num, uint32_t length);
+
+
+	/**
+	 * \brief	Create and open a new file
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 *
+	 * \result	True if the file was open correctly, false otherwise
+	 */
+	bool open_new_log_file(void);
+
+
+	/**
+	 * \brief	Computes the checksum of data logging 
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 *
+	 * \result	True if the the checksum of the data didn't change, false otherwise
+	 */
+	bool checksum_control(void);
+
 	bool debug;									///< Indicates if debug messages should be printed for each param change
 
 	data_logging_set_t* data_logging_set;		///< Pointer to a set of parameters, needs memory allocation
@@ -104,156 +328,10 @@ typedef struct
 	
 	uint32_t sys_id;							///< the system ID
 	
-	Console<File>* console;						///< The pointer to the console containing the file to write data to
+	Console<File> console;						///< The console containing the file to write data to
 
 	const State* state;							///< The pointer to the state structure	
 	toggle_logging_t* toggle_logging;			///< The pointer to the toggle logging structure
-} data_logging_t;
-
-
-/**
- * \brief	Initialise the data logging module
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param	file_name				The pointer to name of the file to create
- * \param 	console 				The pointer to the console containing the file to write to
- * \param	continuous_write		Boolean to state whether writing should be continous or not
- * \param	toggle_logging			The pointer to toggle logging structure
- * \param	sysid					The pointer to the system identification number of the MAV
- *
- * \return	True if the init succeed, false otherwise
- */
-bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, Console<File>* console, bool continuous_write, toggle_logging_t* toggle_logging, uint32_t sysid);
-
-/**
- * \brief	Create and open a new file
- *
- * \param	data_logging			The pointer to the data logging structure
- *
- * \result	True if the file was open correctly, false otherwise
- */
-bool data_logging_open_new_log_file(data_logging_t* data_logging);
-
-/**
- * \brief	The task to log the data to the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- *
- * \return	The result of the task execution
- */
-bool data_logging_update(data_logging_t* data_logging);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val, const char* param_name);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, const char* param_name);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* val, const char* param_name);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val, const char* param_name);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* val, const char* param_name);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val, const char* param_name);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* val, const char* param_name);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val, const char* param_name);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- * \param 	precision				The number of digit after the zero
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name, uint32_t precision);
-
-/**
- * \brief	Registers parameter to log on the SD card
- *
- * \param	data_logging			The pointer to the data logging structure
- * \param 	val						The parameter value
- * \param 	param_name				Name of the parameter
- * \param 	precision				The number of digit after the zero
- *
- * \return	True if the parameter was added, false otherwise
- */
-bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name, uint32_t precision);
-
+};
 
 #endif /* DATA_LOGGING_H__ */

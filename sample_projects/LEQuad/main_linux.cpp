@@ -74,6 +74,9 @@ int main(int argc, char** argv)
 	// Create board
 	Mavrinux board(board_config);
 
+	File_linux file_log;
+	File_linux file_stat;
+
 	// -------------------------------------------------------------------------
 	// Create central data
 	// -------------------------------------------------------------------------
@@ -91,7 +94,9 @@ int main(int argc, char** argv)
 									board.servo_0,
 									board.servo_1,
 									board.servo_2,
-									board.servo_3 );
+									board.servo_3,
+									file_log,
+									file_stat);
 
 
 	// -------------------------------------------------------------------------
@@ -114,22 +119,12 @@ int main(int argc, char** argv)
 		init_success = false; 
 	}
 
-	File_linux file_log;
-	Console<File> console(file_log);
-
-	File_linux file_stat;
-	Console<File> console_stat(file_stat);
-
-	init_success &=	data_logging_create_new_log_file(	&cd.data_logging,
-														"Log_file",
-														&console,
+	init_success &=	cd.data_logging.create_new_log_file("Log_file",
 														true,
 														&cd.toggle_logging,
 														cd.mavlink_communication.mavlink_stream.sysid);
 
-	init_success &=	data_logging_create_new_log_file(	&cd.data_logging2,
-														"Log_stat",
-														&console_stat,
+	init_success &=	cd.data_logging2.create_new_log_file("Log_stat",
 														false,
 														&cd.toggle_logging,
 														cd.mavlink_communication.mavlink_stream.sysid);	

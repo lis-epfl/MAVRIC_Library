@@ -97,6 +97,9 @@ int main (void)
 										sim.gyroscope(),
 										sim.magnetometer() );
 
+	fat_fs_mounting_t fat_fs_mounting;
+	File_fat_fs	file_log(true,&fat_fs_mounting); // boolean value = debug mode
+	File_fat_fs	file_stat(true,&fat_fs_mounting); // boolean value = debug mode
 
 	// -------------------------------------------------------------------------
 	// Create central data
@@ -118,7 +121,9 @@ int main (void)
 									board.servo_0,
 									board.servo_1,
 									board.servo_2,
-									board.servo_3 );
+									board.servo_3,
+									file_log,
+									file_stat );
 
 
 	// Create central data with simulated sensors
@@ -158,23 +163,12 @@ int main (void)
 		init_success = false; 
 	}
 
-	fat_fs_mounting_t fat_fs_mounting;
-	File_fat_fs	file_log(true,&fat_fs_mounting); // boolean value = debug mode
-	Console<File> console(file_log);
-
-	File_fat_fs	file_stat(true,&fat_fs_mounting); // boolean value = debug mode
-	Console<File> console_stat(file_stat);
-
-	init_success &=	data_logging_create_new_log_file(	&cd.data_logging,
-														"Log_file",
-														&console,
+	init_success &=	cd.data_logging.create_new_log_file("Log_file",
 														true,
 														&cd.toggle_logging,
 														cd.mavlink_communication.mavlink_stream.sysid);
 
-	init_success &=	data_logging_create_new_log_file(	&cd.data_logging2,
-														"Log_Stat",
-														&console_stat,
+	init_success &=	cd.data_logging2.create_new_log_file("Log_Stat",
 														false,
 														&cd.toggle_logging,
 														cd.mavlink_communication.mavlink_stream.sysid);
