@@ -38,29 +38,10 @@
  *
  ******************************************************************************/
 
-#ifndef SERIAL_DUMMY_H_
-#define SERIAL_DUMMY_H_
+#ifndef SERIAL_DUMMY_HPP_
+#define SERIAL_DUMMY_HPP_
 
 #include "serial.hpp"
-#include <stdint.h>
-
-
-/**
- * 	Configuration structure
- */
-typedef struct
-{
-	bool flag;			///< Dummy configuration flag
-} serial_dummy_conf_t;
-
-
-/**
- * \brief 	Default configuration
- * 
- * \return 	Config structure
- */
-static inline serial_dummy_conf_t serial_dummy_default_config();
-
 
 class Serial_dummy: public Serial
 {
@@ -70,7 +51,8 @@ public:
 	 * 
 	 * \param 	config 		Device configuration
 	 */
-	Serial_dummy(serial_dummy_conf_t config = serial_dummy_default_config());
+	Serial_dummy(void)
+	{};
 
 
 	/**
@@ -79,7 +61,10 @@ public:
 	 * \return  true Success
 	 * \return  false Error
 	 */
-	bool init(void);
+	bool init(void)
+	{
+		return true;
+	};
 
 
 	/**
@@ -87,7 +72,11 @@ public:
 	 * 
 	 * \return 	Number of incoming bytes available
 	 */	
-	uint32_t readable(void);
+	uint32_t readable(void)
+	{
+		return 0;
+	};
+
 
 
 	/**
@@ -95,7 +84,10 @@ public:
 	 * 
 	 * \return 	Number of bytes available for writing
 	 */	
-	uint32_t writeable(void);
+	uint32_t writeable(void)
+	{
+		return 0;
+	};
 
 
 	/**
@@ -103,7 +95,8 @@ public:
 	 * 
 	 * \return 	Number of bytes available for writing
 	 */	
-	void flush(void);
+	void flush(void)
+	{};
 
 	
 	/**
@@ -119,7 +112,10 @@ public:
 	 * \return 	true		Success
 	 * \return 	false		Failed
 	 */
-	bool attach(serial_interrupt_callback_t func); 
+	bool attach(serial_interrupt_callback_t func)
+	{
+		return true;
+	} 
 
 
 	/**
@@ -131,7 +127,10 @@ public:
 	 * \return 	true		Data successfully written
 	 * \return 	false		Data not written
 	 */
-	bool write(const uint8_t* bytes, const uint32_t size=1);
+	bool write(const uint8_t* bytes, const uint32_t size=1)
+	{
+		return true;
+	};
 
 
 	/**
@@ -143,27 +142,11 @@ public:
 	 * \return 	true		Data successfully read
 	 * \return 	false		Data not read
 	 */	
-	bool read(uint8_t* bytes, const uint32_t size=1);
-
-
-private:
-	serial_dummy_conf_t config_;
+	bool read(uint8_t* bytes, const uint32_t size=1)
+	{
+		return true;
+	};
 };
 
 
-/**
- * \brief 	Default configuration
- * 
- * \return 	Config structure
- */
-static inline serial_dummy_conf_t serial_dummy_default_config()
-{
-	serial_dummy_conf_t conf = {};
-
-	conf.flag = true;
-
-	return conf;
-}
-
-
-#endif /* SERIAL_DUMMY_H_ */
+#endif /* SERIAL_DUMMY_HPP_ */
