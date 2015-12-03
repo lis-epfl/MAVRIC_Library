@@ -767,7 +767,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	{
 		uint8_t msg_id;						///< Message ID of the acknowledged messages
 		uint8_t class_id;					///< Class ID of the acknowledged messages
-	}ubx_ack_t;
+	}ubx_ack_ack_t;
 
 	/** 
 	 *\brief The U-Blox CFG-CFG message structure definition
@@ -1478,7 +1478,7 @@ ubx_mon_rxr_struct_t ubx_mon_rxr_message[2];		///<  The MON RXR message buffer
 ubx_tim_tp_t ubx_tim_tp_message[2];					///<  The TIM TP message buffer
 ubx_tim_vrfy_t ubx_tim_vrfy_message[2];				///<  The TIM VRFY message buffer
 ubx_nav_timeutc_t ubx_nav_timeutc_message[2];		///<  The NAV TIMEUTC message buffer
-ubx_ack_t ubx_ack_message[2];						///<  The ACK ACK message buffer
+ubx_ack_ack_t ubx_ack_message[2];						///<  The ACK ACK message buffer
 ubx_nav_dgps_t ubx_nav_dgps_message[2];				///<  The NAV DGPS message buffer
 
 // NAV-POSLLH
@@ -1542,8 +1542,8 @@ ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[1];		
 uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
 
 // ACK-ACK
-ubx_ack_t *ubx_current_ack_message = &ubx_ack_message[0];										///< The pointer to the ACK ACK message that is being filled (not usable)
-ubx_ack_t *ubx_last_ack_message = &ubx_ack_message[1];											///< The pointer to the last ACK ACK message that was completed
+ubx_ack_ack_t *ubx_current_ack_message = &ubx_ack_message[0];										///< The pointer to the ACK ACK message that is being filled (not usable)
+ubx_ack_ack_t *ubx_last_ack_message = &ubx_ack_message[1];											///< The pointer to the last ACK ACK message that was completed
 uint16_t ubx_number_of_valid_ack_message = 0;													///< Number of valid ACK message received
 
 // NAV-TIMEUTC
@@ -2136,7 +2136,7 @@ static ubx_nav_timeutc_t * ubx_get_nav_timeutc(void);
 *
 * \return	A pointer to the last valid status message, or 0.
 */
-static ubx_ack_t * ubx_get_ack(void);
+static ubx_ack_ack_t * ubx_get_ack(void);
 
 /**
 * \brief	This function returns a pointer to the last NAV DGPS message that was received
@@ -3748,7 +3748,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 
 	if (ubx_class == UBX_CLASS_ACK)
 	{
-		ubx_ack_t *gps_ack = ubx_get_ack();
+		ubx_ack_ack_t *gps_ack = ubx_get_ack();
 		if (gps_ack)
 		{
 			print_util_dbg_print("Answer for class: 0x");
@@ -4334,48 +4334,26 @@ static void ubx_send_uint8(gps_t *gps, uint8_t byte, uint8_t *ck_a, uint8_t *ck_
 
 static void ubx_send_uint16(gps_t *gps, uint16_t byte, uint8_t *ck_a, uint8_t *ck_b)
 {
-	#ifdef __MAVRIC_ENDIAN_BIG__
-		uint8_t data = endian_lower_bytes_uint16(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_higher_bytes_uint16(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-	#else
-		uint8_t data = endian_higher_bytes_uint16(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_lower_bytes_uint16(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-	#endif
+	uint8_t data = endian_lower_bytes_uint16(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
+	
+	data = endian_higher_bytes_uint16(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
 }
 
 static void ubx_send_uint32(gps_t *gps, uint32_t byte, uint8_t *ck_a, uint8_t *ck_b)
 {
-	#ifdef __MAVRIC_ENDIAN_BIG__
-		uint8_t data = endian_lower_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_mid_lower_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_mid_higher_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_higher_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-	#else
-		uint8_t data = endian_higher_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_mid_higher_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_mid_lower_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-		
-		data = endian_lower_bytes_uint32(byte);
-		ubx_send_uint8(gps,data,ck_a,ck_b);
-	#endif
+	uint8_t data = endian_lower_bytes_uint32(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
+	
+	data = endian_mid_lower_bytes_uint32(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
+	
+	data = endian_mid_higher_bytes_uint32(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
+	
+	data = endian_higher_bytes_uint32(byte);
+	ubx_send_uint8(gps,data,ck_a,ck_b);
 }
 
 static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint16_t size, uint8_t *ck_a, uint8_t *ck_b)
@@ -5241,7 +5219,7 @@ static ubx_nav_timeutc_t * ubx_get_nav_timeutc()
 	}
 }
 
-static ubx_ack_t * ubx_get_ack()
+static ubx_ack_ack_t * ubx_get_ack()
 {
 	if (ubx_number_of_valid_ack_message)
 	{
