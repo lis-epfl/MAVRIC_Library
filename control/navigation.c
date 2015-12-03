@@ -323,7 +323,6 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 									dir_desired );
 
 	// Transform the vector in the semi-global reference frame
-	
 	quat_t q_rot;
 	aero_attitude_t attitude_yaw;
 	attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
@@ -338,6 +337,11 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
 	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
+	
+	float rel_heading;
+	rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
+	
+	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
 static void navigation_run(navigation_t* navigation)
@@ -348,8 +352,11 @@ static void navigation_run(navigation_t* navigation)
 	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.waypoint.pos,
 																					rel_pos,
 																					navigation->position_estimation->local_position.pos);
-	navigation_set_speed_command(rel_pos, navigation);
 	
+	// For Quad
+	//navigation_set_speed_command(rel_pos, navigation);
+	
+	// For Wing
 	navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
 
 	navigation->controls_nav->theading=navigation->goal.waypoint.heading;

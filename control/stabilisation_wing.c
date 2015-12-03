@@ -160,7 +160,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		current_heading = heading_from_velocity_vector(gps_speed_semi_local);
 		
 		// Compute turn rate command
-		heading_error = nav_heading - current_heading;
+		heading_error = maths_calc_smaller_angle(nav_heading - current_heading);
 		
 		
 		///////////////
