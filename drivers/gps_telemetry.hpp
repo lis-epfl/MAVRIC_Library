@@ -47,6 +47,16 @@
 #include "gps.hpp"
 
 /**
+ * \brief	Initialize the MAVLink communication module for the GPS
+ * 
+ * \param	gps						The pointer to the gps structure
+ * \param	message_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool gps_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler);
+
+/**
  * \brief	Function to send the MAVLink gps raw message
  * 
  * \param	gps						Pointer to the GPS

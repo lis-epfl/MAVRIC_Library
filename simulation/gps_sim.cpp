@@ -95,6 +95,10 @@ bool Gps_sim::update(void)
 	return success;
 }
 
+void Gps_sim::configure(void)
+{
+	;
+}
 
 const float& Gps_sim::last_update_us(void) const
 {

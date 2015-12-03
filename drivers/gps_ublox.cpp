@@ -1635,7 +1635,7 @@ static void gps_ublox_init(gps_t *gps, Serial* serial)
 	gps->print_nav_on_debug = false;
 	
 	//disable debug message prints
-	gps->debug = false;
+	gps->debug = true;
 
 	gps->idle_timeout = 1200;
 
@@ -2371,7 +2371,7 @@ static void gps_ublox_update(gps_t *gps)
 {
 	bool result;
 	uint32_t tnow;
-	
+
 	result = gps_ublox_message_decode(gps);
 	
 	tnow = time_keeper_get_ms();
@@ -2652,6 +2652,10 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					// we assume very large payloads are line noise
 					print_util_dbg_print("large payload: ");
 					print_util_dbg_print_num(gps->payload_length,10);
+					print_util_dbg_print(", for class:0x");
+					print_util_dbg_print_num(gps->ubx_class,16);
+					print_util_dbg_print(", and msg_id: 0x");
+					print_util_dbg_print_num(gps->msg_id,16);
 					print_util_dbg_print("\r\n");
 					gps->payload_length = 0;
 					gps->step = CHECK_IF_PREAMBLE_1;
@@ -3146,6 +3150,10 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					print_util_dbg_print_num(data,16);
 					print_util_dbg_print(" should be ");
 					print_util_dbg_print_num(gps->cksum_b,16);
+					print_util_dbg_print(" class : 0x");
+					print_util_dbg_print_num(gps->ubx_class,16);
+					print_util_dbg_print(" msg_id : 0x");
+					print_util_dbg_print_num(gps->msg_id,16);
 					print_util_dbg_print("\r\n");
 					break;
 				}
@@ -4838,7 +4846,7 @@ const bool& Gps_ublox::healthy(void) const
 }
 
 
-void Gps_ublox::start_configuration(void)
+void Gps_ublox::configure(void)
 {
 	gps.configure_gps = true;
 }

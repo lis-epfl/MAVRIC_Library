@@ -62,6 +62,12 @@ public:
 	
 
 	/**
+	 * \brief 	Configure the GPS
+	 */
+	void configure(void);
+
+
+	/**
 	 * \brief 	Main update function
 	 * \detail 	Reads new values from sensor
 	 * 
