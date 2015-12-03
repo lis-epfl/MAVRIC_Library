@@ -52,6 +52,7 @@
 #include "gpio_dummy.hpp"
 #include "spektrum_satellite.hpp"
 #include "file_dummy.hpp"
+#include "led_dummy.hpp"
 
 extern "C" 
 {
@@ -84,6 +85,14 @@ static void gpio_setup(void)
 	/* Set GPIO12-15 (in GPIO port D) to 'output push-pull'. */
 	gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT,
 			GPIO_PUPD_NONE, GPIO12 | GPIO13 | GPIO14 | GPIO15);
+}
+
+
+static Serial_dummy* p_dbg_uart;
+uint8_t serial2stream( stream_data_t data, uint8_t byte )
+{
+	p_dbg_uart->write(&byte);
+	return 0;
 }
 /**
  * TO REMOVE (end)
@@ -138,6 +147,21 @@ int main(int argc, char** argv)
 	// Dummy file
 	File_dummy dummy_file("dummy.txt");
 
+	// Dummy led
+	Led_dummy dummy_led;
+
+	// Init debug stream TODO: remove
+	byte_stream_t dbg_stream_;
+	p_dbg_uart 					= &dummy_serial;
+	dbg_stream_.get 			= NULL;
+	dbg_stream_.put 			= &serial2stream;
+	dbg_stream_.flush 			= NULL;
+	dbg_stream_.buffer_empty 	= NULL;
+	dbg_stream_.data 			= NULL;
+	print_util_dbg_print_init(&dbg_stream_);
+
+
+
 	// -------------------------------------------------------------------------
 	// Create simulation
 	// -------------------------------------------------------------------------
@@ -173,6 +197,7 @@ int main(int argc, char** argv)
 									sim.sonar(),
 									dummy_serial,
 									dummy_satellite,
+									dummy_led,
 									dummy_file,
 									sim_battery,
 									sim_servo_0,
@@ -190,22 +215,22 @@ int main(int argc, char** argv)
 	// init_success &= board.init();
 
 	// Init central data
-	// init_success &= cd.init();
+	init_success &= cd.init();
 
-	// init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+	init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
 	// // Try to read from flash, if unsuccessful, write to flash
-	// if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
-	// {
-	// 	onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-	// 	init_success = false; 
-	// }
+	if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
+	{
+		// onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+		init_success = false; 
+	}
 
-	// init_success &= mavlink_telemetry_init(&cd);
+	init_success &= mavlink_telemetry_init(&cd);
 
-	// cd.state.mav_state = MAV_STATE_STANDBY;	
+	cd.state.mav_state = MAV_STATE_STANDBY;	
 	
-	// init_success &= tasks_create_tasks(&cd);	
+	init_success &= tasks_create_tasks(&cd);	
 
 	print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
