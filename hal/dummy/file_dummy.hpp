@@ -85,7 +85,7 @@ public:
 	 */
 	bool exists(const char* path)
 	{
-		return true;
+		return false;
 	}
 
 	/**
