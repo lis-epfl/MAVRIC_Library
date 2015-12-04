@@ -2938,15 +2938,41 @@ void gps_ublox_configure_gps(gps_t *gps)
 	
 	uint32_t tnow = time_keeper_get_millis();
 
-	if ( (!gps->acknowledged_received) && ((tnow - gps->configure_timer)<1000) )
+	uint32_t time_out_config = 5000;
+
+	if (!gps->acknowledged_received) 
 	{
-		return;
+		if ( (tnow - gps->configure_timer) < time_out_config )
+		{
+			return;
+		}
+		else
+		{
+			print_util_dbg_print("Ack not received, ack status:");
+			print_util_dbg_print_num(gps->acknowledged_received,10);
+			print_util_dbg_print(", timer diff:");
+			print_util_dbg_print_num(tnow - gps->configure_timer,10);
+			print_util_dbg_print(", resending same message...\r\n");
+			if (gps->config_nav_msg_count > 0)
+			{
+				gps->config_nav_msg_count--;
+				gps->config_loop_count++;
+			}
+		}
 	}
-	
+	else
+	{
+		gps->config_loop_count++;
+		print_util_dbg_print("Next message...");
+		print_util_dbg_print_num(gps->acknowledged_received,10);
+		print_util_dbg_print(", timer diff:");
+		print_util_dbg_print_num(tnow - gps->configure_timer,10);
+		print_util_dbg_print("\r\n");
+	}
+
 	gps->configure_timer =  tnow;
 
 	gps->acknowledged_received = false;
-	gps->config_loop_count++;
 	
 	uint8_t i;
 	switch(gps->config_loop_count)
