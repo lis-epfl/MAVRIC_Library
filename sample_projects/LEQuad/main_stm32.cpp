@@ -234,11 +234,13 @@ int main(int argc, char** argv)
 	init_success &=	cd.data_logging.create_new_log_file("Log_file",
 														true,
 														&cd.toggle_logging,
+														&cd.state,
 														cd.mavlink_communication.mavlink_stream.sysid);
 
 	init_success &=	cd.data_logging2.create_new_log_file("Log_stat",
 														false,
 														&cd.toggle_logging,
+														&cd.state,
 														cd.mavlink_communication.mavlink_stream.sysid);	
 
 	init_success &= mavlink_telemetry_init(&cd);

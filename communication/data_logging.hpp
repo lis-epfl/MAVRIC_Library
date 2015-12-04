@@ -96,11 +96,12 @@ public:
 	 * \param	file_name				The pointer to name of the file to create
 	 * \param	continuous_write		Boolean to state whether writing should be continous or not
 	 * \param	toggle_logging			The pointer to toggle logging structure
-	 * \param	sysid					The pointer to the system identification number of the MAV
+	 * \param 	state 					The pointer to the state structure
+	 * \param	sysid					The system identification number of the MAV
 	 *
 	 * \return	True if the init succeed, false otherwise
 	 */
-	bool create_new_log_file(const char* file_name_, bool continuous_write_, toggle_logging_t* toggle_logging_, uint32_t sysid);
+	bool create_new_log_file(const char* file_name_, bool continuous_write_, const toggle_logging_t* toggle_logging_, const State* state_, uint32_t sysid);
 
 	/**
 	 * \brief	The task to log the data to the SD card
@@ -120,7 +121,7 @@ public:
 	 *
 	 * \return	True if the parameter was added, false otherwise
 	 */
-	bool add_parameter_uint8(uint8_t* val, const char* param_name);
+	bool add_field(uint8_t* val, const char* param_name);
 
 	/**
 	 * \brief	Registers parameter to log on the SD card
@@ -131,7 +132,7 @@ public:
 	 *
 	 * \return	True if the parameter was added, false otherwise
 	 */
-	bool add_parameter_int8(int8_t* val, const char* param_name);
+	bool add_field(int8_t* val, const char* param_name);
 
 	/**
 	 * \brief	Registers parameter to log on the SD card
@@ -142,7 +143,7 @@ public:
 	 *
 	 * \return	True if the parameter was added, false otherwise
 	 */
-	bool add_parameter_uint16(uint16_t* val, const char* param_name);
+	bool add_field(uint16_t* val, const char* param_name);
 
 	/**
 	 * \brief	Registers parameter to log on the SD card
@@ -153,7 +154,7 @@ public:
 	 *
 	 * \return	True if the parameter was added, false otherwise
 	 */
-	bool add_parameter_int16(int16_t* val, const char* param_name);
+	bool add_field(int16_t* val, const char* param_name);
 
 	/**
 	 * \brief	Registers parameter to log on the SD card
@@ -164,7 +165,7 @@ public:
 	 *
 	 * \return	True if the parameter was added, false otherwise
 	 */
-	bool add_parameter_uint32(uint32_t* val, const char* param_name);
+	bool add_field(uint32_t* val, const char* param_name);
 
 	/**
 	 * \brief	Registers parameter to log on the SD card
@@ -175,7 +176,7 @@ public:
 	 *
 	 * \return	True if the parameter was added, false otherwise
 	 */
-	bool add_parameter_int32(int32_t* val, const char* param_name);
+	bool add_field(int32_t* val, const char* param_name);
 
 	/**
 	 * \brief	Registers parameter to log on the SD card
@@ -186,7 +187,7 @@ public:
 	 *
 	 * \return	True if the parameter was added, false otherwise
 	 */
-	bool add_parameter_uint64(uint64_t* val, const char* param_name);
+	bool add_field(uint64_t* val, const char* param_name);
 
 	/**
 	 * \brief	Registers parameter to log on the SD card
@@ -197,19 +198,7 @@ public:
 	 *
 	 * \return	True if the parameter was added, false otherwise
 	 */
-	bool add_parameter_int64(int64_t* val, const char* param_name);
-
-	/**
-	 * \brief	Registers parameter to log on the SD card
-	 *
-	 * \param	data_logging			The pointer to the data logging structure
-	 * \param 	val						The parameter value
-	 * \param 	param_name				Name of the parameter
-	 * \param 	precision				The number of digit after the zero
-	 *
-	 * \return	True if the parameter was added, false otherwise
-	 */
-	bool add_parameter_float(float* val, const char* param_name, uint32_t precision);
+	bool add_field(int64_t* val, const char* param_name);
 
 	/**
 	 * \brief	Registers parameter to log on the SD card
@@ -221,7 +210,19 @@ public:
 	 *
 	 * \return	True if the parameter was added, false otherwise
 	 */
-	bool add_parameter_double(double* val, const char* param_name, uint32_t precision);
+	bool add_field(float* val, const char* param_name, uint32_t precision);
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 * \param 	precision				The number of digit after the zero
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_field(double* val, const char* param_name, uint32_t precision);
 
 private:
 		/**
@@ -331,7 +332,7 @@ private:
 	Console<File> console;						///< The console containing the file to write data to
 
 	const State* state;							///< The pointer to the state structure	
-	toggle_logging_t* toggle_logging;			///< The pointer to the toggle logging structure
+	const toggle_logging_t* toggle_logging;		///< The pointer to the toggle logging structure
 };
 
 #endif /* DATA_LOGGING_H__ */

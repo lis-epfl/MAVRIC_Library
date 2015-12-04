@@ -448,18 +448,19 @@ console(file)
 	;
 }
 
-bool Data_logging::create_new_log_file(const char* file_name_, bool continuous_write_, toggle_logging_t* toggle_logging_, uint32_t sysid)
+bool Data_logging::create_new_log_file(const char* file_name_, bool continuous_write_, const toggle_logging_t* toggle_logging_, const State* state_, uint32_t sysid)
 {
 	bool init_success = true;
 	
 	const toggle_logging_conf_t* config = &toggle_logging_->toggle_logging_conf;
 
+	toggle_logging = toggle_logging_;
+
 	debug = config->debug;
 
 	continuous_write = continuous_write_;
 
-	state = toggle_logging->state;
-	toggle_logging = toggle_logging_;
+	state = state_;
 
 	// Allocate memory for the onboard data_log
 	data_logging_set = (data_logging_set_t*)malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
@@ -495,7 +496,7 @@ bool Data_logging::create_new_log_file(const char* file_name_, bool continuous_w
 	buffer_name_size = 255;
 	#endif
 	#endif
-	
+
 	// Allocating memory for the file name string
 	file_name = (char*)malloc(buffer_name_size);
 	name_n_extension = (char*)malloc(buffer_name_size);
@@ -593,10 +594,6 @@ bool Data_logging::open_new_log_file(void)
 				print_util_dbg_print(" opened. \r\n");
 			}
 		} //end of if fr == FR_OK
-		else
-		{
-			toggle_logging->log_data = 0;
-		}
 	}//end of if (toggle_logging->log_data)
 
 	return create_success;
@@ -691,7 +688,7 @@ bool Data_logging::update(void)
 }
 
 
-bool Data_logging::add_parameter_uint8(uint8_t* val, const char* param_name)
+bool Data_logging::add_field(uint8_t* val, const char* param_name)
 {
 	bool add_success = true;
 	
@@ -736,7 +733,7 @@ bool Data_logging::add_parameter_uint8(uint8_t* val, const char* param_name)
 }
 
 
-bool Data_logging::add_parameter_int8(int8_t* val, const char* param_name)
+bool Data_logging::add_field(int8_t* val, const char* param_name)
 {
 	bool add_success = true;
 	
@@ -781,7 +778,7 @@ bool Data_logging::add_parameter_int8(int8_t* val, const char* param_name)
 }
 
 
-bool Data_logging::add_parameter_uint16(uint16_t* val, const char* param_name)
+bool Data_logging::add_field(uint16_t* val, const char* param_name)
 {
 	bool add_success = true;
 	
@@ -826,7 +823,7 @@ bool Data_logging::add_parameter_uint16(uint16_t* val, const char* param_name)
 }
 
 
-bool Data_logging::add_parameter_int16(int16_t* val, const char* param_name)
+bool Data_logging::add_field(int16_t* val, const char* param_name)
 {
 	bool add_success = true;
 	
@@ -871,7 +868,7 @@ bool Data_logging::add_parameter_int16(int16_t* val, const char* param_name)
 }
 
 
-bool Data_logging::add_parameter_uint32(uint32_t* val, const char* param_name)
+bool Data_logging::add_field(uint32_t* val, const char* param_name)
 {
 	bool add_success = true;
 	
@@ -916,7 +913,7 @@ bool Data_logging::add_parameter_uint32(uint32_t* val, const char* param_name)
 }
 
 
-bool Data_logging::add_parameter_int32(int32_t* val, const char* param_name)
+bool Data_logging::add_field(int32_t* val, const char* param_name)
 {
 	bool add_success = true;
 	
@@ -961,7 +958,7 @@ bool Data_logging::add_parameter_int32(int32_t* val, const char* param_name)
 }
 
 
-bool Data_logging::add_parameter_uint64(uint64_t* val, const char* param_name)
+bool Data_logging::add_field(uint64_t* val, const char* param_name)
 {
 	bool add_success = true;
 	
@@ -1006,7 +1003,7 @@ bool Data_logging::add_parameter_uint64(uint64_t* val, const char* param_name)
 }
 
 
-bool Data_logging::add_parameter_int64(int64_t* val, const char* param_name)
+bool Data_logging::add_field(int64_t* val, const char* param_name)
 {
 	bool add_success = true;
 	
@@ -1051,7 +1048,7 @@ bool Data_logging::add_parameter_int64(int64_t* val, const char* param_name)
 }
 
 
-bool Data_logging::add_parameter_float(float* val, const char* param_name, uint32_t precision)
+bool Data_logging::add_field(float* val, const char* param_name, uint32_t precision)
 {
 	bool add_success = true;
 	
@@ -1097,7 +1094,7 @@ bool Data_logging::add_parameter_float(float* val, const char* param_name, uint3
 }
 
 
-bool Data_logging::add_parameter_double(double* val, const char* param_name, uint32_t precision)
+bool Data_logging::add_field(double* val, const char* param_name, uint32_t precision)
 {
 	bool add_success = true;
 	
