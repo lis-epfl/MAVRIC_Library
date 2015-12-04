@@ -484,27 +484,33 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 		}
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 		
-		if (navigation->waypoint_handler->dist2wp_sqr < (navigation->waypoint_handler->current_waypoint.param2*navigation->waypoint_handler->current_waypoint.param2))
+		float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
+
+		if (navigation->waypoint_handler->dist2wp_sqr < (navigation->waypoint_handler->current_waypoint.param2*navigation->waypoint_handler->current_waypoint.param2+25))
 		{
-			print_util_dbg_print("Waypoint Nr");
-			print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint_count,10);
-			print_util_dbg_print(" reached, distance:");
-			print_util_dbg_print_num(sqrt(navigation->waypoint_handler->dist2wp_sqr),10);
-			print_util_dbg_print(" less than :");
-			print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint.param2,10);
-			print_util_dbg_print(".\r\n");
-			
-			mavlink_message_t msg;
-			mavlink_msg_mission_item_reached_pack( 	navigation->mavlink_stream->sysid,
-													navigation->mavlink_stream->compid,
-													&msg,
-													navigation->waypoint_handler->current_waypoint_count);
-			mavlink_stream_send(navigation->mavlink_stream, &msg);
-			
-			navigation->waypoint_handler->travel_time = time_keeper_get_millis() - navigation->waypoint_handler->start_wpt_time;
+			if (navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current > 0)
+			{
+				print_util_dbg_print("Waypoint Nr");
+				print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint_count,10);
+				print_util_dbg_print(" reached, distance:");
+				print_util_dbg_print_num(sqrt(navigation->waypoint_handler->dist2wp_sqr),10);
+				print_util_dbg_print(" less than :");
+				print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint.param2,10);
+				print_util_dbg_print(".\r\n");
+				
+				mavlink_message_t msg;
+				mavlink_msg_mission_item_reached_pack( 	navigation->mavlink_stream->sysid,
+														navigation->mavlink_stream->compid,
+														&msg,
+														navigation->waypoint_handler->current_waypoint_count);
+				mavlink_stream_send(navigation->mavlink_stream, &msg);
+
+				navigation->waypoint_handler->travel_time = time_keeper_get_millis() - navigation->waypoint_handler->start_wpt_time;
+			}
 			
 			navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 0;
-			if((navigation->waypoint_handler->current_waypoint.autocontinue == 1)&&(navigation->waypoint_handler->number_of_waypoints>1))
+			
+			if( (rel_heading < PI/6) && (navigation->waypoint_handler->current_waypoint.autocontinue == 1)&&(navigation->waypoint_handler->number_of_waypoints>1))
 			{
 				print_util_dbg_print("Autocontinue towards waypoint Nr");
 				
