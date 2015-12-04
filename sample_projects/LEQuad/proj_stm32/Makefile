@@ -20,8 +20,8 @@ LIB_INC += -I$(MAVRIC_LIB)/communication
 LIB_INC += -I$(MAVRIC_LIB)/control
 LIB_INC += -I$(MAVRIC_LIB)/drivers
 LIB_INC += -I$(MAVRIC_LIB)/hal/common
-LIB_INC += -I$(MAVRIC_LIB)/hal/linux
 LIB_INC += -I$(MAVRIC_LIB)/hal/dummy
+LIB_INC += -I$(MAVRIC_LIB)/hal/stm32
 LIB_INC += -I$(MAVRIC_LIB)/hal
 LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/common
 LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/mavric
@@ -40,7 +40,7 @@ LIB_SRCS += util/print_util.c
 LIB_SRCS += util/quick_trig.c
 LIB_SRCS += util/string_util.c
 
-# LIB_SRCS += boards/mavrinux.cpp
+LIB_SRCS += boards/mavrimini.cpp
 
 LIB_SRCS += sample_projects/LEQuad/main_stm32.cpp
 LIB_SRCS += sample_projects/LEQuad/central_data.cpp
@@ -130,8 +130,10 @@ LIB_SRCS += hal/dummy/gpio_dummy.cpp
 LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
+LIB_SRCS += hal/common/led_gpio.cpp
 
 LIB_SRCS += hal/stm32/time_keeper.c
+LIB_SRCS += hal/stm32/gpio_stm32.cpp
 
 
 # ------------------------------------------------------------------------------

@@ -30,50 +30,126 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file led_gpio.cpp
+ * \file 	gpio_stm32.cpp
  * 
- * \author MAV'RIC Team
- * 
- * \brief Implementation of led using gpio 
+ * \author 	MAV'RIC Team
+ *   
+ * \brief 	Implementation of GPIO peripherals for STM32
  *
  ******************************************************************************/
 
-#include "led_gpio.hpp"
+#include <libopencm3/stm32/gpio.h>
 
+#include "gpio_stm32.hpp"
 
-Led_gpio::Led_gpio(Gpio& gpio, bool active_high):
-	gpio_(gpio),
-	active_high_(active_high)
-{}
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-
-void Led_gpio::on(void)
+Gpio_stm32::Gpio_stm32(gpio_stm32_conf_t config)
 {
-	if( active_high_ )
-	{
-		gpio_.set_high();
-	}
-	else
-	{
-		gpio_.set_low();
-	}
+	config_ = config;
+	configure(config_.dir, config_.pull);
 }
 
 
-void Led_gpio::off(void)
+bool Gpio_stm32::init(void)
 {
-	if( active_high_ )
-	{
-		gpio_.set_low();
-	}
-	else
-	{
-		gpio_.set_high();
-	}	
+	bool success = true;
+
+	success &= configure(config_.dir, config_.pull);
+
+	return success;
 }
 
 
-void Led_gpio::toggle(void)
+bool Gpio_stm32::configure(gpio_dir_t dir, gpio_pull_updown_t pull)
 {
-	gpio_.toggle();
+	uint8_t mode; 
+	uint8_t pull_up_down;
+
+	// Keep config
+	config_.dir  = dir;
+	config_.pull = pull;
+
+	// Get Atmel flags
+	switch( dir )
+	{
+		case GPIO_INPUT:
+			mode = GPIO_MODE_OUTPUT;
+		break;
+
+		case GPIO_OUTPUT:
+			mode = GPIO_MODE_OUTPUT;
+		break;
+	}
+
+	switch( pull )
+	{
+		case GPIO_PULL_UPDOWN_NONE:
+			pull_up_down = GPIO_PUPD_NONE;
+		break;
+
+		case GPIO_PULL_UPDOWN_UP:
+			pull_up_down = GPIO_PUPD_PULLUP;
+		break;
+
+		case GPIO_PULL_UPDOWN_DOWN:
+			pull_up_down = GPIO_PUPD_PULLDOWN;
+		break;
+
+		default:
+			pull_up_down = GPIO_PUPD_NONE;
+		break;
+	}
+
+	// Write to pin
+	gpio_mode_setup(config_.port, mode, pull_up_down, config_.pin);
+
+	return true;	
+}
+
+
+bool Gpio_stm32::set_high(void)
+{
+	gpio_set(config_.port, config_.pin);
+
+	return true;
+}
+
+
+bool Gpio_stm32::set_low(void)
+{
+	gpio_clear(config_.port, config_.pin);
+
+	return true;
+}
+
+
+bool Gpio_stm32::toggle(void)
+{
+	gpio_toggle(config_.port, config_.pin);
+
+	return true;
+}
+
+
+bool Gpio_stm32::write(bool level)
+{
+	if( level == false )
+	{
+		set_low();
+	}
+	else
+	{
+		set_high();
+	}
+
+	return true;
+}
+
+
+bool Gpio_stm32::read(void)
+{
+	return (gpio_get(config_.port, config_.pin) == config_.pin);
 }
