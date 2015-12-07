@@ -322,7 +322,7 @@ static mav_result_t navigation_set_auto_takeoff(navigation_t *navigation, mavlin
 	
 	if (!navigation->state->in_the_air)
 	{
-		print_util_dbg_print("Starting automatic take-off from button\n");
+		print_util_dbg_print("Starting automatic take-off from button\r\n");
 		navigation->auto_takeoff = true;
 
 		result = MAV_RESULT_ACCEPTED;
