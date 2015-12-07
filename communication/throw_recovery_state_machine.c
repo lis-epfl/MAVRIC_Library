@@ -51,8 +51,8 @@
 #include "launch_detection_default_config.h"
 #include "print_util.h"
 
-#define RP_THRESHOLD 0.08f
-#define ANGULAR_SPEED_THRESHOLD 0.5f
+#define RP_THRESHOLD 0.08f 				///< Roll and Pitch threshold for STATE_ATTITUDE_CONTROL
+#define ANGULAR_SPEED_THRESHOLD 0.5f	///< Angular speed threshold for STATE_ATTITUDE_CONTROL
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -68,25 +68,25 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool throw_recovery_state_machine_init(throw_recovery_state_machine_t * state_machine, remote_t * remote, imu_t * imu, ahrs_t * ahrs, position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter, navigation_t * navigation)
+bool throw_recovery_state_machine_init(throw_recovery_state_machine_t * state_machine, const remote_t * remote, const imu_t * imu, const ahrs_t * ahrs, const position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter, navigation_t * navigation)
 {
 	bool init_success = true;
 
-	state_machine->state = STATE_IDLE;
-	state_machine->enabled = 1;
-	state_machine->debug = 0;
-	state_machine->is_initialised = 0;
-
+	// Init state machine dependencies
 	state_machine->stabilisation_copter_conf = &stabilisation_copter_default_config;
-
 	state_machine->remote = remote;
 	state_machine->imu = imu;
 	state_machine->ahrs = ahrs;
 	state_machine->pos_est = pos_est;
 	state_machine->stabilisation_copter = stabilisation_copter;
 	state_machine->navigation = navigation;
-
 	launch_detection_init(&state_machine->ld, &launch_detection_default_config);
+
+	// Init state machine
+	state_machine->state = STATE_IDLE;
+	state_machine->enabled = 1;
+	state_machine->debug = 0;
+	state_machine->is_initialised = 0;
 
 	return init_success;
 }

@@ -54,6 +54,16 @@
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
+/**
+ * \brief        		Return a positive value of i%n
+ *
+ * \param i 			Value to compute modulo for
+ * \param n				Modulo
+ */
+static inline int positive_modulo(int i, int n) {
+    return (i % n + n) % n;
+}
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------

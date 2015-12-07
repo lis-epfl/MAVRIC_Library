@@ -52,7 +52,7 @@ extern "C"
 {
 #endif
 
-#define SAMPLING_PERIOD 10 //< With update frequency of 5ms gives a 50ms sma period
+#define SAMPLING_PERIOD 10 ///< With update frequency of 5ms gives a 50ms sma period
 
 /**
  * \brief 		Simple Moving Average (SMA) structure
@@ -83,26 +83,6 @@ void sma_init(sma_t * sma, uint16_t period);
  */
 void sma_update(sma_t * sma, int16_t sample);
 
-// TODO !
-/**
- * \brief	Function to send the MAVLink current average message
- * 
- * \param	sma						The pointer to the SMA structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-// void sma_telemetry_send_current_avg(const sma_t * sma, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-// TODO !
-
-/**
- * \brief        		Return a positive value of i%n
- *
- * \param i 			Value to compute modulo for
- * \param n				Modulo
- */
-static inline int positive_modulo(int i, int n) {
-    return (i % n + n) % n;
-}
 
 #ifdef __cplusplus
 }

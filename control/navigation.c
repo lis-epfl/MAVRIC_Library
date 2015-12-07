@@ -659,7 +659,7 @@ static void navigation_throw_recovery_position_hold_handler(navigation_t* naviga
 
 		for (uint8_t i = 0; i < 3; i++)
 		{
-			rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimation->local_position.pos[i];
+			rel_pos[i] = navigation->waypoint_handler->waypoint_hold_coordinates.pos[i] - navigation->position_estimation->local_position.pos[i];
 		}
 		
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);

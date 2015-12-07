@@ -108,18 +108,8 @@ bool launch_detection_init(launch_detection_t * ld, const launch_detection_conf_
  *
  * \return 				Task status
  */
-task_return_t launch_detection_update(launch_detection_t * ld, float acc[3]);
+task_return_t launch_detection_update(launch_detection_t * ld, const float acc[3]);
 
-// TODO !
-/**
- * \brief	Function to send the MAVLink launch status
- * 
- * \param	ld						The pointer to the SMA structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-// void sma_telemetry_send_current_avg(const launch_t * ld, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-// TODO !
 
 #ifdef __cplusplus
 }

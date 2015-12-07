@@ -62,7 +62,8 @@ extern "C" {
 #include "navigation.h"
 
 
-typedef enum {
+typedef enum 
+{
 	STATE_IDLE = 0,
 	STATE_LAUNCH_DETECTION = 1,
 	STATE_ATTITUDE_CONTROL = 2,
@@ -72,7 +73,8 @@ typedef enum {
 	STATE_POSITION_LOCKING = 6
 } state_custom_t;
 
-typedef struct {
+typedef struct 
+{
 	state_custom_t state;
 
 	bool enabled; 			///< True : Throw recovery algorithm is enabled
@@ -81,14 +83,13 @@ typedef struct {
 
 	stabilisation_copter_conf_t * stabilisation_copter_conf;
 
-	remote_t * remote;
+	const remote_t * remote;
 	launch_detection_t ld;
-	imu_t * imu;
-	ahrs_t * ahrs;
-	barometer_t * baro;
-	position_estimation_t * pos_est;
+	const imu_t * imu;
+	const ahrs_t * ahrs;
+	const position_estimation_t * pos_est;
 	stabilisation_copter_t * stabilisation_copter;
-	navigation_t * navigation;
+ 	navigation_t * navigation;
 } throw_recovery_state_machine_t;
 
 
@@ -106,10 +107,10 @@ typedef struct {
  * \return	True if the init succeed, false otherwise
  */
 bool throw_recovery_state_machine_init(	throw_recovery_state_machine_t * state_machine,
-										remote_t * remote,
-										imu_t * imu, 
-										ahrs_t * ahrs, 
-										position_estimation_t * pos_est, 
+										const remote_t * remote,
+										const imu_t * imu, 
+										const ahrs_t * ahrs, 
+										const position_estimation_t * pos_est, 
 										stabilisation_copter_t * stabilisation_copter,
 										navigation_t * navigation);
 
