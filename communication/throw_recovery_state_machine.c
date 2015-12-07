@@ -68,6 +68,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+
 bool throw_recovery_state_machine_init(throw_recovery_state_machine_t * state_machine, const remote_t * remote, const imu_t * imu, const ahrs_t * ahrs, const position_estimation_t * pos_est, stabilisation_copter_t * stabilisation_copter, navigation_t * navigation)
 {
 	bool init_success = true;
@@ -84,9 +85,9 @@ bool throw_recovery_state_machine_init(throw_recovery_state_machine_t * state_ma
 
 	// Init state machine
 	state_machine->state = STATE_IDLE;
-	state_machine->enabled = 1;
-	state_machine->debug = 0;
-	state_machine->is_initialised = 0;
+	state_machine->enabled = true;
+	state_machine->debug = false;
+	state_machine->is_initialised = false;
 
 	return init_success;
 }
@@ -94,14 +95,14 @@ bool throw_recovery_state_machine_init(throw_recovery_state_machine_t * state_ma
 task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t * state_machine, control_command_t * controls)
 {
 	bool switch_enabled = throw_recovery_state_machine_switch_enabled(state_machine);
-	bool is_armed = state_machine->debug ? 1 : state_machine->imu->state->mav_mode.ARMED == ARMED_ON;
+	bool is_armed = state_machine->debug ? true : state_machine->imu->state->mav_mode.ARMED == ARMED_ON;
 
 	switch (state_machine->state) 
 	{
 		case STATE_IDLE:
-			if (is_armed && switch_enabled && (state_machine->is_initialised==0))
+			if (is_armed && switch_enabled && (!state_machine->is_initialised))
 			{
-				state_machine->is_initialised = 1;
+				state_machine->is_initialised = true;
 				state_machine->state = STATE_LAUNCH_DETECTION;
 			} 
 		break;
@@ -143,9 +144,9 @@ task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t
 			controls->tvel[Z] = 0.0f;
 			controls->control_mode = VELOCITY_COMMAND_MODE;
 
-			bool est_speed_predicate = state_machine->pos_est->vel[2] < 0.3f;
-			bool err_predicate = state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller.error < 0.3f;
-			bool acc_predicate = state_machine->imu->scaled_accelero.data[Z] < 0.3f;
+			bool est_speed_predicate = abs(state_machine->pos_est->vel[0]) < 0.3f && abs(state_machine->pos_est->vel[1]) < 0.3f && abs(state_machine->pos_est->vel[2]) < 0.3f;
+			bool err_predicate = abs(state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller.error) < 0.3f;
+			bool acc_predicate = abs(state_machine->imu->scaled_accelero.data[Z]) < 0.3f;
 			
 			if (est_speed_predicate && err_predicate && acc_predicate)
 			{
@@ -154,6 +155,7 @@ task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t
 				state_machine->navigation->state->in_the_air = true;
 				state_machine->navigation->throw_recovery_position_set = false;
 				state_machine->navigation->throw_recovery_enabled = true;
+				state_machine->navigation->auto_landing = false;
 			}
 		break;
 
@@ -185,19 +187,19 @@ task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t
 void throw_recovery_state_machine_reset(throw_recovery_state_machine_t * state_machine)
 {
 	state_machine->state = STATE_IDLE;
-	state_machine->is_initialised = 0;
-	state_machine->ld.status = 0;
-	state_machine->navigation->throw_recovery_enabled = 0;
+	state_machine->is_initialised = false;
+	state_machine->ld.status = false;
+	state_machine->navigation->throw_recovery_enabled = false;
 
 	pid_controller_reset_integrator(&state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller);
 }
 
 bool throw_recovery_state_machine_should_reset(throw_recovery_state_machine_t * state_machine)
 {
-	return ((state_machine->enabled == 1) && (state_machine->debug != 1) && (state_machine->is_initialised == 1));
+	return ((state_machine->enabled == true) && (state_machine->debug != true) && (state_machine->is_initialised == true));
 }
 
 bool throw_recovery_state_machine_switch_enabled(throw_recovery_state_machine_t * state_machine)
 {
-	return (state_machine->debug ? 1 : ((int32_t)(state_machine->remote->channels[CHANNEL_AUX1] + 1.0f) > 0)) ;
+	return (state_machine->debug ? true : ((int32_t)(state_machine->remote->channels[CHANNEL_AUX1] + 1.0f) > 0)) ;
 }
