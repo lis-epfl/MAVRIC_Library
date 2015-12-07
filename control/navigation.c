@@ -338,9 +338,10 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 		float dir_desired_sg[3];
 		quaternions_rotate_vector(q_rot, dir_desired, dir_desired_sg);
 
-	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
-	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
-	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
+		navigation->controls_nav->tvel[X] = dir_desired_sg[X];
+		navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
+		navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
+	}
 	
 	float rel_heading;
 	rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - navigation->position_estimation->local_position.heading);
@@ -351,7 +352,7 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 static void navigation_run(navigation_t* navigation)
 {
 	float rel_pos[3];
-	mav_mode_t mode = navigation->state->mav_mode;
+	//mav_mode_t mode = navigation->state->mav_mode;
 	
 	// Control in translational speed of the platform
 	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.waypoint.pos,
