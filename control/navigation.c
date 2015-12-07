@@ -483,8 +483,6 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 			rel_pos[i] = navigation->waypoint_handler->waypoint_coordinates.waypoint.pos[i]-navigation->waypoint_handler->position_estimation->local_position.pos[i];
 		}
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
-		
-		float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
 
 		if (navigation->waypoint_handler->dist2wp_sqr < (navigation->waypoint_handler->current_waypoint.param2*navigation->waypoint_handler->current_waypoint.param2+25))
 		{
@@ -510,33 +508,45 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 			
 			navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 0;
 			
-			if( (rel_heading < PI/6) && (navigation->waypoint_handler->current_waypoint.autocontinue == 1)&&(navigation->waypoint_handler->number_of_waypoints>1))
+			if((navigation->waypoint_handler->current_waypoint.autocontinue == 1)&&(navigation->waypoint_handler->number_of_waypoints>1))
 			{
-				print_util_dbg_print("Autocontinue towards waypoint Nr");
-				
-				navigation->waypoint_handler->start_wpt_time = time_keeper_get_millis();
-				
-				if (navigation->waypoint_handler->current_waypoint_count == (navigation->waypoint_handler->number_of_waypoints-1))
+				if (navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current == 0)
 				{
-					navigation->waypoint_handler->current_waypoint_count = 0;
+					if (navigation->waypoint_handler->current_waypoint_count == (navigation->waypoint_handler->number_of_waypoints-1))
+					{
+						navigation->waypoint_handler->current_waypoint_count = 0;
+					}
+					else
+					{
+						navigation->waypoint_handler->current_waypoint_count++;
+					}
+					navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 1;
 				}
-				else
+				
+				waypoint_local_struct_t next_wpt = waypoint_handler_set_waypoint_from_frame(&navigation->waypoint_handler->current_waypoint, navigation->waypoint_handler->position_estimation->local_position.origin);
+				for (uint8_t i=0;i<3;i++)
 				{
-					navigation->waypoint_handler->current_waypoint_count++;
+					rel_pos[i] = next_wpt.waypoint.pos[i]-navigation->waypoint_handler->position_estimation->local_position.pos[i];
 				}
-				print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint_count,10);
-				print_util_dbg_print("\r\n");
-				navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 1;
-				navigation->waypoint_handler->current_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
-				navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(&navigation->waypoint_handler->current_waypoint, navigation->waypoint_handler->position_estimation->local_position.origin);
+				float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
 
-				mavlink_message_t msg;
-				mavlink_msg_mission_current_pack( 	navigation->mavlink_stream->sysid,
-													navigation->mavlink_stream->compid,
-													&msg,
-													navigation->waypoint_handler->current_waypoint_count);
-				mavlink_stream_send(navigation->mavlink_stream, &msg);
-				
+				if (rel_heading < PI/6)
+				{
+					print_util_dbg_print("Autocontinue towards waypoint Nr");
+					print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint_count,10);
+					print_util_dbg_print("\r\n");
+					navigation->waypoint_handler->start_wpt_time = time_keeper_get_millis();
+					
+					navigation->waypoint_handler->current_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
+					navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(&navigation->waypoint_handler->current_waypoint, navigation->waypoint_handler->position_estimation->local_position.origin);
+
+					mavlink_message_t msg;
+					mavlink_msg_mission_current_pack( 	navigation->mavlink_stream->sysid,
+														navigation->mavlink_stream->compid,
+														&msg,
+														navigation->waypoint_handler->current_waypoint_count);
+					mavlink_stream_send(navigation->mavlink_stream, &msg);
+				}
 			}
 			else
 			{
