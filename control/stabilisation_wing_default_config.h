@@ -53,7 +53,7 @@ extern "C" {
 stabilisation_wing_conf_t stabilisation_wing_default_config =
 {
 	.thrust_apriori = 0.25f,
-	.pitch_angle_apriori = 0.2f,
+	.pitch_angle_apriori = 0.0f,
 	.pitch_angle_apriori_gain = -0.8f,
 	.stabiliser_stack 	= 
 	{
@@ -296,9 +296,9 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.0f,
-					.clip_min = -0.5f,
-					.clip_max = 0.5f,
+					.p_gain = 1.0f,
+					.clip_min = -2.0f,
+					.clip_max = 2.0f,
 					.integrator={
 						.gain = 0.0f,
 						.clip_pre = 1.0f,
@@ -314,20 +314,20 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 					.error = 0.0f,
 					.last_update = 0.0f,
 					.dt = 1,
-					.soft_zone_width = 0.2f
+					.soft_zone_width = 0.0f
 				},
 				// -----------------------------------------------------------------
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.0f,
-					.clip_min = -0.5f,
-					.clip_max = 0.5f,
+					.p_gain = 0.1f,
+					.clip_min = -PI/3.0f,
+					.clip_max = PI/3.0f,
 					.integrator={
 						.gain = 0.0f,
 						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
-						.clip = 0.5f,
+						.clip = PI/6.0f,
 					},
 					.differentiator={
 						.gain = 0.0f,
@@ -338,7 +338,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 					.error = 0.0f,
 					.last_update = 0.0f,
 					.dt = 1,
-					.soft_zone_width = 0.2f
+					.soft_zone_width = 0.0f
 				},
 				// -----------------------------------------------------------------
 				// ------ YAW PID --------------------------------------------------
@@ -387,7 +387,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				.error = 0.0f,
 				.last_update = 0.0f,
 				.dt = 1,
-				.soft_zone_width = 0.2f
+				.soft_zone_width = 0.0f
 			},
 			// ---------------------------------------------------------------------
 			// ------ OUTPUT -------------------------------------------------------

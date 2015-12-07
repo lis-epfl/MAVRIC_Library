@@ -109,11 +109,14 @@ task_return_t vector_field_waypoint_update(vector_field_waypoint_t* vector_field
  * 				 
  * \param 		rel_pos 		Current relative position of the MAV to the waypoint (input)
  * \param 		attractiveness	Weight given to this object (input)
+ * \param 		attractiveness2	Weight given to this object (input)
  * \param 		cruise_speed	Nominal speed around the circle in m/s (input)
  * \param 		radius			Radius of the circle to follow (in m)
  * \param 		vector			Velocity command vector (output)
+ *
+ * \return		Return true if everything is ok, false if there is a computational problem.
  */
-void vector_field_circular_waypoint(const float rel_pos[3], const float attractiveness, const float cruise_speed, const float radius, float vector[3]);
+bool vector_field_circular_waypoint(const float rel_pos[3], const float attractiveness, const float attractiveness2, const float cruise_speed, const float radius, float vector[3]);
 
 #ifdef __cplusplus
 }

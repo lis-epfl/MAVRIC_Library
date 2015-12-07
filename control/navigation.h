@@ -73,6 +73,7 @@ typedef struct
 	float max_climb_rate;								///< Max climb rate in m/s
 	float soft_zone_size;								///< Soft zone of the velocity controller
 	float attractiveness;								///< Attractiveness of a waypoint
+	float attractiveness2;								///< Attractiveness of a waypoint
 
 	waypoint_local_struct_t goal;						///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
 	
@@ -119,6 +120,7 @@ typedef struct
 	float cruise_speed;									///< The cruise speed in m/s
 	float max_climb_rate;								///< Max climb rate in m/s
 	float attractiveness;								///< Attractiveness of a waypoint
+	float attractiveness2;								///< Attractiveness of a waypoint
 	
 	float soft_zone_size;								///< Soft zone of the velocity controller
 	

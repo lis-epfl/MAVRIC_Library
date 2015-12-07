@@ -91,6 +91,9 @@ typedef struct
 	float pitch_down;											///< Down value for the steps in pitch
 	float roll_right;											///< Right value for the steps in roll
 	float roll_left;											///< Left value for the steps in roll
+	// TODO: Remove these two lines, which were used only for tuning
+	float current_heading;
+	float vertical_speed;
 } stabilisation_wing_t;
 
 /**

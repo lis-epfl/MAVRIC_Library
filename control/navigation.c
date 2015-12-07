@@ -317,23 +317,27 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 	float dir_desired[3];
 
 	// Compute the vector field circular
-	vector_field_circular_waypoint(	rel_pos, 
-									navigation->attractiveness, 	// attractiveness
-									navigation->cruise_speed, 	// cruise_speed
-									radius,	// radius
-									dir_desired );
+	bool vector_field_good = vector_field_circular_waypoint(rel_pos, 
+															navigation->attractiveness, 	// attractiveness
+															navigation->attractiveness2, 	// attractiveness
+															navigation->cruise_speed, 		// cruise_speed
+															radius,							// radius
+															dir_desired );
 
-	// Transform the vector in the semi-global reference frame
-	quat_t q_rot;
-	aero_attitude_t attitude_yaw;
-	attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
-	attitude_yaw.rpy[0] = 0.0f;
-	attitude_yaw.rpy[1] = 0.0f;
-	attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
-	q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+	// If there is no computationnal error, update the command values, otherwise keep the last ones.
+	if (vector_field_good == true)
+	{
+		// Transform the vector in the semi-global reference frame
+		quat_t q_rot;
+		aero_attitude_t attitude_yaw;
+		attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
+		attitude_yaw.rpy[0] = 0.0f;
+		attitude_yaw.rpy[1] = 0.0f;
+		attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+		q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
 
-	float dir_desired_sg[3];
-	quaternions_rotate_vector(q_rot, dir_desired, dir_desired_sg);
+		float dir_desired_sg[3];
+		quaternions_rotate_vector(q_rot, dir_desired, dir_desired_sg);
 
 	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
@@ -356,7 +360,15 @@ static void navigation_run(navigation_t* navigation)
 																					navigation->position_estimation->local_position.pos);
 	
 	// For Quad
-	//navigation_set_speed_command(rel_pos, navigation);
+	//mav_mode_t mode = navigation->state->mav_mode;
+	//if ((mode.AUTO == AUTO_ON) && (((!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
+	//{
+		//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
+	//}
+	//else
+	//{
+		//navigation_set_speed_command(rel_pos, navigation);
+	//}
 	
 	// For Wing
 	navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
@@ -914,6 +926,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->cruise_speed = nav_config->cruise_speed;
 	navigation->max_climb_rate = nav_config->max_climb_rate;
 	navigation->attractiveness = nav_config->attractiveness;
+	navigation->attractiveness2 = nav_config->attractiveness2;
 	
 	navigation->soft_zone_size = nav_config->soft_zone_size;
 	
