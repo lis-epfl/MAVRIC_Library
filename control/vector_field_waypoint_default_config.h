@@ -53,7 +53,7 @@ extern "C" {
 
 vector_field_waypoint_conf_t vector_field_waypoint_config =
 {
-	.command_mode = VELOCITY_COMMAND_MODE_SEMI_LOCAL,
+	.command_mode = VELOCITY_COMMAND_MODE_GLOBAL,
 	.floor_altitude = 20.0f,
 	.velocity_max = 16.0f,
 };

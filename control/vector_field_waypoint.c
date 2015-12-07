@@ -488,6 +488,7 @@ task_return_t vector_field_waypoint_update(vector_field_waypoint_t* vector_field
 			case 16:
 				vector_field_circular_waypoint(	rel_pos, 
 												waypoint.param1, 	// attractiveness
+												1.0f, 				// attractiveness2
 												waypoint.param2, 	// cruise_speed
 												waypoint.param3,	// radius
 												tmp_vector );
@@ -528,54 +529,91 @@ task_return_t vector_field_waypoint_update(vector_field_waypoint_t* vector_field
 	return TASK_RUN_SUCCESS;
 }
 
-void vector_field_circular_waypoint(const float rel_pos[3], const float attractiveness, const float cruise_speed, const float radius, float vector[3])
+bool vector_field_circular_waypoint(const float rel_pos[3], const float attractiveness, const float attractiveness2, const float cruise_speed, const float radius, float vector[3])
 {
+	bool speed_good = true;
 	float direction_radial[3] 		= {0.0f, 0.0f, 0.0f};	// desired direction (unit vector) toward the closest point of the circle
 	float direction_tangential[3] 	= {0.0f, 0.0f, 0.0f};	// desired direction (unit vector) tangential to the circle (circular motion)
 	float speed_radial 				= 0.0f;					// desired radial speed
 	float speed_tangential 			= 0.0f;					// desired tangential speed
-
-	// Compute norm of this vector
+	
+	// Compute distances
 	float dist_to_object = vectors_norm(rel_pos);
+	float horiz_dist_to_object = sqrtf(rel_pos[X]*rel_pos[X] + rel_pos[Y]*rel_pos[Y]);
+	float horiz_dist_to_circle = (horiz_dist_to_object >= maths_f_abs(radius)) ? (horiz_dist_to_object - maths_f_abs(radius)) : (maths_f_abs(radius) - horiz_dist_to_object);
 	
-	// Compute distance to circle
-	float dist_to_circle = (dist_to_object >= radius) ? (dist_to_object - radius) : (radius - dist_to_object);
-	
-	// Compute radial direction
-	direction_radial[X] = rel_pos[X]/dist_to_object;
-	direction_radial[Y] = rel_pos[Y]/dist_to_object;
-	direction_radial[Z] = rel_pos[Z]/dist_to_object;
-	if(dist_to_object < radius)
+	// Avoid division by 0 if we are on the center of the circle...
+	if(dist_to_object >= 0.001f)
 	{
-		direction_radial[X] = -direction_radial[X];
-		direction_radial[Y] = -direction_radial[Y];
-		direction_radial[Z] = -direction_radial[Z];
+		// Compute point C, the point on the circle which is the nearest from the current position A (defining current point A as (0,0,0))
+		float AC[3] = {0.0f, 0.0f, 0.0f};
+		AC[X] = horiz_dist_to_circle * rel_pos[X] / horiz_dist_to_object;
+		AC[Y] = horiz_dist_to_circle * rel_pos[Y] / horiz_dist_to_object;
+		AC[Z] = rel_pos[Z];
+		if(horiz_dist_to_object < maths_f_abs(radius))
+		{
+			AC[X] = -AC[X];
+			AC[Y] = -AC[Y];
+		}
+		
+		// Compute radial direction
+		float dist_to_circle = vectors_norm(AC);
+		if(dist_to_circle >= 0.001f)					// Just to be 100% sure
+		{
+			direction_radial[X] = AC[X] / dist_to_circle;
+			direction_radial[Y] = AC[Y] / dist_to_circle;
+			direction_radial[Z] = AC[Z] / dist_to_circle;
+		}
+		else
+		{
+			speed_good = false;
+		}
+		
+		// Compute radial speed
+		speed_radial = attractiveness * dist_to_circle;
+		if(speed_radial > cruise_speed)
+		{
+			speed_radial = cruise_speed;
+		}
+		
+		// Compute tangential direction (using cross-product)
+		float tan_to_circle[3] = { -rel_pos[Y],
+									rel_pos[X],
+									0.0f };
+		float tan_norm = vectors_norm(tan_to_circle);
+		float rotation_direction = (radius >= 0) ? 1.0f : -1.0f;	// 1: Clockwise		-1: Counter-clockwise
+		if(tan_norm >= 0.001f)										// Just to be 100% sure
+		{
+			direction_tangential[X] = rotation_direction*tan_to_circle[X] / tan_norm;
+			direction_tangential[Y] = rotation_direction*tan_to_circle[Y] / tan_norm;
+			direction_tangential[Z] = 0.0f;
+		}
+		else
+		{
+			speed_good = false;
+		}
+		
+		// Compute tangential speed
+		speed_tangential = cruise_speed/(1 + attractiveness2*horiz_dist_to_circle);
+
+		// Compute overall speed
+		vector[X] = direction_radial[X] 	* speed_radial +
+					direction_tangential[X] * speed_tangential;
+		vector[Y] = direction_radial[Y] 	* speed_radial +
+					direction_tangential[Y] * speed_tangential;
+		vector[Z] = direction_radial[Z] 	* speed_radial +
+					direction_tangential[Z] * speed_tangential;
+		
+		// Normalize the whole velocity vector to cruise speed
+		float velocity_norm = vectors_norm(vector);
+		vector[X] = cruise_speed * vector[X] / velocity_norm;
+		vector[Y] = cruise_speed * vector[Y] / velocity_norm;
+		vector[Z] = cruise_speed * vector[Z] / velocity_norm;
+	}
+	else
+	{
+		speed_good = false;
 	}
 	
-	// Compute radial speed
-	speed_radial = attractiveness * dist_to_circle;
-	
-	// Compute tangential direction (using cross-product)
-	float tan_to_circle[3] = { -direction_radial[Y],
-							   direction_radial[X],
-							   0.0f };
-	float tan_norm = vectors_norm(tan_to_circle);
-	float rotation_direction = (radius >= 0) ? 1.0f : -1.0f;	// 1: Clockwise		-1: Counter-clockwise
-	direction_tangential[X] = rotation_direction*tan_to_circle[X]/tan_norm;
-	direction_tangential[Y] = rotation_direction*tan_to_circle[Y]/tan_norm;
-	direction_tangential[Z] = rotation_direction*tan_to_circle[Z]/tan_norm;
-	
-	// Compute tangential speed
-	speed_tangential = cruise_speed/(1 + dist_to_circle);
-
- 	/**
-	 *  End of Student code
-	 */
-
-	vector[X] = direction_radial[X] 	* speed_radial + 
-				direction_tangential[X] * speed_tangential;
-	vector[Y] = direction_radial[Y] 	* speed_radial + 
-				direction_tangential[Y] * speed_tangential;
-	vector[Z] = direction_radial[Z] 	* speed_radial + 
-				direction_tangential[Z] * speed_tangential;
+	return speed_good;
 }
