@@ -55,12 +55,16 @@ extern "C"
 int main(int argc, char** argv)
 {
 	uint8_t sysid = 0;
+	bool init_success = true;
 	
 	// -------------------------------------------------------------------------
 	// Create board
 	// -------------------------------------------------------------------------
 	mavrimini_conf_t board_config = mavrimini_default_config(); 
 	Mavrimini board(board_config);
+
+	// Board initialisation
+	init_success &= board.init();
 
 
 	// -------------------------------------------------------------------------
@@ -72,7 +76,8 @@ int main(int argc, char** argv)
 									board.sim.barometer(),
 									board.sim.gps(), 
 									board.sim.sonar(),
-									board.uart0,
+									// board.serial_1,
+									board.serial_2,
 									board.spektrum_satellite,
 									board.green_led,
 									board.file_flash,
@@ -82,17 +87,13 @@ int main(int argc, char** argv)
 									board.servo_2,
 									board.servo_3 );
 
-
-	// -------------------------------------------------------------------------
-	// Initialisation
-	// -------------------------------------------------------------------------
-	bool init_success = true;
-
-	// Board initialisation
-	init_success &= board.init();
-
 	// Init central data
 	init_success &= cd.init();
+
+
+	// -------------------------------------------------------------------------
+	// Create tasks and telemetry
+	// -------------------------------------------------------------------------
 
 	init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
@@ -114,29 +115,106 @@ int main(int argc, char** argv)
 	// -------------------------------------------------------------------------
 	// Main loop
 	// -------------------------------------------------------------------------
+
+	static uint8_t step = 0;
+	while(1)
+	{
+		step += 1;
+		board.red_led.toggle();
+		
+		if(step%2 == 0)
+		{
+			board.green_led.toggle();
+		}
+
+		// usart_send(USART2, byte);
+		// board.serial_1.write(&byte);
+		time_keeper_delay_ms(100);
+	}
+
+
 	while (1 == 1) 
 	{
 		scheduler_update(&cd.scheduler);
-		
-
-
-		
-		/**
-		 * TO REMOVE (start)
-		 */
-		/* Toggle LEDs. */
-		// gpio_toggle(GPIOD, GPIO12 | GPIO13 | GPIO14 | GPIO15);
-
-		// time_keeper_delay_ms(50);
-
-		/**
-		 * TO REMOVE (end)
-		 */
-
-
-
-
 	}
 
 	return 0;
 }
+
+// void usart2_isr(void)
+// {
+// 	// static uint8_t data = 'A';
+// 	static uint16_t data = 'A';
+
+// 	/* Check if we were called because of RXNE. */
+// 	if (((USART_CR1(USART2) & USART_CR1_RXNEIE) != 0) &&
+// 	    ((USART_SR(USART2) & USART_SR_RXNE) != 0)) {
+
+// 		/* Indicate that we got data. */
+// 		gpio_toggle(GPIOD, GPIO12);
+
+// 		/* Retrieve the data from the peripheral. */
+// 		data = usart_recv(USART2);
+
+// 		/* Enable transmit interrupt so it sends back the data. */
+// 		usart_enable_tx_interrupt(USART2);
+// 	}
+
+// 	/* Check if we were called because of TXE. */
+// 	if (((USART_CR1(USART2) & USART_CR1_TXEIE) != 0) &&
+// 	    ((USART_SR(USART2) & USART_SR_TXE) != 0)) {
+
+// 		/* Put data into the transmit register. */
+// 		usart_send(USART2, data);
+
+// 		/* Disable the TXE interrupt as we don't need it anymore. */
+// 		usart_disable_tx_interrupt(USART2);
+// 	}
+// }
+
+
+
+
+
+// #include <libopencm3/stm32/rcc.h>
+// #include <libopencm3/stm32/gpio.h>
+
+// /* Set STM32 to 168 MHz. */
+// static void clock_setup(void)
+// {
+// 	rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
+
+// 	/* Enable GPIOD clock. */
+// 	rcc_periph_clock_enable(RCC_GPIOC);
+// 	// rcc_periph_clock_enable(RCC_GPIOD);
+// }
+
+// static void gpio_setup(void)
+// {
+// 	/* Set GPIO12-15 (in GPIO port D) to 'output push-pull'. */
+// 	gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT,
+// 			GPIO_PUPD_NONE,  GPIO14 | GPIO15);
+// 	gpio_set_output_options(GPIOC, GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ, GPIO14 | GPIO15);
+// }
+
+// int main(void)
+// {
+// 	int i;
+
+// 	clock_setup();
+// 	gpio_setup();
+
+// 	/* Set two LEDs for wigwag effect when toggling. */
+// 	gpio_set(GPIOC, GPIO14 | GPIO15);
+
+// 	/* Blink the LEDs (PD12, PD13, PD14 and PD15) on the board. */
+// 	while (1) {
+// 		/* Toggle LEDs. */
+// 		gpio_toggle(GPIOC, GPIO14 | GPIO15);
+// 		for (i = 0; i < 6000000; i++) { /* Wait a bit. */
+// 			__asm__("nop");
+// 		}
+// 	}
+
+// 	return 0;
+// }

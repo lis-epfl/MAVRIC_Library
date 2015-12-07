@@ -46,6 +46,8 @@ LIB_SRCS += sample_projects/LEQuad/main_stm32.cpp
 LIB_SRCS += sample_projects/LEQuad/central_data.cpp
 LIB_SRCS += sample_projects/LEQuad/tasks.cpp
 LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
+# LIB_SRCS += sample_projects/LEQuad/proj_stm32/startup_stm32f4xx.c
+
 
 LIB_SRCS += drivers/battery.c                    
 LIB_SRCS += drivers/barometer_telemetry.cpp          
@@ -135,6 +137,7 @@ LIB_SRCS += hal/common/led_gpio.cpp
 
 LIB_SRCS += hal/stm32/time_keeper.c
 LIB_SRCS += hal/stm32/gpio_stm32.cpp
+LIB_SRCS += hal/stm32/serial_stm32.cpp
 
 
 # ------------------------------------------------------------------------------
@@ -149,8 +152,9 @@ CM3_DEFS		= -DSTM32F4
 CM3_FP_FLAGS	?= -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CM3_ARCH_FLAGS	= -mthumb -mcpu=cortex-m4 $(CM3_FP_FLAGS)
 # CM3_LDSCRIPT 	= $(OPENCM3_DIR)/lib/libopencm3_stm32f4.ld
-# CM3_LDSCRIPT 	= mavrimini.ld
-CM3_LDSCRIPT 	= stm32f4-discovery.ld
+CM3_LDSCRIPT 	= mavrimini.ld
+# CM3_LDSCRIPT 	= stm32f4-discovery.ld
+# CM3_LDSCRIPT 	= arm-gcc-link.ld
 
 # ------------------------------------------------------------------------------
 # COMPILER
@@ -168,7 +172,7 @@ SIZER 	:= arm-none-eabi-size
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CFLAGS	+= -Os -g -std=gnu99
+CFLAGS	+= -O2 -g -std=gnu99
 CFLAGS	+= -Wall
 # CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
 # CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
@@ -181,7 +185,7 @@ CFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CXXFLAGS	+= -Os -g -std=c++11
+CXXFLAGS	+= -O2 -g -std=c++11
 CXXFLAGS	+= -Wall
 # CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
 CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
@@ -255,10 +259,10 @@ BUILD_CMD = LOG=$$($(CMD) 2>&1) ; if [ $$? -eq 1 ]; then $(PRINT_ERROR); elif [ 
 # ------------------------------------------------------------------------------
 
 # Main rule
-all: proj
+all: $(PROJ_NAME)
 
-proj: $(PROJ_NAME).elf
-	@$(SIZER) $^
+$(PROJ_NAME): $(PROJ_NAME).bin $(PROJ_NAME).elf
+	@$(BUILD_CMD)
 
 # libopencm3
 $(CM3_LIB_DIR)/lib$(CM3_LIBNAME).a:
@@ -267,11 +271,12 @@ $(CM3_LIB_DIR)/lib$(CM3_LIBNAME).a:
 	@$(BUILD_CMD)
 
 # Linking
-${PROJ_NAME}.elf ${PROJ_NAME}.map: $(CM3_LIB_DIR)/lib$(CM3_LIBNAME).a ${OBJS} 
+${PROJ_NAME}.elf ${PROJ_NAME}.bin: $(CM3_LIB_DIR)/lib$(CM3_LIBNAME).a ${OBJS} 
 	@echo Linking...
-	@$(LD) $(LDFLAGS) $(CM3_ARCH_FLAGS) $(OBJS) $(LDLIBS) ${OBJS} -o $@ 
+	@$(LD) $(LDFLAGS) $(CM3_ARCH_FLAGS) $(OBJS) $(LDLIBS) ${OBJS} -o ${PROJ_NAME}.elf 
 	@$(OBJCOPY) -O ihex $(PROJ_NAME).elf $(PROJ_NAME).hex
 	@$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
+	@$(SIZER) $(PROJ_NAME).elf
 	@$(BUILD_CMD)
 	
 # C files in Library
@@ -286,7 +291,7 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(CM3_ARCH_FLAGS) -c $< -o $@ $(CXXFLAGS)
 	@$(BUILD_CMD)
 
-flash: proj
+flash: $(PROJ_NAME).bin
 	st-flash write $(PROJ_NAME).bin 0x8000000
 
 .PHONY: clean

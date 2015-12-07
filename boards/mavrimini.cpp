@@ -51,7 +51,7 @@ extern "C"
 }
 
 
-static Serial_dummy* p_dbg_serial;
+static Serial* p_dbg_serial;
 uint8_t serial2stream( stream_data_t data, uint8_t byte )
 {
 	p_dbg_serial->write(&byte);
@@ -62,10 +62,15 @@ uint8_t serial2stream( stream_data_t data, uint8_t byte )
 /* Set STM32 to 168 MHz. */
 static void clock_setup(void)
 {
-	rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
+	rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
 
-	/* Enable GPIOD clock. */
+	/* Enable GPIO clock. */
+	rcc_periph_clock_enable(RCC_GPIOA);
+	rcc_periph_clock_enable(RCC_GPIOC);
 	rcc_periph_clock_enable(RCC_GPIOD);
+
+	rcc_periph_clock_enable(RCC_USART2);
+	
 }
 
 
@@ -75,7 +80,8 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
 	green_led( green_led_gpio ),
 	red_led( red_led_gpio ),
 	file_flash("flash.bin"),
-	spektrum_satellite(uart1, dsm_receiver_gpio, dsm_power_gpio),
+	serial_1( config.serial_1_config ),
+	spektrum_satellite(serial_2, dsm_receiver_gpio, dsm_power_gpio),
 	adc_battery(12.3f),
 	battery(adc_battery),
 	servo_0(pwm_0, config.servo_config[0]),
@@ -102,7 +108,7 @@ bool Mavrimini::init(void)
 	// -------------------------------------------------------------------------
 	clock_setup();
 	time_keeper_init();
-	time_keeper_delay_ms(100);
+	time_keeper_delay_ms(500);
 
 
 	// -------------------------------------------------------------------------
@@ -114,7 +120,7 @@ bool Mavrimini::init(void)
 
 	// -------------------------------------------------------------------------
 	// Init stream for USB debug stream TODO: remove
-	p_dbg_serial 		= &uart1;
+	p_dbg_serial 		= &serial_1;
 	dbg_stream_.get 	= NULL;
 	dbg_stream_.put 	= &serial2stream;
 	dbg_stream_.flush 	= NULL;
@@ -139,8 +145,8 @@ bool Mavrimini::init(void)
 	// -------------------------------------------------------------------------
 	// Init UART0
 	// -------------------------------------------------------------------------
-	ret = uart0.init();
-	print_util_dbg_init_msg("[UART0]", ret);
+	ret = serial_1.init();
+	print_util_dbg_init_msg("[SERIAL0]", ret);
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
 	
@@ -148,8 +154,8 @@ bool Mavrimini::init(void)
 	// -------------------------------------------------------------------------
 	// Init UART1
 	// -------------------------------------------------------------------------
-	ret = uart1.init();
-	print_util_dbg_init_msg("[UART1]", ret);
+	ret = serial_2.init();
+	print_util_dbg_init_msg("[SERIAL2]", ret);
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
 	

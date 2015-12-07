@@ -78,6 +78,27 @@ typedef enum
 } gpio_stm32_pin_t;
 
 
+typedef enum
+{
+	GPIO_STM32_AF_0 	= GPIO_AF0 ,
+	GPIO_STM32_AF_1 	= GPIO_AF1 ,
+	GPIO_STM32_AF_2 	= GPIO_AF2 ,
+	GPIO_STM32_AF_3 	= GPIO_AF3 ,
+	GPIO_STM32_AF_4 	= GPIO_AF4 ,
+	GPIO_STM32_AF_5 	= GPIO_AF5 ,
+	GPIO_STM32_AF_6 	= GPIO_AF6 ,
+	GPIO_STM32_AF_7 	= GPIO_AF7 ,
+	GPIO_STM32_AF_8 	= GPIO_AF8 ,
+	GPIO_STM32_AF_9 	= GPIO_AF9 ,
+	GPIO_STM32_AF_10	= GPIO_AF10,
+	GPIO_STM32_AF_11	= GPIO_AF11,
+	GPIO_STM32_AF_12	= GPIO_AF12,
+	GPIO_STM32_AF_13	= GPIO_AF13,
+	GPIO_STM32_AF_14	= GPIO_AF14,
+	GPIO_STM32_AF_15	= GPIO_AF15,
+} gpio_stm32_alt_function_t;
+
+
 /**
  * 	Configuration structure
  */
