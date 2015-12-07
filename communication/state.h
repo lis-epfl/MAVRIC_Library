@@ -52,6 +52,7 @@ extern "C" {
 #include "analog_monitor.h"
 #include "battery.h"
 #include <stdbool.h>
+#include "airspeed_analog.h"
 
 /**
  * \brief	The source mode enum
@@ -130,6 +131,7 @@ typedef struct
 	bool first_connection_set;							///< Flag to tell that we received a first message from the GND station
 	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
+	airspeed_analog_t* airspeed_analog;					///< The pointer to the analog airspeed sensor
 } state_t;
 
 
@@ -139,10 +141,11 @@ typedef struct
  * \param	state			The pointer to the state structure
  * \param	state_config	The pointer to the state configuration structure
  * \param	analog_monitor	The pointer to the analog monitor structure
+ * \param	airspeed_analog	The pointer to the analog airspeed structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor);
+bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, airspeed_analog_t* airspeed_analog);
 
 /**
  * \brief					Makes the switch to active mode

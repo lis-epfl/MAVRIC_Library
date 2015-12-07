@@ -160,6 +160,7 @@ static bool data_logging_filename_append_extension(char* output, char* filename,
 */
 static bool data_logging_filename_append_int(char* output, const char* filename, uint32_t num, uint32_t length);
 
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------

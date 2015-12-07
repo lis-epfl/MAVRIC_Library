@@ -30,47 +30,43 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file analog_monitor_telemetry.h
+ * \file airspeed_analog_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Simon Pyroth
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the analog monitor module
+ * \brief Default configuration for analog airspeed sensor
  *
  ******************************************************************************/
 
-#ifndef ANALOG_MONITOR_TELEMETRY_H_
-#define ANALOG_MONITOR_TELEMETRY_H_
 
-#include "mavlink_stream.h"
-#include "analog_monitor.h"
+#ifndef AIRSPEED_ANALOG_DEFAULT_CONFIG_H_
+#define AIRSPEED_ANALOG_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * \brief	Sends the analog sonar value
- * 
- * \param	analog_monitor			The pointer to the analog monitor structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
-/**
- * \brief	Sends the voltage read from the differential pressure sensor
- * 
- * \param	analog_monitor			The pointer to the analog monitor structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void  analog_monitor_telemetry_send_differential_pressure(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+#include "airspeed_analog.h"
+
+#define RHO_AIR 1.293f						///< Air density [kg/m^3]
+
+
+airspeed_analog_conf_t airspeed_analog_default_config =
+{
+	.analog_rail = ANALOG_RAIL_13,
+	.pressure_offset = 0.0f,
+	.calibration_gain = 0.9f,
+	.conversion_factor = 0.3945f,
+	.correction_gain = 1.0f,
+	.correction_offset = 0.0f,
+	.filter_gain = 0.7f
+};
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ANALOG_MONITOR_TELEMETRY_H_ */
+#endif // AIRSPEED_ANALOG_DEFAULT_CONFIG_H_

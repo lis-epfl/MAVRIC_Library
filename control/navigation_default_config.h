@@ -54,6 +54,7 @@ navigation_config_t navigation_default_config =
 	.dist2vel_gain = 0.7f,
 	.cruise_speed = 3.0f,
 	.max_climb_rate = 1.0f,
+	.attractiveness = 1.0f,
 	.soft_zone_size = 0.0f,
 	.alt_lpf = 0.0f,
 	.LPF_gain = 0.9f,

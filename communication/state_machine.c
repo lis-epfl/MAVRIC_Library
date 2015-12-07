@@ -48,6 +48,7 @@
 #include "state.h"
 #include "time_keeper.h"
 #include "battery.h"
+#include "airspeed_analog.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -182,6 +183,11 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 		break;
 
 		case MAV_STATE_STANDBY:
+			// Set flag to calibrate airspeed sensor
+			if (state_machine->state->autopilot_type == MAV_TYPE_FIXED_WING)
+			{
+				airspeed_analog_start_calibration(state_machine->state->airspeed_analog);
+			}
 			state_machine->state->in_the_air = false;
 			//disable out of fence checks
 			state_machine->state->out_of_fence_1 = false;

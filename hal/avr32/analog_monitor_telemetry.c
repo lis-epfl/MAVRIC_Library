@@ -53,3 +53,13 @@ void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor
 										"sonar",
 										1000.0f/9.8f*2.54f*analog_monitor->avg[ANALOG_RAIL_12]);
 }
+
+void  analog_monitor_telemetry_send_differential_pressure(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"Dif_pres_voltage",
+										analog_monitor->avg[ANALOG_RAIL_12]);
+}

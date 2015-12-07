@@ -45,13 +45,14 @@
 #include "coord_conventions.h"
 #include "mavlink_communication.h"
 
-bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimation_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
+bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimation_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs, airspeed_analog_t* airspeed_analog)
 {
 	bool init_success = true;
 	
-	hud_telemetry_structure->ahrs		= ahrs;
-	hud_telemetry_structure->controls	= controls;
-	hud_telemetry_structure->pos_est    = pos_est;
+	hud_telemetry_structure->ahrs				= ahrs;
+	hud_telemetry_structure->controls			= controls;
+	hud_telemetry_structure->pos_est			= pos_est;
+	hud_telemetry_structure->airspeed_analog	= airspeed_analog;
 	
 	print_util_dbg_print("[HUD TELEMETRY] initialised.\r\n");
 	
@@ -61,7 +62,7 @@ bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, cons
 void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg) 
 {
 	float groundspeed	= sqrt(hud_telemetry_structure->pos_est->vel[0] * hud_telemetry_structure->pos_est->vel[0] + hud_telemetry_structure->pos_est->vel[1] * hud_telemetry_structure->pos_est->vel[1]);
-	float airspeed		= groundspeed;
+	float airspeed		= hud_telemetry_structure->airspeed_analog->airspeed;
 
 	aero_attitude_t aero_attitude;
 	aero_attitude = coord_conventions_quat_to_aero(hud_telemetry_structure->ahrs->qe);
