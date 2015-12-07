@@ -147,7 +147,8 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		// Compute current heading
 		gps_speed_global[X] = stabilisation_wing->pos_est->gps->north_speed;
 		gps_speed_global[Y] = stabilisation_wing->pos_est->gps->east_speed;
-		gps_speed_global[Z] = -stabilisation_wing->pos_est->gps->vertical_speed;		// Convert to NED frame
+		gps_speed_global[Z] = stabilisation_wing->pos_est->vel[Z];
+		stabilisation_wing->vertical_speed = gps_speed_global[Z];			// Used for PID tuning
 		
 		// Transform global to semi-local
 		attitude_yaw = coord_conventions_quat_to_aero(stabilisation_wing->ahrs->qe);
@@ -158,9 +159,15 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		quaternions_rotate_vector(q_rot, gps_speed_global, gps_speed_semi_local);
 		
 		current_heading = heading_from_velocity_vector(gps_speed_semi_local);
+		stabilisation_wing->current_heading = current_heading;	// Used for PID tuning
 		
 		// Compute turn rate command
 		heading_error = maths_calc_smaller_angle(nav_heading - current_heading);
+		// Overwrite command if in remote
+		if(stabilisation_wing->controls->yaw_mode == YAW_RELATIVE)
+		{
+			heading_error = input.rpy[YAW];
+		}
 		
 		
 		///////////////
@@ -176,7 +183,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		feedforward[0] = 0.0f;
 		feedforward[1] = 0.0f;
 		feedforward[2] = 0.0f;
-		feedforward[3] = (input.tvel[X] - 13.0f)/8.0f + 0.2f;
+		feedforward[3] = (vectors_norm(input.tvel) - 13.0f)/8.0f + 0.2f;
 		
 		// run PID update on all velocity controllers
 		stabilisation_run_feedforward(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->imu->dt, rpyt_errors, feedforward);
@@ -187,12 +194,17 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		////////////////
 		// Get turn rate command and transform it into a roll angle command for next layer
 		input_turn_rate = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[0];
-		input_roll_angle = atanf(stabilisation_wing->airspeed_analog->airspeed / 9.81 * input_turn_rate);
+		input_roll_angle = atanf(stabilisation_wing->airspeed_analog->airspeed / 9.81f * input_turn_rate);
 		
 		// Set input for next layer
+		//float tmp_roll = input.rpy[ROLL];
 		input = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output;
 		input.rpy[0] = input_roll_angle;
-		input.rpy[1] = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[1];
+		
+		// TODO: Remove
+		//input.rpy[0] = tmp_roll;
+		
+		input.rpy[1] = - stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[1];
 		input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 
