@@ -50,6 +50,7 @@ bool stabilisation_init(control_command_t *controls)
 	
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
 	controls->yaw_mode = YAW_RELATIVE;
+	controls->velocity_control_mode = VELOCITY_MODE;
 	
 	controls->rpy[ROLL] = 0.0f;
 	controls->rpy[PITCH] = 0.0f;

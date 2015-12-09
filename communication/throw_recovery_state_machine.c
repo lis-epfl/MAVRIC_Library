@@ -100,55 +100,75 @@ task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t
 	switch (state_machine->state) 
 	{
 		case STATE_IDLE:
+			/**************************** Dependecies *****************************/
+			/***************************** Commands *****************************/
+			/***************************** Controls *****************************/
+			/*************************** Transitions ****************************/
 			if (is_armed && switch_enabled && (!state_machine->is_initialised))
 			{
 				state_machine->is_initialised = true;
 				state_machine->state = STATE_LAUNCH_DETECTION;
+				controls->velocity_control_mode = VELOCITY_MODE;
+
+				state_machine->transition_times[STATE_IDLE] = time_keeper_get_millis();
 			} 
 		break;
 
 		case STATE_LAUNCH_DETECTION:
-
+			/**************************** Dependecies *****************************/
 			launch_detection_update(&state_machine->ld, (state_machine->imu->scaled_accelero.data));
-
+			/***************************** Commands *****************************/
+			/***************************** Controls *****************************/
+			/*************************** Transitions ****************************/
 			if (state_machine->ld.status == LAUNCHING)
 			{
 				state_machine->state = STATE_ATTITUDE_CONTROL;
+
+				state_machine->transition_times[STATE_LAUNCH_DETECTION] = time_keeper_get_millis() - state_machine->transition_times[STATE_IDLE];
 			}
 		break;
 
 		case STATE_ATTITUDE_CONTROL:
+			/**************************** Dependecies *****************************/
 			state_machine->stabilisation_copter_conf = &stabilisation_copter_custom_config;
+			/***************************** Commands *****************************/
 			controls->rpy[ROLL] = 0.0f;
 			controls->rpy[PITCH] = 0.0f;
 			controls->thrust = state_machine->stabilisation_copter_conf->thrust_hover_point;
+			/***************************** Controls *****************************/
 			controls->control_mode = ATTITUDE_COMMAND_MODE;
-			controls->yaw_mode = YAW_RELATIVE;
-
-			bool roll_predicate = state_machine->ahrs->qe.v[0] < RP_THRESHOLD;
-			bool pitch_predicate = state_machine->ahrs->qe.v[1] < RP_THRESHOLD;
-			bool angular_speed_x_predicate = state_machine->ahrs->angular_speed[0] < ANGULAR_SPEED_THRESHOLD;
-			bool angular_speed_y_predicate = state_machine->ahrs->angular_speed[1] < ANGULAR_SPEED_THRESHOLD;
+			controls->yaw_mode = YAW_ABSOLUTE;
+			/*************************** Transitions ****************************/
+			bool roll_predicate = abs(state_machine->ahrs->qe.v[0]) < RP_THRESHOLD;
+			bool pitch_predicate = abs(state_machine->ahrs->qe.v[1]) < RP_THRESHOLD;
+			bool angular_speed_x_predicate = abs(state_machine->ahrs->angular_speed[0]) < ANGULAR_SPEED_THRESHOLD;
+			bool angular_speed_y_predicate = abs(state_machine->ahrs->angular_speed[1]) < ANGULAR_SPEED_THRESHOLD;
 
 			if (roll_predicate && pitch_predicate && angular_speed_x_predicate && angular_speed_y_predicate)
 			{
 				state_machine->state = STATE_VERTICAL_VELOCITY;
+
+				state_machine->transition_times[STATE_ATTITUDE_CONTROL] = time_keeper_get_millis() - state_machine->transition_times[STATE_LAUNCH_DETECTION];
 			}
 		break;
 
 		case STATE_VERTICAL_VELOCITY:
+			/**************************** Dependecies *****************************/
 			state_machine->stabilisation_copter_conf = &stabilisation_copter_default_config;
-
-			controls->tvel[X] = 0.0f;
-			controls->tvel[Y] = 0.0f;
+			/***************************** Commands *****************************/
+			// controls->tvel[X] = 0.0f;
+			// controls->tvel[Y] = 0.0f;
 			controls->tvel[Z] = 0.0f;
+			/***************************** Controls *****************************/
 			controls->control_mode = VELOCITY_COMMAND_MODE;
-
-			bool est_speed_predicate = abs(state_machine->pos_est->vel[0]) < 0.3f && abs(state_machine->pos_est->vel[1]) < 0.3f && abs(state_machine->pos_est->vel[2]) < 0.3f;
-			bool err_predicate = abs(state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller.error) < 0.3f;
-			bool acc_predicate = abs(state_machine->imu->scaled_accelero.data[Z]) < 0.3f;
+			controls->yaw_mode = YAW_ABSOLUTE;
+			controls->velocity_control_mode = VERTICAL_VELOCITY_MODE;
+			/*************************** Transitions ****************************/
+			bool est_speed_z_predicate = abs(state_machine->pos_est->vel[Z]) < 0.3f ;
+			bool err_z_predicate = abs(state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller.error) < 0.3f;
+			bool acc_z_predicate = abs(state_machine->imu->scaled_accelero.data[Z]) < 0.3f;
 			
-			if (est_speed_predicate && err_predicate && acc_predicate)
+			if (est_speed_z_predicate && err_z_predicate && acc_z_predicate)
 			{
 				state_machine->state = STATE_HEIGHT_CONTROL;
 
@@ -156,28 +176,62 @@ task_return_t throw_recovery_state_machine_update(throw_recovery_state_machine_t
 				state_machine->navigation->throw_recovery_position_set = false;
 				state_machine->navigation->throw_recovery_enabled = true;
 				state_machine->navigation->auto_landing = false;
+
+				state_machine->transition_times[STATE_VERTICAL_VELOCITY] = time_keeper_get_millis() - state_machine->transition_times[STATE_ATTITUDE_CONTROL];
 			}
 		break;
 
 		case STATE_HEIGHT_CONTROL:
+			/**************************** Dependecies *****************************/
+			/***************************** Commands *****************************/
+			// commands set by controls_nav
+			/***************************** Controls *****************************/
 			controls->control_mode = VELOCITY_COMMAND_MODE;
-			controls->yaw_mode = YAW_RELATIVE;
+			controls->yaw_mode = YAW_ABSOLUTE;
+			controls->velocity_control_mode = VERTICAL_VELOCITY_MODE;
+			/*************************** Transitions ****************************/
+			bool altitude_predicate = abs(state_machine->pos_est->local_position.pos[2]) < 2.1f;
 
-			// bool altitude_predicate = abs(state_machine->pos_est->local_position.pos[2]) < 3.0f;
-			// if (altitude_predicate)
-			// {
-			// 	state_machine->state = STATE_HORIZONTAL_VELOCITY;
-			// }
+			if (altitude_predicate)
+			{
+				state_machine->state = STATE_HORIZONTAL_VELOCITY;
+
+				controls->velocity_control_mode = VELOCITY_MODE;
+
+				state_machine->transition_times[STATE_HEIGHT_CONTROL] = time_keeper_get_millis() - state_machine->transition_times[STATE_VERTICAL_VELOCITY];
+			}
 		break;
 
 		case STATE_HORIZONTAL_VELOCITY:
-			// controls->tvel[X] = 0.0f;
-			// controls->tvel[Y] = 0.0f;
+			/**************************** Dependecies *****************************/
+			/***************************** Commands *****************************/
+			controls->tvel[X] = 0.0f;
+			controls->tvel[Y] = 0.0f;
+			/***************************** Controls *****************************/
+			controls->control_mode = VELOCITY_COMMAND_MODE;
+			controls->yaw_mode = YAW_ABSOLUTE;
+			controls->velocity_control_mode = VELOCITY_MODE;
+			/*************************** Transitions ****************************/
+			bool est_speed_xy_predicate = abs(state_machine->pos_est->vel[X]) < 0.3f && abs(state_machine->pos_est->vel[Y]) < 0.3f;
+			bool acc_xy_predicate = abs(state_machine->imu->scaled_accelero.data[X]) < 0.3f && abs(state_machine->imu->scaled_accelero.data[Y]) < 0.3f;
 
-			// controls->control_mode = VELOCITY_COMMAND_MODE;
+			if (est_speed_xy_predicate && acc_xy_predicate)
+			{
+				state_machine->state = STATE_POSITION_LOCKING;
+
+				state_machine->transition_times[STATE_HORIZONTAL_VELOCITY] = time_keeper_get_millis() - state_machine->transition_times[STATE_HEIGHT_CONTROL];
+			}
 		break;
 
 		case STATE_POSITION_LOCKING:
+			/**************************** Dependecies *****************************/
+			/***************************** Commands *****************************/
+			/***************************** Controls *****************************/
+			controls->control_mode = VELOCITY_COMMAND_MODE;
+			controls->yaw_mode = YAW_ABSOLUTE;
+			controls->velocity_control_mode = VELOCITY_MODE;
+			/*************************** Transitions ****************************/
+
 		break;
 	}
 
@@ -190,6 +244,11 @@ void throw_recovery_state_machine_reset(throw_recovery_state_machine_t * state_m
 	state_machine->is_initialised = false;
 	state_machine->ld.status = false;
 	state_machine->navigation->throw_recovery_enabled = false;
+
+	for (int i=0; i<6; i++)
+	{
+		state_machine->transition_times[i] = 0;
+	}
 
 	pid_controller_reset_integrator(&state_machine->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller);
 }

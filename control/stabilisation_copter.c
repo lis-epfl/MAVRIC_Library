@@ -131,7 +131,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 	switch (stabilisation_copter->controls->control_mode) 
 	{
 	case VELOCITY_COMMAND_MODE:
-		
+
 		attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
 		attitude_yaw_inverse.rpy[0] = 0.0f;
 		attitude_yaw_inverse.rpy[1] = 0.0f;
@@ -149,9 +149,21 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		input.tvel[Y] = input_global.v[Y];
 		input.tvel[Z] = input_global.v[Z];
 		
-		rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
-		rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
-		rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
+		if (input.velocity_control_mode == VERTICAL_VELOCITY_MODE)
+		{
+			rpyt_errors[X] = 0.0f;
+			rpyt_errors[Y] = 0.0f;
+			rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
+			rpyt_errors[YAW]= input.rpy[YAW];
+		}
+		else
+		{
+			rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
+			rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
+			rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
+			rpyt_errors[YAW]= input.rpy[YAW];
+		}
+		
 		
 		if (stabilisation_copter->controls->yaw_mode == YAW_COORDINATED) 
 		{
@@ -185,10 +197,11 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		quat_t rpy_local;
 		quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
 		
+
 		input.rpy[ROLL] = rpy_local.v[Y];
 		input.rpy[PITCH] = -rpy_local.v[X];
 
-		if ((!stabilisation_copter->pos_est->gps->healthy)||(stabilisation_copter->pos_est->state->out_of_fence_2))
+		if ((!stabilisation_copter->pos_est->gps->healthy)||(stabilisation_copter->pos_est->state->out_of_fence_2)||(input.velocity_control_mode == VERTICAL_VELOCITY_MODE))
 		{
 			input.rpy[ROLL] = 0.0f;
 			input.rpy[PITCH] = 0.0f;

@@ -54,12 +54,13 @@ extern "C" {
 
 #include "ahrs.h"
 #include "launch_detection.h"
+#include "navigation.h"
 #include "position_estimation.h"
 #include "remote.h"
 #include "scheduler.h"
 #include "stabilisation.h"
 #include "stabilisation_copter.h"
-#include "navigation.h"
+#include "time_keeper.h"
 
 
 typedef enum 
@@ -80,6 +81,8 @@ typedef struct
 	bool enabled; 			///< True : Throw recovery algorithm is enabled
 	bool debug;				///< True : Debug mode activated
 	bool is_initialised;	///< True : Throw recovery state machine is ready to run
+
+	uint32_t transition_times[6]; 
 
 	stabilisation_copter_conf_t * stabilisation_copter_conf;
 
