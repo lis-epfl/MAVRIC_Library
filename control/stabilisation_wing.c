@@ -143,6 +143,11 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		/////////////
 		// Compute the heading angle corresponding to the given input velocity vector (input from remote/vector field should be in semi-local frame).
 		nav_heading = heading_from_velocity_vector(input.tvel);
+		// Overwrite command if in remote
+		if(stabilisation_wing->controls->yaw_mode == YAW_RELATIVE)
+		{
+			nav_heading = input.rpy[YAW];
+		}
 		
 		// Compute current heading
 		gps_speed_global[X] = stabilisation_wing->pos_est->gps->north_speed;
@@ -163,11 +168,6 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		
 		// Compute turn rate command
 		heading_error = maths_calc_smaller_angle(nav_heading - current_heading);
-		// Overwrite command if in remote
-		if(stabilisation_wing->controls->yaw_mode == YAW_RELATIVE)
-		{
-			heading_error = input.rpy[YAW];
-		}
 		
 		
 		///////////////
@@ -197,13 +197,8 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		input_roll_angle = atanf(stabilisation_wing->airspeed_analog->airspeed / 9.81f * input_turn_rate);
 		
 		// Set input for next layer
-		//float tmp_roll = input.rpy[ROLL];
 		input = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output;
 		input.rpy[0] = input_roll_angle;
-		
-		// TODO: Remove
-		//input.rpy[0] = tmp_roll;
-		
 		input.rpy[1] = - stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[1];
 		input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
 		
@@ -220,8 +215,8 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		
 		// run absolute attitude_filter controller
 		rpyt_errors[0]= sinf(input.rpy[0]) - ( - stabilisation_wing->ahrs->up_vec.v[1] );		// Roll
-		rpyt_errors[1]= sinf(input.rpy[1]) - stabilisation_wing->ahrs->up_vec.v[0];			// Pitch
-		rpyt_errors[2]= 0.0f;															// Yaw
+		rpyt_errors[1]= sinf(input.rpy[1]) - stabilisation_wing->ahrs->up_vec.v[0];				// Pitch
+		rpyt_errors[2]= 0.0f;																	// Yaw
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
 		// run PID update on all attitude_filter controllers
