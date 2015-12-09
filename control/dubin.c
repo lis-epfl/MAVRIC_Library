@@ -40,6 +40,7 @@
  ******************************************************************************/
 
 #include "dubin.h"
+#include "print_util.h"
 
 /**
  * \brief 		Computes the arc length between two point of a circle
@@ -84,6 +85,8 @@ static float dubin_path_length(float t1[3], float t2[3], const float c1[3], cons
 
 void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[3], const float pos[3], const float speed)
 {
+	//print_util_dbg_print("dubin_line\r\n");
+
 	//parameters
 	float one_over_scaling=0.1; //defines the main influence area [m^-1]
 	
@@ -96,19 +99,21 @@ void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[
 	if(vectors_norm_sqr(line_dir) > 0.0f)
 	{
 		//project pos on line ->v_t
-		for (i = 0; i < 3; ++i)
+		for (i = 0; i < 2; ++i)
 		{
 			op[i] = pos[i] - line_origin[i];
 		}
+		op[Z] = 0.0f;
 
 		vectors_normalize(line_dir, e_t);//get tangent direction
 		
 		projection_length = vectors_scalar_product(e_t,op);
 		
-		for (i = 0; i < 3; ++i)
+		for (i = 0; i < 2; ++i)
 		{
 			rad[i] = e_t[i] * projection_length - op[i];
 		}
+		rad[Z] = 0.0f;
 		
 		normal_dist = vectors_norm(rad);
 
@@ -126,22 +131,28 @@ void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[
 		k_r = 2.0f / PI * atan(normal_dist*one_over_scaling); //map all possible distances to 0 to 1;
 		v_r_norm = sqrtf(1-k_r*k_r);
 
-		for (i = 0; i < 3; ++i)
+		for (i = 0; i < 2; ++i)
 		{
-			tvel[i] = e_t[i]*k_r + e_r[i]*v_r_norm;
+			tvel[i] = e_t[i]*v_r_norm + e_r[i]*k_r;
 		}
+		tvel[Z] = 0.0f;
 
 		v_t_norm = vectors_norm(tvel);
-		for (i = 0; i < 3; ++i)
+		for (i = 0; i < 2; ++i)
 		{
 			tvel[i] *= speed / v_t_norm;
 		}
+		tvel[Z] = 0.0f;
 
 	}
+
+	//print_util_dbg_print("dubin_line end\r\n");
 }
 
 void dubin_circle(float tvel[3], const float circle[3], const float radius, const float pos[3], const float speed)
 {
+	//print_util_dbg_print("dubin_circle\r\n");
+
 	float tan_dir[3], tan_origin[3];
 	float rel_pos_norm[3];
 
@@ -149,10 +160,11 @@ void dubin_circle(float tvel[3], const float circle[3], const float radius, cons
 
 	float rel_pos[3];
 
-	for (i = 0; i < 3; ++i)
+	for (i = 0; i < 2; ++i)
 	{
-		rel_pos[i] = circle[i] - pos[3];
+		rel_pos[i] = circle[i] - pos[i];
 	}
+	rel_pos[Z] = 0.0f;
 
 	if (vectors_norm_sqr(rel_pos) > 0.0f)
 	{
@@ -163,23 +175,25 @@ void dubin_circle(float tvel[3], const float circle[3], const float radius, cons
 
 		vectors_normalize(rel_pos_norm, rel_pos_norm);
 
-		tan_dir[X] = -rel_pos[Y];
-		tan_dir[Y] = rel_pos[X];
+		tan_dir[X] = -rel_pos_norm[Y] * maths_sign(radius);
+		tan_dir[Y] = rel_pos_norm[X] * maths_sign(radius);
 		tan_dir[Z] = 0.0f;
 
-		for (i = 0; i < 3; ++i)
+		for (i = 0; i < 2; ++i)
 		{
 			tan_origin[i] = circle[i] - radius * rel_pos_norm[i];
 		}
+		tan_origin[Z] = 0.0f;
 
 		//compute a vectorfield using the tangent.
 		dubin_line(tvel, tan_dir, tan_origin, pos, speed);
-	}	
+	}
+
+	//print_util_dbg_print("dubin_circle end\r\n");
 }
 
 static float dubin_arc_length_2d(const float p1[3], const float p2[3], const float c[3], const int8_t sense)
-{
-	// arc_length_2d(t2,wp2,c2,sense2)
+{	
 	uint32_t i;
 	float v1[3];
 	float v2[3];
@@ -228,7 +242,7 @@ static void dubin_find_tangent(float t1[3], float t2[3], const float c1[3], cons
 
 	float dist = vectors_norm(v);
 	vectors_normalize(v,u);
-	
+
 	float alpha = atan2(u[1],u[0]);
 
 	float cos_alpha = cos(alpha);
@@ -256,6 +270,7 @@ static void dubin_find_tangent(float t1[3], float t2[3], const float c1[3], cons
 	t2[0] = c2[0] + cos_alpha * tt2[0] - sin_alpha * tt2[1];
 	t2[1] = c2[1] + sin_alpha * tt2[0] + cos_alpha * tt2[1];
 	t2[2] = tt2[2];
+
 }
 
 static float dubin_path_length(float t1[3], float t2[3], const float c1[3], const float c2[3], const float wp1[3], const float wp2[3], const int8_t sense1, const int8_t sense2)
@@ -288,48 +303,76 @@ static float dubin_path_length(float t1[3], float t2[3], const float c1[3], cons
 	return t1_t2_norm + arc_1 + arc_2;
 }
 
+// void dubin_init(void)
+// {
+// 	delay_ms(2000);
+
+// 	float wp1[3], wp2[3], d1[3], d2[3], sense_2;
+
+// 	wp1[X] = 2.0f;
+// 	wp1[Y] = 4.0f;
+// 	wp1[Z] = 0.0f;
+
+// 	wp2[X] = 50.0f;
+// 	wp2[Y] = 50.0f;
+// 	wp2[Z] = 0.0f;
+
+// 	d1[X] = 30.0f;
+// 	d1[Y] = 0.0;
+// 	d1[Z] = 0.0f;
+
+// 	d2[X] = 21.2132f;
+// 	d2[Y] = 21.2132f;
+// 	d2[Z] = 0.0f;
+
+// 	sense_2 = -1.0;
+
+// 	dubin_2d(wp1, wp2, d1, d2, sense_2);
+
+// 	delay_ms(1000);
+// }
+
 dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], const float d2[3], float sense_2)
 {
 	dubin_t out,temp;
+	
 	out.length=0;
+
 	uint32_t i,j;
 
 	//directions already turned by 90 degrees
 	float r1[3];
-	r1[0] = d1[1];
-	r1[1] = -d1[0];
+	r1[0] = -d1[1];
+	r1[1] = d1[0];
 	r1[2] = 0.0f;
 
 	float r2[3];
-	r2[0] = d2[1];
-	r2[1] = -d2[0];
+	r2[0] = -d2[1];
+	r2[1] = d2[0];
 	r2[2] = 0.0f;
-	
-	float circle_center_1[3];
-	float circle_center_2[3];
 
 	float rad1 = vectors_norm(r1);
 	float rad2 = vectors_norm(r2);
-	
+
 	float dist;
 
 	float c1_c2[3];
 	//find shortest path for all feasible solutions
-	for (i=0;i<2;i++)
+	for (i=0; i<2; i++)
 	{
 		temp.sense_1 = i&1?1:-1; 
 		
 		//temp.sense_2 = i&2?1:-1; 
 		
-		for (j = 0; i < 2; ++i)
+		for (j = 0; j < 2; j++)
 		{
-			circle_center_1[i] = wp1[i] - temp.sense_1*r1[i];
-			circle_center_2[i] = wp2[i] - sense_2*r2[i];
+			temp.circle_center_1[j] = wp1[j] - temp.sense_1*r1[j];
+			temp.circle_center_2[j] = wp2[j] - sense_2*r2[j];
 
-			c1_c2[i] = circle_center_1[i] - circle_center_2[i];
+			c1_c2[j] = temp.circle_center_1[j] - temp.circle_center_2[j];
 		}
-		circle_center_1[2] = 0.0f;
-		circle_center_2[2] = 0.0f;
+		temp.circle_center_1[2] = 0.0f;
+		temp.circle_center_2[2] = 0.0f;
 		c1_c2[2] = 0.0f;
 
 		dist = vectors_norm(c1_c2);
@@ -339,17 +382,22 @@ dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], cons
 		{
 			temp.length = dubin_path_length(	temp.tangent_point_1,
 												temp.tangent_point_2,
-												circle_center_1,
-												circle_center_2,
+												temp.circle_center_1,
+												temp.circle_center_2,
 												wp1,
 												wp2,
 												temp.sense_1,
 												sense_2);
-			for (j = 0; j < 3; ++i)
+
+			for (j = 0; j < 3; j++)
 			{
 				temp.line_direction[j] = temp.tangent_point_2[j] - temp.tangent_point_1[j];
 			}
 			
+			temp.tangent_point_1[Z] = wp2[Z];
+			temp.tangent_point_2[Z] = wp2[Z];
+			temp.circle_center_1[Z] = wp2[Z];
+			temp.circle_center_2[Z] = wp2[Z];
 
 			if ( (i==0) || ( temp.length < out.length) ) //save temp if the pathlength is shorter, or if this is the first run
 			{
@@ -357,8 +405,6 @@ dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], cons
 			}
 		}
 	}
-
-	out.dubin_state = CIRCLE1;
 
 	return out;
 }

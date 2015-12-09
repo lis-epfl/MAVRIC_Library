@@ -94,6 +94,7 @@ typedef struct
 
 typedef struct
 {
+	dubin_state_t dubin_state;
 	waypoint_struct_t waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
 	waypoint_struct_t current_waypoint;							///< The structure of the current waypoint
 	waypoint_struct_t next_waypoint;							///< The structure of the next waypoint
@@ -189,11 +190,11 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  * \brief	Set the waypoint depending on the reference frame defined in the current_waypoint structure
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	origin					The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
+ * \param	local_position			The local position structure
  *
  * \return	The waypoint in local coordinate frame
  */
-waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
+waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, local_coordinates_t local_position, dubin_state_t* dubin_state);
 
 /**
  * \brief	Sends the travel time between the last two waypoints

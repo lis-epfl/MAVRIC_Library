@@ -62,7 +62,7 @@ typedef struct
 	float tangent_point_2[3];
 	float line_direction[3];
 	float length;
-	dubin_state_t dubin_state;
+	float old_radius;
 }dubin_t;
 
 void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[3], const float pos[3], const float speed);

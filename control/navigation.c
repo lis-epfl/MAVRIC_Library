@@ -45,6 +45,7 @@
 #include "time_keeper.h"
 #include "constants.h"
 #include "coord_conventions.h"
+#include "delay.h"
 
 #define KP_YAW 0.2f ///< Yaw gain for the navigation controller 
 
@@ -206,6 +207,8 @@ static void navigation_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoi
 	waypoint_handler->waypoint_hold_coordinates.waypoint.heading = aero_attitude.rpy[2];
 	
 	waypoint_handler->dist2wp_sqr = 100.0f; // same position, 10m above => dist_sqr = 100.0f
+
+	waypoint_handler->waypoint_hold_coordinates.radius = 30.0f;
 	
 	waypoint_handler->hold_waypoint_set = true;
 }
@@ -324,16 +327,23 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 	float dir_desired[3];
 
 	// Compute the vector field circular
-	bool vector_field_good = vector_field_circular_waypoint(rel_pos, 
-															navigation->attractiveness, 	// attractiveness
-															navigation->attractiveness2, 	// attractiveness
-															navigation->cruise_speed, 		// cruise_speed
-															radius,							// radius
-															dir_desired );
+	// bool vector_field_good = vector_field_circular_waypoint(rel_pos, 
+	// 														navigation->attractiveness, 	// attractiveness
+	// 														navigation->attractiveness2, 	// attractiveness
+	// 														navigation->cruise_speed, 		// cruise_speed
+	// 														radius,							// radius
+	// 														dir_desired );
+
+	//vector_field_good = true;
+	dubin_circle(	dir_desired,
+					navigation->goal.waypoint.pos,
+					navigation->goal.radius,
+					navigation->position_estimation->local_position.pos,
+					navigation->cruise_speed);
 
 	// If there is no computationnal error, update the command values, otherwise keep the last ones.
-	if (vector_field_good == true)
-	{
+	//if (vector_field_good == true)
+	//{
 		// Transform the vector in the semi-global reference frame
 		quat_t q_rot;
 		aero_attitude_t attitude_yaw;
@@ -349,7 +359,8 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 		navigation->controls_nav->tvel[X] = dir_desired_sg[X];
 		navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
 		navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
-	}
+
+	//}
 
 	float rel_heading;
 	rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - navigation->position_estimation->local_position.heading);
@@ -362,58 +373,143 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 	float dir_desired[3], rel_pos[3];
 	float dist2wp_sqr;
 
+	rel_pos[Z] = 0.0f;
 
-	switch(navigation->goal.dubin.dubin_state)
+	float dir_init_bf[3], dir_init[3], init_radius;
+
+	quat_t q_rot;
+	aero_attitude_t attitude_yaw;
+
+	switch(navigation->waypoint_handler->dubin_state)
 	{
+		case INIT:
+			print_util_dbg_print("INIT\r\n");
+			if (navigation->state->nav_plan_active)
+			{
+				print_util_dbg_print("Nav plan active\r\n");
+				init_radius = navigation->goal.radius;
+			}
+			else
+			{
+				print_util_dbg_print("Nav plan inactive\r\n");
+				init_radius = 30.0f;
+			}
+
+			dir_init_bf[X] = init_radius;
+			dir_init_bf[Y] = 0.0f;
+			dir_init_bf[Z] = 0.0f;
+
+			attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
+			attitude_yaw.rpy[0] = 0.0f;
+			attitude_yaw.rpy[1] = 0.0f;
+			attitude_yaw.rpy[2] = attitude_yaw.rpy[2];
+			q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+			quaternions_rotate_vector(q_rot, dir_init_bf, dir_init);
+
+			for (uint8_t i = 0; i < 2; ++i)
+			{
+				rel_pos[i] = navigation->goal.waypoint.pos[i]- navigation->position_estimation->local_position.pos[i];
+			}
+			rel_pos[2] = 0.0f;
+
+			float dir_final[3];
+			float pos_goal[3];
+			
+			if (vectors_norm_sqr(rel_pos) > 0.1f)
+			{
+				vectors_normalize(rel_pos,rel_pos);
+
+				dir_final[X] = rel_pos[Y]*navigation->goal.radius;
+				dir_final[Y] = -rel_pos[X]*navigation->goal.radius;
+				dir_final[Z] = 0.0f;
+
+				for (uint8_t i = 0; i < 3; ++i)
+				{
+					pos_goal[i] = navigation->goal.waypoint.pos[i] + rel_pos[i]*navigation->goal.radius;
+				}
+
+				navigation->goal.dubin = dubin_2d(	navigation->position_estimation->local_position.pos,
+													pos_goal,
+													dir_init,
+													dir_final,
+													maths_sign(navigation->goal.radius));
+				navigation->waypoint_handler->dubin_state = CIRCLE1;
+			}
+			else
+			{
+				dir_final[X] = -dir_init[Y];
+				dir_final[Y] = dir_init[X];
+				dir_final[Z] = 0.0f;
+
+				for (uint8_t i = 0; i < 2; ++i)
+				{
+					navigation->goal.dubin.circle_center_2[i] = navigation->position_estimation->local_position.pos[i];
+				}
+				navigation->goal.dubin.circle_center_2[Z] = 0.0f;
+
+				navigation->waypoint_handler->dubin_state = CIRCLE2;
+
+				break;
+			}
+			
+			// No break here to follow directly the first waypoint
 		case CIRCLE1:
+			print_util_dbg_print("CIRCLE1\r\n");
 			dubin_circle(	dir_desired, 
 							navigation->goal.dubin.circle_center_1, 
 							navigation->goal.radius, 
 							navigation->position_estimation->local_position.pos, 
 							navigation->cruise_speed );
-			for (uint8_t i = 0; i < 3; ++i)
+			for (uint8_t i = 0; i < 2; ++i)
 			{
-				rel_pos[i] = navigation->goal.dubin.circle_center_1[i] - navigation->position_estimation->local_position.pos[i];
+				rel_pos[i] = navigation->goal.dubin.tangent_point_2[i] - navigation->position_estimation->local_position.pos[i];
 			}
-			dist2wp_sqr = vectors_norm_sqr(rel_pos);
+			float heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X])-navigation->position_estimation->local_position.heading);
 
-			if (dist2wp_sqr < 25.0f)
+			if (heading_diff < PI/6.0f)
 			{
-				navigation->goal.dubin.dubin_state = STRAIGHT;
+				navigation->waypoint_handler->dubin_state = STRAIGHT;
 			}
 		break;
 
 		case STRAIGHT:
+			print_util_dbg_print("STRAIGHT\r\n");
 			dubin_line(	dir_desired, 
 						navigation->goal.dubin.line_direction,
 						navigation->goal.dubin.tangent_point_2,
 						navigation->position_estimation->local_position.pos,
 						navigation->cruise_speed);
 			
-			for (uint8_t i = 0; i < 3; ++i)
+			for (uint8_t i = 0; i < 2; ++i)
 			{
-				rel_pos[i] = navigation->goal.dubin.circle_center_1[i] - navigation->position_estimation->local_position.pos[i];
+				rel_pos[i] = navigation->goal.dubin.tangent_point_2[i] - navigation->position_estimation->local_position.pos[i];
 			}
 			dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
 			if (dist2wp_sqr < 25.0f)
 			{
-				navigation->goal.dubin.dubin_state = CIRCLE2;
+				navigation->waypoint_handler->dubin_state = CIRCLE2;
 			}
 		break;
 
 		case CIRCLE2:
+			print_util_dbg_print("CIRCLE2\r\n");
 			dubin_circle(	dir_desired, 
 							navigation->goal.dubin.circle_center_2, 
 							navigation->goal.radius, 
 							navigation->position_estimation->local_position.pos, 
 							navigation->cruise_speed );
+			for (uint8_t i = 0; i < 2; ++i)
+			{
+				rel_pos[i] = navigation->goal.dubin.circle_center_2[i] - navigation->position_estimation->local_position.pos[i];
+			}
 		break;
 	}
 
+	dir_desired[Z] = navigation->goal.waypoint.pos[Z] - navigation->position_estimation->local_position.pos[Z];
+
 	// Transform the vector in the semi-global reference frame
-	quat_t q_rot;
-	aero_attitude_t attitude_yaw;
 	attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
 	attitude_yaw.rpy[0] = 0.0f;
 	attitude_yaw.rpy[1] = 0.0f;
@@ -425,7 +521,7 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 
 	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
-	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
+	//navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
 
 	float rel_heading;
 	rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - navigation->position_estimation->local_position.heading);
@@ -620,7 +716,9 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 					}
 					navigation->waypoint_handler->next_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
 					navigation->waypoint_handler->next_waypoint.current = 1;
-					navigation->waypoint_handler->waypoint_next = waypoint_handler_set_waypoint_from_frame(&navigation->waypoint_handler->next_waypoint, navigation->waypoint_handler->position_estimation->local_position.origin);
+					navigation->waypoint_handler->waypoint_next = waypoint_handler_set_waypoint_from_frame(	&navigation->waypoint_handler->next_waypoint, 
+																											navigation->waypoint_handler->position_estimation->local_position,
+																											&navigation->waypoint_handler->dubin_state);
 				}
 				
 				for (uint8_t i=0;i<3;i++)
@@ -639,7 +737,9 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 					navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 1;
 					navigation->waypoint_handler->next_waypoint.current = 0;
 					navigation->waypoint_handler->current_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
-					navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(&navigation->waypoint_handler->current_waypoint, navigation->waypoint_handler->position_estimation->local_position.origin);
+					navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(	&navigation->waypoint_handler->current_waypoint, 
+																													navigation->waypoint_handler->position_estimation->local_position,
+																													&navigation->waypoint_handler->dubin_state);
 
 					mavlink_message_t msg;
 					mavlink_msg_mission_current_pack( 	navigation->mavlink_stream->sysid,
@@ -698,6 +798,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 		navigation->waypoint_handler->waypoint_critical_coordinates.waypoint.heading = aero_attitude.rpy[2];
 		navigation->waypoint_handler->waypoint_critical_coordinates.loiter_time = 0.0f;
 		navigation->waypoint_handler->waypoint_critical_coordinates.radius = 30.0f;
+		navigation->waypoint_handler->dubin_state = INIT;
 		
 		switch (navigation->critical_behavior)
 		{
@@ -911,7 +1012,9 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 			waypoint.y = packet->param6;
 			waypoint.z = packet->param7;
 			
-			waypoint_local_struct_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(&waypoint,navigation->position_estimation->local_position.origin);
+			waypoint_local_struct_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(	&waypoint,
+																								navigation->position_estimation->local_position,
+																								&navigation->waypoint_handler->dubin_state);
 			navigation_waypoint_hold_init(navigation->waypoint_handler, waypoint_goal.waypoint);
 			
 			result = MAV_RESULT_ACCEPTED;
@@ -979,7 +1082,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->goal.waypoint.pos[Z] = 0.0f;
 	navigation->goal.loiter_time = 0.0f;
 	navigation->goal.radius = 0.0f;
-	
+
 	navigation->wpt_nav_controller = nav_config->wpt_nav_controller;
 	navigation->hovering_controller = nav_config->hovering_controller;
 	
@@ -1054,6 +1157,8 @@ void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler,
 	waypoint_handler->waypoint_hold_coordinates.loiter_time = 0.0f;
 	waypoint_handler->waypoint_hold_coordinates.radius = 30.0f;
 	
+	waypoint_handler->dubin_state = INIT;
+
 	//waypoint_handler->waypoint_hold_coordinates.waypoint.heading = coord_conventions_get_yaw(waypoint_handler->ahrs->qe);
 	//waypoint_handler->waypoint_hold_coordinates.waypoint.heading = local_pos.heading;
 	

@@ -234,6 +234,7 @@ typedef enum
 
 typedef enum 
 {
+	INIT = 0,
 	CIRCLE1 = 1, 
 	STRAIGHT = 2,
 	CIRCLE2 = 3,
