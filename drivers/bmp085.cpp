@@ -46,7 +46,7 @@
 extern "C"
 {
 	#include "maths.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "print_util.h"
 }
 

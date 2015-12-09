@@ -72,7 +72,7 @@ bool Serial_stm32::init(void)
 		break;
 
 		case SERIAL_STM32_2:
-			// nvic_enable_irq(NVIC_USART2_IRQ);
+			nvic_enable_irq(NVIC_USART2_IRQ);
 			handlers_[1] = this;
 		break;
 
@@ -114,17 +114,25 @@ bool Serial_stm32::init(void)
 	gpio_mode_setup(config_.tx_port, 
 					config_.tx_af, 
 					GPIO_PUPD_NONE, 
+					// GPIO_PUPD_PULLUP, 
 					config_.tx_pin);
+	// gpio_set_output_options(config_.tx_port, 
+	// 						// GPIO_OTYPE_OD, 
+	// 						GPIO_OTYPE_PP, 
+	// 						GPIO_OSPEED_25MHZ, 
+	// 						config_.tx_pin);
 
 	// Setup GPIO pins for RX
 	gpio_mode_setup(config_.rx_port, 
 					config_.rx_af, 
 					GPIO_PUPD_NONE, 
+					// GPIO_PUPD_PULLUP, 
 					config_.rx_pin);
-	gpio_set_output_options(config_.rx_port, 
-							GPIO_OTYPE_OD, 
-							GPIO_OSPEED_25MHZ, 
-							config_.rx_pin);
+	// gpio_set_output_options(config_.rx_port, 
+	// 						// GPIO_OTYPE_OD, 
+	// 						GPIO_OTYPE_PP, 
+	// 						GPIO_OSPEED_25MHZ, 
+	// 						config_.rx_pin);
 
 	// Setup TX and RX pin as alternate function
 	gpio_set_af(config_.tx_port, config_.tx_af, config_.tx_pin);
@@ -272,10 +280,10 @@ void usart1_isr(void)
 }
 
 
-void usart2_isr(void)
-{
-	handlers_[1]->irq_handler();
-}
+// void usart2_isr(void)
+// {
+// 	handlers_[1]->irq_handler();
+// }
 
 
 void usart3_isr(void)

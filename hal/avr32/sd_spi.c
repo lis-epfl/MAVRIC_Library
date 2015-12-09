@@ -50,7 +50,7 @@
 #include "spi.h"
 #include "gpio.h"
 #include "pdca.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 
 #include "led.h"
 #include "print_util.h"

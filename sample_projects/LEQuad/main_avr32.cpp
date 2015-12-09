@@ -54,7 +54,7 @@
 
 extern "C" 
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "print_util.h"
 	#include "piezo_speaker.h"
 	#include "delay.h"
@@ -102,38 +102,40 @@ int main (void)
 	// Create central data
 	// -------------------------------------------------------------------------
 	// Create central data using real sensors
-	Central_data cd = Central_data( MAVLINK_SYS_ID,
-									board.imu, 
-									board.bmp085,
-									board.gps_ublox, 
-									//sim.gps(), 
-									// board.sonar_i2cxl,		// Warning:
-									sim.sonar(),				// this is simulated
-									board.uart0,
-									board.spektrum_satellite,
-									board.green_led,
-									board.file_flash,
-									board.battery,
-									// sim_battery,
-									board.servo_0,
-									board.servo_1,
-									board.servo_2,
-									board.servo_3 );
-
-
-	// Create central data with simulated sensors
-	// Central_data cd = Central_data( sim_imu, 
-	// 								sim.barometer(),
+	// Central_data cd = Central_data( MAVLINK_SYS_ID,
+	// 								board.imu, 
+	// 								board.bmp085,
+	// 								// board.gps_ublox, 
 	// 								sim.gps(), 
-	// 								sim.sonar(),
-	// 								board.uart0, 				// mavlink serial
+	// 								// board.sonar_i2cxl,		// Warning:
+	// 								sim.sonar(),				// this is simulated
+	// 								board.uart0,
 	// 								board.spektrum_satellite,
+	// 								board.green_led,
 	// 								board.file_flash,
-	// 								sim_battery,
+	// 								board.battery,
+	// 								// sim_battery,
 	// 								board.servo_0,
 	// 								board.servo_1,
 	// 								board.servo_2,
 	// 								board.servo_3 );
+
+
+	// Create central data with simulated sensors
+	Central_data cd = Central_data( MAVLINK_SYS_ID,
+									sim_imu, 
+									sim.barometer(),
+									sim.gps(), 
+									sim.sonar(),
+									board.uart0, 				// mavlink serial
+									board.spektrum_satellite,
+									board.green_led,
+									board.file_flash,
+									sim_battery,
+									board.servo_0,
+									board.servo_1,
+									board.servo_2,
+									board.servo_3 );
 
 	// -------------------------------------------------------------------------
 	// Initialisation

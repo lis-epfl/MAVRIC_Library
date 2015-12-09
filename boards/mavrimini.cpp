@@ -47,7 +47,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 
@@ -59,18 +59,19 @@ uint8_t serial2stream( stream_data_t data, uint8_t byte )
 }
 
 
-/* Set STM32 to 168 MHz. */
 static void clock_setup(void)
 {
+	// Set STM32 to 168 MHz
 	rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
 
-	/* Enable GPIO clock. */
+	// Enable GPIO clock
 	rcc_periph_clock_enable(RCC_GPIOA);
+	rcc_periph_clock_enable(RCC_GPIOB);
 	rcc_periph_clock_enable(RCC_GPIOC);
 	rcc_periph_clock_enable(RCC_GPIOD);
 
+	// Enable UART2 clock
 	rcc_periph_clock_enable(RCC_USART2);
-	
 }
 
 
@@ -145,7 +146,7 @@ bool Mavrimini::init(void)
 	// -------------------------------------------------------------------------
 	// Init UART0
 	// -------------------------------------------------------------------------
-	ret = serial_1.init();
+	// ret = serial_1.init();
 	print_util_dbg_init_msg("[SERIAL0]", ret);
 	init_success &= ret;
 	time_keeper_delay_ms(100); 

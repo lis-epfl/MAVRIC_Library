@@ -46,8 +46,6 @@ LIB_SRCS += sample_projects/LEQuad/main_stm32.cpp
 LIB_SRCS += sample_projects/LEQuad/central_data.cpp
 LIB_SRCS += sample_projects/LEQuad/tasks.cpp
 LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
-# LIB_SRCS += sample_projects/LEQuad/proj_stm32/startup_stm32f4xx.c
-
 
 LIB_SRCS += drivers/battery.c                    
 LIB_SRCS += drivers/barometer_telemetry.cpp          
@@ -172,7 +170,7 @@ SIZER 	:= arm-none-eabi-size
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CFLAGS	+= -O2 -g -std=gnu99
+CFLAGS	+= -O0 -g -std=gnu99
 CFLAGS	+= -Wall
 # CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
 # CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
@@ -185,7 +183,7 @@ CFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CXXFLAGS	+= -O2 -g -std=c++11
+CXXFLAGS	+= -O0 -g -std=c++11
 CXXFLAGS	+= -Wall
 # CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
 CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
@@ -292,7 +290,7 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 	@$(BUILD_CMD)
 
 flash: $(PROJ_NAME).bin
-	st-flash write $(PROJ_NAME).bin 0x8000000
+	@st-flash write $(PROJ_NAME).bin 0x8000000
 
 .PHONY: clean
 clean:

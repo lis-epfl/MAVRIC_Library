@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 
@@ -102,7 +102,7 @@ bool Dynamic_model_quad_diag::update(void)
 	last_update_us_ = now;
 
 	// Do nothing if updated too often
-	if( dt_s_ < 0.004f )
+	if( dt_s_ < 0.001f )
 	{
 		return true;
 	}

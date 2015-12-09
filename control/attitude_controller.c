@@ -42,7 +42,7 @@
 
 #include "attitude_controller.h"
 #include "constants.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 
 
 //------------------------------------------------------------------------------

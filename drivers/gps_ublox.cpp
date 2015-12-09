@@ -48,7 +48,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "endianness.h"
 	#include <string.h>
 	#include "maths.h"

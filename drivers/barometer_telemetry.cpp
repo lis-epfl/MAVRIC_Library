@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 void barometer_telemetry_send(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

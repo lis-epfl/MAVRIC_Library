@@ -167,6 +167,7 @@ CXXFLAGS += ${LIB_INC}
 LDFLAGS += -I.
 LDFLAGS += ${LIB_INC}
 LDFLAGS += ${SRCS_INC}
+LDFLAGS += -lrt
 
 ################################################################################
 # Normally you shouldn't need to change anything below this line!

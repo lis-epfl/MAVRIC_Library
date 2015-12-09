@@ -35,18 +35,22 @@
  * \author MAV'RIC Team
  * \author Felix Schill
  *   
- * \brief This file is used to interact with the clock of the microcontroller
+ * \brief 	This file is used to interact with the clock of the microcontroller
  * 
- * \detail 	Implementation for STM32
- * 
+ * \detail 	Implementation for AVR32
  * 
  ******************************************************************************/
 
-#include <libopencm3/cm3/nvic.h>
-#include <libopencm3/cm3/systick.h>
 
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 
+extern "C"
+{
+	#include "ast.h"
+}
+
+#define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
+#define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
 
 
 //------------------------------------------------------------------------------
@@ -54,19 +58,38 @@
 //------------------------------------------------------------------------------
 
 /**
- * \brief 	Current system time in microseconds since system boot
+ * \brief	raw timer ticks
+ *
+ * \return	The raw timer ticks
  */
-static volatile uint64_t system_us;
+uint64_t time_keeper_get_s_ticks(void);
 
 
 /**
- * \brief 	Called when systick fires
- * 
- * \details Monotonically increasing number of microseconds from reset
+ * \brief	Transforms the timer ticks into seconds
+ *
+ * \param	timer_ticks		The timer ticks
+ *
+ * \return	The time in seconds
  */
-void sys_tick_handler(void)
+float time_keeper_ticks_to_seconds(uint64_t timer_ticks);
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+uint64_t time_keeper_get_s_ticks(void)
 {
-	system_us++;
+	//raw timer ticks
+	return ast_get_counter_value(&AVR32_AST);
+}
+
+
+float time_keeper_ticks_to_seconds(uint64_t timer_ticks)
+{
+	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
 }
 
 
@@ -76,62 +99,56 @@ void sys_tick_handler(void)
 
 void time_keeper_init(void)
 {
-	/* clock rate / 1000000 to get 1uS interrupt rate */
-	systick_set_reload(168);
-	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
-	systick_counter_enable();
-	/* this done last */
-	systick_interrupt_enable();
+	ast_init_counter(&AVR32_AST, AST_OSC_PB, AST_PRESCALER_SETTING, 0);
+	ast_enable(&AVR32_AST);
 }
+
 
 
 double time_keeper_get_s(void)
 {
 	// time in seconds since system start
-	return (float)(system_us) / 1000000.0f;
+	return time_keeper_ticks_to_seconds(time_keeper_get_s_ticks());
 }
 
 
 uint64_t time_keeper_get_ms(void)
 {
-	// milliseconds since system start
-	return system_us / 1000;
+	//milliseconds since system start
+	return time_keeper_get_s_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
 }
 
 
 uint64_t time_keeper_get_us(void)
 {
 	// microseconds since system start. Will run over after an hour.
-	return system_us;
+	return time_keeper_get_s_ticks() * (1000000 / TK_AST_FREQUENCY);
 }
 
 
 void time_keeper_delay_us(uint64_t microseconds)
 {
 	uint64_t now = time_keeper_get_us();
-	while (time_keeper_get_us() < now + microseconds)
+	while (time_keeper_get_us() < now + microseconds);
+}
+
+
+void time_keeper_delay_ms(uint64_t t) 
+{
+	uint64_t now = time_keeper_get_us();
+	
+	while (time_keeper_get_us() < now + 1000 * t) 
 	{
 		;
 	}
 }
 
 
-void time_keeper_delay_ms(uint64_t milliseconds) 
+void time_keeper_sleep_us(uint64_t t) 
 {
 	uint64_t now = time_keeper_get_us();
 	
-	while (time_keeper_get_us() < now + 1000 * milliseconds) 
-	{
-		;
-	}
-}
-
-
-void time_keeper_sleep_us(uint64_t microseconds) 
-{
-	uint64_t now = time_keeper_get_us();
-	
-	while (time_keeper_get_us() < now + microseconds) 
+	while (time_keeper_get_us() < now + t) 
 	{
 		;
 	}

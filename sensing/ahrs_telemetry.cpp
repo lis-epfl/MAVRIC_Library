@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "coord_conventions.h"
 }
 

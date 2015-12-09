@@ -167,15 +167,19 @@ static inline mavrimini_conf_t mavrimini_default_config()
 	// conf.green_led_gpio_config.port 	= GPIO_STM32_PORT_D;
 	// conf.green_led_gpio_config.pin 		= GPIO_STM32_PIN_12;
 	conf.green_led_gpio_config.port 	= GPIO_STM32_PORT_C;
-	conf.green_led_gpio_config.pin 		= GPIO_STM32_PIN_14;
+	conf.green_led_gpio_config.pin 		= GPIO_STM32_PIN_15;
 	conf.green_led_gpio_config.dir 		= GPIO_OUTPUT;
 	conf.green_led_gpio_config.pull 	= GPIO_PULL_UPDOWN_NONE;
 
 	// Red led
 	// conf.red_led_gpio_config.port 	= GPIO_STM32_PORT_D;
 	// conf.red_led_gpio_config.pin 	= GPIO_STM32_PIN_13;
-	conf.red_led_gpio_config.port 	= GPIO_STM32_PORT_C;
-	conf.red_led_gpio_config.pin 	= GPIO_STM32_PIN_15;
+	// conf.red_led_gpio_config.port 	= GPIO_STM32_PORT_C;
+	// conf.red_led_gpio_config.pin 	= GPIO_STM32_PIN_14;
+	conf.red_led_gpio_config.port 	= GPIO_STM32_PORT_B;
+	conf.red_led_gpio_config.pin 	= GPIO_STM32_PIN_6;
+	// conf.red_led_gpio_config.port 	= GPIO_STM32_PORT_A;
+	// conf.red_led_gpio_config.pin 	= GPIO_STM32_PIN_3;
 	conf.red_led_gpio_config.dir 	= GPIO_OUTPUT;
 	conf.red_led_gpio_config.pull 	= GPIO_PULL_UPDOWN_NONE;
 
@@ -184,18 +188,19 @@ static inline mavrimini_conf_t mavrimini_default_config()
 	// Serial config
 	// -------------------------------------------------------------------------
 	conf.serial_1_config 				= serial_stm32_default_config();
+	conf.serial_1_config.device			= SERIAL_STM32_2;
 	conf.serial_1_config.baudrate		= 57600;
-	conf.serial_1_configdatabits		= SERIAL_STM32_DATABITS_8;
-	conf.serial_1_configstopbits		= SERIAL_STM32_STOPBITS_1;
-	conf.serial_1_configparity			= SERIAL_STM32_PARITY_NONE;
-	conf.serial_1_configmode			= SERIAL_STM32_MODE_TX_RX;
-	conf.serial_1_configflow_control 	= SERIAL_STM32_FLOWCONTROL_NONE;
-	conf.serial_1_configrx_port			= GPIO_STM32_PORT_C;	
-	conf.serial_1_configrx_pin			= GPIO_STM32_PIN_3;
-	conf.serial_1_configrx_af			= GPIO_STM32_AF_7;
-	conf.serial_1_configtx_port			= GPIO_STM32_PORT_C;	
-	conf.serial_1_configtx_pin			= GPIO_STM32_PIN_2;
-	conf.serial_1_configtx_af			= GPIO_STM32_AF_7;
+	conf.serial_1_config.databits		= SERIAL_STM32_DATABITS_8;
+	conf.serial_1_config.stopbits		= SERIAL_STM32_STOPBITS_1;
+	conf.serial_1_config.parity			= SERIAL_STM32_PARITY_NONE;
+	conf.serial_1_config.mode			= SERIAL_STM32_MODE_TX_RX;
+	conf.serial_1_config.flow_control 	= SERIAL_STM32_FLOWCONTROL_NONE;
+	conf.serial_1_config.rx_port		= GPIO_STM32_PORT_A;	
+	conf.serial_1_config.rx_pin			= GPIO_STM32_PIN_3;
+	conf.serial_1_config.rx_af			= GPIO_STM32_AF_7;
+	conf.serial_1_config.tx_port		= GPIO_STM32_PORT_A;	
+	conf.serial_1_config.tx_pin			= GPIO_STM32_PIN_2;
+	conf.serial_1_config.tx_af			= GPIO_STM32_AF_7;
 
 	// -------------------------------------------------------------------------
 	// Servo config

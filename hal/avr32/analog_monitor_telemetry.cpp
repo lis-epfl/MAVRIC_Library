@@ -44,7 +44,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

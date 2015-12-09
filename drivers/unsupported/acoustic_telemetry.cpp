@@ -44,7 +44,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 void acoustic_telemetry_send (const audio_t* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

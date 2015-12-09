@@ -47,7 +47,7 @@
 #include "led.h"
 #include <stdint.h>
 #include "adcifa.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 #include "dac_dma.h"
 #include "sysclk.h"
 

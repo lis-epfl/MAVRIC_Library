@@ -45,7 +45,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include <stdbool.h>
 	#include <stdlib.h>
 	#include <math.h>

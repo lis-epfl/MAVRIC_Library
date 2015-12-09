@@ -71,7 +71,7 @@
 
 extern "C" 
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "ahrs.h"
 	#include "pid_controller.h"
 	#include "print_util.h"

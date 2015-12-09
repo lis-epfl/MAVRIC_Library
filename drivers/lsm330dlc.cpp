@@ -47,7 +47,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 const uint8_t LSM330_ACC_SLAVE_ADDRESS		= 	0b0011000;	///< Define the Accelerometer Address, as a slave on the i2c bus

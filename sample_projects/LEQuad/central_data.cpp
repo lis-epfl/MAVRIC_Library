@@ -53,7 +53,7 @@
 
 extern "C" 
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "navigation_default_config.h"
 	#include "qfilter_default_config.h"
 	#include "scheduler_default_config.h"

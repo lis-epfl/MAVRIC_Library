@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 // void servos_telemetry_mavlink_send(servos_t* servos, mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

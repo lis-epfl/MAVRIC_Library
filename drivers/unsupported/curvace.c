@@ -43,7 +43,7 @@
 #include "curvace.h"
 #include "maths.h"
 #include "quick_trig.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 #include "gpio.h"
 #include "spi.h"
 #include "sysclk.h"

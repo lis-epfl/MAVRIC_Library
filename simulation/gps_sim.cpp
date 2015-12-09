@@ -44,7 +44,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "constants.h"
 }
 
