@@ -210,7 +210,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		input.rpy[1] += stabilisation_wing->pitch_angle_apriori;	// Constant compensation for horizontal
 		if(abs(attitude.rpy[ROLL]) < PI/2.0f)						// Compensation for the roll bank angle
 		{
-			input.rpy[1] += stabilisation_wing->pitch_angle_apriori_gain * (1.0/cosf(attitude.rpy[ROLL]) - 1.0);
+			input.rpy[1] += stabilisation_wing->pitch_angle_apriori_gain * (1.0/maths_f_abs(cosf(attitude.rpy[ROLL])) - 1.0);
 		}
 		
 		// run absolute attitude_filter controller
