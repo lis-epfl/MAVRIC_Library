@@ -656,7 +656,7 @@ static stabilisation_copter_conf_t stabilisation_copter_custom_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 5.0f,  							//< Default = 4.0f
+					.p_gain = 5.0f,  							///< Default = 4.0f
 					.clip_min = -12.0f,
 					.clip_max = 12.0f,
 					.integrator={
@@ -680,7 +680,7 @@ static stabilisation_copter_conf_t stabilisation_copter_custom_config =
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 5.0f,								//< Default = 4.0f
+					.p_gain = 5.0f,								///< Default = 4.0f
 					.clip_min = -12.0f,
 					.clip_max = 12.0f,
 					.integrator={
