@@ -55,6 +55,7 @@ extern "C" {
 #include "mavlink_communication.h"
 #include "state.h"
 #include "qfilter.h"
+#include "dubin.h"
 
 #define MAX_WAYPOINTS 10		///< The maximal size of the waypoint list
 
@@ -88,6 +89,7 @@ typedef struct
 	local_coordinates_t waypoint;								///< The local coordinates of the waypoint
 	float radius;												///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
 	float loiter_time;											///< The loiter time at the waypoint
+	dubin_t dubin;
 }waypoint_local_struct_t;
 
 typedef struct

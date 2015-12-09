@@ -88,6 +88,13 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 static void navigation_set_vector_field_command(navigation_t* navigation, const float rel_pos[3], float radius);
 
 /**
+ * \brief   					Computes the Dubin path
+ * 
+ * \param 	navigation   		Pointer to navigation
+ */
+static void navigation_set_dubin_velocity(navigation_t* navigation);
+
+/**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
  * \param	navigation			The navigation structure
@@ -339,10 +346,87 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 		float dir_desired_sg[3];
 		quaternions_rotate_vector(q_rot, dir_desired, dir_desired_sg);
 
+		navigation->controls_nav->tvel[X] = dir_desired_sg[X];
+		navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
+		navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
+	}
+
+	float rel_heading;
+	rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - navigation->position_estimation->local_position.heading);
+	
+	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
+}
+
+static void navigation_set_dubin_velocity(navigation_t* navigation)
+{
+	float dir_desired[3], rel_pos[3];
+	float dist2wp_sqr;
+
+
+	switch(navigation->goal.dubin.dubin_state)
+	{
+		case CIRCLE1:
+			dubin_circle(	dir_desired, 
+							navigation->goal.dubin.circle_center_1, 
+							navigation->goal.radius, 
+							navigation->position_estimation->local_position.pos, 
+							navigation->cruise_speed );
+			for (uint8_t i = 0; i < 3; ++i)
+			{
+				rel_pos[i] = navigation->goal.dubin.circle_center_1[i] - navigation->position_estimation->local_position.pos[i];
+			}
+			dist2wp_sqr = vectors_norm_sqr(rel_pos);
+
+			if (dist2wp_sqr < 25.0f)
+			{
+				navigation->goal.dubin.dubin_state = STRAIGHT;
+			}
+		break;
+
+		case STRAIGHT:
+			dubin_line(	dir_desired, 
+						navigation->goal.dubin.line_direction,
+						navigation->goal.dubin.tangent_point_2,
+						navigation->position_estimation->local_position.pos,
+						navigation->cruise_speed);
+			
+			for (uint8_t i = 0; i < 3; ++i)
+			{
+				rel_pos[i] = navigation->goal.dubin.circle_center_1[i] - navigation->position_estimation->local_position.pos[i];
+			}
+			dist2wp_sqr = vectors_norm_sqr(rel_pos);
+
+			if (dist2wp_sqr < 25.0f)
+			{
+				navigation->goal.dubin.dubin_state = CIRCLE2;
+			}
+		break;
+
+		case CIRCLE2:
+			dubin_circle(	dir_desired, 
+							navigation->goal.dubin.circle_center_2, 
+							navigation->goal.radius, 
+							navigation->position_estimation->local_position.pos, 
+							navigation->cruise_speed );
+		break;
+	}
+
+	// Transform the vector in the semi-global reference frame
+	quat_t q_rot;
+	aero_attitude_t attitude_yaw;
+	attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
+	attitude_yaw.rpy[0] = 0.0f;
+	attitude_yaw.rpy[1] = 0.0f;
+	attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+	q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+	float dir_desired_sg[3];
+	quaternions_rotate_vector(q_rot, dir_desired, dir_desired_sg);
+
 	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
 	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
-	
+
 	float rel_heading;
 	rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - navigation->position_estimation->local_position.heading);
 	
@@ -352,7 +436,6 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 static void navigation_run(navigation_t* navigation)
 {
 	float rel_pos[3];
-	mav_mode_t mode = navigation->state->mav_mode;
 	
 	// Control in translational speed of the platform
 	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.waypoint.pos,
@@ -360,27 +443,19 @@ static void navigation_run(navigation_t* navigation)
 																					navigation->position_estimation->local_position.pos);
 	
 	// For Quad
-	//mav_mode_t mode = navigation->state->mav_mode;
-	//if ((mode.AUTO == AUTO_ON) && (((!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
-	//{
+	mav_mode_t mode = navigation->state->mav_mode;
+	if ((mode.AUTO == AUTO_ON) && (((!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
+	{
 		//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
-	//}
-	//else
-	//{
-		//navigation_set_speed_command(rel_pos, navigation);
-	//}
+		navigation_set_dubin_velocity(navigation);
+	}
+	else
+	{
+		navigation_set_speed_command(rel_pos, navigation);
+	}
 	
 	// For Wing
-	navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
-
-	// if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
-	// {
-	// 	navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
-	// }
-	// else
-	// {
-	// 	navigation_set_speed_command(rel_pos, navigation);
-	// }
+	//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
 
 	navigation->controls_nav->theading=navigation->goal.waypoint.heading;
 }

@@ -1712,6 +1712,12 @@ waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(waypoint_struct
 	wpt.radius = current_waypoint->param2;
 	wpt.loiter_time = current_waypoint->param1;
 
+	// wpt.dubin = dubin_2d(,
+	// 	wpt.waypoint.pos,
+	// 	,
+	// 	,
+	// 	,);
+
 	return wpt;
 }
 

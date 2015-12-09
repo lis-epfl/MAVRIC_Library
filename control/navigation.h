@@ -60,6 +60,7 @@ extern "C" {
 #include "pid_controller.h"
 #include <stdbool.h>
 #include "vector_field_waypoint.h"
+#include "dubin.h"
 
 /**
  * \brief The navigation structure
