@@ -215,7 +215,7 @@ proj: $(PROJ_NAME).elf
 # Linking
 ${PROJ_NAME}.elf: ${OBJS}
 	@echo Linking...
-	@$(CXX) $(LDFLAGS) $^ -o $@  
+	@$(CXX) $^ -o $@ $(LDFLAGS)  
 	@$(BUILD_CMD)
 	
 # C files in Library
