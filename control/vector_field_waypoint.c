@@ -562,6 +562,7 @@ bool vector_field_circular_waypoint(const float rel_pos[3], const float attracti
 		{
 			direction_radial[X] = AC[X] / dist_to_circle;
 			direction_radial[Y] = AC[Y] / dist_to_circle;
+			#warning clip vertical velocity
 			direction_radial[Z] = AC[Z] / dist_to_circle;
 		}
 		else
