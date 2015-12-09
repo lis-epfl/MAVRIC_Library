@@ -123,6 +123,7 @@ static void vector_field_repulsor_sphere(const float rel_pos[3], const float rep
  */
 static void vector_field_reference_frame(vector_field_waypoint_t* vector_field, float goal_pos[3], float new_goal_pos[3]);
 
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -427,6 +428,10 @@ task_return_t vector_field_waypoint_update(vector_field_waypoint_t* vector_field
 	float dir_desired[3];
 
 	uint32_t j;
+
+	tmp_vector[X] = 0.0f;
+	tmp_vector[Y] = 0.0f;
+	tmp_vector[Z] = 0.0f;
 
 	// Re-init velocity command
 	vector_field->velocity_command->mode 	= vector_field->command_mode;
