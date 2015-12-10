@@ -83,10 +83,10 @@ static void dubin_find_tangent(float t1[3], float t2[3], const float c1[3], cons
 static float dubin_path_length(float t1[3], float t2[3], const float c1[3], const float c2[3], const float wp1[3], const float wp2[3], const int8_t sense1, const int8_t sense2);
 
 
-void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[3], const float pos[3], const float speed)
+void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[3], const float pos[3], const float speed, const float one_over_scaling)
 {
 	//parameters
-	float one_over_scaling=0.1; //defines the main influence area [m^-1]
+	//float one_over_scaling=0.1; //defines the main influence area [m^-1]
 	
 	float e_t[3], e_r[3]; //tangential and radial unit vectors
 	float v_t_norm, v_r_norm;
@@ -145,7 +145,7 @@ void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[
 	}
 }
 
-void dubin_circle(float tvel[3], const float circle[3], const float radius, const float pos[3], const float speed)
+void dubin_circle(float tvel[3], const float circle[3], const float radius, const float pos[3], const float speed, const float one_over_scaling)
 {
 	//print_util_dbg_print("dubin_circle\r\n");
 
@@ -182,7 +182,7 @@ void dubin_circle(float tvel[3], const float circle[3], const float radius, cons
 		//tan_origin[Z] = 0.0f;
 
 		//compute a vectorfield using the tangent.
-		dubin_line(tvel, tan_dir, tan_origin, pos, speed);
+		dubin_line(tvel, tan_dir, tan_origin, pos, speed, one_over_scaling);
 	}
 }
 
