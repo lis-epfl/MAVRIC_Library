@@ -224,29 +224,29 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				}
 			}
 
-			// check battery level
-			if( state_machine->state->battery.is_low )
-			{
-				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
-				state_new = MAV_STATE_CRITICAL;
-				mode_custom_new |= CUST_BATTERY_LOW;
-			}
-			else
-			{
-				mode_custom_new &= ~CUST_BATTERY_LOW;
-			}
+			// // check battery level
+			// if( state_machine->state->battery.is_low )
+			// {
+			// 	print_util_dbg_print("Battery low! Performing critical landing.\r\n");
+			// 	state_new = MAV_STATE_CRITICAL;
+			// 	mode_custom_new |= CUST_BATTERY_LOW;
+			// }
+			// else
+			// {
+			// 	mode_custom_new &= ~CUST_BATTERY_LOW;
+			// }
 			
-			// check connection with GND station
-			if ( state_machine->state->connection_lost)
-			{
-				print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
-				state_new = MAV_STATE_CRITICAL;
-				mode_custom_new |= CUST_HEARTBEAT_LOST;
-			}
-			else
-			{
-				mode_custom_new &= ~CUST_HEARTBEAT_LOST;
-			}
+			// // check connection with GND station
+			// if ( state_machine->state->connection_lost)
+			// {
+			// 	print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
+			// 	state_new = MAV_STATE_CRITICAL;
+			// 	mode_custom_new |= CUST_HEARTBEAT_LOST;
+			// }
+			// else
+			// {
+			// 	mode_custom_new &= ~CUST_HEARTBEAT_LOST;
+			// }
 			
 			// // check whether out_of_fence_1
 			// if (state_machine->state->out_of_fence_1)
