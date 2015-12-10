@@ -802,6 +802,22 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 				{
 					rel_pos[i] = navigation->waypoint_handler->waypoint_next.waypoint.pos[i]-navigation->waypoint_handler->waypoint_coordinates.waypoint.pos[i];
 				}
+
+				float rel_pos_norm[3];
+
+				vectors_normalize(rel_pos, rel_pos_norm);
+
+				float outter_pt[3];
+				outter_pt[X] = navigation->waypoint_handler->waypoint_next.waypoint.pos[X]-rel_pos_norm[Y]*navigation->waypoint_handler->waypoint_next.radius;
+				outter_pt[Y] = navigation->waypoint_handler->waypoint_next.waypoint.pos[Y]+rel_pos_norm[X]*navigation->waypoint_handler->waypoint_next.radius;
+				outter_pt[Z] = 0.0f;
+
+				for (uint8_t i=0;i<3;i++)
+				{
+					rel_pos[i] = outter_pt[i]-navigation->waypoint_handler->waypoint_coordinates.waypoint.pos[i];
+				}
+
+
 				float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
 
 				if (maths_f_abs(rel_heading) < PI/12.0f)
@@ -814,9 +830,8 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 					navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 1;
 					navigation->waypoint_handler->next_waypoint.current = 0;
 					navigation->waypoint_handler->current_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
-					navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(	&navigation->waypoint_handler->current_waypoint, 
-																													navigation->waypoint_handler->position_estimation->local_position,
-																													&navigation->waypoint_handler->dubin_state);
+					navigation->waypoint_handler->waypoint_coordinates = navigation->waypoint_handler->waypoint_next;
+					navigation->waypoint_handler->dubin_state = INIT;
 
 					mavlink_message_t msg;
 					mavlink_msg_mission_current_pack( 	navigation->mavlink_stream->sysid,
