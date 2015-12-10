@@ -340,7 +340,8 @@ static void navigation_set_dubin_field_command(navigation_t* navigation, float r
 					navigation->goal.waypoint.pos,
 					navigation->goal.radius,
 					navigation->position_estimation->local_position.pos,
-					navigation->cruise_speed);
+					navigation->cruise_speed,
+					navigation->one_over_scaling);
 
 	// Transform the vector in the semi-global reference frame
 	quat_t q_rot;
@@ -1170,6 +1171,8 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->attractiveness = nav_config->attractiveness;
 	navigation->attractiveness2 = nav_config->attractiveness2;
 	
+	navigation->one_over_scaling = nav_config->one_over_scaling;
+
 	navigation->soft_zone_size = nav_config->soft_zone_size;
 	
 	navigation->alt_lpf = nav_config->alt_lpf;

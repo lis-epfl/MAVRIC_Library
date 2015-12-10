@@ -75,6 +75,7 @@ typedef struct
 	float soft_zone_size;								///< Soft zone of the velocity controller
 	float attractiveness;								///< Attractiveness of a waypoint
 	float attractiveness2;								///< Attractiveness of a waypoint
+	float one_over_scaling;								///< Line vector field parameter
 
 	waypoint_local_struct_t goal;						///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
 	dubin_t dubin;
@@ -123,6 +124,7 @@ typedef struct
 	float max_climb_rate;								///< Max climb rate in m/s
 	float attractiveness;								///< Attractiveness of a waypoint
 	float attractiveness2;								///< Attractiveness of a waypoint
+	float one_over_scaling;								///< Line vector field parameter
 	
 	float soft_zone_size;								///< Soft zone of the velocity controller
 	

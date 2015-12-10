@@ -56,6 +56,7 @@ navigation_config_t navigation_default_config =
 	.max_climb_rate = 1.0f,
 	.attractiveness = 2.5f,
 	.attractiveness2 = 0.005f,
+	.one_over_scaling = 0.1f,
 	.soft_zone_size = 0.0f,
 	.alt_lpf = 0.0f,
 	.LPF_gain = 0.9f,
