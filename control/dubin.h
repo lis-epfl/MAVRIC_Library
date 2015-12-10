@@ -65,6 +65,8 @@ typedef struct
 	float old_radius;
 }dubin_t;
 
+//void dubin_test_code(void);
+
 void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[3], const float pos[3], const float speed, const float one_over_scaling);
 
 void dubin_circle(float tvel[3], const float circle[3], const float radius, const float pos[3], const float speed, const float one_over_scaling);
