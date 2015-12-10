@@ -145,8 +145,10 @@ void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[
 	}
 }
 
-void dubin_circle(float tvel[3], const float circle[3], const float radius, const float pos[3], const float speed, const float one_over_scaling)
+void dubin_circle(float tvel[3], const float circle[3], float radius_mavlink, const float pos[3], float speed, float one_over_scaling)
 {
+	float radius = -radius_mavlink;
+
 	float tan_dir[3], tan_origin[3];
 	float rel_pos_norm[3];
 
@@ -333,8 +335,10 @@ static float dubin_path_length(float t1[3], float t2[3], const float c1[3], cons
 // 	delay_ms(1000);
 // }
 
-dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], const float d2[3], float sense_2)
+dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], const float d2[3], float sense_mavlink)
 {
+	float sense_2 = - sense_mavlink;
+
 	dubin_t out,temp;
 	
 	out.length=0;
