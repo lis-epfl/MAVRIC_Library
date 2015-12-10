@@ -429,7 +429,7 @@ static void navigation_dubin_state_machine(navigation_t* navigation, waypoint_lo
 			print_util_dbg_print("INIT\r\n");
 			if (navigation->state->nav_plan_active)
 			{
-				init_radius = navigation->goal.radius;
+				init_radius = maths_f_abs(navigation->goal.radius);
 			}
 			else
 			{
