@@ -41,6 +41,7 @@
 
 #include "dubin.h"
 #include "print_util.h"
+#include "delay.h"
 
 /**
  * \brief 		Computes the arc length between two point of a circle
@@ -312,23 +313,23 @@ static float dubin_path_length(float t1[3], float t2[3], const float c1[3], cons
 
 // 	float wp1[3], wp2[3], d1[3], d2[3], sense_2;
 
-// 	wp1[X] = 24.8280f;
-// 	wp1[Y] = -14.4537f;
-// 	wp1[Z] = -99.3874f;
+// 	wp1[X] = -66.676f;
+// 	wp1[Y] = 41.777f;
+// 	wp1[Z] = -30.004f;
 
-// 	wp2[X] = 23.3784f;
-// 	wp2[Y] = 100.4476f;
-// 	wp2[Z] = -25.0f;
+// 	wp2[X] = 72.576f;
+// 	wp2[Y] = -5.029f;
+// 	wp2[Z] = 0.0f;
 
-// 	d1[X] = 17.5892f;
-// 	d1[Y] = 24.2995;
+// 	d1[X] = -38.436f;
+// 	d1[Y] = -11.071;
 // 	d1[Z] = 0.0f;
 
-// 	d2[X] = 29.9976f;
-// 	d2[Y] = 0.3784f;
+// 	d2[X] = -9.558f;
+// 	d2[Y] = -28.436f;
 // 	d2[Z] = 0.0f;
 
-// 	sense_2 =1.0;
+// 	sense_2 = -1.0;
 
 // 	dubin_2d(wp1, wp2, d1, d2, sense_2);
 
@@ -337,7 +338,7 @@ static float dubin_path_length(float t1[3], float t2[3], const float c1[3], cons
 
 dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], const float d2[3], float sense_mavlink)
 {
-	float sense_2 = - sense_mavlink;
+	float sense_2 = -sense_mavlink;
 
 	dubin_t out,temp;
 	
@@ -404,7 +405,7 @@ dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], cons
 												wp2,
 												temp.sense_1,
 												sense_2);
-
+			
 			for (j = 0; j < 2; j++)
 			{
 				temp.line_direction[j] = temp.tangent_point_2[j] - temp.tangent_point_1[j];

@@ -67,6 +67,8 @@ typedef struct
 	float length;						///< The length of the trajectory (to compare multiple Dubin paths)
 }dubin_t;
 
+//void dubin_test_code(void);
+
 /**
  * \brief 		Vector field to follow a line
  * 				 
