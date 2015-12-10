@@ -89,12 +89,12 @@ typedef struct
 	local_coordinates_t waypoint;								///< The local coordinates of the waypoint
 	float radius;												///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
 	float loiter_time;											///< The loiter time at the waypoint
-	dubin_t dubin;
+	dubin_t dubin;												///< The Dubin structure
 }waypoint_local_struct_t;
 
 typedef struct
 {
-	dubin_state_t dubin_state;
+	dubin_state_t dubin_state;									///< The internal Dubin state
 	waypoint_struct_t waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
 	waypoint_struct_t current_waypoint;							///< The structure of the current waypoint
 	waypoint_struct_t next_waypoint;							///< The structure of the next waypoint
@@ -191,6 +191,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	local_position			The local position structure
+ * \param 	dubin_state 			The pointer to the Dubin internal state
  *
  * \return	The waypoint in local coordinate frame
  */
