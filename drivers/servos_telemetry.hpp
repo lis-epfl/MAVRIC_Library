@@ -45,18 +45,28 @@
 #define SERVOS_TELEMETRY_H_
 
 #include "mavlink_stream.hpp"
+#include "servo.hpp"
+
 extern "C"
 {
 	// #include "servos.h"
 }
 
 /**
+ * \brief The servo telemetry definition
+ */
+typedef struct 
+{
+	Servo* servos[8];					///< The pointer to the first servo
+} servos_telemetry_t;
+
+/**
  * \brief	Sends the MAVLink message for the servos
  * 
- * \param	servos					The pointer to the servos structure
+ * \param	servos_telemetry		The pointer to the servos_telemetry structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-// void servos_telemetry_mavlink_send(servos_t* servos, mavlink_stream_t* mavlink_stream_t, mavlink_message_t* msg);
+/void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, mavlink_stream_t* mavlink_stream_t, mavlink_message_t* msg);
 
 #endif /* SERVOS_TELEMETRY_H_ */
