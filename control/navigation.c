@@ -435,6 +435,14 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 													dir_final,
 													maths_sign(navigation->goal.radius));
 				navigation->waypoint_handler->dubin_state = CIRCLE1;
+				print_util_dbg_print("CIRCLE1\r\n");
+				print_util_dbg_print("circle_1(x100): (");
+				print_util_dbg_print_num(navigation->goal.dubin.circle_center_1[X]*100,10);
+				print_util_dbg_print_num(navigation->goal.dubin.circle_center_1[Y]*100,10);
+				print_util_dbg_print_num(navigation->goal.dubin.circle_center_1[Z]*100,10);
+				print_util_dbg_print("), radius(x100): ");
+				print_util_dbg_print_num(navigation->goal.radius*100,10);
+				print_util_dbg_print("\r\n");
 			}
 			else
 			{
@@ -449,13 +457,13 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 				navigation->goal.dubin.circle_center_2[Z] = 0.0f;
 
 				navigation->waypoint_handler->dubin_state = CIRCLE2;
+				print_util_dbg_print("CIRCLE2\r\n");
 
 				break;
 			}
 			
 			// No break here to follow directly the first waypoint
 		case CIRCLE1:
-			print_util_dbg_print("CIRCLE1\r\n");
 			dubin_circle(	dir_desired, 
 							navigation->goal.dubin.circle_center_1, 
 							navigation->goal.radius, 
@@ -470,11 +478,20 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 			if (heading_diff < PI/6.0f)
 			{
 				navigation->waypoint_handler->dubin_state = STRAIGHT;
+				print_util_dbg_print("STRAIGHT\r\n");
+				print_util_dbg_print("tangent_point_2(x100): (");
+				print_util_dbg_print_num(navigation->goal.dubin.tangent_point_2[X]*100,10);
+				print_util_dbg_print_num(navigation->goal.dubin.tangent_point_2[Y]*100,10);
+				print_util_dbg_print_num(navigation->goal.dubin.tangent_point_2[Z]*100,10);
+				print_util_dbg_print("), line_direction(x100): (");
+				print_util_dbg_print_num(navigation->goal.dubin.line_direction[X]*100,10);
+				print_util_dbg_print_num(navigation->goal.dubin.line_direction[Y]*100,10);
+				print_util_dbg_print_num(navigation->goal.dubin.line_direction[Z]*100,10);
+				print_util_dbg_print(")\r\n");
 			}
 		break;
 
 		case STRAIGHT:
-			print_util_dbg_print("STRAIGHT\r\n");
 			dubin_line(	dir_desired, 
 						navigation->goal.dubin.line_direction,
 						navigation->goal.dubin.tangent_point_2,
@@ -489,21 +506,24 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 
 			if (dist2wp_sqr < 25.0f)
 			{
+				print_util_dbg_print("CIRCLE2\r\n");
 				navigation->waypoint_handler->dubin_state = CIRCLE2;
+				print_util_dbg_print("circle_2(x100): (");
+				print_util_dbg_print_num(navigation->goal.dubin.circle_center_2[X]*100,10);
+				print_util_dbg_print_num(navigation->goal.dubin.circle_center_2[Y]*100,10);
+				print_util_dbg_print_num(navigation->goal.dubin.circle_center_2[Z]*100,10);
+				print_util_dbg_print("), radius(x100): ");
+				print_util_dbg_print_num(navigation->goal.radius*100,10);
+				print_util_dbg_print("\r\n");
 			}
 		break;
 
 		case CIRCLE2:
-			print_util_dbg_print("CIRCLE2\r\n");
 			dubin_circle(	dir_desired, 
 							navigation->goal.dubin.circle_center_2, 
 							navigation->goal.radius, 
 							navigation->position_estimation->local_position.pos, 
 							navigation->cruise_speed );
-			for (uint8_t i = 0; i < 2; ++i)
-			{
-				rel_pos[i] = navigation->goal.dubin.circle_center_2[i] - navigation->position_estimation->local_position.pos[i];
-			}
 		break;
 	}
 
@@ -542,8 +562,8 @@ static void navigation_run(navigation_t* navigation)
 	mav_mode_t mode = navigation->state->mav_mode;
 	if ((mode.AUTO == AUTO_ON) && (((!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
-		//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
-		navigation_set_dubin_velocity(navigation);
+		navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
+		//navigation_set_dubin_velocity(navigation);
 	}
 	else
 	{
@@ -1300,6 +1320,11 @@ task_return_t navigation_update(navigation_t* navigation)
 					{
 						navigation_waypoint_take_off_handler(navigation);
 						
+						if (!navigation->auto_takeoff)
+						{
+							break;
+						}
+
 						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
 						navigation_run(navigation);
 					}
