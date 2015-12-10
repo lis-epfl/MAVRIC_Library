@@ -45,7 +45,6 @@
 #include "time_keeper.h"
 #include "constants.h"
 #include "coord_conventions.h"
-#include "delay.h"
 
 #define KP_YAW 0.2f ///< Yaw gain for the navigation controller 
 
@@ -98,11 +97,19 @@ static void navigation_set_dubin_field_command(navigation_t* navigation, float r
 static void navigation_set_vector_field_command(navigation_t* navigation, const float rel_pos[3], float radius);
 
 /**
+ * \brief   					Controls the Dubin's path following
+ * 
+ * \param 	navigation   		Pointer to navigation
+ * \param 	waypoint_next 		The next waypoint
+ */
+static void navigation_dubin_state_machine(navigation_t* navigation, waypoint_local_struct_t* waypoint_next);
+
+/**
  * \brief   					Computes the Dubin path
  * 
  * \param 	navigation   		Pointer to navigation
  */
-static void navigation_set_dubin_velocity(navigation_t* navigation);
+static void navigation_set_dubin_velocity(navigation_t* navigation, dubin_t* dubin);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -302,8 +309,8 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_sg[Z] *= v_desired;
 	
 	/*
-	loop_count = loop_count++ %50;
-	if (loop_count == 0)
+	navigation->loop_count = navigation->loop_count++ %50;
+	if (navigation->loop_count == 0)
 	{
 		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
 		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigation->position_estimation->vel_bf)*100);
@@ -370,23 +377,16 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 	float dir_desired[3];
 
 	// Compute the vector field circular
-	// bool vector_field_good = vector_field_circular_waypoint(rel_pos, 
-	// 														navigation->attractiveness, 	// attractiveness
-	// 														navigation->attractiveness2, 	// attractiveness
-	// 														navigation->cruise_speed, 		// cruise_speed
-	// 														radius,							// radius
-	// 														dir_desired );
-
-	//vector_field_good = true;
-	dubin_circle(	dir_desired,
-					navigation->goal.waypoint.pos,
-					navigation->goal.radius,
-					navigation->position_estimation->local_position.pos,
-					navigation->cruise_speed);
+	bool vector_field_good = vector_field_circular_waypoint(rel_pos, 
+															navigation->attractiveness, 	// attractiveness
+															navigation->attractiveness2, 	// attractiveness
+															navigation->cruise_speed, 		// cruise_speed
+															radius,							// radius
+															dir_desired );
 
 	// If there is no computationnal error, update the command values, otherwise keep the last ones.
-	//if (vector_field_good == true)
-	//{
+	if (vector_field_good == true)
+	{
 		// Transform the vector in the semi-global reference frame
 		quat_t q_rot;
 		aero_attitude_t attitude_yaw;
@@ -403,7 +403,7 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 		navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
 		navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
 
-	//}
+	}
 
 	float rel_heading;
 	rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - navigation->position_estimation->local_position.heading);
@@ -411,9 +411,9 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
-static void navigation_set_dubin_velocity(navigation_t* navigation)
+static void navigation_dubin_state_machine(navigation_t* navigation, waypoint_local_struct_t* waypoint_next)
 {
-	float dir_desired[3], rel_pos[3];
+	float rel_pos[3];
 	float dist2wp_sqr;
 
 	rel_pos[Z] = 0.0f;
@@ -429,12 +429,10 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 			print_util_dbg_print("INIT\r\n");
 			if (navigation->state->nav_plan_active)
 			{
-				print_util_dbg_print("Nav plan active\r\n");
 				init_radius = navigation->goal.radius;
 			}
 			else
 			{
-				print_util_dbg_print("Nav plan inactive\r\n");
 				init_radius = 30.0f;
 			}
 
@@ -443,49 +441,45 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 			dir_init_bf[Z] = 0.0f;
 
 			attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
-			attitude_yaw.rpy[0] = 0.0f;
-			attitude_yaw.rpy[1] = 0.0f;
-			attitude_yaw.rpy[2] = attitude_yaw.rpy[2];
+			attitude_yaw.rpy[ROLL] = 0.0f;
+			attitude_yaw.rpy[PITCH] = 0.0f;
+			attitude_yaw.rpy[YAW] = attitude_yaw.rpy[2];
 			q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
 
 			quaternions_rotate_vector(q_rot, dir_init_bf, dir_init);
 
 			for (uint8_t i = 0; i < 2; ++i)
 			{
-				rel_pos[i] = navigation->goal.waypoint.pos[i]- navigation->position_estimation->local_position.pos[i];
+				rel_pos[i] = waypoint_next->waypoint.pos[i]- navigation->position_estimation->local_position.pos[i];
 			}
-			rel_pos[2] = 0.0f;
+			rel_pos[Z] = 0.0f;
 
 			float dir_final[3];
 			float pos_goal[3];
+			float rel_pos_norm[3];
 			
 			if (vectors_norm_sqr(rel_pos) > 0.1f)
 			{
-				vectors_normalize(rel_pos,rel_pos);
+				vectors_normalize(rel_pos,rel_pos_norm);
 
-				dir_final[X] = rel_pos[Y]*navigation->goal.radius;
-				dir_final[Y] = -rel_pos[X]*navigation->goal.radius;
+				dir_final[X] = -rel_pos_norm[Y]*waypoint_next->radius;
+				dir_final[Y] = rel_pos_norm[X]*waypoint_next->radius;
 				dir_final[Z] = 0.0f;
 
-				for (uint8_t i = 0; i < 3; ++i)
+				for (uint8_t i = 0; i < 2; ++i)
 				{
-					pos_goal[i] = navigation->goal.waypoint.pos[i] + rel_pos[i]*navigation->goal.radius;
+					pos_goal[i] = waypoint_next->waypoint.pos[i] + rel_pos_norm[i]*maths_f_abs(waypoint_next->radius);
 				}
+				pos_goal[Z] = 0.0f;
 
-				navigation->goal.dubin = dubin_2d(	navigation->position_estimation->local_position.pos,
+				waypoint_next->dubin = dubin_2d(	navigation->position_estimation->local_position.pos,
 													pos_goal,
 													dir_init,
 													dir_final,
-													maths_sign(navigation->goal.radius));
+													maths_sign(waypoint_next->radius));
+
 				navigation->waypoint_handler->dubin_state = CIRCLE1;
 				print_util_dbg_print("CIRCLE1\r\n");
-				print_util_dbg_print("circle_1(x100): (");
-				print_util_dbg_print_num(navigation->goal.dubin.circle_center_1[X]*100,10);
-				print_util_dbg_print_num(navigation->goal.dubin.circle_center_1[Y]*100,10);
-				print_util_dbg_print_num(navigation->goal.dubin.circle_center_1[Z]*100,10);
-				print_util_dbg_print("), radius(x100): ");
-				print_util_dbg_print_num(navigation->goal.radius*100,10);
-				print_util_dbg_print("\r\n");
 			}
 			else
 			{
@@ -495,82 +489,97 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 
 				for (uint8_t i = 0; i < 2; ++i)
 				{
-					navigation->goal.dubin.circle_center_2[i] = navigation->position_estimation->local_position.pos[i];
+					waypoint_next->dubin.circle_center_2[i] = navigation->position_estimation->local_position.pos[i];
 				}
-				navigation->goal.dubin.circle_center_2[Z] = 0.0f;
+				waypoint_next->dubin.circle_center_2[Z] = 0.0f;
 
 				navigation->waypoint_handler->dubin_state = CIRCLE2;
 				print_util_dbg_print("CIRCLE2\r\n");
-
-				break;
 			}
-			
-			// No break here to follow directly the first waypoint
+
+			break;
 		case CIRCLE1:
-			dubin_circle(	dir_desired, 
-							navigation->goal.dubin.circle_center_1, 
-							navigation->goal.radius, 
-							navigation->position_estimation->local_position.pos, 
-							navigation->cruise_speed );
 			for (uint8_t i = 0; i < 2; ++i)
 			{
-				rel_pos[i] = navigation->goal.dubin.tangent_point_2[i] - navigation->position_estimation->local_position.pos[i];
+				rel_pos[i] = waypoint_next->dubin.tangent_point_2[i] - navigation->position_estimation->local_position.pos[i];
 			}
 			float heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X])-navigation->position_estimation->local_position.heading);
 
-			if (heading_diff < PI/6.0f)
+			if (maths_f_abs(heading_diff) < PI/6.0f)
 			{
 				navigation->waypoint_handler->dubin_state = STRAIGHT;
 				print_util_dbg_print("STRAIGHT\r\n");
-				print_util_dbg_print("tangent_point_2(x100): (");
-				print_util_dbg_print_num(navigation->goal.dubin.tangent_point_2[X]*100,10);
-				print_util_dbg_print_num(navigation->goal.dubin.tangent_point_2[Y]*100,10);
-				print_util_dbg_print_num(navigation->goal.dubin.tangent_point_2[Z]*100,10);
-				print_util_dbg_print("), line_direction(x100): (");
-				print_util_dbg_print_num(navigation->goal.dubin.line_direction[X]*100,10);
-				print_util_dbg_print_num(navigation->goal.dubin.line_direction[Y]*100,10);
-				print_util_dbg_print_num(navigation->goal.dubin.line_direction[Z]*100,10);
-				print_util_dbg_print(")\r\n");
 			}
-		break;
-
 		case STRAIGHT:
-			dubin_line(	dir_desired, 
-						navigation->goal.dubin.line_direction,
-						navigation->goal.dubin.tangent_point_2,
-						navigation->position_estimation->local_position.pos,
-						navigation->cruise_speed);
-			
 			for (uint8_t i = 0; i < 2; ++i)
 			{
-				rel_pos[i] = navigation->goal.dubin.tangent_point_2[i] - navigation->position_estimation->local_position.pos[i];
+				rel_pos[i] = waypoint_next->dubin.tangent_point_2[i] - navigation->position_estimation->local_position.pos[i];
 			}
 			dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
 			if (dist2wp_sqr < 25.0f)
 			{
-				print_util_dbg_print("CIRCLE2\r\n");
 				navigation->waypoint_handler->dubin_state = CIRCLE2;
-				print_util_dbg_print("circle_2(x100): (");
-				print_util_dbg_print_num(navigation->goal.dubin.circle_center_2[X]*100,10);
-				print_util_dbg_print_num(navigation->goal.dubin.circle_center_2[Y]*100,10);
-				print_util_dbg_print_num(navigation->goal.dubin.circle_center_2[Z]*100,10);
-				print_util_dbg_print("), radius(x100): ");
-				print_util_dbg_print_num(navigation->goal.radius*100,10);
-				print_util_dbg_print("\r\n");
+				print_util_dbg_print("CIRCLE2\r\n");
 			}
+		case CIRCLE2:
+		break;
+	}
+}
+
+static void navigation_set_dubin_velocity(navigation_t* navigation, dubin_t* dubin)
+{
+	float dir_desired[3], rel_pos[3];
+
+	rel_pos[Z] = 0.0f;
+
+	quat_t q_rot;
+	aero_attitude_t attitude_yaw;
+
+	switch(navigation->waypoint_handler->dubin_state)
+	{
+		case INIT:
+			dubin_circle(	dir_desired, 
+							dubin->circle_center_1, 
+							navigation->goal.radius, 
+							navigation->position_estimation->local_position.pos, 
+							navigation->cruise_speed,
+							navigation->one_over_scaling );
+			break;
+		case CIRCLE1:
+			dubin_circle(	dir_desired, 
+							dubin->circle_center_1, 
+							navigation->goal.radius, 
+							navigation->position_estimation->local_position.pos, 
+							navigation->cruise_speed,
+							navigation->one_over_scaling );
+		break;
+
+		case STRAIGHT:
+			dubin_line(	dir_desired, 
+						dubin->line_direction,
+						dubin->tangent_point_2,
+						navigation->position_estimation->local_position.pos,
+						navigation->cruise_speed,
+						navigation->one_over_scaling);
 		break;
 
 		case CIRCLE2:
 			dubin_circle(	dir_desired, 
-							navigation->goal.dubin.circle_center_2, 
+							dubin->circle_center_2, 
 							navigation->goal.radius, 
 							navigation->position_estimation->local_position.pos, 
-							navigation->cruise_speed );
+							navigation->cruise_speed,
+							navigation->one_over_scaling );
 		break;
 	}
 
-	dir_desired[Z] = navigation->goal.waypoint.pos[Z] - navigation->position_estimation->local_position.pos[Z];
+	float vert_vel = navigation->goal.waypoint.pos[Z] - navigation->position_estimation->local_position.pos[Z];;
+
+	vert_vel = maths_f_max(-1.0, vert_vel);
+	vert_vel = maths_f_min(1.0, vert_vel);
+
+	dir_desired[Z] = vert_vel;
 
 	// Transform the vector in the semi-global reference frame
 	attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
@@ -584,7 +593,7 @@ static void navigation_set_dubin_velocity(navigation_t* navigation)
 
 	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
-	//navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
+	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
 
 	float rel_heading;
 	rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - navigation->position_estimation->local_position.heading);
@@ -606,7 +615,10 @@ static void navigation_run(navigation_t* navigation)
 	if ((mode.AUTO == AUTO_ON) && (((!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
-		navigation_set_dubin_velocity(navigation);
+		navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
+
+
+		//navigation_set_dubin_field_command(navigation, navigation->goal.radius);
 	}
 	else
 	{
@@ -614,9 +626,7 @@ static void navigation_run(navigation_t* navigation)
 	}
 	
 	// For Wing
-	//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
-
-	navigation_set_dubin_field_command(navigation, navigation->goal.radius);
+	//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);	
 
 	navigation->controls_nav->theading=navigation->goal.waypoint.heading;
 }
@@ -730,6 +740,7 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 	//if (navigation->mode != navigation->state->mav_mode.byte)
 	if (!navigation_mode_change(navigation))
 	{
+		navigation->waypoint_handler->dubin_state = INIT;
 		navigation->waypoint_handler->hold_waypoint_set = false;
 	}
 	
@@ -781,18 +792,19 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 					}
 					navigation->waypoint_handler->next_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
 					navigation->waypoint_handler->next_waypoint.current = 1;
-					navigation->waypoint_handler->waypoint_next = waypoint_handler_set_waypoint_from_frame(	&navigation->waypoint_handler->next_waypoint, 
+					dubin_state_t dubin_state;
+					navigation->waypoint_handler->waypoint_next = waypoint_handler_set_waypoint_from_frame(&navigation->waypoint_handler->next_waypoint, 
 																											navigation->waypoint_handler->position_estimation->local_position,
-																											&navigation->waypoint_handler->dubin_state);
+																											&dubin_state);
 				}
 				
 				for (uint8_t i=0;i<3;i++)
 				{
-					rel_pos[i] = navigation->waypoint_handler->waypoint_next.waypoint.pos[i]-navigation->waypoint_handler->position_estimation->local_position.pos[i];
+					rel_pos[i] = navigation->waypoint_handler->waypoint_next.waypoint.pos[i]-navigation->waypoint_handler->waypoint_coordinates.waypoint.pos[i];
 				}
 				float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
 
-				if (maths_f_abs(rel_heading) < PI/6)
+				if (maths_f_abs(rel_heading) < PI/12.0f)
 				{
 					print_util_dbg_print("Autocontinue towards waypoint Nr");
 					print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint_count,10);
@@ -1177,7 +1189,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	
 	navigation->alt_lpf = nav_config->alt_lpf;
 	navigation->LPF_gain = nav_config->LPF_gain;
-		
+
 	navigation->loop_count = 0;
 	
 	navigation->dt = 0.004;
@@ -1225,6 +1237,12 @@ void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler,
 	waypoint_handler->waypoint_hold_coordinates.radius = 30.0f;
 	
 	waypoint_handler->dubin_state = INIT;
+
+	for (uint8_t i = 0; i < 3; ++i)
+	{
+		waypoint_handler->waypoint_hold_coordinates.dubin.circle_center_1[i] = local_pos.pos[i];
+	}
+	
 
 	//waypoint_handler->waypoint_hold_coordinates.waypoint.heading = coord_conventions_get_yaw(waypoint_handler->ahrs->qe);
 	//waypoint_handler->waypoint_hold_coordinates.waypoint.heading = local_pos.heading;
@@ -1307,7 +1325,10 @@ task_return_t navigation_update(navigation_t* navigation)
 						{
 							if (!navigation->stop_nav_there)
 							{
+								navigation_dubin_state_machine(navigation, &navigation->waypoint_handler->waypoint_coordinates);
+
 								navigation->goal = navigation->waypoint_handler->waypoint_coordinates;
+								
 								navigation_run(navigation);
 							}
 							else
