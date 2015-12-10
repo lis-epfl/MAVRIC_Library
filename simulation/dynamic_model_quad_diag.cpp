@@ -216,7 +216,7 @@ const std::array<float, 3>& Dynamic_model_quad_diag::acceleration_bf(void) const
 
 const std::array<float, 3>& Dynamic_model_quad_diag::velocity_lf(void) const
 {
-	return vel_bf_;
+	return vel_;
 }
 
 
