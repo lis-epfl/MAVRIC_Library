@@ -297,8 +297,8 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// -----------------------------------------------------------------
 				{
 					.p_gain = 1.0f,
-					.clip_min = -2.0f,
-					.clip_max = 2.0f,
+					.clip_min = -1.0f,
+					.clip_max = 1.0f,
 					.integrator={
 						.gain = 0.0f,
 						.clip_pre = 1.0f,
@@ -324,7 +324,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 					.clip_min = -PI/3.0f,
 					.clip_max = PI/3.0f,
 					.integrator={
-						.gain = 0.0f,
+						.gain = 0.01f,
 						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
 						.clip = PI/6.0f,
