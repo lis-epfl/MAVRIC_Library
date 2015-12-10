@@ -44,6 +44,7 @@
 #include "print_util.h"
 #include "time_keeper.h"
 #include "constants.h"
+#include "dubin.h"
 
 #define KP_YAW 0.2f ///< Yaw gain for the navigation controller 
 
@@ -76,6 +77,15 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
  * \param	navigation	The structure of navigation data
  */
 static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation);
+
+/**
+ * \brief   					Computes the circular vector to the goal
+ * 
+ * \param 	navigation   		Pointer to navigation
+ * \param 	rel_pos 			The relative position between the MAV and the goal
+ * \param	radius				The radius of the circle
+ */
+static void navigation_set_dubin_field_command(navigation_t* navigation, float radius);
 
 /**
  * \brief   					Computes the circular vector to the goal
@@ -311,6 +321,39 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
+static void navigation_set_dubin_field_command(navigation_t* navigation, float radius)
+{
+	float dir_desired[3];
+
+	// Compute the vector field circular
+	dubin_circle(	dir_desired,
+					navigation->goal.waypoint.pos,
+					navigation->goal.radius,
+					navigation->position_estimation->local_position.pos,
+					navigation->cruise_speed);
+
+	// Transform the vector in the semi-global reference frame
+	quat_t q_rot;
+	aero_attitude_t attitude_yaw;
+	attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
+	attitude_yaw.rpy[0] = 0.0f;
+	attitude_yaw.rpy[1] = 0.0f;
+	attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+	q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+	float dir_desired_sg[3];
+	quaternions_rotate_vector(q_rot, dir_desired, dir_desired_sg);
+
+	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
+	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
+	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
+	
+	float rel_heading;
+	rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - navigation->position_estimation->local_position.heading);
+	
+	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
+}
+
 static void navigation_set_vector_field_command(navigation_t* navigation, const float rel_pos[3], float radius)
 {
 	float dir_desired[3];
@@ -371,7 +414,7 @@ static void navigation_run(navigation_t* navigation)
 	//}
 	
 	// For Wing
-	navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
+	//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
 
 	// if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	// {
@@ -381,6 +424,8 @@ static void navigation_run(navigation_t* navigation)
 	// {
 	// 	navigation_set_speed_command(rel_pos, navigation);
 	// }
+
+	navigation_set_dubin_field_command(navigation, navigation->goal.radius);
 
 	navigation->controls_nav->theading=navigation->goal.waypoint.heading;
 }
