@@ -549,7 +549,7 @@ static void navigation_set_dubin_velocity(navigation_t* navigation, dubin_t* dub
 		case CIRCLE1:
 			dubin_circle(	dir_desired, 
 							dubin->circle_center_1, 
-							navigation->goal.radius, 
+							dubin->sense_1, 
 							navigation->position_estimation->local_position.pos, 
 							navigation->cruise_speed,
 							navigation->one_over_scaling );
