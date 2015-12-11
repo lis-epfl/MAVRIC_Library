@@ -46,9 +46,11 @@
 
 using namespace std::chrono;
 
+high_resolution_clock::time_point t_start;
+
 void time_keeper_init(void) 
 {
-	;
+	t_start = high_resolution_clock::now();
 }
 
 
@@ -68,10 +70,11 @@ uint64_t time_keeper_get_ms(void)
 
 uint64_t time_keeper_get_us(void)
 {
-	uint64_t t_now = static_cast<uint64_t>(duration_cast<microseconds>(high_resolution_clock::now().time_since_epoch()).count());
+	high_resolution_clock::time_point t_now = high_resolution_clock::now();
 
-	return t_now;
+	auto t_diff = duration_cast<microseconds>(t_now - t_start);
 
+	return t_diff.count();
 }
 
 
