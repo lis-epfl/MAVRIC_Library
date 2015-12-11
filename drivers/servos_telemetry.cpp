@@ -48,6 +48,14 @@ extern "C"
 	#include "time_keeper.hpp"
 }
 
+void servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0, Servo* servo_1, Servo* servo_2, Servo* servo_3)
+{
+	servos_telemetry->servos[0] = servo_0;
+	servos_telemetry->servos[1] = servo_1;
+	servos_telemetry->servos[2] = servo_2;
+	servos_telemetry->servos[3] = servo_3;
+}
+
 void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	mavlink_msg_servo_output_raw_pack(	mavlink_stream->sysid,
@@ -59,8 +67,13 @@ void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, mavlink
 										(uint16_t)( 1500 + 500 * servos_telemetry->servos[1]->read() ),
 										(uint16_t)( 1500 + 500 * servos_telemetry->servos[2]->read() ),
 										(uint16_t)( 1500 + 500 * servos_telemetry->servos[3]->read() ),
-										(uint16_t)( 1500 + 500 * servos_telemetry->servos[4]->read() ),
-										(uint16_t)( 1500 + 500 * servos_telemetry->servos[5]->read() ),
-										(uint16_t)( 1500 + 500 * servos_telemetry->servos[6]->read() ),
-										(uint16_t)( 1500 + 500 * servos_telemetry->servos[7]->read() ));
+										0,
+										0,
+										0,
+										0
+										//(uint16_t)( 1500 + 500 * servos_telemetry->servos[4]->read() ),
+										//(uint16_t)( 1500 + 500 * servos_telemetry->servos[5]->read() ),
+										//(uint16_t)( 1500 + 500 * servos_telemetry->servos[6]->read() ),
+										//(uint16_t)( 1500 + 500 * servos_telemetry->servos[7]->read() )
+										);
 }

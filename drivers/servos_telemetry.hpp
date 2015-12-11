@@ -57,8 +57,19 @@ extern "C"
  */
 typedef struct 
 {
-	Servo* servos[8];					///< The pointer to the first servo
+	Servo* servos[4];					///< The pointer to the first servo
 } servos_telemetry_t;
+
+/**
+* \brief	Initializes the servos_telemetry_t structure by adding servos
+*
+* \param servos_telemetry 			The pointer to the servos telemetry structure
+* \param servo_0					The zeroth servo
+* \param servo_1					The first servo
+* \param servo_2					The second servo
+* \param servo_3					The third servo
+*/
+void servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0, Servo* servo_1, Servo* servo_2, Servo* servo_3);
 
 /**
  * \brief	Sends the MAVLink message for the servos
@@ -67,6 +78,6 @@ typedef struct
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-/void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, mavlink_stream_t* mavlink_stream_t, mavlink_message_t* msg);
+void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, mavlink_stream_t* mavlink_stream_t, mavlink_message_t* msg);
 
 #endif /* SERVOS_TELEMETRY_H_ */
