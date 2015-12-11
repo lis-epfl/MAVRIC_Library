@@ -56,7 +56,7 @@ LIB_SRCS += drivers/gps_ublox.cpp
 LIB_SRCS += drivers/hmc5883l.cpp             
 LIB_SRCS += drivers/lsm330dlc.cpp            
 LIB_SRCS += drivers/servo.cpp                              
-# LIB_SRCS += drivers/servos_telemetry.c
+LIB_SRCS += drivers/servos_telemetry.cpp
 LIB_SRCS += drivers/sonar_i2cxl.cpp
 LIB_SRCS += drivers/sonar_telemetry.cpp
 LIB_SRCS += drivers/spektrum_satellite.cpp
@@ -167,7 +167,6 @@ CXXFLAGS += ${LIB_INC}
 LDFLAGS += -I.
 LDFLAGS += ${LIB_INC}
 LDFLAGS += ${SRCS_INC}
-LDFLAGS += -lrt
 
 ################################################################################
 # Normally you shouldn't need to change anything below this line!

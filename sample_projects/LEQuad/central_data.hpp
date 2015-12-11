@@ -68,7 +68,8 @@
 #include "battery.hpp"
 #include "servos_mix_quadcopter_diag.hpp"
 #include "led.hpp"
-
+#include "servos_telemetry.hpp"
+ 
 extern "C" 
 {
 	#include "time_keeper.hpp"
@@ -147,7 +148,7 @@ public:
 	state_machine_t state_machine;								///< The structure for the state machine
 		
 	hud_telemetry_structure_t hud_structure;					///< The HUD structure
-
+	servos_telemetry_t servos_telemetry;						///< The servos telemetry structure
 
 	attitude_controller_t 			attitude_controller;
 	velocity_controller_copter_t 	velocity_controller;
