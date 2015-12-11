@@ -41,9 +41,10 @@
  
 
 #include <unistd.h>
-#include <time.h>
 #include "time_keeper.hpp"
+#include <chrono>
 
+using namespace std::chrono;
 
 void time_keeper_init(void) 
 {
@@ -67,9 +68,10 @@ uint64_t time_keeper_get_ms(void)
 
 uint64_t time_keeper_get_us(void)
 {
-	timespec ts;
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
-	return ts.tv_sec*1000000 + ts.tv_nsec / 1000;
+	uint64_t t_now = static_cast<uint64_t>(duration_cast<microseconds>(high_resolution_clock::now().time_since_epoch()).count());
+
+	return t_now;
+
 }
 
 
