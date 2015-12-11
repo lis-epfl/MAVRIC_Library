@@ -84,6 +84,7 @@ typedef struct
 	float thrust_apriori;										///< A priori on the thrust for velocity control
 	float pitch_angle_apriori;									///< Constant a priori on the pitch angle
 	float pitch_angle_apriori_gain;								///< Gain of the pitch angle a priori which is function of the roll value
+	float max_roll_angle;										///< Maximum roll value that the velocity layer could ask to follow
 	int32_t tuning;												///< Are we tuning the controllers?		0: nothing		1: rate		2: attitude
 	int32_t tuning_axis;										///< Which axis are we tuning ?			0: roll			1: pitch
 	int32_t tuning_steps;										///< Is the user allowed to create steps with the remote ?
@@ -104,6 +105,7 @@ typedef struct
 	float thrust_apriori;										///< A priori thrust
 	float pitch_angle_apriori;									///< Constant a priori on the pitch angle
 	float pitch_angle_apriori_gain;								///< Gain of the pitch angle a priori which is function of the roll value
+	float max_roll_angle;										///< Maximum roll value that the velocity layer could ask to follow
 	stabiliser_stack_wing_t stabiliser_stack;					///< The pointer to the PID parameters values and output for the stacked controller
 	int32_t tuning;												///< Are we tuning the controllers?
 	int32_t tuning_axis;										///< Which axis are we tuning ?

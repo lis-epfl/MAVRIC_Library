@@ -94,6 +94,7 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 	stabilisation_wing->thrust_apriori = stabiliser_conf->thrust_apriori;
 	stabilisation_wing->pitch_angle_apriori = stabiliser_conf->pitch_angle_apriori;
 	stabilisation_wing->pitch_angle_apriori_gain = stabiliser_conf->pitch_angle_apriori_gain;
+	stabilisation_wing->max_roll_angle = stabiliser_conf->max_roll_angle;
 	stabilisation_wing->tuning = stabiliser_conf->tuning;
 	stabilisation_wing->tuning_axis = stabiliser_conf->tuning_axis;
 	stabilisation_wing->tuning_steps = stabiliser_conf->tuning_steps;
@@ -132,6 +133,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 	float input_roll_angle;
 	aero_attitude_t attitude, attitude_yaw;
 	quat_t q_rot;
+	float airspeed_desired;
 
 	// set the controller input
 	input= *stabilisation_wing->controls;
@@ -168,24 +170,27 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		current_heading = heading_from_velocity_vector(gps_speed_semi_local);
 		stabilisation_wing->current_heading = current_heading;	// Used for PID tuning
 		
-		// Compute turn rate command
+		// Compute heading error
 		heading_error = maths_calc_smaller_angle(nav_heading - current_heading);
 		
 		
 		///////////////
 		// PID INPUT //
 		///////////////
+		// Vector field normalize vector in plane x-y to cruise_speed value ==> airspeed should be done only on the x-y composants
+		airspeed_desired = sqrtf(input.tvel[X]*input.tvel[X] + input.tvel[Y]*input.tvel[Y]);
+		
 		// Compute errors
 		rpyt_errors[0] = heading_error;																// Heading
 		rpyt_errors[1] = input.tvel[Z] - gps_speed_global[Z];										// Vertical speed
 		rpyt_errors[2] = 0.0f;
-		rpyt_errors[3] = vectors_norm(input.tvel) - stabilisation_wing->airspeed_analog->airspeed;	// Airspeed
+		rpyt_errors[3] = airspeed_desired - stabilisation_wing->airspeed_analog->airspeed;			// Airspeed
 		
 		// Compute the feedforward
 		feedforward[0] = 0.0f;
 		feedforward[1] = 0.0f;
 		feedforward[2] = 0.0f;
-		feedforward[3] = (vectors_norm(input.tvel) - 13.0f)/8.0f + 0.2f;
+		feedforward[3] = (airspeed_desired - 13.0f)/8.0f + 0.2f;
 		
 		// run PID update on all velocity controllers
 		stabilisation_run_feedforward(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->imu->dt, rpyt_errors, feedforward);
@@ -197,7 +202,15 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		// Get turn rate command and transform it into a roll angle command for next layer
 		input_turn_rate = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[0];
 		// TODO: Fix this in case of bad airspeed readings...
-		input_roll_angle = atanf(stabilisation_wing->airspeed_analog->airspeed / 9.81f * input_turn_rate);
+		float clipping_factor = stabilisation_wing->max_roll_angle / (PI/2.0f);
+		if(clipping_factor == 0.0f)
+		{
+			input_roll_angle = 0.0f;
+		}
+		else
+		{
+			input_roll_angle = clipping_factor * atanf( (1.0f/clipping_factor) * (stabilisation_wing->airspeed_analog->airspeed * input_turn_rate / 9.81f) );
+		}
 		
 		// Set input for next layer
 		input = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output;
