@@ -45,7 +45,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ State::State(Battery& battery, state_conf_t config):
 	
 	reset_position = false;
 	
-	last_heartbeat_msg = time_keeper_get_time();
+	last_heartbeat_msg = time_keeper_get_s();
 	max_lost_connection = config.max_lost_connection;
 	connection_lost = false;
 	first_connection_set = false;
@@ -119,7 +119,7 @@ void State::switch_to_active_mode(mav_state_t* mav_state)
 
 void State::connection_status()
 {
-	if ( ((time_keeper_get_time()-last_heartbeat_msg) > max_lost_connection)&&(first_connection_set) )
+	if ( ((time_keeper_get_s()-last_heartbeat_msg) > max_lost_connection)&&(first_connection_set) )
 	{
 		connection_lost = true;
 	}

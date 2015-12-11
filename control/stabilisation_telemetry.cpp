@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "constants.h"
 }
 
@@ -54,7 +54,7 @@ void  stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t*
 	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_pack(	mavlink_stream->sysid,
 															mavlink_stream->compid,
 															msg,
-															time_keeper_get_millis(),
+															time_keeper_get_ms(),
 															stabiliser->rpy_controller[0].output,
 															stabiliser->rpy_controller[1].output,
 															stabiliser->rpy_controller[2].output,
@@ -66,7 +66,7 @@ void  stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabilise
 	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_pack(	mavlink_stream->sysid,
 															mavlink_stream->compid,
 															msg,
-															time_keeper_get_millis(),
+															time_keeper_get_ms(),
 															stabiliser->rpy_controller[0].error,
 															stabiliser->rpy_controller[1].error,
 															stabiliser->rpy_controller[2].error,
@@ -79,7 +79,7 @@ void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* c
 	mavlink_msg_roll_pitch_yaw_thrust_setpoint_pack(	mavlink_stream->sysid,
 														mavlink_stream->compid,
 														msg,
-														time_keeper_get_millis(),
+														time_keeper_get_ms(),
 														controls->rpy[ROLL],
 														controls->rpy[PITCH],
 														controls->rpy[YAW],
@@ -144,7 +144,7 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
 									mavlink_stream->compid,
 									msg,
 									"OutVel",
-									time_keeper_get_micros(),
+									time_keeper_get_us(),
 									-rpy_local.v[X] * 1000,
 									rpy_local.v[Y] * 1000,
 									stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy[YAW] * 1000);
@@ -154,7 +154,7 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
 									mavlink_stream->compid,
 									msg,
 									"OutAtt",
-									time_keeper_get_micros(),
+									time_keeper_get_us(),
 									stabilisation_copter->stabiliser_stack.attitude_stabiliser.output.rpy[ROLL] * 1000,
 									stabilisation_copter->stabiliser_stack.attitude_stabiliser.output.rpy[PITCH] * 1000,
 									stabilisation_copter->stabiliser_stack.attitude_stabiliser.output.rpy[YAW] * 1000);
@@ -164,7 +164,7 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
 									mavlink_stream->compid,
 									msg,
 									"OutRate",
-									time_keeper_get_micros(),
+									time_keeper_get_us(),
 									stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[ROLL] * 1000,
 									stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[PITCH] * 1000,
 									stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[YAW] * 1000);

@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "print_util.h"
 }
 
@@ -145,7 +145,7 @@ void position_estimation_telemetry_send_position(const position_estimation_t* po
 	mavlink_msg_local_position_ned_pack(	mavlink_stream->sysid,
 											mavlink_stream->compid,
 											msg,
-											time_keeper_get_millis(),
+											time_keeper_get_ms(),
 											pos_est->local_position.pos[0],
 											pos_est->local_position.pos[1],
 											pos_est->local_position.pos[2],
@@ -163,7 +163,7 @@ void position_estimation_telemetry_send_global_position(const position_estimatio
 	mavlink_msg_global_position_int_pack(	mavlink_stream->sysid,
 											mavlink_stream->compid,
 											msg,
-											time_keeper_get_millis(),
+											time_keeper_get_ms(),
 											gpos.latitude * 10000000,
 											gpos.longitude * 10000000,
 											gpos.altitude * 1000.0f,

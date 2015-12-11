@@ -38,7 +38,7 @@
  *
  ******************************************************************************/
 
-#include "mavrinux.hpp"
+#include "mavrimini.hpp"
 #include "central_data.hpp"
 #include "mavlink_telemetry.hpp"
 #include "tasks.hpp"
@@ -48,31 +48,24 @@ extern "C"
 	#include "print_util.h"
 }
 
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+
 
 int main(int argc, char** argv)
 {
 	uint8_t sysid = 0;
+	bool init_success = true;
 	
 	// -------------------------------------------------------------------------
-	// Get command line parameters
+	// Create board
 	// -------------------------------------------------------------------------
-	// System id
-	if(argc > 1)
-	{
-		sysid = atoi( argv[1] );
-	}
+	mavrimini_conf_t board_config = mavrimini_default_config(); 
+	Mavrimini board(board_config);
 
-	// -------------------------------------------------------------------------
-	// Create board
-	// -------------------------------------------------------------------------
-	mavrinux_conf_t board_config = mavrinux_default_config(); 
-	
-	// Set correct sysid for UDP port and flash filename
-	board_config.serial_udp_config.local_port 	= 14000 + sysid;
-	board_config.flash_filename 				= std::string("flash") + std::to_string(sysid) + std::string(".bin");
-	
-	// Create board
-	Mavrinux board(board_config);
+	// Board initialisation
+	init_success &= board.init();
+
 
 	// -------------------------------------------------------------------------
 	// Create central data
@@ -83,30 +76,31 @@ int main(int argc, char** argv)
 									board.sim.barometer(),
 									board.sim.gps(), 
 									board.sim.sonar(),
-									board.mavlink_serial,
+									// board.serial_1,
+									board.serial_2,
 									board.spektrum_satellite,
+									board.green_led,
 									board.file_flash,
 									board.battery,
-									board.servos );
-
-
-	// -------------------------------------------------------------------------
-	// Initialisation
-	// -------------------------------------------------------------------------
-	bool init_success = true;
-
-	// Board initialisation
-	init_success &= board.init();
+									board.servo_0,
+									board.servo_1,
+									board.servo_2,
+									board.servo_3 );
 
 	// Init central data
 	init_success &= cd.init();
 
+
+	// -------------------------------------------------------------------------
+	// Create tasks and telemetry
+	// -------------------------------------------------------------------------
+
 	init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
-	// Try to read from flash, if unsuccessful, write to flash
+	// // Try to read from flash, if unsuccessful, write to flash
 	if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
 	{
-		onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+		// onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
 		init_success = false; 
 	}
 
@@ -121,6 +115,28 @@ int main(int argc, char** argv)
 	// -------------------------------------------------------------------------
 	// Main loop
 	// -------------------------------------------------------------------------
+
+	static uint8_t step = 0;
+	while(1)
+	{
+		step += 1;
+		board.red_led.toggle();
+		
+		if(step%2 == 0)
+		{
+			board.green_led.toggle();
+			// board.red_led.toggle();
+		}
+
+		// gpio_toggle(GPIOA, GPIO2);
+		// usart_send(USART2, step);
+		// usart_enable_tx_interrupt(USART2);
+		// board.serial_1.write(&step);
+
+		time_keeper_delay_ms(10);
+	}
+
+
 	while (1 == 1) 
 	{
 		scheduler_update(&cd.scheduler);
@@ -128,3 +144,266 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// void usart2_isr(void)
+// {
+// 	// static uint8_t data = 'A';
+// 	static uint16_t data = 'A';
+
+// 	/* Check if we were called because of RXNE. */
+// 	if (((USART_CR1(USART2) & USART_CR1_RXNEIE) != 0) &&
+// 	    ((USART_SR(USART2) & USART_SR_RXNE) != 0)) {
+
+// 		/* Indicate that we got data. */
+// 		gpio_toggle(GPIOC, GPIO15);
+
+// 		/* Retrieve the data from the peripheral. */
+// 		data = usart_recv(USART2);
+
+// 		/* Enable transmit interrupt so it sends back the data. */
+// 		usart_enable_tx_interrupt(USART2);
+// 	}
+
+// 	/* Check if we were called because of TXE. */
+// 	if (((USART_CR1(USART2) & USART_CR1_TXEIE) != 0) &&
+// 	    ((USART_SR(USART2) & USART_SR_TXE) != 0)) {
+
+// 		/* Put data into the transmit register. */
+// 		usart_send(USART2, data);
+
+// 		/* Disable the TXE interrupt as we don't need it anymore. */
+// 		usart_disable_tx_interrupt(USART2);
+// 	}
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #include <libopencm3/stm32/rcc.h>
+// #include <libopencm3/stm32/gpio.h>
+// #include <libopencm3/stm32/usart.h>
+
+// static void clock_setup(void)
+// {
+// 	// rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
+// 	rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
+
+// 	/* Enable GPIOD clock for LED & USARTs. */
+// 	rcc_periph_clock_enable(RCC_GPIOC);
+// 	rcc_periph_clock_enable(RCC_GPIOA);
+// 	rcc_periph_clock_enable(RCC_GPIOD);
+
+// 	/* Enable clocks for USART2. */
+// 	rcc_periph_clock_enable(RCC_USART2);
+// }
+
+// static void usart_setup(void)
+// {
+// 	/* Setup USART2 parameters. */
+// 	// usart_set_baudrate(USART2, 38400);
+// 	usart_set_baudrate(USART2, 57600);
+// 	usart_set_databits(USART2, 8);
+// 	usart_set_stopbits(USART2, USART_STOPBITS_1);
+// 	usart_set_mode(USART2, USART_MODE_TX);
+// 	usart_set_parity(USART2, USART_PARITY_NONE);
+// 	usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
+
+// 	/* Finally enable the USART. */
+// 	usart_enable(USART2);
+// }
+
+// static void gpio_setup(void)
+// {
+// 	/* Setup GPIO pin GPIO14 on GPIO port D for LED. */
+// 	gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
+// 	gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
+
+// 	/* Setup GPIO pins for USART2 transmit. */
+// 	gpio_mode_setup(GPIOA, GPIO_MODE_AF, 
+// 					GPIO_PUPD_NONE, 
+// 					// GPIO_PUPD_PULLUP, 
+// 					GPIO2);
+// 	// gpio_set_output_options(GPIOA, 
+// 	// 						// GPIO_OTYPE_OD, 
+// 	// 						GPIO_OTYPE_PP, 
+// 	// 						GPIO_OSPEED_25MHZ, 
+// 	// 						// GPIO_OSPEED_100MHZ, 
+// 	// 						GPIO2);
+
+// 	/* Setup USART2 TX pin as alternate function. */
+// 	gpio_set_af(GPIOA, GPIO_AF7, GPIO2);
+// }
+
+// int main(void)
+// {
+// 	int i, j = 0, c = 0;
+
+// 	clock_setup();
+// 	gpio_setup();
+// 	usart_setup();
+
+// 	/* Blink the LED (PD12) on the board with every transmitted byte. */
+// 	while (1) {
+// 		gpio_toggle(GPIOD, GPIO14);	/* LED on/off */
+// 		gpio_toggle(GPIOC, GPIO14);	/* LED on/off */
+// 		usart_send_blocking(USART2, c + '0'); /* USART2: Send byte. */
+// 		c = (c == 9) ? 0 : c + 1;	/* Increment c. */
+// 		if ((j++ % 80) == 0) 
+// 		{		/* Newline after line full. */
+// 			usart_send_blocking(USART2, '\r');
+// 			usart_send_blocking(USART2, '\n');
+// 		}
+// 		for (i = 0; i < 3000000; i++) {	/* Wait a bit. */
+// 			__asm__("NOP");
+// 		}
+// 	}
+
+// 	return 0;
+// }
+
+
+
+
+
+
+
+
+// #include <libopencm3/stm32/rcc.h>
+// #include <libopencm3/stm32/gpio.h>
+// #include <libopencm3/stm32/usart.h>
+// #include <libopencm3/cm3/nvic.h>
+
+// static void clock_setup(void)
+// {
+// 	/* Enable GPIOD clock for LED & USARTs. */
+// 	rcc_periph_clock_enable(RCC_GPIOC);
+// 	rcc_periph_clock_enable(RCC_GPIOA);
+
+// 	/* Enable clocks for USART2. */
+// 	rcc_periph_clock_enable(RCC_USART2);
+// }
+
+// static void usart_setup(void)
+// {
+// 	/* Enable the USART2 interrupt. */
+// 	nvic_enable_irq(NVIC_USART2_IRQ);
+
+// 	/* Setup GPIO pins for USART2 transmit. */
+// 	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO2);
+
+// 	/* Setup GPIO pins for USART2 receive. */
+// 	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO3);
+// 	gpio_set_output_options(GPIOA, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, GPIO3);
+
+// 	/* Setup USART2 TX and RX pin as alternate function. */
+// 	gpio_set_af(GPIOA, GPIO_AF7, GPIO2);
+// 	gpio_set_af(GPIOA, GPIO_AF7, GPIO3);
+
+// 	/* Setup USART2 parameters. */
+// 	usart_set_baudrate(USART2, 38400);
+// 	usart_set_databits(USART2, 8);
+// 	usart_set_stopbits(USART2, USART_STOPBITS_1);
+// 	usart_set_mode(USART2, USART_MODE_TX_RX);
+// 	usart_set_parity(USART2, USART_PARITY_NONE);
+// 	usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
+
+// 	/* Enable USART2 Receive interrupt. */
+// 	usart_enable_rx_interrupt(USART2);
+
+// 	/* Finally enable the USART. */
+// 	usart_enable(USART2);
+// }
+
+// static void gpio_setup(void)
+// {
+// 	/* Setup GPIO pin GPIO12 on GPIO port D for LED. */
+// 	gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
+// 	gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO15);
+// }
+
+// int main(void)
+// {
+// 	clock_setup();
+// 	gpio_setup();
+// 	usart_setup();
+
+// 	uint64_t step = 0;
+
+// 	while (1) 
+// 	{
+// 		step += 1;
+// 		if( step%30000 == 0)
+// 		{
+// 			gpio_toggle(GPIOC, GPIO14);
+// 		}
+// 		__asm__("NOP");
+// 	}
+
+// 	return 0;
+// }
+
+// void usart2_isr(void)
+// {
+// 	static uint8_t data = 'A';
+
+// 	/* Check if we were called because of RXNE. */
+// 	if (((USART_CR1(USART2) & USART_CR1_RXNEIE) != 0) &&
+// 	    ((USART_SR(USART2) & USART_SR_RXNE) != 0)) {
+
+// 		/* Indicate that we got data. */
+// 		gpio_toggle(GPIOC, GPIO15);
+
+// 		/* Retrieve the data from the peripheral. */
+// 		data = usart_recv(USART2);
+
+// 		/* Enable transmit interrupt so it sends back the data. */
+// 		usart_enable_tx_interrupt(USART2);
+// 	}
+
+// 	/* Check if we were called because of TXE. */
+// 	if (((USART_CR1(USART2) & USART_CR1_TXEIE) != 0) &&
+// 	    ((USART_SR(USART2) & USART_SR_TXE) != 0)) {
+
+// 		/* Put data into the transmit register. */
+// 		usart_send(USART2, data);
+
+// 		/* Disable the TXE interrupt as we don't need it anymore. */
+// 		usart_disable_tx_interrupt(USART2);
+// 	}
+// }

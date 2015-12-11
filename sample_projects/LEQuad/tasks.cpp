@@ -42,11 +42,6 @@
 #include "tasks.hpp"
 #include "central_data.hpp"
 
-extern "C"
-{
-	#include "led.h"
-}
-
 
 void tasks_run_imu_update(Central_data* central_data)
 {
@@ -232,6 +227,13 @@ bool tasks_sleep(Central_data* central_data)
 	return true;
 }
 
+bool tasks_led_toggle(Led* led)
+{
+	led->toggle();
+	
+	return true;
+}
+
 bool tasks_create_tasks(Central_data* central_data) 
 {	
 	bool init_success = true;
@@ -255,6 +257,8 @@ bool tasks_create_tasks(Central_data* central_data)
 	init_success &= scheduler_add_task(scheduler, 20000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&remote_update 									, (task_argument_t)&central_data->manual_control.remote	, 10);
 
 	init_success &= scheduler_add_task(scheduler, 500000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW	, (task_function_t)&tasks_run_sonar_update							, (task_argument_t)central_data							, 13);
+
+	init_success &= scheduler_add_task(scheduler, 500000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW	, (task_function_t)&tasks_led_toggle								, (task_argument_t)&central_data->led					, 1);
 
 	init_success &= scheduler_add_task(scheduler, 4000,		RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST	, (task_function_t)&tasks_sleep										, (task_argument_t)central_data							, 14);
 	

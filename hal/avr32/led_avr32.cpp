@@ -30,34 +30,46 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_ublox_telemetry.c
+ * \file led_avr32.cpp
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Julien Lecoeur
  * \author Nicolas Dousse
- *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the GPS UBlox
+ * 
+ * \brief This file is the driver for the avr32 led
  *
  ******************************************************************************/
 
 
-#ifndef GPS_UBLOX_TELEMETRY_H_
-#define GPS_UBLOX_TELEMETRY_H_
+#include "led_avr32.hpp"
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "gps_ublox.hpp"
-
-
-/**
- * \brief	Initialize the MAVLink communication module for the GPS
- * 
- * \param	gps						The pointer to the gps structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool gps_ublox_telemetry_init(Gps_ublox* gps, mavlink_message_handler_t* message_handler);
+extern "C"
+{
+	#include "led.h"
+}
 
 
-#endif /* GPS_UBLOX_TELEMETRY_H_ */
+Led_avr32::Led_avr32(led_avr32_id_t id):
+	id_(id)
+{
+	LED_Off(id_);
+}
+
+
+void Led_avr32::on(void)
+{
+	LED_On(id_);
+}
+
+
+void Led_avr32::off(void)
+{
+	LED_Off(id_);
+}
+
+
+void Led_avr32::toggle(void)
+{
+	LED_Toggle(id_);
+}

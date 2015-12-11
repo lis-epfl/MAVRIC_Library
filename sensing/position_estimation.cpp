@@ -47,7 +47,7 @@ extern "C"
 {
 	#include "print_util.h"
 	#include "maths.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------
@@ -188,7 +188,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 			pos_est->time_last_barometer_msg = pos_est->barometer->last_update_us();
 		}
 
-		// t_inter_baro = (time_keeper_get_micros() - pos_est->barometer->get_last_update()) / 1000.0f;
+		// t_inter_baro = (time_keeper_get_us() - pos_est->barometer->get_last_update()) / 1000.0f;
 		baro_gain = 1.0f; //maths_f_max(1.0f - t_inter_baro / 1000.0f, 0.0f);
 			
 		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(t_inter_baro / 2.5f + 1.0f)) * alt_error;

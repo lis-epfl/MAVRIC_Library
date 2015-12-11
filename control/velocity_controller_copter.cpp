@@ -180,6 +180,15 @@ void velocity_controller_copter_update(velocity_controller_copter_t* controller)
 	// thrust_vector[Z] = - GRAVITY + pid_controller_update_dt( &controller->pid[Z], errors[Z], controller->ahrs->dt );	// should be multiplied by mass
 	thrust_vector[Z] = pid_controller_update_dt( &controller->pid[Z], errors[Z], controller->ahrs->dt );	// should be multiplied by mass
 
+
+	aero_attitude_t attitude_yaw_inverse = coord_conventions_quat_to_aero(controller->ahrs->qe);
+	attitude_yaw_inverse.rpy[0] = 0.0f;
+	attitude_yaw_inverse.rpy[1] = 0.0f;
+	attitude_yaw_inverse.rpy[2] = -attitude_yaw_inverse.rpy[2];
+	
+	quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
+	quaternions_rotate_vector(q_rot, thrust_vector, thrust_vector);
+
 	// Compute the norm of the thrust that should be applied
 	// thrust_norm = vectors_norm(thrust_vector);
 
@@ -191,7 +200,8 @@ void velocity_controller_copter_update(velocity_controller_copter_t* controller)
 	// Map thrust dir to attitude
 	controller->attitude_command->rpy[ROLL]  = maths_clip(thrust_vector[Y], 1);
 	controller->attitude_command->rpy[PITCH] = - maths_clip(thrust_vector[X], 1);
-	controller->attitude_command->rpy[YAW]   = 0.0f;
+	//controller->attitude_command->rpy[YAW]   = 0.0f;
+	controller->attitude_command->rpy[YAW]   = 1.7f;
 
 	aero_attitude_t attitude;
 	attitude.rpy[ROLL] 	= controller->attitude_command->rpy[ROLL]; 

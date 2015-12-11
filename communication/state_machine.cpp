@@ -47,9 +47,8 @@
 	
 extern "C"
 {
-	#include "led.h"
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------

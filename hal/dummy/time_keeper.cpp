@@ -33,96 +33,51 @@
  * \file time_keeper.c
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
  *   
  * \brief This file is used to interact with the clock of the microcontroller
  * 
  ******************************************************************************/
  
-
-#include <unistd.h>
-#include <sys/time.h>
-#include "time_keeper.h"
-
-#define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
-#define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
+#include "time_keeper.hpp"
 
 
-void time_keeper_init() 
+void time_keeper_init(void) 
 {
 	;
 }
 
 
-uint32_t time_keeper_get_time_ticks()
-{ 	
-	//raw timer ticks
-	struct timeval tv;
-	
-	gettimeofday(&tv,0);
-	return tv.tv_sec*1000000+tv.tv_usec;
+double time_keeper_get_s(void)
+{
+	return 0.0;
 }
 
 
-double time_keeper_get_time()
+uint64_t time_keeper_get_ms(void)
 {
-	// time in seconds since system start
-	return time_keeper_ticks_to_seconds(time_keeper_get_time_ticks());
+	return 0;
 }
 
 
-uint32_t time_keeper_get_millis()
+uint64_t time_keeper_get_us(void)
 {
-	//milliseconds since system start
-	return time_keeper_get_time_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
+	return 0;
 }
 
 
-uint32_t time_keeper_get_micros()
+void time_keeper_delay_us(uint64_t microseconds)
 {
-	// microseconds since system start. Will run over after an hour.
-	return time_keeper_get_time_ticks() * (1000000 / TK_AST_FREQUENCY);
+	;
 }
 
 
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
+void time_keeper_delay_ms(uint64_t milliseconds) 
 {
-	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
+	;
 }
 
 
-void time_keeper_delay_micros(int32_t microseconds)
+void time_keeper_sleep_us(uint64_t microseconds) 
 {
-	uint32_t now = time_keeper_get_micros();
-	while (time_keeper_get_micros() < now + microseconds);
+	;
 }
-
-
-void time_keeper_delay_until(uint32_t until_time)
-{
-	while (time_keeper_get_micros() < until_time)
-	{
-		;
-	}	
-}
-
-
-void time_keeper_delay_ms(int32_t t) 
-{
-	uint32_t now = time_keeper_get_micros();
-	
-	while (time_keeper_get_micros() < now + 1000 * t) 
-	{
-		;
-	}
-};
-
-#include <time.h>
-void time_keeper_sleep_us(int32_t t) 
-{
-	// usleep(t);
-	struct timespec reqtime;
-	reqtime.tv_sec = 0;
-	reqtime.tv_nsec = 1000 * t;
-	nanosleep(&reqtime, NULL);
-};

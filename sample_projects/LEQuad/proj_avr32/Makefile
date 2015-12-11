@@ -5,7 +5,7 @@
 ################################################################################
 
 # Binaries will be generated with this name
-PROJ_NAME=LEQuad
+PROJ_NAME=LEQuad_megafly
 
 # ------------------------------------------------------------------------------
 # PROJECT FOLDER
@@ -89,7 +89,7 @@ LIB_SRCS += drivers/bmp085.cpp
 LIB_SRCS += drivers/flow.c                  
 LIB_SRCS += drivers/gps_ublox.cpp                 
 LIB_SRCS += drivers/gps_telemetry.cpp       
-LIB_SRCS += drivers/hmc5883l.cpp             
+LIB_SRCS += drivers/hmc5883l.cpp  
 LIB_SRCS += drivers/lsm330dlc.cpp            
 LIB_SRCS += drivers/servo.cpp                              
 # LIB_SRCS += drivers/servos_telemetry.c
@@ -100,6 +100,7 @@ LIB_SRCS += drivers/spektrum_satellite.cpp
 LIB_SRCS += hal/common/fat_fs_mounting.cpp
 LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
 LIB_SRCS += hal/common/dbg.cpp
+LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
 LIB_SRCS += hal/common/dbg.cpp
@@ -110,8 +111,9 @@ LIB_SRCS += hal/avr32/analog_monitor.c
 LIB_SRCS += hal/avr32/analog_monitor_telemetry.cpp                  
 LIB_SRCS += hal/avr32/dac_dma.c
 LIB_SRCS += hal/avr32/i2c_avr32.cpp            
-LIB_SRCS += hal/avr32/gpio_avr32.cpp
 LIB_SRCS += hal/avr32/led.c            
+LIB_SRCS += hal/avr32/led_avr32.cpp            
+LIB_SRCS += hal/avr32/gpio_avr32.cpp
 LIB_SRCS += hal/avr32/piezo_speaker.c        
 LIB_SRCS += hal/avr32/pwm_avr32.cpp
 LIB_SRCS += hal/avr32/serial_avr32.cpp
@@ -123,9 +125,7 @@ LIB_SRCS += hal/avr32/file_flash_avr32.cpp
 
 LIB_SRCS += hal/dummy/adc_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
-LIB_SRCS += hal/dummy/serial_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
-LIB_SRCS += hal/dummy/file_dummy.cpp
 
 LIB_SRCS += hal/avr32/FatFs/atadrive.c
 LIB_SRCS += hal/avr32/FatFs/sdcard.c
@@ -416,7 +416,7 @@ OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
  
-AWK_CMD = awk '{ printf "%-30s %-10s\n",$$1, $$2; }'
+AWK_CMD = awk '{ printf "%-60s %-10s\n",$$1, $$2; }'
 PRINT_ERROR = printf "$@ $(ERROR_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n" && false
 PRINT_WARNING = printf "$@ $(WARN_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n"
 PRINT_OK = printf "$@ $(OK_STRING)\n" | $(AWK_CMD)

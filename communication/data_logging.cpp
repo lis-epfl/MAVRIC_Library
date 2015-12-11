@@ -45,7 +45,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include <stdbool.h>
 	#include <stdlib.h>
 	#include <math.h>
@@ -643,7 +643,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 
 	init_success &= data_logging_open_new_log_file(data_logging);
 
-	data_logging->logging_time = time_keeper_get_millis();
+	data_logging->logging_time = time_keeper_get_ms();
 	
 	return init_success;
 }
@@ -741,7 +741,7 @@ bool data_logging_update(data_logging_t* data_logging)
 					data_logging_add_header_name(data_logging);
 				}
 
-				data_logging->time_ms = time_keeper_get_millis();
+				data_logging->time_ms = time_keeper_get_ms();
 				
 				if ( !mav_modes_is_armed(data_logging->state->mav_mode))
 				{

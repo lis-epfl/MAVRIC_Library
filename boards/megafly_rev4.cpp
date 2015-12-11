@@ -43,11 +43,10 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 
 	#include "sysclk.h"
 	#include "sleepmgr.h"
-	#include "led.h"
 	#include "delay.h"
 
 	#include "gpio.h"
@@ -79,6 +78,8 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 	lsm330dlc( Lsm330dlc(i2c0) ),
 	bmp085( Bmp085(i2c0) ),
 	spektrum_satellite( Spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin) ),
+	red_led( LED_AVR32_ID_2 ) ,
+	green_led( LED_AVR32_ID_1 ),
 	imu( Imu(lsm330dlc, lsm330dlc, hmc5883l, config.imu_config) ),
 	file_flash( File_flash_avr32("flash.bin") ),
 	gps_ublox( Gps_ublox(uart3) ),
@@ -118,6 +119,8 @@ bool Megafly_rev4::init(void)
 	ret = boardsupport_init();
 	init_success &= ret;
 	
+	// Switch on the red LED
+	red_led.on();	
 
 	// -------------------------------------------------------------------------
 	// Init UART3
@@ -331,9 +334,6 @@ bool Megafly_rev4::boardsupport_init(void)
 	time_keeper_init();
 		
 	INTC_init_interrupts();
-
-	// Switch on the red LED
-	LED_On(LED2);
 
 	// Init analog rails
 	analog_monitor_init(&analog_monitor, analog_monitor_default_config());

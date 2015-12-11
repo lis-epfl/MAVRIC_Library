@@ -184,7 +184,7 @@ public:
 	 * \detail 	The update function has to be called in order to proceed with
 	 * 			the configuration
 	 */
-	 void start_configuration(void);
+	void configure(void);
 
 
 private:

@@ -44,7 +44,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "maths.h"
 }
 
@@ -55,7 +55,7 @@ void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavli
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
-										time_keeper_get_millis(),
+										time_keeper_get_ms(),
 										"stabAvgDelay",
 										stab_task->delay_avg);
 	mavlink_stream_send(mavlink_stream, msg);
@@ -63,7 +63,7 @@ void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavli
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
-										time_keeper_get_millis(),
+										time_keeper_get_ms(),
 										"stabDelayVar",
 										maths_fast_sqrt(stab_task->delay_var_squared));
 	mavlink_stream_send(mavlink_stream, msg);
@@ -71,7 +71,7 @@ void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavli
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
-										time_keeper_get_millis(),
+										time_keeper_get_ms(),
 										"stabMaxDelay",
 										stab_task->delay_max);
 	mavlink_stream_send(mavlink_stream, msg);
@@ -79,7 +79,7 @@ void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavli
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
-										time_keeper_get_millis(),
+										time_keeper_get_ms(),
 										"stabRTvio",
 										stab_task->rt_violations);
 	mavlink_stream_send(mavlink_stream, msg);
@@ -87,7 +87,7 @@ void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavli
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
-										time_keeper_get_millis(),
+										time_keeper_get_ms(),
 										"stabExTime",
 										stab_task->execution_time);
 	mavlink_stream_send(mavlink_stream, msg);

@@ -153,8 +153,10 @@ private:
 static inline gpio_avr32_conf_t gpio_avr32_default_config()
 {
 	gpio_avr32_conf_t conf = {};
-	conf.pin = 0;
-
+	conf.pin 	= 0;
+	conf.dir 	= GPIO_INPUT;
+	conf.pull 	= GPIO_PULL_UPDOWN_NONE;
+	
 	return conf;
 }
 

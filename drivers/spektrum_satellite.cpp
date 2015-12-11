@@ -45,7 +45,7 @@
 
 extern "C" 
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "print_util.h"
 }
 
@@ -90,7 +90,7 @@ bool Spektrum_satellite::init(void)
 	}
 	
 	protocol_ 			= RADIO_PROTOCOL_UNKNOWN;
-	last_update_ 		= time_keeper_get_micros();
+	last_update_ 		= time_keeper_get_us();
 
 	//Set minimum number of frames to be received in order to guess the radio protocol used
 	protocol_proba_.min_nb_frames 	= 10; 
@@ -145,9 +145,9 @@ void Spektrum_satellite::bind(radio_protocol_t protocol)
 	for (i = 0; i < pulses; i++) 
 	{
 		receiver_pin_.configure(GPIO_OUTPUT, GPIO_PULL_UPDOWN_DOWN);
-		time_keeper_delay_micros(113);
+		time_keeper_delay_us(113);
 		receiver_pin_.configure(GPIO_INPUT, GPIO_PULL_UPDOWN_UP);
-		time_keeper_delay_micros(118);
+		time_keeper_delay_us(118);
 	}
 }
 
@@ -188,7 +188,7 @@ void Spektrum_satellite::handle_interrupt(void)
 	uint8_t i = 0;
 	uint16_t sw;
 	uint8_t channel;
-	uint32_t now = time_keeper_get_micros() ;
+	uint32_t now = time_keeper_get_us() ;
 
 	// If byte received
 	while ( uart_.readable() > 0 ) 

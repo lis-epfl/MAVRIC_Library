@@ -47,7 +47,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ void state_telemetry_heartbeat_received(State* state, uint32_t sysid, mavlink_me
 {
 	state->first_connection_set = true;
 	
-	state->last_heartbeat_msg = time_keeper_get_time();	
+	state->last_heartbeat_msg = time_keeper_get_s();	
 	state->msg_count++;
 }
 

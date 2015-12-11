@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 // void servos_telemetry_mavlink_send(servos_t* servos, mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
@@ -53,7 +53,7 @@ extern "C"
 // 	mavlink_msg_servo_output_raw_pack(	mavlink_stream->sysid,
 // 										mavlink_stream->compid,
 // 										msg,
-// 										time_keeper_get_micros(),
+// 										time_keeper_get_us(),
 // 										0,
 // 										(uint16_t)( 1500 + 500 * servos->servo[0].value ),
 // 										(uint16_t)( 1500 + 500 * servos->servo[1].value ),

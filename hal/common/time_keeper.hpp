@@ -30,36 +30,84 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file adxl345_driver.c
+ * \file time_keeper.h
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
  *   
- * \brief This file is the Driver for the ADXL345 accelerometer 
- *
+ * \brief This file is used to interact with the clock of the microcontroller
+ * 
  ******************************************************************************/
 
 
-#include "adxl345_driver.h"
-#include "print_util.h"
+#ifndef TIME_KEEPER_H_
+#define TIME_KEEPER_H_
 
-static acc_data_t acc_outputs;				///< Declare an object containing accelerometer's data
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define CONFIG_POWER_ADDRESS 0x2D					///< Address of the power configuration register
+#include <stdint.h>
 
-#define SENSOR_REG_ADDRESS 0x32						///< Address of the accelerometer register
-#define DATA_SETTING_ADDRESS 0x31					///< Address of the data setting register
-enum {RANGE_2G, RANGE_4G, RANGE_8G, RANGE_16G};		///< Define the different range in which you could use the accelerometer
-#define FULL_RES 0b1000								///< Define the full resolution for the output of the accelerometer
 
-uint8_t data_configuration[2] ={DATA_SETTING_ADDRESS, FULL_RES | RANGE_16G};	///< configuration of the output data
+/** 
+ * \brief	This function initialize the clock of the microcontroller
+ */
+void time_keeper_init(void);
 
-void adxl345_driver_init_slow(void) 
-{
-	;
+
+/** 
+ * \brief	This function returns the time in seconds since system start
+ * 
+ * \return	The time in seconds since system start
+ */
+double time_keeper_get_s(void);
+
+
+/**
+ * \brief	This function returns the time in milliseconds since system start
+ *
+ * \return The time in milliseconds since system start
+ */
+uint64_t time_keeper_get_ms(void);
+
+
+/**
+ * \brief	This function returns the time in microseconds since system start. 
+ *
+ * \warning	Will run over after an hour.
+ *
+ * \return The time in microseconds since system start
+ */
+uint64_t time_keeper_get_us(void);
+
+
+/**
+ * \brief	Functions that runs for the parameters input microseconds before returning
+ *
+ * \param	microseconds		The number of microseconds to wait
+ */
+void time_keeper_delay_us(uint64_t microseconds);
+
+
+/**
+ * \brief	Wait for X ms
+ *
+ * \param	until_time		The time during which the function will run
+ */
+void time_keeper_delay_ms(uint64_t milliseconds);
+
+
+/**
+ * \brief	Sleep for X ms
+ *
+ * \param	until_time		The time during which the function will run
+ */
+void time_keeper_sleep_us(uint64_t microseconds);
+
+
+#ifdef __cplusplus
 }
+#endif
 
-acc_data_t* adxl345_driver_get_acc_data_slow(void) 
-{			
-	return (acc_data_t*)&acc_outputs;
-}
+#endif /* TIME_KEEPER_H_ */

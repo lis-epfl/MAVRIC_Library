@@ -30,68 +30,50 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial_dummy.cpp
+ * \file led_gpio.cpp
  * 
- * \author 	MAV'RIC Team
- *   
- * \brief 	Dummy implementation for serial peripherals
+ * \author MAV'RIC Team
+ * 
+ * \brief Implementation of led using gpio 
  *
  ******************************************************************************/
 
-#include "serial_dummy.hpp"
+#include "led_gpio.hpp"
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
 
-Serial_dummy::Serial_dummy(serial_dummy_conf_t config)
+Led_gpio::Led_gpio(Gpio& gpio, bool active_high):
+	gpio_(gpio),
+	active_high_(active_high)
+{}
+
+
+void Led_gpio::on(void)
 {
-	config_ = config;
+	if( active_high_ )
+	{
+		gpio_.set_high();
+	}
+	else
+	{
+		gpio_.set_low();
+	}
 }
 
 
-bool Serial_dummy::init(void)
+void Led_gpio::off(void)
 {
-	return config_.flag;
+	if( active_high_ )
+	{
+		gpio_.set_low();
+	}
+	else
+	{
+		gpio_.set_high();
+	}	
 }
 
 
-	
-uint32_t Serial_dummy::readable(void)
+void Led_gpio::toggle(void)
 {
-	return config_.flag;
+	gpio_.toggle();
 }
-
-
-
-uint32_t Serial_dummy::writeable(void)
-{
-	return config_.flag;
-}
-
-
-void Serial_dummy::flush(void)
-{
-	;
-}
-
-bool Serial_dummy::attach(serial_interrupt_callback_t func)
-{
-	return config_.flag;
-}
-
-bool Serial_dummy::write(const uint8_t* bytes, const uint32_t size)
-{
-	return config_.flag;
-}
-
-
-bool Serial_dummy::read(uint8_t* bytes, const uint32_t size)
-{
-	return config_.flag;
-}
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------

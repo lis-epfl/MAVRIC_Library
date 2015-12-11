@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 
@@ -128,7 +128,7 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 	mavlink_msg_rc_channels_raw_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
-										time_keeper_get_millis(),
+										time_keeper_get_ms(),
 										0,
 										remote->sat->channel(0) + 1024,
 										remote->sat->channel(1) + 1024,
@@ -146,7 +146,7 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 	mavlink_msg_rc_channels_raw_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
-										time_keeper_get_millis(),
+										time_keeper_get_ms(),
 										1,
 										remote->sat->channel(8)+ 1024,
 										remote->sat->channel(9)+ 1024,
@@ -166,7 +166,7 @@ void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t
 	mavlink_msg_rc_channels_scaled_pack(	mavlink_stream->sysid,
 											mavlink_stream->compid,
 											msg,
-											time_keeper_get_millis(),
+											time_keeper_get_ms(),
 											0,
 											remote->channels[0] * 10000.0f,
 											remote->channels[1] * 10000.0f,
@@ -184,7 +184,7 @@ void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t
 	mavlink_msg_rc_channels_scaled_pack(	mavlink_stream->sysid,
 											mavlink_stream->compid,
 											msg,
-											time_keeper_get_millis(),
+											time_keeper_get_ms(),
 											1,
 											remote->channels[8] * 10000.0f,
 											remote->channels[9] * 10000.0f,

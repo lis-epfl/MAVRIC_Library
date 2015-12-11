@@ -44,7 +44,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "print_util.h"
 	#include "constants.h"
 	#include "coord_conventions.h"
@@ -185,7 +185,7 @@ bool remote_init(remote_t* remote, Satellite* sat, const remote_conf_t config)
 		remote->channels[i] = 0.0f;
 		remote->trims[i] = 0.0f;
 	}
-	remote->last_satellite_update = time_keeper_get_micros();
+	remote->last_satellite_update = time_keeper_get_us();
 	
 	return init_success;
 }
@@ -193,7 +193,7 @@ bool remote_init(remote_t* remote, Satellite* sat, const remote_conf_t config)
 
 void remote_update(remote_t* remote)
 {
-	uint32_t now = time_keeper_get_time_ticks() ;
+	uint32_t now = time_keeper_get_us() ;
 	float raw;
 	
 	if ( remote->sat->last_update() > remote->last_satellite_update )

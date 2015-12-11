@@ -44,9 +44,63 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "maths.h"
 	#include "constants.h"
+}
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief	Launch the configuration of the GPS
+ *
+ * \param	gps						The pointer to the gps structure
+ * \param	packet					The pointer to the decoded MAVLink message long
+ * 
+ * \return	The MAV_RESULT of the command
+ */
+static mav_result_t gps_start_configuration(Gps* gps, mavlink_command_long_t* packet);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static mav_result_t gps_start_configuration(Gps* gps, mavlink_command_long_t* packet)
+{
+	mav_result_t result = MAV_RESULT_TEMPORARILY_REJECTED;
+	
+	if (packet->param1 == 1)
+	{
+		gps->configure();
+		
+		result = MAV_RESULT_ACCEPTED;
+	}
+	
+	return result;
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool gps_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler)
+{
+	bool init_success = true;
+	
+	// Add callbacks for fat_fs_mounting commands requests
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	callbackcmd.command_id = MAV_CMD_PREFLIGHT_UAVCAN; // 243
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&gps_start_configuration;
+	callbackcmd.module_struct =									gps;
+	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	
+	return init_success;
 }
 
 void gps_telemetry_send_raw(const Gps* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

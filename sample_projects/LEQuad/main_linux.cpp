@@ -85,6 +85,7 @@ int main(int argc, char** argv)
 									board.sim.sonar(),
 									board.mavlink_serial,
 									board.spektrum_satellite,
+									board.led,
 									board.file_flash,
 									board.battery,
 									board.servo_0,
@@ -100,6 +101,7 @@ int main(int argc, char** argv)
 
 	// Board initialisation
 	init_success &= board.init();
+	board.sim.update();
 
 	// Init central data
 	init_success &= cd.init();

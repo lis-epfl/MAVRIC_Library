@@ -5,7 +5,7 @@
 ################################################################################
 
 # Binaries will be generated with this name
-PROJ_NAME=Mavrinux
+PROJ_NAME=LEQuad_mavrinux
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
@@ -52,8 +52,7 @@ LIB_SRCS += drivers/barometer_telemetry.cpp
 LIB_SRCS += drivers/bmp085.cpp                    
 LIB_SRCS += drivers/flow.cpp                  
 LIB_SRCS += drivers/gps_telemetry.cpp       
-LIB_SRCS += drivers/gps_ublox.cpp                 
-LIB_SRCS += drivers/gps_ublox_telemetry.cpp       
+LIB_SRCS += drivers/gps_ublox.cpp
 LIB_SRCS += drivers/hmc5883l.cpp             
 LIB_SRCS += drivers/lsm330dlc.cpp            
 LIB_SRCS += drivers/servo.cpp                              
@@ -124,14 +123,13 @@ LIB_SRCS += hal/dummy/FatFs/atadrive.c
 LIB_SRCS += hal/dummy/FatFs/sdcard.c
 LIB_SRCS += hal/dummy/FatFs/usbdisk.c
 LIB_SRCS += hal/dummy/adc_dummy.cpp
-LIB_SRCS += hal/dummy/serial_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
-LIB_SRCS += hal/dummy/file_dummy.cpp
 
 LIB_SRCS += hal/common/fat_fs_mounting.cpp
 LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
 LIB_SRCS += hal/common/dbg.cpp
+LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
 
@@ -169,6 +167,7 @@ CXXFLAGS += ${LIB_INC}
 LDFLAGS += -I.
 LDFLAGS += ${LIB_INC}
 LDFLAGS += ${SRCS_INC}
+LDFLAGS += -lrt
 
 ################################################################################
 # Normally you shouldn't need to change anything below this line!
@@ -194,7 +193,7 @@ OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
  
-AWK_CMD = awk '{ printf "%-30s %-10s\n",$$1, $$2; }'
+AWK_CMD = awk '{ printf "%-60s %-10s\n",$$1, $$2; }'
 PRINT_ERROR = printf "$@ $(ERROR_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n" && false
 PRINT_WARNING = printf "$@ $(WARN_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n"
 PRINT_OK = printf "$@ $(OK_STRING)\n" | $(AWK_CMD)
@@ -216,7 +215,7 @@ proj: $(PROJ_NAME).elf
 # Linking
 ${PROJ_NAME}.elf: ${OBJS}
 	@echo Linking...
-	@$(CXX) $(LDFLAGS) $^ -o $@  
+	@$(CXX) $^ -o $@ $(LDFLAGS)  
 	@$(BUILD_CMD)
 	
 # C files in Library

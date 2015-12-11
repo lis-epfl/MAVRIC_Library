@@ -53,7 +53,7 @@
 
 extern "C" 
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "navigation_default_config.h"
 	#include "qfilter_default_config.h"
 	#include "scheduler_default_config.h"
@@ -62,13 +62,14 @@ extern "C"
 }
 
 
-Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3):
+Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3):
 	imu( imu ),
 	barometer( barometer ),
 	gps( gps ),
 	sonar( sonar ),
 	serial_mavlink( serial_mavlink ),
 	satellite( satellite ),
+	led(led),
 	file_flash( file_flash ),
 	battery( battery ),
 	servo_0( servo_0 ),

@@ -42,7 +42,7 @@
 
 
 #include "scheduler.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 #include "print_util.h"
 #include <stdlib.h>
 
@@ -112,7 +112,7 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 			new_task->timing_mode       = timing_mode;	
 			new_task->priority          = priority;	
 			new_task->repeat_period     = repeat_period;
-			new_task->next_run          = time_keeper_get_micros();
+			new_task->next_run          = time_keeper_get_us();
 			new_task->execution_time    = 0;
 			new_task->delay_max         = 0;
 			new_task->delay_avg         = 0;
@@ -197,7 +197,7 @@ int32_t scheduler_update(scheduler_t* scheduler)
 	// Iterate through registered tasks
 	for (int32_t i = ts->current_schedule_slot; i < ts->task_count; i++) 
 	{
-		uint32_t current_time = time_keeper_get_micros();
+		uint32_t current_time = time_keeper_get_us();
 
 		// If the task is active and has waited long enough...
 		if ( (ts->tasks[i].run_mode != RUN_NEVER) && (current_time >= ts->tasks[i].next_run) ) 
@@ -205,7 +205,7 @@ int32_t scheduler_update(scheduler_t* scheduler)
 			uint32_t delay = current_time - (ts->tasks[i].next_run);
 			uint32_t task_start_time;
 
-		    task_start_time = time_keeper_get_micros();
+		    task_start_time = time_keeper_get_us();
 
 		    // Get function pointer and function argument
 		    call_task = ts->tasks[i].call_function;
@@ -226,7 +226,7 @@ int32_t scheduler_update(scheduler_t* scheduler)
 
 					case PERIODIC_RELATIVE:
 						// Take delays into account
-						ts->tasks[i].next_run = time_keeper_get_micros() + ts->tasks[i].repeat_period;
+						ts->tasks[i].next_run = time_keeper_get_us() + ts->tasks[i].repeat_period;
 					break;
 				}
 			}
@@ -252,7 +252,7 @@ int32_t scheduler_update(scheduler_t* scheduler)
 				ts->tasks[i].delay_max = delay;
 			}
 			ts->tasks[i].delay_var_squared = (15 * ts->tasks[i].delay_var_squared + (delay - ts->tasks[i].delay_avg) * (delay - ts->tasks[i].delay_avg)) / 16;
-			ts->tasks[i].execution_time = (7 * ts->tasks[i].execution_time + (time_keeper_get_micros() - task_start_time)) / 8;
+			ts->tasks[i].execution_time = (7 * ts->tasks[i].execution_time + (time_keeper_get_us() - task_start_time)) / 8;
 				
 			// Depending on shceduling strategy, select next task slot	
 			switch (scheduler->schedule_strategy) 
@@ -327,7 +327,7 @@ void scheduler_change_task_period(task_entry_t *te, uint32_t repeat_period)
 
 void scheduler_suspend_task(task_entry_t *te, uint32_t delay) 
 {
-	te->next_run = time_keeper_get_micros() + delay;
+	te->next_run = time_keeper_get_us() + delay;
 }
 
 
@@ -338,5 +338,5 @@ void scheduler_run_task_now(task_entry_t *te)
 		te->run_mode = RUN_ONCE;
 	} 
 
-	te->next_run = time_keeper_get_micros();
+	te->next_run = time_keeper_get_us();
 }

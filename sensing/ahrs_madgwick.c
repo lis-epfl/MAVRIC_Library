@@ -59,7 +59,7 @@
 #include "maths.h"
 #include "print_util.h"
 #include "constants.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 #include "quaternions.h"
 
 
@@ -121,7 +121,7 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 	float h_x, h_y, h_z;														// computed flux in the earth frame
 
 	// Compute time since last update
-	float now = time_keeper_get_time(); 
+	float now = time_keeper_get_s(); 
 	float dt  = now - ahrs_madgwick->ahrs->last_update;
 
 	// Get current attitude in NED

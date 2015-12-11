@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file time_keeper.h
+ * \file time_keeper.c
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -38,94 +38,67 @@
  * \brief This file is used to interact with the clock of the microcontroller
  * 
  ******************************************************************************/
+ 
+
+#include <unistd.h>
+#include <time.h>
+#include "time_keeper.hpp"
 
 
-#ifndef TIME_KEEPER_H_
-#define TIME_KEEPER_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdint.h>
-
-/** 
- * \brief	This function initialize the clock of the microcontroller
- */
-void time_keeper_init(void);
-
-/** 
- * \brief	This function returns the time in seconds since system start
- * 
- * \return	The time in seconds since system start
- */
-double time_keeper_get_time(void);
-
-/**
- * \brief	This function returns the time in milliseconds since system start
- *
- * \return The time in milliseconds since system start
- */
-uint32_t time_keeper_get_millis(void);
-
-/**
- * \brief	This function returns the time in microseconds since system start. 
- *
- * \warning	Will run over after an hour.
- *
- * \return The time in microseconds since system start
- */
-uint32_t time_keeper_get_micros(void);
-
-/**
- * \brief	raw timer ticks
- *
- * \return	The raw timer ticks
- */
-uint32_t time_keeper_get_time_ticks(void);
-
-/**
- * \brief	Transforms the timer ticks into seconds
- *
- * \param	timer_ticks		The timer ticks
- *
- * \return	The time in seconds
- */
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks);
-
-/**
- * \brief	Functions that runs for the parameters input microseconds before returning
- *
- * \param	microseconds		The number of microseconds to wait
- */
-void time_keeper_delay_micros(int32_t microseconds);
-
-/**
- * \brief	Wait until time pass the parameter input
- *
- * \param	until_time		The time until which the function will run
- */
-void time_keeper_delay_until(uint32_t until_time);
-
-
-/**
- * \brief	Wait for X ms
- *
- * \param	until_time		The time during which the function will run
- */
-void time_keeper_delay_ms(int32_t t);
-
-
-/**
- * \brief	Sleep for X ms
- *
- * \param	until_time		The time during which the function will run
- */
-void time_keeper_sleep_us(int32_t t);
-
-
-#ifdef __cplusplus
+void time_keeper_init(void) 
+{
+	;
 }
-#endif
 
-#endif /* TIME_KEEPER_H_ */
+
+double time_keeper_get_s(void)
+{
+	// time in seconds since system start
+	return (double)time_keeper_get_us() / (double)1000000.0;
+}
+
+
+uint64_t time_keeper_get_ms(void)
+{
+	// milliseconds since system start
+	return time_keeper_get_us() / 1000; /// (TK_AST_FREQUENCY / 1000);
+}
+
+
+uint64_t time_keeper_get_us(void)
+{
+	timespec ts;
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
+	return ts.tv_sec*1000000 + ts.tv_nsec / 1000;
+}
+
+
+void time_keeper_delay_us(uint64_t microseconds)
+{
+	uint64_t now = time_keeper_get_us();
+	while (time_keeper_get_us() < now + microseconds)
+	{
+		;
+	}
+}
+
+
+void time_keeper_delay_ms(uint64_t milliseconds) 
+{
+	uint64_t now = time_keeper_get_us();
+	
+	while (time_keeper_get_us() < now + 1000 * milliseconds) 
+	{
+		;
+	}
+}
+
+
+void time_keeper_sleep_us(uint64_t microseconds) 
+{
+	struct timespec reqtime;
+	reqtime.tv_sec 	= 0;
+	reqtime.tv_nsec = 1000 * microseconds;
+
+	nanosleep(&reqtime, NULL);
+}

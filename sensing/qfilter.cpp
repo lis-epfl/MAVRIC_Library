@@ -46,7 +46,7 @@ extern "C"
 { 
 	#include "coord_conventions.h"
 	#include "print_util.h" 
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include <math.h>
 	#include "maths.h"
 	#include "constants.h"
@@ -103,7 +103,7 @@ void qfilter_update(qfilter_t *qf)
 	float ki_mag = qf->ki_mag;
 
 	// Update time in us
-	float now_us 	= time_keeper_get_micros();
+	float now_us 	= time_keeper_get_us();
 	
 	// Delta t in seconds
 	float dt     = 1e-6 * (float)(now_us - qf->ahrs->last_update);

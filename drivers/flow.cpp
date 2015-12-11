@@ -43,7 +43,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "print_util.h"
 	#include "endianness.h"
 }
@@ -57,7 +57,7 @@ bool flow_init(flow_t* flow, Serial* uart_)
 	bool success = true;
 
 	// Init members
-	flow->last_update_us  = time_keeper_get_micros();
+	flow->last_update_us  = time_keeper_get_us();
 	flow->handshake_state = FLOW_NO_HANDSHAKE; 
 	flow->of_count 	      = 0;
 
@@ -80,7 +80,7 @@ bool flow_init(flow_t* flow, Serial* uart_)
 bool flow_update(flow_t* flow)
 {
 	// Update time
-	flow->last_update_us  = time_keeper_get_micros();
+	flow->last_update_us  = time_keeper_get_us();
 
 	// Receive incoming bytes
 	mavlink_stream_receive(&flow->mavlink_stream);

@@ -45,7 +45,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "constants.h"
 }
 
@@ -66,7 +66,7 @@ Sonar_i2cxl::Sonar_i2cxl(I2c& i2c, sonar_i2cxl_conf_t config):
 	distance_( 0.2f ),
 	velocity_( 0.0f ),
 	healthy_( false ),
-	last_update_us_( time_keeper_get_micros() )
+	last_update_us_( time_keeper_get_us() )
 {}
 
 
@@ -86,7 +86,7 @@ bool Sonar_i2cxl::update(void)
 	res &= send_range_command();
 
 	// Update timing
-	last_update_us_ = time_keeper_get_micros();
+	last_update_us_ = time_keeper_get_us();
 
 	return res;
 }
@@ -145,7 +145,7 @@ bool Sonar_i2cxl::get_last_measure(void)
 	float distance_m 		= 0.0f;
 	float new_velocity 		= 0.0f;
 	float dt_s 				= 0.0f;
-	float time_us 			= time_keeper_get_micros();
+	float time_us 			= time_keeper_get_us();
 
 	res = i2c_.read(buf, 2, config_.i2c_address);
 

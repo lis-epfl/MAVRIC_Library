@@ -30,70 +30,126 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	file_dummy.cpp
+ * \file 	gpio_stm32.cpp
  * 
- * \author  MAV'RIC Team
+ * \author 	MAV'RIC Team
  *   
- * \brief   Dummy implementation of files
+ * \brief 	Implementation of GPIO peripherals for STM32
  *
  ******************************************************************************/
 
-#include "file_dummy.hpp"
+#include <libopencm3/stm32/gpio.h>
 
-using namespace std;
+#include "gpio_stm32.hpp"
 
-File_dummy::File_dummy(const char* path)
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Gpio_stm32::Gpio_stm32(gpio_stm32_conf_t config)
 {
-	;
-}
-
-bool File_dummy::open(const char* path)
-{
-	return false;
-}
-
-
-bool File_dummy::is_open()
-{
-	return false;
+	config_ = config;
+	configure(config_.dir, config_.pull);
 }
 
 
-
-bool File_dummy::close()
+bool Gpio_stm32::init(void)
 {
-	return false;
+	bool success = true;
+
+	success &= configure(config_.dir, config_.pull);
+
+	return success;
 }
 
 
-
-bool File_dummy::read(uint8_t* data, uint32_t size)
+bool Gpio_stm32::configure(gpio_dir_t dir, gpio_pull_updown_t pull)
 {
+	uint8_t mode; 
+	uint8_t pull_up_down;
+
+	// Keep config
+	config_.dir  = dir;
+	config_.pull = pull;
+
+	// Get Atmel flags
+	switch( dir )
+	{
+		case GPIO_INPUT:
+			mode = GPIO_MODE_OUTPUT;
+		break;
+
+		case GPIO_OUTPUT:
+			mode = GPIO_MODE_OUTPUT;
+		break;
+	}
+
+	switch( pull )
+	{
+		case GPIO_PULL_UPDOWN_NONE:
+			pull_up_down = GPIO_PUPD_NONE;
+		break;
+
+		case GPIO_PULL_UPDOWN_UP:
+			pull_up_down = GPIO_PUPD_PULLUP;
+		break;
+
+		case GPIO_PULL_UPDOWN_DOWN:
+			pull_up_down = GPIO_PUPD_PULLDOWN;
+		break;
+
+		default:
+			pull_up_down = GPIO_PUPD_NONE;
+		break;
+	}
+
+	// Write to pin
+	gpio_mode_setup(config_.port, mode, pull_up_down, config_.pin);
+
+	return true;	
+}
+
+
+bool Gpio_stm32::set_high(void)
+{
+	gpio_set(config_.port, config_.pin);
+
 	return true;
 }
 
 
-
-bool File_dummy::write(const uint8_t* data, uint32_t size)
+bool Gpio_stm32::set_low(void)
 {
-	return false;
+	gpio_clear(config_.port, config_.pin);
+
+	return true;
 }
 
 
-
-bool File_dummy::seek(int32_t offset, file_seekfrom_t origin)
+bool Gpio_stm32::toggle(void)
 {
-	return false;
+	gpio_toggle(config_.port, config_.pin);
+
+	return true;
 }
 
 
-uint32_t File_dummy::offset()
+bool Gpio_stm32::write(bool level)
 {
-	return 0;
+	if( level == false )
+	{
+		set_low();
+	}
+	else
+	{
+		set_high();
+	}
+
+	return true;
 }
 
 
-uint32_t File_dummy::length()
+bool Gpio_stm32::read(void)
 {
-	return 0;
+	return (gpio_get(config_.port, config_.pin) == config_.pin);
 }

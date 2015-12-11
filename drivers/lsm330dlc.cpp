@@ -47,7 +47,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 const uint8_t LSM330_ACC_SLAVE_ADDRESS		= 	0b0011000;	///< Define the Accelerometer Address, as a slave on the i2c bus
@@ -286,7 +286,7 @@ bool Lsm330dlc::update(void)
 		gyro_data_[2] = (float)((int16_t)gyro_buffer[3]);
 
 		// Save last update time
-		last_update_us_ = time_keeper_get_micros();
+		last_update_us_ = time_keeper_get_us();
 	}
 
 	return success;

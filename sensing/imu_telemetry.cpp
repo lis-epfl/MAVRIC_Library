@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "print_util.h"
 	#include "constants.h"
 }
@@ -211,7 +211,7 @@ void imu_telemetry_send_scaled(const Imu* imu, const mavlink_stream_t* mavlink_s
 	mavlink_msg_scaled_imu_pack(mavlink_stream->sysid,
 								mavlink_stream->compid,
 								msg,
-								time_keeper_get_millis(),
+								time_keeper_get_ms(),
 								1000 * acc[X],
 								1000 * acc[Y],
 								1000 * acc[Z],

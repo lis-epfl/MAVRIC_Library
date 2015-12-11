@@ -30,97 +30,66 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file time_keeper.c
+ * \file led_avr32.hpp
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
- *   
- * \brief This file is used to interact with the clock of the microcontroller
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
  * 
+ * \brief This file is the driver for the avr32 led
+ *
  ******************************************************************************/
 
 
-#include "time_keeper.h"
-#include "ast.h"
+#ifndef LED_AVR32_HPP_
+#define LED_AVR32_HPP_
 
-#define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
-#define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
+#include <stdint.h>
+#include "led.hpp"
 
 
-void time_keeper_init()
+typedef enum
 {
-	ast_init_counter(&AVR32_AST, AST_OSC_PB, AST_PRESCALER_SETTING, 0);
-	ast_enable(&AVR32_AST);
-}
+	LED_AVR32_ID_0 = 0x01,
+	LED_AVR32_ID_1 = 0x02,
+	LED_AVR32_ID_2 = 0x04,
+	LED_AVR32_ID_3 = 0x08
+} led_avr32_id_t;
 
 
-uint32_t time_keeper_get_time_ticks()
+class Led_avr32 : public Led
 {
-	//raw timer ticks
-	return ast_get_counter_value(&AVR32_AST);
-}
+public:
+	/**
+	 * \brief 	Constructor
+	 * 
+	 * \param 	id 	id of the led (one of led_avr32_id_t enum)
+	 */
+	Led_avr32(led_avr32_id_t id);
 
 
-double time_keeper_get_time()
-{
-	// time in seconds since system start
-	return time_keeper_ticks_to_seconds(time_keeper_get_time_ticks());
-}
+	/**
+	 * \brief	Switch led on
+	 */
+	void on(void);
 
 
-uint32_t time_keeper_get_millis()
-{
-	//milliseconds since system start
-	return time_keeper_get_time_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
-}
+	/**
+	 * \brief	Switch led off
+	 */
+	void off(void);
 
 
-uint32_t time_keeper_get_micros()
-{
-	// microseconds since system start. Will run over after an hour.
-	return time_keeper_get_time_ticks() * (1000000 / TK_AST_FREQUENCY);
-}
-
-
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
-{
-	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
-}
-
-
-void time_keeper_delay_micros(int32_t microseconds)
-{
-	uint32_t now = time_keeper_get_micros();
-	while (time_keeper_get_micros() < now + microseconds);
-}
-
-
-void time_keeper_delay_until(uint32_t until_time)
-{
-	while (time_keeper_get_micros() < until_time)
-	{
-		;
-	}	
-}
-
-
-void time_keeper_delay_ms(int32_t t) 
-{
-	uint32_t now = time_keeper_get_micros();
+	/**
+	 * \brief	Toggle led
+	 */
+	void toggle(void);
 	
-	while (time_keeper_get_micros() < now + 1000 * t) 
-	{
-		;
-	}
+
+private:
+	led_avr32_id_t id_; 			///< ID of the led
 };
 
 
-void time_keeper_sleep_us(int32_t t) 
-{
-	uint32_t now = time_keeper_get_micros();
-	
-	while (time_keeper_get_micros() < now + t) 
-	{
-		;
-	}
-};
+#endif /* LED_AVR32_HPP_ */

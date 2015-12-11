@@ -67,10 +67,11 @@
 #include "manual_control.hpp"
 #include "battery.hpp"
 #include "servos_mix_quadcopter_diag.hpp"
+#include "led.hpp"
 
 extern "C" 
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "ahrs.h"
 	#include "pid_controller.h"
 	#include "print_util.h"
@@ -94,7 +95,7 @@ public:
 	/**
 	 * \brief   Constructor
 	 */
-	Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3);
+	Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3);
 
 
 	/**
@@ -113,6 +114,7 @@ public:
 	Sonar& 			sonar;				///< Reference to sonar
 	Serial&			serial_mavlink;		///< Reference to telemetry serial
 	Satellite&		satellite;			///< Reference to remote control satellite
+	Led& 			led;				///< Reference to the leds
 	File& 			file_flash;			///< Reference to flash storage
 	Battery& 		battery;			///< Reference to battery
 	Servo&	 		servo_0;			///< Reference to servos structure

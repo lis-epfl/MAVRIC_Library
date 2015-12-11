@@ -43,6 +43,7 @@
 #define TASKS_H_
 
 #include "central_data.hpp"
+#include "led.hpp"
 
 /**
  * \brief 			Initialises all the tasks
@@ -101,7 +102,7 @@ bool sonar_update(Central_data* central_data);
 /**
  * \brief            Run the LED toggle task
  */
-bool tasks_led_toggle(void* arg);
+bool tasks_led_toggle(Led* led);
 
 
 #endif /* TASKS_H_ */

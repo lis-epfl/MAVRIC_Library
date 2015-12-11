@@ -45,7 +45,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "constants.h"
 }
 
@@ -265,9 +265,10 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
 bool navigation_update(navigation_t* navigation)
 {	
 	mav_mode_t mode_local = navigation->state->mav_mode;
-	uint32_t t = time_keeper_get_time_ticks();
 	
-	navigation->dt = time_keeper_ticks_to_seconds(t - navigation->last_update);
+	uint32_t t = time_keeper_get_us();
+	
+	navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
 	navigation->last_update = t;
 	
 	switch (navigation->state->mav_state)
