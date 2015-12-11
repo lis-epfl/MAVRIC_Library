@@ -1577,7 +1577,11 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 				waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(	&waypoint_handler->current_waypoint, 
 																									waypoint_handler->position_estimation->local_position,
 																									&waypoint_handler->dubin_state);
+<<<<<<< HEAD
 				
+=======
+
+>>>>>>> origin/quad_to_wing
 				print_util_dbg_print("Waypoint Nr");
 				print_util_dbg_print_num(i,10);
 				print_util_dbg_print(" set,\r\n");
