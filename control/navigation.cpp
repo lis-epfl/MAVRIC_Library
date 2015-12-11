@@ -115,7 +115,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	aero_attitude_t attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
 	attitude_yaw.rpy[0] = 0.0f;
 	attitude_yaw.rpy[1] = 0.0f;
-	attitude_yaw.rpy[2] = attitude_yaw.rpy[2];
+	attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
 	quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
 
 	quaternions_rotate_vector(q_rot,rel_pos,dir_desired_sg);
@@ -202,9 +202,9 @@ static void navigation_run(navigation_t* navigation)
 	float rel_pos[3];
 	
 	// Control in translational speed of the platform
-	navigation->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.pos,
-																					rel_pos,
-																					navigation->position_estimation->local_position.pos);
+	navigation->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(	navigation->goal.pos,
+																rel_pos,
+																navigation->position_estimation->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
 	
 	navigation->controls_nav->theading=navigation->goal.heading;
