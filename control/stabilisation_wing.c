@@ -138,6 +138,9 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 	switch (stabilisation_wing->controls->control_mode) 
 	{
 	case VELOCITY_COMMAND_MODE:
+		// Get current attitude
+		attitude_yaw = coord_conventions_quat_to_aero(stabilisation_wing->ahrs->qe);
+	
 		/////////////
 		// HEADING //
 		/////////////
@@ -146,7 +149,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		// Overwrite command if in remote
 		if(stabilisation_wing->controls->yaw_mode == YAW_RELATIVE)
 		{
-			nav_heading = input.rpy[YAW];
+			nav_heading = maths_calc_smaller_angle(input.rpy[YAW] - attitude_yaw.rpy[YAW]);
 		}
 		
 		// Compute current heading
@@ -156,7 +159,6 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		stabilisation_wing->vertical_speed = gps_speed_global[Z];			// Used for PID tuning
 		
 		// Transform global to semi-local
-		attitude_yaw = coord_conventions_quat_to_aero(stabilisation_wing->ahrs->qe);
 		attitude_yaw.rpy[0] = 0.0f;
 		attitude_yaw.rpy[1] = 0.0f;
 		attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
@@ -194,6 +196,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		////////////////
 		// Get turn rate command and transform it into a roll angle command for next layer
 		input_turn_rate = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[0];
+		// TODO: Fix this in case of bad airspeed readings...
 		input_roll_angle = atanf(stabilisation_wing->airspeed_analog->airspeed / 9.81f * input_turn_rate);
 		
 		// Set input for next layer
@@ -210,7 +213,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		input.rpy[1] += stabilisation_wing->pitch_angle_apriori;	// Constant compensation for horizontal
 		if(abs(attitude.rpy[ROLL]) < PI/2.0f)						// Compensation for the roll bank angle
 		{
-			input.rpy[1] += stabilisation_wing->pitch_angle_apriori_gain * (1.0/cosf(attitude.rpy[ROLL]) - 1.0);
+			input.rpy[1] += stabilisation_wing->pitch_angle_apriori_gain * (1.0/maths_f_abs(cosf(attitude.rpy[ROLL])) - 1.0);
 		}
 		
 		// run absolute attitude_filter controller

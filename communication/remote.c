@@ -498,7 +498,7 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
 	controls->rpy[YAW] 	= remote_get_yaw(remote);
 }
 
-void remote_get_velocity_vector_from_remote_wing(remote_t* remote, control_command_t* controls)
+void remote_get_velocity_vector_from_remote_wing(remote_t* remote, const float ki_yaw, control_command_t* controls)
 {
 	remote_update(remote);
 	
@@ -508,7 +508,7 @@ void remote_get_velocity_vector_from_remote_wing(remote_t* remote, control_comma
 	controls->tvel[X] 	= 10.0f * (1 + remote_get_throttle(remote));
 	controls->tvel[Y] 	= 0.0f;
 	controls->tvel[Z] 	= - 6.0f * remote_get_pitch(remote);
-	controls->rpy[YAW] 	= PI/2.0f * remote_get_roll(remote);// Turn rate
+	controls->rpy[YAW] 	+= ki_yaw * 0.2f * remote_get_roll(remote);	// Turn rate
 }
 
 

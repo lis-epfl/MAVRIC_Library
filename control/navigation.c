@@ -611,22 +611,20 @@ static void navigation_run(navigation_t* navigation)
 																					navigation->position_estimation->local_position.pos);
 	
 	// For Quad
-	mav_mode_t mode = navigation->state->mav_mode;
-	if ((mode.AUTO == AUTO_ON) && (((!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
-	{
-		//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
-		navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
-
-
-		//navigation_set_dubin_field_command(navigation, navigation->goal.radius);
-	}
-	else
-	{
-		navigation_set_speed_command(rel_pos, navigation);
-	}
+	// mav_mode_t mode = navigation->state->mav_mode;
+	// if ((mode.AUTO == AUTO_ON) && (((!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
+	// {
+	// 	//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
+	// 	navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
+	// 	//navigation_set_dubin_field_command(navigation, navigation->goal.radius);
+	// }
+	// else
+	// {
+	// 	navigation_set_speed_command(rel_pos, navigation);
+	// }
 	
 	// For Wing
-	//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);	
+	navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
 
 	navigation->controls_nav->theading=navigation->goal.waypoint.heading;
 }

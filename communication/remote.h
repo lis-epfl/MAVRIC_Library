@@ -323,7 +323,7 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
  * \param	remote	The pointer to the remote structure
  * \param	controls			The pointer to the controls structure
  */
-void remote_get_velocity_vector_from_remote_wing(remote_t* remote, control_command_t* controls);
+void remote_get_velocity_vector_from_remote_wing(remote_t* remote, const float ki_yaw, control_command_t* controls);
 
 
 /**

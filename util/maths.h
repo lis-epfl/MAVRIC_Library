@@ -391,6 +391,13 @@ static inline float maths_interpolate(float x, float x1, float x2, float y1, flo
 	}
 }
 
+/**
+ * \brief 		Returns the sign of the float value of x
+ * 
+ * \param 	x 	The float we want to get the sign
+ * 
+ * \return 		1.0 if x is positive, -1.0 otherwise
+ */
 static inline float maths_sign(float x)
 {
 	if (x >= 0.0f)
