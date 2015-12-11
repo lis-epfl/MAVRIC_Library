@@ -53,37 +53,59 @@ extern "C" {
 #include "mav_modes.h"
 #include "constants.h"
 
+/*
+ * \brief 	The Dubin's path structure
+ */
 typedef struct
 {
-	float circle_center_1[3];
-	float tangent_point_1[3];
-	int8_t sense_1;
-	float circle_center_2[3];
-	float tangent_point_2[3];
-	float line_direction[3];
-	float length;
-	float old_radius;
+	float circle_center_1[3];			///< The center of the first circle
+	float tangent_point_1[3];			///< The tangent point of the first circle
+	int8_t sense_1;						///< The sense of rotation around the circle
+	float circle_center_2[3];			///< The center of the second circle
+	float tangent_point_2[3];			///< The tangent point of the second circle
+	float line_direction[3];			///< The line created from the two tangent points
+	float length;						///< The length of the trajectory (to compare multiple Dubin paths)
 }dubin_t;
 
-void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[3], const float pos[3], const float speed, const float one_over_scaling);
-
-void dubin_circle(float tvel[3], const float circle[3], const float radius, const float pos[3], const float speed, const float one_over_scaling);
+//void dubin_test_code(void);
 
 /**
- * \brief 		Creating Dubin's path between two waypoints and a sense of rotation
- * 
- * \details 	Computes a 3D velocity vector guiding the MAV around a circular waypoint
+ * \brief 		Vector field to follow a line
  * 				 
- * \param 		rel_pos 		Current relative position of the MAV to the waypoint (input)
- * \param 		attractiveness	Weight given to this object (input)
- * \param 		attractiveness2	Weight given to this object (input)
- * \param 		cruise_speed	Nominal speed around the circle in m/s (input)
- * \param 		radius			Radius of the circle to follow (in m)
- * \param 		vector			Velocity command vector (output)
+ * \param 		tvel	 			The output velocity vector
+ * \param 		line_dir 			The direction of the line
+ * \param 		line_origin 		The origin of the line
+ * \param 		pos 				The current position of the robot
+ * \param		speed 				The desired speed
+ * \param 		one_over_scaling	The inverse of the scaling of the field
  *
  * \return		Return true if everything is ok, false if there is a computational problem.
  */
-dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], const float d2[3], float sense_2);
+void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[3], const float pos[3], const float speed, const float one_over_scaling);
+
+/**
+ * \brief 		Vector field to follow a circle
+ * 				 
+ * \param 		tvel	 			The output velocity vector
+ * \param 		circle 				The center of the circle
+ * \param 		radius_mavlink		Radius of the circle to follow (in m), Positive: clockwise
+ * \param 		speed				The desired speed
+ * \param 		one_over_scaling	The inverse of the scaling of the field
+ */
+void dubin_circle(float tvel[3], const float circle[3], float radius_mavlink, const float pos[3], float speed, float one_over_scaling);
+
+/**
+ * \brief 		Creating Dubin's path between two waypoints and a sense of rotation
+ * 				 
+ * \param 		wp1		 			The starting waypoint
+ * \param 		wp2					The ending waypoint
+ * \param 		d1					The starting direction
+ * \param 		d2					The ending direction
+ * \param 		sense_mavlink		The rotation sense, Positive: clockwise
+ *
+ * \return		Return true if everything is ok, false if there is a computational problem.
+ */
+dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], const float d2[3], float sense_mavlink);
 
 #ifdef __cplusplus
 }
