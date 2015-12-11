@@ -41,7 +41,6 @@
 
 #include "dubin.h"
 #include "print_util.h"
-#include "delay.h"
 
 /**
  * \brief 		Computes the arc length between two point of a circle
@@ -89,7 +88,7 @@ void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[
 	//parameters
 	//float one_over_scaling=0.1; //defines the main influence area [m^-1]
 	
-	float e_t[3], e_r[3]; //tangential and radial unit vectors
+	float e_t[3], e_r[3]; // tangential and radial unit vectors
 	float v_t_norm, v_r_norm;
 	float op[3], rad[3], normal_dist, projection_length, k_r;
 	
@@ -104,7 +103,7 @@ void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[
 		}
 		op[Z] = 0.0f;
 
-		vectors_normalize(line_dir, e_t);//get tangent direction
+		vectors_normalize(line_dir, e_t); // get tangent direction
 		
 		projection_length = vectors_scalar_product(e_t,op);
 		
@@ -118,7 +117,7 @@ void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[
 
 		if(normal_dist > 0.0f)
 		{
-			vectors_normalize(rad,e_r);//get radial direction
+			vectors_normalize(rad,e_r); // get radial direction
 		}
 		else
 		{
@@ -182,7 +181,7 @@ void dubin_circle(float tvel[3], const float circle[3], float radius_mavlink, co
 		}
 		tan_origin[Z] = 0.0f;
 
-		//compute a vectorfield using the tangent.
+		//compute a line vectorfield using the tangent.
 		dubin_line(tvel, tan_dir, tan_origin, pos, speed, one_over_scaling);
 	}
 }
@@ -212,7 +211,7 @@ static float dubin_arc_length_2d(const float p1[3], const float p2[3], const flo
 	int32_t sense_of_measure = v1[0]*v2[1] - v1[1]*v2[0];
 
 	float result;
-	if(sense_of_measure*sense < 0) //if direction of angle=direction of flight
+	if (sense_of_measure*sense < 0)
 	{
 		result = angle*vectors_norm(v1);
 	}
@@ -226,9 +225,6 @@ static float dubin_arc_length_2d(const float p1[3], const float p2[3], const flo
 
 static void dubin_find_tangent(float t1[3], float t2[3], const float c1[3], const float c2[3], const float r1, const float r2)
 {
-	// t1, t2: tangent points, the sense of the circles c1 and c2 is defined by the sign of the radius r1 and r2
-	// Positive value for clockwise orbit
-
 	uint32_t i;
 
 	float u[3], v[3];
@@ -423,6 +419,54 @@ dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], cons
 			print_util_dbg_print("This sense combination is not possible\r\n");
 		}
 	}
+
+	// print_util_dbg_print("wp1(x1000): (");
+	// print_util_dbg_print_num(wp1[X]*1000,10);
+	// print_util_dbg_print(", ");
+	// print_util_dbg_print_num(wp1[Y]*1000,10);
+	// print_util_dbg_print(")\r\n");
+
+	// print_util_dbg_print("wp2(x1000): (");
+	// print_util_dbg_print_num(wp2[X]*1000,10);
+	// print_util_dbg_print(", ");
+	// print_util_dbg_print_num(wp2[Y]*1000,10);
+	// print_util_dbg_print(")\r\n");delay_ms(50);
+
+	// print_util_dbg_print("d1(x1000): (");
+	// print_util_dbg_print_num(d1[X]*1000,10);
+	// print_util_dbg_print(", ");
+	// print_util_dbg_print_num(d1[Y]*1000,10);
+	// print_util_dbg_print(")\r\n");
+
+	// print_util_dbg_print("d2(x1000): (");
+	// print_util_dbg_print_num(d2[X]*1000,10);
+	// print_util_dbg_print(", ");
+	// print_util_dbg_print_num(d2[Y]*1000,10);
+	// print_util_dbg_print(")\r\n");delay_ms(50);
+
+	// print_util_dbg_print("tan_1(x1000): (");
+	// print_util_dbg_print_num(out.tangent_point_1[X]*1000,10);
+	// print_util_dbg_print(", ");
+	// print_util_dbg_print_num(out.tangent_point_1[Y]*1000,10);
+	// print_util_dbg_print(")\r\n");
+
+	// print_util_dbg_print("tan_2(x1000): (");
+	// print_util_dbg_print_num(out.tangent_point_2[X]*1000,10);
+	// print_util_dbg_print(", ");
+	// print_util_dbg_print_num(out.tangent_point_2[Y]*1000,10);
+	// print_util_dbg_print(")\r\n");delay_ms(50);
+
+	// print_util_dbg_print("circ1(x1000): (");
+	// print_util_dbg_print_num(out.circle_center_1[X]*1000,10);
+	// print_util_dbg_print(", ");
+	// print_util_dbg_print_num(out.circle_center_1[Y]*1000,10);
+	// print_util_dbg_print(")\r\n");
+
+	// print_util_dbg_print("circ2(x1000): (");
+	// print_util_dbg_print_num(out.circle_center_2[X]*1000,10);
+	// print_util_dbg_print(", ");
+	// print_util_dbg_print_num(out.circle_center_2[Y]*1000,10);
+	// print_util_dbg_print(")\r\n");delay_ms(50);
 
 	if (!init)
 	{
