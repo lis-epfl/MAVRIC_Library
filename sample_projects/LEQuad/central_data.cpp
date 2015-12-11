@@ -255,6 +255,14 @@ bool Central_data::init(void)
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
 
+	// -------------------------------------------------------------------------
+	// Init servo telemetry
+	// -------------------------------------------------------------------------
+	servos_telemetry_init(	&servos_telemetry, 
+							&servo_0, 
+							&servo_1, 
+							&servo_2, 
+							&servo_3);
 
 	// -------------------------------------------------------------------------
 	// Init manual control
