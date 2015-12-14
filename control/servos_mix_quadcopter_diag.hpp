@@ -94,10 +94,10 @@ typedef struct
  * \param config			The pointer to the configuration of servo mix structure
  * \param torque_command	The pointer to the torque command structure
  * \param thrust_command	The pointer to the thrust command structure
- * \param motor_front_right	The pointer to the servos structure
- * \param motor_front_left	The pointer to the servos structure
- * \param motor_rear_right	The pointer to the servos structure
  * \param motor_rear_left	The pointer to the servos structure
+ * \param motor_front_left	The pointer to the servos structure
+ * \param motor_front_right	The pointer to the servos structure
+ * \param motor_rear_right	The pointer to the servos structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -105,10 +105,10 @@ bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix,
 									const servos_mix_quadcopter_diag_conf_t config, 
 									const torque_command_t* torque_command, 
 									const thrust_command_t* thrust_command, 
-									Servo* motor_front_right,	
+									Servo* motor_rear_left,
 									Servo* motor_front_left,	
-									Servo* motor_rear_right,	
-									Servo* motor_rear_left);
+									Servo* motor_front_right,	
+									Servo* motor_rear_right);	
 
 
 /**

@@ -54,10 +54,10 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Dynamic_model_quad_diag::Dynamic_model_quad_diag( 	Servo& servo_front_right,
+Dynamic_model_quad_diag::Dynamic_model_quad_diag( 	Servo& servo_rear_left,
 													Servo& servo_front_left,
+													Servo& servo_front_right,
 													Servo& servo_rear_right,
-													Servo& servo_rear_left,
 													dynamic_model_quad_diag_conf_t config ):
 	servo_front_right_( servo_front_right ),
 	servo_front_left_( servo_front_left ),

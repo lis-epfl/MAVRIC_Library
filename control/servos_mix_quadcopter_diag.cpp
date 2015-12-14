@@ -52,26 +52,26 @@ bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix,
 									const servos_mix_quadcopter_diag_conf_t config, 
 									const torque_command_t* torque_command, 
 									const thrust_command_t* thrust_command, 
-									Servo* motor_front_right,	
+									Servo* motor_rear_left,
 									Servo* motor_front_left,	
-									Servo* motor_rear_right,	
-									Servo* motor_rear_left)
+									Servo* motor_front_right,	
+									Servo* motor_rear_right)	
 {
 	bool init_success = true;
 	
 	// Init dependencies
 	mix->torque_command 	= torque_command;
 	mix->thrust_command 	= thrust_command;
-	mix->motor_front_right  = motor_front_right;
-	mix->motor_front_left   = motor_front_left;
-	mix->motor_rear_right   = motor_rear_right;
 	mix->motor_rear_left    = motor_rear_left;
+	mix->motor_front_left   = motor_front_left;
+	mix->motor_front_right  = motor_front_right;
+	mix->motor_rear_right   = motor_rear_right;
 
 	// Init parameters
-	mix->motor_front_right_dir = config.motor_front_right_dir;
-	mix->motor_front_left_dir  = config.motor_front_left_dir;
-	mix->motor_rear_right_dir  = config.motor_rear_right_dir;	
 	mix->motor_rear_left_dir   = config.motor_rear_left_dir;
+	mix->motor_front_left_dir  = config.motor_front_left_dir;
+	mix->motor_front_right_dir = config.motor_front_right_dir;
+	mix->motor_rear_right_dir  = config.motor_rear_right_dir;	
 
 	mix->min_thrust 	   = config.min_thrust;
 	mix->max_thrust 	   = config.max_thrust;
