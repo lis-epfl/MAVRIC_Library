@@ -146,10 +146,10 @@ bool Serial_usb_avr32::write(const uint8_t* bytes, const uint32_t size)
 
 
 	// If buffer is almost full, flush
-	if( writeable() < 80 )
-	{
-		flush();
-	}
+	// if( writeable() < 80 )
+	// {
+	// 	flush();
+	// }
 
 	return ret;
 }
