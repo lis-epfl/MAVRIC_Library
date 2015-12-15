@@ -102,6 +102,9 @@ typedef struct
 	bool stop_nav;										///< Flag to start/stop the navigation from a button in case of problems
 	bool stop_nav_there;								///< Flag to stop the navigation and fly to the stopping waypoint
 	
+	float safe_altitude;								///< The altitude at which the robot will fly in critical mode
+	float minimal_radius;								///< The minimal circle radius
+
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
@@ -130,6 +133,9 @@ typedef struct
 	float alt_lpf;										///< The low-pass filtered altitude for auto-landing
 	float LPF_gain;										///< The value of the low-pass filter gain
 	
+	float safe_altitude;								///< The altitude at which the robot will fly in critical mode
+	float minimal_radius;								///< The minimal circle radius
+
 	pid_controller_t hovering_controller;				///< hovering controller
 	pid_controller_t wpt_nav_controller;				///< waypoint navigation controller
 }navigation_config_t;
