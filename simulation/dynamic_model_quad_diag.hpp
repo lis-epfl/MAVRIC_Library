@@ -107,16 +107,16 @@ public:
 	/**
 	 * @brief 	Constructor
 	 * 
-	 * \param 	servo_front_right	Reference to front right servo
-	 * \param   servo_front_left	Reference to front left servo
-	 * \param   servo_rear_right	Reference to rear right servo
 	 * \param   servo_rear_left		Reference to rear left servo, 
+	 * \param   servo_front_left	Reference to front left servo
+	 * \param 	servo_front_right	Reference to front right servo
+	 * \param   servo_rear_right	Reference to rear right servo
 	 * \param 	config				Configuration 	 
 	 */
-	Dynamic_model_quad_diag( 	Servo& servo_front_right,
+	Dynamic_model_quad_diag( 	Servo& servo_rear_left,
 								Servo& servo_front_left,
+								Servo& servo_front_right,
 								Servo& servo_rear_right,
-								Servo& servo_rear_left,
 								dynamic_model_quad_diag_conf_t config = dynamic_model_quad_diag_default_config() );
 
 
