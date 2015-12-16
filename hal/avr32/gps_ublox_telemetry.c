@@ -58,6 +58,16 @@
  */
 static mav_result_t gps_ublox_start_configuration(gps_t* gps, mavlink_command_long_t* packet);
 
+
+/**
+ * \brief	Receive relative position errors in the local frame
+ *
+ * \param	gps						The pointer to the gps structure
+ * \param	packet					The pointer to the decoded MAVLink message long
+ * 
+ * \return	The MAV_RESULT of the command
+ */
+static void gps_ublox_telemetry_receive_relative_error(gps_t* gps, uint32_t sysid, mavlink_message_t* msg);
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -76,6 +86,34 @@ static mav_result_t gps_ublox_start_configuration(gps_t* gps, mavlink_command_lo
 	return result;
 }
 
+
+static void gps_ublox_telemetry_receive_relative_error(gps_t* gps, uint32_t sysid, mavlink_message_t* msg)
+{
+	//if (!gps->dgps_relative.is_stationnary)
+	{
+		mavlink_gps_rtk_t packet;
+		
+		mavlink_msg_gps_rtk_decode(msg, &packet);
+		
+		
+		if(packet.rtk_health)
+		{
+			//to check that we do receive message
+			gps->dgps_relative.mess_rec_counter++;
+			gps->dgps_relative.time_last_dgps_relative_msg = time_keeper_get_millis();
+			gps->dgps_relative.tow			= packet.tow;
+			gps->dgps_relative.error_x_mm	= packet.baseline_a_mm;
+			gps->dgps_relative.error_y_mm	= packet.baseline_b_mm;
+		}
+		else
+		{
+			gps->dgps_relative.time_last_dgps_relative_msg = time_keeper_get_millis();
+			gps->dgps_relative.tow			= packet.tow;
+			gps->dgps_relative.error_x_mm	= 0;
+			gps->dgps_relative.error_y_mm	= 0;
+		}
+	}
+}
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -94,6 +132,16 @@ bool gps_ublox_telemetry_init(gps_t* gps, mavlink_message_handler_t* message_han
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&gps_ublox_start_configuration;
 	callbackcmd.module_struct =									gps;
 	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	
+	// Add callbacks for waypoint handler messages requests
+	mavlink_message_handler_msg_callback_t callback;
+
+	callback.message_id 	= MAVLINK_MSG_ID_GPS_RTK; // 127
+	callback.sysid_filter 	= 0;//254;//201;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&gps_ublox_telemetry_receive_relative_error;
+	callback.module_struct 	= (handling_module_struct_t)		gps;
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
 	
 	return init_success;
 }
@@ -131,5 +179,57 @@ void gps_ublox_telemetry_send_raw(const gps_t* gps, const mavlink_stream_t* mavl
 										0,
 										0,
 										gps->num_sats);
+	}
+}
+
+
+void gps_ublox_telemetry_send_relative_error(gps_t* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	if (gps->dgps_relative.is_stationnary)
+	{
+		
+		if (gps->status == GPS_OK)
+		{
+			
+			
+			gps->dgps_relative.mess_send_counter++;
+			mavlink_msg_gps_rtk_pack(	254,//mavlink_stream->sysid,
+			mavlink_stream->compid,
+			msg,
+			1000 * gps->time_gps,
+			0,	//rtk_receiver_id,
+			0,	//wn,
+			gps->dgps_relative.tow,
+			1,	//rtk_health,
+			0,	//rtk_rate,
+			0,	//nsats,
+			0,	//baseline_coords_type,
+			gps->dgps_relative.error_x_mm,
+			gps->dgps_relative.error_y_mm,
+			0,	//baseline_c_mm,
+			0,	//accuracy,
+			0);	//iar_num_hypotheses
+			
+		}
+		else
+		{
+			mavlink_msg_gps_rtk_pack(	mavlink_stream->sysid,
+			mavlink_stream->compid,
+			msg,
+			1000 * gps->time_gps,
+			0,	//rtk_receiver_id,
+			0,	//wn,
+			gps->dgps_relative.tow,
+			0,	//rtk_health,
+			0,	//rtk_rate,
+			0,	//nsats,
+			0,	//baseline_coords_type,
+			0,	//gps->dgps_relative.error_x_mm
+			0,	//gps->dgps_relative.error_y_mm
+			0,	//baseline_c_mm,
+			0,	//accuracy,
+			0);	//iar_num_hypotheses
+		
+		}
 	}
 }

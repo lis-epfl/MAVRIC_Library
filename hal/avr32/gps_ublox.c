@@ -1682,9 +1682,11 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 			
 		case MSG_NAV_SVINFO:
 			gps_sv_info = ubx_get_sv_info();
+			gps->nav_sv_info = *gps_sv_info;
 			
 			if (gps_sv_info)
 			{
+				gps->nav_sv_info.count ++;
 				++gps->loop_sv_info;
 				gps->loop_sv_info %= gps->num_skipped_msg;
 				if (gps->print_nav_on_debug && (gps->loop_sv_info == 0))
@@ -1770,6 +1772,8 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 		
 		case MSG_NAV_DGPS:
 			gps_nav_dgps = ubx_get_nav_dgps();
+			
+			gps->nav_dgps = *gps_nav_dgps;
 			if (gps_nav_dgps)
 			{
 				++gps->loop_nav_dgps;
@@ -2889,7 +2893,7 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->time_last_posllh_msg = time_keeper_get_millis();
 	gps->time_last_velned_msg = time_keeper_get_millis();
 
-	gps->engine_nav_setting = GPS_ENGINE_AIRBORNE_4G;
+	gps->engine_nav_setting = GPS_ENGINE_PEDESTRIAN;
 
 	gps->status = NO_GPS;
 	gps->healthy = false;
@@ -2897,6 +2901,23 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->configure_gps = false;
 	gps->config_nav_msg_count = 0;
 	gps->acknowledged_received = true;
+	
+	int i = 0;
+	for(i = 0;i <= 10; i ++)
+	{
+		gps->nav_dgps.chan_data[i].sv_id= 0;
+		gps->nav_sv_info.channel_data[i].svid = 0;
+		gps->nav_sv_info.count = 0;
+	}
+	
+	//DGPS things
+	gps->dgps_relative.is_stationnary = 0;
+	gps->dgps_relative.time_last_dgps_relative_msg = 0;
+	gps->dgps_relative.tow = 0;
+	gps->dgps_relative.error_x_mm = 0;
+	gps->dgps_relative.error_y_mm = 0;
+	gps->dgps_relative.mess_rec_counter = 0;
+	gps->dgps_relative.mess_send_counter = 0;
 }
 
 

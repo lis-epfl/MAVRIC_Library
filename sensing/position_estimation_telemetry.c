@@ -132,6 +132,8 @@ bool position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_
 	callbackcmd.module_struct =										pos_est;
 	init_success &= mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
 	
+	
+	
 	return init_success;
 }
 

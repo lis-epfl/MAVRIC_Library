@@ -682,6 +682,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t global_flags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
 		uint8_t num_ch;						///< Number of channels
 		uint32_t itow;						///< GPS msToW
+		uint32_t count;
 	}ubx_nav_sv_info_t;
 
 	/**
@@ -1351,6 +1352,21 @@ typedef struct
 	uint8_t validity;						///< Time validity
 }date_time_t;
 
+
+/**
+ * \brief Type definition for GPS data
+ */
+typedef struct
+{
+	uint32_t is_stationnary;						///< ...
+	uint32_t time_last_dgps_relative_msg;		///< Time reference in ms of microcontroller
+	uint32_t mess_rec_counter;
+	uint32_t mess_send_counter;
+	uint32_t tow;								///< GPS Time of Week of last baseline
+	int32_t error_x_mm;							///< Current baseline in ECEF x or NED north component in mm.
+	int32_t error_y_mm;							///< Current baseline in ECEF y or NED east component in mm.
+}dgps_relative_t;
+
 /**
  * \brief Type definition for GPS data
  */
@@ -1429,8 +1445,12 @@ typedef struct
 	uint8_t cksum_a;							///< Checksum a
 	uint8_t cksum_b;							///< Checksum b
 
+	ubx_nav_sv_info_t nav_sv_info;				/// Variable with structure of GPS Ublox UBX-NAV-SV-INFO
+	ubx_nav_dgps_t nav_dgps;
 	gps_engine_setting_t engine_nav_setting;	///< Enum GPS engine setting
 	ubx_cfg_nav_settings_t nav_settings;		///< CFG-NAV settings structure
+	
+	dgps_relative_t dgps_relative;				///< ...
 
 	bool configure_gps;								///< A flag to start the configuration of the GPS
 	uint16_t config_loop_count;					///< The counter for the configuration of the GPS
@@ -1471,7 +1491,7 @@ void gps_ublox_configure_gps(gps_t *gps);
 void gps_ublox_update(gps_t *gps);
 
 /**
- * \brief	Tranforming UTC to local time
+ * \brief	Transforming UTC to local time
  *
  * \param	today_date	The pointer to the date structure
  * \param	time_zone	The current time zone

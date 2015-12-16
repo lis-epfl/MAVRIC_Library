@@ -87,8 +87,9 @@ typedef struct
 	float kp_alt_sonar;								///< The gain to correct the Z position estimation from the sonar
 	float kp_vel_sonar;								///< The gain to correct the Z velocity estimation from the sonar
 
-	uint32_t time_last_gps_posllh_msg;						///< The time at which we received the last GPS POSLLH message in ms
-	uint32_t time_last_gps_velned_msg;						///< The time at which we received the last GPS VELNED message in ms
+	uint32_t time_last_gps_posllh_msg;				///< The time at which we received the last GPS POSLLH message in ms
+	uint32_t time_last_dgps_relative_msg;			///< The time at which we received the last DGPS relative message in ms
+	uint32_t time_last_gps_velned_msg;				///< The time at which we received the last GPS VELNED message in ms
 	uint32_t time_last_barometer_msg;				///< The time at which we received the last barometer message in ms
 	bool init_gps_position;							///< The boolean flag ensuring that the GPS was initialized
 	bool init_barometer;							///< The boolean flag ensuring that the barometer was initialized
@@ -109,7 +110,7 @@ typedef struct
 	
 	barometer_t* barometer;							///< The pointer to the barometer structure
 	const sonar_t* sonar;							///< The pointer to the sonar structure
-	const gps_t* gps;								///< The pointer to the GPS structure
+	gps_t* gps;								///< The pointer to the GPS structure
 	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
 	const imu_t* imu;								///< The pointer to the IMU structure
 	state_t* state;									///< The pointer to the state structure
@@ -134,7 +135,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, data_logging_t* stat_logging);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, data_logging_t* stat_logging);
 
 
 /**

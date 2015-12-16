@@ -71,6 +71,16 @@ bool gps_ublox_telemetry_init(gps_t* gps, mavlink_message_handler_t* message_han
  */
 void gps_ublox_telemetry_send_raw(const gps_t* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
+
+/**
+ * \brief	Function to send the MAVLink gps relative position errors in the local frame
+ * 
+ * \param	gps						The pointer to the GPS structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void gps_ublox_telemetry_send_relative_error(gps_t* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
 #ifdef __cplusplus
 }
 #endif

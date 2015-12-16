@@ -216,6 +216,12 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 				}
 				
 				pos_est->last_gps_pos = local_coordinates;
+				
+				if (pos_est->gps->dgps_relative.is_stationnary)
+				{
+					pos_est->gps->dgps_relative.error_x_mm = pos_est->last_gps_pos.pos[0]*1000.0f;
+					pos_est->gps->dgps_relative.error_y_mm = pos_est->last_gps_pos.pos[1]*1000.0f;
+				}
 			}
 			
 			if (pos_est->time_last_gps_velned_msg < pos_est->gps->time_last_velned_msg)
@@ -232,6 +238,14 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 			for (i = 0;i < 3;i++)
 			{
 				pos_error[i] = pos_est->last_gps_pos.pos[i] - pos_est->local_position.pos[i];
+			}
+			
+			if (pos_est->time_last_dgps_relative_msg < pos_est->gps->dgps_relative.time_last_dgps_relative_msg)
+			{
+				pos_est->time_last_dgps_relative_msg = pos_est->gps->dgps_relative.time_last_dgps_relative_msg;
+				
+				//pos_error[0] -= pos_est->gps->dgps_relative.error_x_mm / 1000.0f;
+				//pos_error[1] -= pos_est->gps->dgps_relative.error_y_mm / 1000.0f;
 			}
 		}
 		else
@@ -355,7 +369,7 @@ static void position_estimation_fence_control(position_estimation_t* pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, data_logging_t* stat_logging)
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, data_logging_t* stat_logging)
 {
 	bool init_success = true;
 	
@@ -414,6 +428,8 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 
 	pos_est->kp_alt_sonar = 2.0f;
 	pos_est->kp_vel_sonar = 2.0f;
+	
+	pos_est->time_last_dgps_relative_msg = 0;
 	
 	gps_position_init(pos_est);
 

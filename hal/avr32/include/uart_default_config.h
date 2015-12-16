@@ -85,6 +85,24 @@ static const usart_config_t usart_default_config_gps =
 };
 
 
+static const usart_config_t usart_default_config_gps2 =
+{
+	.mode						= UART_IN_OUT,
+	.uart_device.uart			= (avr32_usart_t *)&AVR32_USART2,
+	.uart_device.IRQ			= AVR32_USART2_IRQ,
+	.uart_device.receive_stream	= NULL,
+	.options					=
+	{
+		.baudrate				= 38400,
+		.charlength				= 8,
+		.paritytype				= USART_NO_PARITY,
+		.stopbits				= USART_1_STOPBIT,
+		.channelmode			= USART_NORMAL_CHMODE
+	},
+	.rx_pin_map					= {AVR32_USART2_RXD_1_PIN, AVR32_USART2_RXD_1_FUNCTION},
+	.tx_pin_map					= {AVR32_USART2_TXD_1_PIN, AVR32_USART2_TXD_1_FUNCTION}
+};
+
 static const usart_config_t usart_default_config_spektrum =
 {
     .mode						= UART_IN_OUT,

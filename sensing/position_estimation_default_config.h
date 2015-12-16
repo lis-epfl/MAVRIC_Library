@@ -53,8 +53,10 @@ static const position_estimation_conf_t position_estimation_default_config =
     .origin =
     {
         //default home location (EFPL Esplanade)
-        .longitude  = 6.566044801857777f,
-        .latitude   = 46.51852236174565f,
+        //.longitude  = 6.566044801857777f,
+        //.latitude   = 46.51852236174565f,
+		.longitude  = 6.56939394587722f,
+		.latitude   = 46.52428529538311f,
         .altitude   = 400.0f
     },
     .gravity = 9.81f,
