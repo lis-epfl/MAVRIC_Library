@@ -97,16 +97,20 @@ typedef struct
  * \param 	config				Pointer to configuration
  * \param 	attitude_command 	Pointer to attitude command
  * \param 	ahrs		 		Pointer to the estimated attitude
+ * 
+ * \return success
  */
-void attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs);
+bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs);
 
 
 /**
  * \brief               	Main update function
  * 
  * \param 	controller    	Pointer to data structure
+ * 
+ * \return success
  */
-void attitude_controller_p2_update(attitude_controller_p2_t* controller);
+bool attitude_controller_p2_update(attitude_controller_p2_t* controller);
 
 
 #ifdef __cplusplus

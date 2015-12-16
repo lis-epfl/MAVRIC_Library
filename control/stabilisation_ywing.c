@@ -30,93 +30,45 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file piezo_speaker.h
+ * \file stabilisation_ywing.c
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the piezzo speaker
+ * \brief Ywing stabilisation
  *
  ******************************************************************************/
 
-
-#ifndef PIEZO_SPEAKER_H_
-#define PIEZO_SPEAKER_H_
-
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-#include <stdint.h>
-
-#define PIEZO_HIGH_PIN AVR32_PIN_PA12			///< Define the Microcontroller pin associated with the high pin of the piezo speaker
-#define PIEZO_LOW_PIN AVR32_PIN_PA15			///< Define the Microcontroller pin associated with the low pin of the piezo speaker
-
-
 /**
- * \brief Initialize the piezo speaker
+ *   Disclaimer: this WIP
  */
-void piezo_speaker_init(void);
+
+#include "stabilisation_ywing.h"
+#include "time_keeper.h"
 
 
-/**
- * \brief Initialize the speaker in a binary(?) mode
- */
-void piezo_speaker_init_binary(void);
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
 
-/**
- * \brief Beep at a given frequency for a duration
- *
- * \param	duration_ms		Duration of the piezo_speaker_beep
- * \param	frequency		Frequency of the piezo_speaker_beep
- */
-void piezo_speaker_beep(int32_t duration_ms, int32_t frequency);
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 
-/**
- * \brief Startup melody
- */
-void piezo_speaker_startup_melody(void);
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool stabilisation_ywing_init(stabilisation_ywing_t* stabilisation_ywing, stabilisation_ywing_conf_t* config)
+{
+	return true;
+}
 
 
-/**
- * \brief Critical error melody
- */
-void piezo_speaker_critical_error_melody(void);
+void stabilisation_ywing_update(stabilisation_ywing_t* stabilisation_ywing)
+{
+	;
+}
 
-
-/**
- * \brief Quick startup melody
- */
-void piezo_speaker_quick_startup(void);
-
-/**
- * \brief Quick startup melody
- */
-void piezo_speaker_startup_bb(void);
-
-/**
- * \brief Startup melody for bumblebot
- */
-void piezo_speaker_startup_bumblebot(void);
-
-
-/**
- * \brief Star wars melody
- */
-void piezo_speaker_star_wars(void);
-
-
-/**
- * \brief Mario melody
- */
-void piezo_speaker_mario_melody(void);
-
-
-
-#ifdef __cplusplus
-	}
-#endif
-
-#endif /* PIEZO_SPEAKER_H_ */

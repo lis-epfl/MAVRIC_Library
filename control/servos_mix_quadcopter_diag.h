@@ -34,6 +34,7 @@
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Nicolas Dousse
  *   
  * \brief Links between torque commands and servos PWM command for quadcopters 
  * in diagonal configuration
@@ -51,16 +52,7 @@
 
 #include "control_command.h"
 #include "servos.h"
-
-
-/**
- * \brief Enumerate the turn direction of a motor
- */
-typedef enum
-{
-	CW 	= 1,					///< Clock wise
-	CCW	= -1					///< Counter Cleck wise
-} rot_dir_t;
+#include "constants.h"
 
 
 /**
@@ -96,20 +88,20 @@ typedef struct
 	rot_dir_t 	motor_rear_left_dir;			///< Rear  motor turning direction
 	float 		min_thrust;						///< Minimum thrust
 	float		max_thrust;						///< Maximum thrust
-	const torque_command_t* torque_command;		///< Pointer to the torque command structure
-	const thrust_command_t* thrust_command;		///< Pointer to the thrust command structure
+	const torque_command_t* torque_command;			///< Pointer to the torque command structure
+	const thrust_command_t* thrust_command;			///< Pointer to the thrust command structure
 	servos_t*          		servos;				///< Pointer to the servos structure
 } servo_mix_quadcotper_diag_t;
 
 
 /**
- * \brief		Initialize the servo mix
+ * \brief					Initialize the servo mix
  * 
- * \param mix				Pointer to the servo mix structure of the quad in cross shape
- * \param config			Pointer to the configuration of servo mix structure
- * \param torque_command	Pointer to the torque command structure
- * \param thrust_command	Pointer to the thrust command structure
- * \param servos			Pointer to the servos structure
+ * \param mix				The pointer to the servo mix structure of the quad in cross shape
+ * \param config			The pointer to the configuration of servo mix structure
+ * \param torque_command	The pointer to the torque command structure
+ * \param thrust_command	The pointer to the thrust command structure
+ * \param servos			The pointer to the servos structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -121,9 +113,9 @@ bool servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix,
 
 
 /**
- * @brief			Update des servos mix
+ * \brief					Update from servos mix
  * 
- * @param mix		Pointer to the servos mix structure
+ * \param mix				The pointer to the servos mix structure
  */
 void servos_mix_quadcopter_diag_update(servo_mix_quadcotper_diag_t* mix);
 

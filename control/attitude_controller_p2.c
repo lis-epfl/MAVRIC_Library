@@ -56,15 +56,17 @@
 
 #include "attitude_controller_p2.h"
 
-void attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs)
+bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs)
 {
+	bool success = true;
+
 	// Init dependencies
 	controller->attitude_command = attitude_command;
 	controller->torque_command   = torque_command;
 	controller->ahrs 			 = ahrs;
 
 	// Init attitude error estimator
-	attitude_error_estimator_init(&controller->attitude_error_estimator, ahrs);
+	success &= attitude_error_estimator_init(&controller->attitude_error_estimator, ahrs);
 
 	// Init gains
 	controller->p_gain_angle[0] = config->p_gain_angle[0]; 
@@ -73,27 +75,20 @@ void attitude_controller_p2_init(attitude_controller_p2_t* controller, const att
 	controller->p_gain_rate[0]  = config->p_gain_rate[0];
 	controller->p_gain_rate[1]  = config->p_gain_rate[1];
 	controller->p_gain_rate[2]  = config->p_gain_rate[2];
+
+	return success;
 }
 
 
-void attitude_controller_p2_update(attitude_controller_p2_t* controller)
+bool attitude_controller_p2_update(attitude_controller_p2_t* controller)
 {
 	float errors[3];
 	float rates[3];
 
 	// Get attitude command
-	switch ( controller->attitude_command->mode )
-	{
-		case ATTITUDE_COMMAND_MODE_QUATERNION:
-			attitude_error_estimator_set_quat_ref(	&controller->attitude_error_estimator,
-													controller->attitude_command->quat );
-			break;
+	attitude_error_estimator_set_quat_ref(	&controller->attitude_error_estimator,
+											controller->attitude_command->quat );
 
-		case ATTITUDE_COMMAND_MODE_RPY:
-			attitude_error_estimator_set_quat_ref_from_rpy( &controller->attitude_error_estimator,
-															controller->attitude_command->rpy );
-			break;
-	}
 
 	// Get local angular errors
 	attitude_error_estimator_update( &controller->attitude_error_estimator );
@@ -110,4 +105,6 @@ void attitude_controller_p2_update(attitude_controller_p2_t* controller)
 	controller->torque_command->xyz[0] = controller->p_gain_angle[0] * errors[0] - controller->p_gain_rate[0] * rates[0];
 	controller->torque_command->xyz[1] = controller->p_gain_angle[1] * errors[1] - controller->p_gain_rate[1] * rates[1];
 	controller->torque_command->xyz[2] = controller->p_gain_angle[2] * errors[2] - controller->p_gain_rate[2] * rates[2];
+
+	return true;
 }

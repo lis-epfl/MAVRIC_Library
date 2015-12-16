@@ -45,6 +45,7 @@
 #include "print_util.h"
 #include "constants.h"
 #include "coord_conventions.h"
+#include "quick_trig.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -240,6 +241,12 @@ void remote_calibrate(remote_t* remote, remote_channel_t channel)
 }
 
 
+float remote_get_channel(const remote_t* remote, remote_channel_t ch)
+{
+	return remote->channels[ch];
+}
+
+
 float remote_get_throttle(const remote_t* remote)
 {	
 	return remote->channels[CHANNEL_THROTTLE];
@@ -423,19 +430,19 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
 }
 
 
-void remote_get_torque_command(const remote_t* remote, torque_command_t * command)
+void remote_get_torque_command(const remote_t* remote, torque_command_t * command, float scale)
 {
-	command->xyz[ROLL] 	= remote_get_roll(remote);
-	command->xyz[PITCH] = remote_get_pitch(remote);
-	command->xyz[YAW] 	= remote_get_yaw(remote);
+	command->xyz[ROLL] 	= scale * remote_get_roll(remote);
+	command->xyz[PITCH] = scale * remote_get_pitch(remote);
+	command->xyz[YAW] 	= scale * remote_get_yaw(remote);
 }
 
 
-void remote_get_rate_command(const remote_t* remote, rate_command_t * command)
+void remote_get_rate_command(const remote_t* remote, rate_command_t * command, float scale)
 {
-	command->xyz[ROLL] 	= remote_get_roll(remote);
-	command->xyz[PITCH] = remote_get_pitch(remote);
-	command->xyz[YAW] 	= remote_get_yaw(remote);
+	command->xyz[ROLL] 	= scale * remote_get_roll(remote);
+	command->xyz[PITCH] = scale * remote_get_pitch(remote);
+	command->xyz[YAW] 	= scale * remote_get_yaw(remote);
 }
 
 
@@ -445,53 +452,63 @@ void remote_get_thrust_command(const remote_t* remote, thrust_command_t * comman
 }
 
 
-void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command)
+void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_command_t * command, float scale)
 {
+	command->rpy[ROLL] 	= scale * remote_get_roll(remote); 
+	command->rpy[PITCH] = scale * remote_get_pitch(remote);
+	command->rpy[YAW] 	= scale * remote_get_yaw(remote);
+
 	aero_attitude_t attitude;
-	
-	switch( command->mode )
-	{
-		case ATTITUDE_COMMAND_MODE_QUATERNION:
-			attitude.rpy[ROLL] 	= remote_get_roll(remote); 
-			attitude.rpy[PITCH] = remote_get_pitch(remote);
-			attitude.rpy[YAW] 	= remote_get_yaw(remote);
-			command->quat = coord_conventions_quaternion_from_aero(attitude);
-		break;
-
-		case ATTITUDE_COMMAND_MODE_RPY:
-			command->rpy[ROLL] 	= remote_get_roll(remote); 
-			command->rpy[PITCH] = remote_get_pitch(remote);
-			command->rpy[YAW] 	= remote_get_yaw(remote);
-		break;
-	}
-}
-
-void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command)
-{
-	aero_attitude_t attitude;
-
-	switch( command->mode )
-	{
-		case ATTITUDE_COMMAND_MODE_QUATERNION:
-			attitude = coord_conventions_quat_to_aero(command->quat);
-			attitude.rpy[ROLL] 	 = remote_get_roll(remote); 
-			attitude.rpy[PITCH]  = remote_get_pitch(remote);
-			attitude.rpy[YAW] 	+= k_yaw * remote_get_yaw(remote);
-			command->quat = coord_conventions_quaternion_from_aero(attitude);
-		break;
-
-		case ATTITUDE_COMMAND_MODE_RPY:
-			command->rpy[ROLL] 	= remote_get_roll(remote);
-			command->rpy[PITCH] = remote_get_pitch(remote);
-			command->rpy[YAW] 	+= k_yaw * remote_get_yaw(remote);
-		break;
-	}
+	attitude.rpy[ROLL] 	= command->rpy[ROLL]; 
+	attitude.rpy[PITCH] = command->rpy[PITCH];
+	attitude.rpy[YAW] 	= command->rpy[YAW];
+	command->quat = coord_conventions_quaternion_from_aero(attitude);
 }
 
 
-void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command)
+void remote_get_attitude_command(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale)
 {
-	command->xyz[X] = - 10.0f 	* remote_get_pitch(remote);
-	command->xyz[Y] = 10.0f  	* remote_get_roll(remote);
-	command->xyz[Z] = - 1.5f 	* remote_get_throttle(remote);
+	command->rpy[ROLL] 	= scale * remote_get_roll(remote); 
+	command->rpy[PITCH] = scale * remote_get_pitch(remote);
+	command->rpy[YAW] 	+= ki_yaw * scale * remote_get_yaw(remote);
+
+	aero_attitude_t attitude;
+	attitude.rpy[ROLL] 	= command->rpy[ROLL]; 
+	attitude.rpy[PITCH] = command->rpy[PITCH];
+	attitude.rpy[YAW] 	= command->rpy[YAW];
+	command->quat = coord_conventions_quaternion_from_aero(attitude);
+}
+
+
+void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale, float reference_pitch)
+{
+	// Get Roll Pitch and Yaw from remote
+	command->rpy[ROLL] 	= scale * remote_get_roll(remote);
+	command->rpy[PITCH] = scale * remote_get_pitch(remote) + reference_pitch;
+	command->rpy[YAW] 	+= ki_yaw * scale * remote_get_yaw(remote);
+
+	// Apply yaw and pitch first
+	aero_attitude_t attitude;
+	attitude.rpy[ROLL]	= 0.0f;
+	attitude.rpy[PITCH] = command->rpy[PITCH];
+	attitude.rpy[YAW] 	= command->rpy[YAW];
+	command->quat = coord_conventions_quaternion_from_aero(attitude);
+
+
+	// Apply roll according to transition factor
+	quat_t q_roll = {	.s = quick_trig_cos(0.5f * command->rpy[ROLL]),
+						.v = {	quick_trig_cos(reference_pitch) * quick_trig_sin( 0.5f * command->rpy[ROLL]),
+								0.0f,
+								quick_trig_sin(reference_pitch) * quick_trig_sin( 0.5f * command->rpy[ROLL]) }};
+
+	// q := q . q_rh . q_rf
+	command->quat = quaternions_multiply( command->quat, q_roll );
+}
+
+
+void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command, float scale)
+{
+	command->xyz[X] = - 10.0f 	* scale * remote_get_pitch(remote);
+	command->xyz[Y] = 10.0f  	* scale * remote_get_roll(remote);
+	command->xyz[Z] = - 1.5f 	* scale * remote_get_throttle(remote);
 }
