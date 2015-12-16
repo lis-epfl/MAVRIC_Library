@@ -297,7 +297,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 1.0f,
+					.p_gain = 1.2f,
 					.clip_min = -100.0f,
 					.clip_max = 100.0f,
 					.integrator={

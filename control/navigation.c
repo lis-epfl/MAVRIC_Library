@@ -574,7 +574,7 @@ static void navigation_set_dubin_velocity(navigation_t* navigation, dubin_t* dub
 		break;
 	}
 
-	float vert_vel = navigation->goal.waypoint.pos[Z] - navigation->position_estimation->local_position.pos[Z];;
+	float vert_vel = navigation->goal.waypoint.pos[Z] - navigation->position_estimation->local_position.pos[Z];
 
 	if (maths_f_abs(vert_vel) > navigation->max_climb_rate)
 	{
