@@ -64,7 +64,7 @@ double time_keeper_get_s(void)
 uint64_t time_keeper_get_ms(void)
 {
 	// milliseconds since system start
-	return time_keeper_get_us() / 1000; /// (TK_AST_FREQUENCY / 1000);
+	return time_keeper_get_us() / 1000;
 }
 
 
