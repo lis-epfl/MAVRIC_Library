@@ -89,17 +89,17 @@ static mav_result_t gps_ublox_start_configuration(gps_t* gps, mavlink_command_lo
 
 static void gps_ublox_telemetry_receive_relative_error(gps_t* gps, uint32_t sysid, mavlink_message_t* msg)
 {
-	//if (!gps->dgps_relative.is_stationnary)
+	if (!gps->dgps_relative.is_stationnary)
 	{
 		mavlink_gps_rtk_t packet;
 		
 		mavlink_msg_gps_rtk_decode(msg, &packet);
 		
-		
+		gps->dgps_relative.mess_rec_counter++;
 		if(packet.rtk_health)
 		{
 			//to check that we do receive message
-			gps->dgps_relative.mess_rec_counter++;
+			
 			gps->dgps_relative.time_last_dgps_relative_msg = time_keeper_get_millis();
 			gps->dgps_relative.tow			= packet.tow;
 			gps->dgps_relative.error_x_mm	= packet.baseline_a_mm;
@@ -187,19 +187,17 @@ void gps_ublox_telemetry_send_relative_error(gps_t* gps, const mavlink_stream_t*
 {
 	if (gps->dgps_relative.is_stationnary)
 	{
+		gps->dgps_relative.mess_send_counter++;
 		
 		if (gps->status == GPS_OK)
 		{
-			
-			
-			gps->dgps_relative.mess_send_counter++;
 			mavlink_msg_gps_rtk_pack(	254,//mavlink_stream->sysid,
 			mavlink_stream->compid,
 			msg,
-			1000 * gps->time_gps,
+			0,
 			0,	//rtk_receiver_id,
 			0,	//wn,
-			gps->dgps_relative.tow,
+			gps->time_gps,
 			1,	//rtk_health,
 			0,	//rtk_rate,
 			0,	//nsats,
@@ -216,10 +214,10 @@ void gps_ublox_telemetry_send_relative_error(gps_t* gps, const mavlink_stream_t*
 			mavlink_msg_gps_rtk_pack(	mavlink_stream->sysid,
 			mavlink_stream->compid,
 			msg,
-			1000 * gps->time_gps,
+			0,
 			0,	//rtk_receiver_id,
 			0,	//wn,
-			gps->dgps_relative.tow,
+			gps->time_gps,
 			0,	//rtk_health,
 			0,	//rtk_rate,
 			0,	//nsats,
