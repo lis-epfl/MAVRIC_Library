@@ -56,7 +56,7 @@ Gps_sim::Gps_sim(Dynamic_model& dynamic_model):
 	global_position_( {0.0, 0.0, 0.0f, 0.0f} ),
 	horizontal_position_accuracy_( 0.0f ),
 	vertical_position_accuracy_( 0.0f ),
-	global_velocity_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	velocity_lf_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
 	velocity_accuracy_( 0.0f ),
 	heading_( 0.0f ),
 	heading_accuracy_( 0.0f ),
@@ -83,8 +83,7 @@ bool Gps_sim::update(void)
 	global_position_.heading 	= dynamic_model_.position_gf().heading;
 	horizontal_position_accuracy_ 	= 1.0f;
 	vertical_position_accuracy_ 	= 3.0f;
-	global_velocity_ 	= dynamic_model_.velocity_lf();
-	global_velocity_[Z] *= -1.0f;
+	velocity_lf_ 		= dynamic_model_.velocity_lf();
 	velocity_accuracy_ 	= 0.1f;
 	heading_ 			= dynamic_model_.position_gf().heading;
 	heading_accuracy_ 	= 5.0f;
@@ -118,7 +117,7 @@ const float& Gps_sim::last_velocity_update_us(void) const
 }
 
 
-const global_position_t& Gps_sim::global_position(void) const
+const global_position_t& Gps_sim::position_gf(void) const
 {
 	return global_position_;
 }
@@ -136,9 +135,9 @@ const float& Gps_sim::vertical_position_accuracy(void) const
 }
 
 
-const std::array<float,3>& Gps_sim::global_velocity(void) const
+const std::array<float,3>& Gps_sim::velocity_lf(void) const
 {
-	return global_velocity_;
+	return velocity_lf_;
 }
 
 

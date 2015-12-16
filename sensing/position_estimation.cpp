@@ -183,24 +183,22 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		// altimeter correction
 		if ( pos_est->time_last_barometer_msg < pos_est->barometer->last_update_us() )
 		{
-			pos_est->last_alt = -(pos_est->barometer->altitude() ) + pos_est->local_position.origin.altitude;
+			pos_est->last_alt = - ( pos_est->barometer->altitude_gf() - pos_est->local_position.origin.altitude);
 
 			pos_est->time_last_barometer_msg = pos_est->barometer->last_update_us();
 		}
 
-		// t_inter_baro = (time_keeper_get_us() - pos_est->barometer->get_last_update()) / 1000.0f;
-		baro_gain = 1.0f; //maths_f_max(1.0f - t_inter_baro / 1000.0f, 0.0f);
+		baro_gain = 1.0f;
 			
-		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(t_inter_baro / 2.5f + 1.0f)) * alt_error;
 		baro_alt_error = pos_est->last_alt  - pos_est->local_position.pos[2];
-		baro_vel_error = pos_est->barometer->vario_vz() - pos_est->vel[2];
-		//vel_error[2] = 0.1f * pos_error[2];
-		//pos_est->vel[2] += kp_alt_baro_v * vel_error[2];
-				
+		baro_vel_error = pos_est->barometer->vertical_speed_lf() - pos_est->vel[2];		
 	}
 	else
 	{
-		pos_est->barometer->reset_origin_altitude(pos_est->local_position.origin.altitude);
+		// Correct barometer bias
+		float current_altitude_gf = - pos_est->local_position.pos[Z]
+									+ pos_est->local_position.origin.altitude;
+		pos_est->barometer->calibrate_bias(current_altitude_gf);
 		pos_est->init_barometer = true;
 	}
 	
@@ -210,8 +208,8 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		{
 			if ( (pos_est->time_last_gps_posllh_msg < pos_est->gps->last_position_update_us()) )
 			{	
-				global_gps_position = pos_est->gps->global_position();
-				local_coordinates 	= coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
+				global_gps_position = pos_est->gps->position_gf();
+				local_coordinates 	= coord_conventions_global_to_local_position(global_gps_position, pos_est->local_position.origin);
 				
 				// compute GPS velocity estimate
 				gps_dt = (pos_est->gps->last_position_update_us() - pos_est->time_last_gps_posllh_msg) / 1000000.0f;
@@ -236,25 +234,27 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 				pos_est->time_last_gps_velned_msg = pos_est->gps->last_velocity_update_us();
 			}
 			
-			vel_error[X] = pos_est->gps->global_velocity()[X] - pos_est->vel[X]; 
-			vel_error[Y] = pos_est->gps->global_velocity()[Y] - pos_est->vel[Y]; 
-			vel_error[Z] = -pos_est->gps->global_velocity()[Z] - pos_est->vel[Z]; 
-
+			// Enable gps correction
 			gps_gain = 1.0f;
 		
-			for (i = 0;i < 3;i++)
+			// Compute position error and velocity error from gps
+			for (i = 0; i < 3; i++)
 			{
 				pos_error[i] = pos_est->last_gps_pos.pos[i] - pos_est->local_position.pos[i];
+				vel_error[i] = pos_est->gps->velocity_lf()[i] - pos_est->vel[i]; 
 			}
 		}
 		else
 		{
+			// Disable gps correction
+			gps_gain = 0.0f;
+
+			// Do not use position error and velocity error from GPS
 			for (i = 0;i < 3;i++)
 			{
 				pos_error[i] = 0.0f;
 				vel_error[i] = 0.0f;
 			}
-			gps_gain = 0.0f;
 		}
 	}
 	else
@@ -311,7 +311,7 @@ static void gps_position_init(position_estimation_t *pos_est)
 		
 			pos_est->init_gps_position = true;
 			
-			pos_est->local_position.origin 	= pos_est->gps->global_position();
+			pos_est->local_position.origin 	= pos_est->gps->position_gf();
 			pos_est->last_gps_pos 			= pos_est->local_position;
 			
 			pos_est->last_alt = 0;
@@ -424,7 +424,7 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 	// reset origin to position where quad is armed if we have GPS
 	if (pos_est->init_gps_position)
 	{
-		pos_est->local_position.origin 	= pos_est->gps->global_position();
+		pos_est->local_position.origin 	= pos_est->gps->position_gf();
 		pos_est->last_gps_pos 			= pos_est->local_position;
 	}
 	//else
@@ -434,14 +434,14 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 		//pos_est->local_position.origin.altitude = HOME_ALTITUDE;
 	//}
 
-	// reset barometer offset
-	pos_est->barometer->reset_origin_altitude(pos_est->local_position.origin.altitude);
-
-	//pos_est->barometer->altitude_offset = -pos_est->barometer->altitude - pos_est->local_position.pos[2] + pos_est->local_position.origin.altitude;
+	// Correct barometer bias
+	float current_altitude_gf = - pos_est->local_position.pos[Z]
+								+ pos_est->local_position.origin.altitude;
+	pos_est->barometer->calibrate_bias(current_altitude_gf);
 	pos_est->init_barometer = true;
 	
 	print_util_dbg_print("Offset of the barometer set to the GPS altitude, new altitude of:");
-	print_util_dbg_print_num(pos_est->barometer->altitude(),10);
+	print_util_dbg_print_num(pos_est->barometer->altitude_gf(),10);
 	print_util_dbg_print(" ( ");
 	print_util_dbg_print_num(pos_est->local_position.pos[2],10);
 	print_util_dbg_print("  ");

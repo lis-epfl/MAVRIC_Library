@@ -5253,10 +5253,10 @@ Gps_ublox::Gps_ublox(Serial& serial):
 	last_update_us_( time_keeper_get_us() ),
 	last_position_update_us_( time_keeper_get_us() ),
 	last_velocity_update_us_( time_keeper_get_us() ),
-	global_position_( {0.0, 0.0, 0.0f, 0.0f} ),
+	position_gf_( {0.0, 0.0, 0.0f, 0.0f} ),
 	horizontal_position_accuracy_( 0.0f ),
 	vertical_position_accuracy_( 0.0f ),
-	global_velocity_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	velocity_lf_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
 	velocity_accuracy_( 0.0f ),
 	heading_( 0.0f ),
 	heading_accuracy_( 0.0f ),
@@ -5275,18 +5275,18 @@ bool Gps_ublox::update(void)
 	gps_ublox_update(&gps);
 
 	// Copy relevant fields in class members
-	last_update_us_ 		 = time_keeper_get_us();
-	last_position_update_us_ = 1000.0f * gps.time_last_posllh_msg;
-	last_velocity_update_us_ = 1000.0f * gps.time_last_velned_msg;
-	global_position_.longitude 	= gps.longitude;
-	global_position_.latitude 	= gps.latitude;
-	global_position_.altitude 	= gps.altitude;
-	global_position_.heading 	= gps.course / 100.0f;
+	last_update_us_ 		 	= time_keeper_get_us();
+	last_position_update_us_ 	= 1000.0f * gps.time_last_posllh_msg;
+	last_velocity_update_us_ 	= 1000.0f * gps.time_last_velned_msg;
+	position_gf_.longitude 		= gps.longitude;
+	position_gf_.latitude 		= gps.latitude;
+	position_gf_.altitude 		= gps.altitude;
+	position_gf_.heading 		= gps.course / 100.0f;
 	horizontal_position_accuracy_ 	= gps.horizontal_accuracy;
 	vertical_position_accuracy_ 	= gps.vertical_accuracy;
-	global_velocity_[0] = gps.north_speed;
-	global_velocity_[1] = gps.east_speed;
-	global_velocity_[2] = gps.vertical_speed;
+	velocity_lf_[0] 	= gps.north_speed;
+	velocity_lf_[1] 	= gps.east_speed;
+	velocity_lf_[2] 	= gps.vertical_speed;
 	velocity_accuracy_ 	= gps.speed_accuracy;
 	heading_ 			= gps.course/ 100.0f;
 	heading_accuracy_ 	= gps.heading_accuracy;
@@ -5324,9 +5324,9 @@ const float& Gps_ublox::last_velocity_update_us(void) const
 }
 
 
-const global_position_t& Gps_ublox::global_position(void) const
+const global_position_t& Gps_ublox::position_gf(void) const
 {
-	return global_position_;
+	return position_gf_;
 }
 
 
@@ -5342,9 +5342,9 @@ const float& Gps_ublox::vertical_position_accuracy(void) const
 }
 
 
-const std::array<float,3>& Gps_ublox::global_velocity(void) const
+const std::array<float,3>& Gps_ublox::velocity_lf(void) const
 {
-	return global_velocity_;
+	return velocity_lf_;
 }
 
 
