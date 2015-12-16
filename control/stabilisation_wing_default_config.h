@@ -54,7 +54,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 {
 	.thrust_apriori = 0.25f,
 	.pitch_angle_apriori = 0.0f,
-	.pitch_angle_apriori_gain = -0.8f,
+	.pitch_angle_apriori_gain = -0.64f,
 	.max_roll_angle = PI/3.0f,
 	.stabiliser_stack 	= 
 	{

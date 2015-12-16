@@ -113,6 +113,7 @@ typedef struct
 	const mavlink_stream_t* mavlink_stream;				///< The pointer to the MAVLink stream structure
 	remote_t* remote;									///< The pointer to the remote structure
 	const joystick_parsing_t* joystick;					///< Pointer to joystick 
+	float vertical_vel_gain;							///< Gain for the vertical velocity calculation
 }navigation_t;
 
 
@@ -135,6 +136,8 @@ typedef struct
 	
 	float safe_altitude;								///< The altitude at which the robot will fly in critical mode
 	float minimal_radius;								///< The minimal circle radius
+	
+	float vertical_vel_gain;							///< Gain for the vertical velocity calculation
 
 	pid_controller_t hovering_controller;				///< hovering controller
 	pid_controller_t wpt_nav_controller;				///< waypoint navigation controller
