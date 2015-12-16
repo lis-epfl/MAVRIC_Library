@@ -401,6 +401,8 @@ dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], cons
 												wp2,
 												temp.sense_1,
 												sense_2);
+
+			temp.radius_1 = -temp.sense_1 * rad1;
 			
 			for (j = 0; j < 2; j++)
 			{

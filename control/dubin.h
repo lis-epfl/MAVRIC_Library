@@ -61,6 +61,7 @@ typedef struct
 	float circle_center_1[3];			///< The center of the first circle
 	float tangent_point_1[3];			///< The tangent point of the first circle
 	int8_t sense_1;						///< The sense of rotation around the circle
+	int8_t radius_1;					///< The radius of circle 1
 	float circle_center_2[3];			///< The center of the second circle
 	float tangent_point_2[3];			///< The tangent point of the second circle
 	float line_direction[3];			///< The line created from the two tangent points
