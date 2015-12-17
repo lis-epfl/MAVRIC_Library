@@ -515,13 +515,14 @@ static void navigation_dubin_state_machine(navigation_t* navigation, waypoint_lo
 			{
 				rel_pos[i] = waypoint_next->dubin.tangent_point_2[i] - navigation->position_estimation->local_position.pos[i];
 			}
-			dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
-			if (dist2wp_sqr < 25.0f)
+			float scalar_product = rel_pos[X] * waypoint_next->dubin.line_direction[X] + rel_pos[Y] * waypoint_next->dubin.line_direction[Y];
+			if (scalar_product < 0.0f)
 			{
 				navigation->waypoint_handler->dubin_state = CIRCLE2;
 				print_util_dbg_print("CIRCLE2\r\n");
 			}
+
 		case CIRCLE2:
 		break;
 	}
@@ -818,8 +819,8 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 				vectors_normalize(rel_pos, rel_pos_norm);
 
 				float outter_pt[3];
-				outter_pt[X] = navigation->waypoint_handler->waypoint_next.waypoint.pos[X]-rel_pos_norm[Y]*navigation->waypoint_handler->waypoint_next.radius;
-				outter_pt[Y] = navigation->waypoint_handler->waypoint_next.waypoint.pos[Y]+rel_pos_norm[X]*navigation->waypoint_handler->waypoint_next.radius;
+				outter_pt[X] = navigation->waypoint_handler->waypoint_next.waypoint.pos[X]+rel_pos_norm[Y]*navigation->waypoint_handler->waypoint_next.radius;
+				outter_pt[Y] = navigation->waypoint_handler->waypoint_next.waypoint.pos[Y]-rel_pos_norm[X]*navigation->waypoint_handler->waypoint_next.radius;
 				outter_pt[Z] = 0.0f;
 
 				for (uint8_t i=0;i<3;i++)
