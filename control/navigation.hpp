@@ -78,7 +78,7 @@ typedef struct
 	
 	float dist2wp_sqr;									///< The square of the distance to the waypoint
 
-	uint8_t loop_count;									///< A counter for sending MAVLink messages at a lower rate than the function
+	uint32_t loop_count;								///< A counter for sending MAVLink messages at a lower rate than the function
 	
 	navigation_internal_state_t internal_state;			///< The internal state of the navigation module
 	critical_behavior_enum critical_behavior;			///< The critical behavior enum

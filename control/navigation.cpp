@@ -164,20 +164,26 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_sg[Y] *= v_desired;
 	dir_desired_sg[Z] *= v_desired;
 	
-	// static uint32_t loop_count = 0;
-	// loop_count = loop_count++ %50;
-	// if (loop_count == 0)
+	// navigation->loop_count++;
+	// navigation->loop_count = navigation->loop_count % 50;
+	// if (navigation->loop_count == 0)
 	// {
-	// 	print_util_dbg_print("Desired_vel_Bf(x100): (");
-	// 	print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
-	// 	print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
-	// 	print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
-	// 	print_util_dbg_print("). \r\n");
-	// 	print_util_dbg_print("Actual_vel_bf(x100): (");
-	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
-	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
-	// 	print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
-	// 	print_util_dbg_print("). \r\n");
+	// 	// print_util_dbg_print("Desired_vel_sg(x100): (");
+	// 	// print_util_dbg_print_num(dir_desired_sg[X] * 100,10);
+	// 	// print_util_dbg_print_num(dir_desired_sg[Y] * 100,10);
+	// 	// print_util_dbg_print_num(dir_desired_sg[Z] * 100,10);
+	// 	// print_util_dbg_print("). \r\n");
+	// 	print_util_dbg_print("rel_heading(x100): ");
+	// 	print_util_dbg_print_num(rel_heading,10);
+	// 	print_util_dbg_print("\r\n");
+	// 	print_util_dbg_print("nav state: ");
+	// 	print_util_dbg_print_num(navigation->internal_state,10);
+	// 	print_util_dbg_print("\r\n");
+	// 	// print_util_dbg_print("Actual_vel_bf(x100): (");
+	// 	// print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
+	// 	// print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
+	// 	// print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
+	// 	// print_util_dbg_print("). \r\n");
 	// 	// print_util_dbg_print("Actual_pos(x100): (");
 	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
 	// 	// print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
@@ -187,7 +193,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 
 	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
-	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];		
+	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
 	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 
 	if ( (navigation->internal_state == NAV_LANDING) &&(navigation->auto_landing_behavior == DESCENT_TO_GND) )
