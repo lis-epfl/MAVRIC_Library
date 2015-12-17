@@ -75,6 +75,7 @@ typedef struct
 	
 	float alt_lpf;										///< The low-pass filtered altitude for auto-landing
 	float LPF_gain;										///< The value of the low-pass filter gain
+	float kp_yaw;										///< The yaw gain in velocity control mode
 	
 	float dist2wp_sqr;									///< The square of the distance to the waypoint
 
@@ -105,7 +106,8 @@ typedef struct
 	
 	float alt_lpf;										///< The low-pass filtered altitude for auto-landing
 	float LPF_gain;										///< The value of the low-pass filter gain
-	
+	float kp_yaw;										///< The yaw gain in velocity control mode
+
 	pid_controller_t hovering_controller;				///< hovering controller
 	pid_controller_t wpt_nav_controller;				///< waypoint navigation controller
 } navigation_config_t;

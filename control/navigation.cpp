@@ -49,8 +49,6 @@ extern "C"
 	#include "constants.h"
 }
 
-#define KP_YAW 0.2f ///< Yaw gain for the navigation controller 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
@@ -194,7 +192,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	navigation->controls_nav->tvel[X] = dir_desired_sg[X];
 	navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
 	navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
-	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
+	navigation->controls_nav->rpy[YAW] = navigation->kp_yaw * rel_heading;
 
 	if ( (navigation->internal_state == NAV_LANDING) &&(navigation->auto_landing_behavior == DESCENT_TO_GND) )
 	{
@@ -260,7 +258,8 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
 	
 	navigation->alt_lpf = nav_config.alt_lpf;
 	navigation->LPF_gain = nav_config.LPF_gain;
-		
+	navigation->kp_yaw = nav_config.kp_yaw;
+
 	navigation->loop_count = 0;
 	
 	navigation->dt = 0.004;
