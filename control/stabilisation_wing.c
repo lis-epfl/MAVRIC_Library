@@ -98,13 +98,6 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 	stabilisation_wing->max_roll_angle = stabiliser_conf->max_roll_angle;
 	stabilisation_wing->take_off_thrust = stabiliser_conf->take_off_thrust;
 	stabilisation_wing->take_off_pitch = stabiliser_conf->take_off_pitch;
-	stabilisation_wing->tuning = stabiliser_conf->tuning;
-	stabilisation_wing->tuning_axis = stabiliser_conf->tuning_axis;
-	stabilisation_wing->tuning_steps = stabiliser_conf->tuning_steps;
-	stabilisation_wing->pitch_up = stabiliser_conf->pitch_up;
-	stabilisation_wing->pitch_down = stabiliser_conf->pitch_down;
-	stabilisation_wing->roll_right = stabiliser_conf->roll_right;
-	stabilisation_wing->roll_left = stabiliser_conf->roll_left;
 	
 	//init controller
 	controls->control_mode = ATTITUDE_COMMAND_MODE;

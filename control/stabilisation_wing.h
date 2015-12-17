@@ -89,13 +89,6 @@ typedef struct
 	float max_roll_angle;										///< Maximum roll value that the velocity layer could ask to follow
 	float take_off_thrust;										///< Thrust value used during the take-off
 	float take_off_pitch;										///< Pitch angle used during the take-off
-	int32_t tuning;												///< Are we tuning the controllers?		0: nothing		1: rate		2: attitude
-	int32_t tuning_axis;										///< Which axis are we tuning ?			0: roll			1: pitch
-	int32_t tuning_steps;										///< Is the user allowed to create steps with the remote ?
-	float pitch_up;												///< Up value for the steps in pitch
-	float pitch_down;											///< Down value for the steps in pitch
-	float roll_right;											///< Right value for the steps in roll
-	float roll_left;											///< Left value for the steps in roll
 	// TODO: Remove these two lines, which were used only for tuning
 	float current_heading;
 	float vertical_speed;
@@ -113,13 +106,6 @@ typedef struct
 	float take_off_thrust;										///< Thrust value used during the take-off
 	float take_off_pitch;										///< Pitch angle used during the take-off
 	stabiliser_stack_wing_t stabiliser_stack;					///< The pointer to the PID parameters values and output for the stacked controller
-	int32_t tuning;												///< Are we tuning the controllers?
-	int32_t tuning_axis;										///< Which axis are we tuning ?
-	int32_t tuning_steps;										///< Is the user allowed to create steps with the remote ?
-	float pitch_up;												///< Up value for the steps in pitch
-	float pitch_down;											///< Down value for the steps in pitch
-	float roll_right;											///< Right value for the steps in roll
-	float roll_left;											///< Left value for the steps in roll
 } stabilisation_wing_conf_t;
 
 /**

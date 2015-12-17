@@ -523,13 +523,6 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 			},
 		}
 	},
-	.tuning = 0,
-	.tuning_axis = PITCH,
-	.tuning_steps = 0,
-	.pitch_up = 0.5f,
-	.pitch_down = -0.2f,
-	.roll_right = 0.5f,
-	.roll_left = -0.5f
 };
 
 #ifdef __cplusplus
