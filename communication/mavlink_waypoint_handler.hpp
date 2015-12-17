@@ -137,10 +137,12 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	position_estimation		The pointer to the position estimator structure
+ * \param 	navigation 				The pointer to the navigation structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	state					The pointer to the state structure
  * \param	manual_control			The pointer to the manual control structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -160,6 +162,11 @@ bool waypoint_handler_init(	mavlink_waypoint_handler_t* waypoint_handler,
  */
 void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler);
 
+/**
+ * \brief	The waypoint handler tasks, gives a goal for the navigation module
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ */
 bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**

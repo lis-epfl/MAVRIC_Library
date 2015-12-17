@@ -205,14 +205,14 @@ static mav_result_t waypoint_handler_is_arrived(mavlink_waypoint_handler_t* wayp
 /**
  * \brief	Drives the automatic takeoff procedure
  *
- * \param	navigation		The pointer to the navigation structure in central_data
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  */
 static bool waypoint_handler_take_off_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
  * \brief	Start/Stop the navigation
  *
- * \param	navigation			The pointer to the navigation structure
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  * \param	packet					The pointer to the structure of the MAVLink command message long
  * 
  * \return	The MAV_RESULT of the command
@@ -222,7 +222,7 @@ static mav_result_t waypoint_handler_start_stop_navigation(mavlink_waypoint_hand
 /**
  * \brief	Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
  *
- * \param	navigation			The pointer to the navigation structure
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  * \param	packet				The pointer to the structure of the MAVLink command message long
  * 
  * \return	The MAV_RESULT of the command
@@ -232,7 +232,7 @@ static mav_result_t waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t
 /**
  * \brief	Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
  *
- * \param	navigation			The pointer to the navigation structure
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  * \param	packet					The pointer to the structure of the MAVLink command message long
  * 
  * \return	The MAV_RESULT of the command
@@ -242,37 +242,42 @@ static mav_result_t waypoint_handler_set_auto_landing(mavlink_waypoint_handler_t
 /**
  * \brief	Drives the auto-landing navigation behavior
  *
- * \param	navigation		The pointer to the navigation structure in central_data
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  */
 static void waypoint_handler_auto_landing_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
  * \brief	Drives the stopping behavior
  *
- * \param	navigation		The pointer to the navigation structure in central_data
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  */
 static void waypoint_handler_stopping_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
+/**
+ * \brief	State machine to drive the navigation module
+ *
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
+ */
 static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
  * \brief	Drives the critical navigation behavior
  *
- * \param	navigation		The pointer to the navigation structure in central_data
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  */
 static void waypoint_handler_critical_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
  * \brief	Drives the GPS navigation procedure
  *
- * \param	navigation		The pointer to the navigation structure in central_data
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  */
 static void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* waypoint_handler, bool reset_hold_wpt);
 
 /**
  * \brief	Check if the nav mode is equal to the state mav mode
  *
- * \param	navigation			The pointer to the navigation structure
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  *
  * \return	True if the flag STABILISE, GUIDED and ARMED are equal, false otherwise
  */
