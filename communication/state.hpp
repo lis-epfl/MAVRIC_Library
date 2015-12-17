@@ -113,7 +113,6 @@ typedef struct
 	bool out_of_fence_2;								///< Flag to tell whether we are out the second fence or not
 
 	bool nav_plan_active;								///< Flag to tell that a flight plan (min 1 waypoint) is active
-	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
 	bool reset_position;								///< Flag to enable the reset of the position estimation
 		
 	double last_heartbeat_msg;							///< Time of reception of the last heartbeat message from the ground station

@@ -94,8 +94,6 @@ State::State(Battery& battery, state_conf_t config):
 
 	nav_plan_active = false;
 	
-	in_the_air = false;
-	
 	reset_position = false;
 	
 	last_heartbeat_msg = time_keeper_get_s();

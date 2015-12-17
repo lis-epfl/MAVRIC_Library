@@ -410,7 +410,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	{
 		waypoint_handler->state->nav_plan_active = false;
 		print_util_dbg_print("nav plan inactive");
-		if (waypoint_handler->state->in_the_air)
+		if (waypoint_handler->navigation->internal_state > NAV_ON_GND)
 		{
 			print_util_dbg_print("Resetting hold waypoint");
 			waypoint_handler->hold_waypoint_set = false;
@@ -493,7 +493,7 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 	{
 		waypoint_handler->state->nav_plan_active = false;
 		print_util_dbg_print("nav plan inactive");
-		if (waypoint_handler->state->in_the_air)
+		if (waypoint_handler->navigation->internal_state > NAV_ON_GND)
 		{
 			print_util_dbg_print("Resetting hold waypoint");
 			waypoint_handler->hold_waypoint_set = false;
@@ -624,7 +624,7 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	{
 		waypoint_handler->state->nav_plan_active = false;
 		print_util_dbg_print("nav plan inactive");
-		if (waypoint_handler->state->in_the_air)
+		if (waypoint_handler->navigation->internal_state > NAV_ON_GND)
 		{
 			print_util_dbg_print("Resetting hold waypoint");
 			waypoint_handler->hold_waypoint_set = false;
@@ -789,7 +789,7 @@ static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* wayp
 	{
 		waypoint_handler->state->nav_plan_active = false;
 		print_util_dbg_print("nav plan inactive");
-		if (waypoint_handler->state->in_the_air)
+		if (waypoint_handler->navigation->internal_state > NAV_ON_GND)
 		{
 			print_util_dbg_print("Resetting hold waypoint");
 			waypoint_handler->hold_waypoint_set = false;
@@ -1597,7 +1597,6 @@ static void waypoint_handler_auto_landing_handler(mavlink_waypoint_handler_t* wa
 				waypoint_handler->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				waypoint_handler->hold_waypoint_set = false;
 				waypoint_handler->navigation->internal_state = NAV_ON_GND;
-				waypoint_handler->state->in_the_air = false;
 				waypoint_handler->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 				waypoint_handler->state->mav_state = MAV_STATE_STANDBY;
 				break;
@@ -1639,7 +1638,6 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 
 			if (takeoff_result)
 			{
-				waypoint_handler->state->in_the_air = true;
 				if (mav_modes_is_auto(mode_local))
 				{
 					waypoint_handler->navigation->internal_state = NAV_NAVIGATING;
@@ -1886,7 +1884,7 @@ static void waypoint_handler_critical_handler(mavlink_waypoint_handler_t* waypoi
 				print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
 				waypoint_handler->navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 				waypoint_handler->state->mav_mode_custom = CUSTOM_BASE_MODE;
-				waypoint_handler->state->in_the_air = false;
+				waypoint_handler->navigation->internal_state = NAV_ON_GND;
 				waypoint_handler->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
 				waypoint_handler->state->mav_state = MAV_STATE_EMERGENCY;
 				break;
