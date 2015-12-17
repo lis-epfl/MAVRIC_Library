@@ -40,7 +40,8 @@
 
 
 #include <libopencm3/stm32/rcc.h>
- 
+#include <libopencm3/cm3/nvic.h>
+
 #include "serial_stm32.hpp"
 
 
@@ -67,41 +68,49 @@ bool Serial_stm32::init(void)
 	switch( config_.device )
 	{
 		case SERIAL_STM32_1:
+			rcc_periph_clock_enable(RCC_USART1);
 			nvic_enable_irq(NVIC_USART1_IRQ);
 			handlers_[0] = this;
 		break;
 
 		case SERIAL_STM32_2:
+			rcc_periph_clock_enable(RCC_USART2);
 			nvic_enable_irq(NVIC_USART2_IRQ);
 			handlers_[1] = this;
 		break;
 
 		case SERIAL_STM32_3:
+			rcc_periph_clock_enable(RCC_USART3);
 			nvic_enable_irq(NVIC_USART3_IRQ);
 			handlers_[2] = this;
 		break;
 
 		case SERIAL_STM32_4:
+			rcc_periph_clock_enable(RCC_UART4);
 			nvic_enable_irq(NVIC_UART4_IRQ);
 			handlers_[3] = this;
 		break;
 
 		case SERIAL_STM32_5:
+			rcc_periph_clock_enable(RCC_UART5);
 			nvic_enable_irq(NVIC_UART5_IRQ);
 			handlers_[4] = this;
 		break;
 
 		case SERIAL_STM32_6:
+			rcc_periph_clock_enable(RCC_USART6);
 			nvic_enable_irq(NVIC_USART6_IRQ);
 			handlers_[5] = this;
 		break;
 
 		case SERIAL_STM32_7:
+			rcc_periph_clock_enable(RCC_UART7);
 			nvic_enable_irq(NVIC_UART7_IRQ);
 			handlers_[6] = this;
 		break;
 
 		case SERIAL_STM32_8:
+			rcc_periph_clock_enable(RCC_UART8);
 			nvic_enable_irq(NVIC_UART8_IRQ);
 			handlers_[7] = this;
 		break;
@@ -112,28 +121,16 @@ bool Serial_stm32::init(void)
 
 	// Setup GPIO pins for TX
 	gpio_mode_setup(config_.tx_port, 
-					config_.tx_af, 
+					GPIO_MODE_AF, 
 					GPIO_PUPD_NONE, 
-					// GPIO_PUPD_PULLUP, 
 					config_.tx_pin);
-	// gpio_set_output_options(config_.tx_port, 
-	// 						// GPIO_OTYPE_OD, 
-	// 						GPIO_OTYPE_PP, 
-	// 						GPIO_OSPEED_25MHZ, 
-	// 						config_.tx_pin);
 
 	// Setup GPIO pins for RX
 	gpio_mode_setup(config_.rx_port, 
-					config_.rx_af, 
+					GPIO_MODE_AF, 
 					GPIO_PUPD_NONE, 
-					// GPIO_PUPD_PULLUP, 
 					config_.rx_pin);
-	// gpio_set_output_options(config_.rx_port, 
-	// 						// GPIO_OTYPE_OD, 
-	// 						GPIO_OTYPE_PP, 
-	// 						GPIO_OSPEED_25MHZ, 
-	// 						config_.rx_pin);
-
+	
 	// Setup TX and RX pin as alternate function
 	gpio_set_af(config_.tx_port, config_.tx_af, config_.tx_pin);
 	gpio_set_af(config_.rx_port, config_.rx_af, config_.tx_pin);
@@ -151,37 +148,6 @@ bool Serial_stm32::init(void)
 
 	// Finally enable the USART
 	usart_enable(config_.device);
-
-
-
-	// /* Enable the USART2 interrupt. */
-	// nvic_enable_irq(NVIC_USART2_IRQ);
-
-	// /* Setup GPIO pins for USART2 transmit. */
-	// gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO2);
-
-	// /* Setup GPIO pins for USART2 receive. */
-	// gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO3);
-	// gpio_set_output_options(GPIOA, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, GPIO3);
-
-	// /* Setup USART2 TX and RX pin as alternate function. */
-	// gpio_set_af(GPIOA, GPIO_AF7, GPIO2);
-	// gpio_set_af(GPIOA, GPIO_AF7, GPIO3);
-
-	// /* Setup USART2 parameters. */
-	// // usart_set_baudrate(USART2, 38400);
-	// usart_set_baudrate(USART2, 57600);
-	// usart_set_databits(USART2, 8);
-	// usart_set_stopbits(USART2, USART_STOPBITS_1);
-	// usart_set_mode(USART2, USART_MODE_TX_RX);
-	// usart_set_parity(USART2, USART_PARITY_NONE);
-	// usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
-
-	// /* Enable USART2 Receive interrupt. */
-	// usart_enable_rx_interrupt(USART2);
-
-	// /* Finally enable the USART. */
-	// usart_enable(USART2);
 
 	return true;
 }
@@ -274,48 +240,56 @@ bool Serial_stm32::read(uint8_t* bytes, const uint32_t size)
  * 				as interrupt handler. It does internally the dispatch to 
  * 				call the 'irq_handler' function on the right object instance
  */
+__attribute__((interrupt))
 void usart1_isr(void)
 {
 	handlers_[0]->irq_handler();
 }
 
 
-// void usart2_isr(void)
-// {
-// 	handlers_[1]->irq_handler();
-// }
+__attribute__((interrupt))
+void usart2_isr(void)
+{
+	handlers_[1]->irq_handler();
+}
 
 
+__attribute__((interrupt))
 void usart3_isr(void)
 {
 	handlers_[2]->irq_handler();
 }
 
 
+__attribute__((interrupt))
 void uart4_isr(void)
 {
 	handlers_[3]->irq_handler();
 }
 
 
+__attribute__((interrupt))
 void uart5_isr(void)
 {
 	handlers_[4]->irq_handler();
 }
 
 
+__attribute__((interrupt))
 void usart6_isr(void)
 {
 	handlers_[5]->irq_handler();
 }
 
 
+__attribute__((interrupt))
 void uart7_isr(void)
 {
 	handlers_[6]->irq_handler();
 }
 
 
+__attribute__((interrupt))
 void uart8_isr(void)
 {
 	handlers_[7]->irq_handler();

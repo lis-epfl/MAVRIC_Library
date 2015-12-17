@@ -42,7 +42,6 @@
 #define SERIAL_STM32_HPP_
 
 #include <libopencm3/stm32/usart.h>
-#include <libopencm3/cm3/nvic.h>
 
 #include "serial.hpp"
 #include "gpio_stm32.hpp"

@@ -69,9 +69,6 @@ static void clock_setup(void)
 	rcc_periph_clock_enable(RCC_GPIOB);
 	rcc_periph_clock_enable(RCC_GPIOC);
 	rcc_periph_clock_enable(RCC_GPIOD);
-
-	// Enable UART2 clock
-	rcc_periph_clock_enable(RCC_USART2);
 }
 
 
@@ -109,19 +106,30 @@ bool Mavrimini::init(void)
 	// -------------------------------------------------------------------------
 	clock_setup();
 	time_keeper_init();
-	time_keeper_delay_ms(500);
-
 
 	// -------------------------------------------------------------------------
 	// Init LEDs
 	// -------------------------------------------------------------------------
 	green_led.on();	
 	red_led.on();	
-	
 
+	// -------------------------------------------------------------------------
+	// Init SERIAL1
+	// -------------------------------------------------------------------------
+	ret = serial_1.init();
+	init_success &= ret;
+	
+	// -------------------------------------------------------------------------
+	// Init SERIAL2
+	// -------------------------------------------------------------------------
+	ret = serial_2.init();
+	init_success &= ret;
+	
+	
 	// -------------------------------------------------------------------------
 	// Init stream for USB debug stream TODO: remove
 	p_dbg_serial 		= &serial_1;
+	// p_dbg_serial 		= &serial_2;
 	dbg_stream_.get 	= NULL;
 	dbg_stream_.put 	= &serial2stream;
 	dbg_stream_.flush 	= NULL;
@@ -131,35 +139,19 @@ bool Mavrimini::init(void)
 	// -------------------------------------------------------------------------
 
 
-	time_keeper_delay_ms(1000); 
-
 	print_util_dbg_sep('%');
-	time_keeper_delay_ms(100);
+	p_dbg_serial->flush(); 
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	print_util_dbg_print("[MAVRIMINI] ...\r\n");
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 		
-
-	// -------------------------------------------------------------------------
-	// Init UART0
-	// -------------------------------------------------------------------------
-	// ret = serial_1.init();
-	print_util_dbg_init_msg("[SERIAL0]", ret);
-	init_success &= ret;
-	time_keeper_delay_ms(100); 
-	
-
-	// -------------------------------------------------------------------------
-	// Init UART1
-	// -------------------------------------------------------------------------
-	ret = serial_2.init();
+	print_util_dbg_init_msg("[SERIAL1]", ret);
 	print_util_dbg_init_msg("[SERIAL2]", ret);
-	init_success &= ret;
-	time_keeper_delay_ms(100); 
-	
+	p_dbg_serial->flush(); 
+
 
 	// -------------------------------------------------------------------------
 	// Init Servos
@@ -168,42 +160,41 @@ bool Mavrimini::init(void)
 	print_util_dbg_init_msg("[PWM0]", ret);
 	init_success &= ret;
 	servo_0.failsafe();
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	ret = pwm_1.init();
 	print_util_dbg_init_msg("[PWM1]", ret);
 	init_success &= ret;
 	servo_1.failsafe();
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	ret = pwm_2.init();
 	print_util_dbg_init_msg("[PWM2]", ret);
 	init_success &= ret;
 	servo_2.failsafe();
-	time_keeper_delay_ms(100); 
 	ret = pwm_3.init();
 	print_util_dbg_init_msg("[PWM3]", ret);
 	init_success &= ret;
 	servo_3.failsafe();
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	ret = pwm_4.init();
 	print_util_dbg_init_msg("[PWM4]", ret);
 	init_success &= ret;
 	servo_4.failsafe();
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	ret = pwm_5.init();
 	print_util_dbg_init_msg("[PWM5]", ret);
 	init_success &= ret;
 	servo_5.failsafe();
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	ret = pwm_6.init();
 	print_util_dbg_init_msg("[PWM6]", ret);
 	init_success &= ret;
 	servo_6.failsafe();
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	ret = pwm_7.init();
 	print_util_dbg_init_msg("[PWM7]", ret);
 	init_success &= ret;
 	servo_7.failsafe();
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	
 
 	// -------------------------------------------------------------------------
@@ -212,15 +203,15 @@ bool Mavrimini::init(void)
 	ret = spektrum_satellite.init();
 	print_util_dbg_init_msg("[SAT]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	
 
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
+	p_dbg_serial->flush(); 
 	print_util_dbg_init_msg("[MAVRIMINI]", init_success);
-	time_keeper_delay_ms(100);
+	p_dbg_serial->flush();
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100);
+	p_dbg_serial->flush();
 	
 
 	return init_success;
