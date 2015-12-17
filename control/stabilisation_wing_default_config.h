@@ -321,12 +321,12 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.1f,
-					.clip_min = -PI/3.0f,
+					.p_gain = 0.2f,
+					.clip_min = -PI/4.0f,		// To avoid stall
 					.clip_max = PI/3.0f,
 					.integrator={
-						.gain = 0.01f,
-						.clip_pre = 1.0f,
+						.gain = 0.08f,
+						.clip_pre = 100.0f,
 						.accumulator = 0.0f,
 						.clip = PI/6.0f,
 					},
