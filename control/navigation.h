@@ -90,6 +90,7 @@ typedef struct
 	mav_mode_t mode;									///< The mode of the MAV to have a memory of its evolution
 	
 	bool auto_takeoff;									///< The flag to start and end the auto takeoff procedure
+	float takeoff_altitude;								///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
 	bool auto_landing;									///< The flag to start and end the auto landing procedure
 	
 	critical_behavior_enum critical_behavior;			///< The critical behavior enum
@@ -139,6 +140,8 @@ typedef struct
 	float minimal_radius;								///< The minimal circle radius
 	float vertical_vel_gain;							///< Gain for the vertical velocity calculation
 	float heading_acceptance;							///< The heading acceptance to switch to next waypoint
+	
+	float takeoff_altitude;								///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
 
 	pid_controller_t hovering_controller;				///< hovering controller
 	pid_controller_t wpt_nav_controller;				///< waypoint navigation controller

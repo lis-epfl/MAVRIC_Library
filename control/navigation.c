@@ -414,7 +414,6 @@ static void navigation_set_vector_field_command(navigation_t* navigation, const 
 static void navigation_dubin_state_machine(navigation_t* navigation, waypoint_local_struct_t* waypoint_next)
 {
 	float rel_pos[3];
-	float dist2wp_sqr;
 
 	rel_pos[Z] = 0.0f;
 
@@ -613,19 +612,6 @@ static void navigation_run(navigation_t* navigation)
 																					rel_pos,
 																					navigation->position_estimation->local_position.pos);
 	
-	// For Quad
-	// mav_mode_t mode = navigation->state->mav_mode;
-	// if ( ((mode.AUTO == AUTO_ON)||(mode.GUIDED = GUIDED_ON)) && (!navigation->auto_takeoff) )
-	// {
-	// 	//navigation_set_vector_field_command(navigation, rel_pos, navigation->goal.radius);
-	// 	navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
-	// 	//navigation_set_dubin_field_command(navigation, navigation->goal.radius);
-	// }
-	// else
-	// {
-	// 	navigation_set_speed_command(rel_pos, navigation);
-	// }
-	
 	// For Wing
 	navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
 
@@ -704,11 +690,12 @@ static void navigation_waypoint_take_off_handler(navigation_t* navigation)
 	//if (navigation->mode == navigation->state->mav_mode.byte)
 	if (navigation_mode_change(navigation))
 	{
-		if (navigation->waypoint_handler->dist2wp_sqr <= 16.0f)
+		if (navigation->position_estimation->local_position.pos[Z] <= navigation->takeoff_altitude)
 		{
 			//state_machine->state->mav_state = MAV_STATE_ACTIVE;
 			navigation->state->in_the_air = true;
 			navigation->auto_takeoff = false;
+			navigation->waypoint_handler->dubin_state = INIT;
 			print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
 			print_util_dbg_print_num(navigation->waypoint_handler->dist2wp_sqr * 10.0f,10);
 			print_util_dbg_print(".\r\n");
@@ -1324,6 +1311,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->mode.byte = state->mav_mode.byte;
 	
 	navigation->auto_takeoff = false;
+	navigation->takeoff_altitude = nav_config->takeoff_altitude;
 	navigation->auto_landing = false;
 	
 	navigation->stop_nav = false;
@@ -1600,7 +1588,6 @@ task_return_t navigation_update(navigation_t* navigation)
 						}
 
 						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
-						navigation_run(navigation);
 					}
 				}
 			}

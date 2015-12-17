@@ -64,6 +64,7 @@ navigation_config_t navigation_default_config =
 	.alt_lpf = 0.0f,
 	.LPF_gain = 0.9f,
 	.vertical_vel_gain = 1.0f,
+	.takeoff_altitude = -40.0f,
 	.wpt_nav_controller = 
 	{
 		.p_gain = 0.7f,

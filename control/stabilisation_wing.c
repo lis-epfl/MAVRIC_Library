@@ -78,7 +78,7 @@ float heading_from_velocity_vector(float *input_vel)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const airspeed_analog_t* airspeed_analog, servos_t* servos, servo_mix_wing_t* servo_mix)
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const airspeed_analog_t* airspeed_analog, servos_t* servos, servo_mix_wing_t* servo_mix, navigation_t* navigation)
 {
 	bool init_success = true;
 	
@@ -91,10 +91,13 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 	stabilisation_wing->airspeed_analog = airspeed_analog;
 	stabilisation_wing->servos = servos;
 	stabilisation_wing->servo_mix = servo_mix;
+	stabilisation_wing->navigation = navigation;
 	stabilisation_wing->thrust_apriori = stabiliser_conf->thrust_apriori;
 	stabilisation_wing->pitch_angle_apriori = stabiliser_conf->pitch_angle_apriori;
 	stabilisation_wing->pitch_angle_apriori_gain = stabiliser_conf->pitch_angle_apriori_gain;
 	stabilisation_wing->max_roll_angle = stabiliser_conf->max_roll_angle;
+	stabilisation_wing->take_off_thrust = stabiliser_conf->take_off_thrust;
+	stabilisation_wing->take_off_pitch = stabiliser_conf->take_off_pitch;
 	stabilisation_wing->tuning = stabiliser_conf->tuning;
 	stabilisation_wing->tuning_axis = stabiliser_conf->tuning_axis;
 	stabilisation_wing->tuning_steps = stabiliser_conf->tuning_steps;
@@ -218,6 +221,14 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		input.rpy[1] = - stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[1];
 		input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
 		
+		// Overwrite the commands during the take-off (fixe 0 roll angle, fixe defined pitch angle and defined constant thrust value)
+		if(stabilisation_wing->navigation->auto_takeoff)
+		{
+			input.rpy[0] = 0.0f;
+			input.rpy[1] = stabilisation_wing->take_off_pitch;
+			input.thrust = stabilisation_wing->take_off_thrust;
+		}
+		
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	
 	case ATTITUDE_COMMAND_MODE:
@@ -226,7 +237,6 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		input.rpy[1] += stabilisation_wing->pitch_angle_apriori;	// Constant compensation for horizontal
 		if(abs(attitude.rpy[ROLL]) < PI/2.0f)						// Compensation for the roll bank angle
 		{
-			//input.rpy[1] += stabilisation_wing->pitch_angle_apriori_gain * (1.0/maths_f_abs(cosf(attitude.rpy[ROLL])) - 1.0);
 			input.rpy[1] += stabilisation_wing->pitch_angle_apriori_gain * maths_f_abs(input.rpy[0]*input.rpy[0]*input.rpy[0]);
 		}
 		
