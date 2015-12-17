@@ -86,6 +86,7 @@ LIB_SRCS += control/vector_field_waypoint.cpp
 LIB_SRCS += control/velocity_controller_copter.cpp
 
 LIB_SRCS += drivers/battery.c                    
+LIB_SRCS += drivers/barometer.cpp          
 LIB_SRCS += drivers/barometer_telemetry.cpp          
 LIB_SRCS += drivers/bmp085.cpp                   
 LIB_SRCS += drivers/flow.c                  
@@ -94,7 +95,7 @@ LIB_SRCS += drivers/gps_telemetry.cpp
 LIB_SRCS += drivers/hmc5883l.cpp  
 LIB_SRCS += drivers/lsm330dlc.cpp            
 LIB_SRCS += drivers/servo.cpp                              
-# LIB_SRCS += drivers/servos_telemetry.c
+LIB_SRCS += drivers/servos_telemetry.c
 LIB_SRCS += drivers/sonar_i2cxl.cpp
 LIB_SRCS += drivers/sonar_telemetry.cpp
 LIB_SRCS += drivers/spektrum_satellite.cpp
@@ -350,6 +351,7 @@ CC = avr32-gcc
 CFLAGS  = -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall 
 CFLAGS += -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes 
 CFLAGS += -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF
+# CFLAGS += -ffunction-sections
 CFLAGS += ${PREPROC_OPT}
 
 # Include files from MAVRIC library and source folder
@@ -366,6 +368,7 @@ CXX = avr32-g++
 CXXFLAGS  = -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section 
 CXXFLAGS += -g2 -pg -p -Wall -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MD -MP -MF
 # CXXFLAGS += -D_DEFAULT_SOURCE 
+# CXXFLAGS += -ffunction-sections
 CXXFLAGS += ${PREPROC_OPT}
 
 # Include files from MAVRIC library and source folder

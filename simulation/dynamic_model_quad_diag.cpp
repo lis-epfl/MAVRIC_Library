@@ -45,7 +45,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 
@@ -54,10 +54,10 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Dynamic_model_quad_diag::Dynamic_model_quad_diag( 	Servo& servo_front_right,
+Dynamic_model_quad_diag::Dynamic_model_quad_diag( 	Servo& servo_rear_left,
 													Servo& servo_front_left,
+													Servo& servo_front_right,
 													Servo& servo_rear_right,
-													Servo& servo_rear_left,
 													dynamic_model_quad_diag_conf_t config ):
 	servo_front_right_( servo_front_right ),
 	servo_front_left_( servo_front_left ),
@@ -93,7 +93,7 @@ Dynamic_model_quad_diag::Dynamic_model_quad_diag( 	Servo& servo_front_right,
 bool Dynamic_model_quad_diag::update(void)
 {
 	int32_t i;
-	quat_t qtmp1, qvel_bf,  qed;
+	quat_t qtmp1, qvel_bf, qed;
 	const quat_t up 	= { 0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z} };
 	
 	// Update timing
@@ -102,7 +102,7 @@ bool Dynamic_model_quad_diag::update(void)
 	last_update_us_ = now;
 
 	// Do nothing if updated too often
-	if( dt_s_ < 0.004f )
+	if( dt_s_ < 0.001f )
 	{
 		return true;
 	}
@@ -216,7 +216,7 @@ const std::array<float, 3>& Dynamic_model_quad_diag::acceleration_bf(void) const
 
 const std::array<float, 3>& Dynamic_model_quad_diag::velocity_lf(void) const
 {
-	return vel_bf_;
+	return vel_;
 }
 
 

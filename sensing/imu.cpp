@@ -46,7 +46,7 @@
 
 extern "C"
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "print_util.h"
 	#include "constants.h"
 }
@@ -253,9 +253,12 @@ bool Imu::stop_accelerometer_bias_calibration(void)
 	do_accelerometer_bias_calibration_ = false;
 
 	// Update biases
-	config_.accelerometer.bias[X] = config_.accelerometer.mean_values[X];
-	config_.accelerometer.bias[Y] = config_.accelerometer.mean_values[Y];
-	config_.accelerometer.bias[Z] = config_.accelerometer.mean_values[Z] - (-1.0f);
+	if( success )
+	{
+		config_.accelerometer.bias[X] += config_.accelerometer.mean_values[X];
+		config_.accelerometer.bias[Y] += config_.accelerometer.mean_values[Y];
+		config_.accelerometer.bias[Z] += config_.accelerometer.mean_values[Z] - (-1.0f);
+	}
 
 	return success;
 }
@@ -270,10 +273,13 @@ bool Imu::stop_gyroscope_bias_calibration(void)
 	do_gyroscope_bias_calibration_ = false;
 
 	// Update biases
-	config_.gyroscope.bias[X] = config_.gyroscope.mean_values[X];
-	config_.gyroscope.bias[Y] = config_.gyroscope.mean_values[Y];
-	config_.gyroscope.bias[Z] = config_.gyroscope.mean_values[Z];
-
+	if( success )
+	{
+		config_.gyroscope.bias[X] += config_.gyroscope.mean_values[X];
+		config_.gyroscope.bias[Y] += config_.gyroscope.mean_values[Y];
+		config_.gyroscope.bias[Z] += config_.gyroscope.mean_values[Z];
+	}
+	
 	return success;
 }
 
@@ -287,9 +293,9 @@ bool Imu::stop_magnetometer_bias_calibration(void)
 	do_magnetometer_bias_calibration_ = false;
 
 	// Update biases
-	config_.magnetometer.bias[X] = 0.5f * (config_.magnetometer.max_values[X] + config_.magnetometer.min_values[X]);
-	config_.magnetometer.bias[Y] = 0.5f * (config_.magnetometer.max_values[Y] + config_.magnetometer.min_values[Y]);
-	config_.magnetometer.bias[Z] = 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
+	config_.magnetometer.bias[X] += 0.5f * (config_.magnetometer.max_values[X] + config_.magnetometer.min_values[X]);
+	config_.magnetometer.bias[Y] += 0.5f * (config_.magnetometer.max_values[Y] + config_.magnetometer.min_values[Y]);
+	config_.magnetometer.bias[Z] += 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
 
 	return success;
 }

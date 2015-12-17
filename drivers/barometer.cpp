@@ -30,32 +30,62 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file acoustic_telemetry.c
+ * \file barometer.cpp
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief Acoustic receive telemetry function
+ * \brief Interface class for barometers
  *
  ******************************************************************************/
 
-
-#include "acoustic_telemetry.hpp"
+#include "barometer.hpp"
+#include "time_keeper.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
+	#include "maths.h"
 }
 
-void acoustic_telemetry_send (const audio_t* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+
+const float& Barometer::last_update_us(void) const
 {
-	//TODO: create a mavlink message
-	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
-									mavlink_stream->compid,
-									msg,
-									"Audio",
-									time_keeper_get_us(),
-									(float)audio_data->azimuth,
-									(float)audio_data->elevation,
-									(float)audio_data->reliabe_data);
+	return last_update_us_;
+}
+
+
+const float& Barometer::pressure(void)  const
+{
+	return pressure_;
+}
+
+
+const float& Barometer::altitude_gf(void) const
+{
+	return altitude_gf_;
+}
+
+
+const float& Barometer::vertical_speed_lf(void) const
+{
+	return speed_lf_;
+}
+
+
+const float& Barometer::temperature(void) const
+{
+	return temperature_;
+}
+
+
+void Barometer::calibrate_bias(float current_altitude_gf)
+{
+	altitude_bias_gf_ += ( altitude_gf_ - current_altitude_gf );
+}
+
+
+float Barometer::altitude_from_pressure(float pressure, float altitude_bias)
+{
+	return 44330.0f * (1.0f - pow(pressure / 101325.0f, 0.190295f)) - altitude_bias;
 }

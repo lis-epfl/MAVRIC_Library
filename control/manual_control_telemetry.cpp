@@ -49,7 +49,7 @@
 extern "C" 
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

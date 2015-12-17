@@ -105,7 +105,7 @@ public:
 	 * 
 	 * \return 	position
 	 */	
-	const global_position_t& global_position(void) const;
+	const global_position_t& position_gf(void) const;
 
 
 	/**
@@ -125,11 +125,11 @@ public:
 
 
 	/**
-	 * \brief 	Get velocity in global frame in m/s
+	 * \brief 	Get velocity in local frame in m/s
 	 * 
 	 * \return 	3D velocity
 	 */	
-	const std::array<float,3>& global_velocity(void) const;
+	const std::array<float,3>& velocity_lf(void) const;
 
 
 	/**
@@ -188,7 +188,7 @@ private:
 	global_position_t 	global_position_;					///< Global position
 	float 				horizontal_position_accuracy_;		///< Accuracy of position on horizontal plane in m
 	float 				vertical_position_accuracy_;		///< Accuracy of position on vertical axis in m
-	std::array<float,3> global_velocity_;					///< 3D Velocity in global frame in m/s
+	std::array<float,3> velocity_lf_;						///< 3D Velocity in local frame in m/s
 	float 				velocity_accuracy_;					///< Accuracy of velocity in m/s
 	float 				heading_;							///< Heading in degrees
 	float 				heading_accuracy_;					///< Accuracy of heading in degrees

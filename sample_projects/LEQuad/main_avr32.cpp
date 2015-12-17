@@ -43,18 +43,18 @@
 #include "mavlink_telemetry.hpp"
 #include "tasks.hpp"
 
-#include "file_dummy.hpp"
+// #include "file_dummy.hpp"
 #include "file_flash_avr32.hpp"
 #include "serial_usb_avr32.hpp"
 
-#include "dynamic_model_quad_diag.hpp"
-#include "simulation.hpp"
-#include "adc_dummy.hpp"
-#include "pwm_dummy.hpp"
+// #include "dynamic_model_quad_diag.hpp"
+// #include "simulation.hpp"
+// #include "adc_dummy.hpp"
+// #include "pwm_dummy.hpp"
 
 extern "C" 
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "print_util.h"
 	#include "piezo_speaker.h"
 	#include "delay.h"
@@ -62,7 +62,7 @@ extern "C"
 	#include "conf_imu.hpp"
 }
 
-#include "dbg.hpp"
+// #include "dbg.hpp"
 
 int main (void)
 {
@@ -70,7 +70,7 @@ int main (void)
 	// Create board
 	// -------------------------------------------------------------------------
 	megafly_rev4_conf_t board_config 	= megafly_rev4_default_config();
-	board_config.imu_config 			= imu_config();							// Load custom imu config (cf conf_imu.h)
+	// board_config.imu_config 			= imu_config();							// Load custom imu config (cf conf_imu.h)
 	Megafly_rev4 board = Megafly_rev4( board_config );
 
 
@@ -78,24 +78,24 @@ int main (void)
 	// Create simulation
 	// -------------------------------------------------------------------------
 	// Simulated servos
-	Pwm_dummy pwm[4];
-	Servo sim_servo_0(pwm[0], servo_default_config_esc());
-	Servo sim_servo_1(pwm[1], servo_default_config_esc());
-	Servo sim_servo_2(pwm[2], servo_default_config_esc());
-	Servo sim_servo_3(pwm[3], servo_default_config_esc());
+	// Pwm_dummy pwm[4];
+	// Servo sim_servo_0(pwm[0], servo_default_config_esc());
+	// Servo sim_servo_1(pwm[1], servo_default_config_esc());
+	// Servo sim_servo_2(pwm[2], servo_default_config_esc());
+	// Servo sim_servo_3(pwm[3], servo_default_config_esc());
 	
-	// Simulated dynamic model
-	Dynamic_model_quad_diag sim_model 	= Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
-	Simulation sim 						= Simulation(sim_model);
+	// // Simulated dynamic model
+	// Dynamic_model_quad_diag sim_model 	= Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
+	// Simulation sim 						= Simulation(sim_model);
 	
-	// Simulated battery
-	Adc_dummy 	sim_adc_battery = Adc_dummy(11.1f);
-	Battery 	sim_battery 	= Battery(sim_adc_battery);
+	// // Simulated battery
+	// Adc_dummy 	sim_adc_battery = Adc_dummy(11.1f);
+	// Battery 	sim_battery 	= Battery(sim_adc_battery);
 
-	// Simulated IMU
-	Imu 		sim_imu 		= Imu(  sim.accelerometer(),
-										sim.gyroscope(),
-										sim.magnetometer() );
+	// // Simulated IMU
+	// Imu 		sim_imu 		= Imu(  sim.accelerometer(),
+	// 									sim.gyroscope(),
+	// 									sim.magnetometer() );
 
 	fat_fs_mounting_t fat_fs_mounting;
 	File_fat_fs	file_log(true,&fat_fs_mounting); // boolean value = debug mode
@@ -109,9 +109,9 @@ int main (void)
 									board.imu, 
 									board.bmp085,
 									board.gps_ublox, 
-									//sim.gps(), 
-									// board.sonar_i2cxl,		// Warning:
-									sim.sonar(),				// this is simulated
+									// sim.gps(), 
+									board.sonar_i2cxl,		// Warning:
+									// sim.sonar(),				// this is simulated
 									board.uart0,
 									board.spektrum_satellite,
 									board.green_led,
@@ -127,12 +127,14 @@ int main (void)
 
 
 	// Create central data with simulated sensors
-	// Central_data cd = Central_data( sim_imu, 
+	// Central_data cd = Central_data( MAVLINK_SYS_ID,
+	// 								sim_imu, 
 	// 								sim.barometer(),
 	// 								sim.gps(), 
 	// 								sim.sonar(),
 	// 								board.uart0, 				// mavlink serial
 	// 								board.spektrum_satellite,
+	// 								board.green_led,
 	// 								board.file_flash,
 	// 								sim_battery,
 	// 								board.servo_0,
@@ -157,11 +159,11 @@ int main (void)
 	delay_ms(150);
 
 	// Try to read from flash, if unsuccessful, write to flash
-	// if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
-	// {
-	// 	onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-	// 	init_success = false; 
-	// }
+	if( onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false )
+	{
+		onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+		init_success = false; 
+	}
 
 	print_util_dbg_print("creating new log files\r\n");
 	delay_ms(150);

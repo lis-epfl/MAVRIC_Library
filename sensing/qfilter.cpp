@@ -46,7 +46,7 @@ extern "C"
 { 
 	#include "coord_conventions.h"
 	#include "print_util.h" 
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include <math.h>
 	#include "maths.h"
 	#include "constants.h"
@@ -272,7 +272,7 @@ void qfilter_update(qfilter_t *qf)
 	qf->ahrs->linear_acc[Z] = 9.81f * (acc[Z] - up_bf.v[Z]) ;
 
 	// Update angular_speed.
-	qf->ahrs->angular_speed[X] = gyro[X] - qf->gyro_bias[X];
-	qf->ahrs->angular_speed[Y] = gyro[Y] - qf->gyro_bias[Y];
-	qf->ahrs->angular_speed[Z] = gyro[Z] - qf->gyro_bias[Z];
+	qf->ahrs->angular_speed[X] = gyro[X];
+	qf->ahrs->angular_speed[Y] = gyro[Y];
+	qf->ahrs->angular_speed[Z] = gyro[Z];
 }

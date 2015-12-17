@@ -77,69 +77,8 @@ public:
 	bool update(void);
 
 
-	 /**
-	 * \brief   Get the last update time in microseconds
-	 * 
-	 * \return 	Value
-	 */
-	const float& last_update_us(void) const;
-
-
-	/**
-	 * \brief   Return the pressure
-	 * 
-	 * \return 	Value
-	 */
-	const float& pressure(void)  const;
-
-
-	/**
-	 * \brief   Get the altitude in meters
-	 * 
-	 * \detail 	Not NED frame: (>0 means upward)
-	 * 
-	 * \return 	Value
-	 */
-	const float& altitude(void) const;
-
-
-	/**
-	 * \brief   Get the vertical speed in meters/second
-	 * 
-	 * \detail 	Not NED frame: (>0 means upward)
-	 * 
-	 * \return 	Value
-	 */
-	const float& vario_vz(void) const;
-
-
-	/**
-	 * \brief   Get sensor temperature
-	 * 
-	 * \return 	Value
-	 */
-	const float& temperature(void) const;
-
-
-	/**
-	 * \brief   Reset the origin altitude
-	 * 
-	 * \param	origin_altitude 	New origin altitude
-	 * 
-	 * \return 	success
-	 */
-	bool reset_origin_altitude(float origin_altitude);
-
-
 private:
 	Dynamic_model& 	dynamic_model_;	///< Reference to dynamic model
-
-	float	pressure_;				///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
-	float	altitude_;				///< Measured altitude as the median filter of the 3 last_altitudes
-	float	vario_vz_;				///< Vario altitude speed	
-	float	temperature_;			///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
-	float	altitude_offset_;		///< Offset of the barometer sensor for matching GPS altitude value
-	float	last_update_us_;		///< Time of the last update of the barometer
 };
 
 #endif /* BAROMETER_SIM_HPP_ */

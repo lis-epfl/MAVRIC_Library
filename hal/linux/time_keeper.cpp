@@ -33,51 +33,77 @@
  * \file time_keeper.c
  * 
  * \author MAV'RIC Team
+ * \author Felix Schill
  *   
  * \brief This file is used to interact with the clock of the microcontroller
  * 
  ******************************************************************************/
  
-#include "time_keeper.h"
 
+#include <unistd.h>
+#include "time_keeper.hpp"
+#include <chrono>
+
+using namespace std::chrono;
+
+high_resolution_clock::time_point t_start;
 
 void time_keeper_init(void) 
 {
-	;
+	t_start = high_resolution_clock::now();
 }
 
 
 double time_keeper_get_s(void)
 {
-	return 0.0;
+	// time in seconds since system start
+	return (double)time_keeper_get_us() / (double)1000000.0;
 }
 
 
 uint64_t time_keeper_get_ms(void)
 {
-	return 0;
+	// milliseconds since system start
+	return time_keeper_get_us() / 1000;
 }
 
 
 uint64_t time_keeper_get_us(void)
 {
-	return 0;
+	high_resolution_clock::time_point t_now = high_resolution_clock::now();
+
+	auto t_diff = duration_cast<microseconds>(t_now - t_start);
+
+	return t_diff.count();
 }
 
 
 void time_keeper_delay_us(uint64_t microseconds)
 {
-	;
+	uint64_t now = time_keeper_get_us();
+	while (time_keeper_get_us() < now + microseconds)
+	{
+		;
+	}
 }
 
 
 void time_keeper_delay_ms(uint64_t milliseconds) 
 {
-	;
+	uint64_t now = time_keeper_get_us();
+	
+	while (time_keeper_get_us() < now + 1000 * milliseconds) 
+	{
+		;
+	}
 }
 
 
 void time_keeper_sleep_us(uint64_t microseconds) 
 {
-	;
+	struct timespec reqtime;
+	reqtime.tv_sec 	= 0;
+	reqtime.tv_nsec = 1000 * microseconds;
+
+	nanosleep(&reqtime, NULL);
 }

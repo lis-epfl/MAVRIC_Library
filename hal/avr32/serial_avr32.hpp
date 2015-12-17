@@ -98,12 +98,6 @@ typedef struct
 
 
 /**
- * \brief 	Typedef for interrupt handler function
- */
-typedef void(*serial_avr32_irq_func_t)(void); 
-
-
-/**
  * \brief 	Implementation of serial peripheral for avr32
  */
 class Serial_avr32: public Serial

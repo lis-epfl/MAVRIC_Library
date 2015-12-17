@@ -36,7 +36,7 @@
  * \author Gregoire Heitz
  * \author Julien Lecoeur
  *   
- * \brief Abstract class for barometers
+ * \brief Interface class for barometers
  *
  ******************************************************************************/
 
@@ -46,7 +46,7 @@
 
 
 /**
- * \brief 	Abstract class for barometers
+ * \brief 	Interface class for barometers
  */
 class Barometer
 {
@@ -73,7 +73,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& last_update_us(void) const = 0;
+	const float& last_update_us(void) const;
 
 
 	/**
@@ -81,27 +81,27 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& pressure(void)  const = 0;
+	const float& pressure(void)  const;
 
 
 	/**
-	 * \brief   Get the altitude in meters
+	 * \brief   Get the altitude in meters above sea level
 	 * 
-	 * \detail 	Not NED frame: (>0 means upward)
+	 * \detail 	Global frame: (>0 means upward)
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& altitude(void) const = 0;
+	const float& altitude_gf(void) const;
 
 
 	/**
 	 * \brief   Get the vertical speed in meters/second
 	 * 
-	 * \detail 	Not NED frame: (>0 means upward)
+	 * \detail 	NED frame: (>0 means downward)
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& vario_vz(void) const = 0;
+	const float& vertical_speed_lf(void) const;
 
 
 	/**
@@ -109,17 +109,38 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& temperature(void) const = 0;
+	const float& temperature(void) const;
 
 
 	/**
-	 * \brief   Reset the origin altitude
+	 * \brief   Correct altitude offset using current altitude
 	 * 
-	 * \param	origin_altitude 	New origin altitude
-	 * 
-	 * \return 	success
+	 * \param	current_altitude_gf 	Current altitude in global frame
 	 */
-	virtual bool reset_origin_altitude(float origin_altitude) = 0;
+	void calibrate_bias(float current_altitude_gf);
+
+
+	/**
+	 * \brief	Compue altitude above sea level from pressure 
+	 * 
+	 * \param 	pressure		Current atmospheric pressure
+	 * \param   altitude_bias	Altitude correction (optional)
+	 * 
+	 * \return 	Altitude (global frame)
+	 * 
+	 */
+	static float altitude_from_pressure(float pressure, float altitude_bias=0);
+
+
+protected:
+
+	float pressure_;			///< Measured pressure
+	float temperature_;			///< Measured temperature
+	float altitude_gf_;			///< Measured altitude (global frame)
+	float altitude_bias_gf_;	///< Offset of the barometer sensor for matching GPS altitude value
+	float speed_lf_;			///< Vario altitude speed (ned frame)
+	float last_update_us_;		///< Time of the last update of the barometer
+
 };
 
 #endif /* BAROMETER_HPP_ */

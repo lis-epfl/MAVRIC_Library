@@ -106,6 +106,7 @@ int main(int argc, char** argv)
 
 	// Board initialisation
 	init_success &= board.init();
+	board.sim.update();
 
 	// Init central data
 	init_success &= cd.init();

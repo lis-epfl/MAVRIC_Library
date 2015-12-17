@@ -43,7 +43,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 
 	#include "sysclk.h"
 	#include "sleepmgr.h"

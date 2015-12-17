@@ -54,7 +54,7 @@
 
 extern "C" 
 {
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 	#include "navigation_default_config.h"
 	#include "qfilter_default_config.h"
 	#include "scheduler_default_config.h"
@@ -258,6 +258,14 @@ bool Central_data::init(void)
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
 
+	// -------------------------------------------------------------------------
+	// Init servo telemetry
+	// -------------------------------------------------------------------------
+	servos_telemetry_init(	&servos_telemetry, 
+							&servo_0, 
+							&servo_1, 
+							&servo_2, 
+							&servo_3);
 
 	// -------------------------------------------------------------------------
 	// Init manual control

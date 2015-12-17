@@ -43,7 +43,7 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.h"
+	#include "time_keeper.hpp"
 }
 
 
@@ -60,7 +60,7 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
 	servo_2(pwm_2, servo_default_config_esc()),
 	servo_3(pwm_3, servo_default_config_esc()),
 	dynamic_model( Dynamic_model_quad_diag(servo_0, servo_1, servo_2, servo_3) ),
-	sim( Simulation(dynamic_model) ),
+	sim( dynamic_model ),
 	imu( Imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer(), config.imu_config) ),
 	adc_battery( Adc_dummy( 12.34f ) ),
 	battery( Battery(adc_battery) ),
@@ -75,6 +75,11 @@ bool Mavrinux::init(void)
 {
 	bool init_success = true;
 	bool ret;
+
+	// -------------------------------------------------------------------------
+	// Init timer
+	// -------------------------------------------------------------------------
+	time_keeper_init();
 
 	// -------------------------------------------------------------------------
 	// Init UART3

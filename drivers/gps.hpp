@@ -102,7 +102,7 @@ public:
 	 * 
 	 * \return 	position
 	 */	
-	virtual const global_position_t& global_position(void) const = 0;
+	virtual const global_position_t& position_gf(void) const = 0;
 
 
 	/**
@@ -122,11 +122,11 @@ public:
 
 
 	/**
-	 * \brief 	Get velocity in global frame in m/s
+	 * \brief 	Get velocity in local frame in m/s
 	 * 
 	 * \return 	3D velocity
 	 */	
-	virtual const std::array<float,3>& global_velocity(void) const = 0;
+	virtual const std::array<float,3>& velocity_lf(void) const = 0;
 
 
 	/**
