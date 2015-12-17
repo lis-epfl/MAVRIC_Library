@@ -505,7 +505,7 @@ static void navigation_dubin_state_machine(navigation_t* navigation, waypoint_lo
 			}
 			float heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X])-navigation->position_estimation->local_position.heading);
 
-			if (maths_f_abs(heading_diff) < PI/12.0f)
+			if (maths_f_abs(heading_diff) < navigation->heading_acceptance)
 			{
 				navigation->waypoint_handler->dubin_state = STRAIGHT;
 				print_util_dbg_print("STRAIGHT\r\n");
@@ -830,7 +830,7 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 
 				float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
 
-				if (maths_f_abs(rel_heading) < PI/12.0f)
+				if (maths_f_abs(rel_heading) < navigation->heading_acceptance)
 				{
 					print_util_dbg_print("Autocontinue towards waypoint Nr");
 					print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint_count,10);
@@ -1044,7 +1044,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 		float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
 
 		//if (navigation->waypoint_handler->dist2wp_sqr < 3.0f)
-		if (maths_f_abs(rel_heading) < PI/12.0f)
+		if (maths_f_abs(rel_heading) < navigation->heading_acceptance)
 		{
 			next_state = true;
 		}
@@ -1344,6 +1344,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 
 	navigation->safe_altitude = nav_config->safe_altitude;
 	navigation->minimal_radius = nav_config->minimal_radius;
+	navigation->heading_acceptance = nav_config->heading_acceptance;
 
 	navigation->soft_zone_size = nav_config->soft_zone_size;
 	

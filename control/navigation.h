@@ -104,6 +104,7 @@ typedef struct
 	
 	float safe_altitude;								///< The altitude at which the robot will fly in critical mode
 	float minimal_radius;								///< The minimal circle radius
+	float heading_acceptance;							///< The heading acceptance to switch to next waypoint
 
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
@@ -136,8 +137,8 @@ typedef struct
 	
 	float safe_altitude;								///< The altitude at which the robot will fly in critical mode
 	float minimal_radius;								///< The minimal circle radius
-	
 	float vertical_vel_gain;							///< Gain for the vertical velocity calculation
+	float heading_acceptance;							///< The heading acceptance to switch to next waypoint
 
 	pid_controller_t hovering_controller;				///< hovering controller
 	pid_controller_t wpt_nav_controller;				///< waypoint navigation controller
