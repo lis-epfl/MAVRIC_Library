@@ -1556,7 +1556,7 @@ static void waypoint_handler_auto_landing_handler(mavlink_waypoint_handler_t* wa
 		
 		for (uint8_t i = 0; i < 3; i++)
 		{
-			rel_pos[i] = waypoint_handler->waypoint_critical_coordinates.pos[i] - waypoint_handler->position_estimation->local_position.pos[i];
+			rel_pos[i] = waypoint_handler->waypoint_hold_coordinates.pos[i] - waypoint_handler->position_estimation->local_position.pos[i];
 		}
 		
 		waypoint_handler->navigation->dist2wp_sqr = vectors_norm_sqr(rel_pos);
@@ -1677,31 +1677,34 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 			
 			waypoint_handler->navigation->goal = waypoint_handler->waypoint_coordinates; 
 
-			if(mav_modes_is_guided(mode_local))
+			if (!mav_modes_is_auto(mode_local))
 			{
-				waypoint_handler->navigation->internal_state = NAV_HOLD_POSITION;
-			}
-			else
-			{
-				waypoint_handler->navigation->internal_state = NAV_MANUAL_CTRL;
+				if(mav_modes_is_guided(mode_local))
+				{
+					print_util_dbg_print("switching to NAV_HOLD_POSITION\r\n");
+					waypoint_handler->waypoint_hold_coordinates = waypoint_handler->position_estimation->local_position;
+					waypoint_handler->navigation->internal_state = NAV_HOLD_POSITION;
+				}
+				else
+				{
+					print_util_dbg_print("switching to NAV_MANUAL_CTRL\r\n");
+					waypoint_handler->navigation->internal_state = NAV_MANUAL_CTRL;
+				}
 			}
 
 			break;
 
 		case NAV_HOLD_POSITION:
-			if (!waypoint_handler_mode_change(waypoint_handler))
-			{
-				waypoint_handler->navigation->goal = waypoint_handler->position_estimation->local_position;
-			}
-
 			waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
-
+			
 			if ( mav_modes_is_auto(mode_local) )
 			{
+				print_util_dbg_print("switching to NAV_NAVIGATING\r\n");
 				waypoint_handler->navigation->internal_state = NAV_NAVIGATING;
 			}
-			else
+			else if (!mav_modes_is_guided(mode_local))
 			{
+				print_util_dbg_print("switching to NAV_MANUAL_CTRL\r\n");
 				waypoint_handler->navigation->internal_state = NAV_MANUAL_CTRL;
 			}
 			break;
@@ -1961,8 +1964,6 @@ static void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handle
 			{
 				waypoint_handler->state->nav_plan_active = false;
 				print_util_dbg_print("Stop\r\n");
-				
-				//waypoint_handler_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->waypoint_coordinates);
 			}
 		}
 	}
@@ -1970,7 +1971,6 @@ static void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handle
 	{
 		if (!waypoint_handler->hold_waypoint_set)
 		{
-			//waypoint_handler_hold_init(navigation->waypoint_handler, navigation->position_estimation->local_position);
 			waypoint_handler->hold_waypoint_set = true;
 			waypoint_handler->waypoint_coordinates = waypoint_handler->position_estimation->local_position;
 		}
