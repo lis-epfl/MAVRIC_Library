@@ -48,10 +48,7 @@ extern "C"
 	#include "print_util.h"
 	#include "time_keeper.hpp"
 	#include "maths.h"
-
 	#include "constants.h"
-
-	#include "piezo_speaker.h"
 }
 
 //------------------------------------------------------------------------------
