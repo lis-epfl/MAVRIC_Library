@@ -103,7 +103,7 @@ public:
 	 * 
 	 * \return 	position
 	 */	
-	const global_position_t& global_position(void) const;
+	const global_position_t& position_gf(void) const;
 
 
 	/**
@@ -127,7 +127,7 @@ public:
 	 * 
 	 * \return 	3D velocity
 	 */	
-	const std::array<float,3>& global_velocity(void) const;
+	const std::array<float,3>& velocity_lf(void) const;
 
 
 	/**
@@ -193,10 +193,10 @@ private:
 	float 				last_update_us_;					///< Last update time in microseconds
 	float 				last_position_update_us_;			///< Last time position was updated in microseconds
 	float 				last_velocity_update_us_;			///< Last time velocity was updated in microseconds
-	global_position_t 	global_position_;					///< Global position
+	global_position_t 	position_gf_;						///< Global position
 	float 				horizontal_position_accuracy_;		///< Accuracy of position on horizontal plane in m
 	float 				vertical_position_accuracy_;		///< Accuracy of position on vertical axis in m
-	std::array<float,3> global_velocity_;					///< 3D Velocity in global frame in m/s
+	std::array<float,3> velocity_lf_;						///< 3D Velocity in lobal frame in m/s
 	float 				velocity_accuracy_;					///< Accuracy of velocity in m/s
 	float 				heading_;							///< Heading in degrees
 	float 				heading_accuracy_;					///< Accuracy of heading in degrees

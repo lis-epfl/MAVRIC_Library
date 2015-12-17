@@ -50,17 +50,21 @@ extern "C"
 
 
 Barometer_sim::Barometer_sim(Dynamic_model& dynamic_model ):
-	dynamic_model_( dynamic_model ),
-	pressure_( 0.0f ),
-	vario_vz_( 0.0f ),
-	temperature_( 24.0f ),	// Nice day
-	altitude_offset_( 0.0f ),
-	last_update_us_( time_keeper_get_us() )
-{}
+	dynamic_model_( dynamic_model )
+{
+	pressure_ 			= 0.0f;
+	temperature_ 		= 0.0f;
+	altitude_gf_ 		= 0.0f;
+	altitude_bias_gf_ 	= 0.0f;
+	speed_lf_ 			= 0.0f;
+	last_update_us_ 	= 0.0f;
+	temperature_ 		= 24.0f;	// Nice day
+}
 
 
 bool Barometer_sim::init(void)
 {
+	last_update_us_ = time_keeper_get_us();
 	return true;
 }
 
@@ -78,56 +82,20 @@ bool Barometer_sim::update(void)
 	if( dt_s > 0.0f )
 	{
 		// Get altitude
-		// float new_altitude = dynamic_model_.position_gf().altitude - altitude_offset_;
 		float new_altitude = dynamic_model_.position_gf().altitude;
 		
 		// Get variation of altitude
-		vario_vz_ = (new_altitude - altitude_) / dt_s;
-		altitude_ = new_altitude;
+		speed_lf_ 		= - (new_altitude - altitude_gf_) / dt_s;
+		// altitude_gf_ 	= new_altitude - altitude_bias_gf_;
+		altitude_gf_ 	= new_altitude;
 
 		// Get pressure
 		pressure_ = 0.0f; // TODO
 
-		// Save timing
-		last_update_us_ = dynamic_model_.last_update_us();
 	}
+	
+	// Save timing
+	last_update_us_ = dynamic_model_.last_update_us();
 
 	return success;
-}
-
-
-const float& Barometer_sim::last_update_us(void) const
-{
-	return last_update_us_;
-}
-
-
-const float& Barometer_sim::pressure(void)  const
-{
-	return pressure_;
-}
-
-
-const float& Barometer_sim::altitude(void) const
-{
-	return altitude_;
-}
-
-
-const float& Barometer_sim::vario_vz(void) const
-{
-	return vario_vz_;
-}
-
-
-const float& Barometer_sim::temperature(void) const
-{
-	return temperature_;
-}
-
-
-bool Barometer_sim::reset_origin_altitude(float origin_altitude)
-{
-	altitude_offset_ = origin_altitude;
-	return true;
 }

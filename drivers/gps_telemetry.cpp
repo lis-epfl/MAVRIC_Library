@@ -105,10 +105,10 @@ bool gps_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler)
 
 void gps_telemetry_send_raw(const Gps* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	global_position_t global_position = gps->global_position();
-	float ground_speed = maths_fast_sqrt( gps->global_velocity()[X] * gps->global_velocity()[X] 
-										+ gps->global_velocity()[Y] * gps->global_velocity()[Y]
-										+ gps->global_velocity()[Z] * gps->global_velocity()[Z]	 );
+	global_position_t global_position = gps->position_gf();
+	float ground_speed = maths_fast_sqrt( gps->velocity_lf()[X] * gps->velocity_lf()[X] 
+										+ gps->velocity_lf()[Y] * gps->velocity_lf()[Y]
+										+ gps->velocity_lf()[Z] * gps->velocity_lf()[Z]	 );
 	mavlink_msg_gps_raw_int_pack(	mavlink_stream->sysid,
 									mavlink_stream->compid,
 									msg,

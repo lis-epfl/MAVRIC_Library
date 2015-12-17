@@ -93,60 +93,6 @@ public:
 	bool update(void);
 
 
-	/**
-	 * \brief   Get the last update time in microseconds
-	 * 
-	 * \return 	Value
-	 */
-	const float& last_update_us(void) const;
-
-
-	/**
-	 * \brief   Return the pressure
-	 * 
-	 * \return 	Value
-	 */
-	const float& pressure(void)  const;
-
-
-	/**
-	 * \brief   Get the altitude in meters
-	 * 
-	 * \detail 	Not NED frame: (>0 means upward)
-	 * 
-	 * \return 	Value
-	 */
-	const float& altitude(void) const;
-
-
-	/**
-	 * \brief   Get the vertical speed in meters/second
-	 * 
-	 * \detail 	Not NED frame: (>0 means upward)
-	 * 
-	 * \return 	Value
-	 */
-	const float& vario_vz(void) const;
-
-
-	/**
-	 * \brief   Return the temperature
-	 * 
-	 * \return 	Value
-	 */
-	const float& temperature(void) const;
-
-
-	/**
-	 * \brief   Reset the origin altitude
-	 * 
-	 * \param	origin_altitude 	New origin altitude
-	 * 
-	 * \return 	success
-	 */
-	bool reset_origin_altitude(float origin_altitude);	
-
-
 private:
 	I2c&		i2c_;					///< Reference to I2C peripheral
 	
@@ -165,16 +111,11 @@ private:
 	uint8_t 	raw_pressure_[3];		///< Raw pressure contained in 3 uint8_t
 	uint8_t 	raw_temperature_[2];	///< Raw temperature contained in 2 uint8_t
 	
-	float 		pressure_;				///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
-	float 		temperature_;			///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
-	float 		altitude_;				///< Measured altitude as the median filter of the 3 last_altitudes
-	float 		altitude_offset_;		///< Offset of the barometer sensor for matching GPS altitude value
-	float 		vario_vz_;				///< Vario altitude speed
 	float 		last_altitudes_[3];		///< Array to store previous value of the altitude for low pass filtering the output
 	
-	float	 	last_update_us_;		///< Time of the last update of the barometer
 	float 		last_state_update_us_;	///< Time of the last state update
 	float 		dt_s_;					///< Time step for the derivative
+	
 	bmp085_state_t 	state_;				///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 };
 

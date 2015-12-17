@@ -214,7 +214,6 @@ bool tasks_run_barometer_update(Central_data* central_data)
 
 bool tasks_run_sonar_update(Central_data* central_data)
 {
-
 	central_data->sonar.update();
 
 	return true;

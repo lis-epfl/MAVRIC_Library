@@ -48,6 +48,7 @@ LIB_SRCS += sample_projects/LEQuad/tasks.cpp
 LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
 
 LIB_SRCS += drivers/battery.c                    
+LIB_SRCS += drivers/barometer.cpp          
 LIB_SRCS += drivers/barometer_telemetry.cpp          
 LIB_SRCS += drivers/bmp085.cpp                    
 LIB_SRCS += drivers/flow.cpp                  

@@ -93,7 +93,7 @@ Dynamic_model_quad_diag::Dynamic_model_quad_diag( 	Servo& servo_rear_left,
 bool Dynamic_model_quad_diag::update(void)
 {
 	int32_t i;
-	quat_t qtmp1, qvel_bf,  qed;
+	quat_t qtmp1, qvel_bf, qed;
 	const quat_t up 	= { 0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z} };
 	
 	// Update timing

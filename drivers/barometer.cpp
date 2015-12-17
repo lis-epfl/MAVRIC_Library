@@ -30,55 +30,62 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file barometer_sim.hpp
+ * \file barometer.cpp
  * 
  * \author MAV'RIC Team
+ * \author Gregoire Heitz
  * \author Julien Lecoeur
  *   
- * \brief Simulation for barometers
+ * \brief Interface class for barometers
  *
  ******************************************************************************/
 
-
-#ifndef BAROMETER_SIM_HPP_
-#define BAROMETER_SIM_HPP_
-
 #include "barometer.hpp"
-#include "dynamic_model.hpp"
+#include "time_keeper.hpp"
 
-/**
- * \brief 	Simulation for barometers
- */
-class Barometer_sim: public Barometer
+extern "C"
 {
-public:
-	/**
-	 * \brief 	Constructor
-	 * 
-	 * \param 	dynamic_model 	Reference to dynamic model
-	 */
-	Barometer_sim(Dynamic_model& dynamic_model );
+	#include "maths.h"
+}
 
 
-	/**
-	 * \brief   Initialise the sensor
-	 * 			
-	 * \return 	Success
-	 */	
-	bool init(void);
+const float& Barometer::last_update_us(void) const
+{
+	return last_update_us_;
+}
 
 
-	/**
-	 * \brief 	Main update function
-	 * \detail 	Reads new values from sensor
-	 * 
-	 * \return 	Success
-	 */
-	bool update(void);
+const float& Barometer::pressure(void)  const
+{
+	return pressure_;
+}
 
 
-private:
-	Dynamic_model& 	dynamic_model_;	///< Reference to dynamic model
-};
+const float& Barometer::altitude_gf(void) const
+{
+	return altitude_gf_;
+}
 
-#endif /* BAROMETER_SIM_HPP_ */
+
+const float& Barometer::vertical_speed_lf(void) const
+{
+	return speed_lf_;
+}
+
+
+const float& Barometer::temperature(void) const
+{
+	return temperature_;
+}
+
+
+void Barometer::calibrate_bias(float current_altitude_gf)
+{
+	altitude_bias_gf_ += ( altitude_gf_ - current_altitude_gf );
+}
+
+
+float Barometer::altitude_from_pressure(float pressure, float altitude_bias)
+{
+	return 44330.0f * (1.0f - pow(pressure / 101325.0f, 0.190295f)) - altitude_bias;
+}

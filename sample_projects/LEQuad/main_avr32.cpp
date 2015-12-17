@@ -43,14 +43,14 @@
 #include "mavlink_telemetry.hpp"
 #include "tasks.hpp"
 
-#include "file_dummy.hpp"
+// #include "file_dummy.hpp"
 #include "file_flash_avr32.hpp"
 #include "serial_usb_avr32.hpp"
 
-#include "dynamic_model_quad_diag.hpp"
-#include "simulation.hpp"
-#include "adc_dummy.hpp"
-#include "pwm_dummy.hpp"
+// #include "dynamic_model_quad_diag.hpp"
+// #include "simulation.hpp"
+// #include "adc_dummy.hpp"
+// #include "pwm_dummy.hpp"
 
 extern "C" 
 {
@@ -62,7 +62,7 @@ extern "C"
 	#include "conf_imu.hpp"
 }
 
-#include "dbg.hpp"
+// #include "dbg.hpp"
 
 int main (void)
 {
@@ -78,24 +78,24 @@ int main (void)
 	// Create simulation
 	// -------------------------------------------------------------------------
 	// Simulated servos
-	Pwm_dummy pwm[4];
-	Servo sim_servo_0(pwm[0], servo_default_config_esc());
-	Servo sim_servo_1(pwm[1], servo_default_config_esc());
-	Servo sim_servo_2(pwm[2], servo_default_config_esc());
-	Servo sim_servo_3(pwm[3], servo_default_config_esc());
+	// Pwm_dummy pwm[4];
+	// Servo sim_servo_0(pwm[0], servo_default_config_esc());
+	// Servo sim_servo_1(pwm[1], servo_default_config_esc());
+	// Servo sim_servo_2(pwm[2], servo_default_config_esc());
+	// Servo sim_servo_3(pwm[3], servo_default_config_esc());
 	
-	// Simulated dynamic model
-	Dynamic_model_quad_diag sim_model 	= Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
-	Simulation sim 						= Simulation(sim_model);
+	// // Simulated dynamic model
+	// Dynamic_model_quad_diag sim_model 	= Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
+	// Simulation sim 						= Simulation(sim_model);
 	
-	// Simulated battery
-	Adc_dummy 	sim_adc_battery = Adc_dummy(11.1f);
-	Battery 	sim_battery 	= Battery(sim_adc_battery);
+	// // Simulated battery
+	// Adc_dummy 	sim_adc_battery = Adc_dummy(11.1f);
+	// Battery 	sim_battery 	= Battery(sim_adc_battery);
 
-	// Simulated IMU
-	Imu 		sim_imu 		= Imu(  sim.accelerometer(),
-										sim.gyroscope(),
-										sim.magnetometer() );
+	// // Simulated IMU
+	// Imu 		sim_imu 		= Imu(  sim.accelerometer(),
+	// 									sim.gyroscope(),
+	// 									sim.magnetometer() );
 
 
 	// -------------------------------------------------------------------------
