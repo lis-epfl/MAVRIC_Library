@@ -45,6 +45,7 @@
 
 namespace str{
 	const uint8_t MAX_DIGITS10_LONG = 20;
+	const uint8_t MAX_AFTERDIGITS = 255;
 	const uint8_t FLOAT_DIGIT_COUNT = 3;
 
 	/**
