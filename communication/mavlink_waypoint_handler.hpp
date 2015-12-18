@@ -170,15 +170,6 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief	Control if time is over timeout and change sending/receiving flags to false
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- *
- * \return	The task status
- */
-bool waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
  * \brief	Set the waypoint depending on the reference frame defined in the current_waypoint structure
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure

@@ -280,6 +280,15 @@ static void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handle
  */
 static bool waypoint_handler_mode_change(mavlink_waypoint_handler_t* waypoint_handler);
 
+/**
+ * \brief	Control if time is over timeout and change sending/receiving flags to false
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ *
+ * \return	The task status
+ */
+static void waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -1992,6 +2001,32 @@ static bool waypoint_handler_mode_change(mavlink_waypoint_handler_t* waypoint_ha
 	return result;
 }
 
+static void waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler)
+{
+	if (waypoint_handler->waypoint_sending || waypoint_handler->waypoint_receiving)
+	{
+		uint32_t tnow = time_keeper_get_ms();
+		
+		if ((tnow - waypoint_handler->start_timeout) > waypoint_handler->timeout_max_waypoint)
+		{
+			waypoint_handler->start_timeout = tnow;
+			if (waypoint_handler->waypoint_sending)
+			{
+				waypoint_handler->waypoint_sending = false;
+				print_util_dbg_print("Sending waypoint timeout\r\n");
+			}
+			if (waypoint_handler->waypoint_receiving)
+			{
+				waypoint_handler->waypoint_receiving = false;
+				
+				print_util_dbg_print("Receiving waypoint timeout\r\n");
+				waypoint_handler->number_of_waypoints = 0;
+				waypoint_handler->num_waypoint_onboard = 0;
+			}
+		}
+	}
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -2207,6 +2242,8 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
 	
 	waypoint_handler->mode = mode_local;
 
+	waypoint_handler_control_time_out_waypoint_msg(waypoint_handler);
+
 	return true;
 }
 
@@ -2348,33 +2385,6 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 			}
 		}
 	}
-}
-
-bool waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler)
-{
-	if (waypoint_handler->waypoint_sending || waypoint_handler->waypoint_receiving)
-	{
-		uint32_t tnow = time_keeper_get_ms();
-		
-		if ((tnow - waypoint_handler->start_timeout) > waypoint_handler->timeout_max_waypoint)
-		{
-			waypoint_handler->start_timeout = tnow;
-			if (waypoint_handler->waypoint_sending)
-			{
-				waypoint_handler->waypoint_sending = false;
-				print_util_dbg_print("Sending waypoint timeout\r\n");
-			}
-			if (waypoint_handler->waypoint_receiving)
-			{
-				waypoint_handler->waypoint_receiving = false;
-				
-				print_util_dbg_print("Receiving waypoint timeout\r\n");
-				waypoint_handler->number_of_waypoints = 0;
-				waypoint_handler->num_waypoint_onboard = 0;
-			}
-		}
-	}
-	return true;
 }
 
 local_position_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin)
