@@ -56,9 +56,10 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 	.pitch_angle_apriori = 0.0f,
 	.pitch_angle_apriori_gain = -0.64f,
 	.max_roll_angle = PI/3.0f,
-	.take_off_thrust = 0.75f,
-	.take_off_pitch = PI/4.0f,
-	.landing_pitch = -PI/36.0f,		// <=> 5° pitch down
+	.take_off_thrust = 0.5f,
+	.take_off_pitch = PI/6.0f,
+	.landing_pitch = 0.0f,
+	.landing_max_roll = PI/12.0f,
 	.stabiliser_stack 	= 
 	{
 		// #############################################################################

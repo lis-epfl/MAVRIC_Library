@@ -92,13 +92,14 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 	stabilisation_wing->servos = servos;
 	stabilisation_wing->servo_mix = servo_mix;
 	stabilisation_wing->navigation = navigation;
-	stabilisation_wing->thrust_apriori = stabiliser_conf->thrust_apriori;
+	stabilisation_wing->thrust_apriori	= stabiliser_conf->thrust_apriori;
 	stabilisation_wing->pitch_angle_apriori = stabiliser_conf->pitch_angle_apriori;
 	stabilisation_wing->pitch_angle_apriori_gain = stabiliser_conf->pitch_angle_apriori_gain;
 	stabilisation_wing->max_roll_angle = stabiliser_conf->max_roll_angle;
 	stabilisation_wing->take_off_thrust = stabiliser_conf->take_off_thrust;
 	stabilisation_wing->take_off_pitch = stabiliser_conf->take_off_pitch;
 	stabilisation_wing->landing_pitch = stabiliser_conf->landing_pitch;
+	stabilisation_wing->landing_max_roll = stabiliser_conf->landing_max_roll;
 	
 	//init controller
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
@@ -225,9 +226,17 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		}
 		else if(stabilisation_wing->navigation->auto_landing)
 		{
-			// Landing: Keep the roll computed by the velocity layer (navigation), shut down the motor and impose a little pitch down to assure gliding without stall.
+			// Landing: Limit the roll computed by the velocity layer (navigation), shut down the motor and impose a little pitch down to assure gliding without stall.
+			if(input.rpy[0] > stabilisation_wing->landing_max_roll)
+			{
+				input.rpy[0] = stabilisation_wing->landing_max_roll;
+			}
+			else if(input.rpy[0] < -stabilisation_wing->landing_max_roll)
+			{
+				input.rpy[0] = -stabilisation_wing->landing_max_roll;
+			}
 			input.rpy[1] = stabilisation_wing->landing_pitch;
-			input.thrust = 0.0f;
+			input.thrust = -1.0f;
 		}
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 

@@ -1121,6 +1121,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 							navigation->waypoint_handler->waypoint_hold_coordinates.dubin.circle_center_2[i] = navigation->goal.dubin.circle_center_1[i];
 						}
 						navigation->waypoint_handler->waypoint_hold_coordinates.radius = navigation->goal.dubin.radius_1;
+						navigation->waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Z] = -5.0f;
 						navigation->waypoint_handler->dubin_state = CIRCLE2;
 					break;
 
@@ -1132,6 +1133,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 
 					case CIRCLE2:
 						navigation->waypoint_handler->waypoint_hold_coordinates = navigation->goal;
+						navigation->waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Z] = -5.0f;
 					break;
 				}
 				break;
