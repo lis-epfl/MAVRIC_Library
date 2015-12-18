@@ -41,11 +41,11 @@
 
 
 #include "navigation.hpp"
+#include "time_keeper.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "print_util.h"	
 	#include "constants.h"
 }
 

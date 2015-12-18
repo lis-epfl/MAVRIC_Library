@@ -42,11 +42,11 @@
 
 #include "mavlink_waypoint_handler.hpp"
 #include <cstdlib>
-
+#include "time_keeper.hpp"
+ 
 extern "C"
 {
 	#include "print_util.h"
-	#include "time_keeper.hpp"
 	#include "maths.h"
 	#include "constants.h"
 }
