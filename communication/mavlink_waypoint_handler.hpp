@@ -170,16 +170,6 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief	Set the waypoint depending on the reference frame defined in the current_waypoint structure
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	origin					The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
- *
- * \return	The waypoint in local coordinate frame
- */
-local_position_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
-
-/**
  * \brief	Initialise the position hold mode
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
