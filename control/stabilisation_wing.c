@@ -98,6 +98,7 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 	stabilisation_wing->max_roll_angle = stabiliser_conf->max_roll_angle;
 	stabilisation_wing->take_off_thrust = stabiliser_conf->take_off_thrust;
 	stabilisation_wing->take_off_pitch = stabiliser_conf->take_off_pitch;
+	stabilisation_wing->landing_pitch = stabiliser_conf->landing_pitch;
 	
 	//init controller
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
@@ -214,12 +215,19 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		input.rpy[1] = - stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[1];
 		input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
 		
-		// Overwrite the commands during the take-off (fixe 0 roll angle, fixe defined pitch angle and defined constant thrust value)
+		// Overwrite the commands during different key phases (take-off and landing)
 		if(stabilisation_wing->navigation->auto_takeoff)
 		{
+			// Take-off: fixed 0 roll angle, fixed defined pitch angle and fixed defined constant thrust value.
 			input.rpy[0] = 0.0f;
 			input.rpy[1] = stabilisation_wing->take_off_pitch;
 			input.thrust = stabilisation_wing->take_off_thrust;
+		}
+		else if(stabilisation_wing->navigation->auto_landing)
+		{
+			// Landing: Keep the roll computed by the velocity layer (navigation), shut down the motor and impose a little pitch down to assure gliding without stall.
+			input.rpy[1] = stabilisation_wing->landing_pitch;
+			input.thrust = 0.0f;
 		}
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 

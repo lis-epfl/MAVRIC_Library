@@ -692,12 +692,19 @@ static void navigation_waypoint_take_off_handler(navigation_t* navigation)
 	{
 		if (navigation->position_estimation->local_position.pos[Z] <= navigation->takeoff_altitude)
 		{
+			// Reset flag and states
 			//state_machine->state->mav_state = MAV_STATE_ACTIVE;
 			navigation->state->in_the_air = true;
 			navigation->auto_takeoff = false;
 			navigation->waypoint_handler->dubin_state = INIT;
-			print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
-			print_util_dbg_print_num(navigation->waypoint_handler->dist2wp_sqr * 10.0f,10);
+			
+			// Give default command to assure smooth transition before the navigation task is called to update the navigation
+			navigation->controls_nav->tvel[X] = navigation->cruise_speed;
+			navigation->controls_nav->tvel[Y] = 0.0f;
+			navigation->controls_nav->tvel[Z] = -1.0f;
+			
+			// Print debug
+			print_util_dbg_print("Automatic take-off finished");
 			print_util_dbg_print(".\r\n");
 		}
 	}

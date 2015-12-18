@@ -89,6 +89,7 @@ typedef struct
 	float max_roll_angle;										///< Maximum roll value that the velocity layer could ask to follow
 	float take_off_thrust;										///< Thrust value used during the take-off
 	float take_off_pitch;										///< Pitch angle used during the take-off
+	float landing_pitch;										///< Pitch angle used during the landing
 	// TODO: Remove these two lines, which were used only for tuning
 	float current_heading;
 	float vertical_speed;
@@ -105,6 +106,7 @@ typedef struct
 	float max_roll_angle;										///< Maximum roll value that the velocity layer could ask to follow
 	float take_off_thrust;										///< Thrust value used during the take-off
 	float take_off_pitch;										///< Pitch angle used during the take-off
+	float landing_pitch;										///< Pitch angle used during the landing
 	stabiliser_stack_wing_t stabiliser_stack;					///< The pointer to the PID parameters values and output for the stacked controller
 } stabilisation_wing_conf_t;
 
