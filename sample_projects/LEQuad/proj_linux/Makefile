@@ -230,8 +230,10 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 	@$(CXX) -c $< -o $@ $(CXXFLAGS)
 	@$(BUILD_CMD)
 
-.PHONY: clean
+.PHONY: clean rebuild
 clean:
 	@rm -f $(OBJS)
 	@rm -rf build/
 	@$(PRINT_OK)
+
+rebuild: clean proj
