@@ -80,16 +80,29 @@ typedef struct
 	double z;													///< The value on the z axis (depends on the reference frame)
 } waypoint_struct_t;
 
+/**
+ * \brief	The MAV?RIC waypoint structure
+ */
+typedef struct
+{
+	local_coordinates_t waypoint;								///< The local coordinates of the waypoint
+	float radius;												///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
+	float loiter_time;											///< The loiter time at the waypoint
+}waypoint_local_struct_t;
+
 typedef struct
 {
 	waypoint_struct_t waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
 	waypoint_struct_t current_waypoint;							///< The structure of the current waypoint
+	waypoint_struct_t next_waypoint;							///< The structure of the next waypoint
 	uint16_t number_of_waypoints;								///< The total number of waypoints
 	int8_t current_waypoint_count;								///< The number of the current waypoint
 	
-	local_coordinates_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-	local_coordinates_t waypoint_hold_coordinates;				///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-	local_coordinates_t waypoint_critical_coordinates;			///< The coordinates of the waypoint in critical state
+	waypoint_local_struct_t waypoint_coordinates;				///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+	waypoint_local_struct_t waypoint_hold_coordinates;			///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+	waypoint_local_struct_t waypoint_critical_coordinates;		///< The coordinates of the waypoint in critical state
+	waypoint_local_struct_t waypoint_next;						///< The coordinates of the next waypoint
+
 	float dist2wp_sqr;											///< The square of the distance to the waypoint
 	
 	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoint is set
@@ -171,7 +184,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  *
  * \return	The waypoint in local coordinate frame
  */
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
+waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
 
 /**
  * \brief	Sends the travel time between the last two waypoints

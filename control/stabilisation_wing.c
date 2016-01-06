@@ -47,6 +47,34 @@
 
 
 //------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief	Compute a (global) heading angle corresponding to the given velocity input vector.
+ *
+ * \param	input_vel	Float array of the velocity command, in global frame
+ *
+ * \return	(Global) heading angle, from x axis, between -Pi and Pi (radians)
+ */
+float heading_from_velocity_vector(float *input_vel);
+
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+float heading_from_velocity_vector(float *input_vel)
+{
+	float heading_global = atan2(input_vel[Y], input_vel[X]);
+	
+	return heading_global;
+}
+
+
+
+//------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
@@ -64,6 +92,8 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 	stabilisation_wing->servos = servos;
 	stabilisation_wing->servo_mix = servo_mix;
 	stabilisation_wing->thrust_apriori = stabiliser_conf->thrust_apriori;
+	stabilisation_wing->pitch_angle_apriori = stabiliser_conf->pitch_angle_apriori;
+	stabilisation_wing->pitch_angle_apriori_gain = stabiliser_conf->pitch_angle_apriori_gain;
 	stabilisation_wing->tuning = stabiliser_conf->tuning;
 	stabilisation_wing->tuning_axis = stabiliser_conf->tuning_axis;
 	stabilisation_wing->tuning_steps = stabiliser_conf->tuning_steps;
@@ -95,103 +125,98 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 	float rpyt_errors[4];
 	control_command_t input;
 	int32_t i;
-	//quat_t qtmp, q_rot;
-	//aero_attitude_t attitude_yaw_inverse;
+	float feedforward[4];
+	float nav_heading, current_heading, heading_error;
+	float gps_speed_global[3], gps_speed_semi_local[3];
+	float input_turn_rate;
+	float input_roll_angle;
+	aero_attitude_t attitude, attitude_yaw;
+	quat_t q_rot;
 
 	// set the controller input
 	input= *stabilisation_wing->controls;
 	switch (stabilisation_wing->controls->control_mode) 
 	{
 	case VELOCITY_COMMAND_MODE:
-		
-		/*
-		attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_wing->ahrs->qe);
-		attitude_yaw_inverse.rpy[0] = 0.0f;
-		attitude_yaw_inverse.rpy[1] = 0.0f;
-		attitude_yaw_inverse.rpy[2] = attitude_yaw_inverse.rpy[2];
-		
-		//qtmp=quaternions_create_from_vector(input.tvel);
-		//quat_t input_global = quaternions_local_to_global(stabilisation_wing->ahrs->qe, qtmp);
-		
-		q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
-		
-		quat_t input_global;
-		quaternions_rotate_vector(q_rot, input.tvel, input_global.v);
-		
-		input.tvel[X] = input_global.v[X];
-		input.tvel[Y] = input_global.v[Y];
-		input.tvel[Z] = input_global.v[Z];
-		
-		rpyt_errors[X] = input.tvel[X] - stabilisation_wing->pos_est->vel[X];
-		rpyt_errors[Y] = input.tvel[Y] - stabilisation_wing->pos_est->vel[Y];
-		rpyt_errors[3] = -(input.tvel[Z] - stabilisation_wing->pos_est->vel[Z]);
-		
-		if (stabilisation_wing->controls->yaw_mode == YAW_COORDINATED)
+		/////////////
+		// HEADING //
+		/////////////
+		// Compute the heading angle corresponding to the given input velocity vector (input from remote/vector field should be in semi-local frame).
+		nav_heading = heading_from_velocity_vector(input.tvel);
+		// Overwrite command if in remote
+		if(stabilisation_wing->controls->yaw_mode == YAW_RELATIVE)
 		{
-			float rel_heading_coordinated;
-			if ((maths_f_abs(stabilisation_wing->pos_est->vel_bf[X])<0.001f)&&(maths_f_abs(stabilisation_wing->pos_est->vel_bf[Y])<0.001f))
-			{
-				rel_heading_coordinated = 0.0f;
-			}
-			else
-			{
-				rel_heading_coordinated = atan2(stabilisation_wing->pos_est->vel_bf[Y], stabilisation_wing->pos_est->vel_bf[X]);
-			}
-			
-			float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_wing->pos_est->vel_bf)-stabilisation_wing->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
-			input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
+			nav_heading = input.rpy[YAW];
 		}
-
-		rpyt_errors[YAW]= input.rpy[YAW];
 		
-		// run PID update on all velocity controllers
-		stabilisation_run(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->imu->dt, rpyt_errors);
+		// Compute current heading
+		gps_speed_global[X] = stabilisation_wing->pos_est->gps->north_speed;
+		gps_speed_global[Y] = stabilisation_wing->pos_est->gps->east_speed;
+		gps_speed_global[Z] = stabilisation_wing->pos_est->vel[Z];
+		stabilisation_wing->vertical_speed = gps_speed_global[Z];			// Used for PID tuning
 		
-		//velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisation_param.controls->thrust);
-		stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_wing->thrust_hover_point;
-		stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
-		input = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output;
+		// Transform global to semi-local
+		attitude_yaw = coord_conventions_quat_to_aero(stabilisation_wing->ahrs->qe);
+		attitude_yaw.rpy[0] = 0.0f;
+		attitude_yaw.rpy[1] = 0.0f;
+		attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+		q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+		quaternions_rotate_vector(q_rot, gps_speed_global, gps_speed_semi_local);
 		
-		qtmp=quaternions_create_from_vector(stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy);
-		//quat_t rpy_local = quaternions_global_to_local(stabilisation_wing->ahrs->qe, qtmp);
+		current_heading = heading_from_velocity_vector(gps_speed_semi_local);
+		stabilisation_wing->current_heading = current_heading;	// Used for PID tuning
 		
-		quat_t rpy_local;
-		quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
+		// Compute turn rate command
+		heading_error = maths_calc_smaller_angle(nav_heading - current_heading);
 		
-		input.rpy[ROLL] = rpy_local.v[Y];
-		input.rpy[PITCH] = -rpy_local.v[X];
-
-		if ((!stabilisation_wing->pos_est->gps->healthy)||(stabilisation_wing->pos_est->state->out_of_fence_2))
-		{
-			input.rpy[ROLL] = 0.0f;
-			input.rpy[PITCH] = 0.0f;
-		}
-
-		//input.thrust = stabilisation_wing->controls->tvel[Z];
-		*/
 		
-		// Compute velocity errors
-		rpyt_errors[0] = 0.0f;
-		rpyt_errors[1] = 0.0f;
+		///////////////
+		// PID INPUT //
+		///////////////
+		// Compute errors
+		rpyt_errors[0] = heading_error;																// Heading
+		rpyt_errors[1] = input.tvel[Z] - gps_speed_global[Z];										// Vertical speed
 		rpyt_errors[2] = 0.0f;
-		rpyt_errors[3] = input.tvel[X] - stabilisation_wing->airspeed_analog->airspeed;
+		rpyt_errors[3] = vectors_norm(input.tvel) - stabilisation_wing->airspeed_analog->airspeed;	// Airspeed
+		
+		// Compute the feedforward
+		feedforward[0] = 0.0f;
+		feedforward[1] = 0.0f;
+		feedforward[2] = 0.0f;
+		feedforward[3] = (vectors_norm(input.tvel) - 13.0f)/8.0f + 0.2f;
 		
 		// run PID update on all velocity controllers
-		stabilisation_run(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->imu->dt, rpyt_errors);
+		stabilisation_run_feedforward(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->imu->dt, rpyt_errors, feedforward);
 		
-		// Add thrust a priori
-		stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_wing->thrust_apriori;
+		
+		////////////////
+		// PID OUTPUT //
+		////////////////
+		// Get turn rate command and transform it into a roll angle command for next layer
+		input_turn_rate = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[0];
+		input_roll_angle = atanf(stabilisation_wing->airspeed_analog->airspeed / 9.81f * input_turn_rate);
 		
 		// Set input for next layer
+		input = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output;
+		input.rpy[0] = input_roll_angle;
+		input.rpy[1] = - stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[1];
 		input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	
 	case ATTITUDE_COMMAND_MODE:
+		// Add "a priori on the pitch" to fly horizontally and to compensate for roll angle
+		attitude = coord_conventions_quat_to_aero(stabilisation_wing->ahrs->qe);
+		input.rpy[1] += stabilisation_wing->pitch_angle_apriori;	// Constant compensation for horizontal
+		if(abs(attitude.rpy[ROLL]) < PI/2.0f)						// Compensation for the roll bank angle
+		{
+			input.rpy[1] += stabilisation_wing->pitch_angle_apriori_gain * (1.0/maths_f_abs(cosf(attitude.rpy[ROLL])) - 1.0);
+		}
+		
 		// run absolute attitude_filter controller
-		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_wing->ahrs->up_vec.v[1] ); 
-		rpyt_errors[1]= input.rpy[1] - stabilisation_wing->ahrs->up_vec.v[0];
-		rpyt_errors[2]= 0.0f;	// Yaw
+		rpyt_errors[0]= sinf(input.rpy[0]) - ( - stabilisation_wing->ahrs->up_vec.v[1] );		// Roll
+		rpyt_errors[1]= sinf(input.rpy[1]) - stabilisation_wing->ahrs->up_vec.v[0];				// Pitch
+		rpyt_errors[2]= 0.0f;																	// Yaw
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
 		// run PID update on all attitude_filter controllers

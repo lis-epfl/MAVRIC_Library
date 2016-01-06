@@ -1570,7 +1570,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 				
 				for (uint8_t j = 0; j < 3; j++)
 				{
-					rel_pos[j] = waypoint_handler->waypoint_coordinates.pos[j]-waypoint_handler->position_estimation->local_position.pos[j];
+					rel_pos[j] = waypoint_handler->waypoint_coordinates.waypoint.pos[j]-waypoint_handler->position_estimation->local_position.pos[j];
 				}
 				waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 			}
@@ -1605,9 +1605,10 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
 	return TASK_RUN_SUCCESS;
 }
 
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin)
+waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin)
 {
 	global_position_t waypoint_global;
+	waypoint_local_struct_t wpt;
 	local_coordinates_t waypoint_coor;
 	
 	for (uint8_t i = 0; i < 3; i++)
@@ -1694,7 +1695,12 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* 
 		
 	}
 	
-	return waypoint_coor;
+	wpt.waypoint = waypoint_coor;
+	// WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
+	wpt.radius = current_waypoint->param2;
+	wpt.loiter_time = current_waypoint->param1;
+
+	return wpt;
 }
 
 void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler,const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

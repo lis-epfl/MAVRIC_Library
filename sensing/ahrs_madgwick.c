@@ -239,6 +239,8 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
 	// Init config
 	ahrs_madgwick->beta = config->beta;
 	ahrs_madgwick->zeta = config->zeta;
+	ahrs_madgwick->acceleration_correction = config->acceleration_correction;
+	ahrs_madgwick->correction_speed = config->correction_speed;
 	
 	// Init global variables
 	q0 = 1.0f;
@@ -312,10 +314,12 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 	float ax =   ahrs_madgwick->imu->scaled_accelero.data[X];
 	float ay = - ahrs_madgwick->imu->scaled_accelero.data[Y];
 	float az = - ahrs_madgwick->imu->scaled_accelero.data[Z];
-	// TODO: Fix this before uncommenting !
-// 	float ax =   (ahrs_madgwick->imu->scaled_accelero.data[X] + hdv_x);
-// 	float ay = - (ahrs_madgwick->imu->scaled_accelero.data[Y] + hc_y);
-// 	float az = - (ahrs_madgwick->imu->scaled_accelero.data[Z] + hc_z);
+	if(ahrs_madgwick->acceleration_correction == 1 && ahrs_madgwick->airspeed_analog->airspeed >= ahrs_madgwick->correction_speed)
+	{
+		ax =   (ahrs_madgwick->imu->scaled_accelero.data[X] + hdv_x);
+		ay = - (ahrs_madgwick->imu->scaled_accelero.data[Y] + hc_y);
+		az = - (ahrs_madgwick->imu->scaled_accelero.data[Z] + hc_z);
+	}
 	float mx =   ahrs_madgwick->imu->scaled_compass.data[X];
 	float my = - ahrs_madgwick->imu->scaled_compass.data[Y];
 	float mz = - ahrs_madgwick->imu->scaled_compass.data[Z];
@@ -354,6 +358,13 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 	ahrs_madgwick->ahrs->angular_speed[X] = ahrs_madgwick->imu->scaled_gyro.data[X] - (w_bx_);
 	ahrs_madgwick->ahrs->angular_speed[Y] = ahrs_madgwick->imu->scaled_gyro.data[Y] - (-w_by_);
 	ahrs_madgwick->ahrs->angular_speed[Z] = ahrs_madgwick->imu->scaled_gyro.data[Z] - (-w_bz_);
+	// Update angular speeds and update IMU biases !
+	//ahrs_madgwick->ahrs->angular_speed[X] = ahrs_madgwick->imu->scaled_gyro.data[X];
+	//ahrs_madgwick->ahrs->angular_speed[Y] = ahrs_madgwick->imu->scaled_gyro.data[Y];
+	//ahrs_madgwick->ahrs->angular_speed[Z] = ahrs_madgwick->imu->scaled_gyro.data[Z];
+	//ahrs_madgwick->imu->calib_gyro.bias[X] = w_bx_/ahrs_madgwick->imu->calib_gyro.scale_factor[X];
+	//ahrs_madgwick->imu->calib_gyro.bias[Y] = -w_by_/ahrs_madgwick->imu->calib_gyro.scale_factor[Y];
+	//ahrs_madgwick->imu->calib_gyro.bias[Z] = -w_bz_/ahrs_madgwick->imu->calib_gyro.scale_factor[Z];
 
 	// Up vector
 	float up_loc[3] = {0.0f, 0.0f, -1.0f}; 

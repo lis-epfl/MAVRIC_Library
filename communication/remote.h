@@ -298,6 +298,15 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t * contro
  * \param	remote				The pointer to the remote structure
  * \param	controls			The pointer to the controls structure
  */
+void remote_get_angle_command_from_remote(remote_t* remote, control_command_t * controls);
+
+
+/**
+ * \brief	Sets the rate command from the remote (rpy and thrust values)
+ * 
+ * \param	remote				The pointer to the remote structure
+ * \param	controls			The pointer to the controls structure
+ */
 void remote_get_rate_command_from_remote(remote_t* remote, control_command_t * controls);
 
 /**

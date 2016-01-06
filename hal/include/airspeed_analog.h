@@ -62,7 +62,7 @@ typedef struct
 	analog_rails_t analog_rail;		///< Analog rail on which the sensor is connected
 	float pressure_offset;			///< Default airspeed offset
 	float calibration_gain;			///< Gain used for the calibration of the offset (low-pass)
-	float conversion_factor;		///< Factor used for conversion between differential pressure P and square speed v^2.
+	float conversion_factor;		///< Factor used for conversion between differential pressure P and square speed v^2. Should be 2/rho_air
 	float correction_gain;			///< Gain obtained by the fitted relation (Airspeed_measured = gain * Airspeed_true + offset)
 	float correction_offset;		///< Offset obtained by the fitted relation
 	float filter_gain;				///< Gain for the low-pass filter

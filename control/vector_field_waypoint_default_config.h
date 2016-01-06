@@ -30,55 +30,37 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file vector_field_waypoint_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Simon Pyroth
  *   
- * \brief Executing the PID controllers for stabilization
+ * \brief Default configuration for the vector field waypoints.
  *
  ******************************************************************************/
 
 
-#include "stabilisation.h"
-#include "print_util.h"
-#include "constants.h"
+#ifndef VECTOR_FIELD_WAYPOINT_DEFAULT_CONFIG_H_
+#define VECTOR_FIELD_WAYPOINT_DEFAULT_CONFIG_H_
 
-bool stabilisation_init(control_command_t *controls)
-{
-	bool init_success = true;
-	
-	controls->control_mode = ATTITUDE_COMMAND_MODE;
-	controls->yaw_mode = YAW_RELATIVE;
-	
-	controls->rpy[ROLL] = 0.0f;
-	controls->rpy[PITCH] = 0.0f;
-	controls->rpy[YAW] = 0.0f;
-	controls->tvel[X] = 0.0f;
-	controls->tvel[Y] = 0.0f;
-	controls->tvel[Z] = 0.0f;
-	controls->theading = 0.0f;
-	controls->thrust = -1.0f;
-	
-	print_util_dbg_print("[STABILISATION] init.\r\n");
-	
-	return init_success;
-}
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
-{
-	for (int32_t i = 0; i < 3; i++) 
-	{
-		stabiliser->output.rpy[i] =	pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-	}		
-	stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
-}
 
-void stabilisation_run_feedforward(stabiliser_t *stabiliser, float dt, float errors[], float feedforward[])
+#include "vector_field_waypoint.h"
+
+
+vector_field_waypoint_conf_t vector_field_waypoint_config =
 {
-	for (int32_t i = 0; i < 3; i++)
-	{
-		stabiliser->output.rpy[i] =	pid_controller_update_feedforward_dt(&(stabiliser->rpy_controller[i]),  errors[i], feedforward[i], dt);
-	}
-	stabiliser->output.thrust = pid_controller_update_feedforward_dt(&(stabiliser->thrust_controller),  errors[3], feedforward[3], dt);
+	.command_mode = VELOCITY_COMMAND_MODE_GLOBAL,
+	.floor_altitude = 20.0f,
+	.velocity_max = 16.0f,
+};
+
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif // VECTOR_FIELD_WAYPOINT_DEFAULT_CONFIG_H_

@@ -82,6 +82,8 @@ typedef struct
 	servos_t* servos;											///< The pointer to the servos structure
 	servo_mix_wing_t* servo_mix;								///< The pointer to the servos mixer
 	float thrust_apriori;										///< A priori on the thrust for velocity control
+	float pitch_angle_apriori;									///< Constant a priori on the pitch angle
+	float pitch_angle_apriori_gain;								///< Gain of the pitch angle a priori which is function of the roll value
 	int32_t tuning;												///< Are we tuning the controllers?		0: nothing		1: rate		2: attitude
 	int32_t tuning_axis;										///< Which axis are we tuning ?			0: roll			1: pitch
 	int32_t tuning_steps;										///< Is the user allowed to create steps with the remote ?
@@ -89,6 +91,9 @@ typedef struct
 	float pitch_down;											///< Down value for the steps in pitch
 	float roll_right;											///< Right value for the steps in roll
 	float roll_left;											///< Left value for the steps in roll
+	// TODO: Remove these two lines, which were used only for tuning
+	float current_heading;
+	float vertical_speed;
 } stabilisation_wing_t;
 
 /**
@@ -97,6 +102,8 @@ typedef struct
 typedef struct  
 {
 	float thrust_apriori;										///< A priori thrust
+	float pitch_angle_apriori;									///< Constant a priori on the pitch angle
+	float pitch_angle_apriori_gain;								///< Gain of the pitch angle a priori which is function of the roll value
 	stabiliser_stack_wing_t stabiliser_stack;					///< The pointer to the PID parameters values and output for the stacked controller
 	int32_t tuning;												///< Are we tuning the controllers?
 	int32_t tuning_axis;										///< Which axis are we tuning ?
