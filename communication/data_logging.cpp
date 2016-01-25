@@ -1138,3 +1138,13 @@ bool Data_logging::add_field(double* val, const char* param_name, uint32_t preci
 	
 	return add_success;
 }
+
+
+bool Data_logging::add_field(bool* val, const char* param_name)
+{
+	bool add_success = true;
+	
+	add_success = add_field( (uint8_t*)val, param_name);
+	
+	return add_success;
+}

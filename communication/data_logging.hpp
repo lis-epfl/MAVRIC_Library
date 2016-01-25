@@ -224,6 +224,19 @@ public:
 	 */
 	bool add_field(double* val, const char* param_name, uint32_t precision);
 
+
+	/**
+	 * \brief	Registers parameter to log on the SD card
+	 *
+	 * \param	data_logging			The pointer to the data logging structure
+	 * \param 	val						The parameter value
+	 * \param 	param_name				Name of the parameter
+	 *
+	 * \return	True if the parameter was added, false otherwise
+	 */
+	bool add_field(bool* val, const char* param_name);
+
+
 private:
 		/**
 	 * \brief	Add in the file fp the first line with the name of the parameter
