@@ -65,8 +65,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
-			if (((central_data->state.nav_plan_active&&(!central_data->navigation.auto_takeoff)&&(!central_data->navigation.auto_landing)&&(!central_data->navigation.stop_nav)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->navigation.critical_behavior == FLY_TO_HOME_WP)))
-			//if (((central_data->state.nav_plan_active&&(!central_data->navigation.auto_takeoff)&&(!central_data->navigation.auto_landing)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->navigation.critical_behavior == FLY_TO_HOME_WP)))
+			if (((central_data->state.nav_plan_active&&(central_data->navigation.internal_state == NAV_NAVIGATING))||(central_data->navigation.internal_state == NAV_STOP_THERE))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->navigation.critical_behavior == FLY_TO_HOME_WP)))
 			{
 				central_data->controls.yaw_mode = YAW_RELATIVE;
 			}
@@ -75,7 +74,8 @@ bool tasks_run_stabilisation(Central_data* central_data)
 				central_data->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 		
-			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			//if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			if (central_data->navigation.internal_state > NAV_ON_GND)
 			{
 				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
 				servos_mix_quadcopter_diag_update( &central_data->servo_mix );
@@ -95,7 +95,8 @@ bool tasks_run_stabilisation(Central_data* central_data)
 				central_data->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			//if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			if (central_data->navigation.internal_state > NAV_ON_GND)
 			{
 				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
 				servos_mix_quadcopter_diag_update( &central_data->servo_mix );
@@ -108,7 +109,8 @@ bool tasks_run_stabilisation(Central_data* central_data)
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			central_data->controls.yaw_mode = YAW_RELATIVE;
 			
-			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			//if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			if (central_data->navigation.internal_state > NAV_ON_GND)
 			{
 				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
 				servos_mix_quadcopter_diag_update( &central_data->servo_mix );
@@ -254,16 +256,15 @@ bool tasks_create_tasks(Central_data* central_data)
 
 	init_success &= scheduler_add_task(scheduler, 15000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&tasks_run_barometer_update                      , (task_argument_t)central_data						, 2);
 	init_success &= scheduler_add_task(scheduler, 100000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&tasks_run_gps_update                            , (task_argument_t)central_data						, 3);
-	
-	init_success &= scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update								, (task_argument_t)&central_data->navigation			, 4);
-	// init_success &= scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&vector_field_waypoint_update					, (task_argument_t)&central_data->vector_field_waypoint	, 4);
-	
-	init_success &= scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_update              				, (task_argument_t)&central_data->state_machine         , 5);
 
-	init_success &= scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 6);
-	init_success &= scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler 		, 8);
+	init_success &= scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update								, (task_argument_t)&central_data->navigation			, 5);
+	init_success &= scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&waypoint_handler_update							, (task_argument_t)&central_data->waypoint_handler 		, 6);
+	
+	init_success &= scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_update              				, (task_argument_t)&central_data->state_machine         , 7);
+
+	init_success &= scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 8);
 			
-	init_success &= scheduler_add_task(scheduler, 20000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&remote_update 									, (task_argument_t)&central_data->manual_control.remote	, 12);
+	init_success &= scheduler_add_task(scheduler, 20000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&remote_update 									, (task_argument_t)&central_data->manual_control.remote	, 10);
 
 	init_success &= scheduler_add_task(scheduler, 500000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW	, (task_function_t)&tasks_run_sonar_update							, (task_argument_t)central_data							, 13);
 

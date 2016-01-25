@@ -380,7 +380,7 @@ static inline bool mav_modes_are_equal_wo_hil_and_armed(const mav_mode_t mode1, 
 	return mav_modes_are_equal(mode1_, mode2_);
 }
 
-static inline bool mav_modes_are_equal_autonous_modes(const mav_mode_t mode1, const mav_mode_t mode2)
+static inline bool mav_modes_are_equal_autonomous_modes(const mav_mode_t mode1, const mav_mode_t mode2)
 {
 	mav_mode_t mode1_ = mode1;
 	mav_mode_t mode2_ = mode2;

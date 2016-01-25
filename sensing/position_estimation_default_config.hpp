@@ -54,7 +54,7 @@ static inline position_estimation_conf_t position_estimation_default_config()
 	conf.origin.latitude            = 46.51852236174565f;
 	conf.origin.altitude            = 400.0f;
 	conf.gravity                    = 9.81f;
-	conf.fence_set 			= false;
+	conf.fence_set 					= false;
 
 	return conf;
 };

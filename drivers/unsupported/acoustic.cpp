@@ -222,7 +222,7 @@ static void acoustic_process(audio_t* audio_data)
 	if ((audio_data->remote->channels[6] < 0.7f) && (remote_switch_previous >= 0.7f))
 	{
 		//turn off controller, reset hover waypoint to current position
-		navigation_waypoint_hold_init(audio_data->waypoint_handler, audio_data->position_estimation->local_position);
+		waypoint_handler_hold_init(audio_data->waypoint_handler, audio_data->position_estimation->local_position);
 	}
 	
 	//////////////for turning on the siren///////////////////////////
