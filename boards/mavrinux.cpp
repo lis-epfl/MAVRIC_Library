@@ -67,7 +67,8 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
 	spektrum_satellite( Spektrum_satellite(dsm_serial, dsm_receiver_pin, dsm_power_pin) ),
 	led(),
 	mavlink_serial( config.serial_udp_config ),
-	file_flash()
+	file_flash(),
+	config_(config)
 {}
 
 
@@ -146,7 +147,7 @@ bool Mavrinux::init(void)
 	// -------------------------------------------------------------------------
 	// Init file flash
 	// -------------------------------------------------------------------------
-	file_flash.open("flash.bin");
+	file_flash.open(config_.flash_filename.c_str());
 
 	print_util_dbg_sep('-');
 	time_keeper_delay_ms(100); 

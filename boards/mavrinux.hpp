@@ -140,7 +140,8 @@ public:
 	File_linux 			file_flash;
 
 private:
-	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
+	mavrinux_conf_t config_;		///< Configuration
+	byte_stream_t	dbg_stream_;  	///< Temporary member to make print_util work TODO: remove
 };
 
 
