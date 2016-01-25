@@ -813,6 +813,16 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 	return TASK_RUN_SUCCESS;
 }
 
+bool data_logging_add_parameter_bool(data_logging_t* data_logging, bool * val, const char* param_name)
+{
+	return data_logging_add_parameter_uint8(data_logging, (uint8_t *) val, param_name);
+}
+
+bool data_logging_add_parameter_enum(data_logging_t* data_logging, void * val, const char* param_name)
+{
+	return data_logging_add_parameter_uint32(data_logging, (uint32_t *) val, param_name);
+}
+
 bool data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val, const char* param_name)
 {
 	bool add_success = true;

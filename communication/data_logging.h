@@ -160,6 +160,28 @@ task_return_t data_logging_update(data_logging_t* data_logging);
  *
  * \return	True if the parameter was added, false otherwise
  */
+bool data_logging_add_parameter_bool(data_logging_t* data_logging, bool * val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card. Parameter must take on values from an enum
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ *
+ * \return	True if the parameter was added, false otherwise
+ */
+bool data_logging_add_parameter_enum(data_logging_t* data_logging, void * val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ *
+ * \return	True if the parameter was added, false otherwise
+ */
 bool data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val, const char* param_name);
 
 /**
