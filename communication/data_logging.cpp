@@ -485,6 +485,7 @@ bool Data_logging::create_new_log_file(const char* file_name_, bool continuous_w
 	
 	file_init = false;
 	file_opened = false;
+	sys_status = true;
 
 	// Setting the maximal size of the name string
 	#if _USE_LFN
@@ -560,13 +561,23 @@ bool Data_logging::open_new_log_file(void)
 			// If the filename was successfully created, try to open a file
 			if (successful_filename)
 			{
-				if (!console.get_stream()->exists(name_n_extension))
+				int8_t exists = console.get_stream()->exists(name_n_extension);
+				switch (exists)
 				{
-					create_success = console.get_stream()->open(name_n_extension);
-				}
-				else
-				{
-					create_success = false;
+					case -1:
+						sys_status = false;
+						create_success = false;
+					break;
+
+					case 0:
+						sys_status = true;
+						create_success = console.get_stream()->open(name_n_extension);
+					break;
+
+					case 1:
+						sys_status = true;
+						create_success = false;
+					break;
 				}
 				
 			}
@@ -579,7 +590,7 @@ bool Data_logging::open_new_log_file(void)
 			}
 
 			++i;
-		} while( (i < data_logging_set->max_data_logging_count) && (!create_success) );
+		} while( (i < data_logging_set->max_logs) && (!create_success) && sys_status );
 
 		if (create_success)
 		{
@@ -636,32 +647,22 @@ bool Data_logging::update(void)
 		} //end of if (file_opened)
 		else
 		{
-			open_new_log_file();
+			if (sys_status)
+			{
+				open_new_log_file();
+			}
+			
 			cksum_a = 0.0;
 			cksum_b = 0.0;
 		}//end of else if (file_opened)
 	} //end of if (toggle_logging->log_data == 1)
 	else
 	{
+		sys_status = true;
+
 		if (file_opened)
 		{
-			bool succeed = false;
-			for (uint8_t i = 0; i < 5; ++i)
-			{
-				if (debug)
-				{
-					print_util_dbg_print("Attempt to close file ");
-					print_util_dbg_print(name_n_extension);
-					print_util_dbg_print("\r\n");
-				}
-
-				succeed = console.get_stream()->close();
-				
-				if (succeed)
-				{
-					break;
-				}
-			} //end for loop
+			bool succeed = console.get_stream()->close();
 			
 			cksum_a = 0.0;
 			cksum_b = 0.0;

@@ -98,6 +98,9 @@ int main (void)
 	// 									sim.magnetometer() );
 
 	fat_fs_mounting_t fat_fs_mounting;
+
+	fat_fs_mounting_init(&fat_fs_mounting);
+
 	File_fat_fs	file_log(true,&fat_fs_mounting); // boolean value = debug mode
 	File_fat_fs	file_stat(true,&fat_fs_mounting); // boolean value = debug mode
 

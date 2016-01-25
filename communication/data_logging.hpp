@@ -332,6 +332,7 @@ private:
 
 	bool file_init;								///< A flag to tell whether a file is init or not
 	bool file_opened;							///< A flag to tell whether a file is opened or not
+	bool sys_status;							///< A flag to tell whether the file system status is ok or not
 
 	bool continuous_write;						///< A flag to tell whether we write continuously to the file or not
 
