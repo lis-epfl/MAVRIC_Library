@@ -30,22 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	file.cpp
+ * \file toggle_logging_default_config.hpp
  * 
- * \author  MAV'RIC Team
+ * \author MAV'RIC Team
+ * \author Gregoire Heitz
  *   
- * \brief   Abstract class for Files
+ * \brief Default configuration for the data_logging module
  *
  ******************************************************************************/
-#include "file.hpp" 
 
-/**
- * \brief 	write newline character to file ('\n')
- *
- * \return 	success
- */
-bool File::newline()
+
+#ifndef TOGGLE_LOGGING_DEFAULT_CONFIG_H_
+#define TOGGLE_LOGGING_DEFAULT_CONFIG_H_
+
+#include "toggle_logging.hpp"
+
+static inline toggle_logging_conf_t toggle_logging_default_config()
 {
-	const uint8_t newline = '\n';
-	return write(&newline,1);
-}
+	toggle_logging_conf_t conf    = {};
+	
+	conf.debug                  = true;
+	conf.max_data_logging_count = 50;
+	conf.max_logs               = 500;
+	conf.log_data               = 0;  // 1: log data, 0: no log data
+
+	return conf;
+};
+
+#endif // TOGGLE_LOGGING_DEFAULT_CONFIG_H_

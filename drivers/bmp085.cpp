@@ -58,8 +58,8 @@ enum
 	BMP085_ULTRAHIGHRES 
 };
 
-const uint8_t BARO_ALT_LPF 				= 0.95f;		///< low pass filter factor for altitude measured by the barometer
-const uint8_t VARIO_LPF 				= 0.95f;		///< low pass filter factor for the Vario altitude speed
+const float BARO_ALT_LPF 				= 0.95f;		///< low pass filter factor for altitude measured by the barometer
+const float VARIO_LPF	 				= 0.95f;		///< low pass filter factor for the Vario altitude speed
 
 const uint8_t BMP085_SLAVE_ADDRESS 		= 0x77;			///< Address of the barometer sensor on the i2c bus
  

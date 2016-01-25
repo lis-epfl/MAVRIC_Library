@@ -30,35 +30,48 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	file_linux.hpp
+ * \file  	file_fat_fs.hpp
  * 
  * \author  MAV'RIC Team
  *   
- * \brief   Class for files on linux platforms
+ * \brief   Class for files on avr32 platforms
  *
  ******************************************************************************/
 
-#ifndef FILE_LINUX_H_
-#define FILE_LINUX_H_
+
+#ifndef FILE_FAT_FS_H_
+#define FILE_FAT_FS_H_
 
 #include "file.hpp"
-#include <fstream>
+#include "fat_fs_mounting.hpp"
+
+extern "C" 
+{
+	#include "libs/FatFs/src/ff.h"
+	#include "string.h"
+}
 
 
 /**
  * \brief 	File objects on linux platforms
  */
-class File_linux: public File
+class File_fat_fs: public File
 {
 private:
-	std::fstream file_;		///< File handle
+	FIL file_;										///< File handle
+
+	char *file_name;								///< The file name
+
+	bool debug;										///< A flag to tell whether we print the debug messages
+
+	fat_fs_mounting_t* fat_fs_mounting;
 
 public:
+	
 	/**
 	 * \brief 	Constructor 
 	 */
-    File_linux();
-
+    File_fat_fs(bool debug_, fat_fs_mounting_t* fat_fs_mounting_);
 
 	/**
 	 * \brief 	Open the file
@@ -143,13 +156,13 @@ public:
 	 */
 	uint32_t length();
 
+
 	/**
-	 * \brief 	flush buffer to file
+	 * \brief	flush buffer to file
 	 *
-	 * \return 	success	(always true)
+	 * \return success
 	 */
 	bool flush();
-
 };
 
-#endif /* FILE_LINUX_H_ */
+#endif /* FILE_FAT_FS_H_ */

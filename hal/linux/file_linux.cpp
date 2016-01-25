@@ -40,11 +40,16 @@
 
 #include "file_linux.hpp"
 
+extern "C"
+{
+	#include "print_util.h"
+}
+
 using namespace std;
 
-File_linux::File_linux(const char* path)
+File_linux::File_linux()
 {
-	open(path);
+	;
 }
 
 bool File_linux::open(const char* path)
@@ -58,21 +63,22 @@ bool File_linux::open(const char* path)
 	}
 
 	// Try opening file in input/output mode
-	file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
-	
+	//file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
+	file_.open(path, ios::in | ios::out | ios::ate );
+
 	// If it fails, create the file
 	if( ~file_.is_open() )
 	{
 		// open in output mode
 		file_.open(path, ios::out | ios::trunc);
+
 		file_.close();
 
 		// and reopen in input/output mode
 		file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
 	}
 
-	// If it fails, create the file
-	success &= file_.is_open();
+	success = file_.is_open();
 
 	return success;
 }
@@ -84,11 +90,49 @@ bool File_linux::is_open()
 }
 
 
+int8_t File_linux::exists(const char* path)
+{
+	int8_t success = 1;
+
+	if( !file_.is_open() )
+	{
+		file_.open(path, ios::in | ios::out | ios::ate );
+		
+		if (file_.is_open())
+		{
+			success = 1;
+			file_.close();
+		}
+		else
+		{
+			success = 0;
+		}
+	}
+	else
+	{
+		success = 1;
+	}
+
+	return success;
+}
+
 
 bool File_linux::close()
 {
+	bool success;
+
 	file_.close();
-	return false;
+
+	if (file_.is_open())
+	{
+		success = false;
+	}
+	else
+	{
+		success = true;
+	}
+
+	return success;
 }
 
 
@@ -162,4 +206,9 @@ uint32_t File_linux::length()
 	file_.seekg(current, ios::beg);
 
 	return end - begin;
+}
+
+bool File_linux::flush()
+{
+	return true;
 }

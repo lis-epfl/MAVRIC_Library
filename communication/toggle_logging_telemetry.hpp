@@ -30,22 +30,33 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	file.cpp
+ * \file toggle_logging_telemetry.hpp
  * 
- * \author  MAV'RIC Team
+ * \author MAV'RIC Team
+ * \author Nicolas Dousse
  *   
- * \brief   Abstract class for Files
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the toggle_logging module
  *
  ******************************************************************************/
-#include "file.hpp" 
+
+
+#ifndef TOGGLE_LOGGING_TELEMETRY_HPP_
+#define TOGGLE_LOGGING_TELEMETRY_HPP_
+
+#include "mavlink_stream.hpp"
+#include "mavlink_message_handler.hpp"
+#include "toggle_logging.hpp"
+
 
 /**
- * \brief 	write newline character to file ('\n')
+ * \brief	Initialize the MAVLink communication module for the remote
+ * 
+ * \param	toggle_logging			The pointer to the data logging structure
+ * \param	message_handler			The pointer to the MAVLink message handler
  *
- * \return 	success
+ * \return	True if the init succeed, false otherwise
  */
-bool File::newline()
-{
-	const uint8_t newline = '\n';
-	return write(&newline,1);
-}
+bool toggle_logging_telemetry_init(toggle_logging_t* toggle_logging, mavlink_message_handler_t* message_handler);
+
+#endif /* toggle_logging_TELEMETRY_HPP_ */

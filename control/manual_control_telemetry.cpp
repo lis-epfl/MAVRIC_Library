@@ -46,12 +46,11 @@
 #include "remote_telemetry.hpp"
 #include "joystick_telemetry.hpp"
 
-extern "C"
+extern "C" 
 {
 	#include "print_util.h"
 	#include "time_keeper.hpp"
 }
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------

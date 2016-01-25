@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, 
  * this list of conditions and the following disclaimer in the documentation 
  * and/or other materials provided with the distribution.
@@ -28,24 +28,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-
+ 
 /*******************************************************************************
- * \file  	file.cpp
+ * \file toggle_logging.cpp
+ *
+ * \author MAV'RIC Team
+ * \author Nicolas Dousse
  * 
- * \author  MAV'RIC Team
- *   
- * \brief   Abstract class for Files
+ * \brief Toggle the logging of data
  *
  ******************************************************************************/
-#include "file.hpp" 
 
-/**
- * \brief 	write newline character to file ('\n')
- *
- * \return 	success
- */
-bool File::newline()
+#include "toggle_logging.hpp"
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool toggle_logging_init(toggle_logging_t* toggle_logging, toggle_logging_conf_t toggle_logging_conf, const State* state)
 {
-	const uint8_t newline = '\n';
-	return write(&newline,1);
+	bool init_success = true;
+
+	toggle_logging->toggle_logging_conf = toggle_logging_conf;
+
+	toggle_logging->log_data = toggle_logging_conf.log_data;
+
+	toggle_logging->state = state;
+
+	return init_success;
 }

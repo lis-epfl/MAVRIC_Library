@@ -67,6 +67,10 @@ int main(int argc, char** argv)
 	init_success &= board.init();
 
 
+	// Create dummy files
+	File_dummy dummy_file1;
+	File_dummy dummy_file2;
+	
 	// -------------------------------------------------------------------------
 	// Create central data
 	// -------------------------------------------------------------------------
@@ -85,7 +89,9 @@ int main(int argc, char** argv)
 									board.servo_0,
 									board.servo_1,
 									board.servo_2,
-									board.servo_3 );
+									board.servo_3,
+									dummy_file1,
+									dummy_file2 );
 
 	// Init central data
 	init_success &= cd.init();

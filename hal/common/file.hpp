@@ -75,6 +75,12 @@ public:
 	 */
 	virtual bool is_open() = 0;
 
+	/**
+	 * \brief 	Indicates if the file exits
+	 * 
+	 * \return  1 if the file exists, 0 if the file doesn't exist, -1 if the file system is not responding properly
+	 */
+	virtual int8_t exists(const char* path) = 0;
 
 	/**
 	 * \brief 	Close the file
@@ -123,10 +129,10 @@ public:
 
 
 	/**
-	* \brief 	Get current location in file
-	*
-	* \return 	Offset in bytes
-	*/
+	 * \brief 	Get current location in file
+	 *
+	 * \return 	Offset in bytes
+	 */
 	virtual uint32_t offset() = 0;
 
 
@@ -141,9 +147,9 @@ public:
 	/**
 	 * \brief 	flush buffer to file; Not implemented;
 	 *
-	 * \return 	success	(always false)
+	 * \return 	success
 	 */
-	 bool flush();
+	virtual bool flush() = 0;
 
 
 	/**
@@ -151,7 +157,7 @@ public:
 	 *
 	 * \return 	success
 	 */
-	 bool newline();
+	bool newline();
 };
 
 #endif /* FILE_HPP_ */

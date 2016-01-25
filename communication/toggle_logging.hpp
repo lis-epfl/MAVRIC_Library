@@ -30,26 +30,25 @@
  ******************************************************************************/
  
 /*******************************************************************************
- * \file fat_fs_mounting.h
+ * \file toggle_logging.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
- *   
- * \brief Performs the mounting/unmounting of the fat_fs file system
+ * 
+ * \brief Toggle the logging of data
  *
  ******************************************************************************/
 
-
-#ifndef FAT_FS_MOUNTING_HPP_
-#define FAT_FS_MOUNTING_HPP_
+#ifndef TOGGLE_LOGGING_HPP_
+#define TOGGLE_LOGGING_HPP_
 
 #include "state.hpp"
 
 extern "C"
 {
-	#include "libs/FatFs/src/ff.h"
+	#include <stdbool.h>
+	#include <stdint.h>
 }
-
 
 /**
  * \brief 	Configuration for the module data logging
@@ -60,60 +59,29 @@ typedef struct
 	uint16_t max_logs;							///< The max number of logged files with the same name on the SD card
 	bool debug;									///< Indicates if debug messages should be printed for each param change
 	uint32_t log_data;							///< The initial state of writing a file
-} data_logging_conf_t;
+} toggle_logging_conf_t;
 
 /**
  * \brief 	The fat_fs mounting structure
  */
 typedef struct 
 {
-	data_logging_conf_t data_logging_conf;		///< The data logging configuration structre
+	toggle_logging_conf_t toggle_logging_conf;	///< The data logging configuration structure
 
-	FRESULT fr;									///< The result of the fatfs functions
-	FATFS fs;									///< The fatfs handler
-
-	uint32_t loop_count;						///< Counter to try to mount the SD card many times
 	uint32_t log_data;							///< A flag to stop/start writing to file
 
-	bool sys_mounted;							///< A flag to tell whether the file system is mounted
-	
-	uint32_t num_file_opened;					///< Number of open files to now when the system can be unmounted
-
-	const State* state;						///< The pointer to the state structure
-}fat_fs_mounting_t;
+	const State* state;							///< The pointer to the state structure
+}toggle_logging_t;	
 
 /**
- * \brief	Initialise the fat_fs system file
+ * \brief	Initialise the toggle logging system file
  *
- * \param	fat_fs_mounting			The pointer to the SD card mounting structure
- * \param	data_logging_conf		The pointer to the configuration structure
+ * \param	toggle_logging			The pointer to the toggle telemetry structure
+ * \param	toggle_logging_conf		The pointer to the configuration structure
  * \param	state					The pointer to the state structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_t data_logging_conf, const State* state);
+bool toggle_logging_init(toggle_logging_t* toggle_logging, toggle_logging_conf_t toggle_logging_conf, const State* state);
 
-/**
- * \brief	Mount the fat_fs system file
- *
- * \param	fat_fs_mounting			The pointer to the SD card mounting structure
- * \param	debug					A flag to tell if we print the result or not for debug purposes
- */
-void fat_fs_mounting_mount(fat_fs_mounting_t* fat_fs_mounting, bool debug);
-
-/**
- * \brief	Unmount the fat_fs system file
- *
- * \param	fat_fs_mounting			The pointer to the SD card mounting structure
- * \param	debug					A flag to tell if we print the result or not for debug purposes
- */
-void fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug);
-
-/**
- * \brief	Prints on debug port the result's value of the fatfs operation
- *
- * \param	fat_fs_mounting			The pointer to the SD card mounting structure
- */
-void fat_fs_mounting_print_error_signification(FRESULT fr);
-
-#endif /* FAT_FS_MOUNTING_HPP_ */
+#endif /* fat_fs_mounting_TELEMETRY_HPP_ */

@@ -333,7 +333,7 @@ void scheduler_suspend_task(task_entry_t *te, uint32_t delay)
 
 void scheduler_run_task_now(task_entry_t *te) 
 {
-	if ((te->run_mode == RUN_NEVER))
+	if (te->run_mode == RUN_NEVER)
 	{
 		te->run_mode = RUN_ONCE;
 	} 

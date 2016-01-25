@@ -74,6 +74,12 @@ public:
 	 */
 	bool is_open();
 
+	/**
+	 * \brief 	Indicates if the file exits
+	 * 
+	 * \return  1 if the file exists, 0 if the file doesn't exist, -1 if the file system is not responding properly
+	 */
+	int8_t exists(const char* path);
 
 	/**
 	 * \brief 	Close the file
@@ -122,10 +128,10 @@ public:
 
 
 	/**
-	* \brief 	Get current location in file
-	*
-	* \return 	Offset in bytes
-	*/
+	 * \brief 	Get current location in file
+	 *
+	 * \return 	Offset in bytes
+	 */
 	uint32_t offset();
 
 
@@ -135,6 +141,13 @@ public:
 	 * \return 	The file length up to the maximum supported 4Gb.
 	 */
 	uint32_t length();
+
+	/**
+	 * \brief 	flush buffer to file
+	 *
+	 * \return 	success	(always true)
+	 */
+	bool flush();
 };
 
 #endif /* FILE_FLASH_AVR32_H_ */

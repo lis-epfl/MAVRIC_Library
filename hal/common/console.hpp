@@ -181,6 +181,8 @@ public:
 	 * \return 	return itself (*this)
 	 */
 	Console<Writeable> &operator<<(ConsoleManipulator manip);
+
+	Writeable* get_stream();
 };
 
 /**

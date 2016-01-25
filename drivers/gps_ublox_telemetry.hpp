@@ -30,31 +30,35 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_default_config.h
+ * \file gps_ublox_telemetry.hpp
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief Default configuration for the data_logging module
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the GPS UBlox
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_DEFAULT_CONFIG_H_
-#define DATA_LOGGING_DEFAULT_CONFIG_H_
+#ifndef GPS_UBLOX_TELEMETRY_H_
+#define GPS_UBLOX_TELEMETRY_H_
 
-#include "data_logging.hpp"
+#include "mavlink_stream.hpp"
+#include "mavlink_message_handler.hpp"
+#include "gps.hpp"
+#include "gps_ublox.hpp"
 
-static inline data_logging_conf_t data_logging_default_config()
-{
-	data_logging_conf_t conf    = {};
-	
-	conf.debug                  = true;
-	conf.max_data_logging_count = 50;
-	conf.max_logs               = 500;
-	conf.log_data               = 0;  // 1: log data, 0: no log data
 
-	return conf;
-};
+/**
+ * \brief	Initialize the MAVLink communication module for the GPS
+ * 
+ * \param	gps						The pointer to the gps structure
+ * \param	message_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool gps_ublox_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler);
 
-#endif // DATA_LOGGING_DEFAULT_CONFIG_H_
+
+#endif /* GPS_UBLOX_TELEMETRY_H_ */

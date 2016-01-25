@@ -77,7 +77,7 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
 	red_led_gpio( config.red_led_gpio_config ),
 	green_led( green_led_gpio ),
 	red_led( red_led_gpio ),
-	file_flash("flash.bin"),
+	file_flash(),
 	serial_1( config.serial_1_config ),
 	spektrum_satellite(serial_2, dsm_receiver_gpio, dsm_power_gpio),
 	adc_battery(12.3f),

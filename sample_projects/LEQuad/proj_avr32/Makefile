@@ -64,6 +64,8 @@ LIB_SRCS += communication/remote_telemetry.cpp
 LIB_SRCS += communication/state.cpp
 LIB_SRCS += communication/state_machine.cpp
 LIB_SRCS += communication/state_telemetry.cpp
+LIB_SRCS += communication/toggle_logging.cpp
+LIB_SRCS += communication/toggle_logging_telemetry.cpp
 
 LIB_SRCS += control/adaptive_parameter.c          
 LIB_SRCS += control/attitude_controller.c         
@@ -98,8 +100,6 @@ LIB_SRCS += drivers/sonar_i2cxl.cpp
 LIB_SRCS += drivers/sonar_telemetry.cpp
 LIB_SRCS += drivers/spektrum_satellite.cpp
 
-LIB_SRCS += hal/common/fat_fs_mounting.cpp
-LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
 LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp
@@ -123,6 +123,8 @@ LIB_SRCS += hal/avr32/spi_avr32.cpp
 LIB_SRCS += hal/avr32/sd_spi.c
 LIB_SRCS += hal/avr32/time_keeper.c
 LIB_SRCS += hal/avr32/file_flash_avr32.cpp
+LIB_SRCS += hal/avr32/file_fat_fs.cpp
+LIB_SRCS += hal/avr32/fat_fs_mounting.cpp
 
 LIB_SRCS += hal/dummy/adc_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp

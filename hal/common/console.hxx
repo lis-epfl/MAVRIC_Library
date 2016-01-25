@@ -98,7 +98,7 @@ template <typename Writeable>
 template <typename T>
 bool Console<Writeable>::write_floating(T num, uint8_t after_digits)
 {
-	uint8_t data_tmp[str::MAX_DIGITS10_LONG + after_digits + 2];
+	uint8_t data_tmp[str::MAX_DIGITS10_LONG + str::MAX_AFTERDIGITS + 2];
 	uint8_t length;
 	uint8_t* data = str::format_floating(num, data_tmp, &length, after_digits, str::MAX_DIGITS10_LONG);
 
@@ -255,6 +255,17 @@ static Console<Writeable>& endl(Console<Writeable>& console)
 	console.newline();
 	console.flush();
 	return console;
+}
+
+/**
+ * \brief Returns a pointer to writeable
+ *
+ * \return writeable
+ */
+template <typename Writeable>
+Writeable* Console<Writeable>::get_stream()
+{
+	return &stream_;
 }
 
 #endif /* CONSOLE_HXX_ */

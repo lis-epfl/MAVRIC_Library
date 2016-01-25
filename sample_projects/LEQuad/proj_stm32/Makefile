@@ -101,9 +101,10 @@ LIB_SRCS += communication/onboard_parameters.c
 LIB_SRCS += communication/remote.c
 LIB_SRCS += communication/remote_telemetry.c
 LIB_SRCS += communication/state.c
-
 LIB_SRCS += communication/state_machine.c
 LIB_SRCS += communication/state_telemetry.c
+LIB_SRCS += communication/toggle_logging.cpp
+LIB_SRCS += communication/toggle_logging_telemetry.cpp
 
 LIB_SRCS += simulation/simulation.cpp
 LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
@@ -127,8 +128,6 @@ LIB_SRCS += hal/dummy/adc_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
 
-LIB_SRCS += hal/common/fat_fs_mounting.cpp
-LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
 LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp

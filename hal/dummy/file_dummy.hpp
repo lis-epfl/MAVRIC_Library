@@ -53,7 +53,7 @@ public:
 	/**
 	 * \brief 	Constructor 
 	 */
-    File_dummy(const char* path)
+    File_dummy(void)
     {};
 
 
@@ -78,6 +78,15 @@ public:
 		return true;
 	};
 
+	/**
+	 * \brief 	Indicates if the file exits
+	 * 
+	 * \return  1 if the file exists, 0 if the file doesn't exist, -1 if the file system is not responding properly
+	 */
+	int8_t exists(const char* path)
+	{
+		return -1;
+	}
 
 	/**
 	 * \brief 	Close the file
@@ -138,10 +147,10 @@ public:
 
 
 	/**
-	* \brief 	Get current location in file
-	*
-	* \return 	Offset in bytes
-	*/
+	 * \brief 	Get current location in file
+	 *
+	 * \return 	Offset in bytes
+	 */
 	uint32_t offset()
 	{
 		return 0;
@@ -153,6 +162,17 @@ public:
 	 * \return 	The file length up to the maximum supported 4Gb.
 	 */
 	uint32_t length()
+	{
+		return 0;
+	};
+
+
+	/**
+	 * \brief	flush buffer to file
+	 *
+	 * \return success
+	 */
+	bool flush()
 	{
 		return 0;
 	};

@@ -52,6 +52,7 @@
 #include "imu.hpp"
 #include "spektrum_satellite.hpp"
 #include "file_flash_avr32.hpp"
+#include "file_fat_fs.hpp"
 #include "gps_ublox.hpp"
 #include "sonar_i2cxl.hpp"
 #include "adc_avr32.hpp"

@@ -303,7 +303,7 @@ bool Megafly_rev4::init(void)
 	print_util_dbg_init_msg("[SONAR]", ret);
 	init_success &= ret;
 	time_keeper_delay_ms(100); 
-		
+
 
 	print_util_dbg_sep('-');
 	time_keeper_delay_ms(100); 

@@ -80,6 +80,11 @@ bool File_flash_avr32::is_open()
 }
 
 
+int8_t File_flash_avr32::exists(const char* path)
+{
+	return 1;
+}
+
 
 bool File_flash_avr32::close()
 {
@@ -194,4 +199,9 @@ uint32_t File_flash_avr32::offset()
 uint32_t File_flash_avr32::length()
 {
 	return MAVERIC_FLASHC_USER_PAGE_FREE_SPACE;
+}
+
+bool File_flash_avr32::flush()
+{
+	return true;
 }

@@ -59,6 +59,7 @@
 #include "hud_telemetry.hpp"
 #include "state_machine.hpp"
 #include "data_logging.hpp"
+#include "toggle_logging.hpp"
 #include "qfilter.hpp"
 #include "mavlink_stream.hpp"
 #include "simulation.hpp"
@@ -96,7 +97,7 @@ public:
 	/**
 	 * \brief   Constructor
 	 */
-	Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3);
+	Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2);
 
 
 	/**
@@ -148,7 +149,11 @@ public:
 	state_machine_t state_machine;								///< The structure for the state machine
 		
 	hud_telemetry_structure_t hud_structure;					///< The HUD structure
-	servos_telemetry_t servos_telemetry;						///< The servos telemetry structure
+	servos_telemetry_t servos_telemetry;
+
+	toggle_logging_t toggle_logging;
+	Data_logging 	data_logging;
+	Data_logging 	data_logging2;
 
 	attitude_controller_t 			attitude_controller;
 	velocity_controller_copter_t 	velocity_controller;
