@@ -59,9 +59,6 @@ File_fat_fs::File_fat_fs(bool debug_, fat_fs_mounting_t* fat_fs_mounting_)
 {
 	fat_fs_mounting = fat_fs_mounting_;
 	debug = debug_;
-
-	fat_fs_mounting_init(fat_fs_mounting);
-
 }
 
 bool File_fat_fs::open(const char* path)
@@ -82,23 +79,35 @@ bool File_fat_fs::open(const char* path)
 
 	fat_fs_mounting_mount(fat_fs_mounting,debug);
 
-	fr = f_open(&file_, file_name, FA_WRITE | FA_OPEN_ALWAYS);
-
-	if (fr == FR_OK)
+	if (fat_fs_mounting->sys_mounted)
 	{
-		success = true;
+		fr = f_open(&file_, file_name, FA_WRITE | FA_OPEN_ALWAYS);
 
-		fat_fs_mounting->num_file_opened++;
+		if (fr == FR_OK)
+		{
+			success = true;
 
+			fat_fs_mounting->num_file_opened++;
+
+		}
+		else
+		{
+			if (debug)
+			{
+				print_util_dbg_print("Opening error:");
+				fat_fs_mounting_print_error_signification(fr);
+			}
+
+			success = false;
+		}
 	}
 	else
 	{
 		if (debug)
 		{
-			print_util_dbg_print("Opening error:");
-			fat_fs_mounting_print_error_signification(fr);
+			print_util_dbg_print("Mounting error\r\n");
 		}
-		
+
 		success = false;
 	}
 
@@ -122,9 +131,9 @@ bool File_fat_fs::is_open()
 	return success;
 }
 
-bool File_fat_fs::exists(const char* path)
+int8_t File_fat_fs::exists(const char* path)
 {
-	bool success = true;
+	int8_t success = 1;
 	FRESULT fr;
 
 	file_name = (char*)malloc(sizeof(path)+2);
@@ -133,20 +142,24 @@ bool File_fat_fs::exists(const char* path)
 
 	fat_fs_mounting_mount(fat_fs_mounting,debug);
 
-	fr = f_stat(file_name,NULL);
-
-	if (fr == FR_NO_FILE)
+	if (!fat_fs_mounting->sys_mounted)
 	{
-		success = false;
-	}
-	else if (fr == FR_OK)
-	{
-		success = true;
+		success = -1;
 	}
 	else
 	{
-		print_util_dbg_print("Exists status:");
-		fat_fs_mounting_print_error_signification(fr);
+		fr = f_stat(file_name,NULL);
+
+		if (fr == FR_OK)
+		{
+			success = 1;
+		}
+		else
+		{
+			success = 0;
+			print_util_dbg_print("Exists status:");
+			fat_fs_mounting_print_error_signification(fr);
+		}
 	}
 
 	return success;
@@ -157,15 +170,26 @@ bool File_fat_fs::close()
 	bool success = true;
 	FRESULT fr;
 
-	fr = f_close(&file_);
-
-	if (fr == FR_OK)
+	for (uint8_t i = 0; i < 5; ++i)
 	{
-		success = true;
+		if (debug)
+		{
+			print_util_dbg_print("Attempt to close file\r\n");
+		}
 
-		fat_fs_mounting->num_file_opened--;
-	}
-	else
+		fr = f_close(&file_);
+
+		
+		if (fr == FR_OK)
+		{
+			success = true;
+			break;
+		}
+	} //end for loop
+
+	fat_fs_mounting->num_file_opened--;
+
+	if (fr != FR_OK)
 	{
 		if (debug)
 		{
@@ -175,8 +199,6 @@ bool File_fat_fs::close()
 		
 		success = false;
 	}
-
-	free(file_name);
 
 	fat_fs_mounting_unmount(fat_fs_mounting,debug);
 

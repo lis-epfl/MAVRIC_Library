@@ -90,9 +90,9 @@ bool File_linux::is_open()
 }
 
 
-bool File_linux::exists(const char* path)
+int8_t File_linux::exists(const char* path)
 {
-	bool success = true;
+	int8_t success = 1;
 
 	if( !file_.is_open() )
 	{
@@ -100,17 +100,17 @@ bool File_linux::exists(const char* path)
 		
 		if (file_.is_open())
 		{
-			success = true;
+			success = 1;
 			file_.close();
 		}
 		else
 		{
-			success = false;
+			success = 0;
 		}
 	}
 	else
 	{
-		success = true;
+		success = 1;
 	}
 
 	return success;

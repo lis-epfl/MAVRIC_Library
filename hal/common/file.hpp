@@ -78,9 +78,9 @@ public:
 	/**
 	 * \brief 	Indicates if the file exits
 	 * 
-	 * \return  true if the file exists, false otherwise
+	 * \return  1 if the file exists, 0 if the file doesn't exist, -1 if the file system is not responding properly
 	 */
-	virtual bool exists(const char* path) = 0;
+	virtual int8_t exists(const char* path) = 0;
 
 	/**
 	 * \brief 	Close the file
