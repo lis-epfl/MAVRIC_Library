@@ -488,8 +488,10 @@ flash: ${PROJ_NAME}.elf
 	@dfu-programmer at32uc3c1512 flash ${PROJ_NAME}.hex --suppress-bootloader-mem 
 	@dfu-programmer at32uc3c1512 reset 
 
-.PHONY: clean
+.PHONY: clean rebuild
 clean:
 	@rm -f $(OBJS) $(PROJ_NAME).elf $(PROJ_NAME).hex $(PROJ_NAME).bin
 	@rm -rf build/
 	@$(PRINT_OK)
+
+rebuild: clean proj

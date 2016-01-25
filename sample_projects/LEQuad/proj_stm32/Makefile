@@ -292,8 +292,10 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 flash: $(PROJ_NAME).bin
 	@st-flash write $(PROJ_NAME).bin 0x8000000
 
-.PHONY: clean
+.PHONY: clean rebuild
 clean:
 	@rm -f $(OBJS)
 	@rm -rf build/
 	@$(PRINT_OK)
+
+rebuild: clean all
