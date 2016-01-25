@@ -117,7 +117,6 @@ bool state_machine_update(state_machine_t* state_machine)
 		break;
 
 		case MAV_STATE_STANDBY:
-			state_machine->state->in_the_air = false;
 			//disable out of fence checks
 			state_machine->state->out_of_fence_1 = false;
 			state_machine->state->out_of_fence_2 = false;

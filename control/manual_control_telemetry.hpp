@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file manual_control_telemetry.h
+ * \file manual_control_telemetry.hpp
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse

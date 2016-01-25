@@ -237,8 +237,6 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 
 #define DEG2RAD PI/180
 
-#define GPS_LITTLE_ENDIAN
-
 // The UART bytes are sent in a little endian format from the GPS
 
 #ifdef __MAVRIC_ENDIAN_BIG__

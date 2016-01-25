@@ -177,10 +177,8 @@ bool Central_data::init(void)
 							navigation_default_config(),
 							&controls_nav,
 							&ahrs.qe,
-							&waypoint_handler,
 							&position_estimation,
 							&state,
-							&manual_control,
 							&mavlink_communication);/*,
 							&sonar_i2cxl);*/
 	print_util_dbg_init_msg("[NAV]", ret);
@@ -193,8 +191,10 @@ bool Central_data::init(void)
 	// -------------------------------------------------------------------------
 	ret = waypoint_handler_init(	&waypoint_handler,
 									&position_estimation,
+									&navigation,
 									&ahrs,
 									&state,
+									&manual_control,
 									&mavlink_communication,
 									&mavlink_communication.mavlink_stream);
 	waypoint_handler_init_homing_waypoint(&waypoint_handler);

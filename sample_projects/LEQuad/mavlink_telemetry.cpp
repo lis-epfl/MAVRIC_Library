@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_telemetry.c
+ * \file mavlink_telemetry.cpp
  *
  * \author MAV'RIC Team
  *   
@@ -63,10 +63,11 @@
 #include "scheduler_telemetry.hpp"
 #include "sonar_telemetry.hpp"
 #include "fat_fs_mounting_telemetry.hpp"
+#include "manual_control_telemetry.hpp"
 
 extern "C"
 {
-	// #include "scheduler.h"
+	// #include "scheduler.h"	
 }
 
 //------------------------------------------------------------------------------
