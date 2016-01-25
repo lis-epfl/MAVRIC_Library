@@ -131,9 +131,9 @@ bool Serial_stm32::init(void)
 					GPIO_PUPD_NONE, 
 					config_.rx_pin);
 	
-	// Setup TX and RX pin as alternate function
+	// Setup TX and RX pins alternate function
 	gpio_set_af(config_.tx_port, config_.tx_af, config_.tx_pin);
-	gpio_set_af(config_.rx_port, config_.rx_af, config_.tx_pin);
+	gpio_set_af(config_.rx_port, config_.rx_af, config_.rx_pin);
 
 	// Setup USART parameters
 	usart_set_baudrate(config_.device, config_.baudrate);
