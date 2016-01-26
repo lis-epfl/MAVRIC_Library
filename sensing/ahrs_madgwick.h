@@ -66,7 +66,6 @@ extern "C" {
 
 #include "ahrs.h"
 #include "imu.h"
-#include "position_estimation.h"
 
 
 /**
@@ -74,10 +73,10 @@ extern "C" {
  */
 typedef struct
 {
-	float 	beta;						///< 2 * proportional gain (Kp)
-	float	zeta;						///< Gyro drift bias gain
-	bool acceleration_correction;		///< Enable the correction of the parasitic accelerations ?
-	float correction_speed;				///< Airspeed from which the correction should start
+	float 	beta;						// 2 * proportional gain (Kp)
+	float	zeta;						// Gyro drift bias gain
+	bool acceleration_correction;		// Enable the correction of the parasitic accelerations ?
+	float correction_speed;				// Airspeed from which the correction should start
 } ahrs_madgwick_conf_t;
 
 
@@ -86,19 +85,12 @@ typedef struct
  */
 typedef struct
 {
-	imu_t* 	imu;							///< Pointer to IMU sensors
-	ahrs_t* ahrs;							///< Estimated attitude
-	const position_estimation_t* pos_est;	///< Pointer to the position estimation
-	float 	beta;							///< 2 * proportional gain (Kp)
-	float	zeta;							///< Gyro drift bias gain
-	uint32_t acceleration_correction;		///< Enable the correction of the parasitic accelerations ?
-	float correction_speed;					///< Airspeed from which the correct// Quaternions used for the Madgwick algorithm. They are in the MADGWICK FRAME, not in the MAVRIC FRAME !
-	quat_t q_nwu;							///< Quaternion used for the Madgwick algorithm. They are in the MADGWICK FRAME, not in the MAVRIC FRAME !
-	float w_bx;								///< Estimated gyro biases. Warning: they are also expressed in MADGWICK FRAME ! Transformation has to be made to express them in MAVRIC FRAME !
-	float w_by;								///< Estimated gyro biases. Warning: they are also expressed in MADGWICK FRAME ! Transformation has to be made to express them in MAVRIC FRAME !
-	float w_bz;								///< Estimated gyro biases. Warning: they are also expressed in MADGWICK FRAME ! Transformation has to be made to express them in MAVRIC FRAME !
-	float last_airspeed;					///< The last airspeed estimated
-
+	imu_t* 	imu;							// Pointer to IMU sensors
+	ahrs_t* ahrs;							// Estimated attitude
+	float 	beta;							// 2 * proportional gain (Kp)
+	float	zeta;							// Gyro drift bias gain
+	uint32_t acceleration_correction;		// Enable the correction of the parasitic accelerations ?
+	float correction_speed;					// Airspeed from which the correction should start
 } ahrs_madgwick_t;
 
 
@@ -112,7 +104,7 @@ typedef struct
  * 
  * \return 	True if success, false if not
  */
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs, const position_estimation_t* pos_est);
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
 
 
 /**
