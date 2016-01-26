@@ -54,9 +54,17 @@ navigation_config_t navigation_default_config =
 	.dist2vel_gain = 0.7f,
 	.cruise_speed = 3.0f,
 	.max_climb_rate = 1.0f,
+	.attractiveness = 2.5f,
+	.attractiveness2 = 0.005f,
+	.one_over_scaling = 0.1f,
+	.safe_altitude = -30.0f,
+	.minimal_radius = 45.0f,
+	.heading_acceptance = PI/6.0f,
 	.soft_zone_size = 0.0f,
 	.alt_lpf = 0.0f,
 	.LPF_gain = 0.9f,
+	.vertical_vel_gain = 1.0f,
+	.takeoff_altitude = -40.0f,
 	.wpt_nav_controller = 
 	{
 		.p_gain = 0.7f,

@@ -33,7 +33,7 @@
  * \file airspedd_analog.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Julien Lecoeur, Simon Pyroth
  *   
  * \brief This file is the driver for the DIYdrones airspeed sensor V20 
  * (old analog version)
@@ -50,17 +50,46 @@
 
 #include <stdint.h>
 #include "analog_monitor.h"
+#include "scheduler.h"
+
+
 
 /**
- * \brief Structure containing the analog airspeed sensor datas
+ * \brief  Configuration for the airspeed sensor
+ */
+typedef struct 
+{
+	analog_rails_t analog_rail;		///< Analog rail on which the sensor is connected
+	float pressure_offset;			///< Default airspeed offset
+	float calibration_gain;			///< Gain used for the calibration of the offset (low-pass)
+	float conversion_factor;		///< Factor used for conversion between differential pressure P and square speed v^2. Should be around 2/rho_air. This parameter is the one to tune the sensor !
+	float correction_gain;			///< Gain obtained by the fitted relation, if needed (Airspeed_measured = gain * Airspeed_true + offset)
+	float correction_offset;		///< Offset obtained by the fitted relation, if needed
+	float filter_gain;				///< Gain for the low-pass filter
+} airspeed_analog_conf_t;
+
+/**
+ * \brief Structure containing the analog airspeed sensor data
 */
 typedef struct {
-	uint8_t analog_channel;					///< analog channel of the ADC
-	float gain;								///< gain factor for the ADC
-	float pressure_offset;					///< offset of the pressure sensor
-	float differential_pressure;			///< true dynamical pressure (diff between pressure and offset)
-	float airspeed;							///< measure airspeed
 	analog_monitor_t* analog_monitor;		///< pointer to the structure of analog monitor module
+	uint8_t analog_channel;					///< analog channel of the ADC
+	float voltage;							///< Voltage read by the ADC
+	
+	float pressure_offset;					///< Offset of the pressure sensor
+	float differential_pressure;			///< True differential pressure in Pa (raw sensor compensated with offset)
+	float conversion_factor;				///< Factor used for conversion between differential pressure P and square speed v^2. Is influenced by real sensitivity of the sensor and by air density !
+	float correction_gain;					///< Gain used to correct estimation
+	float correction_offset;				///< Offset used to correct estimation
+	float alpha;							///< Filter coefficient
+	
+	float raw_airspeed;						///< Unfiltered and uncorrected airspeed
+	float scaled_airspeed;					///< Corrected airspeed, using fitted relation
+	float airspeed;							///< Filtered corrected airspeed
+	float last_airspeed;					///< Airspeed from previous loop
+	
+	bool calibrating;						///< True if the sensor is currently in calibration
+	float calibration_gain;					///< Gain used for the calibration of the offset (low-pass)
 } airspeed_analog_t;
 
 /**
@@ -71,23 +100,32 @@ typedef struct {
  * \param analog_channel set which channel of the ADC is map to the airspeed sensor
  *
 */
-void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel);
+bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, const airspeed_analog_conf_t* config);
 
 /**
- * \brief Calibrates the airspeed sensor
+ * \brief Calibrates the airspeed sensor offset at 0 speed. It will continue calibrating until it is asked to stop.
  * 
  * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
  *
 */
-void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog);
+void airspeed_analog_start_calibration(airspeed_analog_t* airspeed_analog);
+
+/**
+ * \brief Stop the calibration procedure and keep the last offset.
+ * 
+ * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+ *
+*/
+void airspeed_analog_stop_calibration(airspeed_analog_t* airspeed_analog);
 
 /**
  * \brief Updates the values in the airspeed structure
  *
  * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
  *
+ * \return	The result of the task execution
 */
-void airspeed_analog_update(airspeed_analog_t* airspeed_analog);
+task_return_t airspeed_analog_update(airspeed_analog_t* airspeed_analog);
 
 #ifdef __cplusplus
 }

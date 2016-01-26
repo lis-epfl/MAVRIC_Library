@@ -30,47 +30,52 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file analog_monitor_telemetry.h
+ * \file airspeed_analog_telemetry.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Simon Pyroth
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the analog monitor module
+ * \brief Analog airspeed sensor telemetry functions
  *
  ******************************************************************************/
 
-#ifndef ANALOG_MONITOR_TELEMETRY_H_
-#define ANALOG_MONITOR_TELEMETRY_H_
 
-#include "mavlink_stream.h"
-#include "analog_monitor.h"
+#ifndef AIRSPEED_ANALOG_TELEMETRY_H_
+#define AIRSPEED_ANALOG_TELEMETRY_H_
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * \brief	Sends the analog sonar value
- * 
- * \param	analog_monitor			The pointer to the analog monitor structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+#include "airspeed_analog.h"
+#include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
+
+
 
 /**
- * \brief	Sends the voltage read from the differential pressure sensor
+ * \brief							Initialize the servo mix
  * 
- * \param	analog_monitor			The pointer to the analog monitor structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
+ * \param	airspeed_analog			The pointer to the airspeed_analog structure
+ * \param	mavlink_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void  analog_monitor_telemetry_send_differential_pressure(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+bool airspeed_analog_telemetry_init(airspeed_analog_t* airspeed_analog, mavlink_message_handler_t *mavlink_handler);
+
+/**
+ * \brief 	Send airspeed and useful data for debuging.
+ *
+ * \param	airspeed_analog		Pointer to the analog airspeed sensor data structure
+ * \param	mavlink_stream		Pointer to mavlink stream structure
+ * \param	msg					Pointer to the message structure
+ */
+void airspeed_analog_telemetry_send(airspeed_analog_t* airspeed_analog, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ANALOG_MONITOR_TELEMETRY_H_ */
+#endif

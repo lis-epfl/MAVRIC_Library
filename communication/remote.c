@@ -46,6 +46,7 @@
 #include "constants.h"
 #include "coord_conventions.h"
 #include "quick_trig.h"
+#include "conf_platform.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -59,6 +60,15 @@
  * \return	The value of the ARMED flag
  */
 static mode_flag_armed_t get_armed_flag(remote_t* remote);
+
+/**
+ * \brief	Returns the value of the ARMED flag, for a wing UAV
+ *
+ * \param	remote			The pointer to the remote structure
+ *
+ * \return	The value of the ARMED flag
+ */
+static mode_flag_armed_t get_armed_flag_wing(remote_t* remote);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -83,6 +93,34 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 			remote_get_yaw(remote) > 0.9f && 
 			remote_get_pitch(remote) > 0.9f && 
 			remote_get_roll(remote) < -0.9f )
+	{
+		// Left stick bottom right corner, right stick bottom left corner => disarm
+		print_util_dbg_print("Disarming!\r\n");
+		armed = ARMED_OFF;
+	}
+	else
+	{
+		// Keep current flag
+	}
+
+	return armed;
+}
+
+static mode_flag_armed_t get_armed_flag_wing(remote_t* remote)
+{
+	const remote_mode_t* remote_mode = &remote->mode;
+	mode_flag_armed_t armed = remote_mode->current_desired_mode.ARMED;
+
+	// Get armed flag
+	if( remote_get_throttle(remote) < -0.95f &&
+		remote_get_yaw(remote) < -0.9f )
+	{
+		// Left stick bottom left corner, right stick bottom right corner => arm
+		print_util_dbg_print("Arming!\r\n");
+		armed = ARMED_ON;
+	}
+	else if ( remote_get_throttle(remote) < -0.95f &&
+			  remote_get_yaw(remote) > 0.9f )
 	{
 		// Left stick bottom right corner, right stick bottom left corner => disarm
 		print_util_dbg_print("Disarming!\r\n");
@@ -324,7 +362,11 @@ void remote_mode_update(remote_t* remote)
 		mav_mode_t new_desired_mode = remote_mode->safety_mode;
 
 		// Get armed flag from stick combinaison
+#if M_AIRCRAFT_TYPE == M_COPTER_AIRCRAFT
 		mode_flag_armed_t flag_armed = get_armed_flag(remote);
+#elif M_AIRCRAFT_TYPE == M_WING_AIRCRAFT
+		mode_flag_armed_t flag_armed = get_armed_flag_wing(remote);
+#endif
 
 		if ( remote->channels[remote_mode->safety_channel] > 0 )
 		{
@@ -419,6 +461,33 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t* control
 	controls->thrust 		= remote_get_throttle(remote);
 }
 
+void remote_get_angle_command_from_remote(remote_t* remote, control_command_t * controls)
+{
+	remote_update(remote);
+	
+	controls->rpy[ROLL] 	= asinf(remote_get_roll(remote));
+	controls->rpy[PITCH] 	= asinf(remote_get_pitch(remote));
+	controls->rpy[YAW] 		= asinf(remote_get_yaw(remote));
+	controls->thrust 		= remote_get_throttle(remote);
+}
+
+void remote_get_rate_command_from_remote(remote_t* remote, control_command_t* controls)
+{
+	remote_update(remote);
+	
+	/*	We want to obtain same results as with full manual control.
+		So, we want the output of the regulator to go from -1 to +1 on each axis
+		(if scaling is applied on manual mode by the remote, it will also be applied on the rate, so the remote scaling doesn't matter)
+		Assuming the regulators are only P, if the current rate is 0, we have at the output of the regulator: u = Kp*r = Kp * scaler * remoteInput
+		==> we want u = remoteInput to have the same behavior
+		==> scaler = 1/Kp
+	*/
+	controls->rpy[ROLL] 	= 15.4f * remote_get_roll(remote);		// 1/Kp_roll = 1/0.065
+	controls->rpy[PITCH] 	= 18.2f * remote_get_pitch(remote);		// 1/Kp_pitch = 1/0.055
+	controls->rpy[YAW] 		= remote_get_yaw(remote);				// Direct input
+	controls->thrust 		= remote_get_throttle(remote);			// Direct input
+}
+
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls)
 {
 	remote_update(remote);
@@ -427,6 +496,19 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
 	controls->tvel[Y] 	= 10.0f * remote_get_roll(remote);
 	controls->tvel[Z] 	= - 1.5f * remote_get_throttle(remote);
 	controls->rpy[YAW] 	= remote_get_yaw(remote);
+}
+
+void remote_get_velocity_vector_from_remote_wing(remote_t* remote, const float ki_yaw, control_command_t* controls)
+{
+	remote_update(remote);
+	
+	// TODO: Remove
+	controls->rpy[ROLL] = remote_get_roll(remote);
+	
+	controls->tvel[X] 	= 10.0f * (1 + remote_get_throttle(remote));
+	controls->tvel[Y] 	= 0.0f;
+	controls->tvel[Z] 	= - 6.0f * remote_get_pitch(remote);
+	controls->rpy[YAW] 	+= ki_yaw * 0.2f * remote_get_roll(remote);	// Turn rate
 }
 
 

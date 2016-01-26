@@ -237,3 +237,26 @@ float pid_controller_update_dt(pid_controller_t* controller, float error, float 
 	
 	return controller->output;	
 }
+
+float pid_controller_update_feedforward_dt(pid_controller_t* controller, float error, float feedforward, float dt)
+{
+	controller->error 		= error;
+	controller->dt 			= dt;
+	controller->last_update = time_keeper_get_time_ticks();
+	controller->output 		= controller->p_gain * controller->error
+								+ pid_controller_integrate( &controller->integrator, controller->error, controller->dt)
+								+ pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt)
+								+ feedforward;
+	
+	if( controller->output < controller->clip_min )
+	{
+		controller->output=controller->clip_min;
+	}
+
+	if( controller->output > controller->clip_max )
+	{
+		controller->output=controller->clip_max;
+	}
+	
+	return controller->output;
+}

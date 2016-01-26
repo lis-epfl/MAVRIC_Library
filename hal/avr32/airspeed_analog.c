@@ -30,10 +30,10 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file airspedd_analog.c
+ * \file airspeed_analog.c
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Julien Lecoeur, Simon Pyroth
  *   
  * \brief This file is the driver for the DIYdrones airspeed sensor V20 
  * (old analog version)
@@ -44,70 +44,127 @@
 #include "airspeed_analog.h"
 #include "analog_monitor.h"
 #include "maths.h"
-// #include "delay.h"
+#include "time_keeper.h"
 
-const uint32_t VOLTS_TO_PASCAL = 819;		///< conversion factor from volts to pascal units
-const float PITOT_GAIN_DEFAULT = 1.9936f; 	///< this gain come from APM, but it does not make sense (should be)
+#define AIRSPEED_SENSOR_OFFSET 2.5f			///< Offset of the sensor [V]
+#define AIRSPEED_SENSOR_SENSITIVITY 0.001f	///< Sensitivity of the sensor [V/Pa]
+
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
 /**
- * \brief Returns the pressure measure by the airspeed sensor
+ * \brief Returns the raw differential pressure measured by the airspeed sensor in Pascal
  *
  * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
  *
- * \return the dynamical pressure measured by the sensor (with potential offset)
+ * \return the raw differential pressure measured by the sensor (in Pa)
 */
-float airspeed_analog_get_pressure(airspeed_analog_t* airspeed_analog);
+float airspeed_analog_get_raw_differential_pressure(airspeed_analog_t* airspeed_analog);
 
-void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel)
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+float airspeed_analog_get_raw_differential_pressure(airspeed_analog_t* airspeed_analog)
 {
+	/* Sensor: V = S*P + O
+	V: Measured voltage [0;5 V]
+	S: Sensitivity [0.001 V/Pa]
+	P: Differential pressure [Pa]
+	O: Offset [2.5 V]
+	
+	==> P = (V - O)/S
+	*/
+	//airspeed_analog->voltage = airspeed_analog->analog_monitor->avg[airspeed_analog->analog_channel];
+	//float P = (airspeed_analog->voltage - AIRSPEED_SENSOR_OFFSET)/AIRSPEED_SENSOR_SENSITIVITY;
+	
+	airspeed_analog->voltage = airspeed_analog->analog_monitor->avg[airspeed_analog->analog_channel];
+	float P = (airspeed_analog->voltage - AIRSPEED_SENSOR_OFFSET)/AIRSPEED_SENSOR_SENSITIVITY;
+	
+	return  P;
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, const airspeed_analog_conf_t* config)
+{
+	bool init_success = true;
+	
+	// Dependencies
 	airspeed_analog->analog_monitor = analog_monitor;
-	airspeed_analog->analog_channel = analog_channel;		///< =4 or 5 on board maveric32 v4.1f
-	airspeed_analog->gain = PITOT_GAIN_DEFAULT;
 
-	airspeed_analog->pressure_offset = 1.0f;
+	// Get configuration values
+	airspeed_analog->analog_channel = config->analog_rail;
+	airspeed_analog->conversion_factor = config->conversion_factor;		// Should be around 2/RHO_AIR
+	airspeed_analog->pressure_offset = config->pressure_offset;
+	airspeed_analog->correction_gain = config->correction_gain;
+	airspeed_analog->correction_offset = config->correction_offset;
+	airspeed_analog->alpha = config->filter_gain;
+	airspeed_analog->calibration_gain = config->calibration_gain;
+	
+	// Default values to start the calibration correctly !
+	airspeed_analog->voltage = 0.0f;
 	airspeed_analog->differential_pressure = 0.0f;
+	airspeed_analog->raw_airspeed = 0.0f;
+	airspeed_analog->scaled_airspeed = 0.0f;
 	airspeed_analog->airspeed = 0.0f;
+	airspeed_analog->last_airspeed = 0.0f;
+	airspeed_analog->calibrating = false;
+	
+	// Start calibration
+	airspeed_analog_start_calibration(airspeed_analog);
 
-	airspeed_analog_calibrate(airspeed_analog);
+	return init_success;
+}
+
+void airspeed_analog_start_calibration(airspeed_analog_t* airspeed_analog)
+{
+	// Trigger the calibration
+	airspeed_analog->calibrating = true;
+}
+
+void airspeed_analog_stop_calibration(airspeed_analog_t* airspeed_analog)
+{
+	// Stop calibration process
+	airspeed_analog->calibrating = false;
 }
 
 
-float airspeed_analog_get_pressure(airspeed_analog_t* airspeed_analog)
+task_return_t airspeed_analog_update(airspeed_analog_t* airspeed_analog)
 {
-	return airspeed_analog->analog_monitor->avg[airspeed_analog->analog_channel] * VOLTS_TO_PASCAL;
-}
+	// Get differential pressure
+	float raw_differential_pressure = airspeed_analog_get_raw_differential_pressure(airspeed_analog);
 
-
-void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog)
-{
-	float sum = 10;
-	float pressure = 0;
-	uint8_t count = 100;
-	uint8_t i;
-
-	for(i = 0; i < count; i++)
+	// Wait before ADC reads correct values for pressure offset (compute it directly on value coming out of the sensor)
+	if (airspeed_analog->calibrating && time_keeper_get_millis() >= 3000)
 	{
-		pressure = airspeed_analog_get_pressure(airspeed_analog);
-		sum = sum + pressure;
+		// Mean value of the raw airspeed --> low-pass filter !
+		airspeed_analog->pressure_offset = airspeed_analog->calibration_gain * airspeed_analog->pressure_offset + (1 - airspeed_analog->calibration_gain) * raw_differential_pressure;
 	}
 
-	airspeed_analog->pressure_offset = sum / count;
-}
+	// Correct the raw pressure
+	airspeed_analog->differential_pressure = raw_differential_pressure - airspeed_analog->pressure_offset;
+	
+	// First airspeed estimation, avoiding negative pressure
+	// TODO: Plug the tube in the correct way and use max(pres, 0) instead of abs to have better results !
+	airspeed_analog->raw_airspeed = maths_fast_sqrt( maths_f_abs(airspeed_analog->differential_pressure) * airspeed_analog->conversion_factor );
+	
+	// Correct it using fitted relation: Airspeed_measured = gain * Airspeed_true + offset
+	airspeed_analog->scaled_airspeed = (airspeed_analog->raw_airspeed - airspeed_analog->correction_offset)/airspeed_analog->correction_gain;
+	
+	// Filter the airspeed
+	if (time_keeper_get_millis() >= 3000)
+	{
+		airspeed_analog->last_airspeed = airspeed_analog->airspeed;
+		airspeed_analog->airspeed = airspeed_analog->alpha * airspeed_analog->airspeed + (1 - airspeed_analog->alpha) * airspeed_analog->scaled_airspeed;
+	}
 
-
-void airspeed_analog_update(airspeed_analog_t* airspeed_analog)
-{
-	float raw_airspeed = 0.0f;
-
-	///< measure differential pressure and remove offset
-	airspeed_analog->differential_pressure = airspeed_analog_get_pressure(airspeed_analog) - airspeed_analog->pressure_offset;
-
-	///< Avoid negative pressures
-	airspeed_analog->differential_pressure = maths_f_abs(airspeed_analog->differential_pressure);
-
-	///< compute airspeed from differential pressure using Bernouilli
-	raw_airspeed = maths_fast_sqrt(airspeed_analog->differential_pressure * airspeed_analog->gain);
-
-	///< Filter airspeed estimation
-	airspeed_analog->airspeed = 0.7f * airspeed_analog->airspeed + 0.3f * raw_airspeed; 
+	// TODO: Convert to true airspeed (EAS --> TAS) so that convertion_factor is no more dependent on altitude !
+	
+	return TASK_RUN_SUCCESS;
 }

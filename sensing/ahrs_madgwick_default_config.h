@@ -54,7 +54,9 @@ extern "C" {
 static const ahrs_madgwick_conf_t ahrs_madgwick_default_config =
 {
     .beta = 0.06f,
-    .zeta = 0.01f,
+    .zeta = 0.0f,
+	.acceleration_correction = 0,
+	.correction_speed = 12.0f
 };
 
 

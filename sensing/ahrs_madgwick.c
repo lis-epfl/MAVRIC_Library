@@ -34,17 +34,19 @@
  * 
  * \author MAV'RIC Team
  * \author SOH Madgwick
- * \author Julien Lecoeur
+ * \author Julien Lecoeur, Simon Pyroth
  *   
  * \brief Implementation of Madgwick's AHRS algorithms.
  *
  * See: http://www.x-io.co.uk/node/8#open_source_ahrs_and_imu_algorithms
+ * And: https://github.com/ccny-ros-pkg/imu_tools/blob/indigo/imu_filter_madgwick/src/imu_filter.cpp
  *
  * Date			Author          Notes
  * 29/09/2011	SOH Madgwick    Initial release
  * 02/10/2011	SOH Madgwick	Optimised for reduced CPU load
  * 19/02/2012	SOH Madgwick	Magnetometer measurement is normalised
  * 04/02/2014	Julien Lecoeur	Adapt to MAVRIC
+ * 22/10/2015	Simon Pyroth	Updated version
  *
  ******************************************************************************/
 
@@ -63,16 +65,191 @@
 #include "quaternions.h"
 
 
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs)
+
+//------------------------------------------------------------------------------
+// PRIVATE VARIABLES DECLARATION
+//------------------------------------------------------------------------------
+
+// Global variables used in the Madgwick algorithm.
+// Quaternions used for the Madgwick algorithm. They are in the MADGWICK FRAME, not in the MAVRIC FRAME !
+float q0, q1, q2, q3;
+
+// Estimated gyro biases. Warning: they are also expressed in MADGWICK FRAME ! Transformation has to be made to express them in MAVRIC FRAME !
+float w_bx_, w_by_, w_bz_;
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief  	Perform Madgwick algorithm. All parameters (gyro, accelero, magneto, quaternions, biases are expresses in MADGWICK FRAME).
+ * 
+ * \param 	gx		 	Gyro x
+ * \param 	gx		 	Gyro y
+ * \param 	gx		 	Gyro z
+ * \param 	gx		 	Accelero x
+ * \param 	gx		 	Accelero y
+ * \param 	gx		 	Accelero z
+ * \param 	gx		 	Magneto x
+ * \param 	gx		 	Magneto y
+ * \param 	gx		 	Magneto z
+ * \param 	beta		Beta gain
+ * \param 	zeta		Zeta gain
+ * \param 	dt		 	Time increment for integration
+ */
+void ahrs_madgwick_algo(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz, float beta, float zeta, float dt);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void ahrs_madgwick_algo(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz, float beta, float zeta, float dt)
+{
+	float recipNorm;
+	float s0, s1, s2, s3;
+	float qDot1, qDot2, qDot3, qDot4;
+	float hx, hy;
+	float _2q0mx, _2q0my, _2q0mz, _2q1mx, _2bx, _2bz, _4bx, _4bz, _2q0, _2q1, _2q2, _2q3, _2q0q2, _2q2q3, q0q0, q0q1, q0q2, q0q3, q1q1, q1q2, q1q3, q2q2, q2q3, q3q3;
+	float _w_err_x, _w_err_y, _w_err_z;
+
+	// Use IMU algorithm if magnetometer measurement invalid (avoids NaN in magnetometer normalisation)
+	if((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f))
+	{
+		//madgwickAHRSupdateIMU(gx, gy, gz, ax, ay, az, dt);		// TODO: Implement this function using link in brief to run algo even without magnetometer
+		return;
+	}
+
+	// Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
+	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f)))
+	{
+		// Normalise accelerometer measurement
+		recipNorm = maths_fast_inv_sqrt(ax * ax + ay * ay + az * az);
+		ax *= recipNorm;
+		ay *= recipNorm;
+		az *= recipNorm;
+
+		// Normalise magnetometer measurement
+		recipNorm = maths_fast_inv_sqrt(mx * mx + my * my + mz * mz);
+		mx *= recipNorm;
+		my *= recipNorm;
+		mz *= recipNorm;
+
+		// Auxiliary variables to avoid repeated arithmetic
+		_2q0mx = 2.0f * q0 * mx;
+		_2q0my = 2.0f * q0 * my;
+		_2q0mz = 2.0f * q0 * mz;
+		_2q1mx = 2.0f * q1 * mx;
+		_2q0 = 2.0f * q0;
+		_2q1 = 2.0f * q1;
+		_2q2 = 2.0f * q2;
+		_2q3 = 2.0f * q3;
+		_2q0q2 = 2.0f * q0 * q2;
+		_2q2q3 = 2.0f * q2 * q3;
+		q0q0 = q0 * q0;
+		q0q1 = q0 * q1;
+		q0q2 = q0 * q2;
+		q0q3 = q0 * q3;
+		q1q1 = q1 * q1;
+		q1q2 = q1 * q2;
+		q1q3 = q1 * q3;
+		q2q2 = q2 * q2;
+		q2q3 = q2 * q3;
+		q3q3 = q3 * q3;
+
+		// Reference direction of Earth's magnetic field
+		hx = mx * q0q0 - _2q0my * q3 + _2q0mz * q2 + mx * q1q1 + _2q1 * my * q2 + _2q1 * mz * q3 - mx * q2q2 - mx * q3q3;
+		hy = _2q0mx * q3 + my * q0q0 - _2q0mz * q1 + _2q1mx * q2 - my * q1q1 + my * q2q2 + _2q2 * mz * q3 - my * q3q3;
+		_2bx = maths_fast_sqrt(hx * hx + hy * hy);
+		_2bz = -_2q0mx * q2 + _2q0my * q1 + mz * q0q0 + _2q1mx * q3 - mz * q1q1 + _2q2 * my * q3 - mz * q2q2 + mz * q3q3;
+		_4bx = 2.0f * _2bx;
+		_4bz = 2.0f * _2bz;
+
+		// Gradient decent algorithm corrective step
+		s0 = -_2q2 * (2.0f * q1q3 - _2q0q2 - ax) + _2q1 * (2.0f * q0q1 + _2q2q3 - ay) - _2bz * q2 * (_2bx * (0.5f - q2q2 - q3q3) + _2bz * (q1q3 - q0q2) - mx) + (-_2bx * q3 + _2bz * q1) * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - my) + _2bx * q2 * (_2bx * (q0q2 + q1q3) + _2bz * (0.5f - q1q1 - q2q2) - mz);
+		s1 = _2q3 * (2.0f * q1q3 - _2q0q2 - ax) + _2q0 * (2.0f * q0q1 + _2q2q3 - ay) - 4.0f * q1 * (1 - 2.0f * q1q1 - 2.0f * q2q2 - az) + _2bz * q3 * (_2bx * (0.5f - q2q2 - q3q3) + _2bz * (q1q3 - q0q2) - mx) + (_2bx * q2 + _2bz * q0) * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - my) + (_2bx * q3 - _4bz * q1) * (_2bx * (q0q2 + q1q3) + _2bz * (0.5f - q1q1 - q2q2) - mz);
+		s2 = -_2q0 * (2.0f * q1q3 - _2q0q2 - ax) + _2q3 * (2.0f * q0q1 + _2q2q3 - ay) - 4.0f * q2 * (1 - 2.0f * q1q1 - 2.0f * q2q2 - az) + (-_4bx * q2 - _2bz * q0) * (_2bx * (0.5f - q2q2 - q3q3) + _2bz * (q1q3 - q0q2) - mx) + (_2bx * q1 + _2bz * q3) * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - my) + (_2bx * q0 - _4bz * q2) * (_2bx * (q0q2 + q1q3) + _2bz * (0.5f - q1q1 - q2q2) - mz);
+		s3 = _2q1 * (2.0f * q1q3 - _2q0q2 - ax) + _2q2 * (2.0f * q0q1 + _2q2q3 - ay) + (-_4bx * q3 + _2bz * q1) * (_2bx * (0.5f - q2q2 - q3q3) + _2bz * (q1q3 - q0q2) - mx) + (-_2bx * q0 + _2bz * q2) * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - my) + _2bx * q1 * (_2bx * (q0q2 + q1q3) + _2bz * (0.5f - q1q1 - q2q2) - mz);
+		recipNorm = maths_fast_inv_sqrt(s0 * s0 + s1 * s1 + s2 * s2 + s3 * s3); // normalise step magnitude
+		s0 *= recipNorm;
+		s1 *= recipNorm;
+		s2 *= recipNorm;
+		s3 *= recipNorm;
+
+		// compute gyro drift bias
+		_w_err_x = _2q0 * s1 - _2q1 * s0 - _2q2 * s3 + _2q3 * s2;
+		_w_err_y = _2q0 * s2 + _2q1 * s3 - _2q2 * s0 - _2q3 * s1;
+		_w_err_z = _2q0 * s3 - _2q1 * s2 + _2q2 * s1 - _2q3 * s0;
+		
+		w_bx_ += _w_err_x * dt * zeta;
+		w_by_ += _w_err_y * dt * zeta;
+		w_bz_ += _w_err_z * dt * zeta;
+		
+		gx -= w_bx_;
+		gy -= w_by_;
+		gz -= w_bz_;
+		
+		// Rate of change of quaternion from gyroscope
+		qDot1 = 0.5f * (-q1 * gx - q2 * gy - q3 * gz);
+		qDot2 = 0.5f * ( q0 * gx + q2 * gz - q3 * gy);
+		qDot3 = 0.5f * ( q0 * gy - q1 * gz + q3 * gx);
+		qDot4 = 0.5f * ( q0 * gz + q1 * gy - q2 * gx);
+
+		// Apply feedback step
+		qDot1 -= beta * s0;
+		qDot2 -= beta * s1;
+		qDot3 -= beta * s2;
+		qDot4 -= beta * s3;
+	}
+	else
+	{
+		// Rate of change of quaternion from gyroscope
+		qDot1 = 0.5f * (-q1 * gx - q2 * gy - q3 * gz);
+		qDot2 = 0.5f * ( q0 * gx + q2 * gz - q3 * gy);
+		qDot3 = 0.5f * ( q0 * gy - q1 * gz + q3 * gx);
+		qDot4 = 0.5f * ( q0 * gz + q1 * gy - q2 * gx);
+	}
+
+	// Integrate rate of change of quaternion to yield quaternion
+	q0 += qDot1 * dt;
+	q1 += qDot2 * dt;
+	q2 += qDot3 * dt;
+	q3 += qDot4 * dt;
+
+	// Normalise quaternion
+	recipNorm = maths_fast_inv_sqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
+	q0 *= recipNorm;
+	q1 *= recipNorm;
+	q2 *= recipNorm;
+	q3 *= recipNorm;
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs, airspeed_analog_t* airspeed_analog)
 {
 	// Init dependencies
 	ahrs_madgwick->imu 	= imu;
 	ahrs_madgwick->ahrs = ahrs;
-
-	// Init variables
-	ahrs_madgwick->ref_b[X] 	= 1.0f;
-	ahrs_madgwick->ref_b[Y] 	= 0.0f;
-	ahrs_madgwick->ref_b[Z] 	= 0.0f;
+	ahrs_madgwick->airspeed_analog = airspeed_analog;
+	
+	// Init config
+	ahrs_madgwick->beta = config->beta;
+	ahrs_madgwick->zeta = config->zeta;
+	ahrs_madgwick->acceleration_correction = config->acceleration_correction;
+	ahrs_madgwick->correction_speed = config->correction_speed;
+	
+	// Init global variables
+	q0 = 1.0f;
+	q1 = 0.0f;
+	q2 = 0.0f;
+	q3 = 0.0f;
+	w_bx_ = 0.0f;
+	w_by_ = 0.0f;
+	w_bz_ = 0.0f;
 
 	// Init ahrs structure
 	ahrs_madgwick->ahrs->qe.s = 1.0f;
@@ -97,10 +274,9 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
 	ahrs_madgwick->ahrs->up_vec.v[X] = 0.0f;
 	ahrs_madgwick->ahrs->up_vec.v[Y] = 0.0f;
 	ahrs_madgwick->ahrs->up_vec.v[Z] = -1.0f;
-
-	// Init config
-	ahrs_madgwick->beta = config->beta;
-	ahrs_madgwick->zeta = config->zeta;
+	
+	// Set flag
+	ahrs_madgwick->ahrs->internal_state = AHRS_READY;
 
 	// Notify success
 	print_util_dbg_print("[AHRS MADGWICK] Initialised.\r\n");
@@ -111,220 +287,88 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
 
 void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 {
-	// ----
-	// Variables required for computation
-	// ----
-	float recip_norm, norm; 													// vector norm
-	float q_dot_omega_1, q_dot_omega_2, q_dot_omega_3, q_dot_omega_4; 		// quaternion rate from gyroscopes elements
-	float f1, f2, f3, f4, f5, f6; 										// objective function elements
-	float J_11or24, J_12or23, J_13or22, J_14or21, J_32, J_33; 					// objective function Jacobian elements
-	float J_41, J_42, J_43, J_44, J_51, J_52, J_53, J_54, J_61, J_62, J_63, J_64; 
-	float qhat_dot_1, qhat_dot_2, qhat_dot_3, qhat_dot_4; 					// estimated direction of the gyroscope error
-	float w_err_x, w_err_y, w_err_z; 											// estimated direction of the gyroscope error (angular)
-	float h_x, h_y, h_z;														// computed flux in the earth frame
-
-	// Compute time since last update
-	float now = time_keeper_get_time(); 
-	float dt  = now - ahrs_madgwick->ahrs->last_update;
-
-	// Get current attitude in NED
-	float q1 = ahrs_madgwick->ahrs->qe.s;
-	float q2 = ahrs_madgwick->ahrs->qe.v[X];
-	float q3 = ahrs_madgwick->ahrs->qe.v[Y];
-	float q4 = ahrs_madgwick->ahrs->qe.v[Z];
-
-	// Get values from sensors in NED
-	float wx = ahrs_madgwick->imu->scaled_gyro.data[X];  
-	float wy = ahrs_madgwick->imu->scaled_gyro.data[Y];
-	float wz = ahrs_madgwick->imu->scaled_gyro.data[Z];
-	float ax = ahrs_madgwick->imu->scaled_accelero.data[X];
-	float ay = ahrs_madgwick->imu->scaled_accelero.data[Y];
-	float az = ahrs_madgwick->imu->scaled_accelero.data[Z];
-	float mx = ahrs_madgwick->imu->scaled_compass.data[X];
-	float my = ahrs_madgwick->imu->scaled_compass.data[Y];
-	float mz = ahrs_madgwick->imu->scaled_compass.data[Z];
-
-	// Get current estimate of earth magnetic field orientation
-	float bx = ahrs_madgwick->ref_b[X];
-	float bz = ahrs_madgwick->ref_b[Z];
-
-	// Get current gyro bias estimate
-	float w_bx = ahrs_madgwick->imu->calib_gyro.bias[X] * ahrs_madgwick->imu->calib_gyro.scale_factor[X];
-	float w_by = ahrs_madgwick->imu->calib_gyro.bias[Y] * ahrs_madgwick->imu->calib_gyro.scale_factor[Y];
-	float w_bz = ahrs_madgwick->imu->calib_gyro.bias[Z] * ahrs_madgwick->imu->calib_gyro.scale_factor[Z];
-
-	// Compute feedback only if magnetometer measurement valid (avoids NaN in magnetometer normalisation)
-	if( (mx == 0.0f) && (my == 0.0f) && (mz == 0.0f) ) 
-	{
-		return;
-	}
-
-	// Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
-	if( (ax == 0.0f) && (ay == 0.0f) && (az == 0.0f) ) 
-	{
-		return;
-	}
+	// Compute time
+	uint32_t t = time_keeper_get_time_ticks();			// Warning: time is given in uint32_t here !
+	float dt = time_keeper_ticks_to_seconds(t - ahrs_madgwick->ahrs->last_update);
 	
-	// ----
-	// Main computation
-	// ----		
-	// Auxilirary variables to avoid repeated calculations
-	float half_q1 	= 0.5f * q1;
-	float half_q2 	= 0.5f * q2;
-	float half_q3 	= 0.5f * q3;
-	float half_q4 	= 0.5f * q4;
-	float two_q1 		= 2.0f * q1;
-	float two_q2 		= 2.0f * q2;
-	float two_q3 		= 2.0f * q3;
-	float two_q4 		= 2.0f * q4;
-	float two_bx 		= 2.0f * bx;
-	float two_bz 		= 2.0f * bz;
-	float two_bx_q1 	= 2.0f * bx * q1;
-	float two_bx_q2 	= 2.0f * bx * q2;
-	float two_bx_q3 	= 2.0f * bx * q3;
-	float two_bx_q4 	= 2.0f * bx * q4;
-	float two_bz_q1 	= 2.0f * bz * q1;
-	float two_bz_q2 	= 2.0f * bz * q2;
-	float two_bz_q3 	= 2.0f * bz * q3;
-	float two_bz_q4 	= 2.0f * bz * q4;
-	float q1_q2;
-	float q1_q3 	= q1 * q3;
-	float q1_q4;
-	float q2_q3;
-	float q2_q4 	= q2 * q4;
-	float q3_q4;
-	float two_mx 		= 2.0f * mx;
-	float two_my 		= 2.0f * my;
-	float two_mz 		= 2.0f * mz;
+	
+	////////////////////////////////////////////////////
+	// Compute correction for parasitic accelerations //
+	////////////////////////////////////////////////////
+	// Based on Adrien Briod report about EKF for Quaternion-based orientation estimation, using speed and inertial sensors
+	// Centrifugal force
+	float hc_y =  - (ahrs_madgwick->airspeed_analog->airspeed * ahrs_madgwick->imu->scaled_gyro.data[Z]);
+	float hc_z = ahrs_madgwick->airspeed_analog->airspeed * ahrs_madgwick->imu->scaled_gyro.data[Y];
+	
+	// Longitudinal accelerations
+	float hdv_x = - (ahrs_madgwick->airspeed_analog->airspeed - ahrs_madgwick->airspeed_analog->last_airspeed)/dt;
+	
+	
+	/////////////////////////////////////////////////////////////
+	// Get measurements with correction, in the MADGWICK FRAME //
+	/////////////////////////////////////////////////////////////
+	// Transform sensor measurements
+	float gx =   ahrs_madgwick->imu->scaled_gyro.data[X];
+	float gy = - ahrs_madgwick->imu->scaled_gyro.data[Y];
+	float gz = - ahrs_madgwick->imu->scaled_gyro.data[Z];
+	float ax =   ahrs_madgwick->imu->scaled_accelero.data[X];
+	float ay = - ahrs_madgwick->imu->scaled_accelero.data[Y];
+	float az = - ahrs_madgwick->imu->scaled_accelero.data[Z];
+	if(ahrs_madgwick->acceleration_correction == 1 && ahrs_madgwick->airspeed_analog->airspeed >= ahrs_madgwick->correction_speed)
+	{
+		ax =   (ahrs_madgwick->imu->scaled_accelero.data[X] + hdv_x);
+		ay = - (ahrs_madgwick->imu->scaled_accelero.data[Y] + hc_y);
+		az = - (ahrs_madgwick->imu->scaled_accelero.data[Z] + hc_z);
+	}
+	float mx =   ahrs_madgwick->imu->scaled_compass.data[X];
+	float my = - ahrs_madgwick->imu->scaled_compass.data[Y];
+	float mz = - ahrs_madgwick->imu->scaled_compass.data[Z];
 
-	// Normalise accelerometer measurement
-	recip_norm = maths_fast_inv_sqrt(ax * ax + ay * ay + az * az);
-	ax *= recip_norm;
-	ay *= recip_norm;
-	az *= recip_norm;   
-
-	// Normalise magnetometer measurement
-	recip_norm = maths_fast_inv_sqrt(mx * mx + my * my + mz * mz);
-	mx *= recip_norm;
-	my *= recip_norm;
-	mz *= recip_norm;
-
-	// compute the objective function and Jacobian
-	f1 = -two_q2 * q4 + two_q1 * q3 - ax;
-	f2 = -two_q1 * q2 - two_q3 * q4 - ay;
-	f3 = -1.0f + two_q2 * q2 + two_q3 * q3 - az;
-	f4 = two_bx * (0.5f - q3 * q3 - q4 * q4) + two_bz * (q2_q4 - q1_q3) - mx;
-	f5 = two_bx * (q2 * q3 - q1 * q4) + two_bz * (q1 * q2 + q3 * q4) - my;
-	f6 = two_bx * (q1_q3 + q2_q4) + two_bz * (0.5f - q2 * q2 - q3 * q3) - mz;
-	J_11or24 = -two_q3;					// J_11 negated in matrix multiplication
-	J_12or23 = -2.0f * q4;
-	J_13or22 = -two_q1; 					// J_22 negated in matrix multiplication
-	J_14or21 = -two_q2;
-	J_32 = -2.0f * J_14or21; 				// negated in matrix multiplication
-	J_33 = -2.0f * J_11or24; 				// negated in matrix multiplication
-	J_41 = two_bz_q3; 					// negated in matrix multiplication
-	J_42 = two_bz_q4;
-	J_43 = 2.0f * two_bx_q3 + two_bz_q1; 	// negated in matrix multiplication
-	J_44 = 2.0f * two_bx_q4 - two_bz_q2; 	// negated in matrix multiplication
-	J_51 = two_bx_q4 - two_bz_q2; 			// negated in matrix multiplication
-	J_52 = two_bx_q3 + two_bz_q1;
-	J_53 = two_bx_q2 + two_bz_q4;
-	J_54 = two_bx_q1 - two_bz_q3; 			// negated in matrix multiplication
-	J_61 = two_bx_q3;
-	J_62 = two_bx_q4 - 2.0f * two_bz_q2;
-	J_63 = two_bx_q1 - 2.0f * two_bz_q3;
-	J_64 = two_bx_q2;
-
-	// compute the gradient (matrix multiplication)
-	qhat_dot_1 = J_14or21 * f2 - J_11or24 * f1 - J_41 * f4 - J_51 * f5 + J_61 * f6;
-	qhat_dot_2 = J_12or23 * f1 + J_13or22 * f2 - J_32 * f3 + J_42 * f4 + J_52 * f5 + J_62 * f6;
-	qhat_dot_3 = J_12or23 * f2 - J_33 * f3 - J_13or22 * f1 - J_43 * f4 + J_53 * f5 + J_63 * f6;
-	qhat_dot_4 = J_14or21 * f1 + J_11or24 * f2 - J_44 * f4 - J_54 * f5 + J_64 * f6;
-
-	// normalise the gradient to estimate direction of the gyroscope error
-	norm = maths_fast_sqrt(qhat_dot_1 * qhat_dot_1 + qhat_dot_2 * qhat_dot_2 + qhat_dot_3 * qhat_dot_3 + qhat_dot_4 * qhat_dot_4);
-	qhat_dot_1 = qhat_dot_1 / norm;
-	qhat_dot_2 = qhat_dot_2 / norm;
-	qhat_dot_3 = qhat_dot_3 / norm;
-	qhat_dot_4 = qhat_dot_4 / norm;
-
-	// compute angular estimated direction of the gyroscope error
-	w_err_x = two_q1 * qhat_dot_2 - two_q2 * qhat_dot_1 - two_q3 * qhat_dot_4 + two_q4 * qhat_dot_3;
-	w_err_y = two_q1 * qhat_dot_3 + two_q2 * qhat_dot_4 - two_q3 * qhat_dot_1 - two_q4 * qhat_dot_2;
-	w_err_z = two_q1 * qhat_dot_4 - two_q2 * qhat_dot_3 + two_q3 * qhat_dot_2 - two_q4 * qhat_dot_1;
-
-	// compute and remove the gyroscope baises
-	w_bx += w_err_x * dt * ahrs_madgwick->zeta;
-	w_by += w_err_y * dt * ahrs_madgwick->zeta;
-	w_bz += w_err_z * dt * ahrs_madgwick->zeta;
-	wx -= w_bx;
-	wy -= w_by;
-	wz -= w_bz;
-
-	// compute the quaternion rate measured by gyroscopes
-	q_dot_omega_1 = -half_q2 * wx - half_q3 * wy - half_q4 * wz;
-	q_dot_omega_2 = half_q1 * wx + half_q3 * wz - half_q4 * wy;
-	q_dot_omega_3 = half_q1 * wy - half_q2 * wz + half_q4 * wx;
-	q_dot_omega_4 = half_q1 * wz + half_q2 * wy - half_q3 * wx;
-
-	// compute then integrate the estimated quaternion rate
-	q1 += (q_dot_omega_1 - (ahrs_madgwick->beta * qhat_dot_1)) * dt;
-	q2 += (q_dot_omega_2 - (ahrs_madgwick->beta * qhat_dot_2)) * dt;
-	q3 += (q_dot_omega_3 - (ahrs_madgwick->beta * qhat_dot_3)) * dt;
-	q4 += (q_dot_omega_4 - (ahrs_madgwick->beta * qhat_dot_4)) * dt;
-
-	// Normalise quaternion
-	recip_norm = maths_fast_inv_sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);
-	q1 *= recip_norm;
-	q2 *= recip_norm;
-	q3 *= recip_norm;
-	q4 *= recip_norm;
-
-	// compute flux in the earth frame
-	q1_q2 = q1 * q2; 			// recompute auxilirary variables
-	q1_q3 = q1 * q3; 
-	q1_q4 = q1 * q4; 
-	q3_q4 = q3 * q4; 
-	q2_q3 = q2 * q3; 
-	q2_q4 = q2 * q4; 
-	h_x = two_mx * (0.5f - q3 * q3 - q4 * q4) + two_my * (q2_q3 - q1_q4) + two_mz * (q2_q4 + q1_q3);
-	h_y = two_mx * (q2_q3 + q1_q4) + two_my * (0.5f - q2 * q2 - q4 * q4) + two_mz * (q3_q4 - q1_q2);
-	h_z = two_mx * (q2_q4 - q1_q3) + two_my * (q3_q4 + q1_q2) + two_mz * (0.5f - q2 * q2 - q3 * q3);
-
-	// normalise the flux vector to have only components in the x and z
-	bx = sqrt((h_x * h_x) + (h_y * h_y));
-	bz = h_z;
-
-	// ----
-	// Store result in ahrs and imu structures
-	// ----
+	
+	//////////////////////////////////////////////
+	// Run the algorithm, in the MADGWICK FRAME //
+	//////////////////////////////////////////////
+	ahrs_madgwick_algo( gx, gy, gz,
+						ax, ay, az,
+						mx, my, mz,
+						ahrs_madgwick->beta, ahrs_madgwick->zeta, dt);
+	
+	
+	/////////////////////////////////////////////////////////////////
+	// Compute values in MAVRIC FRAME and write back into IMU/AHRS //
+	/////////////////////////////////////////////////////////////////
+	// Quaternion rotation to express the result in the MAVRIC FRAME
+	quat_t q_nwu = {.s=q0, .v={q1, q2, q3}};				// Current quaternion in madgwick frame
+	quat_t q_nwu2ned = {.s=0, .v={1.0f, 0.0f, 0.0f}};		// Quaternion used for transformation
+	quat_t q_ned = {.s=q0, .v={0.0f, 0.0f, 0.0f}};			// Current quaternion in mavric frame
+	
+	quat_t qinv, qtmp;										// Transformation q_rot^(-1) * q * q_rot
+	qinv = quaternions_inverse(q_nwu2ned);
+	qtmp = quaternions_multiply(qinv,q_nwu);
+	q_ned = quaternions_multiply(qtmp,q_nwu2ned);
+	
 	// Time
-	ahrs_madgwick->ahrs->last_update 	= now;
+	ahrs_madgwick->ahrs->last_update 	= t;
 	ahrs_madgwick->ahrs->dt 			= dt;
 
 	// Quaternion in NED
-	ahrs_madgwick->ahrs->qe.s 		= q1;
-	ahrs_madgwick->ahrs->qe.v[X] 	= q2;
-	ahrs_madgwick->ahrs->qe.v[Y] 	= q3;
-	ahrs_madgwick->ahrs->qe.v[Z] 	= q4;
-
-	// Estimate of earth magnetic field orientation
-	ahrs_madgwick->ref_b[X] = bx;
-	ahrs_madgwick->ref_b[Z] = bz;
+	ahrs_madgwick->ahrs->qe = q_ned;
 	
-	// Angular_speed.
-	ahrs_madgwick->ahrs->angular_speed[X] = ahrs_madgwick->imu->scaled_gyro.data[X];
-	ahrs_madgwick->ahrs->angular_speed[Y] = ahrs_madgwick->imu->scaled_gyro.data[Y];
-	ahrs_madgwick->ahrs->angular_speed[Z] = ahrs_madgwick->imu->scaled_gyro.data[Z];
-
-	// Gyro bias
-	ahrs_madgwick->imu->calib_gyro.bias[X] = w_bx / ahrs_madgwick->imu->calib_gyro.scale_factor[X];
-	ahrs_madgwick->imu->calib_gyro.bias[Y] = w_by / ahrs_madgwick->imu->calib_gyro.scale_factor[Y];
-	ahrs_madgwick->imu->calib_gyro.bias[Z] = w_bz / ahrs_madgwick->imu->calib_gyro.scale_factor[Z];
+	// Angular_speed, subtract estimated biases, making the correspondance between frames !
+	ahrs_madgwick->ahrs->angular_speed[X] = ahrs_madgwick->imu->scaled_gyro.data[X] - (w_bx_);
+	ahrs_madgwick->ahrs->angular_speed[Y] = ahrs_madgwick->imu->scaled_gyro.data[Y] - (-w_by_);
+	ahrs_madgwick->ahrs->angular_speed[Z] = ahrs_madgwick->imu->scaled_gyro.data[Z] - (-w_bz_);
+	// Update angular speeds and update IMU biases !
+	//ahrs_madgwick->ahrs->angular_speed[X] = ahrs_madgwick->imu->scaled_gyro.data[X];
+	//ahrs_madgwick->ahrs->angular_speed[Y] = ahrs_madgwick->imu->scaled_gyro.data[Y];
+	//ahrs_madgwick->ahrs->angular_speed[Z] = ahrs_madgwick->imu->scaled_gyro.data[Z];
+	//ahrs_madgwick->imu->calib_gyro.bias[X] = w_bx_/ahrs_madgwick->imu->calib_gyro.scale_factor[X];
+	//ahrs_madgwick->imu->calib_gyro.bias[Y] = -w_by_/ahrs_madgwick->imu->calib_gyro.scale_factor[Y];
+	//ahrs_madgwick->imu->calib_gyro.bias[Z] = -w_bz_/ahrs_madgwick->imu->calib_gyro.scale_factor[Z];
 
 	// Up vector
-	float up_glob[3] = {0.0f, 0.0f, -1.0f}; 
-	quaternions_rotate_vector(ahrs_madgwick->ahrs->qe, up_glob, ahrs_madgwick->ahrs->up_vec.v);
+	float up_loc[3] = {0.0f, 0.0f, -1.0f}; 
+	quaternions_rotate_vector(quaternions_inverse(ahrs_madgwick->ahrs->qe), up_loc, ahrs_madgwick->ahrs->up_vec.v);
 
 	// Update linear acceleration
 	ahrs_madgwick->ahrs->linear_acc[X] = 9.81f * (ahrs_madgwick->imu->scaled_accelero.data[X] - ahrs_madgwick->ahrs->up_vec.v[X]) ;							// TODO: review this line!
@@ -333,6 +377,7 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 
 	// North vector 
 	// TODO: Remove as never used
-	float north_glob[3] = {1.0f, 0.0f, 0.0f}; 
-	quaternions_rotate_vector(ahrs_madgwick->ahrs->qe, north_glob, ahrs_madgwick->ahrs->north_vec.v);
+	float north_loc[3] = {1.0f, 0.0f, 0.0f}; 
+	quaternions_rotate_vector(quaternions_inverse(ahrs_madgwick->ahrs->qe), north_loc, ahrs_madgwick->ahrs->north_vec.v);
 }
+

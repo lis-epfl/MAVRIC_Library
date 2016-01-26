@@ -34,17 +34,19 @@
  * 
  * \author MAV'RIC Team
  * \author SOH Madgwick
- * \author Julien Lecoeur
+ * \author Julien Lecoeur, SImon Pyroth
  *   
  * \brief Implementation of Madgwick's AHRS algorithms.
  *
  * See: http://www.x-io.co.uk/node/8#open_source_ahrs_and_imu_algorithms
+ * And: https://github.com/ccny-ros-pkg/imu_tools/blob/indigo/imu_filter_madgwick/src/imu_filter.cpp
  *
  * Date			Author          Notes
  * 29/09/2011	SOH Madgwick    Initial release
  * 02/10/2011	SOH Madgwick	Optimised for reduced CPU load
  * 19/02/2012	SOH Madgwick	Magnetometer measurement is normalised
  * 04/02/2014	Julien Lecoeur	Adapt to MAVRIC
+ * 22/10/2015	Simon Pyroth	Updated version
  *
  ******************************************************************************/
 
@@ -64,6 +66,7 @@ extern "C" {
 
 #include "ahrs.h"
 #include "imu.h"
+#include "airspeed_analog.h"
 
 
 /**
@@ -71,8 +74,10 @@ extern "C" {
  */
 typedef struct
 {
-	float 	beta;		// 2 * proportional gain (Kp)	
-	float 	zeta;			// Gain for gyro drift compensation
+	float 	beta;						// 2 * proportional gain (Kp)
+	float	zeta;						// Gyro drift bias gain
+	bool acceleration_correction;		// Enable the correction of the parasitic accelerations ?
+	float correction_speed;				// Airspeed from which the correction should start
 } ahrs_madgwick_conf_t;
 
 
@@ -81,16 +86,18 @@ typedef struct
  */
 typedef struct
 {
-	imu_t* 	imu;			// Pointer to IMU sensors
-	ahrs_t* ahrs;			// Estimated attitude
-	float 	ref_b[3]; 		// Reference direction of magnetic flux in earth frame (x component)
-	float 	beta;			// 2 * proportional gain (Kp)
-	float 	zeta;			// Gain for gyro drift compensation
+	imu_t* 	imu;							// Pointer to IMU sensors
+	ahrs_t* ahrs;							// Estimated attitude
+	airspeed_analog_t* airspeed_analog;		// Pointer to the airspeed sensor
+	float 	beta;							// 2 * proportional gain (Kp)
+	float	zeta;							// Gyro drift bias gain
+	uint32_t acceleration_correction;		// Enable the correction of the parasitic accelerations ?
+	float correction_speed;					// Airspeed from which the correction should start
 } ahrs_madgwick_t;
 
 
 /**
- * \brief  	Init function
+ * \brief  	Init function. This function has to be called after ahrs init to overwrite flags
  * 
  * \param 	ahrs_madgwick 	Pointer to data structure
  * \param 	config 			Pointer to config structure
@@ -99,11 +106,11 @@ typedef struct
  * 
  * \return 	True if success, false if not
  */
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs, airspeed_analog_t* airspeed_analog);
 
 
 /**
- * \brief 	Main update function
+ * \brief 	Main update function. Run Madgwick algorithm in its own frame and convert the result in MAVRIC frame to write the in the IMU.
  * 
  * \param 	ahrs_madgwick 	Pointer to data structure
  */

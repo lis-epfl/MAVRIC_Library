@@ -59,7 +59,8 @@ extern "C" {
 #include "joystick_parsing.h"
 #include "pid_controller.h"
 #include <stdbool.h>
-
+#include "vector_field_waypoint.h"
+#include "dubin.h"
 
 /**
  * \brief The navigation structure
@@ -72,9 +73,12 @@ typedef struct
 	float cruise_speed;									///< The cruise speed in m/s
 	float max_climb_rate;								///< Max climb rate in m/s
 	float soft_zone_size;								///< Soft zone of the velocity controller
+	float attractiveness;								///< Attractiveness of a waypoint
+	float attractiveness2;								///< Attractiveness of a waypoint
+	float one_over_scaling;								///< Line vector field parameter
 
-	local_coordinates_t goal;							///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
-	
+	waypoint_local_struct_t goal;						///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
+
 	float dt;											///< The time interval between two navigation updates
 	uint32_t last_update;								///< The time of the last navigation update in ms
 	
@@ -86,6 +90,7 @@ typedef struct
 	mav_mode_t mode;									///< The mode of the MAV to have a memory of its evolution
 	
 	bool auto_takeoff;									///< The flag to start and end the auto takeoff procedure
+	float takeoff_altitude;								///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
 	bool auto_landing;									///< The flag to start and end the auto landing procedure
 	
 	critical_behavior_enum critical_behavior;			///< The critical behavior enum
@@ -98,6 +103,10 @@ typedef struct
 	bool stop_nav;										///< Flag to start/stop the navigation from a button in case of problems
 	bool stop_nav_there;								///< Flag to stop the navigation and fly to the stopping waypoint
 	
+	float safe_altitude;								///< The altitude at which the robot will fly in critical mode
+	float minimal_radius;								///< The minimal circle radius
+	float heading_acceptance;							///< The heading acceptance to switch to next waypoint
+
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
@@ -106,6 +115,7 @@ typedef struct
 	const mavlink_stream_t* mavlink_stream;				///< The pointer to the MAVLink stream structure
 	remote_t* remote;									///< The pointer to the remote structure
 	const joystick_parsing_t* joystick;					///< Pointer to joystick 
+	float vertical_vel_gain;							///< Gain for the vertical velocity calculation
 }navigation_t;
 
 
@@ -117,12 +127,22 @@ typedef struct
 	float dist2vel_gain;								///< The gain linking the distance to the goal to the actual speed
 	float cruise_speed;									///< The cruise speed in m/s
 	float max_climb_rate;								///< Max climb rate in m/s
+	float attractiveness;								///< Attractiveness of a waypoint
+	float attractiveness2;								///< Attractiveness of a waypoint
+	float one_over_scaling;								///< Line vector field parameter
 	
 	float soft_zone_size;								///< Soft zone of the velocity controller
 	
 	float alt_lpf;										///< The low-pass filtered altitude for auto-landing
 	float LPF_gain;										///< The value of the low-pass filter gain
 	
+	float safe_altitude;								///< The altitude at which the robot will fly in critical mode
+	float minimal_radius;								///< The minimal circle radius
+	float vertical_vel_gain;							///< Gain for the vertical velocity calculation
+	float heading_acceptance;							///< The heading acceptance to switch to next waypoint
+	
+	float takeoff_altitude;								///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
+
 	pid_controller_t hovering_controller;				///< hovering controller
 	pid_controller_t wpt_nav_controller;				///< waypoint navigation controller
 }navigation_config_t;

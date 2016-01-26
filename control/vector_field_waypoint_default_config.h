@@ -30,47 +30,37 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file analog_monitor_telemetry.h
+ * \file vector_field_waypoint_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Simon Pyroth
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the analog monitor module
+ * \brief Default configuration for the vector field waypoints.
  *
  ******************************************************************************/
 
-#ifndef ANALOG_MONITOR_TELEMETRY_H_
-#define ANALOG_MONITOR_TELEMETRY_H_
 
-#include "mavlink_stream.h"
-#include "analog_monitor.h"
+#ifndef VECTOR_FIELD_WAYPOINT_DEFAULT_CONFIG_H_
+#define VECTOR_FIELD_WAYPOINT_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * \brief	Sends the analog sonar value
- * 
- * \param	analog_monitor			The pointer to the analog monitor structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
-/**
- * \brief	Sends the voltage read from the differential pressure sensor
- * 
- * \param	analog_monitor			The pointer to the analog monitor structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void  analog_monitor_telemetry_send_differential_pressure(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+#include "vector_field_waypoint.h"
+
+
+vector_field_waypoint_conf_t vector_field_waypoint_config =
+{
+	.command_mode = VELOCITY_COMMAND_MODE_GLOBAL,
+	.floor_altitude = 20.0f,
+	.velocity_max = 16.0f,
+};
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ANALOG_MONITOR_TELEMETRY_H_ */
+#endif // VECTOR_FIELD_WAYPOINT_DEFAULT_CONFIG_H_

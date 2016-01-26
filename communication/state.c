@@ -58,12 +58,13 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor)
+bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, airspeed_analog_t* airspeed_analog)
 {
 	bool init_success = true;
 	
 	// Init dependencies
 	state->analog_monitor = analog_monitor;
+	state->airspeed_analog = airspeed_analog;
 	
 	// Init parameters
 	state->autopilot_type = state_config->autopilot_type;
@@ -125,6 +126,12 @@ void state_switch_to_active_mode(state_t* state, mav_state_t* mav_state)
 	// Tell other modules to reset position and re-compute waypoints
 	state->reset_position = true;
 	state->nav_plan_active = false;
+	
+	// Stop calibrations
+	if (state->autopilot_type == MAV_TYPE_FIXED_WING)
+	{
+		airspeed_analog_stop_calibration(state->airspeed_analog);
+	}
 	
 	print_util_dbg_print("Switching to active mode.\r\n");
 }

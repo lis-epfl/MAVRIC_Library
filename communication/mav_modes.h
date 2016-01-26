@@ -232,6 +232,14 @@ typedef enum
     CUST_GPS_BAD = 2048							///< GPS loss flag
 }mav_mode_custom_t;
 
+typedef enum 
+{
+	INIT = 0,
+	CIRCLE1 = 1, 
+	STRAIGHT = 2,
+	CIRCLE2 = 3,
+}dubin_state_t;
+
 /*
  * \brief Returns whether motors are armed or not
  * 

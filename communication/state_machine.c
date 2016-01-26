@@ -48,6 +48,7 @@
 #include "state.h"
 #include "time_keeper.h"
 #include "battery.h"
+#include "airspeed_analog.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -182,6 +183,11 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 		break;
 
 		case MAV_STATE_STANDBY:
+			// Set flag to calibrate airspeed sensor
+			if (state_machine->state->autopilot_type == MAV_TYPE_FIXED_WING)
+			{
+				airspeed_analog_start_calibration(state_machine->state->airspeed_analog);
+			}
 			state_machine->state->in_the_air = false;
 			//disable out of fence checks
 			state_machine->state->out_of_fence_1 = false;
@@ -243,28 +249,28 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			
 			// check whether out_of_fence_1
-			if (state_machine->state->out_of_fence_1)
-			{
-				print_util_dbg_print("Out of fence 1!\r\n");
-				state_new = MAV_STATE_CRITICAL;
-				mode_custom_new |= CUST_FENCE_1;
-			}
-			else
-			{
-				mode_custom_new &= ~CUST_FENCE_1;
-			}
+			//if (state_machine->state->out_of_fence_1)
+			//{
+				//print_util_dbg_print("Out of fence 1!\r\n");
+				//state_new = MAV_STATE_CRITICAL;
+				//mode_custom_new |= CUST_FENCE_1;
+			//}
+			//else
+			//{
+				//mode_custom_new &= ~CUST_FENCE_1;
+			//}
 			
 			// check whether out_of_fence_2
-			if (state_machine->state->out_of_fence_2)
-			{
-				print_util_dbg_print("Out of fence 2!\r\n");
-				state_new = MAV_STATE_CRITICAL;
-				mode_custom_new |= CUST_FENCE_2;
-			}
-			else
-			{
-				mode_custom_new &= ~CUST_FENCE_2;
-			}
+			//if (state_machine->state->out_of_fence_2)
+			//{
+				//print_util_dbg_print("Out of fence 2!\r\n");
+				//state_new = MAV_STATE_CRITICAL;
+				//mode_custom_new |= CUST_FENCE_2;
+			//}
+			//else
+			//{
+				//mode_custom_new &= ~CUST_FENCE_2;
+			//}
 
 			// check GPS status
 			if (!state_machine->gps->healthy)
