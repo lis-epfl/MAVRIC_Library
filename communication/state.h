@@ -80,7 +80,7 @@ typedef enum
 typedef enum
 {
 	DESCENT_TO_SMALL_ALTITUDE,							///< First auto landing behavior
-	DESCENT_TO_GND										///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
+	DESCENT_TO_GND										///< Second auto landing behavior, comes after DESCENT_TO_SMALL_ALTITUDE
 } auto_landing_behavior_t;
 
 typedef enum MAV_MODE_FLAG mav_flag_t;

@@ -229,7 +229,9 @@ typedef enum
     CUST_FENCE_2 = 256,							///< Fence 2 violation flag
     CUST_HEARTBEAT_LOST = 512,					///< Heartbeat loss flag
     CUST_REMOTE_LOST = 1024,					///< Remote lost flag
-    CUST_GPS_BAD = 2048							///< GPS loss flag
+    CUST_GPS_BAD = 2048,						///< GPS loss flag
+
+    CUST_THROW_RECOVERY_POSITION_HOLD = 4096 	///< Position hold mode for throw recovery
 }mav_mode_custom_t;
 
 /*

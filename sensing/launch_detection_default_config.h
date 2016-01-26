@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * Copyright (c) 2009-2015, MAV'RIC Development Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -30,47 +30,39 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file launch_detection_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Dylan Bourgeois
  *   
- * \brief Executing the PID controllers for stabilization
+ * \brief Default values for launch detection, used in the implementation of paper :
+ *
+ *		Automatic Re-Initialization and Failure Recovery for Aggressive
+ *		Flight with a Monocular Vision-Based Quadrotor
+ *		M. Faessler, F. Fontana, C. Forster, D. Scaramuzza
+ *		IEEE International Conference on Robotics and Automation (ICRA), Seattle, 2015.
+ * 		http://rpg.ifi.uzh.ch/docs/ICRA15_Faessler.pdf
  *
  ******************************************************************************/
 
+#ifndef LAUNCH_DETECTION_DEFAULT_CONFIG_H_
+#define LAUNCH_DETECTION_DEFAULT_CONFIG_H_
 
-#include "stabilisation.h"
-#include "print_util.h"
-#include "constants.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-bool stabilisation_init(control_command_t *controls)
+#include "launch_detection.h"
+
+
+launch_detection_conf_t launch_detection_default_config =
 {
-	bool init_success = true;
-	
-	controls->control_mode = ATTITUDE_COMMAND_MODE;
-	controls->yaw_mode = YAW_RELATIVE;
-	controls->velocity_control_mode = VELOCITY_MODE;
-	
-	controls->rpy[ROLL] = 0.0f;
-	controls->rpy[PITCH] = 0.0f;
-	controls->rpy[YAW] = 0.0f;
-	controls->tvel[X] = 0.0f;
-	controls->tvel[Y] = 0.0f;
-	controls->tvel[Z] = 0.0f;
-	controls->theading = 0.0f;
-	controls->thrust = -1.0f;
-	
-	print_util_dbg_print("[STABILISATION] init.\r\n");
-	
-	return init_success;
-}
+	.t_launch = 380,
+	.c_idle = 20
+};
 
-void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
-{
-	for (int32_t i = 0; i < 3; i++) 
-	{
-		stabiliser->output.rpy[i] =	pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-	}		
-	stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* LAUNCH_DETECTION_DEFAULT_CONFIG_H_ */

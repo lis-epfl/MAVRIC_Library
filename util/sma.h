@@ -30,47 +30,62 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file sma.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Dylan Bourgeois
  *   
- * \brief Executing the PID controllers for stabilization
+ * \brief A Simple Moving Average utility (SMA)
  *
  ******************************************************************************/
 
+ #ifndef SMA_H_
+ #define SMA_H_
 
-#include "stabilisation.h"
-#include "print_util.h"
-#include "constants.h"
+#include <stdint.h>
 
-bool stabilisation_init(control_command_t *controls)
+#include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
+
+ #ifdef __cplusplus
+extern "C" 
 {
-	bool init_success = true;
-	
-	controls->control_mode = ATTITUDE_COMMAND_MODE;
-	controls->yaw_mode = YAW_RELATIVE;
-	controls->velocity_control_mode = VELOCITY_MODE;
-	
-	controls->rpy[ROLL] = 0.0f;
-	controls->rpy[PITCH] = 0.0f;
-	controls->rpy[YAW] = 0.0f;
-	controls->tvel[X] = 0.0f;
-	controls->tvel[Y] = 0.0f;
-	controls->tvel[Z] = 0.0f;
-	controls->theading = 0.0f;
-	controls->thrust = -1.0f;
-	
-	print_util_dbg_print("[STABILISATION] init.\r\n");
-	
-	return init_success;
-}
+#endif
 
-void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
+#define SAMPLING_PERIOD 10 ///< With update frequency of 5ms gives a 50ms sma period
+
+/**
+ * \brief 		Simple Moving Average (SMA) structure
+ */
+typedef struct
 {
-	for (int32_t i = 0; i < 3; i++) 
-	{
-		stabiliser->output.rpy[i] =	pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-	}		
-	stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
+	int16_t buffer[SAMPLING_PERIOD];	//< Stores the values used to compute the moving average (size is equal to period)
+	int16_t current_avg; 				//< Stores the current average value
+	int32_t sum;						//< Stores the sum of previous values
+	uint32_t nb_samples;				//< Total number of samples read
+	uint16_t period;					//< Period for moving average (number of samples used for computation)
+} sma_t;
+
+/**
+ * \brief        		Simple Moving Average initialisation
+ * 
+ * \param sma 			Pointer the moving average struct
+ * \param period 		Period for moving average (number of samples used for computation)
+ */
+void sma_init(sma_t * sma, uint16_t period);
+
+
+/**
+ * \brief        		Compute new moving average
+ *
+ * \param sma 			Pointer the moving average struct
+ * \param sample 		New sample to consider for moving average
+ */
+void sma_update(sma_t * sma, int16_t sample);
+
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* SMA_H_ */

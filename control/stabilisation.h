@@ -72,6 +72,16 @@ typedef enum
 } yaw_mode_t;
 
 /**
+ * \brief	The velocity control mode enum
+ */
+typedef enum
+{
+	VERTICAL_VELOCITY_MODE,
+	HORIZONTAL_VELOCITY_MODE,
+	VELOCITY_MODE
+} velocity_control_mode_t;
+
+/**
  * \brief	The control command typedef
  */
 typedef struct 
@@ -82,6 +92,7 @@ typedef struct
 	float theading;								///< absolute target heading	
 	control_mode_t control_mode;				///< control mode
 	yaw_mode_t     yaw_mode;					///< yaw mode
+	velocity_control_mode_t velocity_control_mode;
 } control_command_t;
 
 /**

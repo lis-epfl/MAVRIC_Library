@@ -254,16 +254,25 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		}
 		gps_gain = 0.0f;
 	}
-	
+
+	// static float last_sonar = 0.0f;
+	// const  float clip_threshold = 0.9f;
+
+	// if (pos_est->sonar->current_distance - last_sonar < clip_threshold)
+	// {
+	// 	last_sonar = pos_est->sonar->current_distance;
+	// }
+
 	if (pos_est->sonar->healthy)
 	{
 		sonar_gain = 1.0f;
-		
-		sonar_alt_error = -pos_est->sonar->current_distance - pos_est->local_position.pos[Z];
+
+		// sonar_alt_error = - last_sonar - pos_est->local_position.pos[Z];
+		sonar_alt_error = - pos_est->sonar->current_distance - pos_est->local_position.pos[Z];
 
 		if (pos_est->sonar->healthy_vel)
 		{
-			sonar_vel_error = -pos_est->sonar->current_velocity - pos_est->vel[Z];
+			sonar_vel_error = - pos_est->sonar->current_velocity - pos_est->vel[Z];
 		}
 		else
 		{
@@ -413,7 +422,7 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	pos_est->kp_vel_baro = 0.5f;
 
 	pos_est->kp_alt_sonar = 2.0f;
-	pos_est->kp_vel_sonar = 2.0f;
+	pos_est->kp_vel_sonar = 0.0f;
 	
 	gps_position_init(pos_est);
 

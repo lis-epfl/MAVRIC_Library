@@ -30,47 +30,72 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file sma.c
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Dylan Bourgeois
  *   
- * \brief Executing the PID controllers for stabilization
+ * \brief A Simple Moving Average utility (SMA)
  *
  ******************************************************************************/
 
+#define DEBUG 0
 
-#include "stabilisation.h"
-#include "print_util.h"
-#include "constants.h"
+#if DEBUG == 1
+	#define START_UP_ACCUM 1500 //Preload the accumulator to avoid false detection on start-up when debugging
+#else
+	#define START_UP_ACCUM 0
+#endif
 
-bool stabilisation_init(control_command_t *controls)
-{
-	bool init_success = true;
-	
-	controls->control_mode = ATTITUDE_COMMAND_MODE;
-	controls->yaw_mode = YAW_RELATIVE;
-	controls->velocity_control_mode = VELOCITY_MODE;
-	
-	controls->rpy[ROLL] = 0.0f;
-	controls->rpy[PITCH] = 0.0f;
-	controls->rpy[YAW] = 0.0f;
-	controls->tvel[X] = 0.0f;
-	controls->tvel[Y] = 0.0f;
-	controls->tvel[Z] = 0.0f;
-	controls->theading = 0.0f;
-	controls->thrust = -1.0f;
-	
-	print_util_dbg_print("[STABILISATION] init.\r\n");
-	
-	return init_success;
+#include "sma.h"
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief        		Return a positive value of i%n
+ *
+ * \param i 			Value to compute modulo for
+ * \param n				Modulo
+ */
+static inline int positive_modulo(int i, int n) {
+    return (i % n + n) % n;
 }
 
-void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void sma_init(sma_t * sma, uint16_t period)
 {
-	for (int32_t i = 0; i < 3; i++) 
+	sma->current_avg = 0; 
+	sma->nb_samples = 0;
+	sma->sum = START_UP_ACCUM; 
+	sma->period = SAMPLING_PERIOD;
+}
+
+void sma_update(sma_t * sma, int16_t sample)
+{
+	if (sma->nb_samples < SAMPLING_PERIOD)
 	{
-		stabiliser->output.rpy[i] =	pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-	}		
-	stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
+		sma->buffer[sma->nb_samples] = sample;
+		sma->nb_samples += 1;
+		sma->sum += sample;
+		sma->current_avg = sma->sum / sma->nb_samples;
+	} 
+	else 
+	{
+		sma->sum -= sma->buffer[positive_modulo(sma->nb_samples, sma->period)];
+		sma->sum += sample;
+		sma->current_avg = sma->sum / sma->period;
+		sma->buffer[positive_modulo(sma->nb_samples, sma->period)] = sample;
+		sma->nb_samples++;
+	}
+
 }
