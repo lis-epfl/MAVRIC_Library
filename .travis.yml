@@ -14,7 +14,7 @@ install:
 script: 
   - cd travis
   - make LEQuad_linux
-  - make doc_doxygen
+  - make doc
 
 after_success:
   - bash deploy_doc.sh
