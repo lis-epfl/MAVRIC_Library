@@ -170,7 +170,7 @@ SIZER 	:= arm-none-eabi-size
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CFLAGS	+= -O0 -g -std=gnu99
+CFLAGS	+= -O0 -g -std=gnu99 -MMD -MP
 CFLAGS	+= -Wall
 # CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
 # CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
@@ -183,7 +183,7 @@ CFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CXXFLAGS	+= -O0 -g -std=c++11
+CXXFLAGS	+= -O0 -g -std=c++11 -MMD -MP
 CXXFLAGS	+= -Wall
 # CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
 CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
@@ -196,7 +196,7 @@ CXXFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 # C & C++ preprocessor common flags
 # ------------------------------------------------------------------------------
-CPPFLAGS	+= -MD
+CPPFLAGS	+= -MMD -MP
 CPPFLAGS	+= -Wall -Wundef
 CPPFLAGS	+= -I$(CM3_INCLUDE_DIR) $(CM3_DEFS)
 
@@ -232,6 +232,13 @@ BUILD_DIR = build
 
 # Get the names of the .o files from .c and .cpp files
 OBJS += $(addprefix ${BUILD_DIR}/, $(addsuffix .o, $(basename $(LIB_SRCS))))
+
+# ------------------------------------------------------------------------------
+# DEPENDENCY FILES (*.d)
+# ------------------------------------------------------------------------------
+DEPS += $(addsuffix .d, $(basename $(OBJS)))	# create list of dependency files
+-include $(DEPS)								# include existing dependency files
+
 
 # ------------------------------------------------------------------------------
 # COMMANDS FOR FANCY OUTPUT
@@ -294,8 +301,10 @@ flash: $(PROJ_NAME).bin
 
 .PHONY: clean rebuild
 clean:
-	@rm -f $(OBJS)
+	@rm -f $(OBJS) $(DEPS)
 	@rm -rf build/
 	@$(PRINT_OK)
 
 rebuild: clean all
+
+.DEFAULT_GOAL := all
