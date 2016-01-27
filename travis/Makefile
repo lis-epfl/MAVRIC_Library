@@ -7,5 +7,20 @@
 # ------------------------------------------------------------------------------
 
 # Main rule
-all: 
+all: sample_projects doc	
+
+sample_projects: LEQuad_linux
+
+LEQuad_linux:
 	cd ../sample_projects/LEQuad/proj_linux && make clean && make && make clean
+
+LEQuad_avr32:
+	cd ../sample_projects/LEQuad/proj_avr32 && make clean && make && make clean
+
+LEQuad_stm32:
+	cd ../sample_projects/LEQuad/proj_stm32 && make clean && make && make clean
+
+doc: doc_doxygen doc
+
+doc_doxygen:
+	cd ../doc && mkdir -p gh_pages && doxygen

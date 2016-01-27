@@ -9,7 +9,9 @@ install:
   - sudo apt-get install -qq g++-4.8
   - export CXX="g++-4.8"
 
-script: cd travis && make
+script: 
+  - cd travis && make LEQuad_linux
+  - cd travis && make doc_doxygen
 
 after_success:
   - cd travis && bash deploy_doc.sh
