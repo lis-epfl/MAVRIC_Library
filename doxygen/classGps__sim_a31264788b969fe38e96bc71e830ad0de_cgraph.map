@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classDynamic__model.html#a356054acea6bcdc56b10ac25f57bf848" title="Main update function &#160;Reads new values from sensor." alt="" coords="201,5,364,35"/>
+<area shape="rect" id="node5" href="$classDynamic__model.html#a55f5c7d41f09676d0c258898478ad50d" title="Get last update time in microseconds." alt="" coords="177,59,388,88"/>
+<area shape="rect" id="node7" href="$classDynamic__model.html#ad65398330562cae59eabe61af86e1f37" title="Get X, Y and Z position in global frame." alt="" coords="189,112,376,141"/>
+<area shape="rect" id="node9" href="$classDynamic__model.html#ac7037e1f7a8390a9b199e52c0ed5b638" title="Get X, Y and Z components of velocity in local frame." alt="" coords="192,165,373,195"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="5,66,141,203"/>
+<area shape="rect" id="node4" href="$unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="165,5,285,264"/>
+</map>

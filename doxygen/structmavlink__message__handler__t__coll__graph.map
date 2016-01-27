@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structmavlink__message__handler__msg__callback__set__t.html" title="Set of message callbacks." alt="" coords="5,315,304,435"/>
+<area shape="rect" id="node4" href="$structmavlink__message__handler__msg__callback__t.html" title="Message callback." alt="" coords="17,23,292,195"/>
+<area shape="rect" id="node6" href="$structmavlink__message__handler__cmd__callback__set__t.html" title="Set of command callbacks." alt="" coords="328,315,627,435"/>
+<area shape="rect" id="node8" href="$structmavlink__message__handler__cmd__callback__t.html" title="Command callback." alt="" coords="340,23,615,195"/>
+<area shape="rect" id="node10" href="$structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="651,280,781,469"/>
+<area shape="rect" id="node12" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="653,6,747,213"/>
+<area shape="rect" id="node14" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="771,58,904,161"/>
+</map>

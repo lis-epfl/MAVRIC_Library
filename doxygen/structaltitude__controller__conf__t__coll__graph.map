@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structpid__controller__conf__t.html" title="Configuration for PID controller." alt="" coords="51,211,192,383"/>
+<area shape="rect" id="node4" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="5,15,109,135"/>
+<area shape="rect" id="node6" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="133,6,237,143"/>
+</map>

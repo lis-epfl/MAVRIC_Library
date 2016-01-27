@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSerial__stm32.html#a34e71c375f4c77a42195ec027cd62c4d" title="Test if there are bytes available to read." alt="" coords="184,5,339,35"/>
+<area shape="rect" id="node7" href="$classBuffer__tpl.html#a05dbe8802c953c8116321ffa26b72e58" title="Get the oldest element in the buffer." alt="" coords="209,59,313,88"/>
+<area shape="rect" id="node5" href="$classBuffer__tpl.html#ac3079cb00ac66e37bb14429f19ec2f6c" title="Returns the number of available bytes in the buffer." alt="" coords="388,5,521,35"/>
+</map>

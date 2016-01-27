@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSerial__udp.html#a01a3379d58ea2790fb91e87944084f4f" title="Test if there are bytes available to read." alt="" coords="172,59,311,88"/>
+<area shape="rect" id="node11" href="$classBuffer__tpl.html#a05dbe8802c953c8116321ffa26b72e58" title="Get the oldest element in the buffer." alt="" coords="189,112,293,141"/>
+<area shape="rect" id="node5" href="$classBuffer__tpl.html#a814223c9436d3a6d799850cd38c39267" title="Returns the number of free bytes in the buffer." alt="" coords="360,5,499,35"/>
+<area shape="rect" id="node7" href="$classBuffer__tpl.html#a3e6e6b58528f9e82dde45f3d43d2186c" title="Stores data in the buffer, until the buffer is full." alt="" coords="377,59,481,88"/>
+<area shape="rect" id="node9" href="$classBuffer__tpl.html#ac3079cb00ac66e37bb14429f19ec2f6c" title="Returns the number of available bytes in the buffer." alt="" coords="363,112,496,141"/>
+</map>

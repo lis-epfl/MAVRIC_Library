@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classGps.html" title="Abstract class for GPS." alt="" coords="5,253,216,512"/>
+<area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="240,323,352,443"/>
+<area shape="rect" id="node6" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="237,14,355,151"/>
+<area shape="rect" id="node8" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="376,297,493,469"/>
+<area shape="rect" id="node10" href="$structquat__t.html" title="Unit quaternion." alt="" coords="405,31,464,134"/>
+<area shape="rect" id="node12" href="$classSonar.html" title="Abstarct class for sonars." alt="" coords="517,288,648,477"/>
+<area shape="rect" id="node14" href="$classState.html" title="The MAV state." alt="" coords="672,236,851,529"/>
+<area shape="rect" id="node16" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="720,5,803,160"/>
+<area shape="rect" id="node18" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="875,227,1048,538"/>
+</map>

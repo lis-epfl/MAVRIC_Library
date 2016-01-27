@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classBmp085.html#a4f895185b71c8206e5017e3f5ba1c340" title="Main update function &#160;Reads new values from sensor." alt="" coords="136,5,253,35"/>
+<area shape="rect" id="node5" href="$classHmc5883l.html#aed6816efef437df0e65a3f3b107c13b0" title="Main update function &#160;Reads new values from sensor." alt="" coords="131,59,259,88"/>
+<area shape="rect" id="node7" href="$classLsm330dlc.html#a6a90c8e0a93f539d852810e88313189c" title="Main update function." alt="" coords="129,112,260,141"/>
+</map>

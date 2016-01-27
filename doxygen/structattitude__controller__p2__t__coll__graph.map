@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="5,501,176,621"/>
+<area shape="rect" id="node4" href="$structquat__t.html" title="Unit quaternion." alt="" coords="196,6,255,109"/>
+<area shape="rect" id="node6" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="167,177,284,349"/>
+<area shape="rect" id="node11" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="252,374,391,477"/>
+<area shape="rect" id="node9" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="445,519,579,604"/>
+</map>

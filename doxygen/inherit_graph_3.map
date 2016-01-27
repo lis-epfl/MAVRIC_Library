@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classAdc.html" title="Adc" alt="" coords="5,32,51,61"/>
+<area shape="rect" id="node3" href="$classAdc__avr32.html" title="Implementation of Analog to digital converters on avr32 *." alt="" coords="105,5,188,35"/>
+<area shape="rect" id="node5" href="$classAdc__dummy.html" title="Adc_dummy" alt="" coords="100,59,193,88"/>
+</map>

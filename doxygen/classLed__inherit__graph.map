@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classLed__avr32.html" title="{Led_avr32\n||+ Led_avr32()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="5,174,107,311"/>
+<area shape="rect" id="node5" href="$classLed__dummy.html" title="{Led_dummy\n||+ Led_dummy()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="131,174,243,311"/>
+<area shape="rect" id="node7" href="$classLed__gpio.html" title="{Led_gpio\n||+ Led_gpio()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="267,174,360,311"/>
+</map>

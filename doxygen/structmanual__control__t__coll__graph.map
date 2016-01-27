@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structjoystick__t.html" title="The structure for the joystick." alt="" coords="152,437,299,574"/>
+<area shape="rect" id="node4" href="$structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="5,93,141,230"/>
+<area shape="rect" id="node6" href="$unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="165,32,285,291"/>
+<area shape="rect" id="node8" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="351,385,503,626"/>
+<area shape="rect" id="node10" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="309,6,544,317"/>
+<area shape="rect" id="node12" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="568,84,677,239"/>
+</map>
