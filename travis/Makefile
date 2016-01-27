@@ -20,7 +20,10 @@ LEQuad_avr32:
 LEQuad_stm32:
 	cd ../sample_projects/LEQuad/proj_stm32 && make clean && make && make clean
 
-doc: doc_doxygen doc
+doc: doc_doxygen doc_daux
 
 doc_doxygen:
-	cd ../doc && mkdir -p gh_pages && doxygen
+	@cd ../doc && mkdir -p gh_pages && doxygen
+
+doc_daux:
+	@cd ../doc/daux.io && ./daux.phar && mkdir -p ../gh_pages && cp -r static/* ../gh_pages
