@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classSpektrum__satellite.html#ab8a27a536473a2a2d42b479c097352bc" title="Initialize UART receiver for Spektrum/DSM2 slave receivers." alt="" coords="152,59,307,88"/>
-<area shape="rect" id="node5" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="367,5,468,35"/>
-<area shape="rect" id="node7" href="$classMavrinux.html#ac679516de4cb4dee5d62915914dc4d83" title="Hardware initialisation." alt="" coords="368,59,467,88"/>
-<area shape="rect" id="node9" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="355,112,480,141"/>
-</map>

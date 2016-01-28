@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classSerial__stm32.html#a874336f5eb3c470cdefe34405133089d" title="Test if there is space available to write bytes." alt="" coords="191,5,348,35"/>
-<area shape="rect" id="node7" href="$classBuffer__tpl.html#a3e6e6b58528f9e82dde45f3d43d2186c" title="Stores data in the buffer, until the buffer is full." alt="" coords="217,59,321,88"/>
-<area shape="rect" id="node9" href="$classBuffer__tpl.html#ac3079cb00ac66e37bb14429f19ec2f6c" title="Returns the number of available bytes in the buffer." alt="" coords="203,112,336,141"/>
-<area shape="rect" id="node5" href="$classBuffer__tpl.html#a814223c9436d3a6d799850cd38c39267" title="Returns the number of free bytes in the buffer." alt="" coords="397,5,536,35"/>
-</map>

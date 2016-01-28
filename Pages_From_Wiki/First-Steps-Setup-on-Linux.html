@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>       <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>          <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>          <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <title>First-Steps-Setup-on-Linux - MAV'RIC Library</title>
+    <meta name="description" content="Highway to the Danger Zone" />
+    <meta name="author" content="MAV'RIC Team">
+    <meta charset="UTF-8">
+    <link rel="icon" href="../themes/daux/img/favicon-navy.png" type="image/x-icon">
+    <!-- Mobile -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font -->
+    <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700&subset=latin,cyrillic-ext,cyrillic' rel='stylesheet' type='text/css'>
+    <!-- CSS -->
+    <link href='../themes/daux/css/theme.min.css' rel='stylesheet' type='text/css'><link href='../themes/daux/css/theme-navy.min.css' rel='stylesheet' type='text/css'>
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body class="">
+    
+    <a href="https://github.com/lis-epfl/MAVRIC_Library" target="_blank" id="github-ribbon" class="hidden-print"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<div class="container-fluid fluid-height wrapper">
+    <div class="navbar navbar-static-top hidden-print">
+        <div class="container-fluid">
+            <a class="brand navbar-brand pull-left" href="../index.html">MAV'RIC Library</a>
+        </div>
+    </div>
+    <div class="row columns content">
+        <div class="left-column article-tree col-sm-3 hidden-print">
+            <!-- For Mobile -->
+            <div class="responsive-collapse">
+                <button type="button" class="btn btn-sidebar" id="menu-spinner-button">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="sub-nav-collapse" class="sub-nav-collapse">
+                <!-- Navigation -->
+                <ul class='nav nav-list'><li class=''><a href="../Getting_Started.html">Getting Started</a></li><li class=''><a href="../Features/index.html" class="folder">Features</a><ul class='nav nav-list'></ul></li><li class=''><a href="../User_Guide/index.html" class="folder">User Guide</a><ul class='nav nav-list'></ul></li><li class=''><a href="../Developper_Guide/index.html" class="folder">Developper Guide</a><ul class='nav nav-list'></ul></li><li class='open'><a href="#" class="aj-nav folder">Pages From Wiki</a><ul class='nav nav-list'><li class=''><a href="../Pages_From_Wiki/Sidebar.html">Sidebar</a></li><li class=''><a href="../Pages_From_Wiki/Board-numbers.html">Board-numbers</a></li><li class=''><a href="../Pages_From_Wiki/Calibration-Bias-Factors.html">Calibration-Bias-Factors</a></li><li class=''><a href="../Pages_From_Wiki/Calibration-Scale-Factors.html">Calibration-Scale-Factors</a></li><li class=''><a href="../Pages_From_Wiki/Connect-a-Joystick-to-QGroundControl.html">Connect-a-Joystick-to-QGroundControl</a></li><li class=''><a href="../Pages_From_Wiki/Create-new-project-in-Codelite.html">Create-new-project-in-Codelite</a></li><li class=''><a href="../Pages_From_Wiki/Credits License.html">Credits License</a></li><li class=''><a href="../Pages_From_Wiki/Credits-Origin-of-the-Project.html">Credits-Origin-of-the-Project</a></li><li class=''><a href="../Pages_From_Wiki/DataLogging.html">DataLogging</a></li><li class=''><a href="../Pages_From_Wiki/Debug-via-minicom-software-on-Linux.html">Debug-via-minicom-software-on-Linux</a></li><li class=''><a href="../Pages_From_Wiki/Development-Code-style.html">Development-Code-style</a></li><li class=''><a href="../Pages_From_Wiki/Development-Create-new-messages.html">Development-Create-new-messages</a></li><li class=''><a href="../Pages_From_Wiki/Development-Doxygen-Documentation.html">Development-Doxygen-Documentation</a></li><li class=''><a href="../Pages_From_Wiki/Development-Doxygen-Tips.html">Development-Doxygen-Tips</a></li><li class=''><a href="../Pages_From_Wiki/Development-Wiki-How-to.html">Development-Wiki-How-to</a></li><li class=''><a href="../Pages_From_Wiki/Development-workflow.html">Development-workflow</a></li><li class=''><a href="../Pages_From_Wiki/Download-Firmware.html">Download-Firmware</a></li><li class=''><a href="../Pages_From_Wiki/Download-Git-Tools.html">Download-Git-Tools</a></li><li class=''><a href="../Pages_From_Wiki/Download-IDE.html">Download-IDE</a></li><li class=''><a href="../Pages_From_Wiki/Download-QGroundcontrol.html">Download-QGroundcontrol</a></li><li class=''><a href="../Pages_From_Wiki/Electronic-board.html">Electronic-board</a></li><li class=''><a href="../Pages_From_Wiki/FAQ.html">FAQ</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Binding-your-Remote.html">First-Steps-Binding-your-Remote</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-CDC-and-DFU-Drivers-issue-on-Windows.html">First-steps-CDC-and-DFU-Drivers-issue-on-Windows</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-Connect-to-QGroundControl.html">First-steps-Connect-to-QGroundControl</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-DFU-Programming.html">First-Steps-DFU-Programming</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-Flashing-the-autopilot.html">First-steps-Flashing-the-autopilot</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Installing-Bootloader.html">First-Steps-Installing-Bootloader</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-pairing-XBee-modules.html">First-steps-pairing-XBee-modules</a></li><li class='active'><a href="../Pages_From_Wiki/First-Steps-Setup-on-Linux.html">First-Steps-Setup-on-Linux</a></li><li class=''><a href="../Pages_From_Wiki/Flashing-a-microcontroller-for-the-first-time.html">Flashing-a-microcontroller-for-the-first-time</a></li><li class=''><a href="../Pages_From_Wiki/Home.html">Home</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Building-Steps.html">Quad-Assembly-Building-Steps</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Part-List.html">Quad-Assembly-Part-List</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Remote-Pairing.html">Quad-Assembly-Remote-Pairing</a></li><li class=''><a href="../Pages_From_Wiki/README.html">README</a></li><li class=''><a href="../Pages_From_Wiki/Remote-settings.html">Remote-settings</a></li><li class=''><a href="../Pages_From_Wiki/Setup-on-Windows.html">Setup-on-Windows</a></li></ul></li></ul>
+
+                <div class="sidebar-links">
+                    
+                        <!-- Links -->
+                        <a href="https://github.com/lis-epfl/MAVRIC_Library/archive/master.zip" target="_blank">Download</a><br><a href="https://github.com/lis-epfl/MAVRIC_Library" target="_blank">GitHub Repo</a><br><a href="https://github.com/lis-epfl/MAVRIC_Library/issues" target="_blank">Help/Support/Bugs</a><br>
+                        <!-- Twitter -->
+                        
+                        <hr/>
+                    
+                    <p><small>Documentation generated by <a href="http://daux.io">Daux.io</a></small></p>
+                </div>
+            </div>
+        </div>
+        <div class="right-column  content-area col-sm-9">
+            <div class="content-page">
+                <article>
+            <div class="page-header sub-header clearfix">
+            <h1><a href="../Pages_From_Wiki/Sidebar.html">Pages From Wiki</a> <i class="glyphicon glyphicon-chevron-right"></i> <a href="../Pages_From_Wiki/First-Steps-Setup-on-Linux.html">First-Steps-Setup-on-Linux</a>            </h1>
+                    <span style="float: left; font-size: 10px; color: gray;">
+                        Thursday, January 28, 2016                    </span>
+                    <span style="float: right; font-size: 10px; color: gray;">
+                        3:09 PM                    </span>
+        </div>
+    
+    <h1>Using linux as development platform</h1>
+<p>It is possible to build an AVR32 project in Linux. Setting up new projects is probably easier in Atmel Studio, as the Atmel Software Framework is easiest to set up with the built-in wizard. However, once created, it is easily possible to create additional Makefiles or workspaces/projects in Linux, even in the same directory. It is recommended to use a different build directory (e.g. &quot;Debug_linux&quot; instead of &quot;Debug&quot;).</p>
+<p>To build an AVR32 project in Linux, we will need:</p>
+<ul>
+<li>CodeLite or Sublime</li>
+<li>avr32-gcc (from Atmel)</li>
+<li>atmel-headers (also from Atmel, has to go into the avr32/include directory of the avr32-gcc install).</li>
+</ul>
+<h2>1 - Install the toolchain</h2>
+<ul>
+<li>get the Atmel headers</li>
+<li>go to the Utilities folder of the MAV'RIC folder. Enter the Atmel headers folder or</li>
+<li>download  <code>avr32-gnu-toolchain-3.4.2.435-linux.any.x86.tar.gz</code> and <code>atmel-headers-6.1.3.1475.zip</code> from Atmel's website (or the more current version if available). We assume the files are in <code>~/Downloads/</code>
+</li>
+<li>unpack the toolchain:</li>
+</ul>
+<pre><code>cd ~/Downloads
+tar xvfz avr32-gnu-toolchain-3.4.2.435-linux.any.x86.tar.gz
+sudo mv avr32-gnu-toolchain-linux_x86 /usr/local
+</code></pre>
+<ul>
+<li>install headers: the zip file is located in the repository in Code/Library/Atmel_headers folder.</li>
+</ul>
+<pre><code>unzip atmel-headers-6.1.3.1475.zip
+sudo mv atmel-headers-6.1.3.1475/* /usr/local/avr32-gnu-toolchain-linux_x86/avr32/include
+rmdir atmel-headers-6.1.3.1475
+</code></pre>
+<ul>
+<li>create symbolic links in /usr/local/bin:<br />
+<code>sudo ln -s /usr/local/avr32-gnu-toolchain-linux_x86/bin/avr32* /usr/local/bin</code>
+</li>
+</ul>
+<p>Now avr32-gcc should be available. Try <code>avr32-gcc -v</code> to verify.</p>
+<h4>Note: alternatively, the toolchain can be compiled from sources</h4>
+<p>Follow the instructions in this repository [[https://github.com/denravonska/avr32-toolchain]]</p>
+<h2>2 - Set-up project in CodeLite</h2>
+<p>A [[codelite|http://codelite.org]] project is provided (see [[ here | http://codelite.org/LiteEditor/Repositories#toc1 ]] for installation on ubuntu), but it is also possible to use a another IDE like eclipse, or simply a makefile.</p>
+<h3>2-0 Using the existing CodeLite workspace</h3>
+<ul>
+<li>
+<p>Open workspace &quot;Maveric_???.workspace&quot; in codelite.</p>
+</li>
+<li>
+<p>Set up the avr32 compiler:</p>
+<ul>
+<li>go to Settings -&gt; build settings, create a 'New...' compiler profile (e.g. <code>avr32gcc</code>)</li>
+<li>under <code>Tools</code>, enter <code>avr32-gcc</code> for C compiler, assembler name, and enter <code>avr32-g++</code> for C++ and linker.</li>
+<li>For the share object linker, enter <code>avr32-g++ -shared -fPIC</code>,</li>
+<li>For the Archive, enter 'avr32-ar rcu' and for the resource compiler, enter 'windres'</li>
+<li>To speed up build time, change 'make' to 'make -j 4'</li>
+<li>Under the tab &quot;Files types&quot;, double click on the extension &quot;s&quot; and replace the comilation line by</li>
+</ul>
+</li>
+</ul>
+<pre><code>$(AS) $(ASFLAGS) &quot;$(FileFullPath)&quot; $(ObjectSwitch)$(IntermediateDirectory)/$(ObjectName)$(ObjectSuffix) -I$(IncludePath)
+</code></pre>
+<ul>
+<li>Go to Menu Workspace -&gt; Open Active project settings under Common Settings -&gt; General, select the avr32gcc compiler profile.</li>
+</ul>
+<p>The project should now build successfully.</p>
+<h3>2-1 Creating a new workspace/project:</h3>
+<p>If you want to create a new project from scratch, follow the explanations on [[this page|Create-new-project-in-Codelite]].</p>
+<h2>3 - Set-up on Sublime</h2>
+<ul>
+<li>Install sublime text editor, version 2 or 3 (<a href="http://www.sublimetext.com/">link</a>).</li>
+<li>Open sublime and open your project folder</li>
+<li>To set the build command</li>
+<li>Go to &quot;Tools&quot;-&gt;&quot;Build Systems&quot;-&gt;&quot;New Build System...&quot;</li>
+<li>Paste this text in the file</li>
+</ul>
+<pre><code>{
+  &quot;shell&quot;: true,
+  &quot;cmd&quot;: [&quot;make -j8 -C avr32_proj&quot;],
+  &quot;file_regex&quot;: &quot;^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$&quot;,
+  &quot;working_dir&quot;: &quot;${project_path:${folder:${file_path}}}&quot;,
+  &quot;selector&quot;: &quot;source.makefile&quot;,
+  &quot;path&quot;: &quot;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games&quot;,
+  &quot;variants&quot;:
+   [
+     {
+       &quot;name&quot;: &quot;Clean&quot;,
+       &quot;cmd&quot;: [&quot;make -C avr32_proj clean&quot;]
+     },
+     {
+	&quot;name&quot;: &quot;Rebuild&quot;,
+	&quot;cmd&quot;: [&quot;make -C avr32_proj clean &amp;&amp; make -j8 -C avr32_proj&quot;]
+     }
+   ]
+}
+</code></pre>
+<ul>
+<li>
+<p>Save the file where Sublime propose automatically (the name is not important, just remember it)</p>
+</li>
+<li>
+<p>Go to &quot;Tools&quot;-&gt;&quot;Build Systems&quot; and select &quot;YOUR_SYSTEM_BUILD&quot;</p>
+</li>
+<li>
+<p>To setup a shortcut for &quot;clean&quot; and &quot;rebuild&quot; options</p>
+</li>
+<li>
+<p>Go to &quot;Preferences&quot;-&gt;&quot;Key Bindings - User&quot;</p>
+</li>
+<li>
+<p>Paste this text in the opened file</p>
+</li>
+</ul>
+<pre><code>[
+   { &quot;keys&quot;: [&quot;ctrl+alt+shift+b&quot;], &quot;command&quot;: &quot;show_overlay&quot;, &quot;args&quot;: {&quot;overlay&quot;: &quot;command_palette&quot;, &quot;text&quot;: &quot;Build: &quot;} }
+]
+</code></pre>
+<ul>
+<li>
+<p>Save and close the file</p>
+</li>
+<li>
+<p>To compile the code: click on ctrl+b</p>
+</li>
+<li>
+<p>To clean the code: click on ctrl+alt+shift+b and select &quot;Build: Clean&quot;</p>
+</li>
+<li>
+<p>To rebuild the code: click on ctrl+alt+shift+b and select &quot;Build: Rebuild&quot;</p>
+</li>
+</ul>
+<h2>4 - Flashing the autopilot</h2>
+<p>Flashing the binary image to the AVR32 can be done via DFU after flashing a bootloader (check separate instructions [[ Installing Bootloader | First Steps Installing Bootloader ]] and [[ DFU Programming | First Steps DFU Programming ]]). Unfortunately, the JTAGICE3 is not supported in Linux.</p>
+
+        <nav>
+        <ul class="pager">
+            <li><a href="../Pages_From_Wiki/First-steps-pairing-XBee-modules.html">Previous</a></li>            <li><a href="../Pages_From_Wiki/Flashing-a-microcontroller-for-the-first-time.html">Next</a></li>        </ul>
+    </nav>
+    </article>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- jQuery -->
+    <script src="../themes/daux/js/jquery-1.11.3.min.js"></script>
+    <!-- hightlight.js -->
+    <script src="../themes/daux/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- JS -->
+    
+    <script src="../themes/daux/js/daux.js"></script>
+</body>
+</html>

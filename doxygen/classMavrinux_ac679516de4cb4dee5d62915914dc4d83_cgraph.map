@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classSerial__linux__io.html#ad41d739e68daeaa1b0d0aa5faec2c855" title="Hardware initialization." alt="" coords="167,5,297,35"/>
-<area shape="rect" id="node5" href="$classGpio__dummy.html#a9ef11c0e5e5f251503348ef7e3759d00" title="Hardware initialization." alt="" coords="171,59,293,88"/>
-<area shape="rect" id="node7" href="$classSerial__udp.html#a028244600712d3aa49220c29dc8b40c4" title="Hardware initialization." alt="" coords="179,112,285,141"/>
-<area shape="rect" id="node9" href="$classSpektrum__satellite.html#ab8a27a536473a2a2d42b479c097352bc" title="Initialize UART receiver for Spektrum/DSM2 slave receivers." alt="" coords="155,165,309,195"/>
-<area shape="rect" id="node13" href="$classFile__linux.html#a24f41277498ba7e0466821f41c70375b" title="Open the file." alt="" coords="176,219,288,248"/>
-<area shape="rect" id="node11" href="$classSerial.html#a6828a2d281fc081b0f87dc41782610f8" title="Attach a function to call after a receive interrupt is generated." alt="" coords="357,165,456,195"/>
-</map>

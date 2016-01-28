@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classBuffer__tpl.html#a526cfc106b641c84b9fe378a95366250" title="Stores data in the buffer even of it overwrites existing data." alt="" coords="225,5,367,35"/>
-<area shape="rect" id="node5" href="$classBuffer__tpl.html#ac3079cb00ac66e37bb14429f19ec2f6c" title="Returns the number of available bytes in the buffer." alt="" coords="229,59,363,88"/>
-<area shape="rect" id="node7" href="$classBuffer__tpl.html#a05dbe8802c953c8116321ffa26b72e58" title="Get the oldest element in the buffer." alt="" coords="244,112,348,141"/>
-</map>

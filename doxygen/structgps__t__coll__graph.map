@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="5,31,99,238"/>
-<area shape="rect" id="node4" href="$structubx__cfg__nav__settings__t.html" title="The U&#45;Blox CFG&#45;NAV5 settings structure definition." alt="" coords="123,5,283,264"/>
-<area shape="rect" id="node6" href="$structdate__time__t.html" title="{date_time_t\n|+ year\l+ month\l+ day\l+ hour\l+ minute\l+ second\l+ validity\l|}" alt="" coords="307,40,397,229"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classAccelerometer.html#a502ee76801742384312f643c267bb048" title="Main update function &#160;Reads new values from sensor." alt="" coords="145,5,297,35"/>
-<area shape="rect" id="node5" href="$classGyroscope.html#aa1bc5409e1fc374c50d4998109caf961" title="Main update function &#160;Reads new values from sensor." alt="" coords="156,59,287,88"/>
-<area shape="rect" id="node7" href="$classMagnetometer.html#ae067075c2ad106740248985a69a066cb" title="Main update function &#160;Reads new values from sensor." alt="" coords="145,112,297,141"/>
-<area shape="rect" id="node9" href="$classAccelerometer.html#ac54c59d5a3e4c5537e6cd881fae184e6" title="Get X, Y and Z components of acceleration." alt="" coords="155,165,288,195"/>
-<area shape="rect" id="node11" href="$classGyroscope.html#afb31903ff6966d7732283a19e93083ac" title="Get X, Y and Z components of angular velocity." alt="" coords="163,219,280,248"/>
-<area shape="rect" id="node13" href="$classMagnetometer.html#a52be41f6e0c0d7c60b63c2f7c5982d40" title="Get X, Y and Z components of magnetic field." alt="" coords="152,272,291,301"/>
-</map>

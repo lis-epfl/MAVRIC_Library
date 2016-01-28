@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classSerial__usb__avr32.html#ae97353f9dea6e27cdac78b13f2e6f86a" title="Test if there is space available to write bytes." alt="" coords="215,5,396,35"/>
-<area shape="rect" id="node7" href="$classBuffer__tpl.html#a3e6e6b58528f9e82dde45f3d43d2186c" title="Stores data in the buffer, until the buffer is full." alt="" coords="253,59,357,88"/>
-<area shape="rect" id="node9" href="$classBuffer__tpl.html#a8f0ba93f400f92c3327c891800d97c22" title="Tests whether the buffer is empty." alt="" coords="244,112,367,141"/>
-<area shape="rect" id="node11" href="$classBuffer__tpl.html#a05dbe8802c953c8116321ffa26b72e58" title="Get the oldest element in the buffer." alt="" coords="253,165,357,195"/>
-<area shape="rect" id="node5" href="$classBuffer__tpl.html#a814223c9436d3a6d799850cd38c39267" title="Returns the number of free bytes in the buffer." alt="" coords="445,5,584,35"/>
-</map>

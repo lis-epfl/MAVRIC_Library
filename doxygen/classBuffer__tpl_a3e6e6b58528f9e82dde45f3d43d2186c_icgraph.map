@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classSpektrum__satellite.html#adb6188c9e279d061ea4b524201975c33" title="Takes care of incoming data." alt="" coords="159,5,388,35"/>
-<area shape="rect" id="node5" href="$classSerial__avr32.html#a0ca8dc3ec639bdfaf8278f1a643c08eb" title="Write bytes on the serial line." alt="" coords="208,59,339,88"/>
-<area shape="rect" id="node7" href="$classSerial__usb__avr32.html#a136aeea78c5070fc8b7c846aa20f305f" title="Write bytes on the serial line." alt="" coords="195,112,352,141"/>
-<area shape="rect" id="node9" href="$classSerial__udp.html#a01a3379d58ea2790fb91e87944084f4f" title="Test if there are bytes available to read." alt="" coords="204,165,343,195"/>
-<area shape="rect" id="node13" href="$classSerial__udp.html#ac568375e1a82264e735fd8c6b8465b85" title="Write a byte on the serial line." alt="" coords="215,219,332,248"/>
-<area shape="rect" id="node15" href="$classSerial__stm32.html#a54a8c5e1d9773cde753cee32da06d5e7" title="Write bytes on the serial line." alt="" coords="207,272,340,301"/>
-<area shape="rect" id="node11" href="$classSerial__udp.html#a6371af0a085b26e42b4afa3bcfc79e20" title="Read bytes from the serial line." alt="" coords="439,165,553,195"/>
-</map>

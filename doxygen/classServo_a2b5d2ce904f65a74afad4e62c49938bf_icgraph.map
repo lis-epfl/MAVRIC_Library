@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="180,5,281,35"/>
-<area shape="rect" id="node5" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="168,59,293,88"/>
-<area shape="rect" id="node7" href="$classServo.html#a2a4eacedcd7b7f4728b84e07d4645e5a" title="Constructor." alt="" coords="181,112,280,141"/>
-<area shape="rect" id="node9" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="160,165,301,195"/>
-</map>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>       <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>          <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>          <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <title>Electronic-board - MAV'RIC Library</title>
+    <meta name="description" content="Highway to the Danger Zone" />
+    <meta name="author" content="MAV'RIC Team">
+    <meta charset="UTF-8">
+    <link rel="icon" href="../themes/daux/img/favicon-navy.png" type="image/x-icon">
+    <!-- Mobile -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font -->
+    <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700&subset=latin,cyrillic-ext,cyrillic' rel='stylesheet' type='text/css'>
+    <!-- CSS -->
+    <link href='../themes/daux/css/theme.min.css' rel='stylesheet' type='text/css'><link href='../themes/daux/css/theme-navy.min.css' rel='stylesheet' type='text/css'>
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body class="">
+    
+    <a href="https://github.com/lis-epfl/MAVRIC_Library" target="_blank" id="github-ribbon" class="hidden-print"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<div class="container-fluid fluid-height wrapper">
+    <div class="navbar navbar-static-top hidden-print">
+        <div class="container-fluid">
+            <a class="brand navbar-brand pull-left" href="../index.html">MAV'RIC Library</a>
+        </div>
+    </div>
+    <div class="row columns content">
+        <div class="left-column article-tree col-sm-3 hidden-print">
+            <!-- For Mobile -->
+            <div class="responsive-collapse">
+                <button type="button" class="btn btn-sidebar" id="menu-spinner-button">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="sub-nav-collapse" class="sub-nav-collapse">
+                <!-- Navigation -->
+                <ul class='nav nav-list'><li class=''><a href="../Getting_Started.html">Getting Started</a></li><li class=''><a href="../Features/index.html" class="folder">Features</a><ul class='nav nav-list'></ul></li><li class=''><a href="../User_Guide/index.html" class="folder">User Guide</a><ul class='nav nav-list'></ul></li><li class=''><a href="../Developper_Guide/index.html" class="folder">Developper Guide</a><ul class='nav nav-list'></ul></li><li class='open'><a href="#" class="aj-nav folder">Pages From Wiki</a><ul class='nav nav-list'><li class=''><a href="../Pages_From_Wiki/Sidebar.html">Sidebar</a></li><li class=''><a href="../Pages_From_Wiki/Board-numbers.html">Board-numbers</a></li><li class=''><a href="../Pages_From_Wiki/Calibration-Bias-Factors.html">Calibration-Bias-Factors</a></li><li class=''><a href="../Pages_From_Wiki/Calibration-Scale-Factors.html">Calibration-Scale-Factors</a></li><li class=''><a href="../Pages_From_Wiki/Connect-a-Joystick-to-QGroundControl.html">Connect-a-Joystick-to-QGroundControl</a></li><li class=''><a href="../Pages_From_Wiki/Create-new-project-in-Codelite.html">Create-new-project-in-Codelite</a></li><li class=''><a href="../Pages_From_Wiki/Credits License.html">Credits License</a></li><li class=''><a href="../Pages_From_Wiki/Credits-Origin-of-the-Project.html">Credits-Origin-of-the-Project</a></li><li class=''><a href="../Pages_From_Wiki/DataLogging.html">DataLogging</a></li><li class=''><a href="../Pages_From_Wiki/Debug-via-minicom-software-on-Linux.html">Debug-via-minicom-software-on-Linux</a></li><li class=''><a href="../Pages_From_Wiki/Development-Code-style.html">Development-Code-style</a></li><li class=''><a href="../Pages_From_Wiki/Development-Create-new-messages.html">Development-Create-new-messages</a></li><li class=''><a href="../Pages_From_Wiki/Development-Doxygen-Documentation.html">Development-Doxygen-Documentation</a></li><li class=''><a href="../Pages_From_Wiki/Development-Doxygen-Tips.html">Development-Doxygen-Tips</a></li><li class=''><a href="../Pages_From_Wiki/Development-Wiki-How-to.html">Development-Wiki-How-to</a></li><li class=''><a href="../Pages_From_Wiki/Development-workflow.html">Development-workflow</a></li><li class=''><a href="../Pages_From_Wiki/Download-Firmware.html">Download-Firmware</a></li><li class=''><a href="../Pages_From_Wiki/Download-Git-Tools.html">Download-Git-Tools</a></li><li class=''><a href="../Pages_From_Wiki/Download-IDE.html">Download-IDE</a></li><li class=''><a href="../Pages_From_Wiki/Download-QGroundcontrol.html">Download-QGroundcontrol</a></li><li class='active'><a href="../Pages_From_Wiki/Electronic-board.html">Electronic-board</a></li><li class=''><a href="../Pages_From_Wiki/FAQ.html">FAQ</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Binding-your-Remote.html">First-Steps-Binding-your-Remote</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-CDC-and-DFU-Drivers-issue-on-Windows.html">First-steps-CDC-and-DFU-Drivers-issue-on-Windows</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-Connect-to-QGroundControl.html">First-steps-Connect-to-QGroundControl</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-DFU-Programming.html">First-Steps-DFU-Programming</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-Flashing-the-autopilot.html">First-steps-Flashing-the-autopilot</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Installing-Bootloader.html">First-Steps-Installing-Bootloader</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-pairing-XBee-modules.html">First-steps-pairing-XBee-modules</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Setup-on-Linux.html">First-Steps-Setup-on-Linux</a></li><li class=''><a href="../Pages_From_Wiki/Flashing-a-microcontroller-for-the-first-time.html">Flashing-a-microcontroller-for-the-first-time</a></li><li class=''><a href="../Pages_From_Wiki/Home.html">Home</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Building-Steps.html">Quad-Assembly-Building-Steps</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Part-List.html">Quad-Assembly-Part-List</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Remote-Pairing.html">Quad-Assembly-Remote-Pairing</a></li><li class=''><a href="../Pages_From_Wiki/README.html">README</a></li><li class=''><a href="../Pages_From_Wiki/Remote-settings.html">Remote-settings</a></li><li class=''><a href="../Pages_From_Wiki/Setup-on-Windows.html">Setup-on-Windows</a></li></ul></li></ul>
+
+                <div class="sidebar-links">
+                    
+                        <!-- Links -->
+                        <a href="https://github.com/lis-epfl/MAVRIC_Library/archive/master.zip" target="_blank">Download</a><br><a href="https://github.com/lis-epfl/MAVRIC_Library" target="_blank">GitHub Repo</a><br><a href="https://github.com/lis-epfl/MAVRIC_Library/issues" target="_blank">Help/Support/Bugs</a><br>
+                        <!-- Twitter -->
+                        
+                        <hr/>
+                    
+                    <p><small>Documentation generated by <a href="http://daux.io">Daux.io</a></small></p>
+                </div>
+            </div>
+        </div>
+        <div class="right-column  content-area col-sm-9">
+            <div class="content-page">
+                <article>
+            <div class="page-header sub-header clearfix">
+            <h1><a href="../Pages_From_Wiki/Sidebar.html">Pages From Wiki</a> <i class="glyphicon glyphicon-chevron-right"></i> <a href="../Pages_From_Wiki/Electronic-board.html">Electronic-board</a>            </h1>
+                    <span style="float: left; font-size: 10px; color: gray;">
+                        Thursday, January 28, 2016                    </span>
+                    <span style="float: right; font-size: 10px; color: gray;">
+                        3:09 PM                    </span>
+        </div>
+    
+    <h2>Power</h2>
+<h3>Power regulators</h3>
+<p>4 power regulators provide the board with different stable voltages. Two regulators are lm2734 chip, an adjustable voltage regulator controlled by a voltage divider on a feedback pin. The output voltage is defined with the following formula.</p>
+<pre><code>Vout == Vref * (1 + R1 / R2)
+Vref = 0.8V
+R2 = 10k
+</code></pre>
+<p><img src="images/lm2734_sch.png" alt="" /><br />
+The two other regulators provide fix stable voltage, 3.3 and 5 Volts for analogical measurements.<br />
+<img src="images/Rev411_sch_power.png" alt="" />
+On revision 4.1.1, a resistor of 56k is mounted in order to provide 5.2 Volts. On revision 4 and 4.1, a resistor of 68k is mounted to provide 6 Volts.</p>
+<h3>Voltages measurement</h3>
+<p>For measuring the voltages on the board, analogic port are connected to voltage dividers. By reading these ports, input voltages can be monitored by the microcontroller.
+<img src="images/Rev411_sch_voltages.png" alt="" />
+From the voltage read on these 4 ports, the microcontroller can detect if the board is powered with a battery or an external source (Speed controllers or USB bus).</p>
+<h2>Microcontroller</h2>
+<p>The core of the electronic board is the microcontroller, a Atmel AVR 32 bits, the AT32UC3C1512. All the sensors and communication devices are connected to the microcontroller. The microcontroller connections are presented in the two following schematics.</p>
+<h3>Left side Schematic</h3>
+<p>The different signals connected to the microcontroller are:</p>
+<ul>
+<li>SW_RECEIVER: Enable the power supply of the Remote Control Receiver</li>
+<li>SDA0 and SCL0: I2C bus lines connected to the barometer, compass and IMU</li>
+<li>SDA1 and SCL1: Data and Clock lines of the external I2C bus connectors</li>
+<li>PWM0-7: PWM signals connected to the servos connector</li>
+<li>CAN*: CAN bus lines connected to the CAN bus device</li>
+<li>SPI0_*: External SPI bus connected to the SPI 7-pins header</li>
+<li>D_TXD:</li>
+</ul>
+<p><img src="images/Rev411_sch_mcu_1.png" alt="" />
+<img src="images/Rev411_sch_mcu_2.png" alt="" /></p>
+<h2>Sensors</h2>
+<p>The PCB contains different onboard sensors, a barometer used for a relative altitude estimation, a compass used for the heading direction and an Inertial Measurement Unit used for the attitude estimation of the platform.</p>
+<h3>barometer, compass and IMU</h3>
+<p><img src="images/Rev411_sch_sensors.png" alt="" /></p>
+<h2>Communication</h2>
+<p>For enhancing communication capabilities, a CAN bus interface chip is available onboard.</p>
+<h3>CAN bus interface</h3>
+<p><img src="images/Rev411_sch_can.png" alt="" /></p>
+<h2>IOs</h2>
+<p>In addition to standard IOs, the board contains 4 N-channel MOS transistor outputs. These outputs are capable of driving motors and other electric loads within the limits of the power supply maximal current.</p>
+<h3>Output drive by MOS transistor</h3>
+<p><img src="images/Rev411_sch_4nmos.png" alt="" /></p>
+<h2>Connectors</h2>
+<p>Different type of connectors are placed on the PCB to allow multiple connections with a variety of different sensors.</p>
+<h3>Analogic</h3>
+<p>An analogic connector is placed onboard. Several inputs (ADC) and outputs (DCA) lines are available.
+<img src="images/Rev411_sch_conn_ana.png" alt="" /></p>
+<h3>I2C and SPI</h3>
+<p>I2C and SPI buses of the microcontroller are available outside the board through 4 I2C and 1 SPI connectors.
+<img src="images/Rev411_sch_conn_ser.png" alt="" /></p>
+<h3>GPS and Remote</h3>
+<p>The GPS connector is a standard 5 pins connector. Watch out of TX and RX cables inversion in version 4.1 and 4.1.1.<br />
+Two connectors for remote receiver are placed onboard allowing the capability of using two remotes.
+<img src="images/Rev411_sch_conn_gps_remote.png" alt="" /></p>
+<h3>Servos</h3>
+<p><img src="images/Rev411_sch_conn_servos.png" alt="" /></p>
+<h3>SD card and XBee</h3>
+<p><img src="images/Rev411_sch_conn_xbee_sd.png" alt="" /></p>
+
+        <nav>
+        <ul class="pager">
+            <li><a href="../Pages_From_Wiki/Download-QGroundcontrol.html">Previous</a></li>            <li><a href="../Pages_From_Wiki/FAQ.html">Next</a></li>        </ul>
+    </nav>
+    </article>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- jQuery -->
+    <script src="../themes/daux/js/jquery-1.11.3.min.js"></script>
+    <!-- hightlight.js -->
+    <script src="../themes/daux/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- JS -->
+    
+    <script src="../themes/daux/js/daux.js"></script>
+</body>
+</html>

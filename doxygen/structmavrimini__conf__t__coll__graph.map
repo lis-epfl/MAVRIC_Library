@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$structimu__conf__t.html" title="The configuration IMU structure." alt="" coords="17,357,135,529"/>
-<area shape="rect" id="node4" href="$structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="5,5,147,195"/>
-<area shape="rect" id="node6" href="$structservo__conf__t.html" title="Configuration structure for servo." alt="" coords="159,348,311,537"/>
-<area shape="rect" id="node8" href="$structgpio__stm32__conf__t.html" title="{gpio_stm32_conf_t\n|+ port\l+ pin\l+ dir\l+ pull\l|}" alt="" coords="335,374,465,511"/>
-<area shape="rect" id="node10" href="$structgpio__dummy__conf__t.html" title="{gpio_dummy_conf_t\n|+ flag\l|}" alt="" coords="489,400,628,485"/>
-<area shape="rect" id="node12" href="$structserial__stm32__conf__t.html" title="Configuration structure." alt="" coords="672,296,811,589"/>
-</map>

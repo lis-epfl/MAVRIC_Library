@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="5,19,112,48"/>
-<area shape="rect" id="node3" href="$classAccelerometer__sim.html" title="Simulated accelerometers." alt="" coords="161,5,295,35"/>
-<area shape="rect" id="node5" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="185,59,271,88"/>
-<area shape="rect" id="node6" href="$classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="16,85,101,115"/>
-<area shape="rect" id="node8" href="$classGyroscope__sim.html" title="Simulated gyroscopes." alt="" coords="172,112,284,141"/>
-</map>

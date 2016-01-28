@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classLed.html" title="Led" alt="" coords="5,59,48,88"/>
-<area shape="rect" id="node3" href="$classLed__avr32.html" title="Led_avr32" alt="" coords="101,5,184,35"/>
-<area shape="rect" id="node5" href="$classLed__dummy.html" title="Led_dummy" alt="" coords="96,59,189,88"/>
-<area shape="rect" id="node7" href="$classLed__gpio.html" title="Led_gpio" alt="" coords="105,112,180,141"/>
-</map>

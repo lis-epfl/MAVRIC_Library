@@ -1,4 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classSonar__i2cxl.html" title="{Sonar_i2cxl\n||+ Sonar_i2cxl()\l+ init()\l+ update()\l+ last_update_us()\l+ orientation_bf()\l+ distance()\l+ velocity()\l+ healthy()\l}" alt="" coords="5,243,136,450"/>
-<area shape="rect" id="node5" href="$classSonar__sim.html" title="Simulation for sonars." alt="" coords="160,243,291,450"/>
-</map>

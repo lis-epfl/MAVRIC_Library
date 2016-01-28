@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>       <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>          <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>          <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <title>Calibration-Bias-Factors - MAV'RIC Library</title>
+    <meta name="description" content="Highway to the Danger Zone" />
+    <meta name="author" content="MAV'RIC Team">
+    <meta charset="UTF-8">
+    <link rel="icon" href="../themes/daux/img/favicon-navy.png" type="image/x-icon">
+    <!-- Mobile -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font -->
+    <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700&subset=latin,cyrillic-ext,cyrillic' rel='stylesheet' type='text/css'>
+    <!-- CSS -->
+    <link href='../themes/daux/css/theme.min.css' rel='stylesheet' type='text/css'><link href='../themes/daux/css/theme-navy.min.css' rel='stylesheet' type='text/css'>
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body class="">
+    
+    <a href="https://github.com/lis-epfl/MAVRIC_Library" target="_blank" id="github-ribbon" class="hidden-print"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<div class="container-fluid fluid-height wrapper">
+    <div class="navbar navbar-static-top hidden-print">
+        <div class="container-fluid">
+            <a class="brand navbar-brand pull-left" href="../index.html">MAV'RIC Library</a>
+        </div>
+    </div>
+    <div class="row columns content">
+        <div class="left-column article-tree col-sm-3 hidden-print">
+            <!-- For Mobile -->
+            <div class="responsive-collapse">
+                <button type="button" class="btn btn-sidebar" id="menu-spinner-button">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="sub-nav-collapse" class="sub-nav-collapse">
+                <!-- Navigation -->
+                <ul class='nav nav-list'><li class=''><a href="../Getting_Started.html">Getting Started</a></li><li class=''><a href="../Features/index.html" class="folder">Features</a><ul class='nav nav-list'></ul></li><li class=''><a href="../User_Guide/index.html" class="folder">User Guide</a><ul class='nav nav-list'></ul></li><li class=''><a href="../Developper_Guide/index.html" class="folder">Developper Guide</a><ul class='nav nav-list'></ul></li><li class='open'><a href="#" class="aj-nav folder">Pages From Wiki</a><ul class='nav nav-list'><li class=''><a href="../Pages_From_Wiki/Sidebar.html">Sidebar</a></li><li class=''><a href="../Pages_From_Wiki/Board-numbers.html">Board-numbers</a></li><li class='active'><a href="../Pages_From_Wiki/Calibration-Bias-Factors.html">Calibration-Bias-Factors</a></li><li class=''><a href="../Pages_From_Wiki/Calibration-Scale-Factors.html">Calibration-Scale-Factors</a></li><li class=''><a href="../Pages_From_Wiki/Connect-a-Joystick-to-QGroundControl.html">Connect-a-Joystick-to-QGroundControl</a></li><li class=''><a href="../Pages_From_Wiki/Create-new-project-in-Codelite.html">Create-new-project-in-Codelite</a></li><li class=''><a href="../Pages_From_Wiki/Credits License.html">Credits License</a></li><li class=''><a href="../Pages_From_Wiki/Credits-Origin-of-the-Project.html">Credits-Origin-of-the-Project</a></li><li class=''><a href="../Pages_From_Wiki/DataLogging.html">DataLogging</a></li><li class=''><a href="../Pages_From_Wiki/Debug-via-minicom-software-on-Linux.html">Debug-via-minicom-software-on-Linux</a></li><li class=''><a href="../Pages_From_Wiki/Development-Code-style.html">Development-Code-style</a></li><li class=''><a href="../Pages_From_Wiki/Development-Create-new-messages.html">Development-Create-new-messages</a></li><li class=''><a href="../Pages_From_Wiki/Development-Doxygen-Documentation.html">Development-Doxygen-Documentation</a></li><li class=''><a href="../Pages_From_Wiki/Development-Doxygen-Tips.html">Development-Doxygen-Tips</a></li><li class=''><a href="../Pages_From_Wiki/Development-Wiki-How-to.html">Development-Wiki-How-to</a></li><li class=''><a href="../Pages_From_Wiki/Development-workflow.html">Development-workflow</a></li><li class=''><a href="../Pages_From_Wiki/Download-Firmware.html">Download-Firmware</a></li><li class=''><a href="../Pages_From_Wiki/Download-Git-Tools.html">Download-Git-Tools</a></li><li class=''><a href="../Pages_From_Wiki/Download-IDE.html">Download-IDE</a></li><li class=''><a href="../Pages_From_Wiki/Download-QGroundcontrol.html">Download-QGroundcontrol</a></li><li class=''><a href="../Pages_From_Wiki/Electronic-board.html">Electronic-board</a></li><li class=''><a href="../Pages_From_Wiki/FAQ.html">FAQ</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Binding-your-Remote.html">First-Steps-Binding-your-Remote</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-CDC-and-DFU-Drivers-issue-on-Windows.html">First-steps-CDC-and-DFU-Drivers-issue-on-Windows</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-Connect-to-QGroundControl.html">First-steps-Connect-to-QGroundControl</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-DFU-Programming.html">First-Steps-DFU-Programming</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-Flashing-the-autopilot.html">First-steps-Flashing-the-autopilot</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Installing-Bootloader.html">First-Steps-Installing-Bootloader</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-pairing-XBee-modules.html">First-steps-pairing-XBee-modules</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Setup-on-Linux.html">First-Steps-Setup-on-Linux</a></li><li class=''><a href="../Pages_From_Wiki/Flashing-a-microcontroller-for-the-first-time.html">Flashing-a-microcontroller-for-the-first-time</a></li><li class=''><a href="../Pages_From_Wiki/Home.html">Home</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Building-Steps.html">Quad-Assembly-Building-Steps</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Part-List.html">Quad-Assembly-Part-List</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Remote-Pairing.html">Quad-Assembly-Remote-Pairing</a></li><li class=''><a href="../Pages_From_Wiki/README.html">README</a></li><li class=''><a href="../Pages_From_Wiki/Remote-settings.html">Remote-settings</a></li><li class=''><a href="../Pages_From_Wiki/Setup-on-Windows.html">Setup-on-Windows</a></li></ul></li></ul>
+
+                <div class="sidebar-links">
+                    
+                        <!-- Links -->
+                        <a href="https://github.com/lis-epfl/MAVRIC_Library/archive/master.zip" target="_blank">Download</a><br><a href="https://github.com/lis-epfl/MAVRIC_Library" target="_blank">GitHub Repo</a><br><a href="https://github.com/lis-epfl/MAVRIC_Library/issues" target="_blank">Help/Support/Bugs</a><br>
+                        <!-- Twitter -->
+                        
+                        <hr/>
+                    
+                    <p><small>Documentation generated by <a href="http://daux.io">Daux.io</a></small></p>
+                </div>
+            </div>
+        </div>
+        <div class="right-column  content-area col-sm-9">
+            <div class="content-page">
+                <article>
+            <div class="page-header sub-header clearfix">
+            <h1><a href="../Pages_From_Wiki/Sidebar.html">Pages From Wiki</a> <i class="glyphicon glyphicon-chevron-right"></i> <a href="../Pages_From_Wiki/Calibration-Bias-Factors.html">Calibration-Bias-Factors</a>            </h1>
+                    <span style="float: left; font-size: 10px; color: gray;">
+                        Thursday, January 28, 2016                    </span>
+                    <span style="float: right; font-size: 10px; color: gray;">
+                        3:09 PM                    </span>
+        </div>
+    
+    <p>For this part, you need to screw the MAV'RIC board to your quad.</p>
+<h3>To calibrate the accelerometer bias factors, your goal is:</h3>
+<p>For SCALED_IMU.xacc and .yacc, you should have their mean value at zero.
+For SCALED_IMU.zacc, you should have its mean value at -1000 (= -1 gravity unit * 1000)</p>
+<h4>If you just did the calibration of the scaled factor, you can skip the following points:</h4>
+<ul>
+<li>Edit mavlink_telemetry.c-&gt;mavlink_telemetry_init(void) function</li>
+<li>Check that RUN_REGULAR is set for imu_telemetry_send_raw and imu_telemetry_send_scaled, else set it.</li>
+<li>Compile and flash the code</li>
+</ul>
+<h2>But in every case, do the following</h2>
+<h3>Preliminar:</h3>
+<ul>
+<li>Open QGroundControl</li>
+<li>Connect to your quad and go into Analyse.</li>
+<li>Level your quad on a nice flat surface !!!</li>
+</ul>
+<h3>Calibration:</h3>
+<ul>
+<li>Change in this tab the bias of the IMU to fit those mean values.<br />
+=&gt; set Bias_Acc_X as current mean of RAW_IMU.xacc,<br />
+=&gt; set Bias_Acc_Y as current mean of RAW_IMU.yacc.<br />
+=&gt; Adjust Bias_Acc_Z manually in order to have the mean of SCALED_IMU.zacc equal to -1000 (Press Save after each adjustement).</li>
+<li>Check in QGroundControl-&gt;Flight that the attitude estimation is leveled correctly.</li>
+<li>Report this values in MAVRIC\LEQuad\src\config\MAVcalib\MAVxxx_imu_config.h with xxx your MAV ID.</li>
+</ul>
+<h3>Your are done for the accelerometer</h3>
+<h1>To calibrate the magnetometer Bias factors:</h1>
+<h3>WARNING:</h3>
+<p>Any magnetic interference would mess up your calibration of the magnetometer !!! Go outside!</p>
+<p>Before the first flight, or when arriving to a new location, you can (and should) recompute the biais of the magnetometer. In the Utilities/QGroundControl folder, you can find a widget allowing a on-the-go biais computation.</p>
+<ul>
+<li>Open QGroundControl and go in 'Instruments' tab</li>
+<li>Connect your communication port</li>
+<li>Click on &quot;Tools Widgets&quot;-&gt;&quot;Load Custom Widget File&quot; and import the calibration_widget located in the Utilities/QGroundControl folder</li>
+<li>Re-click on &quot;Tools Widgets&quot;-&gt;&quot;Sensor Calibration&quot;</li>
+<li>Estimate the magnetic North direction</li>
+<li>To start the magnetometer calibration, click on the &quot;Magneto calib&quot; button, it starts the calibration process</li>
+<li>The quadcopter can be seen as a cube with 6 faces and their normals. Once the calibration started, align each face to the north and move/shake the drone so that the normal of the face remain in a small angle related to the initial one, the purpose being that during this motion the normal points once really in the north. Do it for the 6 faces.</li>
+<li>Re-click on the &quot;Magneto calib&quot; button, this ends the calibration process</li>
+<li>Go in pro-&gt;plot, To have your new biais, refresh the value of your on-board parameters, (click on the &quot;Get&quot; button of the on-board parameter widget)</li>
+</ul>
+<h1>Calibrate the Gyro initial bias</h1>
+<p>Here we want to use the gyro bias to converge quicker at boot.</p>
+<h3>Steps:</h3>
+<ul>
+<li>In QGroundControl</li>
+<li>Connect to your quad</li>
+<li>Go in Pro-&gt;plot.</li>
+<li>Level your quad properly</li>
+<li>wait until RAW_IMU.xgyro/ygyro/zgyro values stabilize (1min)</li>
+<li>Press Get button to refresh parameters.</li>
+<li>Read the Parameters-&gt;Component-&gt;Bias-&gt;BiasGyro_x/y/z</li>
+<li>Press Write to write them in the flash.</li>
+<li>Edit &lt;...&gt;\maveric\Your_Project\src\config\MAVsettings\MAVxxx_imu_config.h</li>
+<li>Write the gyro bias there.</li>
+</ul>
+<p>Before leaving:</p>
+<ul>
+<li>Go back to Atmel</li>
+<li>undo previous editing of the code that are not relevant for future uses, as in maveric_telemetry.c and in main.cpp</li>
+<li>compile and flash again</li>
+</ul>
+<h3>You are DONE</h3>
+<p>Now, in case you did not calibrate scale factors of your board, have a look on the [[scale factors page|Calibration Scale Factors]].</p>
+
+        <nav>
+        <ul class="pager">
+            <li><a href="../Pages_From_Wiki/Board-numbers.html">Previous</a></li>            <li><a href="../Pages_From_Wiki/Calibration-Scale-Factors.html">Next</a></li>        </ul>
+    </nav>
+    </article>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- jQuery -->
+    <script src="../themes/daux/js/jquery-1.11.3.min.js"></script>
+    <!-- hightlight.js -->
+    <script src="../themes/daux/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- JS -->
+    
+    <script src="../themes/daux/js/daux.js"></script>
+</body>
+</html>

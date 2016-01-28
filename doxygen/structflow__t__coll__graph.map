@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$unionflow__data__t.html" title="Array of 2&#45;D optic flow vectors." alt="" coords="5,306,93,443"/>
-<area shape="rect" id="node4" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="95,6,188,213"/>
-<area shape="rect" id="node6" href="$structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="192,280,323,469"/>
-<area shape="rect" id="node9" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="212,58,345,161"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classAccelerometer__sim.html#ace01eebc112edbcc8488990ed9303f7a" title="Get last update time in microseconds." alt="" coords="268,5,497,35"/>
-<area shape="rect" id="node5" href="$classBarometer__sim.html#a4075bc813d0616b6d52f53f9cf97c037" title="Main update function &#160;Reads new values from sensor." alt="" coords="304,59,461,88"/>
-<area shape="rect" id="node7" href="$classGps__sim.html#a31264788b969fe38e96bc71e830ad0de" title="Main update function &#160;Reads new values from sensor." alt="" coords="323,112,443,141"/>
-<area shape="rect" id="node9" href="$classGyroscope__sim.html#aba98fa8cb19a6914195344691efdb559" title="Get last update time in microseconds." alt="" coords="279,165,487,195"/>
-<area shape="rect" id="node11" href="$classMagnetometer__sim.html#a27736b2fb7d73afb96584458a7120580" title="Get last update time in microseconds." alt="" coords="268,219,497,248"/>
-<area shape="rect" id="node13" href="$classSonar__sim.html#aa4fc17facb51ff8b2eea85b6b9580e60" title="Main update function &#160;Reads new values from sensor." alt="" coords="317,272,448,301"/>
-</map>
