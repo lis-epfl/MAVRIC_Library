@@ -145,7 +145,7 @@ LIB_SRCS += hal/linux/serial_linux_io.cpp
 # CC = gcc
 OBJCOPY = objcopy
 
-CFLAGS  = -g -O2 -Wall -std=gnu99
+CFLAGS  = -g -O2 -Wall -std=gnu99 -MMD -MP
 
 # Include files from MAVRIC library and source folder
 CFLAGS += -I.
@@ -157,7 +157,7 @@ CFLAGS += ${LIB_INC}
 # CXX = g++
 OBJCOPY = objcopy
 
-CXXFLAGS  = -g -O2 -Wall -std=c++11
+CXXFLAGS  = -g -O2 -Wall -std=c++11 -MMD -MP
 
 # Include files from MAVRIC library and source folder
 CXXFLAGS += -I.
@@ -179,6 +179,13 @@ BUILD_DIR = build
 
 # Get the names of the .o files from .c and .cpp files
 OBJS += $(addprefix ${BUILD_DIR}/, $(addsuffix .o, $(basename $(LIB_SRCS))))
+
+# ------------------------------------------------------------------------------
+# DEPENDENCY FILES (*.d)
+# ------------------------------------------------------------------------------
+DEPS += $(addsuffix .d, $(basename $(OBJS)))	# create list of dependency files
+-include $(DEPS)								# include existing dependency files
+
 
 # ------------------------------------------------------------------------------
 # COMMANDS FOR FANCY OUTPUT
@@ -231,8 +238,10 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 
 .PHONY: clean rebuild
 clean:
-	@rm -f $(OBJS)
+	@rm -f $(OBJS) $(DEPS)
 	@rm -rf build/
 	@$(PRINT_OK)
 
 rebuild: clean proj
+
+.DEFAULT_GOAL := all
