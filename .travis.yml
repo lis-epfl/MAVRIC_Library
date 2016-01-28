@@ -13,11 +13,11 @@ install:
   - sudo apt-get install -qq g++-4.8
   - export CXX="g++-4.8"
   - sudo apt-get install -qq graphviz doxygen
-  - sudo apt-get install -qq php7.0
+  - sudo apt-get install -qq php
 
 script: 
   - cd travis
-  - make LEQuad_linux
+  - make sample_projects
   - make doc
 
 after_success:

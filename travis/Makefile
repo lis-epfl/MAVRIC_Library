@@ -20,13 +20,13 @@ LEQuad_avr32:
 LEQuad_stm32:
 	cd ../sample_projects/LEQuad/proj_stm32 && make clean && make && make clean
 
-doc: gh_pages doc_doxygen doc_daux
+doc: doc_doxygen doc_daux
 
 gh_pages:
 	mkdir -p ../doc/gh_pages
 
-doc_doxygen:
-	cd ../doc && mkdir -p gh_pages && doxygen > /dev/null 2> /dev/null
+doc_doxygen: gh_pages
+	cd ../doc && doxygen > /dev/null 2> /dev/null
 
-doc_daux:
-	@cd ../doc/daux.io && ./daux.phar && mkdir -p ../gh_pages && cp -r static/* ../gh_pages
+doc_daux: gh_pages
+	cd ../doc/daux.io && ./daux.phar --destination ../gh_pages
