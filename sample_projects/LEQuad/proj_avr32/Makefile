@@ -348,7 +348,7 @@ ASFLAGS += ${SRCS_INC}
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
 CC = avr32-gcc
-CFLAGS  = -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall 
+CFLAGS  = -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -Wall 
 CFLAGS += -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes 
 CFLAGS += -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MMD -MP
 # CFLAGS += -ffunction-sections
@@ -366,7 +366,7 @@ CFLAGS += ${SRCS_INC}
 CXX = avr32-g++
 # CXXFLAGS  = -O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section 
 CXXFLAGS  = -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section 
-CXXFLAGS += -g2 -pg -p -Wall -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MMD -MP
+CXXFLAGS += -g2 -Wall -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MMD -MP
 # CXXFLAGS += -D_DEFAULT_SOURCE 
 # CXXFLAGS += -ffunction-sections
 CXXFLAGS += ${PREPROC_OPT}
