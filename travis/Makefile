@@ -29,4 +29,5 @@ doc_doxygen: gh_pages
 	cd ../doc && doxygen > /dev/null 2> /dev/null
 
 doc_daux: gh_pages
+	php -v
 	cd ../doc/daux.io && ./daux.phar --destination ../gh_pages
