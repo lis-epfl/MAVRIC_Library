@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classGpio__avr32.html" title="{Gpio_avr32\n||+ Gpio_avr32()\l+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="5,243,112,450"/>
+<area shape="rect" id="node5" href="$classGpio__dummy.html" title="{Gpio_dummy\n||+ Gpio_dummy()\l+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="136,243,253,450"/>
+<area shape="rect" id="node7" href="$classGpio__stm32.html" title="{Gpio_stm32\n||+ Gpio_stm32()\l+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="277,243,389,450"/>
+</map>

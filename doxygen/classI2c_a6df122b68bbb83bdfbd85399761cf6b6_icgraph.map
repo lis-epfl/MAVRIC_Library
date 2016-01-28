@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classBmp085.html#a4f895185b71c8206e5017e3f5ba1c340" title="Main update function &#160;Reads new values from sensor." alt="" coords="139,5,256,35"/>
+<area shape="rect" id="node5" href="$classHmc5883l.html#acd6966f7b8e7f084c9c07a670658bab7" title="Initialise the sensor." alt="" coords="144,59,251,88"/>
+<area shape="rect" id="node9" href="$classHmc5883l.html#aed6816efef437df0e65a3f3b107c13b0" title="Main update function &#160;Reads new values from sensor." alt="" coords="133,112,261,141"/>
+<area shape="rect" id="node11" href="$classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9" title="Initialise the sensor." alt="" coords="143,165,252,195"/>
+<area shape="rect" id="node14" href="$classLsm330dlc.html#a6a90c8e0a93f539d852810e88313189c" title="Main update function." alt="" coords="132,219,263,248"/>
+<area shape="rect" id="node7" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="312,112,437,141"/>
+</map>

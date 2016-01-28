@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classSerial.html" title="Serial" alt="" coords="7,139,60,168"/>
+<area shape="rect" id="node3" href="$classSerial__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="124,5,217,35"/>
+<area shape="rect" id="node5" href="$classSerial__dummy.html" title="Serial_dummy" alt="" coords="119,59,223,88"/>
+<area shape="rect" id="node7" href="$classSerial__linux__io.html" title="Implementation of serial peripheral for avr32." alt="" coords="117,112,224,141"/>
+<area shape="rect" id="node9" href="$classSerial__stm32.html" title="Implementation of serial peripheral for avr32." alt="" coords="121,165,220,195"/>
+<area shape="rect" id="node11" href="$classSerial__udp.html" title="Serial_udp" alt="" coords="129,219,212,248"/>
+<area shape="rect" id="node13" href="$classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="109,272,232,301"/>
+</map>

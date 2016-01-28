@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classServo.html#ad88911ece9b3822f8cc7499fe2b0a12a" title="Set PWM line according to the servo value." alt="" coords="229,32,400,61"/>
+<area shape="rect" id="node5" href="$classServo.html#afc97bfc58e00c9c586d67f53ef4764ad" title="Sets the servos to a given value." alt="" coords="456,5,547,35"/>
+<area shape="rect" id="node9" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="448,59,555,88"/>
+<area shape="rect" id="node7" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="603,5,744,35"/>
+<area shape="rect" id="node11" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="623,59,724,88"/>
+<area shape="rect" id="node13" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="611,112,736,141"/>
+<area shape="rect" id="node15" href="$classServo.html#a2a4eacedcd7b7f4728b84e07d4645e5a" title="Constructor." alt="" coords="624,165,723,195"/>
+</map>

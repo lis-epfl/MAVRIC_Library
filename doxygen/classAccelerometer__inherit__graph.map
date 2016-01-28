@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classAccelerometer__sim.html" title="Simulated accelerometers." alt="" coords="5,296,160,520"/>
+<area shape="rect" id="node5" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="184,261,315,555"/>
+</map>

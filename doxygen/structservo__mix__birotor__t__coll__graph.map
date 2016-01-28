@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="5,596,136,681"/>
+<area shape="rect" id="node4" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="160,553,307,725"/>
+<area shape="rect" id="node6" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="331,596,464,681"/>
+<area shape="rect" id="node8" href="$structdaler__dc__motor__ctrl__t.html" title="structure of the i2cxl_sonar module" alt="" coords="488,553,672,725"/>
+<area shape="rect" id="node10" href="$structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="433,280,564,469"/>
+<area shape="rect" id="node12" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="384,6,477,213"/>
+<area shape="rect" id="node14" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="501,58,635,161"/>
+<area shape="rect" id="node16" href="$structbyte__stream__t.html" title="Byte stream." alt="" coords="588,289,711,461"/>
+</map>

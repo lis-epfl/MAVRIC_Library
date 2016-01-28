@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structimu__conf__t.html" title="The configuration IMU structure." alt="" coords="17,305,135,477"/>
+<area shape="rect" id="node4" href="$structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="5,5,147,195"/>
+<area shape="rect" id="node6" href="$structi2c__avr32__conf__t.html" title="Configuration structure." alt="" coords="159,313,279,468"/>
+<area shape="rect" id="node8" href="$structserial__avr32__conf__t.html" title="Configuration structure." alt="" coords="303,313,436,468"/>
+<area shape="rect" id="node10" href="$structserial__avr32__gpio__map__t.html" title="Gpio map." alt="" coords="287,49,452,151"/>
+<area shape="rect" id="node12" href="$structservo__conf__t.html" title="Configuration structure for servo." alt="" coords="460,296,612,485"/>
+<area shape="rect" id="node14" href="$structgpio__avr32__conf__t.html" title="{gpio_avr32_conf_t\n|+ pin\l+ dir\l+ pull\l|}" alt="" coords="636,331,764,451"/>
+<area shape="rect" id="node16" href="$structserial__usb__avr32__conf__t.html" title="Configuration structure." alt="" coords="791,348,953,433"/>
+</map>

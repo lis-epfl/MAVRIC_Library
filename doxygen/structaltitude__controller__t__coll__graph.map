@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="5,289,136,375"/>
+<area shape="rect" id="node4" href="$structaltitude__t.html" title="Structure containing the Altitude." alt="" coords="160,281,275,383"/>
+<area shape="rect" id="node6" href="$structposition__command__t.html" title="Position command structure." alt="" coords="299,281,440,383"/>
+<area shape="rect" id="node8" href="$structpid__controller__t.html" title="PID controller." alt="" coords="464,211,592,453"/>
+<area shape="rect" id="node10" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="412,15,516,135"/>
+<area shape="rect" id="node12" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="540,6,644,143"/>
+</map>

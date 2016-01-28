@@ -1,0 +1,21 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structmavlink__send__msg__handler__set__t.html" title="MAVLink message handler setting structure." alt="" coords="1263,877,1481,997"/>
+<area shape="rect" id="node4" href="$structmavlink__send__msg__handler__t.html" title="MAVLink message handler structure." alt="" coords="1267,673,1461,793"/>
+<area shape="rect" id="node6" href="$structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="1169,332,1300,521"/>
+<area shape="rect" id="node12" href="$structonboard__parameters__t.html" title="Main structure of the module onboard parameters." alt="" coords="336,656,485,811"/>
+<area shape="rect" id="node31" href="$structmavlink__message__handler__t.html" title="Main message handler structure." alt="" coords="808,665,995,802"/>
+<area shape="rect" id="node8" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="1172,6,1265,213"/>
+<area shape="rect" id="node10" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="1289,58,1423,161"/>
+<area shape="rect" id="node14" href="$structonboard__parameters__set__t.html" title="Set of onboard parameters." alt="" coords="12,367,188,487"/>
+<area shape="rect" id="node16" href="$structonboard__parameters__entry__t.html" title="Structure of onboard parameter." alt="" coords="5,23,195,195"/>
+<area shape="rect" id="node19" href="$classFile.html" title="Base class for file objects." alt="" coords="212,297,297,556"/>
+<area shape="rect" id="node21" href="$classState.html" title="The MAV state." alt="" coords="321,280,500,573"/>
+<area shape="rect" id="node23" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="369,32,452,187"/>
+<area shape="rect" id="node25" href="$structscheduler__t.html" title="Scheduler." alt="" coords="1505,877,1644,997"/>
+<area shape="rect" id="node27" href="$structtask__set__t.html" title="Task set." alt="" coords="1495,665,1655,802"/>
+<area shape="rect" id="node29" href="$structtask__entry__t.html" title="Task entry." alt="" coords="1504,280,1645,573"/>
+<area shape="rect" id="node33" href="$structmavlink__message__handler__msg__callback__set__t.html" title="Set of message callbacks." alt="" coords="847,367,1145,487"/>
+<area shape="rect" id="node35" href="$structmavlink__message__handler__msg__callback__t.html" title="Message callback." alt="" coords="859,23,1133,195"/>
+<area shape="rect" id="node37" href="$structmavlink__message__handler__cmd__callback__set__t.html" title="Set of command callbacks." alt="" coords="524,367,823,487"/>
+<area shape="rect" id="node39" href="$structmavlink__message__handler__cmd__callback__t.html" title="Command callback." alt="" coords="536,23,811,195"/>
+</map>
