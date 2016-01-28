@@ -337,7 +337,7 @@ PREPROC_OPT += -DUDD_ENABLE
 # ASSEMBLY COMPILER OPTIONS
 # ------------------------------------------------------------------------------
 AS = avr32-gcc
-ASFLAGS = -x assembler-with-cpp -c -mpart=uc3c1512c -mrelax 
+ASFLAGS = -x assembler-with-cpp -c -mpart=uc3c1512c -mrelax -MMD -MP
 
 # Include files from MAVRIC library and source folder
 ASFLAGS += -I.
@@ -348,9 +348,9 @@ ASFLAGS += ${SRCS_INC}
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
 CC = avr32-gcc
-CFLAGS  = -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall 
+CFLAGS  = -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -Wall 
 CFLAGS += -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes 
-CFLAGS += -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF
+CFLAGS += -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MMD -MP
 # CFLAGS += -ffunction-sections
 CFLAGS += ${PREPROC_OPT}
 
@@ -366,7 +366,7 @@ CFLAGS += ${SRCS_INC}
 CXX = avr32-g++
 # CXXFLAGS  = -O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section 
 CXXFLAGS  = -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section 
-CXXFLAGS += -g2 -pg -p -Wall -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MD -MP -MF
+CXXFLAGS += -g2 -Wall -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MMD -MP
 # CXXFLAGS += -D_DEFAULT_SOURCE 
 # CXXFLAGS += -ffunction-sections
 CXXFLAGS += ${PREPROC_OPT}
@@ -385,8 +385,8 @@ SIZER = avr32-size
 
 OBJCOPYFLAGS = -R .eeprom -R .fuse -R .lock -R .signature
 
-LDFLAGS  = -nostartfiles -Wl,-Map="mavric.map" -Wl,--start-group -lm  
-LDGLAGS += -Wl,--end-group -L"src/asf/avr32/utils/libs/dsplib/at32ucr3fp/gcc"  
+LDFLAGS  = -nostartfiles -Wl,-Map="mavric.map" -lm
+LDGLAGS += -L"src/asf/avr32/utils/libs/dsplib/at32ucr3fp/gcc"
 LDFLAGS += -Wl,--gc-sections -mpart=uc3c1512c -Wl,--relax -Wl,-e,_trampoline
 
 # Include files from MAVRIC library and source folder
@@ -407,6 +407,12 @@ BUILD_DIR = build
 # Get the names of the .o files from .c and .cpp files
 OBJS += $(addprefix ${BUILD_DIR}/, $(addsuffix .o, $(basename $(LIB_SRCS))))
 OBJS += $(addprefix ${BUILD_DIR}/, $(addsuffix .o, $(basename $(SRCS))))
+
+# ------------------------------------------------------------------------------
+# DEPENDENCY FILES (*.d)
+# ------------------------------------------------------------------------------
+DEPS += $(addsuffix .d, $(basename $(OBJS)))	# create list of dependency files
+-include $(DEPS)								# include existing dependency files
 
 
 # ------------------------------------------------------------------------------
@@ -490,8 +496,10 @@ flash: ${PROJ_NAME}.elf
 
 .PHONY: clean rebuild
 clean:
-	@rm -f $(OBJS) $(PROJ_NAME).elf $(PROJ_NAME).hex $(PROJ_NAME).bin
+	@rm -f $(OBJS) $(PROJ_NAME).elf $(PROJ_NAME).hex $(PROJ_NAME).bin $(DEPS)
 	@rm -rf build/
 	@$(PRINT_OK)
 
 rebuild: clean proj
+
+.DEFAULT_GOAL := all
