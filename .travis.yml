@@ -1,12 +1,29 @@
 language: cpp
 compiler: g++
 
+php: 
+  - '7.0'
+
 before_install:
-- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-- sudo apt-get update -qq
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo add-apt-repository -y ppa:ondrej/php5-oldstable
+  - sudo apt-get update -qq
 
 install:
-- sudo apt-get install -qq g++-4.8
-- export CXX="g++-4.8"
+  - sudo apt-get install -qq g++-4.8
+  - export CXX="g++-4.8"
+  - sudo apt-get install -qq graphviz doxygen
+  - sudo apt-get install -qq php5
 
-script: cd travis && make
+script: 
+  - cd travis
+  - make sample_projects
+  - make doc
+
+after_success:
+  - bash deploy_doc.sh
+  # - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash deploy_doc.sh
+
+env:
+  global:
+    secure: etjy//ioC0o93EhRUlwHRjEeL1pcrzjvHuVf9SwpfjEv7iwGxxEwIJgAtj6l4YkpIVoG20WUHqIg+mLi+np+f+wuKhOEswW16/7dHDAoYI4b/zJga2qEgP1xbJjG9wWBJStHpkUnVIQEf/LBVhgsnp4Ez2J55NImOioJJygA1y9f/2u22iM4RQB4g+UoqW9pPr9eyMCh6lZLDeiMryzWgNg+08BMMaxTlOiAFZbJVYOAOY3ihchGtkJ3nFDoqBjx8jSSRD2+QU87jyQ6y5+MRXbnwLLICBqfVwLfrYiHIZD4Y+FAfiJTPljXOUZiUH4se4SPrjh60Syu4Y6wY/tAd66UBkJOt2nS6m1mCvk6kgtTcuwQFpP+GNzEtco1CCSUUYCgB/yjDqwl4UTSGTFIulN8wJN1f/p0FZgTwG4sDsMh512P3kgh01KZPUEox+f3BppFFOKDV71YT8V4dDvg/jFJ+9bdtgXW638MlGFolACf6RuUjpHHdow2G+KVC/7QVbtcLdAnoN/hhXCXHes4X2M3xOeroyFNXhM49U1oRD9bNSw73xGCch6t5Ox0+lzbeV+NmQ0eXAmfe0n4wF832gDoamfJcy4Ln4OG//rc/iEg4wjyyDO/muF33EmXz4/nRuSeaE/TfPxGiYE92CvY310l03MhjKskF+IMfIjNKnw=
