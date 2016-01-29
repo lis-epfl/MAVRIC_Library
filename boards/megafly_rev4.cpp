@@ -139,17 +139,14 @@ bool Megafly_rev4::init(void)
 	print_util_dbg_print_init(&dbg_stream_);
 	// -------------------------------------------------------------------------
 
-
-	time_keeper_delay_ms(1000); 
-
 	print_util_dbg_sep('%');
-	time_keeper_delay_ms(100);
+	time_keeper_delay_ms(50);
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	print_util_dbg_print("[MEGAFLY_REV4] ...\r\n");
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 	// -------------------------------------------------------------------------
 	// Init GPIO dsm receiver
@@ -157,7 +154,7 @@ bool Megafly_rev4::init(void)
 	ret = dsm_receiver_pin.init();
 	print_util_dbg_init_msg("[DSM RX PIN]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 	// -------------------------------------------------------------------------
 	// Init GPIO dsm power
@@ -173,7 +170,7 @@ bool Megafly_rev4::init(void)
 	ret = uart0.init();
 	print_util_dbg_init_msg("[UART0]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -182,7 +179,7 @@ bool Megafly_rev4::init(void)
 	ret = uart1.init();
 	print_util_dbg_init_msg("[UART1]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -191,7 +188,7 @@ bool Megafly_rev4::init(void)
 	ret = uart3.init();
 	print_util_dbg_init_msg("[UART3]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -200,7 +197,7 @@ bool Megafly_rev4::init(void)
 	ret = i2c0.init();
 	print_util_dbg_init_msg("[I2C0]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -209,7 +206,7 @@ bool Megafly_rev4::init(void)
 	ret = i2c1.init();
 	print_util_dbg_init_msg("[I2C1]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 	
 	// -------------------------------------------------------------------------
@@ -219,42 +216,42 @@ bool Megafly_rev4::init(void)
 	print_util_dbg_init_msg("[PWM0]", ret);
 	init_success &= ret;
 	servo_0.failsafe();
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	ret = pwm_1.init();
 	print_util_dbg_init_msg("[PWM1]", ret);
 	init_success &= ret;
 	servo_1.failsafe();
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	ret = pwm_2.init();
 	print_util_dbg_init_msg("[PWM2]", ret);
 	init_success &= ret;
 	servo_2.failsafe();
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	ret = pwm_3.init();
 	print_util_dbg_init_msg("[PWM3]", ret);
 	init_success &= ret;
 	servo_3.failsafe();
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	ret = pwm_4.init();
 	print_util_dbg_init_msg("[PWM4]", ret);
 	init_success &= ret;
 	servo_4.failsafe();
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	ret = pwm_5.init();
 	print_util_dbg_init_msg("[PWM5]", ret);
 	init_success &= ret;
 	servo_5.failsafe();
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	ret = pwm_6.init();
 	print_util_dbg_init_msg("[PWM6]", ret);
 	init_success &= ret;
 	servo_6.failsafe();
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	ret = pwm_7.init();
 	print_util_dbg_init_msg("[PWM7]", ret);
 	init_success &= ret;
 	servo_7.failsafe();
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 		
 
 	Enable_global_interrupt();
@@ -266,7 +263,7 @@ bool Megafly_rev4::init(void)
 	ret = hmc5883l.init();
 	print_util_dbg_init_msg("[HMC]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -275,7 +272,7 @@ bool Megafly_rev4::init(void)
 	ret = lsm330dlc.init();
 	print_util_dbg_init_msg("[LSM]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 			
 	// -------------------------------------------------------------------------
@@ -284,7 +281,7 @@ bool Megafly_rev4::init(void)
 	ret = bmp085.init();
 	print_util_dbg_init_msg("[BMP]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -293,7 +290,7 @@ bool Megafly_rev4::init(void)
 	ret = spektrum_satellite.init();
 	print_util_dbg_init_msg("[SAT]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -302,15 +299,15 @@ bool Megafly_rev4::init(void)
 	ret = sonar_i2cxl.init();
 	print_util_dbg_init_msg("[SONAR]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	print_util_dbg_init_msg("[MEGAFLY_REV4]", init_success);
-	time_keeper_delay_ms(100);
+	time_keeper_delay_ms(50);
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100);
+	time_keeper_delay_ms(50);
 	
 
 	return init_success;
