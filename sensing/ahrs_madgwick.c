@@ -59,7 +59,7 @@
 #include "maths.h"
 #include "print_util.h"
 #include "constants.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 #include "quaternions.h"
 
 
@@ -102,9 +102,6 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
 	ahrs_madgwick->beta = config->beta;
 	ahrs_madgwick->zeta = config->zeta;
 
-	// Notify success
-	print_util_dbg_print("[AHRS MADGWICK] Initialised.\r\n");
-
 	return true;
 }
 
@@ -124,7 +121,7 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 	float h_x, h_y, h_z;														// computed flux in the earth frame
 
 	// Compute time since last update
-	float now = time_keeper_get_time(); 
+	float now = time_keeper_get_s(); 
 	float dt  = now - ahrs_madgwick->ahrs->last_update;
 
 	// Get current attitude in NED

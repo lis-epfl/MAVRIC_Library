@@ -360,7 +360,31 @@ void print_util_dbg_log_value(const char* msg, int32_t value, char base)
 	print_util_dbg_print("\n");
 }
 
+
 void print_util_dbg_print_long(int64_t c, char base)
 {
 	print_util_putlong(deb_stream, c, base);
+}
+
+
+void print_util_dbg_init_msg(const char* module_name, bool init_success)
+{
+	print_util_dbg_print(module_name);
+	if( init_success == true )
+	{
+		print_util_dbg_print(" ok\r\n");
+	}
+	else
+	{
+		print_util_dbg_print(" INIT ERROR\r\n");
+	}
+}
+
+void print_util_dbg_sep(char c)
+{
+	for( uint8_t i=0; i<80; ++i)
+	{
+		deb_stream->put(deb_stream->data, c);
+	}
+	print_util_dbg_print("\r\n");
 }

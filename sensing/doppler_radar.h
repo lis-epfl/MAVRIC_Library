@@ -43,6 +43,10 @@
 #ifndef DOPPLER_RADAR_H_
 #define DOPPLER_RADAR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "radar_module_driver.h"
 #include "radar_driver.h"
 #include "adc_int.h"
@@ -78,5 +82,9 @@ radar_target_t* get_tracked_target();
  * \return buffer containing the raw FFT
  */
 int32_t* get_raw_FFT();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DOPPLER_RADAR_H_ */

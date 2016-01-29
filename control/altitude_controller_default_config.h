@@ -49,27 +49,27 @@ extern "C" {
 
 #include "altitude_controller.h"
 
-static altitude_controller_conf_t altitude_controller_default_config =
+static inline altitude_controller_conf_t altitude_controller_default_config()
 {
-	.hover_point = -0.28f,
-	.pid_config = 
-	{
-		.p_gain = 0.2f,
-		.clip_min = -1.0f,
-		.clip_max = 1.0f,
-		.integrator={
-			.pregain = 0.5f,
-			.postgain = 1.0f,
-			.accumulator = 0.0f,
-			.clip = 0.5f,
-		},
-		.differentiator={
-			.gain = 0.4f,
-			.previous = 0.0f,
-			.clip = 0.65f
-		},
-		.soft_zone_width = 0.0f
-	},
+	altitude_controller_conf_t conf = {};
+
+	conf.hover_point                        = -0.28f;
+	conf.pid_config                         = {};
+	conf.pid_config.p_gain                  = 0.2f;
+	conf.pid_config.clip_min                = -1.0f;
+	conf.pid_config.clip_max                = 1.0f;
+	conf.pid_config.integrator              = {};
+	conf.pid_config.integrator.pregain      = 0.5f;
+	conf.pid_config.integrator.postgain     = 1.0f;
+	conf.pid_config.integrator.accumulator  = 0.0f;
+	conf.pid_config.integrator.clip         = 0.5f;
+	conf.pid_config.differentiator          = {};
+	conf.pid_config.differentiator.gain     = 0.4f;
+	conf.pid_config.differentiator.previous = 0.0f;
+	conf.pid_config.differentiator.clip     = 0.65f;
+	conf.pid_config.soft_zone_width         = 0.0f;
+
+	return conf;
 };
 
 #ifdef __cplusplus

@@ -47,7 +47,7 @@
 #include "quick_trig.h"
 #include "constants.h"
 
-global_position_t coord_conventions_local_to_global_position(local_coordinates_t input)
+global_position_t coord_conventions_local_to_global_position(local_position_t input)
 {
 	global_position_t output;
 	
@@ -55,15 +55,14 @@ global_position_t coord_conventions_local_to_global_position(local_coordinates_t
 	output.longitude	= input.origin.longitude + maths_rad_to_deg( input.pos[1] / ( EARTH_RADIUS * cos(maths_deg_to_rad(output.latitude)) ) );
 	output.altitude		= -input.pos[2] + input.origin.altitude;
 	output.heading		= input.heading;
-	output.timestamp_ms = input.timestamp_ms;
-
+	
 	return output;
 }
 
 
-local_coordinates_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin) 
+local_position_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin) 
 {
-	local_coordinates_t output;
+	local_position_t output;
 	double small_radius;
 	
 	output.origin		= origin;
@@ -72,8 +71,7 @@ local_coordinates_t coord_conventions_global_to_local_position(global_position_t
 	output.pos[Y]		= (float)(sin(maths_deg_to_rad((position.longitude-origin.longitude))) * small_radius);
 	output.pos[Z]		= (float)(-(position.altitude - origin.altitude));
 	output.heading		= position.heading;
-	output.timestamp_ms	= position.timestamp_ms;
-	
+
 	return output;
 }
 

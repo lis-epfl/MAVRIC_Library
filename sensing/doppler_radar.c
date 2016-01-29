@@ -43,7 +43,7 @@
 #include "doppler_radar.h"
 #include "print_util.h"
 #include "math.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 
 static volatile uint32_t even_odd2;
 
@@ -104,7 +104,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[])
 	}
 
 	//Find maximum of FFT and corresponding frequency
-	//time1 = time_keeper_get_micros();
+	//time1 = time_keeper_get_us();
 	amplitude = 0;
 	index = 0;
 	for(i = 1;i < RADAR_BUFFER_SIZE / 2 - 1; i++) //ignore the element 0 (low frequency noise)
@@ -217,9 +217,9 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[])
 		}
 	}
 	
-	time2 = time_keeper_get_micros();
+	time2 = time_keeper_get_us();
 	time_result = time2 - time1;
-	time1 = time_keeper_get_micros();
+	time1 = time_keeper_get_us();
 
 	main_target.velocity = direction * speed / 100.0f;
 	//main_target.velocity = speed / 100.0f;

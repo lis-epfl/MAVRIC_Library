@@ -42,25 +42,25 @@
 
 
 #include "scheduler.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 #include "print_util.h"
 #include <stdlib.h>
 
-bool scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
+bool scheduler_init(scheduler_t* scheduler, const scheduler_conf_t config) 
 {
 	bool init_success = true;
 	
 	// Init schedule strategy
-	scheduler->schedule_strategy = config->schedule_strategy;
+	scheduler->schedule_strategy = config.schedule_strategy;
 
 	// Init debug mode
-	scheduler->debug = config->debug;
+	scheduler->debug = config.debug;
 
 	// Allocate memory for the task set
-	scheduler->task_set = malloc( sizeof(task_set_t) + sizeof(task_entry_t[config->max_task_count]) );
+	scheduler->task_set = malloc( sizeof(task_set_t) + sizeof(task_entry_t[config.max_task_count]) );
 	if ( scheduler->task_set != NULL ) 
 	{
-		scheduler->task_set->max_task_count = config->max_task_count;
+		scheduler->task_set->max_task_count = config.max_task_count;
 		
 		init_success &= true;
 	}
@@ -112,7 +112,7 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 			new_task->timing_mode       = timing_mode;	
 			new_task->priority          = priority;	
 			new_task->repeat_period     = repeat_period;
-			new_task->next_run          = time_keeper_get_micros();
+			new_task->next_run          = time_keeper_get_us();
 			new_task->execution_time    = 0;
 			new_task->delay_max         = 0;
 			new_task->delay_avg         = 0;
@@ -193,12 +193,11 @@ int32_t scheduler_update(scheduler_t* scheduler)
 
 	task_function_t call_task;
 	task_argument_t function_argument;
-	task_return_t treturn;
 
 	// Iterate through registered tasks
 	for (int32_t i = ts->current_schedule_slot; i < ts->task_count; i++) 
 	{
-		uint32_t current_time = time_keeper_get_micros();
+		uint32_t current_time = time_keeper_get_us();
 
 		// If the task is active and has waited long enough...
 		if ( (ts->tasks[i].run_mode != RUN_NEVER) && (current_time >= ts->tasks[i].next_run) ) 
@@ -206,27 +205,30 @@ int32_t scheduler_update(scheduler_t* scheduler)
 			uint32_t delay = current_time - (ts->tasks[i].next_run);
 			uint32_t task_start_time;
 
-		    task_start_time = time_keeper_get_micros();
+		    task_start_time = time_keeper_get_us();
 
 		    // Get function pointer and function argument
 		    call_task = ts->tasks[i].call_function;
 			function_argument = ts->tasks[i].function_argument;
 
 			// Execute task
-		    treturn = call_task(function_argument);
+		    bool task_success = call_task(function_argument);
 	
 			// Set the next execution time of the task
-			switch (ts->tasks[i].timing_mode) 
+			if(task_success)
 			{
-				case PERIODIC_ABSOLUTE:
-					// Do not take delays into account
-					ts->tasks[i].next_run += ts->tasks[i].repeat_period;
-				break;
+				switch (ts->tasks[i].timing_mode) 
+				{
+					case PERIODIC_ABSOLUTE:
+						// Do not take delays into account
+						ts->tasks[i].next_run += ts->tasks[i].repeat_period;
+					break;
 
-				case PERIODIC_RELATIVE:
-					// Take delays into account
-					ts->tasks[i].next_run = time_keeper_get_micros() + ts->tasks[i].repeat_period;
-				break;
+					case PERIODIC_RELATIVE:
+						// Take delays into account
+						ts->tasks[i].next_run = time_keeper_get_us() + ts->tasks[i].repeat_period;
+					break;
+				}
 			}
 			
 			// Set the task to inactive if it has to run only once
@@ -250,7 +252,7 @@ int32_t scheduler_update(scheduler_t* scheduler)
 				ts->tasks[i].delay_max = delay;
 			}
 			ts->tasks[i].delay_var_squared = (15 * ts->tasks[i].delay_var_squared + (delay - ts->tasks[i].delay_avg) * (delay - ts->tasks[i].delay_avg)) / 16;
-			ts->tasks[i].execution_time = (7 * ts->tasks[i].execution_time + (time_keeper_get_micros() - task_start_time)) / 8;
+			ts->tasks[i].execution_time = (7 * ts->tasks[i].execution_time + (time_keeper_get_us() - task_start_time)) / 8;
 				
 			// Depending on shceduling strategy, select next task slot	
 			switch (scheduler->schedule_strategy) 
@@ -262,13 +264,14 @@ int32_t scheduler_update(scheduler_t* scheduler)
 	
 				case ROUND_ROBIN:
 					// Round robin scheme - scheduler will pick up where it left.
-					if (i >= ts->task_count)
-					{ 
-						ts->current_schedule_slot = 0;
-					}
-				break;
-
-				default:
+					// if (i >= ts->task_count - 1)
+					// { 
+					// 	ts->current_schedule_slot = 0;
+					// }
+					// else
+					// {
+					ts->current_schedule_slot = 0;
+					// }
 				break;
 			}
 
@@ -324,16 +327,16 @@ void scheduler_change_task_period(task_entry_t *te, uint32_t repeat_period)
 
 void scheduler_suspend_task(task_entry_t *te, uint32_t delay) 
 {
-	te->next_run = time_keeper_get_micros() + delay;
+	te->next_run = time_keeper_get_us() + delay;
 }
 
 
 void scheduler_run_task_now(task_entry_t *te) 
 {
-	if ((te->run_mode == RUN_NEVER))
+	if (te->run_mode == RUN_NEVER)
 	{
 		te->run_mode = RUN_ONCE;
 	} 
 
-	te->next_run = time_keeper_get_micros();
+	te->next_run = time_keeper_get_us();
 }

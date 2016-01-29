@@ -79,7 +79,7 @@ typedef void* task_argument_t;
 /**
  * \brief 	Prototype of a task function
  */ 
-typedef task_return_t (*task_function_t)(task_argument_t);
+typedef bool (*task_function_t)(task_argument_t);
 
 
 /**
@@ -195,7 +195,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool scheduler_init( scheduler_t* scheduler, const scheduler_conf_t* config);
+bool scheduler_init( scheduler_t* scheduler, const scheduler_conf_t config);
 
 
 /**

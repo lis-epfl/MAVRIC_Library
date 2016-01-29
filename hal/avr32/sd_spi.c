@@ -50,7 +50,7 @@
 #include "spi.h"
 #include "gpio.h"
 #include "pdca.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 
 #include "led.h"
 #include "print_util.h"
@@ -292,7 +292,7 @@ bool sd_spi_wait_not_busy(void)
 		if (retry == 200000) //card timed-out
 		{
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
-			print_util_dbg_print("card timed-out\r\n");
+			print_util_dbg_print("[SDSPI] card timed-out\r\n");
 			return false; //card is still busy
 		}
 		retry++;
@@ -408,7 +408,7 @@ static int sd_spi_check_hc(void)
 	// check if MMC not busy
 	if (false == sd_spi_wait_not_busy())
 	{
-		print_util_dbg_print("check hc failed, SD card busy\r\n");
+		print_util_dbg_print("[SDSPI] check hc failed, SD card busy\r\n");
 		return SD_FAILURE; //card is still busy
 	}
 
@@ -417,7 +417,7 @@ static int sd_spi_check_hc(void)
 	r1 = sd_spi_command(SD_READ_OCR, 0);
 	if(r1 != 0) // if response not valid
 	{
-		print_util_dbg_print("check hc FAILED, response not valid:");
+		print_util_dbg_print("[SDSPI] check hc FAILED, response not valid:");
 		print_util_dbg_print_num(r1,10);
 		print_util_dbg_print("\r\n");
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
@@ -434,7 +434,7 @@ static int sd_spi_check_hc(void)
 	
 	if(hc_bit & 0x40) //check high capacity bit
 	{
-		print_util_dbg_print("High capacity sd card.\r\n");
+		print_util_dbg_print("[SDSPI] High capacity sd card.\r\n");
 		return SDHC_CARD; //is a high capacity card
 	}
 	return 0; //is not a high capacity card
@@ -478,7 +478,7 @@ static int sd_spi_get_card_type(void)
 			else
 			{
 				spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-				print_util_dbg_print("Card type: SD_CARD_2\r\n");
+				print_util_dbg_print("[SDSPI] Card type: SD_CARD_2\r\n");
 				sd_spi.card_type = SD_CARD_2;
 			}
 		}
@@ -500,12 +500,12 @@ static int sd_spi_get_card_type(void)
 		if ((r1&0xFE) == 0) 
 		{   
 			// ignore "in_idle_state" flag bit
-			print_util_dbg_print("Card type: SD_CARD\r\n");
+			print_util_dbg_print("[SDSPI] Card type: SD_CARD\r\n");
 			sd_spi.card_type = SD_CARD;    // card has accepted the command, this is a SD card
 		} 
 		else 
 		{
-			print_util_dbg_print("Card type: MMC_CARD\r\n");
+			print_util_dbg_print("[SDSPI] Card type: MMC_CARD\r\n");
 			sd_spi.card_type = MMC_CARD;   // card has not responded, this is a MMC card
 		 
 			// reset card again
@@ -582,7 +582,7 @@ void sd_spi_get_capacity(void)
 	}
 	sd_spi.erase_group_size = (erase_grp_size + 1) * (erase_grp_mult + 1);
 	
-	print_util_dbg_print("Card capacity:");
+	print_util_dbg_print("[SDSPI] Card capacity:");
 	print_util_dbg_print_long(sd_spi.capacity,10);
 	print_util_dbg_print(", erase group size:");
 	print_util_dbg_print_num(sd_spi.erase_group_size,10);
@@ -624,7 +624,7 @@ bool sd_spi_reset_card(void)
 		retry++; //increment retry counter
 		if(retry > 1000)
 		{
-			print_util_dbg_print("Did not manage to set card in idle state:");
+			print_util_dbg_print("[SDSPI] Did not manage to set card in idle state:");
 			print_util_dbg_print_num(r1,10);
 			print_util_dbg_print("\r\n");
 			return false; //did not manage to set card in idle_state
@@ -851,7 +851,7 @@ bool sd_spi_init(void)
 	// RESET THE MEMORY CARD
 	if(false == sd_spi_reset_card())
 	{
-		print_util_dbg_print("sd_card FAILED reset \r\n");
+		print_util_dbg_print("[SDSPI] sd_card FAILED reset \r\n");
 		return false; //did not manage to reset the card
 	}
 	
@@ -883,7 +883,7 @@ bool sd_spi_init(void)
 		
 		if(retry == 50000) // measured approx. 500 on several cards
 		{
-			print_util_dbg_print("sd_card FAILED timed-out \r\n");
+			print_util_dbg_print("[SDSPI] sd_card FAILED timed-out \r\n");
 			return false; //card timed-out
 		}
 		retry++; //increment retry counter
@@ -896,12 +896,12 @@ bool sd_spi_init(void)
 		if (is_high_capacity == -1)
 		{
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-			print_util_dbg_print("sd_card FAILED check high capacity \r\n");
+			print_util_dbg_print("[SDSPI] sd_card FAILED check high capacity \r\n");
 			return false;
 		}
 		else if (is_high_capacity == 1)
 		{
-			print_util_dbg_print("Init check Card type: SDHC\r\n");
+			print_util_dbg_print("[SDSPI] Init check Card type: SDHC\r\n");
 			sd_spi.card_type = SD_CARD_2_SDHC;
 		}
 	}
@@ -915,14 +915,14 @@ bool sd_spi_init(void)
 	spi_write(SD_MMC_SPI,0xFF);            // write dummy byte
 	if (r1 != 0x00) //if card did not accept command SET_BLOCKLEN
 	{
-		print_util_dbg_print("sd_card FAILED set block length \r\n");
+		print_util_dbg_print("[SDSPI] sd_card FAILED set block length \r\n");
 		return false;    // card unsupported block length
 	}
 	
 	// GET CARD SPECIFIC DATA
 	if (false ==  sd_spi_get_csd(sd_spi.csd))
 	{
-		print_util_dbg_print("sd_card FAILED get CSD \r\n");
+		print_util_dbg_print("[SDSPI] sd_card FAILED get CSD \r\n");
 		return false;
 	}
 
@@ -933,7 +933,7 @@ bool sd_spi_init(void)
 	#if (defined SD_MMC_READ_CID) && (SD_MMC_READ_CID == true)
 		if (false ==  sd_spi_get_cid(cid))
 		{
-			print_util_dbg_print("sd_card FAILED get CID \r\n");
+			print_util_dbg_print("[SDSPI] sd_card FAILED get CID \r\n");
 			return false;
 		}
 	#endif
@@ -947,7 +947,7 @@ bool sd_spi_init(void)
 	// Initialize PDCA controller for the sd_spi driver
 	local_pdca_init();
 	
-	print_util_dbg_print("Sd_card initialized \r\n");
+	print_util_dbg_print("[SDSPI] Sd_card initialized \r\n");
 	return true; //successfully initialize the sd card
 }
 
@@ -1004,7 +1004,7 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos)
 	// wait for MMC not busy
 	if (false == sd_spi_wait_not_busy())
 	{
-		print_util_dbg_print("card busy");
+		print_util_dbg_print("[SDSPI] card busy");
 		return false;
 	}
 
@@ -1022,7 +1022,7 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos)
 
 	if (r1 != 0x00) //if response not valid
 	{
-		print_util_dbg_print("not received valid response");
+		print_util_dbg_print("[SDSPI] not received valid response");
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return false;
 	}
@@ -1033,7 +1033,7 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos)
 	{
 		if (read_time_out == 30000)   // TIME-OUT
 		{
-			print_util_dbg_print("timed-out");
+			print_util_dbg_print("[SDSPI] timed-out");
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
 			return false;
 		}
@@ -1043,7 +1043,7 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos)
 	// check token
 	if (r1 != MMC_STARTBLOCK_READ)
 	{
-		print_util_dbg_print("did not receive startblock_read");
+		print_util_dbg_print("[SDSPI] did not receive startblock_read");
 		spi_write(SD_MMC_SPI,0xFF);
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return false;
@@ -1235,7 +1235,7 @@ bool sd_spi_read_sector_to_ram_pcda(void* ram, uint32_t beginning_sector, uint8_
 		// open sector number j
 		if(sd_mmc_spi_read_open_PDCA (j))
 		{
-			print_util_dbg_print("\r\rFirst 512 Bytes of Transfer number ");
+			print_util_dbg_print("\r\r[SDSPI] First 512 Bytes of Transfer number ");
 			print_util_dbg_print_num(j,10);
 			print_util_dbg_print(" :\r\r\n");
 
@@ -1258,7 +1258,7 @@ bool sd_spi_read_sector_to_ram_pcda(void* ram, uint32_t beginning_sector, uint8_
 		}
 		else
 		{
-			print_util_dbg_print("\r\r! Unable to open memory \r\r\n");
+			print_util_dbg_print("\r\r[SDSPI] ! Unable to open memory \r\r\n");
 			if (!global_interrupt_enabled)
 			{
 				cpu_irq_disable ();
@@ -1362,7 +1362,7 @@ bool sd_spi_write_given_sector_from_ram(const void *ram, uint32_t beginning_sect
 		// wait for MMC not busy
 		if (false == sd_spi_wait_not_busy())
 		{
-			print_util_dbg_print("SD SPI busy.\r\n");
+			print_util_dbg_print("[SDSPI] SD SPI busy.\r\n");
 			return false;
 		}
 		
@@ -1382,7 +1382,7 @@ bool sd_spi_write_given_sector_from_ram(const void *ram, uint32_t beginning_sect
 		if(r1 != 0x00) //if response not valid
 		{
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
-			print_util_dbg_print("Response not valid\r\n");
+			print_util_dbg_print("[SDSPI] Response not valid\r\n");
 			return false;
 		}
 	
@@ -1415,7 +1415,7 @@ bool sd_spi_write_given_sector_from_ram(const void *ram, uint32_t beginning_sect
 			spi_write(SD_MMC_SPI,0xFF);
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
 			
-			print_util_dbg_print("wrong response token");
+			print_util_dbg_print("[SDSPI] wrong response token");
 			return false; // return ERROR byte
 		}
 

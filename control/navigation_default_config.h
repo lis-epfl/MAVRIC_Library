@@ -49,58 +49,55 @@
 #include "pid_controller.h"
 
 
-navigation_config_t navigation_default_config =
+static inline navigation_config_t navigation_default_config()
 {
-	.dist2vel_gain = 0.7f,
-	.cruise_speed = 3.0f,
-	.max_climb_rate = 1.0f,
-	.soft_zone_size = 0.0f,
-	.alt_lpf = 0.0f,
-	.LPF_gain = 0.9f,
-	.wpt_nav_controller = 
-	{
-		.p_gain = 0.7f,
-		.clip_min = 0.0f,
-		.clip_max = 3.0f,
-		.integrator={
-			.gain = 0.0f,
-			.clip_pre = 0.0f,
-			.accumulator = 0.0f,
-			.clip = 0.0f,
-		},
-		.differentiator={
-			.gain = 0.14f,
-			.previous = 0.0f,
-			.clip = 0.46f
-		},
-		.output = 0.0f,
-		.error = 0.0f,
-		.last_update = 0.0f,
-		.dt = 1,
-		.soft_zone_width = 0.0f
-	},
-	.hovering_controller = 
-	{
-		.p_gain = 0.4f,
-		.clip_min = 0.0f,
-		.clip_max = 3.0f,
-		.integrator={
-			.gain = 0.0f,
-			.clip_pre = 0.0f,
-			.accumulator = 0.0f,
-			.clip = 0.0f,
-		},
-		.differentiator={
-			.gain = 0.28f,
-			.previous = 0.0f,
-			.clip = 0.46f
-		},
-		.output = 0.0f,
-		.error = 0.0f,
-		.last_update = 0.0f,
-		.dt = 1,
-		.soft_zone_width = 0.0f
-	}
+	navigation_config_t conf                         = {};
+	
+	conf.dist2vel_gain                               = 0.7f;
+	conf.cruise_speed                                = 3.0f;
+	conf.max_climb_rate                              = 1.0f;
+	conf.soft_zone_size                              = 0.0f;
+	conf.alt_lpf                                     = 0.0f;
+	conf.LPF_gain                                    = 0.9f;
+	conf.kp_yaw 									 = 0.2f;
+	conf.wpt_nav_controller                          = {};
+	conf.wpt_nav_controller.p_gain                   = 0.7f;
+	conf.wpt_nav_controller.clip_min                 = 0.0f;
+	conf.wpt_nav_controller.clip_max                 = 3.0f;
+	conf.wpt_nav_controller.integrator               = {};
+	conf.wpt_nav_controller.integrator.gain          = 0.0f;
+	conf.wpt_nav_controller.integrator.clip_pre      = 0.0f;
+	conf.wpt_nav_controller.integrator.accumulator   = 0.0f;
+	conf.wpt_nav_controller.integrator.clip          = 0.0f;
+	conf.wpt_nav_controller.differentiator           = {};
+	conf.wpt_nav_controller.differentiator.gain      = 0.14f;
+	conf.wpt_nav_controller.differentiator.previous  = 0.0f;
+	conf.wpt_nav_controller.differentiator.clip      = 0.46f;
+	conf.wpt_nav_controller.output                   = 0.0f;
+	conf.wpt_nav_controller.error                    = 0.0f;
+	conf.wpt_nav_controller.last_update              = 0.0f;
+	conf.wpt_nav_controller.dt                       = 1;
+	conf.wpt_nav_controller.soft_zone_width          = 0.0f;
+	conf.hovering_controller                         = {};
+	conf.hovering_controller.p_gain                  = 0.4f;
+	conf.hovering_controller.clip_min                = 0.0f;
+	conf.hovering_controller.clip_max                = 3.0f;
+	conf.hovering_controller.integrator              = {};
+	conf.hovering_controller.integrator.gain         = 0.0f;
+	conf.hovering_controller.integrator.clip_pre     = 0.0f;
+	conf.hovering_controller.integrator.accumulator  = 0.0f;
+	conf.hovering_controller.integrator.clip         = 0.0f;
+	conf.hovering_controller.differentiator          = {};
+	conf.hovering_controller.differentiator.gain     = 0.28f;
+	conf.hovering_controller.differentiator.previous = 0.0f;
+	conf.hovering_controller.differentiator.clip     = 0.46f;
+	conf.hovering_controller.output                  = 0.0f;
+	conf.hovering_controller.error                   = 0.0f;
+	conf.hovering_controller.last_update             = 0.0f;
+	conf.hovering_controller.dt                      = 1;
+	conf.hovering_controller.soft_zone_width         = 0.0f;
+
+	return conf;
 };
 
 #ifdef __cplusplus

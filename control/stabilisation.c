@@ -60,8 +60,6 @@ bool stabilisation_init(control_command_t *controls)
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
 	
-	print_util_dbg_print("[STABILISATION] init.\r\n");
-	
 	return init_success;
 }
 

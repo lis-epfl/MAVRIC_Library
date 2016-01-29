@@ -41,7 +41,7 @@
 
 
 #include "pid_controller.h"
-#include "time_keeper.h"
+#include "time_keeper.hpp"
 #include "maths.h"
 
 //------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ static float pid_controller_differentiate(differentiator_t* diff, float input, f
 
 bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf_t* config)
 {
-	uint32_t t = time_keeper_get_time_ticks();
+	uint32_t t = time_keeper_get_us();
 
 	controller->p_gain 			= config->p_gain;
 	controller->clip_min 	 	= config->clip_min; 					
@@ -166,7 +166,7 @@ bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf
 
 void pid_controller_init_pass_through(pid_controller_t* controller)
 {
-	uint32_t t = time_keeper_get_time_ticks();
+	uint32_t t = time_keeper_get_us();
 
 	controller->dt = 0.0f;
 	controller->last_update = t;
@@ -194,9 +194,9 @@ void pid_controller_reset_integrator(pid_controller_t* controller)
 
 float pid_controller_update(pid_controller_t* controller, float error)
 {
-	uint32_t t = time_keeper_get_time_ticks();
+	uint32_t t = time_keeper_get_us();
 	controller->error 		= maths_soft_zone(error, controller->soft_zone_width);
-	controller->dt 			= time_keeper_ticks_to_seconds(t - controller->last_update);
+	controller->dt 			= (float)(t - controller->last_update) / 1000000.0f;
 	controller->last_update = t;
 	controller->output 		= controller->p_gain * controller->error  
 								+ pid_controller_integrate( &controller->integrator, controller->error, controller->dt)
@@ -220,7 +220,7 @@ float pid_controller_update_dt(pid_controller_t* controller, float error, float 
 {
 	controller->error 		= error;
 	controller->dt 			= dt;
-	controller->last_update = time_keeper_get_time_ticks();
+	controller->last_update = time_keeper_get_us();
 	controller->output 		= controller->p_gain * controller->error  
 								+ pid_controller_integrate( &controller->integrator, controller->error, controller->dt)
 								+ pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt);

@@ -43,23 +43,20 @@
 #ifndef AHRS_MADGWICK_DEFAULT_CONFIG_H_
 #define AHRS_MADGWICK_DEFAULT_CONFIG_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 
 #include "ahrs_madgwick.h"
 
 
-static const ahrs_madgwick_conf_t ahrs_madgwick_default_config =
+static inline ahrs_madgwick_conf_t ahrs_madgwick_default_config()
 {
-    .beta = 0.06f,
-    .zeta = 0.01f,
+    ahrs_madgwick_conf_t conf = {};
+
+    conf.beta = 0.06f;
+    conf.zeta = 0.01f;
+
+    return conf;
 };
 
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* AHRS_MADGWICK_DEFAULT_CONFIG_H_ */

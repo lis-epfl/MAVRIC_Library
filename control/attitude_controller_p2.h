@@ -100,7 +100,7 @@ typedef struct
  * 
  * \return success
  */
-bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs);
+bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs);
 
 
 /**

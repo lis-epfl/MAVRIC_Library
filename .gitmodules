@@ -1,3 +1,12 @@
 [submodule "libs/mavlink/include"]
 	path = libs/mavlink/include
-	url = git@github.com:lis-epfl/mavlink_headers.git
+	url = https://github.com/lis-epfl/mavlink_headers.git
+[submodule "libs/FatFs"]
+	path = libs/FatFs
+	url = https://github.com/lis-epfl/FatFs.git
+[submodule "libs/asf"]
+	path = libs/asf
+	url = https://github.com/lis-epfl/asf.git
+[submodule "libs/libopencm3"]
+	path = libs/libopencm3
+	url = https://github.com/libopencm3/libopencm3.git
