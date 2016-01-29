@@ -90,11 +90,11 @@ bool Central_data::init(void)
 	bool ret;
 
 	print_util_dbg_sep('%');
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	print_util_dbg_print("[CENTRAL_DATA] ...\r\n");
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	print_util_dbg_sep('-');
 
 
@@ -104,7 +104,7 @@ bool Central_data::init(void)
 	ret = scheduler_init(&scheduler, scheduler_default_config());
 	print_util_dbg_init_msg("[SCHEDULER]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 
 	// -------------------------------------------------------------------------
@@ -122,7 +122,7 @@ bool Central_data::init(void)
 										&file_flash );
 	print_util_dbg_init_msg("[MAVLINK]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 
 	// -------------------------------------------------------------------------
@@ -134,7 +134,7 @@ bool Central_data::init(void)
 								&manual_control);
 	print_util_dbg_init_msg("[STATE MACHINE]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 
 	// -------------------------------------------------------------------------
@@ -143,7 +143,7 @@ bool Central_data::init(void)
 	ret = ahrs_init(&ahrs);
 	print_util_dbg_init_msg("[AHRS]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -155,7 +155,7 @@ bool Central_data::init(void)
 						&ahrs);
 	print_util_dbg_init_msg("[QFILTER]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -170,7 +170,7 @@ bool Central_data::init(void)
 									&ahrs);
 	print_util_dbg_init_msg("[POS EST]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 
 	// -------------------------------------------------------------------------
@@ -186,7 +186,7 @@ bool Central_data::init(void)
 							&sonar_i2cxl);*/
 	print_util_dbg_init_msg("[NAV]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 
 	// -------------------------------------------------------------------------
@@ -204,7 +204,7 @@ bool Central_data::init(void)
 	waypoint_handler_nav_plan_init(&waypoint_handler);
 	print_util_dbg_init_msg("[WAYPOINT]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 	
 	// -------------------------------------------------------------------------
@@ -219,7 +219,7 @@ bool Central_data::init(void)
 										&command.thrust);
 	print_util_dbg_init_msg("[STABILISATION COPTER]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 
 	// -------------------------------------------------------------------------
@@ -228,7 +228,7 @@ bool Central_data::init(void)
 	ret = stabilisation_init( &controls);
 	print_util_dbg_init_msg("[CONTROLS]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 	
 	// -------------------------------------------------------------------------
@@ -240,7 +240,7 @@ bool Central_data::init(void)
 								&ahrs);
 	print_util_dbg_init_msg("[HUD]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	
 
 	// -------------------------------------------------------------------------
@@ -256,7 +256,7 @@ bool Central_data::init(void)
 											&servo_3);
 	print_util_dbg_init_msg("[SERVOS MIX]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 	// -------------------------------------------------------------------------
 	// Init servo telemetry
@@ -276,7 +276,7 @@ bool Central_data::init(void)
 								remote_default_config());
 	print_util_dbg_init_msg("[MANUAL CTRL]", ret);
 	init_success &= ret;
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 
 	// -------------------------------------------------------------------------
 	// Init data logging
@@ -321,11 +321,11 @@ bool Central_data::init(void)
 								&command.velocity );
 
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	print_util_dbg_init_msg("[CENTRAL_DATA]", init_success);
-	time_keeper_delay_ms(100); 
+	time_keeper_delay_ms(50); 
 	print_util_dbg_sep('-');
-	time_keeper_delay_ms(100);
+	time_keeper_delay_ms(50);
 	
 	return init_success;
 }
