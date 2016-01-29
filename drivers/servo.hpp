@@ -180,7 +180,7 @@ static inline servo_conf_t servo_default_config_esc()
 	conf.trim 				= 0.0f;
 	conf.min 				= -0.9f;
 	conf.max 				= 1.0f;
-	conf.failsafe 			= -1.0f;
+	conf.failsafe 			= -1.1f;
 	conf.repeat_freq 		= 200;
 	conf.pulse_center_us 	= 1500;
 	conf.pulse_magnitude_us = 500;
