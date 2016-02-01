@@ -131,6 +131,7 @@ bool Central_data::init(void)
 	ret = state_machine_init( 	&state_machine,
 								&state,
 								&gps,
+								&imu,
 								&manual_control);
 	print_util_dbg_init_msg("[STATE MACHINE]", ret);
 	init_success &= ret;
