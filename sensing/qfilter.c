@@ -73,7 +73,7 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 	qf->ki = config->ki;
 	qf->kp_mag = config->kp_mag;
 	qf->ki_mag = config->ki_mag;
-	
+
 	print_util_dbg_print("[QFILTER] Initialised.\r\n");
 	
 	return init_success;
@@ -82,7 +82,6 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 
 void qfilter_update(qfilter_t *qf)
 {
-	static uint32_t convergence_update_count = 0;
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	quat_t qed, qtmp1, up, up_bf;
 	quat_t mag_global, mag_corrected_local;
@@ -170,36 +169,38 @@ void qfilter_update(qfilter_t *qf)
 	// get error correction gains depending on mode
 	switch (qf->ahrs->internal_state)
 	{
+		case AHRS_INIT:
+			qf->time_ms = time_keeper_get_millis();
+			qf->ahrs->internal_state = AHRS_UNLEVELED;
 		case AHRS_UNLEVELED:
 			kp = qf->kp * 10.0f;
 			kp_mag = qf->kp_mag * 10.0f;
 			
-			ki = 0.5f * qf->ki;
-			ki_mag = 0.5f * qf->ki_mag;
-			
-			convergence_update_count += 1;
-			if( convergence_update_count > 2000 )
+			ki = 0.0f * qf->ki;
+			ki_mag = 0.0f * qf->ki_mag;
+
+			if ( (time_keeper_get_millis() - qf->time_ms) > 8000 )
 			{
-				convergence_update_count = 0;
+				qf->time_ms = time_keeper_get_millis();
 				qf->ahrs->internal_state = AHRS_CONVERGING;
 				print_util_dbg_print("End of AHRS attitude initialization.\r\n");
 			}
+
 			break;
 			
 		case AHRS_CONVERGING:
 			kp = qf->kp;
 			kp_mag = qf->kp_mag;
-			
-			ki = qf->ki * 3.0f;
-			ki_mag = qf->ki_mag * 3.0f;
-			
-			convergence_update_count += 1;
-			if( convergence_update_count > 2000 )
+
+			//ki = qf->ki * 1.5f;
+			//ki_mag = qf->ki_mag * 1.5f;
+
+			if ( (qf->imu->imu_ready) )
 			{
-				convergence_update_count = 0;
 				qf->ahrs->internal_state = AHRS_READY;
 				print_util_dbg_print("End of AHRS leveling.\r\n");
 			}
+
 			break;
 
 		case AHRS_READY:
