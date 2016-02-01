@@ -126,6 +126,9 @@ typedef struct
 	float dt;								///< The time interval between two IMU updates
 	uint32_t last_update;					///< The time of the last IMU update in ms
 
+	bool imu_ready;
+	uint32_t time_ready;
+
 	state_t* state;							///< The pointer to the state structure
 } imu_t;
 

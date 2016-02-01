@@ -112,11 +112,47 @@ static void imu_raw2oriented(imu_t *imu)
 
 static void imu_oriented2scale(imu_t *imu)
 {
+	bool going2ready = true;
+
+	float gyro_lpf = 0.99f;
 	for (int16_t i = 0; i < 3; i++)
 	{
 		imu->scaled_gyro.data[i]  		= (1.0f - GYRO_LPF) * imu->scaled_gyro.data[i] 		+ GYRO_LPF * ( ( imu->oriented_gyro.data[i]     - imu->calib_gyro.bias[i]     ) * imu->calib_gyro.scale_factor[i]     );
 		imu->scaled_accelero.data[i]   	= (1.0f - ACC_LPF)  * imu->scaled_accelero.data[i] 	+ ACC_LPF  * ( ( imu->oriented_accelero.data[i] - imu->calib_accelero.bias[i] ) * imu->calib_accelero.scale_factor[i] );
 		imu->scaled_compass.data[i] 	= (1.0f - MAG_LPF)  * imu->scaled_compass.data[i] 	+ MAG_LPF  * ( ( imu->oriented_compass.data[i]  - imu->calib_compass.bias[i]  ) * imu->calib_compass.scale_factor[i]  );
+	
+		if (!imu->imu_ready)
+		{
+			if (maths_f_abs(imu->scaled_gyro.data[i]-imu->scaled_gyro.data_lpf[i]) < 0.5f )
+			{
+				if ( (time_keeper_get_millis() - imu->time_ready) > 10000 )
+				{
+					going2ready &= true;
+				}
+				else
+				{
+					going2ready = false;
+				}
+			}
+			else
+			{
+				imu->time_ready = time_keeper_get_millis();
+				going2ready = false;
+			}
+
+			imu->scaled_gyro.data_lpf[i] = gyro_lpf * imu->scaled_gyro.data_lpf[i] + (1.0f-gyro_lpf) * imu->scaled_gyro.data[i];
+		}
+	}
+
+	if ( (!imu->imu_ready) && going2ready )
+	{
+		imu->imu_ready = going2ready;
+		for (int16_t i = 0; i < 3; i++)
+		{
+			imu->calib_gyro.bias[i] += imu->scaled_gyro.data_lpf[i] / imu->calib_gyro.scale_factor[i];
+		}
+		print_util_dbg_print("IMU ready\r\n");
+		imu->state->mav_state = MAV_STATE_STANDBY;
 	}
 }
 
@@ -130,7 +166,9 @@ bool imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
 	
 	//init dependency
 	imu->state = state;
-	
+
+	imu->imu_ready = false;
+
 	//init gyro
 	imu->calib_gyro.scale_factor[X] =  1.0f / conf_imu->gyroscope.scale_factor[X];
 	imu->calib_gyro.scale_factor[Y] =  1.0f / conf_imu->gyroscope.scale_factor[Y];
@@ -197,6 +235,8 @@ bool imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
 	imu->last_update = time_keeper_get_time_ticks();
 	imu->dt = 0.004;
 	
+	imu->time_ready = time_keeper_get_millis();
+
 	print_util_dbg_print("[IMU] Initialised\r\n");
 	
 	return init_success;
@@ -212,4 +252,9 @@ void imu_update(imu_t *imu)
 
 	imu_raw2oriented(imu);
 	imu_oriented2scale(imu);
+
+	if (!imu->imu_ready)
+	{
+		imu->state->mav_state = MAV_STATE_CALIBRATING;
+	}
 }

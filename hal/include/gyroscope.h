@@ -52,6 +52,7 @@ typedef struct
 	float data[3];			///< The gyroscope's datas
 	float temperature;		///< The gyroscope's temperature
 	float last_update;		///< The gyroscope last update time
+	float data_lpf[3];		///< The gyroscope's data low-pass filtered
 } gyroscope_t;
 
 #endif /* GYRO_H_ */
