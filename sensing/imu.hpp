@@ -90,6 +90,7 @@ typedef struct
 	float lpf_acc;						///< Low pass filter gain for accelerometer		
 	float lpf_gyro;						///< Low pass filter gain for accelerometer
 	float lpf_mag;						///< Low pass filter gain for accelerometer
+	float lpf_mean;						///< Low pass filter gain for the mean values
 } imu_conf_t;
 
 
@@ -401,6 +402,7 @@ static inline imu_conf_t imu_default_config()
 	conf.lpf_acc 	= 0.1f;
 	conf.lpf_gyro 	= 0.05f;
 	conf.lpf_mag 	= 0.1f;
+	conf.lpf_mean 	= 0.01f;
 	
 	return conf;
 }

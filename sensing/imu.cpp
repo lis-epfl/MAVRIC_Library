@@ -128,7 +128,7 @@ bool Imu::update(void)
 	{
 		for( uint8_t i=0; i<3; i++ )
 		{
-			config_.accelerometer.mean_values[i] = 0.5 * ( config_.accelerometer.mean_values[i] + scaled_acc_[i] );
+			config_.accelerometer.mean_values[i] = (1.0f - config_.lpf_mean) * config_.accelerometer.mean_values[i] + config_.lpf_mean * scaled_acc_[i];
 		}
 	}
 
@@ -155,7 +155,7 @@ bool Imu::update(void)
 				time_ready = time_keeper_get_s();
 			}
 
-			config_.gyroscope.mean_values[i] = 0.5f * (config_.gyroscope.mean_values[i] + scaled_gyro_[i] );
+			config_.gyroscope.mean_values[i] = (1.0f - config_.lpf_mean) * config_.gyroscope.mean_values[i] + config_.lpf_mean * scaled_gyro_[i];
 		}
 
 		if (going2ready)
