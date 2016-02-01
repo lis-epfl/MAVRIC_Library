@@ -94,7 +94,7 @@ Collaboration diagram for imu_conf_t:</div>
 <div class="dyncontent">
 <div class="center"><img src="structimu__conf__t__coll__graph.png" border="0" usemap="#imu__conf__t_coll__map" alt="Collaboration graph"/></div>
 <map name="imu__conf__t_coll__map" id="imu__conf__t_coll__map">
-<area shape="rect" id="node2" href="structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="5,5,147,195"/></map>
+<area shape="rect" id="node2" href="structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="35,5,176,195"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="structimu__conf__t-members.html">List of all members.</a></p>
@@ -119,6 +119,15 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab24b19616fe6a83106ca33e183dbbc82"></a><!-- doxytag: member="imu_conf_t::lpf_mag" ref="ab24b19616fe6a83106ca33e183dbbc82" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82">lpf_mag</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Low pass filter gain for accelerometer. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a73d96ec5ff2c0670964b397bd38e6f5e"></a><!-- doxytag: member="imu_conf_t::lpf_mean" ref="a73d96ec5ff2c0670964b397bd38e6f5e" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e">lpf_mean</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Low pass filter gain for the mean values. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6249f129d8b5f05023e47c21f9be9ee7"></a><!-- doxytag: member="imu_conf_t::startup_calib_gyro_threshold" ref="a6249f129d8b5f05023e47c21f9be9ee7" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7">startup_calib_gyro_threshold</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Threshold on gyroscope value used to decide wheter the autopilot is held stable. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3427b18d50b8577b02f47ff9181f3c38"></a><!-- doxytag: member="imu_conf_t::startup_calib_duration_s" ref="a3427b18d50b8577b02f47ff9181f3c38" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38">startup_calib_duration_s</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Duration in seconds of the automatic startup calibration of gyroscopes. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The configuration IMU structure. </p>
@@ -143,7 +152,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 29 2016 13:52:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Feb 1 2016 18:24:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

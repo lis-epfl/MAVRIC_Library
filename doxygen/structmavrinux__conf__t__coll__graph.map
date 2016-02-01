@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structimu__conf__t.html" title="The configuration IMU structure." alt="" coords="17,297,135,469"/>
-<area shape="rect" id="node4" href="$structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="5,5,147,195"/>
-<area shape="rect" id="node6" href="$structserial__udp__conf__t.html" title="{serial_udp_conf_t\n|+ target_ip\l+ target_port\l+ local_port\l|}" alt="" coords="159,323,281,443"/>
+<area shape="rect" id="node2" href="$structimu__conf__t.html" title="The configuration IMU structure." alt="" coords="5,296,205,520"/>
+<area shape="rect" id="node4" href="$structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="35,5,176,195"/>
+<area shape="rect" id="node6" href="$structserial__udp__conf__t.html" title="{serial_udp_conf_t\n|+ target_ip\l+ target_port\l+ local_port\l|}" alt="" coords="229,348,352,468"/>
 </map>

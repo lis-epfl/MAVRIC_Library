@@ -136,40 +136,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00054"></a>00054 
 <a name="l00058"></a>00058 <span class="keyword">typedef</span> <span class="keyword">enum</span>
 <a name="l00059"></a>00059 {
-<a name="l00060"></a>00060     AHRS_UNLEVELED  = 0,    
-<a name="l00061"></a>00061     AHRS_CONVERGING = 1,    
-<a name="l00062"></a>00062     AHRS_READY      = 2,    
-<a name="l00063"></a>00063 } ahrs_state_t;
-<a name="l00064"></a>00064 
+<a name="l00060"></a>00060     AHRS_INITIALISING   = 0,    
+<a name="l00061"></a>00061     AHRS_LEVELING       = 1,    
+<a name="l00062"></a>00062     AHRS_CONVERGING     = 2,    
+<a name="l00063"></a>00063     AHRS_READY          = 3,    
+<a name="l00064"></a>00064 } ahrs_state_t;
 <a name="l00065"></a>00065 
 <a name="l00066"></a>00066 
-<a name="l00070"></a><a class="code" href="structahrs__t.html">00070</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00071"></a>00071 {
-<a name="l00072"></a><a class="code" href="structahrs__t.html#aef0bbf1571232385d775fa7c8ebaad35">00072</a>     <a class="code" href="structquat__t.html" title="Unit quaternion.">quat_t</a>  <a class="code" href="structahrs__t.html#aef0bbf1571232385d775fa7c8ebaad35" title="quaternion defining the Attitude estimation of the platform">qe</a>;                         
-<a name="l00073"></a>00073     
-<a name="l00074"></a><a class="code" href="structahrs__t.html#a129b4abdf512e3e2fc554999a564a629">00074</a>     <span class="keywordtype">float</span>   angular_speed[3];           
-<a name="l00075"></a><a class="code" href="structahrs__t.html#aa0ecddf93d45bcecd956a0196326de72">00075</a>     <span class="keywordtype">float</span>   linear_acc[3];              
-<a name="l00076"></a>00076     
-<a name="l00077"></a>00077     <span class="comment">// quat_t up_vec;                       ///&lt; The quaternion of the up vector</span>
-<a name="l00078"></a>00078     <span class="comment">// quat_t north_vec;                    ///&lt; The quaternion of the north vector</span>
-<a name="l00079"></a>00079 
-<a name="l00080"></a><a class="code" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0">00080</a>     ahrs_state_t <a class="code" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0" title="Leveling state of the ahrs.">internal_state</a>;        
-<a name="l00081"></a><a class="code" href="structahrs__t.html#aa122262b513cbfd29de7a90e9a8175ca">00081</a>     uint32_t     <a class="code" href="structahrs__t.html#aa122262b513cbfd29de7a90e9a8175ca" title="The time of the last IMU update in ms.">last_update</a>;           
-<a name="l00082"></a><a class="code" href="structahrs__t.html#a09ac8b47ce59461e361697668cd7c3b7">00082</a>     <span class="keywordtype">float</span>        <a class="code" href="structahrs__t.html#a09ac8b47ce59461e361697668cd7c3b7" title="The time interval between two IMU updates.">dt</a>;                    
-<a name="l00083"></a>00083 } <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>;
-<a name="l00084"></a>00084 
+<a name="l00067"></a>00067 
+<a name="l00071"></a><a class="code" href="structahrs__t.html">00071</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00072"></a>00072 {
+<a name="l00073"></a><a class="code" href="structahrs__t.html#aef0bbf1571232385d775fa7c8ebaad35">00073</a>     <a class="code" href="structquat__t.html" title="Unit quaternion.">quat_t</a>  <a class="code" href="structahrs__t.html#aef0bbf1571232385d775fa7c8ebaad35" title="quaternion defining the Attitude estimation of the platform">qe</a>;                         
+<a name="l00074"></a>00074     
+<a name="l00075"></a><a class="code" href="structahrs__t.html#a129b4abdf512e3e2fc554999a564a629">00075</a>     <span class="keywordtype">float</span>   angular_speed[3];           
+<a name="l00076"></a><a class="code" href="structahrs__t.html#aa0ecddf93d45bcecd956a0196326de72">00076</a>     <span class="keywordtype">float</span>   linear_acc[3];              
+<a name="l00077"></a>00077     
+<a name="l00078"></a>00078     <span class="comment">// quat_t up_vec;                       ///&lt; The quaternion of the up vector</span>
+<a name="l00079"></a>00079     <span class="comment">// quat_t north_vec;                    ///&lt; The quaternion of the north vector</span>
+<a name="l00080"></a>00080 
+<a name="l00081"></a><a class="code" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0">00081</a>     ahrs_state_t <a class="code" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0" title="Leveling state of the ahrs.">internal_state</a>;        
+<a name="l00082"></a><a class="code" href="structahrs__t.html#aa122262b513cbfd29de7a90e9a8175ca">00082</a>     uint32_t     <a class="code" href="structahrs__t.html#aa122262b513cbfd29de7a90e9a8175ca" title="The time of the last IMU update in ms.">last_update</a>;           
+<a name="l00083"></a><a class="code" href="structahrs__t.html#a09ac8b47ce59461e361697668cd7c3b7">00083</a>     <span class="keywordtype">float</span>        <a class="code" href="structahrs__t.html#a09ac8b47ce59461e361697668cd7c3b7" title="The time interval between two IMU updates.">dt</a>;                    
+<a name="l00084"></a>00084 } <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>;
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086 
 <a name="l00087"></a>00087 
 <a name="l00088"></a>00088 
-<a name="l00096"></a>00096 <span class="keywordtype">bool</span> ahrs_init(<a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>* ahrs);
-<a name="l00097"></a>00097 
+<a name="l00089"></a>00089 
+<a name="l00097"></a>00097 <span class="keywordtype">bool</span> ahrs_init(<a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>* ahrs);
 <a name="l00098"></a>00098 
-<a name="l00099"></a>00099 <span class="preprocessor">#ifdef __cplusplus</span>
-<a name="l00100"></a>00100 <span class="preprocessor"></span>}
-<a name="l00101"></a>00101 <span class="preprocessor">#endif</span>
-<a name="l00102"></a>00102 <span class="preprocessor"></span>
-<a name="l00103"></a>00103 <span class="preprocessor">#endif </span><span class="comment">/* AHRS_H_ */</span>
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100 <span class="preprocessor">#ifdef __cplusplus</span>
+<a name="l00101"></a>00101 <span class="preprocessor"></span>}
+<a name="l00102"></a>00102 <span class="preprocessor">#endif</span>
+<a name="l00103"></a>00103 <span class="preprocessor"></span>
+<a name="l00104"></a>00104 <span class="preprocessor">#endif </span><span class="comment">/* AHRS_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -188,7 +189,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 29 2016 13:52:28 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Feb 1 2016 18:24:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
