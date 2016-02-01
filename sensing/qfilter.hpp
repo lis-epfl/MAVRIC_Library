@@ -74,6 +74,8 @@ typedef struct
 	float   ki;				///< The integral gain for the acceleration correction of the biais
 	float   kp_mag;			///< The proportional gain for the magnetometer correction of the angular rates
 	float   ki_mag;			///< The integral gain for the magnetometer correction of the angular rates
+
+	float time_s;			///< The time keeper to swtich between the internal states
 	
 	std::array<float,3> 	gyro_bias;	///< Gyro bias compensation
 } qfilter_t;

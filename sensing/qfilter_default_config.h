@@ -53,7 +53,7 @@ static inline qfilter_conf_t qfilter_default_config()
 {
 	qfilter_conf_t conf = {};
 	conf.kp             = 0.07f;
-	conf.ki             = 0.07f / 15.0f;
+	conf.ki             = 0.0f;
 	conf.kp_mag         = 0.1f;
 	conf.ki_mag         = 0.0f;
 
