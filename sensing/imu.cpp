@@ -298,9 +298,9 @@ void Imu::do_startup_calibration(void)
 		}
 
 		// Check if the gyroscope values are stable
-		bool gyro_is_stable = ( maths_f_abs(config_.gyroscope.mean_values[X] - scaled_gyro_[X]) < 0.5f )
-							&&( maths_f_abs(config_.gyroscope.mean_values[Y] - scaled_gyro_[Y]) < 0.5f )
-							&&( maths_f_abs(config_.gyroscope.mean_values[Z] - scaled_gyro_[Z]) < 0.5f );
+		bool gyro_is_stable = ( maths_f_abs(config_.gyroscope.mean_values[X] - scaled_gyro_[X]) < config_.startup_calib_gyro_threshold )
+							&&( maths_f_abs(config_.gyroscope.mean_values[Y] - scaled_gyro_[Y]) < config_.startup_calib_gyro_threshold )
+							&&( maths_f_abs(config_.gyroscope.mean_values[Z] - scaled_gyro_[Z]) < config_.startup_calib_gyro_threshold );
 
 		
 		if( gyro_is_stable == false )
@@ -311,7 +311,7 @@ void Imu::do_startup_calibration(void)
 		}
 
 		// If gyros have been stable for long enough
-		if( (gyro_is_stable == true) && ((time_keeper_get_s() - timestamp_gyro_stable) > 10.0f) )
+		if( (gyro_is_stable == true) && ((time_keeper_get_s() - timestamp_gyro_stable) > config_.startup_calib_duration_s) )
 		{
 			// Sartup calibration is done
 			is_ready_ = true;
