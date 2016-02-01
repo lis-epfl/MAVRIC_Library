@@ -49,7 +49,7 @@
 #include "manual_control.hpp"
 #include "remote.hpp"
 #include "gps.hpp"
-
+#include "imu.hpp"
 
 /**
  * \brief Defines the state machine structure
@@ -60,6 +60,7 @@ typedef struct
 	State* state;										///< Pointer to the state structure
 	remote_t* remote;									///< Pointer to the remote structure
 	const Gps* gps;										///< Pointer to the gps structure
+	const Imu* imu;										///< Pointer to the imu structure
 	manual_control_t* manual_control;					///< Pointer to the manual_control structure
 } state_machine_t;
 
@@ -70,6 +71,7 @@ typedef struct
  * \param state_machine				Pointer to the state machine structure
  * \param state						Pointer to the state structure
  * \param gps 						Pointer to the gps structure
+ * \param imu 						Pointer to the imu structure
  * \param manual_control			Pointer to the manual_control structure
  *
  * \return	True if the init succeed, false otherwise
@@ -77,6 +79,7 @@ typedef struct
 bool state_machine_init(	state_machine_t *state_machine,
 							State* state,
 							const Gps* gps,
+							const Imu* imu,
 							manual_control_t* manual_control);
 
 /**

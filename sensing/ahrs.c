@@ -74,7 +74,7 @@ bool ahrs_init(ahrs_t* ahrs)
 	ahrs->linear_acc[Y] = 0.0f;
 	ahrs->linear_acc[Z] = 0.0f;
 	
-	ahrs->internal_state = AHRS_UNLEVELED;
+	ahrs->internal_state = AHRS_INITIALISING;
 	
 	return init_success;
 }

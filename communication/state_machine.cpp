@@ -66,12 +66,14 @@ extern "C"
 bool state_machine_init(	state_machine_t *state_machine,
 							State* state, 
 							const Gps* gps,
+							const Imu* imu,
 							manual_control_t* manual_control)
 {
 	bool init_success = true;
 	
 	state_machine->state 			= state;
 	state_machine->gps 				= gps;
+	state_machine->imu 				= imu;
 	state_machine->manual_control 	= manual_control;
 	
 	return init_success;
@@ -111,9 +113,15 @@ bool state_machine_update(state_machine_t* state_machine)
 	{
 		case MAV_STATE_UNINIT:
 		case MAV_STATE_BOOT:
-		case MAV_STATE_CALIBRATING:
 		case MAV_STATE_POWEROFF:
 		case MAV_STATE_ENUM_END:
+		break;
+
+		case MAV_STATE_CALIBRATING:
+			if (state_machine->imu->is_ready())
+			{
+				state_new = MAV_STATE_STANDBY;
+			}
 		break;
 
 		case MAV_STATE_STANDBY:
@@ -128,6 +136,12 @@ bool state_machine_update(state_machine_t* state_machine)
 				print_util_dbg_print("Switching from state_machine.\r\n");
 				state_machine->state->switch_to_active_mode(&state_new);
 			}
+
+			if (!state_machine->imu->is_ready())
+			{
+				state_new = MAV_STATE_CALIBRATING;
+			}
+
 			break;
 		
 		case MAV_STATE_ACTIVE:

@@ -57,9 +57,10 @@ extern "C" {
  */
 typedef enum
 {
-	AHRS_UNLEVELED 	= 0,	///< Calibration level: No calibration 
-	AHRS_CONVERGING = 1,	///< Calibration level: leveling 
-	AHRS_READY 		= 2,	///< Calibration level: leveled 
+	AHRS_INITIALISING 	= 0,	///< Calibration level: Not initialised
+	AHRS_LEVELING 		= 1,	///< Calibration level: No calibration, attitude estimation correction by accelero/magneto measurements
+	AHRS_CONVERGING 	= 2,	///< Calibration level: leveling, correction of gyro biais
+	AHRS_READY 			= 3,	///< Calibration level: leveled 
 } ahrs_state_t;
 
 

@@ -90,6 +90,9 @@ typedef struct
 	float lpf_acc;						///< Low pass filter gain for accelerometer		
 	float lpf_gyro;						///< Low pass filter gain for accelerometer
 	float lpf_mag;						///< Low pass filter gain for accelerometer
+	float lpf_mean;						///< Low pass filter gain for the mean values
+	float startup_calib_gyro_threshold; ///< Threshold on gyroscope value used to decide wheter the autopilot is held stable
+	float startup_calib_duration_s;		///< Duration in seconds of the automatic startup calibration of gyroscopes
 } imu_conf_t;
 
 
@@ -169,7 +172,12 @@ public:
 	 */	
 	const std::array<float, 3>& mag(void) const;
 
-
+	/**
+	 * \brief 	Get the readiness of the IMU
+	 * 
+	 * \return 	True if the IMU is ready, false otherwise
+	 */	
+	const bool is_ready(void) const;
 
 	/**
 	 * \brief 	Temporary method to get pointer to configuration
@@ -267,6 +275,24 @@ public:
 
 
 private:
+	/**
+	 * \brief 	Startup calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			If the imu is not ready, this function waits for the gyroscopes 
+	 * 			values to be stable, then perform gyro bias calibration
+	 */
+	void do_startup_calibration(void);
+
+
+	/**
+	 * \brief 	Performs ongoing calibrations
+	 * 
+	 * \detail 	Should not be used in flight
+	 */
+	void do_calibration(void);
+
+
 	Accelerometer& 	accelerometer_;		///< Reference to accelerometer sensor
 	Gyroscope& 		gyroscope_;			///< Reference to gyroscope sensor
 	Magnetometer& 	magnetometer_;		///< Reference to magnetometer sensor
@@ -284,9 +310,11 @@ private:
 	bool do_accelerometer_bias_calibration_;	///< Flag indicating if calibration should be done
 	bool do_gyroscope_bias_calibration_;		///< Flag indicating if calibration should be done
 	bool do_magnetometer_bias_calibration_;		///< Flag indicating if calibration should be done
+	bool is_ready_;								///< Flag indicating the readiness of the IMU
 
 	float dt_s_;						///< Time interval between two updates (in microseconds)
 	float last_update_us_;				///< Last update time in microseconds
+	float timestamp_gyro_stable;		///< The time from which the gyroscope is not varying too much
 };
 
 
@@ -394,6 +422,11 @@ static inline imu_conf_t imu_default_config()
 	conf.lpf_acc 	= 0.1f;
 	conf.lpf_gyro 	= 0.05f;
 	conf.lpf_mag 	= 0.1f;
+	conf.lpf_mean 	= 0.01f;
+
+	// startup calibration length
+	conf.startup_calib_gyro_threshold = 0.5f;
+	conf.startup_calib_duration_s 	  = 10.0f;
 	
 	return conf;
 }
