@@ -70,9 +70,13 @@ Imu::Imu(Accelerometer& accelerometer,
 	do_accelerometer_bias_calibration_(false),
 	do_gyroscope_bias_calibration_(false),
 	do_magnetometer_bias_calibration_(false),
+	is_ready_(false),
 	dt_s_(0.004f),
-	last_update_us_(time_keeper_get_us())
-{}
+	last_update_us_(time_keeper_get_us()),
+	time_ready(time_keeper_get_s())
+{
+	start_gyroscope_bias_calibration();
+}
 
 
 bool Imu::update(void)
@@ -128,12 +132,37 @@ bool Imu::update(void)
 		}
 	}
 
+	bool going2ready = true;
 	// Do gyroscope bias calibration
 	if( do_gyroscope_bias_calibration_ )
 	{
 		for( uint8_t i=0; i<3; i++ )
 		{
-			config_.gyroscope.mean_values[i] = 0.5 * ( config_.gyroscope.mean_values[i] + scaled_gyro_[i] );
+			if (maths_f_abs(config_.gyroscope.mean_values[i] - scaled_gyro_[i]) < 0.5f)
+			{
+				if ( (time_keeper_get_s() - time_ready) > 10.0f)
+				{
+					going2ready &= true;
+				}
+				else
+				{
+					going2ready = false;
+				}
+			}
+			else
+			{
+				going2ready = false;
+				time_ready = time_keeper_get_s();
+			}
+
+			config_.gyroscope.mean_values[i] = 0.5f * (config_.gyroscope.mean_values[i] + scaled_gyro_[i] );
+		}
+
+		if (going2ready)
+		{
+			is_ready_ = true;
+			print_util_dbg_print("IMU ready\r\n");
+			stop_gyroscope_bias_calibration();
 		}
 	}
 
@@ -298,4 +327,9 @@ bool Imu::stop_magnetometer_bias_calibration(void)
 	config_.magnetometer.bias[Z] += 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
 
 	return success;
+}
+
+const bool Imu::is_ready(void) const
+{
+	return is_ready_;
 }

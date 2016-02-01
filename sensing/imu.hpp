@@ -169,7 +169,12 @@ public:
 	 */	
 	const std::array<float, 3>& mag(void) const;
 
-
+	/**
+	 * \brief 	Get the readiness of the IMU
+	 * 
+	 * \return 	True if the IMU is ready, false otherwise
+	 */	
+	const bool is_ready(void) const;
 
 	/**
 	 * \brief 	Temporary method to get pointer to configuration
@@ -284,9 +289,11 @@ private:
 	bool do_accelerometer_bias_calibration_;	///< Flag indicating if calibration should be done
 	bool do_gyroscope_bias_calibration_;		///< Flag indicating if calibration should be done
 	bool do_magnetometer_bias_calibration_;		///< Flag indicating if calibration should be done
+	bool is_ready_;								///< Flag indicating the readiness of the IMU
 
 	float dt_s_;						///< Time interval between two updates (in microseconds)
 	float last_update_us_;				///< Last update time in microseconds
+	float time_ready;					///< The time from which the gyroscope is not varying too much
 };
 
 
