@@ -73,10 +73,8 @@ Imu::Imu(Accelerometer& accelerometer,
 	is_ready_(false),
 	dt_s_(0.004f),
 	last_update_us_(time_keeper_get_us()),
-	time_ready(time_keeper_get_s())
-{
-	start_gyroscope_bias_calibration();
-}
+	timestamp_gyro_stable(time_keeper_get_s())
+{}
 
 
 bool Imu::update(void)
@@ -123,59 +121,11 @@ bool Imu::update(void)
 		scaled_mag_[i] 	= config_.lpf_mag   * new_scaled_mag[i]  + (1.0f - config_.lpf_mag ) * scaled_mag_[i];
 	}
 
-	// Do accelero bias calibration
-	if( do_accelerometer_bias_calibration_ )
-	{
-		for( uint8_t i=0; i<3; i++ )
-		{
-			config_.accelerometer.mean_values[i] = (1.0f - config_.lpf_mean) * config_.accelerometer.mean_values[i] + config_.lpf_mean * scaled_acc_[i];
-		}
-	}
+	// Do automatic gyroscope calibration at startup
+	do_startup_calibration();
 
-	bool going2ready = true;
-	// Do gyroscope bias calibration
-	if( do_gyroscope_bias_calibration_ )
-	{
-		for( uint8_t i=0; i<3; i++ )
-		{
-			if (maths_f_abs(config_.gyroscope.mean_values[i] - scaled_gyro_[i]) < 0.5f)
-			{
-				if ( (time_keeper_get_s() - time_ready) > 10.0f)
-				{
-					going2ready &= true;
-				}
-				else
-				{
-					going2ready = false;
-				}
-			}
-			else
-			{
-				going2ready = false;
-				time_ready = time_keeper_get_s();
-			}
-
-			config_.gyroscope.mean_values[i] = (1.0f - config_.lpf_mean) * config_.gyroscope.mean_values[i] + config_.lpf_mean * scaled_gyro_[i];
-		}
-
-		if (going2ready)
-		{
-			is_ready_ = true;
-			print_util_dbg_print("IMU ready\r\n");
-			stop_gyroscope_bias_calibration();
-		}
-	}
-
-
-	// Do magnetometer bias calibration
-	if( do_magnetometer_bias_calibration_ )
-	{
-		for( uint8_t i=0; i<3; i++ )
-		{
-			config_.magnetometer.max_values[i]  = maths_f_max(config_.magnetometer.max_values[i], scaled_mag_[i]);
-			config_.magnetometer.min_values[i]  = maths_f_min(config_.magnetometer.min_values[i], scaled_mag_[i]);
-		}
-	}
+	// Perform calibration of sensors
+	do_calibration();
 
 	return success;
 }
@@ -329,7 +279,75 @@ bool Imu::stop_magnetometer_bias_calibration(void)
 	return success;
 }
 
+
 const bool Imu::is_ready(void) const
 {
 	return is_ready_;
+}
+
+
+void Imu::do_startup_calibration(void)
+{
+	if( is_ready_ == false )
+	{
+		// Make sure calibration is ongoing
+		if( do_gyroscope_bias_calibration_ == false )
+		{
+			start_gyroscope_bias_calibration();
+			timestamp_gyro_stable = time_keeper_get_s();
+		}
+
+		// Check if the gyroscope values are stable
+		bool gyro_is_stable = ( maths_f_abs(config_.gyroscope.mean_values[X] - scaled_gyro_[X]) < 0.5f )
+							&&( maths_f_abs(config_.gyroscope.mean_values[Y] - scaled_gyro_[Y]) < 0.5f )
+							&&( maths_f_abs(config_.gyroscope.mean_values[Z] - scaled_gyro_[Z]) < 0.5f );
+
+		
+		if( gyro_is_stable == false )
+		{
+			is_ready_ = false;
+			// Reset timestamp
+			timestamp_gyro_stable = time_keeper_get_s();
+		}
+
+		// If gyros have been stable for long enough
+		if( (gyro_is_stable == true) && ((time_keeper_get_s() - timestamp_gyro_stable) > 10.0f) )
+		{
+			// Sartup calibration is done
+			is_ready_ = true;
+			stop_gyroscope_bias_calibration();
+		}
+	}
+}
+
+
+void Imu::do_calibration(void)
+{
+	// Do accelero bias calibration
+	if( do_accelerometer_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.accelerometer.mean_values[i] = (1.0f - config_.lpf_mean) * config_.accelerometer.mean_values[i] + config_.lpf_mean * scaled_acc_[i];
+		}
+	}
+
+	// Do gyroscope bias calibration
+	if( do_gyroscope_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.gyroscope.mean_values[i] = (1.0f - config_.lpf_mean) * config_.gyroscope.mean_values[i] + config_.lpf_mean * scaled_gyro_[i];
+		}
+	}
+
+	// Do magnetometer bias calibration
+	if( do_magnetometer_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.magnetometer.max_values[i]  = maths_f_max(config_.magnetometer.max_values[i], scaled_mag_[i]);
+			config_.magnetometer.min_values[i]  = maths_f_min(config_.magnetometer.min_values[i], scaled_mag_[i]);
+		}
+	}
 }

@@ -273,6 +273,24 @@ public:
 
 
 private:
+	/**
+	 * \brief 	Startup calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			If the imu is not ready, this function waits for the gyroscopes 
+	 * 			values to be stable, then perform gyro bias calibration
+	 */
+	void do_startup_calibration(void);
+
+
+	/**
+	 * \brief 	Performs ongoing calibrations
+	 * 
+	 * \detail 	Should not be used in flight
+	 */
+	void do_calibration(void);
+
+
 	Accelerometer& 	accelerometer_;		///< Reference to accelerometer sensor
 	Gyroscope& 		gyroscope_;			///< Reference to gyroscope sensor
 	Magnetometer& 	magnetometer_;		///< Reference to magnetometer sensor
@@ -294,7 +312,7 @@ private:
 
 	float dt_s_;						///< Time interval between two updates (in microseconds)
 	float last_update_us_;				///< Last update time in microseconds
-	float time_ready;					///< The time from which the gyroscope is not varying too much
+	float timestamp_gyro_stable;		///< The time from which the gyroscope is not varying too much
 };
 
 
