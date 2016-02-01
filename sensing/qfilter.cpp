@@ -184,10 +184,10 @@ void qfilter_update(qfilter_t *qf)
 	// get error correction gains depending on mode
 	switch (qf->ahrs->internal_state)
 	{
-		case AHRS_INIT:
+		case AHRS_INITIALISING:
 			qf->time_s = time_keeper_get_s();
-			qf->ahrs->internal_state = AHRS_UNLEVELED;
-		case AHRS_UNLEVELED:
+			qf->ahrs->internal_state = AHRS_LEVELING;
+		case AHRS_LEVELING:
 			kp = qf->kp * 10.0f;
 			kp_mag = qf->kp_mag * 10.0f;
 			
