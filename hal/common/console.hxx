@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * Copyright (c) 2009-2016, MAV'RIC Development Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -250,7 +250,7 @@ Console<Writeable>& Console<Writeable>::operator<<(ConsoleManipulator manip)
  * \return console
  */
 template <typename Writeable>
-static Console<Writeable>& endl(Console<Writeable>& console)
+Console<Writeable>& endl(Console<Writeable>& console)
 {
 	console.newline();
 	console.flush();
