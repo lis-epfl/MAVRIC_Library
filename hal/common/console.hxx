@@ -250,7 +250,7 @@ Console<Writeable>& Console<Writeable>::operator<<(ConsoleManipulator manip)
  * \return console
  */
 template <typename Writeable>
-static Console<Writeable>& endl(Console<Writeable>& console)
+Console<Writeable>& endl(Console<Writeable>& console)
 {
 	console.newline();
 	console.flush();
