@@ -50,7 +50,7 @@ extern "C"
 #endif
 
 #include <stdint.h>
-#include "maths.h"
+#include "util/maths.h"
 
 
 /**

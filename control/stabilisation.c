@@ -40,9 +40,9 @@
  ******************************************************************************/
 
 
-#include "stabilisation.h"
-#include "print_util.h"
-#include "constants.h"
+#include "control/stabilisation.h"
+#include "util/print_util.h"
+#include "util/constants.h"
 
 bool stabilisation_init(control_command_t *controls)
 {

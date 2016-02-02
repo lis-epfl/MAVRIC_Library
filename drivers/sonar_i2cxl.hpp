@@ -45,8 +45,8 @@
 
 #include <stdint.h>
 
-#include "sonar.hpp"
-#include "i2c.hpp"
+#include "drivers/sonar.hpp"
+#include "hal/common/i2c.hpp"
 
 
 /**

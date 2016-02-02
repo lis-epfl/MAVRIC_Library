@@ -40,12 +40,12 @@
  *
  ******************************************************************************/
 
-#include "scheduler_telemetry.hpp"
+#include "runtime/scheduler_telemetry.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
-	#include "maths.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/maths.h"
 }
 
 void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

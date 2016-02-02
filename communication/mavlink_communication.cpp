@@ -41,12 +41,12 @@
  ******************************************************************************/
 
 
-#include "mavlink_communication.hpp"
+#include "communication/mavlink_communication.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
 	#include <stdlib.h>
 }
 

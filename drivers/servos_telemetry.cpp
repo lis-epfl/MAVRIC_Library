@@ -41,11 +41,11 @@
  ******************************************************************************/
 
 
-#include "servos_telemetry.hpp"
+#include "drivers/servos_telemetry.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
+	#include "hal/common/time_keeper.hpp"
 }
 
 void servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0, Servo* servo_1, Servo* servo_2, Servo* servo_3)

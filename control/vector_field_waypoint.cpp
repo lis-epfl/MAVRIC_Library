@@ -40,16 +40,16 @@
  ******************************************************************************/
 
 
-#include "vector_field_waypoint.hpp"
+#include "control/vector_field_waypoint.hpp"
 
 extern "C"
 {
-	#include "coord_conventions.h"
+	#include "util/coord_conventions.h"
 	#include "stdint.h"
-	#include "constants.h"
-	#include "vectors.h"
+	#include "util/constants.h"
+	#include "util/vectors.h"
 
-	#include "print_util.h"
+	#include "util/print_util.h"
 }
 
 //------------------------------------------------------------------------------

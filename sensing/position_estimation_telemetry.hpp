@@ -44,9 +44,9 @@
 #ifndef POSIION_ESTIMATION_TELEMETRY_H_
 #define POSIION_ESTIMATION_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "position_estimation.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "sensing/position_estimation.hpp"
 
 /**
  * \brief	Initialize the MAVLink communication module for the position estimation

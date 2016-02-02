@@ -40,7 +40,7 @@
 
 #include <libopencm3/stm32/gpio.h>
 
-#include "gpio_stm32.hpp"
+#include "hal/stm32/gpio_stm32.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION

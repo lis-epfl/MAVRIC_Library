@@ -41,11 +41,11 @@
 #ifndef I2C_AVR32_H_
 #define I2C_AVR32_H_
 
-#include "i2c.hpp"
+#include "hal/common/i2c.hpp"
 
 extern "C"
 {
-	#include "twim.h"
+	#include "libs/asf/avr32/drivers/twim/twim.h"
 }
 
 

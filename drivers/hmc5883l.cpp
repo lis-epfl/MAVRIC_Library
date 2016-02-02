@@ -43,12 +43,12 @@
  ******************************************************************************/
 
 
-#include "hmc5883l.hpp"
+#include "drivers/hmc5883l.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
 }
 
 

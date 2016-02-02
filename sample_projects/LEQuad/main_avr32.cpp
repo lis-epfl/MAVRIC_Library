@@ -38,31 +38,31 @@
  *
  ******************************************************************************/
  
-#include "central_data.hpp"
-#include "megafly_rev4.hpp"
-#include "mavlink_telemetry.hpp"
-#include "tasks.hpp"
+#include "sample_projects/LEQuad/central_data.hpp"
+#include "boards/megafly_rev4.hpp"
+#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
+#include "sample_projects/LEQuad/tasks.hpp"
 
-// #include "file_dummy.hpp"
-#include "file_flash_avr32.hpp"
-#include "serial_usb_avr32.hpp"
+// #include "hal/dummy/file_dummy.hpp"
+#include "hal/avr32/file_flash_avr32.hpp"
+#include "hal/avr32/serial_usb_avr32.hpp"
 
-// #include "dynamic_model_quad_diag.hpp"
-// #include "simulation.hpp"
-// #include "adc_dummy.hpp"
-// #include "pwm_dummy.hpp"
+// #include "simulation/dynamic_model_quad_diag.hpp"
+// #include "simulation/simulation.hpp"
+// #include "hal/dummy/adc_dummy.hpp"
+// #include "hal/dummy/pwm_dummy.hpp"
 
 extern "C" 
 {
-	#include "time_keeper.hpp"
-	#include "print_util.h"
-	#include "piezo_speaker.h"
-	#include "delay.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/piezo_speaker.h"
+	#include "libs/asf/avr32/services/delay/delay.h"
 
-	#include "conf_imu.hpp"
+	#include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 }
 
-// #include "dbg.hpp"
+// #include "hal/common/dbg.hpp"
 
 int main (void)
 {

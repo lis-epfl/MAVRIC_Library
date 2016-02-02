@@ -43,13 +43,13 @@
 #ifndef MANUAL_CONTROL_H_
 #define MANUAL_CONTROL_H_
 
-#include "remote.hpp"
-#include "joystick.hpp"
-#include "state.hpp"
+#include "communication/remote.hpp"
+#include "control/joystick.hpp"
+#include "communication/state.hpp"
 
 extern "C" 
 {
-	#include "stabilisation.h"
+	#include "control/stabilisation.h"
 }
 
 /**

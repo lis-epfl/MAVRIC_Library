@@ -43,7 +43,7 @@
 #ifndef DC_MOTOR_CTRL_H_
 #define DC_MOTOR_CTRL_H_
 
-#include "streams.h"
+#include "util/streams.h"
 #include "buffer.h"
 #include "mavlink_stream.h"
 

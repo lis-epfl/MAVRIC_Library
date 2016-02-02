@@ -58,9 +58,9 @@
 extern "C" {
 #endif
 
-#include "quaternions.h"
-#include "coord_conventions.h"
-#include "ahrs.h"
+#include "util/quaternions.h"
+#include "util/coord_conventions.h"
+#include "sensing/ahrs.h"
 
 /**
  * \brief Quaternion attitude error estimator data structure

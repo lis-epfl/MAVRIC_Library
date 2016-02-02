@@ -40,12 +40,12 @@
  ******************************************************************************/
 
 
-#include "sonar_telemetry.hpp"
+#include "drivers/sonar_telemetry.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
-	#include "maths.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/maths.h"
 }
 
 void sonar_telemetry_send(const Sonar* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

@@ -43,8 +43,8 @@
  *   Disclaimer: this WIP
  */
 
-#include "stabilisation_ywing.h"
-#include "time_keeper.hpp"
+#include "control/stabilisation_ywing.h"
+#include "hal/common/time_keeper.hpp"
 
 
 //------------------------------------------------------------------------------

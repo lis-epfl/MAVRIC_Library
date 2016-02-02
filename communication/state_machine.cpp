@@ -41,14 +41,14 @@
  ******************************************************************************/
 
 
-#include "state_machine.hpp"
-#include "state.hpp"
-#include "spektrum_satellite.hpp"
+#include "communication/state_machine.hpp"
+#include "communication/state.hpp"
+#include "drivers/spektrum_satellite.hpp"
 	
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------

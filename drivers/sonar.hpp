@@ -50,7 +50,7 @@
 
 extern "C"
 {
-	#include "quaternions.h"
+	#include "util/quaternions.h"
 }
 
 

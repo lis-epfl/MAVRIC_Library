@@ -41,7 +41,7 @@
 
 
 #include <math.h>
-#include "matrixlib_float.h"
+#include "util/matrixlib_float.h"
 
 //---------------------------------
 // Public functions implementation

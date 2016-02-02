@@ -15,22 +15,6 @@ MAVRIC_LIB=../../../
 
 # Include folders for Library
 LIB_INC += -I$(MAVRIC_LIB)
-LIB_INC += -I$(MAVRIC_LIB)/boards
-LIB_INC += -I$(MAVRIC_LIB)/communication
-LIB_INC += -I$(MAVRIC_LIB)/control
-LIB_INC += -I$(MAVRIC_LIB)/drivers
-LIB_INC += -I$(MAVRIC_LIB)/hal/common
-LIB_INC += -I$(MAVRIC_LIB)/hal/dummy
-LIB_INC += -I$(MAVRIC_LIB)/hal/stm32
-LIB_INC += -I$(MAVRIC_LIB)/hal
-LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/common
-LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/mavric
-LIB_INC += -I$(MAVRIC_LIB)/libs/FatFs/src
-LIB_INC += -I$(MAVRIC_LIB)/libs
-LIB_INC += -I$(MAVRIC_LIB)/sensing
-LIB_INC += -I$(MAVRIC_LIB)/simulation
-LIB_INC += -I$(MAVRIC_LIB)/runtime
-LIB_INC += -I$(MAVRIC_LIB)/util
 
 # Library source files (*.c and *.cpp)
 LIB_SRCS += util/coord_conventions.c

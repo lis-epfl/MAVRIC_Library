@@ -45,11 +45,11 @@
 
 
 #include <array>
-#include "imu.hpp"
+#include "sensing/imu.hpp"
 
 extern "C"
 {
-	#include "coord_conventions.h"
+	#include "util/coord_conventions.h"
 }
 
 /**

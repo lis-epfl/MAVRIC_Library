@@ -40,11 +40,11 @@
  ******************************************************************************/
 
 
-#include "simulation.hpp"
+#include "simulation/simulation.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
+	#include "hal/common/time_keeper.hpp"
 }
 
 

@@ -61,9 +61,9 @@
 extern "C" {
 #endif
 
-#include "attitude_error_estimator.h"
-#include "control_command.h"
-#include "ahrs.h"
+#include "control/attitude_error_estimator.h"
+#include "control/control_command.h"
+#include "sensing/ahrs.h"
 
 
 /**

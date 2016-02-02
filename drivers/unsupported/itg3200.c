@@ -40,9 +40,9 @@
  ******************************************************************************/
 
 
-#include "itg3200.h"
+#include "drivers/unsupported/itg3200.h"
 #include "i2c_driver_int.h"
-#include "print_util.h"
+#include "util/print_util.h"
 
 #define CONFIG_REG_ADDRESS 21				///< Define the Configuration register address
 #define SENSOR_REG_ADDRESS 27				///< Define the Address of the gyroscope sensor as a slave on the i2c bus

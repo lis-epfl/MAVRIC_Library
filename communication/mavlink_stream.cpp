@@ -40,14 +40,14 @@
  ******************************************************************************/
 
 
-#include "mavlink_stream.hpp"
-#include "onboard_parameters.hpp"
-#include "mavlink_message_handler.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/onboard_parameters.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------

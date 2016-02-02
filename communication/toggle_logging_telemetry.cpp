@@ -40,12 +40,12 @@
  *
  ******************************************************************************/
 
-#include "toggle_logging_telemetry.hpp"
+#include "communication/toggle_logging_telemetry.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
-	#include "print_util.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/print_util.h"
 }
 
 /**

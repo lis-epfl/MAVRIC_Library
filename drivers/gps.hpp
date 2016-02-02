@@ -48,7 +48,7 @@
 
 extern "C"
 {
-	#include "coord_conventions.h"
+	#include "util/coord_conventions.h"
 }
 
 

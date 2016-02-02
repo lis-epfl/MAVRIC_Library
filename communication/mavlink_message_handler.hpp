@@ -45,7 +45,7 @@
 #define MAVLINK_MESSAGE_HANDLING_H_
 
 // #include "onboard_parameters.h"
-#include "mavlink_stream.hpp"
+#include "communication/mavlink_stream.hpp"
 
 
 #define MAV_SYS_ID_ALL 0

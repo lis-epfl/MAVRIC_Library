@@ -54,10 +54,10 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "quaternions.h"
+#include "util/quaternions.h"
 
-#include "control_command.h"
-#include "attitude_controller.h"
+#include "control/control_command.h"
+#include "control/attitude_controller.h"
 #include "servos_mix_ywing.h"
 #include "remote.h"
 

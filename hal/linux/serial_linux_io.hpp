@@ -43,7 +43,7 @@
 #ifndef SERIAL_LINUX_IO_H_
 #define SERIAL_LINUX_IO_H_
 
-#include "serial.hpp"
+#include "hal/common/serial.hpp"
 
 
 /**

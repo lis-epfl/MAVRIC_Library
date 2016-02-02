@@ -41,10 +41,10 @@
  ******************************************************************************/
 
 
-#include "airspeed_analog.h"
-#include "analog_monitor.h"
-#include "maths.h"
-// #include "delay.h"
+#include "drivers/unsupported/airspeed_analog.h"
+#include "hal/analog_monitor.h"
+#include "util/maths.h"
+// #include "libs/asf/avr32/services/delay/delay.h"
 
 const uint32_t VOLTS_TO_PASCAL = 819;		///< conversion factor from volts to pascal units
 const float PITOT_GAIN_DEFAULT = 1.9936f; 	///< this gain come from APM, but it does not make sense (should be)

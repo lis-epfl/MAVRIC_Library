@@ -47,7 +47,7 @@
 extern "C" {
 #endif
 
-#include "attitude_controller.h"
+#include "control/attitude_controller.h"
 
 static inline attitude_controller_conf_t attitude_controller_default_config()
 {

@@ -40,12 +40,12 @@
  ******************************************************************************/
 
 
-#include "fat_fs_mounting.hpp"
+#include "hal/avr32/fat_fs_mounting.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------

@@ -43,9 +43,9 @@
 #ifndef JOYSTICK_TELEMETRY_H_
 #define JOYSTICK_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "joystick.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "control/joystick.hpp"
 
 
 /** 

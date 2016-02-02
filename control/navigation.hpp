@@ -45,15 +45,15 @@
 
 #include <stdbool.h>
 
-#include "mavlink_communication.hpp"
-#include "position_estimation.hpp"
-#include "state.hpp"
+#include "communication/mavlink_communication.hpp"
+#include "sensing/position_estimation.hpp"
+#include "communication/state.hpp"
 
 extern "C" 
 {
-	#include "stabilisation.h"
-	#include "quaternions.h"
-	#include "pid_controller.h"
+	#include "control/stabilisation.h"
+	#include "util/quaternions.h"
+	#include "control/pid_controller.h"
 }
 
 /**

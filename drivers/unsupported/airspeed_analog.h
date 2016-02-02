@@ -49,7 +49,7 @@
 #endif
 
 #include <stdint.h>
-#include "analog_monitor.h"
+#include "hal/analog_monitor.h"
 
 /**
  * \brief Structure containing the analog airspeed sensor datas

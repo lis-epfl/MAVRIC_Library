@@ -42,9 +42,9 @@
 #ifndef GPS_TELEMETRY_H_
 #define GPS_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "gps.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "drivers/gps.hpp"
 
 /**
  * \brief	Initialize the MAVLink communication module for the GPS

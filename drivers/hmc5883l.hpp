@@ -49,8 +49,8 @@
 #include <stdint.h>
 #include <array>
 
-#include "magnetometer.hpp"
-#include "i2c.hpp"
+#include "drivers/magnetometer.hpp"
+#include "hal/common/i2c.hpp"
 
 
 /**

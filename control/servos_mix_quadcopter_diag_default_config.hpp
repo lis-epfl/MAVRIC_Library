@@ -43,7 +43,7 @@
 #ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
 #define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
 
-#include "servos_mix_quadcopter_diag.hpp"
+#include "control/servos_mix_quadcopter_diag.hpp"
 
 
 static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()

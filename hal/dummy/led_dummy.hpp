@@ -45,7 +45,7 @@
 #ifndef LED_DUMMY_HPP_
 #define LED_DUMMY_HPP_
 
-#include "led.hpp"
+#include "hal/common/led.hpp"
 
 class Led_dummy : public Led
 {

@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#include "sdcard.h"
-#include "sd_spi.h"
+#include "libs/FatFs/src/sdcard.h"
+#include "hal/avr32/sd_spi.h"
 
 
 bool MMC_disk_status(void)

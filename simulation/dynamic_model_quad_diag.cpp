@@ -41,11 +41,11 @@
  ******************************************************************************/
 
 
-#include "dynamic_model_quad_diag.hpp"
+#include "simulation/dynamic_model_quad_diag.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
+	#include "hal/common/time_keeper.hpp"
 }
 
 

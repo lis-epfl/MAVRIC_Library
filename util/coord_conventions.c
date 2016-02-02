@@ -40,12 +40,12 @@
  ******************************************************************************/
 
 
-#include "coord_conventions.h"
+#include "util/coord_conventions.h"
 #include <math.h>
-#include "maths.h"
-#include "print_util.h"
-#include "quick_trig.h"
-#include "constants.h"
+#include "util/maths.h"
+#include "util/print_util.h"
+#include "util/quick_trig.h"
+#include "util/constants.h"
 
 global_position_t coord_conventions_local_to_global_position(local_position_t input)
 {

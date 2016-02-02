@@ -45,8 +45,8 @@
 extern "C" {
 #endif
 
-#include "status_codes.h"
-#include "print_util.h"
+#include "libs/asf/avr32/utils/status_codes.h"
+#include "util/print_util.h"
 
 
 /**

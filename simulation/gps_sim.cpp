@@ -40,12 +40,12 @@
  ******************************************************************************/
 
 
-#include "gps_sim.hpp"
+#include "simulation/gps_sim.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
-	#include "constants.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/constants.h"
 }
 
 Gps_sim::Gps_sim(Dynamic_model& dynamic_model):

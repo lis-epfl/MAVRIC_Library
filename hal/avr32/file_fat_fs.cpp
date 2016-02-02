@@ -38,13 +38,13 @@
  *
  ******************************************************************************/
 
-#include "file_fat_fs.hpp"
+#include "hal/avr32/file_fat_fs.hpp"
 
 extern "C"
 {
 	#include <stdlib.h>
 	#include <stdbool.h>
-	#include "print_util.h"
+	#include "util/print_util.h"
 }
 
 //------------------------------------------------------------------------------

@@ -41,12 +41,12 @@
  ******************************************************************************/
 
 
-#include "position_estimation_telemetry.hpp"
+#include "sensing/position_estimation_telemetry.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
-	#include "print_util.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/print_util.h"
 }
 
 //------------------------------------------------------------------------------

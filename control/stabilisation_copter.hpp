@@ -44,13 +44,13 @@
 #ifndef STABILISATION_COPTER_H_
 #define STABILISATION_COPTER_H_
 
-#include "mavlink_waypoint_handler.hpp"
-#include "position_estimation.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
+#include "sensing/position_estimation.hpp"
 
 extern "C" 
 {
-	#include "stabilisation.h"
-	#include "control_command.h"
+	#include "control/stabilisation.h"
+	#include "control/control_command.h"
 }
 
 /**

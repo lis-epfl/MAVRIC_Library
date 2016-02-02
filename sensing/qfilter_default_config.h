@@ -47,7 +47,7 @@
 extern "C" {
 #endif
 
-#include "qfilter.hpp"
+#include "sensing/qfilter.hpp"
 
 static inline qfilter_conf_t qfilter_default_config()
 {

@@ -49,7 +49,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "quaternions.h"
+#include "util/quaternions.h"
 
 
 /**

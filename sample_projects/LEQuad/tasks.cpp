@@ -39,9 +39,9 @@
  ******************************************************************************/
 
 
-#include "tasks.hpp"
-#include "central_data.hpp"
-#include "data_logging.hpp"
+#include "sample_projects/LEQuad/tasks.hpp"
+#include "sample_projects/LEQuad/central_data.hpp"
+#include "communication/data_logging.hpp"
 
 
 void tasks_run_imu_update(Central_data* central_data)

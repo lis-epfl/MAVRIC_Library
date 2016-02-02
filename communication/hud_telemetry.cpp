@@ -40,13 +40,13 @@
  ******************************************************************************/
 
 
-#include "hud_telemetry.hpp"
-#include "mavlink_communication.hpp"
+#include "communication/hud_telemetry.hpp"
+#include "communication/mavlink_communication.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "coord_conventions.h"
+	#include "util/print_util.h"
+	#include "util/coord_conventions.h"
 }
 
 bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimation_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)

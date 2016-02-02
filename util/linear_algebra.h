@@ -47,7 +47,7 @@
 extern "C" {
 #endif
 
-#include "small_matrix.h"
+#include "util/small_matrix.h"
 
 /**
  * \brief		Compute the invert of a 2 by 2 Matrix

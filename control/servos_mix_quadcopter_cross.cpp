@@ -41,7 +41,7 @@
  ******************************************************************************/
 
 
-#include "servos_mix_quadcopter_cross.hpp"
+#include "control/servos_mix_quadcopter_cross.hpp"
 
 
 bool servos_mix_quadcotper_cross_init(	servos_mix_quadcotper_cross_t* mix, 

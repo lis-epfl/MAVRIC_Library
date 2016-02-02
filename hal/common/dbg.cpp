@@ -49,8 +49,8 @@
  *	}
  ******************************************************************************/
 
-#include "dbg.hpp"
-#include "string_util.hpp"
+#include "hal/common/dbg.hpp"
+#include "util/string_util.hpp"
 
 Console<Serial>* console_ = 0;
 

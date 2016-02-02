@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "daler_dc_motor_ctrl.h"
+#include "drivers/unsupported/daler_dc_motor_ctrl.h"
 #include "uart_int.h"
 #include "spektrum_satellite.h"
 #include "turnigy.h"

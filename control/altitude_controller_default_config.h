@@ -47,7 +47,7 @@
 extern "C" {
 #endif
 
-#include "altitude_controller.h"
+#include "control/altitude_controller.h"
 
 static inline altitude_controller_conf_t altitude_controller_default_config()
 {

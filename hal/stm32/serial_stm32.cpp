@@ -42,7 +42,7 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/cm3/nvic.h>
 
-#include "serial_stm32.hpp"
+#include "hal/stm32/serial_stm32.hpp"
 
 
 

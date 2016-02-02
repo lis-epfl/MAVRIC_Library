@@ -43,7 +43,7 @@
 #ifndef MAVLINK_COMMUNICATION_DEFAULT_CONFIG_H_
 #define MAVLINK_COMMUNICATION_DEFAULT_CONFIG_H_
 
-#include "mavlink_communication.hpp"
+#include "communication/mavlink_communication.hpp"
 
 static inline mavlink_communication_conf_t mavlink_communication_default_config()
 {

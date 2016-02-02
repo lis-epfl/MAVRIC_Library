@@ -47,7 +47,7 @@
 	extern "C" {
 #endif
 
-#include "quaternions.h"
+#include "util/quaternions.h"
 
 /**
  * \brief 	Control command mode enum

@@ -44,10 +44,10 @@
 #ifndef MAVLINK_COMMUNICATION_H_
 #define MAVLINK_COMMUNICATION_H_
 
-#include "onboard_parameters.hpp"
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "file.hpp"
+#include "communication/onboard_parameters.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "hal/common/file.hpp"
 
 
 /**

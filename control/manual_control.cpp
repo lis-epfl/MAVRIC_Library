@@ -41,12 +41,12 @@
  ******************************************************************************/
  
  
-#include "manual_control.hpp"
+#include "control/manual_control.hpp"
 
 extern "C" 
 {
-	#include "print_util.h"
-	#include "constants.h"
+	#include "util/print_util.h"
+	#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------

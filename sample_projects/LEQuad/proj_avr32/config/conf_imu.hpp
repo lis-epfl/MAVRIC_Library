@@ -44,7 +44,7 @@
 
 extern "C" 
 {
-	#include "conf_platform.h"	// To get the MAVLINK_SYS_ID
+	#include "sample_projects/LEQuad/proj_avr32/config/conf_platform.h"	// To get the MAVLINK_SYS_ID
 }
 
 ///< Define which configuration of the imu to use, depending on the autopilot ID
@@ -94,8 +94,8 @@ extern "C"
 #include "MAVcalib/MAV206_imu_config.h"
 #else
 #warning "Unknown IMU calibration for the board with ID MAVLINK_SYS_ID, falling back to imu_default_config"
-#include "imu.hpp"
-#include "megafly_rev4.hpp"
+#include "sensing/imu.hpp"
+#include "boards/megafly_rev4.hpp"
 
 static inline imu_conf_t imu_config(void)
 {

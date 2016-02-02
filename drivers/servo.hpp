@@ -46,7 +46,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 		
-#include "pwm.hpp"
+#include "hal/common/pwm.hpp"
 
 
 /**

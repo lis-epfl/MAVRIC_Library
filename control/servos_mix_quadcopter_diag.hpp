@@ -45,12 +45,12 @@
 #ifndef SERVOS_MIX_QUADCOPTER_DIAG_HPP_
 #define SERVOS_MIX_QUADCOPTER_DIAG_HPP_
 
-#include "servo.hpp"
+#include "drivers/servo.hpp"
 
 extern "C"
 {
-	#include "control_command.h"
-	#include "constants.h"
+	#include "control/control_command.h"
+	#include "util/constants.h"
 }
 
 /**

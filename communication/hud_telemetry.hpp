@@ -43,11 +43,11 @@
 #ifndef HUD_TELEMETRY_H__
 #define HUD_TELEMETRY_H__
 
-#include "position_estimation.hpp"
+#include "sensing/position_estimation.hpp"
 
 extern "C" 
 {
-	#include "stabilisation.h"
+	#include "control/stabilisation.h"
 }
 
 /**

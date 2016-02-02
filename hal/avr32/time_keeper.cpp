@@ -42,11 +42,11 @@
  ******************************************************************************/
 
 
-#include "time_keeper.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-	#include "ast.h"
+	#include "libs/asf/avr32/drivers/ast/ast.h"
 }
 
 #define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)

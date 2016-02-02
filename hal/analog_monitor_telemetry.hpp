@@ -43,11 +43,11 @@
 #ifndef ANALOG_MONITOR_TELEMETRY_H_
 #define ANALOG_MONITOR_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
+#include "communication/mavlink_stream.hpp"
 
 extern "C" 
 {
-	#include "analog_monitor.h"
+	#include "hal/analog_monitor.h"
 }
 
 /**

@@ -54,7 +54,7 @@ extern "C"
 {
 #endif
 
-#include "board.h"
+#include "libs/asf/common/boards/board.h"
 
 
 #if UC3C

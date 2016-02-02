@@ -43,8 +43,8 @@
 #ifndef BAROMETER_SIM_HPP_
 #define BAROMETER_SIM_HPP_
 
-#include "barometer.hpp"
-#include "dynamic_model.hpp"
+#include "drivers/barometer.hpp"
+#include "simulation/dynamic_model.hpp"
 
 /**
  * \brief 	Simulation for barometers

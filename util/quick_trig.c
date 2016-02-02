@@ -40,10 +40,10 @@
  ******************************************************************************/
 
 
-#include "quick_trig.h"
+#include "util/quick_trig.h"
 
 #include <math.h>
-#include "maths.h"
+#include "util/maths.h"
 
 
 const float acos_x_min = 0.0f;

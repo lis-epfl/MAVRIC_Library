@@ -45,7 +45,7 @@ extern "C"
 #endif
 
 
-#include "compiler.h"
+#include "libs/asf/avr32/utils/compiler.h"
 
 //#warning You must refill the following definitions with a correct values
 
@@ -147,7 +147,7 @@ extern "C"
 //@}
 
 //! The includes of classes and other headers must be done at the end of this file to avoid compile error
-#include "udi_cdc_conf.h"
+#include "libs/asf/common/services/usb/class/cdc/device/udi_cdc_conf.h"
 #include <stdio_usb.h>
 
 #ifdef __cplusplus

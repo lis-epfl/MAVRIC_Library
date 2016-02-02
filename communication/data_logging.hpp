@@ -43,11 +43,11 @@
 #ifndef DATA_LOGGING_H__
 #define DATA_LOGGING_H__
 
-#include "mavlink_communication.hpp"
-#include "state.hpp"
-#include "toggle_logging.hpp"
-#include "file.hpp"
-#include "console.hpp"
+#include "communication/mavlink_communication.hpp"
+#include "communication/state.hpp"
+#include "communication/toggle_logging.hpp"
+#include "hal/common/file.hpp"
+#include "hal/common/console.hpp"
 
 /**
  * \brief	Structure of data logging parameter.
