@@ -44,9 +44,9 @@
 #ifndef TOGGLE_LOGGING_TELEMETRY_HPP_
 #define TOGGLE_LOGGING_TELEMETRY_HPP_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "toggle_logging.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "communication/toggle_logging.hpp"
 
 
 /**

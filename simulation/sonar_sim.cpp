@@ -40,11 +40,11 @@
  ******************************************************************************/
 
 
-#include "sonar_sim.hpp"
+#include "simulation/sonar_sim.hpp"
 
 extern "C"
 {
-	#include "constants.h"
+	#include "util/constants.h"
 }
 
 Sonar_sim::Sonar_sim(Dynamic_model& dynamic_model,sonar_sim_conf_t config):

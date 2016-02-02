@@ -42,7 +42,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include "serial_udp.hpp"
+#include "hal/linux/serial_udp.hpp"
 
 
 //------------------------------------------------------------------------------

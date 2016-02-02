@@ -44,9 +44,9 @@
 #ifndef MANUAL_CONTROL_TELEMETRY_H_
 #define MANUAL_CONTROL_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "manual_control.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "control/manual_control.hpp"
 
 /**
  * \brief	Initialise the manual_control telemetry module

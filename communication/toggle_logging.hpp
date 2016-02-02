@@ -42,7 +42,7 @@
 #ifndef TOGGLE_LOGGING_HPP_
 #define TOGGLE_LOGGING_HPP_
 
-#include "state.hpp"
+#include "communication/state.hpp"
 
 extern "C"
 {

@@ -41,11 +41,11 @@
 #ifndef SPI_AVR32_HPP_
 #define SPI_AVR32_HPP_
 
-#include "spi.hpp"
+#include "hal/common/spi.hpp"
 
 extern "C"
 {
-	#include "spi.h"
+	#include "libs/asf/avr32/drivers/spi/spi.h"
 }
 
 /**

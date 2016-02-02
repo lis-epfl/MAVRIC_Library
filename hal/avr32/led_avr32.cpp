@@ -42,11 +42,11 @@
  ******************************************************************************/
 
 
-#include "led_avr32.hpp"
+#include "hal/avr32/led_avr32.hpp"
 
 extern "C"
 {
-	#include "led.h"
+	#include "hal/avr32/led.h"
 }
 
 

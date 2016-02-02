@@ -43,7 +43,7 @@
 #define CONTROL_COMMAND_TELEMETRY_H_
 
 #include "mavlink_stream.h"
-#include "control_command.h"
+#include "control/control_command.h"
 
 #ifdef __cplusplus
 extern "C" {

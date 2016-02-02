@@ -42,12 +42,12 @@
  
 #include <stdint.h>
 
-#include "battery.hpp"
+#include "drivers/battery.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
 }
  
 

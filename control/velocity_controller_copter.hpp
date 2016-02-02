@@ -49,13 +49,13 @@
 #ifndef VELOCITY_CONTROLLER_COPTER_H_
 #define VELOCITY_CONTROLLER_COPTER_H_
 
-#include "position_estimation.hpp"
+#include "sensing/position_estimation.hpp"
 
 extern "C" 
 {
-	#include "control_command.h"
-	#include "ahrs.h"
-	#include "pid_controller.h"
+	#include "control/control_command.h"
+	#include "sensing/ahrs.h"
+	#include "control/pid_controller.h"
 }
 
 /**

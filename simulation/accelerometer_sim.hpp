@@ -46,7 +46,7 @@
 
 #include <array>
 
-#include "dynamic_model.hpp"
+#include "simulation/dynamic_model.hpp"
 
 /**
  * \brief 	Simulated accelerometers

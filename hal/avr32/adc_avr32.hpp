@@ -41,11 +41,11 @@
 #ifndef ADC_AVR32_HPP_
 #define ADC_AVR32_HPP_
 
-#include "adc.hpp"
+#include "hal/common/adc.hpp"
 
 extern "C"
 {
-	#include "analog_monitor.h"
+	#include "hal/analog_monitor.h"
 }
 
 

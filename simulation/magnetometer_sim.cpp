@@ -40,11 +40,11 @@
  ******************************************************************************/
 
 
-#include "magnetometer_sim.hpp"
+#include "simulation/magnetometer_sim.hpp"
 
 extern "C"
 {
-	#include "constants.h"
+	#include "util/constants.h"
 }
 
 

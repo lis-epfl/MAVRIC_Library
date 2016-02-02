@@ -49,10 +49,10 @@
 #endif
 
 #include <avr32/io.h>
-#include "preprocessor.h"
+#include "libs/asf/avr32/utils/preprocessor/preprocessor.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "user_board.h"
+#include "libs/asf/common/boards/user_board/user_board.h"
 
 
 #define ADC_BUFFER_SIZE 1024

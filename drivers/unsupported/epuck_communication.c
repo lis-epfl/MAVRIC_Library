@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#include "epuck_communication.h"
-#include "time_keeper.hpp"
+#include "drivers/unsupported/epuck_communication.h"
+#include "hal/common/time_keeper.hpp"
 
 
 void epuck_communication_init(epuck_communication_t* epuck_communication, const remote_t* remote, int32_t UID, usart_config_t usart_conf_epuck)

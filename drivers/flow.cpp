@@ -39,13 +39,13 @@
  *
  ******************************************************************************/
 
-#include "flow.hpp"
+#include "drivers/flow.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
-	#include "print_util.h"
-	#include "endianness.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/avr32/endianness.h"
 }
 
 //------------------------------------------------------------------------------

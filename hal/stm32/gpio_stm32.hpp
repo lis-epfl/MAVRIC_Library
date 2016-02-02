@@ -42,7 +42,7 @@
 #define GPIO_STM32_H_
 
 #include <libopencm3/stm32/gpio.h>
-#include "gpio.hpp"
+#include "hal/common/gpio.hpp"
 #include <stdint.h>
 
 

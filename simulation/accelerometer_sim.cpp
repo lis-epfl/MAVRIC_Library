@@ -41,12 +41,12 @@
 
 
 
-#include "accelerometer_sim.hpp"
+#include "simulation/accelerometer_sim.hpp"
 
 
 extern "C"
 {
-	#include "constants.h"
+	#include "util/constants.h"
 }
 
 

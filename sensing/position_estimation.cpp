@@ -40,14 +40,14 @@
  ******************************************************************************/
 
 
-#include "position_estimation.hpp"
-#include "barometer.hpp"
+#include "sensing/position_estimation.hpp"
+#include "drivers/barometer.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "maths.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "util/maths.h"
+	#include "hal/common/time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------

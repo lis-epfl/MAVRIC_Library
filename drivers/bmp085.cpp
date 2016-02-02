@@ -41,13 +41,13 @@
  ******************************************************************************/
 
 
-#include "bmp085.hpp"
+#include "drivers/bmp085.hpp"
 
 extern "C"
 {
-	#include "maths.h"
-	#include "time_keeper.hpp"
-	#include "print_util.h"
+	#include "util/maths.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/print_util.h"
 }
 
 enum

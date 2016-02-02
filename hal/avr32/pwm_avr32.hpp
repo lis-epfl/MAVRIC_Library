@@ -48,7 +48,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "pwm.hpp"
+#include "hal/common/pwm.hpp"
 
 
 class Pwm_avr32: public Pwm

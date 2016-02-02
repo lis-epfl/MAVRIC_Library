@@ -42,27 +42,27 @@
 #ifndef MAVRIMINI_HPP_
 #define MAVRIMINI_HPP_
 
-#include "spektrum_satellite.hpp"
-#include "battery.hpp"
-#include "servo.hpp"
+#include "drivers/spektrum_satellite.hpp"
+#include "drivers/battery.hpp"
+#include "drivers/servo.hpp"
 
-#include "gpio_stm32.hpp"
-#include "serial_stm32.hpp"
+#include "hal/stm32/gpio_stm32.hpp"
+#include "hal/stm32/serial_stm32.hpp"
 
-#include "dynamic_model_quad_diag.hpp"
-#include "simulation.hpp"
+#include "simulation/dynamic_model_quad_diag.hpp"
+#include "simulation/simulation.hpp"
 
-#include "serial_dummy.hpp"
-#include "i2c_dummy.hpp"
-#include "adc_dummy.hpp"
-#include "file_dummy.hpp"
-#include "pwm_dummy.hpp"
-#include "gpio_dummy.hpp"
-#include "led_gpio.hpp"
+#include "hal/dummy/serial_dummy.hpp"
+#include "hal/dummy/i2c_dummy.hpp"
+#include "hal/dummy/adc_dummy.hpp"
+#include "hal/dummy/file_dummy.hpp"
+#include "hal/dummy/pwm_dummy.hpp"
+#include "hal/dummy/gpio_dummy.hpp"
+#include "hal/common/led_gpio.hpp"
 
 extern "C"
 {
-	#include "streams.h"
+	#include "util/streams.h"
 }
 
 

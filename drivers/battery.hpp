@@ -48,7 +48,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "adc.hpp"
+#include "hal/common/adc.hpp"
 
 /**
  * \brief Battery type

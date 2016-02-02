@@ -40,9 +40,9 @@
  ******************************************************************************/
  
 
-#include "ahrs.h"
-#include "print_util.h"
-#include "constants.h"
+#include "sensing/ahrs.h"
+#include "util/print_util.h"
+#include "util/constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

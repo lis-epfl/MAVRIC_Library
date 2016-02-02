@@ -47,7 +47,7 @@
 extern "C" {
 #endif
 
-#include "velocity_controller_copter.hpp"
+#include "control/velocity_controller_copter.hpp"
 
 static inline velocity_controller_copter_conf_t velocity_controller_copter_default_config()
 {

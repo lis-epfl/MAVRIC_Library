@@ -51,8 +51,8 @@
  ******************************************************************************/
 
 
-#include "attitude_error_estimator.h"
-#include "coord_conventions.h"
+#include "control/attitude_error_estimator.h"
+#include "util/coord_conventions.h"
 
 bool attitude_error_estimator_init(attitude_error_estimator_t* estimator, const ahrs_t* ahrs)
 {

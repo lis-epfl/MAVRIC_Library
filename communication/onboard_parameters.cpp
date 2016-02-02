@@ -40,12 +40,12 @@
  ******************************************************************************/
 
 
-#include "onboard_parameters.hpp"
-#include "mavlink_communication.hpp"
+#include "communication/onboard_parameters.hpp"
+#include "communication/mavlink_communication.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
+	#include "util/print_util.h"
 	#include <stdlib.h>
 }
 

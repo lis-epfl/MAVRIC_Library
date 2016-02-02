@@ -38,7 +38,7 @@
  * 
  ******************************************************************************/
  
-#include "time_keeper.hpp"
+#include "hal/common/time_keeper.hpp"
 
 
 void time_keeper_init(void) 

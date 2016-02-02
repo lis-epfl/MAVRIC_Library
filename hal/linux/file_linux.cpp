@@ -38,11 +38,11 @@
  *
  ******************************************************************************/
 
-#include "file_linux.hpp"
+#include "hal/linux/file_linux.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
+	#include "util/print_util.h"
 }
 
 using namespace std;

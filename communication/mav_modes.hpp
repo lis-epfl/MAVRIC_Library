@@ -43,7 +43,7 @@
 #ifndef MAV_MODE_H
 #define MAV_MODE_H
 
-#include "mavlink_stream.hpp"
+#include "communication/mavlink_stream.hpp"
 
 extern "C"
 {

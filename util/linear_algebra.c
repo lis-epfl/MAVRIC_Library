@@ -40,8 +40,8 @@
  ******************************************************************************/
  
 
-#include "linear_algebra.h"
-#include "print_util.h"
+#include "util/linear_algebra.h"
+#include "util/print_util.h"
 
 matrix_2x2_t  inv2(matrix_2x2_t m) 
 {

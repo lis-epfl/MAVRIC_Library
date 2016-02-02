@@ -43,12 +43,12 @@
 #ifndef QFILTER_H_
 #define QFILTER_H_
 
-#include "imu.hpp"
+#include "sensing/imu.hpp"
 
 extern "C" 
 {
 	#include <stdint.h>
-	#include "ahrs.h"
+	#include "sensing/ahrs.h"
 }
 
 /**

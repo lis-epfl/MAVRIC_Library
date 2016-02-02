@@ -46,9 +46,9 @@
 #ifndef GPS_UBLOX_HPP_
 #define GPS_UBLOX_HPP_
 	
-#include "gps.hpp"
+#include "drivers/gps.hpp"
 
-#include "serial.hpp"
+#include "hal/common/serial.hpp"
 
 
 /**

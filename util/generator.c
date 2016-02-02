@@ -40,9 +40,9 @@
  ******************************************************************************/
 
 
-#include "generator.h"
+#include "util/generator.h"
 #include "math.h"
-#include "ads1274.h"
+#include "drivers/unsupported/ads1274.h"
 
 
 // buffer for DAC output (arbitrary waveform for function generator)

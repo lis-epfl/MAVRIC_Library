@@ -44,8 +44,8 @@
 #define SONAR_SIM_HPP_
 
 
-#include "sonar.hpp"
-#include "dynamic_model.hpp"
+#include "drivers/sonar.hpp"
+#include "simulation/dynamic_model.hpp"
 
 
 /**

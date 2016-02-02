@@ -47,7 +47,7 @@
 extern "C" {
 #endif
 
-#include "altitude_estimation.h"
+#include "sensing/altitude_estimation.h"
 
 static inline altitude_estimation_conf_t altitude_estimation_default_config =
 {

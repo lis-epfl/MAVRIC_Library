@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 
-#include "atadrive.h"
+#include "libs/FatFs/src/atadrive.h"
 
 bool ATA_disk_status(void)
 {

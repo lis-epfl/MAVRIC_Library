@@ -44,11 +44,11 @@
 #ifndef SCHEDULER_TELEMETRY_H_
 #define SCHEDULER_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
+#include "communication/mavlink_stream.hpp"
 
 extern "C" 
 {
-	#include "scheduler.h"
+	#include "runtime/scheduler.h"
 }
 
 /**

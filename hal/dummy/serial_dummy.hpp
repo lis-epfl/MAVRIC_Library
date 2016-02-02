@@ -41,7 +41,7 @@
 #ifndef SERIAL_DUMMY_HPP_
 #define SERIAL_DUMMY_HPP_
 
-#include "serial.hpp"
+#include "hal/common/serial.hpp"
 
 class Serial_dummy: public Serial
 {

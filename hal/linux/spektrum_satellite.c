@@ -7,8 +7,8 @@
  *      Author: felix
  */
 #include "spektrum_satellite.h"
-#include "time_keeper.hpp"
-#include "print_util.h"
+#include "hal/common/time_keeper.hpp"
+#include "util/print_util.h"
 // #include "joystick.h"
 
 #include <stdlib.h>

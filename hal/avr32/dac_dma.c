@@ -41,15 +41,15 @@
  ******************************************************************************/
 
 
-#include "dac_dma.h"
-#include "board.h"
-#include "gpio.h"
-#include "power_clocks_lib.h"
-#include "dacifb.h"
-#include "intc.h"
-#include "pevc.h"
-#include "pdca.h"
-#include "print_util.h"
+#include "hal/avr32/dac_dma.h"
+#include "libs/asf/common/boards/board.h"
+#include "libs/asf/avr32/drivers/gpio/gpio.h"
+#include "libs/asf/avr32/drivers/pm/power_clocks_lib.h"
+#include "libs/asf/avr32/drivers/dacifb/dacifb.h"
+#include "libs/asf/avr32/drivers/intc/intc.h"
+#include "libs/asf/avr32/drivers/pevc/pevc.h"
+#include "libs/asf/avr32/drivers/pdca/pdca.h"
+#include "util/print_util.h"
 
 static volatile uint16_t* buffer;					///< pointer to the sampling buffer of the DAC
 static volatile uint16_t from, to;					///< (?)

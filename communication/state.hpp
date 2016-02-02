@@ -46,8 +46,8 @@
 #include "stdint.h"
 #include <stdbool.h>
 
-#include "mav_modes.hpp"
-#include "battery.hpp"
+#include "communication/mav_modes.hpp"
+#include "drivers/battery.hpp"
 
 
 /**

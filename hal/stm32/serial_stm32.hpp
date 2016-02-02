@@ -43,9 +43,9 @@
 
 #include <libopencm3/stm32/usart.h>
 
-#include "serial.hpp"
-#include "gpio_stm32.hpp"
-#include "buffer.hpp"
+#include "hal/common/serial.hpp"
+#include "hal/stm32/gpio_stm32.hpp"
+#include "util/buffer.hpp"
 
 
 /**

@@ -47,7 +47,7 @@
 extern "C" {
 #endif
 
-#include "scheduler.h"
+#include "runtime/scheduler.h"
 
 
 static inline scheduler_conf_t scheduler_default_config()

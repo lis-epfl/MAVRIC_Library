@@ -45,7 +45,7 @@
 extern "C" {
 #endif
 
-#include "twim.h"
+#include "libs/asf/avr32/drivers/twim/twim.h"
 
 static inline twim_options_t twim_default_config()
 {

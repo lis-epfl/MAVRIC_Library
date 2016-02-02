@@ -44,17 +44,17 @@
 #define POSITION_ESTIMATION_H__
 
 
-#include "state.hpp"
-#include "gps.hpp"
-#include "barometer.hpp"
-#include "sonar.hpp"
+#include "communication/state.hpp"
+#include "drivers/gps.hpp"
+#include "drivers/barometer.hpp"
+#include "drivers/sonar.hpp"
 
 extern "C" 
 {
 	#include <stdbool.h>
-	#include "ahrs.h"
-	#include "coord_conventions.h"
-	#include "constants.h"
+	#include "sensing/ahrs.h"
+	#include "util/coord_conventions.h"
+	#include "util/constants.h"
 }
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)

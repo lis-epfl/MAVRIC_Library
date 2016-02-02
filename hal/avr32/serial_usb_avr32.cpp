@@ -47,13 +47,13 @@
  ******************************************************************************/
 
 
-#include "serial_usb_avr32.hpp"
+#include "hal/avr32/serial_usb_avr32.hpp"
 
 extern "C"
 {
 	#include <stdint.h>
-	#include "stdio_usb.h"
-	#include "udi_cdc.h"
+	#include "libs/asf/common/utils/stdio/stdio_usb/stdio_usb.h"
+	#include "libs/asf/common/services/usb/class/cdc/device/udi_cdc.h"
 }
 
 //------------------------------------------------------------------------------

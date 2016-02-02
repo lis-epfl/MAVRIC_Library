@@ -40,13 +40,13 @@
  ******************************************************************************/
 
 
-#include "navigation.hpp"
-#include "time_keeper.hpp"
+#include "control/navigation.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-	#include "print_util.h"	
-	#include "constants.h"
+	#include "util/print_util.h"	
+	#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------

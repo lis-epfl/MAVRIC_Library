@@ -40,11 +40,11 @@
  *
  ******************************************************************************/
 
-#include "joystick_telemetry.hpp"
+#include "control/joystick_telemetry.hpp"
 
-//#include "time_keeper.hpp"
-//#include "print_util.h"
-//#include "constants.h"
+//#include "hal/common/time_keeper.hpp"
+//#include "util/print_util.h"
+//#include "util/constants.h"
 
 
 //------------------------------------------------------------------------------

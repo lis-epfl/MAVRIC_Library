@@ -49,7 +49,7 @@ extern "C" {
 
 #define __MAVRIC_ENDIAN_LITTLE__ 
 
-#include "mavric_endian.h"
+#include "hal/common/mavric_endian.h"
 
 
 #ifdef __cplusplus

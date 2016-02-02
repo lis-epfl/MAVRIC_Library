@@ -41,8 +41,8 @@
 #ifndef CONSOLE_HXX_
 #define CONSOLE_HXX_
 
-#include "maths.h"
-#include "string_util.hpp"
+#include "util/maths.h"
+#include "util/string_util.hpp"
 
 
 

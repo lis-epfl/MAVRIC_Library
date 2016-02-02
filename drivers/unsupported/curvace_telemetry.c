@@ -39,8 +39,8 @@
  *
  ******************************************************************************/
 
-#include "curvace_telemetry.h"
-#include "time_keeper.hpp"
+#include "drivers/unsupported/curvace_telemetry.h"
+#include "hal/common/time_keeper.hpp"
 
 void curvace_telemetry_send(const curvace_t* curvace, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {

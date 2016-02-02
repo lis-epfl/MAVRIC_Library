@@ -51,7 +51,7 @@
 #define CONSOLE_HPP_
 
 #include <stdint.h>
-#include "string_util.hpp"
+#include "util/string_util.hpp"
 
 
 /**

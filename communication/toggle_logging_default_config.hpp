@@ -43,7 +43,7 @@
 #ifndef TOGGLE_LOGGING_DEFAULT_CONFIG_H_
 #define TOGGLE_LOGGING_DEFAULT_CONFIG_H_
 
-#include "toggle_logging.hpp"
+#include "communication/toggle_logging.hpp"
 
 static inline toggle_logging_conf_t toggle_logging_default_config()
 {

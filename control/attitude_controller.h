@@ -55,10 +55,10 @@
 extern "C" {
 #endif
 
-#include "attitude_error_estimator.h"
-#include "control_command.h"
-#include "ahrs.h"
-#include "pid_controller.h"
+#include "control/attitude_error_estimator.h"
+#include "control/control_command.h"
+#include "sensing/ahrs.h"
+#include "control/pid_controller.h"
 
 /**
  * \brief Control mode (attitude or rate)

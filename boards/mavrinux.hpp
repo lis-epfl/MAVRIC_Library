@@ -43,28 +43,28 @@
 #define MAVRINUX_HPP_
 
 
-#include "imu.hpp"
+#include "sensing/imu.hpp"
 
-#include "gpio_dummy.hpp"
-#include "serial_dummy.hpp"
-#include "spektrum_satellite.hpp"
+#include "hal/dummy/gpio_dummy.hpp"
+#include "hal/dummy/serial_dummy.hpp"
+#include "drivers/spektrum_satellite.hpp"
 
-#include "simulation.hpp"
-#include "dynamic_model_quad_diag.hpp"
+#include "simulation/simulation.hpp"
+#include "simulation/dynamic_model_quad_diag.hpp"
 
-#include "serial_linux_io.hpp"
-#include "serial_udp.hpp"
-#include "file_linux.hpp"
+#include "hal/linux/serial_linux_io.hpp"
+#include "hal/linux/serial_udp.hpp"
+#include "hal/linux/file_linux.hpp"
 
-#include "adc_dummy.hpp"
-#include "battery.hpp"
-#include "pwm_dummy.hpp"
-#include "servo.hpp"
-#include "led_dummy.hpp"
+#include "hal/dummy/adc_dummy.hpp"
+#include "drivers/battery.hpp"
+#include "hal/dummy/pwm_dummy.hpp"
+#include "drivers/servo.hpp"
+#include "hal/dummy/led_dummy.hpp"
 
 extern "C"
 {
-	#include "streams.h"
+	#include "util/streams.h"
 }
 
 

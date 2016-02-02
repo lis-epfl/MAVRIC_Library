@@ -42,8 +42,8 @@
 #ifndef FILE_FAT_FS_H_
 #define FILE_FAT_FS_H_
 
-#include "file.hpp"
-#include "fat_fs_mounting.hpp"
+#include "hal/common/file.hpp"
+#include "hal/avr32/fat_fs_mounting.hpp"
 
 extern "C" 
 {

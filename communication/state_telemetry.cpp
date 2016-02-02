@@ -41,13 +41,13 @@
  ******************************************************************************/
 
 
-#include "state_telemetry.hpp"
-#include "state.hpp"
+#include "communication/state_telemetry.hpp"
+#include "communication/state.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------

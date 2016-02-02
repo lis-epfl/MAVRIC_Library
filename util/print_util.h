@@ -50,8 +50,8 @@ extern "C"
 
 #include <stdbool.h>
 
-#include "streams.h"
-#include "quaternions.h"
+#include "util/streams.h"
+#include "util/quaternions.h"
 
 #define MAX_DIGITS 10
 #define MAX_DIGITS_LONG 20

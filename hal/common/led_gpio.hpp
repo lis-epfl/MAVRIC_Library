@@ -44,8 +44,8 @@
 
 #include <stdbool.h>
 
-#include "led.hpp"
-#include "gpio.hpp"
+#include "hal/common/led.hpp"
+#include "hal/common/gpio.hpp"
 
 class Led_gpio: public Led
 {

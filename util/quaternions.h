@@ -50,8 +50,8 @@ extern "C"
 #endif
 
 #include <stdint.h>
-#include "maths.h"
-#include "vectors.h"
+#include "util/maths.h"
+#include "util/vectors.h"
 
 
 /**

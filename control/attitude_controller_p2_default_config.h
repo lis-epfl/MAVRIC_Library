@@ -48,7 +48,7 @@ extern "C" {
 #endif
 
 
-#include "attitude_controller_p2.h"
+#include "control/attitude_controller_p2.h"
 
 
 static inline attitude_controller_p2_conf_t attitude_controller_p2_default_config()

@@ -53,8 +53,8 @@
 #ifndef DBG_HPP_
 #define DBG_HPP_
 
-#include "serial_dummy.hpp"
-#include "console.hpp"
+#include "hal/dummy/serial_dummy.hpp"
+#include "hal/common/console.hpp"
 #include <stdint.h>
 
 namespace dbg{

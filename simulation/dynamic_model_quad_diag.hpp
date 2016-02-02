@@ -44,13 +44,13 @@
 #define DYNAMIC_MODEL_QUAD_DIAG_HPP_
 
 
-#include "dynamic_model.hpp"
-#include "servo.hpp"
-#include "servos_mix_quadcopter_diag_default_config.hpp"
+#include "simulation/dynamic_model.hpp"
+#include "drivers/servo.hpp"
+#include "control/servos_mix_quadcopter_diag_default_config.hpp"
 
 extern "C"
 {
-	#include "constants.h"
+	#include "util/constants.h"
 }
 
 

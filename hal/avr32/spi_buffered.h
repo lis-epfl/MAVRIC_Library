@@ -49,10 +49,10 @@ extern "C" {
 #endif
 
 #include <avr32/io.h>
-#include "preprocessor.h"
+#include "libs/asf/avr32/utils/preprocessor/preprocessor.h"
 #include <stdint.h>
-#include "user_board.h"
-#include "spi_master.h"
+#include "libs/asf/common/boards/user_board/user_board.h"
+#include "libs/asf/common/services/spi/spi_master.h"
 #include "dma_channel_config.h"
 typedef void (function_pointer_t)(void);
 

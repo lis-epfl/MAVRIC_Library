@@ -44,13 +44,13 @@
 #define SIMULATION_HPP_
 
 
-#include "dynamic_model.hpp"
-#include "accelerometer_sim.hpp"
-#include "gyroscope_sim.hpp"
-#include "magnetometer_sim.hpp"
-#include "barometer_sim.hpp"
-#include "gps_sim.hpp"
-#include "sonar_sim.hpp"
+#include "simulation/dynamic_model.hpp"
+#include "simulation/accelerometer_sim.hpp"
+#include "simulation/gyroscope_sim.hpp"
+#include "simulation/magnetometer_sim.hpp"
+#include "simulation/barometer_sim.hpp"
+#include "simulation/gps_sim.hpp"
+#include "simulation/sonar_sim.hpp"
 
 
 /**

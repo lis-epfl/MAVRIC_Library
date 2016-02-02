@@ -40,13 +40,13 @@
  ******************************************************************************/
 
 
-#include "gps_telemetry.hpp"
+#include "drivers/gps_telemetry.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
-	#include "maths.h"
-	#include "constants.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/maths.h"
+	#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------

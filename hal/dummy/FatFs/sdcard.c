@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 
-#include "sdcard.h"
+#include "libs/FatFs/src/sdcard.h"
 
 bool MMC_disk_status(void)
 {

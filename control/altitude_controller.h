@@ -47,9 +47,9 @@
 extern "C" {
 #endif
 
-#include "control_command.h"
-#include "pid_controller.h"
-#include "altitude.h"
+#include "control/control_command.h"
+#include "control/pid_controller.h"
+#include "sensing/altitude.h"
 
 
 /**

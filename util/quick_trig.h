@@ -48,7 +48,7 @@ extern "C"
 {
 #endif
 
-#include "maths.h"
+#include "util/maths.h"
 
 
 #define INTERP_POINTS 50

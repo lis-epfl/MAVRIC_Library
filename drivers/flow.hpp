@@ -42,9 +42,9 @@
 #ifndef FLOW_H_
 #define FLOW_H_
 
-#include "mavlink_stream.hpp"
+#include "communication/mavlink_stream.hpp"
 #include <stdint.h>
-#include "serial.hpp"
+#include "hal/common/serial.hpp"
 
 
 /**

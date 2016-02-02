@@ -47,11 +47,11 @@
  */
 
 #include <avr32/io.h>
-#include "preprocessor.h"
+#include "libs/asf/avr32/utils/preprocessor/preprocessor.h"
 #include <stdint.h>
-#include "user_board.h"
-#include "led.h"
-#include "compiler.h"
+#include "libs/asf/common/boards/user_board/user_board.h"
+#include "hal/avr32/led.h"
+#include "libs/asf/avr32/utils/compiler.h"
 
 //! Structure describing LED hardware connections.
 typedef const struct

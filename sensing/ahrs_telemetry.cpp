@@ -41,12 +41,12 @@
  ******************************************************************************/
 
 
-#include "ahrs_telemetry.hpp"
+#include "sensing/ahrs_telemetry.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
-	#include "coord_conventions.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/coord_conventions.h"
 }
 
 void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

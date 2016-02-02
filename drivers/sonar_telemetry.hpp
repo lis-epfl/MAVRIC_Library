@@ -44,8 +44,8 @@
 #define SONAR_I2CXL_TELEMETRY_H_
 
 
-#include "sonar.hpp"
-#include "mavlink_stream.hpp"
+#include "drivers/sonar.hpp"
+#include "communication/mavlink_stream.hpp"
 
 /**
  * \brief	Task to send the MAVLink sonar message

@@ -42,8 +42,8 @@
 #ifndef TASKS_H_
 #define TASKS_H_
 
-#include "central_data.hpp"
-#include "led.hpp"
+#include "sample_projects/LEQuad/central_data.hpp"
+#include "hal/common/led.hpp"
 
 /**
  * \brief 			Initialises all the tasks

@@ -43,13 +43,13 @@
 #ifndef REMOTE_H__
 #define REMOTE_H__
 
-#include "mav_modes.hpp"
-#include "satellite.hpp"
+#include "communication/mav_modes.hpp"
+#include "drivers/satellite.hpp"
 
 extern "C" 
 {
-	#include "stabilisation.h"
-	#include "control_command.h"
+	#include "control/stabilisation.h"
+	#include "control/control_command.h"
 }
 
 #define REMOTE_CHANNEL_COUNT 14

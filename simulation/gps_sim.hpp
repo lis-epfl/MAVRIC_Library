@@ -44,8 +44,8 @@
 #define GPS_SIM_HPP_
 
 
-#include "gps.hpp"
-#include "dynamic_model.hpp"
+#include "drivers/gps.hpp"
+#include "simulation/dynamic_model.hpp"
 
 /**
  * \brief Simulation for GPS

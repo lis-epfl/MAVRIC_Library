@@ -50,8 +50,8 @@ extern "C"
 #endif
 
 
-#include "small_matrix.h"
-#include "linear_algebra.h"
+#include "util/small_matrix.h"
+#include "util/linear_algebra.h"
 
 
 /**

@@ -46,7 +46,7 @@
 #define LED_AVR32_HPP_
 
 #include <stdint.h>
-#include "led.hpp"
+#include "hal/common/led.hpp"
 
 
 typedef enum

@@ -40,12 +40,12 @@
  ******************************************************************************/
 
 
-#include "barometer_sim.hpp"
+#include "simulation/barometer_sim.hpp"
 
 extern "C"
 {
-	#include "constants.h"
-	#include "time_keeper.hpp"
+	#include "util/constants.h"
+	#include "hal/common/time_keeper.hpp"
 }
 
 

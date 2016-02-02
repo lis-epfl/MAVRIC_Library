@@ -49,7 +49,7 @@ extern "C" {
 
 #include "radar_module_driver.h"
 #include "radar_driver.h"
-#include "adc_int.h"
+#include "hal/avr32/adc_int.h"
 #include "dsp.h"
 
 

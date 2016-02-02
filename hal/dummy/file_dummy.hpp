@@ -41,7 +41,7 @@
 #ifndef FILE_DUMMY_H_
 #define FILE_DUMMY_H_
 
-#include "file.hpp"
+#include "hal/common/file.hpp"
 
 
 /**

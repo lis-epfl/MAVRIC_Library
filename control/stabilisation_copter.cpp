@@ -41,12 +41,12 @@
  ******************************************************************************/
 
 
-#include "stabilisation_copter.hpp"
+#include "control/stabilisation_copter.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "constants.h"
+	#include "util/print_util.h"
+	#include "util/constants.h"
 }
 
 

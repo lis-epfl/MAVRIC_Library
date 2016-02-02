@@ -39,7 +39,7 @@
  *
  ******************************************************************************/
 
-#include "string_util.hpp"
+#include "util/string_util.hpp"
 
 namespace str{
 
