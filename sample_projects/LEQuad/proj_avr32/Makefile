@@ -13,15 +13,11 @@ PROJ_NAME=LEQuad_megafly
 # Project source folder
 MAVRIC_SRC=../
 
-# Include paths for project folder
-SRCS_INC += -I${MAVRIC_SRC}
-
 # Sources files for project folder (*.c and *.cpp)
 SRCS += main_avr32.cpp
 SRCS += central_data.cpp
 SRCS += mavlink_telemetry.cpp
 SRCS += tasks.cpp
-
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
@@ -31,133 +27,15 @@ MAVRIC_LIB=../../../
 
 # Include folders for Library
 LIB_INC += -I$(MAVRIC_LIB)
-LIB_INC += -I${MAVRIC_LIB}sample_projects/LEQuad/proj_avr32/config
 
-# Library source files (*.c and *.cpp)
-LIB_SRCS += boards/megafly_rev4.cpp
-     
-LIB_SRCS += communication/data_logging.cpp            
-LIB_SRCS += communication/hud_telemetry.cpp           
-LIB_SRCS += communication/mavlink_communication.cpp     
-LIB_SRCS += communication/mavlink_message_handler.cpp   
-LIB_SRCS += communication/mavlink_stream.cpp            
-LIB_SRCS += communication/mavlink_waypoint_handler.cpp  
-LIB_SRCS += communication/onboard_parameters.cpp
-LIB_SRCS += communication/remote.cpp
-LIB_SRCS += communication/remote_telemetry.cpp
-LIB_SRCS += communication/state.cpp
-LIB_SRCS += communication/state_machine.cpp
-LIB_SRCS += communication/state_telemetry.cpp
-LIB_SRCS += communication/toggle_logging.cpp
-LIB_SRCS += communication/toggle_logging_telemetry.cpp
+# add library source files
+include ${MAVRIC_LIB}rules_common.mk
+include ${MAVRIC_LIB}rules_libs.mk
+include ${MAVRIC_LIB}rules_avr32.mk
 
-LIB_SRCS += control/adaptive_parameter.c          
-LIB_SRCS += control/attitude_controller.c         
-LIB_SRCS += control/attitude_controller_p2.c      
-LIB_SRCS += control/attitude_error_estimator.c    
-LIB_SRCS += control/joystick.cpp            
-LIB_SRCS += control/joystick_telemetry.cpp  
-LIB_SRCS += control/manual_control.cpp
-LIB_SRCS += control/manual_control_telemetry.cpp
-LIB_SRCS += control/navigation.cpp                   
-LIB_SRCS += control/pid_controller.c               
-LIB_SRCS += control/servos_mix_quadcopter_cross.c  
-LIB_SRCS += control/servos_mix_quadcopter_diag.c   
-LIB_SRCS += control/stabilisation.c
-LIB_SRCS += control/stabilisation_copter.cpp
-LIB_SRCS += control/stabilisation_telemetry.cpp
-LIB_SRCS += control/vector_field_waypoint.cpp
-LIB_SRCS += control/velocity_controller_copter.cpp
-
-LIB_SRCS += drivers/battery.c                    
-LIB_SRCS += drivers/barometer.cpp          
-LIB_SRCS += drivers/barometer_telemetry.cpp          
-LIB_SRCS += drivers/bmp085.cpp                   
-LIB_SRCS += drivers/flow.c                  
-LIB_SRCS += drivers/gps_ublox.cpp                 
-LIB_SRCS += drivers/gps_telemetry.cpp       
-LIB_SRCS += drivers/hmc5883l.cpp  
-LIB_SRCS += drivers/lsm330dlc.cpp            
-LIB_SRCS += drivers/servo.cpp                              
-LIB_SRCS += drivers/servos_telemetry.c
-LIB_SRCS += drivers/sonar_i2cxl.cpp
-LIB_SRCS += drivers/sonar_telemetry.cpp
-LIB_SRCS += drivers/spektrum_satellite.cpp
-
-LIB_SRCS += hal/common/dbg.cpp
-LIB_SRCS += hal/common/led_gpio.cpp
-LIB_SRCS += hal/common/file.cpp
-LIB_SRCS += hal/common/serial.cpp
-LIB_SRCS += hal/common/dbg.cpp
- 
-LIB_SRCS += hal/avr32/adc_avr32.cpp          
-LIB_SRCS += hal/avr32/adc_int.c          
-LIB_SRCS += hal/avr32/analog_monitor.c            
-LIB_SRCS += hal/avr32/analog_monitor_telemetry.cpp                  
-LIB_SRCS += hal/avr32/dac_dma.c
-LIB_SRCS += hal/avr32/i2c_avr32.cpp            
-LIB_SRCS += hal/avr32/led.c            
-LIB_SRCS += hal/avr32/led_avr32.cpp            
-LIB_SRCS += hal/avr32/gpio_avr32.cpp
-LIB_SRCS += hal/avr32/piezo_speaker.c        
-LIB_SRCS += hal/avr32/pwm_avr32.cpp
-LIB_SRCS += hal/avr32/serial_avr32.cpp
-LIB_SRCS += hal/avr32/serial_usb_avr32.cpp
-LIB_SRCS += hal/avr32/spi_avr32.cpp
-LIB_SRCS += hal/avr32/sd_spi.c
-LIB_SRCS += hal/avr32/time_keeper.c
-LIB_SRCS += hal/avr32/file_flash_avr32.cpp
-LIB_SRCS += hal/avr32/file_fat_fs.cpp
-LIB_SRCS += hal/avr32/fat_fs_mounting.cpp
-
-LIB_SRCS += hal/dummy/adc_dummy.cpp
-LIB_SRCS += hal/dummy/i2c_dummy.cpp
-LIB_SRCS += hal/dummy/gpio_dummy.cpp
-
-LIB_SRCS += hal/avr32/FatFs/atadrive.c
-LIB_SRCS += hal/avr32/FatFs/sdcard.c
-LIB_SRCS += hal/avr32/FatFs/usbdisk.c
-
-LIB_SRCS += libs/FatFs/src/ff.c  
-LIB_SRCS += libs/FatFs/src/diskio.c
-LIB_SRCS += libs/FatFs/src/option/syscall.c
-LIB_SRCS += libs/FatFs/src/option/unicode.c
-LIB_SRCS += libs/FatFs/src/option/ccsbcs.c
-
-LIB_SRCS += runtime/scheduler.c  
-LIB_SRCS += runtime/scheduler_telemetry.cpp
-
-LIB_SRCS += sensing/ahrs.c            
-LIB_SRCS += sensing/ahrs_telemetry.cpp  
-LIB_SRCS += sensing/imu.cpp             
-LIB_SRCS += sensing/imu_telemetry.cpp                 
-LIB_SRCS += sensing/position_estimation.cpp            
-LIB_SRCS += sensing/position_estimation_telemetry.cpp
-LIB_SRCS += sensing/qfilter.cpp
-
-LIB_SRCS += simulation/simulation.cpp
-LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
-LIB_SRCS += simulation/accelerometer_sim.cpp
-LIB_SRCS += simulation/gyroscope_sim.cpp
-LIB_SRCS += simulation/magnetometer_sim.cpp
-LIB_SRCS += simulation/barometer_sim.cpp
-LIB_SRCS += simulation/sonar_sim.cpp
-LIB_SRCS += simulation/gps_sim.cpp
-
-LIB_SRCS += util/coord_conventions.c
-LIB_SRCS += util/kalman.c
-LIB_SRCS += util/linear_algebra.c
-LIB_SRCS += util/print_util.c
-LIB_SRCS += util/quick_trig.c
-LIB_SRCS += util/string_util.c
-
-
-# ------------------------------------------------------------------------------
-# ATMEL ASF
-# ------------------------------------------------------------------------------
-include ${MAVRIC_LIB}/libs/rules_asf.mk
+# add headers for libs/asf and for boards/mega_fly library (from includes)
 LIB_INC += $(addprefix -I${MAVRIC_LIB}, ${LIB_ASF_INC})
-LIB_SRCS += ${LIB_ASF_SRCS}
+LIB_INC += $(addprefix -I${MAVRIC_LIB}, ${LIB_MEGAFLY_INC})
 
 # ------------------------------------------------------------------------------
 # PREPROCESSOR OPTIONS
