@@ -44,12 +44,12 @@
 #ifndef STATE_MACHINE_H_
 #define STATE_MACHINE_H_
 
-#include "mavlink_waypoint_handler.hpp"
-#include "state.hpp"
-#include "manual_control.hpp"
-#include "remote.hpp"
-#include "gps.hpp"
-#include "imu.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
+#include "communication/state.hpp"
+#include "control/manual_control.hpp"
+#include "communication/remote.hpp"
+#include "drivers/gps.hpp"
+#include "sensing/imu.hpp"
 
 /**
  * \brief Defines the state machine structure

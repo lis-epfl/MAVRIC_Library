@@ -43,13 +43,13 @@
 #ifndef MAVLINK_STREAM_H_
 #define MAVLINK_STREAM_H_
 
-#include "serial.hpp"
+#include "hal/common/serial.hpp"
 
 extern "C" 
 {
 	#include <stdint.h>
 	#include <stdbool.h>
-	#include "endianness.h"
+	#include "hal/avr32/endianness.h"
 }
 
 #ifdef __MAVRIC_ENDIAN_BIG__

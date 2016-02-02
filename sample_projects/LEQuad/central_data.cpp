@@ -39,27 +39,27 @@
  ******************************************************************************/
 
 
-#include "central_data.hpp"
-#include "stabilisation_copter_default_config.hpp"
-#include "toggle_logging_default_config.hpp"
-#include "mavlink_communication_default_config.hpp"
+#include "sample_projects/LEQuad/central_data.hpp"
+#include "control/stabilisation_copter_default_config.hpp"
+#include "communication/toggle_logging_default_config.hpp"
+#include "communication/mavlink_communication_default_config.hpp"
 
-#include "position_estimation_default_config.hpp"
-#include "remote_default_config.hpp"
-#include "manual_control_default_config.hpp"
-#include "toggle_logging.hpp"
-#include "attitude_controller_default_config.h"
-#include "velocity_controller_copter_default_config.h"
-#include "servos_mix_quadcopter_diag_default_config.hpp"
+#include "sensing/position_estimation_default_config.hpp"
+#include "communication/remote_default_config.hpp"
+#include "control/manual_control_default_config.hpp"
+#include "communication/toggle_logging.hpp"
+#include "control/attitude_controller_default_config.h"
+#include "control/velocity_controller_copter_default_config.h"
+#include "control/servos_mix_quadcopter_diag_default_config.hpp"
 
 extern "C" 
 {
-	#include "time_keeper.hpp"
-	#include "navigation_default_config.h"
-	#include "qfilter_default_config.h"
-	#include "scheduler_default_config.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "control/navigation_default_config.h"
+	#include "sensing/qfilter_default_config.h"
+	#include "runtime/scheduler_default_config.h"
 
-	#include "print_util.h"
+	#include "util/print_util.h"
 }
 
 

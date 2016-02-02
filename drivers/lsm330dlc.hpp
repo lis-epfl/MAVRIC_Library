@@ -48,9 +48,9 @@
 
 #include <stdint.h>
 #include <array>
-#include "accelerometer.hpp"		
-#include "gyroscope.hpp"
-#include "i2c.hpp"
+#include "drivers/accelerometer.hpp"		
+#include "drivers/gyroscope.hpp"
+#include "hal/common/i2c.hpp"
 
 
 /**

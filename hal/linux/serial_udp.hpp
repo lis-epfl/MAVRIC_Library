@@ -41,12 +41,12 @@
 #ifndef SERIAL_UDP_H_
 #define SERIAL_UDP_H_
 
-#include "serial.hpp"
-#include "buffer.hpp"
+#include "hal/common/serial.hpp"
+#include "util/buffer.hpp"
 
 extern "C"
 {
-	#include "endianness.h"
+	#include "hal/avr32/endianness.h"
 	#include <stdint.h>
 	#include <sys/socket.h>
 	#include <arpa/inet.h>

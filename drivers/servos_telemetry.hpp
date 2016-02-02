@@ -44,8 +44,8 @@
 #ifndef SERVOS_TELEMETRY_H_
 #define SERVOS_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "servo.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "drivers/servo.hpp"
 
 extern "C"
 {

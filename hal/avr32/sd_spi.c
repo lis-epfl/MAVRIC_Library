@@ -46,16 +46,16 @@
  ******************************************************************************/
 
 
-#include "sd_spi.h"
-#include "spi.h"
-#include "gpio.h"
-#include "pdca.h"
-#include "time_keeper.hpp"
+#include "hal/avr32/sd_spi.h"
+#include "libs/asf/avr32/drivers/spi/spi.h"
+#include "libs/asf/avr32/drivers/gpio/gpio.h"
+#include "libs/asf/avr32/drivers/pdca/pdca.h"
+#include "hal/common/time_keeper.hpp"
 
-#include "led.h"
-#include "print_util.h"
+#include "hal/avr32/led.h"
+#include "util/print_util.h"
 
-#include "user_board.h"
+#include "libs/asf/common/boards/user_board/user_board.h"
 
 //to remove
 static uint32_t  gl_ptr_mem;						///< Memory data pointer

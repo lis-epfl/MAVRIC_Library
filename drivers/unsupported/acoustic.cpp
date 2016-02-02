@@ -43,15 +43,15 @@
  
 #define KP_YAW 0.2
 
-#include "acoustic.hpp"
-#include "mavlink_stream.hpp"
+#include "drivers/unsupported/acoustic.hpp"
+#include "communication/mavlink_stream.hpp"
 
 extern "C"
 {
 	#include "uart_int.h"
-	#include "print_util.h"
-	#include "constants.h"
-	#include "quick_trig.h"
+	#include "util/print_util.h"
+	#include "util/constants.h"
+	#include "util/quick_trig.h"
 }
 
 float az[STORE_SIZE] =			///< Store pre-computed value for the azimuth

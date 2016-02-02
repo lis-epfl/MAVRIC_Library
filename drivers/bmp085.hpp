@@ -47,8 +47,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "i2c.hpp"
-#include "barometer.hpp"
+#include "hal/common/i2c.hpp"
+#include "drivers/barometer.hpp"
 
 
 /**

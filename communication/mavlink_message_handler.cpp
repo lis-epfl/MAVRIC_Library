@@ -41,12 +41,12 @@
  ******************************************************************************/
 
 
-#include "mavlink_message_handler.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "piezo_speaker.h"
+	#include "util/print_util.h"
+	#include "hal/piezo_speaker.h"
 	#include <stdlib.h>
 	#include <stdbool.h>
 }

@@ -38,7 +38,7 @@
  *
  ******************************************************************************/
 
-#include "adc_dummy.hpp"
+#include "hal/dummy/adc_dummy.hpp"
 
 Adc_dummy::Adc_dummy(float voltage):
 	voltage_(voltage)

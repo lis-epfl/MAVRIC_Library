@@ -49,8 +49,8 @@
 #ifndef SERIAL_USB_AVR32_H_
 #define SERIAL_USB_AVR32_H_
 
-#include "serial.hpp"
-#include "buffer.hpp"
+#include "hal/common/serial.hpp"
+#include "util/buffer.hpp"
 
 extern "C"
 {

@@ -43,15 +43,15 @@
  ******************************************************************************/
 
 
-#include "gps_ublox.hpp"
+#include "drivers/gps_ublox.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
-	#include "endianness.h"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "hal/avr32/endianness.h"
 	#include <string.h>
-	#include "maths.h"
+	#include "util/maths.h"
 }
 
 

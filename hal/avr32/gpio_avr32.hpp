@@ -41,7 +41,7 @@
 #ifndef GPIO_AVR32_H_
 #define GPIO_AVR32_H_
 
-#include "gpio.hpp"
+#include "hal/common/gpio.hpp"
 #include <stdint.h>
 
 /**

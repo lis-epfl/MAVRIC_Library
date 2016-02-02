@@ -41,7 +41,7 @@
  ******************************************************************************/
 
 
-#include "servos_mix_birotor.hpp"
+#include "control/servos_mix_birotor.hpp"
 
 
 bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command,  Servo* motor_left, Servo* motor_right, Servo* servo_left, Servo* servo_right, daler_dc_motor_ctrl_t* dc_motors)

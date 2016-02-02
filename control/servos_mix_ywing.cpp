@@ -40,11 +40,11 @@
  ******************************************************************************/
 
 
-#include "servos_mix_ywing.hpp"
+#include "control/servos_mix_ywing.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
+	#include "util/print_util.h"
 }
 
 bool servo_mix_ywing_init( servo_mix_ywing_t* mix, const servo_mix_ywing_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, Servo* motor, Servo* flap_top, Servo* flap_right, Servo* flap_left)

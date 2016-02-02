@@ -40,11 +40,11 @@
  ******************************************************************************/
 
 
-#include "servo.hpp"
+#include "drivers/servo.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
+	#include "hal/common/time_keeper.hpp"
 }
 
 

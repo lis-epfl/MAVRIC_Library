@@ -43,14 +43,14 @@
 #ifndef MAVLINK_WAYPOINT_HANDLER__
 #define MAVLINK_WAYPOINT_HANDLER__
 
-#include "mavlink_communication.hpp"
-#include "mavlink_stream.hpp"
-#include "position_estimation.hpp"
-#include "mavlink_message_handler.hpp"
-#include "state.hpp"
-#include "qfilter.hpp"
-#include "manual_control.hpp"
-#include "navigation.hpp"
+#include "communication/mavlink_communication.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "sensing/position_estimation.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "communication/state.hpp"
+#include "sensing/qfilter.hpp"
+#include "control/manual_control.hpp"
+#include "control/navigation.hpp"
 
 #define MAX_WAYPOINTS 10		///< The maximal size of the waypoint list
 

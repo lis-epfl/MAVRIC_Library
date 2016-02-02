@@ -41,9 +41,9 @@
  ******************************************************************************/
 
 
-#include "analog_monitor.h"
-#include "adc_int.h"
-#include "adcifa.h"
+#include "hal/analog_monitor.h"
+#include "hal/avr32/adc_int.h"
+#include "libs/asf/avr32/drivers/adcifa/adcifa.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

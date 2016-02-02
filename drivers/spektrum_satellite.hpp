@@ -45,10 +45,10 @@
 #define SPEKTRUM_SATELLITE_HPP_
 
 
-#include "satellite.hpp"
-#include "serial.hpp"
-#include "gpio.hpp"
-#include "buffer.hpp"
+#include "drivers/satellite.hpp"
+#include "hal/common/serial.hpp"
+#include "hal/common/gpio.hpp"
+#include "util/buffer.hpp"
 
 extern "C" 
 {

@@ -46,18 +46,18 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "mavlink_waypoint_handler.hpp"
-#include "stabilisation_copter.hpp"
-#include "navigation.hpp"
-#include "position_estimation.hpp"
-#include "remote.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
+#include "control/stabilisation_copter.hpp"
+#include "control/navigation.hpp"
+#include "sensing/position_estimation.hpp"
+#include "communication/remote.hpp"
 
 extern "C" 
 {
-	#include "streams.h"
+	#include "util/streams.h"
 	#include "buffer.h"
-	#include "ahrs.h"
-	#include "stabilisation.h"
+	#include "sensing/ahrs.h"
+	#include "control/stabilisation.h"
 }
 
 #define STORE_SIZE			4		///< number of azimuth/elevation values stored for reliability test

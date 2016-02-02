@@ -45,7 +45,7 @@
 
 
 
-#include "ahrs_madgwick.h"
+#include "sensing/ahrs_madgwick.h"
 
 
 static inline ahrs_madgwick_conf_t ahrs_madgwick_default_config()

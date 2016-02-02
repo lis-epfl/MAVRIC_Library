@@ -38,14 +38,14 @@
  *
  ******************************************************************************/
 
-#include "i2c_avr32.hpp"
-#include "atmel_status_codes.hpp"
+#include "hal/avr32/i2c_avr32.hpp"
+#include "hal/avr32/atmel_status_codes.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "gpio.h"
-	#include "sysclk.h"
+	#include "util/print_util.h"
+	#include "libs/asf/avr32/drivers/gpio/gpio.h"
+	#include "libs/asf/common/services/clock/sysclk.h"
 }
 
 //------------------------------------------------------------------------------

@@ -40,12 +40,12 @@
  *
  ******************************************************************************/
 
-#include "remote_telemetry.hpp"
-#include "satellite.hpp"
+#include "communication/remote_telemetry.hpp"
+#include "drivers/satellite.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
+	#include "hal/common/time_keeper.hpp"
 }
 
 

@@ -49,14 +49,14 @@
 #include <stdbool.h>
 #include <array>
 
-#include "accelerometer.hpp"
-#include "gyroscope.hpp"
-#include "magnetometer.hpp"
-#include "state.hpp"
+#include "drivers/accelerometer.hpp"
+#include "drivers/gyroscope.hpp"
+#include "drivers/magnetometer.hpp"
+#include "communication/state.hpp"
 
 extern "C" 
 {
-	#include "quaternions.h"
+	#include "util/quaternions.h"
 }
 
 #define GYRO_LPF 0.1f						///< The gyroscope linear pass filter gain

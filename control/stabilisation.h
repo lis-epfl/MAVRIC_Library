@@ -49,7 +49,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "pid_controller.h"
+#include "control/pid_controller.h"
 
 /**
  * \brief	The control mode enum

@@ -48,13 +48,13 @@
 	extern "C" {
 #endif
 
-#include "servo.hpp"
+#include "drivers/servo.hpp"
 
 extern "C"
 {
-	#include "control_command.h"
-	#include "constants.h"
-	#include "daler_dc_motor_ctrl.h"
+	#include "control/control_command.h"
+	#include "util/constants.h"
+	#include "drivers/unsupported/daler_dc_motor_ctrl.h"
 }
 
 /**

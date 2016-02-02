@@ -55,12 +55,12 @@
 
 
 
-#include "ahrs_madgwick.h"
-#include "maths.h"
-#include "print_util.h"
-#include "constants.h"
-#include "time_keeper.hpp"
-#include "quaternions.h"
+#include "sensing/ahrs_madgwick.h"
+#include "util/maths.h"
+#include "util/print_util.h"
+#include "util/constants.h"
+#include "hal/common/time_keeper.hpp"
+#include "util/quaternions.h"
 
 
 bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs)

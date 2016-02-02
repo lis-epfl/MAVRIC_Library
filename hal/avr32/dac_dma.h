@@ -49,10 +49,10 @@
 #endif
 
 #include <avr32/io.h>
-#include "preprocessor.h"
+#include "libs/asf/avr32/utils/preprocessor/preprocessor.h"
 #include <stdint.h>
-#include "user_board.h"
-#include "dacifb.h"
+#include "libs/asf/common/boards/user_board/user_board.h"
+#include "libs/asf/avr32/drivers/dacifb/dacifb.h"
 
 #define DAC_MODE_DMA    DACIFB_TRIGGER_MODE_EVENT						///< Define the DAC mode in respect to the DMA usage
 #define DAC_MODE_MANUAL DACIFB_TRIGGER_MODE_MANUAL						///< Define The DAC mode in manual usage

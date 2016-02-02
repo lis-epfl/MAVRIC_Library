@@ -62,7 +62,7 @@ extern "C" {
 #endif
 
 
-#include "ahrs.h"
+#include "sensing/ahrs.h"
 #include "imu.h"
 
 

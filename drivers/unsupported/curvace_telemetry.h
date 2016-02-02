@@ -47,7 +47,7 @@
 	extern "C" {
 #endif
 
-#include "curvace.h"	
+#include "drivers/unsupported/curvace.h"	
 #include "mavlink_stream.h"
 
 

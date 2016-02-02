@@ -42,7 +42,7 @@
 #ifndef STABILISATION_COPTER_DEFAULT_CONFIG_H_
 #define STABILISATION_COPTER_DEFAULT_CONFIG_H_
 
-#include "stabilisation_copter.hpp"
+#include "control/stabilisation_copter.hpp"
 
 
 static inline stabilisation_copter_conf_t stabilisation_copter_default_config()

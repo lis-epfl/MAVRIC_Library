@@ -40,10 +40,10 @@
  ******************************************************************************/
 
  
-#include "doppler_radar.h"
-#include "print_util.h"
+#include "sensing/doppler_radar.h"
+#include "util/print_util.h"
 #include "math.h"
-#include "time_keeper.hpp"
+#include "hal/common/time_keeper.hpp"
 
 static volatile uint32_t even_odd2;
 

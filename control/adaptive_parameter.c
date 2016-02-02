@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#include "adaptive_parameter.h"
-#include "maths.h"
+#include "control/adaptive_parameter.h"
+#include "util/maths.h"
 
 adaptive_parameter_set_t adapt_param_set;
 

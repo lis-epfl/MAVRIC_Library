@@ -39,12 +39,12 @@
  ******************************************************************************/
 
 
-#include "serial_avr32.hpp"
+#include "hal/avr32/serial_avr32.hpp"
 
 extern "C"
 {
-	#include "gpio.h"
-	#include "sysclk.h"
+	#include "libs/asf/avr32/drivers/gpio/gpio.h"
+	#include "libs/asf/common/services/clock/sysclk.h"
 }
 
 //------------------------------------------------------------------------------

@@ -40,11 +40,11 @@
  ******************************************************************************/
 
 
-#include "piezo_speaker.h"
-#include "dac_dma.h"
-#include "gpio.h"
-// #include "delay.h"
-#include "time_keeper.hpp"
+#include "hal/piezo_speaker.h"
+#include "hal/avr32/dac_dma.h"
+#include "libs/asf/avr32/drivers/gpio/gpio.h"
+// #include "libs/asf/avr32/services/delay/delay.h"
+#include "hal/common/time_keeper.hpp"
 
 
 //------------------------------------------------------------------------------

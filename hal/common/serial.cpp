@@ -1,4 +1,4 @@
-#include "serial.hpp"
+#include "hal/common/serial.hpp"
 
 /**
  * \brief 	write newline character to stream ('\n\r')

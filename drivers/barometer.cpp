@@ -40,12 +40,12 @@
  *
  ******************************************************************************/
 
-#include "barometer.hpp"
-#include "time_keeper.hpp"
+#include "drivers/barometer.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-	#include "maths.h"
+	#include "util/maths.h"
 }
 
 

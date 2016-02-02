@@ -42,7 +42,7 @@
 #ifndef POSITION_ESTIMATION_DEFAULT_CONFIG_H_
 #define POSITION_ESTIMATION_DEFAULT_CONFIG_H_
 
-#include "position_estimation.hpp"
+#include "sensing/position_estimation.hpp"
 
 static inline position_estimation_conf_t position_estimation_default_config()
 {

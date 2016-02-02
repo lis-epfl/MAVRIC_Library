@@ -41,11 +41,11 @@
  ******************************************************************************/
 
 
-#include "spi_buffered.h"
-#include "spi_master.h"
-#include "gpio.h"
-#include "pdca.h"
-#include "led.h"
+#include "hal/avr32/spi_buffered.h"
+#include "libs/asf/common/services/spi/spi_master.h"
+#include "libs/asf/avr32/drivers/gpio/gpio.h"
+#include "libs/asf/avr32/drivers/pdca/pdca.h"
+#include "hal/avr32/led.h"
 
 static volatile spi_buffer_t spi_buffers[SPI_NUMBER];				///< Allocated memory for SPI buffers
 

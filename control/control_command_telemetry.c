@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#include "control_command_telemetry.h"
-#include "time_keeper.hpp"
+#include "control/control_command_telemetry.h"
+#include "hal/common/time_keeper.hpp"
 
 
 void control_command_telemetry_send(const command_t* command, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

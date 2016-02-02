@@ -38,7 +38,7 @@
  *
  ******************************************************************************/
 
-#include "adc_avr32.hpp"
+#include "hal/avr32/adc_avr32.hpp"
 
 
 Adc_avr32::Adc_avr32(analog_monitor_t& analog_monitor, adc_avr32_conf_t config):

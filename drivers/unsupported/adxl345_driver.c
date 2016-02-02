@@ -40,10 +40,10 @@
  ******************************************************************************/
 
 
-#include "adxl345_driver.h"
+#include "drivers/unsupported/adxl345_driver.h"
 #include "i2c_driver_int.h"
-#include "print_util.h"
-#include "twim.h"
+#include "util/print_util.h"
+#include "libs/asf/avr32/drivers/twim/twim.h"
 
 static volatile acc_data_t acc_outputs;				///< Declare an object containing accelerometer's data
 

@@ -41,18 +41,18 @@
  ******************************************************************************/
 
 
-#include "ads1274.h"
-#include "gpio.h"
-#include "tc.h"
-#include "scif_uc3c.h"
-#include "genclk.h"
-#include "eic.h"
-#include "intc.h"
-#include "led.h"
-#include "spi_master.h"
-#include "spi_buffered.h"
+#include "drivers/unsupported/ads1274.h"
+#include "libs/asf/avr32/drivers/gpio/gpio.h"
+#include "libs/asf/avr32/drivers/tc/tc.h"
+#include "libs/asf/avr32/drivers/scif/scif_uc3c.h"
+#include "libs/asf/common/services/clock/genclk.h"
+#include "libs/asf/avr32/drivers/eic/eic.h"
+#include "libs/asf/avr32/drivers/intc/intc.h"
+#include "hal/avr32/led.h"
+#include "libs/asf/common/services/spi/spi_master.h"
+#include "hal/avr32/spi_buffered.h"
 
-#include "dac_dma.h"
+#include "hal/avr32/dac_dma.h"
 
 #define ADC_MODE0 AVR32_PIN_PB03			///< Define the pin selecting the ADC mode 
 #define ADC_MODE1 AVR32_PIN_PB04			///< Define the pin selecting the ADC mode 

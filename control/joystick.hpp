@@ -42,12 +42,12 @@
 #ifndef JOYSTICK_H_
 #define JOYSTICK_H_
 
-#include "state.hpp"
+#include "communication/state.hpp"
 
 extern "C" 
 {
-	#include "stabilisation.h"
-	#include "control_command.h"
+	#include "control/stabilisation.h"
+	#include "control/control_command.h"
 }
 
 

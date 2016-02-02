@@ -38,23 +38,23 @@
  *
  ******************************************************************************/
 
-#include "megafly_rev4.hpp"
+#include "boards/megafly_rev4.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
 
-	#include "sysclk.h"
-	#include "sleepmgr.h"
-	#include "delay.h"
+	#include "libs/asf/common/services/clock/sysclk.h"
+	#include "libs/asf/common/services/sleepmgr/sleepmgr.h"
+	#include "libs/asf/avr32/services/delay/delay.h"
 
-	#include "gpio.h"
+	#include "libs/asf/avr32/drivers/gpio/gpio.h"
 
-	#include "analog_monitor.h"
-	#include "analog_monitor_default_config.h"
+	#include "hal/analog_monitor.h"
+	#include "hal/analog_monitor_default_config.h"
 
-	#include "piezo_speaker.h"
+	#include "hal/piezo_speaker.h"
 }
 
 

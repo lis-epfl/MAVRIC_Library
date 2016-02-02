@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#include "gpio_avr32.hpp"
-#include "gpio.h"
+#include "hal/avr32/gpio_avr32.hpp"
+#include "libs/asf/avr32/drivers/gpio/gpio.h"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION

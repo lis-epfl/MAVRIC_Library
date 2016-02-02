@@ -38,14 +38,14 @@
  *
  ******************************************************************************/
 
-#include "mavrinux.hpp"
-#include "central_data.hpp"
-#include "mavlink_telemetry.hpp"
-#include "tasks.hpp"
+#include "boards/mavrinux.hpp"
+#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
+#include "sample_projects/LEQuad/tasks.hpp"
 
 extern "C" 
 {
-	#include "print_util.h"
+	#include "util/print_util.h"
 }
 
 

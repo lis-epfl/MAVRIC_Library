@@ -40,16 +40,16 @@
  ******************************************************************************/
 
 
-#include "adc_int.h"
-#include "gpio.h"
-#include "tc.h"
-#include "intc.h"
-#include "led.h"
+#include "hal/avr32/adc_int.h"
+#include "libs/asf/avr32/drivers/gpio/gpio.h"
+#include "libs/asf/avr32/drivers/tc/tc.h"
+#include "libs/asf/avr32/drivers/intc/intc.h"
+#include "hal/avr32/led.h"
 #include <stdint.h>
-#include "adcifa.h"
-#include "time_keeper.hpp"
-#include "dac_dma.h"
-#include "sysclk.h"
+#include "libs/asf/avr32/drivers/adcifa/adcifa.h"
+#include "hal/common/time_keeper.hpp"
+#include "hal/avr32/dac_dma.h"
+#include "libs/asf/common/services/clock/sysclk.h"
 
 #define ADC_INT_SEOS0 1			///< Define the Analog to Digital interrupt (?)
 #define ADC_INT_SEOS1 16		///< Define the Analog to Digital interrupt (?)

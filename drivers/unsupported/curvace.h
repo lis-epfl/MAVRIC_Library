@@ -49,10 +49,10 @@
 #endif
 
 #include <stdint.h>
-#include "quaternions.h"
-#include "ahrs.h"
-#include "optic_flow.h"
-#include "constants.h"	
+#include "util/quaternions.h"
+#include "sensing/ahrs.h"
+#include "drivers/optic_flow.h"
+#include "util/constants.h"	
 
 #define CURVACE_NB_OF 108
 

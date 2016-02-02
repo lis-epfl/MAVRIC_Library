@@ -45,7 +45,7 @@
 #ifndef PWM_DUMMY_H_
 #define PWM_DUMMY_H_
 
-#include "pwm.hpp"
+#include "hal/common/pwm.hpp"
 
 
 class Pwm_dummy: public Pwm

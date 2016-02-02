@@ -43,12 +43,12 @@
 #ifndef VECTOR_FIELD_WAYPOINT_H_
 #define VECTOR_FIELD_WAYPOINT_H_
 
-#include "mavlink_waypoint_handler.hpp"
-#include "position_estimation.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
+#include "sensing/position_estimation.hpp"
 
 extern "C" 
 {
-	#include "control_command.h"
+	#include "control/control_command.h"
 }
 
 /**

@@ -43,7 +43,7 @@
 #ifndef MANUAL_CONTROL_DEFAULT_CONFIG_H_
 #define MANUAL_CONTROL_DEFAULT_CONFIG_H_
 
-#include "manual_control.hpp"
+#include "control/manual_control.hpp"
 
 
 static inline manual_control_conf_t manual_control_default_config ()

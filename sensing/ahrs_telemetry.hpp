@@ -44,11 +44,11 @@
 #ifndef AHRS_TELEMETRY_H_
 #define AHRS_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
+#include "communication/mavlink_stream.hpp"
 
 extern "C" 
 {
-	#include "ahrs.h"
+	#include "sensing/ahrs.h"
 }
 
 /**

@@ -39,14 +39,14 @@
  ******************************************************************************/
 
 
-#include "joystick.hpp"
+#include "control/joystick.hpp"
 
 extern "C" 
 {
-	#include "print_util.h"
-	#include "constants.h"
-	#include "coord_conventions.h"
-	#include "quick_trig.h"
+	#include "util/print_util.h"
+	#include "util/constants.h"
+	#include "util/coord_conventions.h"
+	#include "util/quick_trig.h"
 }
 
 //------------------------------------------------------------------------------

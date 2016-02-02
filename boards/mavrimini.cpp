@@ -42,12 +42,12 @@
 #include <libopencm3/stm32/gpio.h>
 
 
-#include "mavrimini.hpp"
+#include "boards/mavrimini.hpp"
 
 extern "C"
 {
-	#include "print_util.h"
-	#include "time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "hal/common/time_keeper.hpp"
 }
 
 

@@ -41,15 +41,15 @@
  *
  ******************************************************************************/
 
-#include "velocity_controller_copter.hpp"
+#include "control/velocity_controller_copter.hpp"
 
 extern "C"
 {
-	#include "quaternions.h"
-	#include "coord_conventions.h"
-	#include "maths.h"
-	#include "constants.h"
-	#include "vectors.h"
+	#include "util/quaternions.h"
+	#include "util/coord_conventions.h"
+	#include "util/maths.h"
+	#include "util/constants.h"
+	#include "util/vectors.h"
 }
 
 //------------------------------------------------------------------------------

@@ -5,7 +5,7 @@
  *  Author: schill
  */ 
 
-#include "piezo_speaker.h"
+#include "hal/piezo_speaker.h"
 
 void piezo_speaker_init() {
 

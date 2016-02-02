@@ -40,15 +40,15 @@
  ******************************************************************************/
 
 
-#include "remote.hpp"
+#include "communication/remote.hpp"
 
 extern "C"
 {
-	#include "time_keeper.hpp"
-	#include "print_util.h"
-	#include "constants.h"
-	#include "coord_conventions.h"
-	#include "quick_trig.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/print_util.h"
+	#include "util/constants.h"
+	#include "util/coord_conventions.h"
+	#include "util/quick_trig.h"
 }
 
 //------------------------------------------------------------------------------

@@ -44,10 +44,10 @@
 #ifndef GPS_UBLOX_TELEMETRY_H_
 #define GPS_UBLOX_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "gps.hpp"
-#include "gps_ublox.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "drivers/gps.hpp"
+#include "drivers/gps_ublox.hpp"
 
 
 /**

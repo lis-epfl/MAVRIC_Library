@@ -45,9 +45,9 @@
 #ifndef IMU_TELEMETRY_HPP_
 #define IMU_TELEMETRY_HPP_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "imu.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "sensing/imu.hpp"
 
 /**
  * \brief	Initialise the imu telemetry module

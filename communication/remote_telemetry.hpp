@@ -44,9 +44,9 @@
 #ifndef REMOTE_TELEMETRY_H_
 #define REMOTE_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "remote.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "communication/remote.hpp"
 
 
 

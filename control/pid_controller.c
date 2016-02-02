@@ -40,9 +40,9 @@
  ******************************************************************************/
 
 
-#include "pid_controller.h"
-#include "time_keeper.hpp"
-#include "maths.h"
+#include "control/pid_controller.h"
+#include "hal/common/time_keeper.hpp"
+#include "util/maths.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

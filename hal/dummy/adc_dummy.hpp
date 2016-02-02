@@ -41,7 +41,7 @@
 #ifndef ADC_DUMMY_HPP_
 #define ADC_DUMMY_HPP_
 
-#include "adc.hpp"
+#include "hal/common/adc.hpp"
 
 class Adc_dummy: public Adc
 {

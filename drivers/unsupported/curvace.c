@@ -40,14 +40,14 @@
  *
  ******************************************************************************/
 
-#include "curvace.h"
-#include "maths.h"
-#include "quick_trig.h"
-#include "time_keeper.hpp"
-#include "gpio.h"
-#include "spi.h"
-#include "sysclk.h"
-#include "delay.h"
+#include "drivers/unsupported/curvace.h"
+#include "util/maths.h"
+#include "util/quick_trig.h"
+#include "hal/common/time_keeper.hpp"
+#include "libs/asf/avr32/drivers/gpio/gpio.h"
+#include "libs/asf/avr32/drivers/spi/spi.h"
+#include "libs/asf/common/services/clock/sysclk.h"
+#include "libs/asf/avr32/services/delay/delay.h"
 
 #define slaveSelectTop AVR32_PIN_PC11
 #define slaveSelectBot AVR32_PIN_PC12

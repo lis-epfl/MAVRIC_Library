@@ -41,12 +41,12 @@
  ******************************************************************************/
 
 
-#include "spektrum_satellite.hpp"
+#include "drivers/spektrum_satellite.hpp"
 
 extern "C" 
 {
-	#include "time_keeper.hpp"
-	#include "print_util.h"
+	#include "hal/common/time_keeper.hpp"
+	#include "util/print_util.h"
 }
 
 Spektrum_satellite* spek_sat;

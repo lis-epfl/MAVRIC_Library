@@ -38,7 +38,7 @@
  *
  ******************************************************************************/
 
-#include "led_gpio.hpp"
+#include "hal/common/led_gpio.hpp"
 
 
 Led_gpio::Led_gpio(Gpio& gpio, bool active_high):

@@ -43,12 +43,12 @@
 #ifndef STABILISATION_TELEMETRY_H_
 #define STABILISATION_TELEMETRY_H_
 
-#include "stabilisation_copter.hpp"
-#include "mavlink_stream.hpp"
+#include "control/stabilisation_copter.hpp"
+#include "communication/mavlink_stream.hpp"
 
 extern "C" 
 {
-	#include "stabilisation.h"
+	#include "control/stabilisation.h"
 }
 
 

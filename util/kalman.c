@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "kalman.h"
+#include "util/kalman.h"
 
 
 void kalman_2D_prediction(kalman_filter_2D_t *kalman, vector_2_t control) 

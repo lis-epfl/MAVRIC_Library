@@ -44,9 +44,9 @@
 #ifndef STATE_TELEMETRY_H_
 #define STATE_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
-#include "state.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "communication/state.hpp"
 
 /**
  * \brief	Initialise the state telemetry module

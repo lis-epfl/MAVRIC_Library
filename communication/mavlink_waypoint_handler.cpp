@@ -40,15 +40,15 @@
  ******************************************************************************/
 
 
-#include "mavlink_waypoint_handler.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
 #include <cstdlib>
-#include "time_keeper.hpp"
+#include "hal/common/time_keeper.hpp"
  
 extern "C"
 {
-	#include "print_util.h"
-	#include "maths.h"
-	#include "constants.h"
+	#include "util/print_util.h"
+	#include "util/maths.h"
+	#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------

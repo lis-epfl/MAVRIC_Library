@@ -41,7 +41,7 @@
 #ifndef FILE_FLASH_AVR32_H_
 #define FILE_FLASH_AVR32_H_
 
-#include "file.hpp"
+#include "hal/common/file.hpp"
 
 
 /**

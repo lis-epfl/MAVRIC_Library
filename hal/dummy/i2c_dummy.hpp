@@ -41,7 +41,7 @@
 #ifndef I2C_DUMMY_H_
 #define I2C_DUMMY_H_
 
-#include "i2c.hpp"
+#include "hal/common/i2c.hpp"
 
 
 /**

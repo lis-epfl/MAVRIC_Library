@@ -41,12 +41,12 @@
 #ifndef SERIAL_AVR32_H_
 #define SERIAL_AVR32_H_
 
-#include "serial.hpp"
-#include "buffer.hpp"
+#include "hal/common/serial.hpp"
+#include "util/buffer.hpp"
 
 extern "C"
 {
-	#include "usart.h"
+	#include "libs/asf/avr32/drivers/usart/usart.h"
 }
 
 /**

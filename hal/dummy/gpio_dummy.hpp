@@ -41,7 +41,7 @@
 #ifndef GPIO_DUMMY_H_
 #define GPIO_DUMMY_H_
 
-#include "gpio.hpp"
+#include "hal/common/gpio.hpp"
 
 
 /**

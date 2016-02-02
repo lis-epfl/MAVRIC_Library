@@ -38,12 +38,12 @@
  *
  ******************************************************************************/
 
-#include "file_flash_avr32.hpp"
+#include "hal/avr32/file_flash_avr32.hpp"
 
 
 extern "C"
 {
-	#include "flashc.h"
+	#include "libs/asf/avr32/drivers/flashc/flashc.h"
 }
 
 #define MAVERIC_FLASHC_USER_PAGE_START_ADDRESS (AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04)	// +4bytes for unknown reason

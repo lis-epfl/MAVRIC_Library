@@ -43,9 +43,9 @@
 #ifndef ACOUSTIC_TELEMETRY_H_
 #define ACOUSTIC_TELEMETRY_H_
 
-#include "acoustic.hpp"
-#include "mavlink_stream.hpp"
-#include "mavlink_message_handler.hpp"
+#include "drivers/unsupported/acoustic.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 /**
  * \brief 	Send the acoustic azimuth and elevation angles, and the Reliable_data flag
