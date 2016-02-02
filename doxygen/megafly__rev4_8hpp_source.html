@@ -124,30 +124,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00042"></a>00042 <span class="preprocessor">#ifndef MEGAFLY_REV4_HPP_</span>
 <a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define MEGAFLY_REV4_HPP_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
-<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;gpio_avr32.hpp&quot;</span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;serial_avr32.hpp&quot;</span>
-<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;serial_usb_avr32.hpp&quot;</span>
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;i2c_avr32.hpp&quot;</span>
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;hmc5883l.hpp&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;lsm330dlc.hpp&quot;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;bmp085.hpp&quot;</span>
-<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;imu.hpp&quot;</span>
-<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;spektrum_satellite.hpp&quot;</span>
-<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;file_flash_avr32.hpp&quot;</span>
-<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;file_fat_fs.hpp&quot;</span>
-<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;gps_ublox.hpp&quot;</span>
-<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;sonar_i2cxl.hpp&quot;</span>
-<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;adc_avr32.hpp&quot;</span>
-<a name="l00059"></a>00059 <span class="preprocessor">#include &quot;battery.hpp&quot;</span>
-<a name="l00060"></a>00060 <span class="preprocessor">#include &quot;pwm_avr32.hpp&quot;</span>
-<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;servo.hpp&quot;</span>
-<a name="l00062"></a>00062 <span class="preprocessor">#include &quot;led_avr32.hpp&quot;</span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;hal/avr32/gpio_avr32.hpp&quot;</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;hal/avr32/serial_avr32.hpp&quot;</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;hal/avr32/serial_usb_avr32.hpp&quot;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;hal/avr32/i2c_avr32.hpp&quot;</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;drivers/hmc5883l.hpp&quot;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;drivers/lsm330dlc.hpp&quot;</span>
+<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;drivers/bmp085.hpp&quot;</span>
+<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;sensing/imu.hpp&quot;</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;drivers/spektrum_satellite.hpp&quot;</span>
+<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;hal/avr32/file_flash_avr32.hpp&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;hal/avr32/file_fat_fs.hpp&quot;</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;drivers/gps_ublox.hpp&quot;</span>
+<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;drivers/sonar_i2cxl.hpp&quot;</span>
+<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;hal/avr32/adc_avr32.hpp&quot;</span>
+<a name="l00059"></a>00059 <span class="preprocessor">#include &quot;drivers/battery.hpp&quot;</span>
+<a name="l00060"></a>00060 <span class="preprocessor">#include &quot;hal/avr32/pwm_avr32.hpp&quot;</span>
+<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;drivers/servo.hpp&quot;</span>
+<a name="l00062"></a>00062 <span class="preprocessor">#include &quot;hal/avr32/led_avr32.hpp&quot;</span>
 <a name="l00063"></a>00063 
 <a name="l00064"></a>00064 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
 <a name="l00065"></a>00065 {
-<a name="l00066"></a>00066 <span class="preprocessor">    #include &quot;twim_default_config.h&quot;</span>
-<a name="l00067"></a>00067 <span class="preprocessor">    #include &quot;streams.h&quot;</span>
-<a name="l00068"></a>00068 <span class="preprocessor">    #include &quot;analog_monitor.h&quot;</span>
+<a name="l00066"></a>00066 <span class="preprocessor">    #include &quot;hal/avr32/twim_default_config.h&quot;</span>
+<a name="l00067"></a>00067 <span class="preprocessor">    #include &quot;util/streams.h&quot;</span>
+<a name="l00068"></a>00068 <span class="preprocessor">    #include &quot;hal/analog_monitor.h&quot;</span>
 <a name="l00069"></a>00069 }
 <a name="l00070"></a>00070 
 <a name="l00071"></a>00071 
@@ -416,7 +416,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 2 2016 11:11:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Feb 2 2016 16:26:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

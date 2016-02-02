@@ -125,9 +125,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00043"></a>00043 <span class="preprocessor">#ifndef ACOUSTIC_TELEMETRY_H_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define ACOUSTIC_TELEMETRY_H_</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;acoustic.hpp&quot;</span>
-<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;mavlink_stream.hpp&quot;</span>
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;mavlink_message_handler.hpp&quot;</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;drivers/unsupported/acoustic.hpp&quot;</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;communication/mavlink_stream.hpp&quot;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;communication/mavlink_message_handler.hpp&quot;</span>
 <a name="l00049"></a>00049 
 <a name="l00057"></a>00057 <span class="keywordtype">void</span> acoustic_telemetry_send (<span class="keyword">const</span> <a class="code" href="structaudio__t.html" title="Structure of the acoustic data.">audio_t</a>* audio_data, <span class="keyword">const</span> <a class="code" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module.">mavlink_stream_t</a>* mavlink_stream, mavlink_message_t* msg);
 <a name="l00058"></a>00058 
@@ -151,7 +151,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 2 2016 11:11:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Feb 2 2016 16:26:46 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

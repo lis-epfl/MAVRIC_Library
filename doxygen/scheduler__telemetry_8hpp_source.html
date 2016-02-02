@@ -126,11 +126,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00044"></a>00044 <span class="preprocessor">#ifndef SCHEDULER_TELEMETRY_H_</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span><span class="preprocessor">#define SCHEDULER_TELEMETRY_H_</span>
 <a name="l00046"></a>00046 <span class="preprocessor"></span>
-<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;mavlink_stream.hpp&quot;</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;communication/mavlink_stream.hpp&quot;</span>
 <a name="l00048"></a>00048 
 <a name="l00049"></a>00049 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> 
 <a name="l00050"></a>00050 {
-<a name="l00051"></a>00051 <span class="preprocessor">    #include &quot;scheduler.h&quot;</span>
+<a name="l00051"></a>00051 <span class="preprocessor">    #include &quot;runtime/scheduler.h&quot;</span>
 <a name="l00052"></a>00052 }
 <a name="l00053"></a>00053 
 <a name="l00061"></a>00061 <span class="keywordtype">void</span> scheduler_telemetry_send_rt_stats(<span class="keyword">const</span> <a class="code" href="structscheduler__t.html" title="Scheduler.">scheduler_t</a>* scheduler, <span class="keyword">const</span> <a class="code" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module.">mavlink_stream_t</a>* mavlink_stream, mavlink_message_t* msg);
@@ -154,7 +154,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 2 2016 11:11:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Feb 2 2016 16:26:46 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

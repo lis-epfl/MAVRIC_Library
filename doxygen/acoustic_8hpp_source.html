@@ -128,18 +128,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00046"></a>00046 <span class="preprocessor">#include &lt;stdint.h&gt;</span>
 <a name="l00047"></a>00047 <span class="preprocessor">#include &lt;stdbool.h&gt;</span>
 <a name="l00048"></a>00048 
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;mavlink_waypoint_handler.hpp&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;stabilisation_copter.hpp&quot;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;navigation.hpp&quot;</span>
-<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;position_estimation.hpp&quot;</span>
-<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;remote.hpp&quot;</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;communication/mavlink_waypoint_handler.hpp&quot;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;control/stabilisation_copter.hpp&quot;</span>
+<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;control/navigation.hpp&quot;</span>
+<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;sensing/position_estimation.hpp&quot;</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;communication/remote.hpp&quot;</span>
 <a name="l00054"></a>00054 
 <a name="l00055"></a>00055 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> 
 <a name="l00056"></a>00056 {
-<a name="l00057"></a>00057 <span class="preprocessor">    #include &quot;streams.h&quot;</span>
+<a name="l00057"></a>00057 <span class="preprocessor">    #include &quot;util/streams.h&quot;</span>
 <a name="l00058"></a>00058 <span class="preprocessor">    #include &quot;buffer.h&quot;</span>
-<a name="l00059"></a>00059 <span class="preprocessor">    #include &quot;ahrs.h&quot;</span>
-<a name="l00060"></a>00060 <span class="preprocessor">    #include &quot;stabilisation.h&quot;</span>
+<a name="l00059"></a>00059 <span class="preprocessor">    #include &quot;sensing/ahrs.h&quot;</span>
+<a name="l00060"></a>00060 <span class="preprocessor">    #include &quot;control/stabilisation.h&quot;</span>
 <a name="l00061"></a>00061 }
 <a name="l00062"></a>00062 
 <a name="l00063"></a>00063 <span class="preprocessor">#define STORE_SIZE          4       ///&lt; number of azimuth/elevation values stored for reliability test</span>
@@ -210,7 +210,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 2 2016 11:11:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Feb 2 2016 16:26:46 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

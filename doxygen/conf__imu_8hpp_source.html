@@ -126,7 +126,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
 <a name="l00045"></a>00045 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> 
 <a name="l00046"></a>00046 {
-<a name="l00047"></a>00047 <span class="preprocessor">    #include &quot;conf_platform.h&quot;</span>  <span class="comment">// To get the MAVLINK_SYS_ID</span>
+<a name="l00047"></a>00047 <span class="preprocessor">    #include &quot;sample_projects/LEQuad/proj_avr32/config/conf_platform.h&quot;</span> <span class="comment">// To get the MAVLINK_SYS_ID</span>
 <a name="l00048"></a>00048 }
 <a name="l00049"></a>00049 
 <a name="l00051"></a>00051 <span class="preprocessor">#if MAVLINK_SYS_ID == 1</span>
@@ -175,8 +175,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00094"></a>00094 <span class="preprocessor"></span><span class="preprocessor">#include &quot;MAVcalib/MAV206_imu_config.h&quot;</span>
 <a name="l00095"></a>00095 <span class="preprocessor">#else</span>
 <a name="l00096"></a>00096 <span class="preprocessor"></span><span class="preprocessor">#warning &quot;Unknown IMU calibration for the board with ID MAVLINK_SYS_ID, falling back to imu_default_config&quot;</span>
-<a name="l00097"></a>00097 <span class="preprocessor"></span><span class="preprocessor">#include &quot;imu.hpp&quot;</span>
-<a name="l00098"></a>00098 <span class="preprocessor">#include &quot;megafly_rev4.hpp&quot;</span>
+<a name="l00097"></a>00097 <span class="preprocessor"></span><span class="preprocessor">#include &quot;sensing/imu.hpp&quot;</span>
+<a name="l00098"></a>00098 <span class="preprocessor">#include &quot;boards/megafly_rev4.hpp&quot;</span>
 <a name="l00099"></a>00099 
 <a name="l00100"></a>00100 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a> imu_config(<span class="keywordtype">void</span>)
 <a name="l00101"></a>00101 {
@@ -203,7 +203,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 2 2016 11:11:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Feb 2 2016 16:26:46 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

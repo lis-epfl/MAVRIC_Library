@@ -126,17 +126,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define POSITION_ESTIMATION_H__</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
 <a name="l00046"></a>00046 
-<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;state.hpp&quot;</span>
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;gps.hpp&quot;</span>
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;barometer.hpp&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;sonar.hpp&quot;</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;communication/state.hpp&quot;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;drivers/gps.hpp&quot;</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;drivers/barometer.hpp&quot;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;drivers/sonar.hpp&quot;</span>
 <a name="l00051"></a>00051 
 <a name="l00052"></a>00052 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> 
 <a name="l00053"></a>00053 {
 <a name="l00054"></a>00054 <span class="preprocessor">    #include &lt;stdbool.h&gt;</span>
-<a name="l00055"></a>00055 <span class="preprocessor">    #include &quot;ahrs.h&quot;</span>
-<a name="l00056"></a>00056 <span class="preprocessor">    #include &quot;coord_conventions.h&quot;</span>
-<a name="l00057"></a>00057 <span class="preprocessor">    #include &quot;constants.h&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">    #include &quot;sensing/ahrs.h&quot;</span>
+<a name="l00056"></a>00056 <span class="preprocessor">    #include &quot;util/coord_conventions.h&quot;</span>
+<a name="l00057"></a>00057 <span class="preprocessor">    #include &quot;util/constants.h&quot;</span>
 <a name="l00058"></a>00058 }
 <a name="l00059"></a>00059 
 <a name="l00060"></a>00060 <span class="comment">// leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)</span>
@@ -220,7 +220,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 2 2016 11:11:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Feb 2 2016 16:26:46 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
