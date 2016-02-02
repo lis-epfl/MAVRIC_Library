@@ -15,7 +15,6 @@ MAVRIC_SRC=../
 
 # Include paths for project folder
 SRCS_INC += -I${MAVRIC_SRC}
-SRCS_INC += -Iconfig
 
 # Sources files for project folder (*.c and *.cpp)
 SRCS += main_avr32.cpp
@@ -32,6 +31,7 @@ MAVRIC_LIB=../../../
 
 # Include folders for Library
 LIB_INC += -I$(MAVRIC_LIB)
+LIB_INC += -I${MAVRIC_LIB}sample_projects/LEQuad/proj_avr32/config
 
 # Library source files (*.c and *.cpp)
 LIB_SRCS += boards/megafly_rev4.cpp
