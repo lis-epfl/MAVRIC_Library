@@ -70,6 +70,33 @@ type name2;         ///< description
 ) MyStruct;
 ```
 
+## Classes
+```cpp
+/**
+ * \brief 	Description of class
+ */
+class My_new_class: public My_parent_class
+{
+public:
+	/**
+	 * \brief 	Constructor
+	 *
+	 * \param 	my_param 	Description of parameter
+	 */
+	My_new_class(bool my_param);
+
+private:
+	int my_private_int		///< description of my int
+
+	/**
+	 * \brief   A private member function
+	 *
+	 * \return 	Success
+	 */
+	bool my_private_member_func(void);
+};
+```
+
 ## Loops
 ```cpp
 while( condition == false )
