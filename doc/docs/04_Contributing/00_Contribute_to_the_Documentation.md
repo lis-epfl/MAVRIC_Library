@@ -46,17 +46,19 @@ git push
 5) Create a pull request ([here is](https://help.github.com/articles/creating-a-pull-request/) how to do) and ask someone to review your changes.
 6) Once your pull request is merged, your contribution is online!
 
+---
+
 # Doxygen Documentation
 A [Doxygen Documention](http://lis-epfl.github.io/MAVRIC_Library/doxygen/classes.html). It contains information on structures, classes and associated functions present in the Library. It also shows dependency graphs for classes and call graphs for functions. 
 
 The content is extracted from comments in the code. The HTML pages are automatically generated each time a commit is pushed to master, then deployed online.
 
 ### Preview the Website
-Doxygen ahndles all the formating, so it is not really required to preview the generated pages, but in case you need to do it, here is how to do:
+Doxygen handles all the formating, so it is not really required to preview the generated pages, but in case you need to do it, here is how:
 1) Go to the **travis** folder to compile the doxygen documentation:
 ```bash
 cd travis/
-make doc_daux
+make doc_doxygen
 cd ../
 ```
 
@@ -65,3 +67,5 @@ cd ../
 firefox doc/gh_pages/doxygen/index.hml
 ```
 
+### Contribute
+The only thing to do is to add nice documentation in the comments of your code!
