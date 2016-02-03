@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>       <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>          <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>          <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <title>Code style - MAV'RIC Library</title>
+    <meta name="description" content="Highway to the Danger Zone" />
+    <meta name="author" content="MAV'RIC Team">
+    <meta charset="UTF-8">
+    <link rel="icon" href="../themes/daux/img/favicon-navy.png" type="image/x-icon">
+    <!-- Mobile -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font -->
+    <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700&subset=latin,cyrillic-ext,cyrillic' rel='stylesheet' type='text/css'>
+    <!-- CSS -->
+    <link href='../themes/daux/css/theme.min.css' rel='stylesheet' type='text/css'><link href='../themes/daux/css/theme-navy.min.css' rel='stylesheet' type='text/css'>
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body class="">
+    
+    <a href="https://github.com/lis-epfl/MAVRIC_Library" target="_blank" id="github-ribbon" class="hidden-print"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<div class="container-fluid fluid-height wrapper">
+    <div class="navbar navbar-static-top hidden-print">
+        <div class="container-fluid">
+            <a class="brand navbar-brand pull-left" href="../index.html">MAV'RIC Library</a>
+        </div>
+    </div>
+    <div class="row columns content">
+        <div class="left-column article-tree col-sm-3 hidden-print">
+            <!-- For Mobile -->
+            <div class="responsive-collapse">
+                <button type="button" class="btn btn-sidebar" id="menu-spinner-button">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="sub-nav-collapse" class="sub-nav-collapse">
+                <!-- Navigation -->
+                <ul class='nav nav-list'><li class=''><a href="../Getting_Started.html">Getting Started</a></li><li class=''><a href="../Features/index.html" class="folder">Features</a><ul class='nav nav-list'></ul></li><li class=''><a href="../User_Guide/index.html" class="folder">User Guide</a><ul class='nav nav-list'></ul></li><li class='open'><a href="../Developper_Guide/index.html" class="folder">Developper Guide</a><ul class='nav nav-list'><li class=''><a href="../Developper_Guide/Create_New_Telemetry_Messages.html">Create New Telemetry Messages</a></li><li class=''><a href="../Developper_Guide/Data_Logging.html">Data Logging</a></li><li class='active'><a href="../Developper_Guide/Code_style.html">Code style</a></li></ul></li><li class=''><a href="#" class="aj-nav folder">Contributing</a><ul class='nav nav-list'><li class=''><a href="../Contributing/Contribute_to_the_Documentation.html">Contribute to the Documentation</a></li><li class=''><a href="../Contributing/Development_Workflow.html">Development Workflow</a></li></ul></li><li class=''><a href="#" class="aj-nav folder">Pages From Wiki</a><ul class='nav nav-list'><li class=''><a href="../Pages_From_Wiki/Calibration-Bias-Factors.html">Calibration-Bias-Factors</a></li><li class=''><a href="../Pages_From_Wiki/Calibration-Scale-Factors.html">Calibration-Scale-Factors</a></li><li class=''><a href="../Pages_From_Wiki/Connect-a-Joystick-to-QGroundControl.html">Connect-a-Joystick-to-QGroundControl</a></li><li class=''><a href="../Pages_From_Wiki/Debug-via-minicom-software-on-Linux.html">Debug-via-minicom-software-on-Linux</a></li><li class=''><a href="../Pages_From_Wiki/Download-Firmware.html">Download-Firmware</a></li><li class=''><a href="../Pages_From_Wiki/Download-Git-Tools.html">Download-Git-Tools</a></li><li class=''><a href="../Pages_From_Wiki/Download-IDE.html">Download-IDE</a></li><li class=''><a href="../Pages_From_Wiki/Download-QGroundcontrol.html">Download-QGroundcontrol</a></li><li class=''><a href="../Pages_From_Wiki/Electronic-board.html">Electronic-board</a></li><li class=''><a href="../Pages_From_Wiki/FAQ.html">FAQ</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Binding-your-Remote.html">First-Steps-Binding-your-Remote</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-CDC-and-DFU-Drivers-issue-on-Windows.html">First-steps-CDC-and-DFU-Drivers-issue-on-Windows</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-Connect-to-QGroundControl.html">First-steps-Connect-to-QGroundControl</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-DFU-Programming.html">First-Steps-DFU-Programming</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-Flashing-the-autopilot.html">First-steps-Flashing-the-autopilot</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Installing-Bootloader.html">First-Steps-Installing-Bootloader</a></li><li class=''><a href="../Pages_From_Wiki/First-steps-pairing-XBee-modules.html">First-steps-pairing-XBee-modules</a></li><li class=''><a href="../Pages_From_Wiki/First-Steps-Setup-on-Linux.html">First-Steps-Setup-on-Linux</a></li><li class=''><a href="../Pages_From_Wiki/Flashing-a-microcontroller-for-the-first-time.html">Flashing-a-microcontroller-for-the-first-time</a></li><li class=''><a href="../Pages_From_Wiki/Home.html">Home</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Building-Steps.html">Quad-Assembly-Building-Steps</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Part-List.html">Quad-Assembly-Part-List</a></li><li class=''><a href="../Pages_From_Wiki/Quad-Assembly-Remote-Pairing.html">Quad-Assembly-Remote-Pairing</a></li><li class=''><a href="../Pages_From_Wiki/Remote-settings.html">Remote-settings</a></li><li class=''><a href="../Pages_From_Wiki/Setup-on-Windows.html">Setup-on-Windows</a></li></ul></li></ul>
+
+                <div class="sidebar-links">
+                    
+                        <!-- Links -->
+                        <a href="https://github.com/lis-epfl/MAVRIC_Library/archive/master.zip" target="_blank">Download</a><br><a href="https://github.com/lis-epfl/MAVRIC_Library" target="_blank">GitHub Repo</a><br><a href="https://github.com/lis-epfl/MAVRIC_Library/issues" target="_blank">Help/Support/Bugs</a><br><a href="http://lis-epfl.github.io/MAVRIC_Library/doxygen/classes.html" target="_blank">Doxygen Documentation</a><br>
+                        <!-- Twitter -->
+                        
+                        <hr/>
+                    
+                    <p><small>Documentation generated by <a href="http://daux.io">Daux.io</a></small></p>
+                </div>
+            </div>
+        </div>
+        <div class="right-column  content-area col-sm-9">
+            <div class="content-page">
+                <article>
+            <div class="page-header sub-header clearfix">
+            <h1><a href="../Developper_Guide/index.html">Developper Guide</a> <i class="glyphicon glyphicon-chevron-right"></i> <a href="../Developper_Guide/Code_style.html">Code style</a>            </h1>
+                    <span style="float: left; font-size: 10px; color: gray;">
+                        Wednesday, February 3, 2016                    </span>
+                    <span style="float: right; font-size: 10px; color: gray;">
+                        9:47 AM                    </span>
+        </div>
+    
+    <p>Here are a few guidelines regarding code style.</p>
+<h2>File header</h2>
+<pre><code class="language-cpp">/*******************************************************************************
+ * Copyright (c) 2009-2016, MAV'RIC Development Team
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
+
+/*******************************************************************************
+ * \file 	filename.cpp
+ * 
+ * \author 	MAV'RIC Team
+ * \author 	Name1
+ * \author 	Name2
+ *   
+ * \brief 	Brief description of the module contained in this file
+ *
+ * \detail 	Detailed description and important information to use this module
+ ******************************************************************************/
+</code></pre>
+<h2>Function header</h2>
+<pre><code class="language-cpp">/**
+* \brief Description of what the function does
+* 
+* \param param_name1    description
+* \param param2        	description
+*
+* \return description
+*/
+</code></pre>
+<h2>Structs</h2>
+<pre><code class="language-cpp">/**
+* \brief Description
+*/
+typedef struct
+{
+type name;          ///&lt; description
+type name2;         ///&lt; description
+) MyStruct;
+</code></pre>
+<h2>Classes</h2>
+<pre><code class="language-cpp">/**
+ * \brief 	Description of class
+ */
+class My_new_class: public My_parent_class
+{
+public:
+	/**
+	 * \brief 	Constructor
+	 *
+	 * \param 	my_param 	Description of parameter
+	 */
+	My_new_class(bool my_param);
+
+private:
+	int my_private_int		///&lt; description of my int
+
+	/**
+	 * \brief   A private member function
+	 *
+	 * \return 	Success
+	 */
+	bool my_private_member_func(void);
+};
+</code></pre>
+<h2>Loops</h2>
+<pre><code class="language-cpp">while( condition == false )
+{
+    do_stuff();
+}
+</code></pre>
+<h2>If</h2>
+<pre><code class="language-cpp">if( my_variable &gt; another_variable )
+{
+    do_this();
+}
+else
+{
+    do_that();
+}
+</code></pre>
+
+        <nav>
+        <ul class="pager">
+            <li><a href="../Developper_Guide/Data_Logging.html">Previous</a></li>            <li><a href="../Contributing/Contribute_to_the_Documentation.html">Next</a></li>        </ul>
+    </nav>
+    </article>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- jQuery -->
+    <script src="../themes/daux/js/jquery-1.11.3.min.js"></script>
+    <!-- hightlight.js -->
+    <script src="../themes/daux/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- JS -->
+    
+    <script src="../themes/daux/js/daux.js"></script>
+</body>
+</html>
