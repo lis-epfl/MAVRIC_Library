@@ -1,6 +1,6 @@
 The documentation you are reading now is made of two things:
 - A Markdown documentation
-- A Doxygen Documention
+- A [Doxygen Documention](../doxygen/classes.html)
 
 # Markdown documentation
 The [Markdown documentation](http://lis-epfl.github.io/MAVRIC_Library/index.html) is the documentation you are reading now. It contains additional information on how to use a MAV'RIC autopilot, and how to use the library to develop a custom autopilot. 
@@ -37,7 +37,7 @@ git checkout master
 git pull
 git checkout -b doc/xxx_xxx
 ```
-2) Update the Markdown files with your favourite texte editor
+2) Update the Markdown files with your favourite text editor
 4) Commit your changes and push them on the online github repository
 ```bash
 git add file1.md file2.md
