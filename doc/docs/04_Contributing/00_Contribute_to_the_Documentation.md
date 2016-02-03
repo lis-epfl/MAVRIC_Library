@@ -18,16 +18,15 @@ The source files are in the [`MAVRIC_Library/doc/docs` folder](https://github.co
 ### Preview the Website
 An HTML version is generated each time a commit is pushed to master, then automatically deployed on the website.
 In order to preview your changes before they are merged to master and automatically deployed to the website, you can preview the website on your computer. To do so: 
-1) Go to the **travis** folder to compile the markdown documentation:
+1) Go to the **doc/daux.io** folder and start a PHP server on your computer:
 ```bash
-cd travis/
-make doc_daux
-cd ../
+cd doc/daux.io
+./serve
 ``` 
-2) Open the generated hmtl files
-```bash
-firefox doc/gh_pages/index.html
-``` 
+2) Open the generated website at [http://localhost:8085](http://localhost:8085).
+This preview is live, i.e., changes in the files will directly affect the preview website once the file is saved.
+
+3) To stop the server, press `Ctrl-C` in the console where the server is running.
 
 ### How to Contribute
 To contribute to the Markdown Documentation, the method is similar to development of software:
