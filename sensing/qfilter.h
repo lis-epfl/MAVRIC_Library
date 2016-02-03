@@ -50,7 +50,7 @@ extern "C" {
 #include <stdint.h>
 #include "imu.h"
 #include "ahrs.h"
-
+#include "state.h"
 
 /**
  * \brief The structure for configuring the quaternion-based attitude estimation
@@ -69,14 +69,15 @@ typedef struct
 typedef struct
 {
 	imu_t* 	imu;			///< Pointer to inertial sensors readout
-	ahrs_t* ahrs;			///< Pointer to estimated attiude
+	ahrs_t* ahrs;			///< Pointer to estimated attitude
+	state_t* state;			///< Pointer to the state structure
 
 	float   kp;				///< The proportional gain for the acceleration correction of the angular rates
 	float   ki;				///< The integral gain for the acceleration correction of the biais
 	float   kp_mag;			///< The proportional gain for the magnetometer correction of the angular rates
 	float   ki_mag;			///< The integral gain for the magnetometer correction of the angular rates
 
-	uint32_t time_ms;		///< The time keeper to swtich between the internal states
+	uint32_t time_ms;		///< The time keeper to switch between the internal states
 } qfilter_t;
 
 
@@ -87,10 +88,11 @@ typedef struct
  * \param	config			The qfilter configuration gains
  * \param	imu				The pointer to the IMU structure
  * \param	ahrs			The pointer to the attitude estimation structure
+ * \param	state			The pointer to the state structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs);
+bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs, state_t* state);
 
 
 /**

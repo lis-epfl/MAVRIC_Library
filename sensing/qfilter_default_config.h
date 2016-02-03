@@ -52,7 +52,7 @@ extern "C" {
 static const qfilter_conf_t qfilter_default_config =
 {
     .kp = 0.15f,
-    .ki = 0.0f,//0.1f / 15.0f,
+    .ki = 0.1f / 15.0f,
     .kp_mag = 0.1f,
     .ki_mag = 0.0f,
 };

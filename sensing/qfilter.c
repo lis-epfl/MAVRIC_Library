@@ -60,13 +60,14 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs)
+bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs, state_t* state)
 {
 	bool init_success = true;
 	
 	//Init dependencies
 	qf->imu = imu;
 	qf->ahrs = ahrs;
+	qf->state = state;
 	
 	//init qfilter gains according to provided configuration
 	qf->kp = config->kp;
@@ -206,8 +207,17 @@ void qfilter_update(qfilter_t *qf)
 		case AHRS_READY:
 			kp = qf->kp;
 			kp_mag = qf->kp_mag;
-			ki = qf->ki;
-			ki_mag = qf->ki_mag;
+			
+			if (qf->state->mav_mode.ARMED == ARMED_ON)
+			{
+				ki = 0.0f;
+				ki_mag = 0.0f;
+			}
+			else
+			{
+				ki = qf->ki;
+				ki_mag = qf->ki_mag;
+			}
 			break;
 	}
 
@@ -227,7 +237,7 @@ void qfilter_update(qfilter_t *qf)
 	qf->ahrs->qe.v[X] += qed.v[X] * dt;
 	qf->ahrs->qe.v[Y] += qed.v[Y] * dt;
 	qf->ahrs->qe.v[Z] += qed.v[Z] * dt;
-
+	
 	snorm = qf->ahrs->qe.s * qf->ahrs->qe.s + qf->ahrs->qe.v[X] * qf->ahrs->qe.v[X] + qf->ahrs->qe.v[Y] * qf->ahrs->qe.v[Y] + qf->ahrs->qe.v[Z] * qf->ahrs->qe.v[Z];
 	if (snorm < 0.0001f)
 	{
