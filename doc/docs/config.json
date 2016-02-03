@@ -23,7 +23,8 @@
         "links": {
             "Download": "https://github.com/lis-epfl/MAVRIC_Library/archive/master.zip",
             "GitHub Repo": "https://github.com/lis-epfl/MAVRIC_Library",
-            "Help/Support/Bugs": "https://github.com/lis-epfl/MAVRIC_Library/issues"
+            "Help/Support/Bugs": "https://github.com/lis-epfl/MAVRIC_Library/issues",
+            "Doxygen Documentation": "http://lis-epfl.github.io/MAVRIC_Library/doxygen/classes.html"
         }
     }
 }

@@ -41,7 +41,7 @@ For this you need to have the autopilot sending the corresponding variable throu
 Thus, go in the file `mavlink_telemetry.c`, and edit the function `mavric_telemetry_init()`
 
 Here is an example of one line of this function :
-```
+```cpp
 init_success &= mavlink_communication_add_msg_send( mavlink_communication, 
                                                     500000, 
                                                     RUN_REGULAR,  
