@@ -67,8 +67,8 @@ bool servos_mix_quadcotper_cross_init(servos_mix_quadcotper_cross_t* mix,
     mix->motor_right_dir = config->motor_right_dir;
     mix->motor_rear_dir  = config->motor_rear_dir;
 
-    mix->min_thrust 	   = config->min_thrust;
-    mix->max_thrust 	   = config->max_thrust;
+    mix->min_thrust        = config->min_thrust;
+    mix->max_thrust        = config->max_thrust;
 
     return true;
 }
@@ -79,12 +79,12 @@ bool servos_mix_quadcopter_cross_update(servos_mix_quadcotper_cross_t* mix)
     float motor[4];
 
     // Front motor
-    motor[0] = 	mix->thrust_command->thrust +
+    motor[0] =  mix->thrust_command->thrust +
                 mix->torque_command->xyz[1]  +
                 mix->motor_front_dir * mix->torque_command->xyz[2];
 
     // Right motor
-    motor[1] = 	mix->thrust_command->thrust +
+    motor[1] =  mix->thrust_command->thrust +
                 (- mix->torque_command->xyz[0]) +
                 mix->motor_right_dir * mix->torque_command->xyz[2];
 

@@ -59,7 +59,7 @@ static inline navigation_config_t navigation_default_config()
     conf.soft_zone_size                              = 0.0f;
     conf.alt_lpf                                     = 0.0f;
     conf.LPF_gain                                    = 0.9f;
-    conf.kp_yaw 									 = 0.2f;
+    conf.kp_yaw                                      = 0.2f;
     conf.wpt_nav_controller                          = {};
     conf.wpt_nav_controller.p_gain                   = 0.7f;
     conf.wpt_nav_controller.clip_min                 = 0.0f;

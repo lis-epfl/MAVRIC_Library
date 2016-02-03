@@ -54,17 +54,17 @@ bool servo_mix_ywing_init(servo_mix_ywing_t* mix, const servo_mix_ywing_conf_t* 
     // Init dependencies
     mix->torque_command = torque_command;
     mix->thrust_command = thrust_command;
-    mix->motor 			= motor;
-    mix->flap_top 		= flap_top;
-    mix->flap_right		= flap_right;
-    mix->flap_left 		= flap_left;
+    mix->motor          = motor;
+    mix->flap_top       = flap_top;
+    mix->flap_right     = flap_right;
+    mix->flap_left      = flap_left;
 
     // Init parameters
-    mix->flap_top_dir	= config->flap_top_dir;
+    mix->flap_top_dir   = config->flap_top_dir;
     mix->flap_right_dir = config->flap_right_dir;
-    mix->flap_left_dir 	= config->flap_left_dir;
-    mix->min_thrust		= config->min_thrust;
-    mix->max_thrust		= config->max_thrust;
+    mix->flap_left_dir  = config->flap_left_dir;
+    mix->min_thrust     = config->min_thrust;
+    mix->max_thrust     = config->max_thrust;
     mix->min_deflection = config->min_deflection;
     mix->max_deflection = config->max_deflection;
 

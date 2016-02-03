@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	megafly_rev4.cpp
+ * \file    megafly_rev4.cpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Autopilot board based on AVR32
+ * \brief   Autopilot board based on AVR32
  *
  ******************************************************************************/
 

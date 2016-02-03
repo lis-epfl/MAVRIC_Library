@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	file_linux.hpp
+ * \file    file_linux.hpp
  *
  * \author  MAV'RIC Team
  *
@@ -46,22 +46,22 @@
 
 
 /**
- * \brief 	File objects on linux platforms
+ * \brief   File objects on linux platforms
  */
 class File_linux: public File
 {
 private:
-    std::fstream file_;		///< File handle
+    std::fstream file_;     ///< File handle
 
 public:
     /**
-     * \brief 	Constructor
+     * \brief   Constructor
      */
     File_linux();
 
 
     /**
-     * \brief 	Open the file
+     * \brief   Open the file
      *
      * \return  true if the file is open, false otherwise
      */
@@ -69,21 +69,21 @@ public:
 
 
     /**
-     * \brief 	Indicates if the file is currently open
+     * \brief   Indicates if the file is currently open
      *
      * \return  true if the file is open, false otherwise
      */
     bool is_open();
 
     /**
-     * \brief 	Indicates if the file exits
+     * \brief   Indicates if the file exits
      *
      * \return  1 if the file exists, 0 if the file doesn't exist, -1 if the file system is not responding properly
      */
     int8_t exists(const char* path);
 
     /**
-     * \brief 	Close the file
+     * \brief   Close the file
      *
      * \return  success
      */
@@ -93,60 +93,60 @@ public:
     /**
      * \brief   Read from the file.
      *
-     * \param   data		Caller supplied buffer to write to.
-     * \param   size		The number of bytes to attempt to read.
+     * \param   data        Caller supplied buffer to write to.
+     * \param   size        The number of bytes to attempt to read.
      *
-     * \return 	success
+     * \return  success
      */
     bool read(uint8_t* data, uint32_t size);
 
 
     /**
-     * \brief 	Write to the file.
+     * \brief   Write to the file.
      *
-     * \param 	data 	The buffer to write.
-     * \param 	size 	The number of bytes to write.
+     * \param   data    The buffer to write.
+     * \param   size    The number of bytes to write.
      *
-     * \return 	success
+     * \return  success
      */
     bool write(const uint8_t* data, uint32_t size);
 
 
     /**
-     * \brief 	Seek to a given offset within the file.
+     * \brief   Seek to a given offset within the file.
      *
-     * \details 	Valid locations to seek to are from zero to the file length.
-     *  			Seeking to the file length moves the pointer to one past the
-     *  			end of the file data so that subsequent file writes append
-     *  			to the existing file.
+     * \details     Valid locations to seek to are from zero to the file length.
+     *              Seeking to the file length moves the pointer to one past the
+     *              end of the file data so that subsequent file writes append
+     *              to the existing file.
      *
-     * \param 	offset 		The distance to move from the origin_ parameter.
-     * \param 	origin 		One of the SeekFrom enumeration.
+     * \param   offset      The distance to move from the origin_ parameter.
+     * \param   origin      One of the SeekFrom enumeration.
      *
-     * \return 	success
+     * \return  success
      */
     bool seek(int32_t offset, file_seekfrom_t origin);
 
 
     /**
-     * \brief 	Get current location in file
+     * \brief   Get current location in file
      *
-     * \return 	Offset in bytes
+     * \return  Offset in bytes
      */
     uint32_t offset();
 
 
     /**
-     * \brief 	Get the file length.
+     * \brief   Get the file length.
      *
-     * \return 	The file length up to the maximum supported 4Gb.
+     * \return  The file length up to the maximum supported 4Gb.
      */
     uint32_t length();
 
     /**
-     * \brief 	flush buffer to file
+     * \brief   flush buffer to file
      *
-     * \return 	success	(always true)
+     * \return  success (always true)
      */
     bool flush();
 

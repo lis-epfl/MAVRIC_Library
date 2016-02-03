@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial_udp.hpp
+ * \file    serial_udp.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Linux implementation of serial peripherals using UDP
+ * \brief   Linux implementation of serial peripherals using UDP
  *
  ******************************************************************************/
 
@@ -53,20 +53,20 @@ extern "C"
 }
 
 /**
- * 	Configuration structure
+ *  Configuration structure
  */
 typedef struct
 {
     const char* target_ip;
-    int32_t 	target_port;
-    int32_t 	local_port;
+    int32_t     target_port;
+    int32_t     local_port;
 } serial_udp_conf_t;
 
 
 /**
- * \brief 	Default configuration
+ * \brief   Default configuration
  *
- * \return 	Config structure
+ * \return  Config structure
  */
 static inline serial_udp_conf_t serial_udp_default_config();
 
@@ -75,15 +75,15 @@ class Serial_udp: public Serial
 {
 public:
     /**
-     * \brief 	Initialises the peripheral
+     * \brief   Initialises the peripheral
      *
-     * \param 	config 		Device configuration
+     * \param   config      Device configuration
      */
     Serial_udp(serial_udp_conf_t config = serial_udp_default_config());
 
 
     /**
-     * \brief 	Hardware initialization
+     * \brief   Hardware initialization
      *
      * \return  true Success
      * \return  false Error
@@ -92,93 +92,93 @@ public:
 
 
     /**
-     * \brief 	Test if there are bytes available to read
+     * \brief   Test if there are bytes available to read
      *
-     * \return 	Number of incoming bytes available
+     * \return  Number of incoming bytes available
      */
     uint32_t readable(void);
 
 
     /**
-     * \brief 	Test if there is space available to write bytes
+     * \brief   Test if there is space available to write bytes
      *
-     * \return 	Number of bytes available for writing
+     * \return  Number of bytes available for writing
      */
     uint32_t writeable(void);
 
 
     /**
-     * \brief 	Sends instantaneously all outgoing bytes
+     * \brief   Sends instantaneously all outgoing bytes
      *
-     * \return 	Number of bytes available for writing
+     * \return  Number of bytes available for writing
      */
     void flush(void);
 
 
     /**
-     * \brief 	Attach a function to call after a receive interrupt is generated
+     * \brief   Attach a function to call after a receive interrupt is generated
      *
      * \details A default handler should be provided by the implementation to
-     * 			add the incoming data in a buffer, so is not mandatory to call
-     * 			this method. The function callback will be called after the
-     * 			interrupt handler
+     *          add the incoming data in a buffer, so is not mandatory to call
+     *          this method. The function callback will be called after the
+     *          interrupt handler
      *
-     * \param  	func	 	Pointer to the callback function
+     * \param   func        Pointer to the callback function
      *
-     * \return 	true		Success
-     * \return 	false		Failed
+     * \return  true        Success
+     * \return  false       Failed
      */
     bool attach(serial_interrupt_callback_t func);
 
 
     /**
-     * \brief 	Write a byte on the serial line
+     * \brief   Write a byte on the serial line
      *
-     * \param 	byte 		Outgoing bytes
-     * \param 	size 		Number of bytes to write
+     * \param   byte        Outgoing bytes
+     * \param   size        Number of bytes to write
      *
-     * \return 	true		Data successfully written
-     * \return 	false		Data not written
+     * \return  true        Data successfully written
+     * \return  false       Data not written
      */
     bool write(const uint8_t* bytes, const uint32_t size = 1);
 
 
     /**
-     * \brief 	Read bytes from the serial line
+     * \brief   Read bytes from the serial line
      *
-     * \param 	bytes 		Incoming bytes
-     * \param 	size 		Number of bytes to read
+     * \param   bytes       Incoming bytes
+     * \param   size        Number of bytes to read
      *
-     * \return 	true		Data successfully read
-     * \return 	false		Data not read
+     * \return  true        Data successfully read
+     * \return  false       Data not read
      */
     bool read(uint8_t* bytes, const uint32_t size = 1);
 
 
 private:
-    serial_udp_conf_t 	config_;
+    serial_udp_conf_t   config_;
 
-    Buffer_tpl<1024> 	tx_buffer_;
-    Buffer 				rx_buffer_;
+    Buffer_tpl<1024>    tx_buffer_;
+    Buffer              rx_buffer_;
 
-    int 				socket_;
-    struct sockaddr_in 	target_addr_;
-    struct sockaddr_in 	local_addr_;
+    int                 socket_;
+    struct sockaddr_in  target_addr_;
+    struct sockaddr_in  local_addr_;
 };
 
 
 /**
- * \brief 	Default configuration
+ * \brief   Default configuration
  *
- * \return 	Config structure
+ * \return  Config structure
  */
 static inline serial_udp_conf_t serial_udp_default_config()
 {
-    serial_udp_conf_t 	conf;
+    serial_udp_conf_t   conf;
 
-    conf.target_ip 		= "127.0.0.1";
-    conf.target_port 	= 14550;
-    conf.local_port 	= 14000;
+    conf.target_ip      = "127.0.0.1";
+    conf.target_port    = 14550;
+    conf.local_port     = 14000;
 
     return conf;
 }

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	dbg.cpp
+ * \file    dbg.cpp
  *
  * \author  MAV'RIC Team
  *
@@ -42,11 +42,11 @@
  * To define '<<' operator for your own class, implement the follwing function
  * in the header of your class, outside of your class definition:
  * template<typename Writeable>
- *	Console<Writeable>& operator<< (Console<Writeable>& console, Yourclass& yourclass)
- *	{
- *		console.write(...);
- *		return console;
- *	}
+ *  Console<Writeable>& operator<< (Console<Writeable>& console, Yourclass& yourclass)
+ *  {
+ *      console.write(...);
+ *      return console;
+ *  }
  ******************************************************************************/
 
 #include "hal/common/dbg.hpp"
@@ -64,7 +64,7 @@ namespace dbg
 /**
  * \brief initializes the console (switches from dummy console to supplied console)
  *
- * \param console 	console to print to
+ * \param console   console to print to
  *
  */
 void init(Console<Serial>& console)
@@ -74,9 +74,9 @@ void init(Console<Serial>& console)
 
 /**
  * \brief returns a reference to the console
- * 		(console provided by init or dummy console if not init'ed)
+ *      (console provided by init or dummy console if not init'ed)
  *
- * \return 	console
+ * \return  console
  *
  */
 Console<Serial>& dout()
@@ -94,9 +94,9 @@ Console<Serial>& dout()
 /**
  * \brief print a buffer to the console
  *
- * \param data 	buffer to be printed
+ * \param data  buffer to be printed
  *
- * \param size 	size of the buffer in bytes
+ * \param size  size of the buffer in bytes
  *
  * \return success
  */
@@ -108,7 +108,7 @@ bool print(const uint8_t* data, uint32_t size)
     }
     else
     {
-        return false;	// We do not write to the dummy console
+        return false;   // We do not write to the dummy console
     }
 }
 };

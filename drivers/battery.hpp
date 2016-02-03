@@ -71,9 +71,9 @@ typedef enum
  */
 typedef struct
 {
-    battery_type_t 	type;				///< Battery type
-    float 			low_level_limit;	///< Level from which the battery is considered low (in percents)
-    float 			lpf_gain;			///< Low pass filter gain
+    battery_type_t  type;               ///< Battery type
+    float           low_level_limit;    ///< Level from which the battery is considered low (in percents)
+    float           lpf_gain;           ///< Low pass filter gain
 } battery_conf_t;
 
 
@@ -101,8 +101,8 @@ public:
     /**
      * \brief   Updates the battery voltage level
      *
-     * \param 	battery   Pointer to the battery structure
-     * \param 	voltage   Update measured battery voltage
+     * \param   battery   Pointer to the battery structure
+     * \param   voltage   Update measured battery voltage
      *
      * \return Success
      */
@@ -126,22 +126,22 @@ public:
 
 
     /**
-     * \brief 	Indicates if the battery is low
+     * \brief   Indicates if the battery is low
      *
-     * \return 	True if low
+     * \return  True if low
      */
     bool is_low(void) const;
 
 
 private:
-    Adc&            adc_;				///< Reference to analog to digital converter
+    Adc&            adc_;               ///< Reference to analog to digital converter
 
-    battery_conf_t 	config_;			///< Configuration
+    battery_conf_t  config_;            ///< Configuration
 
-    float           voltage_;			///< Current voltage of the battery in V
-    float           level_;				///< Current level of the battery in % (from 0 to 100)
-    float			last_update_us_;	///< Last update time in microseconds
-    bool			is_low_;			///< Indiciates if the battery level is low
+    float           voltage_;           ///< Current voltage of the battery in V
+    float           level_;             ///< Current level of the battery in % (from 0 to 100)
+    float           last_update_us_;    ///< Last update time in microseconds
+    bool            is_low_;            ///< Indiciates if the battery level is low
 };
 
 
@@ -150,9 +150,9 @@ static inline battery_conf_t battery_default_config()
 {
     battery_conf_t conf = {};
 
-    conf.type 				= BATTERY_LIPO_3S;
-    conf.low_level_limit 	= 13.3f;
-    conf.lpf_gain		 	= 0.5f;
+    conf.type               = BATTERY_LIPO_3S;
+    conf.low_level_limit    = 13.3f;
+    conf.lpf_gain           = 0.5f;
 
     return conf;
 }

@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial_udp.cpp
+ * \file    serial_udp.cpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Linux implementation of serial peripherals using UDP
+ * \brief   Linux implementation of serial peripherals using UDP
  *
  ******************************************************************************/
 
@@ -62,9 +62,9 @@ Serial_udp::Serial_udp(serial_udp_conf_t config)
     }
 
     // Set local address and port
-    local_addr_.sin_family 		= AF_INET;						// Internet socket
-    local_addr_.sin_addr.s_addr = INADDR_ANY;					// Any host ip
-    local_addr_.sin_port 		= htons(config_.local_port);	// Port provided by config
+    local_addr_.sin_family      = AF_INET;                      // Internet socket
+    local_addr_.sin_addr.s_addr = INADDR_ANY;                   // Any host ip
+    local_addr_.sin_port        = htons(config_.local_port);    // Port provided by config
 
     // Bind the socket local port - necessary to receive packets from qgroundcontrol
     int r = bind(socket_, (struct sockaddr*)&local_addr_, sizeof(struct sockaddr));
@@ -82,9 +82,9 @@ Serial_udp::Serial_udp(serial_udp_conf_t config)
     }
 
     // Set target address and port
-    target_addr_.sin_family 		= AF_INET;
-    target_addr_.sin_addr.s_addr 	= inet_addr(config_.target_ip);
-    target_addr_.sin_port 			= htons(config_.target_port);
+    target_addr_.sin_family         = AF_INET;
+    target_addr_.sin_addr.s_addr    = inet_addr(config_.target_ip);
+    target_addr_.sin_port           = htons(config_.target_port);
 }
 
 
@@ -98,7 +98,7 @@ uint32_t Serial_udp::readable(void)
 {
     int32_t  recsize;
     uint32_t n_bytes_to_read = rx_buffer_.writeable();
-    char 	 buf[n_bytes_to_read];
+    char     buf[n_bytes_to_read];
 
     recsize = recv(socket_, buf, n_bytes_to_read, 0);
 

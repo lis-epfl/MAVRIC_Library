@@ -50,7 +50,7 @@ extern "C"
 
 
 /**
- * \brief 	Enumerate the 2 possible I2C
+ * \brief   Enumerate the 2 possible I2C
  */
 typedef enum
 {
@@ -60,34 +60,34 @@ typedef enum
 
 
 /**
- * @brief 	Configuration structure
+ * @brief   Configuration structure
  */
 typedef struct
 {
     i2c_avr32_devices_t i2c_device;
-    twim_options_t 		twi_opt;
-    bool           		tenbit;
-    uint8_t        		sda_pin;
-    uint8_t        		clk_pin;
+    twim_options_t      twi_opt;
+    bool                tenbit;
+    uint8_t             sda_pin;
+    uint8_t             clk_pin;
 } i2c_avr32_conf_t;
 
 
 /**
- * @brief 	I2C peripheral driver for AVR32
+ * @brief   I2C peripheral driver for AVR32
  */
 class I2c_avr32: public I2c
 {
 public:
     /**
-     * @brief 	Initialises the peripheral
+     * @brief   Initialises the peripheral
      *
-     * @param 	config 		Device configuration
+     * @param   config      Device configuration
      */
     I2c_avr32(i2c_avr32_conf_t config);
 
 
     /**
-     * @brief 		Hardware initialization
+     * @brief       Hardware initialization
      *
      * @return  true Success
      * @return  false Error
@@ -96,45 +96,45 @@ public:
 
 
     /**
-     * @brief 	Test if a chip answers for a given I2C address
+     * @brief   Test if a chip answers for a given I2C address
      *
-     * @param 	address 	Slave adress
+     * @param   address     Slave adress
      *
-     * @return 	True		Slave found
-     * @return 	False		Slave not found
+     * @return  True        Slave found
+     * @return  False       Slave not found
      */
     bool probe(uint32_t address);
 
 
     /**
-     * @brief 	Write multiple bytes to a I2C slave device
+     * @brief   Write multiple bytes to a I2C slave device
      *
-     * @param 	buffer 		Data buffer
-     * @param 	nbytes 		Number of bytes to write
-     * @param 	address 	Slave adress
+     * @param   buffer      Data buffer
+     * @param   nbytes      Number of bytes to write
+     * @param   address     Slave adress
      *
-     * @return 	True		Data successfully written
-     * @return 	False		Data not written
+     * @return  True        Data successfully written
+     * @return  False       Data not written
      */
     bool write(const uint8_t* buffer, uint32_t nbytes, uint32_t address);
 
 
     /**
-     * @brief 	Read multiple bytes to a I2C slave device
+     * @brief   Read multiple bytes to a I2C slave device
      *
-     * @param 	buffer 		Data buffer
-     * @param 	nbytes 		Number of bytes to read
-     * @param 	address 	Slave adress
+     * @param   buffer      Data buffer
+     * @param   nbytes      Number of bytes to read
+     * @param   address     Slave adress
      *
-     * @return 	True		Data successfully read
-     * @return 	False		Data not read
+     * @return  True        Data successfully read
+     * @return  False       Data not read
      */
     bool read(uint8_t* buffer, uint32_t nbytes, uint32_t address);
 
 
 private:
-    i2c_avr32_conf_t 		config_;	///< Configuration
-    volatile avr32_twim_t* 	twim_;		///< Hardware peripheral
+    i2c_avr32_conf_t        config_;    ///< Configuration
+    volatile avr32_twim_t*  twim_;      ///< Hardware peripheral
 
 };
 

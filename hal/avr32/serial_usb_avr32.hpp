@@ -30,19 +30,19 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial_usb_avr32.hpp
+ * \file    serial_usb_avr32.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Implementation of serial over USB for avr32
+ * \brief   Implementation of serial over USB for avr32
  *
  * \details Incomplete implementation (TODO)
- * 			- Implemented:
- * 				* buffered, blocking writing
- * 			- NOT implemented:
- * 				* Read functions
- * 				* Receive interrupt callback
- * 				* buffered input
+ *          - Implemented:
+ *              * buffered, blocking writing
+ *          - NOT implemented:
+ *              * Read functions
+ *              * Receive interrupt callback
+ *              * buffered input
  *
  ******************************************************************************/
 
@@ -58,7 +58,7 @@ extern "C"
 
 
 /**
- * \brief 	Configuration structure
+ * \brief   Configuration structure
  */
 typedef struct
 {
@@ -66,22 +66,22 @@ typedef struct
 
 
 /**
- * \brief 	Implementation of serial peripheral for avr32
+ * \brief   Implementation of serial peripheral for avr32
  */
 class Serial_usb_avr32: public Serial
 {
 public:
 
     /**
-     * \brief  	Initialises the peripheral
+     * \brief   Initialises the peripheral
      *
-     * \param 	config 		Device configuration
+     * \param   config      Device configuration
      */
     Serial_usb_avr32(serial_usb_avr32_conf_t config);
 
 
     /**
-     * \brief 	Hardware initialization
+     * \brief   Hardware initialization
      *
      * \return  true Success
      * \return  false Error
@@ -90,72 +90,72 @@ public:
 
 
     /**
-     * \brief 	Test if there are bytes available to read
+     * \brief   Test if there are bytes available to read
      *
-     * \return 	Number of incoming bytes available
+     * \return  Number of incoming bytes available
      */
     uint32_t readable(void);
 
 
     /**
-     * \brief 	Test if there is space available to write bytes
+     * \brief   Test if there is space available to write bytes
      *
-     * \return 	Number of bytes available for writing
+     * \return  Number of bytes available for writing
      */
     uint32_t writeable(void);
 
 
     /**
-     * \brief 	Sends instantaneously all outgoing bytes
+     * \brief   Sends instantaneously all outgoing bytes
      *
-     * \return 	Number of bytes available for writing
+     * \return  Number of bytes available for writing
      */
     void flush(void);
 
 
     /**
-     * \brief 	Attach a function to call after a receive interrupt is generated
+     * \brief   Attach a function to call after a receive interrupt is generated
      *
      * \details A default handler should be provided by the implementation to
-     * 			add the incoming data in a buffer, so is not mandatory to call
-     * 			this method. The function callback will be called after the
-     * 			interrupt handler
+     *          add the incoming data in a buffer, so is not mandatory to call
+     *          this method. The function callback will be called after the
+     *          interrupt handler
      *
-     * \param  	func	 	Pointer to the callback function
+     * \param   func        Pointer to the callback function
      *
-     * \return 	true		Success
-     * \return 	false		Failed
+     * \return  true        Success
+     * \return  false       Failed
      */
     bool attach(serial_interrupt_callback_t func);
 
 
     /**
-     * \brief 	Write bytes on the serial line
+     * \brief   Write bytes on the serial line
      *
-     * \param 	byte 		Outgoing bytes
-     * \param 	size 		Number of bytes to write
+     * \param   byte        Outgoing bytes
+     * \param   size        Number of bytes to write
      *
-     * \return 	true		Data successfully written
-     * \return 	false		Data not written
+     * \return  true        Data successfully written
+     * \return  false       Data not written
      */
     bool write(const uint8_t* bytes, const uint32_t size = 1);
 
 
     /**
-     * \brief 	Read bytes from the serial line
+     * \brief   Read bytes from the serial line
      *
-     * \param 	bytes 		Incoming bytes
-     * \param 	size 		Number of bytes to read
+     * \param   bytes       Incoming bytes
+     * \param   size        Number of bytes to read
      *
-     * \return 	true		Data successfully read
-     * \return 	false		Data not read
+     * \return  true        Data successfully read
+     * \return  false       Data not read
      */
     bool read(uint8_t* bytes, const uint32_t size = 1);
 
 
 private:
-    serial_usb_avr32_conf_t		config_;		///< Configuration
-    Buffer 						tx_buffer_;		///< Transmission buffer
+    serial_usb_avr32_conf_t     config_;        ///< Configuration
+    Buffer                      tx_buffer_;     ///< Transmission buffer
 };
 
 

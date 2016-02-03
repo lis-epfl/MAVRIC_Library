@@ -49,23 +49,23 @@ bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_co
     // Init dependencies
     mix->torque_command = torque_command;
     mix->thrust_command = thrust_command;
-    mix->motor_left		= motor_left;
-    mix->motor_right	= motor_right;
-    mix->servo_left		= servo_left;
-    mix->servo_right	= servo_right;
+    mix->motor_left     = motor_left;
+    mix->motor_right    = motor_right;
+    mix->servo_left     = servo_left;
+    mix->servo_right    = servo_right;
     mix->dc_motors      = dc_motors;
 
     // Init parameters
-    mix->motor_left_dir		= config->motor_left_dir;
-    mix->motor_right_dir	= config->motor_right_dir;
-    mix->servo_left_dir		= config->servo_left_dir;
-    mix->servo_right_dir	= config->servo_right_dir;
+    mix->motor_left_dir     = config->motor_left_dir;
+    mix->motor_right_dir    = config->motor_right_dir;
+    mix->servo_left_dir     = config->servo_left_dir;
+    mix->servo_right_dir    = config->servo_right_dir;
 
-    mix->min_thrust 		= config->min_thrust;
-    mix->max_thrust 		= config->max_thrust;
+    mix->min_thrust         = config->min_thrust;
+    mix->max_thrust         = config->max_thrust;
 
-    mix->min_servo			= config->min_servo;
-    mix->max_servo	 		= config->max_servo;
+    mix->min_servo          = config->min_servo;
+    mix->max_servo          = config->max_servo;
 
     return true;
 }
@@ -81,11 +81,11 @@ bool servos_mix_birotor_update(servo_mix_birotor_t* mix)
     // torque_command->xyz[2] ==== YAW
 
     // Motor left
-    motor[0] = 	mix->thrust_command->thrust +
+    motor[0] =  mix->thrust_command->thrust +
                 (+ mix->torque_command->xyz[2]);
 
     // Motor right
-    motor[1] = 	mix->thrust_command->thrust +
+    motor[1] =  mix->thrust_command->thrust +
                 (- mix->torque_command->xyz[2]);
 
     // Servo left
@@ -100,27 +100,27 @@ bool servos_mix_birotor_update(servo_mix_birotor_t* mix)
     // Clip values
     /*for (i=0; i<2; i++)
     {
-    	if ( motor[i] < mix->min_thrust )
-    	{
-    		motor[i] = mix->min_thrust;
-    	}
-    	else if ( motor[i] > mix->max_thrust )
-    	{
-    		motor[i] = mix->max_thrust;
-    	}
+        if ( motor[i] < mix->min_thrust )
+        {
+            motor[i] = mix->min_thrust;
+        }
+        else if ( motor[i] > mix->max_thrust )
+        {
+            motor[i] = mix->max_thrust;
+        }
     }
 
     int i=0;
     for (i=2; i<4; i++)
     {
-    	if ( motor[i] < mix->min_servo )
-    	{
-    		motor[i] = mix->min_servo;
-    	}
-    	else if ( motor[i] > mix->max_servo )
-    	{
-    		motor[i] = mix->max_servo;
-    	}
+        if ( motor[i] < mix->min_servo )
+        {
+            motor[i] = mix->min_servo;
+        }
+        else if ( motor[i] > mix->max_servo )
+        {
+            motor[i] = mix->max_servo;
+        }
     }
     */
 

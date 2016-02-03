@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	gpio_avr32.hpp
+ * \file    gpio_avr32.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Implementation of GPIO peripherals for avr32
+ * \brief   Implementation of GPIO peripherals for avr32
  *
  ******************************************************************************/
 
@@ -45,20 +45,20 @@
 #include <stdint.h>
 
 /**
- * 	Configuration structure
+ *  Configuration structure
  */
 typedef struct
 {
-    uint32_t pin;			///< pin number
+    uint32_t pin;           ///< pin number
     gpio_dir_t dir;
     gpio_pull_updown_t pull;
 } gpio_avr32_conf_t;
 
 
 /**
- * @brief 	Default configuration
+ * @brief   Default configuration
  *
- * @return 	Config structure
+ * @return  Config structure
  */
 static inline gpio_avr32_conf_t gpio_avr32_default_config();
 
@@ -67,27 +67,27 @@ class Gpio_avr32: public Gpio
 {
 public:
     /**
-     * @brief 	Initialises the peripheral
+     * @brief   Initialises the peripheral
      *
-     * @param 	config 		Device configuration
+     * @param   config      Device configuration
      */
     Gpio_avr32(gpio_avr32_conf_t config = gpio_avr32_default_config());
 
 
     /**
-     * @brief 	Hardware initialization
+     * @brief   Hardware initialization
      *
-     * @return  true 		Success
-     * @return  false 		Error
+     * @return  true        Success
+     * @return  false       Error
      */
     bool init(void);
 
 
     /**
-     * \brief 	Configures the GPIO
+     * \brief   Configures the GPIO
      *
-     * \param 	dir 	Pin direction (one of enum gpio_dir_t)
-     * \param 	pull 	Pin pull up/down (one of enum gpio_pull_updown_t)
+     * \param   dir     Pin direction (one of enum gpio_dir_t)
+     * \param   pull    Pin pull up/down (one of enum gpio_pull_updown_t)
      *
      * \return  success
      */
@@ -95,67 +95,67 @@ public:
 
 
     /**
-     * @brief 	Write 1 to the gpio
+     * @brief   Write 1 to the gpio
      *
-     * @return 	true		Success
-     * @return 	false		Failed
+     * @return  true        Success
+     * @return  false       Failed
      */
     bool set_high(void);
 
 
     /**
-     * @brief 	Write 0 to the gpio
+     * @brief   Write 0 to the gpio
      *
-     * @return 	true		Success
-     * @return 	false		Failed
+     * @return  true        Success
+     * @return  false       Failed
      */
     bool set_low(void);
 
 
     /**
-     * @brief 	Toggle the gpio value
+     * @brief   Toggle the gpio value
      * @details Writes 0 if currently high, writes 1 if currently low
      *
-     * @return 	true		Success
-     * @return 	false		Failed
+     * @return  true        Success
+     * @return  false       Failed
      */
     bool toggle(void);
 
 
     /**
-     * @brief 	Write to the gpio pin
+     * @brief   Write to the gpio pin
      *
-     * @param 	level 		Value to write
+     * @param   level       Value to write
      *
-     * @return 	true		Success
-     * @return 	false		Failed
+     * @return  true        Success
+     * @return  false       Failed
      */
     bool write(bool level);
 
 
     /**
-     * @brief 	Read the current gpio level
+     * @brief   Read the current gpio level
      *
-     * @return 	Level
+     * @return  Level
      */
     bool read(void);
 
 private:
-    gpio_avr32_conf_t 	config_;	///< Device configuration
+    gpio_avr32_conf_t   config_;    ///< Device configuration
 };
 
 
 /**
- * @brief 	Default configuration
+ * @brief   Default configuration
  *
- * @return 	Config structure
+ * @return  Config structure
  */
 static inline gpio_avr32_conf_t gpio_avr32_default_config()
 {
     gpio_avr32_conf_t conf = {};
-    conf.pin 	= 0;
-    conf.dir 	= GPIO_INPUT;
-    conf.pull 	= GPIO_PULL_UPDOWN_NONE;
+    conf.pin    = 0;
+    conf.dir    = GPIO_INPUT;
+    conf.pull   = GPIO_PULL_UPDOWN_NONE;
 
     return conf;
 }

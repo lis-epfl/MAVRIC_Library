@@ -48,7 +48,7 @@
  *
  * in short:
  * \f$
- * 			output = (P_{q} . qerror) - (P_{g} . gyro)
+ *          output = (P_{q} . qerror) - (P_{g} . gyro)
  * \f$
  *
  ******************************************************************************/
@@ -63,7 +63,7 @@ bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const att
     // Init dependencies
     controller->attitude_command = attitude_command;
     controller->torque_command   = torque_command;
-    controller->ahrs 			 = ahrs;
+    controller->ahrs             = ahrs;
 
     // Init attitude error estimator
     success &= attitude_error_estimator_init(&controller->attitude_error_estimator, ahrs);

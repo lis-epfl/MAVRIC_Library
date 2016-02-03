@@ -54,17 +54,17 @@
 
 
 /**
- * \brief 		Driver for sensor LSM330DLC
+ * \brief       Driver for sensor LSM330DLC
  *
- * \details 	This sensor is at the same time a accelerometer and a gyroscope
+ * \details     This sensor is at the same time a accelerometer and a gyroscope
  */
 class Lsm330dlc: public Accelerometer, public Gyroscope
 {
 public:
     /**
-     * \brief  	Constructor
+     * \brief   Constructor
      *
-     * \param 	i2c 	Reference to I2C device
+     * \param   i2c     Reference to I2C device
      */
     Lsm330dlc(I2c& i2c);
 
@@ -72,10 +72,10 @@ public:
     /**
      * \brief   Initialise the sensor
      * \details Sends configuration via I2C, the I2C peripheral must be
-     * 			activated before this method is called
+     *          activated before this method is called
      *
-     * \return 	true 	Success
-     * \return 	false 	Failed
+     * \return  true    Success
+     * \return  false   Failed
      */
     bool init(void);
 
@@ -84,131 +84,131 @@ public:
      * \brief   Main update function
      * \details Get new data from the sensor
      *
-     * \return 	true 	Success
-     * \return 	false 	Failed
+     * \return  true    Success
+     * \return  false   Failed
      */
     bool update(void);
 
 
     /**
-     * \brief 	Get last update time in microseconds
+     * \brief   Get last update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     const float& last_update_us(void) const;
 
 
     /**
-     * \brief 	Get X, Y and Z components of angular velocity
+     * \brief   Get X, Y and Z components of angular velocity
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const std::array<float, 3>& gyro(void) const;
 
 
 
     /**
-     * \brief 	Get X component of angular velocity
+     * \brief   Get X component of angular velocity
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& gyro_X(void) const;
 
 
     /**
-     * \brief 	Get Y component of angular velocity
+     * \brief   Get Y component of angular velocity
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& gyro_Y(void) const;
 
 
     /**
-     * \brief 	Get Z component of angular velocity
+     * \brief   Get Z component of angular velocity
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& gyro_Z(void) const;
 
 
     /**
-     * \brief 	Get X, Y and Z components of acceleration
+     * \brief   Get X, Y and Z components of acceleration
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const std::array<float, 3>& acc(void) const;
 
 
     /**
-     * \brief 	Get X component of acceleration
+     * \brief   Get X component of acceleration
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& acc_X(void) const;
 
 
     /**
-     * \brief 	Get Y component of acceleration
+     * \brief   Get Y component of acceleration
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& acc_Y(void) const;
 
 
     /**
-     * \brief 	Get Z component of acceleration
+     * \brief   Get Z component of acceleration
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& acc_Z(void) const;
 
 
     /**
-     * \brief 	Get sensor temperature
+     * \brief   Get sensor temperature
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& temperature(void) const;
 
 
 private:
-    I2c& 				 i2c_;				///< I2C peripheral
-    std::array<float, 3> gyro_data_;		///< Gyroscope data
-    std::array<float, 3> acc_data_;			///< Accelerometer data
-    float 				 temperature_;		///< Temperature
-    float 				 last_update_us_; 	///< Last udate time in microseconds
+    I2c&                 i2c_;              ///< I2C peripheral
+    std::array<float, 3> gyro_data_;        ///< Gyroscope data
+    std::array<float, 3> acc_data_;         ///< Accelerometer data
+    float                temperature_;      ///< Temperature
+    float                last_update_us_;   ///< Last udate time in microseconds
 };
 
 #endif

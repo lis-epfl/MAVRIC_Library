@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	gpio_dummy.cpp
+ * \file    gpio_dummy.cpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Dummy implementation of GPIO peripherals
+ * \brief   Dummy implementation of GPIO peripherals
  *
  ******************************************************************************/
 

@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	gpio.hpp
+ * \file    gpio.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Abstract class for GPIO peripherals
+ * \brief   Abstract class for GPIO peripherals
  *
  ******************************************************************************/
 
@@ -42,12 +42,12 @@
 #define GPIO_HPP_
 
 /**
- * \brief 	GPIO direction
+ * \brief   GPIO direction
  */
 typedef enum
 {
-    GPIO_INPUT  	= 0,	///< Input
-    GPIO_OUTPUT 	= 1,	///< Output
+    GPIO_INPUT      = 0,    ///< Input
+    GPIO_OUTPUT     = 1,    ///< Output
 } gpio_dir_t;
 
 
@@ -56,9 +56,9 @@ typedef enum
  */
 typedef enum
 {
-    GPIO_PULL_UPDOWN_NONE = 0,		///< No pull up/down
-    GPIO_PULL_UPDOWN_UP   = 1,		///< Pull up
-    GPIO_PULL_UPDOWN_DOWN = 2,		///< Pull down
+    GPIO_PULL_UPDOWN_NONE = 0,      ///< No pull up/down
+    GPIO_PULL_UPDOWN_UP   = 1,      ///< Pull up
+    GPIO_PULL_UPDOWN_DOWN = 2,      ///< Pull down
 } gpio_pull_updown_t;
 
 
@@ -67,18 +67,18 @@ class Gpio
 public:
 
     /**
-     * @brief 	Hardware initialization
+     * @brief   Hardware initialization
      *
-     * @return  true 		Success
-     * @return  false 		Error
+     * @return  true        Success
+     * @return  false       Error
      */
     virtual bool init(void) = 0;
 
     /**
-     * \brief 	Configures the GPIO
+     * \brief   Configures the GPIO
      *
-     * \param 	dir 	Pin direction (one of enum gpio_dir_t)
-     * \param 	pull 	Pin pull up/down (one of enum gpio_pull_updown_t)
+     * \param   dir     Pin direction (one of enum gpio_dir_t)
+     * \param   pull    Pin pull up/down (one of enum gpio_pull_updown_t)
      *
      * \return  success
      */
@@ -86,48 +86,48 @@ public:
 
 
     /**
-     * @brief 	Write 1 to the gpio
+     * @brief   Write 1 to the gpio
      *
-     * @return 	true		Success
-     * @return 	false		Failed
+     * @return  true        Success
+     * @return  false       Failed
      */
     virtual bool set_high(void) = 0;
 
 
     /**
-     * @brief 	Write 0 to the gpio
+     * @brief   Write 0 to the gpio
      *
-     * @return 	true		Success
-     * @return 	false		Failed
+     * @return  true        Success
+     * @return  false       Failed
      */
     virtual bool set_low(void) = 0;
 
 
     /**
-     * @brief 	Toggle the gpio value
+     * @brief   Toggle the gpio value
      * @details Writes 0 if currently high, writes 1 if currently low
      *
-     * @return 	true		Success
-     * @return 	false		Failed
+     * @return  true        Success
+     * @return  false       Failed
      */
     virtual bool toggle(void) = 0;
 
 
     /**
-     * @brief 	Write to the gpio pin
+     * @brief   Write to the gpio pin
      *
-     * @param 	level 		Value to write
+     * @param   level       Value to write
      *
-     * @return 	true		Success
-     * @return 	false		Failed
+     * @return  true        Success
+     * @return  false       Failed
      */
     virtual bool write(bool level) = 0;
 
 
     /**
-     * @brief 	Read the current gpio level
+     * @brief   Read the current gpio level
      *
-     * @return 	Level
+     * @return  Level
      */
     virtual bool read(void) = 0;
 

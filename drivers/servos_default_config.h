@@ -52,14 +52,14 @@ extern "C" {
 
 static inline servo_entry_t servo_entry_default_standard()
 {
-    servo_entry_t servo_entry 	= {};
+    servo_entry_t servo_entry   = {};
 
-    servo_entry.value 			= 0.0f;
-    servo_entry.trim 			= 0.0f;
-    servo_entry.min 			= -1.0f;
-    servo_entry.max 			= 1.0f;
-    servo_entry.failsafe 		= 0.0f;
-    servo_entry.repeat_freq 	= 50;
+    servo_entry.value           = 0.0f;
+    servo_entry.trim            = 0.0f;
+    servo_entry.min             = -1.0f;
+    servo_entry.max             = 1.0f;
+    servo_entry.failsafe        = 0.0f;
+    servo_entry.repeat_freq     = 50;
 
     return servo_entry;
 };
@@ -67,14 +67,14 @@ static inline servo_entry_t servo_entry_default_standard()
 
 static inline servo_entry_t servo_entry_default_esc()
 {
-    servo_entry_t servo_entry 	= {};
+    servo_entry_t servo_entry   = {};
 
-    servo_entry.value 			= 0.0f;
-    servo_entry.trim 			= 0.0f;
-    servo_entry.min 			= -0.9f;
-    servo_entry.max 			= 1.0f;
-    servo_entry.failsafe 		= -1.0f;
-    servo_entry.repeat_freq 	= 200;
+    servo_entry.value           = 0.0f;
+    servo_entry.trim            = 0.0f;
+    servo_entry.min             = -0.9f;
+    servo_entry.max             = 1.0f;
+    servo_entry.failsafe        = -1.0f;
+    servo_entry.repeat_freq     = 200;
 
     return servo_entry;
 };
@@ -82,14 +82,14 @@ static inline servo_entry_t servo_entry_default_esc()
 
 static inline servo_entry_t servo_entry_default_custom()
 {
-    servo_entry_t servo_entry 	= {};
+    servo_entry_t servo_entry   = {};
 
-    servo_entry.value 			= 0.0f;
-    servo_entry.trim 			= 0.0f;
-    servo_entry.min 			= -0.0f;
-    servo_entry.max 			= 0.0f;
-    servo_entry.failsafe 		= 0.0f;
-    servo_entry.repeat_freq 	= 50;
+    servo_entry.value           = 0.0f;
+    servo_entry.trim            = 0.0f;
+    servo_entry.min             = -0.0f;
+    servo_entry.max             = 0.0f;
+    servo_entry.failsafe        = 0.0f;
+    servo_entry.repeat_freq     = 50;
 
     return servo_entry;
 };
@@ -97,9 +97,9 @@ static inline servo_entry_t servo_entry_default_custom()
 
 static inline servos_conf_t servos_default_config()
 {
-    servos_conf_t conf 	= {};
+    servos_conf_t conf  = {};
 
-    conf.servos_count 	= 4;
+    conf.servos_count   = 4;
     for (uint8_t i = 0; i < MAX_SERVO_COUNT; ++i)
     {
         conf.servo[i] = servo_entry_default_esc();

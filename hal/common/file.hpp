@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	file.hpp
+ * \file    file.hpp
  *
  * \author  MAV'RIC Team
  *
@@ -56,13 +56,13 @@ typedef enum
 
 
 /**
- * \brief 	Base class for file objects
+ * \brief   Base class for file objects
  */
 class File
 {
 public:
     /**
-     * \brief 	Open the file
+     * \brief   Open the file
      *
      * \return  success
      */
@@ -70,21 +70,21 @@ public:
 
 
     /**
-     * \brief 	Indicates if the file is currently open
+     * \brief   Indicates if the file is currently open
      *
      * \return  true if the file is open, false otherwise
      */
     virtual bool is_open() = 0;
 
     /**
-     * \brief 	Indicates if the file exits
+     * \brief   Indicates if the file exits
      *
      * \return  1 if the file exists, 0 if the file doesn't exist, -1 if the file system is not responding properly
      */
     virtual int8_t exists(const char* path) = 0;
 
     /**
-     * \brief 	Close the file
+     * \brief   Close the file
      *
      * \return  success
      */
@@ -94,69 +94,69 @@ public:
     /**
      * \brief   Read from the file.
      *
-     * \param   data		Caller supplied buffer to write to.
-     * \param   size		The number of bytes to attempt to read.
+     * \param   data        Caller supplied buffer to write to.
+     * \param   size        The number of bytes to attempt to read.
      *
-     * \return 	success
+     * \return  success
      */
     virtual bool read(uint8_t* data, uint32_t size) = 0;
 
 
     /**
-     * \brief 	Write to the file.
+     * \brief   Write to the file.
      *
-     * \param 	data 	The buffer to write.
-     * \param 	size 	The number of bytes to write.
+     * \param   data    The buffer to write.
+     * \param   size    The number of bytes to write.
      *
-     * \return 	success
+     * \return  success
      */
     virtual bool write(const uint8_t* data, uint32_t size) = 0;
 
 
     /**
-     * \brief 	Seek to a given offset within the file.
+     * \brief   Seek to a given offset within the file.
      *
-     * \details 	Valid locations to seek to are from zero to the file length.
-     *  			Seeking to the file length moves the pointer to one past the
-     *  			end of the file data so that subsequent file writes append
-     *  			to the existing file.
+     * \details     Valid locations to seek to are from zero to the file length.
+     *              Seeking to the file length moves the pointer to one past the
+     *              end of the file data so that subsequent file writes append
+     *              to the existing file.
      *
-     * \param 	offset 		The distance to move from the origin parameter.
-     * \param 	origin 		One of the file_seekfrom_t enumeration.
+     * \param   offset      The distance to move from the origin parameter.
+     * \param   origin      One of the file_seekfrom_t enumeration.
      *
-     * \return 	success
+     * \return  success
      */
     virtual bool seek(int32_t offset, file_seekfrom_t origin) = 0;
 
 
     /**
-     * \brief 	Get current location in file
+     * \brief   Get current location in file
      *
-     * \return 	Offset in bytes
+     * \return  Offset in bytes
      */
     virtual uint32_t offset() = 0;
 
 
     /**
-     * \brief 	Get the file length.
+     * \brief   Get the file length.
      *
-     * \return 	The file length in bytes
+     * \return  The file length in bytes
      */
     virtual uint32_t length() = 0;
 
 
     /**
-     * \brief 	flush buffer to file; Not implemented;
+     * \brief   flush buffer to file; Not implemented;
      *
-     * \return 	success
+     * \return  success
      */
     virtual bool flush() = 0;
 
 
     /**
-     * \brief 	write newline character to file ('\n')
+     * \brief   write newline character to file ('\n')
      *
-     * \return 	success
+     * \return  success
      */
     bool newline();
 };

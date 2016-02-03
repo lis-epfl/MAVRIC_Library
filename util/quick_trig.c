@@ -64,7 +64,7 @@ const float acos_y[INTERP_POINTS] = {   1.57079633f,  1.55038675f,  1.52996866f,
 const float sin_x_min = 0.0f;
 const float sin_x_max = 1.57079633f;
 const float sin_x_step = 0.0320570678937734f;
-const float sin_y[INTERP_POINTS] = {	0.        ,  0.03205158f,  0.06407022f,  0.09602303f,  0.12787716f,
+const float sin_y[INTERP_POINTS] = {    0.        ,  0.03205158f,  0.06407022f,  0.09602303f,  0.12787716f,
                                         0.1595999f ,  0.19115863f,  0.22252093f,  0.25365458f,  0.28452759f,
                                         0.31510822f,  0.34536505f,  0.375267f  ,  0.40478334f,  0.43388374f,
                                         0.46253829f,  0.49071755f,  0.51839257f,  0.5455349f ,  0.57211666f,
@@ -101,7 +101,7 @@ const float tan_y[INTERP_POINTS] = { 0.00000000e+00f,   3.20680536e-02f,   6.420
 const float atan_x_min = 0.0f;
 const float atan_x_max = 10.0f;
 const float atan_x_step = 0.20408163265306123f;
-const float atan_y[INTERP_POINTS] = {	0.0f        ,  0.20131711f,  0.38752381f,  0.54937448f,  0.68461716f,
+const float atan_y[INTERP_POINTS] = {   0.0f        ,  0.20131711f,  0.38752381f,  0.54937448f,  0.68461716f,
                                         0.79549883f,  0.88597508f,  0.96007036f,  1.02123631f,  1.07222842f,
                                         1.11518067f,  1.15172883f,  1.18312675f,  1.21034074f,  1.23412151f,
                                         1.25505772f,  1.2736155f ,  1.29016748f,  1.30501442f,  1.31840124f,

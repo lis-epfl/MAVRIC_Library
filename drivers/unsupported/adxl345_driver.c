@@ -45,27 +45,27 @@
 #include "util/print_util.h"
 #include "libs/asf/avr32/drivers/twim/twim.h"
 
-static volatile acc_data_t acc_outputs;				///< Declare an object containing accelerometer's data
+static volatile acc_data_t acc_outputs;             ///< Declare an object containing accelerometer's data
 
-#define CONFIG_POWER_ADDRESS 0x2D					///< Address of the power configuration register
+#define CONFIG_POWER_ADDRESS 0x2D                   ///< Address of the power configuration register
 
-#define SENSOR_REG_ADDRESS 0x32						///< Address of the accelerometer register
-#define DATA_SETTING_ADDRESS 0x31					///< Address of the data setting register
-enum {RANGE_2G, RANGE_4G, RANGE_8G, RANGE_16G};		///< Define the different range in which you could use the accelerometer
-#define FULL_RES 0b1000								///< Define the full resolution for the output of the accelerometer
+#define SENSOR_REG_ADDRESS 0x32                     ///< Address of the accelerometer register
+#define DATA_SETTING_ADDRESS 0x31                   ///< Address of the data setting register
+enum {RANGE_2G, RANGE_4G, RANGE_8G, RANGE_16G};     ///< Define the different range in which you could use the accelerometer
+#define FULL_RES 0b1000                             ///< Define the full resolution for the output of the accelerometer
 
-uint8_t default_configuration[2] = {CONFIG_POWER_ADDRESS, 8};	///< default configuration of the accelerometer
+uint8_t default_configuration[2] = {CONFIG_POWER_ADDRESS, 8};   ///< default configuration of the accelerometer
 
-uint8_t data_configuration[2] = {DATA_SETTING_ADDRESS, FULL_RES | RANGE_16G};	///< configuration of the output data
+uint8_t data_configuration[2] = {DATA_SETTING_ADDRESS, FULL_RES | RANGE_16G};   ///< configuration of the output data
 
 void adxl345_driver_init_slow(void)
 {
     static twim_options_t twi_opt =
     {
         .pba_hz = 64000000,
-        .speed	= 400000,
-        .chip	= ADXL_ALT_SLAVE_ADDRESS,
-        .smbus	= false
+        .speed  = 400000,
+        .chip   = ADXL_ALT_SLAVE_ADDRESS,
+        .smbus  = false
     };
 
     twim_master_init(&AVR32_TWIM0, &twi_opt);

@@ -57,80 +57,80 @@ public:
     /**
      * \brief   Initialise the sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     virtual bool init(void) = 0;
 
 
     /**
-     * \brief 	Main update function
-     * \detail 	Reads new values from sensor
+     * \brief   Main update function
+     * \detail  Reads new values from sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     virtual bool update(void) = 0;
 
 
     /**
-     * \brief 	Get last update time in microseconds
+     * \brief   Get last update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     virtual const float& last_update_us(void) const = 0;
 
 
     /**
-     * \brief 	Get X, Y and Z components of acceleration
+     * \brief   Get X, Y and Z components of acceleration
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const std::array<float, 3>& acc(void) const = 0;
 
 
     /**
-     * \brief 	Get X component of acceleration
+     * \brief   Get X component of acceleration
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const float& acc_X(void) const = 0;
 
 
     /**
-     * \brief 	Get Y component of acceleration
+     * \brief   Get Y component of acceleration
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const float& acc_Y(void) const = 0;
 
 
     /**
-     * \brief 	Get Z component of acceleration
+     * \brief   Get Z component of acceleration
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const float& acc_Z(void) const = 0;
 
 
     /**
-     * \brief 	Get sensor temperature
+     * \brief   Get sensor temperature
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const float& temperature(void) const = 0;
 };

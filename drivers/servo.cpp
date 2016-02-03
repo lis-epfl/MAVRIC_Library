@@ -81,7 +81,7 @@ bool Servo::write(float value, bool to_hardware)
     else
     {
         value_ = trimmed_value;
-        success 	 = true;
+        success      = true;
     }
 
     if (to_hardware == true)

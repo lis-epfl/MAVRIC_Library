@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial_dummy.hpp
+ * \file    serial_dummy.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Dummy implementation for serial peripherals
+ * \brief   Dummy implementation for serial peripherals
  *
  ******************************************************************************/
 
@@ -47,16 +47,16 @@ class Serial_dummy: public Serial
 {
 public:
     /**
-     * \brief 	Initialises the peripheral
+     * \brief   Initialises the peripheral
      *
-     * \param 	config 		Device configuration
+     * \param   config      Device configuration
      */
     Serial_dummy(void)
     {};
 
 
     /**
-     * \brief 	Hardware initialization
+     * \brief   Hardware initialization
      *
      * \return  true Success
      * \return  false Error
@@ -68,9 +68,9 @@ public:
 
 
     /**
-     * \brief 	Test if there are bytes available to read
+     * \brief   Test if there are bytes available to read
      *
-     * \return 	Number of incoming bytes available
+     * \return  Number of incoming bytes available
      */
     uint32_t readable(void)
     {
@@ -80,9 +80,9 @@ public:
 
 
     /**
-     * \brief 	Test if there is space available to write bytes
+     * \brief   Test if there is space available to write bytes
      *
-     * \return 	Number of bytes available for writing
+     * \return  Number of bytes available for writing
      */
     uint32_t writeable(void)
     {
@@ -91,26 +91,26 @@ public:
 
 
     /**
-     * \brief 	Sends instantaneously all outgoing bytes
+     * \brief   Sends instantaneously all outgoing bytes
      *
-     * \return 	Number of bytes available for writing
+     * \return  Number of bytes available for writing
      */
     void flush(void)
     {};
 
 
     /**
-     * \brief 	Attach a function to call after a receive interrupt is generated
+     * \brief   Attach a function to call after a receive interrupt is generated
      *
      * \details A default handler should be provided by the implementation to
-     * 			add the incoming data in a buffer, so is not mandatory to call
-     * 			this method. The function callback will be called after the
-     * 			interrupt handler
+     *          add the incoming data in a buffer, so is not mandatory to call
+     *          this method. The function callback will be called after the
+     *          interrupt handler
      *
-     * \param  	func	 	Pointer to the callback function
+     * \param   func        Pointer to the callback function
      *
-     * \return 	true		Success
-     * \return 	false		Failed
+     * \return  true        Success
+     * \return  false       Failed
      */
     bool attach(serial_interrupt_callback_t func)
     {
@@ -119,13 +119,13 @@ public:
 
 
     /**
-     * \brief 	Write bytes on the serial line
+     * \brief   Write bytes on the serial line
      *
-     * \param 	byte 		Outgoing bytes
-     * \param 	size 		Number of bytes to write
+     * \param   byte        Outgoing bytes
+     * \param   size        Number of bytes to write
      *
-     * \return 	true		Data successfully written
-     * \return 	false		Data not written
+     * \return  true        Data successfully written
+     * \return  false       Data not written
      */
     bool write(const uint8_t* bytes, const uint32_t size = 1)
     {
@@ -134,13 +134,13 @@ public:
 
 
     /**
-     * \brief 	Read bytes from the serial line
+     * \brief   Read bytes from the serial line
      *
-     * \param 	bytes 		Incoming bytes
-     * \param 	size 		Number of bytes to read
+     * \param   bytes       Incoming bytes
+     * \param   size        Number of bytes to read
      *
-     * \return 	true		Data successfully read
-     * \return 	false		Data not read
+     * \return  true        Data successfully read
+     * \return  false       Data not read
      */
     bool read(uint8_t* bytes, const uint32_t size = 1)
     {

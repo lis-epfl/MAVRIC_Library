@@ -51,13 +51,13 @@
 #include "libs/asf/avr32/drivers/pdca/pdca.h"
 #include "util/print_util.h"
 
-static volatile uint16_t* buffer;					///< pointer to the sampling buffer of the DAC
-static volatile uint16_t from, to;					///< (?)
-static volatile int32_t autoplay;						///< (?)
-volatile avr32_pevc_t*   ppevc  = &AVR32_PEVC;		///< (?)
-volatile avr32_dacifb_t* dacifb = &AVR32_DACIFB0;	///< DACIFB registers address
-S16 dac_value_audio = -1;							///< (?)
-U8 dac_channel_audio = DAC_AUDIO_CHANNEL;			///< Assign the on-board sensors to their DAC channel.
+static volatile uint16_t* buffer;                   ///< pointer to the sampling buffer of the DAC
+static volatile uint16_t from, to;                  ///< (?)
+static volatile int32_t autoplay;                       ///< (?)
+volatile avr32_pevc_t*   ppevc  = &AVR32_PEVC;      ///< (?)
+volatile avr32_dacifb_t* dacifb = &AVR32_DACIFB0;   ///< DACIFB registers address
+S16 dac_value_audio = -1;                           ///< (?)
+U8 dac_channel_audio = DAC_AUDIO_CHANNEL;           ///< Assign the on-board sensors to their DAC channel.
 
 ///< Functions Prototype Definition
 void init_pevc(void);
@@ -135,7 +135,7 @@ void dac_dma_init(int32_t trigger_mode)
     dacifb_opt_t dacifb_opt =
     {
         .reference                  = DACIFB_REFERENCE_VDDANA,      ///< VDDANA Reference
-        .channel_selection          = DAC_AUDIO_CHANNEL,			///< Selection Channels A&B
+        .channel_selection          = DAC_AUDIO_CHANNEL,            ///< Selection Channels A&B
         .low_power                  = false,                        ///< Low Power Mode
         .dual                       = false,                        ///< Dual Mode
         .prescaler_clock_hz         = DAC_PRESCALER_CLOCK,          ///< Prescaler Clock (Should be 500Khz)
@@ -185,12 +185,12 @@ void dac_dma_load_buffer(uint16_t* samples, int32_t from_sample, int32_t to_samp
 
     static  pdca_channel_options_t PDCA_OPTIONS =
     {
-        .addr	= 0,									///< memory address
-        .pid	= AVR32_PDCA_PID_DAC_TX,				///< select peripheral - data are transmit on the DAC output
-        .size	= 0,									///< transfer counter
-        .r_addr = NULL,									///< next memory address
-        .r_size = 0,									///< next transfer counter
-        .transfer_size = PDCA_TRANSFER_SIZE_HALF_WORD	///< select size of the transfer
+        .addr   = 0,                                    ///< memory address
+        .pid    = AVR32_PDCA_PID_DAC_TX,                ///< select peripheral - data are transmit on the DAC output
+        .size   = 0,                                    ///< transfer counter
+        .r_addr = NULL,                                 ///< next memory address
+        .r_size = 0,                                    ///< next transfer counter
+        .transfer_size = PDCA_TRANSFER_SIZE_HALF_WORD   ///< select size of the transfer
     };
 
     PDCA_OPTIONS.addr = (int8_t*)samples + 2 * from;

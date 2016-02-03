@@ -63,12 +63,12 @@ Pwm_avr32::Pwm_avr32(uint8_t id):
 {
     if (id_ > 7)
     {
-        id_ 		= 7;
+        id_         = 7;
         channel_id_ = 3;
     }
 
     pulse_us_[id_]  = 1500;
-    period_us_[id_] = 20000;	// 50Hz
+    period_us_[id_] = 20000;    // 50Hz
 }
 
 bool Pwm_avr32::init(void)
@@ -84,27 +84,27 @@ bool Pwm_avr32::init(void)
     // Unlock registers
     if (channel_id_ == 0)
     {
-        AVR32_PWM.wpcr =	(AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY) 	|
-                            (AVR32_PWM_WPCR_WPRG0_MASK)							|
-                            (AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD);
+        AVR32_PWM.wpcr = (AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY)  |
+                         (AVR32_PWM_WPCR_WPRG0_MASK)                         |
+                         (AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD);
     }
     else if (channel_id_ == 1)
     {
-        AVR32_PWM.wpcr =	(AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY)	|
-                            (AVR32_PWM_WPCR_WPRG1_MASK)							|
-                            (AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD);
+        AVR32_PWM.wpcr = (AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY)  |
+                         (AVR32_PWM_WPCR_WPRG1_MASK)                         |
+                         (AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD);
     }
     else if (channel_id_ == 2)
     {
-        AVR32_PWM.wpcr =	(AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY)	|
-                            (AVR32_PWM_WPCR_WPRG2_MASK)							|
-                            (AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD);
+        AVR32_PWM.wpcr = (AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY)  |
+                         (AVR32_PWM_WPCR_WPRG2_MASK)                         |
+                         (AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD);
     }
     else if (channel_id_ == 3)
     {
-        AVR32_PWM.wpcr =	(AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY)	|
-                            (AVR32_PWM_WPCR_WPRG3_MASK)							|
-                            (AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD);
+        AVR32_PWM.wpcr = (AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY)  |
+                         (AVR32_PWM_WPCR_WPRG3_MASK)                         |
+                         (AVR32_PWM_WPCR_WPCMD_SWDIS << AVR32_PWM_WPCR_WPCMD);
     }
 
     // To setup the clock
@@ -115,19 +115,19 @@ bool Pwm_avr32::init(void)
                     (0 << AVR32_PWM_CLKSEL_OFFSET);
 
     // output override for low and high side
-    AVR32_PWM.oov  =	(0b1111 << (AVR32_PWM_OOVH0_OFFSET)) 	|
-                        (0b1111 << (AVR32_PWM_OOVL0_OFFSET));
+    AVR32_PWM.oov  = (0b1111 << (AVR32_PWM_OOVH0_OFFSET))    |
+                     (0b1111 << (AVR32_PWM_OOVL0_OFFSET));
 
     // output selection clear: dead time generator (0)
-    AVR32_PWM.osc  =	(0b1111 << (AVR32_PWM_OOVH0_OFFSET)) 	|
-                        (0b1111 << (AVR32_PWM_OOVL0_OFFSET));
+    AVR32_PWM.osc  = (0b1111 << (AVR32_PWM_OOVH0_OFFSET))    |
+                     (0b1111 << (AVR32_PWM_OOVL0_OFFSET));
 
     // set up channels: enable dead time insertion
     // enable dead time, set channel clock to CLKA
-    AVR32_PWM.channel[channel_id_].cmr 	= AVR32_PWM_CMR0_DTE_MASK | 11;
+    AVR32_PWM.channel[channel_id_].cmr  = AVR32_PWM_CMR0_DTE_MASK | 11;
     AVR32_PWM.channel[channel_id_].cprd = 10000;
     AVR32_PWM.channel[channel_id_].cdty = 4000;
-    AVR32_PWM.channel[channel_id_].dt 	= 1000 << 16 | 1000;
+    AVR32_PWM.channel[channel_id_].dt   = 1000 << 16 | 1000;
 
     // // Enable gpio
     if (id_ == 0)
@@ -237,16 +237,16 @@ void Pwm_avr32::write_channel(void)
     // Set update frequency per channel with conservative method:
     // if two servos on the same channel ask for two different frequencies,
     // then the lowest frequecy is used
-    int32_t period 	= max(period_us_[2 * channel_id_],
+    int32_t period  = max(period_us_[2 * channel_id_],
                           period_us_[2 * channel_id_ + 1]);
 
     int32_t pulse_us_a = pulse_us_[2 * channel_id_];
     int32_t pulse_us_b = pulse_us_[2 * channel_id_ + 1];
-    int32_t deadtime 	= (period - pulse_us_a - pulse_us_b) / 2;
+    int32_t deadtime    = (period - pulse_us_a - pulse_us_b) / 2;
 
-    AVR32_PWM.channel[channel_id_ & 0b11].cprdupd 	= period;
-    AVR32_PWM.channel[channel_id_ & 0b11].cdtyupd 	= pulse_us_a + deadtime;
-    AVR32_PWM.channel[channel_id_ & 0b11].dtupd 		= deadtime << 16 | deadtime;
+    AVR32_PWM.channel[channel_id_ & 0b11].cprdupd   = period;
+    AVR32_PWM.channel[channel_id_ & 0b11].cdtyupd   = pulse_us_a + deadtime;
+    AVR32_PWM.channel[channel_id_ & 0b11].dtupd         = deadtime << 16 | deadtime;
 }
 
 // Allocate memory for static members here

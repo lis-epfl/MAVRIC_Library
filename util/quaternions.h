@@ -55,53 +55,53 @@ extern "C"
 
 
 /**
- * \brief 		Unit quaternion
+ * \brief       Unit quaternion
  *
- * \details  	The quaternions are in the form q = [s, v_1, v_2, v_3]
+ * \details     The quaternions are in the form q = [s, v_1, v_2, v_3]
  */
 typedef struct
 {
-    float s;			///<	Scalar component
-    float v[3];			///<	Vector component
+    float s;            ///<    Scalar component
+    float v[3];         ///<    Vector component
 } quat_t;
 
 
 /**
- * \brief 		Quaternion inverse
+ * \brief       Quaternion inverse
  *
- * \param 	q  	Input quaternion
+ * \param   q   Input quaternion
  *
- * \return  	Inversed quaternion
+ * \return      Inversed quaternion
  */
 #define QI(q, out) \
-	out.s = q.s;\
-	out.v[0] = -q.v[0];\
-	out.v[1] = -q.v[1];\
-	out.v[2] = -q.v[2];
+    out.s = q.s;\
+    out.v[0] = -q.v[0];\
+    out.v[1] = -q.v[1];\
+    out.v[2] = -q.v[2];
 
 
 /**
- * \brief 		Creates a quaternion from a vector of dimension 4, MACRO version
+ * \brief       Creates a quaternion from a vector of dimension 4, MACRO version
  *
- * \param 	q 	Output quaternion
- * \param 	s 	Scalar part of the quaternion
- * \param 	v0 	First component of the vector part of the quaternion
- * \param 	v1 	Second component of the vector part of the quaternion
- * \param 	v2 	Third component of the vector part of the quaternion
+ * \param   q   Output quaternion
+ * \param   s   Scalar part of the quaternion
+ * \param   v0  First component of the vector part of the quaternion
+ * \param   v1  Second component of the vector part of the quaternion
+ * \param   v2  Third component of the vector part of the quaternion
  */
 #define QUAT(q, s, v0, v1, v2) \
-	q.s = s;\
-	q.v[0] = v0;\
-	q.v[1] = v1;\
-	q.v[2] = v2;
+    q.s = s;\
+    q.v[0] = v0;\
+    q.v[1] = v1;\
+    q.v[2] = v2;
 
 
 /**
- * \brief 		Creates a quaternion from a vector of dimension 3
+ * \brief       Creates a quaternion from a vector of dimension 3
  *
- * \param 	v 	Array of floats of dimension 3 containing the vector components
+ * \param   v   Array of floats of dimension 3 containing the vector components
  *
- * \return 		Unit quaternion
+ * \return      Unit quaternion
  */
 quat_t static inline quaternions_create_from_vector(float v[3])
 {
@@ -115,29 +115,29 @@ quat_t static inline quaternions_create_from_vector(float v[3])
 
 
 /**
- * \brief 			Quaternion multiplication
+ * \brief           Quaternion multiplication
  *
- * \param 	q1 		Input quaternion
- * \param 	q2 		Input quaternion
- * \param 	out 	Output quaternion
+ * \param   q1      Input quaternion
+ * \param   q2      Input quaternion
+ * \param   out     Output quaternion
  */
 #define QMUL(q1,q2,out) \
-	tmp[0] = q1.v[1] * q2.v[2] - q1.v[2] * q2.v[1];\
-	tmp[1] = q1.v[2] * q2.v[0] - q1.v[0] * q2.v[2];\
-	tmp[2] = q1.v[0] * q2.v[1] - q1.v[1] * q2.v[0];\
-	out.v[0] = q2.s* q1.v[0] + q1.s * q2.v[0] + tmp[0];\
-	out.v[1] = q2.s* q1.v[1] + q1.s * q2.v[1] + tmp[1];\
-	out.v[2] = q2.s* q1.v[2] + q1.s * q2.v[2] + tmp[2];\
-	out.s= q1.s * q2.s - SCP(q1.v, q2.v);
+    tmp[0] = q1.v[1] * q2.v[2] - q1.v[2] * q2.v[1];\
+    tmp[1] = q1.v[2] * q2.v[0] - q1.v[0] * q2.v[2];\
+    tmp[2] = q1.v[0] * q2.v[1] - q1.v[1] * q2.v[0];\
+    out.v[0] = q2.s* q1.v[0] + q1.s * q2.v[0] + tmp[0];\
+    out.v[1] = q2.s* q1.v[1] + q1.s * q2.v[1] + tmp[1];\
+    out.v[2] = q2.s* q1.v[2] + q1.s * q2.v[2] + tmp[2];\
+    out.s= q1.s * q2.s - SCP(q1.v, q2.v);
 
 
 /**
- * \brief 			Multiplies two unit quaternions
+ * \brief           Multiplies two unit quaternions
  *
- * \param 	q1 		Input quaternion
- * \param 	q2 		Input quaternion
+ * \param   q1      Input quaternion
+ * \param   q2      Input quaternion
  *
- * \return 			Output quaternion
+ * \return          Output quaternion
  */
 quat_t static inline quaternions_multiply(const quat_t q1, const quat_t q2)
 {
@@ -158,10 +158,10 @@ quat_t static inline quaternions_multiply(const quat_t q1, const quat_t q2)
 
 
 /**
- * \brief 		Inverse quaternion
+ * \brief       Inverse quaternion
  *
- * \param 	q 	Input quaternion
- * \return 		Output quaternion
+ * \param   q   Input quaternion
+ * \return      Output quaternion
  */
 quat_t static inline quaternions_inverse(const quat_t q)
 {
@@ -178,12 +178,12 @@ quat_t static inline quaternions_inverse(const quat_t q)
 
 
 /**
- * \brief 			Rotates a quaternion
+ * \brief           Rotates a quaternion
  *
- * \param 	qi 		Input quaternion
- * \param 	qe 		Rotation quaternion
+ * \param   qi      Input quaternion
+ * \param   qe      Rotation quaternion
  *
- * \return 			Output quaternion (rotated)
+ * \return          Output quaternion (rotated)
  */
 quat_t static inline quaternions_rotate(const quat_t qi, const quat_t qrot)
 {
@@ -198,14 +198,14 @@ quat_t static inline quaternions_rotate(const quat_t qi, const quat_t qrot)
 
 
 /**
- * \brief 			Rotates a vector from global frame to local frame according to an attitude quaternion
+ * \brief           Rotates a vector from global frame to local frame according to an attitude quaternion
  *
- * \details 		The vector is given in the form of a quaternion with the scalar term equal to 0
+ * \details         The vector is given in the form of a quaternion with the scalar term equal to 0
  *
- * \param 	qe 		Attitude quaternion
- * \param 	qvect 	Quaternion containing the vector to be rotated
+ * \param   qe      Attitude quaternion
+ * \param   qvect   Quaternion containing the vector to be rotated
  *
- * \return 			Output quaternion
+ * \return          Output quaternion
  */
 quat_t static inline quaternions_global_to_local(const quat_t qe, const quat_t qvect)
 {
@@ -220,14 +220,14 @@ quat_t static inline quaternions_global_to_local(const quat_t qe, const quat_t q
 
 
 /**
- * \brief 			Rotates a vector from local frame to global frame according to an attitude quaternion
+ * \brief           Rotates a vector from local frame to global frame according to an attitude quaternion
  *
- * \details 		The vector is given in the form of a quaternion with the scalar term equal to 0
+ * \details         The vector is given in the form of a quaternion with the scalar term equal to 0
  *
- * \param 	qe 		Attitude quaternion
- * \param 	qvect 	Quaternion containing the vector to be rotated
+ * \param   qe      Attitude quaternion
+ * \param   qvect   Quaternion containing the vector to be rotated
  *
- * \return 			Output quaternion
+ * \return          Output quaternion
  */
 quat_t static inline quaternions_local_to_global(const quat_t qe, const quat_t qvect)
 {
@@ -242,14 +242,14 @@ quat_t static inline quaternions_local_to_global(const quat_t qe, const quat_t q
 
 
 /**
- * \brief 			Rotates a vector according to a unit quaternion
+ * \brief           Rotates a vector according to a unit quaternion
  *
- * \details 		This is an optimized implementation that does not require quaternion multiplications
- * 					It should run more than 2 times faster than the standard implementation
+ * \details         This is an optimized implementation that does not require quaternion multiplications
+ *                  It should run more than 2 times faster than the standard implementation
  *
- * \param 	q 		unit quaternion
- * \param 	u 		input vector
- * \param 	v 		rotated vector (output)
+ * \param   q       unit quaternion
+ * \param   u       input vector
+ * \param   v       rotated vector (output)
  *
  */
 void static inline quaternions_rotate_vector(const quat_t q, const float u[3], float v[3])
@@ -270,10 +270,10 @@ void static inline quaternions_rotate_vector(const quat_t q, const float u[3], f
 
 
 /**
- * \brief 		Normalises a quaternion
+ * \brief       Normalises a quaternion
  *
- * \param 	q 	Input quaternion
- * \return 		Unit quaternion
+ * \param   q   Input quaternion
+ * \return      Unit quaternion
  */
 static inline quat_t quaternions_normalise(const quat_t q)
 {

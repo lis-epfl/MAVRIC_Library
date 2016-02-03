@@ -46,8 +46,8 @@
 #include "util/maths.h"
 // #include "libs/asf/avr32/services/delay/delay.h"
 
-const uint32_t VOLTS_TO_PASCAL = 819;		///< conversion factor from volts to pascal units
-const float PITOT_GAIN_DEFAULT = 1.9936f; 	///< this gain come from APM, but it does not make sense (should be)
+const uint32_t VOLTS_TO_PASCAL = 819;       ///< conversion factor from volts to pascal units
+const float PITOT_GAIN_DEFAULT = 1.9936f;   ///< this gain come from APM, but it does not make sense (should be)
 
 /**
  * \brief Returns the pressure measure by the airspeed sensor
@@ -61,7 +61,7 @@ float airspeed_analog_get_pressure(airspeed_analog_t* airspeed_analog);
 void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel)
 {
     airspeed_analog->analog_monitor = analog_monitor;
-    airspeed_analog->analog_channel = analog_channel;		///< =4 or 5 on board maveric32 v4.1f
+    airspeed_analog->analog_channel = analog_channel;       ///< =4 or 5 on board maveric32 v4.1f
     airspeed_analog->gain = PITOT_GAIN_DEFAULT;
 
     airspeed_analog->pressure_offset = 1.0f;

@@ -58,8 +58,8 @@ extern "C" {
 /**
  * @brief   Arrange a 16 bits number in little endian
  *
- * @param 	data 	Input in native format
- * @return 			Output in little endian
+ * @param   data    Input in native format
+ * @return          Output in little endian
  */
 static inline uint16_t endian_to_little16(uint16_t data);
 
@@ -67,8 +67,8 @@ static inline uint16_t endian_to_little16(uint16_t data);
 /**
  * @brief   Arrange a 16 bits number in big endian
  *
- * @param 	data 	Input in native format
- * @return 			Output in big endian
+ * @param   data    Input in native format
+ * @return          Output in big endian
  */
 static inline uint16_t endian_to_big16(uint16_t data);
 
@@ -76,8 +76,8 @@ static inline uint16_t endian_to_big16(uint16_t data);
 /**
  * @brief   Arrange a 32 bits number in little endian
  *
- * @param 	data 	Input in native format
- * @return 			Output in little endian
+ * @param   data    Input in native format
+ * @return          Output in little endian
  */
 static inline uint32_t endian_to_little32(uint32_t data);
 
@@ -85,8 +85,8 @@ static inline uint32_t endian_to_little32(uint32_t data);
 /**
  * @brief   Arrange a 32 bits number in big endian
  *
- * @param 	data 	Input in native format
- * @return 			Output in big endian
+ * @param   data    Input in native format
+ * @return          Output in big endian
  */
 static inline uint32_t endian_to_big32(uint32_t data);
 
@@ -94,8 +94,8 @@ static inline uint32_t endian_to_big32(uint32_t data);
 /**
  * @brief   Converts a 16 bits number from native to network endian
  *
- * @param 	data 	Input in native format
- * @return 			Output in network endian
+ * @param   data    Input in native format
+ * @return          Output in network endian
  */
 static inline uint16_t endian_htons(uint16_t data);
 
@@ -103,8 +103,8 @@ static inline uint16_t endian_htons(uint16_t data);
 /**
  * @brief   Converts a 16 bits number from network to native endian
  *
- * @param 	data 	Input in network format
- * @return 			Output in native endian
+ * @param   data    Input in network format
+ * @return          Output in native endian
  */
 static inline uint16_t endian_ntohs(uint16_t data);
 
@@ -112,8 +112,8 @@ static inline uint16_t endian_ntohs(uint16_t data);
 /**
  * @brief   Converts a 32 bits number from native to network endian
  *
- * @param 	data 	Input in native format
- * @return 			Output in network endian
+ * @param   data    Input in native format
+ * @return          Output in network endian
  */
 static inline uint32_t endian_htonl(uint32_t data);
 
@@ -121,8 +121,8 @@ static inline uint32_t endian_htonl(uint32_t data);
 /**
  * @brief   Converts a 32 bits number from network to native endian
  *
- * @param 	data 	Input in network format
- * @return 			Output in native endian
+ * @param   data    Input in network format
+ * @return          Output in native endian
  */
 static inline uint32_t endian_ntohl(uint32_t data);
 
@@ -130,21 +130,21 @@ static inline uint32_t endian_ntohl(uint32_t data);
 /**
  * @brief   Reverses endianness in a 16 bits number
  *
- * @param 	data 	Input
- * @return 			Output
+ * @param   data    Input
+ * @return          Output
  */
 static inline uint16_t endian_rev16(uint16_t data)
 {
-    return	((data & 0x00FF) << 8) |
-            ((data & 0xFF00) >> 8);
+    return ((data & 0x00FF) << 8) |
+           ((data & 0xFF00) >> 8);
 };
 
 
 /**
  * @brief   Reverses endianness in a 16 bits signed number
  *
- * @param 	data 	Input
- * @return 			Output
+ * @param   data    Input
+ * @return          Output
  */
 static inline int16_t endian_rev16s(int16_t data)
 {
@@ -155,15 +155,15 @@ static inline int16_t endian_rev16s(int16_t data)
 /**
  * @brief   Reverses endianness in a 32 bits number
  *
- * @param 	data 	Input
- * @return 			Output
+ * @param   data    Input
+ * @return          Output
  */
 static inline uint32_t endian_rev32(uint32_t data)
 {
-    return	((data & 0x000000FF) << 24) |
-            ((data & 0x0000FF00) << 8)  |
-            ((data & 0x00FF0000) >> 8)  |
-            ((data & 0xFF000000) >> 24);
+    return ((data & 0x000000FF) << 24) |
+           ((data & 0x0000FF00) << 8)  |
+           ((data & 0x00FF0000) >> 8)  |
+           ((data & 0xFF000000) >> 24);
 };
 
 

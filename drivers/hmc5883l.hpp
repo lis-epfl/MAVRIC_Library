@@ -36,9 +36,9 @@
  * \author Felix Schill
  * \author Julien Lecoeur
  *
- * \brief 	Driver for the magnetometer HMC58831
+ * \brief   Driver for the magnetometer HMC58831
  *
- * \detail 	This driver does not support temperature
+ * \detail  This driver does not support temperature
  *
  ******************************************************************************/
 
@@ -56,15 +56,15 @@
 /**
  * \brief Driver for HMC5883L magnetometer
  *
- * \detail 	This driver does not support temperature
+ * \detail  This driver does not support temperature
  */
 class Hmc5883l: public Magnetometer
 {
 public:
     /**
-     * \brief  	Constructor
+     * \brief   Constructor
      *
-     * \param 	i2c 	Reference to I2C device
+     * \param   i2c     Reference to I2C device
      */
     Hmc5883l(I2c& i2c);
 
@@ -72,89 +72,89 @@ public:
     /**
      * \brief   Initialise the sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     bool init(void);
 
 
     /**
-     * \brief 	Main update function
-     * \detail 	Reads new values from sensor
+     * \brief   Main update function
+     * \detail  Reads new values from sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     bool update(void);
 
 
     /**
-     * \brief 	Get last update time in microseconds
+     * \brief   Get last update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     const float& last_update_us(void) const;
 
 
     /**
-     * \brief 	Get X, Y and Z components of magnetic field
+     * \brief   Get X, Y and Z components of magnetic field
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const std::array<float, 3>& mag(void) const;
 
 
     /**
-     * \brief 	Get X component of magnetic field
+     * \brief   Get X component of magnetic field
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& mag_X(void) const;
 
 
     /**
-     * \brief 	Get Y component of magnetic field
+     * \brief   Get Y component of magnetic field
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& mag_Y(void) const;
 
 
     /**
-     * \brief 	Get Z component of magnetic field
+     * \brief   Get Z component of magnetic field
      *
-     * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
-     * 			and given in the sensor frame (not in the UAV frame).
-     * 			Use an Imu object to handle bias removal, scaling and axis rotations
+     * \detail  This is raw data, so X, Y and Z components are biased, not scaled,
+     *          and given in the sensor frame (not in the UAV frame).
+     *          Use an Imu object to handle bias removal, scaling and axis rotations
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& mag_Z(void) const;
 
 
     /**
-     * \brief 	Get sensor temperature
+     * \brief   Get sensor temperature
      *
-     * \return 	Value
+     * \return  Value
      */
     const float& temperature(void) const;
 
 
 private:
-    I2c&				 i2c_;				///< Reference to I2C peripheral
-    std::array<float, 3> data_;				///< sensor data
-    float				 last_update_us_; 	///< Last update time in microseconds
-    float 				 temperature_;		///< NOT SUPPORTED : temperature
+    I2c&                 i2c_;              ///< Reference to I2C peripheral
+    std::array<float, 3> data_;             ///< sensor data
+    float                last_update_us_;   ///< Last update time in microseconds
+    float                temperature_;      ///< NOT SUPPORTED : temperature
 };
 
 

@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	i2c.hpp
+ * \file    i2c.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Abstract class for i2c peripherals
+ * \brief   Abstract class for i2c peripherals
  *
  ******************************************************************************/
 
@@ -48,7 +48,7 @@ class I2c
 public:
 
     /**
-     * @brief 	Hardware initialization
+     * @brief   Hardware initialization
      *
      * @return  true Success
      * @return  false Error
@@ -57,38 +57,38 @@ public:
 
 
     /**
-     * @brief 	Test if a chip answers for a given I2C address
+     * @brief   Test if a chip answers for a given I2C address
      *
-     * @param 	address 	Slave adress
+     * @param   address     Slave adress
      *
-     * @return 	true		Slave found
-     * @return 	false		Slave not found
+     * @return  true        Slave found
+     * @return  false       Slave not found
      */
     virtual bool probe(uint32_t address) = 0;
 
 
     /**
-     * @brief 	Write multiple bytes to a I2C slave device
+     * @brief   Write multiple bytes to a I2C slave device
      *
-     * @param 	buffer 		Data buffer
-     * @param 	nbytes 		Number of bytes to write
-     * @param 	address 	Slave adress
+     * @param   buffer      Data buffer
+     * @param   nbytes      Number of bytes to write
+     * @param   address     Slave adress
      *
-     * @return 	true		Data successfully written
-     * @return 	false		Data not written
+     * @return  true        Data successfully written
+     * @return  false       Data not written
      */
     virtual bool write(const uint8_t* buffer, uint32_t nbytes, uint32_t address) = 0;
 
 
     /**
-     * @brief 	Read multiple bytes to a I2C slave device
+     * @brief   Read multiple bytes to a I2C slave device
      *
-     * @param 	buffer 		Data buffer
-     * @param 	nbytes 		Number of bytes to read
-     * @param 	address 	Slave adress
+     * @param   buffer      Data buffer
+     * @param   nbytes      Number of bytes to read
+     * @param   address     Slave adress
      *
-     * @return 	true		Data successfully read
-     * @return 	false		Data not read
+     * @return  true        Data successfully read
+     * @return  false       Data not read
      */
     virtual bool read(uint8_t* buffer, uint32_t nbytes, uint32_t address) = 0;
 };

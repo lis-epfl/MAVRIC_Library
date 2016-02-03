@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief 	Telemetry for control_command
+ * \brief   Telemetry for control_command
  *
  ******************************************************************************/
 
@@ -46,7 +46,7 @@
 
 void control_command_telemetry_send(const command_t* command, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-    float quat[4] = { 	command->attitude.quat.s,
+    float quat[4] = {   command->attitude.quat.s,
                         command->attitude.quat.v[0],
                         command->attitude.quat.v[1],
                         command->attitude.quat.v[2],

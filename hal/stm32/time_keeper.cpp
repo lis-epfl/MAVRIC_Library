@@ -37,7 +37,7 @@
  *
  * \brief This file is used to interact with the clock of the microcontroller
  *
- * \detail 	Implementation for STM32
+ * \detail  Implementation for STM32
  *
  *
  ******************************************************************************/
@@ -54,13 +54,13 @@
 //------------------------------------------------------------------------------
 
 /**
- * \brief 	Current system time in microseconds since system boot
+ * \brief   Current system time in microseconds since system boot
  */
 static volatile uint64_t system_us;
 
 
 /**
- * \brief 	Called when systick fires
+ * \brief   Called when systick fires
  *
  * \details Monotonically increasing number of microseconds from reset
  */

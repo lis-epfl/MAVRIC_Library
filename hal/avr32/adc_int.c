@@ -51,10 +51,10 @@
 #include "hal/avr32/dac_dma.h"
 #include "libs/asf/common/services/clock/sysclk.h"
 
-#define ADC_INT_SEOS0 1			///< Define the Analog to Digital interrupt (?)
-#define ADC_INT_SEOS1 16		///< Define the Analog to Digital interrupt (?)
-#define ADC_INT_SEOC0 2			///< Define the Analog to Digital interrupt (?)
-#define ADC_INT_SEOC1 32		///< Define the Analog to Digital interrupt (?)
+#define ADC_INT_SEOS0 1         ///< Define the Analog to Digital interrupt (?)
+#define ADC_INT_SEOS1 16        ///< Define the Analog to Digital interrupt (?)
+#define ADC_INT_SEOC0 2         ///< Define the Analog to Digital interrupt (?)
+#define ADC_INT_SEOC1 32        ///< Define the Analog to Digital interrupt (?)
 
 ///< GPIO pin/analog_monitor-function map.
 static const gpio_map_t ADCIFA_GPIO_MAP =
@@ -82,48 +82,48 @@ static const gpio_map_t ADCIFA_GPIO_MAP =
 
 };
 
-volatile avr32_adcifa_t* adcifa = &AVR32_ADCIFA;							///< ADCIFA IP registers address
+volatile avr32_adcifa_t* adcifa = &AVR32_ADCIFA;                            ///< ADCIFA IP registers address
 
-static volatile int32_t sequencer_item_count, channel_count;					///< Declare counters
+static volatile int32_t sequencer_item_count, channel_count;                    ///< Declare counters
 
-static volatile int32_t sample_counter, oversampling_counter;				///< Declare counters
+static volatile int32_t sample_counter, oversampling_counter;               ///< Declare counters
 
-static volatile int32_t number_of_samples, oversampling, oversampling_divider;	///< Declare ADC sampling stuff
+static volatile int32_t number_of_samples, oversampling, oversampling_divider;  ///< Declare ADC sampling stuff
 
-bool continuous_mode;														///< Declare whether to work in continuous mode or not
+bool continuous_mode;                                                       ///< Declare whether to work in continuous mode or not
 
-static volatile uint32_t last_adc_int_time, adc_int_period;					///< Declare ADC interrupt time and period
+static volatile uint32_t last_adc_int_time, adc_int_period;                 ///< Declare ADC interrupt time and period
 
 ///< 32bits version
 // int32_t adci_buffer[ADCI_INPUT_CHANNELS][ADCI_BUFFER_SIZE];
 
 ///< 16bits version
-static volatile int32_t internal_buffer[MAX_CHANNELS];		///< Declare an internal buffer
-int16_t* adci_buffer[MAX_CHANNELS];							///< Declare a pointer on the ADC interrupt buffer
-uint8_t even_odd;											///< Declare whether even or odd
+static volatile int32_t internal_buffer[MAX_CHANNELS];      ///< Declare an internal buffer
+int16_t* adci_buffer[MAX_CHANNELS];                         ///< Declare a pointer on the ADC interrupt buffer
+uint8_t even_odd;                                           ///< Declare whether even or odd
 
 
 ///< ADC Configuration
 volatile adcifa_opt_t adc_config_options =
 {
-    .frequency                = ADC_FREQUENCY,		///< ADC frequency (Hz)
-    .reference_source         = ADCIFA_REF1V,		///< Reference Source
-    .sample_and_hold_disable  = false,				///< Disable Sample and Hold Time
-    .single_sequencer_mode    = false,				///< Single Sequencer Mode
-    .free_running_mode_enable = false,				///< Free Running Mode
-    .sleep_mode_enable        = false				///< Sleep Mode
+    .frequency                = ADC_FREQUENCY,      ///< ADC frequency (Hz)
+    .reference_source         = ADCIFA_REF1V,       ///< Reference Source
+    .sample_and_hold_disable  = false,              ///< Disable Sample and Hold Time
+    .single_sequencer_mode    = false,              ///< Single Sequencer Mode
+    .free_running_mode_enable = false,              ///< Free Running Mode
+    .sleep_mode_enable        = false               ///< Sleep Mode
 };
 
 ///< Sequencer Configuration
 adcifa_sequencer_opt_t adcifa_sequence_opt =
 {
-    .convnb               = 0,							///< Number of sequence
-    .resolution           = ADCIFA_SRES_12B,			///< Resolution selection
-    .trigger_selection    = ADCIFA_TRGSEL_ITIMER,		///< Trigger selection
-    .start_of_conversion  = ADCIFA_SOCB_ALLSEQ,			///< Conversion Management
-    .sh_mode              = ADCIFA_SH_MODE_STANDARD,	///< Oversampling Management
-    .half_word_adjustment = ADCIFA_HWLA_NOADJ,			///< Half word Adjustment
-    .software_acknowledge = ADCIFA_SA_NO_EOS_SOFTACK	///< Software Acknowledge
+    .convnb               = 0,                          ///< Number of sequence
+    .resolution           = ADCIFA_SRES_12B,            ///< Resolution selection
+    .trigger_selection    = ADCIFA_TRGSEL_ITIMER,       ///< Trigger selection
+    .start_of_conversion  = ADCIFA_SOCB_ALLSEQ,         ///< Conversion Management
+    .sh_mode              = ADCIFA_SH_MODE_STANDARD,    ///< Oversampling Management
+    .half_word_adjustment = ADCIFA_HWLA_NOADJ,          ///< Half word Adjustment
+    .software_acknowledge = ADCIFA_SA_NO_EOS_SOFTACK    ///< Software Acknowledge
 };
 
 ///< Conversions in the Sequencer Configuration
@@ -185,7 +185,7 @@ static void process_data(void)
                 return;
             }
             //if (function_generator!= NULL) {
-            //	dac_dma_set_value((*function_generator)(sample_counter));
+            //  dac_dma_set_value((*function_generator)(sample_counter));
             //}
             oversampling_counter++;
 
@@ -309,7 +309,7 @@ bool adc_int_sampling_complete(void)
 
 
 //void ads1274_set_DAC_generator_function(generatorfunction new_function_generator ) {
-//	function_generator=new_function_generator;
+//  function_generator=new_function_generator;
 
 //}
 

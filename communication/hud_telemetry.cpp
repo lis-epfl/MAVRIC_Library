@@ -53,8 +53,8 @@ bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, cons
 {
     bool init_success = true;
 
-    hud_telemetry_structure->ahrs		= ahrs;
-    hud_telemetry_structure->controls	= controls;
+    hud_telemetry_structure->ahrs       = ahrs;
+    hud_telemetry_structure->controls   = controls;
     hud_telemetry_structure->pos_est    = pos_est;
 
     return init_success;
@@ -62,8 +62,8 @@ bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, cons
 
 void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-    float groundspeed	= sqrt(hud_telemetry_structure->pos_est->vel[0] * hud_telemetry_structure->pos_est->vel[0] + hud_telemetry_structure->pos_est->vel[1] * hud_telemetry_structure->pos_est->vel[1]);
-    float airspeed		= groundspeed;
+    float groundspeed   = sqrt(hud_telemetry_structure->pos_est->vel[0] * hud_telemetry_structure->pos_est->vel[0] + hud_telemetry_structure->pos_est->vel[1] * hud_telemetry_structure->pos_est->vel[1]);
+    float airspeed      = groundspeed;
 
     aero_attitude_t aero_attitude;
     aero_attitude = coord_conventions_quat_to_aero(hud_telemetry_structure->ahrs->qe);

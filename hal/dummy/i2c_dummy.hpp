@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	i2c_dummy.hpp
+ * \file    i2c_dummy.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Dummy implementation of I2C driver
+ * \brief   Dummy implementation of I2C driver
  *
  ******************************************************************************/
 
@@ -45,18 +45,18 @@
 
 
 /**
- * 	Configuration structure
+ *  Configuration structure
  */
 typedef struct
 {
-    bool flag;			///< Dummy configuration flag
+    bool flag;          ///< Dummy configuration flag
 } i2c_dummy_conf_t;
 
 
 /**
- * @brief 	Default configuration
+ * @brief   Default configuration
  *
- * @return 	Config structure
+ * @return  Config structure
  */
 static inline i2c_dummy_conf_t i2c_dummy_default_config();
 
@@ -65,15 +65,15 @@ class I2c_dummy: public I2c
 {
 public:
     /**
-     * @brief 	Initialises the peripheral
+     * @brief   Initialises the peripheral
      *
-     * @param 	config 		Device configuration
+     * @param   config      Device configuration
      */
     I2c_dummy(i2c_dummy_conf_t config = i2c_dummy_default_config());
 
 
     /**
-     * @brief 	Hardware initialization
+     * @brief   Hardware initialization
      *
      * @return  true Success
      * @return  false Error
@@ -82,38 +82,38 @@ public:
 
 
     /**
-     * @brief 	Test if a chip answers for a given I2C address
+     * @brief   Test if a chip answers for a given I2C address
      *
-     * @param 	address 	Slave adress
+     * @param   address     Slave adress
      *
-     * @return 	True		Slave found
-     * @return 	False		Slave not found
+     * @return  True        Slave found
+     * @return  False       Slave not found
      */
     bool probe(uint32_t address);
 
 
     /**
-     * @brief 	Write multiple bytes to a I2C slave device
+     * @brief   Write multiple bytes to a I2C slave device
      *
-     * @param 	buffer 		Data buffer
-     * @param 	nbytes 		Number of bytes to write
-     * @param 	address 	Slave adress
+     * @param   buffer      Data buffer
+     * @param   nbytes      Number of bytes to write
+     * @param   address     Slave adress
      *
-     * @return 	True		Data successfully written
-     * @return 	False		Data not written
+     * @return  True        Data successfully written
+     * @return  False       Data not written
      */
     bool write(const uint8_t* buffer, uint32_t nbytes, uint32_t address);
 
 
     /**
-     * @brief 	Read multiple bytes to a I2C slave device
+     * @brief   Read multiple bytes to a I2C slave device
      *
-     * @param 	buffer 		Data buffer
-     * @param 	nbytes 		Number of bytes to read
-     * @param 	address 	Slave adress
+     * @param   buffer      Data buffer
+     * @param   nbytes      Number of bytes to read
+     * @param   address     Slave adress
      *
-     * @return 	True		Data successfully read
-     * @return 	False		Data not read
+     * @return  True        Data successfully read
+     * @return  False       Data not read
      */
     bool read(uint8_t* buffer, uint32_t nbytes, uint32_t address);
 
@@ -125,9 +125,9 @@ private:
 
 
 /**
- * @brief 	Default configuration
+ * @brief   Default configuration
  *
- * @return 	Config structure
+ * @return  Config structure
  */
 static inline i2c_dummy_conf_t i2c_dummy_default_config()
 {

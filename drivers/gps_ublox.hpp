@@ -37,8 +37,8 @@
  *
  * \brief Driver for UBLOX GPS
  *
- * \detail 	Only one instance can be used
- * 			TODO: remove global variables in gps_ublox.cpp
+ * \detail  Only one instance can be used
+ *          TODO: remove global variables in gps_ublox.cpp
  *
  ******************************************************************************/
 
@@ -58,151 +58,151 @@ class Gps_ublox: public Gps
 {
 public:
     /**
-     * \brief 	Constructor
+     * \brief   Constructor
      *
-     * \param 	serial 	Reference to serial peripheral
+     * \param   serial  Reference to serial peripheral
      */
     Gps_ublox(Serial& serial);
 
 
     /**
-     * \brief 	Main update function
-     * \detail 	Reads new values from sensor
+     * \brief   Main update function
+     * \detail  Reads new values from sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     bool update(void);
 
 
     /**
-     * \brief 	Get last update time in microseconds
+     * \brief   Get last update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     const float& last_update_us(void) const;
 
 
     /**
-     * \brief 	Get last position update time in microseconds
+     * \brief   Get last position update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     const float& last_position_update_us(void) const;
 
 
     /**
-     * \brief 	Get last velocity update time in microseconds
+     * \brief   Get last velocity update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     const float& last_velocity_update_us(void) const;
 
 
     /**
-     * \brief 	Get position in global frame
+     * \brief   Get position in global frame
      *
-     * \return 	position
+     * \return  position
      */
     const global_position_t& position_gf(void) const;
 
 
     /**
-     * \brief 	Get horizontal position accuracy in m
+     * \brief   Get horizontal position accuracy in m
      *
-     * \return 	accuracy
+     * \return  accuracy
      */
     const float& horizontal_position_accuracy(void) const;
 
 
     /**
-     * \brief 	Get vertical position accuracy in m
+     * \brief   Get vertical position accuracy in m
      *
-     * \return 	accuracy
+     * \return  accuracy
      */
     const float& vertical_position_accuracy(void) const;
 
 
     /**
-     * \brief 	Get velocity in global frame in m/s
+     * \brief   Get velocity in global frame in m/s
      *
-     * \return 	3D velocity
+     * \return  3D velocity
      */
     const std::array<float, 3>& velocity_lf(void) const;
 
 
     /**
-     * \brief 	Get velocity accuracy in m/s
+     * \brief   Get velocity accuracy in m/s
      *
-     * \return 	velocity accuracy
+     * \return  velocity accuracy
      */
     const float& velocity_accuracy(void) const;
 
 
     /**
-     * \brief 	Get heading in degrees
+     * \brief   Get heading in degrees
      *
-     * \return 	heading
+     * \return  heading
      */
     const float& heading(void) const;
 
 
     /**
-     * \brief 	Get heading accuracy in degrees
+     * \brief   Get heading accuracy in degrees
      *
-     * \return 	accuracy
+     * \return  accuracy
      */
     const float& heading_accuracy(void) const;
 
 
     /**
-     * \brief 	Get the number of satellites
+     * \brief   Get the number of satellites
      *
-     * \return 	Value
+     * \return  Value
      */
     const uint8_t& num_sats(void) const;
 
 
     /**
-     * \brief 	Indicates whether fix are received
+     * \brief   Indicates whether fix are received
      *
-     * \return 	Value
+     * \return  Value
      */
     const bool& fix(void) const;
 
 
     /**
-     * \brief 	Indicates whether the measurements can be trusted
+     * \brief   Indicates whether the measurements can be trusted
      *
-     * \return 	Value
+     * \return  Value
      */
     const bool& healthy(void) const;
 
 
     /**
-     * \brief 	Start configuration
+     * \brief   Start configuration
      *
-     * \detail 	The update function has to be called in order to proceed with
-     * 			the configuration
+     * \detail  The update function has to be called in order to proceed with
+     *          the configuration
      */
     void configure(void);
 
 
 private:
-    Serial& 			serial_; 							///< Reference to Serial peripheral
+    Serial&             serial_;                            ///< Reference to Serial peripheral
 
-    float 				last_update_us_;					///< Last update time in microseconds
-    float 				last_position_update_us_;			///< Last time position was updated in microseconds
-    float 				last_velocity_update_us_;			///< Last time velocity was updated in microseconds
-    global_position_t 	position_gf_;						///< Global position
-    float 				horizontal_position_accuracy_;		///< Accuracy of position on horizontal plane in m
-    float 				vertical_position_accuracy_;		///< Accuracy of position on vertical axis in m
-    std::array<float, 3> velocity_lf_;						///< 3D Velocity in lobal frame in m/s
-    float 				velocity_accuracy_;					///< Accuracy of velocity in m/s
-    float 				heading_;							///< Heading in degrees
-    float 				heading_accuracy_;					///< Accuracy of heading in degrees
-    uint8_t 			num_sats_;							///< Number of visible satelites
-    bool 				fix_;								///< Indicates whether a fix was acquired
-    bool 				healthy_;							///< Indicates whether the measurements can be trusted
+    float               last_update_us_;                    ///< Last update time in microseconds
+    float               last_position_update_us_;           ///< Last time position was updated in microseconds
+    float               last_velocity_update_us_;           ///< Last time velocity was updated in microseconds
+    global_position_t   position_gf_;                       ///< Global position
+    float               horizontal_position_accuracy_;      ///< Accuracy of position on horizontal plane in m
+    float               vertical_position_accuracy_;        ///< Accuracy of position on vertical axis in m
+    std::array<float, 3> velocity_lf_;                      ///< 3D Velocity in lobal frame in m/s
+    float               velocity_accuracy_;                 ///< Accuracy of velocity in m/s
+    float               heading_;                           ///< Heading in degrees
+    float               heading_accuracy_;                  ///< Accuracy of heading in degrees
+    uint8_t             num_sats_;                          ///< Number of visible satelites
+    bool                fix_;                               ///< Indicates whether a fix was acquired
+    bool                healthy_;                           ///< Indicates whether the measurements can be trusted
 };
 
 

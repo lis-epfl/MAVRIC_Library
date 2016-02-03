@@ -30,19 +30,19 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial_usb_avr32.cpp
+ * \file    serial_usb_avr32.cpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Implementation of serial over USB for avr32
+ * \brief   Implementation of serial over USB for avr32
  *
  * \details Incomplete implementation (TODO)
- * 			- Implemented:
- * 				* buffered, blocking writing
- * 			- NOT implemented:
- * 				* Read functions
- * 				* Receive interrupt callback
- * 				* buffered input
+ *          - Implemented:
+ *              * buffered, blocking writing
+ *          - NOT implemented:
+ *              * Read functions
+ *              * Receive interrupt callback
+ *              * buffered input
  *
  ******************************************************************************/
 
@@ -63,7 +63,7 @@ extern "C"
 Serial_usb_avr32::Serial_usb_avr32(serial_usb_avr32_conf_t config)
 {
     // Store config
-    config_	= config;
+    config_ = config;
 }
 
 
@@ -148,7 +148,7 @@ bool Serial_usb_avr32::write(const uint8_t* bytes, const uint32_t size)
     // If buffer is almost full, flush
     // if( writeable() < 80 )
     // {
-    // 	flush();
+    //  flush();
     // }
 
     return ret;

@@ -124,7 +124,7 @@ bool daler_dc_motor_ctrl_update(daler_dc_motor_ctrl_t* dc_motor) //, const float
     /*
     for (i=0;i<16;i++)
     {
-    	dc_motor_ctrl->dc_motor_ctrl_out_stream.put(dc_motor_ctrl->dc_motor_ctrl_out_stream.data, scaled_channels_uart[i]);
+        dc_motor_ctrl->dc_motor_ctrl_out_stream.put(dc_motor_ctrl->dc_motor_ctrl_out_stream.data, scaled_channels_uart[i]);
     }*/
 
     return true;

@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	gpio_stm32.hpp
+ * \file    gpio_stm32.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Implementation of GPIO peripherals for STM32
+ * \brief   Implementation of GPIO peripherals for STM32
  *
  ******************************************************************************/
 
@@ -80,41 +80,41 @@ typedef enum
 
 typedef enum
 {
-    GPIO_STM32_AF_0 	= GPIO_AF0 ,
-    GPIO_STM32_AF_1 	= GPIO_AF1 ,
-    GPIO_STM32_AF_2 	= GPIO_AF2 ,
-    GPIO_STM32_AF_3 	= GPIO_AF3 ,
-    GPIO_STM32_AF_4 	= GPIO_AF4 ,
-    GPIO_STM32_AF_5 	= GPIO_AF5 ,
-    GPIO_STM32_AF_6 	= GPIO_AF6 ,
-    GPIO_STM32_AF_7 	= GPIO_AF7 ,
-    GPIO_STM32_AF_8 	= GPIO_AF8 ,
-    GPIO_STM32_AF_9 	= GPIO_AF9 ,
-    GPIO_STM32_AF_10	= GPIO_AF10,
-    GPIO_STM32_AF_11	= GPIO_AF11,
-    GPIO_STM32_AF_12	= GPIO_AF12,
-    GPIO_STM32_AF_13	= GPIO_AF13,
-    GPIO_STM32_AF_14	= GPIO_AF14,
-    GPIO_STM32_AF_15	= GPIO_AF15,
+    GPIO_STM32_AF_0     = GPIO_AF0 ,
+    GPIO_STM32_AF_1     = GPIO_AF1 ,
+    GPIO_STM32_AF_2     = GPIO_AF2 ,
+    GPIO_STM32_AF_3     = GPIO_AF3 ,
+    GPIO_STM32_AF_4     = GPIO_AF4 ,
+    GPIO_STM32_AF_5     = GPIO_AF5 ,
+    GPIO_STM32_AF_6     = GPIO_AF6 ,
+    GPIO_STM32_AF_7     = GPIO_AF7 ,
+    GPIO_STM32_AF_8     = GPIO_AF8 ,
+    GPIO_STM32_AF_9     = GPIO_AF9 ,
+    GPIO_STM32_AF_10    = GPIO_AF10,
+    GPIO_STM32_AF_11    = GPIO_AF11,
+    GPIO_STM32_AF_12    = GPIO_AF12,
+    GPIO_STM32_AF_13    = GPIO_AF13,
+    GPIO_STM32_AF_14    = GPIO_AF14,
+    GPIO_STM32_AF_15    = GPIO_AF15,
 } gpio_stm32_alt_function_t;
 
 
 /**
- * 	Configuration structure
+ *  Configuration structure
  */
 typedef struct
 {
-    gpio_stm32_port_t 	port;			///< port number
-    gpio_stm32_pin_t 	pin;			///< pin number
-    gpio_dir_t 			dir;			///< Direction
-    gpio_pull_updown_t 	pull;			///< Pull up/down
+    gpio_stm32_port_t   port;           ///< port number
+    gpio_stm32_pin_t    pin;            ///< pin number
+    gpio_dir_t          dir;            ///< Direction
+    gpio_pull_updown_t  pull;           ///< Pull up/down
 } gpio_stm32_conf_t;
 
 
 /**
- * \brief 	Default configuration
+ * \brief   Default configuration
  *
- * \return 	Config structure
+ * \return  Config structure
  */
 static inline gpio_stm32_conf_t gpio_stm32_default_config();
 
@@ -123,27 +123,27 @@ class Gpio_stm32: public Gpio
 {
 public:
     /**
-     * \brief 	Initialises the peripheral
+     * \brief   Initialises the peripheral
      *
-     * \param 	config 		Device configuration
+     * \param   config      Device configuration
      */
     Gpio_stm32(gpio_stm32_conf_t config = gpio_stm32_default_config());
 
 
     /**
-     * \brief 	Hardware initialization
+     * \brief   Hardware initialization
      *
-     * \return  true 		Success
-     * \return  false 		Error
+     * \return  true        Success
+     * \return  false       Error
      */
     bool init(void);
 
 
     /**
-     * \brief 	Configures the GPIO
+     * \brief   Configures the GPIO
      *
-     * \param 	dir 	Pin direction (one of enum gpio_dir_t)
-     * \param 	pull 	Pin pull up/down (one of enum gpio_pull_updown_t)
+     * \param   dir     Pin direction (one of enum gpio_dir_t)
+     * \param   pull    Pin pull up/down (one of enum gpio_pull_updown_t)
      *
      * \return  success
      */
@@ -151,68 +151,68 @@ public:
 
 
     /**
-     * \brief 	Write 1 to the gpio
+     * \brief   Write 1 to the gpio
      *
-     * \return 	true		Success
-     * \return 	false		Failed
+     * \return  true        Success
+     * \return  false       Failed
      */
     bool set_high(void);
 
 
     /**
-     * \brief 	Write 0 to the gpio
+     * \brief   Write 0 to the gpio
      *
-     * \return 	true		Success
-     * \return 	false		Failed
+     * \return  true        Success
+     * \return  false       Failed
      */
     bool set_low(void);
 
 
     /**
-     * \brief 	Toggle the gpio value
+     * \brief   Toggle the gpio value
      * \details Writes 0 if currently high, writes 1 if currently low
      *
-     * \return 	true		Success
-     * \return 	false		Failed
+     * \return  true        Success
+     * \return  false       Failed
      */
     bool toggle(void);
 
 
     /**
-     * \brief 	Write to the gpio pin
+     * \brief   Write to the gpio pin
      *
-     * \param 	level 		Value to write
+     * \param   level       Value to write
      *
-     * \return 	true		Success
-     * \return 	false		Failed
+     * \return  true        Success
+     * \return  false       Failed
      */
     bool write(bool level);
 
 
     /**
-     * \brief 	Read the current gpio level
+     * \brief   Read the current gpio level
      *
-     * \return 	Level
+     * \return  Level
      */
     bool read(void);
 
 private:
-    gpio_stm32_conf_t 	config_;	///< Device configuration
+    gpio_stm32_conf_t   config_;    ///< Device configuration
 };
 
 
 /**
- * \brief 	Default configuration
+ * \brief   Default configuration
  *
- * \return 	Config structure
+ * \return  Config structure
  */
 static inline gpio_stm32_conf_t gpio_stm32_default_config()
 {
     gpio_stm32_conf_t conf = {};
-    conf.port 	= GPIO_STM32_PORT_A;
-    conf.pin 	= GPIO_STM32_PIN_0;
-    conf.dir 	= GPIO_INPUT;
-    conf.pull 	= GPIO_PULL_UPDOWN_NONE;
+    conf.port   = GPIO_STM32_PORT_A;
+    conf.pin    = GPIO_STM32_PIN_0;
+    conf.dir    = GPIO_INPUT;
+    conf.pull   = GPIO_PULL_UPDOWN_NONE;
     return conf;
 }
 

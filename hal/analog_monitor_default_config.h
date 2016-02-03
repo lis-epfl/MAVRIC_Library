@@ -65,37 +65,37 @@ extern "C" {
 
 #include "hal/analog_monitor.h"
 
-#define INV_VOLTAGE_DIVIDER_1 9.1818f	// previously 6.6f for V4.0
-#define INV_VOLTAGE_DIVIDER_2 23.0f		// previously 11.0f for V4.0
+#define INV_VOLTAGE_DIVIDER_1 9.1818f   // previously 6.6f for V4.0
+#define INV_VOLTAGE_DIVIDER_2 23.0f     // previously 11.0f for V4.0
 
 static inline analog_monitor_conf_t analog_monitor_default_config()
 {
     analog_monitor_conf_t analog_monitor_conf = {};
     analog_monitor_conf.enable =
     {
-        false,		//ANALOG_RAIL_2,
-        false,		//ANALOG_RAIL_3,
-        false,		//ANALOG_RAIL_4,
-        false,		//ANALOG_RAIL_5,
-        false,		//ANALOG_RAIL_6,
-        false,		//ANALOG_RAIL_7,
-        true,		//ANALOG_RAIL_10
-        true,		//ANALOG_RAIL_11
-        true,		//ANALOG_RAIL_12
-        false,		//ANALOG_RAIL_13
+        false,      //ANALOG_RAIL_2,
+        false,      //ANALOG_RAIL_3,
+        false,      //ANALOG_RAIL_4,
+        false,      //ANALOG_RAIL_5,
+        false,      //ANALOG_RAIL_6,
+        false,      //ANALOG_RAIL_7,
+        true,       //ANALOG_RAIL_10
+        true,       //ANALOG_RAIL_11
+        true,       //ANALOG_RAIL_12
+        false,      //ANALOG_RAIL_13
     };
     analog_monitor_conf.conv_factor =
     {
-        1.0f,									//.conv_factor_2 =
-        1.0f,									//.conv_factor_3 =
-        1.0f,									//.conv_factor_4 =
-        1.0f,									//.conv_factor_5 =
-        (0.00023485f * INV_VOLTAGE_DIVIDER_1),	//.conv_factor_6 =
-        (0.00023485f * INV_VOLTAGE_DIVIDER_1),	//.conv_factor_7 =
-        (-0.0002409f * INV_VOLTAGE_DIVIDER_2),	//.conv_factor_10 =
-        (-0.0002409f * INV_VOLTAGE_DIVIDER_2),	//.conv_factor_11 =
-        -0.00025f,								//.conv_factor_12 =
-        -1.0f									//.conv_factor_13 =
+        1.0f,                                   //.conv_factor_2 =
+        1.0f,                                   //.conv_factor_3 =
+        1.0f,                                   //.conv_factor_4 =
+        1.0f,                                   //.conv_factor_5 =
+        (0.00023485f * INV_VOLTAGE_DIVIDER_1),  //.conv_factor_6 =
+        (0.00023485f * INV_VOLTAGE_DIVIDER_1),  //.conv_factor_7 =
+        (-0.0002409f * INV_VOLTAGE_DIVIDER_2),  //.conv_factor_10 =
+        (-0.0002409f * INV_VOLTAGE_DIVIDER_2),  //.conv_factor_11 =
+        -0.00025f,                              //.conv_factor_12 =
+        -1.0f                                   //.conv_factor_13 =
     };
     return analog_monitor_conf;
 };

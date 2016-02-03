@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial_usb_linux_io.hpp
+ * \file    serial_usb_linux_io.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Implementation of serial wrapping around iostream (std::cout and std::cin)
+ * \brief   Implementation of serial wrapping around iostream (std::cout and std::cin)
  *
  * \details write(...) writes to std::cout    read(...) reads from std::cin
  *
@@ -104,9 +104,9 @@ bool Serial_linux_io::read(uint8_t* bytes, const uint32_t size)
 }
 
 /**
- * \brief 	write newline character to stream ('\n')
+ * \brief   write newline character to stream ('\n')
  *
- * \return 	success
+ * \return  success
  */
 bool Serial_linux_io::newline()
 {

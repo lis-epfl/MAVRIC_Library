@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial.hpp
+ * \file    serial.hpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Abstract class for serial peripherals
+ * \brief   Abstract class for serial peripherals
  *
  ******************************************************************************/
 
@@ -51,7 +51,7 @@ class Serial
 public:
 
     /**
-     * \brief 	Hardware initialization
+     * \brief   Hardware initialization
      *
      * \return  true Success
      * \return  false Error
@@ -60,72 +60,72 @@ public:
 
 
     /**
-     * \brief 	Test if there are bytes available to read
+     * \brief   Test if there are bytes available to read
      *
-     * \return 	Number of incoming bytes available
+     * \return  Number of incoming bytes available
      */
     virtual uint32_t readable(void) = 0;
 
 
     /**
-     * \brief 	Test if there is space available to write bytes
+     * \brief   Test if there is space available to write bytes
      *
-     * \return 	Number of bytes available for writing
+     * \return  Number of bytes available for writing
      */
     virtual uint32_t writeable(void) = 0;
 
 
     /**
-     * \brief 	Sends instantaneously all outgoing bytes
+     * \brief   Sends instantaneously all outgoing bytes
      *
-     * \return 	Number of bytes available for writing
+     * \return  Number of bytes available for writing
      */
     virtual void flush(void) = 0;
 
 
     /**
-     * \brief 	Attach a function to call after a receive interrupt is generated
+     * \brief   Attach a function to call after a receive interrupt is generated
      *
      * \details A default handler should be provided by the implementation to
-     * 			add the incoming data in a buffer, so is not mandatory to call
-     * 			this method. The function callback will be called after the
-     * 			interrupt handler
+     *          add the incoming data in a buffer, so is not mandatory to call
+     *          this method. The function callback will be called after the
+     *          interrupt handler
      *
-     * \param  	func	 	Pointer to the callback function
+     * \param   func        Pointer to the callback function
      *
-     * \return 	true		Success
-     * \return 	false		Failed
+     * \return  true        Success
+     * \return  false       Failed
      */
     virtual bool attach(serial_interrupt_callback_t func) = 0;
 
 
     /**
-     * \brief 	Write bytes on the serial line
+     * \brief   Write bytes on the serial line
      *
-     * \param 	byte 		Outgoing bytes
-     * \param 	size 		Number of bytes to write
+     * \param   byte        Outgoing bytes
+     * \param   size        Number of bytes to write
      *
-     * \return 	true		Data successfully written
-     * \return 	false		Data not written
+     * \return  true        Data successfully written
+     * \return  false       Data not written
      */
     virtual bool write(const uint8_t* bytes, const uint32_t size = 1) = 0;
 
 
     /**
-     * \brief 	Read bytes from the serial line
+     * \brief   Read bytes from the serial line
      *
-     * \param 	bytes 		Incoming bytes
-     * \param 	size 		Number of bytes to read
+     * \param   bytes       Incoming bytes
+     * \param   size        Number of bytes to read
      *
-     * \return 	true		Data successfully read
-     * \return 	false		Data not read
+     * \return  true        Data successfully read
+     * \return  false       Data not read
      */
     virtual bool read(uint8_t* bytes, const uint32_t size = 1) = 0;
 
     /**
-     * \brief 	write newline character to stream ('\n\r')
+     * \brief   write newline character to stream ('\n\r')
      *
-     * \return 	success
+     * \return  success
      */
     virtual bool newline();
 };

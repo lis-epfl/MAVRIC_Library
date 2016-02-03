@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief 	Abstract class for sonars
+ * \brief   Abstract class for sonars
  *
  ******************************************************************************/
 
@@ -63,56 +63,56 @@ public:
     /**
      * \brief   Initialise the sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     virtual bool init(void) = 0;
 
 
     /**
-     * \brief 	Main update function
-     * \detail 	Reads new values from sensor
+     * \brief   Main update function
+     * \detail  Reads new values from sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     virtual bool update(void) = 0;
 
 
     /**
-     * \brief 	Get last update time in microseconds
+     * \brief   Get last update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     virtual const float& last_update_us(void) const = 0;
 
 
     /**
-     * \brief 	Get sensor orientation relative to the platform (in body frame)
+     * \brief   Get sensor orientation relative to the platform (in body frame)
      *
-     * \return 	3D orientation
+     * \return  3D orientation
      */
     virtual const std::array<float, 3>& orientation_bf(void) const = 0;
 
 
     /**
-     * \brief 	Get latest distance measure
+     * \brief   Get latest distance measure
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const float& distance(void) const = 0;
 
 
     /**
-     * \brief 	Get velocity estimate from consecutive measurements
+     * \brief   Get velocity estimate from consecutive measurements
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const float& velocity(void) const = 0;
 
 
     /**
-     * \brief 	Indicates whether the measurements can be trusted
+     * \brief   Indicates whether the measurements can be trusted
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const bool& healthy(void) const = 0;
 };

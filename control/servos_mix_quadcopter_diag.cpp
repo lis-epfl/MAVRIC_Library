@@ -60,8 +60,8 @@ bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix,
     bool init_success = true;
 
     // Init dependencies
-    mix->torque_command 	= torque_command;
-    mix->thrust_command 	= thrust_command;
+    mix->torque_command     = torque_command;
+    mix->thrust_command     = thrust_command;
     mix->motor_rear_left    = motor_rear_left;
     mix->motor_front_left   = motor_front_left;
     mix->motor_front_right  = motor_front_right;
@@ -73,8 +73,8 @@ bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix,
     mix->motor_front_right_dir = config.motor_front_right_dir;
     mix->motor_rear_right_dir  = config.motor_rear_right_dir;
 
-    mix->min_thrust 	   = config.min_thrust;
-    mix->max_thrust 	   = config.max_thrust;
+    mix->min_thrust        = config.min_thrust;
+    mix->max_thrust        = config.max_thrust;
 
     return init_success;
 }
@@ -85,13 +85,13 @@ void servos_mix_quadcopter_diag_update(servos_mix_quadcotper_diag_t* mix)
     float motor[4];
 
     // Front Right motor
-    motor[0] = 	mix->thrust_command->thrust +
+    motor[0] =  mix->thrust_command->thrust +
                 (- mix->torque_command->xyz[0]) +
                 (+ mix->torque_command->xyz[1]) +
                 mix->motor_front_right_dir * mix->torque_command->xyz[2];
 
     // Front Left motor
-    motor[1] = 	mix->thrust_command->thrust +
+    motor[1] =  mix->thrust_command->thrust +
                 (+ mix->torque_command->xyz[0]) +
                 (+ mix->torque_command->xyz[1]) +
                 mix->motor_front_left_dir * mix->torque_command->xyz[2];

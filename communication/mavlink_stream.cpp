@@ -65,9 +65,9 @@ bool mavlink_stream_init(mavlink_stream_t* mavlink_stream,
     if (nb_mavlink_stream_instances < MAVLINK_COMM_NUM_BUFFERS)
     {
         mavlink_stream->mavlink_channel =  nb_mavlink_stream_instances;
-        nb_mavlink_stream_instances 	+= 1;
+        nb_mavlink_stream_instances     += 1;
 
-        mavlink_stream->serial 			  = serial;
+        mavlink_stream->serial            = serial;
         mavlink_stream->sysid             = config->sysid;
         mavlink_stream->compid            = config->compid;
         mavlink_stream->msg_available     = false;

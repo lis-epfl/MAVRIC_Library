@@ -58,7 +58,7 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     // -----------------------------------------------------------------
     // ------ ROLL RATE PID --------------------------------------------
     // -----------------------------------------------------------------
-    conf.rate_pid_config[ROLL] 							 = {};
+    conf.rate_pid_config[ROLL]                           = {};
     conf.rate_pid_config[ROLL].p_gain                    = 0.03f;
     conf.rate_pid_config[ROLL].clip_min                  = -0.9f;
     conf.rate_pid_config[ROLL].clip_max                  = 0.9f;
@@ -75,13 +75,13 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     // -----------------------------------------------------------------
     // ------ PITCH RATE PID -------------------------------------------
     // -----------------------------------------------------------------
-    conf.rate_pid_config[PITCH] 						 = {};
+    conf.rate_pid_config[PITCH]                          = {};
     conf.rate_pid_config[PITCH].p_gain                   = 0.03f;
     conf.rate_pid_config[PITCH].clip_min                 = -0.9f;
     conf.rate_pid_config[PITCH].clip_max                 = 0.9f;
     conf.rate_pid_config[PITCH].integrator               = {};
     conf.rate_pid_config[PITCH].integrator.gain          = 0.015f,
-    conf.rate_pid_config[PITCH].integrator.clip_pre      = 1.0f;
+                                           conf.rate_pid_config[PITCH].integrator.clip_pre      = 1.0f;
     conf.rate_pid_config[PITCH].integrator.accumulator   = 0.0f;
     conf.rate_pid_config[PITCH].integrator.clip          = 0.02f;
     conf.rate_pid_config[PITCH].differentiator           = {};
@@ -92,7 +92,7 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     // -----------------------------------------------------------------
     // ------ YAW RATE PID ---------------------------------------------
     // -----------------------------------------------------------------
-    conf.rate_pid_config[YAW] 							 = {};
+    conf.rate_pid_config[YAW]                            = {};
     conf.rate_pid_config[YAW].p_gain                     = 0.3f;
     conf.rate_pid_config[YAW].clip_min                   = -0.3f;
     conf.rate_pid_config[YAW].clip_max                   = 0.3f;
@@ -113,7 +113,7 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     // -----------------------------------------------------------------
     // ------ ROLL ANGLE PID -------------------------------------------
     // -----------------------------------------------------------------
-    conf.angle_pid_config[ROLL] 						 = {};
+    conf.angle_pid_config[ROLL]                          = {};
     conf.angle_pid_config[ROLL].p_gain                   = 4.0f;
     conf.angle_pid_config[ROLL].clip_min                 = -1.2f;
     conf.angle_pid_config[ROLL].clip_max                 = 1.2f;
@@ -130,7 +130,7 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     // -----------------------------------------------------------------
     // ------ PITCH ANGLE PID ------------------------------------------
     // -----------------------------------------------------------------
-    conf.angle_pid_config[PITCH] 						 = {};
+    conf.angle_pid_config[PITCH]                         = {};
     conf.angle_pid_config[PITCH].p_gain                  = 4.0f;
     conf.angle_pid_config[PITCH].clip_min                = -1.2f;
     conf.angle_pid_config[PITCH].clip_max                = 1.2f;
@@ -147,7 +147,7 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     // -----------------------------------------------------------------
     // ------ YAW ANGLE PID --------------------------------------------
     // -----------------------------------------------------------------
-    conf.angle_pid_config[YAW] 							 = {};
+    conf.angle_pid_config[YAW]                           = {};
     conf.angle_pid_config[YAW].p_gain                    = 3.0f;
     conf.angle_pid_config[YAW].clip_min                  = -1.5f;
     conf.angle_pid_config[YAW].clip_max                  = 1.5f;

@@ -47,7 +47,7 @@
 #include "libs/asf/avr32/drivers/pdca/pdca.h"
 #include "hal/avr32/led.h"
 
-static volatile spi_buffer_t spi_buffers[SPI_NUMBER];				///< Allocated memory for SPI buffers
+static volatile spi_buffer_t spi_buffers[SPI_NUMBER];               ///< Allocated memory for SPI buffers
 
 __attribute__((__interrupt__)) void spi0_int_handler(void);
 __attribute__((__interrupt__)) void spi1_int_handler(void);
@@ -142,7 +142,7 @@ void spi_buffered_init_DMA(int32_t spi_index, int32_t block_size)
     {
         .addr = 0,                                // memory address
         .pid = AVR32_PDCA_PID_SPI0_TX,            // select peripheral - transmit to SPI0
-        .size = 12,	                              // transfer counter
+        .size = 12,                               // transfer counter
         .r_addr = NULL,                           // next memory address
         .r_size = 0,                              // next transfer counter
         .transfer_size = PDCA_TRANSFER_SIZE_BYTE  // select size of the transfer
@@ -225,7 +225,7 @@ void spi_buffered_start(int32_t spi_index)
             && (spi_buffers[spi_index].spi_out_buffer_head != spi_buffers[spi_index].spi_out_buffer_tail))
     {
         // if not, initiate transmission by sending first byte
-        //!!!!PORTB &= ~_BV(SPI_CS);	// pull chip select low to start transmission
+        //!!!!PORTB &= ~_BV(SPI_CS);    // pull chip select low to start transmission
         spi_select_device(spi_buffers[spi_index].spi, (struct spi_device*)&spi_buffers[spi_index].adc_spi);
 
         spi_buffers[spi_index].transmission_in_progress = 1;
@@ -298,7 +298,7 @@ void spi_buffered_transmit(int32_t spi_index)
     else
     {
         spi_buffers[spi_index].spi_out_buffer_tail = spi_buffers[spi_index].spi_out_buffer_head;
-        //PORTB |= _BV(SPI_CS);	// pull chip select high to end transmission
+        //PORTB |= _BV(SPI_CS); // pull chip select high to end transmission
         spi_deselect_device(spi_buffers[spi_index].spi, (struct spi_device*)&spi_buffers[spi_index].adc_spi);
         spi_buffers[spi_index].transmission_in_progress = 0;
         spi_buffers[spi_index].spi->idr = AVR32_SPI_IER_RDRF_MASK | AVR32_SPI_IER_TDRE_MASK;

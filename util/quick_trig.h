@@ -65,7 +65,7 @@ float quick_trig_sin(float x);
 
 
 /**
- * \brief			  Quick implementation of the cosinus function
+ * \brief             Quick implementation of the cosinus function
  *
  * \param x           Input value
  *

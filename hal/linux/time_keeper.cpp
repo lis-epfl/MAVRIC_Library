@@ -102,7 +102,7 @@ void time_keeper_delay_ms(uint64_t milliseconds)
 void time_keeper_sleep_us(uint64_t microseconds)
 {
     struct timespec reqtime;
-    reqtime.tv_sec 	= 0;
+    reqtime.tv_sec  = 0;
     reqtime.tv_nsec = 1000 * microseconds;
 
     nanosleep(&reqtime, NULL);

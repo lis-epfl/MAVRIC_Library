@@ -49,11 +49,11 @@ extern "C"
 #include "util/constants.h"
 }
 
-const float   SONAR_I2CXL_LPF_VARIO 				= 0.4f;		///< Low pass filter for velocity estimation
+const float   SONAR_I2CXL_LPF_VARIO                 = 0.4f;     ///< Low pass filter for velocity estimation
 
-const uint8_t SONAR_I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
-const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;		///< Address of the Change Command address Register 1
-const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;		///< Address of the Change Command address Register 2
+const uint8_t SONAR_I2CXL_RANGE_COMMAND             = 0x51;     ///< Address of the Range Command Register
+const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_1  = 0xAA;     ///< Address of the Change Command address Register 1
+const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_2  = 0xA5;     ///< Address of the Change Command address Register 2
 
 
 //------------------------------------------------------------------------------
@@ -141,11 +141,11 @@ bool Sonar_i2cxl::get_last_measure(void)
 {
     bool res;
     uint8_t buf[2];
-    uint16_t distance_cm 	= 0;
-    float distance_m 		= 0.0f;
-    float new_velocity 		= 0.0f;
-    float dt_s 				= 0.0f;
-    float time_us 			= time_keeper_get_us();
+    uint16_t distance_cm    = 0;
+    float distance_m        = 0.0f;
+    float new_velocity      = 0.0f;
+    float dt_s              = 0.0f;
+    float time_us           = time_keeper_get_us();
 
     res = i2c_.read(buf, 2, config_.i2c_address);
 
@@ -175,14 +175,14 @@ bool Sonar_i2cxl::get_last_measure(void)
             velocity_ = 0.0f;
         }
 
-        distance_  		= distance_m;
+        distance_       = distance_m;
         last_update_us_ = time_us;
-        healthy_ 		= true;
+        healthy_        = true;
     }
     else
     {
-        velocity_	= 0.0f;
-        healthy_ 	= false;
+        velocity_   = 0.0f;
+        healthy_    = false;
     }
 
     return res;

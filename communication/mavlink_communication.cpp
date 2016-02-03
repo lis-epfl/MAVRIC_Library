@@ -54,11 +54,11 @@ extern "C"
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 /**
- * \brief 	Toggle mavlink telemetry stream
+ * \brief   Toggle mavlink telemetry stream
  *
- * \param scheduler		scheduler of the MAV
- * \param sysid			MAV sysid
- * \param msg			pointer to the stream you want to toggle
+ * \param scheduler     scheduler of the MAV
+ * \param sysid         MAV sysid
+ * \param msg           pointer to the stream you want to toggle
  */
 static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler, uint32_t sysid, mavlink_message_t* msg);
 
@@ -146,7 +146,7 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
                                         &config.mavlink_stream_config,
                                         serial);
     //rx_stream,
-    //tx_stream	);
+    //tx_stream );
 
     init_success &= mavlink_message_handler_init(&mavlink_communication->message_handler,
                     &config.message_handler_config,
@@ -186,11 +186,11 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
     // Add callback to activate / disactivate streams
     mavlink_message_handler_msg_callback_t callback;
 
-    callback.message_id 	= MAVLINK_MSG_ID_REQUEST_DATA_STREAM; // 66
-    callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
-    callback.compid_filter 	= MAV_COMP_ID_ALL;
-    callback.function 		= (mavlink_msg_callback_function_t)	&mavlink_communication_toggle_telemetry_stream;
-    callback.module_struct 	= (handling_module_struct_t)		&mavlink_communication->scheduler;
+    callback.message_id     = MAVLINK_MSG_ID_REQUEST_DATA_STREAM; // 66
+    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
+    callback.compid_filter  = MAV_COMP_ID_ALL;
+    callback.function       = (mavlink_msg_callback_function_t) &mavlink_communication_toggle_telemetry_stream;
+    callback.module_struct  = (handling_module_struct_t)        &mavlink_communication->scheduler;
     init_success &= mavlink_message_handler_add_msg_callback(&mavlink_communication->message_handler, &callback);
 
     return init_success;

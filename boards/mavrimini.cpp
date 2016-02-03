@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	mavrimini.cpp
+ * \file    mavrimini.cpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Autopilot board based on STM32
+ * \brief   Autopilot board based on STM32
  *
  ******************************************************************************/
 
@@ -128,13 +128,13 @@ bool Mavrimini::init(void)
 
     // -------------------------------------------------------------------------
     // Init stream for USB debug stream TODO: remove
-    p_dbg_serial 		= &serial_1;
-    // p_dbg_serial 		= &serial_2;
-    dbg_stream_.get 	= NULL;
-    dbg_stream_.put 	= &serial2stream;
-    dbg_stream_.flush 	= NULL;
+    p_dbg_serial        = &serial_1;
+    // p_dbg_serial         = &serial_2;
+    dbg_stream_.get     = NULL;
+    dbg_stream_.put     = &serial2stream;
+    dbg_stream_.flush   = NULL;
     dbg_stream_.buffer_empty = NULL;
-    dbg_stream_.data 	= NULL;
+    dbg_stream_.data    = NULL;
     print_util_dbg_print_init(&dbg_stream_);
     // -------------------------------------------------------------------------
 

@@ -59,120 +59,120 @@ class Gps
 {
 public:
     /**
-     * \brief 	Main update function
-     * \detail 	Reads new values from sensor
+     * \brief   Main update function
+     * \detail  Reads new values from sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     virtual bool update(void) = 0;
 
 
     /**
-     * \brief 	Configure the GPS
+     * \brief   Configure the GPS
      */
     virtual void configure(void) = 0;
 
 
     /**
-     * \brief 	Get last update time in microseconds
+     * \brief   Get last update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     virtual const float& last_update_us(void) const = 0;
 
 
     /**
-     * \brief 	Get last position update time in microseconds
+     * \brief   Get last position update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     virtual const float& last_position_update_us(void) const = 0;
 
 
     /**
-     * \brief 	Get last velocity update time in microseconds
+     * \brief   Get last velocity update time in microseconds
      *
-     * \return 	Update time
+     * \return  Update time
      */
     virtual const float& last_velocity_update_us(void) const = 0;
 
 
     /**
-     * \brief 	Get position in global frame
+     * \brief   Get position in global frame
      *
-     * \return 	position
+     * \return  position
      */
     virtual const global_position_t& position_gf(void) const = 0;
 
 
     /**
-     * \brief 	Get horizontal position accuracy in m
+     * \brief   Get horizontal position accuracy in m
      *
-     * \return 	accuracy
+     * \return  accuracy
      */
     virtual const float& horizontal_position_accuracy(void) const = 0;
 
 
     /**
-     * \brief 	Get vertical position accuracy in m
+     * \brief   Get vertical position accuracy in m
      *
-     * \return 	accuracy
+     * \return  accuracy
      */
     virtual const float& vertical_position_accuracy(void) const = 0;
 
 
     /**
-     * \brief 	Get velocity in local frame in m/s
+     * \brief   Get velocity in local frame in m/s
      *
-     * \return 	3D velocity
+     * \return  3D velocity
      */
     virtual const std::array<float, 3>& velocity_lf(void) const = 0;
 
 
     /**
-     * \brief 	Get velocity accuracy in m/s
+     * \brief   Get velocity accuracy in m/s
      *
-     * \return 	velocity accuracy
+     * \return  velocity accuracy
      */
     virtual const float& velocity_accuracy(void) const = 0;
 
 
     /**
-     * \brief 	Get heading in degrees
+     * \brief   Get heading in degrees
      *
-     * \return 	heading
+     * \return  heading
      */
     virtual const float& heading(void) const = 0;
 
 
     /**
-     * \brief 	Get heading accuracy in degrees
+     * \brief   Get heading accuracy in degrees
      *
-     * \return 	accuracy
+     * \return  accuracy
      */
     virtual const float& heading_accuracy(void) const = 0;
 
 
     /**
-     * \brief 	Get the number of satellites
+     * \brief   Get the number of satellites
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const uint8_t& num_sats(void) const = 0;
 
 
     /**
-     * \brief 	Indicates whether fix are received
+     * \brief   Indicates whether fix are received
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const bool& fix(void) const = 0;
 
 
     /**
-     * \brief 	Indicates whether the measurements can be trusted
+     * \brief   Indicates whether the measurements can be trusted
      *
-     * \return 	Value
+     * \return  Value
      */
     virtual const bool& healthy(void) const = 0;
 };

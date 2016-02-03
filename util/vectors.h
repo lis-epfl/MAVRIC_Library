@@ -54,37 +54,37 @@ extern "C"
 
 
 /**
- * \brief 			Cross product between two 3-vectors
+ * \brief           Cross product between two 3-vectors
  *
- * \param 	u 		Input vector (dim 3)
- * \param 	v  		Input vector (dim 3)
- * \param 	out 	Output vector (dim 3)
+ * \param   u       Input vector (dim 3)
+ * \param   v       Input vector (dim 3)
+ * \param   out     Output vector (dim 3)
  */
 #define CROSS(u,v,out) \
-	out[0] = u[1] * v[2] - u[2] * v[1];\
-	out[1] = u[2] * v[0] - u[0] * v[2];\
-	out[2] = u[0] * v[1] - u[1] * v[0];
+    out[0] = u[1] * v[2] - u[2] * v[1];\
+    out[1] = u[2] * v[0] - u[0] * v[2];\
+    out[2] = u[0] * v[1] - u[1] * v[0];
 
 
 /**
- * \brief 			Scalar product between two 3-vectors
+ * \brief           Scalar product between two 3-vectors
  *
- * \param 	v 		Input vector (dim 3)
- * \param 	u 		Input vector (dim 3)
+ * \param   v       Input vector (dim 3)
+ * \param   u       Input vector (dim 3)
  *
- * \return 			Scalar product
+ * \return          Scalar product
  */
 #define SCP(u,v) \
-	(u[0] * v[0] + u[1] * v[1] + u[2] * v[2])
+    (u[0] * v[0] + u[1] * v[1] + u[2] * v[2])
 
 
 /**
- * \brief 		Computes the scalar product of two vectors of dimension 3
+ * \brief       Computes the scalar product of two vectors of dimension 3
  *
- * \param 	u 	Input vector (dim 3)
- * \param 	v 	Input vector (dim 3)
+ * \param   u   Input vector (dim 3)
+ * \param   v   Input vector (dim 3)
  *
- * \return 		Scalar product
+ * \return      Scalar product
  */
 float static inline vectors_scalar_product(const float u[3], const float v[3]) //maths_scalar_product(const float u[3], const float v[3])
 {
@@ -94,11 +94,11 @@ float static inline vectors_scalar_product(const float u[3], const float v[3]) /
 
 
 /**
- * \brief 			Computes the cross product of two vectors of dimension 3
+ * \brief           Computes the cross product of two vectors of dimension 3
  *
- * \param 	u 		Input vector (dim 3)
- * \param 	v 		Input vector (dim 3)
- * \param 	out 	Output vector (dim 3)
+ * \param   u       Input vector (dim 3)
+ * \param   v       Input vector (dim 3)
+ * \param   out     Output vector (dim 3)
  */
 void static inline vectors_cross_product(const float u[3], const float v[3], float out[3]) //maths_cross_product(const float u[3], const float v[3], float out[3])
 {
@@ -109,10 +109,10 @@ void static inline vectors_cross_product(const float u[3], const float v[3], flo
 
 
 /**
- * \brief 		Computes the squared norm of a vector (dim 3)
+ * \brief       Computes the squared norm of a vector (dim 3)
  *
- * \param 	u 	Input vector
- * \return 		Squared norm
+ * \param   u   Input vector
+ * \return      Squared norm
  */
 float static inline vectors_norm_sqr(const float u[3]) //maths_vector_norm_sqr(float u[3])
 {
@@ -122,10 +122,10 @@ float static inline vectors_norm_sqr(const float u[3]) //maths_vector_norm_sqr(f
 
 
 /**
- * \brief 		Computes the norm of a vector of dimension 3
+ * \brief       Computes the norm of a vector of dimension 3
  *
- * \param 	u 	Input vector (dim 3)
- * \return 		Norm of the vector
+ * \param   u   Input vector (dim 3)
+ * \return      Norm of the vector
  */
 float static inline vectors_norm(const float u[3]) //maths_vector_norm(float u[3])
 {
@@ -134,10 +134,10 @@ float static inline vectors_norm(const float u[3]) //maths_vector_norm(float u[3
 
 
 /**
- * \brief 		Normalizes a vector of dimension 3
+ * \brief       Normalizes a vector of dimension 3
  *
- * \param 	v 	Input vector (dim 3)
- * \param 	u 	Output vector (dim 3)
+ * \param   v   Input vector (dim 3)
+ * \param   u   Output vector (dim 3)
  */
 void static inline vectors_normalize(const float v[3], float u[3]) //maths_vector_normalize(float v[3], float u[3])
 {

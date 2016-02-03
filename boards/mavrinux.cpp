@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	mavrinux.cpp
+ * \file    mavrinux.cpp
  *
- * \author 	MAV'RIC Team
+ * \author  MAV'RIC Team
  *
- * \brief 	Emulated board running on linux
+ * \brief   Emulated board running on linux
  *
  ******************************************************************************/
 

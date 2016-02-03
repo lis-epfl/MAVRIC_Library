@@ -36,7 +36,7 @@
  * \author Felix Schill
  * \author Julien Lecoeur
  *
- * \brief 	Driver for the BMP085 barometer
+ * \brief   Driver for the BMP085 barometer
  *
  ******************************************************************************/
 
@@ -52,26 +52,26 @@
 
 
 /**
- * \brief 	Sensor state
+ * \brief   Sensor state
 */
 typedef enum
 {
-    BMP085_IDLE,			///< Idle state
-    BMP085_GET_TEMP,		///< Getting temperature state
-    BMP085_GET_PRESSURE		///< Getting pressure state
+    BMP085_IDLE,            ///< Idle state
+    BMP085_GET_TEMP,        ///< Getting temperature state
+    BMP085_GET_PRESSURE     ///< Getting pressure state
 } bmp085_state_t;
 
 
 /**
- * \brief 	Driver for the BMP085 barometer
+ * \brief   Driver for the BMP085 barometer
  */
 class Bmp085: public Barometer
 {
 public:
     /**
-     * \brief  	Constructor
+     * \brief   Constructor
      *
-     * \param 	i2c 	Reference to I2C device
+     * \param   i2c     Reference to I2C device
      */
     Bmp085(I2c& i2c);
 
@@ -79,44 +79,44 @@ public:
     /**
      * \brief   Initialise the sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     bool init(void);
 
 
     /**
-     * \brief 	Main update function
-     * \detail 	Reads new values from sensor
+     * \brief   Main update function
+     * \detail  Reads new values from sensor
      *
-     * \return 	Success
+     * \return  Success
      */
     bool update(void);
 
 
 private:
-    I2c&		i2c_;					///< Reference to I2C peripheral
+    I2c&        i2c_;                   ///< Reference to I2C peripheral
 
-    int16_t 	ac1_;					///< Configuration values for the
-    int16_t 	ac2_;					///< barometer, given by the datasheet
-    int16_t 	ac3_; 					///< of the sensor
-    uint16_t 	ac4_; 					///< ..
-    uint16_t 	ac5_; 					///< ..
-    uint16_t 	ac6_;					///< TODO: constants?
-    int16_t 	mb_; 					///< => move to constants in cpp
-    int16_t		mc_; 					///<    or
-    int16_t 	md_;					///<    move to configuration structure
-    int16_t 	b1_; 					///< ..
-    int16_t 	b2_;					///< ..
+    int16_t     ac1_;                   ///< Configuration values for the
+    int16_t     ac2_;                   ///< barometer, given by the datasheet
+    int16_t     ac3_;                   ///< of the sensor
+    uint16_t    ac4_;                   ///< ..
+    uint16_t    ac5_;                   ///< ..
+    uint16_t    ac6_;                   ///< TODO: constants?
+    int16_t     mb_;                    ///< => move to constants in cpp
+    int16_t     mc_;                    ///<    or
+    int16_t     md_;                    ///<    move to configuration structure
+    int16_t     b1_;                    ///< ..
+    int16_t     b2_;                    ///< ..
 
-    uint8_t 	raw_pressure_[3];		///< Raw pressure contained in 3 uint8_t
-    uint8_t 	raw_temperature_[2];	///< Raw temperature contained in 2 uint8_t
+    uint8_t     raw_pressure_[3];       ///< Raw pressure contained in 3 uint8_t
+    uint8_t     raw_temperature_[2];    ///< Raw temperature contained in 2 uint8_t
 
-    float 		last_altitudes_[3];		///< Array to store previous value of the altitude for low pass filtering the output
+    float       last_altitudes_[3];     ///< Array to store previous value of the altitude for low pass filtering the output
 
-    float 		last_state_update_us_;	///< Time of the last state update
-    float 		dt_s_;					///< Time step for the derivative
+    float       last_state_update_us_;  ///< Time of the last state update
+    float       dt_s_;                  ///< Time step for the derivative
 
-    bmp085_state_t 	state_;				///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
+    bmp085_state_t  state_;             ///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 };
 
 #endif /* BMP085_HPP_ */
