@@ -46,8 +46,6 @@ git push
 5) Create a pull request ([here is](https://help.github.com/articles/creating-a-pull-request/) how to do) and ask someone to review your changes.
 6) Once your pull request is merged, your contribution is online!
 
----
-
 # Doxygen Documentation
 A [Doxygen Documention](http://lis-epfl.github.io/MAVRIC_Library/doxygen/classes.html). It contains information on structures, classes and associated functions present in the Library. It also shows dependency graphs for classes and call graphs for functions. 
 
