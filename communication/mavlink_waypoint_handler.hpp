@@ -1,40 +1,40 @@
 /*******************************************************************************
  * Copyright (c) 2009-2016, MAV'RIC Development Team
  * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without 
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice, 
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
 /*******************************************************************************
  * \file mavlink_waypoint_handler.h
- * 
+ *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
- *  
+ *
  * \brief The MAVLink waypoint handler
  *
  ******************************************************************************/
@@ -52,139 +52,139 @@
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 
-#define MAX_WAYPOINTS 10		///< The maximal size of the waypoint list
+#define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
 /**
- * \brief	The MAVLink waypoint structure
+ * \brief   The MAVLink waypoint structure
  */
 typedef struct
 {
-	uint8_t frame;												///< The reference frame of the waypoint
-	uint16_t command;											///< The MAV_CMD_NAV id of the waypoint
-	uint8_t current;											///< Flag to tell whether the waypoint is the current one or not
-	uint8_t autocontinue;										///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
-	float param1;												///< Parameter depending on the MAV_CMD_NAV id
-	float param2;												///< Parameter depending on the MAV_CMD_NAV id
-	float param3;												///< Parameter depending on the MAV_CMD_NAV id
-	float param4;												///< Parameter depending on the MAV_CMD_NAV id
-	double x;													///< The value on the x axis (depends on the reference frame)
-	double y;													///< The value on the y axis (depends on the reference frame)
-	double z;													///< The value on the z axis (depends on the reference frame)
+    uint8_t frame;                                              ///< The reference frame of the waypoint
+    uint16_t command;                                           ///< The MAV_CMD_NAV id of the waypoint
+    uint8_t current;                                            ///< Flag to tell whether the waypoint is the current one or not
+    uint8_t autocontinue;                                       ///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
+    float param1;                                               ///< Parameter depending on the MAV_CMD_NAV id
+    float param2;                                               ///< Parameter depending on the MAV_CMD_NAV id
+    float param3;                                               ///< Parameter depending on the MAV_CMD_NAV id
+    float param4;                                               ///< Parameter depending on the MAV_CMD_NAV id
+    double x;                                                   ///< The value on the x axis (depends on the reference frame)
+    double y;                                                   ///< The value on the y axis (depends on the reference frame)
+    double z;                                                   ///< The value on the z axis (depends on the reference frame)
 } waypoint_struct_t;
 
 typedef struct
 {
-	waypoint_struct_t waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
-	waypoint_struct_t current_waypoint;							///< The structure of the current waypoint
-	uint16_t number_of_waypoints;								///< The total number of waypoints
-	int8_t current_waypoint_count;								///< The number of the current waypoint
-	
-	local_position_t waypoint_coordinates;						///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-	local_position_t waypoint_hold_coordinates;					///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-	local_position_t waypoint_critical_coordinates;				///< The coordinates of the waypoint in critical state
-	
-	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoint is set
+    waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
+    waypoint_struct_t current_waypoint;                         ///< The structure of the current waypoint
+    uint16_t number_of_waypoints;                               ///< The total number of waypoints
+    int8_t current_waypoint_count;                              ///< The number of the current waypoint
 
-	bool waypoint_sending;										///< Flag to tell whether waypoint are being sent
-	bool waypoint_receiving;									///< Flag to tell whether waypoint are being received or not
-	
-	int32_t sending_waypoint_num;								///< The ID number of the sending waypoint
-	int32_t waypoint_request_number;							///< The ID number of the requested waypoint
+    local_position_t waypoint_coordinates;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+    local_position_t waypoint_hold_coordinates;                 ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+    local_position_t waypoint_critical_coordinates;             ///< The coordinates of the waypoint in critical state
 
-	uint16_t num_waypoint_onboard;								///< The number of waypoint onboard
+    bool hold_waypoint_set;                                     ///< Flag to tell if the hold position waypoint is set
 
-	uint32_t start_timeout;										///< The start time for the waypoint timeout
-	uint32_t timeout_max_waypoint;								///< The max waiting time for communication
+    bool waypoint_sending;                                      ///< Flag to tell whether waypoint are being sent
+    bool waypoint_receiving;                                    ///< Flag to tell whether waypoint are being received or not
 
-	uint32_t start_wpt_time;									///< The time at which the MAV starts to travel towards its waypoint
-	uint32_t travel_time;										///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
+    int32_t sending_waypoint_num;                               ///< The ID number of the sending waypoint
+    int32_t waypoint_request_number;                            ///< The ID number of the requested waypoint
 
-	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
-	bool auto_landing_next_state;								///< Flag to change critical state in its dedicated state machine
+    uint16_t num_waypoint_onboard;                              ///< The number of waypoint onboard
 
-	mav_mode_t mode;											///< The mode of the MAV to have a memory of its evolution
+    uint32_t start_timeout;                                     ///< The start time for the waypoint timeout
+    uint32_t timeout_max_waypoint;                              ///< The max waiting time for communication
 
-	position_estimation_t* position_estimation;					///< The pointer to the position estimation structure
-	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
+    uint32_t start_wpt_time;                                    ///< The time at which the MAV starts to travel towards its waypoint
+    uint32_t travel_time;                                       ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
-	navigation_t* navigation;									///< The pointer to the navigation structure
-	State* state;												///< The pointer to the state structure
-	mavlink_communication_t* mavlink_communication;				///< The pointer to the MAVLink communication structure
-	const mavlink_stream_t* mavlink_stream;						///< The pointer to MAVLink stream
-	const manual_control_t* manual_control;						///< The pointer to the manual_control structure 
+    bool critical_next_state;                                   ///< Flag to change critical state in its dedicated state machine
+    bool auto_landing_next_state;                               ///< Flag to change critical state in its dedicated state machine
+
+    mav_mode_t mode;                                            ///< The mode of the MAV to have a memory of its evolution
+
+    position_estimation_t* position_estimation;                 ///< The pointer to the position estimation structure
+    const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
+
+    navigation_t* navigation;                                   ///< The pointer to the navigation structure
+    State* state;                                               ///< The pointer to the state structure
+    mavlink_communication_t* mavlink_communication;             ///< The pointer to the MAVLink communication structure
+    const mavlink_stream_t* mavlink_stream;                     ///< The pointer to MAVLink stream
+    const manual_control_t* manual_control;                     ///< The pointer to the manual_control structure
 } mavlink_waypoint_handler_t;
 
 /**
- * \brief	Initialize a home waypoint at (0,0,0) at start up
+ * \brief   Initialize a home waypoint at (0,0,0) at start up
  *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param   waypoint_handler        The pointer to the waypoint handler structure
  */
 void waypoint_handler_init_homing_waypoint(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief	Initialize a list of hardcoded waypoints
+ * \brief   Initialize a list of hardcoded waypoints
  *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param   waypoint_handler        The pointer to the waypoint handler structure
  */
 void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief	Initialize the waypoint handler
+ * \brief   Initialize the waypoint handler
  *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	position_estimation		The pointer to the position estimator structure
- * \param 	navigation 				The pointer to the navigation structure
- * \param	ahrs					The pointer to the attitude estimation structure
- * \param	state					The pointer to the state structure
- * \param	manual_control			The pointer to the manual control structure
- * \param	mavlink_communication	The pointer to the MAVLink communication structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param   waypoint_handler        The pointer to the waypoint handler structure
+ * \param   position_estimation     The pointer to the position estimator structure
+ * \param   navigation              The pointer to the navigation structure
+ * \param   ahrs                    The pointer to the attitude estimation structure
+ * \param   state                   The pointer to the state structure
+ * \param   manual_control          The pointer to the manual control structure
+ * \param   mavlink_communication   The pointer to the MAVLink communication structure
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
  *
- * \return	True if the init succeed, false otherwise
+ * \return  True if the init succeed, false otherwise
  */
-bool waypoint_handler_init(	mavlink_waypoint_handler_t* waypoint_handler, 
-							position_estimation_t* position_estimation,
-							navigation_t* navigation, 
-							const ahrs_t* ahrs, 
-							State* state, 
-							const manual_control_t* manual_control,
-							mavlink_communication_t* mavlink_communication, 
-							const mavlink_stream_t* mavlink_stream);
+bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler,
+                           position_estimation_t* position_estimation,
+                           navigation_t* navigation,
+                           const ahrs_t* ahrs,
+                           State* state,
+                           const manual_control_t* manual_control,
+                           mavlink_communication_t* mavlink_communication,
+                           const mavlink_stream_t* mavlink_stream);
 
 /**
- * \brief	Initialize a first waypoint if a flight plan is set
+ * \brief   Initialize a first waypoint if a flight plan is set
  *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param   waypoint_handler        The pointer to the waypoint handler structure
  */
 void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief	The waypoint handler tasks, gives a goal for the navigation module
+ * \brief   The waypoint handler tasks, gives a goal for the navigation module
  *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param   waypoint_handler        The pointer to the waypoint handler structure
  */
 bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief	Initialise the position hold mode
+ * \brief   Initialise the position hold mode
  *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	local_pos				The position where the position will be held
+ * \param   waypoint_handler        The pointer to the waypoint handler structure
+ * \param   local_pos               The position where the position will be held
  */
 void waypoint_handler_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_position_t local_pos);
 
 /**
- * \brief	Sends the travel time between the last two waypoints
+ * \brief   Sends the travel time between the last two waypoints
  *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
+ * \param   waypoint_handler        The pointer to the waypoint handler structure
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
  */
-void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler,const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

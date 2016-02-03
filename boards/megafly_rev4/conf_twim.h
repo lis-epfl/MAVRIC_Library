@@ -49,7 +49,7 @@
 #ifndef _CONF_TWIM_H
 #define _CONF_TWIM_H
 
- #ifdef __cplusplus
+#ifdef __cplusplus
 extern "C"
 {
 #endif
@@ -59,56 +59,56 @@ extern "C"
 
 #if UC3C
 // These defines are missing from or wrong in the toolchain header file ip_xxx.h or part.h
-#	if !defined(AVR32_TWIM0_GROUP)
-#		define AVR32_TWIM0_GROUP         25
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-#	if !defined(AVR32_TWIM1_GROUP)
-#		define AVR32_TWIM1_GROUP         26
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-#	if !defined(AVR32_TWIM2_GROUP)
-#		define AVR32_TWIM2_GROUP         45
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-#	define CONF_TWIM_IRQ_LINE          AVR32_TWIM0_IRQ
-#	define CONF_TWIM_IRQ_GROUP         AVR32_TWIM0_GROUP
-#	define CONF_TWIM_IRQ_LEVEL         1
+#   if !defined(AVR32_TWIM0_GROUP)
+#       define AVR32_TWIM0_GROUP         25
+#   else
+#       warning "Duplicate define(s) to remove from the ASF"
+#   endif
+#   if !defined(AVR32_TWIM1_GROUP)
+#       define AVR32_TWIM1_GROUP         26
+#   else
+#       warning "Duplicate define(s) to remove from the ASF"
+#   endif
+#   if !defined(AVR32_TWIM2_GROUP)
+#       define AVR32_TWIM2_GROUP         45
+#   else
+#       warning "Duplicate define(s) to remove from the ASF"
+#   endif
+#   define CONF_TWIM_IRQ_LINE          AVR32_TWIM0_IRQ
+#   define CONF_TWIM_IRQ_GROUP         AVR32_TWIM0_GROUP
+#   define CONF_TWIM_IRQ_LEVEL         1
 #elif UC3A3
 // These defines are missing from or wrong in the toolchain header file ip_xxx.h or part.h
-#	if !defined(AVR32_TWIM0_GROUP)
-#		define AVR32_TWIM0_GROUP         11
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-#	if !defined(AVR32_TWIM1_GROUP)
-#		define AVR32_TWIM1_GROUP         12
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-#	define CONF_TWIM_IRQ_LINE          AVR32_TWIM0_IRQ
-#	define CONF_TWIM_IRQ_GROUP         AVR32_TWIM0_GROUP
-#	define CONF_TWIM_IRQ_LEVEL         1
+#   if !defined(AVR32_TWIM0_GROUP)
+#       define AVR32_TWIM0_GROUP         11
+#   else
+#       warning "Duplicate define(s) to remove from the ASF"
+#   endif
+#   if !defined(AVR32_TWIM1_GROUP)
+#       define AVR32_TWIM1_GROUP         12
+#   else
+#       warning "Duplicate define(s) to remove from the ASF"
+#   endif
+#   define CONF_TWIM_IRQ_LINE          AVR32_TWIM0_IRQ
+#   define CONF_TWIM_IRQ_GROUP         AVR32_TWIM0_GROUP
+#   define CONF_TWIM_IRQ_LEVEL         1
 #elif UC3L
 // These defines are missing from or wrong in the toolchain header file ip_xxx.h or part.h
-#	if !defined(AVR32_TWIM0_GROUP)
-#		define AVR32_TWIM0_GROUP         20
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-#	if !defined(AVR32_TWIM1_GROUP)
-#		define AVR32_TWIM1_GROUP         21
-#	else
-#		warning "Duplicate define(s) to remove from the ASF"
-#	endif
-#	define CONF_TWIM_IRQ_LINE          AVR32_TWIM0_IRQ
-#	define CONF_TWIM_IRQ_GROUP         AVR32_TWIM0_GROUP
-#	define CONF_TWIM_IRQ_LEVEL         1
+#   if !defined(AVR32_TWIM0_GROUP)
+#       define AVR32_TWIM0_GROUP         20
+#   else
+#       warning "Duplicate define(s) to remove from the ASF"
+#   endif
+#   if !defined(AVR32_TWIM1_GROUP)
+#       define AVR32_TWIM1_GROUP         21
+#   else
+#       warning "Duplicate define(s) to remove from the ASF"
+#   endif
+#   define CONF_TWIM_IRQ_LINE          AVR32_TWIM0_IRQ
+#   define CONF_TWIM_IRQ_GROUP         AVR32_TWIM0_GROUP
+#   define CONF_TWIM_IRQ_LEVEL         1
 #else
-#	error MCU Not Supported
+#   error MCU Not Supported
 #endif
 
 #ifdef __cplusplus

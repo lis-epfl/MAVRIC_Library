@@ -5,7 +5,7 @@
  *
  *
  * \author
- * 	Atmel Corporation: http://www.atmel.com \n
+ *  Atmel Corporation: http://www.atmel.com \n
  *      Support email: avr32@atmel.com
  *
  *****************************************************************************/
@@ -43,7 +43,8 @@
 #include "util/sinus.h"
 #include "libs/asf/avr32/utils/compiler.h"
 
-U16 sin_table[SINUS_SAMPLES] = {
+U16 sin_table[SINUS_SAMPLES] =
+{
     2222,
     2412,
     2601,

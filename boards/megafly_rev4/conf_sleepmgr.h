@@ -39,14 +39,14 @@
 #define CONF_SLEEPMGR_H
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
 
 #define CONFIG_SLEEPMGR_ENABLE ///< Sleep manager options
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
 #endif /* CONF_SLEEPMGR_H */
