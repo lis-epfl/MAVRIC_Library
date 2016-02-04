@@ -23,7 +23,7 @@ var searchData=
   ['ground_5fspeed',['ground_speed',['../structgps__t.html#af27678536c3e3c2ef30d5775d6b291d9',1,'gps_t']]],
   ['ground_5fspeed_5f2d',['ground_speed_2d',['../structubx__nav__vel__ned__t.html#a61a2e5b8bb036dc4ad824ba0458e3adf',1,'ubx_nav_vel_ned_t']]],
   ['gyro',['gyro',['../classGyroscope.html#afb31903ff6966d7732283a19e93083ac',1,'Gyroscope::gyro()'],['../classLsm330dlc.html#a02afabcfcdca4902a840f29aaaa48084',1,'Lsm330dlc::gyro()'],['../classImu.html#a1c9d0538ed5e4c159de6b7dc1d44b3b2',1,'Imu::gyro()'],['../classGyroscope__sim.html#adb8f2a838ec9932714fb93f3baa58424',1,'Gyroscope_sim::gyro()']]],
-  ['gyro_5fbias',['gyro_bias',['../structqfilter__t.html#a05fc56c6dbec0f1002d326d4a536712c',1,'qfilter_t']]],
+  ['gyro_5fbias',['gyro_bias',['../structqfilter__t.html#a0ae513402d753684caf990ae640caccc',1,'qfilter_t']]],
   ['gyro_5fconfig',['gyro_config',['../structgyro__config.html',1,'']]],
   ['gyro_5fx',['gyro_X',['../classGyroscope.html#a24d51a35560490b8a5cbc7f9dab35480',1,'Gyroscope::gyro_X()'],['../classLsm330dlc.html#a9d5f7665a630ccf266744255c0b26680',1,'Lsm330dlc::gyro_X()'],['../classGyroscope__sim.html#ae17e44874fd915c21b63cb67967681ed',1,'Gyroscope_sim::gyro_X()']]],
   ['gyro_5fy',['gyro_Y',['../classGyroscope.html#a4630986e4538ed8e977ed22449e45c05',1,'Gyroscope::gyro_Y()'],['../classLsm330dlc.html#a74a98465fe3aee533a88bc07b342e17a',1,'Lsm330dlc::gyro_Y()'],['../classGyroscope__sim.html#ae9ef31a3e6cc28e93efa01ceb128dcd2',1,'Gyroscope_sim::gyro_Y()']]],

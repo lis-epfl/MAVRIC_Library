@@ -83,42 +83,42 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*******************************************************************************</span>
 <a name="l00002"></a>00002 <span class="comment"> * Copyright (c) 2009-2016, MAV&#39;RIC Development Team</span>
 <a name="l00003"></a>00003 <span class="comment"> * All rights reserved.</span>
-<a name="l00004"></a>00004 <span class="comment"> * </span>
-<a name="l00005"></a>00005 <span class="comment"> * Redistribution and use in source and binary forms, with or without </span>
+<a name="l00004"></a>00004 <span class="comment"> *</span>
+<a name="l00005"></a>00005 <span class="comment"> * Redistribution and use in source and binary forms, with or without</span>
 <a name="l00006"></a>00006 <span class="comment"> * modification, are permitted provided that the following conditions are met:</span>
-<a name="l00007"></a>00007 <span class="comment"> * </span>
-<a name="l00008"></a>00008 <span class="comment"> * 1. Redistributions of source code must retain the above copyright notice, </span>
+<a name="l00007"></a>00007 <span class="comment"> *</span>
+<a name="l00008"></a>00008 <span class="comment"> * 1. Redistributions of source code must retain the above copyright notice,</span>
 <a name="l00009"></a>00009 <span class="comment"> * this list of conditions and the following disclaimer.</span>
-<a name="l00010"></a>00010 <span class="comment"> * </span>
-<a name="l00011"></a>00011 <span class="comment"> * 2. Redistributions in binary form must reproduce the above copyright notice, </span>
-<a name="l00012"></a>00012 <span class="comment"> * this list of conditions and the following disclaimer in the documentation </span>
+<a name="l00010"></a>00010 <span class="comment"> *</span>
+<a name="l00011"></a>00011 <span class="comment"> * 2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<a name="l00012"></a>00012 <span class="comment"> * this list of conditions and the following disclaimer in the documentation</span>
 <a name="l00013"></a>00013 <span class="comment"> * and/or other materials provided with the distribution.</span>
-<a name="l00014"></a>00014 <span class="comment"> * </span>
+<a name="l00014"></a>00014 <span class="comment"> *</span>
 <a name="l00015"></a>00015 <span class="comment"> * 3. Neither the name of the copyright holder nor the names of its contributors</span>
 <a name="l00016"></a>00016 <span class="comment"> * may be used to endorse or promote products derived from this software without</span>
 <a name="l00017"></a>00017 <span class="comment"> * specific prior written permission.</span>
-<a name="l00018"></a>00018 <span class="comment"> * </span>
-<a name="l00019"></a>00019 <span class="comment"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; </span>
-<a name="l00020"></a>00020 <span class="comment"> * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE </span>
-<a name="l00021"></a>00021 <span class="comment"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE </span>
-<a name="l00022"></a>00022 <span class="comment"> * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE </span>
-<a name="l00023"></a>00023 <span class="comment"> * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR </span>
-<a name="l00024"></a>00024 <span class="comment"> * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF </span>
-<a name="l00025"></a>00025 <span class="comment"> * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS </span>
-<a name="l00026"></a>00026 <span class="comment"> * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN </span>
-<a name="l00027"></a>00027 <span class="comment"> * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) </span>
-<a name="l00028"></a>00028 <span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE </span>
+<a name="l00018"></a>00018 <span class="comment"> *</span>
+<a name="l00019"></a>00019 <span class="comment"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<a name="l00020"></a>00020 <span class="comment"> * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<a name="l00021"></a>00021 <span class="comment"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<a name="l00022"></a>00022 <span class="comment"> * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<a name="l00023"></a>00023 <span class="comment"> * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<a name="l00024"></a>00024 <span class="comment"> * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<a name="l00025"></a>00025 <span class="comment"> * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<a name="l00026"></a>00026 <span class="comment"> * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<a name="l00027"></a>00027 <span class="comment"> * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<a name="l00028"></a>00028 <span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
 <a name="l00029"></a>00029 <span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span>
 <a name="l00030"></a>00030 <span class="comment"> ******************************************************************************/</span>
 <a name="l00031"></a>00031 
 <a name="l00032"></a>00032 <span class="comment">/*******************************************************************************</span>
 <a name="l00033"></a>00033 <span class="comment"> * \file mavlink_communication.h</span>
-<a name="l00034"></a>00034 <span class="comment"> * </span>
+<a name="l00034"></a>00034 <span class="comment"> *</span>
 <a name="l00035"></a>00035 <span class="comment"> * \author MAV&#39;RIC Team</span>
 <a name="l00036"></a>00036 <span class="comment"> * \author Julien Lecoeur</span>
-<a name="l00037"></a>00037 <span class="comment"> *   </span>
-<a name="l00038"></a>00038 <span class="comment"> * \brief This module takes care of sending periodic telemetric messages and </span>
-<a name="l00039"></a>00039 <span class="comment"> * handling incoming messages </span>
+<a name="l00037"></a>00037 <span class="comment"> *</span>
+<a name="l00038"></a>00038 <span class="comment"> * \brief This module takes care of sending periodic telemetric messages and</span>
+<a name="l00039"></a>00039 <span class="comment"> * handling incoming messages</span>
 <a name="l00040"></a>00040 <span class="comment"> *</span>
 <a name="l00041"></a>00041 <span class="comment"> ******************************************************************************/</span>
 <a name="l00042"></a>00042 
@@ -135,31 +135,31 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00058"></a>00058 <span class="keyword">typedef</span> <span class="keywordtype">void</span>* handling_telemetry_module_struct_t;
 <a name="l00059"></a>00059 
 <a name="l00060"></a>00060 
-<a name="l00064"></a>00064 <span class="keyword">typedef</span> void (*mavlink_send_msg_function_t) (handling_telemetry_module_struct_t, <a class="code" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module.">mavlink_stream_t</a>*, mavlink_message_t*);
+<a name="l00064"></a>00064 <span class="keyword">typedef</span> void (*mavlink_send_msg_function_t)(handling_telemetry_module_struct_t, <a class="code" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module.">mavlink_stream_t</a>*, mavlink_message_t*);
 <a name="l00065"></a>00065 
 <a name="l00066"></a>00066 
-<a name="l00070"></a><a class="code" href="structmavlink__send__msg__handler__t.html">00070</a> <span class="keyword">typedef</span> <span class="keyword">struct  </span>
+<a name="l00070"></a><a class="code" href="structmavlink__send__msg__handler__t.html">00070</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
 <a name="l00071"></a>00071 {
 <a name="l00072"></a><a class="code" href="structmavlink__send__msg__handler__t.html#a2f2e7e43d45a8b7dc18c102a0eea51a6">00072</a>     <a class="code" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module.">mavlink_stream_t</a>* <a class="code" href="structmavlink__send__msg__handler__t.html#a2f2e7e43d45a8b7dc18c102a0eea51a6" title="Pointer to the MAVLink stream structure.">mavlink_stream</a>;                               
 <a name="l00073"></a><a class="code" href="structmavlink__send__msg__handler__t.html#a7d9c6ba10202b1913d861518fa54bce1">00073</a>     mavlink_send_msg_function_t <span class="keyword">function</span>;                           
 <a name="l00074"></a><a class="code" href="structmavlink__send__msg__handler__t.html#a89072a9f7da1bb7c09d9b403863fc0ad">00074</a>     handling_telemetry_module_struct_t      <a class="code" href="structmavlink__send__msg__handler__t.html#a89072a9f7da1bb7c09d9b403863fc0ad" title="Pointer to module data structure to be given as argument to the function.">module_struct</a>;          
-<a name="l00075"></a>00075 }<a class="code" href="structmavlink__send__msg__handler__t.html" title="MAVLink message handler structure.">mavlink_send_msg_handler_t</a>;
+<a name="l00075"></a>00075 } <a class="code" href="structmavlink__send__msg__handler__t.html" title="MAVLink message handler structure.">mavlink_send_msg_handler_t</a>;
 <a name="l00076"></a>00076 
 <a name="l00077"></a>00077 
-<a name="l00081"></a><a class="code" href="structmavlink__send__msg__handler__set__t.html">00081</a> <span class="keyword">typedef</span> <span class="keyword">struct  </span>
+<a name="l00081"></a><a class="code" href="structmavlink__send__msg__handler__set__t.html">00081</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
 <a name="l00082"></a>00082 {
 <a name="l00083"></a><a class="code" href="structmavlink__send__msg__handler__set__t.html#a2a00c3e184ec4e443b01f97f8a8b7037">00083</a>     uint32_t <a class="code" href="structmavlink__send__msg__handler__set__t.html#a2a00c3e184ec4e443b01f97f8a8b7037" title="Number of message callback currently registered.">msg_sending_count</a>;                                     
 <a name="l00084"></a><a class="code" href="structmavlink__send__msg__handler__set__t.html#ae2f58a21e56871252cc2d47f01a9cfce">00084</a>     uint32_t <a class="code" href="structmavlink__send__msg__handler__set__t.html#ae2f58a21e56871252cc2d47f01a9cfce" title="Maximum number of callback that can be registered.">max_msg_sending_count</a>;                                 
 <a name="l00085"></a><a class="code" href="structmavlink__send__msg__handler__set__t.html#ae32318db201509d7b1af6528ee0af813">00085</a>     <a class="code" href="structmavlink__send__msg__handler__t.html" title="MAVLink message handler structure.">mavlink_send_msg_handler_t</a> msg_send_list[];                     
-<a name="l00086"></a>00086 }<a class="code" href="structmavlink__send__msg__handler__set__t.html" title="MAVLink message handler setting structure.">mavlink_send_msg_handler_set_t</a>;
+<a name="l00086"></a>00086 } <a class="code" href="structmavlink__send__msg__handler__set__t.html" title="MAVLink message handler setting structure.">mavlink_send_msg_handler_set_t</a>;
 <a name="l00087"></a>00087 
-<a name="l00091"></a><a class="code" href="structmavlink__communication__t.html">00091</a> <span class="keyword">typedef</span> <span class="keyword">struct </span>
+<a name="l00091"></a><a class="code" href="structmavlink__communication__t.html">00091</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
 <a name="l00092"></a>00092 {
 <a name="l00093"></a><a class="code" href="structmavlink__communication__t.html#a0297a1fdf711a3e5b590e19350be1e93">00093</a>     <a class="code" href="structscheduler__t.html" title="Scheduler.">scheduler_t</a>                     <a class="code" href="structmavlink__communication__t.html#a0297a1fdf711a3e5b590e19350be1e93" title="Task set for scheduling of down messages.">scheduler</a>;                      
 <a name="l00094"></a><a class="code" href="structmavlink__communication__t.html#aa91f63ff5e68dffb9af36c4b5fae8aca">00094</a>     <a class="code" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module.">mavlink_stream_t</a>                <a class="code" href="structmavlink__communication__t.html#aa91f63ff5e68dffb9af36c4b5fae8aca" title="Mavlink interface using streams.">mavlink_stream</a>;                 
 <a name="l00095"></a><a class="code" href="structmavlink__communication__t.html#ab1543995f45f5b490737d0cea4fe0a8a">00095</a>     <a class="code" href="structmavlink__message__handler__t.html" title="Main message handler structure.">mavlink_message_handler_t</a>       <a class="code" href="structmavlink__communication__t.html#ab1543995f45f5b490737d0cea4fe0a8a" title="Message handler.">message_handler</a>;                
 <a name="l00096"></a><a class="code" href="structmavlink__communication__t.html#a211c3c642efda3407b3abeafa7cc9f19">00096</a>     <a class="code" href="structonboard__parameters__t.html" title="Main structure of the module onboard parameters.">onboard_parameters_t</a>            <a class="code" href="structmavlink__communication__t.html#a211c3c642efda3407b3abeafa7cc9f19" title="Onboard parameters.">onboard_parameters</a>;             
-<a name="l00097"></a>00097     
+<a name="l00097"></a>00097 
 <a name="l00098"></a><a class="code" href="structmavlink__communication__t.html#ac054b2186e90839d8b0af5d8eed3343f">00098</a>     <a class="code" href="structmavlink__send__msg__handler__set__t.html" title="MAVLink message handler setting structure.">mavlink_send_msg_handler_set_t</a>* <a class="code" href="structmavlink__communication__t.html#ac054b2186e90839d8b0af5d8eed3343f" title="Pointer to the sending message handler set.">send_msg_handler_set</a>;           
 <a name="l00099"></a>00099 
 <a name="l00100"></a>00100 } <a class="code" href="structmavlink__communication__t.html" title="Main MAVLink Communication structure.">mavlink_communication_t</a>;
@@ -171,7 +171,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00109"></a><a class="code" href="structmavlink__communication__conf__t.html#a72829ddb14533048c3fa186c352cb651">00109</a>     <a class="code" href="structmavlink__stream__conf__t.html" title="Configuration structure for the module MAVLink stream.">mavlink_stream_conf_t</a>           <a class="code" href="structmavlink__communication__conf__t.html#a72829ddb14533048c3fa186c352cb651" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>;          
 <a name="l00110"></a><a class="code" href="structmavlink__communication__conf__t.html#a508838ffec8764bd89d3028ef65bd963">00110</a>     <a class="code" href="structmavlink__message__handler__conf__t.html" title="Structure used to hold parameters during initialisation.">mavlink_message_handler_conf_t</a>  <a class="code" href="structmavlink__communication__conf__t.html#a508838ffec8764bd89d3028ef65bd963" title="Configuration for the module message handler.">message_handler_config</a>;         
 <a name="l00111"></a><a class="code" href="structmavlink__communication__conf__t.html#a1637ef0fa3ca36b09f611bc5071fb089">00111</a>     <a class="code" href="structonboard__parameters__conf__t.html" title="Configuration for the module onboard parameters.">onboard_parameters_conf_t</a>       <a class="code" href="structmavlink__communication__conf__t.html#a1637ef0fa3ca36b09f611bc5071fb089" title="Configuration for the module onboard parameters.">onboard_parameters_config</a>;      
-<a name="l00112"></a>00112     
+<a name="l00112"></a>00112 
 <a name="l00113"></a><a class="code" href="structmavlink__communication__conf__t.html#a4c530835af7abc44807a39f9cdc73bac">00113</a>     uint32_t                        <a class="code" href="structmavlink__communication__conf__t.html#a4c530835af7abc44807a39f9cdc73bac" title="Configuration for the sending message handler.">max_msg_sending_count</a>;          
 <a name="l00114"></a>00114 } <a class="code" href="structmavlink__communication__conf__t.html" title="Configuration of the module Mavlink Communication.">mavlink_communication_conf_t</a>;
 <a name="l00115"></a>00115 
@@ -185,7 +185,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00141"></a>00141 
 <a name="l00148"></a>00148 <span class="keywordtype">void</span> mavlink_communication_suspend_downstream(<a class="code" href="structmavlink__communication__t.html" title="Main MAVLink Communication structure.">mavlink_communication_t</a>* mavlink_communication, uint32_t delay);
 <a name="l00149"></a>00149 
-<a name="l00164"></a>00164 <span class="keywordtype">bool</span> mavlink_communication_add_msg_send(    <a class="code" href="structmavlink__communication__t.html" title="Main MAVLink Communication structure.">mavlink_communication_t</a>* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t <span class="keyword">function</span>, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
+<a name="l00164"></a>00164 <span class="keywordtype">bool</span> mavlink_communication_add_msg_send(<a class="code" href="structmavlink__communication__t.html" title="Main MAVLink Communication structure.">mavlink_communication_t</a>* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t <span class="keyword">function</span>, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
 <a name="l00165"></a>00165 
 <a name="l00173"></a>00173 <span class="keywordtype">bool</span> mavlink_communication_send_message(<a class="code" href="structmavlink__send__msg__handler__t.html" title="MAVLink message handler structure.">mavlink_send_msg_handler_t</a>* msg_send);
 <a name="l00174"></a>00174 
@@ -209,7 +209,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 3 2016 08:51:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 4 2016 13:40:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

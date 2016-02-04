@@ -62,109 +62,130 @@
             <div class="page-header sub-header clearfix">
             <h1><a href="../Developper_Guide/index.html">Developper Guide</a> <i class="glyphicon glyphicon-chevron-right"></i> <a href="../Developper_Guide/Code_style.html">Code style</a>            </h1>
                     <span style="float: left; font-size: 10px; color: gray;">
-                        Wednesday, February 3, 2016                    </span>
+                        Thursday, February 4, 2016                    </span>
                     <span style="float: right; font-size: 10px; color: gray;">
-                        9:47 AM                    </span>
+                        2:37 PM                    </span>
         </div>
     
     <p>Here are a few guidelines regarding code style.</p>
-<h2>File header</h2>
+<h1>Automatic formating</h1>
+<p><a href="http://astyle.sourceforge.net/">Artistic Style</a> is used to uniformise indentation, padding, tabulations...</p>
+<p>If you use <a href="https://www.sublimetext.com/">Sublime Text</a>, there is a plugin for Artistic Style called <a href="https://packagecontrol.io/packages/SublimeAStyleFormatter">SublimeAStyleFormatter</a>.
+The plugin is configured by adding the following lines in the configuration file. Feel free to open an issue to propose changes to this default style.</p>
+<pre><code class="language-yaml">&quot;AStyleFormatter&quot;:
+{
+    &quot;options_default&quot;:
+    {
+        &quot;indent&quot;: &quot;spaces&quot;,
+        &quot;indent-spaces&quot;: 4,
+        &quot;convert-tabs&quot;: true,
+        &quot;style&quot;: &quot;bsd&quot;,
+        &quot;indent-switches&quot;: true,
+        &quot;pad-oper&quot;: true,
+        &quot;unpad-paren&quot;: true,
+        &quot;align-pointer&quot;: &quot;type&quot;,
+    },
+}
+
+</code></pre>
+<h1>Examples</h1>
+<h3>File header</h3>
 <pre><code class="language-cpp">/*******************************************************************************
  * Copyright (c) 2009-2016, MAV'RIC Development Team
  * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without 
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice, 
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	filename.cpp
- * 
- * \author 	MAV'RIC Team
- * \author 	Name1
- * \author 	Name2
- *   
- * \brief 	Brief description of the module contained in this file
+ * \file    filename.cpp
  *
- * \detail 	Detailed description and important information to use this module
+ * \author  MAV'RIC Team
+ * \author  Name1
+ * \author  Name2
+ *
+ * \brief   Brief description of the module contained in this file
+ *
+ * \detail  Detailed description and important information to use this module
  ******************************************************************************/
 </code></pre>
-<h2>Function header</h2>
+<h3>Function header</h3>
 <pre><code class="language-cpp">/**
 * \brief Description of what the function does
-* 
+*
 * \param param_name1    description
-* \param param2        	description
+* \param param2         description
 *
 * \return description
 */
 </code></pre>
-<h2>Structs</h2>
+<h3>Structs</h3>
 <pre><code class="language-cpp">/**
 * \brief Description
 */
 typedef struct
 {
-type name;          ///&lt; description
-type name2;         ///&lt; description
-) MyStruct;
+    type name;          ///&lt; description
+    type name2;         ///&lt; description
+} MyStruct;
 </code></pre>
-<h2>Classes</h2>
+<h3>Classes</h3>
 <pre><code class="language-cpp">/**
- * \brief 	Description of class
+ * \brief   Description of class
  */
 class My_new_class: public My_parent_class
 {
 public:
-	/**
-	 * \brief 	Constructor
-	 *
-	 * \param 	my_param 	Description of parameter
-	 */
-	My_new_class(bool my_param);
+    /**
+     * \brief   Constructor
+     *
+     * \param   my_param    Description of parameter
+     */
+    My_new_class(bool my_param);
 
 private:
-	int my_private_int		///&lt; description of my int
+    int my_private_int      ///&lt; description of my int
 
-	/**
-	 * \brief   A private member function
-	 *
-	 * \return 	Success
-	 */
-	bool my_private_member_func(void);
+    /**
+     * \brief   A private member function
+     *
+     * \return  Success
+     */
+    bool my_private_member_func(void);
 };
 </code></pre>
-<h2>Loops</h2>
-<pre><code class="language-cpp">while( condition == false )
+<h3>Loops</h3>
+<pre><code class="language-cpp">while (condition == false)
 {
     do_stuff();
 }
 </code></pre>
-<h2>If</h2>
-<pre><code class="language-cpp">if( my_variable &gt; another_variable )
+<h3>If</h3>
+<pre><code class="language-cpp">if (my_variable &gt; another_variable)
 {
     do_this();
 }

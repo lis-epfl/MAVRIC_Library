@@ -51,7 +51,7 @@ var searchData=
   ['avg',['avg',['../structanalog__monitor__t.html#aeb67bca5fc1ae72836caf06f1b257682',1,'analog_monitor_t']]],
   ['awake_5fflag',['awake_flag',['../structubx__mon__rxr__struct__t.html#a4e6424c43ded99ae1d21978725f0f26d',1,'ubx_mon_rxr_struct_t']]],
   ['axes',['axes',['../structacc__data__t.html#a615ffd392d7f360b022c38d806780c7b',1,'acc_data_t::axes()'],['../structgyroscope__t.html#a11d29fa40ad8fd0132a6b9a218fa3b79',1,'gyroscope_t::axes()']]],
-  ['axis',['axis',['../structimu__sensor__config__t.html#a95e15fcc46ffbcdd2387585c4c39b62c',1,'imu_sensor_config_t']]],
+  ['axis',['axis',['../structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361',1,'imu_sensor_config_t']]],
   ['ayx',['Ayx',['../structderotation__matrix__t.html#a8b68a9e2ae1fea0716902f457434408a',1,'derotation_matrix_t']]],
   ['ayy',['Ayy',['../structderotation__matrix__t.html#af8ba917262ba12396f72fc2e63a4d667',1,'derotation_matrix_t']]],
   ['azim',['azim',['../structubx__nav__sv__info__t.html#ad5cdb09ec8b021c120f1d7ca1e145fcd',1,'ubx_nav_sv_info_t']]],

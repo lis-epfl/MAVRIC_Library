@@ -12,7 +12,7 @@ var searchData=
   ['capacity_5fmult',['capacity_mult',['../structsd__spi__t.html#a262b022411f1f6838f513ae91d5627cc',1,'sd_spi_t']]],
   ['card_5ftype',['card_type',['../structsd__spi__t.html#a1e3ff5e74b98887358082c91c331e512',1,'sd_spi_t']]],
   ['central_5fdata',['Central_data',['../classCentral__data.html',1,'Central_data'],['../classCentral__data.html#a8c9e4e113dbb8c96e53f1be26e396207',1,'Central_data::Central_data()']]],
-  ['chan_5fdata',['chan_data',['../structubx__nav__dgps__t.html#ab19a7956e1bebc53a690ebd37c3d5729',1,'ubx_nav_dgps_t']]],
+  ['chan_5fdata',['chan_data',['../structubx__nav__dgps__t.html#ad78f11ef13c9c689f032c2722abbd6da',1,'ubx_nav_dgps_t']]],
   ['channel',['channel',['../classSatellite.html#a1258b0b911e76664aaada2bf18cd3ee4',1,'Satellite::channel()'],['../classSpektrum__satellite.html#aecc1c81c4700538c31ebe9c6739fe137',1,'Spektrum_satellite::channel()'],['../structtLED__DESCRIPTOR.html#a87c42b45cbaa8d445bfde93f3656730b',1,'tLED_DESCRIPTOR::CHANNEL()']]],
   ['channel_5fdata',['channel_data',['../structubx__nav__sv__info__t.html#a9101ec3ea0bb4f6a8f6d5853ddd27be0',1,'ubx_nav_sv_info_t']]],
   ['channel_5finv',['channel_inv',['../structremote__t.html#a90644a21324c37f5709041e7ca7b0af5',1,'remote_t']]],

@@ -9,7 +9,7 @@ var searchData=
   ['battery_5f',['battery_',['../classState.html#aa8af6eff2f240cae87d455db9023e079',1,'State']]],
   ['battery_5fconf_5ft',['battery_conf_t',['../structbattery__conf__t.html',1,'']]],
   ['baud_5frate',['baud_rate',['../structubx__cfg__prt__t.html#a0403d8ad0dae4dcf8e693c98f159c196',1,'ubx_cfg_prt_t']]],
-  ['bias',['bias',['../structimu__sensor__config__t.html#a823e5f813bce93a3a11ac021d3e8486f',1,'imu_sensor_config_t']]],
+  ['bias',['bias',['../structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a',1,'imu_sensor_config_t']]],
   ['bind',['bind',['../classSatellite.html#a897b03fd579a158190b4a1459ea90ec0',1,'Satellite::bind()'],['../classSpektrum__satellite.html#a53bf9883a0f358c9a1f5cb229965a472',1,'Spektrum_satellite::bind()']]],
   ['bmp085',['Bmp085',['../classBmp085.html',1,'Bmp085'],['../classBmp085.html#a703069074ec31a3e601c9f60f4fca64d',1,'Bmp085::Bmp085()']]],
   ['buffer',['buffer',['../structanalog__monitor__t.html#a35f8538aac910387a48b3d90d2e7d91a',1,'analog_monitor_t']]],

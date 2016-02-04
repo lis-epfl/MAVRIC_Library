@@ -10,7 +10,7 @@ var searchData=
   ['onboard_5fparameters',['onboard_parameters',['../structmavlink__communication__t.html#a211c3c642efda3407b3abeafa7cc9f19',1,'mavlink_communication_t']]],
   ['onboard_5fparameters_5fconfig',['onboard_parameters_config',['../structmavlink__communication__conf__t.html#a1637ef0fa3ca36b09f611bc5071fb089',1,'mavlink_communication_conf_t']]],
   ['orientation',['orientation',['../structcurvace__t.html#a5ecffdd9f761ddb86eaa81512911f9b3',1,'curvace_t']]],
-  ['orientation_5fbf',['orientation_bf',['../structsonar__i2cxl__conf__t.html#a1cf40a7ba1710c1a967b6c2a2234c67c',1,'sonar_i2cxl_conf_t::orientation_bf()'],['../structsonar__sim__conf__t.html#a63c110f697535569458cc8c008c30724',1,'sonar_sim_conf_t::orientation_bf()']]],
+  ['orientation_5fbf',['orientation_bf',['../structsonar__i2cxl__conf__t.html#a352bb2169accb4128183d7cbc784f5a2',1,'sonar_i2cxl_conf_t::orientation_bf()'],['../structsonar__sim__conf__t.html#ab3ab14858c0195b0b2370e3ef99b7128',1,'sonar_sim_conf_t::orientation_bf()']]],
   ['origin',['origin',['../structposition__estimation__conf__t.html#ad33aef8b864b02c34d25016fd845e99b',1,'position_estimation_conf_t::origin()'],['../structlocal__position__t.html#ab63c9c3d6cf40ad53c99218aeee3f410',1,'local_position_t::origin()']]],
   ['out_5fof_5ffence_5f1',['out_of_fence_1',['../structstate__conf__t.html#a9713e27458c13a53303cfd8631a5b164',1,'state_conf_t::out_of_fence_1()'],['../classState.html#abb09d2da7b0c2869d093a44e8b451daf',1,'State::out_of_fence_1()']]],
   ['out_5fof_5ffence_5f2',['out_of_fence_2',['../structstate__conf__t.html#aaef22b5c798e489d33d0547a15698367',1,'state_conf_t::out_of_fence_2()'],['../classState.html#afb2b944fd84462f85c6a8dd32e546e19',1,'State::out_of_fence_2()']]],
