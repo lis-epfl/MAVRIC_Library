@@ -64,10 +64,10 @@ extern "C"
 #define  USB_DEVICE_PRODUCT_NAME          "CDC"
 
 #define  USB_DEVICE_ATTR                  \
-	(USB_CONFIG_ATTR_SELF_POWERED)
+    (USB_CONFIG_ATTR_SELF_POWERED)
 // (USB_CONFIG_ATTR_BUS_POWERED)
-//	(USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_SELF_POWERED)
-//	(USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_BUS_POWERED)
+//  (USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_SELF_POWERED)
+//  (USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_BUS_POWERED)
 
 //! USB Device string definitions (Optional)
 //#define  USB_DEVICE_MANUFACTURE_NAME      "EPFL"
@@ -121,10 +121,10 @@ extern "C"
  */
 //! Interface callback definition
 #define  UDI_CDC_ENABLE_EXT()             stdio_usb_enable()
-#define  UDI_CDC_DISABLE_EXT()            stdio_usb_disable()         
-#define  UDI_CDC_RX_NOTIFY()              
-#define  UDI_CDC_SET_CODING_EXT(cfg)      
-#define  UDI_CDC_SET_DTR_EXT(set)         
+#define  UDI_CDC_DISABLE_EXT()            stdio_usb_disable()
+#define  UDI_CDC_RX_NOTIFY()
+#define  UDI_CDC_SET_CODING_EXT(cfg)
+#define  UDI_CDC_SET_DTR_EXT(set)
 #define  UDI_CDC_SET_RTS_EXT(set)
 
 //! Define it when the transfer CDC Device to Host is a low rate (<512000 bauds)
@@ -141,7 +141,7 @@ extern "C"
 
 
 /**
- * USB Device Driver Configuration    
+ * USB Device Driver Configuration
  * @{
  */
 //@}
