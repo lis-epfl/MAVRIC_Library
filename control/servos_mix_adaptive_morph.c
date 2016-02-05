@@ -90,19 +90,20 @@ void servos_mix_adaptive_morph_update_command(servo_mix_adaptive_morph_t* mix, c
 {
 	// Calculate value to be sent to the motors
 	//To control roll in asymetric way
+	/*
 	float tmp_pitch				= mix->config.servo_pitch_dir * ( (command->rpy[PITCH] + mix->config.trim_pitch) );
 	float tmp_roll_left_servo	= mix->config.servo_roll_left_dir  * ( (command->rpy[ROLL] + mix->config.trim_roll_left) );
 	float tmp_roll_right_servo	= mix->config.servo_roll_right_dir  * ( (command->rpy[ROLL] + mix->config.trim_roll_right) );
 	float tmp_tail_servo		= mix->config.servo_tail_dir  * ( (command->rpy[YAW] + mix->config.trim_tail) );
 	float tmp_motor				= command->thrust;
-	/*
+	*/
 	//To control pitch in a symetric way
 	float tmp_pitch				= mix->config.servo_pitch_dir * ( (command->rpy[PITCH] + mix->config.trim_pitch) );
 	float tmp_roll_left_servo	= mix->config.servo_roll_left_dir  * ( (command->rpy[YAW] + mix->config.trim_roll_left) );
 	float tmp_roll_right_servo	= (-1.0) * mix->config.servo_roll_right_dir  * ( (command->rpy[YAW] + mix->config.trim_roll_right) );
 	float tmp_tail_servo		= mix->config.servo_tail_dir  * ( (command->rpy[ROLL] + mix->config.trim_tail) );
 	float tmp_motor				= command->thrust;
-	*/
+	
 	// Clip values
 	if (tmp_pitch < mix->config.min_amplitude)
 	{
