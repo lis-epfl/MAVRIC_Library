@@ -70,19 +70,15 @@
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "hal/common/led.hpp"
 #include "drivers/servos_telemetry.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "sensing/ahrs.h"
 #include "control/pid_controller.h"
 #include "util/print_util.h"
 #include "util/coord_conventions.h"
 #include "control/stabilisation.h"
-}
-
-extern "C"
-{
 #include "control/attitude_controller.h"
 }
 #include "control/velocity_controller_copter.hpp"
