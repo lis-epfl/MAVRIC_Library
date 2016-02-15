@@ -214,7 +214,7 @@ static bool waypoint_handler_take_off_handler(mavlink_waypoint_handler_t* waypoi
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t waypoint_handler_go_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
+static mav_result_t waypoint_handler_go_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
 /**
  * \brief   Start/Stop the navigation
@@ -1474,6 +1474,8 @@ static mav_result_t waypoint_handler_go_home(mavlink_waypoint_handler_t* waypoin
 	waypoint_handler->navigation->internal_state = NAV_STOP_THERE;
 
 	result = MAV_RESULT_ACCEPTED;
+
+	return result;
 }
 
 static mav_result_t waypoint_handler_start_stop_navigation(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
@@ -2267,7 +2269,7 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
     callbackcmd.command_id = MAV_CMD_NAV_RETURN_TO_LAUNCH; // 20
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
+    callbackcmd.compid_target = MAV_COMP_ID_ALL;
     callbackcmd.function = (mavlink_cmd_callback_function_t)    &waypoint_handler_go_home;
     callbackcmd.module_struct =                                 waypoint_handler;
     init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
