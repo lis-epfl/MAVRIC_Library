@@ -31,6 +31,7 @@ LIB_SRCS += control/stabilisation_telemetry.cpp
 LIB_SRCS += control/vector_field_waypoint.cpp
 LIB_SRCS += control/velocity_controller_copter.cpp
 
+LIB_SRCS += drivers/airspeed_analog.cpp
 LIB_SRCS += drivers/battery.c                    
 LIB_SRCS += drivers/barometer.cpp          
 LIB_SRCS += drivers/barometer_telemetry.cpp          

@@ -33,7 +33,8 @@
  * \file airspedd_analog.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur, Simon Pyroth
+ * \author Julien Lecoeur
+ * \author Simon Pyroth
  *   
  * \brief This file is the driver for the DIYdrones airspeed sensor V20 
  * (old analog version)
@@ -44,13 +45,8 @@
 #ifndef AIRSPEED_ANALOG_H_
 #define AIRSPEED_ANALOG_H_
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
 #include <stdint.h>
-#include "analog_monitor.h"
-#include "scheduler.h"
+#include "hal/common/adc.hpp"
 
 
 
@@ -59,76 +55,111 @@
  */
 typedef struct 
 {
-	analog_rails_t analog_rail;		///< Analog rail on which the sensor is connected
-	float pressure_offset;			///< Default airspeed offset
-	float calibration_gain;			///< Gain used for the calibration of the offset (low-pass)
-	float conversion_factor;		///< Factor used for conversion between differential pressure P and square speed v^2. Should be around 2/rho_air. This parameter is the one to tune the sensor !
-	float correction_gain;			///< Gain obtained by the fitted relation, if needed (Airspeed_measured = gain * Airspeed_true + offset)
-	float correction_offset;		///< Offset obtained by the fitted relation, if needed
-	float filter_gain;				///< Gain for the low-pass filter
+    float pressure_offset;          ///< Default airspeed offset
+    float calibration_gain;         ///< Gain used for the calibration of the offset (low-pass)
+    float conversion_factor;        ///< Factor used for conversion between differential pressure P and square speed v^2. Should be around 2/rho_air. This parameter is the one to tune the sensor !
+    float correction_gain;          ///< Gain obtained by the fitted relation, if needed (Airspeed_measured = gain * Airspeed_true + offset)
+    float correction_offset;        ///< Offset obtained by the fitted relation, if needed
+    float filter_gain;              ///< Gain for the low-pass filter
 } airspeed_analog_conf_t;
 
-/**
- * \brief Structure containing the analog airspeed sensor data
-*/
-typedef struct {
-	analog_monitor_t* analog_monitor;		///< pointer to the structure of analog monitor module
-	uint8_t analog_channel;					///< analog channel of the ADC
-	float voltage;							///< Voltage read by the ADC
-	
-	float pressure_offset;					///< Offset of the pressure sensor
-	float differential_pressure;			///< True differential pressure in Pa (raw sensor compensated with offset)
-	float conversion_factor;				///< Factor used for conversion between differential pressure P and square speed v^2. Is influenced by real sensitivity of the sensor and by air density !
-	float correction_gain;					///< Gain used to correct estimation
-	float correction_offset;				///< Offset used to correct estimation
-	float alpha;							///< Filter coefficient
-	
-	float raw_airspeed;						///< Unfiltered and uncorrected airspeed
-	float scaled_airspeed;					///< Corrected airspeed, using fitted relation
-	float airspeed;							///< Filtered corrected airspeed
-	float last_airspeed;					///< Airspeed from previous loop
-	
-	bool calibrating;						///< True if the sensor is currently in calibration
-	float calibration_gain;					///< Gain used for the calibration of the offset (low-pass)
-} airspeed_analog_t;
+static inline airspeed_analog_conf_t airspeed_analog_default_config();
 
-/**
- * \brief Initialize the airspeed sensor
- *
- * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
- * \param analog_monitor pointer to the structure of analog monitor module
- * \param analog_channel set which channel of the ADC is map to the airspeed sensor
- *
-*/
-bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, const airspeed_analog_conf_t* config);
+class Airspeed_analog
+{
+public:
+    /**
+     * \brief Constructor
+     *
+     * \param  adc     Reference to analog to digital converter
+     * \param  config  Configuration
+     */
+    Airspeed_analog(Adc& adc, airspeed_analog_conf_t config = airspeed_analog_default_config());
 
-/**
- * \brief Calibrates the airspeed sensor offset at 0 speed. It will continue calibrating until it is asked to stop.
- * 
- * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
- *
-*/
-void airspeed_analog_start_calibration(airspeed_analog_t* airspeed_analog);
 
-/**
- * \brief Stop the calibration procedure and keep the last offset.
- * 
- * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
- *
-*/
-void airspeed_analog_stop_calibration(airspeed_analog_t* airspeed_analog);
+    /**
+     * \brief Initialize the airspeed sensor
+     *
+     * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+     * \param analog_monitor pointer to the structure of analog monitor module
+     * \param analog_channel set which channel of the ADC is map to the airspeed sensor
+     *
+    */
+    bool init(const airspeed_analog_conf_t* config);
 
-/**
- * \brief Updates the values in the airspeed structure
- *
- * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
- *
- * \return	The result of the task execution
-*/
-task_return_t airspeed_analog_update(airspeed_analog_t* airspeed_analog);
+    /**
+     * \brief Calibrates the airspeed sensor offset at 0 speed. It will continue calibrating until it is asked to stop.
+     * 
+     * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+     *
+    */
+    void start_calibration(void);
 
-#ifdef __cplusplus
+    /**
+     * \brief Stop the calibration procedure and keep the last offset.
+     * 
+     * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+     *
+    */
+    void stop_calibration(void);
+
+    /**
+     * \brief Updates the values in the airspeed structure
+     *
+     * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+     *
+     * \return  The result of the task execution
+    */
+    bool update(void);
+
+    /**
+     * \brief Gets the current estimated airspeed
+     *
+     * \return  The current estimated airspeed
+    */
+    float get_airspeed();
+
+private:
+    /**
+     * \brief Returns the raw differential pressure measured by the airspeed sensor in Pascal
+     *
+     * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+     *
+     * \return the raw differential pressure measured by the sensor (in Pa)
+    */
+    float get_raw_differential_pressure(void);
+
+    Adc& adc_;                              ///< Reference to analog to digital converter
+    
+    airspeed_analog_conf_t config_;         ///< Configuration
+
+    float voltage;                          ///< Voltage read by the ADC
+    
+    float differential_pressure;            ///< True differential pressure in Pa (raw sensor compensated with offset)
+    
+    float raw_airspeed;                     ///< Unfiltered and uncorrected airspeed
+    float scaled_airspeed;                  ///< Corrected airspeed, using fitted relation
+    float airspeed;                         ///< Filtered corrected airspeed
+    float last_airspeed;                    ///< Airspeed from previous loop
+    
+    bool calibrating;                       ///< True if the sensor is currently in calibration, false otherwise
+
+};
+
+
+
+static inline airspeed_analog_conf_t airspeed_analog_default_config()
+{
+    airspeed_analog_conf_t conf = {};
+
+    conf.pressure_offset = 0.0f;
+    conf.calibration_gain = 0.9f;
+    conf.conversion_factor = 0.3945f;
+    conf.correction_gain = 1.0f;
+    conf.correction_offset = 0.0f;
+    conf.filter_gain = 0.7f;
+
+    return conf;
 }
-#endif
 
 #endif /* AIRSPEED_ANALOG_H_ */
