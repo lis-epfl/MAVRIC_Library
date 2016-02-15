@@ -930,7 +930,7 @@ task_return_t navigation_update(navigation_t* navigation)
 				navigation->auto_takeoff = false;
 				navigation->stop_nav = false;
 				navigation->stop_nav_there = false;
-				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
+				//navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 				navigation->critical_next_state = false;
 				navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
