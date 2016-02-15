@@ -193,6 +193,8 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			{
 				print_util_dbg_print("Switching from state_machine.\r\n");
 				state_switch_to_active_mode(state_machine->state, &state_new);
+
+				mode_custom_new = CUSTOM_BASE_MODE;
 			}
 			break;
 		
