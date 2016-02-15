@@ -95,6 +95,7 @@ int main(int argc, char** argv)
                                    board.servo_1,
                                    board.servo_2,
                                    board.servo_3,
+                                   board.airspeed_analog,
                                    file_log,
                                    file_stat);
 

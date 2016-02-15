@@ -61,6 +61,7 @@
 #include "hal/dummy/pwm_dummy.hpp"
 #include "drivers/servo.hpp"
 #include "hal/dummy/led_dummy.hpp"
+#include "drivers/airspeed_analog.hpp"
 
 extern "C"
 {
@@ -127,6 +128,9 @@ public:
 
     Adc_dummy           adc_battery;
     Battery             battery;
+
+    Adc_dummy           adc_airspeed;
+    Airspeed_analog     airspeed_analog;
 
     Gpio_dummy          dsm_receiver_pin;
     Gpio_dummy          dsm_power_pin;
