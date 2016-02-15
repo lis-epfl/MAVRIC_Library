@@ -44,7 +44,7 @@
 #ifndef CONF_IMU_REV4_H_
 #define CONF_IMU_REV4_H_
 
-#include "imu.hpp"
+//#include "imu.hpp"
 #include "megafly_rev4.hpp"
 
 static inline imu_conf_t imu_config(void)

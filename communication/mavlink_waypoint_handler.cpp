@@ -207,6 +207,16 @@ static mav_result_t waypoint_handler_is_arrived(mavlink_waypoint_handler_t* wayp
 static bool waypoint_handler_take_off_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
+ * \brief   Go home
+ *
+ * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
+ * \param   packet                  The pointer to the structure of the MAVLink command message long
+ *
+ * \return  The MAV_RESULT of the command
+ */
+static mav_result_t waypoint_handler_goto_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
+
+/**
  * \brief   Start/Stop the navigation
  *
  * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
@@ -1450,6 +1460,23 @@ static bool waypoint_handler_take_off_handler(mavlink_waypoint_handler_t* waypoi
     return result;
 }
 
+static mav_result_t waypoint_handler_goto_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
+{
+    mav_result_t result = MAV_RESULT_UNSUPPORTED;
+
+	local_position_t local_position;
+	local_position.pos[0] = 0.0f;
+	local_position.pos[1] = 0.0f;
+	local_position.pos[2] = 0.0f;
+
+	waypoint_handler_hold_init(waypoint_handler, local_position);
+	waypoint_handler->navigation->internal_state = NAV_STOP_THERE;
+
+    result = MAV_RESULT_ACCEPTED;
+
+    return result;
+}
+
 static mav_result_t waypoint_handler_start_stop_navigation(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
@@ -1561,7 +1588,7 @@ static void waypoint_handler_auto_landing_handler(mavlink_waypoint_handler_t* wa
             case DESCENT_TO_SMALL_ALTITUDE:
                 print_util_dbg_print("Cust: descent to small alt");
                 waypoint_handler->state->mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
-                waypoint_handler->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
+                waypoint_handler->state->mav_mode_custom |= CUST_DESCENT_TO_SMALL_ALTITUDE;
                 waypoint_handler->waypoint_hold_coordinates = waypoint_handler->position_estimation->local_position;
                 waypoint_handler->waypoint_hold_coordinates.pos[Z] = -5.0f;
                 break;
@@ -1569,7 +1596,7 @@ static void waypoint_handler_auto_landing_handler(mavlink_waypoint_handler_t* wa
             case DESCENT_TO_GND:
                 print_util_dbg_print("Cust: descent to gnd");
                 waypoint_handler->state->mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
-                waypoint_handler->state->mav_mode_custom = CUST_DESCENT_TO_GND;
+                waypoint_handler->state->mav_mode_custom |= CUST_DESCENT_TO_GND;
                 waypoint_handler->waypoint_hold_coordinates = waypoint_handler->position_estimation->local_position;
                 waypoint_handler->waypoint_hold_coordinates.pos[Z] = 0.0f;
                 waypoint_handler->navigation->alt_lpf = waypoint_handler->position_estimation->local_position.pos[2];
@@ -1686,7 +1713,7 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
                 waypoint_handler->navigation->internal_state = NAV_HOLD_POSITION;
             }
 
-            waypoint_handler->state->mav_mode_custom = CUSTOM_BASE_MODE;
+            //waypoint_handler->state->mav_mode_custom = CUSTOM_BASE_MODE;
             waypoint_handler->navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
             waypoint_handler->critical_next_state = false;
             waypoint_handler->navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
@@ -2294,6 +2321,14 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
     callbackcmd.function = (mavlink_cmd_callback_function_t)    &waypoint_handler_start_stop_navigation;
     callbackcmd.module_struct =                                 waypoint_handler;
     init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+
+    callbackcmd.command_id = MAV_CMD_OVERRIDE_GOTO_HOME; // 253
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+	callbackcmd.function = (mavlink_cmd_callback_function_t)    &waypoint_handler_goto_home;
+	callbackcmd.module_struct =                                 waypoint_handler;
+	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 
     return init_success;
 }

@@ -106,8 +106,8 @@ void state_telemetry_set_mav_mode(State* state, uint32_t sysid, mavlink_message_
     {
         print_util_dbg_print("base_mode from msg:");
         print_util_dbg_print_num(packet.base_mode, 10);
-        print_util_dbg_print(", custom mode:");
-        print_util_dbg_print_num(packet.custom_mode, 10);
+        print_util_dbg_print(", custom mode from msg:");
+		print_util_dbg_print_num(packet.custom_mode, 10);
         print_util_dbg_print("\r\n");
 
         mav_mode_t new_mode;
@@ -142,11 +142,13 @@ void state_telemetry_set_mav_mode(State* state, uint32_t sysid, mavlink_message_
 
             state->mav_mode = (new_mode & (~MAV_MODE_FLAG_HIL_ENABLED)) + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
 
-            //state->mav_mode_custom = packet.custom_mode;
+            state->mav_mode_custom = static_cast<mav_mode_custom_t>(packet.custom_mode);
 
             print_util_dbg_print("New mav mode:");
             print_util_dbg_print_num(state->mav_mode, 10);
-            print_util_dbg_print("\r");
+            print_util_dbg_print(" , New custom mode:");
+            print_util_dbg_print_num(state->mav_mode_custom, 10);
+            print_util_dbg_print("\r\n");
         }
     }
 }
