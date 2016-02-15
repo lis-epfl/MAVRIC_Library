@@ -42,7 +42,7 @@
 #ifndef TASKS_H_
 #define TASKS_H_
 
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEWing/central_data.hpp"
 #include "hal/common/led.hpp"
 
 /**

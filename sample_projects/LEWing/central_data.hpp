@@ -71,6 +71,7 @@
 #include "hal/common/led.hpp"
 #include "drivers/servos_telemetry.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "drivers/airspeed_analog.hpp"
 
 extern "C"
 {
@@ -94,7 +95,7 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2);
+    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Airspeed_analog& airspeed_analog, File& file1, File& file2);
 
 
     /**
@@ -120,6 +121,7 @@ public:
     Servo&          servo_1;            ///< Reference to servos structure
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
+    Airspeed_analog& airspeed_analog;   ///< Reference to the analog airspeed
 
     scheduler_t scheduler;
     mavlink_communication_t mavlink_communication;

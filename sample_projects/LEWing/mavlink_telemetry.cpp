@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEWing/mavlink_telemetry.hpp"
+#include "sample_projects/LEWing/central_data.hpp"
 #include "drivers/sonar_i2cxl.hpp"
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"

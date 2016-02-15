@@ -60,6 +60,7 @@
 #include "hal/avr32/pwm_avr32.hpp"
 #include "drivers/servo.hpp"
 #include "hal/avr32/led_avr32.hpp"
+#include "drivers/airspeed_analog.hpp"
 
 extern "C"
 {
@@ -140,7 +141,9 @@ public:
     Sonar_i2cxl         sonar_i2cxl;
     analog_monitor_t    analog_monitor;
     Adc_avr32           adc_battery;
+    Adc_avr32           adc_airspeed;
     Battery             battery;
+    Airspeed_analog     airspeed_analog;
     Pwm_avr32           pwm_0;
     Pwm_avr32           pwm_1;
     Pwm_avr32           pwm_2;

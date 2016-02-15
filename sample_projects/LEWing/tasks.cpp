@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#include "sample_projects/LEQuad/tasks.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEWing/tasks.hpp"
+#include "sample_projects/LEWing/central_data.hpp"
 #include "communication/data_logging.hpp"
 
 

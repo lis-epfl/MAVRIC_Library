@@ -38,10 +38,10 @@
  *
  ******************************************************************************/
 
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEWing/central_data.hpp"
 #include "boards/megafly_rev4/megafly_rev4.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
+#include "sample_projects/LEWing/mavlink_telemetry.hpp"
+#include "sample_projects/LEWing/tasks.hpp"
 
 // #include "hal/dummy/file_dummy.hpp"
 #include "hal/avr32/file_flash_avr32.hpp"
@@ -59,7 +59,7 @@ extern "C"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"
 
-#include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
+#include "sample_projects/LEWing/proj_avr32/config/conf_imu.hpp"
 }
 
 // #include "hal/common/dbg.hpp"
@@ -125,6 +125,7 @@ int main(void)
                                    board.servo_1,
                                    board.servo_2,
                                    board.servo_3,
+                                   board.airspeed_analog,
                                    file_log,
                                    file_stat);
 

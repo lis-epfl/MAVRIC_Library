@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEWing/central_data.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
 #include "communication/toggle_logging_default_config.hpp"
 #include "communication/mavlink_communication_default_config.hpp"
@@ -63,7 +63,7 @@ extern "C"
 }
 
 
-Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2):
+Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Airspeed_analog& airspeed_analog, File& file1, File& file2):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -77,6 +77,7 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
+    airspeed_analog(airspeed_analog),
     state(battery, state_default_config()),
     data_logging(file1),
     data_logging2(file2),

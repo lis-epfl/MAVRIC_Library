@@ -44,7 +44,7 @@
 
 extern "C"
 {
-#include "sample_projects/LEQuad/proj_avr32/config/conf_platform.h" // To get the MAVLINK_SYS_ID
+#include "sample_projects/LEWing/proj_avr32/config/conf_platform.h" // To get the MAVLINK_SYS_ID
 }
 
 ///< Define which configuration of the imu to use, depending on the autopilot ID

@@ -39,9 +39,9 @@
  ******************************************************************************/
 
 #include "boards/mavrimini.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
+#include "sample_projects/LEWing/central_data.hpp"
+#include "sample_projects/LEWing/mavlink_telemetry.hpp"
+#include "sample_projects/LEWing/tasks.hpp"
 
 extern "C"
 {
