@@ -119,6 +119,13 @@ public:
     */
     const float& get_airspeed() const;
 
+    /**
+     * \brief Gets the previous estimated airspeed
+     *
+     * \return  The previous estimated airspeed
+    */
+    const float& get_last_airspeed() const;
+
 private:
     /**
      * \brief Returns the raw differential pressure measured by the airspeed sensor in Pascal

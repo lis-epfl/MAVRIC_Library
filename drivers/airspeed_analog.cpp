@@ -149,3 +149,8 @@ const float& Airspeed_analog::get_airspeed() const
 {
     return airspeed;
 }
+
+const float& Airspeed_analog::get_last_airspeed() const
+{
+    return last_airspeed;
+}

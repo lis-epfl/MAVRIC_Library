@@ -61,6 +61,7 @@ LIB_SRCS += runtime/scheduler_telemetry.cpp
 
 LIB_SRCS += sensing/ahrs.c            
 LIB_SRCS += sensing/ahrs_telemetry.cpp  
+LIB_SRCS += sensing/ahrs_madgwick.cpp
 LIB_SRCS += sensing/imu.cpp             
 LIB_SRCS += sensing/imu_telemetry.cpp                 
 LIB_SRCS += sensing/position_estimation.cpp            

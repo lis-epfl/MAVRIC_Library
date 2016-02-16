@@ -45,7 +45,7 @@
 
 
 
-#include "sensing/ahrs_madgwick.h"
+#include "sensing/ahrs_madgwick.hpp"
 
 
 static inline ahrs_madgwick_conf_t ahrs_madgwick_default_config()
@@ -53,7 +53,7 @@ static inline ahrs_madgwick_conf_t ahrs_madgwick_default_config()
     ahrs_madgwick_conf_t conf = {};
 
     conf.beta = 0.06f;
-    conf.zeta = 0.01f;
+    conf.zeta = 0.0f;
 
     return conf;
 };
