@@ -59,10 +59,10 @@ extern "C" {
  */
 typedef struct 
 {
-	stabiliser_t rate_stabiliser;								///< The rate controller structure
-	stabiliser_t attitude_stabiliser;							///< The attitude controller structure
-	stabiliser_t velocity_stabiliser;							///< The velocity controller structure
-	stabiliser_t position_stabiliser;							///< The position controller structure
+    stabiliser_t rate_stabiliser;                               ///< The rate controller structure
+    stabiliser_t attitude_stabiliser;                           ///< The attitude controller structure
+    stabiliser_t velocity_stabiliser;                           ///< The velocity controller structure
+    stabiliser_t position_stabiliser;                           ///< The position controller structure
 } stabiliser_stack_wing_t;
 
 /**
@@ -70,24 +70,24 @@ typedef struct
  */
 typedef struct
 {
-	stabiliser_stack_wing_t stabiliser_stack;					///< The pointer to the PID parameters values for the stacked controller 
-	control_command_t* controls;								///< The pointer to the control structure
-	const Imu* imu;												///< The pointer to the IMU structure
-	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
-	const position_estimation_t* pos_est;						///< The pointer to the position estimation structure
-	const Airspeed_analog* airspeed_analog;						///< The pointer to the analog airspeed sensor structure
-	navigation_t* navigation;									///< The pointer to the navigation structure
-	float thrust_apriori;										///< A priori on the thrust for velocity control
-	float pitch_angle_apriori;									///< Constant a priori on the pitch angle
-	float pitch_angle_apriori_gain;								///< Gain of the pitch angle a priori which is function of the roll value
-	float max_roll_angle;										///< Maximum roll value that the velocity layer could ask to follow
-	float take_off_thrust;										///< Thrust value used during the take-off
-	float take_off_pitch;										///< Pitch angle used during the take-off
-	float landing_pitch;										///< Pitch angle used during the landing
-	float landing_max_roll;										///< Maximum roll angle during landing
-	// TODO: Remove these two lines, which were used only for tuning
-	float current_heading;
-	float vertical_speed;
+    stabiliser_stack_wing_t stabiliser_stack;                   ///< The pointer to the PID parameters values for the stacked controller 
+    control_command_t* controls;                                ///< The pointer to the control structure
+    const Imu* imu;                                             ///< The pointer to the IMU structure
+    const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
+    const position_estimation_t* pos_est;                       ///< The pointer to the position estimation structure
+    const Airspeed_analog* airspeed_analog;                     ///< The pointer to the analog airspeed sensor structure
+    navigation_t* navigation;                                   ///< The pointer to the navigation structure
+    float thrust_apriori;                                       ///< A priori on the thrust for velocity control
+    float pitch_angle_apriori;                                  ///< Constant a priori on the pitch angle
+    float pitch_angle_apriori_gain;                             ///< Gain of the pitch angle a priori which is function of the roll value
+    float max_roll_angle;                                       ///< Maximum roll value that the velocity layer could ask to follow
+    float take_off_thrust;                                      ///< Thrust value used during the take-off
+    float take_off_pitch;                                       ///< Pitch angle used during the take-off
+    float landing_pitch;                                        ///< Pitch angle used during the landing
+    float landing_max_roll;                                     ///< Maximum roll angle during landing
+    // TODO: Remove these two lines, which were used only for tuning
+    float current_heading;
+    float vertical_speed;
 } stabilisation_wing_t;
 
 /**
@@ -95,36 +95,36 @@ typedef struct
  */
 typedef struct  
 {
-	float thrust_apriori;										///< A priori thrust
-	float pitch_angle_apriori;									///< Constant a priori on the pitch angle
-	float pitch_angle_apriori_gain;								///< Gain of the pitch angle a priori which is function of the roll value
-	float max_roll_angle;										///< Maximum roll value that the velocity layer could ask to follow
-	float take_off_thrust;										///< Thrust value used during the take-off
-	float take_off_pitch;										///< Pitch angle used during the take-off
-	float landing_pitch;										///< Pitch angle used during the landing
-	float landing_max_roll;										///< Maximum roll angle during landing
-	stabiliser_stack_wing_t stabiliser_stack;					///< The pointer to the PID parameters values and output for the stacked controller
+    float thrust_apriori;                                       ///< A priori thrust
+    float pitch_angle_apriori;                                  ///< Constant a priori on the pitch angle
+    float pitch_angle_apriori_gain;                             ///< Gain of the pitch angle a priori which is function of the roll value
+    float max_roll_angle;                                       ///< Maximum roll value that the velocity layer could ask to follow
+    float take_off_thrust;                                      ///< Thrust value used during the take-off
+    float take_off_pitch;                                       ///< Pitch angle used during the take-off
+    float landing_pitch;                                        ///< Pitch angle used during the landing
+    float landing_max_roll;                                     ///< Maximum roll angle during landing
+    stabiliser_stack_wing_t stabiliser_stack;                   ///< The pointer to the PID parameters values and output for the stacked controller
 } stabilisation_wing_conf_t;
 
 /**
- * \brief							Initialize module stabilization
+ * \brief                           Initialize module stabilization
  *
- * \param	stabilisation_wing		The pointer to the stabilisation wing structure
- * \param	stabiliser_conf			The pointer to structure with all PID controllers
- * \param	control_input			The pointer to the controlling inputs
- * \param	imu						The pointer to the IMU structure
- * \param	ahrs					The pointer to the attitude estimation structure
- * \param	pos_est					The pointer to the position estimation structure
- * \param	airspeed_analog			The pointer to the analog airspeed sensor structure
+ * \param   stabilisation_wing      The pointer to the stabilisation wing structure
+ * \param   stabiliser_conf         The pointer to structure with all PID controllers
+ * \param   control_input           The pointer to the controlling inputs
+ * \param   imu                     The pointer to the IMU structure
+ * \param   ahrs                    The pointer to the attitude estimation structure
+ * \param   pos_est                 The pointer to the position estimation structure
+ * \param   airspeed_analog         The pointer to the analog airspeed sensor structure
  *
- * \return	True if the init succeed, false otherwise
+ * \return  True if the init succeed, false otherwise
  */
 bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation);
 
 /**
- * \brief						Main Controller for controlling and stabilizing the wing
+ * \brief                       Main Controller for controlling and stabilizing the wing
  *
- * \param	stabilisation_wing	The stabilisation structure
+ * \param   stabilisation_wing  The stabilisation structure
  */
 void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wing);
 
