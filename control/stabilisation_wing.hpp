@@ -48,9 +48,10 @@
 #include "sensing/position_estimation.hpp"
 #include "drivers/airspeed_analog.hpp"
 
-extern "C" {
+extern "C"
+{
 #include "control/stabilisation.h"
-//#include "mavlink_waypoint_handler.h"
+#include "control/control_command.h"
 }
 
 
@@ -72,6 +73,8 @@ typedef struct
 {
     stabiliser_stack_wing_t stabiliser_stack;                   ///< The pointer to the PID parameters values for the stacked controller 
     control_command_t* controls;                                ///< The pointer to the control structure
+    torque_command_t* torque_command;
+    thrust_command_t* thrust_command;
     const Imu* imu;                                             ///< The pointer to the IMU structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
     const position_estimation_t* pos_est;                       ///< The pointer to the position estimation structure
@@ -119,7 +122,7 @@ typedef struct
  *
  * \return  True if the init succeed, false otherwise
  */
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation);
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation);
 
 /**
  * \brief                       Main Controller for controlling and stabilizing the wing

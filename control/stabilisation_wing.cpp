@@ -81,13 +81,15 @@ float heading_from_velocity_vector(float *input_vel)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation)
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation)
 {
     bool init_success = true;
     
     //init dependencies
     stabilisation_wing->stabiliser_stack = stabiliser_conf->stabiliser_stack;
     stabilisation_wing->controls = controls;
+    stabilisation_wing->torque_command = torque_command;
+    stabilisation_wing->thrust_command = thrust_command;
     stabilisation_wing->imu = imu;
     stabilisation_wing->ahrs = ahrs;
     stabilisation_wing->pos_est = pos_est;
@@ -282,6 +284,10 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         // run PID update on all rate controllers
         stabilisation_run(&stabilisation_wing->stabiliser_stack.rate_stabiliser, stabilisation_wing->ahrs->dt, rpyt_errors);
     }
+
+    stabilisation_wing->torque_command->xyz[0] = stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[ROLL];
+    stabilisation_wing->torque_command->xyz[1] = stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[PITCH];
+    stabilisation_wing->thrust_command->thrust = stabilisation_wing->stabiliser_stack.rate_stabiliser.output.thrust;
 }
 
 
