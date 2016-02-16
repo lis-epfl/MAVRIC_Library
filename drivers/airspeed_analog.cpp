@@ -145,7 +145,7 @@ bool Airspeed_analog::update(void)
 }
 
 
-float Airspeed_analog::get_airspeed()
+const float& Airspeed_analog::get_airspeed() const
 {
     return airspeed;
 }

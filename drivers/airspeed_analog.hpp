@@ -117,7 +117,7 @@ public:
      *
      * \return  The current estimated airspeed
     */
-    float get_airspeed();
+    const float& get_airspeed() const;
 
 private:
     /**
