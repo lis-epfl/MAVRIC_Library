@@ -257,37 +257,30 @@ bool Lsm330dlc::update(void)
 {
     bool success = true;
 
-    uint8_t fifo_fill       = 1;
     uint8_t accel_buffer[7] = {0, 0, 0, 0, 0, 0, 0};
     uint16_t gyro_buffer[4] = {0, 0, 0, 0};
 
-    success &= i2c_.write(&LSM_FIFO_SRC_ADDRESS, 1, LSM330_ACC_SLAVE_ADDRESS);
-    success &= i2c_.read((uint8_t*)&fifo_fill, 1, LSM330_ACC_SLAVE_ADDRESS);
+    // Read data from accelero sensor
+    success &= i2c_.write(&LSM_ACC_DATA_BEGIN, 1, LSM330_ACC_SLAVE_ADDRESS);
+    success &= i2c_.read((uint8_t*)accel_buffer, 7, LSM330_ACC_SLAVE_ADDRESS);
 
-    if (fifo_fill > 0)
-    {
-        // Read data from accelero sensor
-        success &= i2c_.write(&LSM_ACC_DATA_BEGIN, 1, LSM330_ACC_SLAVE_ADDRESS);
-        success &= i2c_.read((uint8_t*)accel_buffer, 7, LSM330_ACC_SLAVE_ADDRESS);
+    // First Byte is the status register
+    acc_data_[0] = (float)((int16_t)(accel_buffer[2] << 8 | accel_buffer[1]));
+    acc_data_[1] = (float)((int16_t)(accel_buffer[4] << 8 | accel_buffer[3]));
+    acc_data_[2] = (float)((int16_t)(accel_buffer[6] << 8 | accel_buffer[5]));
 
-        // First Byte is the status register
-        acc_data_[0] = (float)((int16_t)(accel_buffer[2] << 8 | accel_buffer[1]));
-        acc_data_[1] = (float)((int16_t)(accel_buffer[4] << 8 | accel_buffer[3]));
-        acc_data_[2] = (float)((int16_t)(accel_buffer[6] << 8 | accel_buffer[5]));
+    // Read data from gyro sensor
+    success &= i2c_.write(&LSM_GYRO_DATA_BEGIN, 1, LSM330_GYRO_SLAVE_ADDRESS);
+    success &= i2c_.read((uint8_t*)gyro_buffer, 8, LSM330_GYRO_SLAVE_ADDRESS);
 
-        // Read data from gyro sensor
-        success &= i2c_.write(&LSM_GYRO_DATA_BEGIN, 1, LSM330_GYRO_SLAVE_ADDRESS);
-        success &= i2c_.read((uint8_t*)gyro_buffer, 8, LSM330_GYRO_SLAVE_ADDRESS);
+    // First Byte is the sensor temperature and Second Byte is the status register
+    temperature_  = (float)((int16_t)gyro_buffer[0]);
+    gyro_data_[0] = (float)((int16_t)gyro_buffer[1]);
+    gyro_data_[1] = (float)((int16_t)gyro_buffer[2]);
+    gyro_data_[2] = (float)((int16_t)gyro_buffer[3]);
 
-        // First Byte is the sensor temperature and Second Byte is the status register
-        temperature_  = (float)((int16_t)gyro_buffer[0]);
-        gyro_data_[0] = (float)((int16_t)gyro_buffer[1]);
-        gyro_data_[1] = (float)((int16_t)gyro_buffer[2]);
-        gyro_data_[2] = (float)((int16_t)gyro_buffer[3]);
-
-        // Save last update time
-        last_update_us_ = time_keeper_get_us();
-    }
+    // Save last update time
+    last_update_us_ = time_keeper_get_us();
 
     return success;
 }
