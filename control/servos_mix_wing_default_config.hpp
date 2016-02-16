@@ -51,27 +51,26 @@ extern "C"
 	#include "util/constants.h"
 }
 
-servo_mix_wing_conf_t servo_mix_wing_default_config =
+static inline servo_mix_wing_conf_t servo_mix_wing_default_config()
 {
-	.servo_right = 2,
-	.servo_left = 1,
-	.motor = 0,
+	servo_mix_wing_conf_t conf;
+
+	conf.servo_right = 2;
+	conf.servo_left = 1;
+	conf.motor = 0;
 	
-	.servo_right_dir = FLAP_INVERTED,
-	.servo_left_dir = FLAP_NORMAL,
+	conf.servo_right_dir = FLAP_INVERTED;
+	conf.servo_left_dir = FLAP_NORMAL;
 	
-	.min_amplitude = -1.0f,
-	.max_amplitude = 1.0f,
-	.min_thrust = -0.9f,
-	.max_thrust = 1.0f,
+	conf.min_amplitude = -1.0f;
+	conf.max_amplitude = 1.0f;
+	conf.min_thrust = -0.9f;
+	conf.max_thrust = 1.0f;
 	
-	.trim_roll = 0.252273f,
-	.trim_pitch = 0.0090908f
+	conf.trim_roll = 0.252273f;
+	conf.trim_pitch = 0.0090908f;
+
+	return conf;
 };
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // SERVOS_MIX_WING_DEFAULT_CONFIG_H_

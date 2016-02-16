@@ -89,20 +89,24 @@ typedef struct
 typedef struct 
 {   
     servo_mix_wing_conf_t   config;         ///< Configuration of the mix
-    const torque_command_t* torque_command;
-    const thrust_command_t* thrust_command;
-    Servo* servo_left;
-    Servo* servo_right;
-    Servo* motor;
+    const torque_command_t* torque_command; ///< The pointer to the torque command
+    const thrust_command_t* thrust_command; ///< The pointer to the thrust command
+    Servo* servo_left;                      ///< The pointer to the left servo
+    Servo* servo_right;                     ///< The pointer to the right servo
+    Servo* motor;                           ///< The pointer to the motor
 } servo_mix_wing_t;
 
 
 /**
- * \brief           Initialize the servo mix
+ * \brief                  Initialize the servo mix
  * 
- * \param mix       Pointer to the servo mix structure of the wing
- * \param config    Pointer to the configuration of servo mix structure
- * \param command   Pointer to the command
+ * \param mix              Pointer to the servo mix structure of the wing
+ * \param config           Pointer to the configuration of servo mix structure
+ * \param torque_command   Pointer to the torque command
+ * \param thrust_command   Pointer to the torque command
+ * \param servo_left       Pointer to the left servo
+ * \param servo_right      Pointer to the right servo
+ * \param motor            Pointer to the motor
  *
  * \return  True if the init succeed, false otherwise
  */
@@ -115,17 +119,17 @@ bool servo_mix_wing_init(servo_mix_wing_t* mix, const servo_mix_wing_conf_t* con
 
 
 /**
- * \brief           Update the servos mix
+ * \brief                  Update the servos mix
  * 
- * \param mix       Pointer to the servos mix structure
+ * \param mix              Pointer to the servos mix structure
  */
 void servos_mix_wing_update(servo_mix_wing_t* mix);
 
 /**
- * \brief           Update the servos mix. This function adds possibility to use another command than the one used at initialisation (for example for a full manual acces)
+ * \brief                  Update the servos mix. This function adds possibility to use another command than the one used at initialisation (for example for a full manual acces)
  * 
- * \param mix       Pointer to the servos mix structure
- * \param command   Pointer to the command
+ * \param mix              Pointer to the servos mix structure
+ * \param command          Pointer to the command
  */
 void servos_mix_wing_update_command(servo_mix_wing_t* mix, control_command_t* command);
 

@@ -63,7 +63,6 @@ extern "C"
 float heading_from_velocity_vector(float *input_vel);
 
 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -74,7 +73,6 @@ float heading_from_velocity_vector(float *input_vel)
     
     return heading_global;
 }
-
 
 
 //------------------------------------------------------------------------------
@@ -165,7 +163,6 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         gps_speed_global[X] = stabilisation_wing->pos_est->gps->velocity_lf()[0];
         gps_speed_global[Y] = stabilisation_wing->pos_est->gps->velocity_lf()[1];
         gps_speed_global[Z] = stabilisation_wing->pos_est->vel[Z];
-        stabilisation_wing->vertical_speed = gps_speed_global[Z];           // Used for PID tuning
         
         // Transform global to semi-local
         attitude_yaw.rpy[0] = 0.0f;
@@ -175,7 +172,6 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         quaternions_rotate_vector(q_rot, gps_speed_global, gps_speed_semi_local);
         
         current_heading = heading_from_velocity_vector(gps_speed_semi_local);
-        stabilisation_wing->current_heading = current_heading;  // Used for PID tuning
         
         // Compute heading error
         heading_error = maths_calc_smaller_angle(nav_heading - current_heading);

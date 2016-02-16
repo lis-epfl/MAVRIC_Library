@@ -73,8 +73,8 @@ typedef struct
 {
     stabiliser_stack_wing_t stabiliser_stack;                   ///< The pointer to the PID parameters values for the stacked controller 
     control_command_t* controls;                                ///< The pointer to the control structure
-    torque_command_t* torque_command;
-    thrust_command_t* thrust_command;
+    torque_command_t* torque_command;                           ///< The pointer to the torque command (output)
+    thrust_command_t* thrust_command;                           ///< The pointer to the thrust command (output)
     const Imu* imu;                                             ///< The pointer to the IMU structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
     const position_estimation_t* pos_est;                       ///< The pointer to the position estimation structure
@@ -88,9 +88,6 @@ typedef struct
     float take_off_pitch;                                       ///< Pitch angle used during the take-off
     float landing_pitch;                                        ///< Pitch angle used during the landing
     float landing_max_roll;                                     ///< Maximum roll angle during landing
-    // TODO: Remove these two lines, which were used only for tuning
-    float current_heading;
-    float vertical_speed;
 } stabilisation_wing_t;
 
 /**
@@ -114,11 +111,14 @@ typedef struct
  *
  * \param   stabilisation_wing      The pointer to the stabilisation wing structure
  * \param   stabiliser_conf         The pointer to structure with all PID controllers
- * \param   control_input           The pointer to the controlling inputs
+ * \param   controls                The pointer to the controlling inputs
+ * \param   torque_command          The pointer to the torque command (output)
+ * \param   thrust_command          The pointer to the thrust command (output)
  * \param   imu                     The pointer to the IMU structure
  * \param   ahrs                    The pointer to the attitude estimation structure
  * \param   pos_est                 The pointer to the position estimation structure
  * \param   airspeed_analog         The pointer to the analog airspeed sensor structure
+ * \param   navigation              The pointer to the navigation structure
  *
  * \return  True if the init succeed, false otherwise
  */
@@ -127,7 +127,7 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 /**
  * \brief                       Main Controller for controlling and stabilizing the wing
  *
- * \param   stabilisation_wing  The stabilisation structure
+ * \param   stabilisation_wing      The stabilisation structure
  */
 void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wing);
 
