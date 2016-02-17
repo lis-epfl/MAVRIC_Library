@@ -73,7 +73,7 @@ typedef struct
  * \param   config              Pointer to configuration
  */
 void gimbal_controller_init(gimbal_controller_t* controller,
-								const gimbal_controller_conf_t* config);
+								const gimbal_controller_conf_t config);
 
 
 /**
