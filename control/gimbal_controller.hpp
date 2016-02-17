@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gimbal_controller.h
+ * \file gimbal_controller.hpp
  *
  * \author MAV'RIC Team
  * \author Alexandre Cherpillod
