@@ -207,14 +207,16 @@ static mav_result_t waypoint_handler_is_arrived(mavlink_waypoint_handler_t* wayp
 static bool waypoint_handler_take_off_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief   Go home
+ 
+ * \brief   Send the quad to home position
  *
  * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
  * \param   packet                  The pointer to the structure of the MAVLink command message long
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t waypoint_handler_goto_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
+static mav_result_t waypoint_handler_go_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
+
 
 /**
  * \brief   Start/Stop the navigation
@@ -1460,21 +1462,28 @@ static bool waypoint_handler_take_off_handler(mavlink_waypoint_handler_t* waypoi
     return result;
 }
 
-static mav_result_t waypoint_handler_goto_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
+
+static mav_result_t waypoint_handler_go_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
-    mav_result_t result = MAV_RESULT_UNSUPPORTED;
+	mav_result_t result = MAV_RESULT_UNSUPPORTED;
+
 
 	local_position_t local_position;
 	local_position.pos[0] = 0.0f;
 	local_position.pos[1] = 0.0f;
-	local_position.pos[2] = 0.0f;
+
+	local_position.pos[2] = -10.0f; //altitude above ground
+	//local_position.heading = waypoint_handler->current_waypoint.param4;
+
 
 	waypoint_handler_hold_init(waypoint_handler, local_position);
 	waypoint_handler->navigation->internal_state = NAV_STOP_THERE;
 
-    result = MAV_RESULT_ACCEPTED;
 
-    return result;
+	result = MAV_RESULT_ACCEPTED;
+
+	return result;
+
 }
 
 static mav_result_t waypoint_handler_start_stop_navigation(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
@@ -2268,8 +2277,8 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
     callbackcmd.command_id = MAV_CMD_NAV_RETURN_TO_LAUNCH; // 20
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
-    callbackcmd.function = (mavlink_cmd_callback_function_t)    &waypoint_handler_set_current_waypoint_from_parameter;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL;
+    callbackcmd.function = (mavlink_cmd_callback_function_t)    &waypoint_handler_go_home;
     callbackcmd.module_struct =                                 waypoint_handler;
     init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 
