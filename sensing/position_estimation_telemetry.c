@@ -50,7 +50,7 @@
 //------------------------------------------------------------------------------
 
 /**
- * \brief	Setting new home position from command long message
+ * \brief	Setting new home position from set_home_position message
  *
  * \param	pos_est				The pointer to the position estimation structure
  * \param	sysid				The system ID

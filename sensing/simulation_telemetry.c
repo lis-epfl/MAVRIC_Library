@@ -52,6 +52,15 @@
 //------------------------------------------------------------------------------
 
 /**
+ * \brief	Setting new home position from set_home_position message
+ *
+ * \param	sim 			The pointer to the simulation model structure
+ * \param	sysid			The system ID
+ * \param	msg				The received MAVLink message structure
+ */
+static void simulation_telemetry_set_new_home_position_int(simulation_model_t *sim, uint32_t sysid, mavlink_message_t* msg);
+
+/**
  * \brief	Changes between simulation to and from reality
  *
  * \param	sim				The pointer to the simulation model structure
@@ -64,6 +73,33 @@ static mav_result_t simulation_telemetry_set_new_home_position(simulation_model_
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
+static void simulation_telemetry_set_new_home_position_int(simulation_model_t *sim, uint32_t sysid, mavlink_message_t* msg)
+{
+	mavlink_set_home_position_t packet;
+
+	mavlink_msg_set_home_position_decode(msg, &packet);
+
+	if ((uint8_t)packet.target_system == (uint8_t)0)
+	{
+		// Set new home position from msg
+		print_util_dbg_print("[SIMULATION] Set new home location integer. \r\n");
+
+		sim->local_position.origin.latitude = packet.latitude / 10000000.0f;
+		sim->local_position.origin.longitude = packet.longitude / 10000000.0f;
+		sim->local_position.origin.altitude = packet.altitude / 1000.0f;
+
+		/*print_util_dbg_print("New Home location: (");
+		print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
+		print_util_dbg_print(")\r\n");*/
+
+		*sim->nav_plan_active = false;
+	}
+}
 
 static mav_result_t simulation_telemetry_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet)
 {
@@ -128,6 +164,15 @@ bool simulation_telemetry_init(simulation_model_t* sim, mavlink_message_handler_
 {
 	bool init_success = true;
 	
+	mavlink_message_handler_msg_callback_t callback;
+	
+	callback.message_id 	= MAVLINK_MSG_ID_SET_HOME_POSITION; // 243
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&simulation_telemetry_set_new_home_position_int;
+	callback.module_struct 	= (handling_module_struct_t)		sim;
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
+
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 		
 	callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
