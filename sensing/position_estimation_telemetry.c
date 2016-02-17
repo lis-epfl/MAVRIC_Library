@@ -76,27 +76,35 @@ static void position_estimation_set_new_home_position_int(position_estimation_t 
 
 	mavlink_msg_set_home_position_decode(msg, &packet);
 
-	if ((uint8_t)packet.target_system == (uint8_t)0)
+	if(pos_est->state->mav_mode.ARMED == ARMED_OFF)
 	{
-		// Set new home position from msg
-		print_util_dbg_print("[POSITION ESTIMATION] Set new home location integer. \r\n");
+		if ((uint8_t)packet.target_system == (uint8_t)0)
+		{
+			// Set new home position from msg
+			print_util_dbg_print("[POSITION ESTIMATION] Set new home location integer. \r\n");
 
-		pos_est->local_position.origin.latitude = packet.latitude / 10000000.0f;
-		pos_est->local_position.origin.longitude = packet.longitude / 10000000.0f;
-		pos_est->local_position.origin.altitude = packet.altitude / 1000.0f;
+			pos_est->local_position.origin.latitude = packet.latitude / 10000000.0f;
+			pos_est->local_position.origin.longitude = packet.longitude / 10000000.0f;
+			pos_est->local_position.origin.altitude = packet.altitude / 1000.0f;
 
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(pos_est->local_position.origin.latitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(pos_est->local_position.origin.longitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(pos_est->local_position.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\r\n");
+			print_util_dbg_print("New Home location: (");
+			print_util_dbg_print_num(pos_est->local_position.origin.latitude * 10000000.0f,10);
+			print_util_dbg_print(", ");
+			print_util_dbg_print_num(pos_est->local_position.origin.longitude * 10000000.0f,10);
+			print_util_dbg_print(", ");
+			print_util_dbg_print_num(pos_est->local_position.origin.altitude * 1000.0f,10);
+			print_util_dbg_print(")\r\n");
 
-		pos_est->fence_set = false;
-		position_estimation_set_new_fence_origin(pos_est);
+			pos_est->fence_set = false;
+			position_estimation_set_new_fence_origin(pos_est);
 
-		*pos_est->nav_plan_active = false;
+			*pos_est->nav_plan_active = false;
+		
+			if (pos_est->stat_logging)
+			{
+				pos_est->stat_logging->data_write = true;
+			}
+		}
 	}
 }
 
@@ -142,6 +150,11 @@ static mav_result_t position_estimation_set_new_home_position(position_estimatio
 		position_estimation_set_new_fence_origin(pos_est);
 
 		*pos_est->nav_plan_active = false;
+
+		if (pos_est->stat_logging)
+		{
+			pos_est->stat_logging->data_write = true;
+		}
 	
 		result = MAV_RESULT_ACCEPTED;
 	}
