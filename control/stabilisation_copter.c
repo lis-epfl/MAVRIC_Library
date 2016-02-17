@@ -192,6 +192,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		{
 			input.rpy[ROLL] = 0.0f;
 			input.rpy[PITCH] = 0.0f;
+			input.rpy[YAW] = 0.0f;
 		}
 
 		//input.thrust = stabilisation_copter->controls->tvel[Z];
