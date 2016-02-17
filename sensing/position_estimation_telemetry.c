@@ -79,7 +79,7 @@ static void position_estimation_set_new_home_position_int(position_estimation_t 
 	if ((uint8_t)packet.target_system == (uint8_t)0)
 	{
 		// Set new home position from msg
-		print_util_dbg_print("[POSITION ESTIMATION] Set new home location. \r\n");
+		print_util_dbg_print("[POSITION ESTIMATION] Set new home location integer. \r\n");
 
 		pos_est->local_position.origin.latitude = packet.latitude / 10000000.0f;
 		pos_est->local_position.origin.longitude = packet.longitude / 10000000.0f;
@@ -92,8 +92,12 @@ static void position_estimation_set_new_home_position_int(position_estimation_t 
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(pos_est->local_position.origin.altitude * 1000.0f,10);
 		print_util_dbg_print(")\r\n");
-	}
 
+		pos_est->fence_set = false;
+		position_estimation_set_new_fence_origin(pos_est);
+
+		*pos_est->nav_plan_active = false;
+	}
 }
 
 static mav_result_t position_estimation_set_new_home_position(position_estimation_t *pos_est, mavlink_command_long_t* packet)
