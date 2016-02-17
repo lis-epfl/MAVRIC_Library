@@ -50,16 +50,51 @@
 //------------------------------------------------------------------------------
 
 /**
- * \brief	Position estimation update step, performing position estimation then position correction (function to be used)
+ * \brief	Setting new home position from command long message
  *
- * \param	pos_est					The pointer to the position estimation structure
- * \param	packet					The pointer to the decoded MAVLink command long message
+ * \param	pos_est				The pointer to the position estimation structure
+ * \param	sysid				The system ID
+ * \param	msg					The received MAVLink message structure
+ */
+static void position_estimation_set_new_home_position_int(position_estimation_t *pos_est, uint32_t sysid, mavlink_message_t* msg);
+
+/**
+ * \brief	Setting new home position from command long message
+ *
+ * \param	pos_est				The pointer to the position estimation structure
+ * \param	packet				The pointer to the decoded MAVLink command long message
  */
 static mav_result_t position_estimation_set_new_home_position(position_estimation_t *pos_est, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
+static void position_estimation_set_new_home_position_int(position_estimation_t *pos_est, uint32_t sysid, mavlink_message_t* msg)
+{
+	mavlink_set_home_position_t packet;
+
+	mavlink_msg_set_home_position_decode(msg, &packet);
+
+	if ((uint8_t)packet.target_system == (uint8_t)0)
+	{
+		// Set new home position from msg
+		print_util_dbg_print("[POSITION ESTIMATION] Set new home location. \r\n");
+
+		pos_est->local_position.origin.latitude = packet.latitude / 10000000.0f;
+		pos_est->local_position.origin.longitude = packet.longitude / 10000000.0f;
+		pos_est->local_position.origin.altitude = packet.altitude / 1000.0f;
+
+		print_util_dbg_print("New Home location: (");
+		print_util_dbg_print_num(pos_est->local_position.origin.latitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(pos_est->local_position.origin.longitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(pos_est->local_position.origin.altitude * 1000.0f,10);
+		print_util_dbg_print(")\r\n");
+	}
+
+}
 
 static mav_result_t position_estimation_set_new_home_position(position_estimation_t *pos_est, mavlink_command_long_t* packet)
 {
@@ -122,6 +157,15 @@ bool position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_
 {
 	bool init_success = true;
 	
+	mavlink_message_handler_msg_callback_t callback;
+	
+	callback.message_id 	= MAVLINK_MSG_ID_SET_HOME_POSITION; // 243
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&position_estimation_set_new_home_position_int;
+	callback.module_struct 	= (handling_module_struct_t)		pos_est;
+	init_success &= mavlink_message_handler_add_msg_callback( mavlink_handler, &callback );
+
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 		
 	callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
