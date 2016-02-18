@@ -253,12 +253,11 @@ bool Lsm330dlc::init(void)
 }
 
 
-bool Lsm330dlc::update(void)
+bool Lsm330dlc::update_acc(void)
 {
     bool success = true;
 
     uint8_t accel_buffer[7] = {0, 0, 0, 0, 0, 0, 0};
-    uint16_t gyro_buffer[4] = {0, 0, 0, 0};
 
     // Read data from accelero sensor
     success &= i2c_.write(&LSM_ACC_DATA_BEGIN, 1, LSM330_ACC_SLAVE_ADDRESS);
@@ -268,6 +267,19 @@ bool Lsm330dlc::update(void)
     acc_data_[0] = (float)((int16_t)(accel_buffer[2] << 8 | accel_buffer[1]));
     acc_data_[1] = (float)((int16_t)(accel_buffer[4] << 8 | accel_buffer[3]));
     acc_data_[2] = (float)((int16_t)(accel_buffer[6] << 8 | accel_buffer[5]));
+
+    // Save last update time
+    last_update_us_ = time_keeper_get_us();
+
+    return success;
+}
+
+
+bool Lsm330dlc::update_gyr(void)
+{
+    bool success = true;
+
+    uint16_t gyro_buffer[4] = {0, 0, 0, 0};
 
     // Read data from gyro sensor
     success &= i2c_.write(&LSM_GYRO_DATA_BEGIN, 1, LSM330_GYRO_SLAVE_ADDRESS);
