@@ -170,3 +170,37 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
                                 stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[YAW] * 1000);
     mavlink_stream_send(mavlink_stream, msg);
 }
+
+void  sensors_set_telemetry_send(Central_data *central_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	float angle[3];
+	aero_attitude_t aero_attitude;
+	quat_t up = {0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
+
+	aero_attitude =  coord_conventions_quat_to_aero(quaternions_global_to_local(central_data->stabilisation_copter.ahrs->qe,up));
+	angle[0] = aero_attitude.rpy[0];
+	angle[1] = aero_attitude.rpy[1];
+	angle[2] = aero_attitude.rpy[2];
+
+	int16_t heading;
+
+	if (angle[2] < 0)
+	    {
+	        heading = (int16_t)(360.0f + 180.0f * angle[2] / PI); //you want to normalize between 0 and 360°
+	    }
+	    else
+	    {
+	        heading = (int16_t)(180.0f * angle[2] / PI);
+	    }
+
+	mavlink_msg_angle_rate_velocity_sensors_pack(mavlink_stream->sysid,
+            mavlink_stream->compid,
+            msg,
+            time_keeper_get_ms(),
+			angle,
+            central_data->ahrs.angular_speed,
+			central_data->stabilisation_copter.pos_est->vel[X], //in global frame
+			central_data->stabilisation_copter.pos_est->vel[Y], //in global frame
+			central_data->stabilisation_copter.pos_est->vel[Z], //in global frame
+			0.0f);
+}
