@@ -49,7 +49,8 @@ extern "C" {
 
 #ifndef __MAVRIC_ENDIAN_BIG__
 #ifndef __MAVRIC_ENDIAN_LITTLE__
-#error Unknown Endian, please include the file hal/$(ARCH)/endianness.h
+#warning Unknown Endian, using default __MAVRIC_ENDIAN_LITTLE__
+#define __MAVRIC_ENDIAN_LITTLE__
 #endif
 #endif
 
