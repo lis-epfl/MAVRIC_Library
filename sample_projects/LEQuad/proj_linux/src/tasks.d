@@ -4,7 +4,7 @@ build/../src/tasks.o: ../../..//../src/tasks.cpp \
  ../../../drivers/gyroscope.hpp ../../../drivers/magnetometer.hpp \
  ../../../communication/state.hpp ../../../communication/mav_modes.hpp \
  ../../../communication/mavlink_stream.hpp ../../../hal/common/serial.hpp \
- ../../../hal/avr32/endianness.h ../../../hal/common/mavric_endian.h \
+ ../../../hal/common/mavric_endian.h \
  ../../../libs/mavlink/include/mavric/mavlink.h \
  ../../../libs/mavlink/include/mavric/version.h \
  ../../../libs/mavlink/include/mavric/mavric.h \
@@ -206,8 +206,6 @@ build/../src/tasks.o: ../../..//../src/tasks.cpp \
 ../../../communication/mavlink_stream.hpp:
 
 ../../../hal/common/serial.hpp:
-
-../../../hal/avr32/endianness.h:
 
 ../../../hal/common/mavric_endian.h:
 
