@@ -119,8 +119,8 @@ typedef enum
     CUST_HEARTBEAT_LOST = 512,                  ///< Heartbeat loss flag
     CUST_REMOTE_LOST = 1024,                    ///< Remote lost flag
     CUST_GPS_BAD = 2048 ,                       ///< GPS loss flag
-	CUST_ATTITUDE_FAKE_FXWD = 4096, 			///< Alex mode
-	CUST_VELOCITY_FAKE_FXWD = 8192, 			///< Alex mode
+	CUST_ATTITUDE_FAKE_FXWD = 4096, 			///< Alex symbiotic drone mode
+	CUST_VELOCITY_FAKE_FXWD = 8192, 			///< Alex symbiotic drone mode
 } mav_mode_custom_t;
 
 #define mav_mode_custom_uint32_t uint32_t

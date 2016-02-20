@@ -10,11 +10,17 @@ PROJ_NAME=LEQuad_mavrinux
 # ------------------------------------------------------------------------------
 # PROJECT FOLDER
 # ------------------------------------------------------------------------------
+
+
 # Project source files (*.c and *.cpp)
-LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
-LIB_SRCS += sample_projects/LEQuad/central_data.cpp
-LIB_SRCS += sample_projects/LEQuad/tasks.cpp
-LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
+LIB_SRCS += ../src/main_linux.cpp
+LIB_SRCS += ../src/central_data.cpp
+LIB_SRCS += ../src/tasks.cpp
+LIB_SRCS += ../src/mavlink_telemetry.cpp
+#LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
+#LIB_SRCS += sample_projects/LEQuad/central_data.cpp
+#LIB_SRCS += sample_projects/LEQuad/tasks.cpp
+#LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
@@ -25,6 +31,12 @@ MAVRIC_LIB=../../../
 # Include folders for Library
 LIB_INC += -I$(MAVRIC_LIB)
 
+#LIB_INC += -ID:\_windows\Program_Files\cygwin64\usr\i686-pc-cygwin\sys-root\usr\include\cygwin
+#LIB_INC += -ID:\_windows\Program_Files\cygwin64\lib\gcc\x86_64-pc-cygwin\5.2.0\include
+#LIB_INC += -ID:\_windows\Program_Files\cygwin64\usr\include
+#LIB_INC += -ID:\_windows\Program_Files\cygwin64\lib\gcc\x86_64-pc-cygwin\4.9.3\include\c++
+#LIB_INC += -ID:\_windows\Program_Files\cygwin64\lib\gcc\x86_64-pc-cygwin\4.9.3\include
+
 # add library source files
 include ${MAVRIC_LIB}rules_common.mk
 #include ${MAVRIC_LIB}rules_libs.mk
@@ -34,7 +46,7 @@ include ${MAVRIC_LIB}rules_linux.mk
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-# CC = gcc
+CC = gcc
 OBJCOPY = objcopy
 
 CFLAGS  = -g -O2 -Wall -std=gnu99 -MMD -MP
@@ -46,7 +58,7 @@ CFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-# CXX = g++
+CXX = g++
 OBJCOPY = objcopy
 
 CXXFLAGS  = -g -O2 -Wall -std=c++11 -MMD -MP

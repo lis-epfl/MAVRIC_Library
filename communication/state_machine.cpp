@@ -102,6 +102,7 @@ bool state_machine_update(state_machine_t* state_machine)
     // Get remote signal strength
     rc_check = manual_control_get_signal_strength(state_machine->manual_control);
 
+    //Get new mode from source
     mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 
     state_machine->state->battery_.update();
