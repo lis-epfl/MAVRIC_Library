@@ -49,7 +49,7 @@ extern "C"
 {
 #include <stdint.h>
 #include <stdbool.h>
-#include "hal/avr32/endianness.h"
+#include "hal/common/mavric_endian.h"
 }
 
 #ifdef __MAVRIC_ENDIAN_BIG__

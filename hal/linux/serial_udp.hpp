@@ -46,7 +46,6 @@
 
 extern "C"
 {
-#include "hal/avr32/endianness.h"
 #include <stdint.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>

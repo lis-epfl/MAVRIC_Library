@@ -1,3 +1,6 @@
+CFLAGS   += -D__MAVRIC_ENDIAN_LITTLE__
+CXXFLAGS += -D__MAVRIC_ENDIAN_LITTLE__
+
 LIB_SRCS += boards/mavrimini.cpp
 
 LIB_SRCS += hal/stm32/time_keeper.c
