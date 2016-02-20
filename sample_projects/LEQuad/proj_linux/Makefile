@@ -37,7 +37,7 @@ include ${MAVRIC_LIB}rules_linux.mk
 # CC = gcc
 OBJCOPY = objcopy
 
-CFLAGS  = -g -O2 -Wall -std=gnu99 -MMD -MP
+CFLAGS += -g -O2 -Wall -std=gnu99 -MMD -MP
 
 # Include files from MAVRIC library and source folder
 CFLAGS += -I.
@@ -49,7 +49,7 @@ CFLAGS += ${LIB_INC}
 # CXX = g++
 OBJCOPY = objcopy
 
-CXXFLAGS  = -g -O2 -Wall -std=c++11 -MMD -MP
+CXXFLAGS += -g -O2 -Wall -std=c++11 -MMD -MP
 
 # Include files from MAVRIC library and source folder
 CXXFLAGS += -I.
