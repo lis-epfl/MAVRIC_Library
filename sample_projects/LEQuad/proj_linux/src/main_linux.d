@@ -172,7 +172,7 @@ build/../src/main_linux.o: ../../..//../src/main_linux.cpp \
  ../../../hal/linux/file_linux.hpp ../../../hal/common/file.hpp \
  ../../../hal/dummy/adc_dummy.hpp ../../../hal/dummy/pwm_dummy.hpp \
  ../../../hal/dummy/led_dummy.hpp ../../../hal/common/led.hpp \
- ../../../util/streams.h ../../../sample_projects/LEQuad/central_data.hpp \
+ ../../../util/streams.h ../../..//../src/central_data.hpp \
  ../../../control/stabilisation_copter.hpp \
  ../../../communication/mavlink_waypoint_handler.hpp \
  ../../../communication/mavlink_communication.hpp \
@@ -195,8 +195,8 @@ build/../src/main_linux.o: ../../..//../src/main_linux.cpp \
  ../../../control/attitude_error_estimator.h \
  ../../../control/velocity_controller_copter.hpp \
  ../../../control/vector_field_waypoint.hpp \
- ../../../sample_projects/LEQuad/mavlink_telemetry.hpp \
- ../../../sample_projects/LEQuad/tasks.hpp
+ ../../../control/gimbal_controller.hpp \
+ ../../..//../src/mavlink_telemetry.hpp ../../..//../src/tasks.hpp
 
 ../../../boards/mavrinux.hpp:
 
@@ -586,7 +586,7 @@ build/../src/main_linux.o: ../../..//../src/main_linux.cpp \
 
 ../../../util/streams.h:
 
-../../../sample_projects/LEQuad/central_data.hpp:
+../../..//../src/central_data.hpp:
 
 ../../../control/stabilisation_copter.hpp:
 
@@ -648,6 +648,8 @@ build/../src/main_linux.o: ../../..//../src/main_linux.cpp \
 
 ../../../control/vector_field_waypoint.hpp:
 
-../../../sample_projects/LEQuad/mavlink_telemetry.hpp:
+../../../control/gimbal_controller.hpp:
 
-../../../sample_projects/LEQuad/tasks.hpp:
+../../..//../src/mavlink_telemetry.hpp:
+
+../../..//../src/tasks.hpp:
