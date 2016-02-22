@@ -1595,6 +1595,9 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 			{
 				++gps->loop_solution;
 				gps->loop_solution %= gps->num_skipped_msg;
+				
+				gps->position_accuracy_3d = gps_solution->position_accuracy_3d;
+				
 				if (gps->print_nav_on_debug && (gps->loop_solution == 0))
 				{
 					print_util_dbg_print("MSG_SOL ");

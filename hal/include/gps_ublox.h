@@ -1415,6 +1415,8 @@ typedef struct
 	uint8_t loop_sv_info;						///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_nav_dgps;						///< Counter used to print one message every num_skipped_msg
 	
+	uint32_t position_accuracy_3d;				///< 3D position accuracy estimate in cm
+	
 	bool print_nav_on_debug;					///< Flag to print messages on debug console
 	bool debug;									///< Indicates if debug messages should be printed
 	
