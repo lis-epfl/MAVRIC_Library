@@ -66,19 +66,29 @@ typedef enum
 
 
 /**
+ * \brief	debug adaptive morph
+ */
+typedef struct 
+{	
+	int32_t	is_pitch_control;			///< Check if pitch control or Roll control
+	int32_t	is_single_folding;			///check if it should fold only one wing side
+} debug_adaptive_morph_t;
+
+
+/**
  * \brief The servo mix structure for a adaptive_morph
  */
 typedef struct
 {
-	uint8_t				servo_pitch;		///< Right aileron servo index
-	uint8_t				servo_roll_left;	///< Left aileron servo index
-	uint8_t				servo_roll_right;	///< Left aileron servo index
+	uint8_t				servo_elevator;		///< Right aileron servo index
+	uint8_t				servo_wing_left;	///< Left aileron servo index
+	uint8_t				servo_wing_right;	///< Left aileron servo index
 	uint8_t				servo_tail;			///< Left aileron servo index
 	uint8_t				motor;				///< Propulsion motor index
 	
-	adaptive_morph_servo_dir_t	servo_pitch_dir;	///< Right aileron servo direction
-	adaptive_morph_servo_dir_t	servo_roll_left_dir;		///< Left aileron servo direction
-	adaptive_morph_servo_dir_t	servo_roll_right_dir;		///< Left aileron servo direction
+	adaptive_morph_servo_dir_t	servo_elevator_dir;	///< Right aileron servo direction
+	adaptive_morph_servo_dir_t	servo_wing_left_dir;		///< Left aileron servo direction
+	adaptive_morph_servo_dir_t	servo_wing_right_dir;		///< Left aileron servo direction
 	adaptive_morph_servo_dir_t	servo_tail_dir;		///< Left aileron servo direction
 	
 	float				min_amplitude;		///< Minimum value which can be put on servo
@@ -90,7 +100,10 @@ typedef struct
 	float				trim_roll_left;		///< Trim value for roll
 	float				trim_roll_right;	///< Trim value for roll
 	float				trim_tail;		///< Trim value for roll
+	
+	debug_adaptive_morph_t debug;
 } servo_mix_adaptive_morph_conf_t;
+
 
 /**
  * \brief	Servos mix structure
@@ -98,9 +111,10 @@ typedef struct
 typedef struct 
 {	
 	servo_mix_adaptive_morph_conf_t	config;			///< Configuration of the mix
-	control_command_t*		command;		///< Pointer to the control command structure
-	servos_t*          		servos;			///< Pointer to the servos structure
-	remote_t*				remote;			///< Pointer to the remote structure
+	debug_adaptive_morph_t debug;
+	control_command_t*		command;				///< Pointer to the control command structure
+	servos_t*          		servos;					///< Pointer to the servos structure
+	remote_t*				remote;					///< Pointer to the remote structure
 } servo_mix_adaptive_morph_t;
 
 

@@ -54,15 +54,15 @@ bool servo_mix_adaptive_morph_init(servo_mix_adaptive_morph_t* mix, const servo_
 	mix->remote			= remote;
 
 	// Init parameters
-	mix->config.servo_pitch			= config->servo_pitch;
-	mix->config.servo_roll_left		= config->servo_roll_left;
-	mix->config.servo_roll_right	= config->servo_roll_right;
+	mix->config.servo_elevator			= config->servo_elevator;
+	mix->config.servo_wing_left		= config->servo_wing_left;
+	mix->config.servo_wing_right	= config->servo_wing_right;
 	mix->config.servo_tail			= config->servo_tail;
 	mix->config.motor				= config->motor;
 	
-	mix->config.servo_pitch_dir = config->servo_pitch_dir;
-	mix->config.servo_roll_left_dir	= config->servo_roll_left_dir;
-	mix->config.servo_roll_right_dir	= config->servo_roll_right_dir;
+	mix->config.servo_elevator_dir = config->servo_elevator_dir;
+	mix->config.servo_wing_left_dir	= config->servo_wing_left_dir;
+	mix->config.servo_wing_right_dir	= config->servo_wing_right_dir;
 	mix->config.servo_tail_dir = config->servo_tail_dir;
 	
 	mix->config.min_amplitude	= config->min_amplitude;
@@ -74,6 +74,9 @@ bool servo_mix_adaptive_morph_init(servo_mix_adaptive_morph_t* mix, const servo_
 	mix->config.trim_roll_left		= config->trim_roll_left;
 	mix->config.trim_roll_right		= config->trim_roll_right;
 	mix->config.trim_tail		= config->trim_tail;
+	
+	mix->config.debug.is_pitch_control = config->debug.is_pitch_control;
+	mix->config.debug.is_single_folding = config->debug.is_single_folding;
 	
 	// Debug and return
 	print_util_dbg_print("[SERVOS MIX WING] initialised \r\n");
@@ -89,19 +92,10 @@ void servos_mix_adaptive_morph_update(servo_mix_adaptive_morph_t* mix)
 void servos_mix_adaptive_morph_update_command(servo_mix_adaptive_morph_t* mix, control_command_t* command)
 {
 	// Calculate value to be sent to the motors
-	//To control roll in asymetric way
-	/*
-	float tmp_pitch				= mix->config.servo_pitch_dir * ( (command->rpy[PITCH] + mix->config.trim_pitch) );
-	float tmp_roll_left_servo	= mix->config.servo_roll_left_dir  * ( (command->rpy[ROLL] + mix->config.trim_roll_left) );
-	float tmp_roll_right_servo	= mix->config.servo_roll_right_dir  * ( (command->rpy[ROLL] + mix->config.trim_roll_right) );
+	float tmp_pitch				= mix->config.servo_elevator_dir * ( (command->rpy[PITCH] + mix->config.trim_pitch) );
+	float tmp_wing_left_servo	= mix->config.servo_wing_left_dir  * ( (command->rpy[ROLL] + mix->config.trim_roll_left) );
+	float tmp_wing_right_servo	= mix->config.servo_wing_right_dir  * ( (command->rpy[ROLL] + mix->config.trim_roll_right) );
 	float tmp_tail_servo		= mix->config.servo_tail_dir  * ( (command->rpy[YAW] + mix->config.trim_tail) );
-	float tmp_motor				= command->thrust;
-	*/
-	//To control pitch in a symetric way
-	float tmp_pitch				= mix->config.servo_pitch_dir * ( (command->rpy[PITCH] + mix->config.trim_pitch) );
-	float tmp_roll_left_servo	= mix->config.servo_roll_left_dir  * ( (command->rpy[YAW] + mix->config.trim_roll_left) );
-	float tmp_roll_right_servo	= (-1.0) * mix->config.servo_roll_right_dir  * ( (command->rpy[YAW] + mix->config.trim_roll_right) );
-	float tmp_tail_servo		= mix->config.servo_tail_dir  * ( (command->rpy[ROLL] + mix->config.trim_tail) );
 	float tmp_motor				= command->thrust;
 	
 	// Clip values
@@ -114,22 +108,22 @@ void servos_mix_adaptive_morph_update_command(servo_mix_adaptive_morph_t* mix, c
 		tmp_pitch = mix->config.max_amplitude;
 	}
 	
-	if (tmp_roll_left_servo < mix->config.min_amplitude)
+	if (tmp_wing_left_servo < mix->config.min_amplitude)
 	{
-		tmp_roll_left_servo = mix->config.min_amplitude;
+		tmp_wing_left_servo = mix->config.min_amplitude;
 	}
-	else if (tmp_roll_left_servo > mix->config.max_amplitude)
+	else if (tmp_wing_left_servo > mix->config.max_amplitude)
 	{
-		tmp_roll_left_servo = mix->config.max_amplitude;
+		tmp_wing_left_servo = mix->config.max_amplitude;
 	}
 	
-	if (tmp_roll_right_servo < mix->config.min_amplitude)
+	if (tmp_wing_right_servo < mix->config.min_amplitude)
 	{
-		tmp_roll_right_servo = mix->config.min_amplitude;
+		tmp_wing_right_servo = mix->config.min_amplitude;
 	}
-	else if (tmp_roll_right_servo > mix->config.max_amplitude)
+	else if (tmp_wing_right_servo > mix->config.max_amplitude)
 	{
-		tmp_roll_right_servo = mix->config.max_amplitude;
+		tmp_wing_right_servo = mix->config.max_amplitude;
 	}
 	
 	if (tmp_tail_servo < mix->config.min_amplitude)
@@ -151,10 +145,10 @@ void servos_mix_adaptive_morph_update_command(servo_mix_adaptive_morph_t* mix, c
 	}
 
 	// Set the calculated values to each motors
-	servos_set_value(mix->servos, mix->config.servo_roll_right, tmp_roll_right_servo);
+	servos_set_value(mix->servos, mix->config.servo_wing_right, tmp_wing_right_servo);
 	servos_set_value(mix->servos, mix->config.servo_tail, tmp_tail_servo);
 	servos_set_value(mix->servos, mix->config.motor, tmp_motor);
-	servos_set_value(mix->servos, mix->config.servo_pitch, tmp_pitch);
-	servos_set_value(mix->servos, mix->config.servo_roll_left, tmp_roll_left_servo);
+	servos_set_value(mix->servos, mix->config.servo_elevator, tmp_pitch);
+	servos_set_value(mix->servos, mix->config.servo_wing_left, tmp_wing_left_servo);
 	servos_set_value(mix->servos, 6, tmp_tail_servo);	// This one is used only for the third one to work properly...
 }

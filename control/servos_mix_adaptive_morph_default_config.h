@@ -54,15 +54,15 @@ extern "C" {
 
 servo_mix_adaptive_morph_conf_t servo_mix_adaptive_morph_default_config =
 {
-	.servo_pitch = M_ADAPTIVE_MORPH_PITCH,
-	.servo_roll_left = M_ADAPTIVE_MORPH_ROLL_LEFT,
-	.servo_roll_right = M_ADAPTIVE_MORPH_ROLL_RIGHT,
+	.servo_elevator = M_ADAPTIVE_MORPH_PITCH,
+	.servo_wing_left = M_ADAPTIVE_MORPH_WING_LEFT,
+	.servo_wing_right = M_ADAPTIVE_MORPH_WING_RIGHT,
 	.servo_tail = M_ADAPTIVE_MORPH_TAIL,
 	.motor = M_ADAPTIVE_MORPH_THRUST,
 	
-	.servo_pitch_dir = UP2,
-	.servo_roll_left_dir = UP2,
-	.servo_roll_right_dir = UP2,
+	.servo_elevator_dir = UP2,
+	.servo_wing_left_dir = UP2,
+	.servo_wing_right_dir = UP2,
 	.servo_tail_dir = DOWN2,
 	
 	.min_amplitude = -1.0f,
@@ -73,7 +73,10 @@ servo_mix_adaptive_morph_conf_t servo_mix_adaptive_morph_default_config =
 	.trim_pitch = 0.0f,
 	.trim_roll_left = 0.0f,
 	.trim_roll_right = 0.0f,
-	.trim_tail = 0.0f
+	.trim_tail = 0.0f,
+	
+	.debug.is_pitch_control = 0, //for roll control by default
+	.debug.is_single_folding = 0 //for normal control by default (instead of single folding)
 };
 
 
