@@ -44,6 +44,7 @@
 
 #include "hal/linux/serial_udp.hpp"
 
+#include <stdio.h>
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -51,6 +52,7 @@
 
 Serial_udp::Serial_udp(serial_udp_conf_t config)
 {
+
     // Copy config
     config_ = config;
 

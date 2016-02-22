@@ -43,7 +43,7 @@
 #include "control/joystick_telemetry.hpp"
 
 //#include "hal/common/time_keeper.hpp"
-//#include "util/print_util.h"
+#include "util/print_util.h"
 //#include "util/constants.h"
 
 
@@ -106,6 +106,8 @@ bool joystick_telemetry_init(joystick_t* joystick, mavlink_message_handler_t* me
 
 void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
+	print_util_dbg_print("send joy");
+
     mavlink_msg_manual_control_pack(mavlink_stream->sysid,
                                     mavlink_stream->compid,
                                     msg,
