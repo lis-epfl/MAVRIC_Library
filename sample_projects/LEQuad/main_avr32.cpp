@@ -47,10 +47,10 @@
 #include "hal/avr32/file_flash_avr32.hpp"
 #include "hal/avr32/serial_usb_avr32.hpp"
 
-// #include "simulation/dynamic_model_quad_diag.hpp"
-// #include "simulation/simulation.hpp"
-// #include "hal/dummy/adc_dummy.hpp"
-// #include "hal/dummy/pwm_dummy.hpp"
+ #include "simulation/dynamic_model_quad_diag.hpp"
+ #include "simulation/simulation.hpp"
+ #include "hal/dummy/adc_dummy.hpp"
+ #include "hal/dummy/pwm_dummy.hpp"
 
 extern "C"
 {
@@ -62,7 +62,7 @@ extern "C"
 #include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 }
 
-// #include "hal/common/dbg.hpp"
+ #include "hal/common/dbg.hpp"
 
 int main(void)
 {
@@ -78,24 +78,24 @@ int main(void)
     // Create simulation
     // -------------------------------------------------------------------------
     // Simulated servos
-    // Pwm_dummy pwm[4];
-    // Servo sim_servo_0(pwm[0], servo_default_config_esc());
-    // Servo sim_servo_1(pwm[1], servo_default_config_esc());
-    // Servo sim_servo_2(pwm[2], servo_default_config_esc());
-    // Servo sim_servo_3(pwm[3], servo_default_config_esc());
+     Pwm_dummy pwm[4];
+     Servo sim_servo_0(pwm[0], servo_default_config_esc());
+     Servo sim_servo_1(pwm[1], servo_default_config_esc());
+     Servo sim_servo_2(pwm[2], servo_default_config_esc());
+     Servo sim_servo_3(pwm[3], servo_default_config_esc());
 
     // // Simulated dynamic model
-    // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
-    // Simulation sim                       = Simulation(sim_model);
+     Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
+     Simulation sim                       = Simulation(sim_model);
 
     // // Simulated battery
-    // Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
-    // Battery  sim_battery     = Battery(sim_adc_battery);
+     Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
+     Battery  sim_battery     = Battery(sim_adc_battery);
 
     // // Simulated IMU
-    // Imu      sim_imu         = Imu(  sim.accelerometer(),
-    //                                  sim.gyroscope(),
-    //                                  sim.magnetometer() );
+     Imu      sim_imu         = Imu(  sim.accelerometer(),
+                                      sim.gyroscope(),
+                                      sim.magnetometer() );
 
     fat_fs_mounting_t fat_fs_mounting;
 
@@ -108,42 +108,44 @@ int main(void)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using real sensors
-    Central_data cd = Central_data(MAVLINK_SYS_ID,
-                                   board.imu,
-                                   board.bmp085,
-                                   board.gps_ublox,
-                                   // sim.gps(),
-                                   board.sonar_i2cxl,      // Warning:
-                                   // sim.sonar(),             // this is simulated
-                                   board.uart0,
-                                   board.spektrum_satellite,
-                                   board.green_led,
-                                   board.file_flash,
-                                   board.battery,
-                                   // sim_battery,
-                                   board.servo_0,
-                                   board.servo_1,
-                                   board.servo_2,
-                                   board.servo_3,
-                                   file_log,
-                                   file_stat);
+//    Central_data cd = Central_data(MAVLINK_SYS_ID,
+//                                   board.imu,
+//                                   board.bmp085,
+//                                   board.gps_ublox,
+//                                   // sim.gps(),
+//                                   board.sonar_i2cxl,      // Warning:
+//                                   // sim.sonar(),             // this is simulated
+//                                   board.uart0,
+//                                   board.spektrum_satellite,
+//                                   board.green_led,
+//                                   board.file_flash,
+//                                   board.battery,
+//                                   // sim_battery,
+//                                   board.servo_0,
+//                                   board.servo_1,
+//                                   board.servo_2,
+//                                   board.servo_3,
+//                                   file_log,
+//                                   file_stat);
 
 
     // Create central data with simulated sensors
-    // Central_data cd = Central_data( MAVLINK_SYS_ID,
-    //                              sim_imu,
-    //                              sim.barometer(),
-    //                              sim.gps(),
-    //                              sim.sonar(),
-    //                              board.uart0,                // mavlink serial
-    //                              board.spektrum_satellite,
-    //                              board.green_led,
-    //                              board.file_flash,
-    //                              sim_battery,
-    //                              board.servo_0,
-    //                              board.servo_1,
-    //                              board.servo_2,
-    //                              board.servo_3 );
+     Central_data cd = Central_data( MAVLINK_SYS_ID,
+                                  sim_imu,
+                                  sim.barometer(),
+                                  sim.gps(),
+                                  sim.sonar(),
+                                  board.uart0,                // mavlink serial
+                                  board.spektrum_satellite,
+                                  board.green_led,
+                                  board.file_flash,
+                                  sim_battery,
+								  sim_servo_0,
+								  sim_servo_1,
+								  sim_servo_2,
+								  sim_servo_3,
+								  file_log,
+								  file_stat );
 
     // -------------------------------------------------------------------------
     // Initialisation
