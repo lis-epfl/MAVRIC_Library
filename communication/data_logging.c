@@ -742,7 +742,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				{
 					if ( (data_logging->time_ms - data_logging->logging_time) > 5000)
 					{
-						data_logging->fr = f_sync(&data_logging->fil);
+						data_logging_sync(data_logging);
 						data_logging->logging_time = data_logging->time_ms;
 					}
 				}
@@ -1204,4 +1204,11 @@ bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val
 	}
 	
 	return add_success;
+}
+
+void data_logging_sync(data_logging_t* data_logging)
+{
+	print_util_dbg_print("Syncing...\r\n");
+	
+	data_logging->fr = f_sync(&data_logging->fil);
 }

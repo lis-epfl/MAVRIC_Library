@@ -264,6 +264,13 @@ bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
 bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name, uint32_t precision);
 
 
+/**
+ * \brief	Syncs the file
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ */
+void data_logging_sync(data_logging_t* data_logging);
+
 #ifdef __cplusplus
 }
 #endif
