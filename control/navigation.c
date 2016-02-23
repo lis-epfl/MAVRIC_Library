@@ -457,6 +457,11 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 			
 			navigation->waypoint_handler->travel_time = time_keeper_get_millis() - navigation->waypoint_handler->start_wpt_time;
 			
+			if (navigation->data_logging)
+			{
+				data_logging_sync(navigation->data_logging);
+			}
+			
 			navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 0;
 			if((navigation->waypoint_handler->current_waypoint.autocontinue == 1)&&(navigation->waypoint_handler->number_of_waypoints>1))
 			{
@@ -784,7 +789,7 @@ static void navigation_stopping_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
+bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication, data_logging_t* data_logging)
 {
 	bool init_success = true;
 	
@@ -797,6 +802,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->mavlink_stream = &mavlink_communication->mavlink_stream;
 	navigation->joystick = joystick;
 	navigation->remote = remote;
+	navigation->data_logging = data_logging;
 	
 	//navigation controller init
 	navigation->controls_nav->rpy[ROLL] = 0.0f;

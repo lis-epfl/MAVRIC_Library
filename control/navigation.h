@@ -105,7 +105,8 @@ typedef struct
 	state_t* state;										///< The pointer to the state structure in central_data
 	const mavlink_stream_t* mavlink_stream;				///< The pointer to the MAVLink stream structure
 	remote_t* remote;									///< The pointer to the remote structure
-	const joystick_parsing_t* joystick;					///< Pointer to joystick 
+	const joystick_parsing_t* joystick;					///< The pointer to joystick 
+	data_logging_t* data_logging;						///< The pointer to the data logging structure
 }navigation_t;
 
 
@@ -140,10 +141,11 @@ typedef struct
  * \param	joystick				The pointer to the joystick_parsing structure
  * \param	remote					The pointer to the remote structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
+ * \param	data_logging			The pointer to the data_logging structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
+bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication, data_logging_t* data_logging);
 
 /**
  * \brief	Initialise the position hold mode
