@@ -17,7 +17,12 @@ The code edition and the compiling can be both made from Atmel Studio. For this,
 # Using Eclipse and Cygwin
 The possibility allows you to compile using the Makefile used in linux. Follow the instructions.
 - Download [Eclipse](http://www.eclipse.org/downloads/packages/eclipse-ide-cc-developers/marsr)
-- Download [Cygwin](https://www.cygwin.com/). Take care to download the packages that can runs the 'make' commands ("Devel" section, find the make package and take it). Some recommended packages are found on this [page](http://www.dogsbodynet.com/openr/install_cygwin.html) - part 9.
+- Download [Cygwin](https://www.cygwin.com/).
+
+Be sure to have the following packages included:
+- Devel / "binutils"
+- Devel / "gcc-g++" & "gcc-core"
+- Devel / "make"
 
 The Makefile will call 'avr-g++' or 'avr-gcc' to compile. These functions must be made global in windows to be called.
 - Add the link 'C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.435\avr32-gnu-toolchain\bin' into your Environment Variables. This link depends on your installation folder.
