@@ -64,7 +64,6 @@
 #include "drivers/sonar_telemetry.hpp"
 #include "communication/toggle_logging_telemetry.hpp"
 #include "control/manual_control_telemetry.hpp"
-#include "control/gimbal_controller_telemetry.hpp"
 
 extern "C"
 {
@@ -177,10 +176,6 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 
     init_success &= toggle_logging_telemetry_init(&central_data->toggle_logging,
                     &central_data->mavlink_communication.message_handler);
-
-    init_success &= gimbal_controller_telemetry_init(&central_data->gimbal_controller,
-  										&central_data->mavlink_communication.message_handler);
-
 
     return init_success;
 }

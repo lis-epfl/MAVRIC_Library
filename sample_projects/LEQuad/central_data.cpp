@@ -62,8 +62,6 @@ extern "C"
 #include "util/print_util.h"
 }
 
-#include "control/gimbal_controller_default_config.hpp"
-
 
 Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2):
     imu(imu),
@@ -322,12 +320,6 @@ bool Central_data::init(void)
                                &waypoint_handler,
                                &position_estimation,
                                &command.velocity);
-
-    //--------------------------------------------------------------------------
-	// Init gimbal controller
-	//--------------------------------------------------------------------------
-	gimbal_controller_init(&gimbal_controller,
-							 gimbal_controller_default_config());
 
 
     print_util_dbg_sep('-');

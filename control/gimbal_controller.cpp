@@ -41,30 +41,65 @@
 
 
 #include "control/gimbal_controller.hpp"
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
+extern "C"
+{
+	#include "util/print_util.h"
+}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+void Gimbal_controller::gimbal_controller_mix_to_servos()
+{
+	/*int32_t i;
+	float gimbal_servo_command[3]; //only gimbal stabilization in pitch and yaw
+
+	gimbal_servo_command[GIMBAL_SERVO_PITCH]	= control->gimbal_rpy[PITCH];
+	gimbal_servo_command[GIMBAL_SERVO_YAW]		= control->gimbal_rpy[YAW];
+
+	for (i=4; i<6; i++)
+	{
+		servos_set_value( servos, i, gimbal_servo_command[i-4]);
+	}*/
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void gimbal_controller_init(gimbal_controller_t* controller, const gimbal_controller_conf_t config)
+void Gimbal_controller::gimbal_controller_init(const gimbal_controller_conf_t config)
 {
-    // Init members
-    controller->attitude_command = config.attitude_command_config;
+    //Init variables
+	attitude_command_desired = config.attitude_command_desired_config;
+	attitude_output = config.attitude_output_config;
+	attitude_command_range[MIN_RANGE_GIMBAL] = config.attitude_command_range_config[MIN_RANGE_GIMBAL];
+	attitude_command_range[MAX_RANGE_GIMBAL] = config.attitude_command_range_config[MAX_RANGE_GIMBAL];
 }
 
 
-void gimbal_controller_update(gimbal_controller_t* controller)
+bool Gimbal_controller::gimbal_controller_update(Gimbal_controller *not_used)
 {
-	;
+
+	//Set directly the desired input as output commands ensuring that they are in the allowed range (no controller here)
+	for(int i = 0; i < 3; i++)
+	{
+		if(attitude_command_desired.rpy[i] < attitude_command_range[MIN_RANGE_GIMBAL].rpy[i])
+			attitude_output.rpy[i] = attitude_command_range[MIN_RANGE_GIMBAL].rpy[i];
+		else if(attitude_command_desired.rpy[i] > attitude_command_range[MAX_RANGE_GIMBAL].rpy[i])
+			attitude_output.rpy[i] = attitude_command_range[MAX_RANGE_GIMBAL].rpy[i];
+		else
+			attitude_output.rpy[i] = attitude_command_desired.rpy[i];
+	}
+
+	/*print_util_dbg_print("output gimbal commands\r\n");
+	print_util_dbg_print("roll ");
+	print_util_dbg_putfloat(attitude_output.rpy[0], 4);
+	print_util_dbg_print("\r\npitch ");
+	print_util_dbg_putfloat(attitude_output.rpy[1], 4);
+	print_util_dbg_print("\r\nyaw ");
+	print_util_dbg_putfloat(attitude_output.rpy[2], 4);
+	print_util_dbg_print("\r\n");*/
+
+	return true;
 }

@@ -49,9 +49,25 @@ static inline gimbal_controller_conf_t gimbal_controller_default_config()
 {
     gimbal_controller_conf_t conf = {};
 
-    conf.attitude_command_config.rpy[0]        = 0.0f;
-    conf.attitude_command_config.rpy[1]        = 0.0f;
-    conf.attitude_command_config.rpy[2]        = 0.0f;
+    //init desired attitude command
+    conf.attitude_command_desired_config.rpy[0]   = 0.0f;
+    conf.attitude_command_desired_config.rpy[1]   = 0.0f;
+    conf.attitude_command_desired_config.rpy[2]   = 0.0f;
+
+    //init MIN range of allowed attitude command
+	conf.attitude_command_range_config[0].rpy[0] = -45.0f;
+	conf.attitude_command_range_config[0].rpy[1] = -45.0f;
+	conf.attitude_command_range_config[0].rpy[2] = -45.0f;
+
+	//init MAX range of allowed attitude command
+	conf.attitude_command_range_config[1].rpy[0] = 45.0f;
+	conf.attitude_command_range_config[1].rpy[1] = 45.0f;
+	conf.attitude_command_range_config[1].rpy[2] = 45.0f;
+
+	//init output commands
+	conf.attitude_output_config.rpy[0]   = 0.0f;
+	conf.attitude_output_config.rpy[1]   = 0.0f;
+	conf.attitude_output_config.rpy[2]   = 0.0f;
 
     return conf;
 };

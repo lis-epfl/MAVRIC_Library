@@ -47,6 +47,19 @@
 #include "communication/mavlink_message_handler.hpp"
 #include "control/gimbal_controller.hpp"
 
+
+/**
+ * \brief   Parse received MAVLink message in structure
+ *
+ * \param   gimbal	    The pointer to the gimbal structure
+ * \param   sysid       The sysid of the system
+ * \param   msg         The pointer to the MAVLink message received
+ *
+ * \return  The MAV_RESULT of the command
+ */
+void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t sysid, mavlink_message_t* msg);
+
+
 /**
  * \brief   Initialise the manual_control telemetry module
  *
@@ -56,7 +69,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool gimbal_controller_telemetry_init(gimbal_controller_t* gimbal_controller, mavlink_message_handler_t* message_handler);
+bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, mavlink_message_handler_t* message_handler);
 
 
 /**
@@ -66,6 +79,7 @@ bool gimbal_controller_telemetry_init(gimbal_controller_t* gimbal_controller, ma
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void gimbal_controller_telemetry_send(const gimbal_controller_t* gimbal_controller, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void gimbal_controller_telemetry_send(const Gimbal_controller* gimbal_controller, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
 
 #endif /* GIMBAL_CONTROL_TELEMETRY_H_ */

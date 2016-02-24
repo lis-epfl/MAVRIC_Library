@@ -75,6 +75,9 @@ extern "C" {
 ///< define if servos 7 and 8 are used
 #define USE_SERVOS_7_8 false
 
+///< define if servos 5 and 6 are used (usually for gimbal)
+#define USE_SERVOS_5_6 true
+
 
 #ifdef __cplusplus
 }
