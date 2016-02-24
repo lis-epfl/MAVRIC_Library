@@ -38,10 +38,11 @@
  *
  ******************************************************************************/
 
+#include "central_data.hpp"
+#include "mavlink_telemetry.hpp"
+#include "tasks.hpp"
+
 #include "boards/mavrinux.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
 
 extern "C"
 {
@@ -78,6 +79,12 @@ int main(int argc, char** argv)
     File_linux file_stat;
 
     // -------------------------------------------------------------------------
+    // Serial for PX4Flow cameras
+    // -------------------------------------------------------------------------
+    Serial_dummy serial_flow_left;
+    Serial_dummy serial_flow_right;
+
+    // -------------------------------------------------------------------------
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using simulated sensors
@@ -96,7 +103,9 @@ int main(int argc, char** argv)
                                    board.servo_2,
                                    board.servo_3,
                                    file_log,
-                                   file_stat);
+                                   file_stat,
+                                   serial_flow_left,
+                                   serial_flow_right);
 
 
     // -------------------------------------------------------------------------
