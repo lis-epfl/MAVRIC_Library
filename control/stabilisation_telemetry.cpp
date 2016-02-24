@@ -47,6 +47,7 @@ extern "C"
 {
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.h"
+#include "util/print_util.h"
 }
 
 void  stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
@@ -173,34 +174,58 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
 
 void  sensors_set_telemetry_send(Central_data *central_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	float angle[3];
 	aero_attitude_t aero_attitude;
-	quat_t up = {0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
+	aero_attitude_t semilocal_rotation;
+	float global_vel[3];
+	float semilocal_vel[3];
 
-	aero_attitude =  coord_conventions_quat_to_aero(quaternions_global_to_local(central_data->stabilisation_copter.ahrs->qe,up));
-	angle[0] = aero_attitude.rpy[0];
-	angle[1] = aero_attitude.rpy[1];
-	angle[2] = aero_attitude.rpy[2];
+	//navigation.qe is the body attitude in quaternion
+	aero_attitude = coord_conventions_quat_to_aero(*central_data->navigation.qe);
+	semilocal_rotation = coord_conventions_quat_to_aero(*central_data->navigation.qe);
 
-	int16_t heading;
+	//only the yaw is kept for the semi-local rotation
+	semilocal_rotation.rpy[0] = 0.0f;
+	semilocal_rotation.rpy[1] = 0.0f;
 
-	if (angle[2] < 0)
-	    {
-	        heading = (int16_t)(360.0f + 180.0f * angle[2] / PI); //you want to normalize between 0 and 360°
-	    }
-	    else
-	    {
-	        heading = (int16_t)(180.0f * angle[2] / PI);
-	    }
+	//q_rot is yaw attitude angle in quaternion (from earth frame to body frame)
+	quat_t q_semilocal = coord_conventions_quaternion_from_aero(semilocal_rotation);
 
-	mavlink_msg_angle_rate_velocity_sensors_pack(mavlink_stream->sysid,
+	//get global frame velocity
+	global_vel[X] = central_data->stabilisation_copter.pos_est->vel[X];
+	global_vel[Y] = central_data->stabilisation_copter.pos_est->vel[Y];
+	global_vel[Z] = central_data->stabilisation_copter.pos_est->vel[Z];
+
+	//transform velocity in global frame to velocity in semi-local frame
+	quaternions_rotate_vector(q_semilocal,global_vel,semilocal_vel);
+
+	/*mavlink_msg_angle_rate_velocity_sensors_pack(mavlink_stream->sysid,
             mavlink_stream->compid,
             msg,
             time_keeper_get_ms(),
-			angle,
+			aero_attitude.rpy,
             central_data->ahrs.angular_speed,
-			central_data->stabilisation_copter.pos_est->vel[X], //in global frame
-			central_data->stabilisation_copter.pos_est->vel[Y], //in global frame
-			central_data->stabilisation_copter.pos_est->vel[Z], //in global frame
-			0.0f);
+			semilocal_vel[X],
+			semilocal_vel[Y],
+			semilocal_vel[Z],
+			0.0f);*/
+
+	mavlink_msg_highres_imu_pack(mavlink_stream->sysid,
+			mavlink_stream->compid,
+			msg,
+			time_keeper_get_ms(),
+			aero_attitude.rpy[0],
+			aero_attitude.rpy[1],
+			aero_attitude.rpy[2],
+			central_data->ahrs.angular_speed[0],
+			central_data->ahrs.angular_speed[1],
+			central_data->ahrs.angular_speed[2],
+			semilocal_vel[X],
+			semilocal_vel[Y],
+			semilocal_vel[Z],
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0);
+
 }

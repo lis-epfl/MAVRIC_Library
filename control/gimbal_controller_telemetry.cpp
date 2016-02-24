@@ -78,12 +78,13 @@ static void gimbal_telemetry_parse_msg(gimbal_controller_t* gimbal, uint32_t sys
 	gimbal->attitude_command.rpy[2] = packet.angle[2];
 
 	print_util_dbg_print("received gimbal commands\r\n");
-	print_util_dbg_print("roll\r\n");
+	print_util_dbg_print("roll ");
 	print_util_dbg_putfloat(gimbal->attitude_command.rpy[0], 4);
-	print_util_dbg_print("pitch\r\n");
+	print_util_dbg_print("\r\npitch ");
 	print_util_dbg_putfloat(gimbal->attitude_command.rpy[1], 4);
-	print_util_dbg_print("yaw\r\n");
+	print_util_dbg_print("\r\nyaw ");
 	print_util_dbg_putfloat(gimbal->attitude_command.rpy[2], 4);
+	print_util_dbg_print("\r\n");
 }
 
 //------------------------------------------------------------------------------
