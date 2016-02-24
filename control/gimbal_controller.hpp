@@ -76,6 +76,7 @@ private:
 	Servo*						servo_pitch;				///< Gimbal pitch servo
 	Servo*						servo_yaw;					///< Gimbal yaw servo
 
+
 public:
 	attitude_command_t			attitude_command_desired;	///< Attitude command (input from head-tracker)
 
@@ -98,7 +99,7 @@ public:
 	 * \param   controller          Pointer to data structure
 	 * \param   config              Pointer to configuration
 	 */
-	void gimbal_controller_init(const gimbal_controller_conf_t config);
+	void gimbal_controller_init(const gimbal_controller_conf_t config,Servo *servo_4,Servo *servo_5);
 
 	/**
 	 * \brief                   Main update function - sends gimbal command to two PWM outputs (for pitch and yaw)

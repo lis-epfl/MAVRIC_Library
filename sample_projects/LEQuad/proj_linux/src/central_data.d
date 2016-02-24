@@ -4,7 +4,7 @@ build/../src/central_data.o: ../../..//../src/central_data.cpp \
  ../../../drivers/magnetometer.hpp ../../../communication/state.hpp \
  ../../../communication/mav_modes.hpp \
  ../../../communication/mavlink_stream.hpp ../../../hal/common/serial.hpp \
- ../../../hal/avr32/endianness.h ../../../hal/common/mavric_endian.h \
+ ../../../hal/common/mavric_endian.h \
  ../../../libs/mavlink/include/mavric/mavlink.h \
  ../../../libs/mavlink/include/mavric/version.h \
  ../../../libs/mavlink/include/mavric/mavric.h \
@@ -217,8 +217,6 @@ build/../src/central_data.o: ../../..//../src/central_data.cpp \
 ../../../communication/mavlink_stream.hpp:
 
 ../../../hal/common/serial.hpp:
-
-../../../hal/avr32/endianness.h:
 
 ../../../hal/common/mavric_endian.h:
 
