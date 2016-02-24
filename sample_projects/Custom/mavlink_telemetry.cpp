@@ -39,31 +39,37 @@
  ******************************************************************************/
 
 
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "mavlink_telemetry.hpp"
+#include "central_data.hpp"
+
 #include "drivers/sonar_i2cxl.hpp"
+#include "drivers/servos_telemetry.hpp"
+#include "drivers/gps_telemetry.hpp"
+#include "drivers/sonar_telemetry.hpp"
+#include "drivers/barometer_telemetry.hpp"
+
+#include "sensing/imu_telemetry.hpp"
+#include "sensing/position_estimation_telemetry.hpp"
+#include "sensing/position_estimation.hpp"
+#include "sensing/ahrs_telemetry.hpp"
+
+#include "control/manual_control_telemetry.hpp"
+#include "control/stabilisation_telemetry.hpp"
+#include "control/joystick_telemetry.hpp"
+#include "control/manual_control_telemetry.hpp"
+
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/hud_telemetry.hpp"
-#include "control/stabilisation_telemetry.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/state.hpp"
-#include "sensing/position_estimation.hpp"
 #include "communication/remote_telemetry.hpp"
-#include "drivers/servos_telemetry.hpp"
 #include "communication/state_telemetry.hpp"
-#include "drivers/gps_telemetry.hpp"
-#include "sensing/imu_telemetry.hpp"
-#include "control/manual_control_telemetry.hpp"
-#include "drivers/barometer_telemetry.hpp"
-#include "sensing/ahrs_telemetry.hpp"
-#include "sensing/position_estimation_telemetry.hpp"
-#include "control/joystick_telemetry.hpp"
-// #include "simulation_telemetry.hpp"
-#include "runtime/scheduler_telemetry.hpp"
-#include "drivers/sonar_telemetry.hpp"
 #include "communication/toggle_logging_telemetry.hpp"
-#include "control/manual_control_telemetry.hpp"
+
+#include "runtime/scheduler_telemetry.hpp"
+// #include "simulation_telemetry.hpp"
+// #include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
@@ -349,6 +355,31 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 }
 
 
+void flow_telemetry_send(const flow_t* flow, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void flow_telemetry_send(const flow_t* flow, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+    mavlink_msg_optical_flow_pack(  mavlink_stream->sysid,
+                    mavlink_stream->compid,
+                    msg,
+                    time_keeper_get_ms(), 
+                    0, 
+                    // flow->tmp_flow_x, 
+                    // flow->tmp_flow_y, 
+                    // flow->tmp_flow_comp_m_x, 
+                    // flow->tmp_flow_comp_m_y,
+                    // endian_rev16(flow->of.x[20]), 
+                    // endian_rev16(flow->of.x[50]), 
+                    // endian_rev16(flow->of.x[80]), 
+                    // endian_rev16(flow->of.x[110]), 
+                    flow->of.x[20], 
+                    flow->of.x[50], 
+                    flow->of.x[80], 
+                    flow->of.x[110], 
+                    flow->n_packets, 
+                    flow->of_count);
+}
+
+
 bool mavlink_telemetry_init(Central_data* central_data)
 {
     bool init_success = true;
@@ -389,6 +420,8 @@ bool mavlink_telemetry_init(Central_data* central_data)
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&scheduler_telemetry_send_rt_stats,                             &central_data->scheduler,               MAVLINK_MSG_ID_NAMED_VALUE_FLOAT); // ID 251
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&sonar_telemetry_send,                            &central_data->sonar_i2cxl.data,            MAVLINK_MSG_ID_DISTANCE_SENSOR  );// ID 132
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
+    
+    init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           &central_data->flow_right_,              MAVLINK_MSG_ID_OPTICAL_FLOW           );
 
     scheduler_sort_tasks(&central_data->mavlink_communication.scheduler);
 

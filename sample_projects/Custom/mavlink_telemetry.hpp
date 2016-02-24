@@ -42,7 +42,8 @@
 #ifndef MAVLINK_TELEMETRY_H_
 #define MAVLINK_TELEMETRY_H_
 
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "central_data.hpp"
+
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_stream.hpp"
 
