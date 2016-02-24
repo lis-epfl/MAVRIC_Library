@@ -45,7 +45,7 @@ extern "C"
 {
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
-#include "hal/avr32/endianness.h"
+#include "hal/common/mavric_endian.h"
 }
 
 //------------------------------------------------------------------------------
