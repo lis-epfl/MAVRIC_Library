@@ -45,27 +45,33 @@
 
 #include "control/control_command.h"
 #include "control/pid_controller.h"
-
-
-/**
- * \brief Gimbal controller structure
- * So far, the command are only sent to an external gimbal board which handles the closed-loop itself
- */
-typedef struct
-{
-    attitude_command_t			attitude_command;	///< Attitude command (input)
-} gimbal_controller_t;
-
+#include "drivers/servo.hpp"
 
 /**
  * \brief Gimbal controller configuration
  */
 typedef struct
 {
-    attitude_command_t   		attitude_command_config;  ///< Initial command sent to the external gimbal board
+	attitude_command_t   		attitude_command_desired_config;	///< Initial desired attitude command
+	attitude_command_t   		attitude_command_range_config[2];  	///< Allowed [min;max] range of the gimbal
+	attitude_command_t   		attitude_output_config;  			///< Initial output commands
 } gimbal_controller_conf_t;
 
 
+class Gimbal_controller
+{
+
+//------------------------------------------------------------------------------
+// VARIABLES
+//------------------------------------------------------------------------------
+private:
+	enum RANGE_GIMBAL
+	{
+	    MIN_RANGE_GIMBAL = 0,              ///< Range of the minimum allowed gimbal angles
+	    MAX_RANGE_GIMBAL = 1               ///< Range of the maximum allowed gimabl angles
+	};
+
+<<<<<<< HEAD
 /**
  * \brief                       Initializes the gimbal controller structure
  *
@@ -74,13 +80,45 @@ typedef struct
  */
 void gimbal_controller_init(gimbal_controller_t* controller,
 								const gimbal_controller_conf_t config);
+=======
+	attitude_command_t			attitude_command_range[2];	///< Range [min; max] of the attitude commands
+	attitude_command_t			attitude_output;			///< Output to PWM (output)
+	Servo*						servo_pitch;				///< Gimbal pitch servo
+	Servo*						servo_yaw;					///< Gimbal yaw servo
+>>>>>>> alex_gimbal
 
 
-/**
- * \brief                   Main update function - so far useless
- *
- * \param   controller      Pointer to data structure
- */
-void gimbal_controller_update(gimbal_controller_t* controller);
+public:
+	attitude_command_t			attitude_command_desired;	///< Attitude command (input from head-tracker)
+
+//------------------------------------------------------------------------------
+// FUNCTIONS
+//------------------------------------------------------------------------------
+private:
+	/**
+	 * \brief                   Sends the output to the servos
+	 *
+	 * \param   output			Outputs to send
+	 * \param	servos			pointer to the servo structure
+	 */
+	void gimbal_controller_mix_to_servos();
+
+public:
+	/**
+	 * \brief                       Initializes the gimbal controller structure
+	 *
+	 * \param   controller          Pointer to data structure
+	 * \param   config              Pointer to configuration
+	 */
+	void gimbal_controller_init(const gimbal_controller_conf_t config,Servo *servo_4,Servo *servo_5);
+
+	/**
+	 * \brief                   Main update function - sends gimbal command to two PWM outputs (for pitch and yaw)
+	 *
+	 * \param   controller      Pointer to data structure
+	 */
+	bool gimbal_controller_update(Gimbal_controller *not_used);
+
+};
 
 #endif /* GIMBAL_CONTROLLER_H_ */

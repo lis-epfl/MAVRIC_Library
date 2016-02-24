@@ -48,31 +48,14 @@ extern "C"
 #include "util/print_util.h"
 #include "hal/common/time_keeper.hpp"
 }
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-/**
- * \brief   Parse received MAVLink message in structure
- *
- * \param   gimbal	    The pointer to the gimbal structure
- * \param   sysid       The sysid of the system
- * \param   msg         The pointer to the MAVLink message received
- *
- * \return  The MAV_RESULT of the command
- */
-static void gimbal_telemetry_parse_msg(gimbal_controller_t* gimbal, uint32_t sysid, mavlink_message_t* msg);
 
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-static void gimbal_telemetry_parse_msg(gimbal_controller_t* gimbal, uint32_t sysid, mavlink_message_t* msg)
+void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t sysid, mavlink_message_t* msg)
 {
 	mavlink_gimbal_command_t packet;
 	mavlink_msg_gimbal_command_decode(msg, &packet);
 
+<<<<<<< HEAD
 	gimbal->attitude_command.rpy[0] = packet.angle[0];
 	gimbal->attitude_command.rpy[1] = packet.angle[1];
 	gimbal->attitude_command.rpy[2] = packet.angle[2];
@@ -85,13 +68,16 @@ static void gimbal_telemetry_parse_msg(gimbal_controller_t* gimbal, uint32_t sys
 	print_util_dbg_print("\r\nyaw ");
 	print_util_dbg_putfloat(gimbal->attitude_command.rpy[2], 4);
 	print_util_dbg_print("\r\n");
+=======
+	//store the received angle as the desired ones
+	gimbal_controller->attitude_command_desired.rpy[0] = packet.angle[0];
+	gimbal_controller->attitude_command_desired.rpy[1] = packet.angle[1];
+	gimbal_controller->attitude_command_desired.rpy[2] = packet.angle[2];
+>>>>>>> alex_gimbal
 }
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
 
-bool gimbal_controller_telemetry_init(gimbal_controller_t* gimbal_controller, mavlink_message_handler_t* message_handler)
+bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, mavlink_message_handler_t* message_handler)
 {
     bool init_success = true;
 
@@ -109,7 +95,7 @@ bool gimbal_controller_telemetry_init(gimbal_controller_t* gimbal_controller, ma
 }
 
 
-void gimbal_controller_telemetry_send(const gimbal_controller_t* gimbal_controller, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void gimbal_controller_telemetry_send(const Gimbal_controller* gimbal_controller, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
     ;
 }
