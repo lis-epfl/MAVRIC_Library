@@ -87,6 +87,7 @@ extern "C"
 }
 #include "control/velocity_controller_copter.hpp"
 #include "control/vector_field_waypoint.hpp"
+#include "control/gimbal_controller.hpp"
 
 /**
  * \brief The central data structure
@@ -158,6 +159,8 @@ public:
     attitude_controller_t           attitude_controller;
     velocity_controller_copter_t    velocity_controller;
     vector_field_waypoint_t         vector_field_waypoint;
+
+    gimbal_controller_t				gimbal_controller;			///< The gimbal control structure
 
 private:
     uint8_t sysid_;     ///< System ID

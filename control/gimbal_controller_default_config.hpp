@@ -43,7 +43,7 @@
 #ifndef GIMBAL_CONTROLLER_DEFAULT_CONFIG_H_
 #define GIMBAL_CONTROLLER_DEFAULT_CONFIG_H_
 
-#include "control/gimbal_controller.h"
+#include "control/gimbal_controller.hpp"
 
 static inline gimbal_controller_conf_t gimbal_controller_default_config()
 {
