@@ -274,7 +274,6 @@ bool tasks_create_tasks(Central_data* central_data)
 
     init_success &= scheduler_add_task(scheduler, 10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&tasks_data_logging_update                       , (task_argument_t)central_data                         , 11);
 
-
     scheduler_sort_tasks(scheduler);
 
     return init_success;

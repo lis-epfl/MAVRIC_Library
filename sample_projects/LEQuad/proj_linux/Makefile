@@ -11,14 +11,10 @@ PROJ_NAME=LEQuad_mavrinux
 # PROJECT FOLDER
 # ------------------------------------------------------------------------------
 # Project source files (*.c and *.cpp)
-LIB_SRCS += ../src/main_linux.cpp
-LIB_SRCS += ../src/central_data.cpp
-LIB_SRCS += ../src/tasks.cpp
-LIB_SRCS += ../src/mavlink_telemetry.cpp
-#LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
-#LIB_SRCS += sample_projects/LEQuad/central_data.cpp
-#LIB_SRCS += sample_projects/LEQuad/tasks.cpp
-#LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
+LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
+LIB_SRCS += sample_projects/LEQuad/central_data.cpp
+LIB_SRCS += sample_projects/LEQuad/tasks.cpp
+LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY

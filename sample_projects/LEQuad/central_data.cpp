@@ -321,7 +321,6 @@ bool Central_data::init(void)
                                &position_estimation,
                                &command.velocity);
 
-
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);
     print_util_dbg_init_msg("[CENTRAL_DATA]", init_success);
