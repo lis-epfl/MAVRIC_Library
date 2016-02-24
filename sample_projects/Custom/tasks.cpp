@@ -39,8 +39,10 @@
  ******************************************************************************/
 
 
-#include "sample_projects/LEQuad/tasks.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "tasks.hpp"
+#include "central_data.hpp"
+
+
 #include "communication/data_logging.hpp"
 
 
@@ -245,6 +247,16 @@ bool tasks_data_logging_update(Central_data* central_data)
     return run_success;
 }
 
+bool tasks_flow_update(Central_data* central_data)
+{
+    bool success = true;
+
+    success &= flow_update( &central_data->flow_left_ );
+    success &= flow_update( &central_data->flow_right_ );
+
+    return success;
+}
+
 bool tasks_create_tasks(Central_data* central_data)
 {
     bool init_success = true;
@@ -273,6 +285,9 @@ bool tasks_create_tasks(Central_data* central_data)
     // init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , (task_function_t)&tasks_sleep                                     , (task_argument_t)central_data                         , 14);
 
     init_success &= scheduler_add_task(scheduler, 10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&tasks_data_logging_update                       , (task_argument_t)central_data                         , 11);
+    
+
+    init_success &= scheduler_add_task(scheduler, 50000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&tasks_flow_update                               , (task_argument_t)central_data                         , 12);
 
     scheduler_sort_tasks(scheduler);
 

@@ -42,7 +42,8 @@
 #ifndef TASKS_H_
 #define TASKS_H_
 
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "central_data.hpp"
+
 #include "hal/common/led.hpp"
 
 /**
@@ -108,5 +109,11 @@ bool tasks_led_toggle(Led* led);
  * \brief            Run the data_logging task
  */
 bool tasks_data_logging_update(Central_data* central_data);
+
+
+/**
+ * \brief            Read new Optic flow value from PX4 cameras
+ */
+bool tasks_flow_update(Central_data* central_data);
 
 #endif /* TASKS_H_ */
