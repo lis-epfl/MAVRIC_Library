@@ -67,19 +67,20 @@ class Gimbal_controller
 {
 public:
 	/**
-	 * \brief                       Constructor
+	 * \brief   Constructor
 	 *
-	 * \param   controller          Pointer to data structure
-	 * \param   config              Pointer to configuration
+	 * \param   servo_pitch         Servo for pitch
+	 * \param   servo_yaw           Servo for yaw
+	 * \param   config              Configuration structure
 	 */
 	Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const gimbal_controller_conf_t config = gimbal_controller_default_config() );
 
 
 	/**
-	 * \brief                   Main update function - sends gimbal command to two PWM outputs (for pitch and yaw)
-	 *
-	 * \param   controller      Pointer to data structure
-	 */
+	 * \brief   Main update function - sends gimbal command to two PWM outputs (for pitch and yaw)
+	 * 
+	 * \return  success
+	 */	 
 	bool update(void);
 
 
@@ -87,12 +88,9 @@ public:
 
 private:
 	/**
-	 * \brief                   Sends the output to the servos
-	 *
-	 * \param   output			Outputs to send
-	 * \param	servos			pointer to the servo structure
+	 * \brief   Sends the output to the servos
 	 */
-	void gimbal_controller_mix_to_servos();
+	void gimbal_controller_mix_to_servos(void);
 
 
 	enum RANGE_GIMBAL

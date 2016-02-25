@@ -50,7 +50,7 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Gimbal_controller::gimbal_controller_mix_to_servos()
+void Gimbal_controller::gimbal_controller_mix_to_servos(void)
 {
 	float pwm_output[3];
 
@@ -100,7 +100,7 @@ bool Gimbal_controller::update(void)
 		}
 	}
 
-	//send attitude output to servos (pwm)
+	// send attitude output to servos (pwm)
 	gimbal_controller_mix_to_servos();
 
 	return true;
