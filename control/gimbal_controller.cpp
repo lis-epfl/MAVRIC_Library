@@ -102,15 +102,6 @@ bool Gimbal_controller::gimbal_controller_update(Gimbal_controller *not_used)
 		}
 	}
 
-	/*print_util_dbg_print("output gimbal commands\r\n");
-	print_util_dbg_print("roll ");
-	print_util_dbg_putfloat(attitude_output.rpy[0], 4);
-	print_util_dbg_print("  pitch ");
-	print_util_dbg_putfloat(attitude_output.rpy[1], 4);
-	print_util_dbg_print("  yaw ");
-	print_util_dbg_putfloat(attitude_output.rpy[2], 4);
-	print_util_dbg_print(" \r\n");*/
-
 	//send attitude output to servos (pwm)
 	gimbal_controller_mix_to_servos();
 
