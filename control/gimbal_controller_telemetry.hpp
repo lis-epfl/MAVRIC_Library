@@ -51,7 +51,7 @@
 /**
  * \brief   Parse received MAVLink message in structure
  *
- * \param   gimbal	    The pointer to the gimbal structure
+ * \param   gimbal      The pointer to the gimbal structure
  * \param   sysid       The sysid of the system
  * \param   msg         The pointer to the MAVLink message received
  *

@@ -43,7 +43,7 @@
 #include "control/gimbal_controller.hpp"
 extern "C"
 {
-	#include "util/print_util.h"
+#include "util/print_util.h"
 }
 
 //------------------------------------------------------------------------------
@@ -52,16 +52,16 @@ extern "C"
 
 void Gimbal_controller::gimbal_controller_mix_to_servos(void)
 {
-	float pwm_output[3];
+    float pwm_output[3];
 
-	//pwm range = [-1;1] which is set to corresponds to angles [-90°;90°]
-	for(int i = 1; i < 3; i++)
-	{
-		pwm_output[i] = attitude_output_.rpy[i]/90.0f;
-	}
+    //pwm range = [-1;1] which is set to corresponds to angles [-90°;90°]
+    for (int i = 1; i < 3; i++)
+    {
+        pwm_output[i] = attitude_output_.rpy[i] / 90.0f;
+    }
 
-	servo_pitch_.write(pwm_output[1],true);
-	servo_yaw_.write(pwm_output[2],true);
+    servo_pitch_.write(pwm_output[1], true);
+    servo_yaw_.write(pwm_output[2], true);
 }
 
 //------------------------------------------------------------------------------
@@ -69,39 +69,39 @@ void Gimbal_controller::gimbal_controller_mix_to_servos(void)
 //------------------------------------------------------------------------------
 
 Gimbal_controller::Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const gimbal_controller_conf_t config):
-	servo_pitch_(servo_pitch),
-	servo_yaw_(servo_yaw)
+    servo_pitch_(servo_pitch),
+    servo_yaw_(servo_yaw)
 {
     // Init variables from config
-	attitude_command_desired_ 				  = config.attitude_command_desired_config;
-	attitude_output_ 						  = config.attitude_output_config;
-	attitude_command_range_[MIN_RANGE_GIMBAL] = config.attitude_command_range_config[MIN_RANGE_GIMBAL];
-	attitude_command_range_[MAX_RANGE_GIMBAL] = config.attitude_command_range_config[MAX_RANGE_GIMBAL];
+    attitude_command_desired_ 				  = config.attitude_command_desired_config;
+    attitude_output_ 						  = config.attitude_output_config;
+    attitude_command_range_[MIN_RANGE_GIMBAL] = config.attitude_command_range_config[MIN_RANGE_GIMBAL];
+    attitude_command_range_[MAX_RANGE_GIMBAL] = config.attitude_command_range_config[MAX_RANGE_GIMBAL];
 }
 
 
 bool Gimbal_controller::update(void)
 {
 
-	//Set directly the desired input as output commands ensuring that they are in the allowed range (no controller here)
-	for(int i = 0; i < 3; i++)
-	{
-		if(attitude_command_desired_.rpy[i] < attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i])
-		{
-			attitude_output_.rpy[i] = attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i];
-		}
-		else if(attitude_command_desired_.rpy[i] > attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i])
-		{
-			attitude_output_.rpy[i] = attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i];
-		}
-		else
-		{
-			attitude_output_.rpy[i] = attitude_command_desired_.rpy[i];
-		}
-	}
+    //Set directly the desired input as output commands ensuring that they are in the allowed range (no controller here)
+    for (int i = 0; i < 3; i++)
+    {
+        if (attitude_command_desired_.rpy[i] < attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i])
+        {
+            attitude_output_.rpy[i] = attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i];
+        }
+        else if (attitude_command_desired_.rpy[i] > attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i])
+        {
+            attitude_output_.rpy[i] = attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i];
+        }
+        else
+        {
+            attitude_output_.rpy[i] = attitude_command_desired_.rpy[i];
+        }
+    }
 
-	// send attitude output to servos (pwm)
-	gimbal_controller_mix_to_servos();
+    // send attitude output to servos (pwm)
+    gimbal_controller_mix_to_servos();
 
-	return true;
+    return true;
 }

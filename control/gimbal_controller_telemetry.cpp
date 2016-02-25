@@ -52,13 +52,13 @@ extern "C"
 
 void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t sysid, mavlink_message_t* msg)
 {
-	mavlink_gimbal_command_t packet;
-	mavlink_msg_gimbal_command_decode(msg, &packet);
+    mavlink_gimbal_command_t packet;
+    mavlink_msg_gimbal_command_decode(msg, &packet);
 
-	//store the received angle as the desired ones
-	gimbal_controller->attitude_command_desired_.rpy[0] = packet.angle[0];
-	gimbal_controller->attitude_command_desired_.rpy[1] = packet.angle[1];
-	gimbal_controller->attitude_command_desired_.rpy[2] = packet.angle[2];
+    //store the received angle as the desired ones
+    gimbal_controller->attitude_command_desired_.rpy[0] = packet.angle[0];
+    gimbal_controller->attitude_command_desired_.rpy[1] = packet.angle[1];
+    gimbal_controller->attitude_command_desired_.rpy[2] = packet.angle[2];
 }
 
 
