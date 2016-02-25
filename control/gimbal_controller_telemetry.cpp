@@ -78,9 +78,3 @@ bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, mavl
 
     return init_success;
 }
-
-
-void gimbal_controller_telemetry_send(const Gimbal_controller* gimbal_controller, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
-{
-    ;
-}

@@ -72,14 +72,4 @@ void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t s
 bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, mavlink_message_handler_t* message_handler);
 
 
-/**
- * \brief   Sends the manual control values via MAVLink
- *
- * \param   gimbal_controller       The pointer to the gimbal controller structure
- * \param   mavlink_stream          The pointer to the MAVLink stream structure
- * \param   msg                     The pointer to the MAVLink message
- */
-void gimbal_controller_telemetry_send(const Gimbal_controller* gimbal_controller, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
-
 #endif /* GIMBAL_CONTROL_TELEMETRY_H_ */
