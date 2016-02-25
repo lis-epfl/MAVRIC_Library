@@ -89,11 +89,17 @@ bool Gimbal_controller::gimbal_controller_update(Gimbal_controller *not_used)
 	for(int i = 0; i < 3; i++)
 	{
 		if(attitude_command_desired.rpy[i] < attitude_command_range[MIN_RANGE_GIMBAL].rpy[i])
+		{
 			attitude_output.rpy[i] = attitude_command_range[MIN_RANGE_GIMBAL].rpy[i];
+		}
 		else if(attitude_command_desired.rpy[i] > attitude_command_range[MAX_RANGE_GIMBAL].rpy[i])
+		{
 			attitude_output.rpy[i] = attitude_command_range[MAX_RANGE_GIMBAL].rpy[i];
+		}
 		else
+		{
 			attitude_output.rpy[i] = attitude_command_desired.rpy[i];
+		}
 	}
 
 	/*print_util_dbg_print("output gimbal commands\r\n");
