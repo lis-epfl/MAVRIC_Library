@@ -1,4 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classGyroscope__sim.html" title="Simulated gyroscopes." alt="" coords="5,296,139,520"/>
-<area shape="rect" id="node5" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="163,261,293,555"/>
+<area shape="rect" id="node3" href="$classGyroscope__sim.html" title="Simulated gyroscopes." alt="" coords="5,261,139,485"/>
+<area shape="rect" id="node5" href="$classLsm330dlc__gyr.html" title="Intermediate interface class for the gyro inside LSM330DLC." alt="" coords="163,322,272,425"/>
+<area shape="rect" id="node7" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="152,534,283,845"/>
 </map>

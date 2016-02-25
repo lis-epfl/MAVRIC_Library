@@ -84,7 +84,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Lsm330dlc Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Lsm330dlc" --><!-- doxytag: inherits="Accelerometer,Gyroscope" -->
+<!-- doxytag: class="Lsm330dlc" --><!-- doxytag: inherits="Lsm330dlc_acc,Lsm330dlc_gyr" -->
 <p>Driver for sensor LSM330DLC.  
  <a href="classLsm330dlc.html#details">More...</a></p>
 
@@ -94,14 +94,14 @@ Inheritance diagram for Lsm330dlc:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLsm330dlc__inherit__graph.png" border="0" usemap="#Lsm330dlc_inherit__map" alt="Inheritance graph"/></div>
 <map name="Lsm330dlc_inherit__map" id="Lsm330dlc_inherit__map">
-<area shape="rect" id="node2" href="classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="5,6,136,213"/><area shape="rect" id="node4" href="classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="160,6,291,213"/></map>
+<area shape="rect" id="node2" href="classLsm330dlc__acc.html" title="Intermediate interface class for the accelero inside LSM330DLC." alt="" coords="20,262,132,365"/><area shape="rect" id="node4" href="classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="5,6,136,213"/><area shape="rect" id="node6" href="classLsm330dlc__gyr.html" title="Intermediate interface class for the gyro inside LSM330DLC." alt="" coords="165,262,275,365"/><area shape="rect" id="node8" href="classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="160,6,291,213"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Lsm330dlc:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLsm330dlc__coll__graph.png" border="0" usemap="#Lsm330dlc_coll__map" alt="Collaboration graph"/></div>
 <map name="Lsm330dlc_coll__map" id="Lsm330dlc_coll__map">
-<area shape="rect" id="node2" href="classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="5,6,136,213"/><area shape="rect" id="node4" href="classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="160,6,291,213"/></map>
+<area shape="rect" id="node2" href="classLsm330dlc__acc.html" title="Intermediate interface class for the accelero inside LSM330DLC." alt="" coords="20,262,132,365"/><area shape="rect" id="node4" href="classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="5,6,136,213"/><area shape="rect" id="node6" href="classLsm330dlc__gyr.html" title="Intermediate interface class for the gyro inside LSM330DLC." alt="" coords="165,262,275,365"/><area shape="rect" id="node8" href="classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="160,6,291,213"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classLsm330dlc-members.html">List of all members.</a></p>
@@ -112,8 +112,10 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a060e3760ea5392904a28e604b3ba78aa"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9">init</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the sensor.  <a href="#a7ed13528e15ce4df5decd94f68e4eba9"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLsm330dlc.html#a6a90c8e0a93f539d852810e88313189c">update</a> (void)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function.  <a href="#a6a90c8e0a93f539d852810e88313189c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6">update_acc</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function.  <a href="#a2b1f8508e986a9d15b9638dd4e0d82a6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a109bde680469607a23de28918ec78397"></a><!-- doxytag: member="Lsm330dlc::update_gyr" ref="a109bde680469607a23de28918ec78397" args="(void)" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>update_gyr</b> (void)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLsm330dlc.html#a58cd635ba4da1cbce5e953aa6743bbc1">last_update_us</a> (void) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last update time in microseconds.  <a href="#a58cd635ba4da1cbce5e953aa6743bbc1"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const std::array&lt; float, 3 &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLsm330dlc.html#a02afabcfcdca4902a840f29aaaa48084">gyro</a> (void) const </td></tr>
@@ -137,7 +139,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Driver for sensor LSM330DLC. </p>
-<p>This sensor is at the same time a accelerometer and a gyroscope </p>
+<p>This sensor is at the same time a accelerometer and a gyroscope The inherited method <a class="el" href="classAccelerometer.html#a502ee76801742384312f643c267bb048" title="Main update function  Reads new values from sensor.">Accelerometer::update</a> is implemented as <a class="el" href="classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6" title="Main update function.">Lsm330dlc::update_acc</a> The inherited method <a class="el" href="classGyroscope.html#aa1bc5409e1fc374c50d4998109caf961" title="Main update function  Reads new values from sensor.">Gyroscope::update</a> is implemented as Lsm330dlc::update_gyr </p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a060e3760ea5392904a28e604b3ba78aa"></a><!-- doxytag: member="Lsm330dlc::Lsm330dlc" ref="a060e3760ea5392904a28e604b3ba78aa" args="(I2c &amp;i2c)" -->
 <div class="memitem">
@@ -445,12 +447,12 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a6a90c8e0a93f539d852810e88313189c"></a><!-- doxytag: member="Lsm330dlc::update" ref="a6a90c8e0a93f539d852810e88313189c" args="(void)" -->
+<a class="anchor" id="a2b1f8508e986a9d15b9638dd4e0d82a6"></a><!-- doxytag: member="Lsm330dlc::update_acc" ref="a2b1f8508e986a9d15b9638dd4e0d82a6" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classLsm330dlc.html#a6a90c8e0a93f539d852810e88313189c">Lsm330dlc::update</a> </td>
+          <td class="memname">bool <a class="el" href="classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6">Lsm330dlc::update_acc</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -466,14 +468,14 @@ Here is the caller graph for this function:</div>
 <dd>
 false Failed </dd></dl>
 
-<p>Implements <a class="el" href="classAccelerometer.html#a502ee76801742384312f643c267bb048">Accelerometer</a>.</p>
+<p>Implements <a class="el" href="classLsm330dlc__acc.html">Lsm330dlc_acc</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classLsm330dlc_a6a90c8e0a93f539d852810e88313189c_cgraph.png" border="0" usemap="#classLsm330dlc_a6a90c8e0a93f539d852810e88313189c_cgraph" alt=""/></div>
-<map name="classLsm330dlc_a6a90c8e0a93f539d852810e88313189c_cgraph" id="classLsm330dlc_a6a90c8e0a93f539d852810e88313189c_cgraph">
-<area shape="rect" id="node3" href="classI2c.html#a6df122b68bbb83bdfbd85399761cf6b6" title="Write multiple bytes to a I2C slave device." alt="" coords="188,5,263,35"/><area shape="rect" id="node5" href="classI2c.html#aae83ee6e5df1bc8b39832fc63a448bdb" title="Read multiple bytes to a I2C slave device." alt="" coords="189,59,261,88"/></map>
+<div class="center"><img src="classLsm330dlc_a2b1f8508e986a9d15b9638dd4e0d82a6_cgraph.png" border="0" usemap="#classLsm330dlc_a2b1f8508e986a9d15b9638dd4e0d82a6_cgraph" alt=""/></div>
+<map name="classLsm330dlc_a2b1f8508e986a9d15b9638dd4e0d82a6_cgraph" id="classLsm330dlc_a2b1f8508e986a9d15b9638dd4e0d82a6_cgraph">
+<area shape="rect" id="node3" href="classI2c.html#a6df122b68bbb83bdfbd85399761cf6b6" title="Write multiple bytes to a I2C slave device." alt="" coords="215,5,289,35"/><area shape="rect" id="node5" href="classI2c.html#aae83ee6e5df1bc8b39832fc63a448bdb" title="Read multiple bytes to a I2C slave device." alt="" coords="216,59,288,88"/></map>
 </div>
 </p>
 
@@ -501,7 +503,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 25 2016 12:46:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 25 2016 13:14:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

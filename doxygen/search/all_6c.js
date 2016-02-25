@@ -59,5 +59,7 @@ var searchData=
   ['lpf_5fmag',['lpf_mag',['../structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82',1,'imu_conf_t']]],
   ['lpf_5fmean',['lpf_mean',['../structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e',1,'imu_conf_t']]],
   ['lsm330dlc',['Lsm330dlc',['../classLsm330dlc.html',1,'Lsm330dlc'],['../classLsm330dlc.html#a060e3760ea5392904a28e604b3ba78aa',1,'Lsm330dlc::Lsm330dlc()']]],
+  ['lsm330dlc_5facc',['Lsm330dlc_acc',['../classLsm330dlc__acc.html',1,'']]],
+  ['lsm330dlc_5fgyr',['Lsm330dlc_gyr',['../classLsm330dlc__gyr.html',1,'']]],
   ['lsm_5fread_5ffifo_5ffill_5ft',['lsm_read_fifo_fill_t',['../structlsm__read__fifo__fill__t.html',1,'']]]
 ];

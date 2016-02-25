@@ -135,58 +135,83 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00053"></a>00053 <span class="preprocessor">#include &quot;hal/common/i2c.hpp&quot;</span>
 <a name="l00054"></a>00054 
 <a name="l00055"></a>00055 
-<a name="l00061"></a><a class="code" href="classLsm330dlc.html">00061</a> <span class="keyword">class </span><a class="code" href="classLsm330dlc.html" title="Driver for sensor LSM330DLC.">Lsm330dlc</a>: <span class="keyword">public</span> <a class="code" href="classAccelerometer.html" title="Abstract class for accelerometers.">Accelerometer</a>, <span class="keyword">public</span> <a class="code" href="classGyroscope.html" title="Abstract class for gyroscopes.">Gyroscope</a>
+<a name="l00061"></a><a class="code" href="classLsm330dlc__acc.html">00061</a> <span class="keyword">class </span><a class="code" href="classLsm330dlc__acc.html" title="Intermediate interface class for the accelero inside LSM330DLC.">Lsm330dlc_acc</a>: <span class="keyword">public</span> <a class="code" href="classAccelerometer.html" title="Abstract class for accelerometers.">Accelerometer</a>
 <a name="l00062"></a>00062 {
 <a name="l00063"></a>00063 <span class="keyword">public</span>:
-<a name="l00069"></a>00069     <a class="code" href="classLsm330dlc.html#a060e3760ea5392904a28e604b3ba78aa" title="Constructor.">Lsm330dlc</a>(<a class="code" href="classI2c.html">I2c</a>&amp; i2c);
-<a name="l00070"></a>00070 
+<a name="l00064"></a>00064     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> update_acc(<span class="keywordtype">void</span>) = 0;
+<a name="l00065"></a>00065 
+<a name="l00066"></a><a class="code" href="classLsm330dlc__acc.html#afe945db52343306c23ca762d8f9090a7">00066</a>     <span class="keywordtype">bool</span> <a class="code" href="classLsm330dlc__acc.html#afe945db52343306c23ca762d8f9090a7" title="Main update function  Reads new values from sensor.">update</a>(<span class="keywordtype">void</span>)
+<a name="l00067"></a>00067     {
+<a name="l00068"></a>00068         <span class="keywordflow">return</span> update_acc();
+<a name="l00069"></a>00069     }
+<a name="l00070"></a>00070 };
 <a name="l00071"></a>00071 
-<a name="l00080"></a>00080     <span class="keywordtype">bool</span> <a class="code" href="classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9" title="Initialise the sensor.">init</a>(<span class="keywordtype">void</span>);
-<a name="l00081"></a>00081 
+<a name="l00072"></a>00072 
+<a name="l00078"></a><a class="code" href="classLsm330dlc__gyr.html">00078</a> <span class="keyword">class </span><a class="code" href="classLsm330dlc__gyr.html" title="Intermediate interface class for the gyro inside LSM330DLC.">Lsm330dlc_gyr</a>: <span class="keyword">public</span> <a class="code" href="classGyroscope.html" title="Abstract class for gyroscopes.">Gyroscope</a>
+<a name="l00079"></a>00079 {
+<a name="l00080"></a>00080 <span class="keyword">public</span>:
+<a name="l00081"></a>00081     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> update_gyr(<span class="keywordtype">void</span>) = 0;
 <a name="l00082"></a>00082 
-<a name="l00090"></a>00090     <span class="keywordtype">bool</span> <a class="code" href="classLsm330dlc.html#a6a90c8e0a93f539d852810e88313189c" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092 
-<a name="l00098"></a>00098     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a58cd635ba4da1cbce5e953aa6743bbc1" title="Get last update time in microseconds.">last_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100 
-<a name="l00110"></a>00110     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classLsm330dlc.html#a02afabcfcdca4902a840f29aaaa48084" title="Get X, Y and Z components of angular velocity.">gyro</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00111"></a>00111 
-<a name="l00112"></a>00112 
-<a name="l00113"></a>00113 
-<a name="l00123"></a>00123     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a9d5f7665a630ccf266744255c0b26680" title="Get X component of angular velocity.">gyro_X</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00124"></a>00124 
-<a name="l00125"></a>00125 
-<a name="l00135"></a>00135     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a74a98465fe3aee533a88bc07b342e17a" title="Get Y component of angular velocity.">gyro_Y</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00083"></a><a class="code" href="classLsm330dlc__gyr.html#a524769d431947fa6601f3a006c91ab58">00083</a>     <span class="keywordtype">bool</span> <a class="code" href="classLsm330dlc__gyr.html#a524769d431947fa6601f3a006c91ab58" title="Main update function  Reads new values from sensor.">update</a>(<span class="keywordtype">void</span>)
+<a name="l00084"></a>00084     {
+<a name="l00085"></a>00085         <span class="keywordflow">return</span> update_gyr();
+<a name="l00086"></a>00086     }
+<a name="l00087"></a>00087 };
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089 
+<a name="l00097"></a><a class="code" href="classLsm330dlc.html">00097</a> <span class="keyword">class </span><a class="code" href="classLsm330dlc.html" title="Driver for sensor LSM330DLC.">Lsm330dlc</a>: <span class="keyword">public</span> <a class="code" href="classLsm330dlc__acc.html" title="Intermediate interface class for the accelero inside LSM330DLC.">Lsm330dlc_acc</a>, <span class="keyword">public</span> <a class="code" href="classLsm330dlc__gyr.html" title="Intermediate interface class for the gyro inside LSM330DLC.">Lsm330dlc_gyr</a>
+<a name="l00098"></a>00098 {
+<a name="l00099"></a>00099 <span class="keyword">public</span>:
+<a name="l00105"></a>00105     <a class="code" href="classLsm330dlc.html#a060e3760ea5392904a28e604b3ba78aa" title="Constructor.">Lsm330dlc</a>(<a class="code" href="classI2c.html">I2c</a>&amp; i2c);
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 
+<a name="l00116"></a>00116     <span class="keywordtype">bool</span> <a class="code" href="classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9" title="Initialise the sensor.">init</a>(<span class="keywordtype">void</span>);
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118 
+<a name="l00126"></a>00126     <span class="keywordtype">bool</span> <a class="code" href="classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6" title="Main update function.">update_acc</a>(<span class="keywordtype">void</span>);
+<a name="l00127"></a>00127     <span class="keywordtype">bool</span> update_gyr(<span class="keywordtype">void</span>);
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129 
+<a name="l00135"></a>00135     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a58cd635ba4da1cbce5e953aa6743bbc1" title="Get last update time in microseconds.">last_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00136"></a>00136 
 <a name="l00137"></a>00137 
-<a name="l00147"></a>00147     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#af0b7bbc9ca0a420cdcc9c652eb1854d6" title="Get Z component of angular velocity.">gyro_Z</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00147"></a>00147     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classLsm330dlc.html#a02afabcfcdca4902a840f29aaaa48084" title="Get X, Y and Z components of angular velocity.">gyro</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00148"></a>00148 
 <a name="l00149"></a>00149 
-<a name="l00159"></a>00159     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classLsm330dlc.html#a80056f0ad9cc14912ae040101b0f6534" title="Get X, Y and Z components of acceleration.">acc</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00160"></a>00160 
+<a name="l00150"></a>00150 
+<a name="l00160"></a>00160     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a9d5f7665a630ccf266744255c0b26680" title="Get X component of angular velocity.">gyro_X</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00161"></a>00161 
-<a name="l00171"></a>00171     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a42a874c86cb2aa7370ec1c9af7545a58" title="Get X component of acceleration.">acc_X</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00172"></a>00172 
+<a name="l00162"></a>00162 
+<a name="l00172"></a>00172     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a74a98465fe3aee533a88bc07b342e17a" title="Get Y component of angular velocity.">gyro_Y</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00173"></a>00173 
-<a name="l00183"></a>00183     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a56bff3591ab0e5ee6a343543dc6135ea" title="Get Y component of acceleration.">acc_Y</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00184"></a>00184 
+<a name="l00174"></a>00174 
+<a name="l00184"></a>00184     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#af0b7bbc9ca0a420cdcc9c652eb1854d6" title="Get Z component of angular velocity.">gyro_Z</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00185"></a>00185 
-<a name="l00195"></a>00195     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#ae3ba58400e0c72f82e861a1c972cff8c" title="Get Z component of acceleration.">acc_Z</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00196"></a>00196 
+<a name="l00186"></a>00186 
+<a name="l00196"></a>00196     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classLsm330dlc.html#a80056f0ad9cc14912ae040101b0f6534" title="Get X, Y and Z components of acceleration.">acc</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00197"></a>00197 
-<a name="l00203"></a>00203     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a30c7651e923de8110c6b90c363df024a" title="Get sensor temperature.">temperature</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00204"></a>00204 
-<a name="l00205"></a>00205 
-<a name="l00206"></a>00206 <span class="keyword">private</span>:
-<a name="l00207"></a>00207     <a class="code" href="classI2c.html">I2c</a>&amp;                 i2c_;              
-<a name="l00208"></a>00208     std::array&lt;float, 3&gt; gyro_data_;        
-<a name="l00209"></a>00209     std::array&lt;float, 3&gt; acc_data_;         
-<a name="l00210"></a>00210     <span class="keywordtype">float</span>                temperature_;      
-<a name="l00211"></a>00211     <span class="keywordtype">float</span>                last_update_us_;   
-<a name="l00212"></a>00212 };
-<a name="l00213"></a>00213 
-<a name="l00214"></a>00214 <span class="preprocessor">#endif</span>
+<a name="l00198"></a>00198 
+<a name="l00208"></a>00208     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a42a874c86cb2aa7370ec1c9af7545a58" title="Get X component of acceleration.">acc_X</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00209"></a>00209 
+<a name="l00210"></a>00210 
+<a name="l00220"></a>00220     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a56bff3591ab0e5ee6a343543dc6135ea" title="Get Y component of acceleration.">acc_Y</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00221"></a>00221 
+<a name="l00222"></a>00222 
+<a name="l00232"></a>00232     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#ae3ba58400e0c72f82e861a1c972cff8c" title="Get Z component of acceleration.">acc_Z</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00233"></a>00233 
+<a name="l00234"></a>00234 
+<a name="l00240"></a>00240     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classLsm330dlc.html#a30c7651e923de8110c6b90c363df024a" title="Get sensor temperature.">temperature</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00241"></a>00241 
+<a name="l00242"></a>00242 
+<a name="l00243"></a>00243 <span class="keyword">private</span>:
+<a name="l00244"></a>00244     <a class="code" href="classI2c.html">I2c</a>&amp;                 i2c_;              
+<a name="l00245"></a>00245     std::array&lt;float, 3&gt; gyro_data_;        
+<a name="l00246"></a>00246     std::array&lt;float, 3&gt; acc_data_;         
+<a name="l00247"></a>00247     <span class="keywordtype">float</span>                temperature_;      
+<a name="l00248"></a>00248     <span class="keywordtype">float</span>                last_update_us_;   
+<a name="l00249"></a>00249 };
+<a name="l00250"></a>00250 
+<a name="l00251"></a>00251 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -205,7 +230,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 25 2016 12:46:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 25 2016 13:14:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
