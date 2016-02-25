@@ -227,10 +227,6 @@ static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_comma
     }
     else
     {
-        //print_util_dbg_print("arm cmd: ");
-        //print_util_dbg_putfloat(arm_cmd, 2);
-        //print_util_dbg_print("\r\n");
-
         if (arm_cmd == 1)
         {
         	new_mode = MAV_MODE_FLAG_SAFETY_ARMED;
