@@ -4,6 +4,8 @@ var searchData=
   ['get',['get',['../structbyte__stream__t.html#a1b4773a56e152e914c7c65b2ea4bef52',1,'byte_stream_t::get()'],['../classBuffer__tpl.html#a05dbe8802c953c8116321ffa26b72e58',1,'Buffer_tpl::get()']]],
   ['get_5fconfig',['get_config',['../classImu.html#adc14809ab2886ccadeb35f9ede31a1fb',1,'Imu']]],
   ['get_5fstream',['get_stream',['../classConsole.html#a580258fef02bc374fa8153ad2eb5d699',1,'Console']]],
+  ['gimbal_5fcontroller',['Gimbal_controller',['../classGimbal__controller.html',1,'Gimbal_controller'],['../classGimbal__controller.html#acf69eb62fa8982d266bd786baa1cdb94',1,'Gimbal_controller::Gimbal_controller()']]],
+  ['gimbal_5fcontroller_5fconf_5ft',['gimbal_controller_conf_t',['../structgimbal__controller__conf__t.html',1,'']]],
   ['global_5fflags',['global_flags',['../structubx__nav__sv__info__t.html#a4f6be11008e81dcc8c64c9f69681ba11',1,'ubx_nav_sv_info_t']]],
   ['global_5fposition_5ft',['global_position_t',['../structglobal__position__t.html',1,'']]],
   ['goal',['goal',['../structnavigation__t.html#af2374038205fb668a462e3d02e79026b',1,'navigation_t']]],

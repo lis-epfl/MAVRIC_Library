@@ -5,7 +5,7 @@ var searchData=
   ['base_5fhealth',['base_health',['../structubx__nav__dgps__t.html#ae32b24ce493c04451063f95f7c8e5c0d',1,'ubx_nav_dgps_t']]],
   ['base_5fid',['base_id',['../structubx__nav__dgps__t.html#a943b371eb1753d81aeaf082310b2a407',1,'ubx_nav_dgps_t']]],
   ['base_5ftow',['base_tow',['../structubx__cfg__fxn__t.html#ad67f012b730f61443ffba40bda2c5755',1,'ubx_cfg_fxn_t']]],
-  ['battery',['Battery',['../classBattery.html',1,'Battery'],['../classBattery.html#ad655b142d6c2cd21fd7a2f8f13a8ff77',1,'Battery::Battery()'],['../classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1',1,'Central_data::battery()']]],
+  ['battery',['Battery',['../classBattery.html',1,'Battery'],['../classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1',1,'Central_data::battery()'],['../classBattery.html#ad655b142d6c2cd21fd7a2f8f13a8ff77',1,'Battery::Battery()']]],
   ['battery_5f',['battery_',['../classState.html#aa8af6eff2f240cae87d455db9023e079',1,'State']]],
   ['battery_5fconf_5ft',['battery_conf_t',['../structbattery__conf__t.html',1,'']]],
   ['baud_5frate',['baud_rate',['../structubx__cfg__prt__t.html#a0403d8ad0dae4dcf8e693c98f159c196',1,'ubx_cfg_prt_t']]],

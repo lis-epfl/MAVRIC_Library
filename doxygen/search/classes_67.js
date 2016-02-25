@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['gimbal_5fcontroller',['Gimbal_controller',['../classGimbal__controller.html',1,'']]],
+  ['gimbal_5fcontroller_5fconf_5ft',['gimbal_controller_conf_t',['../structgimbal__controller__conf__t.html',1,'']]],
   ['global_5fposition_5ft',['global_position_t',['../structglobal__position__t.html',1,'']]],
   ['gpio',['Gpio',['../classGpio.html',1,'']]],
   ['gpio_5favr32',['Gpio_avr32',['../classGpio__avr32.html',1,'']]],

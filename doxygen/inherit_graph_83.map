@@ -1,3 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structmanual__control__conf__t.html" title="Configuration for manual control." alt="" coords="7,5,159,35"/>
+<area shape="rect" id="node1" href="$structlsm__read__fifo__fill__t.html" title="Structure containing filling of the FIFO. WARNING: start_address must 8&#45;bits and the LAST element..." alt="" coords="5,5,136,35"/>
 </map>

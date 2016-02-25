@@ -1,4 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classSatellite.html" title="Satellite" alt="" coords="5,5,75,35"/>
-<area shape="rect" id="node3" href="$classSpektrum__satellite.html" title="Spektrum_satellite" alt="" coords="123,5,253,35"/>
+<area shape="rect" id="node1" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="5,5,117,35"/>
 </map>

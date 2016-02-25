@@ -3,6 +3,7 @@ var searchData=
   ['get',['get',['../classBuffer__tpl.html#a05dbe8802c953c8116321ffa26b72e58',1,'Buffer_tpl']]],
   ['get_5fconfig',['get_config',['../classImu.html#adc14809ab2886ccadeb35f9ede31a1fb',1,'Imu']]],
   ['get_5fstream',['get_stream',['../classConsole.html#a580258fef02bc374fa8153ad2eb5d699',1,'Console']]],
+  ['gimbal_5fcontroller',['Gimbal_controller',['../classGimbal__controller.html#acf69eb62fa8982d266bd786baa1cdb94',1,'Gimbal_controller']]],
   ['gpio_5favr32',['Gpio_avr32',['../classGpio__avr32.html#a689b91eb93134537e395834e0a1c30b8',1,'Gpio_avr32']]],
   ['gpio_5fdummy',['Gpio_dummy',['../classGpio__dummy.html#ac984648b52487d40eaa93a0b8357215a',1,'Gpio_dummy']]],
   ['gpio_5fstm32',['Gpio_stm32',['../classGpio__stm32.html#a50ce4c4150c0ce83ecc2fa8e6a3b785d',1,'Gpio_stm32']]],
