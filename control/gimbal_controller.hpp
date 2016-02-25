@@ -72,7 +72,7 @@ public:
 	 * \param   controller          Pointer to data structure
 	 * \param   config              Pointer to configuration
 	 */
-	Gimbal_controller(Servo& servo_4,Servo& servo_5, const gimbal_controller_conf_t config = gimbal_controller_default_config() );
+	Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const gimbal_controller_conf_t config = gimbal_controller_default_config() );
 
 
 	/**

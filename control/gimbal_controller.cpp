@@ -68,9 +68,9 @@ void Gimbal_controller::gimbal_controller_mix_to_servos()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Gimbal_controller::Gimbal_controller(Servo& servo_4, Servo& servo_5, const gimbal_controller_conf_t config):
-	servo_pitch_(servo_4),
-	servo_yaw_(servo_5)
+Gimbal_controller::Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const gimbal_controller_conf_t config):
+	servo_pitch_(servo_pitch),
+	servo_yaw_(servo_yaw)
 {
     // Init variables from config
 	attitude_command_desired_ 				  = config.attitude_command_desired_config;
