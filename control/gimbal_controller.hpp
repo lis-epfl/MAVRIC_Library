@@ -57,59 +57,82 @@ typedef struct
     attitude_command_t   		attitude_output_config;  			///< Initial output commands
 } gimbal_controller_conf_t;
 
+/**
+ * \brief Default configuration structure
+ */
+static inline gimbal_controller_conf_t gimbal_controller_default_config();
+
 
 class Gimbal_controller
 {
-
-//------------------------------------------------------------------------------
-// VARIABLES
-//------------------------------------------------------------------------------
-private:
-	enum RANGE_GIMBAL
-	{
-	    MIN_RANGE_GIMBAL = 0,              ///< Range of the minimum allowed gimbal angles
-	    MAX_RANGE_GIMBAL = 1               ///< Range of the maximum allowed gimabl angles
-	};
-
-	attitude_command_t			attitude_command_range[2];	///< Range [min; max] of the attitude commands
-	attitude_command_t			attitude_output;			///< Output to PWM (output)
-	Servo*						servo_pitch;				///< Gimbal pitch servo
-	Servo*						servo_yaw;					///< Gimbal yaw servo
-
-
-	attitude_command_desired;	///< Attitude command (input from head-tracker)
-
 public:
-	attitude_command_t			attitude_command_desired;	///< Attitude command (input from head-tracker)
+    /**
+     * \brief   Constructor
+     *
+     * \param   servo_pitch         Servo for pitch
+     * \param   servo_yaw           Servo for yaw
+     * \param   config              Configuration structure
+     */
+    Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const gimbal_controller_conf_t config = gimbal_controller_default_config());
 
-//------------------------------------------------------------------------------
-// FUNCTIONS
-//------------------------------------------------------------------------------
+
+    /**
+     * \brief   Main update function - sends gimbal command to two PWM outputs (for pitch and yaw)
+     *
+     * \return  success
+     */
+    bool update(void);
+
+
+    attitude_command_t			attitude_command_desired_;	///< Attitude command (input from head-tracker)
+
 private:
-	/**
-	 * \brief                   Sends the output to the servos
-	 *
-	 * \param   output			Outputs to send
-	 * \param	servos			pointer to the servo structure
-	 */
-	void gimbal_controller_mix_to_servos();
+    /**
+     * \brief   Sends the output to the servos
+     */
+    void gimbal_controller_mix_to_servos(void);
 
-public:
-	/**
-	 * \brief                       Initializes the gimbal controller structure
-	 *
-	 * \param   controller          Pointer to data structure
-	 * \param   config              Pointer to configuration
-	 */
-	void gimbal_controller_init(const gimbal_controller_conf_t config,Servo *servo_4,Servo *servo_5);
 
-	/**
-	 * \brief                   Main update function - sends gimbal command to two PWM outputs (for pitch and yaw)
-	 *
-	 * \param   controller      Pointer to data structure
-	 */
-	bool gimbal_controller_update(Gimbal_controller *not_used);
+    enum RANGE_GIMBAL
+    {
+        MIN_RANGE_GIMBAL = 0,              ///< Range of the minimum allowed gimbal angles
+        MAX_RANGE_GIMBAL = 1               ///< Range of the maximum allowed gimabl angles
+    };
 
+    attitude_command_t			attitude_command_range_[2];	///< Range [min; max] of the attitude commands
+    attitude_command_t			attitude_output_;			///< Output to PWM (output)
+    Servo&						servo_pitch_;				///< Gimbal pitch servo
+    Servo&						servo_yaw_;					///< Gimbal yaw servo
+};
+
+
+static inline gimbal_controller_conf_t gimbal_controller_default_config()
+{
+    gimbal_controller_conf_t conf = {};
+
+    float min_max_angle = 45.0f;
+
+    //init desired attitude command
+    conf.attitude_command_desired_config.rpy[0] = 0.0f;
+    conf.attitude_command_desired_config.rpy[1] = 0.0f;
+    conf.attitude_command_desired_config.rpy[2] = 0.0f;
+
+    //init output commands
+    conf.attitude_output_config.rpy[0] = 0.0f;
+    conf.attitude_output_config.rpy[1] = 0.0f;
+    conf.attitude_output_config.rpy[2] = 0.0f;
+
+    //init MIN range of allowed attitude command
+    conf.attitude_command_range_config[0].rpy[0] = -min_max_angle;
+    conf.attitude_command_range_config[0].rpy[1] = -min_max_angle;
+    conf.attitude_command_range_config[0].rpy[2] = -min_max_angle;
+
+    //init MAX range of allowed attitude command
+    conf.attitude_command_range_config[1].rpy[0] = min_max_angle;
+    conf.attitude_command_range_config[1].rpy[1] = min_max_angle;
+    conf.attitude_command_range_config[1].rpy[2] = min_max_angle;
+
+    return conf;
 };
 
 #endif /* GIMBAL_CONTROLLER_H_ */
