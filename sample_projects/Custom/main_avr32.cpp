@@ -125,7 +125,7 @@ int main(void)
     Serial_avr32 serial_flow_right(serial_config_flow_right);
     
     // Init
-    serial_flow_right.init();
+    // serial_flow_right.init();
 
 
 
@@ -183,7 +183,8 @@ int main(void)
                                    file_log,
                                    file_stat,
                                    serial_flow_left_dummy,
-                                   serial_flow_right);
+                                   // serial_flow_right);
+                                   serial_flow_left_dummy);
 
 
     // Create central data with simulated sensors
