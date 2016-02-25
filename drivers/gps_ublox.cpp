@@ -2955,10 +2955,10 @@ static void gps_ublox_update(gps_t* gps)
 
         gps->time_last_msg = tnow;
 
+        gps->healthy = true;
+
         if (gps->status == GPS_OK)
         {
-            gps->healthy = true;
-
             // Check for horizontal accuracy
             if (gps->horizontal_accuracy < UBX_POSITION_PRECISION)
             {
@@ -5269,6 +5269,12 @@ Gps_ublox::Gps_ublox(Serial& serial):
 }
 
 
+bool Gps_ublox::init(void)
+{
+    return true;
+}
+
+
 bool Gps_ublox::update(void)
 {
     // Update old structure
@@ -5299,79 +5305,79 @@ bool Gps_ublox::update(void)
 }
 
 
-const float& Gps_ublox::last_update_us(void) const
+const float Gps_ublox::last_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-const float& Gps_ublox::last_position_update_us(void) const
+const float Gps_ublox::last_position_update_us(void) const
 {
     return last_position_update_us_;
 }
 
 
-const float& Gps_ublox::last_velocity_update_us(void) const
+const float Gps_ublox::last_velocity_update_us(void) const
 {
     return last_velocity_update_us_;
 }
 
 
-const global_position_t& Gps_ublox::position_gf(void) const
+const global_position_t Gps_ublox::position_gf(void) const
 {
     return position_gf_;
 }
 
 
-const float& Gps_ublox::horizontal_position_accuracy(void) const
+const float Gps_ublox::horizontal_position_accuracy(void) const
 {
     return horizontal_position_accuracy_;
 }
 
 
-const float& Gps_ublox::vertical_position_accuracy(void) const
+const float Gps_ublox::vertical_position_accuracy(void) const
 {
     return vertical_position_accuracy_;
 }
 
 
-const std::array<float, 3>& Gps_ublox::velocity_lf(void) const
+const std::array<float, 3> Gps_ublox::velocity_lf(void) const
 {
     return velocity_lf_;
 }
 
 
-const float& Gps_ublox::velocity_accuracy(void) const
+const float Gps_ublox::velocity_accuracy(void) const
 {
     return velocity_accuracy_;
 }
 
 
-const float& Gps_ublox::heading(void) const
+const float Gps_ublox::heading(void) const
 {
     return heading_;
 }
 
 
-const float& Gps_ublox::heading_accuracy(void) const
+const float Gps_ublox::heading_accuracy(void) const
 {
     return heading_accuracy_;
 }
 
 
-const uint8_t& Gps_ublox::num_sats(void) const
+const uint8_t Gps_ublox::num_sats(void) const
 {
     return num_sats_;
 }
 
 
-const gps_fix_t& Gps_ublox::fix(void) const
+const gps_fix_t Gps_ublox::fix(void) const
 {
     return fix_;
 }
 
 
-const bool& Gps_ublox::healthy(void) const
+const bool Gps_ublox::healthy(void) const
 {
     return healthy_;
 }
