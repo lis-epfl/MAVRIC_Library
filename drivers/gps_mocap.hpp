@@ -47,10 +47,10 @@
 #include <array>
 
 #include "drivers/gps.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 extern "C"
 {
-#include "communication/mavlink_message_handler.hpp"
 #include "util/coord_conventions.h"
 }
 
@@ -61,6 +61,10 @@ extern "C"
 typedef struct
 {
     global_position_t origin;
+    float horizontal_position_accuracy;
+    float vertical_position_accuracy;
+    float velocity_accuracy;
+    float heading_accuracy;
 } gps_mocap_conf_t;
 
 
@@ -92,6 +96,15 @@ public:
      * \return Success
      */
     bool init(void);
+
+
+    /**
+     * \brief   Method used to update internal state when a message is received
+     * 
+     * \param   sysid         ID of the system
+     * \param   msg           Pointer to the incoming message
+     */
+    void callback(uint32_t sysid, mavlink_message_t* msg);
 
 
     /**
@@ -217,7 +230,13 @@ private:
     mavlink_message_handler_t& message_handler_;       ///< Reference to message handler for callbacks
     gps_mocap_conf_t config_;                          ///< Configuration
 
-    bool is_init;                                      ///< Flag to prevent adding message callbacks several times
+    local_position_t local_position_;                  ///< Local position
+    std::array<float, 3> velocity_lf_;                 ///< Velocity in local frame
+    float heading_;                                    ///< Current heading
+    bool is_init_;                                     ///< Flag to prevent adding message callbacks several times
+    bool is_healthy_;                                  ///< Flag indicating if the gps is connected
+
+    float last_update_us_;                             ///< Last time the gps values were updated
 };
 
 
@@ -235,6 +254,12 @@ static inline gps_mocap_conf_t gps_mocap_default_config()
     conf.origin.latitude  = 6.566044801857777f;
     conf.origin.altitude  = 400.0f;
     conf.origin.heading   = 0.0f;
+
+    // Accuracy
+    conf.horizontal_position_accuracy = 0.001f;
+    conf.vertical_position_accuracy   = 0.001f;
+    conf.velocity_accuracy            = 0.01f;
+    conf.heading_accuracy             = 0.1f;
 
     return conf;
 };

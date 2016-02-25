@@ -41,20 +41,114 @@
 
 
 #include "drivers/gps_mocap.hpp"
+#include "hal/common/time_keeper.hpp"
 
+extern "C"
+{
+#include "util/constants.h"
+#include "util/quick_trig.h"
+}
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief Callback function used to update the gps when a mavlink message is received
+ * 
+ * \param   gps_mocap     Pointer to Gps_mocap object
+ * \param   sysid         ID of the system
+ * \param   msg           Pointer to the incoming message
+ */
+static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, mavlink_message_t* msg);
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, mavlink_message_t* msg)
+{
+   gps_mocap->callback(sysid, msg);
+}
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 Gps_mocap::Gps_mocap(mavlink_message_handler_t& message_handler, gps_mocap_conf_t config):
     message_handler_(message_handler),
     config_(config),
-    is_init(false)
+    is_init_(false),
+    is_healthy_(false),
+    last_update_us_(0.0f)
 {
+    local_position_.pos[X]  = 0.0f;
+    local_position_.pos[Y]  = 0.0f;
+    local_position_.pos[Z]  = 0.0f;
+    local_position_.heading = 0.0f;
+    local_position_.origin  = config_.origin;
 
+    velocity_lf_[X] = 0.0f;
+    velocity_lf_[Y] = 0.0f;
+    velocity_lf_[Z] = 0.0f;
+
+    heading_ = 0.0f;
 }
 
 
 bool Gps_mocap::init(void)
 {
-    return true;
+    if (is_init_ == false)
+    {
+        // Add callbacks for waypoint handler messages requests
+        mavlink_message_handler_msg_callback_t callback;
+
+        callback.message_id     = MAVLINK_MSG_ID_ATT_POS_MOCAP; // 69
+        callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
+        callback.compid_filter  = MAV_COMP_ID_ALL;
+        callback.function       = (mavlink_msg_callback_function_t) &gps_mocap_callback;
+        callback.module_struct  = (handling_module_struct_t)        this;
+        
+        is_init_ = mavlink_message_handler_add_msg_callback(&message_handler_, &callback);
+    }
+
+    return is_init_;
+
+}
+
+
+void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
+{
+    mavlink_att_pos_mocap_t packet;
+    mavlink_msg_att_pos_mocap_decode(msg, &packet);
+
+    // Get timing
+    float t = time_keeper_get_us();
+    
+    // Update velocity
+    float dt_s = (last_update_us_ - t) / 1000000;
+    if (dt_s > 0.0f)
+    {
+        velocity_lf_[X] = (packet.x - local_position_.pos[X]) / dt_s;
+        velocity_lf_[Y] = (packet.y - local_position_.pos[Y]) / dt_s;
+        velocity_lf_[Z] = (packet.z - local_position_.pos[Z]) / dt_s;
+        
+        if (velocity_lf_[X] != 0.0f)
+        {
+            heading_ = quick_trig_atan(velocity_lf_[Y] / velocity_lf_[X]);
+        }
+    }
+
+    // Update position
+    local_position_.pos[X] = packet.x;
+    local_position_.pos[Y] = packet.y;
+    local_position_.pos[Z] = packet.z;
+    
+    // Update timing
+    last_update_us_ = t;
 }
 
 
@@ -66,73 +160,73 @@ bool Gps_mocap::update(void)
 
 void Gps_mocap::configure(void)
 {
-
+    ;
 }
 
 
 const float Gps_mocap::last_update_us(void) const
 {
-    return 0.0f;
+    return last_update_us_;
 }
 
 
 const float Gps_mocap::last_position_update_us(void) const
 {
-    return 0.0f;
+    return last_update_us_;
 }
 
 
 const float Gps_mocap::last_velocity_update_us(void) const
 {
-    return 0.0f;
+    return last_update_us_;
 }
 
 
 const global_position_t Gps_mocap::position_gf(void) const
 {
-    return config_.origin;
+    return coord_conventions_local_to_global_position(local_position_);
 }
 
 
 const float Gps_mocap::horizontal_position_accuracy(void) const
 {
-    return 0.0f;
+    return config_.horizontal_position_accuracy;
 }
 
 
 const float Gps_mocap::vertical_position_accuracy(void) const
 {
-    return 0.0f;
+    return config_.vertical_position_accuracy;
 }
 
 
 const std::array<float, 3> Gps_mocap::velocity_lf(void) const
 {
-    return std::array<float, 3>{{0.0f, 0.0f, 0.0f}};
+    return velocity_lf_;
 }
 
 
 const float Gps_mocap::velocity_accuracy(void) const
 {
-    return 0.0f;
+    return config_.velocity_accuracy;
 }
 
 
 const float Gps_mocap::heading(void) const
 {
-    return 0.0f;
+    return heading_;
 }
 
 
 const float Gps_mocap::heading_accuracy(void) const
 {
-    return 0.0f;
+    return config_.heading_accuracy;
 }
 
 
 const uint8_t Gps_mocap::num_sats(void) const
 {
-    return 0;
+    return 16;
 }
 
 
@@ -150,5 +244,17 @@ const gps_fix_t Gps_mocap::fix(void) const
 
 const bool Gps_mocap::healthy(void) const
 {
-    return true;
+    float t = time_keeper_get_us();
+    
+    if ( (t - last_update_us()) > 1000 )
+    {
+         healthy_ = false;
+    }
+    else
+    {
+        healthy_ = true;
+    }
+
+    return is_healthy_;
 }
+==== BASE ====
