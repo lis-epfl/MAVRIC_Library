@@ -62,22 +62,23 @@ class Gimbal_controller
 {
 public:
 	/**
-	 * \brief                       Initializes the gimbal controller structure
+	 * \brief                       Constructor
 	 *
 	 * \param   controller          Pointer to data structure
 	 * \param   config              Pointer to configuration
 	 */
-	void gimbal_controller_init(const gimbal_controller_conf_t config,Servo *servo_4,Servo *servo_5);
+	Gimbal_controller(Servo& servo_4,Servo& servo_5, const gimbal_controller_conf_t config);
+
 
 	/**
 	 * \brief                   Main update function - sends gimbal command to two PWM outputs (for pitch and yaw)
 	 *
 	 * \param   controller      Pointer to data structure
 	 */
-	bool gimbal_controller_update(Gimbal_controller *not_used);
+	bool update(void);
 
 
-	attitude_command_t			attitude_command_desired;	///< Attitude command (input from head-tracker)
+	attitude_command_t			attitude_command_desired_;	///< Attitude command (input from head-tracker)
 
 private:
 	/**
@@ -95,10 +96,10 @@ private:
 	    MAX_RANGE_GIMBAL = 1               ///< Range of the maximum allowed gimabl angles
 	};
 
-	attitude_command_t			attitude_command_range[2];	///< Range [min; max] of the attitude commands
-	attitude_command_t			attitude_output;			///< Output to PWM (output)
-	Servo*						servo_pitch;				///< Gimbal pitch servo
-	Servo*						servo_yaw;					///< Gimbal yaw servo
+	attitude_command_t			attitude_command_range_[2];	///< Range [min; max] of the attitude commands
+	attitude_command_t			attitude_output_;			///< Output to PWM (output)
+	Servo&						servo_pitch_;				///< Gimbal pitch servo
+	Servo&						servo_yaw_;					///< Gimbal yaw servo
 };
 
 #endif /* GIMBAL_CONTROLLER_H_ */

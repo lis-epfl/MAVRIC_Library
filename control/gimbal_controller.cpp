@@ -57,48 +57,46 @@ void Gimbal_controller::gimbal_controller_mix_to_servos()
 	//pwm range = [-1;1] which is set to corresponds to angles [-90°;90°]
 	for(int i = 1; i < 3; i++)
 	{
-		pwm_output[i] = attitude_output.rpy[i]/90.0f;
+		pwm_output[i] = attitude_output_.rpy[i]/90.0f;
 	}
 
-	servo_pitch->write(pwm_output[1],true);
-	servo_yaw->write(pwm_output[2],true);
+	servo_pitch_.write(pwm_output[1],true);
+	servo_yaw_.write(pwm_output[2],true);
 }
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Gimbal_controller::gimbal_controller_init(const gimbal_controller_conf_t config, Servo *servo_4, Servo *servo_5)
+Gimbal_controller::Gimbal_controller(Servo& servo_4, Servo& servo_5, const gimbal_controller_conf_t config):
+	servo_pitch_(servo_4),
+	servo_yaw_(servo_5)
 {
-    //Init variables from config
-	attitude_command_desired 				 = config.attitude_command_desired_config;
-	attitude_output 						 = config.attitude_output_config;
-	attitude_command_range[MIN_RANGE_GIMBAL] = config.attitude_command_range_config[MIN_RANGE_GIMBAL];
-	attitude_command_range[MAX_RANGE_GIMBAL] = config.attitude_command_range_config[MAX_RANGE_GIMBAL];
-
-	//Set correspondences
-	servo_pitch = servo_4;
-	servo_yaw	= servo_5;
+    // Init variables from config
+	attitude_command_desired_ 				  = config.attitude_command_desired_config;
+	attitude_output_ 						  = config.attitude_output_config;
+	attitude_command_range_[MIN_RANGE_GIMBAL] = config.attitude_command_range_config[MIN_RANGE_GIMBAL];
+	attitude_command_range_[MAX_RANGE_GIMBAL] = config.attitude_command_range_config[MAX_RANGE_GIMBAL];
 }
 
 
-bool Gimbal_controller::gimbal_controller_update(Gimbal_controller *not_used)
+bool Gimbal_controller::update(void)
 {
 
 	//Set directly the desired input as output commands ensuring that they are in the allowed range (no controller here)
 	for(int i = 0; i < 3; i++)
 	{
-		if(attitude_command_desired.rpy[i] < attitude_command_range[MIN_RANGE_GIMBAL].rpy[i])
+		if(attitude_command_desired_.rpy[i] < attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i])
 		{
-			attitude_output.rpy[i] = attitude_command_range[MIN_RANGE_GIMBAL].rpy[i];
+			attitude_output_.rpy[i] = attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i];
 		}
-		else if(attitude_command_desired.rpy[i] > attitude_command_range[MAX_RANGE_GIMBAL].rpy[i])
+		else if(attitude_command_desired_.rpy[i] > attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i])
 		{
-			attitude_output.rpy[i] = attitude_command_range[MAX_RANGE_GIMBAL].rpy[i];
+			attitude_output_.rpy[i] = attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i];
 		}
 		else
 		{
-			attitude_output.rpy[i] = attitude_command_desired.rpy[i];
+			attitude_output_.rpy[i] = attitude_command_desired_.rpy[i];
 		}
 	}
 

@@ -56,9 +56,9 @@ void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t s
 	mavlink_msg_gimbal_command_decode(msg, &packet);
 
 	//store the received angle as the desired ones
-	gimbal_controller->attitude_command_desired.rpy[0] = packet.angle[0];
-	gimbal_controller->attitude_command_desired.rpy[1] = packet.angle[1];
-	gimbal_controller->attitude_command_desired.rpy[2] = packet.angle[2];
+	gimbal_controller->attitude_command_desired_.rpy[0] = packet.angle[0];
+	gimbal_controller->attitude_command_desired_.rpy[1] = packet.angle[1];
+	gimbal_controller->attitude_command_desired_.rpy[2] = packet.angle[2];
 }
 
 
