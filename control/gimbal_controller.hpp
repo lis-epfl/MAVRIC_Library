@@ -52,9 +52,9 @@
  */
 typedef struct
 {
-	attitude_command_t   		attitude_command_desired_config;	///< Initial desired attitude command
-	attitude_command_t   		attitude_command_range_config[2];  	///< Allowed [min;max] range of the gimbal
-	attitude_command_t   		attitude_output_config;  			///< Initial output commands
+    attitude_command_t   		attitude_command_desired_config;	///< Initial desired attitude command
+    attitude_command_t   		attitude_command_range_config[2];  	///< Allowed [min;max] range of the gimbal
+    attitude_command_t   		attitude_output_config;  			///< Initial output commands
 } gimbal_controller_conf_t;
 
 
@@ -77,6 +77,7 @@ private:
 	Servo*						servo_yaw;					///< Gimbal yaw servo
 
 
+	attitude_command_desired;	///< Attitude command (input from head-tracker)
 
 public:
 	attitude_command_t			attitude_command_desired;	///< Attitude command (input from head-tracker)
