@@ -60,38 +60,6 @@ typedef struct
 
 class Gimbal_controller
 {
-
-//------------------------------------------------------------------------------
-// VARIABLES
-//------------------------------------------------------------------------------
-private:
-	enum RANGE_GIMBAL
-	{
-	    MIN_RANGE_GIMBAL = 0,              ///< Range of the minimum allowed gimbal angles
-	    MAX_RANGE_GIMBAL = 1               ///< Range of the maximum allowed gimabl angles
-	};
-
-	attitude_command_t			attitude_command_range[2];	///< Range [min; max] of the attitude commands
-	attitude_command_t			attitude_output;			///< Output to PWM (output)
-	Servo*						servo_pitch;				///< Gimbal pitch servo
-	Servo*						servo_yaw;					///< Gimbal yaw servo
-
-
-public:
-	attitude_command_t			attitude_command_desired;	///< Attitude command (input from head-tracker)
-
-//------------------------------------------------------------------------------
-// FUNCTIONS
-//------------------------------------------------------------------------------
-private:
-	/**
-	 * \brief                   Sends the output to the servos
-	 *
-	 * \param   output			Outputs to send
-	 * \param	servos			pointer to the servo structure
-	 */
-	void gimbal_controller_mix_to_servos();
-
 public:
 	/**
 	 * \brief                       Initializes the gimbal controller structure
@@ -108,6 +76,29 @@ public:
 	 */
 	bool gimbal_controller_update(Gimbal_controller *not_used);
 
+
+	attitude_command_t			attitude_command_desired;	///< Attitude command (input from head-tracker)
+
+private:
+	/**
+	 * \brief                   Sends the output to the servos
+	 *
+	 * \param   output			Outputs to send
+	 * \param	servos			pointer to the servo structure
+	 */
+	void gimbal_controller_mix_to_servos();
+
+
+	enum RANGE_GIMBAL
+	{
+	    MIN_RANGE_GIMBAL = 0,              ///< Range of the minimum allowed gimbal angles
+	    MAX_RANGE_GIMBAL = 1               ///< Range of the maximum allowed gimabl angles
+	};
+
+	attitude_command_t			attitude_command_range[2];	///< Range [min; max] of the attitude commands
+	attitude_command_t			attitude_output;			///< Output to PWM (output)
+	Servo*						servo_pitch;				///< Gimbal pitch servo
+	Servo*						servo_yaw;					///< Gimbal yaw servo
 };
 
 #endif /* GIMBAL_CONTROLLER_H_ */
