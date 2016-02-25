@@ -55,25 +55,10 @@ void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t s
 	mavlink_gimbal_command_t packet;
 	mavlink_msg_gimbal_command_decode(msg, &packet);
 
-<<<<<<< HEAD
-	gimbal->attitude_command.rpy[0] = packet.angle[0];
-	gimbal->attitude_command.rpy[1] = packet.angle[1];
-	gimbal->attitude_command.rpy[2] = packet.angle[2];
-
-	print_util_dbg_print("received gimbal commands\r\n");
-	print_util_dbg_print("roll ");
-	print_util_dbg_putfloat(gimbal->attitude_command.rpy[0], 4);
-	print_util_dbg_print("\r\npitch ");
-	print_util_dbg_putfloat(gimbal->attitude_command.rpy[1], 4);
-	print_util_dbg_print("\r\nyaw ");
-	print_util_dbg_putfloat(gimbal->attitude_command.rpy[2], 4);
-	print_util_dbg_print("\r\n");
-=======
 	//store the received angle as the desired ones
 	gimbal_controller->attitude_command_desired.rpy[0] = packet.angle[0];
 	gimbal_controller->attitude_command_desired.rpy[1] = packet.angle[1];
 	gimbal_controller->attitude_command_desired.rpy[2] = packet.angle[2];
->>>>>>> alex_gimbal
 }
 
 

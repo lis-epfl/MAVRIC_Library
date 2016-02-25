@@ -71,21 +71,11 @@ private:
 	    MAX_RANGE_GIMBAL = 1               ///< Range of the maximum allowed gimabl angles
 	};
 
-<<<<<<< HEAD
-/**
- * \brief                       Initializes the gimbal controller structure
- *
- * \param   controller          Pointer to data structure
- * \param   config              Pointer to configuration
- */
-void gimbal_controller_init(gimbal_controller_t* controller,
-								const gimbal_controller_conf_t config);
-=======
 	attitude_command_t			attitude_command_range[2];	///< Range [min; max] of the attitude commands
 	attitude_command_t			attitude_output;			///< Output to PWM (output)
 	Servo*						servo_pitch;				///< Gimbal pitch servo
 	Servo*						servo_yaw;					///< Gimbal yaw servo
->>>>>>> alex_gimbal
+
 
 
 public:
