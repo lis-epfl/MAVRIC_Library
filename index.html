@@ -37,7 +37,7 @@
         </div>
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
-                <img class="homepage-image img-responsive" src="f14_mavric.png" alt="MAV'RIC Library">            </div>
+                <img class="homepage-image img-responsive" src="f14_mavric.jpg" alt="MAV'RIC Library">            </div>
         </div>
     </div>
 </div>
@@ -53,35 +53,42 @@
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
                 <p class="lead">
-	<strong>MAV'RIC Library</strong> is an open source library to help building 
+	<strong>MAV'RIC Library</strong> is an open source library to build 
 	autopilots for MAVs.
 </p>
 <hr/>
-<h3>Features</h3>
-<hr/>
+<!-- <h3>Features</h3>
+<hr/> -->
 <div class=row>
 <div class="col-sm-4">
-<h4>Feature set 1</h4>
+<h4><strong>Simple Modular Design</strong></h4>
 <ul>
-<li>bla</li>
-<li>bla</li>
-<li>bla</li>
+<li>
+<strong>Consistent Module Architecture</strong> with at least a configuration structure, an init function, and an update function.</li>
+<li>
+<strong>Generic interfaces</strong> for sensors and filters to easily swap modules and adapt to new hardware or behavior.</li>
+<li>
+<strong>No RTOS</strong>. Simple collaborative scheduling ensures easy debugging and no data races.</li>
 </ul>
 </div>
 <div class="col-sm-4">
-<h4>Feature set 2</h4>
+<h4><strong>Mavlink enabled</strong></h4>
 <ul>
-<li>bla</li>
-<li>bla</li>
-<li>bla</li>
+<li>
+<strong>Compatible</strong> with common Ground Stations (QGroundControl, Planner, Tower, ...)</li>
+<li>
+<strong>Custom telemetry</strong> messages and commands are very easy to add.</li>
+<li>
+<strong>Onboard companion computers</strong> allow high level, computationally demanding  tasks such as computer vision or networking.</li>
 </ul>
 </div>
 <div class="col-sm-4">
-<h4>Feature set 3</h4>
+<h4><strong>Multi-platform</strong></h4>
 <ul>
-<li>bla</li>
-<li>bla</li>
-<li>bla</li>
+<li>
+<strong>Hardware Abstraction Layer</strong>, to run almost the same code on different MCU architectures (currently AVR32, STM32 and Emulation)</li>
+<li>
+<strong>Development tools</strong> available and tested on Linux, Mac OS and Windows</li>
 </ul>
 </div>
 </div>
