@@ -11,7 +11,7 @@ PROJ_NAME=LEQuad_megafly
 # PROJECT FOLDER
 # ------------------------------------------------------------------------------
 # Project source folder
-MAVRIC_SRC=../
+MAVRIC_SRC=../../../../src
 
 # Sources files for project folder (*.c and *.cpp)
 SRCS += main_avr32.cpp

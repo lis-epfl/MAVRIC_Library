@@ -102,6 +102,7 @@ bool state_machine_update(state_machine_t* state_machine)
     // Get remote signal strength
     rc_check = manual_control_get_signal_strength(state_machine->manual_control);
 
+    //Get new mode from source
     mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 
     state_machine->state->battery_.update();
@@ -129,7 +130,7 @@ bool state_machine_update(state_machine_t* state_machine)
             state_machine->state->out_of_fence_1 = false;
             state_machine->state->out_of_fence_2 = false;
 
-            mode_custom_new = CUSTOM_BASE_MODE;
+            //mode_custom_new = CUSTOM_BASE_MODE;
 
             if (mav_modes_is_armed(mode_new))
             {

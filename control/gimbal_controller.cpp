@@ -57,7 +57,7 @@ void Gimbal_controller::gimbal_controller_mix_to_servos(void)
     //pwm range = [-1;1] which is set to corresponds to angles [-90°;90°]
     for (int i = 1; i < 3; i++)
     {
-    	print_util_dbg_putfloat(attitude_output_.rpy[i],3);
+    	//print_util_dbg_putfloat(attitude_output_.rpy[i],3);
         pwm_output[i] = attitude_output_.rpy[i] / 90.0f;
     }
 

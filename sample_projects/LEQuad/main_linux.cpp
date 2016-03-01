@@ -43,6 +43,7 @@
 #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
 
+
 extern "C"
 {
 #include "util/print_util.h"
