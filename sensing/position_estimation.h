@@ -54,7 +54,6 @@ extern "C" {
 #include "gps_ublox.h"
 #include "coord_conventions.h"
 #include "state.h"
-#include "tasks.h"
 #include "constants.h"
 #include "sonar.h"
 #include "data_logging.h"

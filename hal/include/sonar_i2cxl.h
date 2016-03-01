@@ -49,7 +49,6 @@
 
 #include <stdint.h>
 #include "sonar.h"
-#include "tasks.h"
 /**
  * \brief structure of the sonar_i2cxl module
 */
@@ -76,7 +75,7 @@ bool sonar_i2cxl_init(sonar_i2cxl_t* sonar);
  * 
  * \return	The result of the task execution
  */
-task_return_t sonar_i2cxl_update(sonar_i2cxl_t* sonar);
+bool sonar_i2cxl_update(sonar_i2cxl_t* sonar);
 
 
 #ifdef __cplusplus

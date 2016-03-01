@@ -172,10 +172,10 @@ bool sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
 }
 
 
-task_return_t sonar_i2cxl_update(sonar_i2cxl_t* sonar_i2cxl)
+bool sonar_i2cxl_update(sonar_i2cxl_t* sonar_i2cxl)
 {
 	sonar_i2cxl_get_last_measure(sonar_i2cxl);
 	sonar_i2cxl_send_range_command(sonar_i2cxl);
 	
-	return TASK_RUN_SUCCESS;
+	return true;
 }
