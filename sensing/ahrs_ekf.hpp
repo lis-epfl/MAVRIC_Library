@@ -39,15 +39,18 @@
  *
  ******************************************************************************/
 
-#ifndef __AHRS_EKF__
-#define __AHRS_EKF__
+#ifndef __AHRS_EKF_HPP__
+#define __AHRS_EKF_HPP__
 
-#ifdef __cplusplus
+#include "matrix.hpp"
+
+using namespace mat;
+
 extern "C"
 {
-#endif
-
 #include "imu.h"
+}
+
 
 /*
  * x[0] : bias_x
@@ -62,25 +65,23 @@ extern "C"
 
 typedef struct
 {
-	float x[7];
+	Mat<7,1> x;
 
-	float F[49];
-	float P[49];
-	float Q[49];
+	Mat<7,7> F;
+	Mat<7,7> P;
+	Mat<7,7> Q;
+	Mat<3,3> R_acc;
+	Mat<3,3> R_mag;
+
+	Mat<7,7> Id;
 
 	imu_t* imu;
-}ahrs_efk_t;
+}ahrs_ekf_t;
 
 
 
-void ahrs_efk_init(ahrs_efk_t* ahrs_ekf, imu_t* imu);
+void ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, imu_t* imu);
 
+void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf);
 
-void ahrs_ekf_predict(ahrs_efk_t* ahrs_ekf);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // __AHRS_EKF__
+#endif // __AHRS_EKF_HPP__
