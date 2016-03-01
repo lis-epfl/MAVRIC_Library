@@ -904,7 +904,7 @@ void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler,
 	
 }
 
-task_return_t navigation_update(navigation_t* navigation)
+bool navigation_update(navigation_t* navigation)
 {
 	mav_mode_t mode_local = navigation->state->mav_mode;
 	
@@ -1064,5 +1064,5 @@ task_return_t navigation_update(navigation_t* navigation)
 	
 	navigation->mode = mode_local;
 	
-	return TASK_RUN_SUCCESS;
+	return true;
 }

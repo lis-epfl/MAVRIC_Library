@@ -52,7 +52,6 @@ extern "C" {
 #include "quaternions.h"
 #include "mavlink_waypoint_handler.h"
 #include "position_estimation.h"
-#include "tasks.h"
 #include "mavlink_communication.h"
 #include "state.h"
 #include "remote.h"
@@ -162,7 +161,7 @@ void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler,
  *
  * \return	Task result, currently only TASK_RUN_SUCCESS
  */
-task_return_t navigation_update(navigation_t* navigation);
+bool navigation_update(navigation_t* navigation);
 
 #ifdef __cplusplus
 }
