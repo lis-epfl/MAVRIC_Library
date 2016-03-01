@@ -42,13 +42,16 @@
 #ifndef __AHRS_EKF_HPP__
 #define __AHRS_EKF_HPP__
 
-#include "matrix.hpp"
-
-using namespace mat;
-
 extern "C"
 {
 #include "imu.h"
+
+typedef struct
+{
+	float x[7];
+	imu_t* imu;
+}ahrs_ekf_t;
+
 }
 
 
@@ -63,20 +66,7 @@ extern "C"
 
 */
 
-typedef struct
-{
-	Mat<7,1> x;
 
-	Mat<7,7> F;
-	Mat<7,7> P;
-	Mat<7,7> Q;
-	Mat<3,3> R_acc;
-	Mat<3,3> R_mag;
-
-	Mat<7,7> Id;
-
-	imu_t* imu;
-}ahrs_ekf_t;
 
 
 

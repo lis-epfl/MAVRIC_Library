@@ -40,12 +40,23 @@
  ******************************************************************************/
 
 #include "ahrs_ekf.hpp"
+#include "matrix.hpp"
 
 extern "C"
 {
-#include "matrixlib_float.h"
 #include "constants.h"
 }
+
+
+using namespace mat;
+
+Mat<7,1> x_state;
+Mat<7,7> F;
+Mat<7,7> P;
+Mat<7,7> Q;
+Mat<3,3> R_acc;
+Mat<3,3> R_mag;
+Mat<7,7> Id;
 
 void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf);
 
@@ -55,17 +66,17 @@ void ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, imu_t* imu)
 {
 	ahrs_ekf->imu = imu;
 
-	ahrs_ekf->P = Mat<7,7>(100.0f,true);
+	P = Mat<7,7>(100.0f,true);
 
-	ahrs_ekf->R_acc(0,0) = 0.01f;
-	ahrs_ekf->R_acc(1,1) = 0.01f;
-	ahrs_ekf->R_acc(2,2) = 0.01f;
+	R_acc(0,0) = 0.01f;
+	R_acc(1,1) = 0.01f;
+	R_acc(2,2) = 0.01f;
 
-	ahrs_ekf->R_mag(0,0) = 0.01f;
-	ahrs_ekf->R_mag(1,1) = 0.01f;
-	ahrs_ekf->R_mag(2,2) = 0.01f;
+	R_mag(0,0) = 0.01f;
+	R_mag(1,1) = 0.01f;
+	R_mag(2,2) = 0.01f;
 
-	ahrs_ekf->Id = Mat<7,7>(1.0f,true);
+	Id = Mat<7,7>(1.0f,true);
 
 	// Q = cov(del_w * del_w^T)
 	
@@ -80,7 +91,7 @@ void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf)
 	float w_y = ahrs_ekf->imu->scaled_gyro.data[Y];
 	float w_z = ahrs_ekf->imu->scaled_gyro.data[Z];
 
-	Mat<7,1> x_k1k1 = ahrs_ekf->x;
+	Mat<7,1> x_k1k1 = x_state;
 
 	Mat<7,1> x_kk1;
 	// x(k,k-1) = f(x(k-1,k-1),u(k));
@@ -93,46 +104,46 @@ void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf)
 	x_kk1(6,0) = x_k1k1(6,0) + 0.5* ((w_z-x_k1k1(2,0))*x_k1k1(3,0) + (w_y-x_k1k1(1,0))*x_k1k1(4,0) - (w_x-x_k1k1(0,0))*x_k1k1(5,0)) * dt;
 
 	// F(k,k-1) = I + jacobian(x(k-1),u(k))*dt;
-	ahrs_ekf->F(0,0) = 1.0f;
-	ahrs_ekf->F(1,1) = 1.0f;
-	ahrs_ekf->F(2,2) = 1.0f;
+	F(0,0) = 1.0f;
+	F(1,1) = 1.0f;
+	F(2,2) = 1.0f;
 
-	ahrs_ekf->F(3,0) = x_k1k1(4,0) * dt;
-	ahrs_ekf->F(3,1) = x_k1k1(5,0) * dt;
-	ahrs_ekf->F(3,2) = x_k1k1(6,0) * dt;
-	ahrs_ekf->F(3,3) = 1.0f; // 1.0f + 0.0f;
-	ahrs_ekf->F(3,4) = -(w_x-x_k1k1(0,0)) * dt;
-	ahrs_ekf->F(3,5) = -(w_y-x_k1k1(1,0)) * dt;
-	ahrs_ekf->F(3,6) = -(w_z-x_k1k1(2,0)) * dt;
+	F(3,0) = x_k1k1(4,0) * dt;
+	F(3,1) = x_k1k1(5,0) * dt;
+	F(3,2) = x_k1k1(6,0) * dt;
+	F(3,3) = 1.0f; // 1.0f + 0.0f;
+	F(3,4) = -(w_x-x_k1k1(0,0)) * dt;
+	F(3,5) = -(w_y-x_k1k1(1,0)) * dt;
+	F(3,6) = -(w_z-x_k1k1(2,0)) * dt;
 	
-	ahrs_ekf->F(4,0) = 1.0f - x_k1k1(3,0) * dt;
-	ahrs_ekf->F(4,1) = x_k1k1(6,0) * dt;
-	ahrs_ekf->F(4,2) = x_k1k1(5,0) * dt;
-	ahrs_ekf->F(4,3) = w_x-x_k1k1(0,0) * dt;
-	ahrs_ekf->F(4,4) = 1.0f; // 1.0f + 0.0f;
-	ahrs_ekf->F(4,5) = (w_z-x_k1k1(2,0)) * dt;
-	ahrs_ekf->F(4,6) = -(w_y-x_k1k1(1,0)) * dt;
+	F(4,0) = 1.0f - x_k1k1(3,0) * dt;
+	F(4,1) = x_k1k1(6,0) * dt;
+	F(4,2) = x_k1k1(5,0) * dt;
+	F(4,3) = w_x-x_k1k1(0,0) * dt;
+	F(4,4) = 1.0f; // 1.0f + 0.0f;
+	F(4,5) = (w_z-x_k1k1(2,0)) * dt;
+	F(4,6) = -(w_y-x_k1k1(1,0)) * dt;
 	
-	ahrs_ekf->F(5,0) = 1.0f - x_k1k1(6,0) * dt;
-	ahrs_ekf->F(5,1) = -x_k1k1(3,0) * dt;
-	ahrs_ekf->F(5,2) = x_k1k1(4,0) * dt;
-	ahrs_ekf->F(5,3) = (w_y-x_k1k1(1,0)) * dt;
-	ahrs_ekf->F(5,4) = -(w_z-x_k1k1(2,0)) * dt;
-	ahrs_ekf->F(5,5) = 1.0f; // 1.0f + 0.0f;
-	ahrs_ekf->F(5,6) = (w_x-x_k1k1(0,0)) * dt;
+	F(5,0) = 1.0f - x_k1k1(6,0) * dt;
+	F(5,1) = -x_k1k1(3,0) * dt;
+	F(5,2) = x_k1k1(4,0) * dt;
+	F(5,3) = (w_y-x_k1k1(1,0)) * dt;
+	F(5,4) = -(w_z-x_k1k1(2,0)) * dt;
+	F(5,5) = 1.0f; // 1.0f + 0.0f;
+	F(5,6) = (w_x-x_k1k1(0,0)) * dt;
 	
-	ahrs_ekf->F(6,0) = x_k1k1(5,0) * dt;
-	ahrs_ekf->F(6,1) = -x_k1k1(4,0) * dt;
-	ahrs_ekf->F(6,2) = x_k1k1(3,0) * dt;
-	ahrs_ekf->F(6,3) = (w_z-x_k1k1(2,0)) * dt;
-	ahrs_ekf->F(6,4) = (w_y-x_k1k1(1,0)) * dt;
-	ahrs_ekf->F(6,5) = -(w_x-x_k1k1(0,0)) * dt;
-	ahrs_ekf->F(6,6) = 1.0f; // 1.0f + 0.0f;
+	F(6,0) = x_k1k1(5,0) * dt;
+	F(6,1) = -x_k1k1(4,0) * dt;
+	F(6,2) = x_k1k1(3,0) * dt;
+	F(6,3) = (w_z-x_k1k1(2,0)) * dt;
+	F(6,4) = (w_y-x_k1k1(1,0)) * dt;
+	F(6,5) = -(w_x-x_k1k1(0,0)) * dt;
+	F(6,6) = 1.0f; // 1.0f + 0.0f;
 
 	// P(k,k-1) = F(k)*P(k-1,k-1)*F(k)' + Q
-	ahrs_ekf->P = (ahrs_ekf->F ^ ahrs_ekf->P ^ ahrs_ekf->F.transpose()) + ahrs_ekf->Q;
+	P = (F ^ P ^ F.transpose()) + Q;
 
-	ahrs_ekf->x = x_kk1;
+	x_state = x_kk1;
 
 }
 
@@ -142,7 +153,7 @@ void ahrs_ekf_update_step(ahrs_ekf_t* ahrs_ekf)
 
 	float mag_global[3];
 
-	Mat<7,1> x_kk1 = ahrs_ekf->x;
+	Mat<7,1> x_kk1 = x_state;
 
 	mag_global[0] = cos(63.0f/180.0f*PI);
 	mag_global[1] = 0.0f;
@@ -216,25 +227,25 @@ void ahrs_ekf_update_step(ahrs_ekf_t* ahrs_ekf)
 
 	//Mat<7,3> H_acc_T = ;
 
-	Mat<3,3> Sk_acc = (H_acc_k ^ ahrs_ekf->P ^ H_acc_k.transpose()) + ahrs_ekf->R_acc;
-	Mat<3,3> Sk_mag = (H_mag_k ^ ahrs_ekf->P ^ H_mag_k.transpose()) + ahrs_ekf->R_mag;
+	Mat<3,3> Sk_acc = (H_acc_k ^ P ^ H_acc_k.transpose()) + R_acc;
+	Mat<3,3> Sk_mag = (H_mag_k ^ P ^ H_mag_k.transpose()) + R_mag;
 
 	// Kalman gain: K(k) = P(k,k-1) * H(k)' * S(k)^-1
 	Mat<3,3> Sk_inv;
 	op::inverse(Sk_acc, Sk_inv);
-	Mat<7,3> K_acc = ahrs_ekf->P ^ (H_acc_k.transpose() ^ Sk_inv);
+	Mat<7,3> K_acc = P ^ (H_acc_k.transpose() ^ Sk_inv);
 	op::inverse(Sk_mag, Sk_inv);
-	Mat<7,3> K_mag = ahrs_ekf->P ^ (H_mag_k.transpose() ^ Sk_inv);
+	Mat<7,3> K_mag = P ^ (H_mag_k.transpose() ^ Sk_inv);
 
 	// Updated state estimate: x(k,k) = x(k,k-1) + K(k)*y_k
-	Mat<7,1> X_kk1 = ahrs_ekf->x;
-	ahrs_ekf->x = X_kk1 + (K_acc ^ yk_acc);
-	X_kk1 = ahrs_ekf->x;
-	ahrs_ekf->x = X_kk1 + (K_mag ^ yk_mag);
+	Mat<7,1> X_kk1 = x_state;
+	x_state = X_kk1 + (K_acc ^ yk_acc);
+	X_kk1 = x_state;
+	x_state = X_kk1 + (K_mag ^ yk_mag);
 
 	// Update covariance estimate
-	ahrs_ekf->P = (ahrs_ekf->Id - (K_acc ^ H_acc_k)) ^ ahrs_ekf->P;
-	ahrs_ekf->P = (ahrs_ekf->Id - (K_mag ^ H_mag_k)) ^ ahrs_ekf->P;
+	P = (Id - (K_acc ^ H_acc_k)) ^ P;
+	P = (Id - (K_mag ^ H_mag_k)) ^ P;
 
 }
 
@@ -243,5 +254,11 @@ void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
 	ahrs_ekf_predict_step(ahrs_ekf);
 
 	ahrs_ekf_update_step(ahrs_ekf);
+
+	uint16_t i;
+	for (i = 0; i < 7; ++i)
+	{
+		ahrs_ekf->x[i] = x_state(i,0);
+	}
 
 }
