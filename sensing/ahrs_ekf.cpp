@@ -39,8 +39,9 @@
  *
  ******************************************************************************/
 
-#include "ahrs_ekf.hpp"
+
 #include "matrix.hpp"
+#include "ahrs_ekf.h"
 
 extern "C"
 {
@@ -58,15 +59,24 @@ Mat<3,3> R_acc;
 Mat<3,3> R_mag;
 Mat<7,7> Id;
 
+void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf, imu_t* imu);
+
 void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf);
 
 void ahrs_ekf_update_step(ahrs_ekf_t* ahrs_ekf);
 
-void ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, imu_t* imu)
+void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf)
 {
-	ahrs_ekf->imu = imu;
-
 	P = Mat<7,7>(100.0f,true);
+
+	// Initalisation of the state
+	x_state(0,0) = 0.0f;
+	x_state(1,0) = 0.0f;
+	x_state(2,0) = 0.0f;
+	x_state(3,0) = 1.0f;
+	x_state(4,0) = 0.0f;
+	x_state(5,0) = 0.0f;
+	x_state(6,0) = 0.0f;
 
 	R_acc(0,0) = 0.01f;
 	R_acc(1,1) = 0.01f;
@@ -77,8 +87,6 @@ void ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, imu_t* imu)
 	R_mag(2,2) = 0.01f;
 
 	Id = Mat<7,7>(1.0f,true);
-
-	// Q = cov(del_w * del_w^T)
 	
 }
 
@@ -94,7 +102,7 @@ void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf)
 	Mat<7,1> x_k1k1 = x_state;
 
 	Mat<7,1> x_kk1;
-	// x(k,k-1) = f(x(k-1,k-1),u(k));
+	// x(k,k-1) = f(x(k-1,k-1),u(k)); // with zero-order Taylor expansion
 	x_kk1(0,0) = x_k1k1(0,0);
 	x_kk1(1,0) = x_k1k1(1,0);
 	x_kk1(2,0) = x_k1k1(2,0);
@@ -140,10 +148,36 @@ void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf)
 	F(6,5) = -(w_x-x_k1k1(0,0)) * dt;
 	F(6,6) = 1.0f; // 1.0f + 0.0f;
 
-	// P(k,k-1) = F(k)*P(k-1,k-1)*F(k)' + Q
+	// Q(k) = cov(del_w * del_w^T)
+
+	Q(0,0) = ahrs_ekf->sigma_w * ahrs_ekf->sigma_w * dt;
+	Q(1,1) = ahrs_ekf->sigma_w * ahrs_ekf->sigma_w * dt;
+	Q(2,2) = ahrs_ekf->sigma_w * ahrs_ekf->sigma_w * dt;
+
+	Q(3,3) = 0.0001f;
+	Q(3,4) = 0.0000001f;
+	Q(3,5) = 0.0000001f;
+	Q(3,6) = 0.0000001f;
+
+	Q(4,3) = 0.0000001f;
+	Q(4,4) = 0.0001f;
+	Q(4,5) = 0.0000001f;
+	Q(4,6) = 0.0000001f;
+
+	Q(5,3) = 0.0000001f;
+	Q(5,4) = 0.0000001f;
+	Q(5,5) = 0.0001f;
+	Q(5,6) = 0.0000001f;
+
+	Q(6,3) = 0.0000001f;
+	Q(6,4) = 0.0000001f;
+	Q(6,5) = 0.0000001f;
+	Q(6,6) = 0.0001f;
+
+	// P(k,k-1) = F(k)*P(k-1,k-1)*F(k)' + Q(k)
 	P = (F ^ P ^ F.transpose()) + Q;
 
-	x_state = x_kk1;
+	op::normalize(x_kk1,x_state);
 
 }
 
@@ -238,15 +272,28 @@ void ahrs_ekf_update_step(ahrs_ekf_t* ahrs_ekf)
 	Mat<7,3> K_mag = P ^ (H_mag_k.transpose() ^ Sk_inv);
 
 	// Updated state estimate: x(k,k) = x(k,k-1) + K(k)*y_k
-	Mat<7,1> X_kk1 = x_state;
-	x_state = X_kk1 + (K_acc ^ yk_acc);
-	X_kk1 = x_state;
-	x_state = X_kk1 + (K_mag ^ yk_mag);
+	x_kk1 = x_state;
+	x_kk1 = x_kk1 + (K_acc ^ yk_acc);
+	Mat<7,1> x_kk = x_kk1 + (K_mag ^ yk_mag);
+
+	op::normalize(x_kk,x_state);
 
 	// Update covariance estimate
 	P = (Id - (K_acc ^ H_acc_k)) ^ P;
 	P = (Id - (K_mag ^ H_mag_k)) ^ P;
 
+}
+
+bool ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, imu_t* imu, ahrs_t* ahrs)
+{
+	bool init_success = true;
+
+	ahrs_ekf->imu = imu;
+	ahrs_ekf->ahrs = ahrs;
+
+	ahrs_ekf_init_cpp(ahrs_ekf);
+
+	return init_success;
 }
 
 void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
@@ -260,5 +307,10 @@ void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
 	{
 		ahrs_ekf->x[i] = x_state(i,0);
 	}
+
+	ahrs_ekf->ahrs->qe.s = x_state(i,3);
+	ahrs_ekf->ahrs->qe.v[0] = x_state(i,4);
+	ahrs_ekf->ahrs->qe.v[1] = x_state(i,5);
+	ahrs_ekf->ahrs->qe.v[2] = x_state(i,6);
 
 }

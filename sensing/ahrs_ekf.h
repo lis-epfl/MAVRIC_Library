@@ -42,18 +42,12 @@
 #ifndef __AHRS_EKF_HPP__
 #define __AHRS_EKF_HPP__
 
-extern "C"
-{
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "imu.h"
-
-typedef struct
-{
-	float x[7];
-	imu_t* imu;
-}ahrs_ekf_t;
-
-}
-
+#include "ahrs.h"
 
 /*
  * x[0] : bias_x
@@ -66,12 +60,23 @@ typedef struct
 
 */
 
+typedef struct
+{
+	float x[7];
+	ahrs_t* ahrs;
+	imu_t* imu;
+
+	float sigma_w;
+	
+}ahrs_ekf_t;
 
 
-
-
-void ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, imu_t* imu);
+bool ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, imu_t* imu, ahrs_t* ahrs);
 
 void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // __AHRS_EKF_HPP__
