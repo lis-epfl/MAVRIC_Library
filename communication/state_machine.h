@@ -54,6 +54,7 @@ extern "C" {
 #include "simulation.h"
 #include "joystick_parsing.h"
 #include "gps_ublox.h"
+#include "remote.h"
 
 /**
  * \brief Defines the state machine structure
