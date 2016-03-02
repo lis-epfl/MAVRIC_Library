@@ -192,6 +192,9 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 flash: $(PROJ_NAME).bin
 	@st-flash write $(PROJ_NAME).bin 0x8000000
 
+dfu: $(PROJ_NAME).bin
+	@dfu-util -a 0 -s 0x8000000 -D LEQuad_mavrimini.bin
+
 .PHONY: clean rebuild
 clean:
 	@rm -f $(OBJS) $(DEPS)
