@@ -66,8 +66,9 @@ typedef struct
 	ahrs_t* ahrs;
 	imu_t* imu;
 
-	float sigma_w;
-	
+	float sigma_w_sqr;
+	float sigma_r_sqr;
+
 }ahrs_ekf_t;
 
 

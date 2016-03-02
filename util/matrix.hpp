@@ -704,8 +704,8 @@ bool op::inverse(const Mat<2,2,float>& m, Mat<2,2,float>& res)
         return false;
     }
 
-    res = std::array<float,4>{  m.d[3] / det, -m.d[1] / det,
-                               -m.d[2] / det,  m.d[0] / det  };
+    res = std::array<float,4>{{  m.d[3] / det, -m.d[1] / det,
+                                -m.d[2] / det,  m.d[0] / det  }};
 
     return true;
 }
@@ -720,9 +720,9 @@ bool op::inverse(const Mat<3,3,float>& m, Mat<3,3,float>& res)
         return false;
     }
 
-    res = std::array<float,9>{  (m.d[4]*m.d[8] - m.d[5]*m.d[7]) / det, -(m.d[1]*m.d[8] - m.d[2]*m.d[7]) / det, (m.d[1]*m.d[5] - m.d[2]*m.d[4]) / det,
+    res = std::array<float,9>{{  (m.d[4]*m.d[8] - m.d[5]*m.d[7]) / det, -(m.d[1]*m.d[8] - m.d[2]*m.d[7]) / det, (m.d[1]*m.d[5] - m.d[2]*m.d[4]) / det,
                                 -(m.d[3]*m.d[8] - m.d[5]*m.d[6]) / det, (m.d[0]*m.d[8] - m.d[2]*m.d[6]) / det, -(m.d[0]*m.d[5] - m.d[2]*m.d[3]) / det,
-                                (m.d[3]*m.d[7] - m.d[4]*m.d[6]) / det, -(m.d[0]*m.d[7] - m.d[1]*m.d[6]) / det, (m.d[0]*m.d[4] - m.d[1]*m.d[3]) / det  };
+                                (m.d[3]*m.d[7] - m.d[4]*m.d[6]) / det, -(m.d[0]*m.d[7] - m.d[1]*m.d[6]) / det, (m.d[0]*m.d[4] - m.d[1]*m.d[3]) / det  }};
 
     return true;
 }
@@ -730,9 +730,9 @@ bool op::inverse(const Mat<3,3,float>& m, Mat<3,3,float>& res)
 template<>
 void op::skew(const Mat<3,1,float>& m, Mat<3,3,float>& res)
 {
-    res = std::array<float,9>{  0.0f, -m.d[2], m.d[1],
+    res = std::array<float,9>{{  0.0f, -m.d[2], m.d[1],
                                 m.d[2], 0.0f, -m.d[0],
-                                -m.d[1], m.d[0], 0.0f};
+                                -m.d[1], m.d[0], 0.0f}};
 }
 
 
@@ -743,8 +743,10 @@ void op::norm(const Mat<N,1,T>& m, T& res)
 
     for (uint32_t i = 0; i < N; ++i)
     {
-        res += m.d[i] * m.d[i];
+        res += (m.d[i] * m.d[i]);
     }
+
+    res = sqrt(res);
 }
 
 template<uint32_t N, typename T>
