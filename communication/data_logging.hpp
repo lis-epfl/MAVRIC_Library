@@ -45,7 +45,6 @@
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/state.hpp"
-#include "communication/toggle_logging.hpp"
 #include "hal/common/file.hpp"
 #include "hal/common/console.hpp"
 
@@ -368,7 +367,6 @@ private:
     Console<File> console_;                      ///< The console containing the file to write data to
 
     State& state_;                              ///< The pointer to the state structure
-    const toggle_logging_t* toggle_logging_;     ///< The pointer to the toggle logging structure
 };
 
 static inline data_logging_conf_t data_logging_default_config()

@@ -46,7 +46,6 @@
 #include "sensing/position_estimation_default_config.hpp"
 #include "communication/remote_default_config.hpp"
 #include "control/manual_control_default_config.hpp"
-#include "communication/toggle_logging.hpp"
 #include "control/attitude_controller_default_config.h"
 #include "control/velocity_controller_copter_default_config.h"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
