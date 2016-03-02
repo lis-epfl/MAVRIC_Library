@@ -110,6 +110,8 @@ bool Mavrimini::init(void)
     // -------------------------------------------------------------------------
     // Init LEDs
     // -------------------------------------------------------------------------
+    ret = green_led_gpio.init();
+    ret = red_led_gpio.init();
     green_led.on();
     red_led.on();
 
@@ -129,7 +131,7 @@ bool Mavrimini::init(void)
     // -------------------------------------------------------------------------
     // Init stream for USB debug stream TODO: remove
     p_dbg_serial        = &serial_1;
-    // p_dbg_serial         = &serial_2;
+    //p_dbg_serial         = &serial_2;
     dbg_stream_.get     = NULL;
     dbg_stream_.put     = &serial2stream;
     dbg_stream_.flush   = NULL;
