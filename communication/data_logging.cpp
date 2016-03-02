@@ -67,21 +67,20 @@ void Data_logging::add_header_name(void)
     bool init = true;
 
     uint16_t i;
-    data_logging_set_t* data_set = data_logging_set;
-
-    init &= console.write("time");
+    
+    init &= console_.write("time");
     put_r_or_n(0);
 
-    for (i = 0; i < data_set->data_logging_count; i++)
+    for (i = 0; i < data_logging_count_; i++)
     {
-        data_logging_entry_t* param = &data_set->data_log[i];
+        data_logging_entry_t* param = &data_log_[i];
 
-        init &= console.write(reinterpret_cast<uint8_t*>(param->param_name), strlen(param->param_name));
+        init &= console_.write(reinterpret_cast<uint8_t*>(param->param_name), strlen(param->param_name));
 
         if (!init)
         {
             break;
-            if (debug)
+            if (debug_)
             {
                 print_util_dbg_print("Error appending header!\r\n");
             }
@@ -91,7 +90,7 @@ void Data_logging::add_header_name(void)
             put_r_or_n(i);
         }
     }
-    file_init = init;
+    file_init_ = init;
 }
 
 
@@ -100,17 +99,17 @@ void Data_logging::put_r_or_n(uint16_t param_num)
     bool success = true;
 
     // Writes a tab character or a end of line character to the file depending on the parameter current number
-    if (param_num == (data_logging_set->data_logging_count - 1))
+    if (param_num == (data_logging_count_ - 1))
     {
-        success &= console.write("\n");
+        success &= console_.write("\n");
     }
     else
     {
-        success &= console.write("\t");
+        success &= console_.write("\t");
     }
     if (!success)
     {
-        if (debug)
+        if (debug_)
         {
             print_util_dbg_print("Error putting tab or new line character!\r\n");
         }
@@ -122,66 +121,65 @@ void Data_logging::log_parameters(void)
 {
     uint32_t i;
     bool success = true;
-    data_logging_set_t* data_set = data_logging_set;
 
     // First parameter is always time
     uint32_t time_ms = time_keeper_get_ms();
-    success &=  console.write(time_ms);
+    success &=  console_.write(time_ms);
     put_r_or_n(0);
 
-    for (i = 0; i < data_set->data_logging_count; i++)
+    for (i = 0; i < data_logging_count_; i++)
     {
         // Writing the value of the parameter to the file, separate values by tab character
-        data_logging_entry_t* param = &data_set->data_log[i];
+        data_logging_entry_t* param = &data_log_[i];
         switch (param->data_type)
         {
             case MAV_PARAM_TYPE_UINT8:
-                success &= console.write(*((uint8_t*)param->param));
+                success &= console_.write(*((uint8_t*)param->param));
                 put_r_or_n(i);
                 break;
 
             case MAV_PARAM_TYPE_INT8:
-                success &= console.write(*((int8_t*)param->param));
+                success &= console_.write(*((int8_t*)param->param));
                 put_r_or_n(i);
                 break;
 
             case MAV_PARAM_TYPE_UINT16:
-                success &= console.write(*((uint16_t*)param->param));
+                success &= console_.write(*((uint16_t*)param->param));
                 put_r_or_n(i);
                 break;
 
             case MAV_PARAM_TYPE_INT16:
-                success &= console.write(*((int16_t*)param->param));
+                success &= console_.write(*((int16_t*)param->param));
                 put_r_or_n(i);
                 break;
 
             case MAV_PARAM_TYPE_UINT32:
-                success &= console.write(*((uint32_t*)param->param));
+                success &= console_.write(*((uint32_t*)param->param));
                 put_r_or_n(i);
                 break;
 
             case MAV_PARAM_TYPE_INT32:
-                success &= console.write(*((int32_t*)param->param));
+                success &= console_.write(*((int32_t*)param->param));
                 put_r_or_n(i);
                 break;
 
             case MAV_PARAM_TYPE_UINT64:
-                success &= console.write(*((uint64_t*)param->param));
+                success &= console_.write(*((uint64_t*)param->param));
                 put_r_or_n(i);
                 break;
 
             case MAV_PARAM_TYPE_INT64:
-                success &= console.write(*((int64_t*)param->param));
+                success &= console_.write(*((int64_t*)param->param));
                 put_r_or_n(i);
                 break;
 
             case MAV_PARAM_TYPE_REAL32:
-                success &= console.write(*(float*)param->param, param->precision);
+                success &= console_.write(*(float*)param->param, param->precision);
                 put_r_or_n(i);
                 break;
 
             case MAV_PARAM_TYPE_REAL64:
-                success &= console.write(*((double*)param->param), param->precision);
+                success &= console_.write(*((double*)param->param), param->precision);
                 put_r_or_n(i);
                 break;
             default:
@@ -192,7 +190,7 @@ void Data_logging::log_parameters(void)
 
         if (!success)
         {
-            if (debug)
+            if (debug_)
             {
                 print_util_dbg_print("Error appending parameter! Error:");
             }
@@ -207,16 +205,16 @@ void Data_logging::seek(void)
     bool success = true;
 
     /* Seek to end of the file to append data */
-    success &= console.get_stream()->seek(0, FILE_SEEK_END);
+    success &= console_.get_stream()->seek(0, FILE_SEEK_END);
 
     if (!success)
     {
-        if (debug)
+        if (debug_)
         {
             print_util_dbg_print("lseek error:");
         }
         // Closing the file if we could not seek the end of the file
-        console.get_stream()->close();
+        console_.get_stream()->close();
     }
 }
 
@@ -344,49 +342,48 @@ bool Data_logging::checksum_control(void)
 {
     bool new_values = false;
 
-    double cksum_a_current = 0.0;
-    double cksum_b_current = 0.0;
+    double cksum_a__current = 0.0;
+    double cksum_b__current = 0.0;
 
     float approx = 1.0f;
 
     uint32_t j = 0;
 
-    data_logging_set_t* data_set = data_logging_set;
-    for (uint32_t i = 0; i < data_set->data_logging_count; ++i)
+    for (uint32_t i = 0; i < data_logging_count_; ++i)
     {
-        data_logging_entry_t* param = &data_set->data_log[i];
+        data_logging_entry_t* param = &data_log_[i];
         switch (param->data_type)
         {
             case MAV_PARAM_TYPE_UINT8:
-                cksum_a_current += *((uint8_t*)param->param);
+                cksum_a__current += *((uint8_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_INT8:
-                cksum_a_current += *((int8_t*)param->param);
+                cksum_a__current += *((int8_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_UINT16:
-                cksum_a_current += *((uint16_t*)param->param);
+                cksum_a__current += *((uint16_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_INT16:
-                cksum_a_current += *((int16_t*)param->param);
+                cksum_a__current += *((int16_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_UINT32:
-                cksum_a_current += *((uint32_t*)param->param);
+                cksum_a__current += *((uint32_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_INT32:
-                cksum_a_current += *((int32_t*)param->param);
+                cksum_a__current += *((int32_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_UINT64:
-                cksum_a_current += *((uint64_t*)param->param);
+                cksum_a__current += *((uint64_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_INT64:
-                cksum_a_current += *((int64_t*)param->param);
+                cksum_a__current += *((int64_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_REAL32:
@@ -395,7 +392,7 @@ bool Data_logging::checksum_control(void)
                     approx *= 10;
                 }
                 approx = round((*((float*)param->param)) * approx) / approx;
-                cksum_a_current += approx;
+                cksum_a__current += approx;
                 break;
 
             case MAV_PARAM_TYPE_REAL64:
@@ -404,37 +401,37 @@ bool Data_logging::checksum_control(void)
                     approx *= 10;
                 }
                 approx = round((*((double*)param->param)) * approx) / approx;
-                cksum_a_current += approx;
+                cksum_a__current += approx;
                 break;
             default:
-                cksum_a_current = 0.0;
-                cksum_b_current = 0.0;
+                cksum_a__current = 0.0;
+                cksum_b__current = 0.0;
                 print_util_dbg_print("Data type not supported!\r\n");
                 break;
         }
-        cksum_b_current += cksum_a_current;
+        cksum_b__current += cksum_a__current;
     }
 
     //  print_util_dbg_print("cksum: (");
-    //  print_util_dbg_print_num(cksum_a_current*100,10);
+    //  print_util_dbg_print_num(cksum_a__current*100,10);
     //  print_util_dbg_print("==");
-    //  print_util_dbg_print_num(cksum_a*100,10);
+    //  print_util_dbg_print_num(cksum_a_*100,10);
     //  print_util_dbg_print(")&&(");
-    //  print_util_dbg_print_num(cksum_b_current*100,10);
+    //  print_util_dbg_print_num(cksum_b__current*100,10);
     //  print_util_dbg_print("==");
-    //  print_util_dbg_print_num(cksum_b*100,10);
+    //  print_util_dbg_print_num(cksum_b_*100,10);
     //  print_util_dbg_print(")\r\n");
 
 
-    if ((cksum_a_current == cksum_a) && (cksum_b_current == cksum_b))
+    if ((cksum_a__current == cksum_a_) && (cksum_b__current == cksum_b_))
     {
         new_values = false;
     }
     else
     {
         new_values = true;
-        cksum_a = cksum_a_current;
-        cksum_b = cksum_b_current;
+        cksum_a_ = cksum_a__current;
+        cksum_b_ = cksum_b__current;
     }
 
     return new_values;
@@ -444,86 +441,70 @@ bool Data_logging::checksum_control(void)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Data_logging::Data_logging(File& file):
-    console(file)
+Data_logging::Data_logging(File& file, State& state, data_logging_conf_t config):
+    config_(config),
+    console_(file),
+    state_(state)
 {
-    ;
+    data_log_ = (data_logging_entry_t*)malloc(sizeof(data_logging_entry_t[config_.max_data_logging_count]));
+    
+    //in case malloc failed 
+    if (data_log_ == NULL)
+    {
+        config_.max_data_logging_count = 0;
+    }
+
+    log_data_ = config_.log_data;
+
+    data_logging_count_ = 0;
 }
 
-bool Data_logging::create_new_log_file(const char* file_name_, bool continuous_write_, const toggle_logging_t* toggle_logging_, const State* state_, uint32_t sysid)
+bool Data_logging::create_new_log_file(const char* file_name__, bool continuous_write__, uint32_t sysid)
 {
     bool init_success = true;
 
-    const toggle_logging_conf_t* config = &toggle_logging_->toggle_logging_conf;
-
-    toggle_logging = toggle_logging_;
-
-    debug = config->debug;
-
-    continuous_write = continuous_write_;
-
-    state = state_;
-
     // Allocate memory for the onboard data_log
-    data_logging_set = (data_logging_set_t*)malloc(sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]));
+    //data_logging_set = (data_logging_set_t*)malloc(sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]));
 
-    if (data_logging_set != NULL)
-    {
-        data_logging_set->max_data_logging_count = config->max_data_logging_count;
-        data_logging_set->max_logs = config->max_logs;
-        data_logging_set->data_logging_count = 0;
-
-        init_success &= true;
-    }
-    else
-    {
-        print_util_dbg_print("[DATA LOGGING] ERROR ! Bad memory allocation.\r\n");
-        data_logging_set->max_data_logging_count = 0;
-        data_logging_set->max_logs = 0;
-        data_logging_set->data_logging_count = 0;
-
-        init_success &= false;
-    }
-
-    file_init = false;
-    file_opened = false;
-    sys_status = true;
+    file_init_ = false;
+    file_opened_ = false;
+    sys_status_ = true;
 
     // Setting the maximal size of the name string
 #if _USE_LFN
-    buffer_name_size = _MAX_LFN;
+    buffer_name_size_ = _MAX_LFN;
 #else
 #ifdef _MAX_LFN
-    buffer_name_size = 8;
+    buffer_name_size_ = 8;
 #else
-    buffer_name_size = 255;
+    buffer_name_size_ = 255;
 #endif
 #endif
 
     // Allocating memory for the file name string
-    file_name = (char*)malloc(buffer_name_size);
-    name_n_extension = (char*)malloc(buffer_name_size);
+    file_name_ = (char*)malloc(buffer_name_size_);
+    name_n_extension_ = (char*)malloc(buffer_name_size_);
 
-    if (file_name == NULL)
+    if (file_name_ == NULL)
     {
         init_success &= false;
     }
-    if (name_n_extension == NULL)
+    if (name_n_extension_ == NULL)
     {
         init_success &= false;
     }
 
-    sys_id = sysid;
+    sys_id_ = sysid;
 
     // Append sysid to filename
-    filename_append_int(file_name, (char*)file_name_, sysid, buffer_name_size);
+    filename_append_int(file_name_, (char*)file_name__, sysid, buffer_name_size_);
 
     init_success &= open_new_log_file();
 
-    logging_time = time_keeper_get_ms();
+    logging_time_ = time_keeper_get_ms();
 
-    cksum_a = 0.0;
-    cksum_b = 0.0;
+    cksum_a_ = 0.0;
+    cksum_b_ = 0.0;
 
     return init_success;
 }
@@ -535,26 +516,26 @@ bool Data_logging::open_new_log_file(void)
 
     uint32_t i = 0;
 
-    if (toggle_logging->log_data)
+    if (log_data_)
     {
         do
         {
             // Create flag for successfully written file names
             bool successful_filename = true;
 
-            // Add iteration number to name_n_extension (does not yet have extension)
-            successful_filename &= filename_append_int(name_n_extension, file_name, i, buffer_name_size);
+            // Add iteration number to name_n_extension_ (does not yet have extension)
+            successful_filename &= filename_append_int(name_n_extension_, file_name_, i, buffer_name_size_);
 
-            // Add extension (.txt) to name_n_extension
-            successful_filename &= filename_append_extension(name_n_extension, name_n_extension, buffer_name_size);
+            // Add extension (.txt) to name_n_extension_
+            successful_filename &= filename_append_extension(name_n_extension_, name_n_extension_, buffer_name_size_);
 
-            // Check if there wasn't enough memory allocated to name_n_extension
+            // Check if there wasn't enough memory allocated to name_n_extension_
             if (!successful_filename)
             {
                 print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
-                print_util_dbg_print_num(buffer_name_size, 10);
+                print_util_dbg_print_num(buffer_name_size_, 10);
                 print_util_dbg_print(" and it is ");
-                print_util_dbg_print_num(sizeof(name_n_extension), 10);
+                print_util_dbg_print_num(sizeof(name_n_extension_), 10);
                 print_util_dbg_print("\r\n");
 
                 create_success = false;
@@ -563,28 +544,28 @@ bool Data_logging::open_new_log_file(void)
             // If the filename was successfully created, try to open a file
             if (successful_filename)
             {
-                int8_t exists = console.get_stream()->exists(name_n_extension);
+                int8_t exists = console_.get_stream()->exists(name_n_extension_);
                 switch (exists)
                 {
                     case -1:
-                        sys_status = false;
+                        sys_status_ = false;
                         create_success = false;
                         break;
 
                     case 0:
-                        sys_status = true;
-                        create_success = console.get_stream()->open(name_n_extension);
+                        sys_status_ = true;
+                        create_success = console_.get_stream()->open(name_n_extension_);
                         break;
 
                     case 1:
-                        sys_status = true;
+                        sys_status_ = true;
                         create_success = false;
                         break;
                 }
 
             }
 
-            if (debug)
+            if (debug_)
             {
                 print_util_dbg_print("Open result:");
                 print_util_dbg_print_num(create_success, 10);
@@ -593,22 +574,22 @@ bool Data_logging::open_new_log_file(void)
 
             ++i;
         }
-        while ((i < data_logging_set->max_logs) && (!create_success) && sys_status);
+        while ((i < config_.max_logs) && (!create_success) && sys_status_);
 
         if (create_success)
         {
             seek();
 
-            file_opened = true;
+            file_opened_ = true;
 
-            if (debug)
+            if (debug_)
             {
                 print_util_dbg_print("File ");
-                print_util_dbg_print(name_n_extension);
+                print_util_dbg_print(name_n_extension_);
                 print_util_dbg_print(" opened. \r\n");
             }
         } //end of if fr == FR_OK
-    }//end of if (toggle_logging->log_data)
+    }//end of if (log_data_)
 
     return create_success;
 }
@@ -616,26 +597,26 @@ bool Data_logging::open_new_log_file(void)
 bool Data_logging::update(void)
 {
     uint32_t time_ms = 0;
-    if (toggle_logging->log_data == 1)
+    if (log_data_ == 1)
     {
-        if (file_opened)
+        if (file_opened_)
         {
-            if (!file_init)
+            if (!file_init_)
             {
                 add_header_name();
             }
 
-            if (!mav_modes_is_armed(state->mav_mode))
+            if (!mav_modes_is_armed(state_.mav_mode))
             {
                 time_ms = time_keeper_get_ms();
-                if ((time_ms - logging_time) > 5000)
+                if ((time_ms - logging_time_) > 5000)
                 {
-                    console.get_stream()->flush();
-                    logging_time = time_ms;
+                    console_.get_stream()->flush();
+                    logging_time_ = time_ms;
                 }
             }
 
-            if (continuous_write)
+            if (continuous_write_)
             {
                 log_parameters();
             }
@@ -647,33 +628,33 @@ bool Data_logging::update(void)
                 }
             }
 
-        } //end of if (file_opened)
+        } //end of if (file_opened_)
         else
         {
-            if (sys_status)
+            if (sys_status_)
             {
                 open_new_log_file();
             }
 
-            cksum_a = 0.0;
-            cksum_b = 0.0;
-        }//end of else if (file_opened)
-    } //end of if (toggle_logging->log_data == 1)
+            cksum_a_ = 0.0;
+            cksum_b_ = 0.0;
+        }//end of else if (file_opened_)
+    } //end of if (log_data_ == 1)
     else
     {
-        sys_status = true;
+        sys_status_ = true;
 
-        if (file_opened)
+        if (file_opened_)
         {
-            bool succeed = console.get_stream()->close();
+            bool succeed = console_.get_stream()->close();
 
-            cksum_a = 0.0;
-            cksum_b = 0.0;
+            cksum_a_ = 0.0;
+            cksum_b_ = 0.0;
 
-            file_opened = false;
-            file_init = false;
+            file_opened_ = false;
+            file_init_ = false;
 
-            if (debug)
+            if (debug_)
             {
                 if (succeed)
                 {
@@ -684,9 +665,9 @@ bool Data_logging::update(void)
                     print_util_dbg_print("Error closing file\r\n");
                 }
             }
-        } //end of if (file_opened)
+        } //end of if (file_opened_)
 
-    } //end of else (toggle_logging->log_data != 1)
+    } //end of else (log_data_ != 1)
 
     return true;
 }
@@ -696,7 +677,7 @@ bool Data_logging::add_field(uint8_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -704,17 +685,17 @@ bool Data_logging::add_field(uint8_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_UINT8_T;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -741,7 +722,7 @@ bool Data_logging::add_field(int8_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -749,17 +730,17 @@ bool Data_logging::add_field(int8_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_INT8_T;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -786,7 +767,7 @@ bool Data_logging::add_field(uint16_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -794,17 +775,17 @@ bool Data_logging::add_field(uint16_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_UINT16_T;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -831,7 +812,7 @@ bool Data_logging::add_field(int16_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -839,17 +820,17 @@ bool Data_logging::add_field(int16_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_INT16_T;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -876,7 +857,7 @@ bool Data_logging::add_field(uint32_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -884,17 +865,17 @@ bool Data_logging::add_field(uint32_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_UINT32_T;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -921,7 +902,7 @@ bool Data_logging::add_field(int32_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -929,17 +910,17 @@ bool Data_logging::add_field(int32_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_INT32_T;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -966,7 +947,7 @@ bool Data_logging::add_field(uint64_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -974,17 +955,17 @@ bool Data_logging::add_field(uint64_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_UINT64_T;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -1011,7 +992,7 @@ bool Data_logging::add_field(int64_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1019,17 +1000,17 @@ bool Data_logging::add_field(int64_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_INT64_T;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -1056,7 +1037,7 @@ bool Data_logging::add_field(float* val, const char* param_name, uint32_t precis
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1064,18 +1045,18 @@ bool Data_logging::add_field(float* val, const char* param_name, uint32_t precis
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_FLOAT;
                 new_param->precision                 = precision;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -1102,7 +1083,7 @@ bool Data_logging::add_field(double* val, const char* param_name, uint32_t preci
 {
     bool add_success = true;
 
-    if ((val == NULL) || (data_logging_set == NULL))
+    if ((val == NULL))
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1110,18 +1091,18 @@ bool Data_logging::add_field(double* val, const char* param_name, uint32_t preci
     }
     else
     {
-        if (data_logging_set->data_logging_count < data_logging_set->max_data_logging_count)
+        if (data_logging_count_ < config_.max_data_logging_count)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
 
                 new_param->param                     = val;
                 strcpy(new_param->param_name,        param_name);
                 new_param->data_type                 = MAVLINK_TYPE_DOUBLE;
                 new_param->precision                 = precision;
 
-                data_logging_set->data_logging_count += 1;
+                data_logging_count_ += 1;
 
                 add_success &= true;
             }
@@ -1151,4 +1132,28 @@ bool Data_logging::add_field(bool* val, const char* param_name)
     add_success = add_field((uint8_t*)val, param_name);
 
     return add_success;
+}
+
+
+mav_mode_t Data_logging::get_state_mav_mode(void)
+{
+    return state_.mav_mode;
+}
+
+
+bool Data_logging::set_log_data(uint32_t param)
+{
+    bool set_success = true;
+
+    //0 to stop, 1 to start
+    if (param == 0 || param == 1)
+    {
+        log_data_ = param;
+        return set_success;
+    }
+    else
+    {
+        set_success = false;
+        return set_success;
+    }
 }

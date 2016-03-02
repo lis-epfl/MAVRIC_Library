@@ -30,33 +30,33 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file toggle_logging_telemetry.hpp
+ * \file data_logging_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *
  * \brief This module takes care of sending periodic telemetric messages for
- * the toggle_logging module
+ * the data_logging module
  *
  ******************************************************************************/
 
 
-#ifndef TOGGLE_LOGGING_TELEMETRY_HPP_
-#define TOGGLE_LOGGING_TELEMETRY_HPP_
+#ifndef DATA_LOGGING_TELEMETRY_HPP_
+#define DATA_LOGGING_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/toggle_logging.hpp"
+#include "communication/data_logging.hpp"
 
 
 /**
- * \brief   Initialize the MAVLink communication module for the remote
+ * \brief   Initialize the call_back to start & stop logging
  *
- * \param   toggle_logging          The pointer to the data logging structure
+ * \param   data_logging          The pointer to the data logging structure
  * \param   message_handler         The pointer to the MAVLink message handler
  *
  * \return  True if the init succeed, false otherwise
  */
-bool toggle_logging_telemetry_init(toggle_logging_t* toggle_logging, mavlink_message_handler_t* message_handler);
+bool data_logging_telemetry_init(Data_logging* data_logging, mavlink_message_handler_t* message_handler);
 
-#endif /* toggle_logging_TELEMETRY_HPP_ */
+#endif /* data_logging_TELEMETRY_HPP_ */
