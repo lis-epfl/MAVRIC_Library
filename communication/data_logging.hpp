@@ -135,128 +135,34 @@ public:
 
 
     /**
-     * \brief   Registers parameter to log on the SD card
+     * \brief   Registers parameter to log on the SD card (integer version)
      *
      * \param   data_logging            The pointer to the data logging structure
      * \param   val                     The parameter value
      * \param   param_name              Name of the parameter
      *
+     * \tparam  T                       Type of parameter to add
+     * 
      * \return  True if the parameter was added, false otherwise
      */
-    bool add_field(uint8_t* val, const char* param_name);
+    template<typename T>
+    bool add_field(T* val, const char* param_name);
+
 
     /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(int8_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(uint16_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(int16_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(uint32_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(int32_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(uint64_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(int64_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
+     * \brief   Registers parameter to log on the SD card (float and double version)
      *
      * \param   data_logging            The pointer to the data logging structure
      * \param   val                     The parameter value
      * \param   param_name              Name of the parameter
      * \param   precision               The number of digit after the zero
      *
+     * \tparam  T                       Type of parameter to add (float or double)
+     * 
      * \return  True if the parameter was added, false otherwise
      */
-    bool add_field(float* val, const char* param_name, uint32_t precision);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     * \param   precision               The number of digit after the zero
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(double* val, const char* param_name, uint32_t precision);
-
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(bool* val, const char* param_name);
+    template<typename T>
+    bool add_field(T* val, const char* param_name, uint32_t precision);
 
 
 private:
