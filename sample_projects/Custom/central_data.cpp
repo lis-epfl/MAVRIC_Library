@@ -344,7 +344,7 @@ bool Central_data::init(void)
     // Init saccade controller
     //--------------------------------------------------------------------------
     saccade_controller_init(serial_flow_left,
-                            serial_flow_right,
+                            serial_flow_right
                             /*pitch_input,
                             gain_input,
                             threshold_input,
