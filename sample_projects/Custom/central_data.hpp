@@ -131,8 +131,6 @@ public:
     Servo&          servo_1;            ///< Reference to servos structure
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
-    flow_t         flow_left_;          ///< OF structure
-    flow_t         flow_right_;         ///< OF structure
     
     
     scheduler_t scheduler;
