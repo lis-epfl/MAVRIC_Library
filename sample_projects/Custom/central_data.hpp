@@ -169,7 +169,7 @@ public:
     velocity_controller_copter_t    velocity_controller;
     vector_field_waypoint_t         vector_field_waypoint;
 
-    saccade_controller_t            saccade_controller;
+    Saccade_controller            saccade_controller;
 
 private:
     uint8_t sysid_;     ///< System ID

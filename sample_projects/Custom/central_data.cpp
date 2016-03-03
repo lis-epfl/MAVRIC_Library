@@ -88,13 +88,9 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     state(battery, state_default_config()),
     data_logging(file1),
     data_logging2(file2),
+    saccade_controller(serial_flow_left_, serial_flow_right_, saccade_controller_default_config()),
     sysid_(sysid)
-
-
-{
-    flow_init(&flow_left_, &serial_flow_left_);
-    flow_init(&flow_right_, &serial_flow_right_);
-}
+{}
 
 
 bool Central_data::init(void)
@@ -343,13 +339,7 @@ bool Central_data::init(void)
     //--------------------------------------------------------------------------
     // Init saccade controller
     //--------------------------------------------------------------------------
-    saccade_controller_init(serial_flow_left,
-                            serial_flow_right
-                            /*pitch_input,
-                            gain_input,
-                            threshold_input,
-                            goal_direction_input*/);
-//Comment mettre les pitch, gain etc qui sont dans la télémétrie, serial_flow_left à initialiser quelque part?
+    saccade_controller.init();
     
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);

@@ -46,53 +46,87 @@
 extern "C" {
 #endif
 
-#include "util/quaternions.h"
 #include "control/control_command.h"
 #include "sensing/altitude.h"
-
+#include "util/quaternions.h"
 #include "util/coord_conventions.h"
+
 #ifdef __cplusplus
 }
 
 #include "drivers/flow.hpp"
 
+
+/**
+ * \brief Configuration structure
+ */
+typedef struct
+{
+    float pitch;
+    float gain;
+    float threshold;
+    float goal_direction;
+} saccade_controller_conf_t;
+
+
+static inline saccade_controller_conf_t saccade_controller_default_config(void);
+
 /**
  * \Saccade controller structure
  */
-class saccade_controller_t
+class Saccade_controller
 {
 public:
     
-    flow_t                     Flow_left;           ///< Left optic flow camera output
-    flow_t                     Flow_right;          ///< Right optic flow camera output
+    flow_t                      flow_left;           ///< Left optic flow camera output
+    flow_t                      flow_right;          ///< Right optic flow camera output
     float                       pitch;              ///< Pitch command for forward motion
     float                       gain;               ///< Gain for importance of CAN
     float                       threshold;          ///< Threshold for importance of CAN
     float                       goal_direction;     ///< Goal direction for drone
     attitude_command_t*         attitude_command;   ///< Attitude command given by the necessary saccade
+  
     
     /**
-     * \brief                       Initializes the saccade controller structure
+     * \brief                       Constructor
      *
-     * \param   serial_flow_left    Serial port for optic flow cameras
-     * \param   pitch               Pitch parameter
-     * \param   gain                Gain
+     * \param   serial_flow_left    Serial port for left optic flow camera
+     * \param   serial_flow_right   Serial port for right optic flow cameras
+     * \param   config              Configuration structure
      */
-    
-    void init(Serial& serial_flow_left, Serial& serial_flow_right,float pitch_input, float gain_input, float threshold_input, float heading_input);
+    Saccade_controller(Serial& serial_flow_left, Serial& serial_flow_right, saccade_controller_conf_t config);
+
+
+    /**
+     * \brief   Init function
+     * 
+     * \return  success
+     */
+    bool init(void);
+
 
     /**
      * \brief                       Update of the saccade control
      *
      */
-    
-    void update();
+    bool update(void);
     
 };
 
 
 
-    
+static inline saccade_controller_conf_t saccade_controller_default_config(void)
+{
+    saccade_controller_conf_t conf;
+
+    conf.pitch          = 0.0f;
+    conf.gain           = 1.0f;
+    conf.threshold      = 1.0f;
+    conf.goal_direction = 0.0f;
+
+    return conf;
+};
+
 
 
 

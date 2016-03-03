@@ -53,22 +53,27 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
-void saccade_controller_t::init(Serial& serial_flow_left, Serial& serial_flow_right,float pitch_input, float gain_input, float threshold_input, float goal_direction_input)
+Saccade_controller::Saccade_controller(Serial& serial_flow_left, Serial& serial_flow_right, saccade_controller_conf_t config)
 {
-    flow_init(&Flow_right, &serial_flow_right);
-    flow_init(&Flow_left, &serial_flow_left);
-    gain = gain_input;
-    threshold = threshold_input;
-    goal_direction = goal_direction_input;
+    flow_init(&flow_right, &serial_flow_right);
+    flow_init(&flow_left, &serial_flow_left);
+    gain            = config.gain;
+    threshold       = config.threshold;
+    goal_direction  = config.goal_direction;
 }
 
-/*void saccade_controller_t::set_direction(heading_angle)
+
+bool Saccade_controller::init(void)
+{
+    return true;
+}
+
+/*void Saccade_controller::set_direction(heading_angle)
 {
   Voir comment définir ca
 }*/
 
-void saccade_controller_t::update()
+bool Saccade_controller::update()
 {
     int N_points = 125;                          // Number of points where optic flow is measured
     
@@ -103,14 +108,15 @@ void saccade_controller_t::update()
     //ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
     
     srand(time(NULL));
+    // float noise = 0.0f;
     float noise = (rand() % 50)/100.;
     
     
     
     //Update the optic flow vectors
     
-    flow_update(&Flow_left);
-    flow_update(&Flow_right);
+    flow_update(&flow_left);
+    flow_update(&flow_right);
     
     /*Calculate for both left and right the sum of the relative nearnesses which are each given by
      RN = OF/sin(angle), then calculate the COMANV's x and y components, to then calculate CAN and NOD. */
@@ -121,8 +127,8 @@ void saccade_controller_t::update()
         Azimuth[i] = (-160.875 + i * angle_between_points)* (PI / 180.);
         Azimuth[i + N_points] = (19.125 + i * angle_between_points)* (PI / 180.);
         
-        Relative_Nearness[i] = Flow_left.of.x[i]/sin(Azimuth[i]);
-        Relative_Nearness[i + N_points] = Flow_right.of.x[i]/sin(Azimuth[i + N_points]);
+        Relative_Nearness[i] = flow_left.of.x[i]/sin(Azimuth[i]);
+        Relative_Nearness[i + N_points] = flow_right.of.x[i]/sin(Azimuth[i + N_points]);
         
     
         COMANV_x += cos(Azimuth[i]) * Relative_Nearness[i] + cos(Azimuth[i + N_points]) * Relative_Nearness[i + N_points];
@@ -146,11 +152,15 @@ void saccade_controller_t::update()
     
     //Transformation of the movement direction into a quaternion
     
-    quat_yaw_command = coord_conventions_quaternion_from_aero({{0.0,0.0,Movement_direction}});
+    aero_attitude_t attitude;
+    attitude.rpy[0] = 0.0f;
+    attitude.rpy[1] = 0.0f;
+    attitude.rpy[2] = Movement_direction;
+    quat_yaw_command = coord_conventions_quaternion_from_aero(attitude);
     
     //Attitude command given by the required movement direction
     
     attitude_command->quat = quat_yaw_command;
     
-    
-    }
+    return true;
+}
