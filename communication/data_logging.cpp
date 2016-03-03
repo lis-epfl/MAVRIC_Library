@@ -338,6 +338,92 @@ bool Data_logging::filename_append_int(char* output, char* filename, uint32_t nu
     return is_success;
 }
 
+
+bool Data_logging::open_new_log_file(void)
+{
+    bool create_success = true;
+
+    uint32_t i = 0;
+
+    if (log_data_)
+    {
+        do
+        {
+            // Create flag for successfully written file names
+            bool successful_filename = true;
+
+            // Add iteration number to name_n_extension_ (does not yet have extension)
+            successful_filename &= filename_append_int(name_n_extension_, file_name_, i, buffer_name_size_);
+
+            // Add extension (.txt) to name_n_extension_
+            successful_filename &= filename_append_extension(name_n_extension_, name_n_extension_, buffer_name_size_);
+
+            // Check if there wasn't enough memory allocated to name_n_extension_
+            if (!successful_filename)
+            {
+                print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
+                print_util_dbg_print_num(buffer_name_size_, 10);
+                print_util_dbg_print(" and it is ");
+                print_util_dbg_print_num(sizeof(name_n_extension_), 10);
+                print_util_dbg_print("\r\n");
+
+                create_success = false;
+            }
+
+            // If the filename was successfully created, try to open a file
+            if (successful_filename)
+            {
+                int8_t exists = console_.get_stream()->exists(name_n_extension_);
+                switch (exists)
+                {
+                    case -1:
+                        sys_status_ = false;
+                        create_success = false;
+                        break;
+
+                    case 0:
+                        sys_status_ = true;
+                        create_success = console_.get_stream()->open(name_n_extension_);
+                        break;
+
+                    case 1:
+                        sys_status_ = true;
+                        create_success = false;
+                        break;
+                }
+
+            }
+
+            if (debug_)
+            {
+                print_util_dbg_print("Open result:");
+                print_util_dbg_print_num(create_success, 10);
+                print_util_dbg_print("\r\n");
+            }
+
+            ++i;
+        }
+        while ((i < config_.max_logs) && (!create_success) && sys_status_);
+
+        if (create_success)
+        {
+            seek();
+
+            file_opened_ = true;
+
+            if (debug_)
+            {
+                print_util_dbg_print("File ");
+                print_util_dbg_print(name_n_extension_);
+                print_util_dbg_print(" opened. \r\n");
+            }
+        } //end of if fr == FR_OK
+    }//end of if (log_data_)
+
+    return create_success;
+}
+
+
 bool Data_logging::checksum_control(void)
 {
     bool new_values = false;
@@ -437,6 +523,7 @@ bool Data_logging::checksum_control(void)
     return new_values;
 }
 
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -509,90 +596,6 @@ bool Data_logging::create_new_log_file(const char* file_name__, bool continuous_
     return init_success;
 }
 
-
-bool Data_logging::open_new_log_file(void)
-{
-    bool create_success = true;
-
-    uint32_t i = 0;
-
-    if (log_data_)
-    {
-        do
-        {
-            // Create flag for successfully written file names
-            bool successful_filename = true;
-
-            // Add iteration number to name_n_extension_ (does not yet have extension)
-            successful_filename &= filename_append_int(name_n_extension_, file_name_, i, buffer_name_size_);
-
-            // Add extension (.txt) to name_n_extension_
-            successful_filename &= filename_append_extension(name_n_extension_, name_n_extension_, buffer_name_size_);
-
-            // Check if there wasn't enough memory allocated to name_n_extension_
-            if (!successful_filename)
-            {
-                print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
-                print_util_dbg_print_num(buffer_name_size_, 10);
-                print_util_dbg_print(" and it is ");
-                print_util_dbg_print_num(sizeof(name_n_extension_), 10);
-                print_util_dbg_print("\r\n");
-
-                create_success = false;
-            }
-
-            // If the filename was successfully created, try to open a file
-            if (successful_filename)
-            {
-                int8_t exists = console_.get_stream()->exists(name_n_extension_);
-                switch (exists)
-                {
-                    case -1:
-                        sys_status_ = false;
-                        create_success = false;
-                        break;
-
-                    case 0:
-                        sys_status_ = true;
-                        create_success = console_.get_stream()->open(name_n_extension_);
-                        break;
-
-                    case 1:
-                        sys_status_ = true;
-                        create_success = false;
-                        break;
-                }
-
-            }
-
-            if (debug_)
-            {
-                print_util_dbg_print("Open result:");
-                print_util_dbg_print_num(create_success, 10);
-                print_util_dbg_print("\r\n");
-            }
-
-            ++i;
-        }
-        while ((i < config_.max_logs) && (!create_success) && sys_status_);
-
-        if (create_success)
-        {
-            seek();
-
-            file_opened_ = true;
-
-            if (debug_)
-            {
-                print_util_dbg_print("File ");
-                print_util_dbg_print(name_n_extension_);
-                print_util_dbg_print(" opened. \r\n");
-            }
-        } //end of if fr == FR_OK
-    }//end of if (log_data_)
-
-    return create_success;
-}
 
 bool Data_logging::update(void)
 {
