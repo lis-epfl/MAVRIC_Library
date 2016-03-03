@@ -47,7 +47,6 @@ extern "C" {
 #endif
 
 #include "control/control_command.h"
-#include "sensing/altitude.h"
 #include "util/quaternions.h"
 #include "util/coord_conventions.h"
 

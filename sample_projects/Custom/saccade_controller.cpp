@@ -41,10 +41,6 @@
 
 #include "saccade_controller.hpp"
 
-#include <ctime>
-#include <stdlib.h>
-#include <stdio.h>
-
 extern "C"
 {
     #include "util/maths.h"
@@ -107,9 +103,9 @@ bool Saccade_controller::update()
     //Random number generation for the noise, the value of the noise is between 0 and 0.5. A new number is generated at each time.
     //ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
     
-    srand(time(NULL));
-    // float noise = 0.0f;
-    float noise = (rand() % 50)/100.;
+    // srand(time(NULL));
+    float noise = 0.0f;
+    // float noise = (rand() % 50)/100.;
     
     
     
