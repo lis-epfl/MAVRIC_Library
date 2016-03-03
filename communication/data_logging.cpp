@@ -673,6 +673,34 @@ bool Data_logging::update(void)
 }
 
 
+bool Data_logging::start(void)
+{
+    bool success = false;
+
+    if (!mav_modes_is_armed(state_.mav_mode))
+    {
+        log_data_ = true;
+        success   = true;
+    }
+
+    return success;
+}
+
+
+bool Data_logging::stop(void)
+{
+    bool success = false;
+
+    if (!mav_modes_is_armed(state_.mav_mode))
+    {
+        log_data_ = false;
+        success   = true;
+    }
+
+    return success;
+}
+
+
 bool Data_logging::add_field(uint8_t* val, const char* param_name)
 {
     bool add_success = true;
@@ -1132,28 +1160,4 @@ bool Data_logging::add_field(bool* val, const char* param_name)
     add_success = add_field((uint8_t*)val, param_name);
 
     return add_success;
-}
-
-
-mav_mode_t Data_logging::get_state_mav_mode(void)
-{
-    return state_.mav_mode;
-}
-
-
-bool Data_logging::set_log_data(uint32_t param)
-{
-    bool set_success = true;
-
-    //0 to stop, 1 to start
-    if (param == 0 || param == 1)
-    {
-        log_data_ = param;
-        return set_success;
-    }
-    else
-    {
-        set_success = false;
-        return set_success;
-    }
 }

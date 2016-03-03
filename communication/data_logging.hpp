@@ -113,6 +113,27 @@ public:
      */
     bool update();
 
+
+    /**
+     * \brief   Start logging data
+     * 
+     * \detail  Will succeed only if the MAV is disarmed
+     * 
+     * \return  Success
+     */
+    bool start(void);
+
+
+    /**
+     * \brief   Stop logging data
+     * 
+     * \detail  Will succeed only if the MAV is disarmed
+     * 
+     * \return  Success
+     */
+    bool stop(void);
+
+
     /**
      * \brief   Registers parameter to log on the SD card
      *
@@ -237,22 +258,6 @@ public:
      */
     bool add_field(bool* val, const char* param_name);
 
-
-    /**
-     * \brief   Read the mav_mode from state
-     *
-     * \return  the mav_mode from state
-     */
-     mav_mode_t get_state_mav_mode(void);
-
-     /**
-     * \brief   Set the log flag to either start or stop the logging
-     *
-     * \param   param    A flag to stop/start writing to file
-     *
-     * \return  True if succeed, false otherwise
-     */
-     bool set_log_data(uint32_t param);
 
 private:
     /**
