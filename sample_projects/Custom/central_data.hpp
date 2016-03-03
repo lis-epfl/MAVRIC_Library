@@ -77,6 +77,7 @@
 #include "control/vector_field_waypoint.hpp"
 
 #include "simulation/simulation.hpp"
+#include "saccade_controller.hpp"
 
 extern "C"
 {
@@ -86,6 +87,7 @@ extern "C"
 #include "control/stabilisation.h"
 #include "control/attitude_controller.h"
 
+    
 #include "util/print_util.h"
 #include "util/coord_conventions.h"
 }
@@ -103,9 +105,7 @@ public:
     Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, 
                 Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, 
                 Led& led, File& file_flash, Battery& battery, 
-                Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, 
-                File& file1, File& file2,
-                Serial& serial_flow_left, Serial& serial_flow_right);
+                Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Serial& serial_flow_left_, Serial& serial_flow_right_);
 
 
     /**
@@ -131,7 +131,10 @@ public:
     Servo&          servo_1;            ///< Reference to servos structure
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
-
+    flow_t         flow_left_;          ///< OF structure
+    flow_t         flow_right_;         ///< OF structure
+    
+    
     scheduler_t scheduler;
     mavlink_communication_t mavlink_communication;
 
@@ -166,10 +169,7 @@ public:
     velocity_controller_copter_t    velocity_controller;
     vector_field_waypoint_t         vector_field_waypoint;
 
-    Serial&         serial_flow_left_;
-    Serial&         serial_flow_right_;
-    flow_t flow_left_;
-    flow_t flow_right_;
+    saccade_controller_t            saccade_controller;
 
 private:
     uint8_t sysid_;     ///< System ID

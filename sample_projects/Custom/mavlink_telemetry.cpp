@@ -351,8 +351,16 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_CTRL_SRC");
     init_success = onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
 
+    //Parameters for saccade controller tuning
+    
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.gain,      "WT_FCT_GAIN");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.threshold,      "WT_FCT_THRSOLD");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.goal_direction,      "GL_DIRECTION");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.pitch,      "PITCH:CONTROL");
+    
     return init_success;
 }
+
 
 
 void flow_telemetry_send(const flow_t* flow, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);

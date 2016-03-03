@@ -53,9 +53,11 @@
 #include "control/velocity_controller_copter_default_config.h"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
 
+#include "saccade_controller.hpp"
+#include "hal/common/time_keeper.hpp"
+
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "control/navigation_default_config.h"
 #include "sensing/qfilter_default_config.h"
 #include "runtime/scheduler_default_config.h"
@@ -69,7 +71,7 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
                           Led& led, File& file_flash, Battery& battery, 
                           Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, 
                           File& file1, File& file2,
-                          Serial& serial_flow_left, Serial& serial_flow_right):
+                          Serial& serial_flow_left_, Serial& serial_flow_right_):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -86,10 +88,13 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     state(battery, state_default_config()),
     data_logging(file1),
     data_logging2(file2),
-    serial_flow_left_(serial_flow_left),
-    serial_flow_right_(serial_flow_right),
     sysid_(sysid)
-{}
+
+
+{
+    flow_init(&flow_left_, &serial_flow_left_);
+    flow_init(&flow_right_, &serial_flow_right_);
+}
 
 
 bool Central_data::init(void)
@@ -108,8 +113,7 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init PX4flow cameras
     // -------------------------------------------------------------------------
-    flow_init(&flow_left_, &serial_flow_left_);
-    flow_init(&flow_right_, &serial_flow_right_);
+    
 
 
     // -------------------------------------------------------------------------
@@ -334,7 +338,19 @@ bool Central_data::init(void)
                                &waypoint_handler,
                                &position_estimation,
                                &command.velocity);
-
+    
+   
+    //--------------------------------------------------------------------------
+    // Init saccade controller
+    //--------------------------------------------------------------------------
+    saccade_controller_init(serial_flow_left,
+                            serial_flow_right,
+                            /*pitch_input,
+                            gain_input,
+                            threshold_input,
+                            goal_direction_input*/);
+//Comment mettre les pitch, gain etc qui sont dans la télémétrie, serial_flow_left à initialiser quelque part?
+    
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);
     print_util_dbg_init_msg("[CENTRAL_DATA]", init_success);
@@ -342,5 +358,6 @@ bool Central_data::init(void)
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);
 
+    
     return init_success;
 }
