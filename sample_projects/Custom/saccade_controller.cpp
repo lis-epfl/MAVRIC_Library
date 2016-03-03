@@ -38,16 +38,17 @@
  *
  ******************************************************************************/
 
-#define _USE_MATH_DEFINES
-#include <cmath>
 
-//#define M_PI 3.14159265358979323846
 #include "saccade_controller.hpp"
+
 #include <ctime>
 #include <stdlib.h>
 #include <stdio.h>
 
-
+extern "C"
+{
+    #include "util/maths.h"
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -117,8 +118,8 @@ void saccade_controller_t::update()
     for(int i=0;i<N_points-1;++i)
     {
        
-        Azimuth[i] = (-160.875 + i * angle_between_points)* (M_PI / 180.);
-        Azimuth[i + N_points] = (19.125 + i * angle_between_points)* (M_PI / 180.);
+        Azimuth[i] = (-160.875 + i * angle_between_points)* (PI / 180.);
+        Azimuth[i + N_points] = (19.125 + i * angle_between_points)* (PI / 180.);
         
         Relative_Nearness[i] = Flow_left.of.x[i]/sin(Azimuth[i]);
         Relative_Nearness[i + N_points] = Flow_right.of.x[i]/sin(Azimuth[i + N_points]);
@@ -137,7 +138,7 @@ void saccade_controller_t::update()
     
     Weighted_function = 1 / (1 + pow(CAN/threshold , - gain));
     
-    CAD = Nearest_object_direction + M_PI/2;
+    CAD = Nearest_object_direction + PI/2;
     
     //Calculation of the movement direction (in radians)
     
