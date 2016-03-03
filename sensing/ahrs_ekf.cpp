@@ -47,8 +47,10 @@ extern "C"
 {
 #include "constants.h"
 #include "print_util.h"
-#include "delay.h"
+#include "maths.h"
+#include "vectors.h"
 #include "quaternions.h"
+#include "delay.h"
 }
 
 
@@ -62,14 +64,6 @@ Mat<3,3> R_acc;
 Mat<3,3> R_mag;
 Mat<7,7> Id;
 
-/*Mat<7,1> x_state;
-Mat<6,6> F;
-Mat<6,6> P;
-Mat<6,6> Q;
-Mat<3,3> R_acc;
-Mat<3,3> R_mag;
-Mat<6,6> Id;*/
-
 void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf, imu_t* imu);
 
 void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf);
@@ -79,9 +73,15 @@ void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf);
 
 void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf)
 {
-	P = Mat<7,7>(100.0f,true);
+	P = Mat<7,7>(10.0f,true);
+
+	P(3,3) = 10.0f;
+	P(4,4) = 10.0f;
+	P(5,5) = 10.0f;
+	P(6,6) = 10.0f;
 
 	// Initalisation of the state
+
 	x_state(0,0) = 0.0f;
 	x_state(1,0) = 0.0f;
 	x_state(2,0) = 0.0f;
@@ -90,21 +90,20 @@ void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf)
 	x_state(5,0) = 0.0f;
 	x_state(6,0) = 0.0f;
 
-	R_acc(0,0) = 0.02f;
-	R_acc(1,1) = 0.02f;
-	R_acc(2,2) = 0.02f;
+	R_acc(0,0) = 0.02f;//0.02f;
+	R_acc(1,1) = 0.02f;//0.02f;
+	R_acc(2,2) = 0.02f;//0.02f;
 
-	R_mag(0,0) = 0.05f;
-	R_mag(1,1) = 0.05f;
-	R_mag(2,2) = 0.05f;
+	R_mag(0,0) = 0.05f; //0.05f;
+	R_mag(1,1) = 0.05f; //0.05f;
+	R_mag(2,2) = 0.05f; //0.05f;
 
 	Id = Mat<7,7>(1.0f,true);
 
-	ahrs_ekf->sigma_w_sqr = 0.00000001f;//SQR(0.0001f);
-	ahrs_ekf->sigma_r_sqr = SQR(0.0001f);
-	
-}
+	ahrs_ekf->sigma_w_sqr = SQR(0.00000001f);//SQR(0.0001f);
+	ahrs_ekf->sigma_r_sqr = SQR(0.00001f);//SQR(0.0001f);
 
+}
 
 void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf)
 {
@@ -289,8 +288,12 @@ void ahrs_ekf_update_step_acc(ahrs_ekf_t* ahrs_ekf)
 	// Innovation y(k) = z(k) - h(x(k,k-1))
 	Mat<3,1> yk_acc = z_acc - h_acc_xkk1;
 
+	float acc_norm = vectors_norm(ahrs_ekf->imu->scaled_accelero.data);
+	float acc_norm_diff = maths_f_abs(1.0f-acc_norm);
+	float noise = 1.0f - maths_center_window_4(5.0f*acc_norm_diff);
+
 	// Innovation covariance S(k) = H(k) * P(k,k-1) * H(k)' + R
-	Mat<3,3> Sk_acc = (H_acc_k ^ P ^ H_acc_k.transpose()) + R_acc;
+	Mat<3,3> Sk_acc = (H_acc_k ^ P ^ H_acc_k.transpose()) + R_acc + Mat<3,3>(noise*0.1f,true);
 
 	// Kalman gain: K(k) = P(k,k-1) * H(k)' * S(k)^-1
 	Mat<3,3> Sk_inv;
@@ -326,11 +329,11 @@ void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf)
 
 	Mat<7,1> x_kk1 = x_state;
 
-	mag_global[0] = cos(63.0f/180.0f*PI);
+	/*mag_global[0] = 1.0f;
 	mag_global[1] = 0.0f;
-	mag_global[2] = sin(63.0f/180.0f*PI);
+	mag_global[2] = 0.0f;
 	
-	/*quat_t qtmp1 = quaternions_create_from_vector(ahrs_ekf->imu->scaled_compass.data); 
+	quat_t qtmp1 = quaternions_create_from_vector(ahrs_ekf->imu->scaled_compass.data); 
 	quat_t qe_mag_global = quaternions_local_to_global(ahrs_ekf->ahrs->qe, qtmp1);
 	//qe_mag_global.v[X] /= mag_norm;
 	//qe_mag_global.v[Y] /= mag_norm;
@@ -343,6 +346,10 @@ void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf)
 		z_mag(i,0) = mag_corrected_local.v[i];
 	}*/
 
+	
+	mag_global[0] = cos(63.0f/180.0f*PI);
+	mag_global[1] = 0.0f;
+	mag_global[2] = sin(63.0f/180.0f*PI);
 	Mat<3,1> z_mag;
 	for (i = 0; i < 3; ++i)
 	{
@@ -354,14 +361,6 @@ void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf)
 	h_mag_xkk1(0,0) = (1.0f - 2.0f*(x_kk1(5,0)*x_kk1(5,0) + x_kk1(6,0)*x_kk1(6,0)))*mag_global[0] + 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global[2];
 	h_mag_xkk1(1,0) = 2.0f*(x_kk1(4,0)*x_kk1(5,0) - x_kk1(3,0)*x_kk1(6,0))*mag_global[0] + 2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0))*mag_global[2];
 	h_mag_xkk1(2,0) = 2.0f*(x_kk1(4,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(5,0))*mag_global[0] + (1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0)))*mag_global[2];
-
-	print_util_dbg_print("h_mag:(x100) [");
-	print_util_dbg_print_num(h_mag_xkk1(0,0)*100,10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print_num(h_mag_xkk1(1,0)*100,10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print_num(h_mag_xkk1(2,0)*100,10);
-	print_util_dbg_print("]\r\n");//delay_ms(150);
 
 	// H_mag(k) = jacobian(h_mag(x(k,k-1)))
 	Mat<3,7> H_mag_k;
@@ -428,15 +427,32 @@ bool ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, imu_t* imu, ahrs_t* ahrs)
 
 void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
 {
-	//delay_ms(500);
 
-	ahrs_ekf_predict_step(ahrs_ekf);
+	if (ahrs_ekf->imu->imu_ready)
+	{
+		ahrs_ekf_predict_step(ahrs_ekf);
 
-	//delay_ms(500);
+		ahrs_ekf_update_step_acc(ahrs_ekf);
+		ahrs_ekf_update_step_mag(ahrs_ekf);
+	}
+	else
+	{
+		R_acc = Mat<3,3>(0.5f,true);
+		R_mag = Mat<3,3>(0.5f,true);
+		P = Mat<7,7>(1.0f,true);
+		ahrs_ekf_update_step_acc(ahrs_ekf);
+		ahrs_ekf_update_step_mag(ahrs_ekf);
+		Mat<7,1> state_previous = x_state;
 
-	ahrs_ekf_update_step_acc(ahrs_ekf);
+		ahrs_ekf_init_cpp(ahrs_ekf);
 
-	ahrs_ekf_update_step_mag(ahrs_ekf);
+		for (int i = 3; i < 7; ++i)
+		{
+			x_state(i,0) = state_previous(i,0);
+		}
+		//x_state = state_previous;
+	}
+	
 
 	uint16_t i;
 	for (i = 0; i < 7; ++i)
@@ -449,7 +465,16 @@ void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
 	ahrs_ekf->ahrs->qe.v[1] = x_state(5,0);
 	ahrs_ekf->ahrs->qe.v[2] = x_state(6,0);
 
-	ahrs_ekf->ahrs->angular_speed[X] = ahrs_ekf->imu->scaled_gyro.data[X];
-	ahrs_ekf->ahrs->angular_speed[Y] = ahrs_ekf->imu->scaled_gyro.data[Y];
-	ahrs_ekf->ahrs->angular_speed[Z] = ahrs_ekf->imu->scaled_gyro.data[Z];
+	ahrs_ekf->ahrs->angular_speed[X] = ahrs_ekf->imu->scaled_gyro.data[X];//x_state(0,0);//
+	ahrs_ekf->ahrs->angular_speed[Y] = ahrs_ekf->imu->scaled_gyro.data[Y];//x_state(1,0);//
+	ahrs_ekf->ahrs->angular_speed[Z] = ahrs_ekf->imu->scaled_gyro.data[Z];//x_state(2,0);//
+
+	uint16_t j;
+	for (i = 0; i < 7; ++i)
+	{
+		for (j = 0; j < 7; ++j)
+		{
+			ahrs_ekf->ahrs->P_vect[i*7 + j] = P(i,j);
+		}
+	}
 }

@@ -68,7 +68,6 @@ typedef struct
 
 	float sigma_w_sqr;
 	float sigma_r_sqr;
-
 }ahrs_ekf_t;
 
 
