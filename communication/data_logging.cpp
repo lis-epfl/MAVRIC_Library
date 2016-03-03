@@ -428,8 +428,8 @@ bool Data_logging::checksum_control(void)
 {
     bool new_values = false;
 
-    double cksum_a__current = 0.0;
-    double cksum_b__current = 0.0;
+    double cksum_a_current = 0.0;
+    double cksum_b_current = 0.0;
 
     float approx = 1.0f;
 
@@ -441,35 +441,35 @@ bool Data_logging::checksum_control(void)
         switch (param->data_type)
         {
             case MAV_PARAM_TYPE_UINT8:
-                cksum_a__current += *((uint8_t*)param->param);
+                cksum_a_current += *((uint8_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_INT8:
-                cksum_a__current += *((int8_t*)param->param);
+                cksum_a_current += *((int8_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_UINT16:
-                cksum_a__current += *((uint16_t*)param->param);
+                cksum_a_current += *((uint16_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_INT16:
-                cksum_a__current += *((int16_t*)param->param);
+                cksum_a_current += *((int16_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_UINT32:
-                cksum_a__current += *((uint32_t*)param->param);
+                cksum_a_current += *((uint32_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_INT32:
-                cksum_a__current += *((int32_t*)param->param);
+                cksum_a_current += *((int32_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_UINT64:
-                cksum_a__current += *((uint64_t*)param->param);
+                cksum_a_current += *((uint64_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_INT64:
-                cksum_a__current += *((int64_t*)param->param);
+                cksum_a_current += *((int64_t*)param->param);
                 break;
 
             case MAV_PARAM_TYPE_REAL32:
@@ -478,7 +478,7 @@ bool Data_logging::checksum_control(void)
                     approx *= 10;
                 }
                 approx = round((*((float*)param->param)) * approx) / approx;
-                cksum_a__current += approx;
+                cksum_a_current += approx;
                 break;
 
             case MAV_PARAM_TYPE_REAL64:
@@ -487,37 +487,37 @@ bool Data_logging::checksum_control(void)
                     approx *= 10;
                 }
                 approx = round((*((double*)param->param)) * approx) / approx;
-                cksum_a__current += approx;
+                cksum_a_current += approx;
                 break;
             default:
-                cksum_a__current = 0.0;
-                cksum_b__current = 0.0;
+                cksum_a_current = 0.0;
+                cksum_b_current = 0.0;
                 print_util_dbg_print("Data type not supported!\r\n");
                 break;
         }
-        cksum_b__current += cksum_a__current;
+        cksum_b_current += cksum_a_current;
     }
 
     //  print_util_dbg_print("cksum: (");
-    //  print_util_dbg_print_num(cksum_a__current*100,10);
+    //  print_util_dbg_print_num(cksum_a_current*100,10);
     //  print_util_dbg_print("==");
     //  print_util_dbg_print_num(cksum_a_*100,10);
     //  print_util_dbg_print(")&&(");
-    //  print_util_dbg_print_num(cksum_b__current*100,10);
+    //  print_util_dbg_print_num(cksum_b_current*100,10);
     //  print_util_dbg_print("==");
     //  print_util_dbg_print_num(cksum_b_*100,10);
     //  print_util_dbg_print(")\r\n");
 
 
-    if ((cksum_a__current == cksum_a_) && (cksum_b__current == cksum_b_))
+    if ((cksum_a_current == cksum_a_) && (cksum_b_current == cksum_b_))
     {
         new_values = false;
     }
     else
     {
         new_values = true;
-        cksum_a_ = cksum_a__current;
-        cksum_b_ = cksum_b__current;
+        cksum_a_ = cksum_a_current;
+        cksum_b_ = cksum_b_current;
     }
 
     return new_values;
