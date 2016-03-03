@@ -96,9 +96,7 @@ bool Saccade_controller::update()
     float Weighted_function = 1.0f;
  
     quat_t quat_yaw_command;
-    
-    //printf (quat[1]);
-    
+        
     
     //Random number generation for the noise, the value of the noise is between 0 and 0.5. A new number is generated at each time.
     //ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
