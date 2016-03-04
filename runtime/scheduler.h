@@ -219,8 +219,10 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 * \brief                Sort tasks by decreasing priority, then by increasing repeat period
 *
 * \param    scheduler   Pointer to scheduler
-*/
-void scheduler_sort_tasks(scheduler_t* scheduler);
+*
+* \return               True if the task was successfully sorted, False if not
+ */
+bool scheduler_sort_tasks(scheduler_t* scheduler);
 
 
 /**
