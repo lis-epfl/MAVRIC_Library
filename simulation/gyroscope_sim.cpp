@@ -49,8 +49,8 @@ extern "C"
 
 Gyroscope_sim::Gyroscope_sim(Dynamic_model& dynamic_model):
     dynamic_model_(dynamic_model),
-    rates_(std::array<float, 3> { {0.0f, 0.0f, 0.0f}}),
-temperature_(24.0f) // Nice day
+    rates_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    temperature_(24.0f) // Nice day
 {}
 
 

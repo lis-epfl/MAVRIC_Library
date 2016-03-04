@@ -53,16 +53,16 @@ Gps_sim::Gps_sim(Dynamic_model& dynamic_model):
     last_update_us_(time_keeper_get_us()),
     last_position_update_us_(time_keeper_get_us()),
     last_velocity_update_us_(time_keeper_get_us()),
-    global_position_( {0.0, 0.0, 0.0f, 0.0f}),
-horizontal_position_accuracy_(0.0f),
-vertical_position_accuracy_(0.0f),
-velocity_lf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-velocity_accuracy_(0.0f),
-heading_(0.0f),
-heading_accuracy_(0.0f),
-num_sats_(0),
-fix_(false),
-healthy_(false)
+    global_position_({0.0, 0.0, 0.0f, 0.0f}),
+    horizontal_position_accuracy_(0.0f),
+    vertical_position_accuracy_(0.0f),
+    velocity_lf_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    velocity_accuracy_(0.0f),
+    heading_(0.0f),
+    heading_accuracy_(0.0f),
+    num_sats_(0),
+    fix_(false),
+    healthy_(false)
 {}
 
 
