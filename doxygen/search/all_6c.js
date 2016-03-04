@@ -37,7 +37,7 @@ var searchData=
   ['load_5fmask',['load_mask',['../structubx__cfg__cfg__t.html#ac479907f07f496fbc9325f9c3d181576',1,'ubx_cfg_cfg_t']]],
   ['local_5fposition',['local_position',['../structposition__estimation__t.html#aecc80d11ffb852a03e7b1fc12d6483f2',1,'position_estimation_t']]],
   ['local_5fposition_5ft',['local_position_t',['../structlocal__position__t.html',1,'']]],
-  ['log_5fdata',['log_data',['../structtoggle__logging__conf__t.html#ae850ca5e02837f0f9d7f2e9c41189cde',1,'toggle_logging_conf_t::log_data()'],['../structtoggle__logging__t.html#a1aeb33e76faccf276c9c255b8eca7952',1,'toggle_logging_t::log_data()']]],
+  ['log_5fdata',['log_data',['../structdata__logging__conf__t.html#ade06ebd3d21bff7536c26cef05a601fa',1,'data_logging_conf_t']]],
   ['longitude',['longitude',['../structubx__nav__pos__llh__t.html#add75ad81a71d1afee4db2c031b8a073e',1,'ubx_nav_pos_llh_t::longitude()'],['../structgps__t.html#ad705360e2144f17add716374c5d0395f',1,'gps_t::longitude()'],['../structglobal__position__t.html#a2f4e4f669c4a6dadda04d953eaa1c6b8',1,'global_position_t::longitude()']]],
   ['loop_5fcount',['loop_count',['../structnavigation__t.html#a4efdaf9717881a27cfde89f2ac12747b',1,'navigation_t::loop_count()'],['../structfat__fs__mounting__t.html#a6593b2419c461deb6e46c3fda780333b',1,'fat_fs_mounting_t::loop_count()']]],
   ['loop_5fmon_5frxr',['loop_mon_rxr',['../structgps__t.html#ab1539bf7fc381a3bbd963713ea905fd6',1,'gps_t']]],

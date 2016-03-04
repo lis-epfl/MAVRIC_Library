@@ -94,48 +94,71 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae0be5fa8f430fb114723360e65a38453"></a><!-- doxytag: member="Data_logging::Data_logging" ref="ae0be5fa8f430fb114723360e65a38453" args="(File &amp;file)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#ae0be5fa8f430fb114723360e65a38453">Data_logging</a> (<a class="el" href="classFile.html">File</a> &amp;file)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a31806e00fbeafe81844dc75f0e49273a"></a><!-- doxytag: member="Data_logging::Data_logging" ref="a31806e00fbeafe81844dc75f0e49273a" args="(File &amp;file, State &amp;state, data_logging_conf_t config=data_logging_default_config())" -->
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a31806e00fbeafe81844dc75f0e49273a">Data_logging</a> (<a class="el" href="classFile.html">File</a> &amp;file, <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="structdata__logging__conf__t.html">data_logging_conf_t</a> config=data_logging_default_config())</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Data logging constructor. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a57eb5799ff2e2874120a114df03a60f5">create_new_log_file</a> (const char *file_name_, bool continuous_write_, const <a class="el" href="structtoggle__logging__t.html">toggle_logging_t</a> *toggle_logging_, const <a class="el" href="classState.html">State</a> *state_, uint32_t sysid)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the data logging module.  <a href="#a57eb5799ff2e2874120a114df03a60f5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a6a31693af23d1281dd30ad8a54582358">create_new_log_file</a> (const char *file_name_, bool continuous_write_, uint32_t sysid)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the data logging module.  <a href="#a6a31693af23d1281dd30ad8a54582358"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff">update</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The task to log the data to the SD card.  <a href="#a75a2133aee0ce0794119f57e911ca9ff"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">add_field</a> (uint8_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#a89d27188320f417d784f760e67ed6ae0"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a70ba28309c871f1f0ddfa274f55f2dbb">add_field</a> (int8_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#a70ba28309c871f1f0ddfa274f55f2dbb"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a48fdb5162af7d3d1dcc4a7ffff669ed9">add_field</a> (uint16_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#a48fdb5162af7d3d1dcc4a7ffff669ed9"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#ae930d9cbc93c7cb7c5f490cdac80cb02">add_field</a> (int16_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#ae930d9cbc93c7cb7c5f490cdac80cb02"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a4a71fc3f70e88f40a9dc71e604dcc73e">add_field</a> (uint32_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#a4a71fc3f70e88f40a9dc71e604dcc73e"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#aa6a956e447cecd04b93b817f6ab01683">add_field</a> (int32_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#aa6a956e447cecd04b93b817f6ab01683"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a4fc58c2eb820939fbfe4a0cdd86b8166">add_field</a> (uint64_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#a4fc58c2eb820939fbfe4a0cdd86b8166"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a0276d7dfd9180b34b5d69a6e179fc51f">add_field</a> (int64_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#a0276d7dfd9180b34b5d69a6e179fc51f"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#ab0e1dd471f637bb3cbee2204effadbb5">add_field</a> (float *val, const char *param_name, uint32_t precision)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#ab0e1dd471f637bb3cbee2204effadbb5"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a9b412b3a26759350f0c6a12567422de7">add_field</a> (double *val, const char *param_name, uint32_t precision)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#a9b412b3a26759350f0c6a12567422de7"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a505feaa0164fa7afea5a83a0337d507c">add_field</a> (bool *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card.  <a href="#a505feaa0164fa7afea5a83a0337d507c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072">start</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Start logging data.  <a href="#a37f718933dd21cf2ba27f1ca98348072"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253">stop</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop logging data.  <a href="#a8b1e84ee48d0b93c80182bf0bb648253"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classData__logging.html#a8539aea900bbabfa8a0747b8d0860e7d">add_field</a> (T *val, const char *param_name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card (integer version)  <a href="#a8539aea900bbabfa8a0747b8d0860e7d"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classData__logging.html#aefc135f9b32912383821ed2c39a4f252">add_field</a> (T *val, const char *param_name, uint32_t precision)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter to log on the SD card (float and double version)  <a href="#aefc135f9b32912383821ed2c39a4f252"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="ad179659d377415d4b7e09692d637c8cc"></a><!-- doxytag: member="Data_logging::add_field" ref="ad179659d377415d4b7e09692d637c8cc" args="(uint8_t *val, const char *param_name)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (uint8_t *val, const char *param_name)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a02567775ec175aafec891237fa9c1421"></a><!-- doxytag: member="Data_logging::add_field" ref="a02567775ec175aafec891237fa9c1421" args="(int8_t *val, const char *param_name)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (int8_t *val, const char *param_name)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="ad853dc451d43c2334fc0896c5793057d"></a><!-- doxytag: member="Data_logging::add_field" ref="ad853dc451d43c2334fc0896c5793057d" args="(uint16_t *val, const char *param_name)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (uint16_t *val, const char *param_name)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="aaaa7327edfe9e31fe8961f05125abf28"></a><!-- doxytag: member="Data_logging::add_field" ref="aaaa7327edfe9e31fe8961f05125abf28" args="(int16_t *val, const char *param_name)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (int16_t *val, const char *param_name)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a766a4f46070b1d6f33fd3ec6c7e8bc0e"></a><!-- doxytag: member="Data_logging::add_field" ref="a766a4f46070b1d6f33fd3ec6c7e8bc0e" args="(uint32_t *val, const char *param_name)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (uint32_t *val, const char *param_name)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="af81b582729e01a3f076db43d766f3a49"></a><!-- doxytag: member="Data_logging::add_field" ref="af81b582729e01a3f076db43d766f3a49" args="(int32_t *val, const char *param_name)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (int32_t *val, const char *param_name)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a3d6f99f888a23ee51bb31e74d5644c3d"></a><!-- doxytag: member="Data_logging::add_field" ref="a3d6f99f888a23ee51bb31e74d5644c3d" args="(uint64_t *val, const char *param_name)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (uint64_t *val, const char *param_name)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a443a6b9f7dbee3e276b02e5cd2469b96"></a><!-- doxytag: member="Data_logging::add_field" ref="a443a6b9f7dbee3e276b02e5cd2469b96" args="(int64_t *val, const char *param_name)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (int64_t *val, const char *param_name)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="ac4f8f553601f290a679d76077df667c0"></a><!-- doxytag: member="Data_logging::add_field" ref="ac4f8f553601f290a679d76077df667c0" args="(float *val, const char *param_name, uint32_t precision)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (float *val, const char *param_name, uint32_t precision)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a1f20aa4726f3e8901a1fde1d5d7e4a56"></a><!-- doxytag: member="Data_logging::add_field" ref="a1f20aa4726f3e8901a1fde1d5d7e4a56" args="(double *val, const char *param_name, uint32_t precision)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (double *val, const char *param_name, uint32_t precision)</td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="aa4a741be683eb9a807bd98ecc9dd2c90"></a><!-- doxytag: member="Data_logging::add_field" ref="aa4a741be683eb9a807bd98ecc9dd2c90" args="(bool *val, const char *param_name)" -->
+template&lt;&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (bool *val, const char *param_name)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The class of the log of the data. </p>
 <p>data_logging_set is implemented as pointer because its memory will be allocated during initialisation </p>
 </div><hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a89d27188320f417d784f760e67ed6ae0"></a><!-- doxytag: member="Data_logging::add_field" ref="a89d27188320f417d784f760e67ed6ae0" args="(uint8_t *val, const char *param_name)" -->
+<a class="anchor" id="a8539aea900bbabfa8a0747b8d0860e7d"></a><!-- doxytag: member="Data_logging::add_field" ref="a8539aea900bbabfa8a0747b8d0860e7d" args="(T *val, const char *param_name)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
+          <td class="memname">bool <a class="el" href="classData__logging.html#a8539aea900bbabfa8a0747b8d0860e7d">Data_logging::add_field</a> </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">T *&#160;</td>
           <td class="paramname"><em>val</em>, </td>
         </tr>
         <tr>
@@ -153,7 +176,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Registers parameter to log on the SD card. </p>
+<p>Registers parameter to log on the SD card (integer version) </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
@@ -162,50 +185,9 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classData__logging_a89d27188320f417d784f760e67ed6ae0_icgraph.png" border="0" usemap="#classData__logging_a89d27188320f417d784f760e67ed6ae0_icgraph" alt=""/></div>
-<map name="classData__logging_a89d27188320f417d784f760e67ed6ae0_icgraph" id="classData__logging_a89d27188320f417d784f760e67ed6ae0_icgraph">
-<area shape="rect" id="node3" href="classData__logging.html#a505feaa0164fa7afea5a83a0337d507c" title="Registers parameter to log on the SD card." alt="" coords="215,5,372,35"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a70ba28309c871f1f0ddfa274f55f2dbb"></a><!-- doxytag: member="Data_logging::add_field" ref="a70ba28309c871f1f0ddfa274f55f2dbb" args="(int8_t *val, const char *param_name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
-          <td>(</td>
-          <td class="paramtype">int8_t *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter to log on the SD card. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
-    <tr><td class="paramname">val</td><td>The parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>Type of parameter to add</td></tr>
   </table>
   </dd>
 </dl>
@@ -213,242 +195,16 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a48fdb5162af7d3d1dcc4a7ffff669ed9"></a><!-- doxytag: member="Data_logging::add_field" ref="a48fdb5162af7d3d1dcc4a7ffff669ed9" args="(uint16_t *val, const char *param_name)" -->
+<a class="anchor" id="aefc135f9b32912383821ed2c39a4f252"></a><!-- doxytag: member="Data_logging::add_field" ref="aefc135f9b32912383821ed2c39a4f252" args="(T *val, const char *param_name, uint32_t precision)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
+          <td class="memname">bool <a class="el" href="classData__logging.html#a8539aea900bbabfa8a0747b8d0860e7d">Data_logging::add_field</a> </td>
           <td>(</td>
-          <td class="paramtype">uint16_t *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter to log on the SD card. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
-    <tr><td class="paramname">val</td><td>The parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ae930d9cbc93c7cb7c5f490cdac80cb02"></a><!-- doxytag: member="Data_logging::add_field" ref="ae930d9cbc93c7cb7c5f490cdac80cb02" args="(int16_t *val, const char *param_name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
-          <td>(</td>
-          <td class="paramtype">int16_t *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter to log on the SD card. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
-    <tr><td class="paramname">val</td><td>The parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a4a71fc3f70e88f40a9dc71e604dcc73e"></a><!-- doxytag: member="Data_logging::add_field" ref="a4a71fc3f70e88f40a9dc71e604dcc73e" args="(uint32_t *val, const char *param_name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter to log on the SD card. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
-    <tr><td class="paramname">val</td><td>The parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="aa6a956e447cecd04b93b817f6ab01683"></a><!-- doxytag: member="Data_logging::add_field" ref="aa6a956e447cecd04b93b817f6ab01683" args="(int32_t *val, const char *param_name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
-          <td>(</td>
-          <td class="paramtype">int32_t *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter to log on the SD card. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
-    <tr><td class="paramname">val</td><td>The parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a4fc58c2eb820939fbfe4a0cdd86b8166"></a><!-- doxytag: member="Data_logging::add_field" ref="a4fc58c2eb820939fbfe4a0cdd86b8166" args="(uint64_t *val, const char *param_name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
-          <td>(</td>
-          <td class="paramtype">uint64_t *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter to log on the SD card. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
-    <tr><td class="paramname">val</td><td>The parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a0276d7dfd9180b34b5d69a6e179fc51f"></a><!-- doxytag: member="Data_logging::add_field" ref="a0276d7dfd9180b34b5d69a6e179fc51f" args="(int64_t *val, const char *param_name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
-          <td>(</td>
-          <td class="paramtype">int64_t *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter to log on the SD card. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
-    <tr><td class="paramname">val</td><td>The parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ab0e1dd471f637bb3cbee2204effadbb5"></a><!-- doxytag: member="Data_logging::add_field" ref="ab0e1dd471f637bb3cbee2204effadbb5" args="(float *val, const char *param_name, uint32_t precision)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
-          <td>(</td>
-          <td class="paramtype">float *&#160;</td>
+          <td class="paramtype">T *&#160;</td>
           <td class="paramname"><em>val</em>, </td>
         </tr>
         <tr>
@@ -472,7 +228,7 @@ Here is the caller graph for this function:</div>
 </div>
 <div class="memdoc">
 
-<p>Registers parameter to log on the SD card. </p>
+<p>Registers parameter to log on the SD card (float and double version) </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
@@ -482,48 +238,9 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a9b412b3a26759350f0c6a12567422de7"></a><!-- doxytag: member="Data_logging::add_field" ref="a9b412b3a26759350f0c6a12567422de7" args="(double *val, const char *param_name, uint32_t precision)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
-          <td>(</td>
-          <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>precision</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter to log on the SD card. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
-    <tr><td class="paramname">val</td><td>The parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter </td></tr>
-    <tr><td class="paramname">precision</td><td>The number of digit after the zero</td></tr>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>Type of parameter to add (float or double)</td></tr>
   </table>
   </dd>
 </dl>
@@ -531,59 +248,12 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a505feaa0164fa7afea5a83a0337d507c"></a><!-- doxytag: member="Data_logging::add_field" ref="a505feaa0164fa7afea5a83a0337d507c" args="(bool *val, const char *param_name)" -->
+<a class="anchor" id="a6a31693af23d1281dd30ad8a54582358"></a><!-- doxytag: member="Data_logging::create_new_log_file" ref="a6a31693af23d1281dd30ad8a54582358" args="(const char *file_name_, bool continuous_write_, uint32_t sysid)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0">Data_logging::add_field</a> </td>
-          <td>(</td>
-          <td class="paramtype">bool *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter to log on the SD card. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure </td></tr>
-    <tr><td class="paramname">val</td><td>The parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classData__logging_a505feaa0164fa7afea5a83a0337d507c_cgraph.png" border="0" usemap="#classData__logging_a505feaa0164fa7afea5a83a0337d507c_cgraph" alt=""/></div>
-<map name="classData__logging_a505feaa0164fa7afea5a83a0337d507c_cgraph" id="classData__logging_a505feaa0164fa7afea5a83a0337d507c_cgraph">
-<area shape="rect" id="node3" href="classData__logging.html#a89d27188320f417d784f760e67ed6ae0" title="Registers parameter to log on the SD card." alt="" coords="215,5,372,35"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a57eb5799ff2e2874120a114df03a60f5"></a><!-- doxytag: member="Data_logging::create_new_log_file" ref="a57eb5799ff2e2874120a114df03a60f5" args="(const char *file_name_, bool continuous_write_, const toggle_logging_t *toggle_logging_, const State *state_, uint32_t sysid)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a57eb5799ff2e2874120a114df03a60f5">Data_logging::create_new_log_file</a> </td>
+          <td class="memname">bool <a class="el" href="classData__logging.html#a6a31693af23d1281dd30ad8a54582358">Data_logging::create_new_log_file</a> </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>file_name_</em>, </td>
@@ -593,18 +263,6 @@ Here is the call graph for this function:</div>
           <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>continuous_write_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structtoggle__logging__t.html">toggle_logging_t</a> *&#160;</td>
-          <td class="paramname"><em>toggle_logging_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classState.html">State</a> *&#160;</td>
-          <td class="paramname"><em>state_</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -626,13 +284,53 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramname">file_name</td><td>The pointer to name of the file to create </td></tr>
     <tr><td class="paramname">continuous_write</td><td>Boolean to state whether writing should be continous or not </td></tr>
-    <tr><td class="paramname">toggle_logging</td><td>The pointer to toggle logging structure </td></tr>
-    <tr><td class="paramname">state</td><td>The pointer to the state structure </td></tr>
     <tr><td class="paramname">sysid</td><td>The system identification number of the MAV</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the init succeed, false otherwise </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a37f718933dd21cf2ba27f1ca98348072"></a><!-- doxytag: member="Data_logging::start" ref="a37f718933dd21cf2ba27f1ca98348072" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072">Data_logging::start</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Start logging data. </p>
+<p>Will succeed only if the MAV is disarmed</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8b1e84ee48d0b93c80182bf0bb648253"></a><!-- doxytag: member="Data_logging::stop" ref="a8b1e84ee48d0b93c80182bf0bb648253" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253">Data_logging::stop</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Stop logging data. </p>
+<p>Will succeed only if the MAV is disarmed</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
 
 </div>
 </div>
@@ -693,7 +391,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 4 2016 15:58:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 4 2016 17:17:44 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

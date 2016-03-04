@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MAV&#39;RIC: data_logging_set_t Struct Reference</title>
+<title>MAV&#39;RIC: data_logging_conf_t Struct Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -81,42 +81,34 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">data_logging_set_t Struct Reference</div>  </div>
+<div class="title">data_logging_conf_t Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="data_logging_set_t" -->
-<p>Set of data logging parameters.  
- <a href="structdata__logging__set__t.html#details">More...</a></p>
+<!-- doxytag: class="data_logging_conf_t" -->
+<p>Configuration of the data_logging element.  
+ <a href="structdata__logging__conf__t.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="data__logging_8hpp_source.html">data_logging.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for data_logging_set_t:</div>
-<div class="dyncontent">
-<div class="center"><img src="structdata__logging__set__t__coll__graph.png" border="0" usemap="#data__logging__set__t_coll__map" alt="Collaboration graph"/></div>
-<map name="data__logging__set__t_coll__map" id="data__logging__set__t_coll__map">
-<area shape="rect" id="node2" href="structdata__logging__entry__t.html" title="Structure of data logging parameter." alt="" coords="24,6,165,143"/></map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="structdata__logging__set__t-members.html">List of all members.</a></p>
+<p><a href="structdata__logging__conf__t-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a430d1a0e8d689fa86787965f9596afbd"></a><!-- doxytag: member="data_logging_set_t::data_logging_count" ref="a430d1a0e8d689fa86787965f9596afbd" args="" -->
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdata__logging__set__t.html#a430d1a0e8d689fa86787965f9596afbd">data_logging_count</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of data logging parameter effectively in the array. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9c1949cea0f9251f78eaa3b25d7e5d3e"></a><!-- doxytag: member="data_logging_set_t::max_data_logging_count" ref="a9c1949cea0f9251f78eaa3b25d7e5d3e" args="" -->
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdata__logging__set__t.html#a9c1949cea0f9251f78eaa3b25d7e5d3e">max_data_logging_count</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of logged parameters. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af586dbc6a90406011cf499b18e493471"></a><!-- doxytag: member="data_logging_set_t::max_logs" ref="af586dbc6a90406011cf499b18e493471" args="" -->
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdata__logging__set__t.html#af586dbc6a90406011cf499b18e493471">max_logs</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a03ed2a95586585cd1d06fd24159126c3"></a><!-- doxytag: member="data_logging_conf_t::max_data_logging_count" ref="a03ed2a95586585cd1d06fd24159126c3" args="" -->
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdata__logging__conf__t.html#a03ed2a95586585cd1d06fd24159126c3">max_data_logging_count</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of parameters. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adb98b78579d888f049df5f8ba3e54398"></a><!-- doxytag: member="data_logging_conf_t::max_logs" ref="adb98b78579d888f049df5f8ba3e54398" args="" -->
+uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdata__logging__conf__t.html#adb98b78579d888f049df5f8ba3e54398">max_logs</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The max number of logged files with the same name on the SD card. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6c13af70fdb4ae8d5bd2c9f5ad409b7"></a><!-- doxytag: member="data_logging_set_t::data_log" ref="ad6c13af70fdb4ae8d5bd2c9f5ad409b7" args="[]" -->
-<a class="el" href="structdata__logging__entry__t.html">data_logging_entry_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdata__logging__set__t.html#ad6c13af70fdb4ae8d5bd2c9f5ad409b7">data_log</a> []</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Data logging array, needs memory allocation. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adabb45e91cc3bdc349195914ea4efd5b"></a><!-- doxytag: member="data_logging_conf_t::debug" ref="adabb45e91cc3bdc349195914ea4efd5b" args="" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdata__logging__conf__t.html#adabb45e91cc3bdc349195914ea4efd5b">debug</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if debug messages should be printed for each param change. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade06ebd3d21bff7536c26cef05a601fa"></a><!-- doxytag: member="data_logging_conf_t::log_data" ref="ade06ebd3d21bff7536c26cef05a601fa" args="" -->
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdata__logging__conf__t.html#ade06ebd3d21bff7536c26cef05a601fa">log_data</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The initial state of writing a file. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Set of data logging parameters. </p>
-<p>Uses C99's flexible member arrays: it is required to allocate memory for this structure </p>
+<div class="textblock"><p>Configuration of the data_logging element. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/communication/<a class="el" href="data__logging_8hpp_source.html">data_logging.hpp</a></li>
 </ul>
@@ -138,7 +130,7 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 4 2016 15:58:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 4 2016 17:17:44 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

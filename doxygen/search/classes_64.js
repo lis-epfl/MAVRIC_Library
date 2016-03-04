@@ -2,8 +2,8 @@ var searchData=
 [
   ['daler_5fdc_5fmotor_5fctrl_5ft',['daler_dc_motor_ctrl_t',['../structdaler__dc__motor__ctrl__t.html',1,'']]],
   ['data_5flogging',['Data_logging',['../classData__logging.html',1,'']]],
+  ['data_5flogging_5fconf_5ft',['data_logging_conf_t',['../structdata__logging__conf__t.html',1,'']]],
   ['data_5flogging_5fentry_5ft',['data_logging_entry_t',['../structdata__logging__entry__t.html',1,'']]],
-  ['data_5flogging_5fset_5ft',['data_logging_set_t',['../structdata__logging__set__t.html',1,'']]],
   ['date_5ftime_5ft',['date_time_t',['../structdate__time__t.html',1,'']]],
   ['derotation_5fmatrix_5ft',['derotation_matrix_t',['../structderotation__matrix__t.html',1,'']]],
   ['differentiator_5ft',['differentiator_t',['../structdifferentiator__t.html',1,'']]],

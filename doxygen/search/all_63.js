@@ -65,7 +65,7 @@ var searchData=
   ['course',['course',['../structgps__t.html#a7d2135669d6fc88c68dbe3459d505a7a',1,'gps_t']]],
   ['course_5fstatus',['course_status',['../structgps__t.html#a8a7c29b5125f0faa65a6c2ce872096c5',1,'gps_t']]],
   ['covariance',['covariance',['../structkalman__filter__2D__t.html#a76ac0388a71cf26531b4229ceeff38ef',1,'kalman_filter_2D_t']]],
-  ['create_5fnew_5flog_5ffile',['create_new_log_file',['../classData__logging.html#a57eb5799ff2e2874120a114df03a60f5',1,'Data_logging']]],
+  ['create_5fnew_5flog_5ffile',['create_new_log_file',['../classData__logging.html#a6a31693af23d1281dd30ad8a54582358',1,'Data_logging']]],
   ['critical_5fbehavior',['critical_behavior',['../structnavigation__t.html#afb13d6d282d94055e2126c548e66e4c0',1,'navigation_t']]],
   ['critical_5fnext_5fstate',['critical_next_state',['../structmavlink__waypoint__handler__t.html#a703868b5a6dd0476e31449fbe64417eb',1,'mavlink_waypoint_handler_t']]],
   ['cruise_5fspeed',['cruise_speed',['../structnavigation__t.html#af634621b34d805043c825f14fc5d356f',1,'navigation_t::cruise_speed()'],['../structnavigation__config__t.html#a063638f222621d984c568986282d0df8',1,'navigation_config_t::cruise_speed()']]],

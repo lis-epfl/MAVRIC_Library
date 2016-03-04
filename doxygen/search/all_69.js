@@ -8,7 +8,7 @@ var searchData=
   ['i2c_5fdummy_5fconf_5ft',['i2c_dummy_conf_t',['../structi2c__dummy__conf__t.html',1,'']]],
   ['idle_5ftimeout',['idle_timeout',['../structgps__t.html#a647299d8c4202a580ad3123b4039ce9a',1,'gps_t']]],
   ['idle_5ftimer',['idle_timer',['../structgps__t.html#aa9688b58a0154e3e4d293dfdf09d1424',1,'gps_t']]],
-  ['imu',['Imu',['../classImu.html',1,'Imu'],['../classImu.html#a4c65a502923f48c797f7548df754ff7c',1,'Imu::Imu()'],['../structstate__machine__t.html#ad77fcafdcc58986034bba342ea496218',1,'state_machine_t::imu()'],['../classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac',1,'Central_data::imu()'],['../structqfilter__t.html#a2cf64aec409b092ce9b1b3e7d6bced66',1,'qfilter_t::imu()']]],
+  ['imu',['Imu',['../classImu.html',1,'Imu'],['../structstate__machine__t.html#ad77fcafdcc58986034bba342ea496218',1,'state_machine_t::imu()'],['../classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac',1,'Central_data::imu()'],['../structqfilter__t.html#a2cf64aec409b092ce9b1b3e7d6bced66',1,'qfilter_t::imu()'],['../classImu.html#a4c65a502923f48c797f7548df754ff7c',1,'Imu::Imu()']]],
   ['imu_5fconf_5ft',['imu_conf_t',['../structimu__conf__t.html',1,'']]],
   ['imu_5fsensor_5fconfig_5ft',['imu_sensor_config_t',['../structimu__sensor__config__t.html',1,'']]],
   ['in_5fproto_5fmask',['in_proto_mask',['../structubx__cfg__prt__t.html#ac2a34cdc2f56fb050be705242fa6fef5',1,'ubx_cfg_prt_t']]],
