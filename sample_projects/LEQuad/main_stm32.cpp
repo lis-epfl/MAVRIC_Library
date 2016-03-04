@@ -51,7 +51,6 @@ extern "C"
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-
 int main(int argc, char** argv)
 {
     uint8_t sysid = 0;
@@ -104,11 +103,11 @@ int main(int argc, char** argv)
     init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
     // // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
-    {
-        // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-        init_success = false;
-    }
+    // if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
+    // {
+    //     // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+    //     init_success = false;
+    // }
 
     init_success &= mavlink_telemetry_init(&cd);
 
@@ -117,7 +116,7 @@ int main(int argc, char** argv)
     init_success &= tasks_create_tasks(&cd);
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
-
+    time_keeper_delay_ms(100);
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
@@ -146,15 +145,18 @@ int main(int argc, char** argv)
 
     // }
 
-    board.green_led.on();
-    board.red_led.on();
+    if (init_success)
+    {
+        board.green_led.off();
+        board.red_led.off();
+    }
 
     while (1 == 1)
     {
-        gpio_toggle(GPIOC, GPIO14);
+        //gpio_toggle(GPIOC, GPIO14);
         // print_util_dbg_print("[HELLO].\r\n");
 
-        time_keeper_delay_ms(100);
+         //time_keeper_delay_ms(100);
 
         // board.red_led.toggle();
         scheduler_update(&cd.scheduler);
