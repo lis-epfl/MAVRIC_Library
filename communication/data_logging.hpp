@@ -45,7 +45,6 @@
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/state.hpp"
-#include "communication/toggle_logging.hpp"
 #include "hal/common/file.hpp"
 #include "hal/common/console.hpp"
 
@@ -62,18 +61,22 @@ typedef struct
 
 
 /**
- * \brief       Set of data logging parameters
- *
- * \details     Uses C99's flexible member arrays: it is required to
- *              allocate memory for this structure
+ * \brief       Configuration of the data_logging element
  */
 typedef struct
 {
-    uint32_t data_logging_count;                ///< Number of data logging parameter effectively in the array
-    uint32_t max_data_logging_count;            ///< Maximum number of logged parameters
+    uint32_t max_data_logging_count;            ///< Maximum number of parameters
     uint16_t max_logs;                          ///< The max number of logged files with the same name on the SD card
-    data_logging_entry_t data_log[];            ///< Data logging array, needs memory allocation
-} data_logging_set_t;
+    bool debug;                                 ///< Indicates if debug messages should be printed for each param change
+    uint32_t log_data;                          ///< The initial state of writing a file
+} data_logging_conf_t;
+
+/**
+ * \brief   Default configuration for the data_logging
+ *
+ * \return  Config structure
+ */
+static inline data_logging_conf_t data_logging_default_config();
 
 /**
  * \brief   The class of the log of the data
@@ -87,7 +90,7 @@ public:
     /**
      * \brief   Data logging constructor
      */
-    Data_logging(File& file);
+    Data_logging(File& file, State& state, data_logging_conf_t config = data_logging_default_config());
 
 
     /**
@@ -95,13 +98,11 @@ public:
      *
      * \param   file_name               The pointer to name of the file to create
      * \param   continuous_write        Boolean to state whether writing should be continous or not
-     * \param   toggle_logging          The pointer to toggle logging structure
-     * \param   state                   The pointer to the state structure
      * \param   sysid                   The system identification number of the MAV
      *
      * \return  True if the init succeed, false otherwise
      */
-    bool create_new_log_file(const char* file_name_, bool continuous_write_, const toggle_logging_t* toggle_logging_, const State* state_, uint32_t sysid);
+    bool create_new_log_file(const char* file_name_, bool continuous_write_, uint32_t sysid);
 
     /**
      * \brief   The task to log the data to the SD card
@@ -112,129 +113,56 @@ public:
      */
     bool update();
 
+
     /**
-     * \brief   Registers parameter to log on the SD card
+     * \brief   Start logging data
+     * 
+     * \detail  Will succeed only if the MAV is disarmed
+     * 
+     * \return  Success
+     */
+    bool start(void);
+
+
+    /**
+     * \brief   Stop logging data
+     * 
+     * \detail  Will succeed only if the MAV is disarmed
+     * 
+     * \return  Success
+     */
+    bool stop(void);
+
+
+    /**
+     * \brief   Registers parameter to log on the SD card (integer version)
      *
      * \param   data_logging            The pointer to the data logging structure
      * \param   val                     The parameter value
      * \param   param_name              Name of the parameter
      *
+     * \tparam  T                       Type of parameter to add
+     * 
      * \return  True if the parameter was added, false otherwise
      */
-    bool add_field(uint8_t* val, const char* param_name);
+    template<typename T>
+    bool add_field(T* val, const char* param_name);
+
 
     /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(int8_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(uint16_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(int16_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(uint32_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(int32_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(uint64_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(int64_t* val, const char* param_name);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
+     * \brief   Registers parameter to log on the SD card (float and double version)
      *
      * \param   data_logging            The pointer to the data logging structure
      * \param   val                     The parameter value
      * \param   param_name              Name of the parameter
      * \param   precision               The number of digit after the zero
      *
+     * \tparam  T                       Type of parameter to add (float or double)
+     * 
      * \return  True if the parameter was added, false otherwise
      */
-    bool add_field(float* val, const char* param_name, uint32_t precision);
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     * \param   precision               The number of digit after the zero
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(double* val, const char* param_name, uint32_t precision);
-
-
-    /**
-     * \brief   Registers parameter to log on the SD card
-     *
-     * \param   data_logging            The pointer to the data logging structure
-     * \param   val                     The parameter value
-     * \param   param_name              Name of the parameter
-     *
-     * \return  True if the parameter was added, false otherwise
-     */
-    bool add_field(bool* val, const char* param_name);
+    template<typename T>
+    bool add_field(T* val, const char* param_name, uint32_t precision);
 
 
 private:
@@ -321,32 +249,47 @@ private:
      */
     bool checksum_control(void);
 
-    bool debug;                                 ///< Indicates if debug messages should be printed for each param change
+    data_logging_conf_t config_;                ///< configuration of the data_logging module
+    
+    bool debug_;                                 ///< Indicates if debug messages should be printed for each param change
+    uint32_t data_logging_count_;               ///< Number of data logging parameter effectively in the array
+    data_logging_entry_t* data_log_;            ///< Data logging array, needs memory allocation
 
-    data_logging_set_t* data_logging_set;       ///< Pointer to a set of parameters, needs memory allocation
 
-    int buffer_name_size;                       ///< The buffer for the size of the file's name
+    int buffer_name_size_;                       ///< The buffer for the size of the file's name
 
-    char* file_name;                            ///< The file name
-    char* name_n_extension;                     ///< Stores the name of the file
+    char* file_name_;                            ///< The file name
+    char* name_n_extension_;                     ///< Stores the name of the file
 
-    bool file_init;                             ///< A flag to tell whether a file is init or not
-    bool file_opened;                           ///< A flag to tell whether a file is opened or not
-    bool sys_status;                            ///< A flag to tell whether the file system status is ok or not
+    bool file_init_;                             ///< A flag to tell whether a file is init or not
+    bool file_opened_;                           ///< A flag to tell whether a file is opened or not
+    bool sys_status_;                            ///< A flag to tell whether the file system status is ok or not
 
-    bool continuous_write;                      ///< A flag to tell whether we write continuously to the file or not
+    bool continuous_write_;                      ///< A flag to tell whether we write continuously to the file or not
+    uint32_t log_data_;                          ///< A flag to stop/start writing to file
 
-    uint32_t logging_time;                      ///< The time that we've passed logging since the last f_close
+    uint32_t logging_time_;                      ///< The time that we've passed logging since the last f_close
 
-    double cksum_a;                             ///< Checksum to see if the onboard parameters have changed values
-    double cksum_b;                             ///< Checksum to see if the onboard parameters have changed values
+    double cksum_a_;                             ///< Checksum to see if the onboard parameters have changed values
+    double cksum_b_;                             ///< Checksum to see if the onboard parameters have changed values
 
-    uint32_t sys_id;                            ///< the system ID
+    uint32_t sys_id_;                            ///< the system ID
 
-    Console<File> console;                      ///< The console containing the file to write data to
+    Console<File> console_;                      ///< The console containing the file to write data to
 
-    const State* state;                         ///< The pointer to the state structure
-    const toggle_logging_t* toggle_logging;     ///< The pointer to the toggle logging structure
+    State& state_;                              ///< The pointer to the state structure
+};
+
+static inline data_logging_conf_t data_logging_default_config()
+{
+    data_logging_conf_t conf    = {};
+
+    conf.max_data_logging_count = 50;
+    conf.max_logs               = 500;
+    conf.debug                  = true;
+    conf.log_data               = 0;  // 1: log data, 0: no log data
+
+    return conf;
 };
 
 #endif /* DATA_LOGGING_H__ */

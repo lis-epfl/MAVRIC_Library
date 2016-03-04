@@ -41,13 +41,11 @@
 
 #include "sample_projects/LEQuad/central_data.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
-#include "communication/toggle_logging_default_config.hpp"
 #include "communication/mavlink_communication_default_config.hpp"
 
 #include "sensing/position_estimation_default_config.hpp"
 #include "communication/remote_default_config.hpp"
 #include "control/manual_control_default_config.hpp"
-#include "communication/toggle_logging.hpp"
 #include "control/attitude_controller_default_config.h"
 #include "control/velocity_controller_copter_default_config.h"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
@@ -78,8 +76,8 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     servo_2(servo_2),
     servo_3(servo_3),
     state(battery, state_default_config()),
-    data_logging(file1),
-    data_logging2(file2),
+    data_logging(file1, state, data_logging_default_config()),
+    data_logging2(file2, state, data_logging_default_config()),
     sysid_(sysid)
 {}
 
@@ -278,16 +276,6 @@ bool Central_data::init(void)
     print_util_dbg_init_msg("[MANUAL CTRL]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
-
-    // -------------------------------------------------------------------------
-    // Init data logging
-    // -------------------------------------------------------------------------
-    ret = toggle_logging_init(&toggle_logging,
-                              toggle_logging_default_config(),
-                              &state);
-
-    print_util_dbg_init_msg("[TOGGLE LOGGING]", ret);
-    init_success &= ret;
 
     //--------------------------------------------------------------------------
     // Init attitude controller

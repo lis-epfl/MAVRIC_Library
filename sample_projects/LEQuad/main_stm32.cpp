@@ -116,34 +116,34 @@ int main(int argc, char** argv)
     init_success &= tasks_create_tasks(&cd);
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
-    time_keeper_delay_ms(100);
-    // -------------------------------------------------------------------------
-    // Main loop
-    // -------------------------------------------------------------------------
 
-    // static uint8_t step = 0;
-    // while(1)
-    // {
-    //  step += 1;
+    // // -------------------------------------------------------------------------
+    // // Main loop
+    // // -------------------------------------------------------------------------
 
-    //  if(step%2 == 0)
-    //  {
-    //      // board.red_led.toggle();
-    //  }
+    // // static uint8_t step = 0;
+    // // while(1)
+    // // {
+    // //  step += 1;
 
-    //  // gpio_toggle(GPIOA, GPIO2);
-    //  // usart_send_blocking(UART4, step);
-    //  // usart_send(UART4, step);
-    //  // if( step == 80 )
-    //  // {
-    //  //  step = 1;
-    //  //  usart_send(UART4, '\r');
-    //  //  usart_send(UART4, '\n');
-    //  // }
-    //  // usart_enable_tx_interrupt(USART2);
-    //  board.serial_1.write(&step);
+    // //  if(step%2 == 0)
+    // //  {
+    // //      // board.red_led.toggle();
+    // //  }
 
-    // }
+    // //  // gpio_toggle(GPIOA, GPIO2);
+    // //  // usart_send_blocking(UART4, step);
+    // //  // usart_send(UART4, step);
+    // //  // if( step == 80 )
+    // //  // {
+    // //  //  step = 1;
+    // //  //  usart_send(UART4, '\r');
+    // //  //  usart_send(UART4, '\n');
+    // //  // }
+    // //  // usart_enable_tx_interrupt(USART2);
+    // //  board.serial_1.write(&step);
+
+    // // }
 
     if (init_success)
     {

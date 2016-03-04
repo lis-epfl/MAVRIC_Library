@@ -49,7 +49,6 @@
 Gpio_stm32::Gpio_stm32(gpio_stm32_conf_t config)
 {
     config_ = config;
-    configure(config_.dir, config_.pull);
 }
 
 

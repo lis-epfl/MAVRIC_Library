@@ -30,31 +30,33 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file toggle_logging_default_config.hpp
+ * \file data_logging_telemetry.hpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *
- * \brief Default configuration for the data_logging module
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the data_logging module
  *
  ******************************************************************************/
 
 
-#ifndef TOGGLE_LOGGING_DEFAULT_CONFIG_H_
-#define TOGGLE_LOGGING_DEFAULT_CONFIG_H_
+#ifndef DATA_LOGGING_TELEMETRY_HPP_
+#define DATA_LOGGING_TELEMETRY_HPP_
 
-#include "communication/toggle_logging.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "communication/data_logging.hpp"
 
-static inline toggle_logging_conf_t toggle_logging_default_config()
-{
-    toggle_logging_conf_t conf    = {};
 
-    conf.debug                  = true;
-    conf.max_data_logging_count = 50;
-    conf.max_logs               = 500;
-    conf.log_data               = 0;  // 1: log data, 0: no log data
+/**
+ * \brief   Initialize the call_back to start & stop logging
+ *
+ * \param   data_logging          The pointer to the data logging structure
+ * \param   message_handler         The pointer to the MAVLink message handler
+ *
+ * \return  True if the init succeed, false otherwise
+ */
+bool data_logging_telemetry_init(Data_logging* data_logging, mavlink_message_handler_t* message_handler);
 
-    return conf;
-};
-
-#endif // TOGGLE_LOGGING_DEFAULT_CONFIG_H_
+#endif /* data_logging_TELEMETRY_HPP_ */
