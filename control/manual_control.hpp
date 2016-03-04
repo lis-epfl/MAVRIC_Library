@@ -55,7 +55,7 @@ extern "C"
 /**
  * \brief   The source mode enum
  */
-typedef enum
+typedef enum : int32_t
 {
     MODE_SOURCE_REMOTE      = 0,
     MODE_SOURCE_GND_STATION = 1,
@@ -66,7 +66,7 @@ typedef enum
 /**
  * \brief   Control source
  */
-typedef enum
+typedef enum : int32_t
 {
     CONTROL_SOURCE_REMOTE       = 0,
     CONTROL_SOURCE_NONE         = 1,

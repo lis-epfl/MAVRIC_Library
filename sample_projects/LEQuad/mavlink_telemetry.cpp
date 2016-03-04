@@ -198,10 +198,10 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     //stabiliser_t* position_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.position_stabiliser;
 
     // System ID
-    init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*)&central_data->mavlink_communication.mavlink_stream.sysid, "ID_SYSID");
+    init_success &= onboard_parameters_add_parameter_uint32(onboard_parameters, &central_data->mavlink_communication.mavlink_stream.sysid, "ID_SYSID");
 
     // Simulation mode
-    init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*)&central_data->state.simulation_mode, "SIM_MODE");
+    init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, &central_data->state.simulation_mode, "SIM_MODE");
 
     // Test attitude controller gains
     //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.p_gain_angle[ROLL],    "GAIN_A_ROLL"        );
@@ -345,8 +345,9 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 
 //  init_success &= onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&central_data->state_machine.low_battery_counter            , "SAFE_COUNT"     );
 
+    /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
     init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_CTRL_SRC");
-    init_success = onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
+    init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
 
     return init_success;
 }
@@ -402,7 +403,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&sonar_telemetry_send,                            &central_data->sonar_i2cxl.data,            MAVLINK_MSG_ID_DISTANCE_SENSOR  );// ID 132
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
 
-    scheduler_sort_tasks(&central_data->mavlink_communication.scheduler);
+    init_success &= scheduler_sort_tasks(&central_data->mavlink_communication.scheduler);
 
     print_util_dbg_init_msg("[TELEMETRY]", init_success);
 
