@@ -195,10 +195,10 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     //stabiliser_t* position_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.position_stabiliser;
 
     // System ID
-    init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*)&central_data->mavlink_communication.mavlink_stream.sysid, "ID_SYSID");
+    init_success &= onboard_parameters_add_parameter_uint32(onboard_parameters, &central_data->mavlink_communication.mavlink_stream.sysid, "ID_SYSID");
 
     // Simulation mode
-    init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*)&central_data->state.simulation_mode, "SIM_MODE");
+    init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, &central_data->state.simulation_mode, "SIM_MODE");
 
     // Test attitude controller gains
     //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.p_gain_angle[ROLL],    "GAINA_ROLL"        );
