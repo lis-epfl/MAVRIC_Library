@@ -5258,15 +5258,15 @@ Gps_ublox::Gps_ublox(Serial& serial):
     last_position_update_us_(time_keeper_get_us()),
     last_velocity_update_us_(time_keeper_get_us()),
     position_gf_( {0.0, 0.0, 0.0f, 0.0f}),
-              horizontal_position_accuracy_(0.0f),
-              vertical_position_accuracy_(0.0f),
-velocity_lf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-velocity_accuracy_(0.0f),
-heading_(0.0f),
-heading_accuracy_(0.0f),
-num_sats_(0),
-fix_(false),
-healthy_(false)
+    horizontal_position_accuracy_(0.0f),
+    vertical_position_accuracy_(0.0f),
+    velocity_lf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
+    velocity_accuracy_(0.0f),
+    heading_(0.0f),
+    heading_accuracy_(0.0f),
+    num_sats_(0),
+    fix_(false),
+    healthy_(false)
 {
     gps_ublox_init(&gps, &serial_);
 }
