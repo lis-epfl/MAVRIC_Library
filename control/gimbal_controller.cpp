@@ -61,8 +61,8 @@ void Gimbal_controller::gimbal_controller_mix_to_servos(void)
         pwm_output[i] = attitude_output_.rpy[i] / 90.0f;
     }
 
-    servo_pitch_.write(pwm_output[1], true);
-    servo_yaw_.write(pwm_output[2], true);
+    servo_pitch_.write(pwm_output[1], true); //[-1;1]
+    servo_yaw_.write(pwm_output[2], true);   //[-1;1]
 }
 
 //------------------------------------------------------------------------------

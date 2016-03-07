@@ -204,6 +204,14 @@ mav_mode_t joystick_get_mode(joystick_t* joystick, const mav_mode_t current_mode
  */
 void joystick_get_velocity_vector(const joystick_t* joystick, control_command_t* controls);
 
+/**
+ * \brief   Parse joystick to velocity vector command - version 2 - used for symbiotic drone project
+ *
+ * \param   joystick        The pointer to the joystick structure
+ * \param   controls        The pointer to the control structure
+ */
+void joystick_get_velocity_vector_version2(const joystick_t* joystick, control_command_t* controls);
+
 
 /**
  * \brief   Parse joystick to attitude command
