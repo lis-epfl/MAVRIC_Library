@@ -50,7 +50,7 @@
 #define _LED_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
 #include <stdint.h>
@@ -186,7 +186,7 @@ extern uint8_t LED_Get_Intensity(uint32_t led);
 extern void LED_Set_Intensity(uint32_t leds, uint8_t intensity);
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
 #endif  // _LED_H_

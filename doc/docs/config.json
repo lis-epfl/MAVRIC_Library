@@ -1,0 +1,30 @@
+{
+    "title": "MAV'RIC Library",
+    "tagline": "Highway to the Danger Zone",
+    "author": "MAV'RIC Team",
+    "image": "f14_mavric.jpg",
+    "ignore": {
+            "files": ["Work_In_Progress.md"],
+            "folders": ["99_Not_Ready"]
+    },
+    "live": {
+        "inherit_index": true,
+        "clean_urls": true
+    },
+    "html": {
+        "theme": "daux-navy",
+        "breadcrumbs": true,
+        "breadcrumb_separator": "Chevrons",
+        "date_modified": true,
+        "float": false,
+        "toggle_code": false,
+
+        "repo": "lis-epfl/MAVRIC_Library",
+        "links": {
+            "Download": "https://github.com/lis-epfl/MAVRIC_Library/archive/master.zip",
+            "GitHub Repo": "https://github.com/lis-epfl/MAVRIC_Library",
+            "Help/Support/Bugs": "https://github.com/lis-epfl/MAVRIC_Library/issues",
+            "Doxygen Documentation": "http://lis-epfl.github.io/MAVRIC_Library/doxygen/classes.html"
+        }
+    }
+}

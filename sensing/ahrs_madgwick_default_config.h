@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * Copyright (c) 2009-2016, MAV'RIC Development Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -45,7 +45,7 @@
 
 
 
-#include "ahrs_madgwick.h"
+#include "sensing/ahrs_madgwick.h"
 
 
 static inline ahrs_madgwick_conf_t ahrs_madgwick_default_config()

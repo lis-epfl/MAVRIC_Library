@@ -1,0 +1,30 @@
+- Make sure that QGroundControl is closed
+- Connect the Joystick to an USB port
+- Open QGroundControl
+- Go to File->Settings->Controllers.
+- Set the enable controller box
+- Choose your Joystick in the list
+- Click on Enable Joysticks
+- Link in the upper tabs of the joystick window,  the Joystick axes with the axes of control:
+ - Axis 0 : Roll
+ - Axis 1 : Pitch
+ - Axis 2 : Throttle
+ - Axis 3 : Yaw
+- Control the axis values:
+ - Roll: negative when titling left, positive when titling right
+ - Pitch: negative when pitching down (pushing forward the joystick), positive when pulling
+ - Throttle : negative when no gaz, positive when full gaz
+ - Yaw : negative when turning left, positive when turning right
+ - Make sure that on the left hand side, the button are not assigned to any specific instructions. The instructions are done in the software side. 
+- Click Close
+- Deactivate the remote: 
+ - in the onboard parameters, set Remote_Active parameter to 0
+ - in the onboard parameters, set Remote_Src_Mode parameter to 3
+- Joystick buttons are as follow (no need to do anything on QGC):
+ - Button 1: arm/disarm
+ - Button 3: attitude control
+ - Button 5: velocity control
+ - Button 2: position hold control
+ - Button 6: gps navigation control
+- Play with the Joystick
+- N.B.: the joystick inputs are sent by QGroundControl ONLY in simulation mode or if the MAV_MODE has the manual flag as well as the safety flag that are enabled (i.e. mode starting by 11******). 

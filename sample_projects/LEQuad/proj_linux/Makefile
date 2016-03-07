@@ -8,6 +8,15 @@
 PROJ_NAME=LEQuad_mavrinux
 
 # ------------------------------------------------------------------------------
+# PROJECT FOLDER
+# ------------------------------------------------------------------------------
+# Project source files (*.c and *.cpp)
+LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
+LIB_SRCS += sample_projects/LEQuad/central_data.cpp
+LIB_SRCS += sample_projects/LEQuad/tasks.cpp
+LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
+
+# ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
 # ------------------------------------------------------------------------------
 # MAVRIC_Library code directory
@@ -15,130 +24,12 @@ MAVRIC_LIB=../../../
 
 # Include folders for Library
 LIB_INC += -I$(MAVRIC_LIB)
-LIB_INC += -I$(MAVRIC_LIB)/boards
-LIB_INC += -I$(MAVRIC_LIB)/communication
-LIB_INC += -I$(MAVRIC_LIB)/control
-LIB_INC += -I$(MAVRIC_LIB)/drivers
-LIB_INC += -I$(MAVRIC_LIB)/hal/common
-LIB_INC += -I$(MAVRIC_LIB)/hal/linux
-LIB_INC += -I$(MAVRIC_LIB)/hal/dummy
-LIB_INC += -I$(MAVRIC_LIB)/hal
-LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/common
-LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/mavric
-LIB_INC += -I$(MAVRIC_LIB)/libs/FatFs/src
-LIB_INC += -I$(MAVRIC_LIB)/libs
-LIB_INC += -I$(MAVRIC_LIB)/sensing
-LIB_INC += -I$(MAVRIC_LIB)/simulation
-LIB_INC += -I$(MAVRIC_LIB)/runtime
-LIB_INC += -I$(MAVRIC_LIB)/util
 
-# Library source files (*.c and *.cpp)
-LIB_SRCS += util/coord_conventions.c
-LIB_SRCS += util/kalman.c
-LIB_SRCS += util/linear_algebra.c
-LIB_SRCS += util/print_util.c
-LIB_SRCS += util/quick_trig.c
-LIB_SRCS += util/string_util.c
-
-LIB_SRCS += boards/mavrinux.cpp
-
-LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
-LIB_SRCS += sample_projects/LEQuad/central_data.cpp
-LIB_SRCS += sample_projects/LEQuad/tasks.cpp
-LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
-
-LIB_SRCS += drivers/battery.c                    
-LIB_SRCS += drivers/barometer.cpp          
-LIB_SRCS += drivers/barometer_telemetry.cpp          
-LIB_SRCS += drivers/bmp085.cpp                    
-LIB_SRCS += drivers/flow.cpp                  
-LIB_SRCS += drivers/gps_telemetry.cpp       
-LIB_SRCS += drivers/gps_ublox.cpp
-LIB_SRCS += drivers/hmc5883l.cpp             
-LIB_SRCS += drivers/lsm330dlc.cpp            
-LIB_SRCS += drivers/servo.cpp                              
-LIB_SRCS += drivers/servos_telemetry.cpp
-LIB_SRCS += drivers/sonar_i2cxl.cpp
-LIB_SRCS += drivers/sonar_telemetry.cpp
-LIB_SRCS += drivers/spektrum_satellite.cpp
-
-LIB_SRCS += control/adaptive_parameter.c          
-LIB_SRCS += control/attitude_controller.c         
-LIB_SRCS += control/attitude_controller_p2.c      
-LIB_SRCS += control/attitude_error_estimator.c    
-LIB_SRCS += control/joystick.cpp         
-LIB_SRCS += control/joystick_telemetry.cpp  
-LIB_SRCS += control/manual_control.cpp
-LIB_SRCS += control/manual_control_telemetry.cpp
-LIB_SRCS += control/navigation.c                   
-LIB_SRCS += control/pid_controller.c               
-LIB_SRCS += control/servos_mix_quadcopter_cross.c  
-LIB_SRCS += control/servos_mix_quadcopter_diag.c   
-LIB_SRCS += control/stabilisation.c
-LIB_SRCS += control/stabilisation_copter.c
-LIB_SRCS += control/stabilisation_telemetry.c
-LIB_SRCS += control/vector_field_waypoint.c
-LIB_SRCS += control/velocity_controller_copter.c
-
-LIB_SRCS += sensing/ahrs.c            
-LIB_SRCS += sensing/ahrs_telemetry.c  
-LIB_SRCS += sensing/imu.c             
-LIB_SRCS += sensing/imu_telemetry.c                  
-LIB_SRCS += sensing/position_estimation.c            
-LIB_SRCS += sensing/position_estimation_telemetry.c
-LIB_SRCS += sensing/qfilter.c
-
-LIB_SRCS += runtime/scheduler.cpp  
-LIB_SRCS += runtime/scheduler_telemetry.c
-                
-LIB_SRCS += communication/data_logging.c            
-LIB_SRCS += communication/hud_telemetry.c           
-LIB_SRCS += communication/mavlink_communication.c     
-LIB_SRCS += communication/mavlink_message_handler.c   
-LIB_SRCS += communication/mavlink_stream.cpp            
-LIB_SRCS += communication/mavlink_waypoint_handler.c  
-LIB_SRCS += communication/onboard_parameters.c
-LIB_SRCS += communication/remote.c
-LIB_SRCS += communication/remote_telemetry.c
-LIB_SRCS += communication/state.c
-
-LIB_SRCS += communication/state_machine.c
-LIB_SRCS += communication/state_telemetry.c
-
-LIB_SRCS += simulation/simulation.cpp
-LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
-LIB_SRCS += simulation/accelerometer_sim.cpp
-LIB_SRCS += simulation/gyroscope_sim.cpp
-LIB_SRCS += simulation/magnetometer_sim.cpp
-LIB_SRCS += simulation/barometer_sim.cpp
-LIB_SRCS += simulation/sonar_sim.cpp
-LIB_SRCS += simulation/gps_sim.cpp
-
-LIB_SRCS += libs/FatFs/src/ff.c  
-LIB_SRCS += libs/FatFs/src/diskio.c
-LIB_SRCS += libs/FatFs/src/option/syscall.c
-LIB_SRCS += libs/FatFs/src/option/unicode.c
-LIB_SRCS += libs/FatFs/src/option/ccsbcs.c
-
-LIB_SRCS += hal/dummy/FatFs/atadrive.c
-LIB_SRCS += hal/dummy/FatFs/sdcard.c
-LIB_SRCS += hal/dummy/FatFs/usbdisk.c
-LIB_SRCS += hal/dummy/adc_dummy.cpp
-LIB_SRCS += hal/dummy/i2c_dummy.cpp
-LIB_SRCS += hal/dummy/gpio_dummy.cpp
-
-LIB_SRCS += hal/common/fat_fs_mounting.cpp
-LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
-LIB_SRCS += hal/common/dbg.cpp
-LIB_SRCS += hal/common/led_gpio.cpp
-LIB_SRCS += hal/common/file.cpp
-LIB_SRCS += hal/common/serial.cpp
-
-LIB_SRCS += hal/linux/file_linux.cpp
-LIB_SRCS += hal/linux/serial_udp.cpp
-LIB_SRCS += hal/linux/time_keeper.c
-LIB_SRCS += hal/linux/serial_linux_io.cpp
-
+# add library source files
+include ${MAVRIC_LIB}rules_common.mk
+#include ${MAVRIC_LIB}rules_libs.mk
+include ${MAVRIC_LIB}rules_dummy.mk
+include ${MAVRIC_LIB}rules_linux.mk
 
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
@@ -146,7 +37,7 @@ LIB_SRCS += hal/linux/serial_linux_io.cpp
 # CC = gcc
 OBJCOPY = objcopy
 
-CFLAGS  = -g -O2 -Wall -std=gnu99
+CFLAGS += -g -O2 -Wall -std=gnu99 -MMD -MP
 
 # Include files from MAVRIC library and source folder
 CFLAGS += -I.
@@ -158,7 +49,7 @@ CFLAGS += ${LIB_INC}
 # CXX = g++
 OBJCOPY = objcopy
 
-CXXFLAGS  = -g -O2 -Wall -std=c++11
+CXXFLAGS += -g -O2 -Wall -std=c++11 -MMD -MP
 
 # Include files from MAVRIC library and source folder
 CXXFLAGS += -I.
@@ -180,6 +71,13 @@ BUILD_DIR = build
 
 # Get the names of the .o files from .c and .cpp files
 OBJS += $(addprefix ${BUILD_DIR}/, $(addsuffix .o, $(basename $(LIB_SRCS))))
+
+# ------------------------------------------------------------------------------
+# DEPENDENCY FILES (*.d)
+# ------------------------------------------------------------------------------
+DEPS += $(addsuffix .d, $(basename $(OBJS)))	# create list of dependency files
+-include $(DEPS)								# include existing dependency files
+
 
 # ------------------------------------------------------------------------------
 # COMMANDS FOR FANCY OUTPUT
@@ -232,8 +130,10 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 
 .PHONY: clean rebuild
 clean:
-	@rm -f $(OBJS)
+	@rm -f $(OBJS) $(DEPS)
 	@rm -rf build/
 	@$(PRINT_OK)
 
 rebuild: clean proj
+
+.DEFAULT_GOAL := all
