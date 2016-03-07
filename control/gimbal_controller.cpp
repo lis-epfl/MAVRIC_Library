@@ -55,7 +55,7 @@ void Gimbal_controller::gimbal_controller_mix_to_servos(void)
     float pwm_output[3];
 
     //pwm range = [-1;1] which is set to corresponds to angles [-90°;90°]
-    for (int i = 1; i < 3; i++)
+    for (int i = 0; i < 3; i++)
     {
     	//print_util_dbg_putfloat(attitude_output_.rpy[i],3);
         pwm_output[i] = attitude_output_.rpy[i] / 90.0f;
@@ -84,21 +84,20 @@ Gimbal_controller::Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const
 bool Gimbal_controller::update(void)
 {
 
-    //Set directly the desired input as output commands ensuring that they are in the allowed range (no controller here)
+	attitude_command_t att_user, att_mimick_plane;
+	att_user = attitude_command_desired_;
+
+
+
+    //Clip the desired value and set them as commands value (no controller here)
     for (int i = 0; i < 3; i++)
     {
         if (attitude_command_desired_.rpy[i] < attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i])
-        {
             attitude_output_.rpy[i] = attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i];
-        }
         else if (attitude_command_desired_.rpy[i] > attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i])
-        {
             attitude_output_.rpy[i] = attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i];
-        }
         else
-        {
             attitude_output_.rpy[i] = attitude_command_desired_.rpy[i];
-        }
     }
 
     // send attitude output to servos (pwm)

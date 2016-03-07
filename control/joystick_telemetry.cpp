@@ -83,7 +83,6 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
     	//print_util_dbg_print("----------\r\n");
 
         joystick->channels.x = packet.x / 1000.0f;
-        print_util_dbg_print_num(joystick->channels.x,10);
         joystick->channels.y = packet.y / 1000.0f;
         joystick->channels.z = packet.z / 1000.0f;
         joystick->channels.r = packet.r / 1000.0f;

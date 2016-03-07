@@ -356,6 +356,22 @@ static void position_estimation_fence_control(position_estimation_t* pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+float position_estimation_get_xy_distance_from_fence_origin(position_estimation_t* pos_est)
+{
+	float dist_xy_sqr;
+	dist_xy_sqr = SQR(pos_est->local_position.pos[X] - pos_est->fence_position.pos[X]) + SQR(pos_est->local_position.pos[Y] - pos_est->fence_position.pos[Y]);
+
+	return maths_fast_sqrt(dist_xy_sqr);
+}
+
+float position_estimation_get_z_distance_from_fence_origin(position_estimation_t* pos_est)
+{
+	float dist_z;
+	dist_z = pos_est->local_position.pos[Z] - pos_est->fence_position.pos[Z];
+
+	return dist_z;
+}
+
 bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, State* state, Barometer* barometer, const Sonar* sonar, const Gps* gps, const ahrs_t* ahrs)
 {
     bool init_success = true;

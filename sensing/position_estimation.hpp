@@ -153,4 +153,23 @@ void position_estimation_update(position_estimation_t* pos_est);
  */
 void position_estimation_set_new_fence_origin(position_estimation_t* pos_est);
 
+/**
+ * \brief   Get the square distance in the xy plan from the fence origin
+ *
+ * \param   pos_est                 The pointer to the position estimation structure
+ *
+ * \return  Square distance from the fence origin [m^2]
+ */
+float position_estimation_get_xy_distance_from_fence_origin(position_estimation_t* pos_est);
+
+/**
+ * \brief   Get the square distance on the z axis from the fence origin
+ *
+ * \param   pos_est                 The pointer to the position estimation structure
+ *
+ * \return  Square distance from the fence origin [m^2]
+ */
+float position_estimation_get_z_distance_from_fence_origin(position_estimation_t* pos_est);
+
+
 #endif // POSITION_ESTIMATION_H__

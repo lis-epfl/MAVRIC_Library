@@ -222,10 +222,9 @@ void  sensors_set_telemetry_send(Central_data *central_data, const mavlink_strea
 			semilocal_vel[X],
 			semilocal_vel[Y],
 			semilocal_vel[Z],
-			0.0f,
-			0.0f,
-			0.0f,
-			0.0f,
-			0);
-
+			central_data->gimbal_controller.attitude_output_.rpy[0],
+			central_data->gimbal_controller.attitude_output_.rpy[1],
+			central_data->gimbal_controller.attitude_output_.rpy[2],
+			0.0f, //float
+			0); //uint16_t
 }
