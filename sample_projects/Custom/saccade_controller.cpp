@@ -75,16 +75,16 @@ bool Saccade_controller::update()
     
     float  Azimuth [2 * N_points];              //Table in which azimuthal angle of all points are stored
     float  Relative_Nearness [2 * N_points];    //Table in which azimuthal angle of all points are stored
-    float COMANV_x = 0.0f;                      //x component of the COMANV
-    float COMANV_y = 0.0f;                      //y component of the COMANV
+    float COMANV_x = 1.0f;                      //x component of the COMANV
+    float COMANV_y = 1.0f;                      //y component of the COMANV
     
     
     // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
     
     float angle_between_points = (140.625 / N_points);
+   
     
-    
-    /* Intermediate variables : CAN is the norm of the COMANV vector, Nearest object direction gives the angle in radians to the nearest object, CAD gives the collision avoidance direction, opposite to the Nearest object direction. */
+    // Intermediate variables : CAN is the norm of the COMANV vector, Nearest object direction gives the angle in radians to the nearest object, CAD gives the collision avoidance direction, opposite to the Nearest object direction.
     
     float CAN = 0.0f;
     float Nearest_object_direction = 0.0f;
@@ -96,7 +96,7 @@ bool Saccade_controller::update()
     float Weighted_function = 1.0f;
  
     quat_t quat_yaw_command;
-        
+   
     
     //Random number generation for the noise, the value of the noise is between 0 and 0.5. A new number is generated at each time.
     //ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
@@ -109,11 +109,11 @@ bool Saccade_controller::update()
     
     //Update the optic flow vectors
     
-    flow_update(&flow_left);
-    flow_update(&flow_right);
+    /*flow_update(&flow_left);
+    flow_update(&flow_right);*/
     
-    /*Calculate for both left and right the sum of the relative nearnesses which are each given by
-     RN = OF/sin(angle), then calculate the COMANV's x and y components, to then calculate CAN and NOD. */
+    //Calculate for both left and right the sum of the relative nearnesses which are each given by
+     // RN = OF/sin(angle), then calculate the COMANV's x and y components, to then calculate CAN and NOD.
     
     for(int i=0;i<N_points-1;++i)
     {
@@ -130,7 +130,9 @@ bool Saccade_controller::update()
 
     }
     
-    //Calculation of the CAN and CAD
+    
+    
+   //Calculation of the CAN and CAD
     
     CAN = sqrt(pow(COMANV_x , 2) + pow(COMANV_y , 2));
 
@@ -150,6 +152,7 @@ bool Saccade_controller::update()
     attitude.rpy[0] = 0.0f;
     attitude.rpy[1] = 0.0f;
     attitude.rpy[2] = Movement_direction;
+    //ICI IL Y A UN PROBLEME
     quat_yaw_command = coord_conventions_quaternion_from_aero(attitude);
     
     //Attitude command given by the required movement direction
