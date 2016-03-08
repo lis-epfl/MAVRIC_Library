@@ -85,6 +85,7 @@ public:
 
 
     attitude_command_t			attitude_command_desired_;	///< Attitude command (input from head-tracker)
+    attitude_command_t			attitude_output_;			///< Output to PWM (output)
 
 private:
     /**
@@ -100,7 +101,6 @@ private:
     };
 
     attitude_command_t			attitude_command_range_[2];	///< Range [min; max] of the attitude commands
-    attitude_command_t			attitude_output_;			///< Output to PWM (output)
     Servo&						servo_pitch_;				///< Gimbal pitch servo
     Servo&						servo_yaw_;					///< Gimbal yaw servo
 };

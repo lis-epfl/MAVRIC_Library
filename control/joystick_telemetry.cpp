@@ -70,8 +70,18 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
     mavlink_manual_control_t packet;
     mavlink_msg_manual_control_decode(msg, &packet);
 
+    /*print_util_dbg_print("packet:\r\n");
+    print_util_dbg_putfloat(packet.x,10);
+    print_util_dbg_print("\r\n");
+    print_util_dbg_putfloat(packet.y,10);
+	print_util_dbg_print("\r\n");
+	print_util_dbg_putfloat(packet.z,10);
+	print_util_dbg_print("\r\n");*/
+
     if ((uint8_t)packet.target == (uint8_t)sysid)
     {
+    	//print_util_dbg_print("----------\r\n");
+
         joystick->channels.x = packet.x / 1000.0f;
         joystick->channels.y = packet.y / 1000.0f;
         joystick->channels.z = packet.z / 1000.0f;
@@ -79,6 +89,14 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
 
         joystick_button_mask(joystick, packet.buttons);
     }
+
+    /*print_util_dbg_print("joystick:\r\n");
+    print_util_dbg_putfloat(joystick->channels.x,10);
+    print_util_dbg_print("\r\n");
+    print_util_dbg_putfloat(joystick->channels.y,10);
+	print_util_dbg_print("\r\n");
+	print_util_dbg_putfloat(joystick->channels.z,10);
+	print_util_dbg_print("\r\n");*/
 }
 
 

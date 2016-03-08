@@ -126,6 +126,14 @@ void manual_control_get_control_command(manual_control_t* manual_control, contro
  */
 void manual_control_get_velocity_vector(manual_control_t* manual_control, control_command_t* controls);
 
+/**
+ * \brief   Get the input from the joystick (Symbiotic project)
+ *
+ * \param   manual_control  The pointer to the manual control structure
+ * \param   controls        The pointer to the command structure that will be executed
+ */
+void manual_control_get_from_joystick_symbiotic(manual_control_t* manual_control, control_command_t* controls);
+
 
 /**
  * \brief   Selects the source input and returns the thrust

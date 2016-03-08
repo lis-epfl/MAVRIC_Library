@@ -201,6 +201,16 @@ void joystick_get_velocity_vector(const joystick_t* joystick, control_command_t*
     controls->rpy[YAW] = joystick->channels.r * MAX_JOYSTICK_RANGE;
 }
 
+void joystick_get_velocity_vector_version2(const joystick_t* joystick, control_command_t* controls)
+{
+	//all joystick input are [-1;1]
+    controls->tvel[X] = joystick->channels.x * 5.0f; //max 5m/s in forward motion
+    controls->rpy[ROLL] = joystick->channels.y * 0.52f; //max [0.78rad = 30°]
+    controls->tvel[Z] = joystick->channels.z * 4.0f; //max 3m/s in vertical motion
+
+    //controls->rpy[YAW] = joystick->channels.r;
+}
+
 
 void joystick_get_control_command(const joystick_t* joystick, control_command_t* controls)
 {
@@ -216,7 +226,7 @@ void joystick_button_mask(joystick_t* joystick, uint16_t buttons)
     joystick_button_t button_local;
     button_local.button_mask = buttons;
 
-    print_util_dbg_print_num(button_local.button_mask, 10);
+    //print_util_dbg_print_num(button_local.button_mask, 10);
 
     bool but;
     but = ((button_local.button_mask & 0x0001) == 0x0001);

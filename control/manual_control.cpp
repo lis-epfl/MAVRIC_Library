@@ -116,6 +116,18 @@ void manual_control_get_velocity_vector(manual_control_t* manual_control, contro
     }
 }
 
+void manual_control_get_from_joystick_symbiotic(manual_control_t* manual_control, control_command_t* controls)
+{
+    switch (manual_control->control_source)
+    {
+        case CONTROL_SOURCE_JOYSTICK:
+            joystick_get_velocity_vector_version2(&manual_control->joystick, controls);
+            break;
+        default:
+        	print_util_dbg_print("Error in geting drone's command from joystick [manual_control_get_from_joystick_symbiotic]");
+    }
+}
+
 
 float manual_control_get_thrust(const manual_control_t* manual_control)
 {

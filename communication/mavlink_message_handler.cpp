@@ -436,7 +436,7 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
     }
     else if (msg->msgid >= 0 && msg->msgid < MAV_MSG_ENUM_END)
     {
-        if (message_handler->debug)
+        if (message_handler->debug && msg->msgid != 185 && msg->msgid != 69)
         {
             mavlink_message_handler_msg_default_dbg(msg);
         }

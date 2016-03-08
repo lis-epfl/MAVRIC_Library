@@ -137,5 +137,13 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
  */
 bool navigation_update(navigation_t* navigation);
 
+/**
+ * \brief   Get the semilocal velocity of the platform
+ *
+ * \param   pos_est                 The pointer to the position estimation structure
+ * \param	nav						The pointer to the navigation structure
+ * \param 	semilocal_vel			The table which will contain the semilocal velocity
+ */
+void position_estimation_get_semilocal_velocity(navigation_t* nav, float semilocal_vel[3]);
 
 #endif // NAVIGATION_H_

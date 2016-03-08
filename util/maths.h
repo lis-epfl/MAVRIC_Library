@@ -276,6 +276,22 @@ static float inline maths_clip(float input_value, float clip_value)
     return input_value;
 }
 
+/**
+ * \brief                   Return the sign of a variable
+ *
+ *
+ * \param   input_value     Input value
+ *
+ * \return                  sign value
+ */
+static float inline sign(float input_value)
+{
+    if (input_value >= 0.0f)
+    	return 1.0f;
+    else
+    	return -1.0f;
+}
+
 
 /**
  * \brief                   A function to attenuate values bellow a certain threshold
