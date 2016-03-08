@@ -71,7 +71,7 @@ bool Saccade_controller::init(void)
 
 bool Saccade_controller::update()
 {
-    int N_points = 125;                          // Number of points where optic flow is measured
+    const int N_points = 125;                          // Number of points where optic flow is measured
     
     float  Azimuth [2 * N_points];              //Table in which azimuthal angle of all points are stored
     float  Relative_Nearness [2 * N_points];    //Table in which azimuthal angle of all points are stored
