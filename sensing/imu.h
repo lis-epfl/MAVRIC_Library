@@ -129,6 +129,9 @@ typedef struct
 	bool imu_ready;
 	uint32_t time_ready;
 
+	float mag_global[3];
+	bool calibrating_north_vector;
+
 	state_t* state;							///< The pointer to the state structure
 } imu_t;
 

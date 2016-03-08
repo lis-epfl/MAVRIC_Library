@@ -80,7 +80,7 @@ bool ahrs_init(ahrs_t* ahrs)
 	ahrs->north_vec.v[X] = 1.0f;
 	ahrs->north_vec.v[Y] = 0.0f;
 	ahrs->north_vec.v[Z] = 0.0f;
-	
+
 	ahrs->up_vec.s    = 0.0f;
 	ahrs->up_vec.v[X] = 0.0f;
 	ahrs->up_vec.v[Y] = 0.0f;

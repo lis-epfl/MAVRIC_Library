@@ -62,16 +62,26 @@ extern "C" {
 
 typedef struct
 {
+	float sigma_w_sqr;
+	float sigma_r_sqr;
+
+	float R_acc;
+	float R_mag;
+}ahrs_ekf_config_t;
+
+typedef struct
+{
 	float x[7];
+
 	ahrs_t* ahrs;
 	imu_t* imu;
 
-	float sigma_w_sqr;
-	float sigma_r_sqr;
+	ahrs_ekf_config_t config;
 }ahrs_ekf_t;
 
 
-bool ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, imu_t* imu, ahrs_t* ahrs);
+
+bool ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, const ahrs_ekf_config_t* config, imu_t* imu, ahrs_t* ahrs);
 
 void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf);
 

@@ -266,6 +266,7 @@ void simulation_calib_set(simulation_model_t *sim)
 		sim->calib_gyro.orientation[i]			= sim->imu->calib_gyro.orientation[i];
 		sim->calib_accelero.orientation[i]		= sim->imu->calib_accelero.orientation[i];
 		sim->calib_compass.orientation[i]		= sim->imu->calib_compass.orientation[i];
+
 	}
 	
 	//reset the simulated ahrs
@@ -280,7 +281,7 @@ void simulation_update(simulation_model_t *sim)
 {
 	int32_t i;
 	quat_t qtmp1, qvel_bf,  qed;
-	const quat_t front = {.s = 0.0f, .v = {1.0f, 0.0f, 0.0f}};
+	const quat_t front = quaternions_create_from_vector(sim->imu->mag_global);//{.s = 0.0f, .v = {sim->imu->mag_global[x], FRONTVECTOR_Y, FRONTVECTOR_Z}};
 	const quat_t up = {.s = 0.0f, .v = {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
 	
 	

@@ -51,7 +51,6 @@
 extern "C" {
 #endif
 
-
 /**
  * \brief	Function to send the MAVLink attitude message
  * 

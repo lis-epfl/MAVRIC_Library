@@ -86,6 +86,15 @@ void ahrs_telemetry_send_attitude_quaternion_cov(const ahrs_t* ahrs, const mavli
 	qe[3] = ahrs->qe.v[2];
 
 	float cov[9];
+	cov[0] = 0.0f;
+	cov[1] = 0.0f;
+	cov[2] = 0.0f;
+	cov[3] = 0.0f;
+	cov[4] = 0.0f;
+	cov[5] = 0.0f;
+	cov[6] = 0.0f;
+	cov[7] = 0.0f;
+	cov[8] = 0.0f;
 	mavlink_msg_attitude_quaternion_cov_pack(	mavlink_stream->sysid,
 												mavlink_stream->compid,
 												msg,
@@ -100,6 +109,31 @@ void ahrs_telemetry_send_attitude_quaternion_cov(const ahrs_t* ahrs, const mavli
 void ahrs_telemetry_send_P_diag(const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
+									mavlink_stream->compid,
+									msg,"P_diag012",
+									time_keeper_get_micros(),
+									ahrs->P_vect[0],
+									ahrs->P_vect[8],
+									ahrs->P_vect[16]);
+	mavlink_stream_send(mavlink_stream,msg);
+
+	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
+									mavlink_stream->compid,
+									msg,"P_diag345",
+									time_keeper_get_micros(),
+									ahrs->P_vect[24],
+									ahrs->P_vect[32],
+									ahrs->P_vect[40]);
+	mavlink_stream_send(mavlink_stream,msg);
+
+	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"P_diag6",
+										ahrs->P_vect[48]);
+
+	/*mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
 									mavlink_stream->compid,
 									msg,"P_diag10",
 									time_keeper_get_micros(),
@@ -278,6 +312,6 @@ void ahrs_telemetry_send_P_diag(const ahrs_t* ahrs, const mavlink_stream_t* mavl
 										msg,
 										time_keeper_get_millis(),
 										"P_diag72",
-										ahrs->P_vect[48]);
+										ahrs->P_vect[48]);*/
 
 }
