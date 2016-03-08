@@ -18,6 +18,7 @@ SRCS += main_avr32.cpp
 SRCS += central_data.cpp
 SRCS += mavlink_telemetry.cpp
 SRCS += tasks.cpp
+SRCS += saccade_controller.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
