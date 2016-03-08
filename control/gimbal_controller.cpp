@@ -84,9 +84,11 @@ Gimbal_controller::Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const
 bool Gimbal_controller::update(void)
 {
 
-	attitude_command_t att_user, att_mimick_plane;
-	att_user = attitude_command_desired_;
+	attitude_command_t att_user_head, att_mimick_plane;
 
+	att_user_head = attitude_command_desired_;
+
+	//position_estimation_get_semilocal_velocity(&central_data->position_estimation,&central_data->navigation, semilocal_vel);
 
 
     //Clip the desired value and set them as commands value (no controller here)

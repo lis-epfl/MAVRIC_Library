@@ -362,6 +362,7 @@ float position_estimation_get_xy_distance_from_fence_origin(position_estimation_
 	dist_xy_sqr = SQR(pos_est->local_position.pos[X] - pos_est->fence_position.pos[X]) + SQR(pos_est->local_position.pos[Y] - pos_est->fence_position.pos[Y]);
 
 	return maths_fast_sqrt(dist_xy_sqr);
+	//return dist_xy_sqr;
 }
 
 float position_estimation_get_z_distance_from_fence_origin(position_estimation_t* pos_est)

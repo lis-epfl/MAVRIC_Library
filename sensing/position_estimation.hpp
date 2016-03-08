@@ -43,7 +43,6 @@
 #ifndef POSITION_ESTIMATION_H__
 #define POSITION_ESTIMATION_H__
 
-
 #include "communication/state.hpp"
 #include "drivers/gps.hpp"
 #include "drivers/barometer.hpp"
@@ -170,6 +169,5 @@ float position_estimation_get_xy_distance_from_fence_origin(position_estimation_
  * \return  Square distance from the fence origin [m^2]
  */
 float position_estimation_get_z_distance_from_fence_origin(position_estimation_t* pos_est);
-
 
 #endif // POSITION_ESTIMATION_H__
