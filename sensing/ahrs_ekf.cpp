@@ -73,12 +73,12 @@ void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf);
 
 void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf)
 {
-	P = Mat<7,7>(10.0f,true);
+	P = Mat<7,7>(1.0f,true);
 
-	P(3,3) = 10.0f;
-	P(4,4) = 10.0f;
-	P(5,5) = 10.0f;
-	P(6,6) = 10.0f;
+	P(3,3) = 1.0f;
+	P(4,4) = 1.0f;
+	P(5,5) = 1.0f;
+	P(6,6) = 1.0f;
 
 	// Initalisation of the state
 
@@ -308,6 +308,7 @@ void ahrs_ekf_update_step_acc(ahrs_ekf_t* ahrs_ekf)
 	h_acc_xkk1(0,0) = -2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0)) * acc_z_global;
 	h_acc_xkk1(1,0) = -2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0)) * acc_z_global;
 	h_acc_xkk1(2,0) = -(1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0))) * acc_z_global;
+	//h_acc_xkk1(2,0) = -(x_kk1(3,0)*x_kk1(3,0) - x_kk1(4,0)*x_kk1(4,0) - x_kk1(5,0)*x_kk1(5,0) + x_kk1(6,0)*x_kk1(6,0)) * acc_z_global;
 
 	// H_acc(k) = jacobian(h_acc(x(k,k-1)))
 	Mat<3,7> H_acc_k;
@@ -326,6 +327,10 @@ void ahrs_ekf_update_step_acc(ahrs_ekf_t* ahrs_ekf)
 	H_acc_k(2,4) = -4.0f * x_kk1(4,0) * acc_z_global;
 	H_acc_k(2,5) = -4.0f * x_kk1(5,0) * acc_z_global;
 	H_acc_k(2,6) = 0.0f;
+	/*H_acc_k(2,3) = 2.0f * x_kk1(3,0) * acc_z_global;
+	H_acc_k(2,4) = -2.0f * x_kk1(4,0) * acc_z_global;
+	H_acc_k(2,5) = -2.0f * x_kk1(5,0) * acc_z_global;
+	H_acc_k(2,6) = 2.0f * x_kk1(6,0) * acc_z_global;*/
 
 	// Innovation y(k) = z(k) - h(x(k,k-1))
 	Mat<3,1> yk_acc = z_acc - h_acc_xkk1;
@@ -408,8 +413,10 @@ void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf)
 	// h_mag(x(k,k-1))
 	Mat<3,1> h_mag_xkk1;
 	h_mag_xkk1(0,0) = (1.0f - 2.0f*(x_kk1(5,0)*x_kk1(5,0) + x_kk1(6,0)*x_kk1(6,0)))*ahrs_ekf->imu->mag_global[0] + 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*ahrs_ekf->imu->mag_global[2];
+	//h_mag_xkk1(0,0) = (x_kk1(3,0)*x_kk1(3,0) + x_kk1(4,0)*x_kk1(4,0) - x_kk1(5,0)*x_kk1(5,0) - x_kk1(6,0)*x_kk1(6,0))*ahrs_ekf->imu->mag_global[0] + 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*ahrs_ekf->imu->mag_global[2];
 	h_mag_xkk1(1,0) = 2.0f*(x_kk1(4,0)*x_kk1(5,0) - x_kk1(3,0)*x_kk1(6,0))*ahrs_ekf->imu->mag_global[0] + 2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0))*ahrs_ekf->imu->mag_global[2];
 	h_mag_xkk1(2,0) = 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*ahrs_ekf->imu->mag_global[0] + (1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0)))*ahrs_ekf->imu->mag_global[2];
+	//h_mag_xkk1(2,0) = 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*ahrs_ekf->imu->mag_global[0] + (x_kk1(3,0)*x_kk1(3,0) - x_kk1(4,0)*x_kk1(4,0) - x_kk1(5,0)*x_kk1(5,0) + x_kk1(6,0)*x_kk1(6,0))*ahrs_ekf->imu->mag_global[2];
 
 	// H_mag(k) = jacobian(h_mag(x(k,k-1)))
 	Mat<3,7> H_mag_k;
@@ -418,6 +425,10 @@ void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf)
 	H_mag_k(0,4) = 2.0f * x_kk1(6,0) * ahrs_ekf->imu->mag_global[2];
 	H_mag_k(0,5) = -4.0f * x_kk1(5,0) * ahrs_ekf->imu->mag_global[0] - 2.0f * x_kk1(3,0) * ahrs_ekf->imu->mag_global[2];
 	H_mag_k(0,6) = -4.0f * x_kk1(6,0) * ahrs_ekf->imu->mag_global[0] + 2.0f * x_kk1(4,0) * ahrs_ekf->imu->mag_global[2];
+	/*H_mag_k(0,3) = 2.0f * x_kk1(3,0) * ahrs_ekf->imu->mag_global[0] - 2.0f * x_kk1(5,0) * ahrs_ekf->imu->mag_global[2];
+	H_mag_k(0,4) = 2.0f * x_kk1(4,0) * ahrs_ekf->imu->mag_global[0] + 2.0f * x_kk1(6,0) * ahrs_ekf->imu->mag_global[2];
+	H_mag_k(0,5) = -2.0f * x_kk1(5,0) * ahrs_ekf->imu->mag_global[0] - 2.0f * x_kk1(3,0) * ahrs_ekf->imu->mag_global[2];
+	H_mag_k(0,6) = -2.0f * x_kk1(6,0) * ahrs_ekf->imu->mag_global[0] + 2.0f * x_kk1(4,0) * ahrs_ekf->imu->mag_global[2];*/
 
 	H_mag_k(1,3) = -2.0f * x_kk1(6,0) * ahrs_ekf->imu->mag_global[0] + 2.0f * x_kk1(4,0) * ahrs_ekf->imu->mag_global[2];
 	H_mag_k(1,4) = 2.0f * x_kk1(5,0) * ahrs_ekf->imu->mag_global[0] + 2.0f * x_kk1(3,0) * ahrs_ekf->imu->mag_global[2];
@@ -428,6 +439,10 @@ void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf)
 	H_mag_k(2,4) = 2.0f * x_kk1(6,0) * ahrs_ekf->imu->mag_global[0] - 4.0f * x_kk1(4,0) * ahrs_ekf->imu->mag_global[2];
 	H_mag_k(2,5) = -2.0f * x_kk1(3,0) * ahrs_ekf->imu->mag_global[0] - 4.0f * x_kk1(5,0) * ahrs_ekf->imu->mag_global[2];
 	H_mag_k(2,6) = 2.0f * x_kk1(4,0) * ahrs_ekf->imu->mag_global[0];
+	/*H_mag_k(2,3) = -2.0f * x_kk1(5,0) * ahrs_ekf->imu->mag_global[0] + 2.0f * x_kk1(3,0) * ahrs_ekf->imu->mag_global[2];
+	H_mag_k(2,4) = 2.0f * x_kk1(6,0) * ahrs_ekf->imu->mag_global[0] - 2.0f * x_kk1(4,0) * ahrs_ekf->imu->mag_global[2];
+	H_mag_k(2,5) = -2.0f * x_kk1(3,0) * ahrs_ekf->imu->mag_global[0] - 2.0f * x_kk1(5,0) * ahrs_ekf->imu->mag_global[2];
+	H_mag_k(2,6) = 2.0f * x_kk1(4,0) * ahrs_ekf->imu->mag_global[0] + 2.0f * x_kk1(6,0) * ahrs_ekf->imu->mag_global[2];*/
 
 	// Innovation y(k) = z(k) - h(x(k,k-1))
 	Mat<3,1> yk_mag = z_mag - h_mag_xkk1;
