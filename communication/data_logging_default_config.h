@@ -55,7 +55,7 @@ data_logging_conf_t data_logging_default_config =
 {
 	.debug = true,
 	.log_data = 0,
-	.max_data_logging_count = 50,
+	.max_data_logging_count = 30,
 	.max_logs = 500,
 };
 
