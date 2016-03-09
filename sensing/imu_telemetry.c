@@ -44,6 +44,7 @@
 #include "time_keeper.h"
 #include "print_util.h"
 #include "constants.h"
+#include "delay.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -214,20 +215,6 @@ static mav_result_t imu_telemetry_calibrated_north_vector(imu_t* imu, mavlink_co
 			{
 				imu->calibrating_north_vector = false;
 				imu->state->mav_state = MAV_STATE_STANDBY;
-
-				float angle = atan2(imu->scaled_compass.data_lpf[Z], maths_fast_sqrt(imu->scaled_compass.data_lpf[X]*imu->scaled_compass.data_lpf[X] + imu->scaled_compass.data_lpf[Y]*imu->scaled_compass.data_lpf[Y]));
-
-				imu->mag_global[0] = cos(angle);
-				imu->mag_global[1] = 0.0f;
-				imu->mag_global[2] = sin(angle);
-
-				print_util_dbg_print("North vector angle (x100):");
-				print_util_dbg_print_nuM(angle*100,10);
-				print_util_dbg_print("\r\n");
-
-				print_util_dbg_print("New North vector :");
-				print_util_dbg_print_vector(imu->mag_global,5);
-				print_util_dbg_print("\r\n");
 			}
 			
 		}

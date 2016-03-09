@@ -115,7 +115,6 @@ static void imu_oriented2scale(imu_t *imu)
 	bool going2ready = true;
 
 	float gyro_lpf = 0.99f;
-	float compass_lpf = 0.99f;
 
 	uint16_t i;
 
@@ -145,11 +144,6 @@ static void imu_oriented2scale(imu_t *imu)
 			}
 
 			imu->scaled_gyro.data_lpf[i] = gyro_lpf * imu->scaled_gyro.data_lpf[i] + (1.0f-gyro_lpf) * imu->scaled_gyro.data[i];
-		}
-
-		if (imu->calibrating_north_vector)
-		{
-			imu->scaled_compass.data_lpf[i] = compass_lpf * imu->scaled_compass.data_lpf[i] + (1.0f-compass_lpf) * imu->scaled_compass.data[i];
 		}
 	}
 
@@ -243,9 +237,9 @@ bool imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
 
 	imu->calibrating_north_vector = false;
 
-	imu->mag_global[X] = 0.4539905f; // cos(63.0f/180.0f*PI)
+	imu->mag_global[X] = 0.632037f; // cos(63.0f/180.0f*PI)
 	imu->mag_global[Y] = 0.0f;
-	imu->mag_global[Z] = 0.8910065f; // sin(63.0f/180.0f*PI)
+	imu->mag_global[Z] = 1.16161f; // sin(63.0f/180.0f*PI)
 
 	imu->last_update = time_keeper_get_time_ticks();
 	imu->dt = 0.004;

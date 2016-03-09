@@ -51,10 +51,12 @@ extern "C" {
 
 static const ahrs_ekf_config_t ahrs_ekf_default_config = 
 {
-	.sigma_w_sqr = 0.00000000000000000001f,
-	.sigma_r_sqr = 0.000000000001f,
+	.sigma_w_sqr = 0.0000000001f,
+	.sigma_r_sqr = 0.000001f,
 	.R_acc = 0.004f,
-	.R_mag = 0.005f,
+	.R_mag = 0.007f,
+	.acc_norm_noise = 0.05f,
+	.acc_multi_noise = 4.0f,
 };
 
 

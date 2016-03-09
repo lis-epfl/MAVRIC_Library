@@ -51,11 +51,13 @@ extern "C"
 #include "vectors.h"
 #include "quaternions.h"
 #include "delay.h"
+#include "coord_conventions.h"
 }
 
 
 using namespace mat;
 
+// C++ variables
 Mat<7,1> x_state;
 Mat<7,7> F;
 Mat<7,7> P;
@@ -64,14 +66,43 @@ Mat<3,3> R_acc;
 Mat<3,3> R_mag;
 Mat<7,7> Id;
 
-void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf);
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
-void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf);
+/**
+ * \brief	Initialize the state and matrix of the EKF
+ *
+ * \param	ahrs_ekf		The pointer to the AHRS EKF structure
+ */
+static void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf);
 
-void ahrs_ekf_update_step_acc(ahrs_ekf_t* ahrs_ekf);
-void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf);
+/**
+ * \brief	Performs the prediction step of the EKF
+ *
+ * \param	ahrs_ekf		The pointer to the AHRS EKF structure
+ */
+static void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf);
 
-void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf)
+/**
+ * \brief	Performs the update step with the accelerometer
+ *
+ * \param	ahrs_ekf		The pointer to the AHRS EKF structure
+ */
+static void ahrs_ekf_update_step_acc(ahrs_ekf_t* ahrs_ekf);
+
+/**
+ * \brief	Performs the update step with the magnetometer
+ *
+ * \param	ahrs_ekf		The pointer to the AHRS EKF structure
+ */
+static void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf)
 {
 	P = Mat<7,7>(1.0f,true);
 
@@ -101,7 +132,7 @@ void ahrs_ekf_init_cpp(ahrs_ekf_t* ahrs_ekf)
 	Id = Mat<7,7>(1.0f,true);
 }
 
-void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf)
+static void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf)
 {
 	float dt = ahrs_ekf->ahrs->dt;
 	
@@ -289,7 +320,7 @@ void ahrs_ekf_predict_step(ahrs_ekf_t* ahrs_ekf)
 	x_state(6,0) = quat.v[2];
 }
 
-void ahrs_ekf_update_step_acc(ahrs_ekf_t* ahrs_ekf)
+static void ahrs_ekf_update_step_acc(ahrs_ekf_t* ahrs_ekf)
 {
 	uint16_t i;
 
@@ -337,10 +368,10 @@ void ahrs_ekf_update_step_acc(ahrs_ekf_t* ahrs_ekf)
 
 	float acc_norm = vectors_norm(ahrs_ekf->imu->scaled_accelero.data);
 	float acc_norm_diff = maths_f_abs(1.0f-acc_norm);
-	float noise = 1.0f - maths_center_window_4(5.0f*acc_norm_diff);
+	float noise = 1.0f - maths_center_window_4(ahrs_ekf->config.acc_multi_noise*acc_norm_diff);
 
 	// Innovation covariance S(k) = H(k) * P(k,k-1) * H(k)' + R
-	Mat<3,3> Sk_acc = (H_acc_k ^ P ^ H_acc_k.transpose()) + R_acc + Mat<3,3>(noise*0.1f,true);
+	Mat<3,3> Sk_acc = (H_acc_k ^ P ^ H_acc_k.transpose()) + R_acc + Mat<3,3>(noise*ahrs_ekf->config.acc_norm_noise,true);
 
 	// Kalman gain: K(k) = P(k,k-1) * H(k)' * S(k)^-1
 	Mat<3,3> Sk_inv;
@@ -381,7 +412,7 @@ void ahrs_ekf_update_step_acc(ahrs_ekf_t* ahrs_ekf)
 
 }
 
-void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf)
+static void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf)
 {
 	uint16_t i;
 
@@ -490,6 +521,10 @@ void ahrs_ekf_update_step_mag(ahrs_ekf_t* ahrs_ekf)
 
 }
 
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
 bool ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, const ahrs_ekf_config_t* config, imu_t* imu, ahrs_t* ahrs)
 {
 	bool init_success = true;
@@ -499,6 +534,8 @@ bool ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, const ahrs_ekf_config_t* config, imu_t*
 
 	ahrs_ekf->config = *config;
 
+	ahrs_ekf->north_calib_started = false;
+
 	ahrs_ekf_init_cpp(ahrs_ekf);
 
 	ahrs_ekf->ahrs->internal_state = AHRS_INIT;
@@ -506,8 +543,14 @@ bool ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, const ahrs_ekf_config_t* config, imu_t*
 	return init_success;
 }
 
-void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
+bool ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
 {
+	bool task_return = true;
+
+	uint16_t i;
+
+	const float compass_lpf = 0.999f;
+
 	ahrs_ekf->ahrs->dt = ahrs_ekf->imu->dt;
 
 	// To enable changing of R with onboard parameters.
@@ -524,7 +567,47 @@ void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
 		ahrs_ekf_predict_step(ahrs_ekf);
 
 		ahrs_ekf_update_step_acc(ahrs_ekf);
-		ahrs_ekf_update_step_mag(ahrs_ekf);
+
+		if (!ahrs_ekf->imu->calibrating_north_vector)
+		{
+			if (ahrs_ekf->north_calib_started)
+			{
+				ahrs_ekf->north_calib_started = false;
+				float angle = atan2(ahrs_ekf->imu->scaled_compass.data_lpf[Z], maths_fast_sqrt(ahrs_ekf->imu->scaled_compass.data_lpf[X]*ahrs_ekf->imu->scaled_compass.data_lpf[X] + ahrs_ekf->imu->scaled_compass.data_lpf[Y]*ahrs_ekf->imu->scaled_compass.data_lpf[Y]));
+
+				float norm_mag = vectors_norm(ahrs_ekf->imu->scaled_compass.data_lpf);
+
+				ahrs_ekf->imu->mag_global[0] = cos(angle)*norm_mag;
+				ahrs_ekf->imu->mag_global[1] = 0.0f;
+				ahrs_ekf->imu->mag_global[2] = sin(angle)*norm_mag;
+				delay_ms(250);
+				print_util_dbg_print("North vector angle (x100):");
+				print_util_dbg_print_num(angle*100,10);
+				print_util_dbg_print("\r\n");delay_ms(250);
+
+				print_util_dbg_print("New North vector :");
+				print_util_dbg_print_vector(ahrs_ekf->imu->mag_global,5);
+				print_util_dbg_print("\r\n");delay_ms(250);
+			}
+
+			ahrs_ekf_update_step_mag(ahrs_ekf);
+		}
+		else
+		{
+			ahrs_ekf->north_calib_started = true;
+			for (i = 0; i < 3; ++i)
+			{
+				aero_attitude_t aero = coord_conventions_quat_to_aero(ahrs_ekf->ahrs->qe);
+				/*aero.rpy[ROLL] = -aero.rpy[ROLL];
+				aero.rpy[PITCH] = -aero.rpy[PITCH];*/
+				aero.rpy[YAW] = 0.0f;
+				quat_t qe = coord_conventions_quaternion_from_aero(aero);
+				quat_t qe_mag = quaternions_create_from_vector(ahrs_ekf->imu->scaled_compass.data);
+				qe_mag = quaternions_local_to_global(qe, qe_mag);
+				ahrs_ekf->imu->scaled_compass.data_lpf[i] = compass_lpf * ahrs_ekf->imu->scaled_compass.data_lpf[i] + (1.0f-compass_lpf) * qe_mag.v[i];
+			}
+		}
+		
 		ahrs_ekf->ahrs->internal_state = AHRS_READY;
 	}
 	else
@@ -546,7 +629,7 @@ void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
 	}
 	
 
-	uint16_t i;
+	
 	for (i = 0; i < 7; ++i)
 	{
 		ahrs_ekf->x[i] = x_state(i,0);
@@ -557,10 +640,10 @@ void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
 	ahrs_ekf->ahrs->qe.v[1] = x_state(5,0);
 	ahrs_ekf->ahrs->qe.v[2] = x_state(6,0);
 
-	#warning "remove before flight"
-	ahrs_ekf->ahrs->angular_speed[X] = x_state(0,0);//ahrs_ekf->imu->scaled_gyro.data[X];// - //
-	ahrs_ekf->ahrs->angular_speed[Y] = x_state(1,0);//ahrs_ekf->imu->scaled_gyro.data[Y];// - //
-	ahrs_ekf->ahrs->angular_speed[Z] = x_state(2,0);//ahrs_ekf->imu->scaled_gyro.data[Z];// - //
+	//#warning "remove before flight"
+	ahrs_ekf->ahrs->angular_speed[X] = ahrs_ekf->imu->scaled_gyro.data[X] - x_state(0,0);
+	ahrs_ekf->ahrs->angular_speed[Y] = ahrs_ekf->imu->scaled_gyro.data[Y] - x_state(1,0);
+	ahrs_ekf->ahrs->angular_speed[Z] = ahrs_ekf->imu->scaled_gyro.data[Z] - x_state(2,0);
 
 	quat_t up, up_bf;
 	up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;
@@ -584,4 +667,6 @@ void ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf)
 			ahrs_ekf->ahrs->P_vect[i*7 + j] = P(i,j);
 		}
 	}
+
+	return task_return;
 }
