@@ -36,6 +36,13 @@
  * \author Nicolas Dousse
  *   
  * \brief Extended Kalman Filter attitude estimation, mixing accelerometer and magnetometer
+ * x[0] : bias_x
+ * x[1] : bias_y
+ * x[2] : bias_z
+ * x[3] : q0
+ * x[4] : q1
+ * x[5] : q2
+ * x[6] : q3
  *
  ******************************************************************************/
 
@@ -49,17 +56,10 @@ extern "C" {
 #include "imu.h"
 #include "ahrs.h"
 
-/*
- * x[0] : bias_x
- * x[1] : bias_y
- * x[2] : bias_z
- * x[3] : q0
- * x[4] : q1
- * x[5] : q2
- * x[6] : q3
 
-*/
-
+/**
+ * \brief The AHRS EKF config structure
+ */
 typedef struct
 {
 	float sigma_w_sqr;									///< The square of the variance on the gyro bias
@@ -72,6 +72,10 @@ typedef struct
 	float R_mag;										///< The variance of the magnetometer
 }ahrs_ekf_config_t;
 
+
+/**
+ * \brief The AHRS EKF structure
+ */
 typedef struct
 {
 	float x[7];											///< The state of the EKF
