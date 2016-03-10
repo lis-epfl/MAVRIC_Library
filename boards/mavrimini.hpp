@@ -48,6 +48,7 @@
 
 #include "hal/stm32/gpio_stm32.hpp"
 #include "hal/stm32/serial_stm32.hpp"
+#include "hal/stm32/pwm_stm32.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
@@ -126,7 +127,7 @@ public:
     Spektrum_satellite  spektrum_satellite;
     Adc_dummy           adc_battery;
     Battery             battery;
-    Pwm_dummy           pwm_0;
+    Pwm_stm32           pwm_0;
     Pwm_dummy           pwm_1;
     Pwm_dummy           pwm_2;
     Pwm_dummy           pwm_3;
@@ -197,7 +198,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     // -------------------------------------------------------------------------
     // Servo config
     // -------------------------------------------------------------------------
-    conf.servo_config[0] = servo_default_config_esc();
+    conf.servo_config[0] = servo_default_config_standard();
     conf.servo_config[1] = servo_default_config_esc();
     conf.servo_config[2] = servo_default_config_esc();
     conf.servo_config[3] = servo_default_config_esc();
