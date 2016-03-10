@@ -72,11 +72,12 @@ extern "C"
  */
 typedef struct
 {
-    gpio_dummy_conf_t       dsm_receiver_gpio_config;
-    gpio_dummy_conf_t       dsm_power_gpio_config;
+    gpio_stm32_conf_t       dsm_receiver_gpio_config;
+    gpio_stm32_conf_t       dsm_power_gpio_config;
     gpio_stm32_conf_t       green_led_gpio_config;
     gpio_stm32_conf_t       red_led_gpio_config;
     serial_stm32_conf_t     serial_1_config;
+    serial_stm32_conf_t     serial_2_config;
     imu_conf_t              imu_config;
     servo_conf_t            servo_config[8];
 } mavrimini_conf_t;
@@ -115,15 +116,15 @@ public:
     /**
      * Public Members
      */
-    Gpio_dummy          dsm_receiver_gpio;
-    Gpio_dummy          dsm_power_gpio;
+    Gpio_stm32          dsm_receiver_gpio;
+    Gpio_stm32          dsm_power_gpio;
     Gpio_stm32          green_led_gpio;
     Gpio_stm32          red_led_gpio;
     Led_gpio            green_led;
     Led_gpio            red_led;
     File_dummy          file_flash;
     Serial_stm32        serial_1;
-    Serial_dummy        serial_2;
+    Serial_stm32        serial_2;
     Spektrum_satellite  spektrum_satellite;
     Adc_dummy           adc_battery;
     Battery             battery;
@@ -164,6 +165,19 @@ static inline mavrimini_conf_t mavrimini_default_config()
     // -------------------------------------------------------------------------
     // GPIO config
     // -------------------------------------------------------------------------
+    
+    // GPIO dsm power pin configuration
+    conf.dsm_power_gpio_config.port       = GPIO_STM32_PORT_A;
+    conf.dsm_power_gpio_config.pin        = GPIO_STM32_PIN_4;
+    conf.dsm_power_gpio_config.dir        = GPIO_OUTPUT;
+    conf.dsm_power_gpio_config.pull       = GPIO_PULL_UPDOWN_NONE; //physical pull up
+    
+    // GPIO dsm receiver pin configuration
+    conf.dsm_receiver_gpio_config.port       = GPIO_STM32_PORT_A;
+    conf.dsm_receiver_gpio_config.pin        = GPIO_STM32_PIN_3;
+    conf.dsm_receiver_gpio_config.dir        = GPIO_INPUT;
+    conf.dsm_receiver_gpio_config.pull       = GPIO_PULL_UPDOWN_NONE;
+
     // Green led
     conf.green_led_gpio_config.port     = GPIO_STM32_PORT_C;
     conf.green_led_gpio_config.pin      = GPIO_STM32_PIN_15;
@@ -194,6 +208,26 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.serial_1_config.tx_port        = GPIO_STM32_PORT_A;
     conf.serial_1_config.tx_pin         = GPIO_STM32_PIN_0;
     conf.serial_1_config.tx_af          = GPIO_STM32_AF_8;
+
+    // -------------------------------------------------------------------------
+    // Serial config
+    // -------------------------------------------------------------------------
+    conf.serial_2_config                = serial_stm32_default_config();
+    conf.serial_2_config.device         = SERIAL_STM32_2;
+    conf.serial_2_config.baudrate       = 115200;
+    conf.serial_2_config.databits       = SERIAL_STM32_DATABITS_8;
+    conf.serial_2_config.stopbits       = SERIAL_STM32_STOPBITS_1;
+    conf.serial_2_config.parity         = SERIAL_STM32_PARITY_NONE;
+    conf.serial_2_config.mode           = SERIAL_STM32_MODE_TX_RX;
+    conf.serial_2_config.flow_control   = SERIAL_STM32_FLOWCONTROL_NONE;
+    conf.serial_2_config.rx_port        = GPIO_STM32_PORT_A;
+    conf.serial_2_config.rx_pin         = GPIO_STM32_PIN_3;
+    conf.serial_2_config.rx_af          = GPIO_STM32_AF_7;
+    conf.serial_2_config.tx_port        = GPIO_STM32_PORT_A;
+    conf.serial_2_config.tx_pin         = GPIO_STM32_PIN_2;
+    conf.serial_2_config.tx_af          = GPIO_STM32_AF_7;
+
+    
 
     // -------------------------------------------------------------------------
     // Servo config
