@@ -60,7 +60,7 @@ var searchData=
   ['do_5fderotation',['do_derotation',['../structcurvace__t.html#ad3027b3c9406c301f5546df43c61e405',1,'curvace_t']]],
   ['dr_5flimit',['dr_limit',['../structubx__cfg__nav__settings__t.html#ad02b1221ed5776015f072faf84338689',1,'ubx_cfg_nav_settings_t']]],
   ['dsm2_5fprotocol_5fproba_5ft',['dsm2_protocol_proba_t',['../structdsm2__protocol__proba__t.html',1,'']]],
-  ['dsm_5freceiver_5fgpio',['dsm_receiver_gpio',['../classMavrimini.html#a5510ea4eb7280b50bcbbf0be25580658',1,'Mavrimini']]],
+  ['dsm_5freceiver_5fgpio',['dsm_receiver_gpio',['../classMavrimini.html#a8fcc6be7df1538104653c3c918ca9a4f',1,'Mavrimini']]],
   ['dsm_5freceiver_5fpin',['dsm_receiver_pin',['../classMegafly__rev4.html#a07bf4d69cc0b14a297a7796f6382a5c8',1,'Megafly_rev4']]],
   ['dt',['dt',['../structnavigation__t.html#ae1d78d5de8473fc5081a2bf72cdf49b4',1,'navigation_t::dt()'],['../structpid__controller__t.html#aa2df2d01c5028cce7276d9ab7df89024',1,'pid_controller_t::dt()'],['../structahrs__t.html#a09ac8b47ce59461e361697668cd7c3b7',1,'ahrs_t::dt()'],['../classSatellite.html#aab1b01790d4a13031bf4e6fdd709cbd5',1,'Satellite::dt()'],['../classSpektrum__satellite.html#acaa767a93aeef27452338112d726afaf',1,'Spektrum_satellite::dt()']]],
   ['dt_5fs',['dt_s',['../classImu.html#abdd7a53ccd0ee2008674f0b4a2a1d58d',1,'Imu']]],
