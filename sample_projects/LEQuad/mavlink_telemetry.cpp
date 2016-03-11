@@ -353,6 +353,41 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 }
 
 
+void altitude_estimation_telemetry_send(const Altitude_estimation* altitude_estimation, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+    Mat<3,1> x = altitude_estimation->x();
+    Mat<3,3> P = altitude_estimation->P();
+    float cov[45];
+    cov[0] = P(0,0);
+    cov[1] = P(1,1);
+    cov[2] = P(2,2);
+
+    mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid,
+                                            mavlink_stream->compid,
+                                            msg,
+                                            time_keeper_get_ms(),
+                                            0,
+                                            0,
+                                            0.0f,
+                                            0.0f,
+                                            x(0,0),
+                                            0.0f,
+                                            0.0f,
+                                            x(1,0),
+                                            0.0f,
+                                            0.0f,
+                                            x(2,0),
+                                            cov);
+
+    // mavlink_msg_local_position_ned_cov_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
+    //                            uint32_t time_boot_ms, uint64_t time_utc, uint8_t estimator_type, 
+    //                            float x, float y, float z, 
+    //                            float vx, float vy, float vz, 
+    //                            float ax, float ay, float az, 
+    //                            const float *covariance)
+}
+
+
 bool mavlink_telemetry_init(Central_data* central_data)
 {
     bool init_success = true;
@@ -402,6 +437,8 @@ bool mavlink_telemetry_init(Central_data* central_data)
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&scheduler_telemetry_send_rt_stats,                             &central_data->scheduler,               MAVLINK_MSG_ID_NAMED_VALUE_FLOAT); // ID 251
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&sonar_telemetry_send,                            &central_data->sonar_i2cxl.data,            MAVLINK_MSG_ID_DISTANCE_SENSOR  );// ID 132
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
+    
+    // init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&altitude_estimation_telemetry_send,                            &central_data->altitude_estimation_,    MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV           );// ID 64
 
     init_success &= scheduler_sort_tasks(&central_data->mavlink_communication.scheduler);
 
