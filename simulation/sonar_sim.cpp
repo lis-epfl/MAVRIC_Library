@@ -125,7 +125,6 @@ bool Sonar_sim::update(void)
                 velocity_ = 0.0f;
             }
 
-            distance_       = new_distance;
             last_update_us_ = dynamic_model_.last_update_us();
             healthy_        = true;
         }
@@ -134,12 +133,17 @@ bool Sonar_sim::update(void)
             velocity_   = 0.0f;
             healthy_    = false;
         }
+
+        // Update current distance even if not healthy
+        distance_ = new_distance;
     }
     else
     {
+        distance_   = config_.max_distance;
         velocity_   = 0.0f;
         healthy_    = false;
     }
+
 
     return success;
 }
