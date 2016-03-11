@@ -77,8 +77,6 @@ LIB_SRCS += simulation/gps_sim.cpp
 
 LIB_SRCS += util/coord_conventions.c
 LIB_SRCS += util/matrix.cpp
-LIB_SRCS += util/kalman.c
-LIB_SRCS += util/linear_algebra.c
 LIB_SRCS += util/print_util.c
 LIB_SRCS += util/quick_trig.c
 LIB_SRCS += util/string_util.c
