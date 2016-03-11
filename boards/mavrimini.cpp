@@ -73,12 +73,15 @@ static void clock_setup(void)
 
 
 Mavrimini::Mavrimini(mavrimini_conf_t config):
+    dsm_receiver_gpio(config.dsm_receiver_gpio_config), 
+    dsm_power_gpio(config.dsm_power_gpio_config),
     green_led_gpio(config.green_led_gpio_config),
     red_led_gpio(config.red_led_gpio_config),
     green_led(green_led_gpio),
     red_led(red_led_gpio),
     file_flash(),
     serial_1(config.serial_1_config),
+    serial_2(config.serial_2_config),
     spektrum_satellite(serial_2, dsm_receiver_gpio, dsm_power_gpio),
     adc_battery(12.3f),
     battery(adc_battery),

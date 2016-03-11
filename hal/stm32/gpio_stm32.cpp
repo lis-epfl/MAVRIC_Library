@@ -75,7 +75,7 @@ bool Gpio_stm32::configure(gpio_dir_t dir, gpio_pull_updown_t pull)
     switch (dir)
     {
         case GPIO_INPUT:
-            mode = GPIO_MODE_OUTPUT;
+            mode = GPIO_MODE_INPUT;
             break;
 
         case GPIO_OUTPUT:
