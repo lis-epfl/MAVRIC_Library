@@ -40,17 +40,17 @@
 
 
 #include "sample_projects/LEWing/central_data.hpp"
-#include "control/stabilisation_copter_default_config.hpp"
+#include "control/stabilisation_wing_default_config.hpp"
 #include "communication/toggle_logging_default_config.hpp"
 #include "communication/mavlink_communication_default_config.hpp"
 
 #include "sensing/position_estimation_default_config.hpp"
+#include "sensing/ahrs_madgwick_default_config.hpp"
 #include "communication/remote_default_config.hpp"
 #include "control/manual_control_default_config.hpp"
 #include "communication/toggle_logging.hpp"
-#include "control/attitude_controller_default_config.h"
-#include "control/velocity_controller_copter_default_config.h"
-#include "control/servos_mix_quadcopter_diag_default_config.hpp"
+#include "control/stabilisation_wing.hpp"
+#include "control/servos_mix_wing_default_config.hpp"
 
 extern "C"
 {
@@ -58,7 +58,6 @@ extern "C"
 #include "control/navigation_default_config.h"
 #include "sensing/qfilter_default_config.h"
 #include "runtime/scheduler_default_config.h"
-
 #include "util/print_util.h"
 }
 
@@ -149,13 +148,14 @@ bool Central_data::init(void)
 
 
     // -------------------------------------------------------------------------
-    // Init qfilter
+    // Init attitude estimation filter
     // -------------------------------------------------------------------------
-    ret = qfilter_init(&attitude_filter,
-                       qfilter_default_config(),
-                       &imu,
-                       &ahrs);
-    print_util_dbg_init_msg("[QFILTER]", ret);
+    ret = ahrs_madgwick_init(&attitude_filter,
+                             ahrs_madgwick_default_config(),
+                             &imu,
+                             &ahrs,
+                             &airspeed_analog);
+    print_util_dbg_init_msg("[MADGWICK]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
 
@@ -212,13 +212,16 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init stabilisers
     // -------------------------------------------------------------------------
-    ret = stabilisation_copter_init(&stabilisation_copter,
-                                    stabilisation_copter_default_config(),
+    ret = stabilisation_wing_init(&stabilisation_wing,
+                                    stabilisation_wing_default_config(),
                                     &controls,
+                                    &command.torque,
+                                    &command.thrust,
+                                    &imu,
                                     &ahrs,
                                     &position_estimation,
-                                    &command.torque,
-                                    &command.thrust);
+                                    &airspeed_analog,
+                                    &navigation);
     print_util_dbg_init_msg("[STABILISATION COPTER]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
@@ -248,14 +251,13 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init servo mixing
     // -------------------------------------------------------------------------
-    ret = servos_mix_quadcotper_diag_init(&servo_mix,
-                                          servos_mix_quadcopter_diag_default_config(),
-                                          &command.torque,
-                                          &command.thrust,
-                                          &servo_0,
-                                          &servo_1,
-                                          &servo_2,
-                                          &servo_3);
+    ret = servos_mix_wing_init(  &servo_mix,
+                                servos_mix_wing_default_config(),
+                                &command.torque,
+                                &command.thrust,
+                                &servo_1,
+                                &servo_2,
+                                &servo_0);
     print_util_dbg_init_msg("[SERVOS MIX]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
@@ -289,28 +291,6 @@ bool Central_data::init(void)
 
     print_util_dbg_init_msg("[TOGGLE LOGGING]", ret);
     init_success &= ret;
-
-    //--------------------------------------------------------------------------
-    // Init attitude controller
-    //--------------------------------------------------------------------------
-    attitude_controller_init(&attitude_controller,
-                             attitude_controller_default_config(),
-                             &ahrs,
-                             &command.attitude,
-                             &command.rate,
-                             &command.torque);
-
-    //--------------------------------------------------------------------------
-    // Init velocity controller
-    //--------------------------------------------------------------------------
-    velocity_controller_copter_conf_t velocity_controller_copter_config = velocity_controller_copter_default_config();
-    velocity_controller_copter_init(&velocity_controller,
-                                    velocity_controller_copter_config,
-                                    &ahrs,
-                                    &position_estimation,
-                                    &command.velocity,
-                                    &command.attitude,
-                                    &command.thrust);
 
     //--------------------------------------------------------------------------
     // Init vector field navigation

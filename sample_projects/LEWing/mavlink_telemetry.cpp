@@ -189,10 +189,10 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 {
     bool init_success = true;
 
-    stabiliser_t* rate_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.rate_stabiliser;
-    // stabiliser_t* attitude_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.attitude_stabiliser;
-    stabiliser_t* velocity_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.velocity_stabiliser;
-    //stabiliser_t* position_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.position_stabiliser;
+    stabiliser_t* rate_stabiliser = &central_data->stabilisation_wing.stabiliser_stack.rate_stabiliser;
+    // stabiliser_t* attitude_stabiliser = &central_data->stabilisation_wing.stabiliser_stack.attitude_stabiliser;
+    stabiliser_t* velocity_stabiliser = &central_data->stabilisation_wing.stabiliser_stack.velocity_stabiliser;
+    //stabiliser_t* position_stabiliser= &central_data->stabilisation_wing.stabiliser_stack.position_stabiliser;
 
     // System ID
     init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*)&central_data->mavlink_communication.mavlink_stream.sysid, "ID_SYSID");
@@ -290,10 +290,6 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->thrust_controller.differentiator.gain,  "THRPPID_KD"    );
     //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->thrust_controller.soft_zone_width,      "THRPPID_SOFT"  );
 
-
-    // qfilter
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->attitude_filter.kp                                        , "QF_KP_ACC");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->attitude_filter.kp_mag                                    , "QF_KP_MAG");
     //init_success &= onboard_parameters_add_parameter_float ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].differentiator.gain         , "YAWAPID_D_GAIN"   );
 
     // Biases
@@ -361,7 +357,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
 
     mavlink_communication_t* mavlink_communication = &central_data->mavlink_communication;
 
-    stabiliser_t* stabiliser_show = &central_data->stabilisation_copter.stabiliser_stack.rate_stabiliser;
+    stabiliser_t* stabiliser_show = &central_data->stabilisation_wing.stabiliser_stack.rate_stabiliser;
 
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&state_telemetry_send_heartbeat,                                &central_data->state,                   MAVLINK_MSG_ID_HEARTBEAT);   // ID 0
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&state_telemetry_send_status,                                   &central_data->state,                   MAVLINK_MSG_ID_SYS_STATUS);   // ID 1

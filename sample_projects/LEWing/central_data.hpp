@@ -51,7 +51,7 @@
 #include "drivers/sonar.hpp"
 #include "hal/common/file.hpp"
 
-#include "control/stabilisation_copter.hpp"
+#include "control/stabilisation_wing.hpp"
 #include "communication/mavlink_communication.hpp"
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
@@ -60,14 +60,14 @@
 #include "communication/state_machine.hpp"
 #include "communication/data_logging.hpp"
 #include "communication/toggle_logging.hpp"
-#include "sensing/qfilter.hpp"
+#include "sensing/ahrs_madgwick.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "simulation/simulation.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "drivers/battery.hpp"
-#include "control/servos_mix_quadcopter_diag.hpp"
+#include "control/servos_mix_wing.hpp"
 #include "hal/common/led.hpp"
 #include "drivers/servos_telemetry.hpp"
 #include "hal/common/time_keeper.hpp"
@@ -80,10 +80,8 @@ extern "C"
 #include "util/print_util.h"
 #include "util/coord_conventions.h"
 #include "control/stabilisation.h"
-#include "control/attitude_controller.h"
 }
 
-#include "control/velocity_controller_copter.hpp"
 #include "control/vector_field_waypoint.hpp"
 
 /**
@@ -121,16 +119,17 @@ public:
     Servo&          servo_1;            ///< Reference to servos structure
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
+
     Airspeed_analog& airspeed_analog;   ///< Reference to the analog airspeed
 
     scheduler_t scheduler;
     mavlink_communication_t mavlink_communication;
 
     command_t command;
-    servos_mix_quadcotper_diag_t servo_mix;
+    servos_mix_wing_t servo_mix;
 
 
-    qfilter_t attitude_filter;                                  ///< The qfilter structure
+    ahrs_madgwick_t attitude_filter;                            ///< The attitude filter structure
     ahrs_t ahrs;                                                ///< The attitude estimation structure
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
@@ -138,7 +137,7 @@ public:
 
     manual_control_t manual_control;                            ///< The joystick parsing structure
 
-    stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
+    stabilisation_wing_t stabilisation_wing;                   ///< The stabilisation structure for a wing
 
     position_estimation_t position_estimation;                  ///< The position estimaton structure
     mavlink_waypoint_handler_t waypoint_handler;
@@ -154,8 +153,6 @@ public:
     Data_logging    data_logging;
     Data_logging    data_logging2;
 
-    attitude_controller_t           attitude_controller;
-    velocity_controller_copter_t    velocity_controller;
     vector_field_waypoint_t         vector_field_waypoint;
 
 private:

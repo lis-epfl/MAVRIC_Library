@@ -70,6 +70,10 @@ int main(void)
     // Create board
     // -------------------------------------------------------------------------
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
+
+    board_config.servo_config[1] = servo_default_config_standard();
+    board_config.servo_config[2] = servo_default_config_standard();
+
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
     Megafly_rev4 board = Megafly_rev4(board_config);
 
@@ -78,19 +82,21 @@ int main(void)
     // Create simulation
     // -------------------------------------------------------------------------
     // Simulated servos
-    // Pwm_dummy pwm[4];
+    // Pwm_dummy pwm[3];
     // Servo sim_servo_0(pwm[0], servo_default_config_esc());
-    // Servo sim_servo_1(pwm[1], servo_default_config_esc());
-    // Servo sim_servo_2(pwm[2], servo_default_config_esc());
-    // Servo sim_servo_3(pwm[3], servo_default_config_esc());
+    // Servo sim_servo_1(pwm[1], servo_default_config_standard());
+    // Servo sim_servo_2(pwm[2], servo_default_config_standard());
 
     // // Simulated dynamic model
-    // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
+    // Dynamic_model_wing sim_model    = Dynamic_model_wing(sim_servo_0, sim_servo_1, sim_servo_2);
     // Simulation sim                       = Simulation(sim_model);
 
     // // Simulated battery
     // Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
     // Battery  sim_battery     = Battery(sim_adc_battery);
+
+    // Adc_dummy    sim_adc_airspeed = Adc_dummy(12.0f);
+    // Airspeed_analog sim_airspeed_analog = Airspeed_analog(sim_adc_airspeed,airspeed_analog_default_config());
 
     // // Simulated IMU
     // Imu      sim_imu         = Imu(  sim.accelerometer(),
@@ -141,10 +147,10 @@ int main(void)
     //                              board.green_led,
     //                              board.file_flash,
     //                              sim_battery,
-    //                              board.servo_0,
-    //                              board.servo_1,
-    //                              board.servo_2,
-    //                              board.servo_3 );
+    //                              sim_servo_0,
+    //                              sim_servo_1,
+    //                              sim_servo_2,
+    //                              sim_servo_3 );
 
     // -------------------------------------------------------------------------
     // Initialisation
@@ -190,8 +196,6 @@ int main(void)
 
     print_util_dbg_print("mavlink_telemetry_init\r\n");
     delay_ms(150);
-
-    cd.state.mav_state = MAV_STATE_STANDBY;
 
     init_success &= tasks_create_tasks(&cd);
 
