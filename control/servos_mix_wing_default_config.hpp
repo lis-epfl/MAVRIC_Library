@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * Copyright (c) 2009-2016, MAV'RIC Development Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -51,9 +51,9 @@ extern "C"
 	#include "util/constants.h"
 }
 
-static inline servo_mix_wing_conf_t servo_mix_wing_default_config()
+static inline servos_mix_wing_conf_t servos_mix_wing_default_config()
 {
-	servo_mix_wing_conf_t conf;
+	servos_mix_wing_conf_t conf;
 
 	conf.servo_right = 2;
 	conf.servo_left = 1;

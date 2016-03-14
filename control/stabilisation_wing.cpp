@@ -79,12 +79,12 @@ float heading_from_velocity_vector(float *input_vel)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation)
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const stabilisation_wing_conf_t stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation)
 {
     bool init_success = true;
     
     //init dependencies
-    stabilisation_wing->stabiliser_stack = stabiliser_conf->stabiliser_stack;
+    stabilisation_wing->stabiliser_stack = stabiliser_conf.stabiliser_stack;
     stabilisation_wing->controls = controls;
     stabilisation_wing->torque_command = torque_command;
     stabilisation_wing->thrust_command = thrust_command;
@@ -93,14 +93,14 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
     stabilisation_wing->pos_est = pos_est;
     stabilisation_wing->airspeed_analog = airspeed_analog;
     stabilisation_wing->navigation = navigation;
-    stabilisation_wing->thrust_apriori  = stabiliser_conf->thrust_apriori;
-    stabilisation_wing->pitch_angle_apriori = stabiliser_conf->pitch_angle_apriori;
-    stabilisation_wing->pitch_angle_apriori_gain = stabiliser_conf->pitch_angle_apriori_gain;
-    stabilisation_wing->max_roll_angle = stabiliser_conf->max_roll_angle;
-    stabilisation_wing->take_off_thrust = stabiliser_conf->take_off_thrust;
-    stabilisation_wing->take_off_pitch = stabiliser_conf->take_off_pitch;
-    stabilisation_wing->landing_pitch = stabiliser_conf->landing_pitch;
-    stabilisation_wing->landing_max_roll = stabiliser_conf->landing_max_roll;
+    stabilisation_wing->thrust_apriori  = stabiliser_conf.thrust_apriori;
+    stabilisation_wing->pitch_angle_apriori = stabiliser_conf.pitch_angle_apriori;
+    stabilisation_wing->pitch_angle_apriori_gain = stabiliser_conf.pitch_angle_apriori_gain;
+    stabilisation_wing->max_roll_angle = stabiliser_conf.max_roll_angle;
+    stabilisation_wing->take_off_thrust = stabiliser_conf.take_off_thrust;
+    stabilisation_wing->take_off_pitch = stabiliser_conf.take_off_pitch;
+    stabilisation_wing->landing_pitch = stabiliser_conf.landing_pitch;
+    stabilisation_wing->landing_max_roll = stabiliser_conf.landing_max_roll;
     
     //init controller
     controls->control_mode = ATTITUDE_COMMAND_MODE;

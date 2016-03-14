@@ -110,7 +110,7 @@ typedef struct
  * \brief                           Initialize module stabilization
  *
  * \param   stabilisation_wing      The pointer to the stabilisation wing structure
- * \param   stabiliser_conf         The pointer to structure with all PID controllers
+ * \param   stabiliser_conf         The structure with all PID controllers
  * \param   controls                The pointer to the controlling inputs
  * \param   torque_command          The pointer to the torque command (output)
  * \param   thrust_command          The pointer to the thrust command (output)
@@ -122,7 +122,7 @@ typedef struct
  *
  * \return  True if the init succeed, false otherwise
  */
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisation_wing_conf_t* stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation);
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const stabilisation_wing_conf_t stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation);
 
 /**
  * \brief                       Main Controller for controlling and stabilizing the wing

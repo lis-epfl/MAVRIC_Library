@@ -48,8 +48,8 @@ extern "C"
 #include "util/constants.h"
 }
 
-bool servo_mix_wing_init(servo_mix_wing_t* mix, 
-                            const servo_mix_wing_conf_t* config, 
+bool servos_mix_wing_init(servos_mix_wing_t* mix, 
+                            const servos_mix_wing_conf_t config, 
                             const torque_command_t* torque_command,
                             const thrust_command_t* thrust_command,
                             Servo* servo_left,
@@ -66,20 +66,20 @@ bool servo_mix_wing_init(servo_mix_wing_t* mix,
     mix->motor          = motor;
 
     // Init parameters
-    mix->config.servo_right     = config->servo_right;
-    mix->config.servo_left      = config->servo_left;
-    mix->config.motor           = config->motor;
+    mix->config.servo_right     = config.servo_right;
+    mix->config.servo_left      = config.servo_left;
+    mix->config.motor           = config.motor;
     
-    mix->config.servo_right_dir = config->servo_right_dir;
-    mix->config.servo_left_dir  = config->servo_left_dir;
+    mix->config.servo_right_dir = config.servo_right_dir;
+    mix->config.servo_left_dir  = config.servo_left_dir;
     
-    mix->config.min_amplitude   = config->min_amplitude;
-    mix->config.max_amplitude   = config->max_amplitude;
-    mix->config.min_thrust      = config->min_thrust;
-    mix->config.max_thrust      = config->max_thrust;
+    mix->config.min_amplitude   = config.min_amplitude;
+    mix->config.max_amplitude   = config.max_amplitude;
+    mix->config.min_thrust      = config.min_thrust;
+    mix->config.max_thrust      = config.max_thrust;
     
-    mix->config.trim_roll       = config->trim_roll;
-    mix->config.trim_pitch      = config->trim_pitch;
+    mix->config.trim_roll       = config.trim_roll;
+    mix->config.trim_pitch      = config.trim_pitch;
     
     // Debug and return
     print_util_dbg_print("[SERVOS MIX WING] initialised \r\n");
@@ -87,7 +87,7 @@ bool servo_mix_wing_init(servo_mix_wing_t* mix,
 }
 
 
-void servos_mix_wing_update(servo_mix_wing_t* mix)
+void servos_mix_wing_update(servos_mix_wing_t* mix)
 {
     // Calculate value to be sent to the motors
     float tmp_right_servo   = mix->config.servo_right_dir * ( (mix->torque_command->xyz[1] + mix->config.trim_pitch) + (mix->torque_command->xyz[0] + mix->config.trim_roll) );
