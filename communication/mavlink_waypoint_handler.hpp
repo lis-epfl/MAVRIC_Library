@@ -51,6 +51,7 @@
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
+#include "control/dubin.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
@@ -76,6 +77,9 @@ typedef struct
     double z;                                                   ///< The value on the z axis (depends on the reference frame)
 } waypoint_struct_t;
 
+/**
+ * \brief   The MAVLink waypoint handler structure
+ */
 typedef struct
 {
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
@@ -83,9 +87,9 @@ typedef struct
     uint16_t number_of_waypoints;                               ///< The total number of waypoints
     int8_t current_waypoint_count;                              ///< The number of the current waypoint
 
-    local_position_t waypoint_coordinates;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-    local_position_t waypoint_hold_coordinates;                 ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-    local_position_t waypoint_critical_coordinates;             ///< The coordinates of the waypoint in critical state
+    waypoint_local_struct_t waypoint_coordinates;               ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+    waypoint_local_struct_t waypoint_hold_coordinates;          ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+    waypoint_local_struct_t waypoint_critical_coordinates;      ///< The coordinates of the waypoint in critical state
 
     bool hold_waypoint_set;                                     ///< Flag to tell if the hold position waypoint is set
 

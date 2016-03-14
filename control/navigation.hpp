@@ -48,7 +48,7 @@
 #include "communication/mavlink_communication.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
-
+#include "control/dubin.hpp"
 extern "C"
 {
 #include "control/stabilisation.h"
@@ -56,19 +56,45 @@ extern "C"
 #include "control/pid_controller.h"
 }
 
+typedef enum
+{
+    DIRECT_TO = 0,
+    DUBIN = 1,
+}navigation_type_t;
+
+/**
+ * \brief   The MAV'RIC waypoint structure
+ */
+typedef struct
+{
+    local_position_t waypoint;                                  ///< The local coordinates of the waypoint
+    float radius;                                               ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
+    float loiter_time;                                          ///< The loiter time at the waypoint
+    dubin_t dubin;                                              ///< The Dubin structure
+}waypoint_local_struct_t;
+
 /**
  * \brief The navigation structure
  */
 typedef struct
 {
+    dubin_state_t dubin_state;                          ///< The internal Dubin state
     float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
     pid_controller_t hovering_controller;               ///< hovering controller
     pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
     float cruise_speed;                                 ///< The cruise speed in m/s
     float max_climb_rate;                               ///< Max climb rate in m/s
     float soft_zone_size;                               ///< Soft zone of the velocity controller
+    float one_over_scaling;                             ///< Line vector field parameter
+    float vertical_vel_gain;                            ///< Gain for the vertical velocity calculation
+    float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
+    float minimal_radius;                               ///< The minimal circle radius
+    float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
+    float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing
 
-    local_position_t goal;                              ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
+    navigation_type_t navigation_type;                  ///< The type of navigation strategy
+
+    waypoint_local_struct_t goal;                       ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
 
     float dt;                                           ///< The time interval between two navigation updates
     uint32_t last_update;                               ///< The time of the last navigation update in ms
@@ -101,6 +127,8 @@ typedef struct
     float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
     float cruise_speed;                                 ///< The cruise speed in m/s
     float max_climb_rate;                               ///< Max climb rate in m/s
+    float one_over_scaling;                             ///< Line vector field parameter
+    float vertical_vel_gain;                            ///< Gain for the vertical velocity calculation
 
     float soft_zone_size;                               ///< Soft zone of the velocity controller
 
@@ -108,8 +136,16 @@ typedef struct
     float LPF_gain;                                     ///< The value of the low-pass filter gain
     float kp_yaw;                                       ///< The yaw gain in velocity control mode
 
+    float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
+    float minimal_radius;                               ///< The minimal circle radius
+    float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
+
+    float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
+
     pid_controller_t hovering_controller;               ///< hovering controller
     pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
+
+    navigation_type_t navigation_type;                  ///< The type of navigation strategy
 } navigation_config_t;
 
 /**

@@ -42,6 +42,7 @@
 
 #include "control/navigation.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "control/dubin.hpp"
 
 extern "C"
 {
@@ -71,6 +72,13 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
  * \param   navigation  The structure of navigation data
  */
 static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation);
+
+/**
+ * \brief                       Computes the Dubin path
+ * 
+ * \param   navigation          Pointer to navigation
+ */
+static void navigation_set_dubin_velocity(navigation_t* navigation, dubin_t* dubin);
 
 /**
  * \brief                       Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -201,17 +209,95 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
     }
 }
 
+static void navigation_set_dubin_velocity(navigation_t* navigation, dubin_t* dubin)
+{
+    float dir_desired[3], rel_pos[3];
+
+    rel_pos[Z] = 0.0f;
+
+    quat_t q_rot;
+    aero_attitude_t attitude_yaw;
+
+    switch(navigation->dubin_state)
+    {
+        case DUBIN_INIT:
+            dubin_circle(   dir_desired, 
+                            dubin->circle_center_1, 
+                            navigation->goal.radius, 
+                            navigation->position_estimation->local_position.pos, 
+                            navigation->cruise_speed,
+                            navigation->one_over_scaling );
+            break;
+        case DUBIN_CIRCLE1:
+            dubin_circle(   dir_desired, 
+                            dubin->circle_center_1, 
+                            dubin->radius_1, 
+                            navigation->position_estimation->local_position.pos, 
+                            navigation->cruise_speed,
+                            navigation->one_over_scaling );
+        break;
+
+        case DUBIN_STRAIGHT:
+            dubin_line( dir_desired, 
+                        dubin->line_direction,
+                        dubin->tangent_point_2,
+                        navigation->position_estimation->local_position.pos,
+                        navigation->cruise_speed,
+                        navigation->one_over_scaling);
+        break;
+
+        case DUBIN_CIRCLE2:
+            dubin_circle(   dir_desired, 
+                            dubin->circle_center_2, 
+                            navigation->goal.radius, 
+                            navigation->position_estimation->local_position.pos, 
+                            navigation->cruise_speed,
+                            navigation->one_over_scaling );
+        break;
+    }
+
+    float vert_vel = navigation->vertical_vel_gain * (navigation->goal.waypoint.pos[Z] - navigation->position_estimation->local_position.pos[Z]);
+
+    if (maths_f_abs(vert_vel) > navigation->max_climb_rate)
+    {
+        vert_vel = maths_sign(vert_vel) * navigation->max_climb_rate;
+    }
+
+    dir_desired[Z] = vert_vel;
+
+    // Transform the vector in the semi-global reference frame
+    attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
+    attitude_yaw.rpy[0] = 0.0f;
+    attitude_yaw.rpy[1] = 0.0f;
+    attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+    q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+    float dir_desired_sg[3];
+    quaternions_rotate_vector(q_rot, dir_desired, dir_desired_sg);
+
+    navigation->controls_nav->tvel[X] = dir_desired_sg[X];
+    navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
+    navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
+
+    float rel_heading;
+    rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - navigation->position_estimation->local_position.heading);
+    
+    navigation->controls_nav->rpy[YAW] = navigation->kp_yaw * rel_heading;
+}
+
 static void navigation_run(navigation_t* navigation)
 {
     float rel_pos[3];
 
     // Control in translational speed of the platform
-    navigation->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.pos,
+    navigation->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.waypoint.pos,
                               rel_pos,
                               navigation->position_estimation->local_position.pos);
     navigation_set_speed_command(rel_pos, navigation);
 
-    navigation->controls_nav->theading = navigation->goal.heading;
+    //navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
+
+    navigation->controls_nav->theading = navigation->goal.waypoint.heading;
 }
 
 //------------------------------------------------------------------------------
@@ -241,9 +327,9 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
     navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
     navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 
-    navigation->goal.pos[X] = 0.0f;
-    navigation->goal.pos[Y] = 0.0f;
-    navigation->goal.pos[Z] = 0.0f;
+    navigation->goal.waypoint.pos[X] = 0.0f;
+    navigation->goal.waypoint.pos[Y] = 0.0f;
+    navigation->goal.waypoint.pos[Z] = 0.0f;
 
     navigation->dist2wp_sqr = 0.0f;
 
@@ -254,11 +340,22 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
     navigation->cruise_speed = nav_config.cruise_speed;
     navigation->max_climb_rate = nav_config.max_climb_rate;
 
+    navigation->one_over_scaling = nav_config.one_over_scaling;
+
+    navigation->safe_altitude = nav_config.safe_altitude;
+    navigation->minimal_radius = nav_config.minimal_radius;
+    navigation->heading_acceptance = nav_config.heading_acceptance;
+    navigation->vertical_vel_gain = nav_config.vertical_vel_gain;
+    navigation->takeoff_altitude = nav_config.takeoff_altitude;
+
     navigation->soft_zone_size = nav_config.soft_zone_size;
 
     navigation->alt_lpf = nav_config.alt_lpf;
     navigation->LPF_gain = nav_config.LPF_gain;
     navigation->kp_yaw = nav_config.kp_yaw;
+
+    navigation->navigation_type = nav_config.navigation_type;
+    navigation->dubin_state = DUBIN_INIT;
 
     navigation->loop_count = 0;
 

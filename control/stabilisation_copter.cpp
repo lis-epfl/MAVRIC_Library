@@ -94,9 +94,9 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
     q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
 
     float pos_error[4];
-    pos_error[X] = waypoint_handler->waypoint_hold_coordinates.pos[X] - position_estimation->local_position.pos[X];
-    pos_error[Y] = waypoint_handler->waypoint_hold_coordinates.pos[Y] - position_estimation->local_position.pos[Y];
-    pos_error[3] = -(waypoint_handler->waypoint_hold_coordinates.pos[Z] - position_estimation->local_position.pos[Z]);
+    pos_error[X] = waypoint_handler->waypoint_hold_coordinates.waypoint.pos[X] - position_estimation->local_position.pos[X];
+    pos_error[Y] = waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Y] - position_estimation->local_position.pos[Y];
+    pos_error[3] = -(waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Z] - position_estimation->local_position.pos[Z]);
 
     pos_error[YAW] = input->rpy[YAW];
 

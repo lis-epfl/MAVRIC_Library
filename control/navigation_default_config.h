@@ -60,6 +60,13 @@ static inline navigation_config_t navigation_default_config()
     conf.alt_lpf                                     = 0.0f;
     conf.LPF_gain                                    = 0.9f;
     conf.kp_yaw                                      = 0.2f;
+    conf.one_over_scaling                            = 0.1f;
+    conf.safe_altitude                               = -30.0f;
+    conf.minimal_radius                              = 45.0f;
+    conf.heading_acceptance                          = PI/6.0f;
+    conf.vertical_vel_gain                           = 1.0f;
+    conf.takeoff_altitude                            = -40.0f;
+    conf.navigation_type                             = DIRECT_TO;
     conf.wpt_nav_controller                          = {};
     conf.wpt_nav_controller.p_gain                   = 0.7f;
     conf.wpt_nav_controller.clip_min                 = 0.0f;
