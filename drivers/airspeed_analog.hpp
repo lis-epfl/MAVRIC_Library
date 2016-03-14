@@ -76,17 +76,6 @@ public:
      */
     Airspeed_analog(Adc& adc, airspeed_analog_conf_t config = airspeed_analog_default_config());
 
-
-    /**
-     * \brief Initialize the airspeed sensor
-     *
-     * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
-     * \param analog_monitor pointer to the structure of analog monitor module
-     * \param analog_channel set which channel of the ADC is map to the airspeed sensor
-     *
-    */
-    bool init(const airspeed_analog_conf_t* config);
-
     /**
      * \brief Calibrates the airspeed sensor offset at 0 speed. It will continue calibrating until it is asked to stop.
      * 

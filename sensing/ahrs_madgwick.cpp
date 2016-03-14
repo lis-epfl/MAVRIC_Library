@@ -223,7 +223,7 @@ void ahrs_madgwick_algo(float gx, float gy, float gz, float ax, float ay, float 
 //------------------------------------------------------------------------------
 
 
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, Imu* imu, ahrs_t* ahrs, Airspeed_analog* airspeed_analog)
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t config, Imu* imu, ahrs_t* ahrs, Airspeed_analog* airspeed_analog)
 {
     // Init dependencies
     ahrs_madgwick->imu  = imu;
@@ -231,10 +231,10 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
     ahrs_madgwick->airspeed_analog = airspeed_analog;
     
     // Init config
-    ahrs_madgwick->beta = config->beta;
-    ahrs_madgwick->zeta = config->zeta;
-    ahrs_madgwick->acceleration_correction = config->acceleration_correction;
-    ahrs_madgwick->correction_speed = config->correction_speed;
+    ahrs_madgwick->beta = config.beta;
+    ahrs_madgwick->zeta = config.zeta;
+    ahrs_madgwick->acceleration_correction = config.acceleration_correction;
+    ahrs_madgwick->correction_speed = config.correction_speed;
     
     // Init global variables
     q0 = 1.0f;

@@ -98,13 +98,13 @@ typedef struct
  * \brief   Init function
  *
  * \param   ahrs_madgwick   Pointer to data structure
- * \param   config          Pointer to config structure
+ * \param   config          Config structure
  * \param   ahrs            Pointer to AHRS structure
  * \param   imu             Pointer to IMU structure
  *
  * \return  True if success, false if not
  */
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, Imu* imu, ahrs_t* ahrs, Airspeed_analog* airspeed_analog);
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t config, Imu* imu, ahrs_t* ahrs, Airspeed_analog* airspeed_analog);
 
 
 /**
