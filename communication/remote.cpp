@@ -473,6 +473,43 @@ void remote_get_velocity_vector(remote_t* remote, control_command_t* controls)
     controls->rpy[YAW]  = remote_get_yaw(remote);
 }
 
+void remote_get_rate_command_wing(remote_t* remote, control_command_t* controls)
+{
+    remote_update(remote);
+
+    /*  We want to obtain same results as with full manual control.
+        So, we want the output of the regulator to go from -1 to +1 on each axis
+        (if scaling is applied on manual mode by the remote, it will also be applied on the rate, so the remote scaling doesn't matter)
+        Assuming the regulators are only P, if the current rate is 0, we have at the output of the regulator: u = Kp*r = Kp * scaler * remoteInput
+        ==> we want u = remoteInput to have the same behavior
+        ==> scaler = 1/Kp
+    */
+
+    controls->rpy[ROLL] = 15.4f * remote_get_roll(remote);
+    controls->rpy[PITCH] = 18.2f * remote_get_pitch(remote);
+    controls->rpy[YAW] = remote_get_yaw(remote);
+    controls->thrust = remote_get_throttle(remote);
+}
+
+void remote_get_angle_command_wing(remote_t* remote, control_command_t* controls)
+{
+    remote_update(remote);
+
+    controls->rpy[ROLL] = asinf(remote_get_roll(remote));
+    controls->rpy[PITCH] = asinf(remote_get_pitch(remote));
+    controls->rpy[YAW] = asinf(remote_get_yaw(remote));
+    controls->thrust = remote_get_throttle(remote);
+}
+
+void remote_get_velocity_wing(remote_t* remote, const float ki_yaw, control_command_t* controls)
+{
+    remote_update(remote);
+
+    controls->tvel[X] = 10.0f * (1.0f + remote_get_throttle(remote));
+    controls->tvel[Y] = 0.0f;
+    controls->tvel[Z] = -6.0f * remote_get_pitch(remote);
+    controls->rpy[YAW] += ki_yaw * 0.2f * remote_get_roll(remote); // Turn rate
+}
 
 void remote_get_torque_command(const remote_t* remote, torque_command_t* command, float scale)
 {

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file manual_control.h
+ * \file manual_control.hpp
  *
  * \author MAV'RIC Team
  *
@@ -125,6 +125,33 @@ void manual_control_get_control_command(manual_control_t* manual_control, contro
  * \param   controls        The pointer to the command structure that will be executed
  */
 void manual_control_get_velocity_vector(manual_control_t* manual_control, control_command_t* controls);
+
+
+/**
+ * \brief   Selects the source input for the rate command for the wing
+ *
+ * \param   manual_control  The pointer to the manual control structure
+ * \param   controls        The pointer to the command structure that will be executed
+ */
+void manual_control_get_rate_command_wing(manual_control_t* manual_control, control_command_t* controls);
+
+
+/**
+ * \brief   Selects the source input for the attitude command for the wing
+ *
+ * \param   manual_control  The pointer to the manual control structure
+ * \param   controls        The pointer to the command structure that will be executed
+ */
+void manual_control_get_angle_command_wing(manual_control_t* manual_control, control_command_t* controls);
+
+/**
+ * \brief   Selects the source input for the velocity command for the wing
+ *
+ * \param   manual_control  The pointer to the manual control structure
+ * \param   ki_yaw          The yaw integrator gain
+ * \param   controls        The pointer to the command structure that will be executed
+ */
+void manual_control_get_velocity_vector_wing(manual_control_t* manual_control, const float ki_yaw, control_command_t* controls);
 
 
 /**

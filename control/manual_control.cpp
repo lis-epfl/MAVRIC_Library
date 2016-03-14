@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file manual_control.c
+ * \file manual_control.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -116,6 +116,59 @@ void manual_control_get_velocity_vector(manual_control_t* manual_control, contro
     }
 }
 
+void manual_control_get_rate_command_wing(manual_control_t* manual_control, control_command_t* controls)
+{
+    switch(manual_control->control_source)
+    {
+        case CONTROL_SOURCE_REMOTE:
+            remote_get_rate_command_wing(&manual_control->remote, controls);
+            break;
+        case CONTROL_SOURCE_JOYSTICK:
+            joystick_get_rate_command_wing(&manual_control->joystick, controls);
+        case CONTROL_SOURCE_NONE:
+            controls->rpy[ROLL] = 0.0f;
+            controls->rpy[PITCH] = 0.0f;
+            controls->rpy[YAW] = 0.0f;
+            controls->thrust = -1.0f;
+            break;
+    }
+}
+
+void manual_control_get_angle_command_wing(manual_control_t* manual_control, control_command_t* controls)
+{
+    switch(manual_control->control_source)
+    {
+        case CONTROL_SOURCE_REMOTE:
+            remote_get_angle_command_wing(&manual_control->remote, controls);
+            break;
+        case CONTROL_SOURCE_JOYSTICK:
+            joystick_get_angle_command_wing(&manual_control->joystick, controls);
+        case CONTROL_SOURCE_NONE:
+            controls->rpy[ROLL] = 0.0f;
+            controls->rpy[PITCH] = 0.0f;
+            controls->rpy[YAW] = 0.0f;
+            controls->thrust = -1.0f;
+            break;
+    }
+}
+
+void manual_control_get_velocity_vector_wing(manual_control_t* manual_control, const float ki_yaw, control_command_t* controls)
+{
+    switch(manual_control->control_source)
+    {
+        case CONTROL_SOURCE_REMOTE:
+            remote_get_velocity_wing(&manual_control->remote, ki_yaw, controls);
+            break;
+        case CONTROL_SOURCE_JOYSTICK:
+            joystick_get_velocity_wing(&manual_control->joystick, ki_yaw, controls);
+        case CONTROL_SOURCE_NONE:
+            controls->tvel[X] = 0.0f;
+            controls->tvel[Y] = 0.0f;
+            controls->tvel[Z] = 0.0f;
+            controls->rpy[YAW] = 0.0f;
+            break;
+    }
+}
 
 float manual_control_get_thrust(const manual_control_t* manual_control)
 {

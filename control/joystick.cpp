@@ -201,6 +201,38 @@ void joystick_get_velocity_vector(const joystick_t* joystick, control_command_t*
     controls->rpy[YAW] = joystick->channels.r * MAX_JOYSTICK_RANGE;
 }
 
+void joystick_get_rate_command_wing(joystick_t* joystick, control_command_t* controls)
+{
+    /*  We want to obtain same results as with full manual control.
+        So, we want the output of the regulator to go from -1 to +1 on each axis
+        (if scaling is applied on manual mode by the joystick, it will also be applied on the rate, so the remote scaling doesn't matter)
+        Assuming the regulators are only P, if the current rate is 0, we have at the output of the regulator: u = Kp*r = Kp * scaler * joystickInput
+        ==> we want u = remoteInput to have the same behavior
+        ==> scaler = 1/Kp
+    */
+
+    controls->rpy[ROLL] = 15.4f * joystick_get_roll(joystick);
+    controls->rpy[PITCH] = 18.2f * joystick_get_pitch(joystick);
+    controls->rpy[YAW] = joystick_get_yaw(joystick);
+    controls->thrust = joystick_get_throttle(joystick);
+}
+
+void joystick_get_angle_command_wing(joystick_t* joystick, control_command_t* controls)
+{
+    controls->rpy[ROLL] = asinf(joystick_get_roll(joystick));
+    controls->rpy[PITCH] = asinf(joystick_get_pitch(joystick));
+    controls->rpy[YAW] = asinf(joystick_get_yaw(joystick));
+    controls->thrust = joystick_get_throttle(joystick);
+}
+
+void joystick_get_velocity_wing(const joystick_t* joystick, const float ki_yaw, control_command_t* controls)
+{
+    controls->tvel[X] = 10.0f * (1.0f + joystick->channels.z * MAX_JOYSTICK_RANGE);
+    controls->tvel[Y] = 0.0f;
+    controls->tvel[Z] = -6.0f * joystick->channels.x * MAX_JOYSTICK_RANGE;
+    controls->rpy[YAW] += ki_yaw * 0.2f * joystick->channels.y * MAX_JOYSTICK_RANGE; // Turn rate
+}
+
 
 void joystick_get_control_command(const joystick_t* joystick, control_command_t* controls)
 {
