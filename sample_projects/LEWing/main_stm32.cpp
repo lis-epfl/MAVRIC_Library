@@ -105,11 +105,11 @@ int main(int argc, char** argv)
     init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
     // // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
-    {
-        // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-        init_success = false;
-    }
+    // if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
+    // {
+    //     // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+    //     init_success = false;
+    // }
 
     init_success &= mavlink_telemetry_init(&cd);
 

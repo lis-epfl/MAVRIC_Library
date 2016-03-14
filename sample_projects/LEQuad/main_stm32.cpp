@@ -51,7 +51,6 @@ extern "C"
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-
 int main(int argc, char** argv)
 {
     uint8_t sysid = 0;
@@ -90,6 +89,7 @@ int main(int argc, char** argv)
                                    board.servo_1,
                                    board.servo_2,
                                    board.servo_3,
+                                   board.airspeed_analog,
                                    dummy_file1,
                                    dummy_file2);
 
@@ -104,11 +104,11 @@ int main(int argc, char** argv)
     init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
     // // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
-    {
-        // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-        init_success = false;
-    }
+    // if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
+    // {
+    //     // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+    //     init_success = false;
+    // }
 
     init_success &= mavlink_telemetry_init(&cd);
 
@@ -118,43 +118,46 @@ int main(int argc, char** argv)
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
-    // -------------------------------------------------------------------------
-    // Main loop
-    // -------------------------------------------------------------------------
+    // // -------------------------------------------------------------------------
+    // // Main loop
+    // // -------------------------------------------------------------------------
 
-    // static uint8_t step = 0;
-    // while(1)
-    // {
-    //  step += 1;
+    // // static uint8_t step = 0;
+    // // while(1)
+    // // {
+    // //  step += 1;
 
-    //  if(step%2 == 0)
-    //  {
-    //      // board.red_led.toggle();
-    //  }
+    // //  if(step%2 == 0)
+    // //  {
+    // //      // board.red_led.toggle();
+    // //  }
 
-    //  // gpio_toggle(GPIOA, GPIO2);
-    //  // usart_send_blocking(UART4, step);
-    //  // usart_send(UART4, step);
-    //  // if( step == 80 )
-    //  // {
-    //  //  step = 1;
-    //  //  usart_send(UART4, '\r');
-    //  //  usart_send(UART4, '\n');
-    //  // }
-    //  // usart_enable_tx_interrupt(USART2);
-    //  board.serial_1.write(&step);
+    // //  // gpio_toggle(GPIOA, GPIO2);
+    // //  // usart_send_blocking(UART4, step);
+    // //  // usart_send(UART4, step);
+    // //  // if( step == 80 )
+    // //  // {
+    // //  //  step = 1;
+    // //  //  usart_send(UART4, '\r');
+    // //  //  usart_send(UART4, '\n');
+    // //  // }
+    // //  // usart_enable_tx_interrupt(USART2);
+    // //  board.serial_1.write(&step);
 
-    // }
+    // // }
 
-    board.green_led.on();
-    board.red_led.on();
+    if (init_success)
+    {
+        board.green_led.off();
+        board.red_led.off();
+    }
 
     while (1 == 1)
     {
-        gpio_toggle(GPIOC, GPIO14);
+        //gpio_toggle(GPIOC, GPIO14);
         // print_util_dbg_print("[HELLO].\r\n");
 
-        time_keeper_delay_ms(100);
+         //time_keeper_delay_ms(100);
 
         // board.red_led.toggle();
         scheduler_update(&cd.scheduler);

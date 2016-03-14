@@ -14,10 +14,10 @@ PROJ_NAME=LEQuad_megafly
 MAVRIC_SRC=../
 
 # Sources files for project folder (*.c and *.cpp)
-SRCS += main_avr32.cpp
-SRCS += central_data.cpp
-SRCS += mavlink_telemetry.cpp
-SRCS += tasks.cpp
+SRCS += sample_projects/LEQuad/main_avr32.cpp
+SRCS += sample_projects/LEQuad/central_data.cpp
+SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
+SRCS += sample_projects/LEQuad/tasks.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
@@ -32,6 +32,7 @@ LIB_INC += -I$(MAVRIC_LIB)
 include ${MAVRIC_LIB}rules_common.mk
 include ${MAVRIC_LIB}rules_libs.mk
 include ${MAVRIC_LIB}rules_avr32.mk
+include ${MAVRIC_LIB}rules_dummy.mk
 
 # add headers for libs/asf and for boards/mega_fly library (from includes)
 LIB_INC += $(addprefix -I${MAVRIC_LIB}, ${LIB_ASF_INC})
@@ -67,7 +68,7 @@ ASFLAGS += ${SRCS_INC}
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
 CC = avr32-gcc
-CFLAGS  = -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -Wall 
+CFLAGS += -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -Wall 
 CFLAGS += -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes 
 CFLAGS += -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MMD -MP
 # CFLAGS += -ffunction-sections
@@ -84,7 +85,7 @@ CFLAGS += ${SRCS_INC}
 # ------------------------------------------------------------------------------
 CXX = avr32-g++
 # CXXFLAGS  = -O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section 
-CXXFLAGS  = -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section 
+CXXFLAGS += -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section 
 CXXFLAGS += -g2 -Wall -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MMD -MP
 # CXXFLAGS += -D_DEFAULT_SOURCE 
 # CXXFLAGS += -ffunction-sections

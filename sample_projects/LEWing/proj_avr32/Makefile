@@ -14,10 +14,10 @@ PROJ_NAME=LEWing_megafly
 MAVRIC_SRC=../
 
 # Sources files for project folder (*.c and *.cpp)
-SRCS += main_avr32.cpp
-SRCS += central_data.cpp
-SRCS += mavlink_telemetry.cpp
-SRCS += tasks.cpp
+SRCS += sample_projects/LEWing/main_avr32.cpp
+SRCS += sample_projects/LEWing/central_data.cpp
+SRCS += sample_projects/LEWing/mavlink_telemetry.cpp
+SRCS += sample_projects/LEWing/tasks.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
@@ -32,6 +32,7 @@ LIB_INC += -I$(MAVRIC_LIB)
 include ${MAVRIC_LIB}rules_common.mk
 include ${MAVRIC_LIB}rules_libs.mk
 include ${MAVRIC_LIB}rules_avr32.mk
+include ${MAVRIC_LIB}rules_dummy.mk
 
 # add headers for libs/asf and for boards/mega_fly library (from includes)
 LIB_INC += $(addprefix -I${MAVRIC_LIB}, ${LIB_ASF_INC})
@@ -84,7 +85,7 @@ CFLAGS += ${SRCS_INC}
 # ------------------------------------------------------------------------------
 CXX = avr32-g++
 # CXXFLAGS  = -O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section 
-CXXFLAGS  = -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section 
+CXXFLAGS += -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section 
 CXXFLAGS += -g2 -Wall -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MMD -MP
 # CXXFLAGS += -D_DEFAULT_SOURCE 
 # CXXFLAGS += -ffunction-sections

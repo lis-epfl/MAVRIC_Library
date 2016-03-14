@@ -62,7 +62,7 @@
 // #include "simulation_telemetry.hpp"
 #include "runtime/scheduler_telemetry.hpp"
 #include "drivers/sonar_telemetry.hpp"
-#include "communication/toggle_logging_telemetry.hpp"
+#include "communication/data_logging_telemetry.hpp"
 #include "control/manual_control_telemetry.hpp"
 
 extern "C"
@@ -174,7 +174,10 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
     init_success &= gps_telemetry_init(&central_data->gps,
                                        &central_data->mavlink_communication.message_handler);
 
-    init_success &= toggle_logging_telemetry_init(&central_data->toggle_logging,
+    init_success &= data_logging_telemetry_init(&central_data->data_logging,
+                    &central_data->mavlink_communication.message_handler);
+
+    init_success &= data_logging_telemetry_init(&central_data->data_logging2,
                     &central_data->mavlink_communication.message_handler);
 
     return init_success;
@@ -348,6 +351,15 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 bool mavlink_telemetry_init(Central_data* central_data)
 {
     bool init_success = true;
+
+    init_success &= central_data->data_logging.create_new_log_file("Log_file",
+                    true,
+                    central_data->mavlink_communication.mavlink_stream.sysid);
+
+
+    init_success &= central_data->data_logging2.create_new_log_file("Log_Stat",
+                    false,
+                    central_data->mavlink_communication.mavlink_stream.sysid);
 
     init_success &= mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging, central_data);
 
