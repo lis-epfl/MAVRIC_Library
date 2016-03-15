@@ -58,6 +58,22 @@ const uint8_t FLOAT_DIGIT_COUNT = 3;
  */
 uint8_t strlen(const char* text);
 
+
+/**
+ * \brief   compares two null terminated strings
+ *
+ * \detail  reproduces the behaviour of the function strcmp of cstring
+ *
+ * \param   str1:   string to compare
+ * \param   str2:   string to compare
+ *
+ * \return  0 if the strings are equal
+ *          <0 the first character that does not match has a lower value in ptr1 than in ptr2;
+ *          >0 the first character that does not match has a greater value in ptr1 than in ptr2
+ */
+int8_t strcmp(const char* str1, const char* str2);
+
+
 /**
  * \brief   returns an array of ascii characters representing an integer
  *
