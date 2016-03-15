@@ -56,7 +56,7 @@ const uint8_t FLOAT_DIGIT_COUNT = 3;
  *
  * \return  length  number of characters excluding the termination character '\0'
  */
-uint8_t strlen(const char* text);
+long strlen(const char* text);
 
 
 /**
@@ -117,6 +117,20 @@ uint8_t* format_floating(T num, uint8_t* dest, uint8_t* length, uint8_t after_di
 */
 template <typename T>
 uint8_t* format_scientific(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits);
+
+
+/**
+ * \brief   copys a string with maximal length of max_len (including '\0')
+ *          if src is longer, dst is truncated
+ *
+ * \detail  reproduces behavior of FreeBSD strlcpy except for return
+ *
+ * \param   dst:    pointer to destination
+ * \param   src:    pointer to source
+ * \param   max_len: maximal length to be copied (INCLUDING '\0')
+ * \return  true dst == src, false if truncated
+ */
+bool strlcpy(char* dst, const char* src, uint16_t max_len);
 };
 
 #include "string_util.hxx"

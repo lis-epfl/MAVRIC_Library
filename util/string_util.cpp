@@ -44,14 +44,11 @@
 namespace str
 {
 
-uint8_t strlen(const char* text)
+long strlen(const char* text)
 {
-    uint8_t i = 0;
-    while (text[i] != '\0')
-    {
-        i++;
-    }
-    return i;
+    char* t = const_cast<char*>(text);
+    while(*(t++) != '\0');
+    return t - text - 1;
 }
 
 /**
@@ -69,15 +66,42 @@ uint8_t strlen(const char* text)
 int8_t strcmp(const char* str1, const char* str2)
 {
     int8_t d = 0;
-    int i=0;
+    char* s1 = const_cast<char*>(str1);
+    char* s2 = const_cast<char*>(str2);
     do
     {
-        d = str1[i] - str2[i];
+        d = *(s1++) - *(s2++);
         if(d != 0)
         {
             return d;
         }
-    }while(str1[i++] != '\0');
+    }while(*s1 != '\0');
     return 0;
+}
+
+/**
+ * \brief   copys a string with maximal length of max_len (including '\0')
+ *          if src is longer, dst is truncated
+ *
+ * \detail  reproduces behavior of FreeBSD strlcpy except for return
+ *
+ * \param   dst:    pointer to destination
+ * \param   src:    pointer to source
+ * \param   max_len: maximal length to be copied (INCLUDING '\0')
+ * \return  true dst == src, false if truncated
+ */
+bool strlcpy(char* dst, const char* src, uint16_t max_len)
+{
+    char* s = const_cast<char*>(src);
+    while(*s != '\0')
+    {
+        if(--max_len <= 0)
+        {
+            break;
+        }
+        *(dst++) = *(s++);
+    }
+    *dst = '\0';
+    return max_len > 0;
 }
 };
