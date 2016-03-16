@@ -176,8 +176,10 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init navigation
     // -------------------------------------------------------------------------
+    navigation_config_t nav_config = navigation_default_config();
+    nav_config.navigation_type = DUBIN;
     ret = navigation_init(&navigation,
-                          navigation_default_config(),
+                          nav_config,
                           &controls_nav,
                           &ahrs.qe,
                           &position_estimation,

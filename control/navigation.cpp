@@ -293,9 +293,17 @@ static void navigation_run(navigation_t* navigation)
     navigation->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.waypoint.pos,
                               rel_pos,
                               navigation->position_estimation->local_position.pos);
-    navigation_set_speed_command(rel_pos, navigation);
+    
+    switch(navigation->navigation_type)
+    {
+        case DIRECT_TO:
+            navigation_set_speed_command(rel_pos, navigation);
+        break;
 
-    //navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
+        case DUBIN:
+            navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
+        break;
+    }
 
     navigation->controls_nav->theading = navigation->goal.waypoint.heading;
 }
