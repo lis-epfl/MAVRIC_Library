@@ -43,7 +43,6 @@
 #include "fat_fs_mounting_telemetry.h"
 #include "time_keeper.h"
 #include "print_util.h"
-#include "delay.h"
 
 /**
  * \brief	Toggle the fat_fs_mounting
@@ -71,8 +70,6 @@ static mav_result_t fat_fs_mounting_telemetry_toggle_logging(fat_fs_mounting_t* 
 
 			fat_fs_mounting_mount(fat_fs_mounting,true);
 
-			delay_ms(250);
-
 			if (fat_fs_mounting->sys_mounted)
 			{
 				result = MAV_RESULT_ACCEPTED;
@@ -84,8 +81,6 @@ static mav_result_t fat_fs_mounting_telemetry_toggle_logging(fat_fs_mounting_t* 
 				result = MAV_RESULT_DENIED;
 				print_util_dbg_print("Mounting failed\r\n");
 			}
-
-			delay_ms(250);
 		}
 		else
 		{
