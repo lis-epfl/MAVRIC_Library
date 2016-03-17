@@ -111,6 +111,10 @@ int main(int argc, char** argv)
     // Init central data
     init_success &= cd.init();
 
+    // Disabling the remote in emulation
+    cd.manual_control.control_source = CONTROL_SOURCE_NONE;
+    cd.manual_control.mode_source = MODE_SOURCE_GND_STATION;
+
     init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
     // Try to read from flash, if unsuccessful, write to flash
