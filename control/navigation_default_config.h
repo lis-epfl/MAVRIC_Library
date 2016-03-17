@@ -65,7 +65,7 @@ static inline navigation_config_t navigation_default_config()
     conf.minimal_radius                              = 45.0f;
     conf.heading_acceptance                          = PI/6.0f;
     conf.vertical_vel_gain                           = 1.0f;
-    conf.takeoff_altitude                            = -40.0f;
+    conf.takeoff_altitude                            = -10.0f;
     conf.navigation_type                             = DIRECT_TO;
     conf.wpt_nav_controller                          = {};
     conf.wpt_nav_controller.p_gain                   = 0.7f;

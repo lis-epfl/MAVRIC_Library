@@ -75,7 +75,7 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     servo_2(servo_2),
     servo_3(servo_3),
     airspeed_analog(airspeed_analog),
-    state(battery, state_default_config()),
+    state(battery, state_wing_default_config()),
     data_logging(file1, state, data_logging_default_config()),
     data_logging2(file2, state, data_logging_default_config()),
     sysid_(sysid)
@@ -178,6 +178,7 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     navigation_config_t nav_config = navigation_default_config();
     nav_config.navigation_type = DUBIN;
+    nav_config.takeoff_altitude = -40.0f;
     ret = navigation_init(&navigation,
                           nav_config,
                           &controls_nav,
