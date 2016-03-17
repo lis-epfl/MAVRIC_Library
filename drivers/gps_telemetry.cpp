@@ -85,7 +85,7 @@ static mav_result_t gps_start_configuration(Gps* gps, mavlink_command_long_t* pa
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool gps_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler)
+bool gps_telemetry_init(Gps* gps, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
@@ -98,12 +98,12 @@ bool gps_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler)
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (mavlink_cmd_callback_function_t)    &gps_start_configuration;
     callbackcmd.module_struct =                                 gps;
-    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;
 }
 
-void gps_telemetry_send_raw(const Gps* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void gps_telemetry_send_raw(const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     global_position_t global_position = gps->position_gf();
     float ground_speed = maths_fast_sqrt(gps->velocity_lf()[X] * gps->velocity_lf()[X]

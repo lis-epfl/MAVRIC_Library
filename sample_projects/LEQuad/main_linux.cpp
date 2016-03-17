@@ -81,8 +81,8 @@ int main(int argc, char** argv)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using simulated sensors
-    Central_data cd = Central_data(sysid,
-                                   board.imu,
+    central_data_conf_t central_data_config = central_data_default_config(sysid);
+    Central_data cd = Central_data(board.imu,
                                    board.sim.barometer(),
                                    board.sim.gps(),
                                    board.sim.sonar(),
@@ -96,7 +96,8 @@ int main(int argc, char** argv)
                                    board.servo_2,
                                    board.servo_3,
                                    file_log,
-                                   file_stat);
+                                   file_stat,
+                                   central_data_config);
 
 
     // -------------------------------------------------------------------------
@@ -111,12 +112,14 @@ int main(int argc, char** argv)
     // Init central data
     init_success &= cd.init();
 
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+
+    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.get_onboard_parameters();
+    init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
 
     // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
+    if (onboard_parameters->read_parameters_from_storage() == false)
     {
-        onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+        onboard_parameters->write_parameters_to_storage();
         init_success = false;
     }
     
@@ -131,9 +134,9 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-    while (1 == 1)
+    while (1)
     {
-        scheduler_update(&cd.scheduler);
+        cd.scheduler.update();
     }
 
     return 0;

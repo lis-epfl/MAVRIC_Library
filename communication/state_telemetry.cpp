@@ -207,7 +207,7 @@ static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_comm
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_telemetry_init(State* state, mavlink_message_handler_t* message_handler)
+bool state_telemetry_init(State* state, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
@@ -219,14 +219,14 @@ bool state_telemetry_init(State* state, mavlink_message_handler_t* message_handl
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (mavlink_msg_callback_function_t) &state_telemetry_heartbeat_received;
     callback.module_struct  = (handling_module_struct_t)        state;
-    init_success &= mavlink_message_handler_add_msg_callback(message_handler, &callback);
+    init_success &= message_handler->add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_SET_MODE; // 11
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (mavlink_msg_callback_function_t) &state_telemetry_set_mav_mode;
     callback.module_struct  = (handling_module_struct_t)        state;
-    init_success &= mavlink_message_handler_add_msg_callback(message_handler, &callback);
+    init_success &= message_handler->add_msg_callback(&callback);
 
     // Add callbacks for waypoint handler commands requests
     mavlink_message_handler_cmd_callback_t callbackcmd;
@@ -237,12 +237,12 @@ bool state_telemetry_init(State* state, mavlink_message_handler_t* message_handl
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (mavlink_cmd_callback_function_t)    &state_telemetry_set_mode_from_cmd;
     callbackcmd.module_struct =                                 state;
-    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;
 }
 
-void state_telemetry_send_heartbeat(const State* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void state_telemetry_send_heartbeat(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_heartbeat_pack(mavlink_stream->sysid,
                                mavlink_stream->compid,
@@ -254,7 +254,7 @@ void state_telemetry_send_heartbeat(const State* state, const mavlink_stream_t* 
                                state->mav_state);
 }
 
-void state_telemetry_send_status(const State* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void state_telemetry_send_status(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_sys_status_pack(mavlink_stream->sysid,
                                 mavlink_stream->compid,

@@ -48,7 +48,7 @@ extern "C"
 #include "util/maths.h"
 }
 
-void sonar_telemetry_send(const Sonar* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void sonar_telemetry_send(const Sonar* sonar, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_distance_sensor_pack(mavlink_stream->sysid,
                                      mavlink_stream->compid,

@@ -75,21 +75,6 @@ typedef struct
 
 
 /**
- * \brief   Main structure for the MAVLink stream module
- */
-typedef struct
-{
-    Serial*      serial;
-    uint32_t sysid;         ///< System ID
-    uint32_t compid;        ///< System Component ID
-    mavlink_received_t rec;     ///< Last received message
-    bool msg_available;     ///< Indicates if a new message is available and not handled yet
-    uint8_t mavlink_channel;    ///< Channel number used internally by mavlink to retrieve incomplete incoming message
-    bool debug;         ///< Debug flag
-} mavlink_stream_t;
-
-
-/**
  * \brief   Configuration structure for the module MAVLink stream
  */
 typedef struct
@@ -99,45 +84,50 @@ typedef struct
     bool     debug;                 ///< Debug flag
 } mavlink_stream_conf_t;
 
-
 /**
- * \brief   Initialization of MAVLink sysid, compid and scheduler to send messages
- *
- * \param   mavlink_stream      Pointer to the MAVLink stream structure
- * \param   config              Configuration
- * \param   rx_stream;          Output stream
- * \param   tx_stream;          Input stream
- *
- * \return  Success
+ * \brief   Main structure for the MAVLink stream module
  */
-bool mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config, Serial* serial);
+class Mavlink_stream
+{
+    friend class Mavlink_message_handler;
+public:
+
+    Mavlink_stream(Serial& serial, const mavlink_stream_conf_t& config);
 
 
-/**
- * \brief   Send Mavlink stream
- *
- * \param   mavlink_stream      Pointer to the MAVLink stream structure
- * \param   msg                 msg to stream
- *
- * \return success
- */
-bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+    /**
+     * \brief   Send Mavlink stream
+     *
+     * \param   msg                 msg to stream
+     *
+     * \return success
+     */
+    bool send(mavlink_message_t* msg) const;
+
+    /**
+     * \brief   Mavlink parsing of message
+     *
+     * \return  Success         True if a message was successfully decoded, false else
+     */
+    bool receive();
+
+    /**
+     * \brief   Flushing MAVLink stream
+     */
+    void flush();
 
 
-/**
- * \brief   Mavlink parsing of message
- *
- * \param   mavlink_stream  Pointer to the MAVLink receive stream structure
- *
- * \return  Success         True if a message was successfully decoded, false else
- */
-bool mavlink_stream_receive(mavlink_stream_t* mavlink_stream);
-
-
-/**
- * \brief   Flushing MAVLink stream
- */
-void mavlink_stream_flush(mavlink_stream_t* mavlink_stream);
-
+    uint32_t sysid;             ///< System ID
+    uint32_t compid;            ///< System Component ID
+    bool msg_available;         ///< Indicates if a new message is available and not handled yet
+    mavlink_received_t rec;     ///< Last received message
+    //friend bool mavlink_communication_update(Mavlink_communication* mavlink_communication);
+    //friend static bool onboard_parameters_send_one_parameter_now(Onboard_parameters* onboard_parameters, uint32_t index);
+    //friend bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
+private:
+    Serial& serial;
+    uint8_t mavlink_channel;    ///< Channel number used internally by mavlink to retrieve incomplete incoming message
+    bool debug;                 ///< Debug flag
+};
 
 #endif /* MAVLINK_STREAM_H */

@@ -48,7 +48,7 @@ extern "C"
 #include "hal/common/time_keeper.hpp"
 }
 
-void barometer_telemetry_send(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void barometer_telemetry_send(const Barometer* barometer, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_scaled_pressure_pack(mavlink_stream->sysid,
                                      mavlink_stream->compid,

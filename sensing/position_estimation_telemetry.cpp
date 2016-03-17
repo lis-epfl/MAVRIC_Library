@@ -122,7 +122,7 @@ static mav_result_t position_estimation_set_new_home_position(position_estimatio
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_message_handler_t* mavlink_handler)
+bool position_estimation_telemetry_init(position_estimation_t* pos_est, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
@@ -134,13 +134,13 @@ bool position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_
     callbackcmd.compid_target = MAV_COMP_ID_ALL;
     callbackcmd.function      = (mavlink_cmd_callback_function_t)   &position_estimation_set_new_home_position;
     callbackcmd.module_struct =                                     pos_est;
-    init_success &= mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;
 }
 
 
-void position_estimation_telemetry_send_position(const position_estimation_t* pos_est, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void position_estimation_telemetry_send_position(const position_estimation_t* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_local_position_ned_pack(mavlink_stream->sysid,
                                         mavlink_stream->compid,
@@ -154,7 +154,7 @@ void position_estimation_telemetry_send_position(const position_estimation_t* po
                                         pos_est->vel_bf[2]);
 }
 
-void position_estimation_telemetry_send_global_position(const position_estimation_t* pos_est, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void position_estimation_telemetry_send_global_position(const position_estimation_t* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     // send integrated position (for now there is no GPS error correction...!!!)
     global_position_t gpos = coord_conventions_local_to_global_position(pos_est->local_position);

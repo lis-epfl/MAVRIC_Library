@@ -184,7 +184,7 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool imu_telemetry_init(Imu* imu, mavlink_message_handler_t* message_handler)
+bool imu_telemetry_init(Imu* imu, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
@@ -197,12 +197,12 @@ bool imu_telemetry_init(Imu* imu, mavlink_message_handler_t* message_handler)
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (mavlink_cmd_callback_function_t)    &imu_telemetry_start_calibration;
     callbackcmd.module_struct =                                 imu;
-    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;
 }
 
-void imu_telemetry_send_scaled(const Imu* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void imu_telemetry_send_scaled(const Imu* imu, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     std::array<float, 3> acc  = imu->acc();
     std::array<float, 3> gyro = imu->gyro();

@@ -41,7 +41,6 @@
 
 #include "sample_projects/LEQuad/central_data.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
-#include "communication/mavlink_communication_default_config.hpp"
 
 #include "sensing/position_estimation_default_config.hpp"
 #include "communication/remote_default_config.hpp"
@@ -61,7 +60,7 @@ extern "C"
 }
 
 
-Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2):
+Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, const central_data_conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -75,12 +74,14 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
+    scheduler(scheduler_default_config()),
+    mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
     state(battery, state_default_config()),
     data_logging(file1, state, data_logging_default_config()),
     data_logging2(file2, state, data_logging_default_config()),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),
     altitude_controller_(command.position, altitude_, command.thrust),
-    sysid_(sysid)
+    sysid_(mavlink_communication.get_sysid())
 {}
 
 
@@ -88,7 +89,6 @@ bool Central_data::init(void)
 {
     bool init_success = true;
     bool ret;
-
     print_util_dbg_sep('%');
     time_keeper_delay_ms(50);
     print_util_dbg_sep('-');
@@ -101,27 +101,7 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init main sheduler
     // -------------------------------------------------------------------------
-    ret = scheduler_init(&scheduler, scheduler_default_config());
-    print_util_dbg_init_msg("[SCHEDULER]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init mavlink communication
-    // -------------------------------------------------------------------------
-    mavlink_communication_conf_t mavlink_communication_config = mavlink_communication_default_config();
-    mavlink_communication_config.mavlink_stream_config.sysid = sysid_;
-    mavlink_communication_config.message_handler_config.debug = true;
-    mavlink_communication_config.onboard_parameters_config.debug = true;
-    mavlink_communication_config.mavlink_stream_config.debug = true;
-    ret = mavlink_communication_init(&mavlink_communication,
-                                     mavlink_communication_config,
-                                     &serial_mavlink,
-                                     &state,
-                                     &file_flash);
-    print_util_dbg_init_msg("[MAVLINK]", ret);
-    init_success &= ret;
+    print_util_dbg_init_msg("[SCHEDULER]", true);
     time_keeper_delay_ms(50);
 
 
@@ -200,7 +180,7 @@ bool Central_data::init(void)
                                 &state,
                                 &manual_control,
                                 &mavlink_communication,
-                                &mavlink_communication.mavlink_stream);
+                                &mavlink_communication.get_mavlink_stream());
     waypoint_handler_init_homing_waypoint(&waypoint_handler);
     waypoint_handler_nav_plan_init(&waypoint_handler);
     print_util_dbg_init_msg("[WAYPOINT]", ret);

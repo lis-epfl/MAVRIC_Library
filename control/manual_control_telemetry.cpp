@@ -100,7 +100,7 @@ static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t*
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_message_handler_t* message_handler)
+bool manual_control_telemetry_init(manual_control_t* manual_control, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
@@ -119,13 +119,13 @@ bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_mes
     callbackcmd.compid_target = MAV_COMP_ID_SYSTEM_CONTROL; // 250
     callbackcmd.function = (mavlink_cmd_callback_function_t)    &manual_control_telemetry_toggle_remote_use;
     callbackcmd.module_struct =                                 manual_control;
-    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;
 }
 
 
-void manual_control_telemetry_send(const manual_control_t* manual_control, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void manual_control_telemetry_send(const manual_control_t* manual_control, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     switch (manual_control->control_source)
     {
@@ -147,7 +147,7 @@ void manual_control_telemetry_send(const manual_control_t* manual_control, const
                                                 manual_control->remote.channels[6] * 10000.0f,
                                                 manual_control->remote.channels[7] * 10000.0f,
                                                 manual_control->remote.mode.current_desired_mode);
-            mavlink_stream_send(mavlink_stream, msg);
+            mavlink_stream->send(msg);
             mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid,
                                                 mavlink_stream->compid,
                                                 msg,

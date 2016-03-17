@@ -49,7 +49,7 @@ extern "C"
 #include "util/constants.h"
 }
 
-void  stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void  stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_pack(mavlink_stream->sysid,
             mavlink_stream->compid,
@@ -61,7 +61,7 @@ void  stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t*
             stabiliser->thrust_controller.output);
 }
 
-void  stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void  stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_pack(mavlink_stream->sysid,
             mavlink_stream->compid,
@@ -73,7 +73,7 @@ void  stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabilise
             stabiliser->thrust_controller.error);
 }
 
-void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* controls, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     // Controls output
     mavlink_msg_roll_pitch_yaw_thrust_setpoint_pack(mavlink_stream->sysid,
@@ -86,7 +86,7 @@ void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* c
             controls->thrust);
 }
 
-void stabilisation_telemetry_send_control(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void stabilisation_telemetry_send_control(const control_command_t* controls, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     switch (controls->control_mode)
     {
@@ -125,7 +125,7 @@ void stabilisation_telemetry_send_control(const control_command_t* controls, con
     }
 }
 
-void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_copter, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_copter, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     aero_attitude_t attitude_yaw_inverse;
     quat_t q_rot, qtmp;
@@ -148,7 +148,7 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
                                 -rpy_local.v[X] * 1000,
                                 rpy_local.v[Y] * 1000,
                                 stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy[YAW] * 1000);
-    mavlink_stream_send(mavlink_stream, msg);
+    mavlink_stream->send(msg);
 
     mavlink_msg_debug_vect_pack(mavlink_stream->sysid,
                                 mavlink_stream->compid,
@@ -158,7 +158,7 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
                                 stabilisation_copter->stabiliser_stack.attitude_stabiliser.output.rpy[ROLL] * 1000,
                                 stabilisation_copter->stabiliser_stack.attitude_stabiliser.output.rpy[PITCH] * 1000,
                                 stabilisation_copter->stabiliser_stack.attitude_stabiliser.output.rpy[YAW] * 1000);
-    mavlink_stream_send(mavlink_stream, msg);
+    mavlink_stream->send(msg);
 
     mavlink_msg_debug_vect_pack(mavlink_stream->sysid,
                                 mavlink_stream->compid,
@@ -168,5 +168,5 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
                                 stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[ROLL] * 1000,
                                 stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[PITCH] * 1000,
                                 stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[YAW] * 1000);
-    mavlink_stream_send(mavlink_stream, msg);
+    mavlink_stream->send(msg);
 }

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file scheduler.h
+ * \file scheduler.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -41,20 +41,13 @@
  ******************************************************************************/
 
 
-#ifndef SCHEDULER_H_
-#define SCHEDULER_H_
+#ifndef SCHEDULER_HPP_
+#define SCHEDULER_HPP_
+
+#include <stdint.h>
 
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-#include "stdint.h"
-#include <stdbool.h>
-
-#define SCHEDULER_TIMEBASE 1000000  ///< time base for the scheduler
-
+#define SchedulerIMEBASE 1000000  ///< time base for the scheduler
 
 typedef uint8_t task_handle_t;
 
@@ -163,20 +156,6 @@ typedef struct task_set_t
 
 
 /**
- * \brief   Scheduler
- *
- * \details     task_set is implemented as pointer because its memory will be
- *              allocated during initialisation
- */
-typedef struct
-{
-    bool debug;                                 ///<    Indicates whether the scheduler should print debug messages
-    schedule_strategy_t schedule_strategy;      ///<    Scheduling strategy
-    task_set_t* task_set;                       ///<    Pointer to task set, needs memory allocation
-} scheduler_t;
-
-
-/**
  * \brief Scheduler configuration
  */
 typedef struct
@@ -188,111 +167,139 @@ typedef struct
 
 
 /**
- * \brief               Scheduler module initialisation
+ * \brief   Scheduler
  *
- * \param   scheduler   Pointer to scheduler
- * \param   config      Configuration
- *
- * \return  True if the init succeed, false otherwise
+ * \details     task_set is implemented as pointer because its memory will be
+ *              allocated during initialisation
  */
-bool scheduler_init(scheduler_t* scheduler, const scheduler_conf_t config);
+class Scheduler
+{
+public:
+    /**
+     * \brief               Constructor
+     *
+     * \param   config      Configuration
+     */
+    Scheduler(const scheduler_conf_t config);
 
 
-/**
- * \brief                   Register a new task to the task set, in the first available slot
- *
- * \param scheduler         Pointer to scheduler
- * \param repeat_period     Repeat period (us)
- * \param run_mode          Run mode
- * \param timing_mode       Timing mode
- * \param priority          Priority
- * \param call_function     Function pointer to be called
- * \param function_argument Argument to be passed to the function
- * \param task_id           Unique task identifier
- *
- * \return                  True if the task was successfully added, False if not
- */
-bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, task_function_t call_function, task_argument_t function_argument, uint32_t task_id);
+    /**
+     * \brief                   Register a new task to the task set, in the first available slot
+     *
+     * \param repeat_period     Repeat period (us)
+     * \param run_mode          Run mode
+     * \param timing_mode       Timing mode
+     * \param priority          Priority
+     * \param call_function     Function pointer to be called
+     * \param function_argument Argument to be passed to the function
+     * \param task_id           Unique task identifier
+     *
+     * \return                  True if the task was successfully added, False if not
+     */
+    bool add_task(uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, task_function_t call_function, task_argument_t function_argument, uint32_t task_id);
 
 
-/**
-* \brief                Sort tasks by decreasing priority, then by increasing repeat period
-*
-* \param    scheduler   Pointer to scheduler
-*
-* \return               True if the task was successfully sorted, False if not
- */
-bool scheduler_sort_tasks(scheduler_t* scheduler);
+    /**
+     * \brief                Sort tasks by decreasing priority, then by increasing repeat period
+     *
+     * \return               True if the task was successfully sorted, False if not
+     */
+    bool sort_tasks();
 
 
-/**
- * \brief                Run update (check for tasks ready for execution and execute them)
- *
- * \param   scheduler    Pointer to scheduler
- *
- * \return               Number of realtime violations
- */
-int32_t scheduler_update(scheduler_t* scheduler);
+    /**
+     * \brief                Run update (check for tasks ready for execution and execute them)
+     *
+     * \return               Number of realtime violations
+     */
+    int32_t update();
 
 
-/**
- * \brief               Find a task according to its idea
- *
- * \param   scheduler   Pointer to scheduler
- * \param   task_id     ID of the target task
- *
- * \return              Pointer to the target task
- */
-task_entry_t* scheduler_get_task_by_id(const scheduler_t* scheduler, uint16_t task_id);
+    /**
+     * \brief               Find a task according to its idea
+     *
+     * \param   task_id     ID of the target task
+     *
+     * \return              Pointer to the target task
+     */
+    task_entry_t* get_task_by_id(uint16_t task_id) const;
 
 
-/**
- * \brief               Find a task according to its index
- *
- * \param scheduler     Pointer to the scheduler
- * \param task_index    Index of the target task
- *
- * \return              Pointer to the target task
- */
-task_entry_t* scheduler_get_task_by_index(const scheduler_t* scheduler, uint16_t task_index);
+    /**
+     * \brief               Find a task according to its index
+     *
+     * \param task_index    Index of the target task
+     *
+     * \return              Pointer to the target task
+     */
+    task_entry_t* get_task_by_index(uint16_t task_index) const;
 
 
-/**
- * \brief               Modifies the run mode of an existing task
- *
- * \param te            Pointer to a task entry
- * \param new_run_mode  New run mode
- */
-void scheduler_change_run_mode(task_entry_t* te, task_run_mode_t new_run_mode);
+    /**
+     * \brief               Returns whether scheduler is in debug mode (printing messages)
+     *
+     * \param task_index    Index of the target task
+     *
+     * \return              Pointer to the target task
+     */
+    bool is_debug();
 
 
-/**
- * \brief                   Modifies the period of execution of an existing task
- *
- * \param te                Pointer to a task entry
- * \param repeat_period     New repeat period (us)
- */
-void scheduler_change_task_period(task_entry_t* te, uint32_t repeat_period);
+    /**
+     * \brief           Suspends all tasks
+     *
+     * \param delay     Duration (us)
+     */
+    void suspend_all_tasks(uint32_t delay);
 
 
-/**
- * \brief           Suspends a task
- *
- * \param te        Pointer to a task entry
- * \param delay     Duration (us)
- */
-void scheduler_suspend_task(task_entry_t* te, uint32_t delay);
+    /**
+     * \brief       Run all tasks immediately
+     *
+     */
+    void run_all_tasks_now();
 
 
-/**
- * \brief       Run a task immediately
- *
- * \param te    Pointer to a task entry
- */
-void scheduler_run_task_now(task_entry_t* te);
+    /**
+     * \brief               Modifies the run mode of an existing task
+     *
+     * \param te            Pointer to a task entry
+     * \param new_run_mode  New run mode
+     */
+    static void change_run_mode(task_entry_t* te, task_run_mode_t new_run_mode);
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif /* SCHEDULER_H_ */
+    /**
+     * \brief                   Modifies the period of execution of an existing task
+     *
+     * \param tep                Pointer to a task entry
+     * \param repeat_period     New repeat period (us)
+     */
+    static void change_task_period(task_entry_t* te, uint32_t repeat_period);
+
+
+    /**
+     * \brief           Suspends a task
+     *
+     * \param te        Pointer to a task entry
+     * \param delay     Duration (us)
+     */
+    static void suspend_task(task_entry_t* te, uint32_t delay);
+
+
+    /**
+     * \brief       Run a task immediately
+     *
+     * \param te    Pointer to a task entry
+     */
+    static void run_task_now(task_entry_t* te);
+
+
+private:
+    task_set_t* task_set;                       ///<    Pointer to task set, needs memory allocation
+    schedule_strategy_t schedule_strategy;      ///<    Scheduling strategy
+    bool debug;                                 ///<    Indicates whether the scheduler should print debug messages
+
+};
+
+#endif /* SCHEDULER_HPP_ */

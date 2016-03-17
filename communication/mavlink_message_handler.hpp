@@ -140,21 +140,6 @@ typedef struct
 
 
 /**
- * \brief       Main message handler structure
- *
- * \details     msg_callback_set and cmd_callback_set are implemented as pointer
- *              because their memory will be allocated during initialisation
- */
-typedef struct
-{
-    mavlink_message_handler_msg_callback_set_t* msg_callback_set;   ///<    Set of message callbacks
-    mavlink_message_handler_cmd_callback_set_t* cmd_callback_set;   ///<    Set of command callbacks
-    bool debug;                                                     ///<    Indicates whether debug message are written for every incoming message
-    const mavlink_stream_t* mavlink_stream;
-} mavlink_message_handler_t;
-
-
-/**
  * \brief   Structure used to hold parameters during initialisation
  */
 typedef struct
@@ -166,76 +151,117 @@ typedef struct
 
 
 /**
- * \brief                       Initialises the message handler module
+ * \brief       Main message handler structure
  *
- * \param   message_handler     Pointer to message handler data structure
- * \param   config              Config parameters
- * \param   mavlink_stream      Pointer to the mavlink stream
- *
- * \return  True if the init succeed, false otherwise
+ * \details     msg_callback_set and cmd_callback_set are implemented as pointer
+ *              because their memory will be allocated during initialisation
  */
-bool mavlink_message_handler_init(mavlink_message_handler_t*            message_handler,
-                                  const mavlink_message_handler_conf_t*     config,
-                                  const mavlink_stream_t* mavlink_stream);
+class Mavlink_message_handler
+{
+public:
+    /**
+     * \brief                       Constructor
+     *
+     * \param   config              Config parameters
+     * \param   mavlink_stream      mavlink stream
+     *
+     */
+    Mavlink_message_handler(Mavlink_stream& mavlink_stream, const mavlink_message_handler_conf_t& config);
+    
+    /**
+     * \brief                       Registers a new callback for a message
+     * \details                     You should call mavlink_message_handler_sort_callback function after having added all callbacks,
+     *                              as it is used by mavlink_message_handler_receive to speed up matching
+     *
+     * \param   msg_callback        Pointer to new message callback (this structure
+     *                              is copied internally, so it does not need to be
+     *                              kept in memory after the function is called)
+     *
+     * \return  True if the message callback was correctly added, false otherwise
+     */
+    bool add_msg_callback(mavlink_message_handler_msg_callback_t* msg_callback);
+
+    /**
+     * \brief                       Registers a new callback for a command
+     * \details                     You should call mavlink_message_handler_sort_callback function after having added all callbacks,
+     *                              as it is used by mavlink_message_handler_receive to speed up matching
+     *
+     * \param   cmd_callback        Pointer to new command callback (this structure
+     *                              is copied internally, so it does not need to be
+     *                              kept in memory after the function is called)
+     *
+     * \return  True if the command callback was correctly added, false otherwise
+     */
+    bool add_cmd_callback(mavlink_message_handler_cmd_callback_t* cmd_callback);
+
+    /**
+     * \brief       Main update function, handles the incoming message according to
+     *              the registered message and command callbacks
+     *
+     * \param rec   Pointer to the MAVLink receive message structure
+     */
+    void receive(mavlink_received_t* rec);
+
+    /**
+     * \brief           Dummy message callback for debug purpose
+     * \details         Prints the fields of the incoming message to the debug console
+     *
+     * \param   msg     Pointer to incoming message
+     */
+    static void msg_default_dbg(mavlink_message_t* msg);
+
+    /**
+     * \brief           Dummy command callback for debug purpose
+     * \details         Prints the fields of the incoming command to the debug console
+     *
+     * \param   cmd     Pointer to incoming command
+     */
+    static void cmd_default_dbg(mavlink_command_long_t* cmd);
 
 
-/**
- * \brief                       Registers a new callback for a message
- * \details                     You should call mavlink_message_handler_sort_callback function after having added all callbacks,
- *                              as it is used by mavlink_message_handler_receive to speed up matching
- *
- * \param   message_handler     Pointer to message handler data structure
- * \param   msg_callback        Pointer to new message callback (this structure
- *                              is copied internally, so it does not need to be
- *                              kept in memory after the function is called)
- *
- * \return  True if the message callback was correctly added, false otherwise
- */
-bool mavlink_message_handler_add_msg_callback(mavlink_message_handler_t*                    message_handler,
-        mavlink_message_handler_msg_callback_t*     msg_callback);
+private:
+    bool debug;                                                     ///<    Indicates whether debug message are written for every incoming message
+    Mavlink_stream& mavlink_stream;
+    mavlink_message_handler_cmd_callback_set_t* cmd_callback_set;   ///<    Set of command callbacks
+    mavlink_message_handler_msg_callback_set_t* msg_callback_set;   ///<    Set of message callbacks
+    /**
+    * \brief                Sort the latest added message callback
+    *
+    * \details              This should be done each time a callback is added to speed up the matching
+    *                   while receiving a cmd message.
+    */
+    void sort_latest_msg_callback();
 
+    /**
+    * \brief                Sort the latest added command callback
+    *
+    * \details              This should be done each time a callback is added to speed up the matching
+    *                       while receiving a cmd message.
+    *
+    */
+    void sort_latest_cmd_callback();
 
-/**
- * \brief                       Registers a new callback for a command
- * \details                     You should call mavlink_message_handler_sort_callback function after having added all callbacks,
- *                              as it is used by mavlink_message_handler_receive to speed up matching
- *
- * \param   message_handler     Pointer to message handler data structure
- * \param   cmd_callback        Pointer to new command callback (this structure
- *                              is copied internally, so it does not need to be
- *                              kept in memory after the function is called)
- *
- * \return  True if the command callback was correctly added, false otherwise
- */
-bool mavlink_message_handler_add_cmd_callback(mavlink_message_handler_t*                    message_handler,
-        mavlink_message_handler_cmd_callback_t*     cmd_callback);
+    /**
+     * \brief                   Checks whether a message matches with a registered callback
+     *
+     * \param   msg_callback    Pointer to a registered message callback
+     * \param   msg             Incoming message
+     *
+     * \return                  Boolean (true if the message matches, false if not)
+     */
+    bool match_msg(mavlink_message_handler_msg_callback_t* msg_callback, mavlink_message_t* msg);
 
+    /**
+     * \brief                   Checks whether a command matches with a registered callback
+     *
+     * \param   msg_callback    Pointer to a registered command callback
+     * \param   msg             Incoming message containing the command
+     * \param   cmd             Incoming command encoded in the message
+     *
+     * \return                  Boolean (true if the message matches, false if not)
+     */
+    bool match_cmd(mavlink_message_handler_cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd);
 
-/**
- * \brief           Dummy message callback for debug purpose
- * \details         Prints the fields of the incoming message to the debug console
- *
- * \param   msg     Pointer to incoming message
- */
-void mavlink_message_handler_msg_default_dbg(mavlink_message_t* msg);
-
-
-/**
- * \brief           Dummy command callback for debug purpose
- * \details         Prints the fields of the incoming command to the debug console
- *
- * \param   cmd     Pointer to incoming command
- */
-void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd);
-
-
-/**
- * \brief       Main update function, handles the incoming message according to
- *              the registered message and command callbacks
- *
- * \param rec   Pointer to the MAVLink receive message structure
- */
-void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler, mavlink_received_t* rec);
-
+};
 
 #endif /* MAVLINK_MESSAGE_HANDLING_H */
