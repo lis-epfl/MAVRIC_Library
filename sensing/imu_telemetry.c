@@ -44,6 +44,7 @@
 #include "time_keeper.h"
 #include "print_util.h"
 #include "constants.h"
+#include "delay.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -184,6 +185,53 @@ static mav_result_t imu_telemetry_start_calibration(imu_t* imu, mavlink_command_
 	return result;
 }
 
+static mav_result_t imu_telemetry_calibrated_north_vector(imu_t* imu, mavlink_command_long_t* packet)
+{
+	mav_result_t result;
+
+	if ( (imu->state->mav_state == MAV_STATE_STANDBY)||(imu->state->mav_state == MAV_STATE_CALIBRATING) )
+	{
+		if (packet->param1 == 2)
+		{
+			result = MAV_RESULT_ACCEPTED;
+
+			if (!imu->calibrating_north_vector)
+			{
+				imu->calibrating_north_vector = true;
+				imu->state->mav_state = MAV_STATE_CALIBRATING;
+
+				print_util_dbg_print("Starting North vector calibration\r\n");
+				print_util_dbg_print("Old North vector :");
+				print_util_dbg_print_vector(imu->mag_global,5);
+				print_util_dbg_print("\r\n");
+
+				for (uint16_t i = 0; i < 3; ++i)
+				{
+					imu->scaled_compass.data_lpf[i] = imu->scaled_compass.data[i];
+				}
+				
+			}
+			else
+			{
+				imu->calibrating_north_vector = false;
+				imu->state->mav_state = MAV_STATE_STANDBY;
+			}
+			
+		}
+		else
+		{
+			result = MAV_RESULT_UNSUPPORTED;
+		}
+	}
+	else
+	{
+		result = MAV_RESULT_TEMPORARILY_REJECTED;
+	}
+
+	return result;
+
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -203,6 +251,14 @@ bool imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler)
 	callbackcmd.module_struct =									imu;
 	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
+	callbackcmd.command_id = MAV_CMD_PREFLIGHT_SET_SENSOR_OFFSETS; // 242
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&imu_telemetry_calibrated_north_vector;
+	callbackcmd.module_struct =									imu;
+	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+
 	return init_success;
 }
 

@@ -115,7 +115,10 @@ static void imu_oriented2scale(imu_t *imu)
 	bool going2ready = true;
 
 	float gyro_lpf = 0.99f;
-	for (int16_t i = 0; i < 3; i++)
+
+	uint16_t i;
+
+	for (i = 0; i < 3; i++)
 	{
 		imu->scaled_gyro.data[i]  		= (1.0f - GYRO_LPF) * imu->scaled_gyro.data[i] 		+ GYRO_LPF * ( ( imu->oriented_gyro.data[i]     - imu->calib_gyro.bias[i]     ) * imu->calib_gyro.scale_factor[i]     );
 		imu->scaled_accelero.data[i]   	= (1.0f - ACC_LPF)  * imu->scaled_accelero.data[i] 	+ ACC_LPF  * ( ( imu->oriented_accelero.data[i] - imu->calib_accelero.bias[i] ) * imu->calib_accelero.scale_factor[i] );
@@ -147,7 +150,7 @@ static void imu_oriented2scale(imu_t *imu)
 	if ( (!imu->imu_ready) && going2ready )
 	{
 		imu->imu_ready = going2ready;
-		for (int16_t i = 0; i < 3; i++)
+		for (i = 0; i < 3; i++)
 		{
 			imu->calib_gyro.bias[i] += imu->scaled_gyro.data_lpf[i] / imu->calib_gyro.scale_factor[i];
 		}
@@ -231,7 +234,13 @@ bool imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
 	imu->calib_compass.min_oriented_values[Y] =  10000.0f;
 	imu->calib_compass.min_oriented_values[Z] =  10000.0f;
 	imu->calib_compass.calibration = false;
-	
+
+	imu->calibrating_north_vector = false;
+
+	imu->mag_global[X] = 0.632037f; // cos(63.0f/180.0f*PI)
+	imu->mag_global[Y] = 0.0f;
+	imu->mag_global[Z] = 1.16161f; // sin(63.0f/180.0f*PI)
+
 	imu->last_update = time_keeper_get_time_ticks();
 	imu->dt = 0.004;
 	

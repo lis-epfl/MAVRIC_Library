@@ -75,7 +75,7 @@ mavlink_communication_conf_t mavlink_communication_default_config =
 		.max_param_count = MAX_ONBOARD_PARAM_COUNT,
 		.debug           = true
 	},
-	.max_msg_sending_count = 22
+	.max_msg_sending_count = 25
 };
 
 

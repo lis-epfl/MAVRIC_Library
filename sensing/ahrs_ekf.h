@@ -30,37 +30,88 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_default_config.h
+ * \file ahrs_ekf.h
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief Default configuration for the data_logging module
+ * \brief Extended Kalman Filter attitude estimation, mixing accelerometer and magnetometer
+ * x[0] : bias_x
+ * x[1] : bias_y
+ * x[2] : bias_z
+ * x[3] : q0
+ * x[4] : q1
+ * x[5] : q2
+ * x[6] : q3
  *
  ******************************************************************************/
 
-
-#ifndef DATA_LOGGING_DEFAULT_CONFIG_H_
-#define DATA_LOGGING_DEFAULT_CONFIG_H_
+#ifndef __AHRS_EKF_HPP__
+#define __AHRS_EKF_HPP__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "imu.h"
+#include "ahrs.h"
 
-#include "data_logging.h"
 
-
-data_logging_conf_t data_logging_default_config =
+/**
+ * \brief The AHRS EKF config structure
+ */
+typedef struct
 {
-	.debug = true,
-	.log_data = 0,
-	.max_data_logging_count = 30,
-	.max_logs = 500,
-};
+	float sigma_w_sqr;									///< The square of the variance on the gyro bias
+	float sigma_r_sqr;									///< The square of the variance on the quaternion
+
+	float acc_norm_noise;								///< The noise gain depending on the norm of the acceleration
+	float acc_multi_noise;								///< The multiplication factor in the computation of the noise for the accelerometer
+
+	float R_acc;										///< The variance of the accelerometer
+	float R_mag;										///< The variance of the magnetometer
+}ahrs_ekf_config_t;
+
+
+/**
+ * \brief The AHRS EKF structure
+ */
+typedef struct
+{
+	float x[7];											///< The state of the EKF
+
+	ahrs_t* ahrs;										///< The pointer to the ahrs structure
+	imu_t* imu;											///< The pointer to the IMU structure
+
+	bool north_calib_started;							///< The flag to calibrate the north vector at the end of the procedure
+
+	ahrs_ekf_config_t config;							///< The config structure for the EKF module
+}ahrs_ekf_t;
+
+
+/**
+ * \brief	Init AHRS EKF controller
+ *
+ * \param	ahrs_ekf 		The pointer to the AHRS EKF structure
+ * \param	config 			The pointer to the ahrs_ekf configuration structure
+ * \param 	imu 			The pointer to the IMU structure
+ * \param 	ahrs 			The pointer to the AHRS structure
+ * 
+ * \return 	success
+ */
+bool ahrs_ekf_init(ahrs_ekf_t* ahrs_ekf, const ahrs_ekf_config_t* config, imu_t* imu, ahrs_t* ahrs);
+
+/**
+ * \brief	Performs the EKF algorithm
+ *
+ * \param	ahrs_ekf		The pointer to the AHRS EKF structure
+ *
+ * \return	true if success
+ */
+bool ahrs_ekf_update(ahrs_ekf_t* ahrs_ekf);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // DATA_LOGGING_DEFAULT_CONFIG_H_
+#endif // __AHRS_EKF_HPP__

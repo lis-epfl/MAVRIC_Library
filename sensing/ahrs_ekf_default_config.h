@@ -30,28 +30,39 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file magnetometer.h
+ * \file ahrs_ekf_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief This file define the compass's data type
- * 
+ * \brief EKF attitude estimation
+ *
  ******************************************************************************/
 
+#ifndef AHRS_EKF_DEFAULT_CONFIG_H_
+#define AHRS_EKF_DEFAULT_CONFIG_H_
 
-#ifndef MAGNETOMETER_H_
-#define MAGNETOMETER_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/**
- * \brief The magnetometer structure
- */
-typedef struct
+#include "ahrs_ekf.h"
+
+
+static const ahrs_ekf_config_t ahrs_ekf_default_config = 
 {
-	float data[3];			///< The magnetometer's datas
-	float temperature;		///< The magnetometer's temperature
-	float last_update;		///< The magnetometer last update time
-	float data_lpf[3];		///< The magnetometer's data low-pass filtered
-} magnetometer_t;
+	.sigma_w_sqr = 0.0000000001f,
+	.sigma_r_sqr = 0.000001f,
+	.R_acc = 0.004f,
+	.R_mag = 0.007f,
+	.acc_norm_noise = 0.05f,
+	.acc_multi_noise = 4.0f,
+};
 
-#endif /* MAGNETOMETER_H_ */
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* AHRS_EKF_DEFAULT_CONFIG_H_ */

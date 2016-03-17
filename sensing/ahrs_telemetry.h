@@ -51,7 +51,6 @@
 extern "C" {
 #endif
 
-
 /**
  * \brief	Function to send the MAVLink attitude message
  * 
@@ -71,6 +70,9 @@ void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const mavlink_stream_t* ma
  */
 void ahrs_telemetry_send_attitude_quaternion(const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
+void ahrs_telemetry_send_attitude_quaternion_cov(const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+void ahrs_telemetry_send_P_diag(const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 #ifdef __cplusplus
 }
