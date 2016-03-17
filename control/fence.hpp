@@ -58,24 +58,24 @@ extern "C"
 class Fence
 {
 public:
-	Fence(void);
+	Fence(mavlink_waypoint_handler_t waypoint_handler);
 	~Fence(void);
-	void add_waypoint(void);
+	void add_waypoint(waypoint_struct_t& new_waypoint);
 	void del_waypoint(void);
-	void set_h_max(void);
-	void get_h_max(void);
-	void set_h_min(void);
-	void get_h_min(void);
+	void set_h_max(float new_h);
+	float get_h_max(void);
+	void set_h_min(float new_h);
+	float get_h_min(void);
 	uint8_t get_fence_id(void);
 private:
 	//waypoint params: p1,p2,p3,p4,x,y,z
 	//attribution 			h_min,h_max,fence_id;
-	waypoint_struct_t* 	waypoint_list[MAX_WAYPOINTS]={nullptr};
-	uint8_t 			fence_id;
-	float				h_max;
-	float				h_min;
-	uint8_t				nb_wall;
-	uint8_t				nb_waypoint; ///< number of wyapoints in the fence
+	waypoint_struct_t* 	fence_points[MAX_WAYPOINTS]={nullptr};
+	uint8_t 			fence_id=1;
+	float				h_max=20; //[m]
+	float				h_min=5; //[m]
+	uint8_t				nb_wall=0;
+	uint8_t				nb_waypoint=0; ///< number of waypoints in the fence
 
 };
 

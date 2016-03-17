@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file fence_avoiding.cpp
+ * \file fence_cas.cpp
  *
  * \author MAV'RIC Team
  * \author Cyril Stuber
@@ -59,13 +59,14 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Fence_CAS::Fence_CAS(void)
+Fence_CAS::Fence_CAS(position_estimation_t& postion_estimation)
+:	pos_est(postion_estimation),
+	sensor_res(3),
+	a_max(1),
+	r_pz(0),
+	discomfort(0)
 {
-	this->waypoint_handler=nullptr;
-	this->fence_id=1;
-	//this->point_index[0]=0;
 
-	//initialization des parametres
 }
 Fence_CAS::~Fence_CAS(void)
 {
@@ -74,6 +75,7 @@ Fence_CAS::~Fence_CAS(void)
 //call with tasks
 bool Fence_CAS::update(void)
 {
+	//print_util_dbg_print("TEST UPDATE");
 	//recupère les variables central_data
 	//pour chaque fence
 		//pour chaque doublet de points
@@ -83,16 +85,48 @@ bool Fence_CAS::update(void)
 					//calcul des repulsions
 					//mélange les repulsiosn avec la vitesse
 
-	//injecte la nouevlle vitesse dasn central-data
+	//injecte la nouevlle vitesse dans central-data
 	return true;
 }
-void Fence_CAS::add_fence()
+void Fence_CAS::add_fence(void)
 {
 	//add a fence to the cas
 }
 void Fence_CAS::del_fence(uint8_t fence_id)
 {
 	//del a fence to the cas
+}
+void Fence_CAS::set_a_max(void)
+{
+	//add a fence to the cas
+}
+void Fence_CAS::get_a_max(void)
+{
+	//add a fence to the cas
+}
+void Fence_CAS::set_r_pz(void)
+{
+	//add a fence to the cas
+}
+void Fence_CAS::get_r_pz(void)
+{
+	//add a fence to the cas
+}
+void Fence_CAS::get_disconfort(void)
+{
+	//add a fence to the cas
+}
+void Fence_CAS::set_disconfort(void)
+{
+	//add a fence to the cas
+}
+void Fence_CAS::get_sensor_res(void)
+{
+	//add a fence to the cas
+}
+void Fence_CAS::set_sensor_res(void)
+{
+	//add a fence to the cas
 }
 
 

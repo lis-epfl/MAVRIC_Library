@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file fence_avoiding.hpp
+ * \file fence_cas.hpp
  *
  * \author MAV'RIC Team
  * \author Cyril Stuber
@@ -48,6 +48,7 @@
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "sensing/position_estimation.hpp"
+#include "control/fence.hpp"
 
 extern "C"
 {
@@ -69,19 +70,37 @@ typedef struct
 class Fence_CAS
 {
 public:
-	Fence_CAS(void);
+	Fence_CAS(position_estimation_t& postion_estimation);
 	~Fence_CAS(void);
 	bool update(void);
 	void add_fence(void);
 	void del_fence(uint8_t fence_id);
 
+	void set_sensor_res(void);
+	void get_sensor_res(void);
+	void set_disconfort(void);
+	void get_disconfort(void);
+	void set_a_max(void);
+	void get_a_max(void);
+	void set_r_pz(void);
+	void get_r_pz(void);
+
 private:
 
-	const mavlink_waypoint_handler_t*   waypoint_handler;					///< Waypoints handler
-	uint8_t								fence_id;					///< Id of the fence
-	uint8_t								point_index[MAX_WAYPOINTS];	///< Fence Id for each of the waypoints
-	const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
-	velocity_command_t*                 velocity_command;           ///< Velocity command (output)
+
+
+	//const mavlink_waypoint_handler_t*   waypoint_handler;			///< Waypoints handler
+	//uint8_t								fence_id;					///< Id of the fence
+	//uint8_t								point_index[MAX_WAYPOINTS];	///< Fence Id for each of the waypoints
+
+	//fence_struct_t* to be implemented
+	//fence_struct_t* fence_list[MAX_WAYPOINTS]={nullptr};			///< List of fences
+	uint8_t								sensor_res; ///< simulate sensor resolution [unit?]
+	float								a_max; ///<maximal deceleration [m/s^2]
+	float								r_pz; ///< radius of Protection Zone
+	float								discomfort; ///<[0,1] intensity of the reaction
+	const position_estimation_t&        pos_est;                    ///< Estimated position and speed (input)
+	//velocity_command_t&                 velocity_command;           ///< Velocity command (output)
 };
 
 #endif /*FENCE_CAS_H_*/

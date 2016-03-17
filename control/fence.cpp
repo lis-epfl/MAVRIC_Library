@@ -58,42 +58,52 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Fence::Fence(void)
+Fence::Fence(mavlink_waypoint_handler_t& waypoint_handler):
+		fence_points(&waypoint_handler.fence_list)
 {
-	//initialization des parametres
+
 }
 Fence::~Fence(void)
 {
 	//destructeur
 }
-void Fence::add_waypoint(void)
+void Fence::add_waypoint(waypoint_struct_t& new_waypoint)
 {
-	//add a fence to the cas
+	if(nb_waypoint<MAX_WAYPOINTS)
+	{
+		this->fence_points[this->nb_waypoint]= new_waypoint;
+		this->nb_waypoint++;
+	}
+
 }
 
 void Fence::del_waypoint(void)
 {
-	//add a fence to the cas
+	if(nb_waypoint > 0)
+	{
+		this->fence_points[this->nb_waypoint]= nullptr;
+		this->nb_waypoint--;
+	}
 }
-void Fence::set_h_max(void)
+void Fence::set_h_max(float new_h)
 {
-	//add a fence to the cas
+	this->h_max=new_h;
 }
-void Fence::get_h_max(void)
+float Fence::get_h_max(void)
 {
-	//add a fence to the cas
+	return this->h_max;
 }
-void Fence::set_h_min(void)
+void Fence::set_h_min(float new_h)
 {
-	//add a fence to the cas
+	this->h_min=new_h;
 }
-void Fence::get_h_min(void)
+float Fence::get_h_min(void)
 {
-	//add a fence to the cas
+	return this->h_min;
 }
 uint8_t Fence::get_fence_id(void)
 {
-	return ths->fence_id;
+	return this->fence_id;
 }
 
 // to use:

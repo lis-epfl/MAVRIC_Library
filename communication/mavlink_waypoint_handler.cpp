@@ -1092,7 +1092,18 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
                     print_util_dbg_print_num(waypoint_handler->number_of_waypoints - waypoint_handler->num_waypoint_onboard, 10);
                     print_util_dbg_print("\r\n");
 
-                    waypoint_handler->waypoint_list[waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number] = new_waypoint;
+
+                    //TODO add comments
+                    if(new_waypoint.command==MAV_CMD_NAV_WAYPOINT) //16
+                    {
+                    	waypoint_handler->waypoint_list[waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number] = new_waypoint;
+                    }
+                    if(new_waypoint.command==MAV_CMD_NAV_FENCE)//40
+                    {
+                    	waypoint_handler->fence_list[waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number] = new_waypoint;
+                    	fence.add_waypoint()
+                    }
+
                     waypoint_handler->waypoint_request_number++;
 
                     if ((waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number) == waypoint_handler->number_of_waypoints)
