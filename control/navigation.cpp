@@ -211,9 +211,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 
 static void navigation_set_dubin_velocity(navigation_t* navigation, dubin_t* dubin)
 {
-    float dir_desired[3], rel_pos[3];
-
-    rel_pos[Z] = 0.0f;
+    float dir_desired[3];
 
     quat_t q_rot;
     aero_attitude_t attitude_yaw;
