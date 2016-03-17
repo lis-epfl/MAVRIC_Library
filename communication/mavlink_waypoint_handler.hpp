@@ -84,12 +84,14 @@ typedef struct
 {
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
     waypoint_struct_t current_waypoint;                         ///< The structure of the current waypoint
+    waypoint_struct_t next_waypoint;                            ///< The structure of the next waypoint
     uint16_t number_of_waypoints;                               ///< The total number of waypoints
     int8_t current_waypoint_count;                              ///< The number of the current waypoint
 
     waypoint_local_struct_t waypoint_coordinates;               ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
     waypoint_local_struct_t waypoint_hold_coordinates;          ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
     waypoint_local_struct_t waypoint_critical_coordinates;      ///< The coordinates of the waypoint in critical state
+    waypoint_local_struct_t waypoint_next;                      ///< The coordinates of the next waypoint
 
     bool hold_waypoint_set;                                     ///< Flag to tell if the hold position waypoint is set
 
