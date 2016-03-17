@@ -37,7 +37,7 @@ LIB_SRCS += drivers/battery.c
 LIB_SRCS += drivers/barometer.cpp          
 LIB_SRCS += drivers/barometer_telemetry.cpp          
 LIB_SRCS += drivers/bmp085.cpp                   
-LIB_SRCS += drivers/flow.c                  
+LIB_SRCS += drivers/flow.cpp
 LIB_SRCS += drivers/gps_ublox.cpp                 
 LIB_SRCS += drivers/gps_telemetry.cpp       
 LIB_SRCS += drivers/hmc5883l.cpp  
@@ -54,7 +54,7 @@ LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
 LIB_SRCS += hal/common/dbg.cpp
 
-LIB_SRCS += runtime/scheduler.c  
+LIB_SRCS += runtime/scheduler.cpp
 LIB_SRCS += runtime/scheduler_telemetry.cpp
 
 LIB_SRCS += sensing/ahrs.c            

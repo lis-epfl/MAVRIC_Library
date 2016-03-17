@@ -57,7 +57,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_message_handler_t* message_handler);
+bool manual_control_telemetry_init(manual_control_t* manual_control, Mavlink_message_handler* message_handler);
 
 
 /**
@@ -67,6 +67,6 @@ bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_mes
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void manual_control_telemetry_send(const manual_control_t* manual_control, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void manual_control_telemetry_send(const manual_control_t* manual_control, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* MANUAL_CONTROL_TELEMETRY_H_ */

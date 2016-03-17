@@ -92,6 +92,26 @@ extern "C"
 #include "control/velocity_controller_copter.hpp"
 #include "control/vector_field_waypoint.hpp"
 
+
+/**
+ * \brief   Configuration of the module central data module
+ */
+typedef struct
+{
+    mavlink_communication_conf_t mavlink_communication_config;      ///<    Configuration for the mavlink communication module
+} central_data_conf_t;
+
+
+/**
+ * \brief   Default configuration
+ *
+ * \param   sysid       System id (default value = 1)
+ *
+ * \return  Config structure
+ */
+static inline central_data_conf_t central_data_default_config(uint8_t sysid = 1);
+
+
 /**
  * \brief The central data structure
  */
@@ -101,7 +121,7 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2);
+    Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, const central_data_conf_t& config = central_data_default_config());
 
 
     /**
@@ -128,8 +148,8 @@ public:
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
 
-    scheduler_t scheduler;
-    mavlink_communication_t mavlink_communication;
+    Scheduler scheduler;
+    Mavlink_communication mavlink_communication;
 
     servos_mix_quadcotper_diag_t servo_mix;
 
@@ -170,5 +190,22 @@ private:
     uint8_t sysid_;     ///< System ID
 };
 
+
+
+static inline central_data_conf_t central_data_default_config(uint8_t sysid)
+{
+    central_data_conf_t conf                  = {};
+
+    /* Mavlink communication config */
+    mavlink_communication_conf_t mavlink_communication_config = mavlink_communication_default_config();
+    mavlink_communication_config.mavlink_stream_config.sysid = sysid;
+    mavlink_communication_config.message_handler_config.debug = true;
+    mavlink_communication_config.onboard_parameters_config.debug = true;
+    mavlink_communication_config.mavlink_stream_config.debug = true;
+    conf.mavlink_communication_config = mavlink_communication_config;
+
+    
+    return conf;
+};
 
 #endif /* CENTRAL_DATA_H_ */

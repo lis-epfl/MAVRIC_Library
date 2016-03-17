@@ -58,7 +58,7 @@ typedef struct
     const position_estimation_t* pos_est;                       ///< The pointer to the position estimator structure
     const control_command_t* controls;                          ///< The pointer to the control structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
-    const mavlink_stream_t* mavlink_stream;                     ///< The pointer to the MAVLink stream structure
+    const Mavlink_stream* mavlink_stream;                       ///< The pointer to the MAVLink stream structure
 } hud_telemetry_structure_t;
 
 /**
@@ -80,7 +80,7 @@ bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, cons
  * \param   mavlink_stream              The pointer to the MAVLink stream structure
  * \param   msg                         The pointer to the MAVLink message
  */
-void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif //HUD_TELEMETRY_H__

@@ -60,7 +60,7 @@ bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, cons
     return init_success;
 }
 
-void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     float groundspeed   = sqrt(hud_telemetry_structure->pos_est->vel[0] * hud_telemetry_structure->pos_est->vel[0] + hud_telemetry_structure->pos_est->vel[1] * hud_telemetry_structure->pos_est->vel[1]);
     float airspeed      = groundspeed;

@@ -218,7 +218,7 @@ static void navigation_run(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, const position_estimation_t* position_estimation, State* state, mavlink_communication_t* mavlink_communication)
+bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, const position_estimation_t* position_estimation, State* state, Mavlink_communication* mavlink_communication)
 {
     bool init_success = true;
 
@@ -227,7 +227,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, c
     navigation->qe = qe;
     navigation->position_estimation = position_estimation;
     navigation->state = state;
-    navigation->mavlink_stream = &mavlink_communication->mavlink_stream;
+    navigation->mavlink_stream = &mavlink_communication->get_mavlink_stream();
 
     //navigation controller init
     navigation->controls_nav->rpy[ROLL] = 0.0f;

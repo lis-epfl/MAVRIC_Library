@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file scheduler.c
+ * \file scheduler.cpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -41,59 +41,60 @@
  ******************************************************************************/
 
 
-#include "runtime/scheduler.h"
+#include "runtime/scheduler.hpp"
 #include "hal/common/time_keeper.hpp"
-#include "util/print_util.h"
 #include <stdlib.h>
+#include "util/print_util.h"
 
-bool scheduler_init(scheduler_t* scheduler, const scheduler_conf_t config)
+Scheduler::Scheduler(const scheduler_conf_t config)
 {
     bool init_success = true;
 
     // Init schedule strategy
-    scheduler->schedule_strategy = config.schedule_strategy;
+    schedule_strategy = config.schedule_strategy;
 
     // Init debug mode
-    scheduler->debug = config.debug;
+    debug = config.debug;
 
-    // Allocate memory for the task set
-    scheduler->task_set = malloc(sizeof(task_set_t) + sizeof(task_entry_t[config.max_task_count]));
-    if (scheduler->task_set != NULL)
+    
+    // allocate memory for tasks
+    for(max_task_count = config.max_task_count; max_task_count > 0; max_task_count--)
     {
-        scheduler->task_set->max_task_count = config.max_task_count;
-
-        init_success &= true;
+        tasks = (task_entry_t*)malloc(sizeof(task_entry_t[config.max_task_count]));
+        if(tasks != NULL)
+        {
+            break;
+        }
     }
-    else
+    if(max_task_count < config.max_task_count)
     {
-        print_util_dbg_print("[SCHEDULER] ERROR ! Bad memory allocation\r\n");
-        scheduler->task_set->max_task_count = 0;
-
+        print_util_dbg_print("[Scheduler] constructor: tried to allocate task list for ");
+        print_util_dbg_print_num(config.max_task_count,10);
+        print_util_dbg_print(" tasks; only space for ");
+        print_util_dbg_print_num(max_task_count,10);
+        print_util_dbg_print("\r\n");
         init_success &= false;
     }
 
-    scheduler->task_set->task_count = 0;
-    scheduler->task_set->current_schedule_slot = 0;
+    task_count = 0;
+    current_schedule_slot = 0;
 
     print_util_dbg_print("[SCHEDULER] Init\r\n");
-
-    return init_success;
 }
 
 
-bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, task_function_t call_function, task_argument_t function_argument, uint32_t task_id)
+bool Scheduler::add_task(uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, task_function_t call_function, task_argument_t function_argument, uint32_t task_id)
 {
     bool task_successfully_added = false;
-    task_set_t* ts = scheduler->task_set;
 
     // Check if the scheduler is not full
-    if (ts->task_count < ts->max_task_count)
+    if (task_count < max_task_count)
     {
         // Check if there is already a task with this ID
         bool id_is_unique = true;
-        for (uint32_t i = 0; i < ts->task_count; ++i)
+        for (uint32_t i = 0; i < task_count; ++i)
         {
-            if (ts->tasks[i].task_id == task_id)
+            if (tasks[i].task_id == task_id)
             {
                 id_is_unique = false;
                 break;
@@ -103,7 +104,7 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
         // Add new task
         if (id_is_unique == true)
         {
-            task_entry_t* new_task = &ts->tasks[ts->task_count];
+            task_entry_t* new_task = &tasks[task_count];
 
             new_task->call_function     = call_function;
             new_task->function_argument = function_argument;
@@ -112,13 +113,13 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
             new_task->timing_mode       = timing_mode;
             new_task->priority          = priority;
             new_task->repeat_period     = repeat_period;
-            new_task->next_run          = time_keeper_get_us();
+            new_task->next_run          = 0;
             new_task->execution_time    = 0;
             new_task->delay_max         = 0;
             new_task->delay_avg         = 0;
             new_task->delay_var_squared = 0;
 
-            ts->task_count += 1;
+            task_count += 1;
 
             task_successfully_added = true;
         }
@@ -138,14 +139,13 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 }
 
 
-bool scheduler_sort_tasks(scheduler_t* scheduler)
+bool Scheduler::sort_tasks()
 {
     bool sorted = false;
 
-    task_set_t* ts = scheduler->task_set;
     task_entry_t tmp;
 
-    if (ts->task_count < 2)
+    if (task_count < 2)
     {
         sorted = true;
         return sorted;
@@ -156,16 +156,16 @@ bool scheduler_sort_tasks(scheduler_t* scheduler)
         sorted = true;
 
         // Iterate through registered tasks
-        for (int32_t i = 0; i < (ts->task_count - 1); i++)
+        for (uint32_t i = 0; i < (task_count - 1); i++)
         {
-            if (ts->tasks[i].priority < ts->tasks[i + 1].priority)
+            if (tasks[i].priority < tasks[i + 1].priority)
             {
                 // Task i has lower priority than task i+1 -> need swap
                 sorted = false;
             }
-            else if (ts->tasks[i].priority == ts->tasks[i + 1].priority)
+            else if (tasks[i].priority == tasks[i + 1].priority)
             {
-                if (ts->tasks[i].repeat_period > ts->tasks[i + 1].repeat_period)
+                if (tasks[i].repeat_period > tasks[i + 1].repeat_period)
                 {
                     // Tasks i and i+1 have equal priority, but task i has higher
                     // repeat period than task i+1 -> need swap
@@ -176,9 +176,9 @@ bool scheduler_sort_tasks(scheduler_t* scheduler)
             // Swap tasks i and i+1 if necessary
             if (sorted == false)
             {
-                tmp = ts->tasks[i];
-                ts->tasks[i] = ts->tasks[i + 1];
-                ts->tasks[i + 1] = tmp;
+                tmp = tasks[i];
+                tasks[i] = tasks[i + 1];
+                tasks[i + 1] = tmp;
                 sorted = false;
             }
         }
@@ -187,31 +187,36 @@ bool scheduler_sort_tasks(scheduler_t* scheduler)
 }
 
 
-int32_t scheduler_update(scheduler_t* scheduler)
+int32_t Scheduler::update()
 {
     int32_t realtime_violation = 0;
-
-    task_set_t* ts = scheduler->task_set;
 
     task_function_t call_task;
     task_argument_t function_argument;
 
     // Iterate through registered tasks
-    for (int32_t i = ts->current_schedule_slot; i < ts->task_count; i++)
+    for (uint32_t i = current_schedule_slot; i < task_count; i++)
     {
         uint32_t current_time = time_keeper_get_us();
 
         // If the task is active and has waited long enough...
-        if ((ts->tasks[i].run_mode != RUN_NEVER) && (current_time >= ts->tasks[i].next_run))
+        if ((tasks[i].run_mode != RUN_NEVER) && (current_time >= tasks[i].next_run))
         {
-            uint32_t delay = current_time - (ts->tasks[i].next_run);
+
+            // If the task runs for the first time, we assume it runs on time
+            if(tasks[i].next_run == 0)
+            {
+                tasks[i].next_run = current_time;
+            }
+            
+            uint32_t delay = current_time - (tasks[i].next_run);
             uint32_t task_start_time;
 
             task_start_time = time_keeper_get_us();
 
             // Get function pointer and function argument
-            call_task = ts->tasks[i].call_function;
-            function_argument = ts->tasks[i].function_argument;
+            call_task = tasks[i].call_function;
+            function_argument = tasks[i].function_argument;
 
             // Execute task
             bool task_success = call_task(function_argument);
@@ -219,60 +224,60 @@ int32_t scheduler_update(scheduler_t* scheduler)
             // Set the next execution time of the task
             if (task_success)
             {
-                switch (ts->tasks[i].timing_mode)
+                switch (tasks[i].timing_mode)
                 {
                     case PERIODIC_ABSOLUTE:
                         // Do not take delays into account
-                        ts->tasks[i].next_run += ts->tasks[i].repeat_period;
+                        tasks[i].next_run += tasks[i].repeat_period;
                         break;
 
                     case PERIODIC_RELATIVE:
                         // Take delays into account
-                        ts->tasks[i].next_run = time_keeper_get_us() + ts->tasks[i].repeat_period;
+                        tasks[i].next_run = time_keeper_get_us() + tasks[i].repeat_period;
                         break;
                 }
             }
 
             // Set the task to inactive if it has to run only once
-            if (ts->tasks[i].run_mode == RUN_ONCE)
+            if (tasks[i].run_mode == RUN_ONCE)
             {
-                ts->tasks[i].run_mode = RUN_NEVER;
+                tasks[i].run_mode = RUN_NEVER;
             }
 
             // Check real time violations
-            if (ts->tasks[i].next_run < current_time)
+            if (tasks[i].next_run < current_time)
             {
                 realtime_violation = -i; //realtime violation!!
-                ts->tasks[i].rt_violations++;
-                ts->tasks[i].next_run = current_time + ts->tasks[i].repeat_period;
+                tasks[i].rt_violations++;
+                tasks[i].next_run = current_time + tasks[i].repeat_period;
             }
 
             // Compute real-time statistics
-            ts->tasks[i].delay_avg = (7 * ts->tasks[i].delay_avg + delay) / 8;
-            if (delay > ts->tasks[i].delay_max)
+            tasks[i].delay_avg = (7 * tasks[i].delay_avg + delay) / 8;
+            if (delay > tasks[i].delay_max)
             {
-                ts->tasks[i].delay_max = delay;
+                tasks[i].delay_max = delay;
             }
-            ts->tasks[i].delay_var_squared = (15 * ts->tasks[i].delay_var_squared + (delay - ts->tasks[i].delay_avg) * (delay - ts->tasks[i].delay_avg)) / 16;
-            ts->tasks[i].execution_time = (7 * ts->tasks[i].execution_time + (time_keeper_get_us() - task_start_time)) / 8;
+            tasks[i].delay_var_squared = (15 * tasks[i].delay_var_squared + (delay - tasks[i].delay_avg) * (delay - tasks[i].delay_avg)) / 16;
+            tasks[i].execution_time = (7 * tasks[i].execution_time + (time_keeper_get_us() - task_start_time)) / 8;
 
             // Depending on shceduling strategy, select next task slot
-            switch (scheduler->schedule_strategy)
+            switch (schedule_strategy)
             {
                 case FIXED_PRIORITY:
                     // Fixed priority scheme - scheduler will start over with tasks with the highest priority
-                    ts->current_schedule_slot = 0;
+                    current_schedule_slot = 0;
                     break;
 
                 case ROUND_ROBIN:
                     // Round robin scheme - scheduler will pick up where it left.
-                    // if (i >= ts->task_count - 1)
+                    // if (i >= task_count - 1)
                     // {
-                    //  ts->current_schedule_slot = 0;
+                    //  current_schedule_slot = 0;
                     // }
                     // else
                     // {
-                    ts->current_schedule_slot = 0;
+                    current_schedule_slot = 0;
                     // }
                     break;
             }
@@ -284,15 +289,14 @@ int32_t scheduler_update(scheduler_t* scheduler)
 }
 
 
-task_entry_t* scheduler_get_task_by_id(const scheduler_t* scheduler, uint16_t task_id)
+task_entry_t* Scheduler::get_task_by_id(uint16_t task_id) const
 {
-    task_set_t* ts = scheduler->task_set;
 
-    for (int32_t i = 0; i < ts->task_count; i++)
+    for (uint32_t i = 0; i < task_count; i++)
     {
-        if (ts->tasks[i].task_id == task_id)
+        if (tasks[i].task_id == task_id)
         {
-            return &ts->tasks[i];
+            return &tasks[i];
         }
     }
 
@@ -300,40 +304,67 @@ task_entry_t* scheduler_get_task_by_id(const scheduler_t* scheduler, uint16_t ta
 }
 
 
-task_entry_t* scheduler_get_task_by_index(const scheduler_t* scheduler, uint16_t task_index)
+task_entry_t* Scheduler::get_task_by_index(uint16_t task_index) const
 {
-    task_set_t* ts = scheduler->task_set;
-
-    if (task_index < ts->task_count)
+    if (task_index < task_count)
     {
-        return &ts->tasks[task_index];
+        return &tasks[task_index];
     }
 
     return NULL;
 }
 
 
-void scheduler_change_run_mode(task_entry_t* te, task_run_mode_t new_run_mode)
+bool Scheduler::is_debug()
+{
+    return debug;
+}
+
+
+void Scheduler::suspend_all_tasks(uint32_t delay)
+{
+    for(uint32_t i = 0; i < task_count; i++)
+    {
+        suspend_task(&tasks[i], delay);
+    }
+}
+
+
+void Scheduler::run_all_tasks_now()
+{
+    for(uint32_t i = 0; i < task_count; i++)
+    {
+        run_task_now(&tasks[i]);
+    }
+}
+
+
+/*************************************************************************
+ *                 static member functions                               *
+ ************************************************************************/
+
+
+void Scheduler::change_run_mode(task_entry_t* te, task_run_mode_t new_run_mode)
 {
     te->run_mode = new_run_mode;
 }
 
 
-void scheduler_change_task_period(task_entry_t* te, uint32_t repeat_period)
+void Scheduler::change_task_period(task_entry_t* te, uint32_t repeat_period)
 {
     te->repeat_period = repeat_period;
-    scheduler_change_run_mode(te, RUN_REGULAR);
-    scheduler_run_task_now(te);
+    change_run_mode(te, RUN_REGULAR);
+    run_task_now(te);
 }
 
 
-void scheduler_suspend_task(task_entry_t* te, uint32_t delay)
+void Scheduler::suspend_task(task_entry_t* te, uint32_t delay)
 {
     te->next_run = time_keeper_get_us() + delay;
 }
 
 
-void scheduler_run_task_now(task_entry_t* te)
+void Scheduler::run_task_now(task_entry_t* te)
 {
     if (te->run_mode == RUN_NEVER)
     {

@@ -43,11 +43,8 @@
 #ifndef SCHEDULER_DEFAULT_CONFIG_H_
 #define SCHEDULER_DEFAULT_CONFIG_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-#include "runtime/scheduler.h"
+#include "runtime/scheduler.hpp"
 
 
 static inline scheduler_conf_t scheduler_default_config()
@@ -61,10 +58,5 @@ static inline scheduler_conf_t scheduler_default_config()
 
     return conf;
 };
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // SCHEDULER_DEFAULT_CONFIG_H_

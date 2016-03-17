@@ -113,8 +113,8 @@ typedef struct
 
     navigation_t* navigation;                                   ///< The pointer to the navigation structure
     State* state;                                               ///< The pointer to the state structure
-    mavlink_communication_t* mavlink_communication;             ///< The pointer to the MAVLink communication structure
-    const mavlink_stream_t* mavlink_stream;                     ///< The pointer to MAVLink stream
+    Mavlink_communication* mavlink_communication;               ///< The pointer to the MAVLink communication structure
+    const Mavlink_stream* mavlink_stream;                       ///< The pointer to MAVLink stream
     const manual_control_t* manual_control;                     ///< The pointer to the manual_control structure
 } mavlink_waypoint_handler_t;
 
@@ -152,8 +152,8 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler,
                            const ahrs_t* ahrs,
                            State* state,
                            const manual_control_t* manual_control,
-                           mavlink_communication_t* mavlink_communication,
-                           const mavlink_stream_t* mavlink_stream);
+                           Mavlink_communication* mavlink_communication,
+                           const Mavlink_stream* mavlink_stream);
 
 /**
  * \brief   Initialize a first waypoint if a flight plan is set
@@ -184,7 +184,7 @@ void waypoint_handler_hold_init(mavlink_waypoint_handler_t* waypoint_handler, lo
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

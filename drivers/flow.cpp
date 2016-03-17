@@ -52,38 +52,22 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool flow_init(flow_t* flow, Serial* uart_)
+Flow::Flow(Serial& uart, flow_conf_t config) : uart(uart), mavlink_stream(uart, config.mavlink_stream_config)
 {
-    bool success = true;
-
     // Init members
-    flow->last_update_us  = time_keeper_get_us();
-    flow->handshake_state = FLOW_NO_HANDSHAKE;
-    flow->of_count        = 0;
-
-    // Init uart
-    flow->uart = uart_;
-
-    // Init MAVLink stream
-    mavlink_stream_conf_t mavlink_stream_conf = {};
-    mavlink_stream_conf.sysid   = 1;
-    mavlink_stream_conf.compid  = 50;
-    mavlink_stream_conf.debug   = true;
-    success &= mavlink_stream_init(&(flow->mavlink_stream),
-                                   &mavlink_stream_conf,
-                                   flow->uart);
-
-    return success;
+    last_update_us  = time_keeper_get_us();
+    handshake_state = FLOW_NO_HANDSHAKE;
+    of_count        = 0;
 }
 
 
-bool flow_update(flow_t* flow)
+bool Flow::update(Flow* flow)
 {
     // Update time
     flow->last_update_us  = time_keeper_get_us();
 
     // Receive incoming bytes
-    mavlink_stream_receive(&flow->mavlink_stream);
+    flow->mavlink_stream.receive();
 
     // Check if a new message is here
     if (flow->mavlink_stream.msg_available == true)

@@ -276,34 +276,34 @@ bool tasks_create_tasks(Central_data* central_data)
 {
     bool init_success = true;
 
-    scheduler_t* scheduler = &central_data->scheduler;
+    Scheduler* scheduler = &central_data->scheduler;
 
-    init_success &= scheduler_add_task(scheduler, 4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation                         , (task_argument_t)central_data                         , 0);
-    // init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation_quaternion              , (task_argument_t)central_data                         , 0);
+    init_success &= scheduler->add_task(4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation                         , (task_argument_t)central_data                         , 0);
+    // init_success &= scheduler->add_task(4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation_quaternion              , (task_argument_t)central_data                         , 0);
 
-    init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&tasks_altitude_estimation                       , (task_argument_t)&central_data->altitude_estimation_ , 12);
+    init_success &= scheduler->add_task(4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&tasks_altitude_estimation                          , (task_argument_t)&central_data->altitude_estimation_ , 12);
 
-    init_success &= scheduler_add_task(scheduler, 15000,    RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&tasks_run_barometer_update                      , (task_argument_t)central_data                     , 2);
-    init_success &= scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&tasks_run_gps_update                            , (task_argument_t)central_data                     , 3);
+    init_success &= scheduler->add_task(15000,    RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&tasks_run_barometer_update                      , (task_argument_t)central_data                     , 2);
+    init_success &= scheduler->add_task(100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&tasks_run_gps_update                            , (task_argument_t)central_data                     , 3);
 
-    init_success &= scheduler_add_task(scheduler, 10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation            , 5);
-    init_success &= scheduler_add_task(scheduler, 10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&waypoint_handler_update                         , (task_argument_t)&central_data->waypoint_handler      , 6);
+    init_success &= scheduler->add_task(10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation            , 5);
+    init_success &= scheduler->add_task(10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&waypoint_handler_update                         , (task_argument_t)&central_data->waypoint_handler      , 6);
 
-    init_success &= scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_update                            , (task_argument_t)&central_data->state_machine         , 7);
+    init_success &= scheduler->add_task(200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_update                            , (task_argument_t)&central_data->state_machine         , 7);
 
-    init_success &= scheduler_add_task(scheduler, 4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 8);
+    init_success &= scheduler->add_task(4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 8);
 
-    init_success &= scheduler_add_task(scheduler, 20000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&remote_update                                     , (task_argument_t)&central_data->manual_control.remote , 10);
+    init_success &= scheduler->add_task(20000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&remote_update                                     , (task_argument_t)&central_data->manual_control.remote , 10);
 
-    init_success &= scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH    , (task_function_t)&tasks_run_sonar_update                          , (task_argument_t)central_data                         , 13);
+    init_success &= scheduler->add_task(100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH    , (task_function_t)&tasks_run_sonar_update                         , (task_argument_t)central_data                         , 13);
 
-    init_success &= scheduler_add_task(scheduler, 500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&tasks_led_toggle                                , (task_argument_t)&central_data->led                   , 1);
+    init_success &= scheduler->add_task(500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&tasks_led_toggle                                , (task_argument_t)&central_data->led                   , 1);
 
-    // init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , (task_function_t)&tasks_sleep                                     , (task_argument_t)central_data                         , 14);
+    // init_success &= scheduler->add_task(4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , (task_function_t)&tasks_sleep                                     , (task_argument_t)central_data                         , 14);
 
-    init_success &= scheduler_add_task(scheduler, 10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&tasks_data_logging_update                       , (task_argument_t)central_data                         , 11);
+    init_success &= scheduler->add_task(10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&tasks_data_logging_update                       , (task_argument_t)central_data                         , 11);
 
-    init_success &= scheduler_sort_tasks(scheduler);
+    init_success &= scheduler->sort_tasks();
 
     return init_success;
 }
