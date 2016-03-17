@@ -30,18 +30,18 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file dynamic_model_quad_diag.cpp
+ * \file dynamic_model_fixed_wing.cpp
  *
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Nicolas Jacquemin
  * \author Julien Lecoeur
  *
- * \brief Simulated dynamics of a quadcopter in diag configuration
+ * \brief Simulated dynamics of a fixed wing UAV
  *
  ******************************************************************************/
 
 
-#include "simulation/Dynamic_model_fixed_wing.hpp"
+#include "simulation/dynamic_model_fixed_wing.hpp"
 
 extern "C"
 {
@@ -54,27 +54,28 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-//TODO : Implement the constructor
-Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(/*Servo& servo_rear_left,
-        Servo& servo_front_left,
-        Servo& servo_front_right,
-        Servo& servo_rear_right,
-        dynamic_model_quad_diag_conf_t config*/)/*:
-    servo_front_right_(servo_front_right),
-    servo_front_left_(servo_front_left),
-    servo_rear_right_(servo_rear_right),
-    servo_rear_left_(servo_rear_left),
+Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
+        Servo& servo_flap_left,
+        Servo& servo_flap_right,
+        dynamic_model_fixed_wing_conf_t config):
+    servo_motor_(servo_motor),
+    servo_flap_left_(servo_flap_left),
+    servo_flap_right_(servo_flap_right),
     config_(config),
-    rotorspeeds_(std::array<float, 4> { {0.0f, 0.0f, 0.0f, 0.0f}}),
-torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-rates_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-lin_forces_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-acc_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-vel_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-vel_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
-last_update_us_(time_keeper_get_us()),
-dt_s_(0.004f)*/
+    motor_speed_(0.0f),
+    left_flap_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),//TODO: change these to the correct values
+    right_flap_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
+    left_drift_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
+    right_drift_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
+    torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
+    rates_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
+    lin_forces_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
+    acc_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
+    vel_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
+    vel_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
+    attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
+    last_update_us_(time_keeper_get_us()),
+    dt_s_(0.004f)
 {
     // Init local position
     local_position_.pos[0]  = 0.0f;
@@ -114,9 +115,8 @@ bool Dynamic_model_fixed_wing::update(void)
         dt_s_ = 0.1f;
     }
 
-   //TODO : Compute the torques on the wing
-    // compute torques and forces based on servo commands
-    //forces_from_servos();
+    // compute torques and forces based on servo commands and positions of the flaps
+    forces_from_servos();
 
     // integrate torques to get simulated gyro rates (with some damping)
     rates_bf_[0] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[0] + dt_s_ * torques_bf_[0] / config_.roll_pitch_momentum, 10.0f);
@@ -253,10 +253,12 @@ const quat_t& Dynamic_model_fixed_wing::attitude(void) const
 
 void Dynamic_model_fixed_wing::forces_from_servos(void)
 {
-   //TODO : see if I reuse it or write a new one
-    /*float motor_command[4];
-    float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
-    float ldb;
+    float motor_command = servo_motor_.read() - config_.rotor_rpm_offset;
+    float flaps_angle_left = servo_flap_left_.read() - config_.flap_offset; //TODO: transform these in angles
+    float flaps_angle_right = servo_flap_right_.read() - config_.flap_offset;
+    left_flap_.set_flap_angle(flaps_angle_left);
+    right_flap_.set_flap_angle(flaps_angle_right);
+
     quat_t wind_gf  = {};
     wind_gf.s       = 0;
     wind_gf.v[0]    = config_.wind_x;
@@ -264,55 +266,89 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     wind_gf.v[2]    = 0.0f;
 
     quat_t wind_bf  =  quaternions_global_to_local(attitude_, wind_gf);
-
-    float sqr_lateral_airspeed = SQR(vel_bf_[0] + wind_bf.v[0]) + SQR(vel_bf_[1] + wind_bf.v[1]);
-    float lateral_airspeed = sqrt(sqr_lateral_airspeed);
-
-    float old_rotor_speed;
-
-    motor_command[0] = servo_front_right_.read() - config_.rotor_rpm_offset;
-    motor_command[1] = servo_front_left_.read()  - config_.rotor_rpm_offset;
-    motor_command[2] = servo_rear_right_.read()  - config_.rotor_rpm_offset;
-    motor_command[3] = servo_rear_left_.read()   - config_.rotor_rpm_offset;
-
-    for (int32_t i = 0; i < 4; i++)
-    {
-
-        // temporarily save old rotor speeds
-        old_rotor_speed = rotorspeeds_[i];
-        // estimate rotor speeds by low - pass filtering
-        //rotorspeeds_[i] = (config_.rotor_lpf) * rotorspeeds_[i] + (1.0f - config_.rotor_lpf) * (motor_command[i] * config_.rotor_rpm_gain);
-        rotorspeeds_[i] = (motor_command[i] * config_.rotor_rpm_gain);
-
-        // calculate torque created by rotor inertia
-        rotor_inertia[i] = (rotorspeeds_[i] - old_rotor_speed) / dt_s_ * config_.rotor_momentum;
-
-        ldb = lift_drag_base(rotorspeeds_[i], sqr_lateral_airspeed, -vel_bf_[Z]);
-
-        rotor_lifts[i] = ldb * config_.rotor_cl;
-        rotor_drags[i] = ldb * config_.rotor_cd;
-    }
-
-    float mpos_x = config_.rotor_arm_length / 1.4142f;
-    float mpos_y = config_.rotor_arm_length / 1.4142f;
+    //Take into account the speed of the plane
+    wind_bf.v[0] += vel_bf_[0];
+    wind_bf.v[1] += vel_bf_[1];
+    wind_bf.v[2] += vel_bf_[2];
+    wing_model_forces_t motor_forces = this->compute_motor_forces(wind_bf, motor_command);
+    wing_model_forces_t left_flap_force = left_flap_.compute_forces(wind_bf);
+    wing_model_forces_t right_flap_force = right_flap_.compute_forces(wind_bf);
+    wing_model_forces_t left_drift_force = left_drift_.compute_forces(wind_bf);
+    wing_model_forces_t right_drift_force = right_drift_.compute_forces(wind_bf);
 
     // torque around x axis (roll)
-    torques_bf_[ROLL] = ((rotor_lifts[1]  + rotor_lifts[3])
-                         - (rotor_lifts[0]  + rotor_lifts[2])) * mpos_y;;
+    torques_bf_[ROLL] = motor_forces.torque[ROLL] +
+			left_flap_force.torque[ROLL] +
+			right_flap_force.torque[ROLL] +
+			left_drift_force.torque[ROLL] +
+      right_drift_force.torque[ROLL];
 
     // torque around y axis (pitch)
-    torques_bf_[PITCH] = ((rotor_lifts[1]  + rotor_lifts[0])
-                          - (rotor_lifts[3]  + rotor_lifts[2])) *  mpos_x;
+    torques_bf_[PITCH] = motor_forces.torque[PITCH] +
+			 left_flap_force.torque[PITCH] +
+			 right_flap_force.torque[PITCH] +
+       left_drift_force.torque[PITCH] +
+       right_drift_force.torque[PITCH];
 
-    torques_bf_[YAW] = (config_.servos_mix_config.motor_front_left_dir  * (10.0f * rotor_drags[1]   + rotor_inertia[1])
-                        + config_.servos_mix_config.motor_front_right_dir * (10.0f * rotor_drags[0]     + rotor_inertia[0])
-                        + config_.servos_mix_config.motor_rear_left_dir   * (10.0f * rotor_drags[3]     + rotor_inertia[3])
-                        + config_.servos_mix_config.motor_rear_right_dir  * (10.0f * rotor_drags[2]     + rotor_inertia[2])) * config_.rotor_diameter;
+    // torque around z axis (yaw)
+    torques_bf_[YAW] = motor_forces.torque[YAW] +
+		       left_flap_force.torque[YAW] +
+		       right_flap_force.torque[YAW] +
+           left_drift_force.torque[YAW] +
+           right_drift_force.torque[YAW];
 
-    lin_forces_bf_[X] = -(vel_bf_[X] - wind_bf.v[0]) * lateral_airspeed * config_.vehicle_drag;
-    lin_forces_bf_[Y] = -(vel_bf_[Y] - wind_bf.v[1]) * lateral_airspeed * config_.vehicle_drag;
-    lin_forces_bf_[Z] = - (rotor_lifts[1]
-                           + rotor_lifts[0]
-                           + rotor_lifts[3]
-                           + rotor_lifts[2]);*/
+    lin_forces_bf_[X] = motor_forces.force[0] +
+			left_flap_force.force[0] +
+			right_flap_force.force[0] +
+      left_drift_force.force[0] +
+      right_drift_force.force[0];
+
+    lin_forces_bf_[Y] = motor_forces.force[1] +
+			left_flap_force.force[1] +
+			right_flap_force.force[1] +
+      left_drift_force.force[1] +
+      right_drift_force.force[1];
+
+    lin_forces_bf_[Z] = motor_forces.force[2] +
+			left_flap_force.force[2] +
+			right_flap_force.force[2] +
+      left_drift_force.force[2] +
+      right_drift_force.force[2];
+}
+
+wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(quat_t wind_bf,float motor_command)
+{
+  //Same as for quad rotors
+  // temporarily save old rotor speeds
+  float old_motor_speed = motor_speed_;
+  // estimate rotor speeds
+  motor_speed_ = (motor_command * config_.rotor_rpm_gain);
+
+  // calculate torque created by rotor inertia
+  float rotor_inertia = (motor_speed_ - old_motor_speed) / dt_s_ * config_.rotor_momentum;
+
+  float sqr_lat_airspeed = SQR(wind_bf.v[1]) + SQR(wind_bf.v[2]);
+  float ldb = lift_drag_base(motor_speed_, sqr_lat_airspeed, wind_bf.v[0]);
+
+  wing_model_forces_t motor_forces;
+  motor_forces.force[0] = ldb * config_.rotor_cl;
+  motor_forces.force[1] = 0.0f;
+  motor_forces.force[2] = 0.0f;
+  motor_forces.torque[ROLL] = (10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;
+  motor_forces.torque[PITCH] = 0.0f;
+  motor_forces.torque[YAW] = 0.0f;
+
+  return motor_forces;
+}
+
+float Dynamic_model_fixed_wing::lift_drag_base(float rpm, float sqr_lat_airspeed, float axial_airspeed)
+{
+    if (rpm < 0.1f)
+    {
+        return 0.0f;
+    }
+    float mean_vel = config_.rotor_diameter * PI * rpm / 60.0f;
+    float exit_vel = rpm / 60.0f * config_.rotor_pitch;
+
+    return (0.5f * config_.air_density * (mean_vel * mean_vel + sqr_lat_airspeed) * config_.rotor_foil_area  * (1.0f - (axial_airspeed / exit_vel)));
 }

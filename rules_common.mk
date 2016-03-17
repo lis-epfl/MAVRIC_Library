@@ -73,6 +73,8 @@ LIB_SRCS += simulation/magnetometer_sim.cpp
 LIB_SRCS += simulation/barometer_sim.cpp
 LIB_SRCS += simulation/sonar_sim.cpp
 LIB_SRCS += simulation/gps_sim.cpp
+LIB_SRCS += simulation/dynamic_model_fixed_wing.cpp
+LIB_SRCS += simulation/wing_model.cpp
 
 LIB_SRCS += util/coord_conventions.c
 LIB_SRCS += util/kalman.c

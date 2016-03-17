@@ -30,10 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file dynamic_model_quad_diag.hpp
+ * \file dynamic_model_fixed_wing.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Jacquemin
+ * \author Julien Lecoeur
  *
  * \brief Simulated dynamics of a fixed wing UAV
  *
@@ -45,6 +46,8 @@
 
 
 #include "simulation/dynamic_model.hpp"
+#include "drivers/servo.hpp"
+#include "simulation/wing_model.hpp"
 
 extern "C"
 {
@@ -57,24 +60,23 @@ extern "C"
  */
 typedef struct
 {
-   //TODO : declare the needed parameters
-    /*float rotor_lpf;                    ///< Low-pass filtered response of the rotors to simulate inertia and lag
-    float rotor_rpm_gain;               ///< Gain linking the command to rpm
+    float rotor_lpf;                    ///< Low-pass filtered response of the rotors to simulate inertia and lag
+    float rotor_rpm_gain;               ///< Gain linking the command to rpm*/
     float rotor_rpm_offset;             ///< Offset to convert servo commands to rpm
+    float flap_offset;             ///< Offset to convert servo commands to rpm
 
     float rotor_cd;                     ///< Rotor drag coefficient
     float rotor_cl;                     ///< Rotor lift coefficient
     float rotor_diameter;               ///< Mean rotor diameter in m
     float rotor_foil_area;              ///< Rotor foil area
 
-    float rotor_pitch;                  ///< Rotor pitch
+    float rotor_pitch;                  ///< Rotor pitch*/
     float total_mass;                   ///< Vehicle mass in kg
     float vehicle_drag;                 ///< Coefficient of drag of the whole vehicle
     float roll_pitch_momentum;          ///< Roll and pitch angular momentum of the vehicle
     float yaw_momentum;                 ///< Yaw angular momentum constants (assumed to be independent)
 
     float rotor_momentum;               ///< Angular momentum of the rotor (for rotor inertia)
-    float rotor_arm_length;             ///< Distance between CoG and motor (in meter)
 
     float wind_x;                       ///< X component of wind in global frame in m/s
     float wind_y;                       ///< Y component of wind in global frame in m/s
@@ -83,8 +85,6 @@ typedef struct
 
     float gravity;                      ///< Gravity value used for the simulated forces
     float air_density;                  ///< Air density in kg/m3
-
-    servos_mix_quadcopter_diag_conf_t  servos_mix_config;*/
 
 } dynamic_model_fixed_wing_conf_t;
 
@@ -112,12 +112,10 @@ public:
      * \param   servo_rear_right    Reference to rear right servo
      * \param   config              Configuration
      */
-     //TODO: Update with the parameters needed for the constructor
-    Dynamic_model_fixed_wing(/*Servo& servo_rear_left,
-                            Servo& servo_front_left,
-                            Servo& servo_front_right,
-                            Servo& servo_rear_right,
-                            dynamic_model_quad_diag_conf_t config = dynamic_model_quad_diag_default_config()*/);
+    Dynamic_model_fixed_wing(Servo& servo_motor,
+            Servo& servo_flap_left,
+            Servo& servo_flap_right,
+            dynamic_model_fixed_wing_conf_t config = dynamic_model_fixed_wing_default_config());
 
 
     /**
@@ -185,13 +183,20 @@ public:
     const quat_t& attitude(void) const;
 
 private:
-   //TODO : add the needed variables
-    /*Servo& servo_front_right_;              ///< Reference to front right servo
-    Servo& servo_front_left_;               ///< Reference to front left servo
-    Servo& servo_rear_right_;               ///< Reference to rear right servo
-    Servo& servo_rear_left_;                ///< Reference to rear left servo*/
+    Servo& servo_motor_;              ///< Reference to front right servo
+    Servo& servo_flap_left_;               ///< Reference to front left servo
+    Servo& servo_flap_right_;               ///< Reference to rear right servo
 
-    Dynamic_model_fixed_wing_conf_t config_; ///< Configuration
+    dynamic_model_fixed_wing_conf_t config_; ///< Configuration
+
+    float motor_speed_;
+
+    Wing_model left_flap_;
+    Wing_model right_flap_;
+    Wing_model left_drift_;
+    Wing_model right_drift_;
+
+
 
     //std::array<float, 4> rotorspeeds_;      ///< Estimated rotor speeds
     std::array<float, 3> torques_bf_;       ///< 3D torques vector applied on the vehicle
@@ -212,18 +217,20 @@ private:
     /**
      * \brief   Computes forces applied to the UAV from servo input
      */
-     //TODO: see if needed for the fixed wing UAV
     void forces_from_servos(void);
 
+    wing_model_forces_t compute_motor_forces(quat_t wind_bf,float motor_command);
+
+    float lift_drag_base(float rpm, float sqr_lat_airspeed, float axial_airspeed);
 };
 
 
 
-static inline dynamic_model_quad_diag_conf_t dynamic_model_quad_diag_default_config()
+static inline dynamic_model_fixed_wing_conf_t dynamic_model_fixed_wing_default_config()
 {
-    dynamic_model_quad_diag_conf_t conf = {};
+    dynamic_model_fixed_wing_conf_t conf = {};
 
-    /*conf.rotor_lpf              = 0.1f;                 ///< Low pass filter constant (adjusted for time) to express rotor inertia/lag. 1.0       = no inertia, 0.0 = infinite inertia
+    conf.rotor_lpf              = 0.1f;                 ///< Low pass filter constant (adjusted for time) to express rotor inertia/lag. 1.0       = no inertia, 0.0 = infinite inertia
     conf.rotor_rpm_gain         = 4000.0f;              ///< The gain linking the rotor command to rpm
     conf.rotor_rpm_offset       = -1.0f;                ///< Offset to convert servo commands to rpm (servo command that corresponds to zero rpm)
     conf.rotor_cd               = 0.03f;                ///< Coefficient of drag of rotor blade
@@ -236,19 +243,15 @@ static inline dynamic_model_quad_diag_conf_t dynamic_model_quad_diag_default_con
     conf.roll_pitch_momentum    = 0.1f * 0.17f / 1.4142f;   ///< Angular momentum constants (assumed to be independent) (in kg/m^2)
     conf.yaw_momentum           = 0.1f * 0.17f;         ///< Approximate motor arm mass * rotor arm length
     conf.rotor_momentum         = 0.005f * 0.03f;       ///< Rotor inertia  (5g off center mass * rotor radius)
-    conf.rotor_arm_length       = 0.17f;                ///< Distance between CoG and motor (in meter)
     conf.wind_x                 = 0.0f;                 ///< Wind in x axis, global frame
     conf.wind_y                 = 0.0f;                 ///< Wind in y axis, global frame
     conf.gravity                = 9.8f;                 ///< Simulation gravity
     conf.air_density            = 1.2f;                 ///< Air density*/
-    //TODO : config the parameters declared before with the default values
 
     //default home location (EFPL Esplanade)
     conf.home_coordinates[X]    = 46.51852236174565f;   ///< Latitude of the simulation home waypoint
     conf.home_coordinates[Y]    = 6.566044801857777f;   ///< Longitude of the simulation home waypoint
     conf.home_coordinates[Z]    = 400.0f;               ///< Altitude of the simulation home waypoint
-
-    conf.servos_mix_config = servos_mix_quadcopter_diag_default_config();
 
     return conf;
 }
