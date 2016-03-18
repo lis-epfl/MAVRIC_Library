@@ -1,4 +1,5 @@
-LIB_SRCS += communication/data_logging.cpp            
+LIB_SRCS += communication/data_logging.cpp
+LIB_SRCS += communication/data_logging_telemetry.cpp            
 LIB_SRCS += communication/hud_telemetry.cpp           
 LIB_SRCS += communication/mavlink_communication.cpp     
 LIB_SRCS += communication/mavlink_message_handler.cpp   
@@ -10,8 +11,6 @@ LIB_SRCS += communication/remote_telemetry.cpp
 LIB_SRCS += communication/state.cpp
 LIB_SRCS += communication/state_machine.cpp
 LIB_SRCS += communication/state_telemetry.cpp
-LIB_SRCS += communication/toggle_logging.cpp
-LIB_SRCS += communication/toggle_logging_telemetry.cpp
 
 LIB_SRCS += control/adaptive_parameter.c          
 LIB_SRCS += control/attitude_controller.c         

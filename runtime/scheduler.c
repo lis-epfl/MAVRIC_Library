@@ -138,7 +138,7 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 }
 
 
-void scheduler_sort_tasks(scheduler_t* scheduler)
+bool scheduler_sort_tasks(scheduler_t* scheduler)
 {
     bool sorted = false;
 
@@ -147,7 +147,8 @@ void scheduler_sort_tasks(scheduler_t* scheduler)
 
     if (ts->task_count < 2)
     {
-        return;
+        sorted = true;
+        return sorted;
     }
 
     while (sorted == false)
@@ -182,6 +183,7 @@ void scheduler_sort_tasks(scheduler_t* scheduler)
             }
         }
     }
+    return sorted;
 }
 
 

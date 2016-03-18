@@ -54,11 +54,47 @@
 
 
 /**
+ * \brief       Intermediate interface class for the accelero inside LSM330DLC
+ *
+ * \details     Inherits only accelerometer
+ */
+class Lsm330dlc_acc: public Accelerometer
+{
+public:
+    virtual bool update_acc(void) = 0;
+
+    bool update(void)
+    {
+        return update_acc();
+    }
+};
+
+
+/**
+ * \brief       Intermediate interface class for the gyro inside LSM330DLC
+ *
+ * \details     Inherits only gyroscope
+ */
+class Lsm330dlc_gyr: public Gyroscope
+{
+public:
+    virtual bool update_gyr(void) = 0;
+
+    bool update(void)
+    {
+        return update_gyr();
+    }
+};
+
+
+/**
  * \brief       Driver for sensor LSM330DLC
  *
  * \details     This sensor is at the same time a accelerometer and a gyroscope
+ *              The inherited method Accelerometer::update is implemented as Lsm330dlc::update_acc
+ *              The inherited method Gyroscope::update is implemented as Lsm330dlc::update_gyr
  */
-class Lsm330dlc: public Accelerometer, public Gyroscope
+class Lsm330dlc: public Lsm330dlc_acc, public Lsm330dlc_gyr
 {
 public:
     /**
@@ -87,7 +123,8 @@ public:
      * \return  true    Success
      * \return  false   Failed
      */
-    bool update(void);
+    bool update_acc(void);
+    bool update_gyr(void);
 
 
     /**

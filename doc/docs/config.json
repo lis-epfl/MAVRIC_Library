@@ -2,7 +2,7 @@
     "title": "MAV'RIC Library",
     "tagline": "Highway to the Danger Zone",
     "author": "MAV'RIC Team",
-    "image": "f14_mavric.png",
+    "image": "f14_mavric.jpg",
     "ignore": {
             "files": ["Work_In_Progress.md"],
             "folders": ["99_Not_Ready"]
