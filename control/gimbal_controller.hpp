@@ -46,15 +46,16 @@
 #include "control/control_command.h"
 #include "control/pid_controller.h"
 #include "drivers/servo.hpp"
+#include "control/navigation.hpp"
 
 /**
  * \brief Gimbal controller configuration
  */
 typedef struct
 {
-    attitude_command_t   		attitude_command_desired_config;	///< Initial desired attitude command
-    attitude_command_t   		attitude_command_range_config[2];  	///< Allowed [min;max] range of the gimbal
-    attitude_command_t   		attitude_output_config;  			///< Initial output commands
+    attitude_command_t   		attitude_command_desired_config;	///< Initial desired attitude command [°]
+    attitude_command_t   		attitude_command_range_config[2];  	///< Allowed [min;max] range of the gimbal [°]
+    attitude_command_t   		attitude_output_config;  			///< Initial output commands [°]
 } gimbal_controller_conf_t;
 
 /**
@@ -73,7 +74,7 @@ public:
      * \param   servo_yaw           Servo for yaw
      * \param   config              Configuration structure
      */
-    Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const gimbal_controller_conf_t config = gimbal_controller_default_config());
+    Gimbal_controller(navigation_t *navigation, Servo& servo_pitch, Servo& servo_yaw, const gimbal_controller_conf_t config = gimbal_controller_default_config());
 
 
     /**
@@ -81,11 +82,11 @@ public:
      *
      * \return  success
      */
-    bool update(void);
+    bool update();
 
 
-    attitude_command_t			attitude_command_desired_;	///< Attitude command (input from head-tracker)
-    attitude_command_t			attitude_output_;			///< Output to PWM (output)
+    attitude_command_t			attitude_command_desired_;	///< Attitude command (input from head-tracker) [°]
+    attitude_command_t			attitude_output_;			///< Output to PWM (output) [°]
 
 private:
     /**
@@ -101,8 +102,9 @@ private:
     };
 
     attitude_command_t			attitude_command_range_[2];	///< Range [min; max] of the attitude commands
-    Servo&						servo_pitch_;				///< Gimbal pitch servo
-    Servo&						servo_yaw_;					///< Gimbal yaw servo
+    navigation_t				*navigation_;				///< Pointer to the navigation structure
+    Servo&						servo_pitch_;				///< Gimbal pitch servo //PWM4
+    Servo&						servo_yaw_;					///< Gimbal yaw servo //PWM5
 };
 
 
@@ -110,7 +112,7 @@ static inline gimbal_controller_conf_t gimbal_controller_default_config()
 {
     gimbal_controller_conf_t conf = {};
 
-    float min_max_angle = 45.0f;
+    float min_max_angle = 60.0f;
 
     //init desired attitude command
     conf.attitude_command_desired_config.rpy[0] = 0.0f;

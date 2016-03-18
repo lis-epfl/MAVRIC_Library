@@ -341,5 +341,5 @@ void position_estimation_get_semilocal_velocity(navigation_t* nav, float semiloc
 	global_vel[Z] = nav->position_estimation->vel[Z];
 
 	//transform velocity in global frame to velocity in semi-local frame
-	quaternions_rotate_vector(q_semilocal,global_vel,semilocal_vel);
+	quaternions_rotate_vector(quaternions_inverse(q_semilocal),global_vel,semilocal_vel);
 }

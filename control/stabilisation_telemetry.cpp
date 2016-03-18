@@ -199,18 +199,18 @@ void  sensors_set_telemetry_send(Central_data *central_data, const mavlink_strea
 			mavlink_stream->compid,
 			msg,
 			time_keeper_get_ms(),
-			aero_attitude.rpy[0],
-			aero_attitude.rpy[1],
-			aero_attitude.rpy[2],
+			maths_rad_to_deg(aero_attitude.rpy[0]),
+			maths_rad_to_deg(aero_attitude.rpy[1]),
+			maths_rad_to_deg(aero_attitude.rpy[2]),
 			central_data->ahrs.angular_speed[0],
 			central_data->ahrs.angular_speed[1],
 			central_data->ahrs.angular_speed[2],
 			semilocal_vel[X],
 			semilocal_vel[Y],
 			semilocal_vel[Z],
-			central_data->gimbal_controller.attitude_output_.rpy[0],
-			central_data->gimbal_controller.attitude_output_.rpy[1],
-			central_data->gimbal_controller.attitude_output_.rpy[2],
+			central_data->gimbal_controller.attitude_output_.rpy[0], //[°]
+			central_data->gimbal_controller.attitude_output_.rpy[1], //[°]
+			central_data->gimbal_controller.attitude_output_.rpy[2], //[°]
 			0.0f, //float
 			0); //uint16_t
 }
