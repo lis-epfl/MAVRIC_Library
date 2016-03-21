@@ -108,12 +108,12 @@ float Wing_model::get_cl(float aoa, float speed)
 
 float Wing_model::get_cd(float aoa, float speed)
 {
-	return 1.0; //TODO: implement function
+	return 0.1; //TODO: implement function
 }
 
 float Wing_model::get_cm(float aoa, float speed)
 {
-	return 1.0; //TODO: implement function
+	return 0.0; //TODO: implement function
 }
 
 wing_model_forces_t Wing_model::forces_wing_to_bf(wing_model_forces_t forces_wf)

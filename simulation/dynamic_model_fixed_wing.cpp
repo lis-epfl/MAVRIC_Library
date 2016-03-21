@@ -42,6 +42,7 @@
 
 
 #include "simulation/dynamic_model_fixed_wing.hpp"
+#include <iostream>
 
 extern "C"
 {
@@ -63,8 +64,8 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     servo_flap_right_(servo_flap_right),
     config_(config),
     motor_speed_(0.0f),
-    left_flap_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),//TODO: change these to the correct values
-    right_flap_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
+    left_flap_(0.0f,quat_t{0.0f, {1.0f, 0.0f, 0.0f}}, 0.0f, 1.0f, 0.0f, 4.0f, 1.0f),//TODO: change these to the correct values
+    right_flap_(0.0f,quat_t{0.0f, {1.0f, 0.0f, 0.0f}}, 0.0f, -1.0f, 0.0f, 4.0f, 1.0f),
     left_drift_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
     right_drift_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
     torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
@@ -104,13 +105,13 @@ bool Dynamic_model_fixed_wing::update(void)
     last_update_us_ = now;
 
     // Do nothing if updated too often
-    if (dt_s_ < 0.001f)
+    /*if (dt_s_ < 0.001f)
     {
         return true;
-    }
+    }*///TODO: remove this when it works
 
     // Clip dt if too large, this is not realistic but the simulation will be more precise
-    if (dt_s_ > 0.1f)
+    //if (dt_s_ > 0.1f) TODO: Uncomment this
     {
         dt_s_ = 0.1f;
     }
@@ -246,14 +247,13 @@ const quat_t& Dynamic_model_fixed_wing::attitude(void) const
 }
 
 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 void Dynamic_model_fixed_wing::forces_from_servos(void)
 {
-    float motor_command = servo_motor_.read() - config_.rotor_rpm_offset;
+    float motor_command = 1.0f;//servo_motor_.read() - config_.rotor_rpm_offset;
     float flaps_angle_left = servo_flap_left_.read() - config_.flap_offset; //TODO: transform these in angles
     float flaps_angle_right = servo_flap_right_.read() - config_.flap_offset;
     left_flap_.set_flap_angle(flaps_angle_left);
@@ -264,13 +264,12 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     wind_gf.v[0]    = config_.wind_x;
     wind_gf.v[1]    = config_.wind_y;
     wind_gf.v[2]    = 0.0f;
-
     quat_t wind_bf  =  quaternions_global_to_local(attitude_, wind_gf);
     //Take into account the speed of the plane
     wind_bf.v[0] += vel_bf_[0];
     wind_bf.v[1] += vel_bf_[1];
     wind_bf.v[2] += vel_bf_[2];
-    wing_model_forces_t motor_forces = this->compute_motor_forces(wind_bf, motor_command);
+    wing_model_forces_t motor_forces = compute_motor_forces(wind_bf, motor_command);
     wing_model_forces_t left_flap_force = left_flap_.compute_forces(wind_bf);
     wing_model_forces_t right_flap_force = right_flap_.compute_forces(wind_bf);
     wing_model_forces_t left_drift_force = left_drift_.compute_forces(wind_bf);
@@ -314,6 +313,8 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
 			right_flap_force.force[2] +
       left_drift_force.force[2] +
       right_drift_force.force[2];
+      for(int i=0; i<3; i++) printf("torque%d: %f\n",i, torques_bf_[i]);
+      for(int i=0; i<3; i++) printf("force%d: %f\n",i, lin_forces_bf_[i]);
 }
 
 wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(quat_t wind_bf,float motor_command)
