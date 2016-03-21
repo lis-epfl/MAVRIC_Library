@@ -30,61 +30,63 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file matrixlib_float.h
+ * \file altitude_controller.cpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *
- * \brief Source file for the floating point versions of some matrix operation
- * functions
+ * \brief   A simple altitude controller for copter
  *
  ******************************************************************************/
 
 
-#ifndef __MF_H__
-#define __MF_H__
+#include "control/altitude_controller.hpp"
 
-#ifdef __cplusplus
-extern "C"
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Altitude_controller::Altitude_controller(const position_command_t& position_command, 
+                                         const altitude_t& altitude, 
+                                         thrust_command_t& thrust_command,
+                                         altitude_controller_conf_t config):
+    position_command_(position_command),
+    altitude_(altitude),
+    thrust_command_(thrust_command)
 {
-#endif
-
-#include <stdint.h>
-
-#ifndef USE_MATF
-#define USE_MATF            0
-#endif
-
-/**
- * \brief Enumerates errors module can throw
- */
-enum matf_errors
-{
-    MATF_ERROR_BASE = 0x3F00,
-};
-
-//----------------------------
-// Public function prototypes
-//----------------------------
-
-float* matf_zeros(int32_t, int32_t, float*);
-float* matf_diag(int32_t, int32_t, float*, float, int32_t, int32_t);
-float* matf_std(int32_t, float*, float*);
-float* matf_copy(int32_t, int32_t, float*, float*);
-float* matf_cross(float* a, float* b, float* c);
-float* matf_copy_part(float*, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, float*, int32_t, int32_t, int32_t, int32_t);
-float  matf_norm(int32_t, float*);
-float  matf_sum(int32_t, float*);
-float* matf_add(int32_t, int32_t, float*, float*, float*);
-float* matf_multiply_factor(int32_t n1, int32_t n2, float* A, float* B, float c);
-float* matf_sub(int32_t, int32_t, float*, float*, float*);
-float* matf_tr(int32_t, int32_t, float*, float*);
-float* matf_multiply(int32_t, int32_t, int32_t, float*, float*, float*);
-float* matf_multiply_Bt(int32_t, int32_t, int32_t, float*, float*, float*);
-// float* matf_invert(int32_t numRowsCols, float* dstM, float* srcM);
-
-
-#ifdef __cplusplus
+    hover_point_ = config.hover_point;
+    pid_controller_init(&pid_, &config.pid_config);
 }
-#endif
 
-#endif
+
+bool Altitude_controller::init(void)
+{   
+    return true;
+}
+
+
+bool Altitude_controller::update(void)
+{
+    float error = 0.0f;
+
+    switch (position_command_.mode)
+    {
+        case POSITION_COMMAND_MODE_LOCAL:
+            error = position_command_.xyz[2] - (-altitude_.above_ground);
+            break;
+
+        case POSITION_COMMAND_MODE_GLOBAL:
+            error = position_command_.xyz[2] - (-altitude_.above_sea);
+            break;
+    }
+
+    thrust_command_.thrust = hover_point_ - pid_controller_update(&pid_, error);
+
+    return true;
+}
