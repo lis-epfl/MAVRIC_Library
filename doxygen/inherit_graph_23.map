@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structaudio__t.html" title="Structure of the acoustic data." alt="" coords="5,5,69,35"/>
+<area shape="rect" id="node1" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="5,32,88,61"/>
+<area shape="rect" id="node3" href="$classBarometer__sim.html" title="Simulation for barometers." alt="" coords="137,5,247,35"/>
+<area shape="rect" id="node5" href="$classBmp085.html" title="Driver for the BMP085 barometer." alt="" coords="157,59,227,88"/>
 </map>

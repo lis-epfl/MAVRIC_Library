@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['h_5f',['H_',['../classKalman.html#afd42db08fb3bd019b8ac9e3a9059b60a',1,'Kalman']]],
   ['handshake_5fstate',['handshake_state',['../structflow__t.html#af143a5f6e111c77a79c3be5c5c323146',1,'flow_t']]],
   ['have_5fraw_5fvelocity',['have_raw_velocity',['../structgps__t.html#a0e5f56cb48fad71fac7d64d75726e9fc',1,'gps_t']]],
   ['hdop',['hdop',['../structgps__t.html#ac4b5c6c3d8d655767447eb2aa3db2518',1,'gps_t']]],
@@ -12,7 +13,7 @@ var searchData=
   ['horizontal_5faccuracy',['horizontal_accuracy',['../structubx__nav__pos__llh__t.html#a37574e9885d3fa1268c2010184d48c48',1,'ubx_nav_pos_llh_t::horizontal_accuracy()'],['../structgps__t.html#ae7f7b21657d1adb7038bd3933d4a81c3',1,'gps_t::horizontal_accuracy()']]],
   ['horizontal_5fstatus',['horizontal_status',['../structgps__t.html#ac11a2c4b6291bc7e0db1510f514683ae',1,'gps_t']]],
   ['hour',['hour',['../structubx__nav__timeutc__t.html#a2c68e9306f2e066a5982aa0f3eb63893',1,'ubx_nav_timeutc_t::hour()'],['../structdate__time__t.html#ab9ee4c9f9a31aac8fea020d567697120',1,'date_time_t::hour()']]],
-  ['hover_5fpoint',['hover_point',['../structaltitude__controller__t.html#a076aca866493277836aef9ca6c0f9ec3',1,'altitude_controller_t::hover_point()'],['../structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b',1,'altitude_controller_conf_t::hover_point()']]],
+  ['hover_5fpoint',['hover_point',['../structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b',1,'altitude_controller_conf_t']]],
   ['hovering_5fcontroller',['hovering_controller',['../structnavigation__t.html#a0961b5b9c6c766a0887fe638359e748f',1,'navigation_t::hovering_controller()'],['../structnavigation__config__t.html#a265bcafe82117ea6bec7360e18fe45d9',1,'navigation_config_t::hovering_controller()']]],
   ['hud_5fstructure',['hud_structure',['../classCentral__data.html#ac6293592dec12f4f428f6ade761adfee',1,'Central_data']]],
   ['hw_5fversion',['hw_version',['../structubx__mon__ver__t.html#ab88ba534ab797ea8978d1575f82adb13',1,'ubx_mon_ver_t']]]

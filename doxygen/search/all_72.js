@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['r_5f',['R_',['../classKalman.html#aed56eb17f9b2e79632d02d1a8ba1e11f',1,'Kalman']]],
   ['rail',['rail',['../structadc__avr32__conf__t.html#a44f8dc5f2edc74a7235cdc06a245ac09',1,'adc_avr32_conf_t']]],
   ['rate',['rate',['../structcommand__t.html#abe03f9ba4c033a2c08b6a8238ae290dc',1,'command_t::rate()'],['../structubx__cfg__msg__rate__t.html#a67ce70a804cdc9898a00e0fbcd3ca63a',1,'ubx_cfg_msg_rate_t::rate()'],['../structubx__cfg__msg__rate__send__t.html#a1a8425c3eff13f17b0028d435eca3885',1,'ubx_cfg_msg_rate_send_t::rate()']]],
   ['rate_5fcommand',['rate_command',['../structattitude__controller__t.html#a243e855091a1466da90e802fa9fcc062',1,'attitude_controller_t']]],
@@ -59,6 +60,7 @@ var searchData=
   ['rotor_5fpitch',['rotor_pitch',['../structdynamic__model__quad__diag__conf__t.html#a9a9d5ed9837f37444c7b5459ddc73bcc',1,'dynamic_model_quad_diag_conf_t']]],
   ['rotor_5frpm_5fgain',['rotor_rpm_gain',['../structdynamic__model__quad__diag__conf__t.html#a9a5872a7284c86d15a427b8a30955d60',1,'dynamic_model_quad_diag_conf_t']]],
   ['rotor_5frpm_5foffset',['rotor_rpm_offset',['../structdynamic__model__quad__diag__conf__t.html#a1ab497ff762ccc0cff82cb586e03ba43',1,'dynamic_model_quad_diag_conf_t']]],
+  ['rows',['rows',['../classMat.html#a066ecd63d924b097cde4653d69bc77ab',1,'Mat']]],
   ['rpy',['rpy',['../structattitude__command__t.html#a4b05a80c9b476c13217cf95d56ca3ae8',1,'attitude_command_t::rpy()'],['../structcontrol__command__t.html#a6c432578ccf6b02c4a0a383cac113d52',1,'control_command_t::rpy()'],['../structaero__attitude__t.html#a4d5779a210f5d31955687d3d91e971c4',1,'aero_attitude_t::rpy()']]],
   ['rpy_5fcontroller',['rpy_controller',['../structstabiliser__t.html#ac1e1019078fab6c1b8cd09d030ddf2c5',1,'stabiliser_t']]],
   ['rpy_5ferrors',['rpy_errors',['../structattitude__error__estimator__t.html#aa7b99f9a229355fd2cfacdb7432f278e',1,'attitude_error_estimator_t']]],

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['p_5f',['P_',['../classKalman.html#a8b90b9c36fe7a3260ebf7ce52e7e97a1',1,'Kalman']]],
   ['p_5facc',['p_acc',['../structubx__cfg__nav__settings__t.html#a3cda63d4c72542a45c9306c8c330fd4a',1,'ubx_cfg_nav_settings_t']]],
   ['p_5fdop',['p_dop',['../structubx__cfg__nav__settings__t.html#a5c4be9e67e2a5b6a62650e649c69d025',1,'ubx_cfg_nav_settings_t']]],
   ['p_5fgain',['p_gain',['../structpid__controller__t.html#a16807a99e73fdf8465df968789e2cdc7',1,'pid_controller_t']]],
@@ -19,7 +20,7 @@ var searchData=
   ['parameters',['parameters',['../structonboard__parameters__set__t.html#a4dbf7ed3c8c5152cedf74028d8b7abfb',1,'onboard_parameters_set_t::parameters()'],['../structadaptive__parameter__set__t.html#a234d85b7ec2166ba853b1de2f2f82924',1,'adaptive_parameter_set_t::parameters()']]],
   ['payload_5fcounter',['payload_counter',['../structgps__t.html#a1ff5d53dbb6f260f2adc668e0c3f1cd0',1,'gps_t']]],
   ['payload_5flength',['payload_length',['../structgps__t.html#adc08583fe5abcdaae21449f7766a1ec2',1,'gps_t']]],
-  ['pid',['pid',['../structaltitude__controller__t.html#a38b98e8e8ec8285461539c3c1ed60aa3',1,'altitude_controller_t::pid()'],['../structvelocity__controller__copter__t.html#a937f65ab3300f6f5ff21e50947e9fb7b',1,'velocity_controller_copter_t::pid()']]],
+  ['pid',['pid',['../structvelocity__controller__copter__t.html#a937f65ab3300f6f5ff21e50947e9fb7b',1,'velocity_controller_copter_t']]],
   ['pid_5fconfig',['pid_config',['../structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96',1,'altitude_controller_conf_t::pid_config()'],['../structvelocity__controller__copter__conf__t.html#af80968c81485db403abd5c20e45f46cf',1,'velocity_controller_copter_conf_t::pid_config()']]],
   ['pin',['pin',['../structgpio__avr32__conf__t.html#a94d7d2ce7ff1da08f0328bfd945fa1ef',1,'gpio_avr32_conf_t::pin()'],['../structserial__avr32__gpio__map__t.html#af5a9cfdd7408ee2c0c95bde3a3ac03f7',1,'serial_avr32_gpio_map_t::pin()'],['../structspi__avr32__gpio__map__t.html#a019ec4b9b290d383f61de0a9a14b5f9b',1,'spi_avr32_gpio_map_t::pin()'],['../structgpio__stm32__conf__t.html#aa477fc569ceac28fcf9348f8b2c96dad',1,'gpio_stm32_conf_t::pin()']]],
   ['pin_5fmask',['PIN_MASK',['../structtLED__DESCRIPTOR.html#ad7a25455572f3a9621100b62c22d4bbd',1,'tLED_DESCRIPTOR']]],
@@ -30,7 +31,6 @@ var searchData=
   ['pos_5fest',['pos_est',['../structhud__telemetry__structure__t.html#aa6f9c80d35fcfaca4198cbc204e52d06',1,'hud_telemetry_structure_t::pos_est()'],['../structstabilisation__copter__t.html#a8fe70875748b6c47e2a9dfbf2cfda0ae',1,'stabilisation_copter_t::pos_est()'],['../structvector__field__waypoint__t.html#a13e6b01c329053341d7f03e0a4b36dcb',1,'vector_field_waypoint_t::pos_est()'],['../structvelocity__controller__copter__t.html#a4bd96c7a04147be094850c0e5a745d8d',1,'velocity_controller_copter_t::pos_est()']]],
   ['position',['position',['../structcommand__t.html#a3314e8bdc60f5b2db1d3ad937be9eb55',1,'command_t']]],
   ['position_5faccuracy_5f3d',['position_accuracy_3d',['../structubx__nav__solution__t.html#aa8f22e1a1fd97eed7f372aa1cc87c3a0',1,'ubx_nav_solution_t']]],
-  ['position_5fcommand',['position_command',['../structaltitude__controller__t.html#a8a2f46d0fb2efc250de9c2c0bcfd0de6',1,'altitude_controller_t']]],
   ['position_5fdop',['position_DOP',['../structubx__nav__solution__t.html#a8dd557cf38af7e62ab98872113628ccc',1,'ubx_nav_solution_t']]],
   ['position_5festimation',['position_estimation',['../structmavlink__waypoint__handler__t.html#aff3b8359a0c008aec5f1d0578e86f934',1,'mavlink_waypoint_handler_t::position_estimation()'],['../structnavigation__t.html#a3b1b7a6c40ee335e97c88da913782918',1,'navigation_t::position_estimation()'],['../structaudio__t.html#a5aa8c497cc1198511c30c2b11ed21c3d',1,'audio_t::position_estimation()'],['../classCentral__data.html#a64fab262f6a513c6a8bb37cde9bebcca',1,'Central_data::position_estimation()']]],
   ['position_5fstabiliser',['position_stabiliser',['../structstabiliser__stack__copter__t.html#a9fdaa5f61fa9de3b1547408a90bb2333',1,'stabiliser_stack_copter_t']]],

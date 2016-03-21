@@ -27,5 +27,7 @@ var searchData=
   ['stop_5faccelerometer_5fbias_5fcalibration',['stop_accelerometer_bias_calibration',['../classImu.html#a5455d91545d19a136b5cf92519daeec1',1,'Imu']]],
   ['stop_5fgyroscope_5fbias_5fcalibration',['stop_gyroscope_bias_calibration',['../classImu.html#a66b1dfbebdce8334d1759c829e6e8d8a',1,'Imu']]],
   ['stop_5fmagnetometer_5fbias_5fcalibration',['stop_magnetometer_bias_calibration',['../classImu.html#a90376d4f0fb362e2f3bfaa90d5f78f7c',1,'Imu']]],
+  ['subtract',['subtract',['../classmat_1_1op.html#abc31fcd595274d85e97ce04b7e95e3ff',1,'mat::op::subtract(const Mat&lt; N, P, T &gt; &amp;m1, const Mat&lt; N, P, T &gt; &amp;m2, Mat&lt; N, P, T &gt; &amp;res)'],['../classmat_1_1op.html#a0f5c6ba7ac4a5dd98aefdf236c6d009e',1,'mat::op::subtract(const Mat&lt; N, P, T &gt; &amp;m1, const T value, Mat&lt; N, P, T &gt; &amp;res)'],['../classMat.html#afedb04fc63233308ac2c32f9dcc943d4',1,'Mat::subtract(const Mat &amp;m) const '],['../classMat.html#a00d2f92b87913f16eca31c7f3c68ee3c',1,'Mat::subtract(const T value) const ']]],
+  ['subtract_5finplace',['subtract_inplace',['../classMat.html#a501e516cdb31adc36f43e7a40dc2f60b',1,'Mat::subtract_inplace(const Mat &amp;m)'],['../classMat.html#ac94fe73e9a03b22a7e77261972837ae4',1,'Mat::subtract_inplace(const T value)']]],
   ['switch_5fto_5factive_5fmode',['switch_to_active_mode',['../classState.html#a83b946fdb7de29b4140d1ce5ab4635fa',1,'State']]]
 ];

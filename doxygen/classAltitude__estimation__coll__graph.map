@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classKalman.html" title="{Kalman\&lt; 3, 1, 1 \&gt;\n|# x_\l# P_\l# F_\l# Q_\l# H_\l# R_\l# B_\l# S_\l# I_\l# K_\l# y_\l|+ Kalman()\l+ Kalman()\l+ x()\l+ P()\l+ predict()\l+ predict()\l+ update()\l+ update()\l}" alt="" coords="388,382,513,762"/>
+<area shape="rect" id="node4" href="$classMat.html" title="{Mat\&lt; m, n \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator[]()\l+ add()\land 28 more...}" alt="" coords="5,5,112,264"/>
+<area shape="rect" id="node6" href="$classMat.html" title="{Mat\&lt; m, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator[]()\l+ add()\land 28 more...}" alt="" coords="136,5,243,264"/>
+<area shape="rect" id="node8" href="$classMat.html" title="{Mat\&lt; m, m \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator[]()\l+ add()\land 28 more...}" alt="" coords="267,5,373,264"/>
+<area shape="rect" id="node10" href="$classMat.html" title="{Mat\&lt; n, p \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator[]()\l+ add()\land 28 more...}" alt="" coords="397,5,504,264"/>
+<area shape="rect" id="node12" href="$classMat.html" title="{Mat\&lt; n, n \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator[]()\l+ add()\land 28 more...}" alt="" coords="528,5,635,264"/>
+<area shape="rect" id="node14" href="$classMat.html" title="{Mat\&lt; n, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator[]()\l+ add()\land 28 more...}" alt="" coords="659,5,765,264"/>
+<area shape="rect" id="node16" href="$classMat.html" title="{Mat\&lt; n, m \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator[]()\l+ add()\land 28 more...}" alt="" coords="789,5,896,264"/>
+</map>

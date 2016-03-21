@@ -1,6 +1,7 @@
 var searchData=
 [
   ['s',['s',['../structquat__t.html#afe90b186a2072976bf84ab00f8bfd479',1,'quat_t']]],
+  ['s_5f',['S_',['../classKalman.html#a8b1e7443e5709e17a6f66361ed38634e',1,'Kalman']]],
   ['safety_5fchannel',['safety_channel',['../structremote__mode__conf__t.html#a566558933cf2fb56cafbaaf1e0b6a9d8',1,'remote_mode_conf_t::safety_channel()'],['../structremote__mode__t.html#ab12fa91de9f84e52436ba5fe19adba49',1,'remote_mode_t::safety_channel()']]],
   ['safety_5fmode',['safety_mode',['../structremote__mode__conf__t.html#ae7dec77e2007f2d1b6024d530f77a227',1,'remote_mode_conf_t::safety_mode()'],['../structremote__mode__t.html#a91cbeb2219e014ad982f91cf0a2f81ae',1,'remote_mode_t::safety_mode()']]],
   ['sample_5fdiv',['sample_div',['../structgyro__config.html#afe4047b72932b3d4bb0fe5c3a7c93174',1,'gyro_config']]],
@@ -45,7 +46,7 @@ var searchData=
   ['size_5fdata',['size_data',['../structflow__t.html#a0d08e8de829ce6dd2afc6d6e833e2ebf',1,'flow_t']]],
   ['soft_5fzone_5fsize',['soft_zone_size',['../structnavigation__t.html#a6d508f3a655eae4b6def762fe2fab10c',1,'navigation_t::soft_zone_size()'],['../structnavigation__config__t.html#aa2159bf967d2100798d8011a756b889b',1,'navigation_config_t::soft_zone_size()']]],
   ['soft_5fzone_5fwidth',['soft_zone_width',['../structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489',1,'pid_controller_conf_t::soft_zone_width()'],['../structpid__controller__t.html#a5a63d05e58a79340c0222c8acfaca962',1,'pid_controller_t::soft_zone_width()']]],
-  ['sonar',['sonar',['../classCentral__data.html#af74940d5c4c05df5df2229989f492c8d',1,'Central_data::sonar()'],['../structaltitude__estimation__t.html#a91e84153bcde248256200b739e936a3c',1,'altitude_estimation_t::sonar()'],['../structposition__estimation__t.html#ab84e97c671578470b2f25467ea7af6b8',1,'position_estimation_t::sonar()']]],
+  ['sonar',['sonar',['../classCentral__data.html#af74940d5c4c05df5df2229989f492c8d',1,'Central_data::sonar()'],['../structposition__estimation__t.html#ab84e97c671578470b2f25467ea7af6b8',1,'position_estimation_t::sonar()']]],
   ['speed',['speed',['../structgps__t.html#a2300eed2c84ab00718f31350f87daa44',1,'gps_t']]],
   ['speed_5f3d',['speed_3d',['../structubx__nav__vel__ned__t.html#aa1c9f82f463cc151cdbf2c9d2bace527',1,'ubx_nav_vel_ned_t']]],
   ['speed_5faccuracy',['speed_accuracy',['../structubx__nav__solution__t.html#a8067fd4c0142f668d04ecb4513dcc16c',1,'ubx_nav_solution_t::speed_accuracy()'],['../structubx__nav__vel__ned__t.html#a4ba39a83805f2388a56dfb26da6c610d',1,'ubx_nav_vel_ned_t::speed_accuracy()'],['../structgps__t.html#a3005316cefe45bbaf45b68d5155f49c5',1,'gps_t::speed_accuracy()']]],
@@ -67,7 +68,7 @@ var searchData=
   ['start_5fwpt_5ftime',['start_wpt_time',['../structmavlink__waypoint__handler__t.html#a9ae7e4c9ff9519b7ac9fa3132c0974f9',1,'mavlink_waypoint_handler_t']]],
   ['startup_5fcalib_5fduration_5fs',['startup_calib_duration_s',['../structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38',1,'imu_conf_t']]],
   ['startup_5fcalib_5fgyro_5fthreshold',['startup_calib_gyro_threshold',['../structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7',1,'imu_conf_t']]],
-  ['state',['state',['../structmavlink__waypoint__handler__t.html#aa0fa32f7561bee8a2536cb11bc490550',1,'mavlink_waypoint_handler_t::state()'],['../structonboard__parameters__t.html#a96ce5f11c30c9aa611e08aa437e1ac76',1,'onboard_parameters_t::state()'],['../structstate__machine__t.html#ad26a34ccf28531ba4d4f6442621c2dc7',1,'state_machine_t::state()'],['../structnavigation__t.html#a9397a96e25dddfb4f15f7a8352678fe4',1,'navigation_t::state()'],['../classCentral__data.html#a15d4c15c6c91701595dbc6bb3d68b927',1,'Central_data::state()'],['../structposition__estimation__t.html#ab4a98d35658f99023ac52e4ecacdb6cb',1,'position_estimation_t::state()'],['../structkalman__filter__2D__t.html#aec365fc26a46eead2edbe45151357f5a',1,'kalman_filter_2D_t::state()']]],
+  ['state',['state',['../structmavlink__waypoint__handler__t.html#aa0fa32f7561bee8a2536cb11bc490550',1,'mavlink_waypoint_handler_t::state()'],['../structonboard__parameters__t.html#a96ce5f11c30c9aa611e08aa437e1ac76',1,'onboard_parameters_t::state()'],['../structstate__machine__t.html#ad26a34ccf28531ba4d4f6442621c2dc7',1,'state_machine_t::state()'],['../structnavigation__t.html#a9397a96e25dddfb4f15f7a8352678fe4',1,'navigation_t::state()'],['../classCentral__data.html#a15d4c15c6c91701595dbc6bb3d68b927',1,'Central_data::state()'],['../structposition__estimation__t.html#ab4a98d35658f99023ac52e4ecacdb6cb',1,'position_estimation_t::state()']]],
   ['state_5fmachine',['state_machine',['../classCentral__data.html#a0f2fbbc2fa9fc14d970462570c3429d8',1,'Central_data']]],
   ['static_5fhold_5fthresh',['static_hold_thresh',['../structubx__cfg__nav__settings__t.html#a2ce746bee4c0055747c4987420ceb2aa',1,'ubx_cfg_nav_settings_t']]],
   ['status',['status',['../structmavlink__received__t.html#a2224ecc05ff79c3a001aacb08a488477',1,'mavlink_received_t::status()'],['../structubx__cfg__tp__t.html#aa5f0e32aacd0be25df50ca023a788208',1,'ubx_cfg_tp_t::status()'],['../structubx__nav__dgps__t.html#a7ab02de10dbd66a6a6d049ba80cad3b8',1,'ubx_nav_dgps_t::status()'],['../structgps__t.html#aaa0854f799a40951088f9c39699292a7',1,'gps_t::status()']]],
@@ -78,6 +79,5 @@ var searchData=
   ['sys_5fid',['sys_id',['../structmavlink__message__handler__msg__callback__t.html#a599c25a3ba54216b257e5d7389cde124',1,'mavlink_message_handler_msg_callback_t']]],
   ['sys_5fmounted',['sys_mounted',['../structfat__fs__mounting__t.html#a80c89e0286934b4013a22809091d0394',1,'fat_fs_mounting_t']]],
   ['sysid',['sysid',['../structmavlink__stream__t.html#a5c859c6ec990ace308b127cad35ae6ac',1,'mavlink_stream_t::sysid()'],['../structmavlink__stream__conf__t.html#a98da853eda1b6a8a83253672ae34ad21',1,'mavlink_stream_conf_t::sysid()']]],
-  ['sysid_5ffilter',['sysid_filter',['../structmavlink__message__handler__msg__callback__t.html#a5fc641a1f1c96aa7b5ecae452430c1d2',1,'mavlink_message_handler_msg_callback_t::sysid_filter()'],['../structmavlink__message__handler__cmd__callback__t.html#aee5acda6446d0f035cf85512b23b5420',1,'mavlink_message_handler_cmd_callback_t::sysid_filter()']]],
-  ['system_5fmodel',['system_model',['../structkalman__filter__2D__t.html#a822463af51b44f292d367b56243bdb96',1,'kalman_filter_2D_t']]]
+  ['sysid_5ffilter',['sysid_filter',['../structmavlink__message__handler__msg__callback__t.html#a5fc641a1f1c96aa7b5ecae452430c1d2',1,'mavlink_message_handler_msg_callback_t::sysid_filter()'],['../structmavlink__message__handler__cmd__callback__t.html#aee5acda6446d0f035cf85512b23b5420',1,'mavlink_message_handler_cmd_callback_t::sysid_filter()']]]
 ];

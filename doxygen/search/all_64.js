@@ -58,6 +58,7 @@ var searchData=
   ['distance',['distance',['../classSonar.html#a61279df583287149aa78c72fc4750e15',1,'Sonar::distance()'],['../classSonar__i2cxl.html#a30aaaf2cad62979203268c842e6cff0c',1,'Sonar_i2cxl::distance()'],['../classSonar__sim.html#ab575fa8fbccaf40d7c6a12014b539b02',1,'Sonar_sim::distance()']]],
   ['dlpf',['DLPF',['../structgyro__config.html#a5397c5e444e1c2d04e776ed444deae1a',1,'gyro_config']]],
   ['do_5fderotation',['do_derotation',['../structcurvace__t.html#ad3027b3c9406c301f5546df43c61e405',1,'curvace_t']]],
+  ['dot',['dot',['../classmat_1_1op.html#a4ee891ee86472872e85f1a0022b8649a',1,'mat::op::dot()'],['../classMat.html#ab6609c7ac79aaac03cd453dc12bd8e2e',1,'Mat::dot()']]],
   ['dr_5flimit',['dr_limit',['../structubx__cfg__nav__settings__t.html#ad02b1221ed5776015f072faf84338689',1,'ubx_cfg_nav_settings_t']]],
   ['dsm2_5fprotocol_5fproba_5ft',['dsm2_protocol_proba_t',['../structdsm2__protocol__proba__t.html',1,'']]],
   ['dsm_5freceiver_5fgpio',['dsm_receiver_gpio',['../classMavrimini.html#a8fcc6be7df1538104653c3c918ca9a4f',1,'Mavrimini']]],

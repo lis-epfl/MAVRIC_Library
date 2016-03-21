@@ -1,6 +1,7 @@
 var searchData=
 [
   ['s',['s',['../structquat__t.html#afe90b186a2072976bf84ab00f8bfd479',1,'quat_t']]],
+  ['s_5f',['S_',['../classKalman.html#a8b1e7443e5709e17a6f66361ed38634e',1,'Kalman']]],
   ['safety_5fchannel',['safety_channel',['../structremote__mode__conf__t.html#a566558933cf2fb56cafbaaf1e0b6a9d8',1,'remote_mode_conf_t::safety_channel()'],['../structremote__mode__t.html#ab12fa91de9f84e52436ba5fe19adba49',1,'remote_mode_t::safety_channel()']]],
   ['safety_5fmode',['safety_mode',['../structremote__mode__conf__t.html#ae7dec77e2007f2d1b6024d530f77a227',1,'remote_mode_conf_t::safety_mode()'],['../structremote__mode__t.html#a91cbeb2219e014ad982f91cf0a2f81ae',1,'remote_mode_t::safety_mode()']]],
   ['sample_5fdiv',['sample_div',['../structgyro__config.html#afe4047b72932b3d4bb0fe5c3a7c93174',1,'gyro_config']]],
@@ -80,7 +81,7 @@ var searchData=
   ['size_5fdata',['size_data',['../structflow__t.html#a0d08e8de829ce6dd2afc6d6e833e2ebf',1,'flow_t']]],
   ['soft_5fzone_5fsize',['soft_zone_size',['../structnavigation__t.html#a6d508f3a655eae4b6def762fe2fab10c',1,'navigation_t::soft_zone_size()'],['../structnavigation__config__t.html#aa2159bf967d2100798d8011a756b889b',1,'navigation_config_t::soft_zone_size()']]],
   ['soft_5fzone_5fwidth',['soft_zone_width',['../structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489',1,'pid_controller_conf_t::soft_zone_width()'],['../structpid__controller__t.html#a5a63d05e58a79340c0222c8acfaca962',1,'pid_controller_t::soft_zone_width()']]],
-  ['sonar',['Sonar',['../classSonar.html',1,'Sonar'],['../classCentral__data.html#af74940d5c4c05df5df2229989f492c8d',1,'Central_data::sonar()'],['../structaltitude__estimation__t.html#a91e84153bcde248256200b739e936a3c',1,'altitude_estimation_t::sonar()'],['../structposition__estimation__t.html#ab84e97c671578470b2f25467ea7af6b8',1,'position_estimation_t::sonar()'],['../classSimulation.html#aaa6af22e24b433fa4de1a2fe28946c2b',1,'Simulation::sonar()']]],
+  ['sonar',['Sonar',['../classSonar.html',1,'Sonar'],['../classCentral__data.html#af74940d5c4c05df5df2229989f492c8d',1,'Central_data::sonar()'],['../structposition__estimation__t.html#ab84e97c671578470b2f25467ea7af6b8',1,'position_estimation_t::sonar()'],['../classSimulation.html#aaa6af22e24b433fa4de1a2fe28946c2b',1,'Simulation::sonar()']]],
   ['sonar_5fi2cxl',['Sonar_i2cxl',['../classSonar__i2cxl.html',1,'Sonar_i2cxl'],['../classSonar__i2cxl.html#a3f4f6a528824adf73084eec85ff3e158',1,'Sonar_i2cxl::Sonar_i2cxl()']]],
   ['sonar_5fi2cxl_5fconf_5ft',['sonar_i2cxl_conf_t',['../structsonar__i2cxl__conf__t.html',1,'']]],
   ['sonar_5fsim',['Sonar_sim',['../classSonar__sim.html',1,'Sonar_sim'],['../classSonar__sim.html#a582c16be06fcc3a4e1f1aa425ae14478',1,'Sonar_sim::Sonar_sim()']]],
@@ -121,7 +122,7 @@ var searchData=
   ['start_5fwpt_5ftime',['start_wpt_time',['../structmavlink__waypoint__handler__t.html#a9ae7e4c9ff9519b7ac9fa3132c0974f9',1,'mavlink_waypoint_handler_t']]],
   ['startup_5fcalib_5fduration_5fs',['startup_calib_duration_s',['../structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38',1,'imu_conf_t']]],
   ['startup_5fcalib_5fgyro_5fthreshold',['startup_calib_gyro_threshold',['../structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7',1,'imu_conf_t']]],
-  ['state',['State',['../classState.html',1,'State'],['../structmavlink__waypoint__handler__t.html#aa0fa32f7561bee8a2536cb11bc490550',1,'mavlink_waypoint_handler_t::state()'],['../structonboard__parameters__t.html#a96ce5f11c30c9aa611e08aa437e1ac76',1,'onboard_parameters_t::state()'],['../structstate__machine__t.html#ad26a34ccf28531ba4d4f6442621c2dc7',1,'state_machine_t::state()'],['../structnavigation__t.html#a9397a96e25dddfb4f15f7a8352678fe4',1,'navigation_t::state()'],['../classCentral__data.html#a15d4c15c6c91701595dbc6bb3d68b927',1,'Central_data::state()'],['../structposition__estimation__t.html#ab4a98d35658f99023ac52e4ecacdb6cb',1,'position_estimation_t::state()'],['../structkalman__filter__2D__t.html#aec365fc26a46eead2edbe45151357f5a',1,'kalman_filter_2D_t::state()'],['../classState.html#a82b5799d3faad48117d922af14ea3bb2',1,'State::State()']]],
+  ['state',['State',['../classState.html',1,'State'],['../classState.html#a82b5799d3faad48117d922af14ea3bb2',1,'State::State()'],['../structmavlink__waypoint__handler__t.html#aa0fa32f7561bee8a2536cb11bc490550',1,'mavlink_waypoint_handler_t::state()'],['../structonboard__parameters__t.html#a96ce5f11c30c9aa611e08aa437e1ac76',1,'onboard_parameters_t::state()'],['../structstate__machine__t.html#ad26a34ccf28531ba4d4f6442621c2dc7',1,'state_machine_t::state()'],['../structnavigation__t.html#a9397a96e25dddfb4f15f7a8352678fe4',1,'navigation_t::state()'],['../classCentral__data.html#a15d4c15c6c91701595dbc6bb3d68b927',1,'Central_data::state()'],['../structposition__estimation__t.html#ab4a98d35658f99023ac52e4ecacdb6cb',1,'position_estimation_t::state()']]],
   ['state_5fconf_5ft',['state_conf_t',['../structstate__conf__t.html',1,'']]],
   ['state_5fmachine',['state_machine',['../classCentral__data.html#a0f2fbbc2fa9fc14d970462570c3429d8',1,'Central_data']]],
   ['state_5fmachine_5ft',['state_machine_t',['../structstate__machine__t.html',1,'']]],
@@ -132,6 +133,8 @@ var searchData=
   ['stop_5faccelerometer_5fbias_5fcalibration',['stop_accelerometer_bias_calibration',['../classImu.html#a5455d91545d19a136b5cf92519daeec1',1,'Imu']]],
   ['stop_5fgyroscope_5fbias_5fcalibration',['stop_gyroscope_bias_calibration',['../classImu.html#a66b1dfbebdce8334d1759c829e6e8d8a',1,'Imu']]],
   ['stop_5fmagnetometer_5fbias_5fcalibration',['stop_magnetometer_bias_calibration',['../classImu.html#a90376d4f0fb362e2f3bfaa90d5f78f7c',1,'Imu']]],
+  ['subtract',['subtract',['../classmat_1_1op.html#abc31fcd595274d85e97ce04b7e95e3ff',1,'mat::op::subtract(const Mat&lt; N, P, T &gt; &amp;m1, const Mat&lt; N, P, T &gt; &amp;m2, Mat&lt; N, P, T &gt; &amp;res)'],['../classmat_1_1op.html#a0f5c6ba7ac4a5dd98aefdf236c6d009e',1,'mat::op::subtract(const Mat&lt; N, P, T &gt; &amp;m1, const T value, Mat&lt; N, P, T &gt; &amp;res)'],['../classMat.html#afedb04fc63233308ac2c32f9dcc943d4',1,'Mat::subtract(const Mat &amp;m) const '],['../classMat.html#a00d2f92b87913f16eca31c7f3c68ee3c',1,'Mat::subtract(const T value) const ']]],
+  ['subtract_5finplace',['subtract_inplace',['../classMat.html#a501e516cdb31adc36f43e7a40dc2f60b',1,'Mat::subtract_inplace(const Mat &amp;m)'],['../classMat.html#ac94fe73e9a03b22a7e77261972837ae4',1,'Mat::subtract_inplace(const T value)']]],
   ['sv_5fid',['sv_id',['../structubx__nav__dgps__t.html#a1447e57c558bdb490de7e8c159231003',1,'ubx_nav_dgps_t']]],
   ['svid',['svid',['../structubx__nav__sv__info__t.html#a094d5806bd93a9e8fbc718c1c9cf6919',1,'ubx_nav_sv_info_t']]],
   ['sw_5fversion',['sw_version',['../structubx__mon__ver__t.html#a74c884fb632ab87e388a7c7d02619462',1,'ubx_mon_ver_t']]],
@@ -139,6 +142,5 @@ var searchData=
   ['sys_5fid',['sys_id',['../structmavlink__message__handler__msg__callback__t.html#a599c25a3ba54216b257e5d7389cde124',1,'mavlink_message_handler_msg_callback_t']]],
   ['sys_5fmounted',['sys_mounted',['../structfat__fs__mounting__t.html#a80c89e0286934b4013a22809091d0394',1,'fat_fs_mounting_t']]],
   ['sysid',['sysid',['../structmavlink__stream__t.html#a5c859c6ec990ace308b127cad35ae6ac',1,'mavlink_stream_t::sysid()'],['../structmavlink__stream__conf__t.html#a98da853eda1b6a8a83253672ae34ad21',1,'mavlink_stream_conf_t::sysid()']]],
-  ['sysid_5ffilter',['sysid_filter',['../structmavlink__message__handler__msg__callback__t.html#a5fc641a1f1c96aa7b5ecae452430c1d2',1,'mavlink_message_handler_msg_callback_t::sysid_filter()'],['../structmavlink__message__handler__cmd__callback__t.html#aee5acda6446d0f035cf85512b23b5420',1,'mavlink_message_handler_cmd_callback_t::sysid_filter()']]],
-  ['system_5fmodel',['system_model',['../structkalman__filter__2D__t.html#a822463af51b44f292d367b56243bdb96',1,'kalman_filter_2D_t']]]
+  ['sysid_5ffilter',['sysid_filter',['../structmavlink__message__handler__msg__callback__t.html#a5fc641a1f1c96aa7b5ecae452430c1d2',1,'mavlink_message_handler_msg_callback_t::sysid_filter()'],['../structmavlink__message__handler__cmd__callback__t.html#aee5acda6446d0f035cf85512b23b5420',1,'mavlink_message_handler_cmd_callback_t::sysid_filter()']]]
 ];

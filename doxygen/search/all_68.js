@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['h_5f',['H_',['../classKalman.html#afd42db08fb3bd019b8ac9e3a9059b60a',1,'Kalman']]],
   ['handle_5finterrupt',['handle_interrupt',['../classSpektrum__satellite.html#adb6188c9e279d061ea4b524201975c33',1,'Spektrum_satellite']]],
   ['handshake_5fstate',['handshake_state',['../structflow__t.html#af143a5f6e111c77a79c3be5c5c323146',1,'flow_t']]],
   ['have_5fraw_5fvelocity',['have_raw_velocity',['../structgps__t.html#a0e5f56cb48fad71fac7d64d75726e9fc',1,'gps_t']]],
@@ -15,7 +16,7 @@ var searchData=
   ['horizontal_5fposition_5faccuracy',['horizontal_position_accuracy',['../classGps.html#a615de69d1b16f9d04058eeca55fb17ad',1,'Gps::horizontal_position_accuracy()'],['../classGps__ublox.html#a512cae752e08b5c60f293c029bbb17aa',1,'Gps_ublox::horizontal_position_accuracy()'],['../classGps__sim.html#a85ee4e542a8ac860ad7845cc086d2774',1,'Gps_sim::horizontal_position_accuracy()']]],
   ['horizontal_5fstatus',['horizontal_status',['../structgps__t.html#ac11a2c4b6291bc7e0db1510f514683ae',1,'gps_t']]],
   ['hour',['hour',['../structubx__nav__timeutc__t.html#a2c68e9306f2e066a5982aa0f3eb63893',1,'ubx_nav_timeutc_t::hour()'],['../structdate__time__t.html#ab9ee4c9f9a31aac8fea020d567697120',1,'date_time_t::hour()']]],
-  ['hover_5fpoint',['hover_point',['../structaltitude__controller__t.html#a076aca866493277836aef9ca6c0f9ec3',1,'altitude_controller_t::hover_point()'],['../structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b',1,'altitude_controller_conf_t::hover_point()']]],
+  ['hover_5fpoint',['hover_point',['../structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b',1,'altitude_controller_conf_t']]],
   ['hovering_5fcontroller',['hovering_controller',['../structnavigation__t.html#a0961b5b9c6c766a0887fe638359e748f',1,'navigation_t::hovering_controller()'],['../structnavigation__config__t.html#a265bcafe82117ea6bec7360e18fe45d9',1,'navigation_config_t::hovering_controller()']]],
   ['hud_5fstructure',['hud_structure',['../classCentral__data.html#ac6293592dec12f4f428f6ade761adfee',1,'Central_data']]],
   ['hud_5ftelemetry_5fstructure_5ft',['hud_telemetry_structure_t',['../structhud__telemetry__structure__t.html',1,'']]],

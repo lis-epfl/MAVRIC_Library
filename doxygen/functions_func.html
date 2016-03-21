@@ -81,6 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>All</span></a></li>
       <li class="current"><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_rela.html"><span>Related&#160;Functions</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -94,6 +95,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_func_0x67.html#index_g"><span>g</span></a></li>
       <li><a href="functions_func_0x68.html#index_h"><span>h</span></a></li>
       <li><a href="functions_func_0x69.html#index_i"><span>i</span></a></li>
+      <li><a href="functions_func_0x6b.html#index_k"><span>k</span></a></li>
       <li><a href="functions_func_0x6c.html#index_l"><span>l</span></a></li>
       <li><a href="functions_func_0x6d.html#index_m"><span>m</span></a></li>
       <li><a href="functions_func_0x6e.html#index_n"><span>n</span></a></li>
@@ -105,6 +107,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_func_0x75.html#index_u"><span>u</span></a></li>
       <li><a href="functions_func_0x76.html#index_v"><span>v</span></a></li>
       <li><a href="functions_func_0x77.html#index_w"><span>w</span></a></li>
+      <li><a href="functions_func_0x78.html#index_x"><span>x</span></a></li>
     </ul>
   </div>
 </div>
@@ -149,8 +152,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>Adc_dummy()
 : <a class="el" href="classAdc__dummy.html#a801e75ecace33db21075f3fbc8dbb37e">Adc_dummy</a>
 </li>
+<li>add()
+: <a class="el" href="classMat.html#a4d10bbd13966d2b3746e22333bb60093">Mat&lt; N, P, T &gt;</a>
+, <a class="el" href="classmat_1_1op.html#adde1334fecffd8e70be5a5d31f43d62c">mat::op</a>
+, <a class="el" href="classMat.html#a25ca2c8d8b7488ea38cb94c6b9ba203b">Mat&lt; N, P, T &gt;</a>
+</li>
 <li>add_field()
 : <a class="el" href="classData__logging.html#a8539aea900bbabfa8a0747b8d0860e7d">Data_logging</a>
+</li>
+<li>add_inplace()
+: <a class="el" href="classMat.html#a249a106c35ee37b3fb65871a8b5e3ce8">Mat&lt; N, P, T &gt;</a>
 </li>
 <li>altitude_from_pressure()
 : <a class="el" href="classBarometer.html#a8e5b1fc3eeb41f802c1252bb02fa8305">Barometer</a>
@@ -163,17 +174,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classDynamic__model.html#a0908d95a8aa41d9223259a54243e6455">Dynamic_model</a>
 </li>
 <li>attach()
-: <a class="el" href="classSerial.html#a6828a2d281fc081b0f87dc41782610f8">Serial</a>
-, <a class="el" href="classSerial__udp.html#a38d75a506a699c4d289a806e40bd197a">Serial_udp</a>
+: <a class="el" href="classSerial__udp.html#a38d75a506a699c4d289a806e40bd197a">Serial_udp</a>
+, <a class="el" href="classSerial__stm32.html#aa435ed0428ae9eecd57cbeb38de2f7a9">Serial_stm32</a>
+, <a class="el" href="classSerial__dummy.html#a3877a82dbfd8137619e6c13cfe2f5aba">Serial_dummy</a>
 , <a class="el" href="classSerial__linux__io.html#add9d5a92540beace4af02a37ccc17c2e">Serial_linux_io</a>
 , <a class="el" href="classSerial__avr32.html#a8e4c8096f42bee9019832e79251bac4a">Serial_avr32</a>
-, <a class="el" href="classSerial__stm32.html#aa435ed0428ae9eecd57cbeb38de2f7a9">Serial_stm32</a>
 , <a class="el" href="classSerial__usb__avr32.html#aad76baf4c47fcdb7162d57b69cb37f12">Serial_usb_avr32</a>
-, <a class="el" href="classSerial__dummy.html#a3877a82dbfd8137619e6c13cfe2f5aba">Serial_dummy</a>
+, <a class="el" href="classSerial.html#a6828a2d281fc081b0f87dc41782610f8">Serial</a>
 </li>
 <li>attitude()
-: <a class="el" href="classDynamic__model__quad__diag.html#a9f3bb259ebeb979f7de0cf6a644d59cf">Dynamic_model_quad_diag</a>
-, <a class="el" href="classDynamic__model.html#a94d2db69b0f3d3c6d95bc9f80339093a">Dynamic_model</a>
+: <a class="el" href="classDynamic__model.html#a94d2db69b0f3d3c6d95bc9f80339093a">Dynamic_model</a>
+, <a class="el" href="classDynamic__model__quad__diag.html#a9f3bb259ebeb979f7de0cf6a644d59cf">Dynamic_model_quad_diag</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -182,7 +193,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -194,7 +205,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 14:30:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Mar 21 2016 17:42:38 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

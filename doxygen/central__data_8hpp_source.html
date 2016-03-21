@@ -151,94 +151,103 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00069"></a>00069 <span class="preprocessor">#include &quot;control/servos_mix_quadcopter_diag.hpp&quot;</span>
 <a name="l00070"></a>00070 <span class="preprocessor">#include &quot;hal/common/led.hpp&quot;</span>
 <a name="l00071"></a>00071 <span class="preprocessor">#include &quot;drivers/servos_telemetry.hpp&quot;</span>
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
-<a name="l00074"></a>00074 {
-<a name="l00075"></a>00075 <span class="preprocessor">#include &quot;hal/common/time_keeper.hpp&quot;</span>
-<a name="l00076"></a>00076 <span class="preprocessor">#include &quot;sensing/ahrs.h&quot;</span>
-<a name="l00077"></a>00077 <span class="preprocessor">#include &quot;control/pid_controller.h&quot;</span>
-<a name="l00078"></a>00078 <span class="preprocessor">#include &quot;util/print_util.h&quot;</span>
-<a name="l00079"></a>00079 <span class="preprocessor">#include &quot;util/coord_conventions.h&quot;</span>
-<a name="l00080"></a>00080 <span class="preprocessor">#include &quot;control/stabilisation.h&quot;</span>
-<a name="l00081"></a>00081 }
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
-<a name="l00084"></a>00084 {
-<a name="l00085"></a>00085 <span class="preprocessor">#include &quot;control/attitude_controller.h&quot;</span>
-<a name="l00086"></a>00086 }
-<a name="l00087"></a>00087 <span class="preprocessor">#include &quot;control/velocity_controller_copter.hpp&quot;</span>
-<a name="l00088"></a>00088 <span class="preprocessor">#include &quot;control/vector_field_waypoint.hpp&quot;</span>
-<a name="l00089"></a>00089 
-<a name="l00093"></a><a class="code" href="classCentral__data.html">00093</a> <span class="keyword">class </span><a class="code" href="classCentral__data.html" title="The central data structure.">Central_data</a>
-<a name="l00094"></a>00094 {
-<a name="l00095"></a>00095 <span class="keyword">public</span>:
-<a name="l00099"></a>00099     <a class="code" href="classCentral__data.html#a8c9e4e113dbb8c96e53f1be26e396207" title="Constructor.">Central_data</a>(uint8_t sysid, <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; <a class="code" href="classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac" title="Reference to IMU.">imu</a>, <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp; <a class="code" href="classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e" title="Reference to barometer.">barometer</a>, <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp; <a class="code" href="classCentral__data.html#a0a3bd477594522fa2d54dea8c3a48b8d" title="Reference to GPS.">gps</a>, <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp; <a class="code" href="classCentral__data.html#af74940d5c4c05df5df2229989f492c8d" title="Reference to sonar.">sonar</a>, <a class="code" href="classSerial.html">Serial</a>&amp; <a class="code" href="classCentral__data.html#a498f555a2dc8d5f205d1230b1e6057e2" title="Reference to telemetry serial.">serial_mavlink</a>, <a class="code" href="classSatellite.html">Satellite</a>&amp; <a class="code" href="classCentral__data.html#a6bf25d7614b15d82cbf5e473c4e3851f" title="Reference to remote control satellite.">satellite</a>, <a class="code" href="classLed.html">Led</a>&amp; <a class="code" href="classCentral__data.html#ad8249c334277847c69106384dc3f00bd" title="Reference to the leds.">led</a>, <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; <a class="code" href="classCentral__data.html#a78f2bba25e47b8e437db08eecb077670" title="Reference to flash storage.">file_flash</a>, <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp; <a class="code" href="classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1" title="Reference to battery.">battery</a>, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#a1f2a4cc194bb87c8d41ba55893e1edc5" title="Reference to servos structure.">servo_0</a>, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#ae7188d3fd58b96a261aff7634f2d215d" title="Reference to servos structure.">servo_1</a>, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#aeabf8973f44313c8fcdc273ef5bece59" title="Reference to servos structure.">servo_2</a>, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#ae2008469434596b9be24a37733e4d5f7" title="Reference to servos structure.">servo_3</a>, <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file1, <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file2);
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101 
-<a name="l00106"></a>00106     <span class="keywordtype">bool</span> <a class="code" href="classCentral__data.html#a81c83fd816042f8bfe60f759187e5943" title="Initialisation.">init</a>(<span class="keywordtype">void</span>);
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108 
-<a name="l00112"></a><a class="code" href="classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac">00112</a>     <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp;            <a class="code" href="classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac" title="Reference to IMU.">imu</a>;                
-<a name="l00113"></a><a class="code" href="classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e">00113</a>     <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp;      <a class="code" href="classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e" title="Reference to barometer.">barometer</a>;          
-<a name="l00114"></a><a class="code" href="classCentral__data.html#a0a3bd477594522fa2d54dea8c3a48b8d">00114</a>     <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp;            <a class="code" href="classCentral__data.html#a0a3bd477594522fa2d54dea8c3a48b8d" title="Reference to GPS.">gps</a>;                
-<a name="l00115"></a><a class="code" href="classCentral__data.html#af74940d5c4c05df5df2229989f492c8d">00115</a>     <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp;          <a class="code" href="classCentral__data.html#af74940d5c4c05df5df2229989f492c8d" title="Reference to sonar.">sonar</a>;              
-<a name="l00116"></a><a class="code" href="classCentral__data.html#a498f555a2dc8d5f205d1230b1e6057e2">00116</a>     <a class="code" href="classSerial.html">Serial</a>&amp;         <a class="code" href="classCentral__data.html#a498f555a2dc8d5f205d1230b1e6057e2" title="Reference to telemetry serial.">serial_mavlink</a>;     
-<a name="l00117"></a><a class="code" href="classCentral__data.html#a6bf25d7614b15d82cbf5e473c4e3851f">00117</a>     <a class="code" href="classSatellite.html">Satellite</a>&amp;      <a class="code" href="classCentral__data.html#a6bf25d7614b15d82cbf5e473c4e3851f" title="Reference to remote control satellite.">satellite</a>;          
-<a name="l00118"></a><a class="code" href="classCentral__data.html#ad8249c334277847c69106384dc3f00bd">00118</a>     <a class="code" href="classLed.html">Led</a>&amp;            <a class="code" href="classCentral__data.html#ad8249c334277847c69106384dc3f00bd" title="Reference to the leds.">led</a>;                
-<a name="l00119"></a><a class="code" href="classCentral__data.html#a78f2bba25e47b8e437db08eecb077670">00119</a>     <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp;           <a class="code" href="classCentral__data.html#a78f2bba25e47b8e437db08eecb077670" title="Reference to flash storage.">file_flash</a>;         
-<a name="l00120"></a><a class="code" href="classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1">00120</a>     <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp;        <a class="code" href="classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1" title="Reference to battery.">battery</a>;            
-<a name="l00121"></a><a class="code" href="classCentral__data.html#a1f2a4cc194bb87c8d41ba55893e1edc5">00121</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classCentral__data.html#a1f2a4cc194bb87c8d41ba55893e1edc5" title="Reference to servos structure.">servo_0</a>;            
-<a name="l00122"></a><a class="code" href="classCentral__data.html#ae7188d3fd58b96a261aff7634f2d215d">00122</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classCentral__data.html#ae7188d3fd58b96a261aff7634f2d215d" title="Reference to servos structure.">servo_1</a>;            
-<a name="l00123"></a><a class="code" href="classCentral__data.html#aeabf8973f44313c8fcdc273ef5bece59">00123</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classCentral__data.html#aeabf8973f44313c8fcdc273ef5bece59" title="Reference to servos structure.">servo_2</a>;            
-<a name="l00124"></a><a class="code" href="classCentral__data.html#ae2008469434596b9be24a37733e4d5f7">00124</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classCentral__data.html#ae2008469434596b9be24a37733e4d5f7" title="Reference to servos structure.">servo_3</a>;            
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126     <a class="code" href="structscheduler__t.html" title="Scheduler.">scheduler_t</a> scheduler;
-<a name="l00127"></a>00127     <a class="code" href="structmavlink__communication__t.html" title="Main MAVLink Communication structure.">mavlink_communication_t</a> mavlink_communication;
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129     <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a> command;
-<a name="l00130"></a>00130     <a class="code" href="structservos__mix__quadcotper__diag__t.html" title="servos mix structure">servos_mix_quadcotper_diag_t</a> servo_mix;
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132 
-<a name="l00133"></a><a class="code" href="classCentral__data.html#ac9e7f27b6316566522fe78bafaae26a2">00133</a>     <a class="code" href="structqfilter__t.html" title="The structure for the quaternion-based attitude estimation.">qfilter_t</a> <a class="code" href="classCentral__data.html#ac9e7f27b6316566522fe78bafaae26a2" title="The qfilter structure.">attitude_filter</a>;                                  
-<a name="l00134"></a><a class="code" href="classCentral__data.html#afe742c039f320c7fd634467d35541e13">00134</a>     <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a> <a class="code" href="classCentral__data.html#afe742c039f320c7fd634467d35541e13" title="The attitude estimation structure.">ahrs</a>;                                                
+<a name="l00072"></a>00072 <span class="preprocessor">#include &quot;control/altitude_controller.hpp&quot;</span>
+<a name="l00073"></a>00073 
+<a name="l00074"></a>00074 <span class="preprocessor">#include &quot;sensing/altitude_estimation.hpp&quot;</span>
+<a name="l00075"></a>00075 
+<a name="l00076"></a>00076 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
+<a name="l00077"></a>00077 {
+<a name="l00078"></a>00078 <span class="preprocessor">#include &quot;hal/common/time_keeper.hpp&quot;</span>
+<a name="l00079"></a>00079 <span class="preprocessor">#include &quot;sensing/ahrs.h&quot;</span>
+<a name="l00080"></a>00080 <span class="preprocessor">#include &quot;sensing/altitude.h&quot;</span>
+<a name="l00081"></a>00081 <span class="preprocessor">#include &quot;control/pid_controller.h&quot;</span>
+<a name="l00082"></a>00082 <span class="preprocessor">#include &quot;util/print_util.h&quot;</span>
+<a name="l00083"></a>00083 <span class="preprocessor">#include &quot;util/coord_conventions.h&quot;</span>
+<a name="l00084"></a>00084 <span class="preprocessor">#include &quot;control/stabilisation.h&quot;</span>
+<a name="l00085"></a>00085 }
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
+<a name="l00088"></a>00088 {
+<a name="l00089"></a>00089 <span class="preprocessor">#include &quot;control/attitude_controller.h&quot;</span>
+<a name="l00090"></a>00090 }
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092 <span class="preprocessor">#include &quot;control/velocity_controller_copter.hpp&quot;</span>
+<a name="l00093"></a>00093 <span class="preprocessor">#include &quot;control/vector_field_waypoint.hpp&quot;</span>
+<a name="l00094"></a>00094 
+<a name="l00098"></a><a class="code" href="classCentral__data.html">00098</a> <span class="keyword">class </span><a class="code" href="classCentral__data.html" title="The central data structure.">Central_data</a>
+<a name="l00099"></a>00099 {
+<a name="l00100"></a>00100 <span class="keyword">public</span>:
+<a name="l00104"></a>00104     <a class="code" href="classCentral__data.html#a8c9e4e113dbb8c96e53f1be26e396207" title="Constructor.">Central_data</a>(uint8_t sysid, <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; <a class="code" href="classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac" title="Reference to IMU.">imu</a>, <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp; <a class="code" href="classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e" title="Reference to barometer.">barometer</a>, <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp; <a class="code" href="classCentral__data.html#a0a3bd477594522fa2d54dea8c3a48b8d" title="Reference to GPS.">gps</a>, <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp; <a class="code" href="classCentral__data.html#af74940d5c4c05df5df2229989f492c8d" title="Reference to sonar.">sonar</a>, <a class="code" href="classSerial.html">Serial</a>&amp; <a class="code" href="classCentral__data.html#a498f555a2dc8d5f205d1230b1e6057e2" title="Reference to telemetry serial.">serial_mavlink</a>, <a class="code" href="classSatellite.html">Satellite</a>&amp; <a class="code" href="classCentral__data.html#a6bf25d7614b15d82cbf5e473c4e3851f" title="Reference to remote control satellite.">satellite</a>, <a class="code" href="classLed.html">Led</a>&amp; <a class="code" href="classCentral__data.html#ad8249c334277847c69106384dc3f00bd" title="Reference to the leds.">led</a>, <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; <a class="code" href="classCentral__data.html#a78f2bba25e47b8e437db08eecb077670" title="Reference to flash storage.">file_flash</a>, <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp; <a class="code" href="classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1" title="Reference to battery.">battery</a>, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#a1f2a4cc194bb87c8d41ba55893e1edc5" title="Reference to servos structure.">servo_0</a>, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#ae7188d3fd58b96a261aff7634f2d215d" title="Reference to servos structure.">servo_1</a>, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#aeabf8973f44313c8fcdc273ef5bece59" title="Reference to servos structure.">servo_2</a>, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#ae2008469434596b9be24a37733e4d5f7" title="Reference to servos structure.">servo_3</a>, <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file1, <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file2);
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106 
+<a name="l00111"></a>00111     <span class="keywordtype">bool</span> <a class="code" href="classCentral__data.html#a81c83fd816042f8bfe60f759187e5943" title="Initialisation.">init</a>(<span class="keywordtype">void</span>);
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113 
+<a name="l00117"></a><a class="code" href="classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac">00117</a>     <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp;            <a class="code" href="classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac" title="Reference to IMU.">imu</a>;                
+<a name="l00118"></a><a class="code" href="classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e">00118</a>     <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp;      <a class="code" href="classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e" title="Reference to barometer.">barometer</a>;          
+<a name="l00119"></a><a class="code" href="classCentral__data.html#a0a3bd477594522fa2d54dea8c3a48b8d">00119</a>     <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp;            <a class="code" href="classCentral__data.html#a0a3bd477594522fa2d54dea8c3a48b8d" title="Reference to GPS.">gps</a>;                
+<a name="l00120"></a><a class="code" href="classCentral__data.html#af74940d5c4c05df5df2229989f492c8d">00120</a>     <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp;          <a class="code" href="classCentral__data.html#af74940d5c4c05df5df2229989f492c8d" title="Reference to sonar.">sonar</a>;              
+<a name="l00121"></a><a class="code" href="classCentral__data.html#a498f555a2dc8d5f205d1230b1e6057e2">00121</a>     <a class="code" href="classSerial.html">Serial</a>&amp;         <a class="code" href="classCentral__data.html#a498f555a2dc8d5f205d1230b1e6057e2" title="Reference to telemetry serial.">serial_mavlink</a>;     
+<a name="l00122"></a><a class="code" href="classCentral__data.html#a6bf25d7614b15d82cbf5e473c4e3851f">00122</a>     <a class="code" href="classSatellite.html">Satellite</a>&amp;      <a class="code" href="classCentral__data.html#a6bf25d7614b15d82cbf5e473c4e3851f" title="Reference to remote control satellite.">satellite</a>;          
+<a name="l00123"></a><a class="code" href="classCentral__data.html#ad8249c334277847c69106384dc3f00bd">00123</a>     <a class="code" href="classLed.html">Led</a>&amp;            <a class="code" href="classCentral__data.html#ad8249c334277847c69106384dc3f00bd" title="Reference to the leds.">led</a>;                
+<a name="l00124"></a><a class="code" href="classCentral__data.html#a78f2bba25e47b8e437db08eecb077670">00124</a>     <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp;           <a class="code" href="classCentral__data.html#a78f2bba25e47b8e437db08eecb077670" title="Reference to flash storage.">file_flash</a>;         
+<a name="l00125"></a><a class="code" href="classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1">00125</a>     <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp;        <a class="code" href="classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1" title="Reference to battery.">battery</a>;            
+<a name="l00126"></a><a class="code" href="classCentral__data.html#a1f2a4cc194bb87c8d41ba55893e1edc5">00126</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classCentral__data.html#a1f2a4cc194bb87c8d41ba55893e1edc5" title="Reference to servos structure.">servo_0</a>;            
+<a name="l00127"></a><a class="code" href="classCentral__data.html#ae7188d3fd58b96a261aff7634f2d215d">00127</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classCentral__data.html#ae7188d3fd58b96a261aff7634f2d215d" title="Reference to servos structure.">servo_1</a>;            
+<a name="l00128"></a><a class="code" href="classCentral__data.html#aeabf8973f44313c8fcdc273ef5bece59">00128</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classCentral__data.html#aeabf8973f44313c8fcdc273ef5bece59" title="Reference to servos structure.">servo_2</a>;            
+<a name="l00129"></a><a class="code" href="classCentral__data.html#ae2008469434596b9be24a37733e4d5f7">00129</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classCentral__data.html#ae2008469434596b9be24a37733e4d5f7" title="Reference to servos structure.">servo_3</a>;            
+<a name="l00130"></a>00130 
+<a name="l00131"></a>00131     <a class="code" href="structscheduler__t.html" title="Scheduler.">scheduler_t</a> scheduler;
+<a name="l00132"></a>00132     <a class="code" href="structmavlink__communication__t.html" title="Main MAVLink Communication structure.">mavlink_communication_t</a> mavlink_communication;
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134     <a class="code" href="structservos__mix__quadcotper__diag__t.html" title="servos mix structure">servos_mix_quadcotper_diag_t</a> servo_mix;
 <a name="l00135"></a>00135 
-<a name="l00136"></a><a class="code" href="classCentral__data.html#abad328ece4b1c4d9b5cea4a958ccdf5e">00136</a>     <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a> <a class="code" href="classCentral__data.html#abad328ece4b1c4d9b5cea4a958ccdf5e" title="The control structure used for rate and attitude modes.">controls</a>;                                 
-<a name="l00137"></a><a class="code" href="classCentral__data.html#ad0ca56077e524d66d745664a54592541">00137</a>     <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a> <a class="code" href="classCentral__data.html#ad0ca56077e524d66d745664a54592541" title="The control nav structure used for velocity modes.">controls_nav</a>;                             
-<a name="l00138"></a>00138 
-<a name="l00139"></a><a class="code" href="classCentral__data.html#a8163db935ed58e78f179800ecc24c382">00139</a>     <a class="code" href="structmanual__control__t.html" title="The manual control structure.">manual_control_t</a> <a class="code" href="classCentral__data.html#a8163db935ed58e78f179800ecc24c382" title="The joystick parsing structure.">manual_control</a>;                            
-<a name="l00140"></a>00140 
-<a name="l00141"></a><a class="code" href="classCentral__data.html#ac719f3664bcce16498ef315460d4f5e9">00141</a>     <a class="code" href="structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module.">stabilisation_copter_t</a> <a class="code" href="classCentral__data.html#ac719f3664bcce16498ef315460d4f5e9" title="The stabilisation structure for copter.">stabilisation_copter</a>;                
+<a name="l00136"></a>00136 
+<a name="l00137"></a><a class="code" href="classCentral__data.html#ac9e7f27b6316566522fe78bafaae26a2">00137</a>     <a class="code" href="structqfilter__t.html" title="The structure for the quaternion-based attitude estimation.">qfilter_t</a> <a class="code" href="classCentral__data.html#ac9e7f27b6316566522fe78bafaae26a2" title="The qfilter structure.">attitude_filter</a>;                                  
+<a name="l00138"></a><a class="code" href="classCentral__data.html#afe742c039f320c7fd634467d35541e13">00138</a>     <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a> <a class="code" href="classCentral__data.html#afe742c039f320c7fd634467d35541e13" title="The attitude estimation structure.">ahrs</a>;                                                
+<a name="l00139"></a>00139 
+<a name="l00140"></a><a class="code" href="classCentral__data.html#abad328ece4b1c4d9b5cea4a958ccdf5e">00140</a>     <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a> <a class="code" href="classCentral__data.html#abad328ece4b1c4d9b5cea4a958ccdf5e" title="The control structure used for rate and attitude modes.">controls</a>;                                 
+<a name="l00141"></a><a class="code" href="classCentral__data.html#ad0ca56077e524d66d745664a54592541">00141</a>     <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a> <a class="code" href="classCentral__data.html#ad0ca56077e524d66d745664a54592541" title="The control nav structure used for velocity modes.">controls_nav</a>;                             
 <a name="l00142"></a>00142 
-<a name="l00143"></a><a class="code" href="classCentral__data.html#a64fab262f6a513c6a8bb37cde9bebcca">00143</a>     <a class="code" href="structposition__estimation__t.html" title="The position estimator structure.">position_estimation_t</a> <a class="code" href="classCentral__data.html#a64fab262f6a513c6a8bb37cde9bebcca" title="The position estimaton structure.">position_estimation</a>;                  
-<a name="l00144"></a>00144     <a class="code" href="structmavlink__waypoint__handler__t.html">mavlink_waypoint_handler_t</a> waypoint_handler;
-<a name="l00145"></a><a class="code" href="classCentral__data.html#a9eefe22c6f86fa2fcfa573f670bb796c">00145</a>     <a class="code" href="structnavigation__t.html" title="The navigation structure.">navigation_t</a> <a class="code" href="classCentral__data.html#a9eefe22c6f86fa2fcfa573f670bb796c" title="The structure to perform GPS navigation.">navigation</a>;                                    
+<a name="l00143"></a><a class="code" href="classCentral__data.html#a8163db935ed58e78f179800ecc24c382">00143</a>     <a class="code" href="structmanual__control__t.html" title="The manual control structure.">manual_control_t</a> <a class="code" href="classCentral__data.html#a8163db935ed58e78f179800ecc24c382" title="The joystick parsing structure.">manual_control</a>;                            
+<a name="l00144"></a>00144 
+<a name="l00145"></a><a class="code" href="classCentral__data.html#ac719f3664bcce16498ef315460d4f5e9">00145</a>     <a class="code" href="structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module.">stabilisation_copter_t</a> <a class="code" href="classCentral__data.html#ac719f3664bcce16498ef315460d4f5e9" title="The stabilisation structure for copter.">stabilisation_copter</a>;                
 <a name="l00146"></a>00146 
-<a name="l00147"></a><a class="code" href="classCentral__data.html#a15d4c15c6c91701595dbc6bb3d68b927">00147</a>     <a class="code" href="classState.html" title="The MAV state.">State</a> <a class="code" href="classCentral__data.html#a15d4c15c6c91701595dbc6bb3d68b927" title="The structure with all state information.">state</a>;                                                
-<a name="l00148"></a><a class="code" href="classCentral__data.html#a0f2fbbc2fa9fc14d970462570c3429d8">00148</a>     <a class="code" href="structstate__machine__t.html" title="Defines the state machine structure.">state_machine_t</a> <a class="code" href="classCentral__data.html#a0f2fbbc2fa9fc14d970462570c3429d8" title="The structure for the state machine.">state_machine</a>;                              
-<a name="l00149"></a>00149 
-<a name="l00150"></a><a class="code" href="classCentral__data.html#ac6293592dec12f4f428f6ade761adfee">00150</a>     <a class="code" href="structhud__telemetry__structure__t.html" title="The HUD structure to send the MAVLink HUD message.">hud_telemetry_structure_t</a> <a class="code" href="classCentral__data.html#ac6293592dec12f4f428f6ade761adfee" title="The HUD structure.">hud_structure</a>;                    
-<a name="l00151"></a>00151     <a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a> servos_telemetry;
-<a name="l00152"></a>00152 
-<a name="l00153"></a>00153     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging;
-<a name="l00154"></a>00154     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging2;
-<a name="l00155"></a>00155 
-<a name="l00156"></a>00156     <a class="code" href="structattitude__controller__t.html" title="Attitude controller structure.">attitude_controller_t</a>           attitude_controller;
-<a name="l00157"></a>00157     <a class="code" href="structvelocity__controller__copter__t.html" title="Velocity controller structure.">velocity_controller_copter_t</a>    velocity_controller;
-<a name="l00158"></a>00158     <a class="code" href="structvector__field__waypoint__t.html" title="Vector field navigation.">vector_field_waypoint_t</a>         vector_field_waypoint;
+<a name="l00147"></a><a class="code" href="classCentral__data.html#a64fab262f6a513c6a8bb37cde9bebcca">00147</a>     <a class="code" href="structposition__estimation__t.html" title="The position estimator structure.">position_estimation_t</a> <a class="code" href="classCentral__data.html#a64fab262f6a513c6a8bb37cde9bebcca" title="The position estimaton structure.">position_estimation</a>;                  
+<a name="l00148"></a>00148     <a class="code" href="structmavlink__waypoint__handler__t.html">mavlink_waypoint_handler_t</a> waypoint_handler;
+<a name="l00149"></a><a class="code" href="classCentral__data.html#a9eefe22c6f86fa2fcfa573f670bb796c">00149</a>     <a class="code" href="structnavigation__t.html" title="The navigation structure.">navigation_t</a> <a class="code" href="classCentral__data.html#a9eefe22c6f86fa2fcfa573f670bb796c" title="The structure to perform GPS navigation.">navigation</a>;                                    
+<a name="l00150"></a>00150 
+<a name="l00151"></a><a class="code" href="classCentral__data.html#a15d4c15c6c91701595dbc6bb3d68b927">00151</a>     <a class="code" href="classState.html" title="The MAV state.">State</a> <a class="code" href="classCentral__data.html#a15d4c15c6c91701595dbc6bb3d68b927" title="The structure with all state information.">state</a>;                                                
+<a name="l00152"></a><a class="code" href="classCentral__data.html#a0f2fbbc2fa9fc14d970462570c3429d8">00152</a>     <a class="code" href="structstate__machine__t.html" title="Defines the state machine structure.">state_machine_t</a> <a class="code" href="classCentral__data.html#a0f2fbbc2fa9fc14d970462570c3429d8" title="The structure for the state machine.">state_machine</a>;                              
+<a name="l00153"></a>00153 
+<a name="l00154"></a><a class="code" href="classCentral__data.html#ac6293592dec12f4f428f6ade761adfee">00154</a>     <a class="code" href="structhud__telemetry__structure__t.html" title="The HUD structure to send the MAVLink HUD message.">hud_telemetry_structure_t</a> <a class="code" href="classCentral__data.html#ac6293592dec12f4f428f6ade761adfee" title="The HUD structure.">hud_structure</a>;                    
+<a name="l00155"></a>00155     <a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a> servos_telemetry;
+<a name="l00156"></a>00156 
+<a name="l00157"></a>00157     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging;
+<a name="l00158"></a>00158     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging2;
 <a name="l00159"></a>00159 
-<a name="l00160"></a>00160 <span class="keyword">private</span>:
-<a name="l00161"></a>00161     uint8_t sysid_;     
-<a name="l00162"></a>00162 };
-<a name="l00163"></a>00163 
+<a name="l00160"></a>00160     <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a>                       command;
+<a name="l00161"></a>00161     <a class="code" href="structattitude__controller__t.html" title="Attitude controller structure.">attitude_controller_t</a>           attitude_controller;
+<a name="l00162"></a>00162     <a class="code" href="structvelocity__controller__copter__t.html" title="Velocity controller structure.">velocity_controller_copter_t</a>    velocity_controller;
+<a name="l00163"></a>00163     <a class="code" href="structvector__field__waypoint__t.html" title="Vector field navigation.">vector_field_waypoint_t</a>         vector_field_waypoint;
 <a name="l00164"></a>00164 
-<a name="l00165"></a>00165 <span class="preprocessor">#endif </span><span class="comment">/* CENTRAL_DATA_H_ */</span>
+<a name="l00165"></a>00165     <a class="code" href="structaltitude__t.html" title="Structure containing the Altitude.">altitude_t</a>                      altitude_;
+<a name="l00166"></a>00166     <a class="code" href="classAltitude__estimation.html" title="Altitude estimator.">Altitude_estimation</a>             altitude_estimation_;
+<a name="l00167"></a>00167     <a class="code" href="classAltitude__controller.html" title="Altitude controller.">Altitude_controller</a>             altitude_controller_;
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 <span class="keyword">private</span>:
+<a name="l00170"></a>00170     uint8_t sysid_;     
+<a name="l00171"></a>00171 };
+<a name="l00172"></a>00172 
+<a name="l00173"></a>00173 
+<a name="l00174"></a>00174 <span class="preprocessor">#endif </span><span class="comment">/* CENTRAL_DATA_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -250,7 +259,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 14:30:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Mar 21 2016 17:42:37 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

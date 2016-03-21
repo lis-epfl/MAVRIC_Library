@@ -107,10 +107,9 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structahrs__madgwick__t.html">ahrs_madgwick_t</a></li>
 <li><a class="el" href="structahrs__t.html">ahrs_t</a></li>
 <li><a class="el" href="structairspeed__analog__t.html">airspeed_analog_t</a></li>
+<li><a class="el" href="classAltitude__controller.html">Altitude_controller</a></li>
 <li><a class="el" href="structaltitude__controller__conf__t.html">altitude_controller_conf_t</a></li>
-<li><a class="el" href="structaltitude__controller__t.html">altitude_controller_t</a></li>
 <li><a class="el" href="structaltitude__estimation__conf__t.html">altitude_estimation_conf_t</a></li>
-<li><a class="el" href="structaltitude__estimation__t.html">altitude_estimation_t</a></li>
 <li><a class="el" href="structaltitude__t.html">altitude_t</a></li>
 <li><a class="el" href="structanalog__monitor__conf__t.html">analog_monitor_conf_t</a></li>
 <li><a class="el" href="structanalog__monitor__t.html">analog_monitor_t</a></li>
@@ -210,7 +209,11 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structjoystick__channels__t.html">joystick_channels_t</a></li>
 <li><a class="el" href="structjoystick__event.html">joystick_event</a></li>
 <li><a class="el" href="structjoystick__t.html">joystick_t</a></li>
-<li><a class="el" href="structkalman__filter__2D__t.html">kalman_filter_2D_t</a></li>
+<li><a class="el" href="classKalman.html">Kalman&lt; n, p, m, T &gt;</a></li>
+<li><a class="el" href="classKalman.html">Kalman&lt; 3, 1, 1 &gt;</a><ul>
+<li><a class="el" href="classAltitude__estimation.html">Altitude_estimation</a></li>
+</ul>
+</li>
 <li><a class="el" href="classLed.html">Led</a><ul>
 <li><a class="el" href="classLed__avr32.html">Led_avr32</a></li>
 <li><a class="el" href="classLed__dummy.html">Led_dummy</a></li>
@@ -226,12 +229,14 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 </li>
 <li><a class="el" href="structmanual__control__conf__t.html">manual_control_conf_t</a></li>
 <li><a class="el" href="structmanual__control__t.html">manual_control_t</a></li>
-<li><a class="el" href="structmatrix__1x1__t.html">matrix_1x1_t</a></li>
-<li><a class="el" href="structmatrix__2x2__t.html">matrix_2x2_t</a></li>
-<li><a class="el" href="structmatrix__3x3__t.html">matrix_3x3_t</a></li>
-<li><a class="el" href="structmatrix__4x4__t.html">matrix_4x4_t</a></li>
-<li><a class="el" href="structmatrix__5x5__t.html">matrix_5x5_t</a></li>
-<li><a class="el" href="structmatrix__6x6__t.html">matrix_6x6_t</a></li>
+<li><a class="el" href="classMat.html">Mat&lt; N, P, T &gt;</a></li>
+<li><a class="el" href="classMat.html">Mat&lt; m, 1 &gt;</a></li>
+<li><a class="el" href="classMat.html">Mat&lt; m, m &gt;</a></li>
+<li><a class="el" href="classMat.html">Mat&lt; m, n &gt;</a></li>
+<li><a class="el" href="classMat.html">Mat&lt; n, 1 &gt;</a></li>
+<li><a class="el" href="classMat.html">Mat&lt; n, m &gt;</a></li>
+<li><a class="el" href="classMat.html">Mat&lt; n, n &gt;</a></li>
+<li><a class="el" href="classMat.html">Mat&lt; n, p &gt;</a></li>
 <li><a class="el" href="structmavlink__communication__conf__t.html">mavlink_communication_conf_t</a></li>
 <li><a class="el" href="structmavlink__communication__t.html">mavlink_communication_t</a></li>
 <li><a class="el" href="structmavlink__message__handler__cmd__callback__set__t.html">mavlink_message_handler_cmd_callback_set_t</a></li>
@@ -260,6 +265,7 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structonboard__parameters__entry__t.html">onboard_parameters_entry_t</a></li>
 <li><a class="el" href="structonboard__parameters__set__t.html">onboard_parameters_set_t</a></li>
 <li><a class="el" href="structonboard__parameters__t.html">onboard_parameters_t</a></li>
+<li><a class="el" href="classmat_1_1op.html">mat::op</a></li>
 <li><a class="el" href="structpid__controller__conf__t.html">pid_controller_conf_t</a></li>
 <li><a class="el" href="structpid__controller__t.html">pid_controller_t</a></li>
 <li><a class="el" href="structposition__command__t.html">position_command_t</a></li>
@@ -378,12 +384,6 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structubx__nav__vel__ned__t.html">ubx_nav_vel_ned_t</a></li>
 <li><a class="el" href="structubx__tim__tp__t.html">ubx_tim_tp_t</a></li>
 <li><a class="el" href="structubx__tim__vrfy__t.html">ubx_tim_vrfy_t</a></li>
-<li><a class="el" href="structvector__1__t.html">vector_1_t</a></li>
-<li><a class="el" href="structvector__2__t.html">vector_2_t</a></li>
-<li><a class="el" href="structvector__3__t.html">vector_3_t</a></li>
-<li><a class="el" href="structvector__4__t.html">vector_4_t</a></li>
-<li><a class="el" href="structvector__5__t.html">vector_5_t</a></li>
-<li><a class="el" href="structvector__6__t.html">vector_6_t</a></li>
 <li><a class="el" href="structvector__field__waypoint__conf__t.html">vector_field_waypoint_conf_t</a></li>
 <li><a class="el" href="structvector__field__waypoint__t.html">vector_field_waypoint_t</a></li>
 <li><a class="el" href="structvelocity__command__t.html">velocity_command_t</a></li>
@@ -398,7 +398,7 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -410,7 +410,7 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 14:30:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Mar 21 2016 17:42:38 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

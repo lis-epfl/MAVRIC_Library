@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['barometer',['Barometer',['../classBarometer.html',1,'Barometer'],['../classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e',1,'Central_data::barometer()'],['../structaltitude__estimation__t.html#a28bb1689880aded317fba3a82ab17d23',1,'altitude_estimation_t::barometer()'],['../structposition__estimation__t.html#a422f4cdc5d51e3c2f21ada0c1432aed5',1,'position_estimation_t::barometer()'],['../classSimulation.html#a368aa6c86a02f49a56f83df509c6d9e7',1,'Simulation::barometer()']]],
+  ['b_5f',['B_',['../classKalman.html#acf8e90cf222702a93cc079769813c7c0',1,'Kalman']]],
+  ['barometer',['Barometer',['../classBarometer.html',1,'Barometer'],['../classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e',1,'Central_data::barometer()'],['../structposition__estimation__t.html#a422f4cdc5d51e3c2f21ada0c1432aed5',1,'position_estimation_t::barometer()'],['../classSimulation.html#a368aa6c86a02f49a56f83df509c6d9e7',1,'Simulation::barometer()']]],
   ['barometer_5fsim',['Barometer_sim',['../classBarometer__sim.html',1,'Barometer_sim'],['../classBarometer__sim.html#a8cb0b945413cb2c0be355240648dd56a',1,'Barometer_sim::Barometer_sim()']]],
   ['base_5fhealth',['base_health',['../structubx__nav__dgps__t.html#ae32b24ce493c04451063f95f7c8e5c0d',1,'ubx_nav_dgps_t']]],
   ['base_5fid',['base_id',['../structubx__nav__dgps__t.html#a943b371eb1753d81aeaf082310b2a407',1,'ubx_nav_dgps_t']]],
