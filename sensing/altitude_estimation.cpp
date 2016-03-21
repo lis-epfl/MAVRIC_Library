@@ -42,7 +42,6 @@
 
 #include "sensing/altitude_estimation.hpp"
 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -52,16 +51,16 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Altitude_estimation::Altitude_estimation(Sonar& sonar, 
-                                         Barometer& barometer, 
-                                         ahrs_t& ahrs, 
-                                         altitude_t& altitude, 
+Altitude_estimation::Altitude_estimation(Sonar& sonar,
+                                         Barometer& barometer,
+                                         ahrs_t& ahrs,
+                                         altitude_t& altitude,
                                          altitude_estimation_conf_t config):
-    Kalman<3,1,1>(std::array<float,3>{{0.0f, 0.0f, 0.0f}},   // x 
-                  std::array<float,3*3>{{100.0f,   0.0f,   0.0f, 
+    Kalman<3,1,1>(std::array<float,3>{{0.0f, 0.0f, 0.0f}},   // x
+                  std::array<float,3*3>{{100.0f,   0.0f,   0.0f,
                                            0.0f, 100.0f,   0.0f,
                                            0.0f,   0.0f, 100.0f}},     // P
-                  std::array<float,3*3>{{1.0f, 0.004f, 0.000008f, 
+                  std::array<float,3*3>{{1.0f, 0.004f, 0.000008f,
                                          0.0f, 1.0f,   0.004f,
                                          0.0f, 0.0f,   1.0f}},         // F
                   std::array<float,3*3>{{}}, // Q
@@ -81,9 +80,8 @@ Altitude_estimation::Altitude_estimation(Sonar& sonar,
     float s_vel = 1.0e-1f;
     float s_acc = 1.0e-10f; // 0.0f; //1.0e-20f;
 
-
-    Mat<3,1> g({s_pos + + s_vel*dt + 0.5f*s_acc*dt*dt, 
-                s_vel + s_acc*dt, 
+    Mat<3,1> g({s_pos + + s_vel*dt + 0.5f*s_acc*dt*dt,
+                s_vel + s_acc*dt,
                 s_acc});
 
     Q_ = g % ~g;
@@ -98,13 +96,17 @@ bool Altitude_estimation::init(void)
 
 bool Altitude_estimation::update(void)
 {
-    Kalman<3,1,1>::predict(Mat<1,1>({-ahrs_.linear_acc[2]}));   
+    Kalman<3,1,1>::predict(Mat<1,1>({-ahrs_.linear_acc[2]}));
 
     if (last_sonar_update_us_ < sonar_.last_update_us() )
     {
         float alt = sonar_.distance();
-        Kalman<3,1,1>::update(Mat<1,1>({alt}));
-        last_sonar_update_us_ = sonar_.last_update_us();
+
+        if( sonar_.healthy() || alt < 0.3f )
+        {
+          Kalman<3,1,1>::update(Mat<1,1>({alt}));
+          last_sonar_update_us_ = sonar_.last_update_us();
+        }
     }
 
     altitude_.above_sea    = x_(1,0);

@@ -72,6 +72,8 @@ Sonar_i2cxl::Sonar_i2cxl(I2c& i2c, sonar_i2cxl_conf_t config):
 
 bool Sonar_i2cxl::init(void)
 {
+    last_update_us_ = time_keeper_get_us();
+
     // Try to probe the device
     return i2c_.probe(config_.i2c_address);
 }
@@ -190,7 +192,7 @@ bool Sonar_i2cxl::get_last_measure(void)
         {
             distance_ = config_.max_distance;
         }
-        
+
         velocity_   = 0.0f;
         healthy_    = false;
     }
