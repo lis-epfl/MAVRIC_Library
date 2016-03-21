@@ -43,11 +43,8 @@
 #ifndef FENCE_H_
 #define FENCE_H_
 
-
-//chechk if thoses are usefull
-
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "sensing/position_estimation.hpp"
+
 
 extern "C"
 {
@@ -58,9 +55,9 @@ extern "C"
 class Fence
 {
 public:
-	Fence(mavlink_waypoint_handler_t waypoint_handler);
+	Fence(mavlink_waypoint_handler_t* waypoint_handler);
 	~Fence(void);
-	void add_waypoint(waypoint_struct_t& new_waypoint);
+	void add_waypoint(waypoint_struct_t* new_waypoint);
 	void del_waypoint(void);
 	void set_h_max(float new_h);
 	float get_h_max(void);
@@ -70,7 +67,7 @@ public:
 private:
 	//waypoint params: p1,p2,p3,p4,x,y,z
 	//attribution 			h_min,h_max,fence_id;
-	waypoint_struct_t* 	fence_points[MAX_WAYPOINTS]={nullptr};
+	waypoint_struct_t 	fence_points[MAX_WAYPOINTS];
 	uint8_t 			fence_id=1;
 	float				h_max=20; //[m]
 	float				h_min=5; //[m]

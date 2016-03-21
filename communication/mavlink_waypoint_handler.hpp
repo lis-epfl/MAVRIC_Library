@@ -51,7 +51,8 @@
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
-#include "control/fence.hpp"
+
+//#include "control/fence.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
@@ -80,7 +81,7 @@ typedef struct
 typedef struct
 {
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
-    waypoint_struct_t fence_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
+    waypoint_struct_t fence_list[MAX_WAYPOINTS];             	///< The array of all waypoints (max MAX_WAYPOINTS)
     waypoint_struct_t current_waypoint;                         ///< The structure of the current waypoint
     uint16_t number_of_waypoints;                               ///< The total number of waypoints
     int8_t current_waypoint_count;                              ///< The number of the current waypoint
@@ -97,8 +98,7 @@ typedef struct
     int32_t sending_waypoint_num;                               ///< The ID number of the sending waypoint
     int32_t waypoint_request_number;                            ///< The ID number of the requested waypoint
 
-    uint16_t num_waypoint_onboard;                              ///< The number of waypoint onboard
-
+    uint16_t num_waypoint_onboard;
     uint32_t start_timeout;                                     ///< The start time for the waypoint timeout
     uint32_t timeout_max_waypoint;                              ///< The max waiting time for communication
 

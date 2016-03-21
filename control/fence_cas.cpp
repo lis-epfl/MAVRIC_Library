@@ -59,12 +59,12 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Fence_CAS::Fence_CAS(position_estimation_t& postion_estimation)
-:	pos_est(postion_estimation),
-	sensor_res(3),
+Fence_CAS::Fence_CAS(position_estimation_t* postion_estimation)
+:	sensor_res(3),
 	a_max(1),
 	r_pz(0),
-	discomfort(0)
+	discomfort(0),
+	pos_est(postion_estimation)
 {
 
 }

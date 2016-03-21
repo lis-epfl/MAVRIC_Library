@@ -58,8 +58,8 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Fence::Fence(mavlink_waypoint_handler_t& waypoint_handler):
-		fence_points(&waypoint_handler.fence_list)
+Fence::Fence(mavlink_waypoint_handler_t* waypoint_handler):
+		fence_points(waypoint_handler->fence_list)
 {
 
 }
@@ -67,12 +67,14 @@ Fence::~Fence(void)
 {
 	//destructeur
 }
-void Fence::add_waypoint(waypoint_struct_t& new_waypoint)
+void Fence::add_waypoint(waypoint_struct_t* new_waypoint)
 {
 	if(nb_waypoint<MAX_WAYPOINTS)
 	{
-		this->fence_points[this->nb_waypoint]= new_waypoint;
+		this->fence_points[this->nb_waypoint]= *new_waypoint;
 		this->nb_waypoint++;
+		//print_util_dbg_print_num(waypoint_handler->number_of_waypoints - waypoint_handler->num_waypoint_onboard, 10);
+		print_util_dbg_print("NEW WAYPOINT ADDED TO FENCE\r\n");
 	}
 
 }
@@ -81,7 +83,7 @@ void Fence::del_waypoint(void)
 {
 	if(nb_waypoint > 0)
 	{
-		this->fence_points[this->nb_waypoint]= nullptr;
+		//this->fence_points[this->nb_waypoint]= nullptr;
 		this->nb_waypoint--;
 	}
 }

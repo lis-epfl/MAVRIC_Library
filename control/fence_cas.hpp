@@ -35,7 +35,8 @@
  * \author MAV'RIC Team
  * \author Cyril Stuber
  *
- * \brief This module takes care of simulating a fence and avoiding it.
+ * \brief 	This module takes care of simulating a fence and avoiding it.
+ * 			"cas" stand for Collision Avoiding System.
  *
  ******************************************************************************/
 
@@ -45,10 +46,11 @@
 
 
 //chechk if thoses are usefull
-
-#include "communication/mavlink_waypoint_handler.hpp"
-#include "sensing/position_estimation.hpp"
 #include "control/fence.hpp"
+//#include "communication/mavlink_waypoint_handler.hpp"
+//#include "sensing/position_estimation.hpp"
+#include "sensing/position_estimation.hpp"
+
 
 extern "C"
 {
@@ -70,7 +72,7 @@ typedef struct
 class Fence_CAS
 {
 public:
-	Fence_CAS(position_estimation_t& postion_estimation);
+	Fence_CAS(position_estimation_t* postion_estimation);
 	~Fence_CAS(void);
 	bool update(void);
 	void add_fence(void);
@@ -99,7 +101,7 @@ private:
 	float								a_max; ///<maximal deceleration [m/s^2]
 	float								r_pz; ///< radius of Protection Zone
 	float								discomfort; ///<[0,1] intensity of the reaction
-	const position_estimation_t&        pos_est;                    ///< Estimated position and speed (input)
+	const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
 	//velocity_command_t&                 velocity_command;           ///< Velocity command (output)
 };
 

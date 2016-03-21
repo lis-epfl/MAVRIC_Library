@@ -1093,18 +1093,21 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
                     print_util_dbg_print("\r\n");
 
 
-                    //TODO add comments
-                    if(new_waypoint.command==MAV_CMD_NAV_WAYPOINT) //16
-                    {
-                    	waypoint_handler->waypoint_list[waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number] = new_waypoint;
-                    }
+                    waypoint_handler->waypoint_list[waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number] = new_waypoint;
+                    waypoint_handler->waypoint_request_number++;
+                    //CYSTU a supprimer
+
+                    /*
+                     *
                     if(new_waypoint.command==MAV_CMD_NAV_FENCE)//40
                     {
-                    	waypoint_handler->fence_list[waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number] = new_waypoint;
-                    	fence.add_waypoint()
-                    }
+                    	waypoint_handler->fence_list[waypoint_handler->num_fence_points] = new_waypoint;
+                    	waypoint_handler->num_fence_points++;
+                    	//fence.add_waypoint(new_waypoint);
+                    }*/
 
-                    waypoint_handler->waypoint_request_number++;
+
+
 
                     if ((waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number) == waypoint_handler->number_of_waypoints)
                     {
@@ -1126,6 +1129,7 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 
                         waypoint_handler->state->nav_plan_active = false;
                         waypoint_handler_nav_plan_init(waypoint_handler);
+                        // CYSTU copy the waypoints with cmd=40 to the fence object
                     }
                     else
                     {
@@ -1998,7 +2002,7 @@ static void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handle
             waypoint_handler->travel_time = time_keeper_get_ms() - waypoint_handler->start_wpt_time;
 
             waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 0;
-            if ((waypoint_handler->current_waypoint.autocontinue == 1) && (waypoint_handler->number_of_waypoints > 1))
+            if ((waypoint_handler->current_waypoint.autocontinue == 1) && (waypoint_handler->number_of_waypoints > 1) && (waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count+1].command != MAV_CMD_NAV_FENCE))
             {
                 print_util_dbg_print("Autocontinue towards waypoint Nr");
 
@@ -2027,6 +2031,19 @@ static void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handle
                 mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 
             }
+            //CYSTU
+            else if (waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count+1].command == MAV_CMD_NAV_FENCE) //40
+			{
+            	print_util_dbg_print("WAYPOI-nT CAN T FOLLOW\r\n");
+                if (waypoint_handler->current_waypoint_count == (waypoint_handler->number_of_waypoints - 1))
+                {
+                    waypoint_handler->current_waypoint_count = 0;
+                }
+                else
+                {
+                    waypoint_handler->current_waypoint_count++;
+                }
+			}
             else
             {
                 waypoint_handler->state->nav_plan_active = false;
@@ -2526,12 +2543,18 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
                 print_util_dbg_print(" set,\r\n");
 
                 waypoint_handler->state->nav_plan_active = true;
-
-                for (uint8_t j = 0; j < 3; j++)
+                if(waypoint_handler->current_waypoint.command == MAV_CMD_NAV_FENCE)//40
                 {
-                    rel_pos[j] = waypoint_handler->waypoint_coordinates.pos[j] - waypoint_handler->position_estimation->local_position.pos[j];
+                	print_util_dbg_print("WAYPOINT IGNORED ######################,\r\n");
                 }
-                waypoint_handler->navigation->dist2wp_sqr = vectors_norm_sqr(rel_pos);
+                else
+                {
+					for (uint8_t j = 0; j < 3; j++)
+					{
+						rel_pos[j] = waypoint_handler->waypoint_coordinates.pos[j] - waypoint_handler->position_estimation->local_position.pos[j];
+					}
+					waypoint_handler->navigation->dist2wp_sqr = vectors_norm_sqr(rel_pos);
+                }
             }
         }
     }
