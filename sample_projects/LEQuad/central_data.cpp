@@ -78,6 +78,8 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     state(battery, state_default_config()),
     data_logging(file1, state, data_logging_default_config()),
     data_logging2(file2, state, data_logging_default_config()),
+    altitude_estimation_(sonar, barometer, ahrs, altitude_),
+    altitude_controller_(command.position, altitude_, command.thrust),
     sysid_(sysid)
 {}
 
@@ -286,6 +288,17 @@ bool Central_data::init(void)
                              &command.attitude,
                              &command.rate,
                              &command.torque);
+
+    //--------------------------------------------------------------------------
+    // Init altitude estimation
+    //--------------------------------------------------------------------------
+    altitude_estimation_.init();
+
+
+    //--------------------------------------------------------------------------
+    // Init altitude controller
+    //--------------------------------------------------------------------------
+    altitude_controller_.init();
 
     //--------------------------------------------------------------------------
     // Init velocity controller
