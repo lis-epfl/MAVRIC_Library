@@ -5254,9 +5254,9 @@ static ubx_nav_dgps_t* ubx_get_nav_dgps()
 
 Gps_ublox::Gps_ublox(Serial& serial):
     serial_(serial),
-    last_update_us_(time_keeper_get_us()),
-    last_position_update_us_(time_keeper_get_us()),
-    last_velocity_update_us_(time_keeper_get_us()),
+    last_update_us_(0.0f),
+    last_position_update_us_(0.0f),
+    last_velocity_update_us_(0.0f),
     position_gf_( {0.0, 0.0, 0.0f, 0.0f}),
     horizontal_position_accuracy_(0.0f),
     vertical_position_accuracy_(0.0f),

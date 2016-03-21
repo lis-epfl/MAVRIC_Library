@@ -66,7 +66,7 @@ Sonar_i2cxl::Sonar_i2cxl(I2c& i2c, sonar_i2cxl_conf_t config):
     distance_(0.2f),
     velocity_(0.0f),
     healthy_(false),
-    last_update_us_(time_keeper_get_us())
+    last_update_us_(0.0f)
 {}
 
 
