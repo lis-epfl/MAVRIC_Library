@@ -83,7 +83,9 @@ int main(int argc, char** argv)
     // Create central data using simulated sensors
 
     central_data_conf_t cd_config = central_data_default_config();
-
+    cd_config.manual_control_config.mode_source = MODE_SOURCE_GND_STATION;
+    cd_config.manual_control_config.control_source = CONTROL_SOURCE_NONE;
+    
     Central_data cd = Central_data(sysid,
                                    cd_config,
                                    board.imu,
