@@ -46,7 +46,7 @@
 // #include "hal/dummy/file_dummy.hpp"
 #include "hal/avr32/file_flash_avr32.hpp"
 #include "hal/avr32/serial_usb_avr32.hpp"
-
+#include "sensing/offboard_camera.hpp"
 // #include "simulation/dynamic_model_quad_diag.hpp"
 // #include "simulation/simulation.hpp"
 // #include "hal/dummy/adc_dummy.hpp"
@@ -104,6 +104,8 @@ int main(void)
     File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
     File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
 
+    Offboard_Camera camera_object = Offboard_Camera(0, true);
+    Offboard_Camera& camera = camera_object;
     // -------------------------------------------------------------------------
     // Create central data
     // -------------------------------------------------------------------------
@@ -115,7 +117,7 @@ int main(void)
                                    // sim.gps(),
                                    board.sonar_i2cxl,      // Warning:
                                    // sim.sonar(),             // this is simulated
-                                   board.uart0,
+                                   /*board.uart0,*/board.uart_usb,//
                                    board.spektrum_satellite,
                                    board.green_led,
                                    board.file_flash,
@@ -126,7 +128,8 @@ int main(void)
                                    board.servo_2,
                                    board.servo_3,
                                    file_log,
-                                   file_stat);
+                                   file_stat,
+                                   camera);
 
 
     // Create central data with simulated sensors
