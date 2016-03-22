@@ -211,6 +211,7 @@ int main(void)
     // Board initialisation
     init_success &= board.init();
 
+
     // Init central data
     init_success &= cd.init();
 

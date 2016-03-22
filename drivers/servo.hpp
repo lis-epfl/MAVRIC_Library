@@ -178,7 +178,7 @@ static inline servo_conf_t servo_default_config_esc()
     servo_conf_t conf       = {};
 
     conf.trim               = 0.0f;
-    conf.min                = -0.9f;
+    conf.min                = -1.1f;
     conf.max                = 1.0f;
     conf.failsafe           = -1.1f;
     conf.repeat_freq        = 200;

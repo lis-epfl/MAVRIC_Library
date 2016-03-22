@@ -80,3 +80,4 @@ LIB_SRCS += util/quick_trig.c
 LIB_SRCS += util/string_util.c
 
 LIB_SRCS += sample_projects/Custom/saccade_controller.cpp
+LIB_SRCS += sample_projects/Custom/saccade_telemetry.cpp

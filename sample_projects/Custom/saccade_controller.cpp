@@ -46,17 +46,22 @@ extern "C"
     #include "util/maths.h"
 }
 
+
+
+
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 Saccade_controller::Saccade_controller(Serial& serial_flow_left, Serial& serial_flow_right, saccade_controller_conf_t config)
 {
-    flow_init(&flow_right, &serial_flow_right);
-    flow_init(&flow_left, &serial_flow_left);
-    gain            = config.gain;
-    threshold       = config.threshold;
-    goal_direction  = config.goal_direction;
+    flow_init(&flow_right_, &serial_flow_right);
+    flow_init(&flow_left_, &serial_flow_left);
+    gain_            = config.gain_;
+    threshold_       = config.threshold_;
+    goal_direction_  = config.goal_direction_;
 }
+
 
 
 bool Saccade_controller::init(void)
@@ -71,12 +76,10 @@ bool Saccade_controller::init(void)
 
 bool Saccade_controller::update()
 {
-    int N_points = 125;                          // Number of points where optic flow is measured
+   
     
-    float  Azimuth [2 * N_points];              //Table in which azimuthal angle of all points are stored
-    float  Relative_Nearness [2 * N_points];    //Table in which azimuthal angle of all points are stored
-    float COMANV_x = 1.0f;                      //x component of the COMANV
-    float COMANV_y = 1.0f;                      //y component of the COMANV
+    float comanv_x = 1.0f;                      //x component of the comanv
+    float comanv_y = 1.0f;                      //y component of the comanv
     
     
     // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
@@ -84,75 +87,76 @@ bool Saccade_controller::update()
     float angle_between_points = (140.625 / N_points);
    
     
-    // Intermediate variables : CAN is the norm of the COMANV vector, Nearest object direction gives the angle in radians to the nearest object, CAD gives the collision avoidance direction, opposite to the Nearest object direction.
+    // Intermediate variables : can is the norm of the comanv vector, nearest object direction gives the angle in radians to the nearest object, cad gives the collision avoidance direction, opposite to the nearest object direction.
     
-    float CAN = 0.0f;
-    float Nearest_object_direction = 0.0f;
-    float CAD = 0.0f;
-    float Movement_direction = 0.0f;
+    //float can = 0.0f;
+    float nearest_object_direction = 0.0f;
+    //float cad  = 0.0f;
+    float movement_direction = 0.0f;
     
-    //Sigmoid function for direction choice, it takes the CAN, a threshold and a gain and describes how important it is for the drone to perform a saccade
+    //Sigmoid function for direction choice, it takes the can, a threshold and a gain and describes how important it is for the drone to perform a saccade
     
-    float Weighted_function = 1.0f;
+    float weighted_function = 1.0f;
  
+    // Quaternion given to attitude controller for the saccade
     quat_t quat_yaw_command;
    
     
     //Random number generation for the noise, the value of the noise is between 0 and 0.5. A new number is generated at each time.
     //ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
     
-    // srand(time(NULL));
+    //srand(time(NULL));
     float noise = 0.0f;
-    // float noise = (rand() % 50)/100.;
+    //float noise = (rand() % 50)/100.;
     
     
     
     //Update the optic flow vectors
     
-    /*flow_update(&flow_left);
-    flow_update(&flow_right);*/
+    flow_update(&flow_left_);
+    flow_update(&flow_right_);
     
     //Calculate for both left and right the sum of the relative nearnesses which are each given by
-     // RN = OF/sin(angle), then calculate the COMANV's x and y components, to then calculate CAN and NOD.
+    //RN = OF/sin(angle), then calculate the comanv's x and y components, to then calculate can and NOD.
     
     for(int i=0;i<N_points-1;++i)
     {
        
-        Azimuth[i] = (-160.875 + i * angle_between_points)* (PI / 180.);
-        Azimuth[i + N_points] = (19.125 + i * angle_between_points)* (PI / 180.);
+        azimuth_[i] = (-160.875 + i * angle_between_points)* (PI / 180.);
+        azimuth_[i + N_points] = (19.125 + i * angle_between_points)* (PI / 180.);
         
-        Relative_Nearness[i] = flow_left.of.x[i]/sin(Azimuth[i]);
-        Relative_Nearness[i + N_points] = flow_right.of.x[i]/sin(Azimuth[i + N_points]);
+        relative_nearness_[i] = flow_left_.of.x[i]/sin(azimuth_[i]);
+        relative_nearness_[i + N_points] = flow_right_.of.x[i]/sin(azimuth_[i + N_points]);
         
     
-        COMANV_x += cos(Azimuth[i]) * Relative_Nearness[i] + cos(Azimuth[i + N_points]) * Relative_Nearness[i + N_points];
-        COMANV_y += sin(Azimuth[i]) * Relative_Nearness[i] + sin(Azimuth[i + N_points]) * Relative_Nearness[i + N_points];
+        comanv_x += cos(azimuth_[i]) * relative_nearness_[i] + cos(azimuth_[i + N_points]) * relative_nearness_[i + N_points];
+        comanv_y += sin(azimuth_[i]) * relative_nearness_[i] + sin(azimuth_[i + N_points]) * relative_nearness_[i + N_points];
 
     }
     
     
     
-   //Calculation of the CAN and CAD
+   //Calculation of the can and cad
     
-    CAN = sqrt(pow(COMANV_x , 2) + pow(COMANV_y , 2));
+    can_ = sqrt(pow(comanv_x , 2) + pow(comanv_y , 2));
 
-    Nearest_object_direction = atan(COMANV_y/COMANV_x);
+    nearest_object_direction = atan(comanv_y/comanv_x);
     
-    Weighted_function = 1 / (1 + pow(CAN/threshold , - gain));
+    weighted_function = 1 / (1 + pow(can_/threshold_ , - gain_));
     
-    CAD = Nearest_object_direction + PI/2;
+    cad_ = nearest_object_direction + PI;
     
     //Calculation of the movement direction (in radians)
     
-    Movement_direction = Weighted_function * CAD + (1-Weighted_function) * (goal_direction + noise);
+    movement_direction = weighted_function * cad_ + (1-weighted_function) * (goal_direction_ + noise);
     
     //Transformation of the movement direction into a quaternion
     
     aero_attitude_t attitude;
     attitude.rpy[0] = 0.0f;
     attitude.rpy[1] = 0.0f;
-    attitude.rpy[2] = Movement_direction;
-    //ICI IL Y A UN PROBLEME
+    attitude.rpy[2] = movement_direction;
+    
     quat_yaw_command = coord_conventions_quaternion_from_aero(attitude);
     
     //Attitude command given by the required movement direction

@@ -47,6 +47,7 @@
 #include "drivers/gps_telemetry.hpp"
 #include "drivers/sonar_telemetry.hpp"
 #include "drivers/barometer_telemetry.hpp"
+#include "saccade_telemetry.hpp"
 
 #include "sensing/imu_telemetry.hpp"
 #include "sensing/position_estimation_telemetry.hpp"
@@ -196,7 +197,7 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     bool init_success = true;
 
     stabiliser_t* rate_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.rate_stabiliser;
-    // stabiliser_t* attitude_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.attitude_stabiliser;
+    stabiliser_t* attitude_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.attitude_stabiliser;
     stabiliser_t* velocity_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.velocity_stabiliser;
     //stabiliser_t* position_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.position_stabiliser;
 
@@ -221,12 +222,12 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].differentiator.clip,     "ROLLRPID_D_CLIp");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].differentiator.gain,     "ROLLRPID_KD");
 
-    // Roll attitude PID
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].p_gain,                "ROLLAPID_KP"       );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLLAPID_I_CLIP"   );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLLAPID_KI"       );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].differentiator.clip,   "ROLLAPID_D_CLIP"   );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLLAPID_KD"       );
+    //Roll attitude PID
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].p_gain,                "ROLLAPID_KP"       );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLLAPID_I_CLIP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLLAPID_KI"       );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].differentiator.clip,   "ROLLAPID_D_CLIP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLLAPID_KD"       );
 
     // Pitch rate PID
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[PITCH].p_gain,              "PITCHRPID_KP");
@@ -235,12 +236,12 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[PITCH].differentiator.clip,     "PITCHRPID_D_CLIP");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[PITCH].differentiator.gain, "PITCHRPID_KD");
 
-    // Pitch attitude PID
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].p_gain,               "PITCHAPID_KP"      );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCHAPID_I_CLIP"  );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCHAPID_KI"      );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].differentiator.clip,  "PITCHAPID_D_CLIP"  );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCHAPID_KD"      );
+    //Pitch attitude PID
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].p_gain,               "PITCHAPID_KP"      );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCHAPID_I_CLIP"  );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCHAPID_KI"      );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].differentiator.clip,  "PITCHAPID_D_CLIP"  );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCHAPID_KD"      );
 
     // Yaw rate PID
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[YAW].p_gain,                "YAWRPID_KP");
@@ -252,13 +253,13 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[YAW].differentiator.gain,   "YAWRPID_KD");
 
     // Yaw attitude PID
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAWAPID_KP"        );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAWAPID_P_CLMX"    );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAWAPID_P_CLMN"    );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAWAPID_I_CLIP"    );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAWAPID_KI"        );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAWAPID_D_CLIP"    );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAWAPID_KD"        );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAWAPID_KP"        );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAWAPID_P_CLMX"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAWAPID_P_CLMN"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAWAPID_I_CLIP"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAWAPID_KI"        );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAWAPID_D_CLIP"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAWAPID_KD"        );
 
 
     // Roll velocity PID
@@ -353,10 +354,10 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 
     //Parameters for saccade controller tuning
     
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.gain,      "WT_FCT_GAIN");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.threshold,      "WT_FCT_THRSOLD");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.goal_direction,      "GL_DIRECTION");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.pitch,      "PITCH_CONTROL");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.gain_,      "WT_FCT_GAIN");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.threshold_,      "WT_FCT_THRSOLD");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.goal_direction_,      "GL_DIRECTION");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.pitch_,      "PITCH_CONTROL");
     
     return init_success;
 }
@@ -430,6 +431,8 @@ bool mavlink_telemetry_init(Central_data* central_data)
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
     // init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           &central_data->flow_right_,              MAVLINK_MSG_ID_OPTICAL_FLOW           );
 
+    init_success &= mavlink_communication_add_msg_send(mavlink_communication,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&saccade_telemetry_send_vector,                                        &central_data->saccade_controller,                     MAVLINK_MSG_ID_DEBUG_VECT);   // ID 24
+                                                       
     scheduler_sort_tasks(&central_data->mavlink_communication.scheduler);
 
     print_util_dbg_init_msg("[TELEMETRY]", init_success);

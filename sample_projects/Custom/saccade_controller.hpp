@@ -55,36 +55,59 @@ extern "C" {
 
 #include "drivers/flow.hpp"
 
+//Definition of the number of points used for the optic flow on each camera
+const int N_points = 125;
 
 /**
  * \brief Configuration structure
+ * \param   pitch               Pitch command for forward motion
+ * \param   gain                Gain for weighting function
+ * \param   threshold           Threshold for weighting function
+ * \param   goal_direction      Goal direction for navigation
  */
 typedef struct
 {
-    float pitch;
-    float gain;
-    float threshold;
-    float goal_direction;
+    float pitch_;
+    float gain_;
+    float threshold_;
+    float goal_direction_;
 } saccade_controller_conf_t;
 
 
 static inline saccade_controller_conf_t saccade_controller_default_config(void);
 
+
+
 /**
- * \Saccade controller structure
+ * \brief Saccade controller structure
+ *
+ * \param   flow_left           Left optic flow camera input
+ * \param   flow_right;         Right optic flow camera input
+ * \param   pitch               Pitch command for forward motion
+ * \param   gain                Gain for weighting function
+ * \param   threshold           Threshold for weighting function
+ * \param   goal_direction      Goal direction for navigation
+ * \param   azimuth             Table of azimuthal angles
+ * \param   relative_nearness   Table of relative nearnesses
+ * \param   attitude_command    Output for saccade
+
  */
 class Saccade_controller
 {
 public:
     
-    flow_t                      flow_left;           ///< Left optic flow camera output
-    flow_t                      flow_right;          ///< Right optic flow camera output
-    float                       pitch;              ///< Pitch command for forward motion
-    float                       gain;               ///< Gain for importance of CAN
-    float                       threshold;          ///< Threshold for importance of CAN
-    float                       goal_direction;     ///< Goal direction for drone
+    flow_t                      flow_left_;           ///< Left optic flow camera output
+    flow_t                      flow_right_;          ///< Right optic flow camera output
+    float                       pitch_;              ///< Pitch command for forward motion
+    float                       gain_;               ///< Gain for importance of CAN
+    float                       threshold_;          ///< Threshold for importance of CAN
+    float                       goal_direction_;     ///< Goal direction for drone
+    float                       azimuth_ [2 * N_points];            //Table of azimuthal angles
+    float                       relative_nearness_ [2 * N_points];    //Table of Relative nearness
+    float                       can_;
+    float                       cad_;
     attitude_command_t*         attitude_command;   ///< Attitude command given by the necessary saccade
-  
+    
     
     /**
      * \brief                       Constructor
@@ -96,6 +119,7 @@ public:
     Saccade_controller(Serial& serial_flow_left, Serial& serial_flow_right, saccade_controller_conf_t config);
 
 
+
     /**
      * \brief   Init function
      * 
@@ -105,8 +129,9 @@ public:
 
 
     /**
-     * \brief                       Update of the saccade control
+     * \brief   Update of the saccade control
      *
+     * \return  success
      */
     bool update(void);
     
@@ -118,10 +143,10 @@ static inline saccade_controller_conf_t saccade_controller_default_config(void)
 {
     saccade_controller_conf_t conf;
 
-    conf.pitch          = 0.0f;
-    conf.gain           = 1.0f;
-    conf.threshold      = 1.0f;
-    conf.goal_direction = 0.0f;
+    conf.pitch_          = 0.0f;
+    conf.gain_           = 1.0f;
+    conf.threshold_      = 1.0f;
+    conf.goal_direction_ = 0.0f;
 
     return conf;
 };
