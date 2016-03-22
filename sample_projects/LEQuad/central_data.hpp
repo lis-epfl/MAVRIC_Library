@@ -97,7 +97,7 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Camera& offboard_camera);
+    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Camera& offboard_camera);
 
 
     /**
@@ -110,22 +110,24 @@ public:
     /**
      * Public members
      */
-    Imu&            imu;                ///< Reference to IMU
-    Barometer&      barometer;          ///< Reference to barometer
-    Gps&            gps;                ///< Reference to GPS
-    Sonar&          sonar;              ///< Reference to sonar
-    Serial&         serial_mavlink;     ///< Reference to telemetry serial
-    Satellite&      satellite;          ///< Reference to remote control satellite
-    Led&            led;                ///< Reference to the leds
-    File&           file_flash;         ///< Reference to flash storage
-    Battery&        battery;            ///< Reference to battery
-    Servo&          servo_0;            ///< Reference to servos structure
-    Servo&          servo_1;            ///< Reference to servos structure
-    Servo&          servo_2;            ///< Reference to servos structure
-    Servo&          servo_3;            ///< Reference to servos structure
+    Imu&            imu;                    ///< Reference to IMU
+    Barometer&      barometer;              ///< Reference to barometer
+    Gps&            gps;                    ///< Reference to GPS
+    Sonar&          sonar;                  ///< Reference to sonar
+    Serial&         serial_mavlink;         ///< Reference to telemetry serial
+    Serial&         raspi_serial_mavlink;   ///< Reference to raspberry pi telemetry serial
+    Satellite&      satellite;              ///< Reference to remote control satellite
+    Led&            led;                    ///< Reference to the leds
+    File&           file_flash;             ///< Reference to flash storage
+    Battery&        battery;                ///< Reference to battery
+    Servo&          servo_0;                ///< Reference to servos structure
+    Servo&          servo_1;                ///< Reference to servos structure
+    Servo&          servo_2;                ///< Reference to servos structure
+    Servo&          servo_3;                ///< Reference to servos structure
 
     scheduler_t scheduler;
     mavlink_communication_t mavlink_communication;
+    mavlink_communication_t raspi_mavlink_communication;
 
     command_t command;
     servos_mix_quadcotper_diag_t servo_mix;

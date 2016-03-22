@@ -374,6 +374,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
     init_success &= mavlink_telemetry_init_communication_module(central_data);
 
     mavlink_communication_t* mavlink_communication = &central_data->mavlink_communication;
+    mavlink_communication_t* raspi_mavlink_communication = &central_data->raspi_mavlink_communication;
 
     stabiliser_t* stabiliser_show = &central_data->stabilisation_copter.stabiliser_stack.rate_stabiliser;
 
@@ -395,7 +396,8 @@ bool mavlink_telemetry_init(Central_data* central_data)
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  200000,   RUN_REGULAR,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&stabilisation_telemetry_send_control,                      &central_data->controls,                MAVLINK_MSG_ID_MANUAL_CONTROL       );// ID 69
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&hud_telemetry_send_message,                                    &central_data->hud_structure,           MAVLINK_MSG_ID_VFR_HUD);    // ID 74
     // init_success &= mavlink_communication_add_msg_send(mavlink_communication,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&simulation_telemetry_send_state,                                &central_data->sim_model,               MAVLINK_MSG_ID_HIL_STATE            );// ID 90
-    // init_success &= mavlink_communication_add_msg_send(mavlink_communication,  500000,    RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&simulation_telemetry_send_quaternions,                         &central_data->sim_model,               MAVLINK_MSG_ID_HIL_STATE_QUATERNION );// ID 115
+    // init_success &= mavlink_communication_add_msg_send(mavlink+
+    _communication,  500000,    RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&simulation_telemetry_send_quaternions,                         &central_data->sim_model,               MAVLINK_MSG_ID_HIL_STATE_QUATERNION );// ID 115
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&sonar_telemetry_send,                                          &central_data->sonar,                   MAVLINK_MSG_ID_DISTANCE_SENSOR); // ID 119
 
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  200000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&stabilisation_telemetry_send_rpy_speed_thrust_setpoint,        stabiliser_show,                        MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT); // ID 160
@@ -404,7 +406,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&sonar_telemetry_send,                            &central_data->sonar_i2cxl.data,            MAVLINK_MSG_ID_DISTANCE_SENSOR  );// ID 132
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
 */
-    init_success &= mavlink_communication_add_msg_send(mavlink_communication,  1000000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&offboard_camera_telemetry_send_start_stop,                                     &central_data->offboard_camera,              MAVLINK_MSG_ID_COMMAND_LONG           );// ID 76
+    init_success &= mavlink_communication_add_msg_send(raspi_mavlink_communication,  1000000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&offboard_camera_telemetry_send_start_stop,                                     &central_data->offboard_camera,              MAVLINK_MSG_ID_COMMAND_LONG           );// ID 76
     init_success &= scheduler_sort_tasks(&central_data->mavlink_communication.scheduler);
 
     print_util_dbg_init_msg("[TELEMETRY]", init_success);

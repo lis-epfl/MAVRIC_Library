@@ -117,7 +117,8 @@ int main(void)
                                    // sim.gps(),
                                    board.sonar_i2cxl,      // Warning:
                                    // sim.sonar(),             // this is simulated
-                                   /*board.uart0,*/board.uart_usb,//
+                                   board.uart0,
+                                   board.uart_usb,//
                                    board.spektrum_satellite,
                                    board.green_led,
                                    board.file_flash,

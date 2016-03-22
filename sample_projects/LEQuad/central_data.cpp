@@ -61,12 +61,13 @@ extern "C"
 }
 
 
-Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Camera& ob_camera):
+Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Camera& ob_camera):
     imu(imu),
     barometer(barometer),
     gps(gps),
     sonar(sonar),
     serial_mavlink(serial_mavlink),
+    raspi_serial_mavlink(raspi_serial_mavlink),
     satellite(satellite),
     led(led),
     file_flash(file_flash),
@@ -120,6 +121,24 @@ bool Central_data::init(void)
                                      &state,
                                      &file_flash);
     print_util_dbg_init_msg("[MAVLINK]", ret);
+    init_success &= ret;
+    time_keeper_delay_ms(50);
+
+
+    // -------------------------------------------------------------------------
+    // Init raspberry pi mavlink communication
+    // -------------------------------------------------------------------------
+    mavlink_communication_conf_t raspi_mavlink_communication_config = mavlink_communication_default_config();
+    raspi_mavlink_communication_config.mavlink_stream_config.sysid = sysid_;
+    raspi_mavlink_communication_config.message_handler_config.debug = true;
+    raspi_mavlink_communication_config.onboard_parameters_config.debug = true;
+    raspi_mavlink_communication_config.mavlink_stream_config.debug = true;
+    ret = mavlink_communication_init(&raspi_mavlink_communication,
+                                     raspi_mavlink_communication_config,
+                                     &raspi_serial_mavlink,
+                                     &state,
+                                     &file_flash);
+    print_util_dbg_init_msg("[RASPI MAVLINK]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
 
