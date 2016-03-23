@@ -50,12 +50,12 @@ extern "C"
 
 Simulation::Simulation(Dynamic_model& dynamic_model, simulation_conf_t config):
     dynamic_model_(dynamic_model),
-    accelerometer_(Accelerometer_sim(dynamic_model_)),
-    gyroscope_(Gyroscope_sim(dynamic_model_)),
-    magnetometer_(Magnetometer_sim(dynamic_model_)),
-    barometer_(Barometer_sim(dynamic_model_)),
-    sonar_(Sonar_sim(dynamic_model_)),
-    gps_(Gps_sim(dynamic_model_)),
+    accelerometer_(dynamic_model_),
+    gyroscope_(dynamic_model_),
+    magnetometer_(dynamic_model_),
+    barometer_(dynamic_model_),
+    sonar_(dynamic_model_),
+    gps_(dynamic_model_),
     last_update_us_(time_keeper_get_us())
 {}
 
