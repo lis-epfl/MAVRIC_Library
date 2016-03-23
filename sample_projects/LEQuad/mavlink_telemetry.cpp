@@ -181,6 +181,9 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
     init_success &= data_logging_telemetry_init(&central_data->data_logging2,
                     &central_data->mavlink_communication.message_handler);
 
+    init_success &= offboard_camera_telemetry_init(&central_data->offboard_camera,
+                    &central_data->raspi_mavlink_communication.message_handler);
+
     return init_success;
 }
 

@@ -385,7 +385,7 @@ void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd)
 void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler, mavlink_received_t* rec)
 {
     mavlink_message_t* msg = &rec->msg;
-
+    
     if (msg->msgid == MAVLINK_MSG_ID_COMMAND_LONG)
     {
         // The message is a command

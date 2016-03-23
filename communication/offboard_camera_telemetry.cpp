@@ -55,21 +55,26 @@ extern "C"
 //------------------------------------------------------------------------------
 
 /**
- * \brief                       Sets the information received from the offboard camera
+ * \brief                       Receives information related to the camera results
  *
  * \param   camera              The pointer to the offboard camera class
  * \param   sysid               The system ID
  * \param   msg                 The received MAVLink message structure
  */
-void offboard_camera_telemetry_start_stop(Offboard_Camera* camera, uint32_t sysid, mavlink_message_t* msg);
-
+//void offboard_camera_telemetry_receive_camera_output(Offboard_Camera* camera, uint32_t sysid, mavlink_message_t* msg);
+static mav_result_t offboard_camera_telemetry_receive_camera_output(Offboard_Camera* camera, mavlink_command_long_t packet);
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void offboard_camera_telemetry_start_stop(Offboard_Camera* camera, uint32_t sysid, mavlink_message_t* msg)
+//void offboard_camera_telemetry_receive_camera_output(Offboard_Camera* camera, uint32_t sysid, mavlink_message_t* msg)
+static mav_result_t offboard_camera_telemetry_receive_camera_output(Offboard_Camera* camera, mavlink_command_long_t packet)
 {
-    
+    mav_result_t result;
+    print_util_dbg_init_msg("[PICAMERA MSG RECV]", true);
+    result = MAV_RESULT_ACCEPTED;
+    return result;
+
 }
 
 //------------------------------------------------------------------------------
@@ -79,18 +84,17 @@ void offboard_camera_telemetry_start_stop(Offboard_Camera* camera, uint32_t sysi
 bool offboard_camera_telemetry_init(Offboard_Camera* camera, mavlink_message_handler_t* message_handler)
 {
     bool init_success = true;
-/*
-    // Add callbacks for onboard parameters requests
-    mavlink_message_handler_msg_callback_t callback;
 
-    callback.message_id         = MAV_CMD_DO_CONTROL_VIDEO; // 1
-    callback.sysid_filter       = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter      = MAV_COMP_ID_ALL;
-    //callback.compid_target      = MAV_COMP_ID_ALL; // 0
-    callback.function           = (mavlink_msg_callback_function_t) &offboard_camera_telemetry_start_stop;
-    callback.module_struct      = (handling_module_struct_t)        camera;
-    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callback);
-*/
+    // Add callbacks for cmd
+    mavlink_message_handler_cmd_callback_t callbackcmd;
+    callbackcmd.command_id = MAV_CMD_DO_CONTROL_VIDEO; // 200
+    callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // WRONG 190
+    callbackcmd.function = (mavlink_cmd_callback_function_t)    &offboard_camera_telemetry_receive_camera_output;
+    callbackcmd.module_struct =                                 camera;
+    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+    print_util_dbg_init_msg("[PICAMERA TELEMETRY INIT]", init_success);
     return init_success;
 }
 
