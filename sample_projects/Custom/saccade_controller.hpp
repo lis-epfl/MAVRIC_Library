@@ -39,18 +39,14 @@
  ******************************************************************************/
 
 
-#ifndef SACCADE_CONTROLLER_H_
-#define SACCADE_CONTROLLER_H_
+#ifndef SACCADE_CONTROLLER_HPP_
+#define SACCADE_CONTROLLER_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+extern "C"
+{
 #include "control/control_command.h"
 #include "util/quaternions.h"
 #include "util/coord_conventions.h"
-
-#ifdef __cplusplus
 }
 
 #include "drivers/flow.hpp"
@@ -152,9 +148,4 @@ static inline saccade_controller_conf_t saccade_controller_default_config(void)
 };
 
 
-
-
-
-#endif
-
-#endif /* ALTITUDE_CONTROLLER_H_ */
+#endif /* ALTITUDE_CONTROLLER_HPP_ */

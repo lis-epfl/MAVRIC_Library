@@ -76,7 +76,7 @@ bool Saccade_controller::init(void)
 
 bool Saccade_controller::update()
 {
-   
+
     
     float comanv_x = 1.0f;                      //x component of the comanv
     float comanv_y = 1.0f;                      //y component of the comanv

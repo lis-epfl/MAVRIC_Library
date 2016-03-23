@@ -15,6 +15,7 @@ LIB_SRCS += sample_projects/Custom/main_linux.cpp
 LIB_SRCS += sample_projects/Custom/central_data.cpp
 LIB_SRCS += sample_projects/Custom/tasks.cpp
 LIB_SRCS += sample_projects/Custom/mavlink_telemetry.cpp
+LIB_SRCS += sample_projects/Custom/saccade_controller.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
