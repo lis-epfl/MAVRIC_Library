@@ -46,6 +46,7 @@
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "sensing/position_estimation.hpp"
+#include "control/navigation.hpp"
 
 extern "C"
 {
@@ -136,7 +137,8 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
  * \brief                           Main Controller for controlling and stabilizing the quad
  *
  * \param   stabilisation_copter    The stabilisation structure
+ * \param   central_data		    The central data class
  */
-void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* stabilisation_copter);
+void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* stabilisation_copter, navigation_t* nav);
 
 #endif /* STABILISATION_COPTER_H_ */

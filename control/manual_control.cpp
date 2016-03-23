@@ -288,6 +288,20 @@ mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control,
     return new_mode;
 }
 
+mav_mode_t manual_control_get_mode_from_remote(manual_control_t* manual_control, mav_mode_t mode_current)
+{
+    mav_mode_t new_mode = mode_current;
+
+	if (remote_check(&manual_control->remote) != SIGNAL_LOST)
+	{
+		// Update mode from remote
+		remote_mode_update(&manual_control->remote);
+		new_mode = remote_mode_get(&manual_control->remote, mode_current);
+	}
+
+    return new_mode;
+}
+
 
 signal_quality_t manual_control_get_signal_strength(manual_control_t* manual_control)
 {

@@ -248,13 +248,14 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
     stabilisation_copter->thrust_command->thrust = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.thrust;
 }
 
-void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* stabilisation_copter)
+void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* stabilisation_copter, navigation_t* nav)
 {
 
 	//Input
 	//stabilisation_copter.controls.tvel[X]
-	//stabilisation_copter.controls.rpy[ROLL]
+	//stabilisatoin_copter.controls.tvel[Y] = 0.0f;
 	//stabilisation_copter.controls.tvel[Z]
+	//stabilisation_copter.controls.rpy[ROLL]
 
     float rpyt_errors[4];
     control_command_t input;
@@ -273,6 +274,7 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
     {
         case VELOCITY_COMMAND_MODE:
 
+        //Transform input velocity (semi-local velocity) to global velocity
             attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
             attitude_yaw_inverse.rpy[0] = 0.0f;
             attitude_yaw_inverse.rpy[1] = 0.0f;
@@ -290,14 +292,20 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
             input.tvel[Y] = input_global.v[Y];
             input.tvel[Z] = input_global.v[Z];
 
+         //Compute errors on global velocity
             rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
             rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
             rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
+
+           //compute the semilocal velocity
+            float semilocal_vel[3];
+            position_estimation_get_semilocal_velocity(nav, semilocal_vel);
 
             if (stabilisation_copter->controls->yaw_mode == YAW_COORDINATED)
             {
                 float rel_heading_coordinated;
                 if ((maths_f_abs(stabilisation_copter->pos_est->vel_bf[X]) <= 0.2f) && (maths_f_abs(stabilisation_copter->pos_est->vel_bf[Y]) <= 0.2f))
+                //if (semilocal_vel[X] <= 0.3) //0.3m/s
                 {
                     rel_heading_coordinated = 0.0f;
                 }
@@ -312,6 +320,7 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
 
             rpyt_errors[YAW] = input.rpy[YAW];
 
+         //run PID on global velocity
             // run PID update on all velocity controllers
             stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
 
@@ -320,12 +329,14 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
             stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
             input = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output;
 
+         //Convert global velocity output from PID to semi-local velocity
             qtmp = quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
             //quat_t rpy_local = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
 
             quat_t rpy_local;
             quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
 
+         //Transform to attitude commands
             input.rpy[ROLL] = rpy_local.v[Y];
             input.rpy[PITCH] = -rpy_local.v[X];
 
@@ -335,7 +346,7 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
                 input.rpy[PITCH] = 0.0f;
             }
 
-            //added to have the roll
+            //overwrite the roll command
             input.rpy[ROLL] = stabilisation_copter->controls->rpy[ROLL];
 
         //input.thrust = stabilisation_copter->controls->tvel[Z];

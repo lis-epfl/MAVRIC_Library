@@ -227,7 +227,15 @@ void manual_control_get_velocity_command(const manual_control_t* manual_control,
  */
 mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control, mav_mode_t mode_current);
 
-
+/**
+ * \brief   Returns the value of the mode from the remote
+ *
+ * \param   manual_control          The pointer to the manual_control structure
+ * \param   mode_current            The current mode of the MAV
+ *
+ * \return  The value of the mode
+ */
+mav_mode_t manual_control_get_mode_from_remote(manual_control_t* manual_control, mav_mode_t mode_current);
 
 /**
  * \brief   Returns the quality of the strength of the remote receiver
