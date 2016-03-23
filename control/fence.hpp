@@ -49,6 +49,7 @@
 extern "C"
 {
 #include "control/control_command.h"
+#include "control/navigation.hpp"
 }
 
 

@@ -84,6 +84,7 @@ typedef struct
     waypoint_struct_t fence_list[MAX_WAYPOINTS];             	///< The array of all waypoints (max MAX_WAYPOINTS)
     waypoint_struct_t current_waypoint;                         ///< The structure of the current waypoint
     uint16_t number_of_waypoints;                               ///< The total number of waypoints
+    uint16_t number_of_fence_points;
     int8_t current_waypoint_count;                              ///< The number of the current waypoint
 
     local_position_t waypoint_coordinates;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)

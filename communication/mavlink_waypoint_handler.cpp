@@ -1095,16 +1095,12 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 
                     waypoint_handler->waypoint_list[waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number] = new_waypoint;
                     waypoint_handler->waypoint_request_number++;
-                    //CYSTU a supprimer
-
-                    /*
-                     *
+                    //CYSTU
                     if(new_waypoint.command==MAV_CMD_NAV_FENCE)//40
                     {
-                    	waypoint_handler->fence_list[waypoint_handler->num_fence_points] = new_waypoint;
-                    	waypoint_handler->num_fence_points++;
-                    	//fence.add_waypoint(new_waypoint);
-                    }*/
+                    	waypoint_handler->fence_list[waypoint_handler->number_of_fence_points] = new_waypoint;
+                    	waypoint_handler->number_of_fence_points++;
+                    }
 
 
 
@@ -1130,6 +1126,7 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
                         waypoint_handler->state->nav_plan_active = false;
                         waypoint_handler_nav_plan_init(waypoint_handler);
                         // CYSTU copy the waypoints with cmd=40 to the fence object
+
                     }
                     else
                     {
@@ -2034,7 +2031,7 @@ static void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handle
             //CYSTU
             else if (waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count+1].command == MAV_CMD_NAV_FENCE) //40
 			{
-            	print_util_dbg_print("WAYPOI-nT CAN T FOLLOW\r\n");
+            	print_util_dbg_print("This waypoint is a fence point, use next waypoint\r\n");
                 if (waypoint_handler->current_waypoint_count == (waypoint_handler->number_of_waypoints - 1))
                 {
                     waypoint_handler->current_waypoint_count = 0;
@@ -2543,18 +2540,13 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
                 print_util_dbg_print(" set,\r\n");
 
                 waypoint_handler->state->nav_plan_active = true;
-                if(waypoint_handler->current_waypoint.command == MAV_CMD_NAV_FENCE)//40
-                {
-                	print_util_dbg_print("WAYPOINT IGNORED ######################,\r\n");
-                }
-                else
-                {
-					for (uint8_t j = 0; j < 3; j++)
-					{
-						rel_pos[j] = waypoint_handler->waypoint_coordinates.pos[j] - waypoint_handler->position_estimation->local_position.pos[j];
-					}
-					waypoint_handler->navigation->dist2wp_sqr = vectors_norm_sqr(rel_pos);
-                }
+
+				for (uint8_t j = 0; j < 3; j++)
+				{
+					rel_pos[j] = waypoint_handler->waypoint_coordinates.pos[j] - waypoint_handler->position_estimation->local_position.pos[j];
+				}
+				waypoint_handler->navigation->dist2wp_sqr = vectors_norm_sqr(rel_pos);
+
             }
         }
     }

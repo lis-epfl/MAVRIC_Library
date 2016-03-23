@@ -45,9 +45,9 @@
 #define FENCE_CAS_H_
 
 
-//chechk if thoses are usefull
-#include "control/fence.hpp"
-//#include "communication/mavlink_waypoint_handler.hpp"
+//check if thoses are usefull
+//#include "control/fence.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
 //#include "sensing/position_estimation.hpp"
 #include "sensing/position_estimation.hpp"
 
@@ -57,22 +57,10 @@ extern "C"
 #include "control/control_command.h"
 }
 
-/**
- * \brief Fence configuration
- */
-/*
-typedef struct
-{
-	mavlink_waypoint_handler_t&   		waypoint_t;	///< Waypoint handler
-	uint8_t 							fence_id;	///< Store thee the fence index
-	uint8_t 							point_index[MAX_WAYPOINTS]; ///< List of the points in the fence
-} fence_t;
-*/
-
 class Fence_CAS
 {
 public:
-	Fence_CAS(position_estimation_t* postion_estimation);
+	Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* postion_estimation);
 	~Fence_CAS(void);
 	bool update(void);
 	void add_fence(void);
@@ -87,22 +75,21 @@ public:
 	void set_r_pz(void);
 	void get_r_pz(void);
 
+
 private:
 
 
-
-	//const mavlink_waypoint_handler_t*   waypoint_handler;			///< Waypoints handler
-	//uint8_t								fence_id;					///< Id of the fence
-	//uint8_t								point_index[MAX_WAYPOINTS];	///< Fence Id for each of the waypoints
-
-	//fence_struct_t* to be implemented
-	//fence_struct_t* fence_list[MAX_WAYPOINTS]={nullptr};			///< List of fences
-	uint8_t								sensor_res; ///< simulate sensor resolution [unit?]
+	bool detect_line(float A[3], float B[3],const float C[3], float V[3], float gamma, float I[3]);
+	uint8_t								sensor_res; ///< simulate sensor resolution, spatial resolution between two sensors. [deg]
 	float								a_max; ///<maximal deceleration [m/s^2]
 	float								r_pz; ///< radius of Protection Zone
 	float								discomfort; ///<[0,1] intensity of the reaction
+	mavlink_waypoint_handler_t* 		waypoint_handler;
 	const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
 	//velocity_command_t&                 velocity_command;           ///< Velocity command (output)
+	float 								detected_point[3];
+	float 								fov; ///< Field of View, total angle of detection [deg]
+
 };
 
 #endif /*FENCE_CAS_H_*/
