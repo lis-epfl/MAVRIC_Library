@@ -56,7 +56,37 @@ const uint8_t FLOAT_DIGIT_COUNT = 3;
  *
  * \return  length  number of characters excluding the termination character '\0'
  */
-uint8_t strlen(const char* text);
+long strlen(const char* text);
+
+
+/**
+ * \brief   compares two null terminated strings
+ *
+ * \detail  reproduces the behaviour of the function strcmp of cstring
+ *
+ * \param   str1:   string to compare
+ * \param   str2:   string to compare
+ *
+ * \return  0 if the strings are equal
+ *          <0 the first character that does not match has a lower value in ptr1 than in ptr2;
+ *          >0 the first character that does not match has a greater value in ptr1 than in ptr2
+ */
+int16_t strcmp(const char* str1, const char* str2);
+
+
+/**
+ * \brief   copys a string with maximal length of max_len (including '\0')
+ *          if src is longer, dst is truncated
+ *
+ * \detail  reproduces behavior of FreeBSD strlcpy except for return
+ *
+ * \param   dst:    pointer to destination
+ * \param   src:    pointer to source
+ * \param   max_len: maximal length to be copied (INCLUDING '\0')
+ * \return  true dst == src, false if truncated
+ */
+bool strlcpy(char* dst, const char* src, uint16_t max_len);
+
 
 /**
  * \brief   returns an array of ascii characters representing an integer
@@ -101,6 +131,7 @@ uint8_t* format_floating(T num, uint8_t* dest, uint8_t* length, uint8_t after_di
 */
 template <typename T>
 uint8_t* format_scientific(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits);
+
 };
 
 #include "string_util.hxx"
