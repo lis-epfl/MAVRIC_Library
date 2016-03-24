@@ -182,13 +182,11 @@ bool Mavlink_communication::add_msg_send(uint32_t repeat_period, task_run_mode_t
 
     if (msg_sending_count <  max_msg_sending_count)
     {
-        mavlink_send_msg_handler_t* new_msg_send = &msg_send_list[msg_sending_count];
+        mavlink_send_msg_handler_t* new_msg_send = &msg_send_list[msg_sending_count++];
 
         new_msg_send->mavlink_stream = &mavlink_stream;
         new_msg_send->function = function;
         new_msg_send->module_struct = module_structure;
-
-        msg_sending_count += 1;
 
         add_success &= true;
 
@@ -260,18 +258,13 @@ uint32_t* Mavlink_communication::get_sysid_ptr()
 
 
 
-bool mavlink_communication_update(Mavlink_communication* mavlink_communication)
+bool Mavlink_communication::update(Mavlink_communication* mavlink_communication)
 {
-    Mavlink_stream& mavlink_stream = mavlink_communication->mavlink_stream;
     // Receive new message
-    while (mavlink_stream.receive())
+    mavlink_received_t rec;
+    while (mavlink_communication->mavlink_stream.receive(&rec))
     {
-        // Handle message
-        if (mavlink_stream.msg_available == true)
-        {
-            mavlink_communication->message_handler.receive(&mavlink_stream.rec);
-            mavlink_stream.msg_available = false;
-        }
+            mavlink_communication->message_handler.receive(&rec);
     }
 
     // Send messages

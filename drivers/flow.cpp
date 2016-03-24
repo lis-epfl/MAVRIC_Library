@@ -66,17 +66,12 @@ bool Flow::update(Flow* flow)
     // Update time
     flow->last_update_us  = time_keeper_get_us();
 
-    // Receive incoming bytes
-    flow->mavlink_stream.receive();
-
-    // Check if a new message is here
-    if (flow->mavlink_stream.msg_available == true)
+    mavlink_received_t rec;
+    // Receive incoming bytes and check if a new message is here
+    if (flow->mavlink_stream.receive(&rec))
     {
         // Get pointer to new message
-        mavlink_message_t* msg = &flow->mavlink_stream.rec.msg;
-
-        // Indicate that the message was handled
-        flow->mavlink_stream.msg_available = false;
+        mavlink_message_t* msg = &rec.msg;
 
         // declare messages
         mavlink_optical_flow_t          optical_flow_msg;
