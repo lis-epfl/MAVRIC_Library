@@ -65,9 +65,9 @@
 #include "communication/hud_telemetry.hpp"
 #include "communication/state_machine.hpp"
 #include "communication/data_logging.hpp"
-#include "communication/toggle_logging.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/state.hpp"
+#include "communication/data_logging_telemetry.hpp"
 
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
@@ -159,7 +159,7 @@ public:
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
-    toggle_logging_t toggle_logging;
+ 
     Data_logging    data_logging;
     Data_logging    data_logging2;
 

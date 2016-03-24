@@ -66,7 +66,7 @@
 #include "communication/state.hpp"
 #include "communication/remote_telemetry.hpp"
 #include "communication/state_telemetry.hpp"
-#include "communication/toggle_logging_telemetry.hpp"
+#include "communication/data_logging_telemetry.hpp"
 
 #include "runtime/scheduler_telemetry.hpp"
 // #include "simulation_telemetry.hpp"
@@ -181,8 +181,11 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
     init_success &= gps_telemetry_init(&central_data->gps,
                                        &central_data->mavlink_communication.message_handler);
 
-    init_success &= toggle_logging_telemetry_init(&central_data->toggle_logging,
-                    &central_data->mavlink_communication.message_handler);
+    init_success &= data_logging_telemetry_init(&central_data->data_logging,
+                                                &central_data->mavlink_communication.message_handler);
+    
+    init_success &= data_logging_telemetry_init(&central_data->data_logging2,
+                                                &central_data->mavlink_communication.message_handler);
 
     return init_success;
 }

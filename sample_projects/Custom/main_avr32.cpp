@@ -227,21 +227,6 @@ int main(void)
         init_success = false;
     }
 
-    print_util_dbg_print("creating new log files\r\n");
-    delay_ms(150);
-
-    init_success &= cd.data_logging.create_new_log_file("Log_file",
-                    true,
-                    &cd.toggle_logging,
-                    &cd.state,
-                    cd.mavlink_communication.mavlink_stream.sysid);
-
-    init_success &= cd.data_logging2.create_new_log_file("Log_Stat",
-                    false,
-                    &cd.toggle_logging,
-                    &cd.state,
-                    cd.mavlink_communication.mavlink_stream.sysid);
-
     print_util_dbg_print("created new log files\r\n");
 
     init_success &= mavlink_telemetry_init(&cd);
