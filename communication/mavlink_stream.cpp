@@ -76,7 +76,6 @@ Mavlink_stream::Mavlink_stream(Serial& serial, const mavlink_stream_conf_t& conf
     sysid          = config.sysid;
     compid         = config.compid;
     debug          = config.debug;
-    msg_available  = false;
 }
 
 
@@ -102,27 +101,24 @@ bool Mavlink_stream::send(mavlink_message_t* msg) const
 }
 
 
-bool Mavlink_stream::receive()
+bool Mavlink_stream::receive(mavlink_received_t* rec)
 {
     uint8_t byte;
-
+    
     // Try to decode bytes until a message is complete, or there is nothing left to read
-    while ((msg_available == false) && (serial.readable() > 0))
+    while (serial.readable() > 0)
     {
         // read one byte
         serial.read(&byte);
 
         // Use the byte to decode current message
-        if (mavlink_parse_char(mavlink_channel, byte, &rec.msg, &rec.status))
+        if (mavlink_parse_char(mavlink_channel, byte, &rec->msg, &rec->status))
         {
-            // If message was sucessfully decoded, exit while loop
-            msg_available = true;
+            return true;
         }
     }
-
-    return msg_available;
+    return false;
 }
-
 
 void Mavlink_stream::flush()
 {

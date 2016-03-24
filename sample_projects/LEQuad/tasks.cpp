@@ -291,7 +291,7 @@ bool tasks_create_tasks(Central_data* central_data)
 
     init_success &= scheduler->add_task(200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_update                            , (task_argument_t)&central_data->state_machine         , 7);
 
-    init_success &= scheduler->add_task(4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 8);
+    init_success &= scheduler->add_task(4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&Mavlink_communication::update                    , (task_argument_t)&central_data->mavlink_communication , 8);
 
     init_success &= scheduler->add_task(20000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&remote_update                                     , (task_argument_t)&central_data->manual_control.remote , 10);
 

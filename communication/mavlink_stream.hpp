@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_stream.h
+ * \file mavlink_stream.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -89,7 +89,6 @@ typedef struct
  */
 class Mavlink_stream
 {
-    friend class Mavlink_message_handler;
 public:
 
     Mavlink_stream(Serial& serial, const mavlink_stream_conf_t& config);
@@ -105,25 +104,21 @@ public:
     bool send(mavlink_message_t* msg) const;
 
     /**
-     * \brief   Mavlink parsing of message
+     * \brief   Mavlink parsing of message; the message is not available in this module afterwards
+     *
+     * \param   rec             Address where to store the received message
      *
      * \return  Success         True if a message was successfully decoded, false else
      */
-    bool receive();
+    bool receive(mavlink_received_t* rec);
 
     /**
      * \brief   Flushing MAVLink stream
      */
     void flush();
 
-
     uint32_t sysid;             ///< System ID
     uint32_t compid;            ///< System Component ID
-    bool msg_available;         ///< Indicates if a new message is available and not handled yet
-    mavlink_received_t rec;     ///< Last received message
-    //friend bool mavlink_communication_update(Mavlink_communication* mavlink_communication);
-    //friend static bool onboard_parameters_send_one_parameter_now(Onboard_parameters* onboard_parameters, uint32_t index);
-    //friend bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
 private:
     Serial& serial;
     uint8_t mavlink_channel;    ///< Channel number used internally by mavlink to retrieve incomplete incoming message

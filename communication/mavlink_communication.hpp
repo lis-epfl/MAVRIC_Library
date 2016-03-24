@@ -166,14 +166,19 @@ public:
      */
      uint32_t* get_sysid_ptr();
 
-
-    friend bool mavlink_communication_update(Mavlink_communication* mavlink_communication);
-    
     Scheduler& get_scheduler();
     Mavlink_message_handler& get_message_handler();
     Mavlink_stream& get_mavlink_stream();
     Onboard_parameters& get_onboard_parameters();
-    
+  
+    /**
+     * \brief   Run task scheduler update if the buffer is empty
+     *
+     * \param   mavlink_communication   Pointer to the MAVLink communication structure
+     *
+     * \return  Task status return
+     */
+    static bool update(Mavlink_communication* mavlink_communication);  
     
 private:
     Scheduler                       scheduler;                      ///<    Task set for scheduling of down messages
@@ -186,15 +191,6 @@ private:
 
     bool configure_communication(const mavlink_communication_conf_t& config);
 };
-
-/**
- * \brief   Run task scheduler update if the buffer is empty
- *
- * \param   mavlink_communication   Pointer to the MAVLink communication structure
- *
- * \return  Task status return
- */
-bool mavlink_communication_update(Mavlink_communication* mavlink_communication);
 
 
 
