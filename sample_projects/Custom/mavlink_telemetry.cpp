@@ -396,6 +396,16 @@ bool mavlink_telemetry_init(Central_data* central_data)
 {
     bool init_success = true;
 
+    
+    init_success &= central_data->data_logging.create_new_log_file("Log_file",
+                    true,
+                    central_data->mavlink_communication.mavlink_stream.sysid);
+
+
+    init_success &= central_data->data_logging2.create_new_log_file("Log_Stat",
+                    false,
+                    central_data->mavlink_communication.mavlink_stream.sysid);
+
     init_success &= mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging, central_data);
 
     init_success &= mavlink_telemetry_add_data_logging_parameters_stat(&central_data->data_logging2, central_data);

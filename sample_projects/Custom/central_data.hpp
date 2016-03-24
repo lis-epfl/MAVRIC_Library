@@ -67,7 +67,7 @@
 #include "communication/data_logging.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/state.hpp"
-#include "communication/data_logging_telemetry.hpp"
+//#include "communication/data_logging_telemetry.hpp"
 
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
