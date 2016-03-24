@@ -77,12 +77,12 @@ typedef struct
  * \details     Uses C99's flexible member arrays: it is required to
  *              allocate memory for this structure
  */
-typedef struct
-{
-    uint32_t param_count;                                       ///< Number of onboard parameter effectively in the array
-    uint32_t max_param_count;                                   ///< Maximum number of parameters
-    onboard_parameters_entry_t parameters[];                    ///< Onboard parameters array, needs memory allocation
-} onboard_parameters_set_t;
+// typedef struct
+// {
+//     uint32_t param_count;                                       ///< Number of onboard parameter effectively in the array
+//     uint32_t max_param_count;                                   ///< Maximum number of parameters
+//     onboard_parameters_entry_t parameters[];                    ///< Onboard parameters array, needs memory allocation
+// } onboard_parameters_set_t;
 
 
 /**
@@ -157,11 +157,12 @@ public:
 
 private:
     bool debug;                                             ///< Indicates if debug messages should be printed for each param change
-    onboard_parameters_set_t* param_set;                    ///< Pointer to a set of parameters, needs memory allocation
     File& file;                                             ///< File storage to keep parameters between flights
     const State& state;                                     ///< Pointer to the state structure
     const Mavlink_stream& mavlink_stream;                   ///< Pointer to mavlink_stream
-    
+    uint32_t param_count;                                   ///< Number of onboard parameter effectively in the array
+    uint32_t max_param_count;                               ///< Maximum number of parameters
+    onboard_parameters_entry_t* parameters;                 ///< Onboard parameters array, needs memory allocation
     /**
      * \brief   Sends immediately one parameter
      *

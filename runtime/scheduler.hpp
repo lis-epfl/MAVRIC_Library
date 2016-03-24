@@ -141,21 +141,6 @@ typedef struct
 
 
 /**
- * \brief   Task set
- *
- * \details     Uses C99's flexible member arrays: it is required to
- *              allocate memory for this structure
- */
-typedef struct task_set_t
-{
-    uint32_t task_count;                        ///<    Number_of_tasks
-    uint32_t max_task_count;                    ///<    Maximum number of tasks
-    uint32_t current_schedule_slot;             ///<    Slot of the task being executed
-    task_entry_t tasks[];                       ///<    Array of tasks_entry to be executed, needs memory allocation
-} task_set_t;
-
-
-/**
  * \brief Scheduler configuration
  */
 typedef struct
@@ -169,8 +154,6 @@ typedef struct
 /**
  * \brief   Scheduler
  *
- * \details     task_set is implemented as pointer because its memory will be
- *              allocated during initialisation
  */
 class Scheduler
 {
@@ -296,9 +279,12 @@ public:
 
 
 private:
-    task_set_t* task_set;                       ///<    Pointer to task set, needs memory allocation
     schedule_strategy_t schedule_strategy;      ///<    Scheduling strategy
     bool debug;                                 ///<    Indicates whether the scheduler should print debug messages
+    uint32_t task_count;                        ///<    Number_of_tasks
+    uint32_t max_task_count;                    ///<    Maximum number of tasks
+    uint32_t current_schedule_slot;             ///<    Slot of the task being executed
+    task_entry_t* tasks;                        ///<    Array of tasks_entry to be executed, needs memory allocation
 
 };
 

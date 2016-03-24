@@ -70,7 +70,7 @@ typedef void (*mavlink_send_msg_function_t)(handling_telemetry_module_struct_t, 
  */
 typedef struct
 {
-    Mavlink_stream* mavlink_stream;                               ///<    Pointer to the MAVLink stream structure
+    Mavlink_stream* mavlink_stream;                                 ///<    Pointer to the MAVLink stream structure
     mavlink_send_msg_function_t function;                           ///<    Pointer to the function to be executed
     handling_telemetry_module_struct_t      module_struct;          ///<    Pointer to module data structure to be given as argument to the function
 } mavlink_send_msg_handler_t;
@@ -211,7 +211,7 @@ static inline mavlink_communication_conf_t mavlink_communication_default_config(
     conf.mavlink_stream_config.sysid                   = sysid;
     conf.mavlink_stream_config.compid                  = 50;
     conf.mavlink_stream_config.debug                   = false,
-                               conf.message_handler_config                        = {};
+    conf.message_handler_config                        = {};
     conf.message_handler_config.max_msg_callback_count = 20;
     conf.message_handler_config.max_cmd_callback_count = 20;
     conf.message_handler_config.debug                  = false;

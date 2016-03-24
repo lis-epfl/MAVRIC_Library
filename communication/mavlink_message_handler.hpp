@@ -112,34 +112,6 @@ typedef struct
 
 
 /**
- * \brief       Set of message callbacks
- *
- * \details     Uses C99's flexible member arrays: it is required to
- *              allocate memory for the callback_list
- */
-typedef struct
-{
-    uint32_t callback_count;                                        ///<    Number of message callback currently registered
-    uint32_t max_callback_count;                                    ///<    Maximum number of callback that can be registered
-    mavlink_message_handler_msg_callback_t callback_list[];         ///<    List of message callbacks
-} mavlink_message_handler_msg_callback_set_t;
-
-
-/**
- * \brief       Set of command callbacks
- *
- * \details     Uses C99's flexible member arrays: it is required to
- *              allocate memory for this structure
- */
-typedef struct
-{
-    uint32_t callback_count;                                        ///<    Number of command callback currently registered
-    uint32_t max_callback_count;                                    ///<    Maximum number of callback that can be registered
-    mavlink_message_handler_cmd_callback_t callback_list[];         ///<    List of message callbacks
-} mavlink_message_handler_cmd_callback_set_t;
-
-
-/**
  * \brief   Structure used to hold parameters during initialisation
  */
 typedef struct
@@ -222,8 +194,13 @@ public:
 private:
     bool debug;                                                     ///<    Indicates whether debug message are written for every incoming message
     Mavlink_stream& mavlink_stream;
-    mavlink_message_handler_cmd_callback_set_t* cmd_callback_set;   ///<    Set of command callbacks
-    mavlink_message_handler_msg_callback_set_t* msg_callback_set;   ///<    Set of message callbacks
+    uint32_t msg_callback_count;                                    ///<    Number of message callback currently registered
+    uint32_t msg_callback_count_max;                                ///<    Maximum number of message callback that can be registered
+    uint32_t cmd_callback_count;                                    ///<    Number of command callback currently registered
+    uint32_t cmd_callback_count_max;                                ///<    Maximum number of command callback that can be registered
+    mavlink_message_handler_msg_callback_t* msg_callback_list;      ///<    List of command callbacks
+    mavlink_message_handler_cmd_callback_t* cmd_callback_list;      ///<    List of message callbacks
+    
     /**
     * \brief                Sort the latest added message callback
     *

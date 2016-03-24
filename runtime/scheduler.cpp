@@ -56,24 +56,28 @@ Scheduler::Scheduler(const scheduler_conf_t config)
     // Init debug mode
     debug = config.debug;
 
-    // Allocate memory for the task set
-    task_set = (task_set_t*)malloc(sizeof(task_set_t) + sizeof(task_entry_t[config.max_task_count]));
-    if (task_set != NULL)
+    
+    // allocate memory for tasks
+    for(max_task_count = config.max_task_count; max_task_count > 0; max_task_count--)
     {
-        task_set->max_task_count = config.max_task_count;
-
-        init_success &= true;
+        tasks = (task_entry_t*)malloc(sizeof(task_entry_t[config.max_task_count]));
+        if(tasks != NULL)
+        {
+            break;
+        }
     }
-    else
+    if(max_task_count < config.max_task_count)
     {
-        print_util_dbg_print("[SCHEDULER] ERROR ! Bad memory allocation\r\n");
-        task_set->max_task_count = 0;
-
+        print_util_dbg_print("[Scheduler] constructor: tried to allocate task list for ");
+        print_util_dbg_print_num(config.max_task_count,10);
+        print_util_dbg_print(" tasks; only space for ");
+        print_util_dbg_print_num(max_task_count,10);
+        print_util_dbg_print("\r\n");
         init_success &= false;
     }
 
-    task_set->task_count = 0;
-    task_set->current_schedule_slot = 0;
+    task_count = 0;
+    current_schedule_slot = 0;
 
     print_util_dbg_print("[SCHEDULER] Init\r\n");
 }
@@ -84,13 +88,13 @@ bool Scheduler::add_task(uint32_t repeat_period, task_run_mode_t run_mode, task_
     bool task_successfully_added = false;
 
     // Check if the scheduler is not full
-    if (task_set->task_count < task_set->max_task_count)
+    if (task_count < max_task_count)
     {
         // Check if there is already a task with this ID
         bool id_is_unique = true;
-        for (uint32_t i = 0; i < task_set->task_count; ++i)
+        for (uint32_t i = 0; i < task_count; ++i)
         {
-            if (task_set->tasks[i].task_id == task_id)
+            if (tasks[i].task_id == task_id)
             {
                 id_is_unique = false;
                 break;
@@ -100,7 +104,7 @@ bool Scheduler::add_task(uint32_t repeat_period, task_run_mode_t run_mode, task_
         // Add new task
         if (id_is_unique == true)
         {
-            task_entry_t* new_task = &task_set->tasks[task_set->task_count];
+            task_entry_t* new_task = &tasks[task_count];
 
             new_task->call_function     = call_function;
             new_task->function_argument = function_argument;
@@ -115,7 +119,7 @@ bool Scheduler::add_task(uint32_t repeat_period, task_run_mode_t run_mode, task_
             new_task->delay_avg         = 0;
             new_task->delay_var_squared = 0;
 
-            task_set->task_count += 1;
+            task_count += 1;
 
             task_successfully_added = true;
         }
@@ -141,7 +145,7 @@ bool Scheduler::sort_tasks()
 
     task_entry_t tmp;
 
-    if (task_set->task_count < 2)
+    if (task_count < 2)
     {
         sorted = true;
         return sorted;
@@ -152,16 +156,16 @@ bool Scheduler::sort_tasks()
         sorted = true;
 
         // Iterate through registered tasks
-        for (uint32_t i = 0; i < (task_set->task_count - 1); i++)
+        for (uint32_t i = 0; i < (task_count - 1); i++)
         {
-            if (task_set->tasks[i].priority < task_set->tasks[i + 1].priority)
+            if (tasks[i].priority < tasks[i + 1].priority)
             {
                 // Task i has lower priority than task i+1 -> need swap
                 sorted = false;
             }
-            else if (task_set->tasks[i].priority == task_set->tasks[i + 1].priority)
+            else if (tasks[i].priority == tasks[i + 1].priority)
             {
-                if (task_set->tasks[i].repeat_period > task_set->tasks[i + 1].repeat_period)
+                if (tasks[i].repeat_period > tasks[i + 1].repeat_period)
                 {
                     // Tasks i and i+1 have equal priority, but task i has higher
                     // repeat period than task i+1 -> need swap
@@ -172,9 +176,9 @@ bool Scheduler::sort_tasks()
             // Swap tasks i and i+1 if necessary
             if (sorted == false)
             {
-                tmp = task_set->tasks[i];
-                task_set->tasks[i] = task_set->tasks[i + 1];
-                task_set->tasks[i + 1] = tmp;
+                tmp = tasks[i];
+                tasks[i] = tasks[i + 1];
+                tasks[i + 1] = tmp;
                 sorted = false;
             }
         }
@@ -191,21 +195,21 @@ int32_t Scheduler::update()
     task_argument_t function_argument;
 
     // Iterate through registered tasks
-    for (uint32_t i = task_set->current_schedule_slot; i < task_set->task_count; i++)
+    for (uint32_t i = current_schedule_slot; i < task_count; i++)
     {
         uint32_t current_time = time_keeper_get_us();
 
         // If the task is active and has waited long enough...
-        if ((task_set->tasks[i].run_mode != RUN_NEVER) && (current_time >= task_set->tasks[i].next_run))
+        if ((tasks[i].run_mode != RUN_NEVER) && (current_time >= tasks[i].next_run))
         {
-            uint32_t delay = current_time - (task_set->tasks[i].next_run);
+            uint32_t delay = current_time - (tasks[i].next_run);
             uint32_t task_start_time;
 
             task_start_time = time_keeper_get_us();
 
             // Get function pointer and function argument
-            call_task = task_set->tasks[i].call_function;
-            function_argument = task_set->tasks[i].function_argument;
+            call_task = tasks[i].call_function;
+            function_argument = tasks[i].function_argument;
 
             // Execute task
             bool task_success = call_task(function_argument);
@@ -213,60 +217,60 @@ int32_t Scheduler::update()
             // Set the next execution time of the task
             if (task_success)
             {
-                switch (task_set->tasks[i].timing_mode)
+                switch (tasks[i].timing_mode)
                 {
                     case PERIODIC_ABSOLUTE:
                         // Do not take delays into account
-                        task_set->tasks[i].next_run += task_set->tasks[i].repeat_period;
+                        tasks[i].next_run += tasks[i].repeat_period;
                         break;
 
                     case PERIODIC_RELATIVE:
                         // Take delays into account
-                        task_set->tasks[i].next_run = time_keeper_get_us() + task_set->tasks[i].repeat_period;
+                        tasks[i].next_run = time_keeper_get_us() + tasks[i].repeat_period;
                         break;
                 }
             }
 
             // Set the task to inactive if it has to run only once
-            if (task_set->tasks[i].run_mode == RUN_ONCE)
+            if (tasks[i].run_mode == RUN_ONCE)
             {
-                task_set->tasks[i].run_mode = RUN_NEVER;
+                tasks[i].run_mode = RUN_NEVER;
             }
 
             // Check real time violations
-            if (task_set->tasks[i].next_run < current_time)
+            if (tasks[i].next_run < current_time)
             {
                 realtime_violation = -i; //realtime violation!!
-                task_set->tasks[i].rt_violations++;
-                task_set->tasks[i].next_run = current_time + task_set->tasks[i].repeat_period;
+                tasks[i].rt_violations++;
+                tasks[i].next_run = current_time + tasks[i].repeat_period;
             }
 
             // Compute real-time statistics
-            task_set->tasks[i].delay_avg = (7 * task_set->tasks[i].delay_avg + delay) / 8;
-            if (delay > task_set->tasks[i].delay_max)
+            tasks[i].delay_avg = (7 * tasks[i].delay_avg + delay) / 8;
+            if (delay > tasks[i].delay_max)
             {
-                task_set->tasks[i].delay_max = delay;
+                tasks[i].delay_max = delay;
             }
-            task_set->tasks[i].delay_var_squared = (15 * task_set->tasks[i].delay_var_squared + (delay - task_set->tasks[i].delay_avg) * (delay - task_set->tasks[i].delay_avg)) / 16;
-            task_set->tasks[i].execution_time = (7 * task_set->tasks[i].execution_time + (time_keeper_get_us() - task_start_time)) / 8;
+            tasks[i].delay_var_squared = (15 * tasks[i].delay_var_squared + (delay - tasks[i].delay_avg) * (delay - tasks[i].delay_avg)) / 16;
+            tasks[i].execution_time = (7 * tasks[i].execution_time + (time_keeper_get_us() - task_start_time)) / 8;
 
             // Depending on shceduling strategy, select next task slot
             switch (schedule_strategy)
             {
                 case FIXED_PRIORITY:
                     // Fixed priority scheme - scheduler will start over with tasks with the highest priority
-                    task_set->current_schedule_slot = 0;
+                    current_schedule_slot = 0;
                     break;
 
                 case ROUND_ROBIN:
                     // Round robin scheme - scheduler will pick up where it left.
-                    // if (i >= task_set->task_count - 1)
+                    // if (i >= task_count - 1)
                     // {
-                    //  task_set->current_schedule_slot = 0;
+                    //  current_schedule_slot = 0;
                     // }
                     // else
                     // {
-                    task_set->current_schedule_slot = 0;
+                    current_schedule_slot = 0;
                     // }
                     break;
             }
@@ -281,11 +285,11 @@ int32_t Scheduler::update()
 task_entry_t* Scheduler::get_task_by_id(uint16_t task_id) const
 {
 
-    for (uint32_t i = 0; i < task_set->task_count; i++)
+    for (uint32_t i = 0; i < task_count; i++)
     {
-        if (task_set->tasks[i].task_id == task_id)
+        if (tasks[i].task_id == task_id)
         {
-            return &task_set->tasks[i];
+            return &tasks[i];
         }
     }
 
@@ -295,9 +299,9 @@ task_entry_t* Scheduler::get_task_by_id(uint16_t task_id) const
 
 task_entry_t* Scheduler::get_task_by_index(uint16_t task_index) const
 {
-    if (task_index < task_set->task_count)
+    if (task_index < task_count)
     {
-        return &task_set->tasks[task_index];
+        return &tasks[task_index];
     }
 
     return NULL;
@@ -312,18 +316,18 @@ bool Scheduler::is_debug()
 
 void Scheduler::suspend_all_tasks(uint32_t delay)
 {
-    for(uint32_t i = 0; i < task_set->task_count; i++)
+    for(uint32_t i = 0; i < task_count; i++)
     {
-        suspend_task(&task_set->tasks[i], delay);
+        suspend_task(&tasks[i], delay);
     }
 }
 
 
 void Scheduler::run_all_tasks_now()
 {
-    for(uint32_t i = 0; i < task_set->task_count; i++)
+    for(uint32_t i = 0; i < task_count; i++)
     {
-        run_task_now(&task_set->tasks[i]);
+        run_task_now(&tasks[i]);
     }
 }
 
