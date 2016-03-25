@@ -85,9 +85,8 @@ int main(int argc, char** argv)
     central_data_conf_t cd_config = central_data_default_config();
     cd_config.manual_control_config.mode_source = MODE_SOURCE_GND_STATION;
     cd_config.manual_control_config.control_source = CONTROL_SOURCE_NONE;
-    
+
     Central_data cd = Central_data(sysid,
-                                   cd_config,
                                    board.imu,
                                    board.sim.barometer(),
                                    board.sim.gps(),
@@ -102,7 +101,8 @@ int main(int argc, char** argv)
                                    board.servo_2,
                                    board.servo_3,
                                    file_log,
-                                   file_stat);
+                                   file_stat,
+                                   cd_config);
 
 
     // -------------------------------------------------------------------------
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
     board.sim.update();
 
     // Init central data
-    init_success &= cd.init(cd_config);
+    init_success &= cd.init();
 
     init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
         onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
         init_success = false;
     }
-    
+
     init_success &= mavlink_telemetry_init(&cd);
 
     cd.state.mav_state = MAV_STATE_STANDBY;

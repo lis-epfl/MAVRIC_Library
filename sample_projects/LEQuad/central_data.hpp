@@ -130,14 +130,30 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(uint8_t sysid, central_data_conf_t config, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2);
+    Central_data( uint8_t sysid,
+                  Imu& imu,
+                  Barometer& barometer,
+                  Gps& gps,
+                  Sonar& sonar,
+                  Serial& serial_mavlink,
+                  Satellite& satellite,
+                  Led& led,
+                  File& file_flash,
+                  Battery& battery,
+                  Servo& servo_0,
+                  Servo& servo_1,
+                  Servo& servo_2,
+                  Servo& servo_3,
+                  File& file1,
+                  File& file2,
+                  central_data_conf_t config = central_data_default_config() );
 
 
     /**
      * \brief   Initialisation
      * \return [description]
      */
-    bool init(central_data_conf_t config);
+    bool init(void);
 
 
     /**
@@ -196,7 +212,9 @@ public:
     Altitude_controller             altitude_controller_;
 
 private:
-    uint8_t sysid_;     ///< System ID
+    uint8_t sysid_;                 ///< System ID
+
+    central_data_conf_t config_;    ///< Configuration
 };
 
 static inline central_data_conf_t central_data_default_config()

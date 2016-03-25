@@ -111,7 +111,6 @@ int main(void)
     central_data_conf_t cd_config = central_data_default_config();
 
     Central_data cd = Central_data(MAVLINK_SYS_ID,
-                                   cd_config,
                                    board.imu,
                                    board.bmp085,
                                    board.gps_ublox,
@@ -129,7 +128,8 @@ int main(void)
                                    board.servo_2,
                                    board.servo_3,
                                    file_log,
-                                   file_stat);
+                                   file_stat,
+                                   cd_config );
 
 
     // Create central data with simulated sensors
@@ -157,7 +157,7 @@ int main(void)
     init_success &= board.init();
 
     // Init central data
-    init_success &= cd.init(cd_config);
+    init_success &= cd.init();
 
     init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
