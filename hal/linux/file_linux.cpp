@@ -208,7 +208,9 @@ uint32_t File_linux::length()
     return end - begin;
 }
 
+
 bool File_linux::flush()
 {
+    file_.flush();
     return true;
 }

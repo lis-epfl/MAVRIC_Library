@@ -53,27 +53,24 @@ extern "C"
 
 
 
-Imu::Imu(Accelerometer& accelerometer,
-         Gyroscope& gyroscope,
-         Magnetometer& magnetometer,
-         imu_conf_t config):
+Imu::Imu(Accelerometer& accelerometer, Gyroscope& gyroscope, Magnetometer& magnetometer, imu_conf_t config):
     accelerometer_(accelerometer),
     gyroscope_(gyroscope),
     magnetometer_(magnetometer),
     config_(config),
-    oriented_acc_(std::array<float, 3> { {0.0f, 0.0f, 0.0f}}),
-oriented_gyro_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-oriented_mag_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-scaled_acc_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-scaled_gyro_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-scaled_mag_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-do_accelerometer_bias_calibration_(false),
-do_gyroscope_bias_calibration_(false),
-do_magnetometer_bias_calibration_(false),
-is_ready_(false),
-dt_s_(0.004f),
-last_update_us_(time_keeper_get_us()),
-timestamp_gyro_stable(time_keeper_get_s())
+    oriented_acc_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    oriented_gyro_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    oriented_mag_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    scaled_acc_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    scaled_gyro_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    scaled_mag_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    do_accelerometer_bias_calibration_(false),
+    do_gyroscope_bias_calibration_(false),
+    do_magnetometer_bias_calibration_(false),
+    is_ready_(false),
+    dt_s_(0.004f),
+    last_update_us_(time_keeper_get_us()),
+    timestamp_gyro_stable(time_keeper_get_s())
 {}
 
 

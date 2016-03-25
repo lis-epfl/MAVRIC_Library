@@ -59,7 +59,6 @@
 #include "communication/hud_telemetry.hpp"
 #include "communication/state_machine.hpp"
 #include "communication/data_logging.hpp"
-#include "communication/toggle_logging.hpp"
 #include "sensing/qfilter.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "simulation/simulation.hpp"
@@ -70,11 +69,15 @@
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "hal/common/led.hpp"
 #include "drivers/servos_telemetry.hpp"
+#include "control/altitude_controller.hpp"
+
+#include "sensing/altitude_estimation.hpp"
 
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
 #include "sensing/ahrs.h"
+#include "sensing/altitude.h"
 #include "control/pid_controller.h"
 #include "util/print_util.h"
 #include "util/coord_conventions.h"
@@ -85,6 +88,7 @@ extern "C"
 {
 #include "control/attitude_controller.h"
 }
+
 #include "control/velocity_controller_copter.hpp"
 #include "control/vector_field_waypoint.hpp"
 
@@ -127,7 +131,6 @@ public:
     scheduler_t scheduler;
     mavlink_communication_t mavlink_communication;
 
-    command_t command;
     servos_mix_quadcotper_diag_t servo_mix;
 
 
@@ -151,13 +154,17 @@ public:
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
-    toggle_logging_t toggle_logging;
     Data_logging    data_logging;
     Data_logging    data_logging2;
 
+    command_t                       command;
     attitude_controller_t           attitude_controller;
     velocity_controller_copter_t    velocity_controller;
     vector_field_waypoint_t         vector_field_waypoint;
+
+    altitude_t                      altitude_;
+    Altitude_estimation             altitude_estimation_;
+    Altitude_controller             altitude_controller_;
 
 private:
     uint8_t sysid_;     ///< System ID

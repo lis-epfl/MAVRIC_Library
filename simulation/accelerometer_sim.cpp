@@ -52,8 +52,8 @@ extern "C"
 
 Accelerometer_sim::Accelerometer_sim(Dynamic_model& dynamic_model):
     dynamic_model_(dynamic_model),
-    acceleration_(std::array<float, 3> { {0.0f, 0.0f, 0.0f}}),
-temperature_(24.0f) // Nice day
+    acceleration_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    temperature_(24.0f) // Nice day
 {}
 
 
