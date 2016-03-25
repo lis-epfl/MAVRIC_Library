@@ -35,7 +35,7 @@ var searchData=
   ['airspeed_5fanalog_5ft',['airspeed_analog_t',['../structairspeed__analog__t.html',1,'']]],
   ['all',['all',['../unioncurvace__raw__data__t.html#a03210fd50774dd5539b8bc126d0925d7',1,'curvace_raw_data_t::all()'],['../unioncurvace__data__t.html#ac2ba3b8564151852ba29aec89105402a',1,'curvace_data_t::all()'],['../unioncurvace__roi__coord__t.html#a5d75a63997f4b5801918e58a9e4c4049',1,'curvace_roi_coord_t::all()'],['../unioncurvace__calibration__matrix__t.html#a0c3dbf977ea12aa00c7f2dfcf8aa7e6c',1,'curvace_calibration_matrix_t::all()']]],
   ['alt_5felips',['alt_elips',['../structgps__t.html#a7ce84b87b2d3cbc7d6458e3734cc78e6',1,'gps_t']]],
-  ['alt_5flpf',['alt_lpf',['../structnavigation__t.html#ae8862f564d8a93e4fa393e55b1238cf5',1,'navigation_t::alt_lpf()'],['../structnavigation__config__t.html#a107baed8c193a8c63361332bbbef2df3',1,'navigation_config_t::alt_lpf()']]],
+  ['alt_5flpf',['alt_lpf',['../structnavigation__t.html#ae8862f564d8a93e4fa393e55b1238cf5',1,'navigation_t::alt_lpf()'],['../structnavigation__conf__t.html#a16c18a8a336c29b7de9fc9754740f12b',1,'navigation_conf_t::alt_lpf()']]],
   ['altitude',['altitude',['../structgps__t.html#a72edc614dd84ab0d29c6720d15d79e8e',1,'gps_t::altitude()'],['../structglobal__position__t.html#a0220524a6a33a48c556ed2761c2c3bfe',1,'global_position_t::altitude()']]],
   ['altitude_5fbias_5fgf_5f',['altitude_bias_gf_',['../classBarometer.html#af01c889a2b36d3f1e2b9b094dd91f17a',1,'Barometer']]],
   ['altitude_5fcontroller',['Altitude_controller',['../classAltitude__controller.html',1,'']]],

@@ -1,3 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structstabiliser__t.html" title="The structure used to control the vehicle with 4 PIDs." alt="" coords="5,5,91,35"/>
+<area shape="rect" id="node1" href="$structstabiliser__stack__copter__t.html" title="Structure containing the stacked controller." alt="" coords="7,5,172,35"/>
 </map>

@@ -46,7 +46,7 @@ var searchData=
   ['dir',['dir',['../structgpio__stm32__conf__t.html#abe9043d31a0ccfaff3ead2c175bdb276',1,'gpio_stm32_conf_t']]],
   ['disable_5fcounter',['disable_counter',['../structgps__t.html#a441909a43d91c01cda0dec9d84c31f58',1,'gps_t']]],
   ['disable_5fremote_5fmode_5fchannel',['disable_remote_mode_channel',['../structremote__mode__conf__t.html#a5110221fbb530cdead15fe70c85ca5b6',1,'remote_mode_conf_t::disable_remote_mode_channel()'],['../structremote__mode__t.html#a9b373af3b31c55674c45a3d3af9a3928',1,'remote_mode_t::disable_remote_mode_channel()']]],
-  ['dist2vel_5fgain',['dist2vel_gain',['../structnavigation__t.html#a7979ccef9876406dc0d019ba6eea78c7',1,'navigation_t::dist2vel_gain()'],['../structnavigation__config__t.html#a5dfe45cdd12e5c78d6266a820c1a0d26',1,'navigation_config_t::dist2vel_gain()']]],
+  ['dist2vel_5fgain',['dist2vel_gain',['../structnavigation__t.html#a7979ccef9876406dc0d019ba6eea78c7',1,'navigation_t::dist2vel_gain()'],['../structnavigation__conf__t.html#a3d97d485ee1c02f037c33ff1f2d7dfeb',1,'navigation_conf_t::dist2vel_gain()']]],
   ['dist2wp_5fsqr',['dist2wp_sqr',['../structnavigation__t.html#a20d5f8996afec3ccd9f022f7ace23983',1,'navigation_t']]],
   ['dlpf',['DLPF',['../structgyro__config.html#a5397c5e444e1c2d04e776ed444deae1a',1,'gyro_config']]],
   ['do_5fderotation',['do_derotation',['../structcurvace__t.html#ad3027b3c9406c301f5546df43c61e405',1,'curvace_t']]],

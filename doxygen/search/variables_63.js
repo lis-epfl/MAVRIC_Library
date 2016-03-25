@@ -48,7 +48,7 @@ var searchData=
   ['course_5fstatus',['course_status',['../structgps__t.html#a8a7c29b5125f0faa65a6c2ce872096c5',1,'gps_t']]],
   ['critical_5fbehavior',['critical_behavior',['../structnavigation__t.html#afb13d6d282d94055e2126c548e66e4c0',1,'navigation_t']]],
   ['critical_5fnext_5fstate',['critical_next_state',['../structmavlink__waypoint__handler__t.html#a703868b5a6dd0476e31449fbe64417eb',1,'mavlink_waypoint_handler_t']]],
-  ['cruise_5fspeed',['cruise_speed',['../structnavigation__t.html#af634621b34d805043c825f14fc5d356f',1,'navigation_t::cruise_speed()'],['../structnavigation__config__t.html#a063638f222621d984c568986282d0df8',1,'navigation_config_t::cruise_speed()']]],
+  ['cruise_5fspeed',['cruise_speed',['../structnavigation__t.html#af634621b34d805043c825f14fc5d356f',1,'navigation_t::cruise_speed()'],['../structnavigation__conf__t.html#aa8c02157003fac3116033a9ba8a69b60',1,'navigation_conf_t::cruise_speed()']]],
   ['csd',['csd',['../structsd__spi__t.html#a8b32a506ae26d49fb930d35ff47b50b2',1,'sd_spi_t']]],
   ['current',['current',['../structwaypoint__struct__t.html#a73f8c14925a7e26cea2fedd2e8304bf6',1,'waypoint_struct_t']]],
   ['current_5fdesired_5fmode',['current_desired_mode',['../structremote__mode__t.html#a7d9aa978284193695181a10b85936b07',1,'remote_mode_t']]],

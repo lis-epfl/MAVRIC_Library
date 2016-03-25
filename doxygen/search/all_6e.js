@@ -6,7 +6,7 @@ var searchData=
   ['nav_5frate',['nav_rate',['../structubx__cfg__nav__rate__t.html#a26a4f63336ab89b1f29b3f3d4803a219',1,'ubx_cfg_nav_rate_t::nav_rate()'],['../structubx__cfg__nav__rate__send__t.html#acc213a0e07ce19d929005c9a7ca0a6a2',1,'ubx_cfg_nav_rate_send_t::nav_rate()'],['../structubx__cfg__rate__t.html#a884abd9fa8dbac9a7405d8892c18182f',1,'ubx_cfg_rate_t::nav_rate()']]],
   ['nav_5fsettings',['nav_settings',['../structgps__t.html#a6709cde6bb4ed3a5915d4b7fff9e4b5b',1,'gps_t']]],
   ['navigation',['navigation',['../structmavlink__waypoint__handler__t.html#ac61911c94e24ed5e884c7c178d97c4b9',1,'mavlink_waypoint_handler_t::navigation()'],['../structaudio__t.html#a447eb7c039465b9ea4cf36599b17406f',1,'audio_t::navigation()'],['../classCentral__data.html#a9eefe22c6f86fa2fcfa573f670bb796c',1,'Central_data::navigation()']]],
-  ['navigation_5fconfig_5ft',['navigation_config_t',['../structnavigation__config__t.html',1,'']]],
+  ['navigation_5fconf_5ft',['navigation_conf_t',['../structnavigation__conf__t.html',1,'']]],
   ['navigation_5ft',['navigation_t',['../structnavigation__t.html',1,'']]],
   ['nb_5fsetpoints',['nb_setpoints',['../structadaptive__parameter__t.html#a210c6c63169d594762b9a87329bab5b0',1,'adaptive_parameter_t']]],
   ['ned_5fdown',['ned_down',['../structubx__nav__vel__ned__t.html#a27ce6c6619f52481c6c077f8ce867a54',1,'ubx_nav_vel_ned_t']]],

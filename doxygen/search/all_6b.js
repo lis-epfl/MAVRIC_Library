@@ -13,5 +13,5 @@ var searchData=
   ['kp_5fvel_5fbaro',['kp_vel_baro',['../structposition__estimation__t.html#a0c455bbf93e9dc33f7a106a166aa13b7',1,'position_estimation_t']]],
   ['kp_5fvel_5fgps',['kp_vel_gps',['../structposition__estimation__t.html#a87e594d4d947ab6dd3bb3db4c868108a',1,'position_estimation_t']]],
   ['kp_5fvel_5fsonar',['kp_vel_sonar',['../structposition__estimation__t.html#ae1e0cde188f08dcc12bb2413cc63b53c',1,'position_estimation_t']]],
-  ['kp_5fyaw',['kp_yaw',['../structnavigation__t.html#af9d54535f9788c05c6c00346d97babcd',1,'navigation_t::kp_yaw()'],['../structnavigation__config__t.html#a736983137460443444676c17edbe17e4',1,'navigation_config_t::kp_yaw()']]]
+  ['kp_5fyaw',['kp_yaw',['../structnavigation__t.html#af9d54535f9788c05c6c00346d97babcd',1,'navigation_t::kp_yaw()'],['../structnavigation__conf__t.html#aab5990c13334ab3976f20e062298d384',1,'navigation_conf_t::kp_yaw()']]]
 ];

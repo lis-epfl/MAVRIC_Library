@@ -17,7 +17,7 @@ var searchData=
   ['horizontal_5fstatus',['horizontal_status',['../structgps__t.html#ac11a2c4b6291bc7e0db1510f514683ae',1,'gps_t']]],
   ['hour',['hour',['../structubx__nav__timeutc__t.html#a2c68e9306f2e066a5982aa0f3eb63893',1,'ubx_nav_timeutc_t::hour()'],['../structdate__time__t.html#ab9ee4c9f9a31aac8fea020d567697120',1,'date_time_t::hour()']]],
   ['hover_5fpoint',['hover_point',['../structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b',1,'altitude_controller_conf_t']]],
-  ['hovering_5fcontroller',['hovering_controller',['../structnavigation__t.html#a0961b5b9c6c766a0887fe638359e748f',1,'navigation_t::hovering_controller()'],['../structnavigation__config__t.html#a265bcafe82117ea6bec7360e18fe45d9',1,'navigation_config_t::hovering_controller()']]],
+  ['hovering_5fcontroller',['hovering_controller',['../structnavigation__t.html#a0961b5b9c6c766a0887fe638359e748f',1,'navigation_t::hovering_controller()'],['../structnavigation__conf__t.html#aec7e8f3db1d60ca5b45cd7c86e5a2a4f',1,'navigation_conf_t::hovering_controller()']]],
   ['hud_5fstructure',['hud_structure',['../classCentral__data.html#ac6293592dec12f4f428f6ade761adfee',1,'Central_data']]],
   ['hud_5ftelemetry_5fstructure_5ft',['hud_telemetry_structure_t',['../structhud__telemetry__structure__t.html',1,'']]],
   ['hw_5fversion',['hw_version',['../structubx__mon__ver__t.html#ab88ba534ab797ea8978d1575f82adb13',1,'ubx_mon_ver_t']]]

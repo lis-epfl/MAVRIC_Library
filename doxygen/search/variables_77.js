@@ -15,5 +15,5 @@ var searchData=
   ['wingrons_5fspeed',['wingrons_speed',['../structdaler__dc__motor__ctrl__t.html#a39d83528092d2002d2d7db11952ed61b',1,'daler_dc_motor_ctrl_t']]],
   ['wkn_5froll_5fover',['wkn_roll_over',['../structubx__cfg__nav__expert__settings__t.html#acab543c702746905d21e55a01b482220',1,'ubx_cfg_nav_expert_settings_t']]],
   ['wno',['wno',['../structubx__tim__vrfy__t.html#aee8d79b409dab55d7ca9b7979e92103d',1,'ubx_tim_vrfy_t']]],
-  ['wpt_5fnav_5fcontroller',['wpt_nav_controller',['../structnavigation__t.html#a244e0d21ede4ea299ee654b763d35985',1,'navigation_t::wpt_nav_controller()'],['../structnavigation__config__t.html#af0d66ed86382aa703cc64528bd3395cd',1,'navigation_config_t::wpt_nav_controller()']]]
+  ['wpt_5fnav_5fcontroller',['wpt_nav_controller',['../structnavigation__t.html#a244e0d21ede4ea299ee654b763d35985',1,'navigation_t::wpt_nav_controller()'],['../structnavigation__conf__t.html#a672d260875df92f6edfbad165eb3230f',1,'navigation_conf_t::wpt_nav_controller()']]]
 ];

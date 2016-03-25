@@ -44,7 +44,7 @@ var searchData=
   ['signal_5fquality',['signal_quality',['../structremote__t.html#a5eb14a352a516d5d95e99946100b8db3',1,'remote_t']]],
   ['simulation_5fmode',['simulation_mode',['../structstate__conf__t.html#a8842619538c883b7479c0f64a3f00df0',1,'state_conf_t::simulation_mode()'],['../classState.html#afb42fd7cc71e88d635c70cf1697dc07c',1,'State::simulation_mode()']]],
   ['size_5fdata',['size_data',['../structflow__t.html#a0d08e8de829ce6dd2afc6d6e833e2ebf',1,'flow_t']]],
-  ['soft_5fzone_5fsize',['soft_zone_size',['../structnavigation__t.html#a6d508f3a655eae4b6def762fe2fab10c',1,'navigation_t::soft_zone_size()'],['../structnavigation__config__t.html#aa2159bf967d2100798d8011a756b889b',1,'navigation_config_t::soft_zone_size()']]],
+  ['soft_5fzone_5fsize',['soft_zone_size',['../structnavigation__t.html#a6d508f3a655eae4b6def762fe2fab10c',1,'navigation_t::soft_zone_size()'],['../structnavigation__conf__t.html#a9f5c86157a2c06a1ee4ff91f18ba421e',1,'navigation_conf_t::soft_zone_size()']]],
   ['soft_5fzone_5fwidth',['soft_zone_width',['../structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489',1,'pid_controller_conf_t::soft_zone_width()'],['../structpid__controller__t.html#a5a63d05e58a79340c0222c8acfaca962',1,'pid_controller_t::soft_zone_width()']]],
   ['sonar',['sonar',['../classCentral__data.html#af74940d5c4c05df5df2229989f492c8d',1,'Central_data::sonar()'],['../structposition__estimation__t.html#ab84e97c671578470b2f25467ea7af6b8',1,'position_estimation_t::sonar()']]],
   ['speed',['speed',['../structgps__t.html#a2300eed2c84ab00718f31350f87daa44',1,'gps_t']]],
