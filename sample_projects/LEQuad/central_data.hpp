@@ -72,6 +72,16 @@
 #include "control/altitude_controller.hpp"
 
 #include "sensing/altitude_estimation.hpp"
+#include "control/stabilisation_copter_default_config.hpp"
+#include "communication/mavlink_communication_default_config.hpp"
+#include "sensing/position_estimation_default_config.hpp"
+#include "control/servos_mix_quadcopter_diag_default_config.hpp"
+#include "control/manual_control_default_config.hpp"
+#include "communication/remote_default_config.hpp"
+#include "control/attitude_controller_default_config.hpp"
+#include "control/velocity_controller_copter_default_config.hpp"
+#include "control/navigation_default_config.hpp"
+#include "sensing/qfilter_default_config.hpp"
 
 extern "C"
 {
@@ -82,15 +92,34 @@ extern "C"
 #include "util/print_util.h"
 #include "util/coord_conventions.h"
 #include "control/stabilisation.h"
-}
-
-extern "C"
-{
 #include "control/attitude_controller.h"
+#include "runtime/scheduler_default_config.h"
 }
 
 #include "control/velocity_controller_copter.hpp"
 #include "control/vector_field_waypoint.hpp"
+
+
+typedef struct
+{
+    state_conf_t state_config;
+    data_logging_conf_t data_logging_config;
+    data_logging_conf_t data_logging_config2;
+    scheduler_conf_t scheduler_config;
+    mavlink_communication_conf_t mavlink_communication_config;
+    qfilter_conf_t qfilter_config;
+    position_estimation_conf_t position_estimation_config;
+    navigation_conf_t navigation_config;
+    stabilisation_copter_conf_t stabilisation_copter_config;
+    servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
+    manual_control_conf_t manual_control_config;
+    remote_conf_t remote_config;
+    attitude_controller_conf_t attitude_controller_config;
+    velocity_controller_copter_conf_t velocity_controller_copter_config;
+
+}central_data_conf_t;
+
+static inline central_data_conf_t central_data_default_config();
 
 /**
  * \brief The central data structure
@@ -101,7 +130,23 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2);
+    Central_data( uint8_t sysid,
+                  Imu& imu,
+                  Barometer& barometer,
+                  Gps& gps,
+                  Sonar& sonar,
+                  Serial& serial_mavlink,
+                  Satellite& satellite,
+                  Led& led,
+                  File& file_flash,
+                  Battery& battery,
+                  Servo& servo_0,
+                  Servo& servo_1,
+                  Servo& servo_2,
+                  Servo& servo_3,
+                  File& file1,
+                  File& file2,
+                  central_data_conf_t config = central_data_default_config() );
 
 
     /**
@@ -167,8 +212,43 @@ public:
     Altitude_controller             altitude_controller_;
 
 private:
-    uint8_t sysid_;     ///< System ID
+    uint8_t sysid_;                 ///< System ID
+
+    central_data_conf_t config_;    ///< Configuration
 };
 
+static inline central_data_conf_t central_data_default_config()
+{
+    central_data_conf_t conf = {};
+
+    conf.state_config = state_default_config();
+
+    conf.data_logging_config = data_logging_default_config();
+    conf.data_logging_config = data_logging_default_config();
+
+    conf.scheduler_config = scheduler_default_config();
+
+    conf.mavlink_communication_config = mavlink_communication_default_config();
+
+    conf.qfilter_config = qfilter_default_config();
+
+    conf.position_estimation_config = position_estimation_default_config();
+
+    conf.navigation_config = navigation_default_config();
+
+    conf.stabilisation_copter_config = stabilisation_copter_default_config();
+
+    conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
+
+    conf.manual_control_config = manual_control_default_config();
+
+    conf.remote_config = remote_default_config();
+
+    conf.attitude_controller_config = attitude_controller_default_config();
+
+    conf.velocity_controller_copter_config = velocity_controller_copter_default_config();
+
+    return conf;
+}
 
 #endif /* CENTRAL_DATA_H_ */
