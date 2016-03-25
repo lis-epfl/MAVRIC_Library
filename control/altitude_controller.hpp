@@ -93,13 +93,14 @@ public:
      */
     bool update(void);
 
+    //Temporary public, to adjust pid gains
+    pid_controller_t            pid_;                ///< Controller
 
 private:
     const position_command_t&   position_command_;   ///< Pointer to altitude command (input)
     const altitude_t&           altitude_;           ///< Pointer to estimated altitude (input)
     thrust_command_t&           thrust_command_;     ///< Pointer to thrust command (output)
 
-    pid_controller_t            pid_;                ///< Controller
     float                       hover_point_;        ///< Thrust required to hover
 };
 

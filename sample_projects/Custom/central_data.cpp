@@ -87,6 +87,8 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     data_logging(file1, state, data_logging_default_config()),
     data_logging2(file2, state, data_logging_default_config()),
     saccade_controller(serial_flow_left_, serial_flow_right_, saccade_controller_default_config()),
+    altitude_estimation_(sonar, barometer, ahrs, altitude_),
+    altitude_controller_(command.position, altitude_, command.thrust),
     sysid_(sysid)
 {}
 

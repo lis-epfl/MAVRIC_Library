@@ -362,6 +362,27 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.goal_direction_,      "GL_DIRECTION");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.pitch_,      "PITCH_CONTROL");
     
+    //Attitude PID controller gains
+    
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].p_gain,         "ROLL_ATT_PID_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].integrator.gain,"ROLL_ATT_PID_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].differentiator.gain,   "ROLL_ATT_PID_KD"    );
+    
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].p_gain,         "PITCH_ATT_PID_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].integrator.gain,"PITCH_ATT_PID_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].differentiator.gain,   "PITCH_ATT_PID_KD"    );
+
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].p_gain,         "YAW_ATT_PID_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].integrator.gain,"YAW_ATT_PID_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].differentiator.gain,   "YAW_ATT_PID_KD"    );
+
+    //Altitude PID controller gains
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.p_gain,         "ALT_PID_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.integrator.gain,"ALT_PID_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.differentiator.gain,   "ALT_PID_KD"    );
+    
     return init_success;
 }
 

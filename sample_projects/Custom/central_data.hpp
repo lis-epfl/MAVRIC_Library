@@ -58,6 +58,7 @@
 #include "sensing/imu.hpp"
 #include "sensing/qfilter.hpp"
 #include "sensing/position_estimation.hpp"
+ #include "sensing/altitude_estimation.hpp"
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/onboard_parameters.hpp"
@@ -75,6 +76,7 @@
 #include "control/stabilisation_copter.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/vector_field_waypoint.hpp"
+#include "control/altitude_controller.hpp"
 
 #include "simulation/simulation.hpp"
 #include "saccade_controller.hpp"
@@ -82,6 +84,7 @@
 extern "C"
 {
 #include "sensing/ahrs.h"
+#include "sensing/altitude.h"
 
 #include "control/pid_controller.h"
 #include "control/stabilisation.h"
@@ -168,6 +171,11 @@ public:
     vector_field_waypoint_t         vector_field_waypoint;
 
     Saccade_controller            saccade_controller;
+
+
+    altitude_t                      altitude_;
+    Altitude_estimation             altitude_estimation_;
+    Altitude_controller             altitude_controller_;
 
 private:
     uint8_t sysid_;     ///< System ID
