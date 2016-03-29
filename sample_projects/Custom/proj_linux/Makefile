@@ -16,6 +16,7 @@ LIB_SRCS += sample_projects/Custom/central_data.cpp
 LIB_SRCS += sample_projects/Custom/tasks.cpp
 LIB_SRCS += sample_projects/Custom/mavlink_telemetry.cpp
 LIB_SRCS += sample_projects/Custom/saccade_controller.cpp
+LIB_SRCS += sample_projects/Custom/saccade_telemetry.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
@@ -87,11 +88,11 @@ NO_COLOR=\033[0m
 OK_COLOR=\033[32;01m
 ERROR_COLOR=\033[31;01m
 WARN_COLOR=\033[33;01m
- 
+
 OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
- 
+
 AWK_CMD = awk '{ printf "%-60s %-10s\n",$$1, $$2; }'
 PRINT_ERROR = printf "$@ $(ERROR_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n" && false
 PRINT_WARNING = printf "$@ $(WARN_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n"
@@ -114,9 +115,9 @@ proj: $(PROJ_NAME).elf
 # Linking
 ${PROJ_NAME}.elf: ${OBJS}
 	@echo Linking...
-	@$(CXX) $^ -o $@ $(LDFLAGS)  
+	@$(CXX) $^ -o $@ $(LDFLAGS)
 	@$(BUILD_CMD)
-	
+
 # C files in Library
 ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.c
 	@mkdir -p $(dir $@)
