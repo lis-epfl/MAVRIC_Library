@@ -81,7 +81,7 @@ typedef struct
  */
 typedef struct
 {
-    scheduler_conf_t                scheduler_config;
+    Scheduler::conf_t               scheduler_config;
     mavlink_stream_conf_t           mavlink_stream_config;          ///<    Configuration for the module MAVLink stream
     mavlink_message_handler_conf_t  message_handler_config;         ///<    Configuration for the module message handler
     onboard_parameters_conf_t       onboard_parameters_config;      ///<    Configuration for the module onboard parameters
@@ -128,7 +128,7 @@ public:
      *
      * \return  True if the message was correctly added, false otherwise
      */
-    bool add_msg_send(uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
+    bool add_msg_send(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
 
 
 
@@ -201,7 +201,7 @@ static inline mavlink_communication_conf_t mavlink_communication_default_config(
 
     conf.scheduler_config                              = {};
     conf.scheduler_config.max_task_count               = 30;
-    conf.scheduler_config.schedule_strategy            = FIXED_PRIORITY;
+    conf.scheduler_config.schedule_strategy            = Scheduler::FIXED_PRIORITY;
     conf.scheduler_config.debug                        = false;
     conf.mavlink_stream_config                         = {};
     conf.mavlink_stream_config.sysid                   = sysid;

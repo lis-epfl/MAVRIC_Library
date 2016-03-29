@@ -45,110 +45,10 @@
 #define SCHEDULER_HPP_
 
 #include <stdint.h>
+#include "runtime/scheduler_task.hpp"
 
 
 #define SchedulerIMEBASE 1000000  ///< time base for the scheduler
-
-typedef uint8_t task_handle_t;
-
-
-/**
- * \brief   Task return code
- */
-typedef enum
-{
-    TASK_RUN_ERROR   = -1,      ///<    The task was not not successfully executed
-    TASK_RUN_BLOCKED = 0,       ///<    If a task returns "TASK_RUN_BLOCKED", the scheduler will try to re-run at the next schedule update, and not update "next_run"
-    TASK_RUN_SUCCESS = 1        ///<    The task was successfully executed
-} task_return_t;
-
-
-/**
- * \brief   Generic argument to be passed to a task function
- */
-typedef void* task_argument_t;
-
-
-/**
- * \brief   Prototype of a task function
- */
-typedef bool (*task_function_t)(task_argument_t);
-
-
-/**
- * \brief   Task run mode
- */
-typedef enum
-{
-    RUN_NEVER,                  ///<    The task will not be executed
-    RUN_ONCE,                   ///<    The task will be executed only once
-    RUN_REGULAR                 ///<    The task will be executed periodically
-} task_run_mode_t;
-
-
-/**
- * \brief   Task timing mode
- */
-typedef enum
-{
-    PERIODIC_ABSOLUTE,          ///<    The task will be executed according to a fixed schedule (ie. regardless of past delays or realtime violations)
-    PERIODIC_RELATIVE           ///<    The task will be executed with constant period relative to the last execution
-} task_timing_mode_t;
-
-
-/**
- * \brief   Task priority
- */
-typedef enum
-{
-    PRIORITY_LOWEST  = 0,       ///<    Lowest priority
-    PRIORITY_LOW     = 1,       ///<    Low priority
-    PRIORITY_NORMAL  = 2,       ///<    Normal priority
-    PRIORITY_HIGH    = 3,       ///<    High priority
-    PRIORITY_HIGHEST = 4        ///<    Highest priority
-} task_priority_t;
-
-
-/**
- * \brief   Scheduling strategy
- */
-typedef enum
-{
-    ROUND_ROBIN,                ///<    Round robin scheduling
-    FIXED_PRIORITY              ///<    Fixed priority scheduling
-} schedule_strategy_t;
-
-
-/**
- * \brief   Task entry
- */
-typedef struct
-{
-    task_function_t     call_function;          ///<    Function to be called
-    task_argument_t     function_argument;      ///<    Argument to be passed to the function
-    uint32_t            task_id;                ///<    Unique task identifier
-    task_run_mode_t     run_mode;               ///<    Run mode
-    task_timing_mode_t  timing_mode;            ///<    Timing mode
-    task_priority_t     priority;               ///<    Priority
-    uint32_t            repeat_period;          ///<    Period between two calls (us)
-    uint32_t            next_run;               ///<    Next execution time
-    uint32_t            execution_time;         ///<    Execution time
-    uint32_t            delay_max;              ///<    Maximum delay between expected execution and actual execution
-    uint32_t            delay_avg;              ///<    Average delay between expected execution and actual execution
-    uint32_t            delay_var_squared;      ///<    Standard deviation of the delay
-    uint32_t            rt_violations;          ///<    Number of Real-time violations, this is incremented each time an execution is skipped
-} task_entry_t;
-
-
-/**
- * \brief Scheduler configuration
- */
-typedef struct
-{
-    uint32_t max_task_count;                    ///<    Maximum number of tasks
-    schedule_strategy_t schedule_strategy;      ///<    Schedule strategy
-    bool debug;                                 ///<    Indicates whether the scheduler should print debug messages
-} scheduler_conf_t;
 
 
 /**
@@ -157,13 +57,36 @@ typedef struct
  */
 class Scheduler
 {
+
 public:
+
+    /**
+     * \brief   Scheduling strategy
+     */
+    enum strategy_t
+    {
+        ROUND_ROBIN,                ///<    Round robin scheduling
+        FIXED_PRIORITY              ///<    Fixed priority scheduling
+    };
+
+
+    /**
+     * \brief Scheduler configuration
+     */
+    struct conf_t
+    {
+        uint32_t max_task_count;                    ///<    Maximum number of tasks
+        Scheduler::strategy_t schedule_strategy;    ///<    Schedule strategy
+        bool debug;                                 ///<    Indicates whether the scheduler should print debug messages
+    };
+
+
     /**
      * \brief               Constructor
      *
      * \param   config      Configuration
      */
-    Scheduler(const scheduler_conf_t config);
+    Scheduler(const Scheduler::conf_t config = default_config());
 
 
     /**
@@ -179,7 +102,7 @@ public:
      *
      * \return                  True if the task was successfully added, False if not
      */
-    bool add_task(uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, task_function_t call_function, task_argument_t function_argument, uint32_t task_id);
+    bool add_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, uint32_t task_id);
 
 
     /**
@@ -205,7 +128,7 @@ public:
      *
      * \return              Pointer to the target task
      */
-    task_entry_t* get_task_by_id(uint16_t task_id) const;
+    Scheduler_task* get_task_by_id(uint16_t task_id) const;
 
 
     /**
@@ -215,7 +138,7 @@ public:
      *
      * \return              Pointer to the target task
      */
-    task_entry_t* get_task_by_index(uint16_t task_index) const;
+    Scheduler_task* get_task_by_index(uint16_t task_index) const;
 
 
     /**
@@ -244,48 +167,20 @@ public:
 
 
     /**
-     * \brief               Modifies the run mode of an existing task
+     * \brief       Creates and returns default config for schedulers
      *
-     * \param te            Pointer to a task entry
-     * \param new_run_mode  New run mode
+     * \return      default_config
      */
-    static void change_run_mode(task_entry_t* te, task_run_mode_t new_run_mode);
-
-
-    /**
-     * \brief                   Modifies the period of execution of an existing task
-     *
-     * \param tep                Pointer to a task entry
-     * \param repeat_period     New repeat period (us)
-     */
-    static void change_task_period(task_entry_t* te, uint32_t repeat_period);
-
-
-    /**
-     * \brief           Suspends a task
-     *
-     * \param te        Pointer to a task entry
-     * \param delay     Duration (us)
-     */
-    static void suspend_task(task_entry_t* te, uint32_t delay);
-
-
-    /**
-     * \brief       Run a task immediately
-     *
-     * \param te    Pointer to a task entry
-     */
-    static void run_task_now(task_entry_t* te);
+    static Scheduler::conf_t default_config();
 
 
 private:
-    schedule_strategy_t schedule_strategy;      ///<    Scheduling strategy
+    strategy_t schedule_strategy;               ///<    Scheduling strategy
     bool debug;                                 ///<    Indicates whether the scheduler should print debug messages
     uint32_t task_count;                        ///<    Number_of_tasks
     uint32_t max_task_count;                    ///<    Maximum number of tasks
     uint32_t current_schedule_slot;             ///<    Slot of the task being executed
-    task_entry_t* tasks;                        ///<    Array of tasks_entry to be executed, needs memory allocation
-
+    Scheduler_task* tasks;                     ///<    Array of tasks_entry to be executed, needs memory allocation
 };
 
 #endif /* SCHEDULER_HPP_ */

@@ -95,22 +95,22 @@ static void mavlink_communication_toggle_telemetry_stream(Scheduler* scheduler, 
         }
         else
         {
-            task_entry_t* task = scheduler->get_task_by_id(request.req_stream_id);
+            Scheduler_task* task = scheduler->get_task_by_id(request.req_stream_id);
 
             if (task != NULL)
             {
                 if (request.start_stop)
                 {
-                    Scheduler::change_run_mode(task, RUN_REGULAR);
+                    task->set_run_mode(Scheduler_task::Scheduler_task::RUN_REGULAR);
                 }
                 else
                 {
-                    Scheduler::change_run_mode(task, RUN_NEVER);
+                    task->set_run_mode(Scheduler_task::Scheduler_task::RUN_NEVER);
                 }
 
                 if (request.req_message_rate > 0)
                 {
-                    Scheduler::change_task_period(task, SchedulerIMEBASE / (uint32_t)request.req_message_rate);
+                    task->change_period(SchedulerIMEBASE / (uint32_t)request.req_message_rate);
                 }
             }
             else
@@ -176,7 +176,7 @@ void Mavlink_communication::suspend_downstream(uint32_t delay)
 }
 
 
-bool Mavlink_communication::add_msg_send(uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
+bool Mavlink_communication::add_msg_send(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
 {
     bool add_success = true;
 
@@ -194,8 +194,8 @@ bool Mavlink_communication::add_msg_send(uint32_t repeat_period, task_run_mode_t
                                           run_mode,
                                           timing_mode,
                                           priority,
-                                          (task_function_t)&send_message,
-                                          (task_argument_t)new_msg_send,
+                                          (Scheduler_task::task_function_t)&send_message,
+                                          (Scheduler_task::task_argument_t)new_msg_send,
                                           task_id);
     }
     else
