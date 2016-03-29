@@ -183,7 +183,7 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 
     init_success &= data_logging_telemetry_init(&central_data->data_logging,
                                                 &central_data->mavlink_communication.message_handler);
-    
+
     init_success &= data_logging_telemetry_init(&central_data->data_logging2,
                                                 &central_data->mavlink_communication.message_handler);
 
@@ -356,18 +356,18 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success = onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
 
     //Parameters for saccade controller tuning
-    
+
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.gain_,      "WT_FCT_GAIN");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.threshold_,      "WT_FCT_THRSOLD");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.goal_direction_,      "GL_DIRECTION");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller.pitch_,      "PITCH_CONTROL");
-    
+
     //Attitude PID controller gains
-    
+
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].p_gain,         "ROLL_ATT_PID_KP"   );
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].integrator.gain,"ROLL_ATT_PID_KI"    );
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].differentiator.gain,   "ROLL_ATT_PID_KD"    );
-    
+
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].p_gain,         "PITCH_ATT_PID_KP"   );
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].integrator.gain,"PITCH_ATT_PID_KI"    );
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].differentiator.gain,   "PITCH_ATT_PID_KD"    );
@@ -382,7 +382,7 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.p_gain,         "ALT_PID_KP"   );
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.integrator.gain,"ALT_PID_KI"    );
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.differentiator.gain,   "ALT_PID_KD"    );
-    
+
     return init_success;
 }
 
@@ -394,22 +394,37 @@ void flow_telemetry_send(const flow_t* flow, const mavlink_stream_t* mavlink_str
     mavlink_msg_optical_flow_pack(  mavlink_stream->sysid,
                     mavlink_stream->compid,
                     msg,
-                    time_keeper_get_ms(), 
-                    0, 
-                    // flow->tmp_flow_x, 
-                    // flow->tmp_flow_y, 
-                    // flow->tmp_flow_comp_m_x, 
+                    time_keeper_get_ms(),
+                    0,
+                    // flow->tmp_flow_x,
+                    // flow->tmp_flow_y,
+                    // flow->tmp_flow_comp_m_x,
                     // flow->tmp_flow_comp_m_y,
-                    // endian_rev16(flow->of.x[20]), 
-                    // endian_rev16(flow->of.x[50]), 
-                    // endian_rev16(flow->of.x[80]), 
-                    // endian_rev16(flow->of.x[110]), 
-                    flow->of.x[20], 
-                    flow->of.x[50], 
-                    flow->of.x[80], 
-                    flow->of.x[110], 
-                    flow->n_packets, 
+                    // endian_rev16(flow->of.x[20]),
+                    // endian_rev16(flow->of.x[50]),
+                    // endian_rev16(flow->of.x[80]),
+                    // endian_rev16(flow->of.x[110]),
+                    flow->of.x[20],
+                    flow->of.x[50],
+                    flow->of.x[80],
+                    flow->of.x[110],
+                    flow->n_packets,
                     flow->of_count);
+}
+
+void altitude_estimation_telemetry_send(const Altitude_estimation* altitude_estimation, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+    Mat<3,1> x = altitude_estimation->x();
+    Mat<3,3> P = altitude_estimation->P();
+
+    mavlink_msg_debug_vect_pack(mavlink_stream->sysid,
+                                mavlink_stream->compid,
+                                msg,
+                                "ALT_KALMAN",
+                                time_keeper_get_us(),
+                                x(0,0),   // alt
+                                x(1,0),   // vertical speed
+                                P(0,0));  // covariance of altitude
 }
 
 
@@ -417,7 +432,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
 {
     bool init_success = true;
 
-    
+
     init_success &= central_data->data_logging.create_new_log_file("Log_file",
                     true,
                     central_data->mavlink_communication.mavlink_stream.sysid);
@@ -466,7 +481,9 @@ bool mavlink_telemetry_init(Central_data* central_data)
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           &central_data->saccade_controller.flow_right_,              MAVLINK_MSG_ID_OPTICAL_FLOW           );
 
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&saccade_telemetry_send_vector,                                        &central_data->saccade_controller,                     MAVLINK_MSG_ID_DEBUG_VECT);   // ID 24
-                                                       
+
+    init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&altitude_estimation_telemetry_send,                            &central_data->altitude_estimation_,    MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV           );// ID 64
+
     scheduler_sort_tasks(&central_data->mavlink_communication.scheduler);
 
     print_util_dbg_init_msg("[TELEMETRY]", init_success);
