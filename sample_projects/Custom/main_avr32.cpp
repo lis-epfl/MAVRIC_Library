@@ -118,8 +118,8 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   serial_dummy,
-                                   serial_dummy);
+                                   board.uart3,
+                                   board.uart4);
 
     // -------------------------------------------------------------------------
     // Initialisation

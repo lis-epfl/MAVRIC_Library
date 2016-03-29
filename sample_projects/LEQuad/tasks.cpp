@@ -150,9 +150,9 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data);
 bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 {
     tasks_run_imu_update(central_data);
-    
+
     mav_mode_t mode = central_data->state.mav_mode;
-    
+
     if (mav_modes_is_armed(mode) == false)
     {
         // Set command to current heading
@@ -164,6 +164,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     }
     else if (mav_modes_is_auto(mode))
     {
+        central_data->saccade_controller.update();
         // vector_field_waypoint_update(&central_data->vector_field_waypoint);
         // velocity_controller_copter_update(&central_data->velocity_controller);
         // attitude_controller_update(&central_data->attitude_controller);
@@ -173,20 +174,20 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     {
         // manual_control_get_velocity_command(&central_data->manual_control, &central_data->command.velocity, 1.0f);
         // velocity_controller_copter_update(&central_data->velocity_controller);
-        
+
         // get attitude command from remote
         manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
-        
+
         // 1m altitude command (Above goround level)
         central_data->command.position.xyz[0] = 0.0f;
         central_data->command.position.xyz[1] = 0.0f;
         central_data->command.position.xyz[2] = -1.0f;
         central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
-        
+
         // Do control
         central_data->altitude_controller_.update();
         attitude_controller_update(&central_data->attitude_controller);
-        
+
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else if (mav_modes_is_manual(mode) && mav_modes_is_stabilise(mode))
@@ -194,10 +195,10 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         // get command from remote
         manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
         manual_control_get_thrust_command(&central_data->manual_control, &central_data->command.thrust);
-        
+
         // Do control
         attitude_controller_update(&central_data->attitude_controller);
-        
+
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else
@@ -207,7 +208,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         central_data->servo_2.failsafe();
         central_data->servo_3.failsafe();
     }
-    
+
     return true;
 }
 
