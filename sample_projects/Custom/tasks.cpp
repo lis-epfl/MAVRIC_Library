@@ -152,9 +152,9 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data);
 bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 {
     tasks_run_imu_update(central_data);
-    
+
     mav_mode_t mode = central_data->state.mav_mode;
-    
+
     if (mav_modes_is_armed(mode) == false)
     {
         // Set command to current heading
@@ -175,20 +175,20 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     {
         // manual_control_get_velocity_command(&central_data->manual_control, &central_data->command.velocity, 1.0f);
         // velocity_controller_copter_update(&central_data->velocity_controller);
-        
+
         // get attitude command from remote
         manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
-        
+
         // 1m altitude command (Above goround level)
         central_data->command.position.xyz[0] = 0.0f;
         central_data->command.position.xyz[1] = 0.0f;
         central_data->command.position.xyz[2] = -1.0f;
         central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
-        
+
         // Do control
         central_data->altitude_controller_.update();
         attitude_controller_update(&central_data->attitude_controller);
-        
+
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else if (mav_modes_is_manual(mode) && mav_modes_is_stabilise(mode))
@@ -196,10 +196,10 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         // get command from remote
         manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
         manual_control_get_thrust_command(&central_data->manual_control, &central_data->command.thrust);
-        
+
         // Do control
         attitude_controller_update(&central_data->attitude_controller);
-        
+
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else
@@ -209,7 +209,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         central_data->servo_2.failsafe();
         central_data->servo_3.failsafe();
     }
-    
+
     return true;
 }
 
@@ -270,8 +270,8 @@ bool tasks_create_tasks(Central_data* central_data)
 
     scheduler_t* scheduler = &central_data->scheduler;
 
-    init_success &= scheduler_add_task(scheduler, 4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation                         , (task_argument_t)central_data                         , 0);
-    //init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation_quaternion              , (task_argument_t)central_data                         , 0);
+    // init_success &= scheduler_add_task(scheduler, 4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation                         , (task_argument_t)central_data                         , 0);
+    init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation_quaternion              , (task_argument_t)central_data                         , 0);
 
     init_success &= scheduler_add_task(scheduler, 15000,    RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&tasks_run_barometer_update                      , (task_argument_t)central_data                     , 2);
     // init_success &= scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&tasks_run_gps_update                            , (task_argument_t)central_data                     , 3);
@@ -292,7 +292,7 @@ bool tasks_create_tasks(Central_data* central_data)
     // init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , (task_function_t)&tasks_sleep                                     , (task_argument_t)central_data                         , 14);
 
     init_success &= scheduler_add_task(scheduler, 10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&tasks_data_logging_update                       , (task_argument_t)central_data                         , 11);
-    
+
     scheduler_sort_tasks(scheduler);
 
     return init_success;

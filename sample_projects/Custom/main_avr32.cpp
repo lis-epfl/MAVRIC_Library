@@ -73,17 +73,19 @@ int main(void)
     // -------------------------------------------------------------------------
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
-    
+
     board_config.i2c1_config.sda_pin    = AVR32_TWIMS1_TWD_0_1_PIN;
     board_config.i2c1_config.clk_pin    = AVR32_TWIMS1_TWCK_0_1_PIN;
 
     Megafly_rev4 board = Megafly_rev4(board_config);
 
+    Serial_dummy serial_dummy;
+    Gps_ublox gps_dummy(serial_dummy);
 
     // -------------------------------------------------------------------------
     // Left PX4Flow camera
     // -------------------------------------------------------------------------
-    
+
     // Configuration
     serial_avr32_conf_t serial_config_flow_left;
     serial_config_flow_left.serial_device         = AVR32_SERIAL_3;
@@ -99,7 +101,7 @@ int main(void)
     // Create instance
     Serial_avr32 serial_flow_left(serial_config_flow_left);
     //Serial_dummy serial_flow_left_dummy;
-    
+
     // Init
     //serial_flow_left.init();
 
@@ -108,7 +110,7 @@ int main(void)
     // -------------------------------------------------------------------------
     // Left PX4Flow camera
     // -------------------------------------------------------------------------
-    
+
     // Configuration
     serial_avr32_conf_t serial_config_flow_right;
     serial_config_flow_right.serial_device         = AVR32_SERIAL_4;
@@ -123,7 +125,7 @@ int main(void)
 
     // Create instance
     Serial_avr32 serial_flow_right(serial_config_flow_right);
-    
+
     // Init
     //serial_flow_right.init();
 
@@ -166,9 +168,10 @@ int main(void)
     Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
                                    board.bmp085,
-                                   board.gps_ublox,
-                                   // sim.gps(),
-                                   board.sonar_i2cxl,      // Warning:
+                                  //  board.gps_ublox,
+                                   gps_dummy,
+                                  //  sim.gps(),
+                                   board.sonar_i2cxl,          // Warning:
                                    // sim.sonar(),             // this is simulated
                                    board.uart0,
                                    board.spektrum_satellite,
@@ -182,9 +185,10 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   serial_flow_left,
-                                   serial_flow_right);
-                                   //serial_flow_left_dummy);
+                                  //  serial_flow_left,
+                                  //  serial_flow_right);
+                                  serial_dummy,
+                                   serial_dummy);
 
 
     // Create central data with simulated sensors
