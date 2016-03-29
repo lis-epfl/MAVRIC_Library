@@ -71,6 +71,7 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
     uart0(config.uart0_config),
     uart1(config.uart1_config),
     uart3(config.uart3_config),
+    uart4(config.uart4_config),
     uart_usb(config.uart_usb_config),
     i2c0(config.i2c0_config),
     i2c1(config.i2c1_config),
@@ -181,7 +182,6 @@ bool Megafly_rev4::init(void)
     init_success &= ret;
     time_keeper_delay_ms(50);
 
-
     // -------------------------------------------------------------------------
     // Init UART3
     // -------------------------------------------------------------------------
@@ -190,6 +190,13 @@ bool Megafly_rev4::init(void)
     init_success &= ret;
     time_keeper_delay_ms(50);
 
+    // -------------------------------------------------------------------------
+    // Init UART4
+    // -------------------------------------------------------------------------
+    ret = uart4.init();
+    print_util_dbg_init_msg("[UART4]", ret);
+    init_success &= ret;
+    time_keeper_delay_ms(50);
 
     // -------------------------------------------------------------------------
     // Init I2C0
@@ -206,7 +213,7 @@ bool Megafly_rev4::init(void)
     ret = i2c1.init();
     print_util_dbg_init_msg("[I2C1]", ret);
     init_success &= ret;
-    
+
 
 
     // -------------------------------------------------------------------------
@@ -215,7 +222,7 @@ bool Megafly_rev4::init(void)
     ret = pwm_0.init();
     print_util_dbg_init_msg("[PWM0]", ret);
     init_success &= ret;
-  
+
     ret = pwm_1.init();
     print_util_dbg_init_msg("[PWM1]", ret);
     init_success &= ret;
@@ -265,7 +272,7 @@ bool Megafly_rev4::init(void)
 // time_keeper_delay_ms(3000);
 
     servo_0.failsafe();
-    
+
     servo_1.failsafe();
 
     servo_2.failsafe();

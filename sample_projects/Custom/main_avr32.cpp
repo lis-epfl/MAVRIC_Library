@@ -74,88 +74,24 @@ int main(void)
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
 
-    board_config.i2c1_config.sda_pin    = AVR32_TWIMS1_TWD_0_1_PIN;
-    board_config.i2c1_config.clk_pin    = AVR32_TWIMS1_TWCK_0_1_PIN;
+    // Modify board configuration for PX4flow
+    board_config.uart3_config.serial_device         = AVR32_SERIAL_3;
+    board_config.uart3_config.mode                  = AVR32_SERIAL_IN_OUT;
+    board_config.uart3_config.options.baudrate      = 115200;
+    board_config.uart3_config.options.charlength    = 8;
+    board_config.uart3_config.options.paritytype    = USART_NO_PARITY;
+    board_config.uart3_config.options.stopbits      = USART_1_STOPBIT;
+    board_config.uart3_config.options.channelmode   = USART_NORMAL_CHMODE;
+    board_config.uart3_config.rx_pin_map            = {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
+    board_config.uart3_config.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
 
     Megafly_rev4 board = Megafly_rev4(board_config);
 
+    // Create dummy GPS
     Serial_dummy serial_dummy;
     Gps_ublox gps_dummy(serial_dummy);
 
-    // -------------------------------------------------------------------------
-    // Left PX4Flow camera
-    // -------------------------------------------------------------------------
-
-    // Configuration
-    serial_avr32_conf_t serial_config_flow_left;
-    serial_config_flow_left.serial_device         = AVR32_SERIAL_3;
-    serial_config_flow_left.mode                  = AVR32_SERIAL_IN_OUT;
-    serial_config_flow_left.options.baudrate      = 115200;
-    serial_config_flow_left.options.charlength    = 8;
-    serial_config_flow_left.options.paritytype    = USART_NO_PARITY;
-    serial_config_flow_left.options.stopbits      = USART_1_STOPBIT;
-    serial_config_flow_left.options.channelmode   = USART_NORMAL_CHMODE;
-    serial_config_flow_left.rx_pin_map            = {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
-    serial_config_flow_left.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
-
-    // Create instance
-    Serial_avr32 serial_flow_left(serial_config_flow_left);
-    //Serial_dummy serial_flow_left_dummy;
-
-    // Init
-    //serial_flow_left.init();
-
-
-
-    // -------------------------------------------------------------------------
-    // Left PX4Flow camera
-    // -------------------------------------------------------------------------
-
-    // Configuration
-    serial_avr32_conf_t serial_config_flow_right;
-    serial_config_flow_right.serial_device         = AVR32_SERIAL_4;
-    serial_config_flow_right.mode                  = AVR32_SERIAL_IN_OUT;
-    serial_config_flow_right.options.baudrate      = 115200;
-    serial_config_flow_right.options.charlength    = 8;
-    serial_config_flow_right.options.paritytype    = USART_NO_PARITY;
-    serial_config_flow_right.options.stopbits      = USART_1_STOPBIT;
-    serial_config_flow_right.options.channelmode   = USART_NORMAL_CHMODE;
-    serial_config_flow_right.rx_pin_map            = {AVR32_USART4_RXD_2_PIN, AVR32_USART4_RXD_2_FUNCTION};
-    serial_config_flow_right.tx_pin_map            = {AVR32_USART4_TXD_2_PIN, AVR32_USART4_TXD_2_FUNCTION};
-
-    // Create instance
-    Serial_avr32 serial_flow_right(serial_config_flow_right);
-
-    // Init
-    //serial_flow_right.init();
-
-
-
-    // -------------------------------------------------------------------------
-    // Create simulation
-    // -------------------------------------------------------------------------
-    // Simulated servos
-    // Pwm_dummy pwm[4];
-    // Servo sim_servo_0(pwm[0], servo_default_config_esc());
-    // Servo sim_servo_1(pwm[1], servo_default_config_esc());
-    // Servo sim_servo_2(pwm[2], servo_default_config_esc());
-    // Servo sim_servo_3(pwm[3], servo_default_config_esc());
-
-    // // Simulated dynamic model
-    // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
-    // Simulation sim                       = Simulation(sim_model);
-
-    // // Simulated battery
-    // Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
-    // Battery  sim_battery     = Battery(sim_adc_battery);
-
-    // // Simulated IMU
-    // Imu      sim_imu         = Imu(  sim.accelerometer(),
-    //                                  sim.gyroscope(),
-    //                                  sim.magnetometer() );
-
     fat_fs_mounting_t fat_fs_mounting;
-
     fat_fs_mounting_init(&fat_fs_mounting);
 
     File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
@@ -168,44 +104,22 @@ int main(void)
     Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
                                    board.bmp085,
-                                  //  board.gps_ublox,
+                                   //  board.gps_ublox,
                                    gps_dummy,
-                                  //  sim.gps(),
                                    board.sonar_i2cxl,          // Warning:
-                                   // sim.sonar(),             // this is simulated
                                    board.uart0,
                                    board.spektrum_satellite,
                                    board.green_led,
                                    board.file_flash,
                                    board.battery,
-                                   // sim_battery,
                                    board.servo_0,
                                    board.servo_1,
                                    board.servo_2,
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                  //  serial_flow_left,
-                                  //  serial_flow_right);
-                                  serial_dummy,
+                                   serial_dummy,
                                    serial_dummy);
-
-
-    // Create central data with simulated sensors
-    // Central_data cd = Central_data( MAVLINK_SYS_ID,
-    //                              sim_imu,
-    //                              sim.barometer(),
-    //                              sim.gps(),
-    //                              sim.sonar(),
-    //                              board.uart0,                // mavlink serial
-    //                              board.spektrum_satellite,
-    //                              board.green_led,
-    //                              board.file_flash,
-    //                              sim_battery,
-    //                              board.servo_0,
-    //                              board.servo_1,
-    //                              board.servo_2,
-    //                              board.servo_3 );
 
     // -------------------------------------------------------------------------
     // Initialisation
