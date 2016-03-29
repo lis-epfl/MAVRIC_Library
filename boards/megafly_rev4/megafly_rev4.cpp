@@ -185,7 +185,7 @@ bool Megafly_rev4::init(void)
     // -------------------------------------------------------------------------
     // Init UART3
     // -------------------------------------------------------------------------
-    // ret = uart3.init();
+    ret = uart3.init();
     print_util_dbg_init_msg("[UART3]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
@@ -203,7 +203,7 @@ bool Megafly_rev4::init(void)
     // -------------------------------------------------------------------------
     // Init I2C1
     // -------------------------------------------------------------------------
-    // ret = i2c1.init();
+    ret = i2c1.init();
     print_util_dbg_init_msg("[I2C1]", ret);
     init_success &= ret;
     
@@ -324,7 +324,7 @@ bool Megafly_rev4::init(void)
     // -------------------------------------------------------------------------
     // Init sonar
     // -------------------------------------------------------------------------
-    // ret = sonar_i2cxl.init();
+    ret = sonar_i2cxl.init();
     print_util_dbg_init_msg("[SONAR]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);

@@ -86,22 +86,22 @@ int main(void)
     
     // Configuration
     serial_avr32_conf_t serial_config_flow_left;
-    serial_config_flow_left.serial_device         = AVR32_SERIAL_2;
+    serial_config_flow_left.serial_device         = AVR32_SERIAL_3;
     serial_config_flow_left.mode                  = AVR32_SERIAL_IN_OUT;
     serial_config_flow_left.options.baudrate      = 115200;
     serial_config_flow_left.options.charlength    = 8;
     serial_config_flow_left.options.paritytype    = USART_NO_PARITY;
     serial_config_flow_left.options.stopbits      = USART_1_STOPBIT;
     serial_config_flow_left.options.channelmode   = USART_NORMAL_CHMODE;
-    serial_config_flow_left.rx_pin_map            = {AVR32_USART2_RXD_0_1_PIN, AVR32_USART2_RXD_0_1_FUNCTION};
-    serial_config_flow_left.tx_pin_map            = {AVR32_USART2_TXD_0_1_PIN, AVR32_USART2_TXD_0_1_FUNCTION};
+    serial_config_flow_left.rx_pin_map            = {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
+    serial_config_flow_left.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
 
     // Create instance
     Serial_avr32 serial_flow_left(serial_config_flow_left);
-    Serial_dummy serial_flow_left_dummy;
+    //Serial_dummy serial_flow_left_dummy;
     
     // Init
-    // serial_flow_left.init();
+    //serial_flow_left.init();
 
 
 
@@ -125,7 +125,7 @@ int main(void)
     Serial_avr32 serial_flow_right(serial_config_flow_right);
     
     // Init
-    // serial_flow_right.init();
+    //serial_flow_right.init();
 
 
 
@@ -182,9 +182,9 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   serial_flow_left_dummy,
-                                   // serial_flow_right);
-                                   serial_flow_left_dummy);
+                                   serial_flow_left,
+                                   serial_flow_right);
+                                   //serial_flow_left_dummy);
 
 
     // Create central data with simulated sensors
