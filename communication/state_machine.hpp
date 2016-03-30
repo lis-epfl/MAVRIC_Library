@@ -44,7 +44,6 @@
 #ifndef STATE_MACHINE_H_
 #define STATE_MACHINE_H_
 
-#include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
@@ -56,7 +55,6 @@
  */
 typedef struct
 {
-    mavlink_waypoint_handler_t* waypoint_handler;       ///< Pointer to the mavlink waypoint handler structure
     State* state;                                       ///< Pointer to the state structure
     remote_t* remote;                                   ///< Pointer to the remote structure
     const Gps* gps;                                     ///< Pointer to the gps structure

@@ -99,6 +99,7 @@ extern "C"
 typedef struct
 {
     mavlink_communication_conf_t mavlink_communication_config;      ///<    Configuration for the mavlink communication module
+    Navigation::conf_t navigation_config;
 } central_data_conf_t;
 
 
@@ -148,6 +149,9 @@ public:
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
 
+    State state;                                                ///< The structure with all state information
+    state_machine_t state_machine;                              ///< The structure for the state machine
+
     Scheduler scheduler;
     Mavlink_communication mavlink_communication;
 
@@ -164,13 +168,11 @@ public:
 
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
-    position_estimation_t position_estimation;                  ///< The position estimaton structure
-    mavlink_waypoint_handler_t waypoint_handler;
-    navigation_t navigation;                                    ///< The structure to perform GPS navigation
+    Position_estimation position_estimation;                    ///< The position estimaton structure
+    Navigation navigation;                                      ///< The structure to perform GPS navigation
+    Mavlink_waypoint_handler waypoint_handler;
 
-    State state;                                                ///< The structure with all state information
-    state_machine_t state_machine;                              ///< The structure for the state machine
-
+ 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
@@ -204,7 +206,7 @@ static inline central_data_conf_t central_data_default_config(uint8_t sysid)
     mavlink_communication_config.mavlink_stream_config.debug = true;
     conf.mavlink_communication_config = mavlink_communication_config;
 
-    
+    conf.navigation_config = Navigation::default_config();
     return conf;
 };
 

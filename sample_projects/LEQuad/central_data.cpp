@@ -41,8 +41,6 @@
 
 #include "sample_projects/LEQuad/central_data.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
-
-#include "sensing/position_estimation_default_config.hpp"
 #include "communication/remote_default_config.hpp"
 #include "control/manual_control_default_config.hpp"
 #include "control/attitude_controller_default_config.h"
@@ -52,7 +50,6 @@
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
-#include "control/navigation_default_config.h"
 #include "sensing/qfilter_default_config.h"
 
 #include "util/print_util.h"
@@ -73,9 +70,14 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
+    state(battery, state_default_config()),
     scheduler(Scheduler::default_config()),
     mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
-    state(battery, state_default_config()),
+    ahrs(ahrs_initialized()),
+    manual_control(&satellite, manual_control_default_config(), remote_default_config()),
+    position_estimation(state, barometer, sonar, gps, ahrs),
+    navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.get_mavlink_stream(), config.navigation_config),
+    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.get_message_handler(), mavlink_communication.get_mavlink_stream()),
     data_logging(file1, state, data_logging_default_config()),
     data_logging2(file2, state, data_logging_default_config()),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),
@@ -118,15 +120,6 @@ bool Central_data::init(void)
 
 
     // -------------------------------------------------------------------------
-    // Init ahrs
-    // -------------------------------------------------------------------------
-    ret = ahrs_init(&ahrs);
-    print_util_dbg_init_msg("[AHRS]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
     // Init qfilter
     // -------------------------------------------------------------------------
     ret = qfilter_init(&attitude_filter,
@@ -134,55 +127,6 @@ bool Central_data::init(void)
                        &imu,
                        &ahrs);
     print_util_dbg_init_msg("[QFILTER]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init position_estimation_init
-    // -------------------------------------------------------------------------
-    ret = position_estimation_init(&position_estimation,
-                                   position_estimation_default_config(),
-                                   &state,
-                                   &barometer,
-                                   &sonar,
-                                   &gps,
-                                   &ahrs);
-    print_util_dbg_init_msg("[POS EST]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init navigation
-    // -------------------------------------------------------------------------
-    ret = navigation_init(&navigation,
-                          navigation_default_config(),
-                          &controls_nav,
-                          &ahrs.qe,
-                          &position_estimation,
-                          &state,
-                          &mavlink_communication);/*,
-                            &sonar_i2cxl);*/
-    print_util_dbg_init_msg("[NAV]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init waypoint handler
-    // -------------------------------------------------------------------------
-    ret = waypoint_handler_init(&waypoint_handler,
-                                &position_estimation,
-                                &navigation,
-                                &ahrs,
-                                &state,
-                                &manual_control,
-                                &mavlink_communication,
-                                &mavlink_communication.get_mavlink_stream());
-    waypoint_handler_init_homing_waypoint(&waypoint_handler);
-    waypoint_handler_nav_plan_init(&waypoint_handler);
-    print_util_dbg_init_msg("[WAYPOINT]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
 
@@ -246,17 +190,6 @@ bool Central_data::init(void)
                           &servo_1,
                           &servo_2,
                           &servo_3);
-
-    // -------------------------------------------------------------------------
-    // Init manual control
-    // -------------------------------------------------------------------------
-    ret = manual_control_init(&manual_control,
-                              &satellite,
-                              manual_control_default_config(),
-                              remote_default_config());
-    print_util_dbg_init_msg("[MANUAL CTRL]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
 
     //--------------------------------------------------------------------------
     // Init attitude controller

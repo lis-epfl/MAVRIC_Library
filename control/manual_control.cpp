@@ -63,17 +63,13 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool manual_control_init(manual_control_t* manual_control, Satellite* sat, manual_control_conf_t config, remote_conf_t remote_config)
+manual_control_t::manual_control_t(Satellite* sat, manual_control_conf_t config, remote_conf_t remote_config)
 {
-    bool init_success = true;
+    mode_source     = config.mode_source;
+    control_source  = config.control_source;
 
-    manual_control->mode_source     = config.mode_source;
-    manual_control->control_source  = config.control_source;
-
-    init_success &= remote_init(&manual_control->remote, sat, remote_config);
-    init_success &= joystick_init(&manual_control->joystick);
-
-    return init_success;
+    remote_init(&remote, sat, remote_config);
+    joystick_init(&joystick);
 }
 
 

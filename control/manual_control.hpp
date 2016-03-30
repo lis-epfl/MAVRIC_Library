@@ -87,26 +87,23 @@ typedef struct
 /**
  * \brief The manual control structure
  */
-typedef struct
+struct manual_control_t
 {
+    /**
+     * \brief                   Constructor
+     *
+     * \param   config          The pointer to the configuration structure of the module
+     * \param   remote_config   The pointer to the remote structure
+     */
+    manual_control_t(Satellite* sat, manual_control_conf_t config, remote_conf_t remote_config);
+
+
     mode_source_t           mode_source;        ///< The source mode
     control_source_t        control_source;     ///< Flag to tell whether the remote is active or not
 
     remote_t                remote;             ///< The pointer to the remote structure
     joystick_t              joystick;           ///< The pointer to the joystick structure
-} manual_control_t;
-
-
-/**
- * \brief                   Initialise the manual control module
- *
- * \param   manual_control  The pointer to the manual control structure
- * \param   config          The pointer to the configuration structure of the module
- * \param   remote_config   The pointer to the remote structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool manual_control_init(manual_control_t* manual_control,  Satellite* sat, manual_control_conf_t config, remote_conf_t remote_config);
+} ;
 
 
 /**
