@@ -164,7 +164,6 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     }
     else if (mav_modes_is_auto(mode))
     {
-        central_data->saccade_controller.update();
         // vector_field_waypoint_update(&central_data->vector_field_waypoint);
         // velocity_controller_copter_update(&central_data->velocity_controller);
         // attitude_controller_update(&central_data->attitude_controller);
