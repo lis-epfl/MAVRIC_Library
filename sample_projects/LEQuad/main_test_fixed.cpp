@@ -69,18 +69,20 @@ int main(int argc, char** argv)
     //Create dynamic model
     Dynamic_model_fixed_wing model(servo_motor, servo_flap_left, servo_flap_right);
 
-    servo_motor.write(2000.0f);
+    servo_motor.write(1.0f);
 
 
     local_position_t position;
+    std::array<float, 3> velocity;
+    std::array<float, 3> ang_velocity;
     quat_t orientation;
     float roll, pitch, yaw;
     //Begin simulation
     while(1)
     {
-      std::cin.ignore();
-      model.update();
       position = model.position_lf();
+      velocity = model.velocity_lf();
+      ang_velocity = model.angular_velocity_bf();
       orientation = model.attitude();
       float q0 = orientation.s;
       float q1 = orientation.v[0];
@@ -90,7 +92,11 @@ int main(int argc, char** argv)
       roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
       pitch = asin(2*(q0*q2-q3*q1));
       yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3));
-      printf("Roll: %f \nPitch: %f \nYaw: %f \n", roll, pitch, yaw);
+      printf("Roll: %f Pitch: %f Yaw: %f \n", roll, pitch, yaw);
+      printf("Velocity: (%f, %f, %f)\n", velocity[0], velocity[1], velocity[2]);
+      printf("Angular velocity: (%f, %f, %f)\n\n", ang_velocity[0], ang_velocity[1], ang_velocity[2]);
+      std::cin.ignore();
+      model.update();
     }
     return 0;
 }

@@ -64,8 +64,8 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     servo_flap_right_(servo_flap_right),
     config_(config),
     motor_speed_(0.0f),
-    left_flap_(0.0f,quat_t{0.0f, {1.0f, 0.0f, 0.0f}}, 0.0f, 1.0f, 0.0f, 4.0f, 1.0f),//TODO: change these to the correct values
-    right_flap_(0.0f,quat_t{0.0f, {1.0f, 0.0f, 0.0f}}, 0.0f, -1.0f, 0.0f, 4.0f, 1.0f),
+    left_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.1f, 0.0f, 0.02f, 0.1f),//TODO: change these to the correct values
+    right_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, -0.1f, 0.0f, 0.02f, 0.1f),
     left_drift_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
     right_drift_(0.0f,quat_t{0.0f, {0.0f, 0.0f, 0.0f}}, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
     torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
@@ -104,6 +104,7 @@ bool Dynamic_model_fixed_wing::update(void)
     dt_s_           = (now - last_update_us_) / 1000000.0f;
     last_update_us_ = now;
 
+
     // Do nothing if updated too often
     /*if (dt_s_ < 0.001f)
     {
@@ -113,15 +114,15 @@ bool Dynamic_model_fixed_wing::update(void)
     // Clip dt if too large, this is not realistic but the simulation will be more precise
     //if (dt_s_ > 0.1f) TODO: Uncomment this
     {
-        dt_s_ = 0.1f;
+        dt_s_ = 0.01f;
     }
 
     // compute torques and forces based on servo commands and positions of the flaps
     forces_from_servos();
 
     // integrate torques to get simulated gyro rates (with some damping)
-    rates_bf_[0] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[0] + dt_s_ * torques_bf_[0] / config_.roll_pitch_momentum, 10.0f);
-    rates_bf_[1] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[1] + dt_s_ * torques_bf_[1] / config_.roll_pitch_momentum, 10.0f);
+    rates_bf_[0] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[0] + dt_s_ * torques_bf_[0] / config_.roll_momentum, 10.0f);
+    rates_bf_[1] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[1] + dt_s_ * torques_bf_[1] / config_.pitch_momentum, 10.0f);
     rates_bf_[2] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[2] + dt_s_ * torques_bf_[2] / config_.yaw_momentum, 10.0f);
 
 
@@ -148,6 +149,7 @@ bool Dynamic_model_fixed_wing::update(void)
     // check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
     if (local_position_.pos[Z] > 0)
     {
+        printf("Ouccccccccccccccccccccccccccccch!!!\n");//TODO: REMOVE
         vel_[Z] = 0.0f;
         local_position_.pos[Z] = 0.0f;
 
@@ -266,9 +268,10 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     wind_gf.v[2]    = 0.0f;
     quat_t wind_bf  =  quaternions_global_to_local(attitude_, wind_gf);
     //Take into account the speed of the plane
-    wind_bf.v[0] += vel_bf_[0];
-    wind_bf.v[1] += vel_bf_[1];
-    wind_bf.v[2] += vel_bf_[2];
+    wind_bf.v[0] -= vel_bf_[0];
+    wind_bf.v[1] -= vel_bf_[1];
+    wind_bf.v[2] -= vel_bf_[2];
+    printf("\n%f %f %f\n",vel_bf_[0],vel_bf_[1],vel_bf_[2]);
     wing_model_forces_t motor_forces = compute_motor_forces(wind_bf, motor_command);
     wing_model_forces_t left_flap_force = left_flap_.compute_forces(wind_bf);
     wing_model_forces_t right_flap_force = right_flap_.compute_forces(wind_bf);
@@ -313,8 +316,10 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
 			right_flap_force.force[2] +
       left_drift_force.force[2] +
       right_drift_force.force[2];
-      for(int i=0; i<3; i++) printf("torque%d: %f\n",i, torques_bf_[i]);
-      for(int i=0; i<3; i++) printf("force%d: %f\n",i, lin_forces_bf_[i]);
+      for(int i=0; i<3; i++) printf(" torque%d: %f",i, torques_bf_[i]);
+      printf("\n");
+      for(int i=0; i<3; i++) printf(" force%d: %f",i, lin_forces_bf_[i]);
+      printf("\n");
 }
 
 wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(quat_t wind_bf,float motor_command)
@@ -329,15 +334,17 @@ wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(quat_t wind_b
   float rotor_inertia = (motor_speed_ - old_motor_speed) / dt_s_ * config_.rotor_momentum;
 
   float sqr_lat_airspeed = SQR(wind_bf.v[1]) + SQR(wind_bf.v[2]);
-  float ldb = lift_drag_base(motor_speed_, sqr_lat_airspeed, wind_bf.v[0]);
+  float ldb = lift_drag_base(motor_speed_, sqr_lat_airspeed, -wind_bf.v[0]);
 
   wing_model_forces_t motor_forces;
   motor_forces.force[0] = ldb * config_.rotor_cl;
   motor_forces.force[1] = 0.0f;
   motor_forces.force[2] = 0.0f;
-  motor_forces.torque[ROLL] = (10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;
+  motor_forces.torque[ROLL] = 0.0f;//(10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;
   motor_forces.torque[PITCH] = 0.0f;
   motor_forces.torque[YAW] = 0.0f;
+
+  printf("Motor force: %f, Motor torque: %f\n",motor_forces.force[0], motor_forces.torque[0]);
 
   return motor_forces;
 }
