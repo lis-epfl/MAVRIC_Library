@@ -52,6 +52,7 @@
 extern "C"
 {
 #include <stdint.h>
+#include "libs/asf/common/services/clock/sysclk.h"
 #include "libs/asf/common/utils/stdio/stdio_usb/stdio_usb.h"
 #include "libs/asf/common/services/usb/class/cdc/device/udi_cdc.h"
 }
@@ -64,6 +65,9 @@ Serial_usb_avr32::Serial_usb_avr32(serial_usb_avr32_conf_t config)
 {
     // Store config
     config_ = config;
+
+    // set interupt callback to null
+    irq_callback = NULL;
 }
 
 
@@ -72,16 +76,16 @@ bool Serial_usb_avr32::init(void)
     // Init usb hardware
     stdio_usb_init(NULL);
     stdio_usb_enable();
+    stdio_usb_vbus_event(true);
+    handlers_ = this;
 
     return true;
 }
 
 
-
 uint32_t Serial_usb_avr32::readable(void)
 {
-    // Not implemented
-    return 0;
+    return rx_buffer_.readable();
 }
 
 
@@ -113,8 +117,8 @@ void Serial_usb_avr32::flush(void)
 
 bool Serial_usb_avr32::attach(serial_interrupt_callback_t func)
 {
-    // Not implemented
-    return false;
+    irq_callback = func;
+    return true;
 }
 
 
@@ -157,6 +161,59 @@ bool Serial_usb_avr32::write(const uint8_t* bytes, const uint32_t size)
 
 bool Serial_usb_avr32::read(uint8_t* bytes, const uint32_t size)
 {
-    // Not implemented
-    return false;
+    bool ret = false;
+    if (rx_buffer_.readable() >= size) // Testing
+    {
+        ret = true;
+        for (uint32_t i = 0; i < size; ++i)
+        {
+            ret &= rx_buffer_.get(bytes[i]);
+        }
+    }
+
+    return ret;
+}
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Serial_usb_avr32* Serial_usb_avr32::handlers_ = NULL;
+
+
+// Notify incoming usb data
+void usb_interupt_rx_notify()
+{
+    // Calls the static function which determines what to do with incoming data
+    Serial_usb_avr32::irq();
+}
+
+
+// Calls the handler for the desired usb class (only 1 usb atm)
+void Serial_usb_avr32::irq(void)
+{
+    if (handlers_)
+    {
+        handlers_->irq_handler();
+    }
+}
+
+
+// Determines what to do with incoming data
+void Serial_usb_avr32::irq_handler(void)
+{
+    // Receive all data
+    while (udi_cdc_is_rx_ready())
+    {
+        uint8_t c1 = 0;
+        stdio_usb_getchar_read_buf(NULL, (int*)&c1);
+        rx_buffer_.put_lossy(c1);
+    }
+
+    // Call callback function if attached
+    if (irq_callback != NULL)
+    {
+        irq_callback(this);
+    }
 }

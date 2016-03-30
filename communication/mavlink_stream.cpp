@@ -117,16 +117,17 @@ bool mavlink_stream_receive(mavlink_stream_t* mavlink_stream)
 {
     uint8_t byte;
     mavlink_received_t* rec = &mavlink_stream->rec;
-    
+
     // Try to decode bytes until a message is complete, or there is nothing left to read
     while ((mavlink_stream->msg_available == false) && (mavlink_stream->serial->readable() > 0))
     {
         // read one byte
-        mavlink_stream->serial->read(&byte);
-
+        mavlink_stream->serial->read(&byte, 1);
+        
         // Use the byte to decode current message
         if (mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status))
         {
+            print_util_dbg_print("Message available\r\n");
             // If message was sucessfully decoded, exit while loop
             mavlink_stream->msg_available = true;
         }

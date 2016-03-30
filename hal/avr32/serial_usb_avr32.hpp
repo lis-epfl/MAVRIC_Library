@@ -54,14 +54,31 @@
 
 extern "C"
 {
+#include "util/print_util.h"
+#include "libs/asf/avr32/drivers/usart/usart.h"
+#include "boards/megafly_rev4/conf_usb.h"
 }
 
+/**
+ * \brief   UART modes
+ */
+typedef enum
+{
+    AVR32_USB_SERIAL_OFF    = 0,
+    AVR32_USB_SERIAL_IN     = 1,
+    AVR32_USB_SERIAL_OUT    = 2,
+    AVR32_USB_SERIAL_IN_OUT = 3,
+} serial_usb_avr32_mode_t;
 
 /**
  * \brief   Configuration structure
  */
 typedef struct
 {
+    // Testing
+    serial_usb_avr32_mode_t     mode;
+    usart_options_t         options;
+    // Testing
 } serial_usb_avr32_conf_t;
 
 
@@ -153,10 +170,31 @@ public:
     bool read(uint8_t* bytes, const uint32_t size = 1);
 
 
+    /**
+     * \brief   Interrupt function for the incoming usb data
+     */
+    static void irq(void);
 private:
+
     serial_usb_avr32_conf_t     config_;        ///< Configuration
-    Buffer                      tx_buffer_;     ///< Transmission buffer
+    Buffer_tpl<1024>            tx_buffer_;     ///< Transmission buffer
+    Buffer_tpl<1024>            rx_buffer_;     ///< Reception buffer
+    
+    volatile avr32_usbc_t* uart_;
+
+    static Serial_usb_avr32* handlers_;
+
+
+    /**
+     * \brief   Interrupt handler to read all incoming data
+     */
+    void irq_handler(void);
+    serial_interrupt_callback_t irq_callback;
 };
 
+/**
+ * \brief   Interrupt, called when there is incoming usb data
+ */
+void usb_interupt_rx_notify();
 
 #endif /* SERIAL_USB_AVR32_H_ */
