@@ -53,10 +53,12 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Saccade_controller::Saccade_controller(Serial& serial_flow_left, Serial& serial_flow_right, saccade_controller_conf_t config)
+Saccade_controller::Saccade_controller(Serial& serial_flow_left, Serial& serial_flow_right, attitude_command_t&  attitude_command, saccade_controller_conf_t config)
+: attitude_command_(attitude_command)
 {
     flow_init(&flow_right_, &serial_flow_right);
     flow_init(&flow_left_, &serial_flow_left);
+
     gain_            = config.gain_;
     threshold_       = config.threshold_;
     goal_direction_  = config.goal_direction_;
@@ -113,8 +115,8 @@ bool Saccade_controller::update()
     
     //Update the optic flow vectors
     
-    flow_update(&flow_left_);
-    flow_update(&flow_right_);
+    // flow_update(&flow_left_);
+    // flow_update(&flow_right_);
     
     //Calculate for both left and right the sum of the relative nearnesses which are each given by
     //RN = OF/sin(angle), then calculate the comanv's x and y components, to then calculate can and NOD.
@@ -161,7 +163,7 @@ bool Saccade_controller::update()
     
     //Attitude command given by the required movement direction
     
-    attitude_command->quat = quat_yaw_command;
+    attitude_command_.quat = quat_yaw_command;
     
     return true;
 }

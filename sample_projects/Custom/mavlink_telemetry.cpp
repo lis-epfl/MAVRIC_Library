@@ -364,18 +364,32 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 
     //Attitude PID controller gains
 
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].p_gain,         "ROLL_ATT_PID_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].integrator.gain,"ROLL_ATT_PID_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].differentiator.gain,   "ROLL_ATT_PID_KD"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].p_gain,         "ROLL_ATT_R_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].integrator.gain,"ROLL_ATT_R_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].differentiator.gain,   "ROLL_ATT_R_KD"    );
 
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].p_gain,         "PITCH_ATT_PID_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].integrator.gain,"PITCH_ATT_PID_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].differentiator.gain,   "PITCH_ATT_PID_KD"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].p_gain,         "PIT_ATT_R_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].integrator.gain,"PIT_ATT_R_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].differentiator.gain,   "PIT_ATT_R_KD"    );
 
 
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].p_gain,         "YAW_ATT_PID_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].integrator.gain,"YAW_ATT_PID_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].differentiator.gain,   "YAW_ATT_PID_KD"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].p_gain,         "YAW_ATT_R_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].integrator.gain,"YAW_ATT_R_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].differentiator.gain,   "YAW_ATT_R_KD"    );
+
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[ROLL].p_gain,         "ROLL_ATT_A_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[ROLL].integrator.gain,"ROLL_ATT_A_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[ROLL].differentiator.gain,   "ROLL_ATT_A_KD"    );
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[PITCH].p_gain,         "PIT_ATT_A_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[PITCH].integrator.gain,"PIT_ATT_A_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[PITCH].differentiator.gain,   "PIT_ATT_A_KD"    );
+
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[YAW].p_gain,         "YAW_ATT_A_KP"   );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[YAW].integrator.gain,"YAW_ATT_A_KI"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[YAW].differentiator.gain,   "YAW_ATT_A_KD"    );
 
     //Altitude PID controller gains
 

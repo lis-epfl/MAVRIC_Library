@@ -102,7 +102,7 @@ public:
     float                       relative_nearness_ [2 * N_points];    //Table of Relative nearness
     float                       can_;
     float                       cad_;
-    attitude_command_t*         attitude_command;   ///< Attitude command given by the necessary saccade
+    attitude_command_t&        attitude_command_;   ///< Attitude command given by the necessary saccade
     
     
     /**
@@ -112,7 +112,7 @@ public:
      * \param   serial_flow_right   Serial port for right optic flow cameras
      * \param   config              Configuration structure
      */
-    Saccade_controller(Serial& serial_flow_left, Serial& serial_flow_right, saccade_controller_conf_t config);
+    Saccade_controller(Serial& serial_flow_left, Serial& serial_flow_right, attitude_command_t& attitude_command, saccade_controller_conf_t config);
 
 
 
