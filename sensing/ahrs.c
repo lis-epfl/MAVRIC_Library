@@ -78,3 +78,10 @@ bool ahrs_init(ahrs_t* ahrs)
 
     return init_success;
 }
+
+ahrs_t ahrs_initialized()
+{
+    ahrs_t ahrs;
+    ahrs_init(&ahrs);
+    return ahrs;
+}

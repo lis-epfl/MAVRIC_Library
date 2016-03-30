@@ -48,7 +48,7 @@ void tasks_run_imu_update(Central_data* central_data)
 {
     central_data->imu.update();
     qfilter_update(&central_data->attitude_filter);
-    position_estimation_update(&central_data->position_estimation);
+    central_data->position_estimation.update();
 }
 
 bool tasks_run_stabilisation(Central_data* central_data)
@@ -286,8 +286,8 @@ bool tasks_create_tasks(Central_data* central_data)
     init_success &= scheduler->add_task(15000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_RELATIVE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&tasks_run_barometer_update                      , (Scheduler_task::task_argument_t)central_data                     , 2);
     init_success &= scheduler->add_task(100000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&tasks_run_gps_update                            , (Scheduler_task::task_argument_t)central_data                     , 3);
 
-    init_success &= scheduler->add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&navigation_update                               , (Scheduler_task::task_argument_t)&central_data->navigation            , 5);
-    init_success &= scheduler->add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&waypoint_handler_update                         , (Scheduler_task::task_argument_t)&central_data->waypoint_handler      , 6);
+    init_success &= scheduler->add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&Navigation::update                               , (Scheduler_task::task_argument_t)&central_data->navigation            , 5);
+    init_success &= scheduler->add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update                 , (Scheduler_task::task_argument_t)&central_data->waypoint_handler      , 6);
 
     init_success &= scheduler->add_task(200000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL , (Scheduler_task::task_function_t)&state_machine_update                            , (Scheduler_task::task_argument_t)&central_data->state_machine         , 7);
 

@@ -56,7 +56,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool position_estimation_telemetry_init(position_estimation_t* pos_est, Mavlink_message_handler* mavlink_handler);
+bool position_estimation_telemetry_init(Position_estimation* pos_est, Mavlink_message_handler* mavlink_handler);
 
 /**
  * \brief   Function to send the MAVLink position estimation message
@@ -65,7 +65,7 @@ bool position_estimation_telemetry_init(position_estimation_t* pos_est, Mavlink_
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void position_estimation_telemetry_send_position(const position_estimation_t* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void position_estimation_telemetry_send_position(const Position_estimation* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
@@ -75,7 +75,7 @@ void position_estimation_telemetry_send_position(const position_estimation_t* po
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void position_estimation_telemetry_send_global_position(const position_estimation_t* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void position_estimation_telemetry_send_global_position(const Position_estimation* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif /* POSIION_ESTIMATION_TELEMETRY_H_ */

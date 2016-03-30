@@ -62,26 +62,61 @@ extern "C"
 #define POS_DECAY 0.0f
 
 
-/**
- * \brief The position estimator structure
- */
-typedef struct
+
+class Position_estimation
 {
-    global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
-    float gravity;              ///<    value of the Gravity for position estimation correction
-    bool fence_set;
-} position_estimation_conf_t;
+public:
+
+    friend class Mavlink_waypoint_handler;
+
+    /**
+     * \brief The position estimator structure
+     */
+    typedef struct
+    {
+        global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
+        float gravity;              ///<    value of the Gravity for position estimation correction
+        bool fence_set;
+    }conf_t;
 
 
-/**
- * \brief The position estimator structure
- */
-typedef struct
-{
-    float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
-    float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
+    /**
+     * \brief   Initialize the position estimation module
+     *
+     * \param   state           state structure
+     * \param   barometer       barometer structure
+     * \param   sonar           sonar structure
+     * \param   gps             GPS structure
+     * \param   ahrs            attitude estimation structure
+     * \param   config          default home position and gravity value
+     *
+     * \return  True if the init succeed, false otherwise
+     */
+    Position_estimation(State& state, Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config = default_config());
+
+    /**
+     * \brief   Position estimation update step, performing position estimation then position correction (function to be used)
+     *
+     */
+    void update();
+
+    
+    void set_fence_to_current_position();
+
+    static conf_t default_config();
+
+    local_position_t local_position;        ///< Local position
+    float vel[3];                           ///< 3D velocity in global frame
     float kp_alt_baro;                      ///< Gain to correct the Z position estimation from the barometer
     float kp_vel_baro;                      ///< Gain to correct the Z velocity estimation from the barometer
+    float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
+    float vel_bf[3];                        ///< 3D velocity in body frame
+    const Gps& gps;                         ///< Reference to the GPS structure
+    State& state;                           ///< Reference to the state structure
+    const ahrs_t& ahrs;                       ///< Reference to the attitude estimation structure
+    bool* nav_plan_active;                  ///< Pointer to the waypoint set flag
+private:
+    float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
     float kp_alt_sonar;                     ///< Gain to correct the Z position estimation from the sonar
     float kp_vel_sonar;                     ///< Gain to correct the Z velocity estimation from the sonar
 
@@ -91,13 +126,10 @@ typedef struct
     bool init_gps_position;                 ///< Boolean flag ensuring that the GPS was initialized
     bool init_barometer;                    ///< Boolean flag ensuring that the barometer was initialized
 
-    float vel_bf[3];                        ///< 3D velocity in body frame
-    float vel[3];                           ///< 3D velocity in global frame
 
     float last_alt;                         ///< Value of the last altitude estimation
     float last_vel[3];                      ///< Last 3D velocity
 
-    local_position_t local_position;        ///< Local position
     local_position_t last_gps_pos;          ///< Coordinates of the last GPS position
 
     bool fence_set;                         ///< Indicates if fence is set
@@ -105,52 +137,49 @@ typedef struct
 
     float gravity;                          ///< Value of the gravity
 
-    Barometer* barometer;                   ///< Pointer to the barometer structure
-    const Sonar* sonar;                     ///< Pointer to the sonar structure
-    const Gps* gps;                         ///< Pointer to the GPS structure
-    const ahrs_t* ahrs;                     ///< Pointer to the attitude estimation structure
-    State* state;                           ///< Pointer to the state structure
-
-    bool* nav_plan_active;                  ///< Pointer to the waypoint set flag
-} position_estimation_t;
+    Barometer& barometer;                   ///< Reference to the barometer structure
+    const Sonar& sonar;                     ///< Reference to the sonar structure
 
 
-/**
- * \brief   Initialize the position estimation module
- *
- * \param   pos_est         Pointer to the position estimation structure
- * \param   config          Configuration for default home position and gravity value
- * \param   state           Pointer to the state structure
- * \param   barometer       Pointer to the barometer structure
- * \param   sonar           Pointer to the sonar structure
- * \param   gps             Pointer to the GPS structure
- * \param   ahrs            Pointer to the attitude estimation structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, State* state, Barometer* barometer, const Sonar* sonar, const Gps* gps, const ahrs_t* ahrs);
+    /**
+     * \brief   Reset the home position and altitude
+     *
+     */
+    void reset_home_position();
 
+    /**
+     * \brief   Reset the origin of the fence (e.g. common for many entities or when armed)
+     *
+     */
+    void reset_fence_origin();
 
-/**
- * \brief   Reset the home position and altitude
- *
- * \param   pos_est                 The pointer to the position estimation structure
- */
-void position_estimation_reset_home_altitude(position_estimation_t* pos_est);
+    /**
+     * \brief   Direct integration of the position with the IMU data
+     *
+     */
+    void position_integration();
 
+    /**
+     * \brief   Position correction with the GPS and the barometer
+     *
+     */
+    void position_correction();
 
-/**
- * \brief   Position estimation update step, performing position estimation then position correction (function to be used)
- *
- * \param   pos_est                 The pointer to the position estimation structure
- */
-void position_estimation_update(position_estimation_t* pos_est);
+    /**
+     * \brief   Initialization of the position estimation from the GPS position
+     *
+     * \param   gps             The pointer to the GPS structure
+     *
+     * \return  void
+     */
+    void gps_position_init();
 
-/**
- * \brief   Reset the origin of the fence (e.g. common for many entities or when armed)
- *
- * \param   pos_est                 The pointer to the position estimation structure
- */
-void position_estimation_set_new_fence_origin(position_estimation_t* pos_est);
+    /**
+     * \brief   Check if the robot is going further from the working radius, delimited by those fences
+     *
+     * \return  void
+     */
+    void fence_control();
 
+};
 #endif // POSITION_ESTIMATION_H__

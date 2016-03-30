@@ -59,17 +59,17 @@ extern "C"
  * \param   pos_est                 The pointer to the position estimation structure
  * \param   packet                  The pointer to the decoded MAVLink command long message
  */
-static mav_result_t position_estimation_set_new_home_position(position_estimation_t* pos_est, mavlink_command_long_t* packet);
+static mav_result_t position_estimation_set_new_home_position(Position_estimation* pos_est, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t position_estimation_set_new_home_position(position_estimation_t* pos_est, mavlink_command_long_t* packet)
+static mav_result_t position_estimation_set_new_home_position(Position_estimation* pos_est, mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
-    if (!mav_modes_is_armed(pos_est->state->mav_mode))
+    if (!mav_modes_is_armed(pos_est->state.mav_mode))
     {
         if (packet->param1 == 1)
         {
@@ -103,8 +103,8 @@ static mav_result_t position_estimation_set_new_home_position(position_estimatio
             print_util_dbg_print(")\r\n");
         }
 
-        pos_est->fence_set = false;
-        position_estimation_set_new_fence_origin(pos_est);
+
+        pos_est->set_fence_to_current_position();
 
         *pos_est->nav_plan_active = false;
 
@@ -122,7 +122,7 @@ static mav_result_t position_estimation_set_new_home_position(position_estimatio
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool position_estimation_telemetry_init(position_estimation_t* pos_est, Mavlink_message_handler* message_handler)
+bool position_estimation_telemetry_init(Position_estimation* pos_est, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
@@ -140,7 +140,7 @@ bool position_estimation_telemetry_init(position_estimation_t* pos_est, Mavlink_
 }
 
 
-void position_estimation_telemetry_send_position(const position_estimation_t* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void position_estimation_telemetry_send_position(const Position_estimation* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_local_position_ned_pack(mavlink_stream->sysid,
                                         mavlink_stream->compid,
@@ -154,7 +154,7 @@ void position_estimation_telemetry_send_position(const position_estimation_t* po
                                         pos_est->vel_bf[2]);
 }
 
-void position_estimation_telemetry_send_global_position(const position_estimation_t* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void position_estimation_telemetry_send_global_position(const Position_estimation* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     // send integrated position (for now there is no GPS error correction...!!!)
     global_position_t gpos = coord_conventions_local_to_global_position(pos_est->local_position);

@@ -49,7 +49,7 @@ extern "C"
 #include "util/coord_conventions.h"
 }
 
-bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimation_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
+bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const Position_estimation* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
 {
     bool init_success = true;
 
