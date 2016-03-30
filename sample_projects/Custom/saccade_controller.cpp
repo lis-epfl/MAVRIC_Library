@@ -79,91 +79,91 @@ bool Saccade_controller::init(void)
 bool Saccade_controller::update()
 {
 
-    
+
     float comanv_x = 1.0f;                      //x component of the comanv
     float comanv_y = 1.0f;                      //y component of the comanv
-    
-    
+
+
     // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
-    
+
     float angle_between_points = (140.625 / N_points);
-   
-    
+
+
     // Intermediate variables : can is the norm of the comanv vector, nearest object direction gives the angle in radians to the nearest object, cad gives the collision avoidance direction, opposite to the nearest object direction.
-    
+
     //float can = 0.0f;
     float nearest_object_direction = 0.0f;
     //float cad  = 0.0f;
     float movement_direction = 0.0f;
-    
+
     //Sigmoid function for direction choice, it takes the can, a threshold and a gain and describes how important it is for the drone to perform a saccade
-    
+
     float weighted_function = 1.0f;
- 
+
     // Quaternion given to attitude controller for the saccade
     quat_t quat_yaw_command;
-   
-    
+
+
     //Random number generation for the noise, the value of the noise is between 0 and 0.5. A new number is generated at each time.
     //ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
-    
+
     //srand(time(NULL));
     float noise = 0.0f;
     //float noise = (rand() % 50)/100.;
-    
-    
-    
+
+
+
     //Update the optic flow vectors
-    
-    // flow_update(&flow_left_);
-    // flow_update(&flow_right_);
-    
+
+    flow_update(&flow_left_);
+    flow_update(&flow_right_);
+
     //Calculate for both left and right the sum of the relative nearnesses which are each given by
     //RN = OF/sin(angle), then calculate the comanv's x and y components, to then calculate can and NOD.
-    
+
     for(int i=0;i<N_points-1;++i)
     {
-       
-        azimuth_[i] = (-160.875 + i * angle_between_points)* (PI / 180.);
-        azimuth_[i + N_points] = (19.125 + i * angle_between_points)* (PI / 180.);
-        
-        relative_nearness_[i] = flow_left_.of.x[i]/sin(azimuth_[i]);
-        relative_nearness_[i + N_points] = flow_right_.of.x[i]/sin(azimuth_[i + N_points]);
-        
-    
-        comanv_x += cos(azimuth_[i]) * relative_nearness_[i] + cos(azimuth_[i + N_points]) * relative_nearness_[i + N_points];
-        comanv_y += sin(azimuth_[i]) * relative_nearness_[i] + sin(azimuth_[i + N_points]) * relative_nearness_[i + N_points];
+
+        // azimuth_[i] = (-160.875 + i * angle_between_points)* (PI / 180.);
+        // azimuth_[i + N_points] = (19.125 + i * angle_between_points)* (PI / 180.);
+        //
+        // relative_nearness_[i] = flow_left_.of.x[i]/sin(azimuth_[i]);
+        // relative_nearness_[i + N_points] = flow_right_.of.x[i]/sin(azimuth_[i + N_points]);
+        //
+        //
+        // comanv_x += cos(azimuth_[i]) * relative_nearness_[i] + cos(azimuth_[i + N_points]) * relative_nearness_[i + N_points];
+        // comanv_y += sin(azimuth_[i]) * relative_nearness_[i] + sin(azimuth_[i + N_points]) * relative_nearness_[i + N_points];
 
     }
-    
-    
-    
-   //Calculation of the can and cad
-    
-    can_ = sqrt(pow(comanv_x , 2) + pow(comanv_y , 2));
 
-    nearest_object_direction = atan(comanv_y/comanv_x);
-    
-    weighted_function = 1 / (1 + pow(can_/threshold_ , - gain_));
-    
-    cad_ = nearest_object_direction + PI;
-    
+
+
+   //Calculation of the can and cad
+
+    // can_ = sqrt(pow(comanv_x , 2) + pow(comanv_y , 2));
+    //
+    // nearest_object_direction = atan(comanv_y/comanv_x);
+    //
+    // weighted_function = 1 / (1 + pow(can_/threshold_ , - gain_));
+    //
+    // cad_ = nearest_object_direction + PI;
+    //
     //Calculation of the movement direction (in radians)
-    
-    movement_direction = weighted_function * cad_ + (1-weighted_function) * (goal_direction_ + noise);
-    
+    //
+    // movement_direction = weighted_function * cad_ + (1-weighted_function) * (goal_direction_ + noise);
+
     //Transformation of the movement direction into a quaternion
-    
+
     aero_attitude_t attitude;
     attitude.rpy[0] = 0.0f;
     attitude.rpy[1] = 0.0f;
     attitude.rpy[2] = movement_direction;
-    
+
     quat_yaw_command = coord_conventions_quaternion_from_aero(attitude);
-    
+
     //Attitude command given by the required movement direction
-    
+
     attitude_command_.quat = quat_yaw_command;
-    
+
     return true;
 }
