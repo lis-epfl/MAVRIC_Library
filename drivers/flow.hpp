@@ -77,8 +77,8 @@ typedef enum
  */
 typedef struct
 {
-    mavlink_stream_t    mavlink_stream;     ///< Mavlink interface using streams
     Serial*             uart;               ///< Serial device
+    mavlink_stream_t    mavlink_stream;     ///< Mavlink interface using streams
 
     uint8_t     of_count;   ///< Number of optic flow vectors
     flow_data_t of;         ///< Optic flow vectors
