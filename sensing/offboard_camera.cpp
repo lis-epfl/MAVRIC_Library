@@ -41,6 +41,8 @@
 
 
 #include "sensing/offboard_camera.hpp"
+#include "sample_projects/LEQuad/tasks.hpp"
+#include "sample_projects/LEQuad/central_data.hpp"
 
 extern "C"
 {
@@ -58,14 +60,24 @@ Offboard_Camera::Offboard_Camera(int camera_id, bool is_camera_running):
 {}
 
 
-bool Offboard_Camera::update(void)
+bool Offboard_Camera::update()
 {
     bool success = true;
+
+    // TEMPORARY...
+    // Switch camera on and off
+    is_camera_running_ = !is_camera_running_;
+    // ...TEMPORARY
 
     // Update timing
     uint32_t t      = time_keeper_get_us();
     //dt_s_           = (float)(t - last_update_us_) / 1000000.0f;
     last_update_us_ = t;
+
+    // Send the message now
+    //print_util_dbg_init_msg("[Offboard camera state]", is_camera_running_);
+    //task_entry_t* camera_send_message_task = scheduler_get_task_by_id(scheduler, MAVLINK_MSG_ID_COMMAND_LONG);
+    //scheduler_run_task_now(camera_send_message_task);
 
     return success;
 }

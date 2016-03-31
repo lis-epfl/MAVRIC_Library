@@ -97,7 +97,7 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Camera& offboard_camera);
+    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Camera& ob_camera);
 
 
     /**

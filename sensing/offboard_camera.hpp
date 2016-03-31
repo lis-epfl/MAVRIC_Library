@@ -43,10 +43,14 @@
 #ifndef OFFBOARD_CAMERA_HPP_
 #define OFFBOARD_CAMERA_HPP_
 
+#include "runtime/scheduler.h"
+
 extern "C"
 {
 
 }
+
+class Central_data;
 
 /**
  * \brief   Offboard Camera Master Controller
@@ -74,7 +78,7 @@ public:
      *
      * \return  Success
      */
-    bool update(void);
+    bool update();
 
 
     /**
@@ -88,8 +92,11 @@ public:
     int get_camera_id();
 
     int camera_id_;
-    float last_update_us_;              ///< Last update time in microseconds
     bool is_camera_running_;            ///< States whether the camera should be running
+    float last_update_us_;              ///< Last update time in microseconds
+    
+private:
+    Offboard_Camera();
 };
 
 

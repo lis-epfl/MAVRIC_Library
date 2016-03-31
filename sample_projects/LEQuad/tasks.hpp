@@ -100,6 +100,12 @@ bool tasks_run_barometer_update(Central_data* central_data);
 bool sonar_update(Central_data* central_data);
 
 /**
+ * \brief			Run the offboard camera task
+ */
+//bool tasks_offboard_camera_update(Central_data* central_data);
+bool tasks_offboard_camera_update(Offboard_Camera* camera);
+
+/**
  * \brief            Run the LED toggle task
  */
 bool tasks_led_toggle(Led* led);

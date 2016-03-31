@@ -104,7 +104,7 @@ int main(void)
     File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
     File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
 
-    Offboard_Camera camera_object = Offboard_Camera(2, true);
+    Offboard_Camera camera_object = Offboard_Camera(1, true);
     Offboard_Camera& camera = camera_object;
     // -------------------------------------------------------------------------
     // Create central data

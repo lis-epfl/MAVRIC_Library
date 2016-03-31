@@ -79,8 +79,8 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     state(battery, state_default_config()),
     data_logging(file1, state, data_logging_default_config()),
     data_logging2(file2, state, data_logging_default_config()),
-    sysid_(sysid),
-    offboard_camera(ob_camera)
+    offboard_camera(ob_camera),
+    sysid_(sysid)
 {}
 
 
