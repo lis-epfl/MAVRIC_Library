@@ -60,7 +60,7 @@ Offboard_Camera::Offboard_Camera(int camera_id, bool is_camera_running):
 {}
 
 
-bool Offboard_Camera::update()
+bool Offboard_Camera::update(const scheduler_t* scheduler)
 {
     bool success = true;
 
@@ -76,8 +76,8 @@ bool Offboard_Camera::update()
 
     // Send the message now
     //print_util_dbg_init_msg("[Offboard camera state]", is_camera_running_);
-    //task_entry_t* camera_send_message_task = scheduler_get_task_by_id(scheduler, MAVLINK_MSG_ID_COMMAND_LONG);
-    //scheduler_run_task_now(camera_send_message_task);
+    task_entry_t* camera_send_message_task = scheduler_get_task_by_id(scheduler, MAVLINK_MSG_ID_COMMAND_LONG);
+    scheduler_run_task_now(camera_send_message_task);
 
     return success;
 }

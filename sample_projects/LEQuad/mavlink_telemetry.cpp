@@ -409,7 +409,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&sonar_telemetry_send,                            &central_data->sonar_i2cxl.data,            MAVLINK_MSG_ID_DISTANCE_SENSOR  );// ID 132
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
 */
-    init_success &= mavlink_communication_add_msg_send(raspi_mavlink_communication,  1000000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&offboard_camera_telemetry_send_start_stop,                                     &central_data->offboard_camera,              MAVLINK_MSG_ID_COMMAND_LONG           );// ID 76
+    init_success &= mavlink_communication_add_msg_send(raspi_mavlink_communication,  1000000,   RUN_ONCE,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&offboard_camera_telemetry_send_start_stop,                                     &central_data->offboard_camera,              MAVLINK_MSG_ID_COMMAND_LONG           );// ID 76
     init_success &= scheduler_sort_tasks(&central_data->mavlink_communication.scheduler);
 
     print_util_dbg_init_msg("[TELEMETRY]", init_success);

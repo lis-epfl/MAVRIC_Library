@@ -63,8 +63,8 @@ static Serial_avr32*        p_uart3;
 
 uint8_t serial2stream(stream_data_t data, uint8_t byte)
 {
-    p_uart_usb->write(&byte);
-    //p_uart3->write(&byte);
+    //p_uart_usb->write(&byte);
+    p_uart3->write(&byte);
     return 0;
 }
 
@@ -143,8 +143,8 @@ bool Megafly_rev4::init(void)
 
     // -------------------------------------------------------------------------
     // Init stream for USB debug stream TODO: remove
-    p_uart_usb = &uart_usb;
-    //p_uart3 = &uart3;
+    //p_uart_usb = &uart_usb;
+    p_uart3 = &uart3;
     dbg_stream_.get = NULL;
     dbg_stream_.put = &serial2stream;
     dbg_stream_.flush = NULL;

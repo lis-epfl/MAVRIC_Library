@@ -78,7 +78,7 @@ public:
      *
      * \return  Success
      */
-    bool update();
+    bool update(const scheduler_t* scheduler);
 
 
     /**

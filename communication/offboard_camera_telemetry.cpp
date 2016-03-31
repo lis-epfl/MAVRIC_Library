@@ -71,28 +71,11 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Offboard_Cam
 static mav_result_t offboard_camera_telemetry_receive_camera_output(Offboard_Camera* camera, mavlink_command_long_t* packet)
 {
     mav_result_t result;
-    print_util_dbg_init_msg("[PICAMERA MSG RECV]", true);
-    print_util_dbg_print("Param1: ");
-    print_util_dbg_print_num(packet->param1,10);
-    print_util_dbg_print("\r\n");
-    print_util_dbg_print("Param2: ");
-    print_util_dbg_print_num(packet->param2,10);
-    print_util_dbg_print("\r\n");
-    print_util_dbg_print("Param3: ");
+    print_util_dbg_print("Tag loc: (");
     print_util_dbg_print_num(packet->param3,10);
-    print_util_dbg_print("\r\n");
-    print_util_dbg_print("Param4: ");
+    print_util_dbg_print(", ");
     print_util_dbg_print_num(packet->param4,10);
-    print_util_dbg_print("\r\n");
-    print_util_dbg_print("Param5: ");
-    print_util_dbg_print_num(packet->param5,10);
-    print_util_dbg_print("\r\n");
-    print_util_dbg_print("Param6: ");
-    print_util_dbg_print_num(packet->param6,10);
-    print_util_dbg_print("\r\n");
-    print_util_dbg_print("Param7: ");
-    print_util_dbg_print_num(packet->param7,10);
-    print_util_dbg_print("\r\n");
+    print_util_dbg_print(")\r\n");
     result = MAV_RESULT_ACCEPTED;
     return result;
 
