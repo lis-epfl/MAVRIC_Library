@@ -108,7 +108,7 @@ int main(void)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using real sensors
-    central_data_conf_t central_data_config = central_data_default_config(MAVLINK_SYS_ID);
+    Central_data::conf_t central_data_config = Central_data::default_config(MAVLINK_SYS_ID);
     Central_data cd = Central_data(board.imu,
                                    board.bmp085,
                                    board.gps_ublox,

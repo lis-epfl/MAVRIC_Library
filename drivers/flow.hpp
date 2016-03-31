@@ -77,7 +77,7 @@ typedef enum
  */
 typedef struct
 {
-    mavlink_stream_conf_t mavlink_stream_config;
+    Mavlink_stream::conf_t mavlink_stream_config;
 } flow_conf_t;
 
 
@@ -135,7 +135,7 @@ static inline flow_conf_t flow_default_config()
 {
     flow_conf_t config                  = {};
 
-    mavlink_stream_conf_t stream_config = {};
+    Mavlink_stream::conf_t stream_config = {};
     stream_config.sysid   = 1;
     stream_config.compid  = 50;
     stream_config.debug   = true;

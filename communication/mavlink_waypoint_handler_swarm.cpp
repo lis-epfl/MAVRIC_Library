@@ -582,13 +582,13 @@ Mavlink_waypoint_handler_swarm::Mavlink_waypoint_handler_swarm(Position_estimati
                                                                const Mavlink_stream& mavlink_stream):
     Mavlink_waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, message_handler, mavlink_stream)
 {
-    mavlink_message_handler_cmd_callback_t callbackcmd;
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
 
     callbackcmd.command_id = MAV_CMD_CONDITION_LAST; // 159
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
-    callbackcmd.function = (mavlink_cmd_callback_function_t)    &set_scenario;
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &set_scenario;
     callbackcmd.module_struct =                                 this;
     message_handler.add_cmd_callback(&callbackcmd);
 }

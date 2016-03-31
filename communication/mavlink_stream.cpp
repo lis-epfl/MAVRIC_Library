@@ -54,7 +54,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_stream::Mavlink_stream(Serial& serial, const mavlink_stream_conf_t& config) : serial(serial)
+Mavlink_stream::Mavlink_stream(Serial& serial, const conf_t& config) : serial(serial)
 {
     // Init static variable storing number of mavlink stream instances
     static uint8_t nb_mavlink_stream_instances = 0;
@@ -101,7 +101,7 @@ bool Mavlink_stream::send(mavlink_message_t* msg) const
 }
 
 
-bool Mavlink_stream::receive(mavlink_received_t* rec)
+bool Mavlink_stream::receive(Mavlink_stream::msg_received_t* rec)
 {
     uint8_t byte;
     

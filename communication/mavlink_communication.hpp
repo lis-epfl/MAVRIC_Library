@@ -51,58 +51,46 @@
 #include "hal/common/file.hpp"
 
 
-/**
- * \brief       Pointer a module's data structure
- *
- * \details     This is used as an alias to any data structure in the prototype of callback functions
- */
-typedef void* handling_telemetry_module_struct_t;
-
-
-/**
- * \brief       Prototype of callback functions for MAVLink messages
- */
-typedef void (*mavlink_send_msg_function_t)(handling_telemetry_module_struct_t, Mavlink_stream*, mavlink_message_t*);
-
-
-/**
- * \brief   MAVLink message handler structure
- */
-typedef struct
-{
-    Mavlink_stream* mavlink_stream;                                 ///<    Pointer to the MAVLink stream structure
-    mavlink_send_msg_function_t function;                           ///<    Pointer to the function to be executed
-    handling_telemetry_module_struct_t      module_struct;          ///<    Pointer to module data structure to be given as argument to the function
-} mavlink_send_msg_handler_t;
-
-
-/**
- * \brief   Configuration of the module Mavlink Communication
- */
-typedef struct
-{
-    Scheduler::conf_t               scheduler_config;
-    mavlink_stream_conf_t           mavlink_stream_config;          ///<    Configuration for the module MAVLink stream
-    mavlink_message_handler_conf_t  message_handler_config;         ///<    Configuration for the module message handler
-    onboard_parameters_conf_t       onboard_parameters_config;      ///<    Configuration for the module onboard parameters
-
-    uint32_t                        max_msg_sending_count;          ///<    Configuration for the sending message handler
-} mavlink_communication_conf_t;
-
-
-/**
- * \brief   Default configuration
- *
- * \param   sysid       System id (default value = 1)
- *
- * \return  Config structure
- */
-static inline mavlink_communication_conf_t mavlink_communication_default_config(uint8_t sysid = 1);
 
 
 class Mavlink_communication
 {
 public:
+
+    /**
+     * \brief       Pointer a module's data structure
+     *
+     * \details     This is used as an alias to any data structure in the prototype of callback functions
+     */
+    typedef void* handling_telemetry_module_struct_t;
+
+    /**
+     * \brief       Prototype of callback functions for MAVLink messages
+     */
+    typedef void (*send_msg_function_t)(handling_telemetry_module_struct_t, Mavlink_stream*, mavlink_message_t*);
+
+    /**
+     * \brief   Configuration of the module Mavlink Communication
+     */
+    struct conf_t
+    {
+        Scheduler::conf_t               scheduler_config;
+        Mavlink_stream::conf_t          mavlink_stream_config;          ///<    Configuration for the module MAVLink stream
+        Mavlink_message_handler::conf_t message_handler_config;         ///<    Configuration for the module message handler
+        Onboard_parameters::conf_t      onboard_parameters_config;      ///<    Configuration for the module onboard parameters
+
+        uint32_t                        max_msg_sending_count;          ///<    Configuration for the sending message handler
+    };
+
+    /**
+     * \brief   Default configuration
+     *
+     * \param   sysid       System id (default value = 1)
+     *
+     * \return  Config structure
+     */
+    static inline conf_t default_config(uint8_t sysid = 1);
+
     /**
      * \brief   Initialisation of the module MAVLink communication
      *
@@ -113,7 +101,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mavlink_communication(Serial& serial, State& state, File& file_storage, const mavlink_communication_conf_t& config = mavlink_communication_default_config());
+    Mavlink_communication(Serial& serial, State& state, File& file_storage, const conf_t& config = default_config());
 
     /**
      * \brief   Adding new message to the MAVLink scheduler
@@ -128,7 +116,7 @@ public:
      *
      * \return  True if the message was correctly added, false otherwise
      */
-    bool add_msg_send(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
+    bool add_msg_send(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
 
 
 
@@ -138,16 +126,6 @@ public:
      * \param   delay                   Delay of suspension in microsecond
      */
     void suspend_downstream(uint32_t delay);
-
-
-    /**
-     * \brief   Suspending sending of messages
-     *
-     * \param   msg_send    The MAVLink message sending handler
-     *
-     * \return  The result of execution of the task
-     */
-    static bool send_message(mavlink_send_msg_handler_t* msg_send);
 
 
     /**
@@ -166,9 +144,24 @@ public:
      */
      uint32_t* get_sysid_ptr();
 
+    /*
+     * \brief   Returns scheduler
+     */
     Scheduler& get_scheduler();
+    
+    /*
+     * \brief   Returns message_handler
+     */
     Mavlink_message_handler& get_message_handler();
+
+    /*
+     * \brief   Returns mavlink_stream
+     */
     Mavlink_stream& get_mavlink_stream();
+
+    /*
+     * \brief   Returns onboard_parameters struct
+     */
     Onboard_parameters& get_onboard_parameters();
   
     /**
@@ -179,25 +172,44 @@ public:
      * \return  Task status return
      */
     static bool update(Mavlink_communication* mavlink_communication);  
-    
+
 private:
+
+    /**
+     * \brief   MAVLink message handler structure
+     */
+    struct send_msg_handler_t
+    {
+        Mavlink_stream* mavlink_stream;                                 ///<    Pointer to the MAVLink stream structure
+        send_msg_function_t function;                                   ///<    Pointer to the function to be executed
+        handling_telemetry_module_struct_t      module_struct;          ///<    Pointer to module data structure to be given as argument to the function
+    };
+    
     Scheduler                       scheduler;                      ///<    Task set for scheduling of down messages
     Mavlink_stream                  mavlink_stream;                 ///<    Mavlink interface using streams
     Mavlink_message_handler         message_handler;                ///<    Message handler
     Onboard_parameters              onboard_parameters;             ///<    Onboard parameters
     uint32_t msg_sending_count;                                     ///<    Number of message callback currently registered
     uint32_t max_msg_sending_count;                                 ///<    Maximum number of callback that can be registered
-    mavlink_send_msg_handler_t* msg_send_list;                      ///<    List of message callbacks
+    send_msg_handler_t* msg_send_list;                      ///<    List of message callbacks
 
-    bool configure_communication(const mavlink_communication_conf_t& config);
+
+    /**
+     * \brief   Suspending sending of messages
+     *
+     * \param   msg_send    The MAVLink message sending handler
+     *
+     * \return  The result of execution of the task
+     */
+    static bool send_message(send_msg_handler_t* msg_send);
+
+
 };
 
 
-
-
-static inline mavlink_communication_conf_t mavlink_communication_default_config(uint8_t sysid)
+Mavlink_communication::conf_t Mavlink_communication::default_config(uint8_t sysid)
 {
-    mavlink_communication_conf_t conf                  = {};
+    conf_t conf                                        = {};
 
     conf.scheduler_config                              = {};
     conf.scheduler_config.max_task_count               = 30;

@@ -53,7 +53,7 @@ extern "C"
 //------------------------------------------------------------------------------
 
 
-Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const onboard_parameters_conf_t& config) :
+Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config) :
         file(file),
         state(state),
         mavlink_stream(mavlink_stream),
@@ -67,7 +67,7 @@ Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const S
     // allocate memory for command callbacks
     for(max_param_count = config.max_param_count; max_param_count > 0; max_param_count--)
     {
-        parameters = (onboard_parameters_entry_t*)malloc(sizeof(onboard_parameters_entry_t)*max_param_count);
+        parameters = (param_entry_t*)malloc(sizeof(param_entry_t)*max_param_count);
         if(parameters != NULL)
         {
             break;
@@ -92,37 +92,37 @@ Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const S
                                        MAVLINK_MSG_ID_PARAM_VALUE);
 
     // Add callbacks for onboard parameters requests
-    mavlink_message_handler_msg_callback_t callback;
+    Mavlink_message_handler::msg_callback_t callback;
 
     callback.message_id     = MAVLINK_MSG_ID_PARAM_REQUEST_LIST; // 21
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (mavlink_msg_callback_function_t) &schedule_all_parameters;
-    callback.module_struct  = (handling_module_struct_t)this;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &schedule_all_parameters;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)this;
     init_success &= message_handler.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_PARAM_REQUEST_READ; // 20
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (mavlink_msg_callback_function_t) &send_parameter;
-    callback.module_struct  = (handling_module_struct_t)this;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &send_parameter;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)this;
     init_success &= message_handler.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_PARAM_SET; // 23
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (mavlink_msg_callback_function_t) &receive_parameter;
-    callback.module_struct  = (handling_module_struct_t)this;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &receive_parameter;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)this;
     init_success &= message_handler.add_msg_callback(&callback);
 
     // Add callbacks for waypoint handler commands requests
-    mavlink_message_handler_cmd_callback_t callbackcmd;
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
 
     callbackcmd.command_id = MAV_CMD_PREFLIGHT_STORAGE; // 245
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL;
-    callbackcmd.function = (mavlink_cmd_callback_function_t)    &preflight_storage;
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &preflight_storage;
     callbackcmd.module_struct = this;
     init_success &= message_handler.add_cmd_callback(&callbackcmd);
 }
@@ -144,7 +144,7 @@ bool Onboard_parameters::add_parameter_uint32(uint32_t* val, const char* param_n
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                onboard_parameters_entry_t* new_param = &parameters[param_count++];
+                param_entry_t* new_param = &parameters[param_count++];
 
                 new_param->param                     = (float*) val;
                 strcpy(new_param->param_name,       param_name);
@@ -191,7 +191,7 @@ bool Onboard_parameters::add_parameter_int32(int32_t* val, const char* param_nam
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                onboard_parameters_entry_t* new_param = &parameters[param_count++];
+                param_entry_t* new_param = &parameters[param_count++];
 
                 new_param->param                     = (float*) val;
                 strcpy(new_param->param_name,       param_name);
@@ -238,7 +238,7 @@ bool Onboard_parameters::add_parameter_float(float* val, const char* param_name)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                onboard_parameters_entry_t* new_param = &parameters[param_count++];
+                param_entry_t* new_param = &parameters[param_count++];
 
                 new_param->param                     = val;
                 strcpy(new_param->param_name,       param_name);
@@ -422,7 +422,7 @@ void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, 
                 bool match = true;
 
                 // Get pointer to parameter number i
-                onboard_parameters_entry_t* param = &onboard_parameters->parameters[i];
+                param_entry_t* param = &onboard_parameters->parameters[i];
 
                 for (uint16_t j = 0; j < param->param_name_length; j++)
                 {
@@ -468,7 +468,7 @@ void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameter
             && (set.target_component == onboard_parameters->mavlink_stream.compid))
     {
         char* key = (char*) set.param_id;
-        onboard_parameters_entry_t* param;
+        param_entry_t* param;
 
         if (onboard_parameters->debug == true)
         {

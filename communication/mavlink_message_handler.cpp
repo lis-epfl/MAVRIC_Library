@@ -56,7 +56,7 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool Mavlink_message_handler::match_msg(mavlink_message_handler_msg_callback_t* msg_callback, mavlink_message_t* msg)
+bool Mavlink_message_handler::match_msg(msg_callback_t* msg_callback, mavlink_message_t* msg)
 {
     bool match = false;
 
@@ -80,7 +80,7 @@ bool Mavlink_message_handler::match_msg(mavlink_message_handler_msg_callback_t* 
 }
 
 
-bool Mavlink_message_handler::match_cmd(mavlink_message_handler_cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd)
+bool Mavlink_message_handler::match_cmd(cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd)
 {
     bool match = false;
 
@@ -113,7 +113,7 @@ void Mavlink_message_handler::sort_latest_cmd_callback()
 
     //as the list is already sorted, we just need to compare the latest element from the list with previous one,
     //until we find a command_id lower than the current one
-    mavlink_message_handler_cmd_callback_t temp = cmd_callback_list[cmd_callback_count];
+    cmd_callback_t temp = cmd_callback_list[cmd_callback_count];
     j = cmd_callback_count;
     while ((j > 0) && (cmd_callback_list[j - 1].command_id > temp.command_id))
     {
@@ -130,7 +130,7 @@ void Mavlink_message_handler::sort_latest_msg_callback()
 
     //as the list is already sorted, we just need to compare the latest element from the list with previous one,
     //until we find a message_id lower than the current one
-    mavlink_message_handler_msg_callback_t temp = msg_callback_list[msg_callback_count];
+    msg_callback_t temp = msg_callback_list[msg_callback_count];
     j =  msg_callback_count;
     while ((j > 0) && (msg_callback_list[j - 1].message_id > temp.message_id))
     {
@@ -146,7 +146,7 @@ void Mavlink_message_handler::sort_latest_msg_callback()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream, const mavlink_message_handler_conf_t& config) : 
+Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream, const conf_t& config) : 
         mavlink_stream(mavlink_stream)
 {
     // Init debug mode
@@ -158,7 +158,7 @@ Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream,
     // allocate memory for message callbacks
     for(msg_callback_count_max = config.max_msg_callback_count; msg_callback_count_max > 0; msg_callback_count_max--)
     {
-        msg_callback_list = (mavlink_message_handler_msg_callback_t*)malloc(sizeof(mavlink_message_handler_msg_callback_t)*msg_callback_count_max);
+        msg_callback_list = (msg_callback_t*)malloc(sizeof(msg_callback_t)*msg_callback_count_max);
         if(msg_callback_list != NULL)
         {
             break;
@@ -176,7 +176,7 @@ Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream,
     // allocate memory for command callbacks
     for(cmd_callback_count_max = config.max_cmd_callback_count; cmd_callback_count_max > 0; cmd_callback_count_max--)
     {
-        cmd_callback_list = (mavlink_message_handler_cmd_callback_t*)malloc(sizeof(mavlink_message_handler_cmd_callback_t)*cmd_callback_count_max);
+        cmd_callback_list = (cmd_callback_t*)malloc(sizeof(cmd_callback_t)*cmd_callback_count_max);
         if(cmd_callback_list != NULL)
         {
             break;
@@ -193,7 +193,7 @@ Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream,
 }
 
 
-bool Mavlink_message_handler::add_msg_callback(mavlink_message_handler_msg_callback_t* msg_callback)
+bool Mavlink_message_handler::add_msg_callback(msg_callback_t* msg_callback)
 {
     bool add_callback_success = true;
 
@@ -207,7 +207,7 @@ bool Mavlink_message_handler::add_msg_callback(mavlink_message_handler_msg_callb
     {
         if (msg_callback_count <  msg_callback_count_max)
         {
-            mavlink_message_handler_msg_callback_t* new_callback = &msg_callback_list[msg_callback_count];
+            msg_callback_t* new_callback = &msg_callback_list[msg_callback_count];
 
             new_callback->sys_id        = &mavlink_stream.sysid;
             new_callback->message_id    = msg_callback->message_id;
@@ -235,7 +235,7 @@ bool Mavlink_message_handler::add_msg_callback(mavlink_message_handler_msg_callb
 }
 
 
-bool Mavlink_message_handler::add_cmd_callback(mavlink_message_handler_cmd_callback_t* cmd_callback)
+bool Mavlink_message_handler::add_cmd_callback(cmd_callback_t* cmd_callback)
 {
     bool add_callback_success = true;
 
@@ -249,7 +249,7 @@ bool Mavlink_message_handler::add_cmd_callback(mavlink_message_handler_cmd_callb
     {
         if (cmd_callback_count <  cmd_callback_count_max)
         {
-            mavlink_message_handler_cmd_callback_t* new_callback = &cmd_callback_list[cmd_callback_count];
+            cmd_callback_t* new_callback = &cmd_callback_list[cmd_callback_count];
 
             new_callback->command_id = cmd_callback->command_id;
             new_callback->sysid_filter = cmd_callback->sysid_filter;
@@ -318,7 +318,7 @@ void Mavlink_message_handler::cmd_default_dbg(mavlink_command_long_t* cmd)
 }
 
 
-void Mavlink_message_handler::receive(mavlink_received_t* rec)
+void Mavlink_message_handler::receive(Mavlink_stream::msg_received_t* rec)
 {
     mavlink_message_t* msg = &rec->msg;
 
@@ -346,8 +346,8 @@ void Mavlink_message_handler::receive(mavlink_received_t* rec)
                 {
                     if (match_cmd(&cmd_callback_list[i], msg, &cmd))
                     {
-                        mavlink_cmd_callback_function_t function        = cmd_callback_list[i].function;
-                        handling_module_struct_t        module_struct   = cmd_callback_list[i].module_struct;
+                        cmd_callback_func_t function             = cmd_callback_list[i].function;
+                        handling_module_struct_t module_struct   = cmd_callback_list[i].module_struct;
 
                         // Call appropriate function callback
                         result = function(module_struct, &cmd);
@@ -382,7 +382,7 @@ void Mavlink_message_handler::receive(mavlink_received_t* rec)
         {
             if (match_msg(&msg_callback_list[i], msg))
             {
-                mavlink_msg_callback_function_t function        = msg_callback_list[i].function;
+                Mavlink_message_handler::msg_callback_func_t function        = msg_callback_list[i].function;
                 handling_module_struct_t        module_struct   = msg_callback_list[i].module_struct;
                 uint32_t                        sys_id          = *msg_callback_list[i].sys_id;
 

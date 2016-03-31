@@ -65,33 +65,33 @@ extern "C"
 
 
 /**
- * \brief   Mavlink structures for the receive message and its status
- */
-typedef struct
-{
-    mavlink_message_t msg;          ///< Mavlink message
-    mavlink_status_t status;        ///< Status on the message
-} mavlink_received_t;
-
-
-/**
- * \brief   Configuration structure for the module MAVLink stream
- */
-typedef struct
-{
-    uint32_t sysid;                 ///< System ID
-    uint32_t compid;                ///< System Component ID
-    bool     debug;                 ///< Debug flag
-} mavlink_stream_conf_t;
-
-/**
  * \brief   Main structure for the MAVLink stream module
  */
 class Mavlink_stream
 {
 public:
 
-    Mavlink_stream(Serial& serial, const mavlink_stream_conf_t& config);
+    /**
+     * \brief   Mavlink structures for the receive message and its status
+     */
+    typedef struct
+    {
+        mavlink_message_t msg;          ///< Mavlink message
+        mavlink_status_t status;        ///< Status on the message
+    } msg_received_t;
+
+    /**
+     * \brief   Configuration structure for the module MAVLink stream
+     */
+    struct conf_t
+    {
+        uint32_t sysid;                 ///< System ID
+        uint32_t compid;                ///< System Component ID
+        bool     debug;                 ///< Debug flag
+    };
+
+
+    Mavlink_stream(Serial& serial, const conf_t& config);
 
 
     /**
@@ -110,7 +110,7 @@ public:
      *
      * \return  Success         True if a message was successfully decoded, false else
      */
-    bool receive(mavlink_received_t* rec);
+    bool receive(msg_received_t* rec);
 
     /**
      * \brief   Flushing MAVLink stream

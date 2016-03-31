@@ -111,14 +111,14 @@ bool manual_control_telemetry_init(manual_control_t* manual_control, Mavlink_mes
                                             message_handler);
 
     // Add callbacks for waypoint handler commands requests
-    mavlink_message_handler_cmd_callback_t callbackcmd;
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
 
     callbackcmd.command_id = MAV_CMD_DO_PARACHUTE; // 208
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_SYSTEM_CONTROL; // 250
-    callbackcmd.function = (mavlink_cmd_callback_function_t)    &manual_control_telemetry_toggle_remote_use;
-    callbackcmd.module_struct =                                 manual_control;
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)            &manual_control_telemetry_toggle_remote_use;
+    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) manual_control;
     init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;

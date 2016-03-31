@@ -94,35 +94,34 @@ extern "C"
 
 
 /**
- * \brief   Configuration of the module central data module
- */
-typedef struct
-{
-    mavlink_communication_conf_t mavlink_communication_config;      ///<    Configuration for the mavlink communication module
-    Navigation::conf_t navigation_config;
-} central_data_conf_t;
-
-
-/**
- * \brief   Default configuration
- *
- * \param   sysid       System id (default value = 1)
- *
- * \return  Config structure
- */
-static inline central_data_conf_t central_data_default_config(uint8_t sysid = 1);
-
-
-/**
  * \brief The central data structure
  */
 class Central_data
 {
 public:
     /**
+     * \brief   Configuration of the module central data module
+     */
+    typedef struct
+    {
+        Mavlink_communication::conf_t mavlink_communication_config;      ///<    Configuration for the mavlink communication module
+        Navigation::conf_t navigation_config;
+    }conf_t;
+
+    /**
+     * \brief   Default configuration
+     *
+     * \param   sysid       System id (default value = 1)
+     *
+     * \return  Config structure
+     */
+    static inline conf_t default_config(uint8_t sysid = 1);
+
+
+    /**
      * \brief   Constructor
      */
-    Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, const central_data_conf_t& config = central_data_default_config());
+    Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, const conf_t& config = default_config());
 
 
     /**
@@ -194,13 +193,12 @@ private:
 
 
 
-static inline central_data_conf_t central_data_default_config(uint8_t sysid)
+Central_data::conf_t Central_data::default_config(uint8_t sysid)
 {
-    central_data_conf_t conf                  = {};
+    conf_t conf                                                = {};
 
     /* Mavlink communication config */
-    mavlink_communication_conf_t mavlink_communication_config = mavlink_communication_default_config();
-    mavlink_communication_config.mavlink_stream_config.sysid = sysid;
+    Mavlink_communication::conf_t mavlink_communication_config = Mavlink_communication::default_config(sysid);
     mavlink_communication_config.message_handler_config.debug = true;
     mavlink_communication_config.onboard_parameters_config.debug = true;
     mavlink_communication_config.mavlink_stream_config.debug = true;

@@ -66,7 +66,7 @@ bool Flow::update(Flow* flow)
     // Update time
     flow->last_update_us  = time_keeper_get_us();
 
-    mavlink_received_t rec;
+    Mavlink_stream::msg_received_t rec;
     // Receive incoming bytes and check if a new message is here
     if (flow->mavlink_stream.receive(&rec))
     {

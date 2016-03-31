@@ -95,13 +95,13 @@ bool position_estimation_telemetry_init(Position_estimation* pos_est, Mavlink_me
 {
     bool init_success = true;
 
-    mavlink_message_handler_cmd_callback_t callbackcmd;
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
 
     callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
     callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL;
-    callbackcmd.function      = (mavlink_cmd_callback_function_t)   &position_estimation_set_new_home_position;
+    callbackcmd.function      = (Mavlink_message_handler::cmd_callback_func_t)   &position_estimation_set_new_home_position;
     callbackcmd.module_struct =                                     pos_est;
     init_success &= message_handler->add_cmd_callback(&callbackcmd);
 

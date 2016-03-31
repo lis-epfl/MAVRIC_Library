@@ -125,7 +125,7 @@ static void mavlink_communication_toggle_telemetry_stream(Scheduler* scheduler, 
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_communication::Mavlink_communication(Serial& serial, State& state, File& file_storage, const mavlink_communication_conf_t& config) : 
+Mavlink_communication::Mavlink_communication(Serial& serial, State& state, File& file_storage, const conf_t& config) : 
     scheduler(config.scheduler_config),
     mavlink_stream(serial, config.mavlink_stream_config),
     message_handler(mavlink_stream, config.message_handler_config),
@@ -138,7 +138,7 @@ Mavlink_communication::Mavlink_communication(Serial& serial, State& state, File&
     // reduce max_msg_sending_count messages, until enough space is available
     for(max_msg_sending_count = config.max_msg_sending_count; max_msg_sending_count > 0; max_msg_sending_count--)
     {
-        msg_send_list = (mavlink_send_msg_handler_t*)malloc(sizeof(mavlink_send_msg_handler_t[max_msg_sending_count]));
+        msg_send_list = (send_msg_handler_t*)malloc(sizeof(send_msg_handler_t[max_msg_sending_count]));
         if(msg_send_list != NULL)
         {
             break;
@@ -156,13 +156,13 @@ Mavlink_communication::Mavlink_communication(Serial& serial, State& state, File&
     }
 
     // Add callback to activate / disactivate streams
-    mavlink_message_handler_msg_callback_t callback;
+    Mavlink_message_handler::msg_callback_t callback;
 
     callback.message_id     = MAVLINK_MSG_ID_REQUEST_DATA_STREAM; // 66
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (mavlink_msg_callback_function_t) &mavlink_communication_toggle_telemetry_stream;
-    callback.module_struct  = (handling_module_struct_t)        &scheduler;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &mavlink_communication_toggle_telemetry_stream;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)        &scheduler;
     init_success &= message_handler.add_msg_callback(&callback);
 
     if(!init_success)
@@ -177,13 +177,13 @@ void Mavlink_communication::suspend_downstream(uint32_t delay)
 }
 
 
-bool Mavlink_communication::add_msg_send(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
+bool Mavlink_communication::add_msg_send(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Mavlink_communication::send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
 {
     bool add_success = true;
 
     if (msg_sending_count <  max_msg_sending_count)
     {
-        mavlink_send_msg_handler_t* new_msg_send = &msg_send_list[msg_sending_count++];
+        send_msg_handler_t* new_msg_send = &msg_send_list[msg_sending_count++];
 
         new_msg_send->mavlink_stream = &mavlink_stream;
         new_msg_send->function = function;
@@ -210,11 +210,11 @@ bool Mavlink_communication::add_msg_send(uint32_t repeat_period, Scheduler_task:
 }
 
 
-bool Mavlink_communication::send_message(mavlink_send_msg_handler_t* msg_send)
+bool Mavlink_communication::send_message(send_msg_handler_t* msg_send)
 {
     bool success = true;
 
-    mavlink_send_msg_function_t function = msg_send->function;
+    Mavlink_communication::send_msg_function_t function = msg_send->function;
     handling_telemetry_module_struct_t module_struct = msg_send->module_struct;
 
     mavlink_message_t msg;
@@ -262,7 +262,7 @@ uint32_t* Mavlink_communication::get_sysid_ptr()
 bool Mavlink_communication::update(Mavlink_communication* mavlink_communication)
 {
     // Receive new message
-    mavlink_received_t rec;
+    Mavlink_stream::msg_received_t rec;
     while (mavlink_communication->mavlink_stream.receive(&rec))
     {
             mavlink_communication->message_handler.receive(&rec);

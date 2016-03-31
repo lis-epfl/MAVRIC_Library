@@ -212,31 +212,31 @@ bool state_telemetry_init(State* state, Mavlink_message_handler* message_handler
     bool init_success = true;
 
     // Add callbacks for onboard parameters requests
-    mavlink_message_handler_msg_callback_t callback;
+    Mavlink_message_handler::msg_callback_t callback;
 
     callback.message_id     = MAVLINK_MSG_ID_HEARTBEAT; // 1
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (mavlink_msg_callback_function_t) &state_telemetry_heartbeat_received;
-    callback.module_struct  = (handling_module_struct_t)        state;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &state_telemetry_heartbeat_received;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) state;
     init_success &= message_handler->add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_SET_MODE; // 11
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (mavlink_msg_callback_function_t) &state_telemetry_set_mav_mode;
-    callback.module_struct  = (handling_module_struct_t)        state;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &state_telemetry_set_mav_mode;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) state;
     init_success &= message_handler->add_msg_callback(&callback);
 
     // Add callbacks for waypoint handler commands requests
-    mavlink_message_handler_cmd_callback_t callbackcmd;
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
 
     callbackcmd.command_id = MAV_CMD_DO_SET_MODE; // 176
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (mavlink_cmd_callback_function_t)    &state_telemetry_set_mode_from_cmd;
-    callbackcmd.module_struct =                                 state;
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)         &state_telemetry_set_mode_from_cmd;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) state;
     init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;

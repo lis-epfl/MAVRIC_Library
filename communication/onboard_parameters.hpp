@@ -57,47 +57,20 @@ extern "C"
 
 #define MAX_ONBOARD_PARAM_COUNT 120 // should be < 122 to fit on user page on AT32UC3C1512
 
-/**
- * \brief   Structure of onboard parameter.
- */
-typedef struct
-{
-    float* param;                                               ///< Pointer to the parameter value
-    char param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];  ///< Parameter name composed of 16 characters
-    mavlink_message_type_t data_type;                           ///< Parameter type
-    uint8_t param_name_length;                                  ///< Length of the parameter name
-    uint8_t param_id;                                           ///< Parameter ID
-    bool  schedule_for_transmission;                            ///< Boolean to activate the transmission of the parameter
-} onboard_parameters_entry_t;
-
-
-/**
- * \brief       Set of onboard parameters
- *
- * \details     Uses C99's flexible member arrays: it is required to
- *              allocate memory for this structure
- */
-// typedef struct
-// {
-//     uint32_t param_count;                                       ///< Number of onboard parameter effectively in the array
-//     uint32_t max_param_count;                                   ///< Maximum number of parameters
-//     onboard_parameters_entry_t parameters[];                    ///< Onboard parameters array, needs memory allocation
-// } onboard_parameters_set_t;
-
-
-/**
- * \brief   Configuration for the module onboard parameters
- */
-typedef struct
-{
-    uint32_t max_param_count;                                   ///< Maximum number of parameters
-    bool debug;                                                 ///< Indicates if debug messages should be printed for each param change
-} onboard_parameters_conf_t;
-
 
 class Onboard_parameters
 {
 public:
+
+    /**
+     * \brief   Configuration for the module onboard parameters
+     */
+    struct conf_t
+    {
+        uint32_t max_param_count;                                   ///< Maximum number of parameters
+        bool debug;                                                 ///< Indicates if debug messages should be printed for each param change
+    };
+
     /**
      * \brief   Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
      *
@@ -109,7 +82,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Onboard_parameters(Scheduler& scheduler, File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const onboard_parameters_conf_t& config);
+    Onboard_parameters(Scheduler& scheduler, File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config);
 
     /**
      * \brief   Register parameter in the internal parameter list that gets published to MAVlink
@@ -156,13 +129,33 @@ public:
     bool write_parameters_to_storage();
 
 private:
+
+    /**
+     * \brief   Structure of onboard parameter.
+     */
+    struct param_entry_t
+    {
+        float* param;                                               ///< Pointer to the parameter value
+        char param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];  ///< Parameter name composed of 16 characters
+        mavlink_message_type_t data_type;                           ///< Parameter type
+        uint8_t param_name_length;                                  ///< Length of the parameter name
+        uint8_t param_id;                                           ///< Parameter ID
+        bool  schedule_for_transmission;                            ///< Boolean to activate the transmission of the parameter
+    };
+    
     bool debug;                                             ///< Indicates if debug messages should be printed for each param change
     File& file;                                             ///< File storage to keep parameters between flights
     const State& state;                                     ///< Pointer to the state structure
     const Mavlink_stream& mavlink_stream;                   ///< Pointer to mavlink_stream
     uint32_t param_count;                                   ///< Number of onboard parameter effectively in the array
     uint32_t max_param_count;                               ///< Maximum number of parameters
-    onboard_parameters_entry_t* parameters;                 ///< Onboard parameters array, needs memory allocation
+    param_entry_t* parameters;                 ///< Onboard parameters array, needs memory allocation
+
+
+
+
+
+
     /**
      * \brief   Sends immediately one parameter
      *
