@@ -75,7 +75,6 @@ bool Offboard_Camera::update(const scheduler_t* scheduler)
     last_update_us_ = t;
 
     // Send the message now
-    //print_util_dbg_init_msg("[Offboard camera state]", is_camera_running_);
     task_entry_t* camera_send_message_task = scheduler_get_task_by_id(scheduler, MAVLINK_MSG_ID_COMMAND_LONG);
     scheduler_run_task_now(camera_send_message_task);
 
