@@ -155,6 +155,8 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 
     mav_mode_t mode = central_data->state.mav_mode;
 
+    central_data->saccade_controller.update();
+
     if (mav_modes_is_armed(mode) == false)
     {
         // Set command to current heading

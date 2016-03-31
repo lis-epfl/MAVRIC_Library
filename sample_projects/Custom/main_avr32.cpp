@@ -118,8 +118,8 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   board.uart3,
-                                   board.uart4);
+                                   board.uart3,   // flow left
+                                   board.uart4);  // flow right
 
     // -------------------------------------------------------------------------
     // Initialisation

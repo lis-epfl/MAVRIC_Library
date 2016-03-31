@@ -90,7 +90,7 @@ extern "C"
 #include "control/stabilisation.h"
 #include "control/attitude_controller.h"
 
-    
+
 #include "util/print_util.h"
 #include "util/coord_conventions.h"
 }
@@ -105,10 +105,12 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, 
-                Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, 
-                Led& led, File& file_flash, Battery& battery, 
-                Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Serial& serial_flow_left_, Serial& serial_flow_right_);
+    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps,
+                Sonar& sonar, Serial& serial_mavlink, Satellite& satellite,
+                Led& led, File& file_flash, Battery& battery,
+                Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3,
+                File& file1, File& file2,
+                Serial& serial_flow_left_, Serial& serial_flow_right_);
 
 
     /**
@@ -134,8 +136,8 @@ public:
     Servo&          servo_1;            ///< Reference to servos structure
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
-    
-    
+
+
     scheduler_t scheduler;
     mavlink_communication_t mavlink_communication;
 
@@ -162,7 +164,7 @@ public:
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
- 
+
     Data_logging    data_logging;
     Data_logging    data_logging2;
 
