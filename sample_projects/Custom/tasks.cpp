@@ -204,6 +204,16 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         attitude_controller_update(&central_data->attitude_controller);
 
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
+
+        // // get command from remote
+        // manual_control_get_rate_command(&central_data->manual_control, &central_data->command.rate, 3.0f);
+        // manual_control_get_thrust_command(&central_data->manual_control, &central_data->command.thrust);
+
+        // // Do control
+        // central_data->attitude_controller.mode = ATTITUDE_CONTROLLER_MODE_RATE_ONLY;
+        // attitude_controller_update(&central_data->attitude_controller);
+
+        // servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else
     {
@@ -307,7 +317,7 @@ bool tasks_create_tasks(Central_data* central_data)
 
     init_success &= scheduler_add_task(scheduler, 100000,  RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_run_sonar_update,    (task_argument_t)central_data,                          12);
     init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH,   (task_function_t)&tasks_altitude_estimation, (task_argument_t)&central_data->altitude_estimation_,   13);
-    init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_flow,                                         (task_argument_t)central_data,                         4);
+    init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_flow,                (task_argument_t)central_data,                          14);
 
     // init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , (task_function_t)&tasks_sleep                                     , (task_argument_t)central_data                         , 99);
 
