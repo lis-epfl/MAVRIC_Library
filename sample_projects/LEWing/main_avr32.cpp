@@ -114,6 +114,8 @@ int main(void)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using real sensors
+    central_data_conf_t cd_config = central_data_default_config();
+
     Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
                                    board.bmp085,
@@ -133,7 +135,8 @@ int main(void)
                                    board.servo_3,
                                    board.airspeed_analog,
                                    file_log,
-                                   file_stat);
+                                   file_stat,
+                                   cd_config);
 
 
     // Create central data with simulated sensors

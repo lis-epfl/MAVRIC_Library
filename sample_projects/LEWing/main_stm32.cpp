@@ -75,6 +75,8 @@ int main(int argc, char** argv)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using simulated sensors
+    central_data_conf_t cd_config = central_data_default_config();
+
     Central_data cd = Central_data(sysid,
                                    board.imu,
                                    board.sim.barometer(),
@@ -92,7 +94,8 @@ int main(int argc, char** argv)
                                    board.servo_3,
                                    board.airspeed_analog,
                                    dummy_file1,
-                                   dummy_file2);
+                                   dummy_file2,
+                                   cd_config);
 
     // Init central data
     init_success &= cd.init();

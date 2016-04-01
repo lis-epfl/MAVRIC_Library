@@ -40,27 +40,17 @@
 
 
 #include "sample_projects/LEWing/central_data.hpp"
-#include "control/stabilisation_wing_default_config.hpp"
-#include "communication/mavlink_communication_default_config.hpp"
 
-#include "sensing/position_estimation_default_config.hpp"
-#include "sensing/ahrs_madgwick_default_config.hpp"
-#include "communication/remote_default_config.hpp"
-#include "control/manual_control_default_config.hpp"
 #include "control/stabilisation_wing.hpp"
-#include "control/servos_mix_wing_default_config.hpp"
 
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
-#include "control/navigation_default_config.h"
-#include "sensing/qfilter_default_config.h"
-#include "runtime/scheduler_default_config.h"
 #include "util/print_util.h"
 }
 
 
-Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Airspeed_analog& airspeed_analog, File& file1, File& file2):
+Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Airspeed_analog& airspeed_analog, File& file1, File& file2, central_data_conf_t config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -78,7 +68,8 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     state(battery, state_wing_default_config()),
     data_logging(file1, state, data_logging_default_config()),
     data_logging2(file2, state, data_logging_default_config()),
-    sysid_(sysid)
+    sysid_(sysid),
+    config_(config)
 {}
 
 
@@ -108,7 +99,7 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init mavlink communication
     // -------------------------------------------------------------------------
-    mavlink_communication_conf_t mavlink_communication_config = mavlink_communication_default_config();
+    mavlink_communication_conf_t mavlink_communication_config = config_.mavlink_communication_config;
     mavlink_communication_config.mavlink_stream_config.sysid = sysid_;
     mavlink_communication_config.message_handler_config.debug = true;
     mavlink_communication_config.onboard_parameters_config.debug = true;
@@ -149,7 +140,7 @@ bool Central_data::init(void)
     // Init attitude estimation filter
     // -------------------------------------------------------------------------
     ret = ahrs_madgwick_init(&attitude_filter,
-                             ahrs_madgwick_default_config(),
+                             config_.ahrs_madgwick_config,
                              &imu,
                              &ahrs,
                              &airspeed_analog);
@@ -162,7 +153,7 @@ bool Central_data::init(void)
     // Init position_estimation_init
     // -------------------------------------------------------------------------
     ret = position_estimation_init(&position_estimation,
-                                   position_estimation_default_config(),
+                                   config_.position_estimation_config,
                                    &state,
                                    &barometer,
                                    &sonar,
@@ -176,7 +167,7 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init navigation
     // -------------------------------------------------------------------------
-    navigation_config_t nav_config = navigation_default_config();
+    navigation_conf_t nav_config = config_.navigation_config;
     nav_config.navigation_type = DUBIN;
     nav_config.takeoff_altitude = -40.0f;
     ret = navigation_init(&navigation,
@@ -214,7 +205,7 @@ bool Central_data::init(void)
     // Init stabilisers
     // -------------------------------------------------------------------------
     ret = stabilisation_wing_init(&stabilisation_wing,
-                                    stabilisation_wing_default_config(),
+                                    config_.stabilisation_wing_config,
                                     &controls,
                                     &command.torque,
                                     &command.thrust,
@@ -253,7 +244,7 @@ bool Central_data::init(void)
     // Init servo mixing
     // -------------------------------------------------------------------------
     ret = servos_mix_wing_init(  &servo_mix,
-                                servos_mix_wing_default_config(),
+                                config_.servos_mix_wing_config,
                                 &command.torque,
                                 &command.thrust,
                                 &servo_1,
@@ -277,8 +268,8 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     ret = manual_control_init(&manual_control,
                               &satellite,
-                              manual_control_default_config(),
-                              remote_default_config());
+                              config_.manual_control_config,
+                              config_.remote_config);
     print_util_dbg_init_msg("[MANUAL CTRL]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
@@ -286,12 +277,12 @@ bool Central_data::init(void)
     //--------------------------------------------------------------------------
     // Init vector field navigation
     //--------------------------------------------------------------------------
-    vector_field_waypoint_conf_t vector_field_config;
+    /*vector_field_waypoint_conf_t vector_field_config;
     vector_field_waypoint_init(&vector_field_waypoint,
                                &vector_field_config,
                                &waypoint_handler,
                                &position_estimation,
-                               &command.velocity);
+                               &command.velocity);*/
 
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);

@@ -72,6 +72,15 @@
 #include "hal/common/time_keeper.hpp"
 #include "drivers/airspeed_analog.hpp"
 
+#include "control/stabilisation_wing_default_config.hpp"
+#include "communication/mavlink_communication_default_config.hpp"
+#include "sensing/position_estimation_default_config.hpp"
+#include "control/servos_mix_wing_default_config.hpp"
+#include "control/manual_control_default_config.hpp"
+#include "communication/remote_default_config.hpp"
+#include "control/navigation_default_config.hpp"
+#include "sensing/ahrs_madgwick_default_config.hpp"
+
 extern "C"
 {
 #include "sensing/ahrs.h"
@@ -79,9 +88,28 @@ extern "C"
 #include "util/print_util.h"
 #include "util/coord_conventions.h"
 #include "control/stabilisation.h"
+#include "runtime/scheduler_default_config.h"
 }
 
 #include "control/vector_field_waypoint.hpp"
+
+typedef struct
+{
+    state_conf_t state_config;
+    data_logging_conf_t data_logging_config;
+    data_logging_conf_t data_logging_config2;
+    scheduler_conf_t scheduler_config;
+    mavlink_communication_conf_t mavlink_communication_config;
+    ahrs_madgwick_conf_t ahrs_madgwick_config;
+    position_estimation_conf_t position_estimation_config;
+    navigation_conf_t navigation_config;
+    stabilisation_wing_conf_t stabilisation_wing_config;
+    servos_mix_wing_conf_t servos_mix_wing_config;
+    manual_control_conf_t manual_control_config;
+    remote_conf_t remote_config;
+}central_data_conf_t;
+
+static inline central_data_conf_t central_data_default_config();
 
 /**
  * \brief The central data structure
@@ -92,7 +120,24 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Airspeed_analog& airspeed_analog, File& file1, File& file2);
+    Central_data(   uint8_t sysid, 
+                    Imu& imu, 
+                    Barometer& barometer, 
+                    Gps& gps, 
+                    Sonar& sonar, 
+                    Serial& serial_mavlink, 
+                    Satellite& satellite, 
+                    Led& led, 
+                    File& file_flash, 
+                    Battery& battery, 
+                    Servo& servo_0, 
+                    Servo& servo_1, 
+                    Servo& servo_2, 
+                    Servo& servo_3, 
+                    Airspeed_analog& airspeed_analog, 
+                    File& file1, 
+                    File& file2,
+                    central_data_conf_t config = central_data_default_config() );
 
 
     /**
@@ -155,7 +200,38 @@ public:
 
 private:
     uint8_t sysid_;     ///< System ID
+
+    central_data_conf_t config_;    ///< Configuration
 };
 
+static inline central_data_conf_t central_data_default_config()
+{
+    central_data_conf_t conf = {};
+
+    conf.state_config = state_default_config();
+
+    conf.data_logging_config = data_logging_default_config();
+    conf.data_logging_config = data_logging_default_config();
+
+    conf.scheduler_config = scheduler_default_config();
+
+    conf.mavlink_communication_config = mavlink_communication_default_config();
+
+    conf.ahrs_madgwick_config = ahrs_madgwick_default_config();
+
+    conf.position_estimation_config = position_estimation_default_config();
+
+    conf.navigation_config = navigation_default_config();
+
+    conf.stabilisation_wing_config = stabilisation_wing_default_config();
+
+    conf.servos_mix_wing_config = servos_mix_wing_default_config();
+
+    conf.manual_control_config = manual_control_default_config();
+
+    conf.remote_config = remote_default_config();
+
+    return conf;
+}
 
 #endif /* CENTRAL_DATA_H_ */
