@@ -1457,10 +1457,21 @@ static bool waypoint_handler_take_off_handler(mavlink_waypoint_handler_t* waypoi
             break;
 
             case DUBIN:
-                if (waypoint_handler->position_estimation->local_position.pos[Z] <= waypoint_handler->navigation->takeoff_altitude)
+                if (waypoint_handler->state->autopilot_type == MAV_TYPE_QUADROTOR)
                 {
-                    result = true;
+                    if (waypoint_handler->navigation->dist2wp_sqr <= 16.0f)
+                    {
+                        result = true;
+                    }
                 }
+                else
+                {
+                    if (waypoint_handler->position_estimation->local_position.pos[Z] <= waypoint_handler->navigation->takeoff_altitude)
+                    {
+                        result = true;
+                    }
+                }
+            break;
         }
 
         if (result)

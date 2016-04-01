@@ -299,7 +299,22 @@ static void navigation_run(navigation_t* navigation)
         break;
 
         case DUBIN:
-            navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
+            if (navigation->state->autopilot_type == MAV_TYPE_QUADROTOR)
+            {
+                if ( (navigation->internal_state == NAV_NAVIGATING) || (navigation->internal_state == NAV_HOLD_POSITION) )
+                {
+                    navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
+                }
+                else
+                {
+                    navigation_set_speed_command(rel_pos, navigation);
+                }
+            }
+            else
+            {
+                navigation_set_dubin_velocity(navigation, &navigation->goal.dubin);
+            }
+            // Add here other types of navigation strategies
         break;
     }
 
