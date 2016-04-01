@@ -150,15 +150,18 @@ int main(int argc, char** argv)
 
     // }
 
-    board.green_led.on();
-    board.red_led.on();
+    if (init_success)
+    {
+        board.green_led.off();
+        board.red_led.off();
+    }
 
     while (1 == 1)
     {
-        gpio_toggle(GPIOC, GPIO14);
+        //gpio_toggle(GPIOC, GPIO14);
         // print_util_dbg_print("[HELLO].\r\n");
 
-        time_keeper_delay_ms(100);
+         //time_keeper_delay_ms(100);
 
         // board.red_led.toggle();
         scheduler_update(&cd.scheduler);
