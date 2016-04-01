@@ -84,11 +84,11 @@ Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const S
 
     // Add onboard parameter telemetry to the scheduler
     init_success &= scheduler.add_task(100000,
-                                       RUN_REGULAR,
-                                       PERIODIC_ABSOLUTE,
-                                       PRIORITY_HIGHEST,
-                                       (task_function_t)&send_all_scheduled_parameters,
-                                       (task_argument_t)this,
+                                       Scheduler_task::Scheduler_task::RUN_REGULAR,
+                                       Scheduler_task::Scheduler_task::PERIODIC_ABSOLUTE,
+                                       Scheduler_task::Scheduler_task::PRIORITY_HIGHEST,
+                                       (Scheduler_task::task_function_t)&send_all_scheduled_parameters,
+                                       (Scheduler_task::task_argument_t)this,
                                        MAVLINK_MSG_ID_PARAM_VALUE);
 
     // Add callbacks for onboard parameters requests

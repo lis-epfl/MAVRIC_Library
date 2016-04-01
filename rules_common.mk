@@ -55,6 +55,7 @@ LIB_SRCS += hal/common/serial.cpp
 LIB_SRCS += hal/common/dbg.cpp
 
 LIB_SRCS += runtime/scheduler.cpp
+LIB_SRCS += runtime/scheduler_task.cpp
 LIB_SRCS += runtime/scheduler_telemetry.cpp
 
 LIB_SRCS += sensing/ahrs.c            

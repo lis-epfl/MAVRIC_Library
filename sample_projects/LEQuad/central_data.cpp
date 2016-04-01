@@ -54,7 +54,6 @@ extern "C"
 #include "hal/common/time_keeper.hpp"
 #include "control/navigation_default_config.h"
 #include "sensing/qfilter_default_config.h"
-#include "runtime/scheduler_default_config.h"
 
 #include "util/print_util.h"
 }
@@ -74,7 +73,7 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
-    scheduler(scheduler_default_config()),
+    scheduler(Scheduler::default_config()),
     mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
     state(battery, state_default_config()),
     data_logging(file1, state, data_logging_default_config()),
