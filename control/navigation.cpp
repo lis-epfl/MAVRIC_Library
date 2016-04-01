@@ -310,7 +310,7 @@ static void navigation_run(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, const position_estimation_t* position_estimation, State* state, mavlink_communication_t* mavlink_communication)
+bool navigation_init(navigation_t* navigation, navigation_conf_t nav_config, control_command_t* controls_nav, const quat_t* qe, const position_estimation_t* position_estimation, State* state, mavlink_communication_t* mavlink_communication)
 {
     bool init_success = true;
 
