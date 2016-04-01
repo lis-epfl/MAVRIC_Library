@@ -42,7 +42,8 @@
 #define STRING_UTIL_HPP_
 
 #include <stdint.h>
-
+#include <stddef.h>
+ 
 namespace str
 {
 const uint8_t MAX_DIGITS10_LONG = 20;
