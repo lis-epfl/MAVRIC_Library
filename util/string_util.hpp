@@ -52,11 +52,13 @@ const uint8_t FLOAT_DIGIT_COUNT = 3;
 /**
  * \brief   returns the length of a const char* excluding the termination character '\0'
  *
+ * \details checks for NULL pointer: returns 0 if text == NULL
+ *
  * \param   max_digits  maximal number of digits allowed (the rest is truncated)
  *
  * \return  length  number of characters excluding the termination character '\0'
  */
-long strlen(const char* text);
+uint64_t strlen(const char* text);
 
 
 /**
