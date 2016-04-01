@@ -43,6 +43,7 @@
 #include "sample_projects/LEWing/central_data.hpp"
 #include "communication/data_logging.hpp"
 #include "control/servos_mix_wing.hpp"
+#include "hal/common/time_keeper.hpp"
 
 
 void tasks_run_imu_update(Central_data* central_data)

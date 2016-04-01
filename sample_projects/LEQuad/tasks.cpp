@@ -42,7 +42,7 @@
 #include "sample_projects/LEQuad/tasks.hpp"
 #include "sample_projects/LEQuad/central_data.hpp"
 #include "communication/data_logging.hpp"
-
+#include "hal/common/time_keeper.hpp"
 
 void tasks_run_imu_update(Central_data* central_data)
 {

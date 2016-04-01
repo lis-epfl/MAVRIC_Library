@@ -64,6 +64,7 @@
 #include "drivers/sonar_telemetry.hpp"
 #include "communication/data_logging_telemetry.hpp"
 #include "control/manual_control_telemetry.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {

@@ -69,7 +69,6 @@
 #include "control/servos_mix_wing.hpp"
 #include "hal/common/led.hpp"
 #include "drivers/servos_telemetry.hpp"
-#include "hal/common/time_keeper.hpp"
 #include "drivers/airspeed_analog.hpp"
 
 #include "control/stabilisation_wing_default_config.hpp"
