@@ -1626,6 +1626,64 @@ static void waypoint_handler_auto_landing_handler(mavlink_waypoint_handler_t* wa
     }
 }
 
+static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t* waypoint_handler)
+{
+    float tag_pos[3];
+    float cur_pos[3];
+
+    // Set this position to be the goal
+    for (uint8_t i = 0; i < 3; i++)
+    {
+        tag_pos[i] = waypoint_handler->waypoint_hold_coordinates.pos[i];
+        cur_pos[i] = waypoint_handler->position_estimation->local_position.pos[i];
+    }
+
+    bool next_state = false;
+
+    // If the camera has detected the tag...
+    if (true) // to be changed
+    {
+        // The hold coordinates has been already been updated during the tag location reading...
+        // Changed the z goal to ground if we are positioned directly above the tag
+        float horizontal_distance_to_tag_sqr = (cur_pos[0] - tag_pos[0]) * (cur_pos[0] - tag_pos[0]) + (cur_pos[1] - tag_pos[1]) * (cur_pos[1] - tag_pos[1]);
+
+        // If we are not above tag
+        if (horizontal_distance_to_tag_sqr > 0.25)
+        {
+            // Don't change the z hold coordinates
+
+        }
+        else // Descend to ground 
+        {
+            waypoint_handler->waypoint_hold_coordinates.pos[2] = 0.0f;
+        }
+
+        waypoint_handler->navigation->alt_lpf = waypoint_handler->position_estimation->local_position.pos[2];
+    }
+    else // Else we need to search for the tag ...
+    {
+        
+    }
+
+    waypoint_handler->navigation->alt_lpf = waypoint_handler->navigation->LPF_gain * (waypoint_handler->navigation->alt_lpf) + (1.0f - waypoint_handler->navigation->LPF_gain) * waypoint_handler->position_estimation->local_position.pos[2];
+    if ((waypoint_handler->position_estimation->local_position.pos[2] > -0.1f) && (maths_f_abs(waypoint_handler->position_estimation->local_position.pos[2] - waypoint_handler->navigation->alt_lpf) <= 0.2f))
+    {
+        // Disarming
+        next_state = true;
+    }
+
+    if (next_state)
+    {
+        print_util_dbg_print("Auto-landing on tag: disarming motors \r\n");
+        waypoint_handler->navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+        waypoint_handler->state->mav_mode_custom = CUSTOM_BASE_MODE;
+        waypoint_handler->hold_waypoint_set = false;
+        waypoint_handler->navigation->internal_state = NAV_ON_GND;
+        waypoint_handler->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+        waypoint_handler->state->mav_state = MAV_STATE_STANDBY;
+    }
+}
+
 static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_handler)
 {
     mav_mode_t mode_local = waypoint_handler->state->mav_mode;
@@ -1751,6 +1809,17 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 
         case NAV_LANDING:
             waypoint_handler_auto_landing_handler(waypoint_handler);
+
+            waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
+
+            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
+            {
+                waypoint_handler->navigation->internal_state = NAV_MANUAL_CTRL;
+            }
+            break;
+
+        case NAV_LAND_ON_TAG:
+            waypoint_handler_auto_land_on_tag_handler(waypoint_handler);
 
             waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
 

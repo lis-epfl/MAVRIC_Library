@@ -47,6 +47,7 @@
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
 #include "sensing/offboard_camera.hpp"
+#include "sample_projects/LEQuad/central_data.hpp"
 
 /**
  * \brief   Initialise the offboard camera telemetry module
@@ -57,7 +58,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool offboard_camera_telemetry_init(Offboard_Camera* camera, mavlink_message_handler_t* message_handler);
+bool offboard_camera_telemetry_init(Central_data* central_data, mavlink_message_handler_t* message_handler);
 
 /**
  * \brief   Function to send the MAVLink start/stop camera do command

@@ -57,7 +57,18 @@ Offboard_Camera::Offboard_Camera(int camera_id, bool is_camera_running):
     camera_id_(camera_id),
     is_camera_running_(is_camera_running),
     last_update_us_(time_keeper_get_us())
-{}
+{
+    // Set camera resolution
+    camera_res[0] = 1280;
+    camera_res[1] = 960;
+
+    // Set camera rotation
+    camera_rotation = 1.5708;
+
+    // Set camera field of view
+    camera_fov[0] = 0.9337512;
+    camera_fov[1] = 0.72274086;
+}
 
 
 bool Offboard_Camera::update(const scheduler_t* scheduler)

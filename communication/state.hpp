@@ -82,6 +82,7 @@ typedef enum
     NAV_STOP_ON_POSITION,
     NAV_STOP_THERE,
     NAV_LANDING,
+    NAV_LAND_ON_TAG,
 } navigation_internal_state_t;
 
 /**
