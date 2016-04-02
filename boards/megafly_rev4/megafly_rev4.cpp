@@ -242,49 +242,46 @@ bool Megafly_rev4::init(void)
     ret = pwm_5.init();
     print_util_dbg_init_msg("[PWM5]", ret);
     init_success &= ret;
+
     ret = pwm_6.init();
     print_util_dbg_init_msg("[PWM6]", ret);
     init_success &= ret;
+
     ret = pwm_7.init();
     print_util_dbg_init_msg("[PWM7]", ret);
     init_success &= ret;
 
-//     servo_0.write(1);
-//     servo_1.write(1);
-//     servo_2.write(1);
-//     servo_3.write(1);
-//     servo_4.write(1);
-//     servo_5.write(1);
-//     servo_6.write(1);
-//     servo_7.write(1);
+    // -------------------------------------------------------------------------
+    // Calibrate ESCs
+    // -------------------------------------------------------------------------
+    // servo_0.write(1);
+    // servo_1.write(1);
+    // servo_2.write(1);
+    // servo_3.write(1);
+    // servo_4.write(1);
+    // servo_5.write(1);
+    // servo_6.write(1);
+    // servo_7.write(1);
+    // time_keeper_delay_ms(3000);
+    // servo_0.write(-1);
+    // servo_1.write(-1);
+    // servo_2.write(-1);
+    // servo_3.write(-1);
+    // servo_4.write(-1);
+    // servo_5.write(-1);
+    // servo_6.write(-1);
+    // servo_7.write(-1);
 
-// time_keeper_delay_ms(3000);
-
-//     servo_0.write(-1);
-//     servo_1.write(-1);
-//     servo_2.write(-1);
-//     servo_3.write(-1);
-//     servo_4.write(-1);
-//     servo_5.write(-1);
-//     servo_6.write(-1);
-//     servo_7.write(-1);
-
-// time_keeper_delay_ms(3000);
-
+    // -------------------------------------------------------------------------
+    // Init Servos
+    // -------------------------------------------------------------------------
     servo_0.failsafe();
-
     servo_1.failsafe();
-
     servo_2.failsafe();
-
     servo_3.failsafe();
-
     servo_4.failsafe();
-
     servo_5.failsafe();
-
     servo_6.failsafe();
-
     servo_7.failsafe();
 
 
