@@ -95,13 +95,13 @@ public:
 
     //Temporary public, to adjust pid gains
     pid_controller_t            pid_;                ///< Controller
+    float                       hover_point_;        ///< Thrust required to hover
 
 private:
     const position_command_t&   position_command_;   ///< Pointer to altitude command (input)
     const altitude_t&           altitude_;           ///< Pointer to estimated altitude (input)
     thrust_command_t&           thrust_command_;     ///< Pointer to thrust command (output)
 
-    float                       hover_point_;        ///< Thrust required to hover
 };
 
 
@@ -110,6 +110,7 @@ static inline altitude_controller_conf_t altitude_controller_default_config(void
     altitude_controller_conf_t conf = {};
 
     conf.hover_point                        = -0.28f;
+
     conf.pid_config                         = {};
     conf.pid_config.p_gain                  = 0.2f;
     conf.pid_config.clip_min                = -1.0f;
@@ -117,7 +118,7 @@ static inline altitude_controller_conf_t altitude_controller_default_config(void
     conf.pid_config.integrator              = {};
     conf.pid_config.integrator.gain         = 0.5f;
     conf.pid_config.integrator.accumulator  = 0.0f;
-    conf.pid_config.integrator.clip_pre     = 0.1f;
+    conf.pid_config.integrator.clip_pre     = 0.0001f;
     conf.pid_config.integrator.clip         = 0.5f;
     conf.pid_config.differentiator          = {};
     conf.pid_config.differentiator.gain     = 0.4f;

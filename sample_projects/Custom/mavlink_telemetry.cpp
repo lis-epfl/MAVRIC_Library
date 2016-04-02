@@ -396,6 +396,8 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.p_gain,         "ALT_PID_KP"   );
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.integrator.gain,"ALT_PID_KI"    );
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.differentiator.gain,   "ALT_PID_KD"    );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.hover_point_,   "HOVERPT_ALT"    );
+
 
     return init_success;
 }
@@ -492,7 +494,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&scheduler_telemetry_send_rt_stats,                             &central_data->scheduler,               MAVLINK_MSG_ID_NAMED_VALUE_FLOAT); // ID 251
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&sonar_telemetry_send,                            &central_data->sonar_i2cxl.data,            MAVLINK_MSG_ID_DISTANCE_SENSOR  );// ID 132
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
-    init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           &central_data->saccade_controller.flow_right_,              MAVLINK_MSG_ID_OPTICAL_FLOW           );
+    init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           &central_data->saccade_controller.flow_left_,              MAVLINK_MSG_ID_OPTICAL_FLOW           );
 
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&saccade_telemetry_send_vector,                                        &central_data->saccade_controller,                     MAVLINK_MSG_ID_DEBUG_VECT);   // ID 24
 

@@ -65,7 +65,7 @@ Altitude_estimation::Altitude_estimation(Sonar& sonar,
                                          0.0f, 0.0f,   1.0f}},         // F
                   std::array<float,3*3>{{}}, // Q
                   std::array<float,3>{{1.0f, 0.0f, 0.0f}},               // H
-                  std::array<float,1>{{0.001f}},                         // R
+                  std::array<float,1>{{0.0001f}},                         // R
                   std::array<float,3>{{0.000008f, 0.004, 0.0f}}  ),      // B
     sonar_(sonar),
     barometer_(barometer),
