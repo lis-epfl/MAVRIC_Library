@@ -230,7 +230,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
 
     
     // -------------------------------------------------------------------------
-    // Servo config
+    // PWM config
     // -------------------------------------------------------------------------
     conf.pwm_config[0].gpio_config.port = GPIO_STM32_PORT_B;
     conf.pwm_config[0].gpio_config.pin = GPIO_STM32_PIN_3;
@@ -240,7 +240,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[0].timer_config = TIM2;
     conf.pwm_config[0].rcc_timer_config = RCC_TIM2;
     conf.pwm_config[0].channel_config = CHANNEL_2;
-    conf.pwm_config[0].prescaler_config = 168;
+    conf.pwm_config[0].prescaler_config = 84; //since APB1 clock is main_clk/2
     conf.pwm_config[0].period_config = 20000; //50Hz
     conf.pwm_config[0].duty_cycle_config = 5000;
 
@@ -252,7 +252,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[1].timer_config = TIM3;
     conf.pwm_config[1].rcc_timer_config = RCC_TIM3;
     conf.pwm_config[1].channel_config = CHANNEL_1;
-    conf.pwm_config[1].prescaler_config = 168;
+    conf.pwm_config[1].prescaler_config = 84;
     conf.pwm_config[1].period_config = 20000; //50Hz
     conf.pwm_config[1].duty_cycle_config = 5000;
 
@@ -264,7 +264,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[2].timer_config = TIM3;
     conf.pwm_config[2].rcc_timer_config = RCC_TIM3;
     conf.pwm_config[2].channel_config = CHANNEL_2;
-    conf.pwm_config[2].prescaler_config = 168;
+    conf.pwm_config[2].prescaler_config = 84;
     conf.pwm_config[2].period_config = 20000; //50Hz
     conf.pwm_config[2].duty_cycle_config = 5000;
 
@@ -276,7 +276,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[3].timer_config = TIM4;
     conf.pwm_config[3].rcc_timer_config = RCC_TIM4;
     conf.pwm_config[3].channel_config = CHANNEL_1;
-    conf.pwm_config[3].prescaler_config = 168;
+    conf.pwm_config[3].prescaler_config = 84;
     conf.pwm_config[3].period_config = 20000; //50Hz
     conf.pwm_config[3].duty_cycle_config = 5000;
 
@@ -288,7 +288,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[4].timer_config = TIM4;
     conf.pwm_config[4].rcc_timer_config = RCC_TIM4;
     conf.pwm_config[4].channel_config = CHANNEL_2;
-    conf.pwm_config[4].prescaler_config = 168;
+    conf.pwm_config[4].prescaler_config = 84;
     conf.pwm_config[4].period_config = 20000; //50Hz
     conf.pwm_config[4].duty_cycle_config = 5000;
 
@@ -300,7 +300,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[5].timer_config = TIM4;
     conf.pwm_config[5].rcc_timer_config = RCC_TIM4;
     conf.pwm_config[5].channel_config = CHANNEL_3;
-    conf.pwm_config[5].prescaler_config = 168;
+    conf.pwm_config[5].prescaler_config = 84;
     conf.pwm_config[5].period_config = 20000; //50Hz
     conf.pwm_config[5].duty_cycle_config = 5000;
 
