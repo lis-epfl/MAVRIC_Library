@@ -47,9 +47,12 @@ extern "C"
 #include "control/control_command.h"
 #include "util/quaternions.h"
 #include "util/coord_conventions.h"
+#include "util/quick_trig.h"
 }
 
 #include "drivers/flow.hpp"
+
+#include "hal/common/time_keeper.hpp"
 
 /**
  * \brief Configuration structure
@@ -123,8 +126,12 @@ public:
     float                       goal_direction_;                    ///< Goal direction for drone
     float                       azimuth_ [2 * N_points];            ///< Table of azimuthal angles
     float                       relative_nearness_ [2 * N_points];  ///< Table of Relative nearness
+    float                       inv_sin_azimuth_ [2 * N_points];
+    float                       cos_azimuth_[2 * N_points];
+    float                       sin_azimuth_[2 * N_points];
     float                       can_;
     float                       cad_;
+    uint64_t                    last_saccade_;
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
 
     flow_t&                       flow_left_;                          ///< Left optic flow camera output
