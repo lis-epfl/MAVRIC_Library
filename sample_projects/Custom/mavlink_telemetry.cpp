@@ -199,112 +199,15 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
 {
     bool init_success = true;
 
-    stabiliser_t* rate_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.rate_stabiliser;
-    stabiliser_t* attitude_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.attitude_stabiliser;
-    stabiliser_t* velocity_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.velocity_stabiliser;
-    //stabiliser_t* position_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.position_stabiliser;
-
     // System ID
     init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*)&central_data->mavlink_communication.mavlink_stream.sysid, "ID_SYSID");
 
     // Simulation mode
     init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*)&central_data->state.simulation_mode, "SIM_MODE");
 
-    // Test attitude controller gains
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.p_gain_angle[ROLL],    "GAINA_ROLL"        );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.p_gain_angle[PITCH],   "GAINA_PITCH"       );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.p_gain_angle[YAW],     "GAINA_YAW"         );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.p_gain_rate[ROLL],     "GAINR_ROLL"        );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.p_gain_rate[PITCH],    "GAINR_PITCH"       );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.p_gain_rate[YAW],      "GAINR_YAW"         );
-
-    // // Roll rate PID
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].p_gain,              "ROLLRPID_KP");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].integrator.clip,         "ROLLRPID_I_CLIP");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].integrator.gain,         "ROLLRPID_KI");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].differentiator.clip,     "ROLLRPID_D_CLIp");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].differentiator.gain,     "ROLLRPID_KD");
-
-    // //Roll attitude PID
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].p_gain,                "ROLLAPID_KP"       );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLLAPID_I_CLIP"   );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLLAPID_KI"       );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].differentiator.clip,   "ROLLAPID_D_CLIP"   );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLLAPID_KD"       );
-
-    // // Pitch rate PID
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[PITCH].p_gain,              "PITCHRPID_KP");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[PITCH].integrator.clip,         "PITCHRPID_I_CLIP");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[PITCH].integrator.gain,         "PITCHRPID_KI");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[PITCH].differentiator.clip,     "PITCHRPID_D_CLIP");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[PITCH].differentiator.gain, "PITCHRPID_KD");
-
-    // //Pitch attitude PID
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].p_gain,               "PITCHAPID_KP"      );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCHAPID_I_CLIP"  );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCHAPID_KI"      );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].differentiator.clip,  "PITCHAPID_D_CLIP"  );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCHAPID_KD"      );
-
-    // // Yaw rate PID
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[YAW].p_gain,                "YAWRPID_KP");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[YAW].clip_max,          "YAWRPID_P_CLMX");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[YAW].clip_min,          "YAWRPID_P_CLMN");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[YAW].integrator.clip,       "YAWRPID_I_CLIP");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[YAW].integrator.gain,       "YAWRPID_KI");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[YAW].differentiator.clip,   "YAWRPID_D_CLIP");
-    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &rate_stabiliser->rpy_controller[YAW].differentiator.gain,   "YAWRPID_KD");
-
-    // // Yaw attitude PID
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAWAPID_KP"        );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAWAPID_P_CLMX"    );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAWAPID_P_CLMN"    );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAWAPID_I_CLIP"    );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAWAPID_KI"        );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAWAPID_D_CLIP"    );
-    // init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAWAPID_KD"        );
-
-
-    // Roll velocity PID
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLLVPID_KP"       );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLLVPID_KI"       );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLLVPID_I_CLIP"   );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLLVPID_KD"       );
-
-
-    // Pitch velocity PID
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCHVPID_KP"      );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCHVPID_KI"      );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCHVPID_I_CLIP"  );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCHVPID_KD"      );
-
-    // Thrust velocity PID
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &velocity_stabiliser->thrust_controller.p_gain,              "THRVPID_KP");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &velocity_stabiliser->thrust_controller.integrator.clip_pre,     "THRVPID_I_PREG");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &velocity_stabiliser->thrust_controller.differentiator.gain,     "THRVPID_KD");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &velocity_stabiliser->thrust_controller.soft_zone_width,         "THRVPID_SOFT");
-
-    // Roll position PID
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->rpy_controller[ROLL].p_gain,                "ROLLPPID_KP"   );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLLPPID_KI"   );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLLPPID_KD"   );
-
-    // Pitch position PID
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->rpy_controller[PITCH].p_gain,               "PITCHPPID_KP"  );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCHPPID_KI"  );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCHPPID_KD"  );
-
-    // Thrust position PID
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->thrust_controller.p_gain,               "THRPPID_KP"    );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->thrust_controller.integrator.gain,      "THRPPID_KI"    );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->thrust_controller.differentiator.gain,  "THRPPID_KD"    );
-    //init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &position_stabiliser->thrust_controller.soft_zone_width,      "THRPPID_SOFT"  );
-
-
     // qfilter
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->attitude_filter.kp                                        , "QF_KP_ACC");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->attitude_filter.kp_mag                                    , "QF_KP_MAG");
-    //init_success &= onboard_parameters_add_parameter_float ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].differentiator.gain         , "YAWAPID_D_GAIN"   );
 
     // Biases
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->imu.get_config()->gyroscope.bias[X]                                    , "BIAS_GYRO_X");
@@ -332,15 +235,14 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->imu.get_config()->magnetometer.scale_factor[Y]                        , "SCALE_MAG_Y");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->imu.get_config()->magnetometer.scale_factor[Z]                        , "SCALE_MAG_Z");
 
-
+    // Position estimation
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_alt_baro                              , "POS_KP_ALT_BARO");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_vel_baro                              , "POS_KP_VELB");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_pos_gps[0]                            , "POS_KP_POS0");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_pos_gps[1]                            , "POS_KP_POS1");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_pos_gps[2]                            , "POS_KP_POS2");
 
-
-
+    // Navigation
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.dist2vel_gain                             , "VEL_DIST2VEL");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.cruise_speed                                  , "VEL_CRUISESPEED");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.max_climb_rate                                , "VEL_CLIMBRATE");
@@ -350,54 +252,50 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.wpt_nav_controller.p_gain                 , "VEL_WPT_PGAIN");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.wpt_nav_controller.differentiator.gain        , "VEL_WPT_DGAIN");
 
-//  init_success &= onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&central_data->state_machine.low_battery_counter            , "SAFE_COUNT"     );
 
+    // Control and mode source
     init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_CTRL_SRC");
     init_success = onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
 
-    //Parameters for saccade controller tuning
 
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.gain_,      "WT_FCT_GAIN");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.threshold_,      "WT_FCT_THRSOLD");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.goal_direction_,      "GL_DIRECTION");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.pitch_,      "PITCH_CONTROL");
-
-    //Attitude PID controller gains
-
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].p_gain,         "ROLL_ATT_R_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].integrator.gain,"ROLL_ATT_R_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].differentiator.gain,   "ROLL_ATT_R_KD"    );
-
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].p_gain,         "PIT_ATT_R_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].integrator.gain,"PIT_ATT_R_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].differentiator.gain,   "PIT_ATT_R_KD"    );
+    // Saccade controller
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.gain_,            "WT_FCT_GAIN"   );
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.threshold_,       "WT_FCT_THRSOLD");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.goal_direction_,  "GL_DIRECTION"  );
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.pitch_,           "PITCH_CONTROL" );
 
 
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].p_gain,         "YAW_ATT_R_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].integrator.gain,"YAW_ATT_R_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].differentiator.gain,   "YAW_ATT_R_KD"    );
+    // Attitude PID controller gains
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].p_gain,             "ROLL_ATT_R_KP");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].integrator.gain,    "ROLL_ATT_R_KI");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].differentiator.gain,"ROLL_ATT_R_KD");
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].p_gain,              "PIT_ATT_R_KP");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].integrator.gain,     "PIT_ATT_R_KI");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[PITCH].differentiator.gain, "PIT_ATT_R_KD");
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].p_gain,              "YAW_ATT_R_KP");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].integrator.gain,     "YAW_ATT_R_KI");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[YAW].differentiator.gain, "YAW_ATT_R_KD");
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[ROLL].p_gain,              "ROLL_ATT_A_KP");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[ROLL].integrator.gain,     "ROLL_ATT_A_KI");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[ROLL].differentiator.gain, "ROLL_ATT_A_KD");
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[PITCH].p_gain,               "PIT_ATT_A_KP");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[PITCH].integrator.gain,      "PIT_ATT_A_KI");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[PITCH].differentiator.gain,  "PIT_ATT_A_KD");
+
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[YAW].p_gain,               "YAW_ATT_A_KP");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[YAW].integrator.gain,      "YAW_ATT_A_KI");
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[YAW].differentiator.gain,  "YAW_ATT_A_KD");
 
 
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[ROLL].p_gain,         "ROLL_ATT_A_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[ROLL].integrator.gain,"ROLL_ATT_A_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[ROLL].differentiator.gain,   "ROLL_ATT_A_KD"    );
-
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[PITCH].p_gain,         "PIT_ATT_A_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[PITCH].integrator.gain,"PIT_ATT_A_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[PITCH].differentiator.gain,   "PIT_ATT_A_KD"    );
-
-
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[YAW].p_gain,         "YAW_ATT_A_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[YAW].integrator.gain,"YAW_ATT_A_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.angle_pid[YAW].differentiator.gain,   "YAW_ATT_A_KD"    );
-
-    //Altitude PID controller gains
-
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.p_gain,         "ALT_PID_KP"   );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.integrator.gain,"ALT_PID_KI"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.differentiator.gain,   "ALT_PID_KD"    );
-    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.hover_point_,   "HOVERPT_ALT"    );
-
+    // Altitude PID controller gains
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.p_gain,              "ALT_PID_KP" );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.integrator.gain,     "ALT_PID_KI" );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.pid_.differentiator.gain, "ALT_PID_KD" );
+    init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->altitude_controller_.hover_point_,             "HOVERPT_ALT");
 
     return init_success;
 }
