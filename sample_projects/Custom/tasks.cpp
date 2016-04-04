@@ -166,11 +166,20 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     }
     else if (mav_modes_is_auto(mode))
     {
-        // central_data->saccade_controller_.blabla;
-        // vector_field_waypoint_update(&central_data->vector_field_waypoint);
-        // velocity_controller_copter_update(&central_data->velocity_controller);
-        // attitude_controller_update(&central_data->attitude_controller);
-        // servos_mix_quadcopter_diag_update(&central_data->servo_mix);
+        central_data->command.attitude = central_data->saccade_controller_.attitude_command_;
+
+        // 1m altitude command (Above goround level)
+        central_data->command.position.xyz[0] = 0.0f;
+        central_data->command.position.xyz[1] = 0.0f;
+        central_data->command.position.xyz[2] = -1.0f;
+        central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
+
+        // Do control
+        central_data->altitude_controller_.update();
+        central_data->saccade_controller_.update();
+        attitude_controller_update(&central_data->attitude_controller);
+
+        servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else if (mav_modes_is_manual(mode) && mav_modes_is_guided(mode))
     {

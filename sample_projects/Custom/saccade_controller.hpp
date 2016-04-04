@@ -47,6 +47,7 @@ extern "C"
 #include "control/control_command.h"
 #include "util/quaternions.h"
 #include "util/coord_conventions.h"
+#include "util/quick_trig.h"
 }
 
 #include "drivers/flow.hpp"
@@ -95,7 +96,7 @@ public:
      * \param   flow_right   Serial port for right optic flow cameras
      * \param   config       Configuration structure
      */
-    Saccade_controller(flow_t& flow_left, flow_t& flow_right saccade_controller_conf_t config);
+    Saccade_controller(flow_t& flow_left, flow_t& flow_right, saccade_controller_conf_t config);
 
 
     /**
@@ -123,6 +124,9 @@ public:
     float                       goal_direction_;                    ///< Goal direction for drone
     float                       azimuth_ [2 * N_points];            ///< Table of azimuthal angles
     float                       relative_nearness_ [2 * N_points];  ///< Table of Relative nearness
+    float                       inv_sin_azimuth_ [2 * N_points];
+    float                       cos_azimuth_[2 * N_points];
+    float                       sin_azimuth_[2 * N_points];
     float                       can_;
     float                       cad_;
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
