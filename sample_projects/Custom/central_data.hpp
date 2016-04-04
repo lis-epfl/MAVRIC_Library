@@ -81,7 +81,6 @@
 #include "simulation/simulation.hpp"
 #include "saccade_controller.hpp"
 
-
 extern "C"
 {
 #include "sensing/ahrs.h"
@@ -173,12 +172,7 @@ public:
     velocity_controller_copter_t    velocity_controller;
     vector_field_waypoint_t         vector_field_waypoint;
 
-
-    Serial&                       serial_flow_left_;
-    Serial&                       serial_flow_right_;
-    flow_t                        flow_left_;
-    flow_t                        flow_right_;
-    Saccade_controller            saccade_controller_;
+    Saccade_controller            saccade_controller;
 
 
     altitude_t                      altitude_;

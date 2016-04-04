@@ -71,7 +71,7 @@ bool flow_init(flow_t* flow, Serial* uart_)
     mavlink_stream_conf.debug   = true;
     success &= mavlink_stream_init(&(flow->mavlink_stream),
                                    &mavlink_stream_conf,
-                                   uart_);
+                                   flow->uart);
 
     return success;
 }
