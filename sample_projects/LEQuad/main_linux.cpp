@@ -52,7 +52,8 @@ extern "C"
 int main(int argc, char** argv)
 {
     uint8_t sysid = 0;
-
+    bool init_success = true;
+    
     // -------------------------------------------------------------------------
     // Get command line parameters
     // -------------------------------------------------------------------------
@@ -76,6 +77,11 @@ int main(int argc, char** argv)
 
     File_linux file_log;
     File_linux file_stat;
+
+    // Board initialisation
+    init_success &= board.init();
+
+    board.sim.update();
 
     // -------------------------------------------------------------------------
     // Create central data
@@ -103,16 +109,6 @@ int main(int argc, char** argv)
                                    file_log,
                                    file_stat,
                                    cd_config);
-
-
-    // -------------------------------------------------------------------------
-    // Initialisation
-    // -------------------------------------------------------------------------
-    bool init_success = true;
-
-    // Board initialisation
-    init_success &= board.init();
-    board.sim.update();
 
     // Init central data
     init_success &= cd.init();
