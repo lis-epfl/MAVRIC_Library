@@ -58,153 +58,147 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Pwm_stm32::Pwm_stm32(uint8_t id):
-    id_(id),
-    channel_id_(id / 2)
+Pwm_stm32::Pwm_stm32(pwm_conf_t pwm_config)
 {
-    if (id_ > 7)
-    {
-        id_         = 7;
-        channel_id_ = 3;
-    }
+    pwm_config_ = pwm_config;
 
-    pulse_us_[id_]  = 1500;
-    period_us_[id_] = 20000;    // 50Hz
-
-    //TODO adapt
-    timer_peripheral_ = TIM1;
-    prescaler_ = 168;
-    period_ = 20000;
+    timer_              = pwm_config.timer_config;
+    prescaler_          = pwm_config.prescaler_config;
+    period_             = pwm_config.period_config;
+    duty_cyle_          = pwm_config.duty_cycle_config;
+    channel_id_         = pwm_config.channel_config;
 }
 
 bool Pwm_stm32::init(void)
 {
     bool success = true;
-    int32_t gpio_success;
+    
+    /* Enable peripheral port & TIM clock. */
+    //rcc_periph_clock_enable(RCC_GPIOx);
+    rcc_periph_clock_enable(pwm_config_.rcc_timer_config);
 
-    /* Enable GPIOC clock. */
-    rcc_periph_clock_enable(RCC_GPIOA);
-
-    gpio_set_af(GPIOA, GPIO_AF1, GPIO8);
+    gpio_mode_setup(pwm_config_.gpio_config.port, GPIO_MODE_AF, GPIO_PUPD_NONE, pwm_config_.gpio_config.pin);
+    gpio_set_af(pwm_config_.gpio_config.port, pwm_config_.gpio_config.alt_fct, pwm_config_.gpio_config.pin);
+    gpio_set_output_options(pwm_config_.gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ, pwm_config_.gpio_config.port);
   
-  /* Set GPIO12 (in GPIO port C) to 'output push-pull'. */
-    gpio_mode_setup(GPIOA, GPIO_MODE_AF,
-              GPIO_PUPD_NONE, GPIO8);
+    //WARNING Common to all channels of that TIMER
+    //select prescaler
+    TIM_PSC(pwm_config_.timer_config) = prescaler_;
+    //select the output period
+    TIM_ARR(pwm_config_.timer_config) = period_;
+    //enable the autoreload
+    TIM_CR1(pwm_config_.timer_config) |= TIM_CR1_ARPE;
+    //select counting mode (edge-aligned)
+    TIM_CR1(pwm_config_.timer_config) |= TIM_CR1_CMS_EDGE;
+    //counting up
+    TIM_CR1(pwm_config_.timer_config) |= TIM_CR1_DIR_UP;
+    //enable counter
+    TIM_CR1(pwm_config_.timer_config) |= TIM_CR1_CEN;
 
-    // gpio_set(GPIOA, GPIO8);
-    // gpio_clear(GPIOD, GPIO13);
+    //CHANNEL SPECIFIC
+    if (pwm_config_.channel_config == CHANNEL_1)
+    {
+        //Disable channel1
+        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC1E; 
+        //Reset output compare
+        TIM_CCMR1(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR1_OC1M_MASK;
+        TIM_CCMR1(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR1_CC1S_MASK;
 
+        //Select output mode
+        TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_CC1S_OUT;
+        //select polarity low
+        TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC1NP;
+        //select PWM mode 1
+        TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC1M_PWM1;
 
-    /* Enable TIM2 clock. */
-    rcc_periph_clock_enable(RCC_TIM1);
+        //select duty cycle
+        TIM_CCR1(pwm_config_.timer_config) = duty_cyle_;
 
-    /* Enable TIM2 interrupt. */
-    // nvic_enable_irq(NVIC_TIM1_CC_IRQ);
+        //set the preload bit
+        TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC1PE;
+        
+        //enable capture/compare
+        TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC1E;
+    }
+    else if (pwm_config_.channel_config == CHANNEL_2)
+    {
+        //Disable channel2
+        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC2E; 
+        //Reset output compare
+        TIM_CCMR1(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR1_OC2M_MASK;
+        TIM_CCMR1(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR1_CC2S_MASK;
 
-    /* Reset TIM2 peripheral. */
-    timer_reset(TIM1);
+        //Select output mode
+        TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_CC2S_OUT;
+        //select polarity low
+        TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC2NP;
+        //select PWM mode 1
+        TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC2M_PWM1;
 
-    /* Timer global mode:
-     * - No divider
-     * - Alignment edge
-     * - Direction up
-     */
-    timer_set_mode(TIM1, TIM_CR1_CKD_CK_INT,
-               TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
+        //select duty cycle
+        TIM_CCR2(pwm_config_.timer_config) = duty_cyle_;
 
-    timer_set_prescaler(TIM1, prescaler_);
+        //set the preload bit
+        TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC2PE;
+        
+        //enable capture/compare
+        TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC2E;
+    }
+    else if (pwm_config_.channel_config == CHANNEL_3)
+    {
+        //Disable channel3
+        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC3E; 
+        //Reset output compare
+        TIM_CCMR2(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR2_OC3M_MASK;
+        TIM_CCMR2(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR2_CC3S_MASK;
 
-    /* Enable preload. */
-    timer_disable_preload(TIM1);
+        //Select output mode
+        TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_CC3S_OUT;
+        //select polarity low
+        TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC3NP;
+        //select PWM mode 1
+        TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC3M_PWM1;
 
-    /* Continous mode. */
-    timer_continuous_mode(TIM1);
+        //select duty cycle
+        TIM_CCR3(pwm_config_.timer_config) = duty_cyle_;
 
-    /* Period (36kHz). */
-    timer_set_period(TIM1, period_);
+        //set the preload bit
+        TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC3PE;
+        
+        //enable capture/compare
+        TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC3E;
+    }
+    else if (pwm_config_.channel_config == CHANNEL_4)
+    {
+        //Disable channel4
+        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC4E; 
+        //Reset output compare
+        TIM_CCMR2(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR2_OC4M_MASK;
+        TIM_CCMR2(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR2_CC4S_MASK;
 
-    // Disable outputs. 
-    timer_disable_oc_output(TIM1, TIM_OC1);
-    // timer_disable_oc_output(TIM1, TIM_OC2);
-    // timer_disable_oc_output(TIM1, TIM_OC3);
-    // timer_disable_oc_output(TIM1, TIM_OC4);
-    timer_disable_oc_clear(TIM1, TIM_OC1);
-    timer_enable_oc_preload(TIM1, TIM_OC1);
-    timer_set_oc_slow_mode(TIM1, TIM_OC1);
-    timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
-    timer_set_oc_polarity_high(TIM1, TIM_OC1);
-    timer_enable_oc_output(TIM1, TIM_OC1);
-    timer_enable_break_main_output(TIM1);
-    /* -- OC1 configuration -- */
+        //Select output mode
+        TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_CC4S_OUT;
+        //select polarity low
+        TIM_CCER(pwm_config_.timer_config) |= (1 << 15); //TODO TIM_CCER_CC4NP does not exist in libopencm3 library
+        //select PWM mode 1
+        TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC4M_PWM1;
 
-    /* Configure global mode of line 1. */
-    timer_disable_oc_clear(TIM1, TIM_OC1);
-    timer_disable_oc_preload(TIM1, TIM_OC1);
-    timer_set_oc_slow_mode(TIM1, TIM_OC1);
-    timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_FROZEN);
+        //select duty cycle
+        TIM_CCR4(pwm_config_.timer_config) = duty_cyle_;
 
-    /* Set the capture compare value for OC1. */
-    timer_set_oc_value(TIM1, TIM_OC1, 1000);
-
-    /* ---- */
-
-    /* ARR reload enable. */
-    timer_enable_preload(TIM1);
-
-    /* Counter enable. */
-    timer_enable_counter(TIM1);
-
-    /* Enable commutation interrupt. */
-    // timer_enable_irq(TIM1, TIM_DIER_CC1IE);
-
-    // /* init timer */
-    // //enable timer clock
-    // rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_TIM1EN);
-
-    // /* Reset TIM1 peripheral */
-    // timer_reset(timer_peripheral_);
-
-    // /* Set the timers global mode to:
-    // * - use no divider
-    // * - alignment edge
-    // * - count direction up
-    // */
-    // timer_set_mode(timer_peripheral_,
-    //             TIM_CR1_CKD_CK_INT,
-    //             TIM_CR1_CMS_EDGE,
-    //             TIM_CR1_DIR_UP);
-
-    // timer_set_prescaler(timer_peripheral_, prescaler_);
-    // timer_set_repetition_counter(timer_peripheral_, 0);
-    // timer_enable_preload(timer_peripheral_);
-    // timer_continuous_mode(timer_peripheral_);
-    // timer_set_period(timer_peripheral_, period_);
-
-    // /* init output channel */
-    // /* Enable GPIO clock. */
-    // rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_IOPAEN);
-
-    // /* Set timer channel to output */
-    // gpio_mode_setup(    GPIOA, 
-    //                     GPIO_MODE_AF,
-    //                     GPIO_OTYPE_OD,
-    //                     GPIO_TIM1_CH1);
-
-    // timer_disable_oc_output(timer_peripheral_, TIM_OC1);
-    // timer_set_oc_mode(timer_peripheral_, TIM_OC1, TIM_OCM_PWM1);
-    // timer_set_oc_value(timer_peripheral_, TIM_OC1, 0);
-    // timer_enable_oc_output(timer_peripheral_, TIM_OC1);
-
-    // timer_set_oc_value(timer_peripheral_, TIM_OC1, pulse_us_[id_]);
-
-    // timer_enable_counter(timer_peripheral_);
+        //set the preload bit
+        TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC4PE;
+        
+        //enable capture/compare
+        TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC4E;
+    }
 
     return success;
 }
 
 bool Pwm_stm32::set_pulse_width_us(uint16_t pulse_us)
 {
-    pulse_us_[id_] = pulse_us;
+    duty_cyle_ = pulse_us;
     write_channel();
 
     return true;
@@ -213,7 +207,8 @@ bool Pwm_stm32::set_pulse_width_us(uint16_t pulse_us)
 
 bool Pwm_stm32::set_period_us(uint16_t period_us)
 {
-    period_us_[id_] = period_us;
+    // WARNING this affect the period of the TIMER not only the specific channel
+    period_ = period_us;
     write_channel();
 
     return true;
@@ -226,33 +221,27 @@ bool Pwm_stm32::set_period_us(uint16_t period_us)
 
 void Pwm_stm32::write_channel(void)
 {
-    // Set update frequency per channel with conservative method:
-    // if two servos on the same channel ask for two different frequencies,
-    // then the lowest frequecy is used
-    // int32_t period  = max(period_us_[2 * channel_id_],
-    //                       period_us_[2 * channel_id_ + 1]);
-
-    // int32_t pulse_us_a = pulse_us_[2 * channel_id_];
-    // int32_t pulse_us_b = pulse_us_[2 * channel_id_ + 1];
-    // int32_t deadtime    = (period - pulse_us_a - pulse_us_b) / 2;
-
-    // AVR32_PWM.channel[channel_id_ & 0b11].cprdupd   = period;
-    // AVR32_PWM.channel[channel_id_ & 0b11].cdtyupd   = pulse_us_a + deadtime;
-    // AVR32_PWM.channel[channel_id_ & 0b11].dtupd         = deadtime << 16 | deadtime;
-}
-
-// Allocate memory for static members here
-uint32_t Pwm_stm32::pulse_us_[8];
-uint32_t Pwm_stm32::period_us_[8];
-
-void tim2_isr(void)
-{
-    if (timer_get_flag(TIM2, TIM_SR_CC1IF)) {
-
-        /* Clear compare interrupt flag. */
-        timer_clear_flag(TIM2, TIM_SR_CC1IF);
-
-        /* Toggle LED to indicate compare event. */
-        gpio_clear(GPIOC, GPIO14);
+    //select the output period
+    TIM_ARR(timer_) = period_;
+    
+    if(channel_id_ == CHANNEL_1)
+    {
+        //select duty cycle
+        TIM_CCR1(timer_) = duty_cyle_;
+    }
+    else if(channel_id_ == CHANNEL_2)
+    {
+        //select duty cycle
+        TIM_CCR2(timer_) = duty_cyle_;
+    }
+    else if(channel_id_ == CHANNEL_3)
+    {
+        //select duty cycle
+        TIM_CCR3(timer_) = duty_cyle_;
+    }
+    else if(channel_id_ == CHANNEL_4)
+    {
+        //select duty cycle
+        TIM_CCR4(timer_) = duty_cyle_;
     }
 }

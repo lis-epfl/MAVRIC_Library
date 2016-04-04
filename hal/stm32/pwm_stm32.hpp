@@ -48,6 +48,41 @@
 
 #include "hal/common/pwm.hpp"
 
+#include "hal/stm32/gpio_stm32.hpp"
+
+extern "C"
+{
+#include <libopencm3/stm32/timer.h>
+#include <libopencm3/stm32/rcc.h>
+}
+
+
+/**
+ * \brief   enum of timer channel
+ */
+typedef enum
+{
+    CHANNEL_1,
+    CHANNEL_2,
+    CHANNEL_3,
+    CHANNEL_4
+} channel_t;
+
+
+/**
+ * \brief   Configuration structure
+ */
+typedef struct
+{
+    gpio_stm32_conf_t       gpio_config;
+    uint32_t                timer_config;
+    rcc_periph_clken        rcc_timer_config;
+    channel_t               channel_config;
+    uint32_t                prescaler_config;
+    uint32_t                period_config;
+    uint32_t                duty_cycle_config;
+} pwm_conf_t;
+
 
 class Pwm_stm32: public Pwm
 {
@@ -57,7 +92,7 @@ public:
      *
      * \param Servo number (between 0 and 7)
      */
-    Pwm_stm32(uint8_t id);
+    Pwm_stm32(pwm_conf_t pwm_config);
 
 
     /**
@@ -94,17 +129,13 @@ private:
      */
     void write_channel(void);
 
+    pwm_conf_t pwm_config_;
 
-    uint8_t id_;            ///< PWM line number
     uint8_t channel_id_;    ///< PWM channel number
-    uint32_t timer_peripheral_;    ///< TIMER used
+    uint32_t timer_;        ///< TIMER used
     uint32_t prescaler_;    ///<
-    uint32_t period_;    ///<
-
-    // this is static because each channel controls 2 pwm lines and is thus
-    // shared by two objects
-    static uint32_t pulse_us_[8];
-    static uint32_t period_us_[8];
+    uint32_t period_;       ///<
+    uint32_t duty_cyle_;    ///<
 };
 
 #endif /* PWM_STM32_H_ */
