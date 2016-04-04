@@ -106,8 +106,8 @@ bool Saccade_controller::update()
 
     if(saccade_time - last_saccade_ > 1000)
     {
-  
-  
+
+
 
     // Quaternion given to attitude controller for the saccade
     quat_t quat_yaw_command;
@@ -123,7 +123,7 @@ bool Saccade_controller::update()
         relative_nearness_[i]             = flow_left_.of.x[i];// * inv_sin_azimuth_[i];
         relative_nearness_[i + N_points]  = flow_right_.of.x[i];// * inv_sin_azimuth_[i + N_points];
     }
-  
+
 
     // Calculate the comanv's x and y components, to then calculate can and NOD.
     float comanv_x = 0.0f;
@@ -149,20 +149,24 @@ bool Saccade_controller::update()
     // Calculation of the can and cad
 
     can_ = maths_fast_sqrt(comanv_x * comanv_x + comanv_y * comanv_y);
-    
-    float nearest_object_direction = quick_trig_atan(comanv_y/comanv_x);
-    
+
+    float nearest_object_direction = 0.0f;
+    if (comanv_x != 0.0f)
+    {
+        nearest_object_direction = quick_trig_atan(comanv_y / comanv_x);
+    }
+
     // weighted_function = 1/(1 + pow(can_/threshold_ , - gain_));
-    
+
     cad_ = nearest_object_direction + PI;
-    
+
 
     //Calculation of the movement direction (in radians)
     //
     float movement_direction = weighted_function * cad_ + (1-weighted_function) * (goal_direction_ + noise);
 
     //Transformation of the movement direction into a quaternion
-    
+
     aero_attitude_t attitude;
     attitude.rpy[0] = 0.0f;
     attitude.rpy[1] = -5.0f;
