@@ -40,6 +40,7 @@
 
 
 #include "saccade_controller.hpp"
+ #include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
@@ -64,6 +65,8 @@ Saccade_controller::Saccade_controller( flow_t& flow_left,
     threshold_       = config.threshold_;
     goal_direction_  = config.goal_direction_;
     pitch_           = config.pitch_;
+
+    last_saccade_ = 0;
 
     // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
     float angle_between_points = (140.625 / N_points);
@@ -95,18 +98,16 @@ bool Saccade_controller::init(void)
 }*/
 
 
-
 // #include <stdio.h>
 
 bool Saccade_controller::update()
 {
-    // Intermediate variables :
-    // can is the norm of the comanv vector,
-    // nearest object direction gives the angle in radians to theazimuth_[i])
+    uint64_t saccade_time = time_keeper_get_ms();
 
-    // Sigmoid function for direction choice, it takes the can, a threshold and
-    // a gain and describes how important it is for the drone to perform a saccade
-    float weighted_function = 1.0f;
+    if(saccade_time - last_saccade_ > 1000)
+    {
+  
+  
 
     // Quaternion given to attitude controller for the saccade
     quat_t quat_yaw_command;
@@ -135,15 +136,23 @@ bool Saccade_controller::update()
     }
 
 
+    // Intermediate variables :
+    // can is the norm of the comanv vector,
+    // nearest object direction gives the angle in radians to the azimuth_[i])
 
 
-   // Calculation of the can and cad
+    // Sigmoid function for direction choice, it takes the can, a threshold and
+    // a gain and describes how important it is for the drone to perform a saccade
+
+    float weighted_function = 1.0f;
+
+    // Calculation of the can and cad
 
     can_ = maths_fast_sqrt(comanv_x * comanv_x + comanv_y * comanv_y);
     
     float nearest_object_direction = quick_trig_atan(comanv_y/comanv_x);
     
-    weighted_function = 1;// / (1 + pow(can_/threshold_ , - gain_));
+    // weighted_function = 1/(1 + pow(can_/threshold_ , - gain_));
     
     cad_ = nearest_object_direction + PI;
     
@@ -153,7 +162,7 @@ bool Saccade_controller::update()
     float movement_direction = weighted_function * cad_ + (1-weighted_function) * (goal_direction_ + noise);
 
     //Transformation of the movement direction into a quaternion
-
+    
     aero_attitude_t attitude;
     attitude.rpy[0] = 0.0f;
     attitude.rpy[1] = -5.0f;
@@ -165,5 +174,7 @@ bool Saccade_controller::update()
 
     attitude_command_.quat = quat_yaw_command;
 
+    last_saccade_ = time_keeper_get_ms();
+    }
     return true;
 }
