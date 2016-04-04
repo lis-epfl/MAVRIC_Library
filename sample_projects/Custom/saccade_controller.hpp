@@ -95,7 +95,7 @@ public:
      * \param   flow_right   Serial port for right optic flow cameras
      * \param   config       Configuration structure
      */
-    Saccade_controller(flow_t& flow_left, flow_t& flow_right, attitude_command_t& attitude_command, saccade_controller_conf_t config);
+    Saccade_controller(flow_t& flow_left, flow_t& flow_right saccade_controller_conf_t config);
 
 
     /**
@@ -125,10 +125,10 @@ public:
     float                       relative_nearness_ [2 * N_points];  ///< Table of Relative nearness
     float                       can_;
     float                       cad_;
+    attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
 
     flow_t&                       flow_left_;                          ///< Left optic flow camera output
     flow_t&                       flow_right_;                         ///< Right optic flow camera output
-    attitude_command_t&         attitude_command_;                   ///< Attitude command given by the necessary saccade
 
 };
 

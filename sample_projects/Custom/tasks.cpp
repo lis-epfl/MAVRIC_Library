@@ -155,8 +155,6 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 
     mav_mode_t mode = central_data->state.mav_mode;
 
-	    central_data->saccade_controller_.update();
-
     if (mav_modes_is_armed(mode) == false)
     {
         // Set command to current heading
@@ -168,7 +166,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     }
     else if (mav_modes_is_auto(mode))
     {
-        // central_data->saccade_controller_.update();
+        // central_data->saccade_controller_.blabla;
         // vector_field_waypoint_update(&central_data->vector_field_waypoint);
         // velocity_controller_copter_update(&central_data->velocity_controller);
         // attitude_controller_update(&central_data->attitude_controller);
@@ -297,6 +295,14 @@ bool tasks_flow(Central_data* cd)
 }
 
 
+bool tasks_saccade(Central_data* cd)
+{
+  cd->saccade_controller_.update();
+
+  return true;
+}
+
+
 bool tasks_create_tasks(Central_data* central_data)
 {
     bool init_success = true;
@@ -305,7 +311,7 @@ bool tasks_create_tasks(Central_data* central_data)
 
     // init_success &= scheduler_add_task(scheduler, 4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation                         , (task_argument_t)central_data                         , 0);
     init_success &= scheduler_add_task(scheduler, 4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation_quaternion              , (task_argument_t)central_data                         , 0);
-    init_success &= scheduler_add_task(scheduler, 500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW,     (task_function_t)&tasks_led_toggle                                , (task_argument_t)&central_data->led                   , 1);
+    init_success &= scheduler_add_task(scheduler, 500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST,     (task_function_t)&tasks_led_toggle                                , (task_argument_t)&central_data->led                   , 1);
     init_success &= scheduler_add_task(scheduler, 15000,    RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&tasks_run_barometer_update                      , (task_argument_t)central_data                     , 2);
     init_success &= scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&tasks_run_gps_update                            , (task_argument_t)central_data                     , 3);
     init_success &= scheduler_add_task(scheduler, 10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation            , 5);
@@ -317,8 +323,8 @@ bool tasks_create_tasks(Central_data* central_data)
 
     init_success &= scheduler_add_task(scheduler, 100000,  RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_run_sonar_update,    (task_argument_t)central_data,                          12);
     init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH,   (task_function_t)&tasks_altitude_estimation, (task_argument_t)&central_data->altitude_estimation_,   13);
-    init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_flow,                                         (task_argument_t)central_data,                         4);
-
+    init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_flow,                (task_argument_t)central_data,                          14);
+    init_success &= scheduler_add_task(scheduler, 10000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_saccade,             (task_argument_t)central_data,                       15);
     // init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , (task_function_t)&tasks_sleep                                     , (task_argument_t)central_data                         , 99);
 
     scheduler_sort_tasks(scheduler);

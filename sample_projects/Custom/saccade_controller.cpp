@@ -56,11 +56,9 @@ extern "C"
 //------------------------------------------------------------------------------
 Saccade_controller::Saccade_controller( flow_t& flow_left,
                                         flow_t& flow_right,
-                                        attitude_command_t&  attitude_command,
                                         saccade_controller_conf_t config ):
   flow_left_(flow_left),
-  flow_right_(flow_right),
-  attitude_command_(attitude_command)
+  flow_right_(flow_right)
 {
     // Init members
     gain_            = config.gain_;
@@ -96,11 +94,7 @@ bool Saccade_controller::update()
 {
     // Intermediate variables :
     // can is the norm of the comanv vector,
-    // nearest object direction gives the angle in radians to the nearest object,
-    // cad gives the collision avoidance direction, opposite to the nearest
-    // object direction.
-    float nearest_object_direction  = 0.0f;
-    float movement_direction        = 0.0f;
+    // nearest object direction gives the angle in radians to theazimuth_[i])
 
     // Sigmoid function for direction choice, it takes the can, a threshold and
     // a gain and describes how important it is for the drone to perform a saccade
@@ -111,14 +105,14 @@ bool Saccade_controller::update()
 
     // Random number generation for the noise, the value of the noise is between 0 and 0.5. A new number is generated at each time.
     // ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
-    // float noise = 0.0f;
+    float noise = 0.0f;
 
     // Calculate for both left and right the sum of the relative nearnesses
     // which are each given by RN = OF/sin(angle),
     for (uint32_t i = 0; i < N_points; ++i)
     {
-        // relative_nearness_[i]             = flow_left_.of.x[i]  / quick_trig_sin(azimuth_[i]);
-        // relative_nearness_[i + N_points]  = flow_right_.of.x[i] / quick_trig_sin(azimuth_[i + N_points]);
+        relative_nearness_[i]             = flow_left_.of.x[i]  / quick_trig_sin(azimuth_[i]);
+        relative_nearness_[i + N_points]  = flow_right_.of.x[i] / quick_trig_sin(azimuth_[i + N_points]);
 
         // test
         relative_nearness_[i]             = flow_left_.of.x[i];
@@ -128,8 +122,8 @@ bool Saccade_controller::update()
         // if (quick_trig_sin(azimuth_[i]) != 0.0f)
         // {
 
-        relative_nearness_[i]             = 1.0f / (10.0f + quick_trig_sin(azimuth_[i]) );
-        // relative_nearness_[i]             = 1.0f / azimuth_[i];
+        // relative_nearness_[i]             = 1.0f / (10.0f + quick_trig_sin(azimuth_[i]) );
+        // relative_nearness_[i]             = 1.0f / azattitude_command_t& attitude_command,imuth_[i];
         // relative_nearness_[i]             = 1.0f / relative_nearness_[i];
 
         // }
@@ -175,7 +169,7 @@ bool Saccade_controller::update()
 
     //Calculation of the movement direction (in radians)
     //
-    // movement_direction = weighted_function * cad_ + (1-weighted_function) * (goal_direction_ + noise);
+    float movement_direction = weighted_function * cad_ + (1-weighted_function) * (goal_direction_ + noise);
 
     //Transformation of the movement direction into a quaternion
 
