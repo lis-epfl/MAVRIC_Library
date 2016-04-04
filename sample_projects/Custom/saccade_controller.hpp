@@ -95,7 +95,7 @@ public:
      * \param   flow_right   Serial port for right optic flow cameras
      * \param   config       Configuration structure
      */
-    Saccade_controller(flow_t& flow_left, flow_t& flow_right saccade_controller_conf_t config);
+    Saccade_controller(flow_t& flow_left, flow_t& flow_right, saccade_controller_conf_t config);
 
 
     /**
