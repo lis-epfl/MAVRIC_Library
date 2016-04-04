@@ -312,6 +312,8 @@ void flow_telemetry_send(const Central_data* cd, const mavlink_stream_t* mavlink
     float of[60];
     char name[7];
 
+    float t = time_keeper_get_us();
+
     switch (step)
     {
       case 0:
@@ -320,6 +322,9 @@ void flow_telemetry_send(const Central_data* cd, const mavlink_stream_t* mavlink
           {
               // left 0 to 59
               of[i] = cd->flow_left_.of.x[i];
+
+              // tmp
+              of[i] = 0.5f * (1.0f + quick_trig_sin(0.00001*t + 0.1*i));
           }
       break;
 
@@ -329,6 +334,9 @@ void flow_telemetry_send(const Central_data* cd, const mavlink_stream_t* mavlink
           {
               // left 60 to 119
               of[i] = cd->flow_left_.of.x[i + 60];
+
+              // tmp
+              of[i] = 1.0f * (5.0f + quick_trig_sin(0.00001*t + 0.1*i));
           }
       break;
 
@@ -338,11 +346,17 @@ void flow_telemetry_send(const Central_data* cd, const mavlink_stream_t* mavlink
           {
               // left 120 to 124
               of[i] = cd->flow_left_.of.x[i + 120];
+
+              // tmp
+              of[i] = 2.0f * (1.0f + quick_trig_sin(0.00001*t + 0.1*i));
           }
           for (uint32_t i = 0; i < 55; i++)
           {
               // right 0 to 54
               of[i + 5] = cd->flow_right_.of.x[i];
+
+              // tmp
+              of[i+5] = 2.0f * (1.0f + quick_trig_sin(0.00001*t + 0.1*i));
           }
       break;
 
@@ -352,6 +366,9 @@ void flow_telemetry_send(const Central_data* cd, const mavlink_stream_t* mavlink
           {
               // right 55 to 114
               of[i] = cd->flow_right_.of.x[i + 55];
+
+              // tmp
+              of[i] = 3.0f * (1.0f + quick_trig_sin(0.00001*t + 0.1*i));
           }
       break;
 
@@ -361,6 +378,9 @@ void flow_telemetry_send(const Central_data* cd, const mavlink_stream_t* mavlink
           {
               // right 115 to 124
               of[i] = cd->flow_right_.of.x[i + 115];
+
+              // tmp
+              of[i] = 4.0f * (1.0f + quick_trig_sin(0.00001*t + 0.1*i));
           }
           for (uint32_t i = 10; i < 60; i++)
           {
@@ -456,7 +476,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&sonar_telemetry_send,                            &central_data->sonar_i2cxl.data,            MAVLINK_MSG_ID_DISTANCE_SENSOR  );// ID 132
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
 
-    init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           central_data,             MAVLINK_MSG_ID_OPTICAL_FLOW);
+    init_success &= mavlink_communication_add_msg_send(mavlink_communication,  10000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           central_data,             MAVLINK_MSG_ID_OPTICAL_FLOW);
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&saccade_telemetry_send_vector,                                 &central_data->saccade_controller_,     MAVLINK_MSG_ID_DEBUG_VECT);   // ID 24
     // init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&altitude_estimation_telemetry_send,                            &central_data->altitude_estimation_,    MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV           );// ID 64
 
