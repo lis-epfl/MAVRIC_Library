@@ -165,7 +165,7 @@ bool Saccade_controller::update()
     
     aero_attitude_t attitude;
     attitude.rpy[0] = 0.0f;
-    attitude.rpy[1] = -5.0f;
+    attitude.rpy[1] = pitch_;
     attitude.rpy[2] = movement_direction;
 
     quat_yaw_command = coord_conventions_quaternion_from_aero(attitude);
