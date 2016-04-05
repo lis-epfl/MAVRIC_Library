@@ -39,9 +39,9 @@
  * \details Incomplete implementation (TODO)
  *          - Implemented:
  *              * buffered, blocking writing
- *          - NOT implemented:
  *              * Read functions
  *              * Receive interrupt callback
+ *          - NOT implemented:
  *              * buffered input
  *
  ******************************************************************************/
