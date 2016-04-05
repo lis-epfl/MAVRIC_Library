@@ -72,6 +72,8 @@ bool Serial_usb_avr32::init(void)
     // Init usb hardware
     stdio_usb_init(NULL);
     stdio_usb_enable();
+    stdio_usb_vbus_event(true);
+    handlers_ = this;
 
     return true;
 }
