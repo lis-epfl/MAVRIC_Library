@@ -76,6 +76,9 @@ bool Serial_usb_avr32::init(void)
     stdio_usb_init(NULL);
     stdio_usb_enable();
     stdio_usb_vbus_event(true);
+
+    // Set handler to point at this object, if there are more than 1 usb
+    // this would need to change to an array pointing to all of the objects
     handlers_ = this;
 
     return true;
@@ -117,6 +120,7 @@ void Serial_usb_avr32::flush(void)
 
 bool Serial_usb_avr32::attach(serial_interrupt_callback_t func)
 {
+    // Set callback function for data read
     irq_callback = func;
     return true;
 }
@@ -162,9 +166,13 @@ bool Serial_usb_avr32::write(const uint8_t* bytes, const uint32_t size)
 bool Serial_usb_avr32::read(uint8_t* bytes, const uint32_t size)
 {
     bool ret = false;
-    if (rx_buffer_.readable() >= size) // Testing
+
+    // Check if there is enough data to be read
+    if (rx_buffer_.readable() >= size)
     {
         ret = true;
+
+        // Read data
         for (uint32_t i = 0; i < size; ++i)
         {
             ret &= rx_buffer_.get(bytes[i]);
@@ -193,10 +201,12 @@ void usb_interupt_rx_notify()
 // Calls the handler for the desired usb class (only 1 usb atm)
 void Serial_usb_avr32::irq(void)
 {
+    // If the Serial_usb_avr32 object has been created
     if (handlers_)
     {
+        // Run interrupt function
         handlers_->irq_handler();
-    }
+    } // Else do nothing, no serial connected
 }
 
 
@@ -206,8 +216,11 @@ void Serial_usb_avr32::irq_handler(void)
     // Receive all data
     while (udi_cdc_is_rx_ready())
     {
+        // Retrieve single char
         uint8_t c1 = 0;
         stdio_usb_getchar_read_buf(NULL, (int*)&c1);
+
+        // Add to buffer to be read later
         rx_buffer_.put_lossy(c1);
     }
 

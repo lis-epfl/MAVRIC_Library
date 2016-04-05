@@ -162,7 +162,6 @@ private:
     Buffer_tpl<1024>            tx_buffer_;     ///< Transmission buffer
     Buffer_tpl<1024>            rx_buffer_;     ///< Reception buffer
 
-    //volatile avr32_usbc_t* uart_;               ///<
     static Serial_usb_avr32* handlers_;         ///< Contains handler information. Static as it needs return the usb serial object
     serial_interrupt_callback_t irq_callback;   ///< The callback function for when there is data to be read
 
