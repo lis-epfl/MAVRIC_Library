@@ -46,6 +46,10 @@ extern "C"
 #include "util/print_util.h"
 }
 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
 /**
  * \brief       Computes the arc length between two point of a circle
  *               
@@ -87,108 +91,9 @@ static void dubin_find_tangent(float t1[3], float t2[3], const float c1[3], cons
 static float dubin_path_length(float t1[3], float t2[3], const float c1[3], const float c2[3], const float wp1[3], const float wp2[3], const int8_t sense1, const int8_t sense2);
 
 
-void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[3], const float pos[3], const float speed, const float one_over_scaling)
-{
-    //parameters
-    //float one_over_scaling=0.1; //defines the main influence area [m^-1]
-    
-    float e_t[3], e_r[3]; // tangential and radial unit vectors
-    float v_t_norm, v_r_norm;
-    float op[3], rad[3], normal_dist, projection_length, k_r;
-    
-    uint32_t i;
-
-    if(vectors_norm_sqr(line_dir) > 0.0f)
-    {
-        //project pos on line ->v_t
-        for (i = 0; i < 2; ++i)
-        {
-            op[i] = pos[i] - line_origin[i];
-        }
-        op[Z] = 0.0f;
-
-        vectors_normalize(line_dir, e_t); // get tangent direction
-        
-        projection_length = vectors_scalar_product(e_t,op);
-        
-        for (i = 0; i < 2; ++i)
-        {
-            rad[i] = e_t[i] * projection_length - op[i];
-        }
-        rad[Z] = 0.0f;
-        
-        normal_dist = vectors_norm(rad);
-
-        if(normal_dist > 0.0f)
-        {
-            vectors_normalize(rad,e_r); // get radial direction
-        }
-        else
-        {
-            e_r[0]=0;
-            e_r[1]=0;
-            e_r[2]=0;
-        }
-        
-        k_r = 2.0f / PI * atan(normal_dist*one_over_scaling); //map all possible distances to 0 to 1;
-        v_r_norm = sqrtf(1-k_r*k_r);
-
-        for (i = 0; i < 2; ++i)
-        {
-            tvel[i] = e_t[i]*v_r_norm + e_r[i]*k_r;
-        }
-        tvel[Z] = 0.0f;
-
-        v_t_norm = vectors_norm(tvel);
-        for (i = 0; i < 2; ++i)
-        {
-            tvel[i] *= speed / v_t_norm;
-        }
-        tvel[Z] = 0.0f;
-
-    }
-}
-
-void dubin_circle(float tvel[3], const float circle[3], float radius_mavlink, const float pos[3], float speed, float one_over_scaling)
-{
-    float radius = -radius_mavlink;
-
-    float tan_dir[3], tan_origin[3];
-    float rel_pos_norm[3];
-
-    uint32_t i;
-
-    float rel_pos[3];
-
-    for (i = 0; i < 2; ++i)
-    {
-        rel_pos[i] = circle[i] - pos[i];
-    }
-    rel_pos[Z] = 0.0f;
-
-    if (vectors_norm_sqr(rel_pos) > 0.0f)
-    {
-
-        rel_pos_norm[X] = rel_pos[X];
-        rel_pos_norm[Y] = rel_pos[Y];
-        rel_pos_norm[Z] = 0.0f;
-
-        vectors_normalize(rel_pos_norm, rel_pos_norm);
-
-        tan_dir[X] = -rel_pos_norm[Y] * maths_sign(radius);
-        tan_dir[Y] = rel_pos_norm[X] * maths_sign(radius);
-        tan_dir[Z] = 0.0f;
-
-        for (i = 0; i < 2; ++i)
-        {
-            tan_origin[i] = circle[i] - maths_f_abs(radius) * rel_pos_norm[i];
-        }
-        tan_origin[Z] = 0.0f;
-
-        //compute a line vectorfield using the tangent.
-        dubin_line(tvel, tan_dir, tan_origin, pos, speed, one_over_scaling);
-    }
-}
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 static float dubin_arc_length_2d(const float p1[3], const float p2[3], const float c[3], const int8_t sense)
 {   
@@ -305,6 +210,113 @@ static float dubin_path_length(float t1[3], float t2[3], const float c1[3], cons
     float arc_2 = dubin_arc_length_2d(t2,wp2,c2,sense2);
 
     return t1_t2_norm + arc_1 + arc_2;
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void dubin_line(float tvel[3], const float line_dir[3], const float line_origin[3], const float pos[3], const float speed, const float one_over_scaling)
+{
+    //parameters
+    //float one_over_scaling=0.1; //defines the main influence area [m^-1]
+    
+    float e_t[3], e_r[3]; // tangential and radial unit vectors
+    float v_t_norm, v_r_norm;
+    float op[3], rad[3], normal_dist, projection_length, k_r;
+    
+    uint32_t i;
+
+    if(vectors_norm_sqr(line_dir) > 0.0f)
+    {
+        //project pos on line ->v_t
+        for (i = 0; i < 2; ++i)
+        {
+            op[i] = pos[i] - line_origin[i];
+        }
+        op[Z] = 0.0f;
+
+        vectors_normalize(line_dir, e_t); // get tangent direction
+        
+        projection_length = vectors_scalar_product(e_t,op);
+        
+        for (i = 0; i < 2; ++i)
+        {
+            rad[i] = e_t[i] * projection_length - op[i];
+        }
+        rad[Z] = 0.0f;
+        
+        normal_dist = vectors_norm(rad);
+
+        if(normal_dist > 0.0f)
+        {
+            vectors_normalize(rad,e_r); // get radial direction
+        }
+        else
+        {
+            e_r[0]=0;
+            e_r[1]=0;
+            e_r[2]=0;
+        }
+        
+        k_r = 2.0f / PI * atan(normal_dist*one_over_scaling); //map all possible distances to 0 to 1;
+        v_r_norm = sqrtf(1-k_r*k_r);
+
+        for (i = 0; i < 2; ++i)
+        {
+            tvel[i] = e_t[i]*v_r_norm + e_r[i]*k_r;
+        }
+        tvel[Z] = 0.0f;
+
+        v_t_norm = vectors_norm(tvel);
+        for (i = 0; i < 2; ++i)
+        {
+            tvel[i] *= speed / v_t_norm;
+        }
+        tvel[Z] = 0.0f;
+
+    }
+}
+
+void dubin_circle(float tvel[3], const float circle[3], float radius_mavlink, const float pos[3], float speed, float one_over_scaling)
+{
+    float radius = -radius_mavlink;
+
+    float tan_dir[3], tan_origin[3];
+    float rel_pos_norm[3];
+
+    uint32_t i;
+
+    float rel_pos[3];
+
+    for (i = 0; i < 2; ++i)
+    {
+        rel_pos[i] = circle[i] - pos[i];
+    }
+    rel_pos[Z] = 0.0f;
+
+    if (vectors_norm_sqr(rel_pos) > 0.0f)
+    {
+
+        rel_pos_norm[X] = rel_pos[X];
+        rel_pos_norm[Y] = rel_pos[Y];
+        rel_pos_norm[Z] = 0.0f;
+
+        vectors_normalize(rel_pos_norm, rel_pos_norm);
+
+        tan_dir[X] = -rel_pos_norm[Y] * maths_sign(radius);
+        tan_dir[Y] = rel_pos_norm[X] * maths_sign(radius);
+        tan_dir[Z] = 0.0f;
+
+        for (i = 0; i < 2; ++i)
+        {
+            tan_origin[i] = circle[i] - maths_f_abs(radius) * rel_pos_norm[i];
+        }
+        tan_origin[Z] = 0.0f;
+
+        //compute a line vectorfield using the tangent.
+        dubin_line(tvel, tan_dir, tan_origin, pos, speed, one_over_scaling);
+    }
 }
 
 // void dubin_test_code(void)
