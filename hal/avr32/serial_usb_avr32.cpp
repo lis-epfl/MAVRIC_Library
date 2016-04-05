@@ -85,8 +85,7 @@ bool Serial_usb_avr32::init(void)
 
 uint32_t Serial_usb_avr32::readable(void)
 {
-    // Not implemented
-    return 0;
+    return rx_buffer_.readable();
 }
 
 
