@@ -222,7 +222,14 @@ bool Pwm_stm32::set_period_us(uint16_t period_us)
 void Pwm_stm32::write_channel(void)
 {
     //select the output period
-    TIM_ARR(timer_) = period_;
+    if (TIM_ARR(timer_) > period_)
+    {
+        print_util_dbg_print("should keep slower period.\r\n");
+    }
+    else
+    {
+        TIM_ARR(timer_) = period_;
+    }
     
     if(channel_id_ == CHANNEL_1)
     {
