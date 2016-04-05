@@ -243,8 +243,16 @@ bool tasks_offboard_camera_update(Offboard_Camera* camera)
 
 bool tasks_offboard_camera_update(Central_data* central_data)
 {
+    // Set waypoint to search for tag and land
+    central_data->waypoint_handler.navigation->internal_state = NAV_LAND_ON_TAG;
+
+    // Set hold position point
+    central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = central_data->waypoint_handler.position_estimation->local_position.pos[0];
+    central_data->waypoint_handler.waypoint_hold_coordinates.pos[1] = central_data->waypoint_handler.position_estimation->local_position.pos[1];
+    central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = -10.0f;
+
+    // Land
     central_data->offboard_camera.update(&(central_data->raspi_mavlink_communication.scheduler));
-    //central_data->offboard_camera.update();
     return true;
 }
 

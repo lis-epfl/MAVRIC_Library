@@ -64,13 +64,11 @@ extern "C"
  * \param   sysid               The system ID
  * \param   msg                 The received MAVLink message structure
  */
-//void offboard_camera_telemetry_receive_camera_output(Offboard_Camera* camera, uint32_t sysid, mavlink_message_t* msg);
 static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data* central_data, mavlink_command_long_t* packet);
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-//void offboard_camera_telemetry_receive_camera_output(Offboard_Camera* camera, uint32_t sysid, mavlink_message_t* msg)
 static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data* central_data, mavlink_command_long_t* packet)
 {
     mav_result_t result;
@@ -80,6 +78,9 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
     print_util_dbg_print(", ");
     print_util_dbg_print_num(packet->param4,10);
     print_util_dbg_print(")\r\n");
+
+    // Set waypoint enum to tag found
+    central_data->waypoint_handler.navigation->land_on_tag_behavior = TAG_FOUND;
 
     Offboard_Camera camera = central_data->offboard_camera;
 
@@ -142,6 +143,12 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 bool offboard_camera_telemetry_init(Central_data* central_data, mavlink_message_handler_t* message_handler)
 {
     bool init_success = true;
+
+    // Set tag landing state to tag not found
+    central_data->waypoint_handler.navigation->land_on_tag_behavior = TAG_NOT_FOUND;
+
+    // Set the tag landing altitude to be the starting altitude
+    central_data->waypoint_handler.navigation->tag_search_altitude = -10.0f;
 
     // Add callbacks for cmd
     mavlink_message_handler_cmd_callback_t callbackcmd;

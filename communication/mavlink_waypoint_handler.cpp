@@ -1641,27 +1641,32 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
     bool next_state = false;
 
     // If the camera has detected the tag...
-    if (true) // to be changed
+    if (waypoint_handler->navigation->land_on_tag_behavior == TAG_FOUND)
     {
         // The hold coordinates has been already been updated during the tag location reading...
         // Changed the z goal to ground if we are positioned directly above the tag
         float horizontal_distance_to_tag_sqr = (cur_pos[0] - tag_pos[0]) * (cur_pos[0] - tag_pos[0]) + (cur_pos[1] - tag_pos[1]) * (cur_pos[1] - tag_pos[1]);
 
         // If we are not above tag
-        if (horizontal_distance_to_tag_sqr > 0.25)
+        if (horizontal_distance_to_tag_sqr > ALLOWABLE_HORIZONTAL_TAG_OFFSET_SQR)
         {
-            // Don't change the z hold coordinates
+            // Stay at tag search altitude
+            waypoint_handler->waypoint_hold_coordinates.pos[2] = waypoint_handler->navigation->tag_search_altitude;
 
         }
         else // Descend to ground 
         {
             waypoint_handler->waypoint_hold_coordinates.pos[2] = 0.0f;
+
+            // Set tag search altitude to current height, so it will reposition itself at this altitude if it drifts away
+            waypoint_handler->navigation->tag_search_altitude = waypoint_handler->position_estimation->local_position.pos[2];
         }
 
         waypoint_handler->navigation->alt_lpf = waypoint_handler->position_estimation->local_position.pos[2];
     }
-    else // Else we need to search for the tag ...
+    else if (waypoint_handler->navigation->land_on_tag_behavior == TAG_NOT_FOUND)// Else we need to search for the tag ...
     {
+        // Set the hold position to be the current location
         
     }
 

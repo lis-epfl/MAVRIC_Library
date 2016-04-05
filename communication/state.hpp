@@ -86,6 +86,15 @@ typedef enum
 } navigation_internal_state_t;
 
 /**
+ * \brief   The auto-landing enum
+ */
+typedef enum
+{
+    TAG_NOT_FOUND,                                      ///< Tag has not yet been found, search for tag
+    TAG_FOUND                                           ///< Tag has been found, go to location
+} land_on_tag_behavior_t;
+
+/**
  * \brief    Configuration structure
  *
  * TODO: clean

@@ -53,7 +53,7 @@
 #include "control/navigation.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
-
+#define ALLOWABLE_HORIZONTAL_TAG_OFFSET_SQR 0.25        ///< The square distance from the drone to the center of the tag that is acceptable
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
