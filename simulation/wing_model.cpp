@@ -120,6 +120,7 @@ float Wing_model::get_cd(float aoa, float speed)
 {
 	float s = sin(aoa);
 	return 0.022894020849831 -
+	// return (0.152894020849831 -
 				0.059723970421536*s +
 				2.083877344767450*s*s +
 				0.471968503907211*s*s*s -

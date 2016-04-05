@@ -42,8 +42,10 @@
 #include "drivers/servo.hpp"
 #include "hal/dummy/pwm_dummy.hpp"
 #include "util/coord_conventions.h"
+#include "hal/common/time_keeper.hpp"
 
 #include <iostream>
+#include <fstream>
 
 extern "C"
 {
@@ -53,6 +55,12 @@ extern "C"
 
 int main(int argc, char** argv)
 {
+    // Create log file
+    std::ofstream logfile;
+    logfile.open("log.csv");
+    logfile << "x,y,z,vx,vy,vz,r,p,y" << std::endl;
+    // logfile.close();
+
     Pwm_dummy pwm;
     servo_conf_t config;
     config.trim = 0.0f;
@@ -69,7 +77,8 @@ int main(int argc, char** argv)
     //Create dynamic model
     Dynamic_model_fixed_wing model(servo_motor, servo_flap_left, servo_flap_right);
 
-    servo_motor.write(1.0f);
+    // servo_motor.write(1.0f);
+    servo_motor.write(-0.5f);
 
 
     local_position_t position;
@@ -77,26 +86,37 @@ int main(int argc, char** argv)
     std::array<float, 3> ang_velocity;
     quat_t orientation;
     float roll, pitch, yaw;
+
     //Begin simulation
-    while(1)
+    time_keeper_init();
+    float t = time_keeper_get_s();
+    for (uint32_t i = 0; i < 1000; i++)
     {
-      position = model.position_lf();
-      velocity = model.velocity_lf();
-      ang_velocity = model.angular_velocity_bf();
-      orientation = model.attitude();
-      float q0 = orientation.s;
-      float q1 = orientation.v[0];
-      float q2 = orientation.v[1];
-      float q3 = orientation.v[2];
-      printf("Position: (%f, %f, %f)\n", position.pos[0], position.pos[1], position.pos[2]);
-      roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
-      pitch = asin(2*(q0*q2-q3*q1));
-      yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3));
-      printf("Roll: %f Pitch: %f Yaw: %f \n", roll, pitch, yaw);
-      printf("Velocity: (%f, %f, %f)\n", velocity[0], velocity[1], velocity[2]);
-      printf("Angular velocity: (%f, %f, %f)\n\n", ang_velocity[0], ang_velocity[1], ang_velocity[2]);
-      std::cin.ignore();
-      model.update();
+        position = model.position_lf();
+        velocity = model.velocity_lf();
+        ang_velocity = model.angular_velocity_bf();
+        orientation = model.attitude();
+        float q0 = orientation.s;
+        float q1 = orientation.v[0];
+        float q2 = orientation.v[1];
+        float q3 = orientation.v[2];
+        printf("Position: (%f, %f, %f)\n", position.pos[0], position.pos[1], position.pos[2]);
+        roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
+        pitch = asin(2*(q0*q2-q3*q1));
+        yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3));
+        printf("Roll: %f Pitch: %f Yaw: %f \n", roll, pitch, yaw);
+        printf("Velocity: (%f, %f, %f)\n", velocity[0], velocity[1], velocity[2]);
+        printf("Angular velocity: (%f, %f, %f)\n\n", ang_velocity[0], ang_velocity[1], ang_velocity[2]);
+        // std::cin.ignore();
+
+        // write to log file
+        logfile << position.pos[0] << "," << position.pos[1] << "," << position.pos[2] << ",";
+        logfile << velocity[0] << "," << velocity[1] << "," << velocity[2] << ",";
+        logfile << roll << "," << pitch << "," << yaw << std::endl;
+
+        while(time_keeper_get_s() - t < 0.004f){}
+        t = time_keeper_get_s();
+        model.update();
     }
     return 0;
 }

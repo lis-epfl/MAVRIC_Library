@@ -72,8 +72,8 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     rates_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     lin_forces_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     acc_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-    vel_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-    vel_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
+    vel_bf_(std::array<float, 3> {{5.0f, 0.0f, 0.0f}}),
+    vel_(std::array<float, 3> {{5.0f, 0.0f, 0.0f}}),
     attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
     last_update_us_(time_keeper_get_us()),
     dt_s_(0.004f)
@@ -81,7 +81,7 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     // Init local position
     local_position_.pos[0]  = 0.0f;
     local_position_.pos[1]  = 0.0f;
-    local_position_.pos[2]  = 0.0f;
+    local_position_.pos[2]  = -50.0f;
     local_position_.heading = 0.0f;
     local_position_.origin.latitude         = config_.home_coordinates[0];
     local_position_.origin.longitude        = config_.home_coordinates[1];
@@ -255,7 +255,8 @@ const quat_t& Dynamic_model_fixed_wing::attitude(void) const
 
 void Dynamic_model_fixed_wing::forces_from_servos(void)
 {
-    float motor_command = 1.0f;//servo_motor_.read() - config_.rotor_rpm_offset;
+    // float motor_command = 1.0f;//servo_motor_.read() - config_.rotor_rpm_offset;
+    float motor_command = servo_motor_.read() - config_.rotor_rpm_offset;
     float flaps_angle_left = servo_flap_left_.read() - config_.flap_offset; //TODO: transform these in angles
     float flaps_angle_right = servo_flap_right_.read() - config_.flap_offset;
     left_flap_.set_flap_angle(flaps_angle_left);
