@@ -64,6 +64,9 @@ Serial_usb_avr32::Serial_usb_avr32(serial_usb_avr32_conf_t config)
 {
     // Store config
     config_ = config;
+
+    // set interupt callback to null
+    irq_callback = NULL;
 }
 
 
