@@ -173,3 +173,47 @@ bool Serial_usb_avr32::read(uint8_t* bytes, const uint32_t size)
 
     return ret;
 }
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Serial_usb_avr32* Serial_usb_avr32::handlers_ = NULL;
+
+
+// Notify incoming usb data
+void usb_interupt_rx_notify()
+{
+    // Calls the static function which determines what to do with incoming data
+    Serial_usb_avr32::irq();
+}
+
+
+// Calls the handler for the desired usb class (only 1 usb atm)
+void Serial_usb_avr32::irq(void)
+{
+    if (handlers_)
+    {
+        handlers_->irq_handler();
+    }
+}
+
+
+// Determines what to do with incoming data
+void Serial_usb_avr32::irq_handler(void)
+{
+    // Receive all data
+    while (udi_cdc_is_rx_ready())
+    {
+        uint8_t c1 = 0;
+        stdio_usb_getchar_read_buf(NULL, (int*)&c1);
+        rx_buffer_.put_lossy(c1);
+    }
+
+    // Call callback function if attached
+    if (irq_callback != NULL)
+    {
+        irq_callback(this);
+    }
+}
