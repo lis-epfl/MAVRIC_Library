@@ -118,8 +118,8 @@ void Serial_usb_avr32::flush(void)
 
 bool Serial_usb_avr32::attach(serial_interrupt_callback_t func)
 {
-    // Not implemented
-    return false;
+    irq_callback = func;
+    return true;
 }
 
 
