@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_estimation.h
+ * \file altitude_estimation.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,13 +40,7 @@
  ******************************************************************************/
 
 
-#include "sensing/altitude_estimation.h"
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
+#include "sensing/altitude_estimation.hpp"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -57,22 +51,66 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void altitude_estimation_init(altitude_estimation_t* estimator, const altitude_estimation_conf_t* config, const sonar_t* sonar, const barometer_t* barometer, const ahrs_t* ahrs, altitude_t* altitude_estimated)
+Altitude_estimation::Altitude_estimation(Sonar& sonar,
+                                         Barometer& barometer,
+                                         ahrs_t& ahrs,
+                                         altitude_t& altitude,
+                                         altitude_estimation_conf_t config):
+    Kalman<3,1,1>(std::array<float,3>{{0.0f, 0.0f, 0.0f}},   // x
+                  std::array<float,3*3>{{100.0f,   0.0f,   0.0f,
+                                           0.0f, 100.0f,   0.0f,
+                                           0.0f,   0.0f, 100.0f}},     // P
+                  std::array<float,3*3>{{1.0f, 0.004f, 0.000008f,
+                                         0.0f, 1.0f,   0.004f,
+                                         0.0f, 0.0f,   1.0f}},         // F
+                  std::array<float,3*3>{{}}, // Q
+                  std::array<float,3>{{1.0f, 0.0f, 0.0f}},               // H
+                  std::array<float,1>{{0.001f}},                         // R
+                  std::array<float,3>{{0.000008f, 0.004, 0.0f}}  ),      // B
+    sonar_(sonar),
+    barometer_(barometer),
+    ahrs_(ahrs),
+    altitude_(altitude),
+    config_(config),
+    last_sonar_update_us_(0.0f)
 {
-    // Init dependencies
-    estimator->sonar                = sonar;
-    estimator->barometer            = barometer;
-    estimator->ahrs                 = ahrs;
-    estimator->altitude_estimated   = altitude_estimated;
+    float dt = 0.004f;
 
-    // Init members
+    float s_pos = 1.0e-2f; //1.0e-5f;
+    float s_vel = 1.0e-1f;
+    float s_acc = 1.0e-10f; // 0.0f; //1.0e-20f;
+
+    Mat<3,1> g({s_pos + + s_vel*dt + 0.5f*s_acc*dt*dt,
+                s_vel + s_acc*dt,
+                s_acc});
+
+    Q_ = g % ~g;
 }
 
 
-void altitude_estimation_update(altitude_estimation_t* estimator)
+bool Altitude_estimation::init(void)
 {
-    float alt = estimator->sonar->current_distance;
+    return true;
+}
 
-    estimator->altitude_estimated->above_sea    = - 400.0f - alt;
-    estimator->altitude_estimated->above_ground = - alt;
+
+bool Altitude_estimation::update(void)
+{
+    Kalman<3,1,1>::predict(Mat<1,1>({-ahrs_.linear_acc[2]}));
+
+    if (last_sonar_update_us_ < sonar_.last_update_us() )
+    {
+        float alt = sonar_.distance();
+
+        if( sonar_.healthy() || alt < 0.3f )
+        {
+          Kalman<3,1,1>::update(Mat<1,1>({alt}));
+          last_sonar_update_us_ = sonar_.last_update_us();
+        }
+    }
+
+    altitude_.above_sea    = x_(1,0);
+    altitude_.above_ground = x_(0,0);
+
+    return true;
 }

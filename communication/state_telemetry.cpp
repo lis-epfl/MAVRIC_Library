@@ -82,6 +82,16 @@ static void state_telemetry_set_mav_mode(State* state, uint32_t sysid, mavlink_m
  */
 static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_command_long_t* packet);
 
+/**
+ * \brief   Set the ARM mode from a command message
+ *
+ * \param   state               The pointer to the state structure
+ * \param   packet              The pointer to the decoded MAVLink message long
+ *
+ * \return  The MAV_RESULT of the command
+ */
+static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_command_long_t* packet);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -203,6 +213,44 @@ static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_comm
     return result;
 }
 
+static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_command_long_t* packet)
+{
+    mav_result_t result = MAV_RESULT_ACCEPTED;
+
+    mav_mode_t new_mode;
+    float arm_cmd = packet->param1;
+
+    if (state->mav_state == MAV_STATE_CALIBRATING)
+    {
+        result = MAV_RESULT_TEMPORARILY_REJECTED;
+        print_util_dbg_print("Currently calibrating, impossible to change mode.\r\n");
+    }
+    else
+    {
+        if (arm_cmd == 1)
+        {
+        	new_mode = MAV_MODE_FLAG_SAFETY_ARMED;
+            if (!mav_modes_is_armed(state->mav_mode))
+            {
+                state->switch_to_active_mode(&state->mav_state);
+            }
+        }
+        else
+        {
+        	new_mode = 0;
+            state->mav_state = MAV_STATE_STANDBY;
+        }
+
+        state->mav_mode = (new_mode & (~MAV_MODE_FLAG_HIL_ENABLED)) + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED) + (state->mav_mode & (~MAV_MODE_FLAG_HIL_ENABLED) & (~MAV_MODE_FLAG_SAFETY_ARMED));
+
+        print_util_dbg_print("New mav mode:");
+        print_util_dbg_print_num(state->mav_mode, 10);
+        print_util_dbg_print("\r\n");
+    }
+
+    return result;
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -236,6 +284,14 @@ bool state_telemetry_init(State* state, mavlink_message_handler_t* message_handl
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (mavlink_cmd_callback_function_t)    &state_telemetry_set_mode_from_cmd;
+    callbackcmd.module_struct =                                 state;
+    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+
+    callbackcmd.command_id = MAV_CMD_COMPONENT_ARM_DISARM; // 400
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+    callbackcmd.function = (mavlink_cmd_callback_function_t)    &state_telemetry_set_arm_from_cmd;
     callbackcmd.module_struct =                                 state;
     init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 

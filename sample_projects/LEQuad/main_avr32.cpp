@@ -66,6 +66,8 @@ extern "C"
 
 int main(void)
 {
+    bool init_success = true;
+    
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
@@ -73,6 +75,8 @@ int main(void)
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
     Megafly_rev4 board = Megafly_rev4(board_config);
 
+    // Board initialisation
+    init_success &= board.init();
 
     // -------------------------------------------------------------------------
     // Create simulation
@@ -108,6 +112,8 @@ int main(void)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using real sensors
+    central_data_conf_t cd_config = central_data_default_config();
+
     Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
                                    board.bmp085,
@@ -126,7 +132,8 @@ int main(void)
                                    board.servo_2,
                                    board.servo_3,
                                    file_log,
-                                   file_stat);
+                                   file_stat,
+                                   cd_config );
 
 
     // Create central data with simulated sensors
@@ -144,14 +151,6 @@ int main(void)
     //                              board.servo_1,
     //                              board.servo_2,
     //                              board.servo_3 );
-
-    // -------------------------------------------------------------------------
-    // Initialisation
-    // -------------------------------------------------------------------------
-    bool init_success = true;
-
-    // Board initialisation
-    init_success &= board.init();
 
     // Init central data
     init_success &= cd.init();

@@ -30,61 +30,30 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file matrixlib_float.h
+ * \file qfilter_default_config.hpp
  *
  * \author MAV'RIC Team
+ * \author Felix Schill
  *
- * \brief Source file for the floating point versions of some matrix operation
- * functions
+ * \brief Default configuration for qfilter
  *
  ******************************************************************************/
 
 
-#ifndef __MF_H__
-#define __MF_H__
+#ifndef QFILTER_DEFAULT_CONFIG_H_
+#define QFILTER_DEFAULT_CONFIG_H_
 
-#ifdef __cplusplus
-extern "C"
+#include "sensing/qfilter.hpp"
+
+static inline qfilter_conf_t qfilter_default_config()
 {
-#endif
+    qfilter_conf_t conf = {};
+    conf.kp             = 0.07f;
+    conf.ki             = 0.0f;
+    conf.kp_mag         = 0.1f;
+    conf.ki_mag         = 0.0f;
 
-#include <stdint.h>
-
-#ifndef USE_MATF
-#define USE_MATF            0
-#endif
-
-/**
- * \brief Enumerates errors module can throw
- */
-enum matf_errors
-{
-    MATF_ERROR_BASE = 0x3F00,
+    return conf;
 };
 
-//----------------------------
-// Public function prototypes
-//----------------------------
-
-float* matf_zeros(int32_t, int32_t, float*);
-float* matf_diag(int32_t, int32_t, float*, float, int32_t, int32_t);
-float* matf_std(int32_t, float*, float*);
-float* matf_copy(int32_t, int32_t, float*, float*);
-float* matf_cross(float* a, float* b, float* c);
-float* matf_copy_part(float*, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, float*, int32_t, int32_t, int32_t, int32_t);
-float  matf_norm(int32_t, float*);
-float  matf_sum(int32_t, float*);
-float* matf_add(int32_t, int32_t, float*, float*, float*);
-float* matf_multiply_factor(int32_t n1, int32_t n2, float* A, float* B, float c);
-float* matf_sub(int32_t, int32_t, float*, float*, float*);
-float* matf_tr(int32_t, int32_t, float*, float*);
-float* matf_multiply(int32_t, int32_t, int32_t, float*, float*, float*);
-float* matf_multiply_Bt(int32_t, int32_t, int32_t, float*, float*, float*);
-// float* matf_invert(int32_t numRowsCols, float* dstM, float* srcM);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* QFILTER_DEFAULT_CONFIG_H_ */
