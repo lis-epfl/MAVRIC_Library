@@ -162,6 +162,15 @@ bool Serial_usb_avr32::write(const uint8_t* bytes, const uint32_t size)
 
 bool Serial_usb_avr32::read(uint8_t* bytes, const uint32_t size)
 {
-    // Not implemented
-    return false;
+    bool ret = false;
+    if (rx_buffer_.readable() >= size) // Testing
+    {
+        ret = true;
+        for (uint32_t i = 0; i < size; ++i)
+        {
+            ret &= rx_buffer_.get(bytes[i]);
+        }
+    }
+
+    return ret;
 }
