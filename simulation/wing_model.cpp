@@ -82,13 +82,17 @@ wing_model_forces_t Wing_model::compute_forces(quat_t wind_bf){
 	printf("Cm: %f\n",cm);
 	float density=1.225f; //Keep it constant for now
 	float base = 0.5*density*speed_sq*area_;
+	float lift = cl*base; //Doing this to improve the speed -> Correct??
+	float drag = cd*base;
+	float sinus = sin(aoa);
+	float cosinus = cos(aoa);
 	wing_model_forces_t forces_wf;
 	forces_wf.torque[ROLL] = 0.0;
 	forces_wf.torque[PITCH] = cm*chord_*base; //Positive when plane lift its nose
 	forces_wf.torque[YAW] = 0.0;
-	forces_wf.force[0] = -cd*base; //Drag is directed to the tail of the plane
+	forces_wf.force[0] = -drag*cosinus+lift*sinus; //Drag and lift are // and orthogonal to the wind
 	forces_wf.force[1] = 0.0;
-	forces_wf.force[2] = -cl*base; //Lift is directed on the upward direction
+	forces_wf.force[2] = -lift*cosinus-drag*sinus; 
 	wing_model_forces_t forces_bf = forces_wing_to_bf(forces_wf);
 	//printf("___________________\nAoa: %f, Cl: %f, Cd:%f, Cm:%f\nWF:\n Pitch Torque: %f, XForce:%f, ZForce:%f\n",aoa,cl,cd,cm,forces_wf.torque[PITCH],forces_wf.force[0],forces_wf.force[2]);
 	//printf("BF:\n Roll Torque: %f, Pitch Torque: %f, Yaw Torque: %f\n XForce:%f, YForce:%f, ZForce:%f\n_____________________\n",forces_bf.torque[ROLL],forces_bf.torque[PITCH],forces_bf.torque[YAW],forces_bf.force[0],forces_bf.force[1],forces_bf.force[2]);
