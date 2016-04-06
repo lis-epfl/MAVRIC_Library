@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file navigation_default_config.h
+ * \file navigation_default_config.hpp
  *
  * \author MAV'RIC Team
  *
@@ -42,16 +42,13 @@
 #ifndef NAVIGATION_DEFAULT_CONFIG_H_
 #define NAVIGATION_DEFAULT_CONFIG_H_
 
-#ifdef __cplusplus
 extern "C" {
-#endif
-
 #include "control/pid_controller.h"
+}
 
-
-static inline navigation_config_t navigation_default_config()
+static inline navigation_conf_t navigation_default_config()
 {
-    navigation_config_t conf                         = {};
+    navigation_conf_t conf                         = {};
 
     conf.dist2vel_gain                               = 0.7f;
     conf.cruise_speed                                = 3.0f;
@@ -99,9 +96,5 @@ static inline navigation_config_t navigation_default_config()
 
     return conf;
 };
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* NAVIGATION_DEFAULT_CONFIG_H_ */

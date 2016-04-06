@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_controller.h
+ * \file altitude_controller.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,12 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/altitude_controller.h"
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
+#include "control/altitude_controller.hpp"
 
 
 //------------------------------------------------------------------------------
@@ -57,33 +52,41 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void altitude_controller_init(altitude_controller_t* controller, const altitude_controller_conf_t* config, const position_command_t* position_command, const altitude_t* altitude_estimated, thrust_command_t* thrust_command)
+Altitude_controller::Altitude_controller(const position_command_t& position_command, 
+                                         const altitude_t& altitude, 
+                                         thrust_command_t& thrust_command,
+                                         altitude_controller_conf_t config):
+    position_command_(position_command),
+    altitude_(altitude),
+    thrust_command_(thrust_command)
 {
-    // Init dependencies
-    controller->position_command    = position_command;
-    controller->altitude_estimated  = altitude_estimated;
-    controller->thrust_command      = thrust_command;
-
-    // Init members
-    controller->hover_point = config->hover_point;
-    pid_controller_init(&controller->pid, &config->pid_config);
+    hover_point_ = config.hover_point;
+    pid_controller_init(&pid_, &config.pid_config);
 }
 
 
-void altitude_controller_update(altitude_controller_t* controller)
+bool Altitude_controller::init(void)
+{   
+    return true;
+}
+
+
+bool Altitude_controller::update(void)
 {
     float error = 0.0f;
 
-    switch (controller->position_command->mode)
+    switch (position_command_.mode)
     {
         case POSITION_COMMAND_MODE_LOCAL:
-            error = controller->position_command->xyz[2] - controller->altitude_estimated->above_ground;
+            error = position_command_.xyz[2] - (-altitude_.above_ground);
             break;
 
         case POSITION_COMMAND_MODE_GLOBAL:
-            error = controller->position_command->xyz[2] - controller->altitude_estimated->above_sea;
+            error = position_command_.xyz[2] - (-altitude_.above_sea);
             break;
     }
 
-    controller->thrust_command->thrust = controller->hover_point - pid_controller_update(&controller->pid, error);
+    thrust_command_.thrust = hover_point_ - pid_controller_update(&pid_, error);
+
+    return true;
 }

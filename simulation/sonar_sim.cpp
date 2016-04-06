@@ -131,15 +131,28 @@ bool Sonar_sim::update(void)
         }
         else
         {
+            // Update current distance even if not healthy
+            if (new_distance < config_.min_distance)
+            {
+                distance_ = config_.min_distance;
+            }
+            else if(new_distance > config_.max_distance)
+            {
+                distance_ = config_.max_distance;
+            }
+            
             velocity_   = 0.0f;
             healthy_    = false;
         }
+
     }
     else
     {
+        distance_   = config_.max_distance;
         velocity_   = 0.0f;
         healthy_    = false;
     }
+
 
     return success;
 }
