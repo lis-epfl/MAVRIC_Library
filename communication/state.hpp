@@ -96,8 +96,6 @@ typedef struct
 
     mav_mode_custom_t mav_mode_custom;                  ///< The value of the custom_mode
 
-    int32_t simulation_mode;                            ///< The value of the simulation_mode (0: real, 1: simulation)
-
     uint8_t autopilot_type;                             ///< The type of the autopilot (MAV_TYPE enum in common.h)
     uint8_t autopilot_name;                             ///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
 
@@ -171,8 +169,6 @@ public:
 
     mav_mode_custom_t mav_mode_custom;                  ///< The value of the custom_mode
 
-    int32_t simulation_mode;                            ///< The value of the simulation_mode (0: real, 1: simulation)
-
     uint8_t autopilot_type;                             ///< The type of the autopilot (MAV_TYPE enum in common.h)
     uint8_t autopilot_name;                             ///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
 
@@ -209,7 +205,6 @@ static inline state_conf_t state_default_config()
 
     conf.mav_mode                = MAV_MODE_SAFE;
     conf.mav_state               = MAV_STATE_BOOT;
-    conf.simulation_mode         = HIL_OFF;
     conf.autopilot_type          = MAV_TYPE_QUADROTOR;
     conf.autopilot_name          = MAV_AUTOPILOT_MAVRIC;
     conf.sensor_present          = 0b1111110000100111;
