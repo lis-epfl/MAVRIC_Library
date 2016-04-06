@@ -1828,6 +1828,14 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 
             waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
 
+            print_util_dbg_print("GOAL: (");
+            print_util_dbg_print_num(waypoint_handler->navigation->goal.pos[0], 10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_handler->navigation->goal.pos[1], 10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_handler->navigation->goal.pos[2], 10);
+            print_util_dbg_print(")");
+
             if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
             {
                 waypoint_handler->navigation->internal_state = NAV_MANUAL_CTRL;

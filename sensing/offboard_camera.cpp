@@ -77,7 +77,7 @@ bool Offboard_Camera::update(const scheduler_t* scheduler)
 
     // TEMPORARY...
     // Switch camera on and off
-    is_camera_running_ = !is_camera_running_;
+    is_camera_running_ = true;
     // ...TEMPORARY
 
     // Update timing
