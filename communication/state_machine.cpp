@@ -345,10 +345,19 @@ bool state_machine_update(state_machine_t* state_machine)
             break;
     }
 
+    // Check simulation mode
+    if (state_machine->state->simulation_mode == true)
+    {
+        mode_new |= MAV_MODE_FLAG_HIL_ENABLED;
+    }
+    else
+    {
+        mode_new &= ~MAV_MODE_FLAG_HIL_ENABLED;
+    }
 
     // Finally, write new modes and states
-    state_machine->state->mav_mode = mode_new;
-    state_machine->state->mav_state = state_new;
+    state_machine->state->mav_mode        = mode_new;
+    state_machine->state->mav_state       = state_new;
     state_machine->state->mav_mode_custom = mode_custom_new;
 
     return true;
