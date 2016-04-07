@@ -193,7 +193,7 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 
 
 bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_parameters, Central_data* central_data)
-{/*
+{
     bool init_success = true;
 
     stabiliser_t* rate_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.rate_stabiliser;
@@ -348,10 +348,10 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.wpt_nav_controller.differentiator.gain        , "VEL_WPT_DGAIN");
 
 //  init_success &= onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&central_data->state_machine.low_battery_counter            , "SAFE_COUNT"     );
-*/
+
     /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
-    //init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_CTRL_SRC");
-    //init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
+    init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_CTRL_SRC");
+    init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
 return true;
     //return init_success;
 }

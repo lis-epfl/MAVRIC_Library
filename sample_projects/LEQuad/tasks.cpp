@@ -42,7 +42,7 @@
 #include "sample_projects/LEQuad/tasks.hpp"
 #include "sample_projects/LEQuad/central_data.hpp"
 #include "communication/data_logging.hpp"
-
+#include "util/print_util.h"
 
 void tasks_run_imu_update(Central_data* central_data)
 {
@@ -245,6 +245,7 @@ bool tasks_offboard_camera_update(Central_data* central_data)
 {
     // Set waypoint to search for tag and land
     central_data->waypoint_handler.navigation->internal_state = NAV_LAND_ON_TAG;
+    print_util_dbg_print("internal_state = NAV_LAND_ON_TAG");
 
     // Set hold position point
     central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = central_data->waypoint_handler.position_estimation->local_position.pos[0];

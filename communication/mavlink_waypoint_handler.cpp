@@ -1631,7 +1631,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
     float tag_pos[3];
     float cur_pos[3];
 
-    // Set this position to be the goal
+    // Set position vectors to shorten code later
     for (uint8_t i = 0; i < 3; i++)
     {
         tag_pos[i] = waypoint_handler->waypoint_hold_coordinates.pos[i];
@@ -1670,6 +1670,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         
     }
 
+    // Calculate low-pass filter altitude for when to turn off motors
     waypoint_handler->navigation->alt_lpf = waypoint_handler->navigation->LPF_gain * (waypoint_handler->navigation->alt_lpf) + (1.0f - waypoint_handler->navigation->LPF_gain) * waypoint_handler->position_estimation->local_position.pos[2];
     if ((waypoint_handler->position_estimation->local_position.pos[2] > -0.1f) && (maths_f_abs(waypoint_handler->position_estimation->local_position.pos[2] - waypoint_handler->navigation->alt_lpf) <= 0.2f))
     {
@@ -1677,6 +1678,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         next_state = true;
     }
 
+    // Disarm if needed
     if (next_state)
     {
         print_util_dbg_print("Auto-landing on tag: disarming motors \r\n");
