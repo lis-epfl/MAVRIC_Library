@@ -57,42 +57,42 @@ extern "C"
 }
 
 
-/**
- * \brief   enum of timer channel
- */
-typedef enum
-{
-    CHANNEL_1,
-    CHANNEL_2,
-    CHANNEL_3,
-    CHANNEL_4
-} channel_t;
-
-
-/**
- * \brief   Configuration structure
- */
-typedef struct
-{
-    gpio_stm32_conf_t       gpio_config;
-    uint32_t                timer_config;
-    rcc_periph_clken        rcc_timer_config;
-    channel_t               channel_config;
-    uint32_t                prescaler_config;
-    uint32_t                period_config;
-    uint32_t                duty_cycle_config;
-} pwm_conf_t;
-
-
 class Pwm_stm32: public Pwm
 {
 public:
+
+    /**
+     * \brief   enum of timer channel
+     */
+    typedef enum
+    {
+        PWM_STM32_CHANNEL_1,
+        PWM_STM32_CHANNEL_2,
+        PWM_STM32_CHANNEL_3,
+        PWM_STM32_CHANNEL_4
+    } pwm_stm32_channel_t;
+
+    /**
+     * \brief   STM32_PWM configuration structure
+     */
+    typedef struct
+    {
+        gpio_stm32_conf_t       gpio_config;            ///< specify which gpio is used
+        uint32_t                timer_config;           ///< specify which timer is used
+        rcc_periph_clken        rcc_timer_config;       ///< rcc reference to the timer
+        pwm_stm32_channel_t     channel_config;         ///< specify which channel is used
+        uint32_t                prescaler_config;       ///< specify the clk divider
+        uint32_t                period_config;          ///< specify the period of the PWM
+        uint32_t                duty_cycle_config;      ///< specify the pulse length in microseconds
+    } config_t;
+
+
     /**
      * \brief Constructor
      *
      * \param Servo number (between 0 and 7)
      */
-    Pwm_stm32(pwm_conf_t pwm_config);
+    Pwm_stm32(config_t pwm_config);
 
 
     /**
@@ -129,13 +129,13 @@ private:
      */
     void write_channel(void);
 
-    pwm_conf_t pwm_config_;
+    config_t pwm_config_;
 
     uint8_t channel_id_;    ///< PWM channel number
     uint32_t timer_;        ///< TIMER used
-    uint32_t prescaler_;    ///<
-    uint32_t period_;       ///<
-    uint32_t duty_cyle_;    ///<
+    uint32_t prescaler_;    ///< clk divider
+    uint32_t period_;       ///< period
+    uint32_t duty_cyle_;    ///< pulse length in us
 };
 
 #endif /* PWM_STM32_H_ */

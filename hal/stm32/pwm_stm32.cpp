@@ -58,7 +58,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Pwm_stm32::Pwm_stm32(pwm_conf_t pwm_config)
+Pwm_stm32::Pwm_stm32(config_t pwm_config)
 {
     pwm_config_ = pwm_config;
 
@@ -96,7 +96,7 @@ bool Pwm_stm32::init(void)
     TIM_CR1(pwm_config_.timer_config) |= TIM_CR1_CEN;
 
     //CHANNEL SPECIFIC
-    if (pwm_config_.channel_config == CHANNEL_1)
+    if (pwm_config_.channel_config == PWM_STM32_CHANNEL_1)
     {
         //Disable channel1
         TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC1E; 
@@ -120,7 +120,7 @@ bool Pwm_stm32::init(void)
         //enable capture/compare
         TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC1E;
     }
-    else if (pwm_config_.channel_config == CHANNEL_2)
+    else if (pwm_config_.channel_config == PWM_STM32_CHANNEL_2)
     {
         //Disable channel2
         TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC2E; 
@@ -144,7 +144,7 @@ bool Pwm_stm32::init(void)
         //enable capture/compare
         TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC2E;
     }
-    else if (pwm_config_.channel_config == CHANNEL_3)
+    else if (pwm_config_.channel_config == PWM_STM32_CHANNEL_3)
     {
         //Disable channel3
         TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC3E; 
@@ -168,7 +168,7 @@ bool Pwm_stm32::init(void)
         //enable capture/compare
         TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC3E;
     }
-    else if (pwm_config_.channel_config == CHANNEL_4)
+    else if (pwm_config_.channel_config == PWM_STM32_CHANNEL_4)
     {
         //Disable channel4
         TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC4E; 
@@ -231,22 +231,22 @@ void Pwm_stm32::write_channel(void)
         TIM_ARR(timer_) = period_;
     }
     
-    if(channel_id_ == CHANNEL_1)
+    if(channel_id_ == PWM_STM32_CHANNEL_1)
     {
         //select duty cycle
         TIM_CCR1(timer_) = duty_cyle_;
     }
-    else if(channel_id_ == CHANNEL_2)
+    else if(channel_id_ == PWM_STM32_CHANNEL_2)
     {
         //select duty cycle
         TIM_CCR2(timer_) = duty_cyle_;
     }
-    else if(channel_id_ == CHANNEL_3)
+    else if(channel_id_ == PWM_STM32_CHANNEL_3)
     {
         //select duty cycle
         TIM_CCR3(timer_) = duty_cyle_;
     }
-    else if(channel_id_ == CHANNEL_4)
+    else if(channel_id_ == PWM_STM32_CHANNEL_4)
     {
         //select duty cycle
         TIM_CCR4(timer_) = duty_cyle_;
