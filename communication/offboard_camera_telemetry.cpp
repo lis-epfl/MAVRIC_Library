@@ -73,12 +73,6 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 {
     mav_result_t result;
 
-    print_util_dbg_print("Tag loc: (");
-    print_util_dbg_print_num(packet->param3,10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(packet->param4,10);
-    print_util_dbg_print(")\r\n");
-
     // Set waypoint enum to tag found
     central_data->waypoint_handler.navigation->land_on_tag_behavior = TAG_FOUND;
 
@@ -97,8 +91,8 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         pixel_width = width / resolution
         pixel_width = 2 * drone_height * tan(fov/2) / resolution
     */
-    float pixel_width = 2 * drone_height * tan(camera.camera_fov[0]) / (camera.camera_res[0]);
-    float pixel_height = 2 * drone_height * tan(camera.camera_fov[1]) / (camera.camera_res[1]);
+    float pixel_width = 2 * (-drone_height) * tan(camera.camera_fov[0]) / (camera.camera_res[0]); // drone_height negated as +z is down
+    float pixel_height = 2 * (-drone_height) * tan(camera.camera_fov[1]) / (camera.camera_res[1]); // drone_height negated as +z is down
 
     // Get drone offset
     float picture_forward_offset = -packet->param4 * pixel_width; // Negative, because in vision positive is towards the bottom of the picture
@@ -129,7 +123,7 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
     // Set hold position
     central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = tag_x_pos;
     central_data->waypoint_handler.waypoint_hold_coordinates.pos[1] = tag_y_pos;
-    central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = drone_height; // This should probably be changed to a constant value to prevent drift
+    central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = central_data->waypoint_handler.navigation->tag_search_altitude;
 
     result = MAV_RESULT_ACCEPTED;
     return result;

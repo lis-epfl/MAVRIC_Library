@@ -1669,6 +1669,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
             waypoint_handler->navigation->tag_search_altitude = waypoint_handler->position_estimation->local_position.pos[2];
         }
 
+        // Determine low pass filter altitude to know when to turn off drone
         waypoint_handler->navigation->alt_lpf = waypoint_handler->position_estimation->local_position.pos[2];
     }
     else if (waypoint_handler->navigation->land_on_tag_behavior == TAG_NOT_FOUND)// Else we need to search for the tag ...
