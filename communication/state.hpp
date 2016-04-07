@@ -97,7 +97,6 @@ typedef struct
     mav_mode_custom_t mav_mode_custom;                  ///< The value of the custom_mode
 
     int32_t simulation_mode;                            ///< The value of the simulation_mode (0: real, 1: simulation)
-
     uint8_t autopilot_type;                             ///< The type of the autopilot (MAV_TYPE enum in common.h)
     uint8_t autopilot_name;                             ///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
 
@@ -170,8 +169,6 @@ public:
     mav_state_t mav_state;                              ///< The value of the MAV state
 
     mav_mode_custom_t mav_mode_custom;                  ///< The value of the custom_mode
-
-    int32_t simulation_mode;                            ///< The value of the simulation_mode (0: real, 1: simulation)
 
     uint8_t autopilot_type;                             ///< The type of the autopilot (MAV_TYPE enum in common.h)
     uint8_t autopilot_name;                             ///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
