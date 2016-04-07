@@ -1686,6 +1686,15 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         next_state = true;
     }
 
+    // If the tag search has gone on too long, set mode to landing
+    if ((time_keeper_get_us() - waypoint_handler->navigation->tag_search_start_time) > TAG_SEARCH_TIMEOUT_US)
+    {
+        print_util_dbg_print("Auto-landing on tag: Timeout: Switch to normal landing\r\n");
+        waypoint_handler->navigation->internal_state = DESCENT_TO_SMALL_ALTITUDE;
+        waypoint_handler->navigation->auto_landing_behavior = DESCENT_TO_GND;
+        waypoint_handler->navigation->land_on_tag_behavior == TAG_NOT_FOUND;
+    }
+
     // Disarm if needed
     if (next_state)
     {
@@ -1696,6 +1705,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         waypoint_handler->navigation->internal_state = NAV_ON_GND;
         waypoint_handler->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
         waypoint_handler->state->mav_state = MAV_STATE_STANDBY;
+        waypoint_handler->navigation->land_on_tag_behavior == TAG_NOT_FOUND;
     }
 }
 

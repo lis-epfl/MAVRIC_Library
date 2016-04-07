@@ -56,6 +56,8 @@ extern "C"
 #include "control/pid_controller.h"
 }
 
+#define TAG_SEARCH_TIMEOUT_US 60000000
+
 /**
  * \brief The navigation structure
  */
@@ -86,6 +88,7 @@ typedef struct
     auto_landing_behavior_t auto_landing_behavior;      ///< The autolanding behavior enum
     land_on_tag_behavior_t land_on_tag_behavior;        ///< The land on tag behavior enum
     float tag_search_altitude;                          ///< The altitude that the drone should search for the tag at
+    uint32_t tag_search_start_time;                     ///< The start time that the offboard camera has been searching for the tag, causes a timeout if too long
 
     control_command_t* controls_nav;                    ///< The pointer to the navigation control structure
     const quat_t* qe;                                   ///< The pointer to the attitude quaternion structure
