@@ -7,5 +7,6 @@ var searchData=
   ['position_5festimation_5ft',['position_estimation_t',['../structposition__estimation__t.html',1,'']]],
   ['pwm',['Pwm',['../classPwm.html',1,'']]],
   ['pwm_5favr32',['Pwm_avr32',['../classPwm__avr32.html',1,'']]],
-  ['pwm_5fdummy',['Pwm_dummy',['../classPwm__dummy.html',1,'']]]
+  ['pwm_5fdummy',['Pwm_dummy',['../classPwm__dummy.html',1,'']]],
+  ['pwm_5fstm32',['Pwm_stm32',['../classPwm__stm32.html',1,'']]]
 ];

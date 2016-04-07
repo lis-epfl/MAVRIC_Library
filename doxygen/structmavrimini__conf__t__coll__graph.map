@@ -2,6 +2,7 @@
 <area shape="rect" id="node2" href="$structimu__conf__t.html" title="The configuration IMU structure." alt="" coords="5,331,205,555"/>
 <area shape="rect" id="node4" href="$structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="35,5,176,195"/>
 <area shape="rect" id="node6" href="$structservo__conf__t.html" title="Configuration structure for servo." alt="" coords="229,348,381,537"/>
-<area shape="rect" id="node8" href="$structgpio__stm32__conf__t.html" title="{gpio_stm32_conf_t\n|+ port\l+ pin\l+ dir\l+ pull\l|}" alt="" coords="405,374,536,511"/>
-<area shape="rect" id="node10" href="$structserial__stm32__conf__t.html" title="Configuration structure." alt="" coords="572,296,711,589"/>
+<area shape="rect" id="node8" href="$structgpio__stm32__conf__t.html" title="{gpio_stm32_conf_t\n|+ port\l+ pin\l+ dir\l+ pull\l+ alt_fct\l|}" alt="" coords="437,23,568,177"/>
+<area shape="rect" id="node12" href="$structPwm__stm32_1_1config__t.html" title="STM32_PWM configuration structure." alt="" coords="605,348,755,537"/>
+<area shape="rect" id="node10" href="$structserial__stm32__conf__t.html" title="Configuration structure." alt="" coords="779,296,917,589"/>
 </map>

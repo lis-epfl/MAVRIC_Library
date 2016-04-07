@@ -21,6 +21,7 @@ var searchData=
   ['parameters',['parameters',['../structonboard__parameters__set__t.html#a4dbf7ed3c8c5152cedf74028d8b7abfb',1,'onboard_parameters_set_t::parameters()'],['../structadaptive__parameter__set__t.html#a234d85b7ec2166ba853b1de2f2f82924',1,'adaptive_parameter_set_t::parameters()']]],
   ['payload_5fcounter',['payload_counter',['../structgps__t.html#a1ff5d53dbb6f260f2adc668e0c3f1cd0',1,'gps_t']]],
   ['payload_5flength',['payload_length',['../structgps__t.html#adc08583fe5abcdaae21449f7766a1ec2',1,'gps_t']]],
+  ['period_5fconfig',['period_config',['../structPwm__stm32_1_1config__t.html#a8be6a6ba91e19e7f64a979221151e0cd',1,'Pwm_stm32::config_t']]],
   ['pid',['pid',['../structvelocity__controller__copter__t.html#a937f65ab3300f6f5ff21e50947e9fb7b',1,'velocity_controller_copter_t']]],
   ['pid_5fconfig',['pid_config',['../structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96',1,'altitude_controller_conf_t::pid_config()'],['../structvelocity__controller__copter__conf__t.html#af80968c81485db403abd5c20e45f46cf',1,'velocity_controller_copter_conf_t::pid_config()']]],
   ['pid_5fcontroller_5fconf_5ft',['pid_controller_conf_t',['../structpid__controller__conf__t.html',1,'']]],
@@ -49,6 +50,7 @@ var searchData=
   ['preamble2',['preamble2',['../structubx__header__t.html#aa23c4f009ef9eaf9a920697af1de95d3',1,'ubx_header_t']]],
   ['precision',['precision',['../structdata__logging__entry__t.html#a4e815bc58ce18b671a18309f8748c1bc',1,'data_logging_entry_t']]],
   ['predict',['predict',['../classKalman.html#a2bf20288d9e7050857ace6a70b173802',1,'Kalman::predict(void)'],['../classKalman.html#a67a666af5ea72fe30283ad61613ffc8e',1,'Kalman::predict(Mat&lt; p, 1, T &gt; u)']]],
+  ['prescaler_5fconfig',['prescaler_config',['../structPwm__stm32_1_1config__t.html#a97e28e181c1749885d55d26820b61ce2',1,'Pwm_stm32::config_t']]],
   ['pressure',['pressure',['../classBarometer.html#afe42185560d85096d656e6029cbd357f',1,'Barometer']]],
   ['pressure_5f',['pressure_',['../classBarometer.html#a2c17c3b17977b5c5568ac5fb23c83653',1,'Barometer']]],
   ['pressure_5foffset',['pressure_offset',['../structairspeed__analog__t.html#add16f84699bfaaccbff46c73a3125fd4',1,'airspeed_analog_t']]],
@@ -72,5 +74,7 @@ var searchData=
   ['pwm',['Pwm',['../classPwm.html',1,'Pwm'],['../structtLED__DESCRIPTOR.html#a5cfd01391574158cf7edb0a5b110ec6a',1,'tLED_DESCRIPTOR::PWM()']]],
   ['pwm_5f0',['pwm_0',['../classMavrinux.html#aa89c20556424714f274b0a95189e97c5',1,'Mavrinux']]],
   ['pwm_5favr32',['Pwm_avr32',['../classPwm__avr32.html',1,'Pwm_avr32'],['../classPwm__avr32.html#acf1afd8173446fc9baf4d1a6a6e7a975',1,'Pwm_avr32::Pwm_avr32()']]],
-  ['pwm_5fdummy',['Pwm_dummy',['../classPwm__dummy.html',1,'']]]
+  ['pwm_5fdummy',['Pwm_dummy',['../classPwm__dummy.html',1,'']]],
+  ['pwm_5fstm32',['Pwm_stm32',['../classPwm__stm32.html',1,'Pwm_stm32'],['../classPwm__stm32.html#a5318b50f8c825979dc41c99522578cc3',1,'Pwm_stm32::Pwm_stm32()']]],
+  ['pwm_5fstm32_5fchannel_5ft',['pwm_stm32_channel_t',['../classPwm__stm32.html#a34edbab8e0d2defb9d6ad7264ade714d',1,'Pwm_stm32']]]
 ];

@@ -8,5 +8,6 @@ var searchData=
   ['probe',['probe',['../classI2c__avr32.html#a4c62da114d6d70182b26f1cb7fcf5b37',1,'I2c_avr32::probe()'],['../classI2c.html#ab8140148faf1616a02cec420a9cef8d3',1,'I2c::probe()'],['../classI2c__dummy.html#aa78b7afea903134d7a7d5fbae1c72a24',1,'I2c_dummy::probe()']]],
   ['put',['put',['../classBuffer__tpl.html#a3e6e6b58528f9e82dde45f3d43d2186c',1,'Buffer_tpl']]],
   ['put_5flossy',['put_lossy',['../classBuffer__tpl.html#a526cfc106b641c84b9fe378a95366250',1,'Buffer_tpl']]],
-  ['pwm_5favr32',['Pwm_avr32',['../classPwm__avr32.html#acf1afd8173446fc9baf4d1a6a6e7a975',1,'Pwm_avr32']]]
+  ['pwm_5favr32',['Pwm_avr32',['../classPwm__avr32.html#acf1afd8173446fc9baf4d1a6a6e7a975',1,'Pwm_avr32']]],
+  ['pwm_5fstm32',['Pwm_stm32',['../classPwm__stm32.html#a5318b50f8c825979dc41c99522578cc3',1,'Pwm_stm32']]]
 ];

@@ -54,5 +54,6 @@ var searchData=
   ['dsm_5freceiver_5fgpio',['dsm_receiver_gpio',['../classMavrimini.html#a8fcc6be7df1538104653c3c918ca9a4f',1,'Mavrimini']]],
   ['dsm_5freceiver_5fpin',['dsm_receiver_pin',['../classMegafly__rev4.html#a07bf4d69cc0b14a297a7796f6382a5c8',1,'Megafly_rev4']]],
   ['dt',['dt',['../structnavigation__t.html#ae1d78d5de8473fc5081a2bf72cdf49b4',1,'navigation_t::dt()'],['../structpid__controller__t.html#aa2df2d01c5028cce7276d9ab7df89024',1,'pid_controller_t::dt()'],['../structahrs__t.html#a09ac8b47ce59461e361697668cd7c3b7',1,'ahrs_t::dt()']]],
+  ['duty_5fcycle_5fconfig',['duty_cycle_config',['../structPwm__stm32_1_1config__t.html#a6b8cc1b2ad50249d83c0ae83765f8c08',1,'Pwm_stm32::config_t']]],
   ['dyn_5fmodel',['dyn_model',['../structubx__cfg__nav__settings__t.html#a1f977a007dd8fdd10a957fa52f9f2712',1,'ubx_cfg_nav_settings_t']]]
 ];

@@ -34,6 +34,7 @@ var searchData=
   ['time_5fto_5ffirst_5ffix',['time_to_first_fix',['../structubx__nav__status__t.html#a7617e7c5e962355430669981b33822d1',1,'ubx_nav_status_t']]],
   ['time_5fzone',['time_zone',['../structgps__t.html#a2800ff904f48c4524446ad8a7ba06442',1,'gps_t']]],
   ['timeout_5fmax_5fwaypoint',['timeout_max_waypoint',['../structmavlink__waypoint__handler__t.html#ae50eebb69a80d3e666574442832bfa77',1,'mavlink_waypoint_handler_t']]],
+  ['timer_5fconfig',['timer_config',['../structPwm__stm32_1_1config__t.html#a3e03aa707bbc169120510858fef8c43f',1,'Pwm_stm32::config_t']]],
   ['timeref',['timeref',['../structubx__cfg__nav__rate__t.html#a7c28d25350c51ee40ef5bb8758ba2970',1,'ubx_cfg_nav_rate_t::timeref()'],['../structubx__cfg__nav__rate__send__t.html#a255e62178d8ae8983514ac63995e08b4',1,'ubx_cfg_nav_rate_send_t::timeref()']]],
   ['timing_5fmode',['timing_mode',['../structtask__entry__t.html#adbea42ffe5bad11ae2d06196041923e6',1,'task_entry_t']]],
   ['torque',['torque',['../structcommand__t.html#ad37d49bf12c3a50ffd93545adf044185',1,'command_t']]],

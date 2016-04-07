@@ -3,6 +3,7 @@ var searchData=
   ['central_5fdata',['Central_data',['../classCentral__data.html',1,'']]],
   ['central_5fdata_5fconf_5ft',['central_data_conf_t',['../structcentral__data__conf__t.html',1,'']]],
   ['command_5ft',['command_t',['../structcommand__t.html',1,'']]],
+  ['config_5ft',['config_t',['../structPwm__stm32_1_1config__t.html',1,'Pwm_stm32']]],
   ['console',['Console',['../classConsole.html',1,'']]],
   ['console_3c_20file_20_3e',['Console< File >',['../classConsole.html',1,'']]],
   ['control_5fcommand_5ft',['control_command_t',['../structcontrol__command__t.html',1,'']]],
