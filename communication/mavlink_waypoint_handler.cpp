@@ -244,6 +244,13 @@ static mav_result_t waypoint_handler_set_auto_landing(mavlink_waypoint_handler_t
 static void waypoint_handler_auto_landing_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
+ * \brief   Drives the auto-landing on tag navigation behavior
+ *
+ * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
+ */
+static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t* waypoint_handler);
+
+/**
  * \brief   Drives the stopping behavior
  *
  * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
