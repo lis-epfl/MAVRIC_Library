@@ -171,7 +171,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         // 1m altitude command (Above goround level)
         central_data->command.position.xyz[0] = 0.0f;
         central_data->command.position.xyz[1] = 0.0f;
-        central_data->command.position.xyz[2] = -0.7f;
+        central_data->command.position.xyz[2] = -0.8f;
         central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
 
         // Do control

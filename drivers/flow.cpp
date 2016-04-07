@@ -169,9 +169,10 @@ bool flow_update(flow_t* flow)
                             // swap bytes
                             for (uint32_t i = 0; i < flow->of_count; ++i)
                             {
-                                flow->of_loc.x[i] = endian_rev16s(flow->of_loc_tmp.x[i]);
+                                flow->of_loc.x[i] =  endian_rev16s(flow->of_loc_tmp.x[i]);
                                 flow->of_loc.y[i] = endian_rev16s(flow->of_loc_tmp.y[i]);
                             }
+                        
                         }
                         break;
 
@@ -192,11 +193,12 @@ bool flow_update(flow_t* flow)
                                 flow->of_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
                             }
 
-                            // swap bytes
+                            // swap bytes and filter for high frequency noise
                             for (int i = 0; i < flow->of_count; ++i)
                             {
-                                flow->of.x[i] = endian_rev16s(flow->of_tmp.x[i]);
-                                flow->of.y[i] = endian_rev16s(flow->of_tmp.y[i]);
+                                flow->of.x[i] = filter_constant * endian_rev16s(flow->of_tmp.x[i])+ (1-filter_constant)*flow->of.x[i];
+                                flow->of.y[i] = filter_constant * endian_rev16s(flow->of_tmp.y[i])+ (1-filter_constant)*flow->of.y[i];
+
                             }
                         }
                         break;

@@ -75,6 +75,11 @@ Saccade_controller::Saccade_controller( flow_t& flow_left,
     // Init azimuth angles
     for (uint32_t i = 0; i < N_points; ++i)
     {
+        //Set rpy to 0, see if this causes loss of yaw control after auto mode switched on.
+        attitude_command_.rpy[0] = 0.0f;
+        attitude_command_.rpy[1] = 0.0f;
+        attitude_command_.rpy[2] = 0.0f;
+
         azimuth_[i]             = (-160.875 + i * angle_between_points) * (PI / 180.0f);
         inv_sin_azimuth_[i]     = 1.0f/quick_trig_sin(azimuth_[i]);
         azimuth_[i + N_points]  = (  19.125 + i * angle_between_points) * (PI / 180.0f);
@@ -109,6 +114,7 @@ bool Saccade_controller::update()
 
 
 
+
     // Quaternion given to attitude controller for the saccade
     quat_t quat_yaw_command;
 
@@ -118,10 +124,18 @@ bool Saccade_controller::update()
 
     // Calculate for both left and right the sum of the relative nearnesses
     // which are each given by RN = OF/sin(angle),
-    for (uint32_t i = 0; i < N_points; ++i)
+    for (uint32_t i = 0; i < N_points; i++)
     {
-        relative_nearness_[i]             = flow_left_.of.x[i];// * inv_sin_azimuth_[i];
-        relative_nearness_[i + N_points]  = flow_right_.of.x[i];// * inv_sin_azimuth_[i + N_points];
+        // if(i<50 or i > 60){
+        // relative_nearness_[i]             = 0;
+        // relative_nearness_[i + N_points]  = 0;
+        // }
+        // else if(i> 49 and i<61){
+        //     relative_nearness_[i] = 10;
+        //     relative_nearness_[i+N_points] = 0;
+        // }
+        relative_nearness_[i]             = maths_f_abs(flow_left_.of.x[i]);//* inv_sin_azimuth_[i]);
+        relative_nearness_[i + N_points]  = maths_f_abs(flow_right_.of.x[i]);//* inv_sin_azimuth_[i + N_points]);
     }
 
 
@@ -153,32 +167,34 @@ bool Saccade_controller::update()
     float nearest_object_direction = 0.0f;
     if (comanv_x != 0.0f)
     {
-        nearest_object_direction = quick_trig_atan(comanv_y / comanv_x);
+        nearest_object_direction = atan2(comanv_y,comanv_x);
     }
 
-    // weighted_function = 1/(1 + pow(can_/threshold_ , - gain_));
+    weighted_function = 1/(1 + pow(can_/threshold_ , - gain_));
 
-    cad_ = nearest_object_direction + PI;
+    cad_ = (nearest_object_direction + PI)* weighted_function;// + (1-weighted_function) * (goal_direction_ + noise);
 
 
     //Calculation of the movement direction (in radians)
     //
-    float movement_direction = weighted_function * cad_ + (1-weighted_function) * (goal_direction_ + noise);
+    float movement_direction = cad_;
 
     //Transformation of the movement direction into a quaternion
+    // aero_attitude_t attitude;
+    // attitude_.rpy[0] = 0.0f;
+    // attitude_.rpy[1] = pitch_;
+    // attitude_.rpy[2] = movement_direction;
+    attitude_command_.rpy[0] = 0.0f;
+    attitude_command_.rpy[1] = pitch_;
+    attitude_command_.rpy[2] += movement_direction;
 
-    aero_attitude_t attitude;
-    attitude.rpy[0] = 0.0f;
-    attitude.rpy[1] = pitch_;
-    attitude.rpy[2] = movement_direction;
-
-    quat_yaw_command = coord_conventions_quaternion_from_aero(attitude);
+    quat_yaw_command = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
 
     //Attitude command given by the required movement direction
 
-    attitude_command_.quat = quat_yaw_command;
-
+    attitude_command_.quat   = quat_yaw_command;
     last_saccade_ = time_keeper_get_ms();
+
     }
     return true;
 }

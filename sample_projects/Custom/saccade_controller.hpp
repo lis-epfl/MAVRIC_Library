@@ -133,7 +133,7 @@ public:
     float                       cad_;
     uint64_t                    last_saccade_;
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
-
+    aero_attitude_t             attitude_;
     flow_t&                       flow_left_;                          ///< Left optic flow camera output
     flow_t&                       flow_right_;                         ///< Right optic flow camera output
 
