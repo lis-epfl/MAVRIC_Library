@@ -346,7 +346,7 @@ bool state_machine_update(state_machine_t* state_machine)
     }
 
     // Check simulation mode
-    if (state_machine->state->simulation_mode == true)
+    if ( mav_modes_is_hil(state_machine->state->mav_mode) == true )
     {
         mode_new |= MAV_MODE_FLAG_HIL_ENABLED;
     }
