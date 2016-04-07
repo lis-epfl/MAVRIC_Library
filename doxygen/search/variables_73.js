@@ -42,7 +42,7 @@ var searchData=
   ['setvalues',['setvalues',['../structadaptive__parameter__t.html#af24f52ebf7fc9d40bead05710d23bc29',1,'adaptive_parameter_t']]],
   ['sign',['sign',['../structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4',1,'imu_sensor_config_t']]],
   ['signal_5fquality',['signal_quality',['../structremote__t.html#a5eb14a352a516d5d95e99946100b8db3',1,'remote_t']]],
-  ['simulation_5fmode',['simulation_mode',['../structstate__conf__t.html#a8842619538c883b7479c0f64a3f00df0',1,'state_conf_t::simulation_mode()'],['../classState.html#afb42fd7cc71e88d635c70cf1697dc07c',1,'State::simulation_mode()']]],
+  ['simulation_5fmode',['simulation_mode',['../structstate__conf__t.html#a8842619538c883b7479c0f64a3f00df0',1,'state_conf_t']]],
   ['size_5fdata',['size_data',['../structflow__t.html#a0d08e8de829ce6dd2afc6d6e833e2ebf',1,'flow_t']]],
   ['soft_5fzone_5fsize',['soft_zone_size',['../structnavigation__t.html#a6d508f3a655eae4b6def762fe2fab10c',1,'navigation_t::soft_zone_size()'],['../structnavigation__conf__t.html#a9f5c86157a2c06a1ee4ff91f18ba421e',1,'navigation_conf_t::soft_zone_size()']]],
   ['soft_5fzone_5fwidth',['soft_zone_width',['../structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489',1,'pid_controller_conf_t::soft_zone_width()'],['../structpid__controller__t.html#a5a63d05e58a79340c0222c8acfaca962',1,'pid_controller_t::soft_zone_width()']]],

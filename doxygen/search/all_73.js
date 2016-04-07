@@ -75,7 +75,7 @@ var searchData=
   ['signal_5fquality',['signal_quality',['../structremote__t.html#a5eb14a352a516d5d95e99946100b8db3',1,'remote_t']]],
   ['simulation',['Simulation',['../classSimulation.html',1,'Simulation'],['../classSimulation.html#a89a33c403d6d5e6e0e0ace1b706ce7bc',1,'Simulation::Simulation()']]],
   ['simulation_5fconf_5ft',['simulation_conf_t',['../structsimulation__conf__t.html',1,'']]],
-  ['simulation_5fmode',['simulation_mode',['../structstate__conf__t.html#a8842619538c883b7479c0f64a3f00df0',1,'state_conf_t::simulation_mode()'],['../classState.html#afb42fd7cc71e88d635c70cf1697dc07c',1,'State::simulation_mode()']]],
+  ['simulation_5fmode',['simulation_mode',['../structstate__conf__t.html#a8842619538c883b7479c0f64a3f00df0',1,'state_conf_t']]],
   ['sinus_2ec',['sinus.c',['../sinus_8c.html',1,'']]],
   ['sinus_2eh',['sinus.h',['../sinus_8h.html',1,'']]],
   ['size_5fdata',['size_data',['../structflow__t.html#a0d08e8de829ce6dd2afc6d6e833e2ebf',1,'flow_t']]],
