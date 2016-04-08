@@ -319,7 +319,7 @@ bool tasks_create_tasks(Central_data* central_data)
 
     // init_success &= scheduler_add_task(scheduler, 4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation                         , (task_argument_t)central_data                         , 0);
     init_success &= scheduler_add_task(scheduler, 4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation_quaternion              , (task_argument_t)central_data                         , 0);
-    init_success &= scheduler_add_task(scheduler, 500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST,     (task_function_t)&tasks_led_toggle                                , (task_argument_t)&central_data->led                   , 1);
+    init_success &= scheduler_add_task(scheduler, 500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST,     (task_function_t)&tasks_led_toggle                                , (task_argument_t)&central_data->led                   , 1);
     init_success &= scheduler_add_task(scheduler, 15000,    RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&tasks_run_barometer_update                      , (task_argument_t)central_data                     , 2);
     init_success &= scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&tasks_run_gps_update                            , (task_argument_t)central_data                     , 3);
     init_success &= scheduler_add_task(scheduler, 10000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation            , 5);
