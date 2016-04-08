@@ -110,8 +110,8 @@ bool Saccade_controller::update()
     // which are each given by RN = OF/sin(angle),
     for (uint32_t i = 0; i < N_points; ++i)
     {
-        relative_nearness_[i]             = flow_left_.of.x[i];// * inv_sin_azimuth_[i];
-        relative_nearness_[i + N_points]  = flow_right_.of.x[i];// * inv_sin_azimuth_[i + N_points];
+        relative_nearness_[i]             = maths_f_abs(flow_left_.of.x[i]);// * inv_sin_azimuth_[i];
+        relative_nearness_[i + N_points]  = maths_f_abs(flow_right_.of.x[i]);// * inv_sin_azimuth_[i + N_points];
     }
 
 
