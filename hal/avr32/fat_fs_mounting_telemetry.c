@@ -67,13 +67,29 @@ static mav_result_t fat_fs_mounting_telemetry_toggle_logging(fat_fs_mounting_t* 
 		if(packet->param1 == 1)
 		{
 			print_util_dbg_print("Start logging from command message\r\n");
+
+			fat_fs_mounting_mount(fat_fs_mounting,true);
+
+			if (fat_fs_mounting->sys_mounted)
+			{
+				result = MAV_RESULT_ACCEPTED;
+
+				print_util_dbg_print("Mounting successful\r\n");
+			}
+			else
+			{
+				result = MAV_RESULT_DENIED;
+				print_util_dbg_print("Mounting failed\r\n");
+			}
 		}
 		else
 		{
 			print_util_dbg_print("Stop logging from command message\r\n");
+			fat_fs_mounting->loop_count = 0;
+
+			result = MAV_RESULT_ACCEPTED;
 		}
-	
-		result = MAV_RESULT_ACCEPTED;
+		
 	
 		fat_fs_mounting->log_data = packet->param1;
 	}
