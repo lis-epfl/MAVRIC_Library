@@ -52,44 +52,38 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool flow_init(flow_t* flow, Serial* uart_)
+Flow::Flow(Serial& uart):
+  uart_(uart)
 {
-    bool success = true;
-
     // Init members
-    flow->last_update_us  = time_keeper_get_us();
-    flow->handshake_state = FLOW_NO_HANDSHAKE;
-    flow->of_count        = 0;
-
-    // Init uart
-    flow->uart = uart_;
+    last_update_us  = time_keeper_get_us();
+    handshake_state = FLOW_NO_HANDSHAKE;
+    of_count        = 0;
 
     // Init MAVLink stream
     mavlink_stream_conf_t mavlink_stream_conf = {};
     mavlink_stream_conf.sysid   = 1;
     mavlink_stream_conf.compid  = 50;
     mavlink_stream_conf.debug   = true;
-    success &= mavlink_stream_init(&(flow->mavlink_stream),
-                                   &mavlink_stream_conf,
-                                   uart_);
-
-    return success;
+    mavlink_stream_init( &mavlink_stream_,
+                         &mavlink_stream_conf,
+                         &uart_);
 }
 
 
-bool flow_update(flow_t* flow)
+bool Flow::update(void)
 {
     // Receive incoming bytes
-    while (mavlink_stream_receive(&flow->mavlink_stream))
+    while (mavlink_stream_receive(&mavlink_stream_))
     {
         // Check if a new message is here
-        if (flow->mavlink_stream.msg_available == true)
+        if (mavlink_stream_.msg_available == true)
         {
             // Get pointer to new message
-            mavlink_message_t* msg = &flow->mavlink_stream.rec.msg;
+            mavlink_message_t* msg = &mavlink_stream_.rec.msg;
 
             // Indicate that the message was handled
-            flow->mavlink_stream.msg_available = false;
+            mavlink_stream_.msg_available = false;
 
             // declare messages
             mavlink_optical_flow_t          optical_flow_msg;
@@ -111,31 +105,31 @@ bool flow_update(flow_t* flow)
                     switch (handshake_msg.jpg_quality)
                     {
                         case 0:
-                            flow->handshake_state = FLOW_HANDSHAKE_DATA;
+                            handshake_state = FLOW_HANDSHAKE_DATA;
                             break;
 
                         case 255:
-                            flow->handshake_state = FLOW_HANDSHAKE_METADATA;
+                            handshake_state = FLOW_HANDSHAKE_METADATA;
                             break;
 
                         default:
-                            flow->handshake_state = FLOW_HANDSHAKE_DATA;
+                            handshake_state = FLOW_HANDSHAKE_DATA;
                             break;
                     }
 
                     // Get number of of vectors
-                    flow->of_count        = handshake_msg.width;
-                    if (flow->of_count > 125)
+                    of_count        = handshake_msg.width;
+                    if (of_count > 125)
                     {
-                        flow->of_count = 125;
+                        of_count = 125;
                     }
 
                     // Get total payload size
-                    flow->n_packets       = handshake_msg.packets;
-                    flow->size_data       = handshake_msg.size;
-                    if (flow->size_data > 500)
+                    packet_count_       = handshake_msg.packets;
+                    byte_count_       = handshake_msg.size;
+                    if (byte_count_ > 500)
                     {
-                        flow->size_data = 500;
+                        byte_count_ = 500;
                     }
                     break;
 
@@ -144,61 +138,61 @@ bool flow_update(flow_t* flow)
                     mavlink_msg_encapsulated_data_decode(msg, &data_msg);
 
                     // Handle according to hanshake state
-                    switch (flow->handshake_state)
+                    switch (handshake_state)
                     {
                         case FLOW_HANDSHAKE_METADATA:
-                            if (data_msg.seqnr < flow->n_packets - 1)
+                            if (data_msg.seqnr < packet_count_ - 1)
                             {
                                 // not last packet
                                 for (uint32_t i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
                                 {
-                                    flow->of_loc_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+                                    of_loc_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
                                 }
                             }
-                            else if (data_msg.seqnr < flow->n_packets)
+                            else if (data_msg.seqnr < packet_count_)
                             {
                                 // last packet
-                                for (uint32_t i = 0; i < flow->size_data; ++i)
+                                for (uint32_t i = 0; i < byte_count_; ++i)
                                 {
-                                    flow->of_loc_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+                                    of_loc_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
                                 }
 
                                 // swap bytes
-                                for (uint32_t i = 0; i < flow->of_count; ++i)
+                                for (uint32_t i = 0; i < of_count; ++i)
                                 {
-                                    flow->of_loc.x[i] =  endian_rev16s(flow->of_loc_tmp.x[i]);
-                                    flow->of_loc.y[i] = endian_rev16s(flow->of_loc_tmp.y[i]);
+                                    of_loc.x[i] =  endian_rev16s(of_loc_tmp_.x[i]);
+                                    of_loc.y[i] = endian_rev16s(of_loc_tmp_.y[i]);
                                 }
 
                             }
                             break;
 
                         default:
-                            if (data_msg.seqnr < (flow->n_packets - 1))
+                            if (data_msg.seqnr < (packet_count_ - 1))
                             {
                                 // not last packet
                                 for (uint32_t i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
                                 {
-                                    flow->of_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+                                    of_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
                                 }
                             }
-                            else if (data_msg.seqnr == (flow->n_packets - 1))
+                            else if (data_msg.seqnr == (packet_count_ - 1))
                             {
                                 // last packet
-                                for (uint32_t i = 0; i < flow->size_data % MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
+                                for (uint32_t i = 0; i < byte_count_ % MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
                                 {
-                                    flow->of_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+                                    of_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
                                 }
 
                                 // swap bytes and filter for high frequency noise
-                                for (int i = 0; i < flow->of_count; ++i)
+                                for (int i = 0; i < of_count; ++i)
                                 {
-                                    flow->of.x[i] = filter_constant * endian_rev16s(flow->of_tmp.x[i])+ (1-filter_constant)*flow->of.x[i];
-                                    flow->of.y[i] = filter_constant * endian_rev16s(flow->of_tmp.y[i])+ (1-filter_constant)*flow->of.y[i];
+                                    of.x[i] = filter_constant * endian_rev16s(of_tmp_.x[i])+ (1-filter_constant)*of.x[i];
+                                    of.y[i] = filter_constant * endian_rev16s(of_tmp_.y[i])+ (1-filter_constant)*of.y[i];
                                 }
 
                                 // Update time
-                                flow->last_update_us  = time_keeper_get_us();
+                                last_update_us  = time_keeper_get_us();
                             }
                             break;
                     }

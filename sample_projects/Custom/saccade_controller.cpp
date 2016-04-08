@@ -54,8 +54,8 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Saccade_controller::Saccade_controller( flow_t& flow_left,
-                                        flow_t& flow_right,
+Saccade_controller::Saccade_controller( Flow& flow_left,
+                                        Flow& flow_right,
                                         saccade_controller_conf_t config ):
   flow_left_(flow_left),
   flow_right_(flow_right)

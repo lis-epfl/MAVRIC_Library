@@ -155,18 +155,9 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-
-    uint32_t step = 0;
-
     while (1 == 1)
     {
         scheduler_update(&cd.scheduler);
-        step++;
-
-          if (step == 1000)
-          {
-            flow_update(&(cd.flow_right_));
-          }
     }
 
     return 0;

@@ -176,8 +176,8 @@ public:
 
     Serial&                       serial_flow_left_;
     Serial&                       serial_flow_right_;
-    flow_t                        flow_left_;
-    flow_t                        flow_right_;
+    Flow                          flow_left_;
+    Flow                          flow_right_;
     Saccade_controller            saccade_controller_;
 
 

@@ -73,45 +73,42 @@ typedef enum
 
 
 /**
- * \brief   Data structure for Flow
+ * \brief   Driver for PX4Flow
  */
-typedef struct
+class  Flow
 {
-    Serial*             uart;               ///< Serial device
-    mavlink_stream_t    mavlink_stream;     ///< Mavlink interface using streams
+public:
+    /**
+    * \brief    Init function
+    * \param    uart    Pointer to serial peripheral
+    * \return   Success
+    */
+    Flow(Serial& uart);
 
-    uint8_t     of_count;   ///< Number of optic flow vectors
+    /**
+    * \brief    Update function
+    * \return   Success
+    */
+    bool update(void);
+
     flow_data_t of;         ///< Optic flow vectors
-    flow_data_t of_tmp;     ///< Temporary optic flow vectors
+    uint8_t     of_count;   ///< Number of optic flow vectors
     flow_data_t of_loc;     ///< Location of optic flow vectors
-    flow_data_t of_loc_tmp; ///< Temporary location of optic flow vectors
-    uint16_t    n_packets;  ///< Number of encapsulated data packets expected
-    uint32_t    size_data;  ///< Total size of data to receive (in bytes)
+    uint32_t last_update_us;                    ///< Last update time in microseconds
+
+private:
+    Serial&             uart_;               ///< Serial device
+    mavlink_stream_t    mavlink_stream_;     ///< Mavlink interface using streams
+
+    flow_data_t of_tmp_;        ///< Temporary optic flow vectors
+    flow_data_t of_loc_tmp_;    ///< Temporary location of optic flow vectors
+    uint16_t    packet_count_;  ///< Number of encapsulated data packets expected
+    uint32_t    byte_count_;    ///< Total size of data to receive (in bytes)
 
     flow_handshake_state_t  handshake_state;    ///< Indicates the current reception state for encapsulated data
-    uint32_t last_update_us;                    ///< Last update time in microseconds
-} flow_t;
+};
 
 
-/**
- * \brief Init function
- *
- * \param flow  Pointer to flow structure
- * \param uart  Pointer to serial peripheral
- *
- * \return      Success
- */
-bool flow_init(flow_t* flow, Serial* uart);
-
-
-/**
- * \brief Update function
- *
- * \param flow      Pointer to flow structure
- *
- * \return      Success
- */
-bool flow_update(flow_t* flow);
 
 
 #endif /* FLOW_HPP_ */

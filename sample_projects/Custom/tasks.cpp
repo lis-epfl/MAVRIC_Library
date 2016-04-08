@@ -296,8 +296,8 @@ bool tasks_flow(Central_data* cd)
 {
     bool success = true;
 
-    success &= flow_update(&(cd->flow_left_));
-    success &= flow_update(&(cd->flow_right_));
+    success &= cd->flow_left_.update();
+    success &= cd->flow_right_.update();
 
     return success;
 }
