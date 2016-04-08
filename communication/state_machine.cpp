@@ -222,12 +222,12 @@ bool state_machine_update(state_machine_t* state_machine)
             state_machine->state->out_of_fence_1 = false;
             state_machine->state->out_of_fence_2 = false;
 
-            mode_custom_new = CUSTOM_BASE_MODE;
-
             if (mav_modes_is_armed(mode_new))
             {
                 print_util_dbg_print("Switching from state_machine.\r\n");
                 state_machine->state->switch_to_active_mode(&state_new);
+
+                mode_custom_new = CUSTOM_BASE_MODE;
             }
 
             if (!state_machine->imu->is_ready())
