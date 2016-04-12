@@ -262,8 +262,19 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init servo mixing
     // -------------------------------------------------------------------------
+
+servos_mix_quadcopter_diag_conf_t my_servos_mix_quadcopter_diag_default_config;
+
+    my_servos_mix_quadcopter_diag_default_config.motor_front_right_dir              = CCW;
+    my_servos_mix_quadcopter_diag_default_config.motor_front_left_dir               = CW;
+    my_servos_mix_quadcopter_diag_default_config.motor_rear_right_dir               = CW;
+    my_servos_mix_quadcopter_diag_default_config.motor_rear_left_dir                = CCW;
+    my_servos_mix_quadcopter_diag_default_config.min_thrust                         = -0.9f;
+    my_servos_mix_quadcopter_diag_default_config.max_thrust                         = 1.0f;
+
+
     ret = servos_mix_quadcotper_diag_init(&servo_mix,
-                                          servos_mix_quadcopter_diag_default_config(),
+                                          my_servos_mix_quadcopter_diag_default_config,
                                           &command.torque,
                                           &command.thrust,
                                           &servo_0,
@@ -341,7 +352,7 @@ bool Central_data::init(void)
     //--------------------------------------------------------------------------
     // Init saccade controller
     //--------------------------------------------------------------------------
-    saccade_controller_.init();
+    saccade_controller_.init(&ahrs);
 
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);

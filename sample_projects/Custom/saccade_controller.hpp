@@ -48,6 +48,7 @@ extern "C"
 #include "util/quaternions.h"
 #include "util/coord_conventions.h"
 #include "util/quick_trig.h"
+#include "sensing/ahrs.h"
 }
 
 #include "drivers/flow.hpp"
@@ -88,6 +89,14 @@ static inline saccade_controller_conf_t saccade_controller_default_config(void);
  * \param   attitude_command    Output for saccade
 
  */
+
+ typedef enum
+{
+    SACCADE,            ///< Idle state
+    INTERSACCADE,        ///< Getting temperature state
+} saccade_state_t;
+
+
 class Saccade_controller
 {
 public:
@@ -106,7 +115,7 @@ public:
      *
      * \return  success
      */
-    bool init(void);
+    bool init(const ahrs_t* ahrs);
 
 
     /**
@@ -118,7 +127,8 @@ public:
 
 
     //Definition of the number of points used for the optic flow on each camera
-    static const uint32_t N_points = 125;
+    // static const uint32_t N_points = 125;
+    static const uint32_t N_points = 73;
 
     float                       pitch_;                             ///< Pitch command for forward motion
     float                       gain_;                              ///< Gain for importance of CAN
@@ -133,9 +143,12 @@ public:
     float                       cad_;
     uint64_t                    last_saccade_;
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
-    aero_attitude_t             attitude_;
-    flow_t&                       flow_left_;                          ///< Left optic flow camera output
-    flow_t&                       flow_right_;                         ///< Right optic flow camera output
+    flow_t&                     flow_left_;                          ///< Left optic flow camera output
+    flow_t&                     flow_right_;                         ///< Right optic flow camera output
+
+    const ahrs_t*               ahrs_;  
+
+    saccade_state_t             saccade_state_; 
 
 };
 
