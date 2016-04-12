@@ -244,6 +244,7 @@ bool tasks_offboard_camera_update(Offboard_Camera* camera)
 bool tasks_offboard_camera_update(Central_data* central_data)
 {
     // Set waypoint to search for tag and land
+    /*
     central_data->waypoint_handler.navigation->internal_state = NAV_LAND_ON_TAG;
     print_util_dbg_print("internal_state = NAV_LAND_ON_TAG");
 
@@ -257,6 +258,7 @@ bool tasks_offboard_camera_update(Central_data* central_data)
     central_data->waypoint_handler.navigation->tag_search_start_time = time_keeper_get_us();
 
     // Land
+    */
     central_data->offboard_camera.update(&(central_data->raspi_mavlink_communication.scheduler));
     return true;
 }
@@ -296,7 +298,7 @@ bool tasks_create_tasks(Central_data* central_data)
     init_success &= scheduler_add_task(scheduler, 500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&tasks_run_sonar_update                          , (task_argument_t)central_data                         , 13);
 
     init_success &= scheduler_add_task(scheduler, 500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&tasks_led_toggle                                , (task_argument_t)&central_data->led                   , 1);
-    init_success &= scheduler_add_task(scheduler, 20000000, RUN_ONCE, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&tasks_offboard_camera_update                    , (task_argument_t)central_data       , 15);
+    init_success &= scheduler_add_task(scheduler, 10000000, RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&tasks_offboard_camera_update                    , (task_argument_t)central_data       , 15);
 
     // init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , (task_function_t)&tasks_sleep                                     , (task_argument_t)central_data                         , 14);
 

@@ -60,6 +60,8 @@
  */
 bool offboard_camera_telemetry_init(Central_data* central_data, mavlink_message_handler_t* message_handler);
 
+void offboard_camera_goal_location_telemetry_send(const Central_data* central_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
 /**
  * \brief   Function to send the MAVLink start/stop camera do command
  *

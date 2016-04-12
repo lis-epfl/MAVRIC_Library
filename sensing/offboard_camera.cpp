@@ -58,6 +58,9 @@ Offboard_Camera::Offboard_Camera(int camera_id, bool is_camera_running):
     is_camera_running_(is_camera_running),
     last_update_us_(time_keeper_get_us())
 {
+    // Set picture count to 0
+    picture_count = 0.0f;
+
     // Set camera resolution
     camera_res[0] = 1280;
     camera_res[1] = 960;
@@ -74,6 +77,7 @@ Offboard_Camera::Offboard_Camera(int camera_id, bool is_camera_running):
 bool Offboard_Camera::update(const scheduler_t* scheduler)
 {
     bool success = true;
+    
 
     // TEMPORARY...
     // Switch camera on and off

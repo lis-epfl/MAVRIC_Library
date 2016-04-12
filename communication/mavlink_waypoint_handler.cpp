@@ -1532,23 +1532,43 @@ static mav_result_t waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t
 static mav_result_t waypoint_handler_set_auto_landing(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result;
+    print_util_dbg_print("Attempting to land\r\n");
+    // Tell the offboard camera to start taking pictures
+    //scheduler_run_task_now(scheduler_get_task_by_index(const scheduler_t* scheduler, 15));
 
-
-    if ((waypoint_handler->navigation->internal_state == NAV_NAVIGATING) || (waypoint_handler->navigation->internal_state == NAV_HOLD_POSITION))
+    //if ((waypoint_handler->navigation->internal_state == NAV_NAVIGATING) || (waypoint_handler->navigation->internal_state == NAV_HOLD_POSITION))
     {
+        /*
         result = MAV_RESULT_ACCEPTED;
 
         waypoint_handler->navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
         waypoint_handler->auto_landing_next_state = false;
 
-        waypoint_handler->navigation->internal_state = NAV_LANDING;
+        waypoint_handler->navigation->internal_state = NAV_LAND_ON_TAG;
 
         print_util_dbg_print("Auto-landing procedure initialised.\r\n");
+        */
+
+        // Set waypoint to search for tag and land
+        waypoint_handler->navigation->internal_state = NAV_LAND_ON_TAG;
+        print_util_dbg_print("internal_state = NAV_LAND_ON_TAG\r\n");
+
+        // Set hold position point
+        waypoint_handler->waypoint_hold_coordinates.pos[0] = waypoint_handler->position_estimation->local_position.pos[0];
+        waypoint_handler->waypoint_hold_coordinates.pos[1] = waypoint_handler->position_estimation->local_position.pos[1];
+        waypoint_handler->waypoint_hold_coordinates.pos[2] = -10.0f;
+        waypoint_handler->navigation->tag_search_altitude = waypoint_handler->waypoint_hold_coordinates.pos[2];
+
+        // Set new tag search start time
+        waypoint_handler->navigation->tag_search_start_time = time_keeper_get_us();
+
+        // Land
+        //central_data->offboard_camera.update(&(central_data->raspi_mavlink_communication.scheduler));
     }
-    else
+    /*else
     {
         result = MAV_RESULT_DENIED;
-    }
+    }*/
 
     return result;
 }
@@ -1685,14 +1705,14 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         // Disarming
         next_state = true;
     }
-
+/*
     // If the tag search has gone on too long, set mode to landing
     if ((time_keeper_get_us() - waypoint_handler->navigation->tag_search_start_time) > TAG_SEARCH_TIMEOUT_US)
     {
         print_util_dbg_print("Auto-landing on tag: Timeout: Switch to normal landing\r\n");
-        waypoint_handler->navigation->internal_state = DESCENT_TO_SMALL_ALTITUDE;
+        waypoint_handler->navigation->internal_state = NAV_LANDING;
         waypoint_handler->navigation->auto_landing_behavior = DESCENT_TO_GND;
-        waypoint_handler->navigation->land_on_tag_behavior == TAG_NOT_FOUND;
+        waypoint_handler->navigation->land_on_tag_behavior = TAG_NOT_FOUND;
     }
 
     // Disarm if needed
@@ -1705,8 +1725,8 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         waypoint_handler->navigation->internal_state = NAV_ON_GND;
         waypoint_handler->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
         waypoint_handler->state->mav_state = MAV_STATE_STANDBY;
-        waypoint_handler->navigation->land_on_tag_behavior == TAG_NOT_FOUND;
-    }
+        waypoint_handler->navigation->land_on_tag_behavior = TAG_NOT_FOUND;
+    }*/
 }
 
 static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_handler)
@@ -1848,13 +1868,9 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
 
             waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
 
-            print_util_dbg_print("GOAL: (");
-            print_util_dbg_print_num(waypoint_handler->navigation->goal.pos[0], 10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_handler->navigation->goal.pos[1], 10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_handler->navigation->goal.pos[2], 10);
-            print_util_dbg_print(")");
+            /*print_util_dbg_print("Goal:");
+            print_util_dbg_print_vector(waypoint_handler->navigation->goal.pos, 4);
+            print_util_dbg_print("\r\n");*/
 
             if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
             {

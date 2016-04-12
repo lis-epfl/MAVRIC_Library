@@ -73,58 +73,79 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 {
     mav_result_t result;
 
-    // Set waypoint enum to tag found
-    central_data->waypoint_handler.navigation->land_on_tag_behavior = TAG_FOUND;
+    // Increment counter
+    central_data->offboard_camera.picture_count++;
 
-    Offboard_Camera camera = central_data->offboard_camera;
+    // Only change stuff if we are search for a tag
+    if (central_data->waypoint_handler.navigation->internal_state == NAV_LAND_ON_TAG)
+    {
+        // Set waypoint enum to tag found
+        central_data->waypoint_handler.navigation->land_on_tag_behavior = TAG_FOUND;
 
-    // Set the x and y hold position to be equal to the tag location
+        Offboard_Camera camera = central_data->offboard_camera;
 
-    // Get drone height
-    float drone_height = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2];
+        // Set the x and y hold position to be equal to the tag location
 
-    // Find pixel dimensions
-    /*
-        tan(fov/2) = (width / 2) / drone_height
-        width = 2 * drone_height * tan(fov/2)
+        // Get drone height
+        float drone_height = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2];
 
-        pixel_width = width / resolution
-        pixel_width = 2 * drone_height * tan(fov/2) / resolution
-    */
-    float pixel_width = 2 * (-drone_height) * tan(camera.camera_fov[0]) / (camera.camera_res[0]); // drone_height negated as +z is down
-    float pixel_height = 2 * (-drone_height) * tan(camera.camera_fov[1]) / (camera.camera_res[1]); // drone_height negated as +z is down
+        // Find pixel dimensions
+        /*
+            tan(fov/2) = (width / 2) / drone_height
+            width = 2 * drone_height * tan(fov/2)
 
-    // Get drone offset
-    float picture_forward_offset = -packet->param4 * pixel_width; // Negative, because in vision positive is towards the bottom of the picture
-    float picture_right_offset = packet->param3 * pixel_height; 
+            pixel_width = width / resolution
+            pixel_width = 2 * drone_height * tan(fov/2) / resolution
+        */
+        float pixel_width = 2 * (-drone_height) * tan(camera.camera_fov[0]) / (camera.camera_res[0]); // drone_height negated as +z is down
+        float pixel_height = 2 * (-drone_height) * tan(camera.camera_fov[1]) / (camera.camera_res[1]); // drone_height negated as +z is down
+
+        // Get drone offset
+        float picture_forward_offset = -packet->param4 * pixel_width; // Negative, because in vision positive is towards the bottom of the picture
+        float picture_right_offset = packet->param3 * pixel_height; 
+        
+        // Rotate offset to align with drone
+        quat_t q_rot, q_offset;
+        q_rot.s = cos(camera.camera_rotation/2);
+        q_rot.v[0] = 0;
+        q_rot.v[1] = 0;
+        q_rot.v[2] = -1*sin(camera.camera_rotation/2);
+        q_offset.s = 0;
+        q_offset.v[0] = picture_forward_offset;
+        q_offset.v[1] = picture_right_offset;
+        q_offset.v[2] = 0;
+        /*
+        QUAT(q_rot, cos(camera.camera_rotation/2), 0, 0, 1*sin(camera.camera_rotation/2));
+        QUAT(q_offset, 0, picture_forward_offset, picture_right_offset, 0);
+        */
+        quat_t q_new_dir = quaternions_rotate(q_offset, q_rot);
+        /*print_util_dbg_print("Tag loc:");
+        print_util_dbg_print_vector(q_new_dir.v, 4);
+        print_util_dbg_print("\r\n");*/
+        // Convert due to yaw change
+        float yaw = coord_conventions_get_yaw(central_data->ahrs.qe);
+        quat_t q_yaw_rot;
+        q_yaw_rot.s = cos(-yaw/2);
+        q_yaw_rot.v[0] = 0;
+        q_yaw_rot.v[1] = 0;
+        q_yaw_rot.v[2] = 1*sin(-yaw/2);
+        quat_t q_new_local_dir = quaternions_rotate(q_new_dir, q_yaw_rot);
+        /*print_util_dbg_print("Tag loc - yaw:");
+        print_util_dbg_print_vector(q_new_local_dir.v, 4);
+        print_util_dbg_print("\r\n");*/
+        float drone_x_offset = q_new_local_dir.v[0];
+        float drone_y_offset = q_new_local_dir.v[1];
+
+        // Get local tag position from drone position and offset
+        float tag_x_pos = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[0] + drone_x_offset;
+        float tag_y_pos = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1] + drone_y_offset;
+
+        // Set hold position
+        central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = tag_x_pos;
+        central_data->waypoint_handler.waypoint_hold_coordinates.pos[1] = tag_y_pos;
+        central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = central_data->waypoint_handler.navigation->tag_search_altitude;
+    }
     
-    // Rotate offset to align with drone
-    quat_t q_rot, q_offset;
-    q_rot.s = cos(camera.camera_rotation/2);
-    q_rot.v[0] = 0;
-    q_rot.v[1] = 0;
-    q_rot.v[2] = 1*sin(camera.camera_rotation/2);
-    q_offset.s = 0;
-    q_offset.v[0] = picture_forward_offset;
-    q_offset.v[1] = picture_right_offset;
-    q_offset.v[2] = 0;
-    /*
-    QUAT(q_rot, cos(camera.camera_rotation/2), 0, 0, 1*sin(camera.camera_rotation/2));
-    QUAT(q_offset, 0, picture_forward_offset, picture_right_offset, 0);
-    */
-    quat_t q_new_dir = quaternions_rotate(q_offset, q_rot);
-    float drone_x_offset = q_new_dir.v[0];
-    float drone_y_offset = q_new_dir.v[1];
-
-    // Get local tag position from drone position and offset
-    float tag_x_pos = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[0] + drone_x_offset;
-    float tag_y_pos = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1] + drone_y_offset;
-
-    // Set hold position
-    central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = tag_x_pos;
-    central_data->waypoint_handler.waypoint_hold_coordinates.pos[1] = tag_y_pos;
-    central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = central_data->waypoint_handler.navigation->tag_search_altitude;
-
     result = MAV_RESULT_ACCEPTED;
     return result;
 
@@ -155,6 +176,19 @@ bool offboard_camera_telemetry_init(Central_data* central_data, mavlink_message_
     init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
     print_util_dbg_init_msg("[PICAMERA TELEMETRY INIT]", init_success);
     return init_success;
+}
+
+void offboard_camera_goal_location_telemetry_send(const Central_data* central_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+    mavlink_msg_debug_vect_pack(mavlink_stream->sysid,
+                                mavlink_stream->compid,
+                                msg,
+                                "Tag_Search_Goal_Location",
+                                time_keeper_get_us(),
+                                central_data->waypoint_handler.navigation->goal.pos[0] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[0],
+                                central_data->waypoint_handler.navigation->goal.pos[1] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1],
+                                //central_data->waypoint_handler.navigation->goal.pos[2] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2]);
+                                central_data->offboard_camera.picture_count);
 }
 
 void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

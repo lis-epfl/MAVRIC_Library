@@ -97,7 +97,7 @@ public:
     int camera_id_;                     ///< ID number of camera
     bool is_camera_running_;            ///< States whether the camera should be running
     float last_update_us_;              ///< Last update time in microseconds
-    
+    float picture_count;                ///< The count of the pictures received
 private:
     Offboard_Camera();
 };

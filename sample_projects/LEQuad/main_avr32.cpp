@@ -50,7 +50,7 @@
 // #include "simulation/dynamic_model_quad_diag.hpp"
 // #include "simulation/simulation.hpp"
 // #include "hal/dummy/adc_dummy.hpp"
-// #include "hal/dummy/pwm_dummy.hpp"
+#include "hal/dummy/pwm_dummy.hpp"
 
 extern "C"
 {
@@ -78,11 +78,11 @@ int main(void)
     // Create simulation
     // -------------------------------------------------------------------------
     // Simulated servos
-    // Pwm_dummy pwm[4];
-    // Servo sim_servo_0(pwm[0], servo_default_config_esc());
-    // Servo sim_servo_1(pwm[1], servo_default_config_esc());
-    // Servo sim_servo_2(pwm[2], servo_default_config_esc());
-    // Servo sim_servo_3(pwm[3], servo_default_config_esc());
+    Pwm_dummy pwm[4];
+    Servo sim_servo_0(pwm[0], servo_default_config_esc());
+    Servo sim_servo_1(pwm[1], servo_default_config_esc());
+    Servo sim_servo_2(pwm[2], servo_default_config_esc());
+    Servo sim_servo_3(pwm[3], servo_default_config_esc());
 
     // // Simulated dynamic model
     // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
@@ -110,7 +110,7 @@ int main(void)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using real sensors
-    Central_data cd = Central_data(MAVLINK_SYS_ID,
+    /*Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
                                    board.bmp085,
                                    board.gps_ublox,
@@ -130,8 +130,28 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
+                                   camera);*/
+    Central_data cd = Central_data(MAVLINK_SYS_ID,
+                                   board.imu,
+                                   board.bmp085,
+                                   board.gps_ublox,
+                                   // sim.gps(),
+                                   board.sonar_i2cxl,      // Warning:
+                                   // sim.sonar(),             // this is simulated
+                                   board.uart0,
+                                   board.uart_usb,//
+                                   board.spektrum_satellite,
+                                   board.green_led,
+                                   board.file_flash,
+                                   board.battery,
+                                   // sim_battery,
+                                   sim_servo_0,
+                                   sim_servo_1,
+                                   sim_servo_2,
+                                   sim_servo_3,
+                                   file_log,
+                                   file_stat,
                                    camera);
-
 
     // Create central data with simulated sensors
     // Central_data cd = Central_data( MAVLINK_SYS_ID,
