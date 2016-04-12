@@ -259,8 +259,8 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     float motor_command = servo_motor_.read() - config_.rotor_rpm_offset;
     float flaps_angle_left = servo_flap_left_.read() - config_.flap_offset; //TODO: transform these in angles
     float flaps_angle_right = servo_flap_right_.read() - config_.flap_offset;
-    left_flap_.set_flap_angle(flaps_angle_left);
-    right_flap_.set_flap_angle(flaps_angle_right);
+    left_flap_.set_flap_angle(0);//flaps_angle_left);//Set these in degrees!!
+    right_flap_.set_flap_angle(0);//flaps_angle_right);
 
     quat_t wind_gf  = {};
     wind_gf.s       = 0;

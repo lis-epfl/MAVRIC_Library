@@ -96,10 +96,14 @@ private:
     float position_bf_[3];
     float area_; //surface of the wing
     float chord_; //length of the chord
+    float lookup_Cl_[181];
+    float lookup_Cd_[181];
+    float lookup_Cm_[181];
 
-    float get_cl(float aoa, float speed);
-    float get_cd(float aoa, float speed);
-    float get_cm(float aoa, float speed);
+    void init_lookup();
+    float get_cl(float aoa, float flap_angle);
+    float get_cd(float aoa, float flap_angle);
+    float get_cm(float aoa, float flap_angle);
     wing_model_forces_t forces_wing_to_bf(wing_model_forces_t forces_wf);
 };
 
