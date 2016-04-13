@@ -84,9 +84,11 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 
         Offboard_Camera camera = central_data->offboard_camera;
 
-        // Set the x and y hold position to be equal to the tag location
+        /*
+         * Set the x and y hold position to be equal to the tag location
+         */
 
-        // Get drone height
+        // Get drone height from the local position, drone height tells you the pixel dimensions on the ground, +z is down
         float drone_height = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2];
 
         // Find pixel dimensions
@@ -101,38 +103,40 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         float pixel_height = 2 * (-drone_height) * tan(camera.camera_fov[1]) / (camera.camera_res[1]); // drone_height negated as +z is down
 
         // Get drone offset
+        // Forward corresponds to param4 as the picamera code outputs (right,down)
         float picture_forward_offset = -packet->param4 * pixel_width; // Negative, because in vision positive is towards the bottom of the picture
         float picture_right_offset = packet->param3 * pixel_height; 
         
         // Rotate offset to align with drone
         quat_t q_rot, q_offset;
-        q_rot.s = cos(camera.camera_rotation/2);
+        q_rot.s = cos(camera.camera_rotation/2); // Based off how camera is mounted
         q_rot.v[0] = 0;
         q_rot.v[1] = 0;
-        q_rot.v[2] = -1*sin(camera.camera_rotation/2);
+        q_rot.v[2] = 1*sin(camera.camera_rotation/2); // Negative as CCW camera rotation is positive
         q_offset.s = 0;
         q_offset.v[0] = picture_forward_offset;
         q_offset.v[1] = picture_right_offset;
         q_offset.v[2] = 0;
-        /*
-        QUAT(q_rot, cos(camera.camera_rotation/2), 0, 0, 1*sin(camera.camera_rotation/2));
-        QUAT(q_offset, 0, picture_forward_offset, picture_right_offset, 0);
-        */
         quat_t q_new_dir = quaternions_rotate(q_offset, q_rot);
-        /*print_util_dbg_print("Tag loc:");
+
+        print_util_dbg_print("Tag loc:");
         print_util_dbg_print_vector(q_new_dir.v, 4);
-        print_util_dbg_print("\r\n");*/
+        print_util_dbg_print("\r\n");
+
         // Convert due to yaw change
         float yaw = coord_conventions_get_yaw(central_data->ahrs.qe);
         quat_t q_yaw_rot;
-        q_yaw_rot.s = cos(-yaw/2);
+        q_yaw_rot.s = cos(yaw/2);
         q_yaw_rot.v[0] = 0;
         q_yaw_rot.v[1] = 0;
-        q_yaw_rot.v[2] = 1*sin(-yaw/2);
+        q_yaw_rot.v[2] = -1*sin(yaw/2);
         quat_t q_new_local_dir = quaternions_rotate(q_new_dir, q_yaw_rot);
-        /*print_util_dbg_print("Tag loc - yaw:");
+
+        print_util_dbg_print("Tag loc - yaw:");
         print_util_dbg_print_vector(q_new_local_dir.v, 4);
-        print_util_dbg_print("\r\n");*/
+        print_util_dbg_print("\r\n");
+
+        // Determine how far the drone is from the tag in north and east coordinates
         float drone_x_offset = q_new_local_dir.v[0];
         float drone_y_offset = q_new_local_dir.v[1];
 
