@@ -292,12 +292,12 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
             input.tvel[Y] = input_global.v[Y];
             input.tvel[Z] = input_global.v[Z];
 
-         //Compute errors on global velocity
+            //Compute errors on global velocity
             rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
             rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
             rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
 
-           //compute the semilocal velocity
+            //compute the semilocal velocity
             float semilocal_vel[3];
             position_estimation_get_semilocal_velocity(nav, semilocal_vel);
 
@@ -346,8 +346,11 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
                 input.rpy[PITCH] = 0.0f;
             }
 
-            //overwrite the roll command
-            input.rpy[ROLL] = stabilisation_copter->controls->rpy[ROLL];
+            //ALEX changes overwrite the roll command
+            if(stabilisation_copter->controls->rpy[ROLL] < 2.0f *3.145f/18.0f)
+            	input.rpy[ROLL] = stabilisation_copter->controls->rpy[ROLL];
+            else
+            	input.rpy[ROLL] = 0.0f;
 
         //input.thrust = stabilisation_copter->controls->tvel[Z];
 
