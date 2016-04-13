@@ -30,26 +30,81 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_controller_default_config.h
+ * \file altitude_controller.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief Default configuration for the module altitude_controller
+ * \brief   A simple altitude controller for copter
  *
  ******************************************************************************/
 
 
-#ifndef ALTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
-#define ALTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
+#ifndef ALTITUDE_CONTROLLER_HPP_
+#define ALTITUDE_CONTROLLER_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+extern "C"
+{
+#include "control/control_command.h"
+#include "control/pid_controller.h"
+#include "sensing/altitude.h"
+}
 
-#include "control/altitude_controller.h"
 
-static inline altitude_controller_conf_t altitude_controller_default_config()
+/**
+ * \brief Altitude controller configuration
+ */
+typedef struct
+{
+    float                   hover_point;        ///< Thrust required to hover
+    pid_controller_conf_t   pid_config;         ///< Proportionnal gain
+} altitude_controller_conf_t;
+
+
+/**
+ * \brief   Default configuration
+ */
+static inline altitude_controller_conf_t altitude_controller_default_config(void);
+
+
+/**
+ * \brief Altitude controller
+ */
+class Altitude_controller
+{
+public:
+    Altitude_controller(const position_command_t& position_command,
+                        const altitude_t& altitude, 
+                        thrust_command_t& thrust_command,
+                        altitude_controller_conf_t config = altitude_controller_default_config() );
+
+    /**
+     * \brief   Initialization
+     * 
+     * \return  Success
+     */
+    bool init(void);
+
+
+    /**
+     * \brief   Main update function
+     * 
+     * \return  Success
+     */
+    bool update(void);
+
+
+private:
+    const position_command_t&   position_command_;   ///< Pointer to altitude command (input)
+    const altitude_t&           altitude_;           ///< Pointer to estimated altitude (input)
+    thrust_command_t&           thrust_command_;     ///< Pointer to thrust command (output)
+
+    pid_controller_t            pid_;                ///< Controller
+    float                       hover_point_;        ///< Thrust required to hover
+};
+
+
+static inline altitude_controller_conf_t altitude_controller_default_config(void)
 {
     altitude_controller_conf_t conf = {};
 
@@ -59,9 +114,9 @@ static inline altitude_controller_conf_t altitude_controller_default_config()
     conf.pid_config.clip_min                = -1.0f;
     conf.pid_config.clip_max                = 1.0f;
     conf.pid_config.integrator              = {};
-    conf.pid_config.integrator.pregain      = 0.5f;
-    conf.pid_config.integrator.postgain     = 1.0f;
+    conf.pid_config.integrator.gain         = 0.5f;
     conf.pid_config.integrator.accumulator  = 0.0f;
+    conf.pid_config.integrator.clip_pre     = 0.1f;
     conf.pid_config.integrator.clip         = 0.5f;
     conf.pid_config.differentiator          = {};
     conf.pid_config.differentiator.gain     = 0.4f;
@@ -72,8 +127,5 @@ static inline altitude_controller_conf_t altitude_controller_default_config()
     return conf;
 };
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif // ALTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
+#endif /* ALTITUDE_CONTROLLER_HPP_ */

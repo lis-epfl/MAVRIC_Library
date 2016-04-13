@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_estimation.h
+ * \file altitude_estimation.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,33 +40,24 @@
  ******************************************************************************/
 
 
-#ifndef ALTITUDE_ESTIMATION_H_
-#define ALTITUDE_ESTIMATION_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "sensing/altitude.h"
-#include "sonar.h"
-#include "barometer.h"
-#include "sensing/ahrs.h"
+#ifndef ALTITUDE_ESTIMATION_HPP_
+#define ALTITUDE_ESTIMATION_HPP_
 
 
-/**
- * \brief Altitude estimator structure
- */
-typedef struct
+#include "drivers/sonar.hpp"
+#include "drivers/barometer.hpp"
+
+#include "util/kalman.hpp"
+
+extern "C"
 {
-    const sonar_t*      sonar;                  ///< Pointer to sonar (input)
-    const barometer_t*  barometer;              ///< Pointer to barometer (input)
-    const ahrs_t*       ahrs;                   ///< Pointer to estimated attitude and acceleration (input)
-    altitude_t*         altitude_estimated;     ///< Pointer to estimated altitude (output)
-} altitude_estimation_t;
+#include "sensing/altitude.h"
+#include "sensing/ahrs.h"
+}
 
 
 /**
- * \brief Altitude estimation configuration
+ * \brief   Configuration structure
  */
 typedef struct
 {
@@ -74,33 +65,58 @@ typedef struct
 
 
 /**
- * \brief                       Initializes the altitude estimation structure
- *
- * \param   estimator           Pointer to data structure
- * \param   config              Pointer to configuration
- * \param   sonar               Pointer to the sonar
- * \param   barometer           Pointer to the barometer
- * \param   ahrs                Pointer to the ahrs
- * \param   altitude_estimated  Pointer to the estimated altitude
+ * \brief   Default configuration
+ * 
+ * \return  Configuration structure
  */
-void altitude_estimation_init(altitude_estimation_t* estimator,
-                              const altitude_estimation_conf_t* config,
-                              const sonar_t* sonar,
-                              const barometer_t* barometer,
-                              const ahrs_t* ahrs,
-                              altitude_t* altitude_estimated);
+static inline altitude_estimation_conf_t altitude_estimation_default_config(void);
 
 
 /**
- * \brief                   Main update function
- *
- * \param   estimator       Pointer to data structure
+ * \brief   Altitude estimator
  */
-void altitude_estimation_update(altitude_estimation_t* estimator);
+class Altitude_estimation: public Kalman<3,1,1>
+{
+public:
+    Altitude_estimation(Sonar& sonar, 
+                        Barometer& barometer, 
+                        ahrs_t& ahrs, 
+                        altitude_t& altitude, 
+                        altitude_estimation_conf_t config = altitude_estimation_default_config() );
+
+    /**
+     * \brief   Initialization
+     * 
+     * \return  Success
+     */
+    bool init(void);
 
 
-#ifdef __cplusplus
+    /**
+     * \brief   Main update function
+     * 
+     * \return  Success
+     */
+    bool update(void);
+
+
+private:
+    const Sonar&        sonar_;           ///< Sonar, must be downward facing (input)
+    const Barometer&    barometer_;       ///< Barometer (input)
+    const ahrs_t&       ahrs_;            ///< Attitude and acceleration (input)
+    altitude_t&         altitude_;        ///< Estimated altitude (output)
+
+    altitude_estimation_conf_t config_;   ///< Configuration
+
+    float last_sonar_update_us_;          ///< Last time we updated the estimate using sonar
+};
+
+
+static inline altitude_estimation_conf_t altitude_estimation_default_config(void)
+{
+    altitude_estimation_conf_t conf = {};
+
+    return conf;
 }
-#endif
 
-#endif /* ALTITUDE_ESTIMATION_H_ */
+#endif /* ALTITUDE_ESTIMATION_HPP_ */

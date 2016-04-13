@@ -226,8 +226,6 @@ void joystick_button_mask(joystick_t* joystick, uint16_t buttons)
     joystick_button_t button_local;
     button_local.button_mask = buttons;
 
-    //print_util_dbg_print_num(button_local.button_mask, 10);
-
     bool but;
     but = ((button_local.button_mask & 0x0001) == 0x0001);
     joystick_button_1(joystick, but);

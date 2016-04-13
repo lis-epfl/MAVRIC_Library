@@ -215,44 +215,78 @@ bool Megafly_rev4::init(void)
     ret = pwm_0.init();
     print_util_dbg_init_msg("[PWM0]", ret);
     init_success &= ret;
-    servo_0.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_1.init();
     print_util_dbg_init_msg("[PWM1]", ret);
     init_success &= ret;
-    servo_1.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_2.init();
     print_util_dbg_init_msg("[PWM2]", ret);
     init_success &= ret;
-    servo_2.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_3.init();
     print_util_dbg_init_msg("[PWM3]", ret);
     init_success &= ret;
-    servo_3.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_4.init();
     print_util_dbg_init_msg("[PWM4]", ret);
     init_success &= ret;
-    servo_4.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_5.init();
     print_util_dbg_init_msg("[PWM5]", ret);
     init_success &= ret;
-    servo_5.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_6.init();
     print_util_dbg_init_msg("[PWM6]", ret);
     init_success &= ret;
-    servo_6.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_7.init();
     print_util_dbg_init_msg("[PWM7]", ret);
     init_success &= ret;
-    servo_7.failsafe();
+
+    //-----------------------------
+    // Calibrate ESCs => Remove the propellers!
+    //-----------------------------
+    //     servo_0.write(1);
+    //     servo_1.write(1);
+    //     servo_2.write(1);
+    //     servo_3.write(1);
+    //     servo_4.write(1);
+    //     servo_5.write(1);
+    //     servo_6.write(1);
+    //     servo_7.write(1);
+    //     time_keeper_delay_ms(3000);
+    //     servo_0.write(-1);
+    //     servo_1.write(-1);
+    //     servo_2.write(-1);
+    //     servo_3.write(-1);
+    //     servo_4.write(-1);
+    //     servo_5.write(-1);
+    //     servo_6.write(-1);
+    //     servo_7.write(-1);
+
+
+    // -------------------------------------------------------------------------
+    // Init Servos
+    // -------------------------------------------------------------------------
+
     time_keeper_delay_ms(50);
 
+    servo_0.failsafe();
+    servo_1.failsafe();
+    servo_2.failsafe();
+    servo_3.failsafe();
+    servo_4.failsafe();
+    servo_5.failsafe();
+    servo_6.failsafe();
+    servo_7.failsafe();
 
     Enable_global_interrupt();
 
