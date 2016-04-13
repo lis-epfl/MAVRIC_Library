@@ -162,12 +162,15 @@ bool Saccade_controller::update()
 
     aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_.qe);
     float movement_direction  = 0.0f;
+    float heading_error = 0.0f;
 
     switch (saccade_state_)
     {
         // This is the case where we are performing a saccade
         case SACCADE:
-            if (maths_f_abs(attitude_command_.rpy[2]- current_rpy.rpy[2]) < 0.1)
+            heading_error = maths_f_abs( fmod(attitude_command_.rpy[2], 2*PI)
+                                       - fmod(current_rpy.rpy[2],       2*PI) );
+            if ( heading_error < 0.1)
             {
                 attitude_command_.rpy[0]  = 0;
                 attitude_command_.rpy[1]  = pitch_;
@@ -186,7 +189,7 @@ bool Saccade_controller::update()
                 attitude_command_.rpy[1]  = 0;
                 attitude_command_.rpy[2]  += movement_direction;
                 attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
-                saccade_state_ = SACCADE;
+                saccade_state_            = SACCADE;
             }
         break;
     }
