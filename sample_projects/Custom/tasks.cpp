@@ -171,7 +171,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         // 1m altitude command (Above goround level)
         central_data->command.position.xyz[0] = 0.0f;
         central_data->command.position.xyz[1] = 0.0f;
-        central_data->command.position.xyz[2] = -0.6f;
+        central_data->command.position.xyz[2] = -2.0f;
         central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
 
         // Do control
@@ -191,7 +191,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         // 1m altitude command (Above goround level)
         central_data->command.position.xyz[0] = 0.0f;
         central_data->command.position.xyz[1] = 0.0f;
-        central_data->command.position.xyz[2] = -0.6f;
+        central_data->command.position.xyz[2] = -2.0f;
         central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
 
         // Do control
@@ -332,8 +332,8 @@ bool tasks_create_tasks(Central_data* central_data)
     init_success &= scheduler_add_task(scheduler, 100000,  RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_run_sonar_update,    (task_argument_t)central_data,                          12);
     init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH,   (task_function_t)&tasks_altitude_estimation, (task_argument_t)&central_data->altitude_estimation_,   13);
     init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_flow,                (task_argument_t)central_data,                          14);
-    init_success &= scheduler_add_task(scheduler, 10000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_saccade,             (task_argument_t)central_data,                       15);
-    // init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , (task_function_t)&tasks_sleep                                     , (task_argument_t)central_data                         , 99);
+    init_success &= scheduler_add_task(scheduler, 10000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&tasks_saccade,             (task_argument_t)central_data,                          15);
+    init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , (task_function_t)&tasks_sleep,            (task_argument_t)central_data,                          99);
 
     scheduler_sort_tasks(scheduler);
 

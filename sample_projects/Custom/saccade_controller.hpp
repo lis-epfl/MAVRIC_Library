@@ -108,7 +108,7 @@ public:
      * \param   ahrs         Attitude and heading reference system
      * \param   config       Configuration structure
      */
-    Saccade_controller(flow_t& flow_left, flow_t& flow_right, const ahrs_t& ahrs, saccade_controller_conf_t config);
+    Saccade_controller(Flow& flow_left, Flow& flow_right, const ahrs_t& ahrs, saccade_controller_conf_t config);
 
 
     /**
@@ -142,10 +142,10 @@ public:
     float                       sin_azimuth_[2 * N_points];
     float                       can_;
     float                       cad_;
-    uint64_t                    last_saccade_;
+    float                       last_saccade_;
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
-    flow_t&                     flow_left_;                          ///< Left optic flow camera output
-    flow_t&                     flow_right_;                         ///< Right optic flow camera output
+    Flow&                       flow_left_;                          ///< Left optic flow camera output
+    Flow&                       flow_right_;                         ///< Right optic flow camera output
     const ahrs_t&               ahrs_;                               ///< Attitude and heading reference system
 
     saccade_state_t             saccade_state_;

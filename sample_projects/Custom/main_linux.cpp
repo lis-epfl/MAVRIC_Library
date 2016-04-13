@@ -71,7 +71,8 @@ int main(int argc, char** argv)
     // Set correct sysid for UDP port and flash filename
     board_config.serial_udp_config.local_port   = 14000 + sysid;
     board_config.flash_filename                 = std::string("flash") + std::to_string(sysid) + std::string(".bin");
-
+    board_config.dynamic_model_config.rotor_cd  = 1.0f;
+    board_config.dynamic_model_config.vehicle_drag  = 10.0f;
     // Create board
     Mavrinux board(board_config);
 

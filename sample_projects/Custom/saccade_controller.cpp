@@ -54,8 +54,8 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Saccade_controller::Saccade_controller( flow_t& flow_left,
-                                        flow_t& flow_right,
+Saccade_controller::Saccade_controller( Flow& flow_left,
+                                        Flow& flow_right,
                                         const ahrs_t& ahrs,
                                         saccade_controller_conf_t config ):
   flow_left_(flow_left),
@@ -68,13 +68,14 @@ Saccade_controller::Saccade_controller( flow_t& flow_left,
     goal_direction_  = config.goal_direction_;
     pitch_           = config.pitch_;
 
-    last_saccade_ = 0;
+    last_saccade_ = 0.0f;
 
     saccade_state_ = SACCADE;
 
-    attitude_command_.rpy[0]  = 0;
-    attitude_command_.rpy[1]  = 0;
-    attitude_command_.rpy[2]  = 0;
+    attitude_command_.rpy[0]  = 0.0f;
+    attitude_command_.rpy[1]  = 0.0f;
+    attitude_command_.rpy[2]  = 0.0f;
+    attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
 
     // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
     // float angle_between_points = (140.625 / N_points);
@@ -108,7 +109,7 @@ bool Saccade_controller::init(void)
 }*/
 
 
-// #include <stdio.h>
+#include <stdlib.h>
 
 bool Saccade_controller::update()
 {
@@ -168,25 +169,30 @@ bool Saccade_controller::update()
     {
         // This is the case where we are performing a saccade
         case SACCADE:
-            heading_error = maths_f_abs( fmod(attitude_command_.rpy[2], 2*PI)
-                                       - fmod(current_rpy.rpy[2],       2*PI) );
+            heading_error = maths_f_abs( maths_calc_smaller_angle(attitude_command_.rpy[2] - current_rpy.rpy[2]) );
             if ( heading_error < 0.1)
             {
-                attitude_command_.rpy[0]  = 0;
+                attitude_command_.rpy[0]  = 0.0f;
                 attitude_command_.rpy[1]  = pitch_;
                 attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
-                last_saccade_             = time_keeper_get_ms();
+                last_saccade_             = time_keeper_get_s();
                 saccade_state_            = INTERSACCADE;
             }
+
+            // printf("SACCADE\n");
         break;
         // In this case, we are now in intersaccadic phase
         case INTERSACCADE:
-            if (time_keeper_get_ms() - last_saccade_ > 1000)
+            // printf("INTERSACCADE\n");
+
+            if ( (time_keeper_get_s() - last_saccade_) > 3.0f)
             {
                 // Calculation of the movement direction (in radians)
-                movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
-                attitude_command_.rpy[0]  = 0;
-                attitude_command_.rpy[1]  = 0;
+                // movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
+                movement_direction = (float)(rand() % 360) * (PI / 180.0f);
+                // printf("%f\n", movement_direction);
+                attitude_command_.rpy[0]  = 0.0f;
+                attitude_command_.rpy[1]  = 0.0f;
                 attitude_command_.rpy[2]  += movement_direction;
                 attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
                 saccade_state_            = SACCADE;
