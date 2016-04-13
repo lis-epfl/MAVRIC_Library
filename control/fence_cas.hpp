@@ -74,20 +74,22 @@ public:
 	void get_a_max(void);
 	void set_r_pz(void);
 	void get_r_pz(void);
+	float get_repulsion(int axis);
 
 
 private:
 
-
-	bool detect_line(float A[3], float B[3],const float C[3], float V[3], float gamma, float I[3]);
+	float detect_seg(local_position_t Al, local_position_t Bl,local_position_t Cl, float V[3], float I[3],float J[3]);
+	float detect_line(local_position_t A, local_position_t B,local_position_t C, float V[3], float gamma, float I[3]);
 	uint8_t								sensor_res; ///< simulate sensor resolution, spatial resolution between two sensors. [deg]
 	float								a_max; ///<maximal deceleration [m/s^2]
 	float								r_pz; ///< radius of Protection Zone
 	float								discomfort; ///<[0,1] intensity of the reaction
 	mavlink_waypoint_handler_t* 		waypoint_handler;
-	const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
+const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
 	//velocity_command_t&                 velocity_command;           ///< Velocity command (output)
 	float 								detected_point[3];
+	float 								repulsion[3];
 	float 								fov; ///< Field of View, total angle of detection [deg]
 
 };

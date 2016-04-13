@@ -956,6 +956,7 @@ static void waypoint_handler_receive_count(mavlink_waypoint_handler_t* waypoint_
             // comment these lines if you want to add new waypoints to the list instead of overwriting them
             waypoint_handler->num_waypoint_onboard = 0;
             waypoint_handler->number_of_waypoints = 0;
+            waypoint_handler->number_of_fence_points = 0;
             //---//
 
             if ((packet.count + waypoint_handler->number_of_waypoints) > MAX_WAYPOINTS)
@@ -1125,8 +1126,6 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 
                         waypoint_handler->state->nav_plan_active = false;
                         waypoint_handler_nav_plan_init(waypoint_handler);
-                        // CYSTU copy the waypoints with cmd=40 to the fence object
-
                     }
                     else
                     {
@@ -1279,6 +1278,7 @@ static void waypoint_handler_clear_waypoint_list(mavlink_waypoint_handler_t* way
         if (waypoint_handler->number_of_waypoints > 0)
         {
             waypoint_handler->number_of_waypoints = 0;
+            waypoint_handler->number_of_fence_points = 0;
             waypoint_handler->num_waypoint_onboard = 0;
             waypoint_handler->state->nav_plan_active = 0;
             waypoint_handler->state->nav_plan_active = false;
@@ -2215,7 +2215,8 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 
     // init waypoint navigation
     waypoint_handler->number_of_waypoints = 0;
-    waypoint_handler->num_waypoint_onboard = 0;
+    waypoint_handler->number_of_fence_points = 0;
+	waypoint_handler->num_waypoint_onboard = 0;
 
     waypoint_handler->sending_waypoint_num = 0;
     waypoint_handler->waypoint_request_number = 0;
