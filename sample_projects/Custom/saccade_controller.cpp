@@ -165,34 +165,29 @@ bool Saccade_controller::update()
 
     switch (saccade_state_)
     {
-        //This is the case where we are performing a saccade
-
+        // This is the case where we are performing a saccade
         case SACCADE:
-
-
-            if(maths_f_abs(attitude_command_.rpy[2]- current_rpy.rpy[2])<0.1){
-            attitude_command_.rpy[0]  = 0;
-            attitude_command_.rpy[1]  = pitch_;
-            attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
-            last_saccade_ = time_keeper_get_ms();
-            saccade_state_ = INTERSACCADE;
+            if (maths_f_abs(attitude_command_.rpy[2]- current_rpy.rpy[2]) < 0.1)
+            {
+                attitude_command_.rpy[0]  = 0;
+                attitude_command_.rpy[1]  = pitch_;
+                attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                last_saccade_             = time_keeper_get_ms();
+                saccade_state_            = INTERSACCADE;
             }
         break;
-
-
-        //In this case, we are now in intersaccadic phase
-
+        // In this case, we are now in intersaccadic phase
         case INTERSACCADE:
-        if( time_keeper_get_ms() - last_saccade_ > 1000)
-        {
-            // Calculation of the movement direction (in radians)
-                    movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
-                    attitude_command_.rpy[0]  = 0;
-                    attitude_command_.rpy[1]  = 0;
-                    attitude_command_.rpy[2]  += movement_direction;
-                    attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
-            saccade_state_ = SACCADE;
-        }
+            if (time_keeper_get_ms() - last_saccade_ > 1000)
+            {
+                // Calculation of the movement direction (in radians)
+                movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
+                attitude_command_.rpy[0]  = 0;
+                attitude_command_.rpy[1]  = 0;
+                attitude_command_.rpy[2]  += movement_direction;
+                attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                saccade_state_ = SACCADE;
+            }
         break;
     }
 
