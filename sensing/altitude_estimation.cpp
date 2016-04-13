@@ -93,7 +93,6 @@ bool Altitude_estimation::init(void)
     return true;
 }
 
-
 bool Altitude_estimation::update(void)
 {
     Kalman<3,1,1>::predict(Mat<1,1>({-ahrs_.linear_acc[2]}));
@@ -104,8 +103,8 @@ bool Altitude_estimation::update(void)
 
         if( sonar_.healthy() || alt < 0.3f )
         {
-          Kalman<3,1,1>::update(Mat<1,1>({alt}));
-          last_sonar_update_us_ = sonar_.last_update_us();
+            Kalman<3,1,1>::update(Mat<1,1>({alt}));
+            last_sonar_update_us_ = sonar_.last_update_us();
         }
     }
 
