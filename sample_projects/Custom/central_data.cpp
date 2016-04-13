@@ -92,7 +92,7 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     // flow_right_(serial_flow_right_),
     flow_left_(),
     flow_right_(),
-    saccade_controller_(flow_left_, flow_right_, saccade_controller_default_config()),
+    saccade_controller_(flow_left_, flow_right_, ahrs, saccade_controller_default_config()),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),
     altitude_controller_(command.position, altitude_, command.thrust),
     sysid_(sysid)
@@ -352,7 +352,7 @@ servos_mix_quadcopter_diag_conf_t my_servos_mix_quadcopter_diag_default_config;
     //--------------------------------------------------------------------------
     // Init saccade controller
     //--------------------------------------------------------------------------
-    saccade_controller_.init(&ahrs);
+    saccade_controller_.init();
 
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);

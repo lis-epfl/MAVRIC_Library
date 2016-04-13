@@ -56,9 +56,11 @@ extern "C"
 //------------------------------------------------------------------------------
 Saccade_controller::Saccade_controller( flow_t& flow_left,
                                         flow_t& flow_right,
+                                        const ahrs_t& ahrs,
                                         saccade_controller_conf_t config ):
   flow_left_(flow_left),
-  flow_right_(flow_right)
+  flow_right_(flow_right),
+  ahrs_(ahrs)
 {
     // Init members
     gain_            = config.gain_;
@@ -95,9 +97,8 @@ Saccade_controller::Saccade_controller( flow_t& flow_left,
     }
 }
 
-bool Saccade_controller::init(const ahrs_t* ahrs)
+bool Saccade_controller::init(void)
 {
-    ahrs_ = ahrs;
     return true;
 }
 
@@ -113,7 +114,7 @@ bool Saccade_controller::update()
 {
     // Random number generation for the noise, the value of the noise is between 0 and 0.5. A new number is generated at each time.
     // ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
-    float noise = 0.0f;
+    // float noise = 0.0f;
 
     // Calculate for both left and right the sum of the relative nearnesses
     // which are each given by RN = OF/sin(angle),
@@ -159,7 +160,7 @@ bool Saccade_controller::update()
     cad_ = nearest_object_direction + PI;
 
 
-    aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_->qe);
+    aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_.qe);
     float movement_direction  = 0.0f;
 
     switch (saccade_state_)
@@ -167,8 +168,8 @@ bool Saccade_controller::update()
         //This is the case where we are performing a saccade
 
         case SACCADE:
-                
-            
+
+
             if(maths_f_abs(attitude_command_.rpy[2]- current_rpy.rpy[2])<0.1){
             attitude_command_.rpy[0]  = 0;
             attitude_command_.rpy[1]  = pitch_;
@@ -177,7 +178,7 @@ bool Saccade_controller::update()
             saccade_state_ = INTERSACCADE;
             }
         break;
-        
+
 
         //In this case, we are now in intersaccadic phase
 
@@ -195,6 +196,6 @@ bool Saccade_controller::update()
         break;
     }
 
-        
+
     return true;
 }

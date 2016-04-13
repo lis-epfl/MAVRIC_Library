@@ -105,9 +105,10 @@ public:
      *
      * \param   flow_left    Serial port for left optic flow camera
      * \param   flow_right   Serial port for right optic flow cameras
+     * \param   ahrs         Attitude and heading reference system
      * \param   config       Configuration structure
      */
-    Saccade_controller(flow_t& flow_left, flow_t& flow_right, saccade_controller_conf_t config);
+    Saccade_controller(flow_t& flow_left, flow_t& flow_right, const ahrs_t& ahrs, saccade_controller_conf_t config);
 
 
     /**
@@ -115,7 +116,7 @@ public:
      *
      * \return  success
      */
-    bool init(const ahrs_t* ahrs);
+    bool init(void);
 
 
     /**
@@ -145,10 +146,9 @@ public:
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
     flow_t&                     flow_left_;                          ///< Left optic flow camera output
     flow_t&                     flow_right_;                         ///< Right optic flow camera output
+    const ahrs_t&               ahrs_;                               ///< Attitude and heading reference system
 
-    const ahrs_t*               ahrs_;  
-
-    saccade_state_t             saccade_state_; 
+    saccade_state_t             saccade_state_;
 
 };
 
