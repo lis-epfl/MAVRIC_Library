@@ -115,7 +115,7 @@ typedef struct
 
     pid_controller_t hovering_controller;               ///< hovering controller
     pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
-} navigation_config_t;
+} navigation_conf_t;
 
 /**
  * \brief   Initialization
@@ -131,7 +131,7 @@ typedef struct
  *
  * \return  True if the init succeed, false otherwise
  */
-bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, const position_estimation_t* position_estimation, State* state, mavlink_communication_t* mavlink_communication);
+bool navigation_init(navigation_t* navigation, navigation_conf_t nav_config, control_command_t* controls_nav, const quat_t* qe, const position_estimation_t* position_estimation, State* state, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief   Navigates the robot towards waypoint waypoint_input in 3D velocity command mode

@@ -164,22 +164,38 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     }
     else if (mav_modes_is_auto(mode))
     {
-        vector_field_waypoint_update(&central_data->vector_field_waypoint);
-        velocity_controller_copter_update(&central_data->velocity_controller);
-        attitude_controller_update(&central_data->attitude_controller);
-        servos_mix_quadcopter_diag_update(&central_data->servo_mix);
+        // vector_field_waypoint_update(&central_data->vector_field_waypoint);
+        // velocity_controller_copter_update(&central_data->velocity_controller);
+        // attitude_controller_update(&central_data->attitude_controller);
+        // servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else if (mav_modes_is_manual(mode) && mav_modes_is_guided(mode))
     {
-        manual_control_get_velocity_command(&central_data->manual_control, &central_data->command.velocity, 1.0f);
-        velocity_controller_copter_update(&central_data->velocity_controller);
+        // manual_control_get_velocity_command(&central_data->manual_control, &central_data->command.velocity, 1.0f);
+        // velocity_controller_copter_update(&central_data->velocity_controller);
+
+        // get attitude command from remote
+        manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
+
+        // Hardcode altitude command
+        central_data->command.position.xyz[0] = 0.0f;
+        central_data->command.position.xyz[1] = 0.0f;
+        central_data->command.position.xyz[2] = -5.0f;
+        central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
+
+        // Do control
+        central_data->altitude_controller_.update();
         attitude_controller_update(&central_data->attitude_controller);
+
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else if (mav_modes_is_manual(mode) && mav_modes_is_stabilise(mode))
     {
+        // get command from remote
         manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
         manual_control_get_thrust_command(&central_data->manual_control, &central_data->command.thrust);
+
+        // Do control
         attitude_controller_update(&central_data->attitude_controller);
 
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
@@ -273,6 +289,17 @@ bool tasks_data_logging_update(Central_data* central_data)
     return run_success;
 }
 
+
+bool tasks_altitude_estimation(Altitude_estimation* altitude_estimation)
+{
+    bool success = true;
+
+    success &= altitude_estimation->update();
+
+    return success;
+}
+
+
 bool tasks_create_tasks(Central_data* central_data)
 {
     bool init_success = true;
@@ -281,6 +308,8 @@ bool tasks_create_tasks(Central_data* central_data)
 
     init_success &= scheduler_add_task(scheduler, 4000,     RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation                         , (task_argument_t)central_data                         , 0);
     // init_success &= scheduler_add_task(scheduler, 4000,      RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, (task_function_t)&tasks_run_stabilisation_quaternion              , (task_argument_t)central_data                         , 0);
+
+    init_success &= scheduler_add_task(scheduler, 4000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&tasks_altitude_estimation                       , (task_argument_t)&central_data->altitude_estimation_ , 12);
 
     init_success &= scheduler_add_task(scheduler, 15000,    RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&tasks_run_barometer_update                      , (task_argument_t)central_data                     , 2);
     init_success &= scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&tasks_run_gps_update                            , (task_argument_t)central_data                     , 3);
@@ -295,7 +324,7 @@ bool tasks_create_tasks(Central_data* central_data)
 
     init_success &= scheduler_add_task(scheduler, 20000,    RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH , (task_function_t)&remote_update                                     , (task_argument_t)&central_data->manual_control.remote , 10);
 
-    init_success &= scheduler_add_task(scheduler, 500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&tasks_run_sonar_update                          , (task_argument_t)central_data                         , 13);
+    init_success &= scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH    , (task_function_t)&tasks_run_sonar_update                          , (task_argument_t)central_data                         , 13);
 
     init_success &= scheduler_add_task(scheduler, 500000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&tasks_led_toggle                                , (task_argument_t)&central_data->led                   , 1);
     init_success &= scheduler_add_task(scheduler, 10000000, RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&tasks_offboard_camera_update                    , (task_argument_t)central_data       , 15);

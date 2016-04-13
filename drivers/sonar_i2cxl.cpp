@@ -66,7 +66,7 @@ Sonar_i2cxl::Sonar_i2cxl(I2c& i2c, sonar_i2cxl_conf_t config):
     distance_(0.2f),
     velocity_(0.0f),
     healthy_(false),
-    last_update_us_(time_keeper_get_us())
+    last_update_us_(0.0f)
 {}
 
 
@@ -181,9 +181,20 @@ bool Sonar_i2cxl::get_last_measure(void)
     }
     else
     {
+        // Update current distance even if not healthy
+        if (distance_m < config_.min_distance)
+        {
+            distance_ = config_.min_distance;
+        }
+        else if(distance_m > config_.max_distance)
+        {
+            distance_ = config_.max_distance;
+        }
+
         velocity_   = 0.0f;
         healthy_    = false;
     }
+
 
     return res;
 }

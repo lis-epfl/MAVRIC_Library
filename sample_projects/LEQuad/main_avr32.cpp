@@ -47,6 +47,8 @@
 #include "hal/avr32/file_flash_avr32.hpp"
 #include "hal/avr32/serial_usb_avr32.hpp"
 #include "sensing/offboard_camera.hpp"
+
+// //uncomment to go in simulation
 // #include "simulation/dynamic_model_quad_diag.hpp"
 // #include "simulation/simulation.hpp"
 // #include "hal/dummy/adc_dummy.hpp"
@@ -66,13 +68,14 @@ extern "C"
 
 int main(void)
 {
+    bool init_success = true;
+    
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
     Megafly_rev4 board = Megafly_rev4(board_config);
-
 
     // -------------------------------------------------------------------------
     // Create simulation
@@ -96,6 +99,8 @@ int main(void)
     // Imu      sim_imu         = Imu(  sim.accelerometer(),
     //                                  sim.gyroscope(),
     //                                  sim.magnetometer() );
+    // Board initialisation
+    init_success &= board.init();
 
     fat_fs_mounting_t fat_fs_mounting;
 
@@ -109,28 +114,28 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create central data
     // -------------------------------------------------------------------------
+    central_data_conf_t cd_config = central_data_default_config();
+
     // Create central data using real sensors
     /*Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
                                    board.bmp085,
                                    board.gps_ublox,
-                                   // sim.gps(),
                                    board.sonar_i2cxl,      // Warning:
-                                   // sim.sonar(),             // this is simulated
                                    board.uart0,
                                    board.uart_usb,//
                                    board.spektrum_satellite,
                                    board.green_led,
                                    board.file_flash,
                                    board.battery,
-                                   // sim_battery,
                                    board.servo_0,
                                    board.servo_1,
                                    board.servo_2,
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   camera);*/
+                                   camera,
+                                   cd_config);*/
     Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
                                    board.bmp085,
@@ -151,9 +156,35 @@ int main(void)
                                    sim_servo_3,
                                    file_log,
                                    file_stat,
-                                   camera);
+                                   camera,
+                                   cd_config );
 
-    // Create central data with simulated sensors
+
+    // -------------------------------------------------------------------------
+    // Create simulation
+    // -------------------------------------------------------------------------
+    // // Simulated servos
+    // Pwm_dummy pwm[4];
+    // Servo sim_servo_0(pwm[0], servo_default_config_esc());
+    // Servo sim_servo_1(pwm[1], servo_default_config_esc());
+    // Servo sim_servo_2(pwm[2], servo_default_config_esc());
+    // Servo sim_servo_3(pwm[3], servo_default_config_esc());
+
+    // // Simulated dynamic model
+    // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
+    // Simulation sim                       = Simulation(sim_model);
+
+    // // Simulated battery
+    // Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
+    // Battery  sim_battery     = Battery(sim_adc_battery);
+
+    // // Simulated IMU
+    // Imu      sim_imu         = Imu(  sim.accelerometer(),
+    //                                  sim.gyroscope(),
+    //                                  sim.magnetometer() );
+
+    // // set the flag to simulation
+    // cd_config.state_config.simulation_mode = HIL_ON;
     // Central_data cd = Central_data( MAVLINK_SYS_ID,
     //                              sim_imu,
     //                              sim.barometer(),
@@ -164,18 +195,13 @@ int main(void)
     //                              board.green_led,
     //                              board.file_flash,
     //                              sim_battery,
-    //                              board.servo_0,
-    //                              board.servo_1,
-    //                              board.servo_2,
-    //                              board.servo_3 );
-
-    // -------------------------------------------------------------------------
-    // Initialisation
-    // -------------------------------------------------------------------------
-    bool init_success = true;
-
-    // Board initialisation
-    init_success &= board.init();
+    //                              sim_servo_0,
+    //                              sim_servo_1,
+    //                              sim_servo_2,
+    //                              sim_servo_3 ,
+    //                              file_log,
+    //                              file_stat,
+    //                              cd_config );
 
     // Init central data
     init_success &= cd.init();
