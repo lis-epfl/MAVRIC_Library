@@ -88,9 +88,11 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     data_logging2(file2, state, data_logging_default_config()),
     serial_flow_left_(serial_flow_left),
     serial_flow_right_(serial_flow_right),
-    flow_left_(serial_flow_left_),
-    flow_right_(serial_flow_right_),
-    saccade_controller_(flow_left_, flow_right_, saccade_controller_default_config()),
+    // flow_left_(serial_flow_left_),
+    // flow_right_(serial_flow_right_),
+    flow_left_(),
+    flow_right_(),
+    saccade_controller_(flow_left_, flow_right_, ahrs, saccade_controller_default_config()),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),
     altitude_controller_(command.position, altitude_, command.thrust),
     sysid_(sysid)
@@ -260,8 +262,19 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init servo mixing
     // -------------------------------------------------------------------------
+
+servos_mix_quadcopter_diag_conf_t my_servos_mix_quadcopter_diag_default_config;
+
+    my_servos_mix_quadcopter_diag_default_config.motor_front_right_dir              = CCW;
+    my_servos_mix_quadcopter_diag_default_config.motor_front_left_dir               = CW;
+    my_servos_mix_quadcopter_diag_default_config.motor_rear_right_dir               = CW;
+    my_servos_mix_quadcopter_diag_default_config.motor_rear_left_dir                = CCW;
+    my_servos_mix_quadcopter_diag_default_config.min_thrust                         = -0.9f;
+    my_servos_mix_quadcopter_diag_default_config.max_thrust                         = 1.0f;
+
+
     ret = servos_mix_quadcotper_diag_init(&servo_mix,
-                                          servos_mix_quadcopter_diag_default_config(),
+                                          my_servos_mix_quadcopter_diag_default_config,
                                           &command.torque,
                                           &command.thrust,
                                           &servo_0,
@@ -325,6 +338,15 @@ bool Central_data::init(void)
                                &waypoint_handler,
                                &position_estimation,
                                &command.velocity);
+
+     // -------------------------------------------------------------------------
+     // Init PX4flow cameras
+     // -------------------------------------------------------------------------
+     flow_init(&flow_left_, &serial_flow_left_);
+     flow_init(&flow_right_, &serial_flow_right_);
+    //  flow_init(&flow_left_, &serial_mavlink);
+    //  flow_init(&flow_right_, &serial_mavlink);
+
 
 
     //--------------------------------------------------------------------------

@@ -54,11 +54,13 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Saccade_controller::Saccade_controller( Flow& flow_left,
-                                        Flow& flow_right,
+Saccade_controller::Saccade_controller( flow_t& flow_left,
+                                        flow_t& flow_right,
+                                        const ahrs_t& ahrs,
                                         saccade_controller_conf_t config ):
   flow_left_(flow_left),
-  flow_right_(flow_right)
+  flow_right_(flow_right),
+  ahrs_(ahrs)
 {
     // Init members
     gain_            = config.gain_;
@@ -68,16 +70,24 @@ Saccade_controller::Saccade_controller( Flow& flow_left,
 
     last_saccade_ = 0;
 
-    // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
-    float angle_between_points = (140.625 / N_points);
+    saccade_state_ = SACCADE;
 
+    attitude_command_.rpy[0]  = 0;
+    attitude_command_.rpy[1]  = 0;
+    attitude_command_.rpy[2]  = 0;
+
+    // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
+    // float angle_between_points = (140.625 / N_points);
+    float angle_between_points = (2.*180. / 160.);
 
     // Init azimuth angles
     for (uint32_t i = 0; i < N_points; ++i)
     {
-        azimuth_[i]             = (-160.875 + i * angle_between_points) * (PI / 180.0f);
+        // azimuth_[i]             = (-160.875 + i * angle_between_points) * (PI / 180.0f);
+        azimuth_[i]             = (-173.25 + i * angle_between_points) * (PI / 180.0f);
         inv_sin_azimuth_[i]     = 1.0f/quick_trig_sin(azimuth_[i]);
-        azimuth_[i + N_points]  = (  19.125 + i * angle_between_points) * (PI / 180.0f);
+        // azimuth_[i + N_points]  = (  19.125 + i * angle_between_points) * (PI / 180.0f);
+        azimuth_[i + N_points]  = (  9. + i * angle_between_points) * (PI / 180.0f);
         inv_sin_azimuth_[i + N_points]  = 1.0f/quick_trig_sin(azimuth_[i + N_points]);
 
         cos_azimuth_[i] = quick_trig_cos(azimuth_[i]);
@@ -104,14 +114,14 @@ bool Saccade_controller::update()
 {
     // Random number generation for the noise, the value of the noise is between 0 and 0.5. A new number is generated at each time.
     // ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
-    float noise = 0.0f;
+    // float noise = 0.0f;
 
     // Calculate for both left and right the sum of the relative nearnesses
     // which are each given by RN = OF/sin(angle),
     for (uint32_t i = 0; i < N_points; ++i)
     {
-        relative_nearness_[i]             = maths_f_abs(flow_left_.of.x[i]);// * inv_sin_azimuth_[i];
-        relative_nearness_[i + N_points]  = maths_f_abs(flow_right_.of.x[i]);// * inv_sin_azimuth_[i + N_points];
+        relative_nearness_[i]             = maths_f_abs(flow_left_.of.x[i]);// * inv_sin_azimuth_[i]);
+        relative_nearness_[i + N_points]  = maths_f_abs(flow_right_.of.x[i]);// * inv_sin_azimuth_[i + N_points]);
     }
 
 
@@ -146,21 +156,44 @@ bool Saccade_controller::update()
         nearest_object_direction = atan2(comanv_y, comanv_x);
     }
 
-    // weighted_function = 1/(1 + pow(can_/threshold_ , - gain_));
+    //float weighted_function = 1/(1 + pow(can_/threshold_ , - gain_));
     cad_ = nearest_object_direction + PI;
 
-    if( time_keeper_get_ms() - last_saccade_ > 1000)
+
+    aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_.qe);
+    float movement_direction  = 0.0f;
+    float heading_error = 0.0f;
+
+    switch (saccade_state_)
     {
-        // Calculation of the movement direction (in radians)
-        float movement_direction = weighted_function * cad_ + (1-weighted_function) * (goal_direction_ + noise);
-
-        // Attitude command given by the required movement direction
-        attitude_command_.rpy[0]  = 0.0f;
-        attitude_command_.rpy[1]  = pitch_;
-        attitude_command_.rpy[2]  += movement_direction;
-        attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
-
-        last_saccade_ = time_keeper_get_ms();
+        // This is the case where we are performing a saccade
+        case SACCADE:
+            heading_error = maths_f_abs( fmod(attitude_command_.rpy[2], 2*PI)
+                                       - fmod(current_rpy.rpy[2],       2*PI) );
+            if ( heading_error < 0.1)
+            {
+                attitude_command_.rpy[0]  = 0;
+                attitude_command_.rpy[1]  = pitch_;
+                attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                last_saccade_             = time_keeper_get_ms();
+                saccade_state_            = INTERSACCADE;
+            }
+        break;
+        // In this case, we are now in intersaccadic phase
+        case INTERSACCADE:
+            if (time_keeper_get_ms() - last_saccade_ > 1000)
+            {
+                // Calculation of the movement direction (in radians)
+                movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
+                attitude_command_.rpy[0]  = 0;
+                attitude_command_.rpy[1]  = 0;
+                attitude_command_.rpy[2]  += movement_direction;
+                attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                saccade_state_            = SACCADE;
+            }
+        break;
     }
+
+
     return true;
 }
