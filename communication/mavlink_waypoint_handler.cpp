@@ -2435,6 +2435,7 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
             break;
 
         case MAV_STATE_ACTIVE:
+        case MAV_STATE_CRITICAL: // Testing
             waypoint_handler->navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
             waypoint_handler->critical_next_state = false;
 
@@ -2445,7 +2446,7 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
 
             waypoint_handler_state_machine(waypoint_handler);
             break;
-
+/*
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
             if (mav_modes_is_stabilise(mode_local))
@@ -2458,7 +2459,7 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
                 }
             }
             break;
-
+*/
         default:
             waypoint_handler->navigation->internal_state = NAV_ON_GND;
             break;

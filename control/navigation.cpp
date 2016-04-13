@@ -285,12 +285,13 @@ bool navigation_update(navigation_t* navigation)
             break;
 
         case MAV_STATE_ACTIVE:
+        case MAV_STATE_CRITICAL: // Testing
             if (navigation->internal_state > NAV_ON_GND)
             {
                 navigation_run(navigation);
             }
             break;
-
+/*
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
             if (mav_modes_is_stabilise(mode_local))
@@ -309,7 +310,7 @@ bool navigation_update(navigation_t* navigation)
                 }
             }
             break;
-
+*/
         default:
             navigation->controls_nav->tvel[X] = 0.0f;
             navigation->controls_nav->tvel[Y] = 0.0f;
