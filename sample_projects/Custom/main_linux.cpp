@@ -43,7 +43,7 @@
 #include "tasks.hpp"
 
 #include "boards/mavrinux.hpp"
-
+#include "drivers/flow_px4.hpp"
 #include "util/raytracing.hpp"
 
 extern "C"
@@ -115,6 +115,8 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     Serial_dummy serial_flow_left;
     Serial_dummy serial_flow_right;
+    Flow_px4 flow_left(serial_flow_left);
+    Flow_px4 flow_right(serial_flow_right);
 
     // -------------------------------------------------------------------------
     // Create central data
@@ -138,8 +140,8 @@ int main(int argc, char** argv)
                                    file_stat,
                                   //  board.mavlink_serial,
                                   //  board.mavlink_serial);
-                                   serial_flow_left,
-                                   serial_flow_right);
+                                   flow_left,
+                                   flow_right);
 
 
     // -------------------------------------------------------------------------

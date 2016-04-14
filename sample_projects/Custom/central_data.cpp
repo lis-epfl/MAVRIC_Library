@@ -69,7 +69,7 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
                           Led& led, File& file_flash, Battery& battery,
                           Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3,
                           File& file1, File& file2,
-                          Serial& serial_flow_left, Serial& serial_flow_right):
+                          Flow& flow_left, Flow& flow_right):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -86,10 +86,8 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     state(battery, state_default_config()),
     data_logging(file1, state, data_logging_default_config()),
     data_logging2(file2, state, data_logging_default_config()),
-    serial_flow_left_(serial_flow_left),
-    serial_flow_right_(serial_flow_right),
-    flow_left_(serial_flow_left_),
-    flow_right_(serial_flow_right_),
+    flow_left_(flow_left),
+    flow_right_(flow_right),
     saccade_controller_(flow_left_, flow_right_, ahrs, saccade_controller_default_config()),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),
     altitude_controller_(command.position, altitude_, command.thrust),
@@ -336,15 +334,6 @@ servos_mix_quadcopter_diag_conf_t my_servos_mix_quadcopter_diag_default_config;
                                &waypoint_handler,
                                &position_estimation,
                                &command.velocity);
-
-     // -------------------------------------------------------------------------
-     // Init PX4flow cameras
-     // -------------------------------------------------------------------------
-    //  flow_init(&flow_left_, &serial_flow_left_);
-    //  flow_init(&flow_right_, &serial_flow_right_);
-    //  flow_init(&flow_left_, &serial_mavlink);
-    //  flow_init(&flow_right_, &serial_mavlink);
-
 
 
     //--------------------------------------------------------------------------

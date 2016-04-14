@@ -49,6 +49,7 @@
 #include "hal/avr32/serial_usb_avr32.hpp"
 
 #include "hal/dummy/serial_dummy.hpp"
+#include "drivers/flow_px4.hpp"
 // #include "simulation/dynamic_model_quad_diag.hpp"
 // #include "simulation/simulation.hpp"
 // #include "hal/dummy/adc_dummy.hpp"
@@ -87,10 +88,26 @@ int main(void)
 
     Megafly_rev4 board = Megafly_rev4(board_config);
 
+    // -------------------------------------------------------------------------
+    // Board Initialisation
+    // -------------------------------------------------------------------------
+    bool init_success = true;
+
+    // Board initialisation
+    init_success &= board.init();
+
+    // -------------------------------------------------------------------------
+    // Additionnal sensors
+    // -------------------------------------------------------------------------
     // Create dummy GPS
     Serial_dummy serial_dummy;
     Gps_ublox gps_dummy(serial_dummy);
 
+    // Create camera drivers
+    Flow_px4 flow_left(board.uart3);
+    Flow_px4 flow_right(board.uart4);
+
+    // Create log files
     fat_fs_mounting_t fat_fs_mounting;
     fat_fs_mounting_init(&fat_fs_mounting);
 
@@ -118,17 +135,8 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   board.uart3,   // flow left
-                                   board.uart4);  // flow right
-
-    // -------------------------------------------------------------------------
-    // Initialisation
-    // -------------------------------------------------------------------------
-    bool init_success = true;
-
-    // Board initialisation
-    init_success &= board.init();
-
+                                   flow_left,
+                                   flow_right);
 
     // Init central data
     init_success &= cd.init();

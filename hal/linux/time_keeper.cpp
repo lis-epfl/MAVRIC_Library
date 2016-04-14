@@ -46,6 +46,7 @@
 
 using namespace std::chrono;
 
+const uint64_t speedup_factor = 10;
 high_resolution_clock::time_point t_start;
 
 void time_keeper_init(void)
@@ -74,7 +75,7 @@ uint64_t time_keeper_get_us(void)
 
     auto t_diff = duration_cast<microseconds>(t_now - t_start);
 
-    return t_diff.count();
+    return t_diff.count() * speedup_factor;
 }
 
 

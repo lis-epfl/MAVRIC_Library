@@ -111,7 +111,7 @@ public:
                 Led& led, File& file_flash, Battery& battery,
                 Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3,
                 File& file1, File& file2,
-                Serial& serial_flow_left_, Serial& serial_flow_right_);
+                Flow& flow_left_, Flow& flow_right_);
 
 
     /**
@@ -173,11 +173,8 @@ public:
     velocity_controller_copter_t    velocity_controller;
     vector_field_waypoint_t         vector_field_waypoint;
 
-
-    Serial&                       serial_flow_left_;
-    Serial&                       serial_flow_right_;
-    Flow                          flow_left_;
-    Flow                          flow_right_;
+    Flow&                         flow_left_;
+    Flow&                         flow_right_;
     Saccade_controller            saccade_controller_;
 
 

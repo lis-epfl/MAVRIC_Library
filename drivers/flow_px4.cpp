@@ -39,7 +39,7 @@
  *
  ******************************************************************************/
 
-#include "drivers/flow.hpp"
+#include "drivers/flow_px4.hpp"
 
 extern "C"
 {
@@ -52,7 +52,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Flow::Flow(Serial& uart):
+Flow_px4::Flow_px4(Serial& uart):
   uart_(uart)
 {
     // Init members
@@ -71,7 +71,7 @@ Flow::Flow(Serial& uart):
 }
 
 
-bool Flow::update(void)
+bool Flow_px4::update(void)
 {
     // Receive incoming bytes
     while (mavlink_stream_receive(&mavlink_stream_))
@@ -187,8 +187,10 @@ bool Flow::update(void)
                                 // swap bytes and filter for high frequency noise
                                 for (int i = 0; i < of_count; ++i)
                                 {
-                                    of.x[i] = filter_constant * endian_rev16s(of_tmp_.x[i])+ (1-filter_constant)*of.x[i];
-                                    of.y[i] = filter_constant * endian_rev16s(of_tmp_.y[i])+ (1-filter_constant)*of.y[i];
+                                    of.x[i] = filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.x[i])) +
+                                              (1.0f - filter_constant) * of.x[i];
+                                    of.y[i] = filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.y[i])) +
+                                              (1.0f - filter_constant) * of.y[i];
                                 }
 
                                 // Update time
