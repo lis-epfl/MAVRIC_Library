@@ -43,6 +43,7 @@ var searchData=
   ['altitude_5fellipsoid',['altitude_ellipsoid',['../structubx__nav__pos__llh__t.html#a581ce8d49671f3e58b24bc3d9f238f62',1,'ubx_nav_pos_llh_t']]],
   ['altitude_5festimation',['Altitude_estimation',['../classAltitude__estimation.html',1,'']]],
   ['altitude_5festimation_5fconf_5ft',['altitude_estimation_conf_t',['../structaltitude__estimation__conf__t.html',1,'']]],
+  ['altitude_5ffiltered',['altitude_filtered',['../classBarometer.html#a0794b40c677b9b3c95bcbb503d8529b4',1,'Barometer']]],
   ['altitude_5ffrom_5fpressure',['altitude_from_pressure',['../classBarometer.html#a8e5b1fc3eeb41f802c1252bb02fa8305',1,'Barometer']]],
   ['altitude_5fgf',['altitude_gf',['../classBarometer.html#ada747a30c4ba82b650f99a3d65e7788f',1,'Barometer']]],
   ['altitude_5fgf_5f',['altitude_gf_',['../classBarometer.html#a2be30f7d4220e5bd0f109b8dda038351',1,'Barometer']]],
