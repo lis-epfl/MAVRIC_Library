@@ -74,9 +74,7 @@ State::State(Battery& battery, state_conf_t config):
 
     mav_mode_custom = config.mav_mode_custom;
 
-    simulation_mode = config.simulation_mode;
-
-    if (simulation_mode == HIL_ON)
+    if (config.simulation_mode == HIL_ON)
     {
         mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
     }
@@ -84,6 +82,10 @@ State::State(Battery& battery, state_conf_t config):
     {
         mav_mode &= ~MAV_MODE_FLAG_HIL_ENABLED;
     }
+
+    sensor_present = config.sensor_present;
+    sensor_enabled = config.sensor_enabled;
+    sensor_health = config.sensor_health;
 
     fence_1_xy = config.fence_1_xy;
     fence_1_z = config.fence_1_z;

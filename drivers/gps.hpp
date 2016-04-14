@@ -51,6 +51,12 @@ extern "C"
 #include "util/coord_conventions.h"
 }
 
+typedef enum
+{
+    NO_GPS = 0,                            ///< No GPS
+    NO_FIX = 1,                            ///< No GPS fix
+    GPS_OK = 2,                            ///< GPS ok
+}gps_fix_t;
 
 /**
  * \brief Abstract class for GPS
@@ -166,7 +172,7 @@ public:
      *
      * \return  Value
      */
-    virtual const bool& fix(void) const = 0;
+    virtual const gps_fix_t& fix(void) const = 0;
 
 
     /**

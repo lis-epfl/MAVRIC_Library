@@ -104,7 +104,7 @@ bool Battery::update(void)
 
 
     // Update low level flag
-    if (voltage_ < get_low_voltage(config_.type))
+    if (level_ < config_.low_level_limit)
     {
         is_low_ = true;
     }

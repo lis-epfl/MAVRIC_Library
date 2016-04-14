@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file velocity_controller_copter_default_config.h
+ * \file velocity_controller_copter_default_config.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -42,10 +42,6 @@
 
 #ifndef VELOCITY_CONTROLLER_COPTER_DEFAULT_CONFIG_H_
 #define VELOCITY_CONTROLLER_COPTER_DEFAULT_CONFIG_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include "control/velocity_controller_copter.hpp"
 
@@ -108,9 +104,5 @@ static inline velocity_controller_copter_conf_t velocity_controller_copter_defau
 
     return conf;
 };
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // VELOCITY_CONTROLLER_COPTER_DEFAULT_CONFIG_H_
