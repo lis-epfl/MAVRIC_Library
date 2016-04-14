@@ -124,29 +124,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00042"></a>00042 <span class="preprocessor"></span><span class="preprocessor">#define STRING_UTIL_HPP_</span>
 <a name="l00043"></a>00043 <span class="preprocessor"></span>
 <a name="l00044"></a>00044 <span class="preprocessor">#include &lt;stdint.h&gt;</span>
-<a name="l00045"></a>00045 
-<a name="l00046"></a>00046 <span class="keyword">namespace </span>str
-<a name="l00047"></a>00047 {
-<a name="l00048"></a>00048 <span class="keyword">const</span> uint8_t MAX_DIGITS10_LONG = 20;
-<a name="l00049"></a>00049 <span class="keyword">const</span> uint8_t MAX_AFTERDIGITS = 255;
-<a name="l00050"></a>00050 <span class="keyword">const</span> uint8_t FLOAT_DIGIT_COUNT = 3;
-<a name="l00051"></a>00051 
-<a name="l00059"></a>00059 uint8_t strlen(<span class="keyword">const</span> <span class="keywordtype">char</span>* text);
-<a name="l00060"></a>00060 
-<a name="l00071"></a>00071 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00072"></a>00072 uint8_t* format_integer(T number, uint8_t* dest, uint8_t* length, uint8_t max_digits = MAX_DIGITS10_LONG);
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074 
-<a name="l00087"></a>00087 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00088"></a>00088 uint8_t* format_floating(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits = FLOAT_DIGIT_COUNT, uint8_t max_int_digits = MAX_DIGITS10_LONG);
-<a name="l00089"></a>00089 
-<a name="l00102"></a>00102 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00103"></a>00103 uint8_t* format_scientific(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits);
-<a name="l00104"></a>00104 };
-<a name="l00105"></a>00105 
-<a name="l00106"></a>00106 <span class="preprocessor">#include &quot;string_util.hxx&quot;</span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include &lt;stddef.h&gt;</span>
+<a name="l00046"></a>00046  
+<a name="l00047"></a>00047 <span class="keyword">namespace </span>str
+<a name="l00048"></a>00048 {
+<a name="l00049"></a>00049 <span class="keyword">const</span> uint8_t MAX_DIGITS10_LONG = 20;
+<a name="l00050"></a>00050 <span class="keyword">const</span> uint8_t MAX_AFTERDIGITS = 255;
+<a name="l00051"></a>00051 <span class="keyword">const</span> uint8_t FLOAT_DIGIT_COUNT = 3;
+<a name="l00052"></a>00052 
+<a name="l00062"></a>00062 uint64_t strlen(<span class="keyword">const</span> <span class="keywordtype">char</span>* text);
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064 
+<a name="l00077"></a>00077 int16_t strcmp(<span class="keyword">const</span> <span class="keywordtype">char</span>* str1, <span class="keyword">const</span> <span class="keywordtype">char</span>* str2);
+<a name="l00078"></a>00078 
+<a name="l00079"></a>00079 
+<a name="l00091"></a>00091 <span class="keywordtype">bool</span> strlcpy(<span class="keywordtype">char</span>* dst, <span class="keyword">const</span> <span class="keywordtype">char</span>* src, uint16_t max_len);
+<a name="l00092"></a>00092 
+<a name="l00093"></a>00093 
+<a name="l00104"></a>00104 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00105"></a>00105 uint8_t* format_integer(T number, uint8_t* dest, uint8_t* length, uint8_t max_digits = MAX_DIGITS10_LONG);
+<a name="l00106"></a>00106 
 <a name="l00107"></a>00107 
-<a name="l00108"></a>00108 <span class="preprocessor">#endif </span><span class="comment">/* STRING_UTIL_HPP_ */</span>
+<a name="l00120"></a>00120 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00121"></a>00121 uint8_t* format_floating(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits = FLOAT_DIGIT_COUNT, uint8_t max_int_digits = MAX_DIGITS10_LONG);
+<a name="l00122"></a>00122 
+<a name="l00135"></a>00135 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00136"></a>00136 uint8_t* format_scientific(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits);
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138 };
+<a name="l00139"></a>00139 
+<a name="l00140"></a>00140 <span class="preprocessor">#include &quot;string_util.hxx&quot;</span>
+<a name="l00141"></a>00141 
+<a name="l00142"></a>00142 <span class="preprocessor">#endif </span><span class="comment">/* STRING_UTIL_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -165,7 +174,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 14 2016 14:58:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 14 2016 15:06:03 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
