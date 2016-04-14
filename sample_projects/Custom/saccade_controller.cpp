@@ -184,8 +184,7 @@ bool Saccade_controller::update()
         // In this case, we are now in intersaccadic phase
         case INTERSACCADE:
             // printf("INTERSACCADE\n");
-
-            if ( (time_keeper_get_s() - last_saccade_) > 3.0f)
+            if ( (time_keeper_get_s() - last_saccade_) > 2.0f )
             {
                 // Calculation of the movement direction (in radians)
                 // movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
