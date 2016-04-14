@@ -179,6 +179,51 @@ bool Intersection::set_distance(float distance)
 }
 
 
+//##################################################################################################
+// World class
+//##################################################################################################
+bool World::add_object(Object* obj)
+{
+    bool success = false;
+
+    if (obj != NULL)
+    {
+        success = true;
+        objects_.push_back(obj);
+    }
+    else
+    {
+        success = false;
+    }
+
+    return success;
+}
+
+bool World::intersect(const Ray& ray, Intersection& intersection, Object* object)
+{
+    bool success = false;
+    Intersection inter_tmp;
+    uint32_t object_count = objects_.size();
+
+    intersection.set_distance(1000.0f);
+
+    for (uint32_t i = 0; i < object_count; i++)
+    {
+        if (objects_[i]->intersect(ray, inter_tmp))
+        {
+            success = true;
+            if (inter_tmp.distance() < intersection.distance())
+            {
+                // This intersection is the best
+                intersection = inter_tmp;
+            }
+        }
+    }
+
+    return success;
+}
+
+
 
 //##################################################################################################
 // Sphere class

@@ -44,6 +44,7 @@
 #define RAYTRACING_HPP_
 
 #include "util/matrix.hpp"
+#include <vector>
 
 namespace raytracing
 {
@@ -64,7 +65,7 @@ public:
      * \param   origin      Ray origin
      * \param   direction   Ray direction (unit vector)
      */
-    Ray(Vector3f origin, Vector3f direction);
+    Ray(Vector3f origin = Vector3f{0.0f, 0.0f, 0.0f}, Vector3f direction = Vector3f{1.0f, 0.0f, 0.0f});
 
     /**
      * \brief   Return origin point
@@ -153,7 +154,7 @@ private:
 /**
  * \brief   Object interface
  */
-class Raytracing_object
+class Object
 {
 public:
     /**
@@ -167,6 +168,39 @@ public:
     virtual bool intersect(const Ray& ray, Intersection& intersection) = 0;
 };
 
+//##################################################################################################
+// World class
+//##################################################################################################
+/**
+ * \brief  World
+ */
+class World
+{
+public:
+    /**
+     * \brief   Add an object to the world
+     *
+     * \param   obj     Object
+     *
+     * \return  success
+     */
+    bool add_object(Object* obj);
+
+    /**
+     * \brief   Return intersection between ray and closest object in world
+     *
+     * \param   ray           Ray to intersect with (input)
+     * \param   intersection  Intersection point (output)
+     * \param   object        Intersecting object (output)
+     *
+     * \return  boolean indicating if an intersection was found
+     */
+    bool intersect(const Ray& ray, Intersection& intersection, Object* object);
+
+private:
+    std::vector<Object*>  objects_;
+};
+
 
 //##################################################################################################
 // Sphere class
@@ -174,7 +208,7 @@ public:
 /**
  * \brief   Sphere
  */
-class Sphere: public Raytracing_object
+class Sphere: public Object
 {
 public:
     /**
@@ -183,7 +217,7 @@ public:
      * \param   center      Center of sphere
      * \param   radius      Radius of sphere
      */
-    Sphere(Vector3f center, float radius);
+    Sphere(Vector3f center = Vector3f{0.0f, 0.0f, 0.0f}, float radius = 1.0f);
 
     /**
      * \brief   Return origin point
@@ -227,7 +261,7 @@ private:
 /**
  * \brief   Cylinder
  */
-class Cylinder: public Raytracing_object
+class Cylinder: public Object
 {
 public:
     /**
@@ -237,7 +271,7 @@ public:
      * \param   axis        Axis of the cylinder (normal vetor)
      * \param   radius      Radius of cylinder
      */
-    Cylinder(Vector3f center, Vector3f axis, float radius);
+    Cylinder(Vector3f center = Vector3f{0.0f, 0.0f, 0.0f}, Vector3f axis = Vector3f{0.0f, 0.0f, 1.0f}, float radius = 1.0f);
 
     /**
      * \brief   Return center point
