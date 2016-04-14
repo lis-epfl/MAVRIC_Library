@@ -104,7 +104,7 @@ Bmp085::Bmp085(I2c& i2c):
     raw_pressure_{ 0, 0, 0 },
     raw_temperature_{ 0, 0 },
     last_altitudes_{0.0f, 0.0f, 0.0f},
-    last_state_update_us_(time_keeper_get_us()),
+    last_state_update_us_(0.0f),
     dt_s_(0.1f),
     state_(BMP085_IDLE)
 {

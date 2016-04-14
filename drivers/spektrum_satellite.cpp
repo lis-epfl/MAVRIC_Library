@@ -74,7 +74,8 @@ void spektrum_irq_callback(Serial* serial)
 Spektrum_satellite::Spektrum_satellite(Serial& uart, Gpio& receiver_pin, Gpio& power_pin):
     uart_(uart),
     receiver_pin_(receiver_pin),
-    power_pin_(power_pin)
+    power_pin_(power_pin),
+    last_update_(0.0f)
 {}
 
 bool Spektrum_satellite::init(void)
