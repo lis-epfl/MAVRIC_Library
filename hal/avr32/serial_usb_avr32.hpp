@@ -176,6 +176,6 @@ private:
  * Must be outside the object as asf does not know of any serial_usb_avr32
  * object.
  */
-void usb_interupt_rx_notify();
+extern "C" void usb_interupt_rx_notify();
 
 #endif /* SERIAL_USB_AVR32_H_ */
