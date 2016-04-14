@@ -39,18 +39,11 @@
  *
  ******************************************************************************/
 
+#include "util/maths.h"
+
 namespace str
 {
-/**
- * \brief   returns an array of ascii characters representing an integer
- *
- * \param   number  Number to be put into the array
- * \param   dest    Adress of the array to put it to (should be at least max_digits+1 long)
- * \param   length  Adress where the length of the array is written to (length including the sign)
- * \param   max_digits  maximal number of digits allowed (the rest is truncated)
- *
- * \return  new_dest    new Address of the array (new_dest is a subarray of dest)
- */
+
 template<typename T>
 uint8_t* format_integer(T number, uint8_t* dest, uint8_t* length, uint8_t max_digits)
 {
@@ -83,18 +76,6 @@ uint8_t* format_integer(T number, uint8_t* dest, uint8_t* length, uint8_t max_di
 }
 
 
-/**
- * \brief   returns an array of ascii characters representing a floating number
- *
- * \param   number  Number to be put into the array
- * \param   dest    Adress of the array to put it to (should be at least max_digits+1 long)
- * \param   length  Adress where the length of the array is written to
-                    (length including the sign and decimal point)
- * \param   after_digits number of digits after the decimal point
- * \param   max_int_digits  maximal number of digits before decimal point
- *
- * \return  new_dest    new Address of the array (new_dest is a subarray of dest)
- */
 template <typename T>
 uint8_t* format_floating(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits, uint8_t max_int_digits)
 {
@@ -136,18 +117,7 @@ uint8_t* format_floating(T num, uint8_t* dest, uint8_t* length, uint8_t after_di
     return data;
 }
 
-/**
-* \brief    returns an array of ascii characters representing a number in scientific notation
-*
-* \param    num     Number to be put into the array
-* \param    dest    Adress of the array to put it to (should be at least max_digits+3+x long,
-*                   where x is the number of digits of the exponent)
-* \param    length  Adress where the length of the array is written to
-*                   (length including the sign and decimal point)
-* \param    after_digits number of digits after the decimal point but before E
-*
-* \return   new_dest    new Address of the array (new_dest is a subarray of dest)
-*/
+
 template <typename T>
 uint8_t* format_scientific(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits)
 {
@@ -210,10 +180,9 @@ uint8_t* format_scientific(T num, uint8_t* dest, uint8_t* length, uint8_t after_
         exp_length++; // Make exponent length one
     }
     uint8_t* exp_length_ptr = &exp_length; // Point to the number of digits in exponent
-    uint8_t* data_exp = format_integer(decimal_moves_original, data + *length, exp_length_ptr, exp_length);
+    format_integer(decimal_moves_original, data + *length, exp_length_ptr, exp_length);
 
     // Update length and dest
-    dest = data;
     *length = *length + 1 + exp_length; // Add the E and the exponent to length
 
     return data; // Return data
