@@ -46,7 +46,7 @@
 
 using namespace std::chrono;
 
-const uint64_t speedup_factor = 10;
+const uint64_t speedup_factor = 1;
 high_resolution_clock::time_point t_start;
 
 void time_keeper_init(void)
@@ -104,7 +104,7 @@ void time_keeper_sleep_us(uint64_t microseconds)
 {
     struct timespec reqtime;
     reqtime.tv_sec  = 0;
-    reqtime.tv_nsec = 1000 * microseconds;
+    reqtime.tv_nsec = 1000 * microseconds / speedup_factor;
 
     nanosleep(&reqtime, NULL);
 }
