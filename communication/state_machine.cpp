@@ -197,6 +197,17 @@ bool state_machine_update(state_machine_t* state_machine)
 
     mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 
+    // prevent arming if imu not AHRS_READY
+    if(!state_machine->imu->is_ready())
+    {
+        if(mav_modes_is_armed(mode_new))
+        {
+            print_util_dbg_print("[STATE_MACHINE]: prevented arming since IMU not ready\r\n");
+        }
+        mode_new = mode_new & (~MAV_MODE_FLAG_SAFETY_ARMED);
+    }
+
+
     state_machine->state->battery_.update();
 
     state_machine->state->connection_status();
