@@ -5,7 +5,7 @@ var searchData=
   ['on',['on',['../classLed__avr32.html#a8431680baa3348f7b864c43a0869619f',1,'Led_avr32::on()'],['../classLed.html#a446a6c7a635f05e539027318d870b5a2',1,'Led::on()'],['../classLed__gpio.html#abc58a2b9cd24c787242af30901398eea',1,'Led_gpio::on()'],['../classLed__dummy.html#ac48fdbbe43b302af1375992234eb13a4',1,'Led_dummy::on()']]],
   ['open',['open',['../classFile__fat__fs.html#a339f0af702eec684d872cdef3c22812a',1,'File_fat_fs::open()'],['../classFile__flash__avr32.html#ae7863126498b4f34ffff77945abbd61c',1,'File_flash_avr32::open()'],['../classFile.html#a5d85966a2c5d15deccc06b89e4df0e96',1,'File::open()'],['../classFile__dummy.html#a56cb85751fb198bb774075e47330d3fb',1,'File_dummy::open()'],['../classFile__linux.html#a24f41277498ba7e0466821f41c70375b',1,'File_linux::open()']]],
   ['operator_25',['operator%',['../classMat.html#a0ce6f4fc4fb7408b890a2ccb082e1f36',1,'Mat']]],
-  ['operator_28_29',['operator()',['../classMat.html#abac6f84e05eee604a9b8233dba3f4d48',1,'Mat']]],
+  ['operator_28_29',['operator()',['../classMat.html#a6867acd267001f608c0deff3febaa4a0',1,'Mat']]],
   ['operator_2a',['operator*',['../classMat.html#a90d0b12f4a54eadebb0ca7e86e9a680e',1,'Mat::operator*(const Mat &amp;m) const '],['../classMat.html#a92c2f7e61e20e73d62dfab1699b9d1aa',1,'Mat::operator*(const T value) const ']]],
   ['operator_2a_3d',['operator*=',['../classMat.html#a6b1737e64b15ac82f6c4fff941cf9ee8',1,'Mat::operator*=(const Mat &amp;m)'],['../classMat.html#a85a3c3c5979644aef3ce69822deb2871',1,'Mat::operator*=(const T value)']]],
   ['operator_2b',['operator+',['../classMat.html#ad8fb1655fb8bcbad0f7b75eb8a68dec9',1,'Mat::operator+(const Mat &amp;m) const '],['../classMat.html#a7f516cef5d0e094508f9b7cab890d602',1,'Mat::operator+(T value) const ']]],
@@ -13,7 +13,7 @@ var searchData=
   ['operator_2d',['operator-',['../classMat.html#aecaa88c52954963983bdcefbd983751b',1,'Mat::operator-(const Mat &amp;m) const '],['../classMat.html#a0f1c50ee31c9b4faf83763cac7a132eb',1,'Mat::operator-(const T value) const ']]],
   ['operator_2d_3d',['operator-=',['../classMat.html#a6a7766c24d79fa9e0e42961ca65c6e5f',1,'Mat::operator-=(const Mat &amp;m)'],['../classMat.html#a0e6e0bd2a385cf666e28a80697765851',1,'Mat::operator-=(const T value)']]],
   ['operator_3c_3c',['operator<<',['../classConsole.html#a7045dbf455db7e4cf41c7ecafdc9cc31',1,'Console::operator&lt;&lt;(const T &amp;data)'],['../classConsole.html#a1661d1665b7f5bdfea455e8963d589ad',1,'Console::operator&lt;&lt;(ConsoleManipulator manip)']]],
-  ['operator_5b_5d',['operator[]',['../classMat.html#ae75842b8e745e2550b68d35a07e180a7',1,'Mat']]],
+  ['operator_5b_5d',['operator[]',['../classMat.html#a66bf4fdc472a4df84877deec04410b2b',1,'Mat']]],
   ['operator_7e',['operator~',['../classMat.html#aaf5a22307d22016a23bee37ad93a2952',1,'Mat']]],
   ['orientation_5fbf',['orientation_bf',['../classSonar.html#a4d2abf288d8bf7ffaf28e3323f30a08c',1,'Sonar::orientation_bf()'],['../classSonar__i2cxl.html#ac794447ccb918385086fd1ac91673f11',1,'Sonar_i2cxl::orientation_bf()'],['../classSonar__sim.html#a53ce1c938e428e4b92beba5974094334',1,'Sonar_sim::orientation_bf()']]]
 ];
