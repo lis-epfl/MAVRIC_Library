@@ -137,6 +137,7 @@ protected:
     float pressure_;            ///< Measured pressure
     float temperature_;         ///< Measured temperature
     float altitude_gf_;         ///< Measured altitude (global frame)
+    float altitude_filtered;   ///< Measured altitude without bias removal
     float altitude_bias_gf_;    ///< Offset of the barometer sensor for matching GPS altitude value
     float speed_lf_;            ///< Vario altitude speed (ned frame)
     float last_update_us_;      ///< Time of the last update of the barometer
