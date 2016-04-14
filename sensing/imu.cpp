@@ -69,8 +69,8 @@ Imu::Imu(Accelerometer& accelerometer, Gyroscope& gyroscope, Magnetometer& magne
     do_magnetometer_bias_calibration_(false),
     is_ready_(false),
     dt_s_(0.004f),
-    last_update_us_(time_keeper_get_us()),
-    timestamp_gyro_stable(time_keeper_get_s())
+    last_update_us_(0.0f),
+    timestamp_gyro_stable(0.0f)
 {}
 
 
