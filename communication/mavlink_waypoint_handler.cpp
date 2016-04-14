@@ -1705,7 +1705,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         // Disarming
         next_state = true;
     }
-
+/*
     // If the tag search has gone on too long, set mode to landing
     if ((time_keeper_get_us() - waypoint_handler->navigation->tag_search_start_time) > TAG_SEARCH_TIMEOUT_US)
     {
@@ -1714,7 +1714,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         waypoint_handler->navigation->auto_landing_behavior = DESCENT_TO_GND;
         waypoint_handler->navigation->land_on_tag_behavior = TAG_NOT_FOUND;
     }
-/*
+
     // Disarm if needed
     if (next_state)
     {
@@ -1873,6 +1873,7 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
             waypoint_handler_auto_land_on_tag_handler(waypoint_handler);
 
             waypoint_handler->navigation->goal = waypoint_handler->waypoint_hold_coordinates;
+            /*
             float goal_output[3];
             goal_output[0] = waypoint_handler->navigation->goal.pos[0] - waypoint_handler->position_estimation->local_position.pos[0];
             goal_output[1] = waypoint_handler->navigation->goal.pos[1] - waypoint_handler->position_estimation->local_position.pos[1];
@@ -1880,6 +1881,7 @@ static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_
             print_util_dbg_print("Goal:");
             print_util_dbg_print_vector(goal_output, 4);
             print_util_dbg_print("\r\n");
+            */
 
             if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
             {

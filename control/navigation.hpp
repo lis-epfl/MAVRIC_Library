@@ -56,7 +56,7 @@ extern "C"
 #include "control/pid_controller.h"
 }
 
-#define TAG_SEARCH_TIMEOUT_US 300000000
+#define TAG_SEARCH_TIMEOUT_US 60000000
 
 /**
  * \brief The navigation structure

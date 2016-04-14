@@ -85,43 +85,76 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         Offboard_Camera camera = central_data->offboard_camera;
 
         /*
+         * The incoming packet is of this format:
+         * param1: camera number
+         * param2: camera status
+         * param3: tag horizontal location, positive is right
+         * param4: tag vertical location, positive is down
+         * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000000000 for unknown
+         * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1000000000 for unknown
+         * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1000000000 for unknown
+         */
+
+        /*
          * Set the x and y hold position to be equal to the tag location
          */
 
-        // Get drone height from the local position, drone height tells you the pixel dimensions on the ground, +z is down
-        float drone_height = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2];
+        // Get drone height, drone height tells you the pixel dimensions on the ground, +z is down
+        float drone_height = 0.0f;
+        if (packet->param7 > -900000000) // Get drone height from the packet if available
+        {
+           drone_height = -packet->param7 / 1000.0f;
+        }
+        else // Get drone height from the local position, drone height tells you the pixel dimensions on the ground, +z is down
+        {
+           drone_height = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2];
+        }
+        
+        // Get tag location in m
+        float picture_forward_offset = 0.0f;
+        float picture_right_offset = 0.0f;
+        if (packet->param5 > -900000000 && packet->param6 > -900000000) // Get tag location from packet in m if available
+        {
+            // Forward corresponds to param6 as the picamera code outputs (right,down)
+            picture_forward_offset = -packet->param6 / 1000.0f; // Negative, because in vision positive is towards the bottom of the picture
+            picture_right_offset = packet->param5 / 1000.0f;
+        }
+        else // Use pixels
+        {
+            // Find pixel dimensions
+            /*
+                tan(fov/2) = (width / 2) / drone_height
+                width = 2 * drone_height * tan(fov/2)
 
-        // Find pixel dimensions
-        /*
-            tan(fov/2) = (width / 2) / drone_height
-            width = 2 * drone_height * tan(fov/2)
+                pixel_width = width / resolution
+                pixel_width = 2 * drone_height * tan(fov/2) / resolution
+            */
+            float pixel_width = 2 * (-drone_height) * tan(camera.camera_fov[0]) / (camera.camera_res[0]); // drone_height negated as +z is down
+            float pixel_height = 2 * (-drone_height) * tan(camera.camera_fov[1]) / (camera.camera_res[1]); // drone_height negated as +z is down
 
-            pixel_width = width / resolution
-            pixel_width = 2 * drone_height * tan(fov/2) / resolution
-        */
-        float pixel_width = 2 * (-drone_height) * tan(camera.camera_fov[0]) / (camera.camera_res[0]); // drone_height negated as +z is down
-        float pixel_height = 2 * (-drone_height) * tan(camera.camera_fov[1]) / (camera.camera_res[1]); // drone_height negated as +z is down
-
-        // Get drone offset
-        // Forward corresponds to param4 as the picamera code outputs (right,down)
-        float picture_forward_offset = -packet->param4 * pixel_width; // Negative, because in vision positive is towards the bottom of the picture
-        float picture_right_offset = packet->param3 * pixel_height; 
+            // Get drone offset
+            // Forward corresponds to param4 as the picamera code outputs (right,down)
+            picture_forward_offset = -packet->param4 * pixel_width; // Negative, because in vision positive is towards the bottom of the picture
+            picture_right_offset = packet->param3 * pixel_height; 
+        }
+        
         
         // Rotate offset to align with drone
         quat_t q_rot, q_offset;
         q_rot.s = cos(camera.camera_rotation/2); // Based off how camera is mounted
         q_rot.v[0] = 0;
         q_rot.v[1] = 0;
-        q_rot.v[2] = 1*sin(camera.camera_rotation/2); // Negative as CCW camera rotation is positive
+        q_rot.v[2] = 1*sin(camera.camera_rotation/2);
         q_offset.s = 0;
         q_offset.v[0] = picture_forward_offset;
         q_offset.v[1] = picture_right_offset;
         q_offset.v[2] = 0;
         quat_t q_new_dir = quaternions_rotate(q_offset, q_rot);
-
+        /*
         print_util_dbg_print("Tag loc:");
         print_util_dbg_print_vector(q_new_dir.v, 4);
         print_util_dbg_print("\r\n");
+        */
 
         // Convert due to yaw change
         float yaw = coord_conventions_get_yaw(central_data->ahrs.qe);
@@ -129,12 +162,13 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         q_yaw_rot.s = cos(yaw/2);
         q_yaw_rot.v[0] = 0;
         q_yaw_rot.v[1] = 0;
-        q_yaw_rot.v[2] = -1*sin(yaw/2);
+        q_yaw_rot.v[2] = -1*sin(yaw/2); // Negative to rotate CCW
         quat_t q_new_local_dir = quaternions_rotate(q_new_dir, q_yaw_rot);
-
+        /*
         print_util_dbg_print("Tag loc - yaw:");
         print_util_dbg_print_vector(q_new_local_dir.v, 4);
         print_util_dbg_print("\r\n");
+        */
 
         // Determine how far the drone is from the tag in north and east coordinates
         float drone_x_offset = q_new_local_dir.v[0];
