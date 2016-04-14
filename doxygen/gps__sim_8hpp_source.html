@@ -174,7 +174,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00164"></a>00164     <span class="keyword">const</span> uint8_t&amp; <a class="code" href="classGps__sim.html#a7b96a3dba5d11961e9e2700e0aba2ac8" title="Get the number of satellites.">num_sats</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00165"></a>00165 
 <a name="l00166"></a>00166 
-<a name="l00172"></a>00172     <span class="keyword">const</span> <span class="keywordtype">bool</span>&amp; <a class="code" href="classGps__sim.html#abd7cd9a1ccbf70685ca0809805ff2739" title="Indicates whether fix are received.">fix</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00172"></a>00172     <span class="keyword">const</span> gps_fix_t&amp; <a class="code" href="classGps__sim.html#a0d506add15fc6f3a3e59afa2ba099871" title="Indicates whether fix are received.">fix</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00173"></a>00173 
 <a name="l00174"></a>00174 
 <a name="l00180"></a>00180     <span class="keyword">const</span> <span class="keywordtype">bool</span>&amp; <a class="code" href="classGps__sim.html#a187a543a034baad5db61835db170c4a0" title="Indicates whether the measurements can be trusted.">healthy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
@@ -193,7 +193,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00193"></a>00193     <span class="keywordtype">float</span>               heading_;                           
 <a name="l00194"></a>00194     <span class="keywordtype">float</span>               heading_accuracy_;                  
 <a name="l00195"></a>00195     uint8_t             num_sats_;                          
-<a name="l00196"></a>00196     <span class="keywordtype">bool</span>                fix_;                               
+<a name="l00196"></a>00196     gps_fix_t           fix_;                               
 <a name="l00197"></a>00197     <span class="keywordtype">bool</span>                healthy_;                           
 <a name="l00198"></a>00198 };
 <a name="l00199"></a>00199 
@@ -217,7 +217,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 12 2016 12:54:34 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 14 2016 08:17:48 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
