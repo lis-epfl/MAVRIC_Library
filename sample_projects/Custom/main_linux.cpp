@@ -44,6 +44,7 @@
 
 #include "boards/mavrinux.hpp"
 #include "drivers/flow_px4.hpp"
+#include "simulation/flow_sim.hpp"
 #include "util/raytracing.hpp"
 
 extern "C"
@@ -56,33 +57,6 @@ extern "C"
 
 int main(int argc, char** argv)
 {
-
-    raytracing::Ray r({0.0f, 0.0f, 0.0f}, {1.0f, 0.05f, 0.07f});
-    raytracing::Sphere s({1.0f, 0.0f, 0.0f}, 0.1f);
-    raytracing::Cylinder c({1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, 0.1f);
-    raytracing::Intersection i;
-    bool hit = false;
-    hit = c.intersect(r, i);
-    if (hit)
-    {
-        std::cout << "Cylinder" << std::endl;
-        std::cout << i.point()[0] << " " << i.point()[1] << " " << i.point()[2] << std::endl;
-        std::cout << i.normal()[0] << " " << i.normal()[1] << " " << i.normal()[2] << std::endl;
-        std::cout << i.distance() << std::endl;
-    }
-
-    hit = s.intersect(r, i);
-    if (hit)
-    {
-        std::cout << "Sphere" << std::endl;
-        std::cout << i.point()[0] << " " << i.point()[1] << " " << i.point()[2] << std::endl;
-        std::cout << i.normal()[0] << " " << i.normal()[1] << " " << i.normal()[2] << std::endl;
-        std::cout << i.distance() << std::endl;
-    }
-
-
-
-
     uint8_t sysid = 0;
 
     // -------------------------------------------------------------------------
@@ -107,16 +81,41 @@ int main(int argc, char** argv)
     // Create board
     Mavrinux board(board_config);
 
+    // -------------------------------------------------------------------------
+    // Board Initialisation
+    // -------------------------------------------------------------------------
+    bool init_success = true;
+
+    // Board initialisation
+    init_success &= board.init();
+    board.sim.update();
+
+    // -------------------------------------------------------------------------
+    // Additionnal sensors
+    // -------------------------------------------------------------------------
     File_linux file_log;
     File_linux file_stat;
 
-    // -------------------------------------------------------------------------
-    // Serial for PX4Flow cameras
-    // -------------------------------------------------------------------------
-    Serial_dummy serial_flow_left;
-    Serial_dummy serial_flow_right;
-    Flow_px4 flow_left(serial_flow_left);
-    Flow_px4 flow_right(serial_flow_right);
+    // Objects for optic flow
+    uint32_t cyl_count = 10;
+    raytracing::Cylinder cylinders[cyl_count];
+    raytracing::World world;
+    for (uint32_t i = 0; i < cyl_count; i++)
+    {
+        cylinders[i].set_center(Vector3f{ 10.0f * quick_trig_cos( i * 2 * PI / cyl_count ),
+                                          10.0f *quick_trig_cos( i * 2 * PI / cyl_count ),
+                                          0.0f});
+        cylinders[i].set_axis(Vector3f{ 0.0f, 0.0f, 1.0f});
+        cylinders[i].set_radius(2.0f);
+
+        world.add_object(&cylinders[i]);
+    }
+    // world.add_object(&s);
+    // world.add_object(&c);
+
+    // Simulated Flow cameras
+    Flow_sim flow_left(board.dynamic_model, world, -PI);
+    Flow_sim flow_right(board.dynamic_model, world, 0.0f);
 
     // -------------------------------------------------------------------------
     // Create central data
@@ -138,8 +137,6 @@ int main(int argc, char** argv)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                  //  board.mavlink_serial,
-                                  //  board.mavlink_serial);
                                    flow_left,
                                    flow_right);
 
@@ -147,12 +144,6 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Initialisation
     // -------------------------------------------------------------------------
-    bool init_success = true;
-
-    // Board initialisation
-    init_success &= board.init();
-    board.sim.update();
-
     // Init central data
     init_success &= cd.init();
 

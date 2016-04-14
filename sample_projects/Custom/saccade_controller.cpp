@@ -49,8 +49,6 @@ extern "C"
 }
 
 
-
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -164,6 +162,7 @@ bool Saccade_controller::update()
     aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_.qe);
     float movement_direction  = 0.0f;
     float heading_error = 0.0f;
+    float of_sum = 0.0f;
 
     switch (saccade_state_)
     {
@@ -188,7 +187,24 @@ bool Saccade_controller::update()
             {
                 // Calculation of the movement direction (in radians)
                 // movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
-                movement_direction = (float)(rand() % 360) * (PI / 180.0f);
+                for (uint32_t i = 45; i < 90; ++i)
+                {
+                    of_sum +=  flow_left_.of.x[i];
+                }
+                for (uint32_t i = 0; i < 45; ++i)
+                {
+                    of_sum +=  flow_right_.of.x[i];
+                }
+                if ( of_sum >= 0.0f )
+                {
+                    movement_direction = 0.25f * PI;
+                }
+                else
+                {
+                    movement_direction = -0.25f * PI;
+                }
+
+                // movement_direction = (float)(rand() % 360) * (PI / 180.0f);
                 // printf("%f\n", movement_direction);
                 attitude_command_.rpy[0]  = 0.0f;
                 attitude_command_.rpy[1]  = 0.0f;
