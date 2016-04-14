@@ -319,9 +319,10 @@ void state_telemetry_send_status(const State* state, const mavlink_stream_t* mav
                                 state->sensor_enabled,                      // sensors enabled
                                 state->sensor_health,                       // sensors health
                                 0,                                          // load
-                                (int32_t)(1000.0f * state->battery_.voltage()), // bat voltage (mV)
+                                (uint16_t)(1000.0f * state->battery_.voltage()), // bat voltage (mV)
                                 0,                                          // current (mA)
-                                state->battery_.level(),                    // battery remaining
+                                (int8_t)state->battery_.level(),            // battery remaining
                                 0, 0,                                       // comms drop, comms errors
                                 0, 0, 0, 0);                                // autopilot specific errors
+
 }

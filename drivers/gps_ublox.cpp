@@ -1318,11 +1318,6 @@ typedef struct
 
 #endif
 
-
-#define NO_GPS 0                            ///< No GPS
-#define NO_FIX 1                            ///< No GPS fix
-#define GPS_OK 2                            ///< GPS ok
-
 #define UTC_TIME_UNVALID 0
 #define UTC_TIME_VALID 1
 
@@ -2960,10 +2955,10 @@ static void gps_ublox_update(gps_t* gps)
 
         gps->time_last_msg = tnow;
 
-        gps->healthy = true;
-
         if (gps->status == GPS_OK)
         {
+            gps->healthy = true;
+
             // Check for horizontal accuracy
             if (gps->horizontal_accuracy < UBX_POSITION_PRECISION)
             {
@@ -3021,6 +3016,8 @@ static void gps_ublox_update(gps_t* gps)
         }
         else
         {
+            gps->healthy = false;
+
             gps->horizontal_status = 0;
             gps->altitude_status = 0;
             gps->speed_status = 0;
@@ -5265,7 +5262,7 @@ Gps_ublox::Gps_ublox(Serial& serial):
     heading_(0.0f),
     heading_accuracy_(0.0f),
     num_sats_(0),
-    fix_(false),
+    fix_(NO_FIX),
     healthy_(false)
 {
     gps_ublox_init(&gps, &serial_);
@@ -5296,15 +5293,7 @@ bool Gps_ublox::update(void)
     heading_accuracy_   = gps.heading_accuracy;
     num_sats_   = gps.num_sats;
     healthy_    = gps.healthy;
-
-    if (gps.status > 0)
-    {
-        fix_ = true;
-    }
-    else
-    {
-        fix_ = false;
-    }
+    fix_ = static_cast<gps_fix_t>(gps.status);
 
     return true;
 }
@@ -5376,7 +5365,7 @@ const uint8_t& Gps_ublox::num_sats(void) const
 }
 
 
-const bool& Gps_ublox::fix(void) const
+const gps_fix_t& Gps_ublox::fix(void) const
 {
     return fix_;
 }
