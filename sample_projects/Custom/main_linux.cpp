@@ -44,14 +44,45 @@
 
 #include "boards/mavrinux.hpp"
 
+#include "util/raytracing.hpp"
+
 extern "C"
 {
 #include "util/print_util.h"
 }
 
 
+#include <iostream>
+
 int main(int argc, char** argv)
 {
+
+    raytracing::Ray r({0.0f, 0.0f, 0.0f}, {1.0f, 0.05f, 0.07f});
+    raytracing::Sphere s({1.0f, 0.0f, 0.0f}, 0.1f);
+    raytracing::Cylinder c({1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, 0.1f);
+    raytracing::Intersection i;
+    bool hit = false;
+    hit = c.intersect(r, i);
+    if (hit)
+    {
+        std::cout << "Cylinder" << std::endl;
+        std::cout << i.point()[0] << " " << i.point()[1] << " " << i.point()[2] << std::endl;
+        std::cout << i.normal()[0] << " " << i.normal()[1] << " " << i.normal()[2] << std::endl;
+        std::cout << i.distance() << std::endl;
+    }
+
+    hit = s.intersect(r, i);
+    if (hit)
+    {
+        std::cout << "Sphere" << std::endl;
+        std::cout << i.point()[0] << " " << i.point()[1] << " " << i.point()[2] << std::endl;
+        std::cout << i.normal()[0] << " " << i.normal()[1] << " " << i.normal()[2] << std::endl;
+        std::cout << i.distance() << std::endl;
+    }
+
+
+
+
     uint8_t sysid = 0;
 
     // -------------------------------------------------------------------------
