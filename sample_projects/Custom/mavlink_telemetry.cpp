@@ -208,6 +208,8 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     // qfilter
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->attitude_filter.kp                                        , "QF_KP_ACC");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->attitude_filter.kp_mag                                    , "QF_KP_MAG");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->attitude_filter.ki                                        , "QF_KI_ACC");
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->attitude_filter.ki_mag                                    , "QF_KI_MAG");
 
     // Biases
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->imu.get_config()->gyroscope.bias[X]                                    , "BIAS_GYRO_X");

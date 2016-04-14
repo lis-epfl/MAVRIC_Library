@@ -168,8 +168,7 @@ bool Saccade_controller::update()
     {
         // This is the case where we are performing a saccade
         case SACCADE:
-            heading_error = maths_f_abs( fmod(attitude_command_.rpy[2], 2*PI)
-                                       - fmod(current_rpy.rpy[2],       2*PI) );
+            heading_error = maths_f_abs( maths_calc_smaller_angle(attitude_command_.rpy[2]-current_rpy.rpy[2]) );
             if ( heading_error < 0.1)
             {
                 attitude_command_.rpy[0]  = 0;
@@ -181,7 +180,7 @@ bool Saccade_controller::update()
         break;
         // In this case, we are now in intersaccadic phase
         case INTERSACCADE:
-            if (time_keeper_get_ms() - last_saccade_ > 1000)
+            if (time_keeper_get_ms() - last_saccade_ > 500)
             {
                 // Calculation of the movement direction (in radians)
                 movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
