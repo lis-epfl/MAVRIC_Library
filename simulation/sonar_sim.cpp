@@ -52,6 +52,7 @@ Sonar_sim::Sonar_sim(Dynamic_model& dynamic_model, sonar_sim_conf_t config):
     config_(config),
     distance_(0.0f),
     velocity_(0.0f),
+    last_update_us_(0.0f),
     healthy_(true)
 {}
 

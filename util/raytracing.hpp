@@ -178,6 +178,11 @@ class World
 {
 public:
     /**
+     * \brief   Constructor
+     */
+    World(void);
+
+    /**
      * \brief   Add an object to the world
      *
      * \param   obj     Object
@@ -198,7 +203,8 @@ public:
     bool intersect(const Ray& ray, Intersection& intersection, Object* object);
 
 private:
-    std::vector<Object*>  objects_;
+    std::array<Object*, 20>  objects_;
+    uint32_t                 object_count_;
 };
 
 

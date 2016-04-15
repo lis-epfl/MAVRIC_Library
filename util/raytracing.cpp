@@ -182,17 +182,31 @@ bool Intersection::set_distance(float distance)
 //##################################################################################################
 // World class
 //##################################################################################################
+World::World(void):
+  object_count_(0)
+{}
+
 bool World::add_object(Object* obj)
 {
     bool success = false;
 
     if (obj != NULL)
     {
-        success = true;
-        objects_.push_back(obj);
+        if (object_count_ < objects_.size())
+        {
+            success = true;
+            objects_[object_count_] = obj;
+            object_count_ += 1;
+        }
+        else
+        {
+            // Too many objects
+            success = false;
+        }
     }
     else
     {
+        // Invalid object
         success = false;
     }
 
