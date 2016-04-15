@@ -224,6 +224,88 @@ bool World::intersect(const Ray& ray, Intersection& intersection, Object* object
 }
 
 
+//##################################################################################################
+// Plane class
+//##################################################################################################
+Plane::Plane(Vector3f center, Vector3f normal):
+  center_(center)
+{
+    set_normal(normal);
+}
+
+const Vector3f& Plane::center(void) const
+{
+    return center_;
+}
+
+
+bool Plane::set_center(Vector3f center)
+{
+    center_ = center;
+
+    return true;
+}
+
+
+const Vector3f& Plane::normal(void) const
+{
+    return normal_;
+}
+
+
+bool Plane::set_normal(Vector3f normal)
+{
+    bool success = false;
+    float magnitude = norm(normal);
+
+    if (magnitude != 0.0f)
+    {
+        normal_[0] = normal[0] / magnitude;
+        normal_[1] = normal[1] / magnitude;
+        normal_[2] = normal[2] / magnitude;
+        success = true;
+    }
+    else
+    {
+        success = false;
+    }
+
+    return success;
+}
+
+
+bool Plane::intersect(const Ray& ray, Intersection& intersection)
+{
+    bool success = false;
+
+    float den = dot(ray.direction(), normal_);
+
+    if (den != 0.0f)
+    {
+        float d = dot(center_ - ray.origin(), normal_) / den;
+
+        if ( d > 0.0f )
+        {
+            success = true;
+            intersection.set_point(ray.origin() + ray.direction() * d);
+            intersection.set_distance(d);
+            intersection.set_normal(ray.origin() - intersection.point());
+        }
+        else
+        {
+            // No intersection
+            success = false;
+        }
+    }
+    else
+    {
+        // No intersection
+        success = false;
+    }
+
+    return success;
+}
+
 
 //##################################################################################################
 // Sphere class
