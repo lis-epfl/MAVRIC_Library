@@ -82,7 +82,15 @@ bool Flow_sim::update(void)
     Mat<2,1>                  of_tmp;
 
     // Get current velocity
-    Mat<3,1>                  vel = dynamic_model_.velocity_lf();
+    quat_t att = dynamic_model_.attitude();
+    float vel_lf[3] = {dynamic_model_.velocity_lf()[0], dynamic_model_.velocity_lf()[1], dynamic_model_.velocity_lf()[2]};
+    float vel_bf[3];
+    quaternions_rotate_vector(att, vel_lf, vel_bf);
+    Mat<3,1> vel;
+    vel[0] = vel_bf[0];
+    vel[1] = vel_bf[1];
+    vel[2] = vel_bf[2];
+
 
     for (uint32_t i = 0; i < of_count; i++)
     {
@@ -91,7 +99,6 @@ bool Flow_sim::update(void)
         ray_tmp.set_origin(Vector3f{pos_lf.pos[0], pos_lf.pos[1], pos_lf.pos[2]});
 
         // Rotate ray
-        quat_t att = dynamic_model_.attitude();
         float orient_bf[3] = {rays_[i].direction()[0], rays_[i].direction()[1], rays_[i].direction()[2]};
         float orient_lf[3];
         quaternions_rotate_vector( quaternions_inverse(att), orient_bf, orient_lf);
@@ -101,7 +108,7 @@ bool Flow_sim::update(void)
         float proximity;
         if (world_.intersect(ray_tmp, inter_tmp, obj_tmp))
         {
-            proximity = inter_tmp.distance();
+            proximity = 1.0f / inter_tmp.distance();
         }
         else
         {
@@ -109,9 +116,12 @@ bool Flow_sim::update(void)
         }
 
         // Compute optic flow
-        of_tmp = jacob_[i] % (vel * proximity);
-        of.x[i] = of_tmp[0];
-        of.y[i] = of_tmp[1];
+        // of_tmp = jacob_[i] % (vel * proximity);
+        // of.x[i] = of_tmp[0];
+        // of.y[i] = of_tmp[1];
+
+        of.x[i] = (vel[0] * proximity) * quick_trig_sin(of_loc.x[i]);
+        of.y[i] = 0.0f;
     }
 
     return true;
