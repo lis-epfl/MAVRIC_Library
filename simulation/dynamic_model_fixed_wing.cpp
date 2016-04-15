@@ -43,13 +43,14 @@
 
 #include "simulation/dynamic_model_fixed_wing.hpp"
 #include <iostream>
+#include <fstream>
 
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
 }
 
-
+extern std::ofstream logfile;
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -91,7 +92,6 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     // Init global position
     global_position_ = coord_conventions_local_to_global_position(local_position_);
 }
-
 
 bool Dynamic_model_fixed_wing::update(void)
 {
@@ -255,72 +255,73 @@ const quat_t& Dynamic_model_fixed_wing::attitude(void) const
 
 void Dynamic_model_fixed_wing::forces_from_servos(void)
 {
-    // float motor_command = 1.0f;//servo_motor_.read() - config_.rotor_rpm_offset;
+    // Get the servos commands and set the flap angles
     float motor_command = servo_motor_.read() - config_.rotor_rpm_offset;
     float flaps_angle_left = servo_flap_left_.read() - config_.flap_offset; //TODO: transform these in angles
     float flaps_angle_right = servo_flap_right_.read() - config_.flap_offset;
     left_flap_.set_flap_angle(0);//flaps_angle_left);//Set these in degrees!!
     right_flap_.set_flap_angle(0);//flaps_angle_right);
 
+    //Get the wind in the bf
+      //Take into account the speed of the plane to get the relative wind
     quat_t wind_gf  = {};
     wind_gf.s       = 0;
-    wind_gf.v[0]    = config_.wind_x;
-    wind_gf.v[1]    = config_.wind_y;
-    wind_gf.v[2]    = 0.0f;
+    wind_gf.v[0]    = config_.wind_x-vel_[0];
+    wind_gf.v[1]    = config_.wind_y-vel_[1];
+    wind_gf.v[2]    = 0.0f-vel_[2];
     quat_t wind_bf  =  quaternions_global_to_local(attitude_, wind_gf);
-    //Take into account the speed of the plane
-    wind_bf.v[0] -= vel_bf_[0];
-    wind_bf.v[1] -= vel_bf_[1];
-    wind_bf.v[2] -= vel_bf_[2];
-    printf("\n%f %f %f\n",vel_bf_[0],vel_bf_[1],vel_bf_[2]);
+
+
+    //Compute the forces for the motor and each wing
     wing_model_forces_t motor_forces = compute_motor_forces(wind_bf, motor_command);
     wing_model_forces_t left_flap_force = left_flap_.compute_forces(wind_bf);
     wing_model_forces_t right_flap_force = right_flap_.compute_forces(wind_bf);
     wing_model_forces_t left_drift_force = left_drift_.compute_forces(wind_bf);
     wing_model_forces_t right_drift_force = right_drift_.compute_forces(wind_bf);
 
-    // torque around x axis (roll)
+    //Get the torque around x axis (roll)
     torques_bf_[ROLL] = motor_forces.torque[ROLL] +
 			left_flap_force.torque[ROLL] +
 			right_flap_force.torque[ROLL] +
 			left_drift_force.torque[ROLL] +
       right_drift_force.torque[ROLL];
 
-    // torque around y axis (pitch)
+    //Get the torque around y axis (pitch)
     torques_bf_[PITCH] = motor_forces.torque[PITCH] +
 			 left_flap_force.torque[PITCH] +
 			 right_flap_force.torque[PITCH] +
        left_drift_force.torque[PITCH] +
        right_drift_force.torque[PITCH];
 
-    // torque around z axis (yaw)
+    logfile << torques_bf_[PITCH] << std::endl;
+
+    //Get the torque around z axis (yaw)
     torques_bf_[YAW] = motor_forces.torque[YAW] +
 		       left_flap_force.torque[YAW] +
 		       right_flap_force.torque[YAW] +
            left_drift_force.torque[YAW] +
            right_drift_force.torque[YAW];
 
+    //Get the force in X axis
     lin_forces_bf_[X] = motor_forces.force[0] +
 			left_flap_force.force[0] +
 			right_flap_force.force[0] +
       left_drift_force.force[0] +
       right_drift_force.force[0];
 
+    //Get the force in Y axis
     lin_forces_bf_[Y] = motor_forces.force[1] +
 			left_flap_force.force[1] +
 			right_flap_force.force[1] +
       left_drift_force.force[1] +
       right_drift_force.force[1];
 
+    //Get the force in Z axis
     lin_forces_bf_[Z] = motor_forces.force[2] +
 			left_flap_force.force[2] +
 			right_flap_force.force[2] +
       left_drift_force.force[2] +
       right_drift_force.force[2];
-      for(int i=0; i<3; i++) printf(" torque%d: %f",i, torques_bf_[i]);
-      printf("\n");
-      for(int i=0; i<3; i++) printf(" force%d: %f",i, lin_forces_bf_[i]);
-      printf("\n");
 }
 
 wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(quat_t wind_bf,float motor_command)
@@ -338,14 +339,12 @@ wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(quat_t wind_b
   float ldb = lift_drag_base(motor_speed_, sqr_lat_airspeed, -wind_bf.v[0]);
 
   wing_model_forces_t motor_forces;
-  motor_forces.force[0] = ldb * config_.rotor_cl;
+  motor_forces.force[0] = 0.0f;//ldb * config_.rotor_cl; TODO: fix it
   motor_forces.force[1] = 0.0f;
   motor_forces.force[2] = 0.0f;
   motor_forces.torque[ROLL] = 0.0f;//(10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;
   motor_forces.torque[PITCH] = 0.0f;
-  motor_forces.torque[YAW] = 0.0f;
-
-  printf("Motor force: %f, Motor torque: %f\n",motor_forces.force[0], motor_forces.torque[0]);
+  motor_forces.torque[YAW] = 0.0f;//TODO : make this work
 
   return motor_forces;
 }

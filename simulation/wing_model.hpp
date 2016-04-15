@@ -68,7 +68,13 @@ public:
     /**
      * @brief   Constructor
      *
-     * \param
+     * \param   flap_angle    angle of the flap in degrees
+     * \param   orientation   quaternion of the orientation of the wing in bf
+     * \param   x_position    x distance between wing COG and plane COG
+     * \param   y_position    y distance between wing COG and plane COG
+     * \param   z_position    z distance between wing COG and plane COG
+     * \param   area          area of the wing in m^2
+     * \param   chord         chord length of the wing
      */
     Wing_model(float flap_angle,
       quat_t orientation,
@@ -80,30 +86,64 @@ public:
 
      /**
      * \brief   Computes the forces applied on the wing
-     * \detail  Takes the speed vector and computes the force that applies on the wing (3 forces and 3 moments are possible)
+     * \detail  Takes the wind speed vector and computes the force that applies on the wing (3 forces and 3 moments are possible)
      *
-     * \param	relative_speed	speed of the plane relatively to the wind, in bf coordinates
+     * \param	wind_bf	speed of wind relatively to the plane, in bf
      *
      * \return  The 3 forces and 3 moments that applies on the wing
      */
     wing_model_forces_t compute_forces(quat_t wind_bf);
 
+    /**
+    * \brief    Allows to change the flap angle
+    *
+    * \param    angle   the new angle, in degrees
+    */
     void set_flap_angle(float angle);
 
 private:
-    float flap_angle_; //angle of the flap
-    quat_t orientation_;
-    float position_bf_[3];
-    float area_; //surface of the wing
-    float chord_; //length of the chord
-    float lookup_Cl_[181];
-    float lookup_Cd_[181];
-    float lookup_Cm_[181];
+    float flap_angle_;        // angle of the flap
+    quat_t orientation_;      // orientation of the wing in bf reference
+    float position_bf_[3];    // position of the wing COG from the plane COG in bf
+    float area_;              // surface of the wing (m^2)
+    float chord_;             // length of the chord (m)
+    float lookup_Cl_[181];    // Lookup table of the Cl coefficient
+    float lookup_Cd_[181];    // Lookup table of the Cd coefficient
+    float lookup_Cm_[181];    // Lookup table of the Cm coefficient
 
+    /**
+    * \brief    Initializes the 3 lookup tables
+    */
     void init_lookup();
+
+    /**
+    * \brief    Get Cl coefficient
+    *
+    * \Return   value of Cl
+    */
     float get_cl(float aoa, float flap_angle);
+
+    /**
+    * \brief    Get Cd coefficient
+    *
+    * \Return   value of Cd
+    */
     float get_cd(float aoa, float flap_angle);
+
+    /**
+    * \brief    Get Cm coefficient
+    *
+    * \Return   value of Cm
+    */
     float get_cm(float aoa, float flap_angle);
+
+    /**
+    * \brief    Transform the forces from wing reference frame to bf
+    *
+    * \param    forces_wf   the forces in the wing frame
+    *
+    * \Return   forces in the body frame
+    */
     wing_model_forces_t forces_wing_to_bf(wing_model_forces_t forces_wf);
 };
 

@@ -52,13 +52,14 @@ extern "C"
 #include "util/print_util.h"
 }
 
+std::ofstream logfile;
 
 int main(int argc, char** argv)
 {
     // Create log file
-    std::ofstream logfile;
+
     logfile.open("log.csv");
-    logfile << "x,y,z,vx,vy,vz,r,p,y" << std::endl;
+    logfile << "x,y,z,vx,vy,vz,r,p,y,pv,pt" << std::endl;
     // logfile.close();
 
     Pwm_dummy pwm;
@@ -78,7 +79,7 @@ int main(int argc, char** argv)
     Dynamic_model_fixed_wing model(servo_motor, servo_flap_left, servo_flap_right);
 
     // servo_motor.write(1.0f);
-    servo_motor.write(-0.5f);
+    servo_motor.write(-0.4f);
 
 
     local_position_t position;
@@ -107,12 +108,12 @@ int main(int argc, char** argv)
         printf("Roll: %f Pitch: %f Yaw: %f \n", roll, pitch, yaw);
         printf("Velocity: (%f, %f, %f)\n", velocity[0], velocity[1], velocity[2]);
         printf("Angular velocity: (%f, %f, %f)\n\n", ang_velocity[0], ang_velocity[1], ang_velocity[2]);
-        // std::cin.ignore();
+        //std::cin.ignore();
 
         // write to log file
         logfile << position.pos[0] << "," << position.pos[1] << "," << position.pos[2] << ",";
         logfile << velocity[0] << "," << velocity[1] << "," << velocity[2] << ",";
-        logfile << roll << "," << pitch << "," << yaw << std::endl;
+        logfile << roll << "," << pitch << "," << yaw << "," << ang_velocity[2] << ",";
 
         while(time_keeper_get_s() - t < 0.004f){}
         t = time_keeper_get_s();

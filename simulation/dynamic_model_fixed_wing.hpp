@@ -107,10 +107,9 @@ public:
     /**
      * @brief   Constructor
      *
-     * \param   servo_rear_left     Reference to rear left servo,
-     * \param   servo_front_left    Reference to front left servo
-     * \param   servo_front_right   Reference to front right servo
-     * \param   servo_rear_right    Reference to rear right servo
+     * \param   servo_motor_        Reference to motor
+     * \param   servo_flap_left     Reference to left flap
+     * \param   servo_flap_right    Reference to right flap
      * \param   config              Configuration
      */
     Dynamic_model_fixed_wing(Servo& servo_motor,
@@ -184,25 +183,22 @@ public:
     const quat_t& attitude(void) const;
 
 private:
-    Servo& servo_motor_;              ///< Reference to front right servo
-    Servo& servo_flap_left_;               ///< Reference to front left servo
-    Servo& servo_flap_right_;               ///< Reference to rear right servo
+    Servo& servo_motor_;         ///< Reference to motor servo
+    Servo& servo_flap_left_;     ///< Reference to left flap servo
+    Servo& servo_flap_right_;    ///< Reference to right flap servo
 
     dynamic_model_fixed_wing_conf_t config_; ///< Configuration
 
-    float motor_speed_;
+    float motor_speed_;          ///< Speed of the motor
 
-    Wing_model left_flap_;
-    Wing_model right_flap_;
-    Wing_model left_drift_;
-    Wing_model right_drift_;
+    Wing_model left_flap_;       ///< Left wing+flap
+    Wing_model right_flap_;      ///< Right wing+flap
+    Wing_model left_drift_;      ///< Left drift
+    Wing_model right_drift_;     ///< Right drift
 
-
-
-    //std::array<float, 4> rotorspeeds_;      ///< Estimated rotor speeds
     std::array<float, 3> torques_bf_;       ///< 3D torques vector applied on the vehicle
     std::array<float, 3> rates_bf_;         ///< 3D angular rates vector
-    std::array<float, 3> lin_forces_bf_;        ///< 3D linear forces vector in body frame
+    std::array<float, 3> lin_forces_bf_;    ///< 3D linear forces vector in body frame
     std::array<float, 3> acc_bf_;           ///< 3D acceleration vector in body frame
     std::array<float, 3> vel_bf_;           ///< 3D velocity vector in body frame
     std::array<float, 3> vel_;              ///< 3D velocity vector in NED frame
@@ -214,14 +210,30 @@ private:
     float last_update_us_;                  ///< The last update in micro seconds
     float dt_s_;                            ///< The time delta since last update in seconds
 
-
     /**
      * \brief   Computes forces applied to the UAV from servo input
      */
     void forces_from_servos(void);
 
+    /**
+     * \brief   Computes forces applied by the motor
+     *
+     * \param   wind_bf         quaternion of the relative wind in body frame
+     * \param   motor_command   the motor command issued by the servo
+     *
+     * \return  force structure with 3 forces and 3 torques
+     */
     wing_model_forces_t compute_motor_forces(quat_t wind_bf,float motor_command);
 
+    /**
+     * \brief   Computes the base coefficient to compute the lift an drag
+     *
+     * \param   rpm                 the number of rotations per minute of the blades
+     * \param   sqr_lat_airspeed    the squared speed of the airflow parallel to the plane of rotation of the blades
+     * \param   axial_airspeed      the speed of the airflow perpendicular to the plane of rotation of the blades
+     *
+     * \return  a float coefficient
+    */
     float lift_drag_base(float rpm, float sqr_lat_airspeed, float axial_airspeed);
 };
 
@@ -240,7 +252,7 @@ static inline dynamic_model_fixed_wing_conf_t dynamic_model_fixed_wing_default_c
     conf.rotor_foil_area        = 0.18f * 0.015f;       ///< Area of the propeller blades in m^2
     conf.rotor_pitch            = 0.15f;                ///< Rotor pitch in m/revolution (7x6" roughly 0.15m)
     conf.total_mass             = 0.02f;                ///< Vehicle mass in kg
-    conf.roll_momentum          = 886.0f/(1000.0f*1000.0f);///< Angular momentum constants (assumed to be independent) (in kg/m^2)
+    conf.roll_momentum          = 886.0f/(1000.0f*1000.0f);///< Angular momentum constants (assumed to be independent) (in kg/m^2) TODO: correct these
     conf.pitch_momentum         = 150.0f/(1000.0f*1000.0f);///< Angular momentum constants (assumed to be independent) (in kg/m^2)
     conf.yaw_momentum           = 1021.0f/(1000.0f*1000.0f);         ///< Approximate motor arm mass * rotor arm length
     conf.rotor_momentum         = 0.005f * 0.03f;       ///< Rotor inertia  (5g off center mass * rotor radius)

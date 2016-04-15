@@ -76,11 +76,10 @@ wing_model_forces_t Wing_model::compute_forces(quat_t wind_bf){
 	quat_t wind_wf = quaternions_global_to_local(orientation_,wind_bf); //TODO : double check
 	float aoa = atan2(-wind_wf.v[2], -wind_wf.v[0]); //Neglect the lateral wind
 	float speed_sq = SQR(wind_wf.v[0]) + SQR(wind_wf.v[2]); //Neglect the lateral wind
-	//float speed = sqrt(speed_sq);
 	float cl = get_cl(aoa/PI*180.0,flap_angle_); //aoa is in rad and needs to be given in degrees
 	float cd = get_cd(aoa/PI*180.0,flap_angle_);
 	float cm = get_cm(aoa/PI*180.0,flap_angle_);
-	printf("Cm: %f\n",cm);
+	printf("%f, %f\n",aoa, cm);
 	float density=1.225f; //Keep it constant for now
 	float base = 0.5*density*speed_sq*area_;
 	float lift = cl*base; //Doing this to improve the speed -> Correct??
@@ -95,12 +94,9 @@ wing_model_forces_t Wing_model::compute_forces(quat_t wind_bf){
 	forces_wf.force[1] = 0.0;
 	forces_wf.force[2] = -lift*cosinus-drag*sinus;
 	wing_model_forces_t forces_bf = forces_wing_to_bf(forces_wf);
-	//printf("___________________\nAoa: %f, Cl: %f, Cd:%f, Cm:%f\nWF:\n Pitch Torque: %f, XForce:%f, ZForce:%f\n",aoa,cl,cd,cm,forces_wf.torque[PITCH],forces_wf.force[0],forces_wf.force[2]);
-	//printf("BF:\n Roll Torque: %f, Pitch Torque: %f, Yaw Torque: %f\n XForce:%f, YForce:%f, ZForce:%f\n_____________________\n",forces_bf.torque[ROLL],forces_bf.torque[PITCH],forces_bf.torque[YAW],forces_bf.force[0],forces_bf.force[1],forces_bf.force[2]);
 	return forces_bf;
 }
 
-/*Set the flap angle (in degrees)*/
 void Wing_model::set_flap_angle(float angle){
 	flap_angle_ = angle;
 }
@@ -110,7 +106,6 @@ void Wing_model::set_flap_angle(float angle){
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-/* Returns the cl coefficient for a given aoa */
 float Wing_model::get_cl(float aoa, float flap_angle)
 {
 	if(flap_angle!=0)
@@ -131,12 +126,11 @@ float Wing_model::get_cl(float aoa, float flap_angle)
 	}
 	else
 	{
-		return (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cl_[(int)ceil(aoa)]-lookup_Cl_[(int)floor(aoa)])+lookup_Cl_[(int)floor(aoa)];
+		return (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cl_[(int)ceil(aoa)+90]-lookup_Cl_[(int)floor(aoa)+90])+lookup_Cl_[(int)floor(aoa)+90];
 	}
 	return 0;
 }
 
-/* Returns the cd coefficient for a given aoa */
 float Wing_model::get_cd(float aoa,float flap_angle)
 {
 	if(flap_angle!=0)
@@ -157,12 +151,11 @@ float Wing_model::get_cd(float aoa,float flap_angle)
 	}
 	else
 	{
-		return (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cd_[(int)ceil(aoa)]-lookup_Cd_[(int)floor(aoa)])+lookup_Cd_[(int)floor(aoa)];
+		return (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cd_[(int)ceil(aoa)+90]-lookup_Cd_[(int)floor(aoa)+90])+lookup_Cd_[(int)floor(aoa)+90];
 	}
 	return 0;
 }
 
-/* Returns the cm coefficient for a given aoa */
 float Wing_model::get_cm(float aoa, float flap_angle)
 {
 	if(flap_angle!=0)
@@ -177,14 +170,14 @@ float Wing_model::get_cm(float aoa, float flap_angle)
 	{
 		return lookup_Cm_[180];
 	}
-	else if(floor(aoa)==ceil(aoa))
+	else //if(floor(aoa)==ceil(aoa))
 	{
 		return lookup_Cm_[(int)floor(aoa)+90];
 	}
-	else
+	/*else
 	{
-		return (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cm_[(int)ceil(aoa)]-lookup_Cm_[(int)floor(aoa)])+lookup_Cm_[(int)floor(aoa)];
-	}
+		return (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cm_[(int)ceil(aoa)+90]-lookup_Cm_[(int)floor(aoa)+90])+lookup_Cm_[(int)floor(aoa)+90];
+	}*/
 	return 0;
 }
 
@@ -200,16 +193,6 @@ wing_model_forces_t Wing_model::forces_wing_to_bf(wing_model_forces_t forces_wf)
 	forces_bf.force[0] = tmp.v[0];
 	forces_bf.force[1] = tmp.v[1];
 	forces_bf.force[2] = tmp.v[2];
-	/*quat_t roll, pitch, yaw;
-	roll.s = forces_wf.torque[ROLL]; roll.v[0]=1.0f; roll.v[1]=0.0f; roll.v[2]=0.0f; //TODO: double check how the rotation is done
-	pitch.s = forces_wf.torque[PITCH]; pitch.v[0]=0.0f; pitch.v[1]=1.0f; pitch.v[2]=0.0f;
-	yaw.s = forces_wf.torque[YAW]; yaw.v[0]=0.0f; yaw.v[1]=0.0f; yaw.v[2]=1.0f;
-	roll = quaternions_local_to_global(orientation_,roll);
-	pitch = quaternions_local_to_global(orientation_,pitch);
-	yaw = quaternions_local_to_global(orientation_,yaw);
-	forces_bf.torque[ROLL]  = roll.s*roll.v[0] + pitch.s*pitch.v[0] + yaw.s*yaw.v[0] + forces_bf.force[2]*position_bf_[1] - forces_bf.force[1]*position_bf_[2]; //Axis: front, right, down, with rotations: right hand
-	forces_bf.torque[PITCH] = roll.s*roll.v[1] + pitch.s*pitch.v[1] + yaw.s*yaw.v[1] - forces_bf.force[2]*position_bf_[0] + forces_bf.force[0]*position_bf_[2];
-	forces_bf.torque[YAW]   = roll.s*roll.v[2] + pitch.s*pitch.v[2] + yaw.s*yaw.v[2] - forces_bf.force[0]*position_bf_[1] + forces_bf.force[1]*position_bf_[0];*/
 	quat_t torques_wf;
 	torques_wf.s = 0.0f;
 	for(int i=0; i<3; i++) torques_wf.v[i]=forces_wf.torque[i];
@@ -218,7 +201,7 @@ wing_model_forces_t Wing_model::forces_wing_to_bf(wing_model_forces_t forces_wf)
 	return forces_bf;
 }
 
-void Wing_model::init_lookup() //Initialization of the lookup tables
+void Wing_model::init_lookup()
 {
 	//Cl
 	 lookup_Cl_[0] = -0.099154;
