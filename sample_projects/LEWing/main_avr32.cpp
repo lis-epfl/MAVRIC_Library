@@ -66,6 +66,8 @@ extern "C"
 
 int main(void)
 {
+    bool init_success = true;
+
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
@@ -77,31 +79,8 @@ int main(void)
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
     Megafly_rev4 board = Megafly_rev4(board_config);
 
-
-    // -------------------------------------------------------------------------
-    // Create simulation
-    // -------------------------------------------------------------------------
-    // Simulated servos
-    // Pwm_dummy pwm[3];
-    // Servo sim_servo_0(pwm[0], servo_default_config_esc());
-    // Servo sim_servo_1(pwm[1], servo_default_config_standard());
-    // Servo sim_servo_2(pwm[2], servo_default_config_standard());
-
-    // // Simulated dynamic model
-    // Dynamic_model_wing sim_model    = Dynamic_model_wing(sim_servo_0, sim_servo_1, sim_servo_2);
-    // Simulation sim                       = Simulation(sim_model);
-
-    // // Simulated battery
-    // Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
-    // Battery  sim_battery     = Battery(sim_adc_battery);
-
-    // Adc_dummy    sim_adc_airspeed = Adc_dummy(12.0f);
-    // Airspeed_analog sim_airspeed_analog = Airspeed_analog(sim_adc_airspeed,airspeed_analog_default_config());
-
-    // // Simulated IMU
-    // Imu      sim_imu         = Imu(  sim.accelerometer(),
-    //                                  sim.gyroscope(),
-    //                                  sim.magnetometer() );
+    // Board initialisation
+    init_success &= board.init();
 
     fat_fs_mounting_t fat_fs_mounting;
 
@@ -138,6 +117,30 @@ int main(void)
                                    file_stat,
                                    cd_config);
 
+    // -------------------------------------------------------------------------
+    // Create simulation
+    // -------------------------------------------------------------------------
+    // Simulated servos
+    // Pwm_dummy pwm[3];
+    // Servo sim_servo_0(pwm[0], servo_default_config_esc());
+    // Servo sim_servo_1(pwm[1], servo_default_config_standard());
+    // Servo sim_servo_2(pwm[2], servo_default_config_standard());
+
+    // // Simulated dynamic model
+    // Dynamic_model_wing sim_model    = Dynamic_model_wing(sim_servo_0, sim_servo_1, sim_servo_2);
+    // Simulation sim                       = Simulation(sim_model);
+
+    // // Simulated battery
+    // Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
+    // Battery  sim_battery     = Battery(sim_adc_battery);
+
+    // Adc_dummy    sim_adc_airspeed = Adc_dummy(12.0f);
+    // Airspeed_analog sim_airspeed_analog = Airspeed_analog(sim_adc_airspeed,airspeed_analog_default_config());
+
+    // // Simulated IMU
+    // Imu      sim_imu         = Imu(  sim.accelerometer(),
+    //                                  sim.gyroscope(),
+    //                                  sim.magnetometer() );
 
     // Create central data with simulated sensors
     // Central_data cd = Central_data( MAVLINK_SYS_ID,
@@ -154,14 +157,6 @@ int main(void)
     //                              sim_servo_1,
     //                              sim_servo_2,
     //                              sim_servo_3 );
-
-    // -------------------------------------------------------------------------
-    // Initialisation
-    // -------------------------------------------------------------------------
-    bool init_success = true;
-
-    // Board initialisation
-    init_success &= board.init();
 
     // Init central data
     init_success &= cd.init();
@@ -181,12 +176,12 @@ int main(void)
     print_util_dbg_print("creating new log files\r\n");
     delay_ms(150);
 
-    print_util_dbg_print("created new log files\r\n");
-
     init_success &= mavlink_telemetry_init(&cd);
 
     print_util_dbg_print("mavlink_telemetry_init\r\n");
     delay_ms(150);
+
+    cd.state.mav_state = MAV_STATE_STANDBY;
 
     init_success &= tasks_create_tasks(&cd);
 

@@ -87,7 +87,6 @@ int main(int argc, char** argv)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using simulated sensors
-
     central_data_conf_t cd_config = central_data_default_config();
     cd_config.manual_control_config.mode_source = MODE_SOURCE_GND_STATION;
     cd_config.manual_control_config.control_source = CONTROL_SOURCE_NONE;
@@ -113,10 +112,6 @@ int main(int argc, char** argv)
 
     // Init central data
     init_success &= cd.init();
-
-    // Disabling the remote in emulation
-    cd.manual_control.control_source = CONTROL_SOURCE_NONE;
-    cd.manual_control.mode_source = MODE_SOURCE_GND_STATION;
 
     init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
