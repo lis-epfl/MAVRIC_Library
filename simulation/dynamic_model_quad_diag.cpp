@@ -72,7 +72,7 @@ Dynamic_model_quad_diag::Dynamic_model_quad_diag(Servo& servo_rear_left,
     vel_bf_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     vel_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
-    last_update_us_(time_keeper_get_us()),
+    last_update_us_(0.0f),
     dt_s_(0.004f)
 {
     // Init local position

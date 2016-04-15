@@ -70,7 +70,7 @@ Mat<N,P,T>::Mat(T value, bool diag)
                     d[index] = 0.0f;
                 }
             }
-        }   
+        }
     }
 }
 
@@ -107,7 +107,7 @@ Mat<N,P,T>::Mat(const std::initializer_list<T> list)
         {
             size = N*P;
         }
-    
+
         const T* it = list.begin();
 
         for (uint32_t i = 0; i < size; ++i)
@@ -141,11 +141,39 @@ uint32_t Mat<N,P,T>::index(uint32_t i, uint32_t j)
 
 
 template<uint32_t N, uint32_t P, typename T>
+const T& Mat<N,P,T>::operator()(const uint32_t& i, const uint32_t& j) const
+{
+    if (i < N && j < P)
+    {
+        return d[i * P + j];
+    }
+    else
+    {
+        return d[0];
+    }
+}
+
+
+template<uint32_t N, uint32_t P, typename T>
 T& Mat<N,P,T>::operator()(const uint32_t& i, const uint32_t& j)
 {
     if (i < N && j < P)
     {
         return d[i * P + j];
+    }
+    else
+    {
+        return d[0];
+    }
+}
+
+
+template<uint32_t N, uint32_t P, typename T>
+const T& Mat<N,P,T>::operator[](const uint32_t& index) const
+{
+    if (index < N * P)
+    {
+        return d[index];
     }
     else
     {
@@ -196,7 +224,7 @@ Mat<N,P,T> Mat<N,P,T>::operator+(const Mat& m) const
 template<uint32_t N, uint32_t P, typename T>
 Mat<N,P,T> Mat<N,P,T>::operator+(T value) const
 {
-    Mat res = add(value); 
+    Mat res = add(value);
     return res;
 }
 
@@ -309,16 +337,16 @@ Mat<N,P,T> Mat<N,P,T>::multiply(const Mat& m) const
 {
     Mat res;
     mat::op::multiply(*this, m, res);
-    return res;        
+    return res;
 }
 
-  
+
 template<uint32_t N, uint32_t P, typename T>
 Mat<N,P,T> Mat<N,P,T>::multiply(const T value) const
 {
     Mat res;
     mat::op::multiply(*this, value, res);
-    return res;        
+    return res;
 }
 
 
@@ -349,7 +377,7 @@ void Mat<N,P,T>::multiply_inplace(const Mat& m)
     mat::op::multiply(*this, m, *this);
 }
 
-   
+
 template<uint32_t N, uint32_t P, typename T>
 void Mat<N,P,T>::multiply_inplace(const T value)
 {
@@ -471,7 +499,7 @@ void op::transpose(const Mat<N,P,T>& m, Mat<P,N,T>& res)
 {
     uint32_t index  = 0;
     uint32_t index2 = 0;
-    
+
     for (uint32_t i = 0; i < N; ++i)
     {
         for (uint32_t j = 0; j < P; ++j)
@@ -480,7 +508,7 @@ void op::transpose(const Mat<N,P,T>& m, Mat<P,N,T>& res)
             index2 = j*N + i;
             res.d[index2] = m.d[index];
         }
-    } 
+    }
 }
 
 
@@ -508,33 +536,33 @@ void op::dot(const Mat<N,P,T>& m1, const Mat<P,Q,T>& m2, Mat<N,Q,T>& res)
  */
 // template<uint32_t N, typename T>
 // bool op::inverse(const Mat<N,N,T>& m, Mat<N,N,T>& res)
-// {    
+// {
     // Mat<N,2*N,T> aug;
-    
+
     // for (uint32_t i=0; i < N; i++)
     // {
     //     for (uint32_t j=0; j < N; j++)
     //     {
     //         float v = m.d[i * N + j];
-            
+
     //         //  clean floats
     //         float precision = 1.0e-6f;
-    //         if (-precision < v && v < precision) 
+    //         if (-precision < v && v < precision)
     //         {
-    //             v = 0.0f;   
+    //             v = 0.0f;
     //         }
-            
+
     //         aug(i,j) = v;
     //         aug(i,N+j) = (i == j) * 1.0f;    //  right hand side is I3
     //     }
     // }
-    
+
     // //  reduce
     // for (uint32_t i=0; i < N; i++)   //  iterate over rows
     // {
     //     //  look for a pivot
     //     float p = aug(i,i);
-        
+
     //     if (p == 0.0f)
     //     {
     //         bool pFound = false;
@@ -549,16 +577,16 @@ void op::dot(const Mat<N,P,T>& m1, const Mat<P,Q,T>& m2, Mat<N,Q,T>& res)
     //                 break;
     //             }
     //         }
-            
+
     //         if (!pFound) {
     //             //  singular, give up
     //             return false;
     //         }
     //     }
-        
+
     //     //  normalize the pivot
     //     aug.row_scale(i,  1 / p);
-        
+
     //     //  pivot is in right place, reduce all rows
     //     for (uint32_t k=0; k < N; k++)
     //     {
@@ -568,7 +596,7 @@ void op::dot(const Mat<N,P,T>& m1, const Mat<P,Q,T>& m2, Mat<N,Q,T>& res)
     //         }
     //     }
     // }
-    
+
     // return aug.template slice <N,N*2> ();
 //     return  false;
 // }

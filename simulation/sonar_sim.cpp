@@ -52,6 +52,7 @@ Sonar_sim::Sonar_sim(Dynamic_model& dynamic_model, sonar_sim_conf_t config):
     config_(config),
     distance_(0.0f),
     velocity_(0.0f),
+    last_update_us_(0.0f),
     healthy_(true)
 {}
 
@@ -126,7 +127,6 @@ bool Sonar_sim::update(void)
             }
 
             distance_       = new_distance;
-            last_update_us_ = dynamic_model_.last_update_us();
             healthy_        = true;
         }
         else
@@ -140,7 +140,7 @@ bool Sonar_sim::update(void)
             {
                 distance_ = config_.max_distance;
             }
-            
+
             velocity_   = 0.0f;
             healthy_    = false;
         }
@@ -153,6 +153,7 @@ bool Sonar_sim::update(void)
         healthy_    = false;
     }
 
+    last_update_us_ = dynamic_model_.last_update_us();
 
     return success;
 }
