@@ -347,10 +347,10 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
             }
 
             //ALEX changes overwrite the roll command
-            if(stabilisation_copter->controls->rpy[ROLL] < 2.0f *3.145f/18.0f)
+            //if(stabilisation_copter->controls->rpy[ROLL] < 2.0f *3.145f/18.0f)
             	input.rpy[ROLL] = stabilisation_copter->controls->rpy[ROLL];
-            else
-            	input.rpy[ROLL] = 0.0f;
+            //else
+            //	input.rpy[ROLL] = 0.0f;
 
         //input.thrust = stabilisation_copter->controls->tvel[Z];
 
