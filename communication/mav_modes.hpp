@@ -125,8 +125,6 @@ typedef enum
 	CUST_VELOCITY_FAKE_FXWD = 8192, 			///< Alex symbiotic drone mode
 } mav_mode_custom_list_t;
 
-#define mav_mode_custom_uint32_t uint32_t
-
 #define mav_mode_t uint8_t
 #define mav_mode_custom_t uint32_t
 
@@ -134,7 +132,7 @@ typedef enum
 /**
  * \brief  Funtion to allow logic operations on enum in C++
  */
-inline mav_mode_custom_t operator |=(mav_mode_custom_t a, mav_mode_custom_t b)
+/*inline mav_mode_custom_t operator |=(mav_mode_custom_t a, mav_mode_custom_t b)
 {
     return static_cast<mav_mode_custom_t>(static_cast<int>(a) | static_cast<int>(b));
 }
@@ -147,7 +145,7 @@ inline mav_mode_custom_t operator&=(mav_mode_custom_t a, mav_mode_custom_t b)
 inline mav_mode_custom_t operator~(mav_mode_custom_t a)
 {
     return static_cast<mav_mode_custom_t>(~static_cast<int>(a));
-}
+}*/
 
 
 /*
@@ -422,4 +420,4 @@ static inline bool mav_modes_are_equal_autonomous_modes(const mav_mode_t mode1, 
     return mav_modes_are_equal(mode1_, mode2_);
 }
 
-
+#endif //MAV_MODE_H
