@@ -15,7 +15,7 @@
 <area shape="rect" id="node28" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="736,713,883,885"/>
 <area shape="rect" id="node30" href="$classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="907,669,1117,928"/>
 <area shape="rect" id="node32" href="$classGps.html" title="Abstract class for GPS." alt="" coords="907,299,1117,557"/>
-<area shape="rect" id="node34" href="$classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="1141,695,1283,902"/>
+<area shape="rect" id="node34" href="$classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="1141,687,1283,911"/>
 <area shape="rect" id="node36" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="1240,325,1333,531"/>
 <area shape="rect" id="node38" href="$classSerial__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="1307,695,1421,902"/>
 <area shape="rect" id="node41" href="$classGpio__avr32.html" title="{Gpio_avr32\n||+ Gpio_avr32()\l+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="1445,695,1552,902"/>

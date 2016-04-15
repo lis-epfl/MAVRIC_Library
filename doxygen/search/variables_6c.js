@@ -33,7 +33,7 @@ var searchData=
   ['lp_5fmode',['lp_mode',['../structubx__cfg__rxm__t.html#a4ff05819515300e6d25706198328411f',1,'ubx_cfg_rxm_t']]],
   ['lpf',['LPF',['../structcurvace__t.html#a1b2207f5cf259127b1af1143b047f487',1,'curvace_t']]],
   ['lpf_5facc',['lpf_acc',['../structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8',1,'imu_conf_t']]],
-  ['lpf_5fgain',['lpf_gain',['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()'],['../structnavigation__t.html#ad82fe3685a85a56bc949fc3029a6d8c6',1,'navigation_t::LPF_gain()'],['../structnavigation__conf__t.html#a3953ba3fccdbefcbfef07ba822f9801b',1,'navigation_conf_t::LPF_gain()']]],
+  ['lpf_5fgain',['LPF_gain',['../structnavigation__t.html#ad82fe3685a85a56bc949fc3029a6d8c6',1,'navigation_t::LPF_gain()'],['../structnavigation__conf__t.html#a3953ba3fccdbefcbfef07ba822f9801b',1,'navigation_conf_t::LPF_gain()'],['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()']]],
   ['lpf_5fgyro',['lpf_gyro',['../structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd',1,'imu_conf_t']]],
   ['lpf_5fmag',['lpf_mag',['../structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82',1,'imu_conf_t']]],
   ['lpf_5fmean',['lpf_mean',['../structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e',1,'imu_conf_t']]]

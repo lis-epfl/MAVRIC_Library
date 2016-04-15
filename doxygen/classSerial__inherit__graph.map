@@ -4,5 +4,5 @@
 <area shape="rect" id="node7" href="$classSerial__linux__io.html" title="Implementation of serial peripheral for avr32." alt="" coords="293,261,419,485"/>
 <area shape="rect" id="node9" href="$classSerial__stm32.html" title="Implementation of serial peripheral for avr32." alt="" coords="443,261,560,485"/>
 <area shape="rect" id="node11" href="$classSerial__udp.html" title="{Serial_udp\n||+ Serial_udp()\l+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l}" alt="" coords="584,270,685,477"/>
-<area shape="rect" id="node13" href="$classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="709,270,851,477"/>
+<area shape="rect" id="node13" href="$classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="709,261,851,485"/>
 </map>

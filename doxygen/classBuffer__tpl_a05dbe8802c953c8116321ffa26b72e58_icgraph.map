@@ -3,9 +3,10 @@
 <area shape="rect" id="node5" href="$classSerial__avr32.html#a060ce69893b3b60a854c13ad9e7c3307" title="Read bytes from the serial line." alt="" coords="211,59,336,88"/>
 <area shape="rect" id="node7" href="$classSerial__usb__avr32.html#ac592ddce67456e1a4ff593fc3559ab20" title="Sends instantaneously all outgoing bytes." alt="" coords="195,112,352,141"/>
 <area shape="rect" id="node9" href="$classSerial__usb__avr32.html#a136aeea78c5070fc8b7c846aa20f305f" title="Write bytes on the serial line." alt="" coords="195,165,352,195"/>
-<area shape="rect" id="node11" href="$classSerial__udp.html#ad009bc0295aa5f2034f5c5d44696e0a1" title="Sends instantaneously all outgoing bytes." alt="" coords="215,219,332,248"/>
-<area shape="rect" id="node15" href="$classSerial__udp.html#a6371af0a085b26e42b4afa3bcfc79e20" title="Read bytes from the serial line." alt="" coords="216,272,331,301"/>
-<area shape="rect" id="node17" href="$classSerial__stm32.html#a38437caf66eb83e0815aeb5871ac67a3" title="Read bytes from the serial line." alt="" coords="208,325,339,355"/>
-<area shape="rect" id="node19" href="$classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="189,379,357,408"/>
-<area shape="rect" id="node13" href="$classSerial__udp.html#ac568375e1a82264e735fd8c6b8465b85" title="Write a byte on the serial line." alt="" coords="439,219,556,248"/>
+<area shape="rect" id="node11" href="$classSerial__usb__avr32.html#abc619ad16623fb467f9f33a29776a2c4" title="Read bytes from the serial line." alt="" coords="196,219,351,248"/>
+<area shape="rect" id="node13" href="$classSerial__udp.html#ad009bc0295aa5f2034f5c5d44696e0a1" title="Sends instantaneously all outgoing bytes." alt="" coords="215,272,332,301"/>
+<area shape="rect" id="node17" href="$classSerial__udp.html#a6371af0a085b26e42b4afa3bcfc79e20" title="Read bytes from the serial line." alt="" coords="216,325,331,355"/>
+<area shape="rect" id="node19" href="$classSerial__stm32.html#a38437caf66eb83e0815aeb5871ac67a3" title="Read bytes from the serial line." alt="" coords="208,379,339,408"/>
+<area shape="rect" id="node21" href="$classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="189,432,357,461"/>
+<area shape="rect" id="node15" href="$classSerial__udp.html#ac568375e1a82264e735fd8c6b8465b85" title="Write a byte on the serial line." alt="" coords="439,272,556,301"/>
 </map>

@@ -124,13 +124,12 @@ Defines</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>UDC_SUSPEND_EVENT</b>()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae7e6970d1974cfc2a01cf33a9161f375"></a><!-- doxytag: member="conf_usb.h::UDC_RESUME_EVENT" ref="ae7e6970d1974cfc2a01cf33a9161f375" args="()" -->
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>UDC_RESUME_EVENT</b>()</td></tr>
-<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conf__usb_8h.html#adfc10044d7adab40e43753941e9278e6">UDI_CDC_ENABLE_EXT</a>()&#160;&#160;&#160;stdio_usb_enable()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Mandatory when USB_DEVICE_ATTR authorizes remote wakeup feature.  <a href="#adfc10044d7adab40e43753941e9278e6"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abf8630ff4c73496f3ca5221b0f3bbf93"></a><!-- doxytag: member="conf_usb.h::UDI_CDC_DISABLE_EXT" ref="abf8630ff4c73496f3ca5221b0f3bbf93" args="()" -->
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>UDI_CDC_DISABLE_EXT</b>()&#160;&#160;&#160;stdio_usb_disable()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aabc69432a6e3071a75e3a01c85083100"></a><!-- doxytag: member="conf_usb.h::UDI_CDC_RX_NOTIFY" ref="aabc69432a6e3071a75e3a01c85083100" args="()" -->
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>UDI_CDC_RX_NOTIFY</b>()</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>UDI_CDC_RX_NOTIFY</b>()&#160;&#160;&#160;usb_interupt_rx_notify()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46c1d972ed364165f59392ed245c6332"></a><!-- doxytag: member="conf_usb.h::UDI_CDC_SET_CODING_EXT" ref="a46c1d972ed364165f59392ed245c6332" args="(cfg)" -->
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>UDI_CDC_SET_CODING_EXT</b>(cfg)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab1abdc0b0397e0929e0c9b80f2589d48"></a><!-- doxytag: member="conf_usb.h::UDI_CDC_SET_DTR_EXT" ref="ab1abdc0b0397e0929e0c9b80f2589d48" args="(set)" -->
@@ -147,6 +146,8 @@ Defines</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>UDI_CDC_DEFAULT_PARITY</b>&#160;&#160;&#160;CDC_PAR_NONE</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a70354163ae3f6c586ee8c8919e6ec332"></a><!-- doxytag: member="conf_usb.h::UDI_CDC_DEFAULT_DATABITS" ref="a70354163ae3f6c586ee8c8919e6ec332" args="" -->
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>UDI_CDC_DEFAULT_DATABITS</b>&#160;&#160;&#160;8</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a737cdbbe78873732e0f621e37e7d4978"></a><!-- doxytag: member="conf_usb.h::usb_interupt_rx_notify" ref="a737cdbbe78873732e0f621e37e7d4978" args="(void)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>usb_interupt_rx_notify</b> (void)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>USB configuration file for CDC application. </p>
@@ -239,7 +240,7 @@ Defines</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 14 2016 17:24:15 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 15 2016 12:43:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
