@@ -203,6 +203,59 @@ private:
 
 
 //##################################################################################################
+// Plane class
+//##################################################################################################
+/**
+ * \brief   Plane
+ */
+class Plane: public Object
+{
+public:
+    /**
+     * \brief   Constructor
+     *
+     * \param   center      Center of sphere
+     * \param   radius      Radius of sphere
+     */
+    Plane(Vector3f center = Vector3f{0.0f, 0.0f, 0.0f}, Vector3f normal = Vector3f{1.0f, 0.0f, 0.0f});
+
+    /**
+     * \brief   Return origin point
+     */
+    const Vector3f& center(void) const;
+
+    /**
+     * \brief   Update center point
+     */
+    bool set_center(Vector3f center);
+
+    /**
+     * \brief   Return origin point
+     */
+    const Vector3f& normal(void) const;
+
+    /**
+     * \brief   Update normal point
+     */
+    bool set_normal(Vector3f normal);
+
+    /**
+     * \brief Perform intersection between a ray and the current object
+     *
+     * \param   ray           Ray to intersect with (input)
+     * \param   intersection  Intersection point (output)
+     *
+     * \return  boolean indicating if an intersection was found
+     */
+    bool intersect(const Ray& ray, Intersection& intersection);
+
+private:
+    Vector3f center_;       ///< Center of plane
+    Vector3f normal_;       ///< Normal to plane
+};
+
+
+//##################################################################################################
 // Sphere class
 //##################################################################################################
 /**
