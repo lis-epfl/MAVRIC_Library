@@ -226,6 +226,11 @@ const local_position_t& Dynamic_model_quad_diag::position_lf(void) const
 }
 
 
+local_position_t& Dynamic_model_quad_diag::position_lf(void)
+{
+    return local_position_;
+}
+
 const global_position_t& Dynamic_model_quad_diag::position_gf(void) const
 {
     return global_position_;

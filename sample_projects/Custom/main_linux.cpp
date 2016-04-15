@@ -97,21 +97,34 @@ int main(int argc, char** argv)
     File_linux file_stat;
 
     // Objects for optic flow
-    uint32_t cyl_count = 10;
-    raytracing::Cylinder cylinders[cyl_count];
     raytracing::World world;
-    for (uint32_t i = 0; i < cyl_count; i++)
-    {
-        cylinders[i].set_center(Vector3f{ 10.0f * quick_trig_cos( i * 2 * PI / cyl_count ),
-                                          10.0f *quick_trig_cos( i * 2 * PI / cyl_count ),
-                                          0.0f});
-        cylinders[i].set_axis(Vector3f{ 0.0f, 0.0f, 1.0f});
-        cylinders[i].set_radius(2.0f);
 
-        world.add_object(&cylinders[i]);
+    uint32_t cyl_row = 4;
+    raytracing::Cylinder cylinders[cyl_row*cyl_row];
+    for (uint32_t i = 0; i < cyl_row; i++)
+    {
+        for (uint32_t j = 0; j < cyl_row; j++)
+        {
+            cylinders[i*cyl_row+j].set_center(Vector3f{ -10.0f + i * 20.0f / cyl_row,
+                                                        -10.0f + j * 20.0f / cyl_row,
+                                                        0.0f});
+            cylinders[i*cyl_row+j].set_axis(Vector3f{ 0.0f, 0.0f, 1.0f});
+            cylinders[i*cyl_row+j].set_radius(0.5f);
+
+            world.add_object(&cylinders[i*cyl_row+j]);
+        }
     }
-    // world.add_object(&s);
-    // world.add_object(&c);
+    // raytracing::Cylinder cyl(Vector3f{ 0.5f, 1.5f, 0.0f}, Vector3f{ 0.0f, 0.0f, 1.0f}, 1.0f);
+    // world.add_object(&cyl);
+
+    raytracing::Plane p0(Vector3f{-20.0f, 0.0f, 0.0f}, Vector3f{1.0f, 0.0f, 0.0f});
+    raytracing::Plane p1(Vector3f{20.0f, 0.0f, 0.0f}, Vector3f{-1.0f, 0.0f, 0.0f});
+    raytracing::Plane p2(Vector3f{0.0f, -20.0f, 0.0f}, Vector3f{0.0f, 1.0f, 0.0f});
+    raytracing::Plane p3(Vector3f{0.0f, 20.0f, 0.0f}, Vector3f{0.0f, -1.0f, 0.0f});
+    world.add_object(&p0);
+    world.add_object(&p1);
+    world.add_object(&p2);
+    world.add_object(&p3);
 
     // Simulated Flow cameras
     Flow_sim flow_left(board.dynamic_model, world, -PI);
@@ -183,6 +196,17 @@ int main(int argc, char** argv)
     while (1 == 1)
     {
         scheduler_update(&cd.scheduler);
+
+        // recenter simulation
+        local_position_t& pos = board.dynamic_model.position_lf();
+
+        float max_dist = 20.0f;
+        if ((pos.pos[0] > max_dist) || (pos.pos[1] > max_dist) || (pos.pos[2] > max_dist) || (pos.pos[0] < -max_dist) || (pos.pos[1] < -max_dist) || (pos.pos[2] < -max_dist))
+        {
+            pos.pos[0] = 0.0f;
+            pos.pos[1] = 0.0f;
+            pos.pos[2] = 0.0f;
+        }
     }
 
     return 0;

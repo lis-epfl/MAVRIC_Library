@@ -96,7 +96,8 @@ public:
      *
      * \return  Value
      */
-    virtual const local_position_t& position_lf(void) const = 0;
+     virtual const local_position_t& position_lf(void) const = 0;
+    virtual local_position_t& position_lf(void) = 0;
 
 
     /**

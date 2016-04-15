@@ -48,6 +48,10 @@ extern "C"
     #include "util/quick_trig.h"
 }
 
+#include <iostream>
+#include <fstream>
+
+static std::ofstream logfile;
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -94,6 +98,16 @@ Saccade_controller::Saccade_controller( Flow& flow_left,
         sin_azimuth_[i] = quick_trig_sin(azimuth_[i]);
         sin_azimuth_[i + N_points] = quick_trig_sin(azimuth_[i + N_points]);
     }
+
+    logfile.open("log.csv");
+    // logfile << "movement_direction,posx,posy,posz,q0,q1,q2,q3,";
+    logfile << "movement_direction,q0,q1,q2,q3,";
+    for (uint32_t i = 0; i < 179; i++)
+    {
+        logfile << "of" << i << ",";
+    }
+    logfile << "of" << 179 << std::endl;
+      /* code */
 }
 
 bool Saccade_controller::init(void)
@@ -187,22 +201,39 @@ bool Saccade_controller::update()
             {
                 // Calculation of the movement direction (in radians)
                 // movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
-                for (uint32_t i = 45; i < 90; ++i)
+                // for (uint32_t i = 45; i < 90; ++i)
+                for (uint32_t i = 65; i < 75; ++i)
                 {
                     of_sum +=  flow_left_.of.x[i];
                 }
-                for (uint32_t i = 0; i < 45; ++i)
+                // for (uint32_t i = 0; i < 45; ++i)
+                for (uint32_t i = 15; i < 25; ++i)
                 {
                     of_sum +=  flow_right_.of.x[i];
                 }
-                if ( of_sum >= 0.0f )
+                // if ( of_sum >= 0.0f )
+                // {
+                //     movement_direction = (5+rand()%5) * 0.05f * PI;
+                // }
+                // else
+                // {
+                //     movement_direction = - (5+rand()%5) * 0.05f * PI;
+                // }
+                movement_direction = - maths_sigmoid(20.0f * of_sum) * 0.5 * PI + (rand()%100-50)*0.001f;
+
+                // log
+                logfile << movement_direction << ",";
+                // logfile << flow_left_.dynamic_model_.position_lf()[0] << "," << << flow_left_.dynamic_model_.position_lf()[1] << "," << flow_left_.dynamic_model_.position_lf()[2] << ",";
+                logfile << ahrs_.qe.s << "," << ahrs_.qe.v[0] << "," << ahrs_.qe.v[1]<< "," << ahrs_.qe.v[2] << ",";
+                for (uint32_t i = 0; i < 90; ++i)
                 {
-                    movement_direction = 0.25f * PI;
+                  logfile << flow_left_.of.x[i] << ", ";
                 }
-                else
+                for (uint32_t i = 0; i < 89; ++i)
                 {
-                    movement_direction = -0.25f * PI;
+                  logfile << flow_right_.of.x[i] << ", ";
                 }
+                logfile << flow_right_.of.x[89] << std::endl;
 
                 // movement_direction = (float)(rand() % 360) * (PI / 180.0f);
                 // printf("%f\n", movement_direction);

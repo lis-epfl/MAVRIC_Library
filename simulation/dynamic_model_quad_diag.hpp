@@ -158,7 +158,8 @@ public:
      *
      * \return  Value
      */
-    const local_position_t& position_lf(void) const;
+     const local_position_t& position_lf(void) const;
+    local_position_t& position_lf(void);
 
 
     /**
