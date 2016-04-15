@@ -73,14 +73,4 @@ public:
     uint32_t    last_update_us;   ///< Last update time in microseconds
 };
 
-
-    flow_data_t of;               ///< Optic flow vectors
-    uint8_t     of_count;         ///< Number of optic flow vectors
-    flow_data_t of_loc;           ///< Location of optic flow vectors
-    uint32_t    last_update_us;   ///< Last update time in microseconds
-};
-
-
-
-
 #endif /* FLOW_HPP_ */

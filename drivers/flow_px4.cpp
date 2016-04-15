@@ -55,8 +55,6 @@ extern "C"
 Flow_px4::Flow_px4(Serial& uart):
   uart_(uart)
 {
-    bool success = true;
-
     // Init members
     last_update_us  = time_keeper_get_us();
     handshake_state = FLOW_NO_HANDSHAKE;
