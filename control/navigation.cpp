@@ -245,6 +245,8 @@ bool navigation_init(navigation_t* navigation, navigation_conf_t nav_config, con
     navigation->goal.pos[Y] = 0.0f;
     navigation->goal.pos[Z] = 0.0f;
 
+    navigation->last_update = 0;
+
     navigation->dist2wp_sqr = 0.0f;
 
     navigation->wpt_nav_controller = nav_config.wpt_nav_controller;

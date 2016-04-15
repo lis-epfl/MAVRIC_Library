@@ -204,7 +204,7 @@ static void position_estimation_position_correction(position_estimation_t* pos_e
 
     if (pos_est->init_gps_position)
     {
-        if (pos_est->gps->fix() == true)
+        if (pos_est->gps->healthy() == true)
         {
             if ((pos_est->time_last_gps_posllh_msg < pos_est->gps->last_position_update_us()))
             {
@@ -301,7 +301,7 @@ static void position_estimation_position_correction(position_estimation_t* pos_e
 
 static void gps_position_init(position_estimation_t* pos_est)
 {
-    if ((pos_est->init_gps_position == false) && (pos_est->gps->fix() == true))
+    if ((pos_est->init_gps_position == false) && (pos_est->gps->healthy() == true))
     {
         if ((pos_est->time_last_gps_posllh_msg < pos_est->gps->last_position_update_us())
                 && (pos_est->time_last_gps_velned_msg < pos_est->gps->last_velocity_update_us()))

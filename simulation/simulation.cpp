@@ -56,7 +56,7 @@ Simulation::Simulation(Dynamic_model& dynamic_model, simulation_conf_t config):
     barometer_(dynamic_model_),
     sonar_(dynamic_model_),
     gps_(dynamic_model_),
-    last_update_us_(time_keeper_get_us())
+    last_update_us_(0.0f)
 {}
 
 

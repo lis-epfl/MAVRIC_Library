@@ -88,7 +88,6 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
             remote_get_roll(remote) > 0.9f)
     {
         // Left stick bottom left corner, right stick bottom right corner => arm
-        print_util_dbg_print("Arming!\r\n");
         armed = ARMED_ON;
         remote_mode->arm_action = ARM_ACTION_ARMING;
     }
@@ -98,7 +97,6 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
              remote_get_roll(remote) < -0.9f)
     {
         // Left stick bottom right corner, right stick bottom left corner => disarm
-        print_util_dbg_print("Disarming!\r\n");
         armed = ARMED_OFF;
         remote_mode->arm_action = ARM_ACTION_DISARMING;
     }
@@ -441,13 +439,11 @@ mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t current_mode)
         new_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
 
         remote->mode.arm_action = ARM_ACTION_NONE;
-        print_util_dbg_print("Arming in new fct\r\n");
     }
     else if (remote->mode.arm_action == ARM_ACTION_DISARMING)
     {
         new_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
         remote->mode.arm_action = ARM_ACTION_NONE;
-        print_util_dbg_print("Disarming in new fct\r\n");
     }
 
     return new_mode;

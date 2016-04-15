@@ -49,6 +49,7 @@ extern "C"
 {
 #include <stdint.h>
 #include <stdbool.h>
+#include "util/print_util.h"
 }
 
 /**
@@ -118,14 +119,16 @@ typedef enum
     CUST_FENCE_2 = 256,                         ///< Fence 2 violation flag
     CUST_HEARTBEAT_LOST = 512,                  ///< Heartbeat loss flag
     CUST_REMOTE_LOST = 1024,                    ///< Remote lost flag
+
     CUST_GPS_BAD = 2048 ,                       ///< GPS loss flag
 	CUST_ATTITUDE_FAKE_FXWD = 4096, 			///< Alex symbiotic drone mode
 	CUST_VELOCITY_FAKE_FXWD = 8192, 			///< Alex symbiotic drone mode
-} mav_mode_custom_t;
+} mav_mode_custom_list_t;
 
 #define mav_mode_custom_uint32_t uint32_t
 
 #define mav_mode_t uint8_t
+#define mav_mode_custom_t uint32_t
 
 
 /**
@@ -419,4 +422,4 @@ static inline bool mav_modes_are_equal_autonomous_modes(const mav_mode_t mode1, 
     return mav_modes_are_equal(mode1_, mode2_);
 }
 
-#endif //MAV_MODE_H
+

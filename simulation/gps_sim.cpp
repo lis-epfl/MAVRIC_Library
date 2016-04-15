@@ -50,9 +50,9 @@ extern "C"
 
 Gps_sim::Gps_sim(Dynamic_model& dynamic_model):
     dynamic_model_(dynamic_model),
-    last_update_us_(time_keeper_get_us()),
-    last_position_update_us_(time_keeper_get_us()),
-    last_velocity_update_us_(time_keeper_get_us()),
+    last_update_us_(0.0f),
+    last_position_update_us_(0.0f),
+    last_velocity_update_us_(0.0f),
     global_position_({0.0, 0.0, 0.0f, 0.0f}),
     horizontal_position_accuracy_(0.0f),
     vertical_position_accuracy_(0.0f),
@@ -61,7 +61,7 @@ Gps_sim::Gps_sim(Dynamic_model& dynamic_model):
     heading_(0.0f),
     heading_accuracy_(0.0f),
     num_sats_(0),
-    fix_(false),
+    fix_(NO_GPS),
     healthy_(false)
 {}
 
@@ -89,7 +89,7 @@ bool Gps_sim::update(void)
     heading_accuracy_   = 5.0f;
     num_sats_   = 5;
     healthy_    = true;
-    fix_        = true;
+    fix_        = GPS_OK;
 
     return success;
 }
@@ -165,7 +165,7 @@ const uint8_t& Gps_sim::num_sats(void) const
 }
 
 
-const bool& Gps_sim::fix(void) const
+const gps_fix_t& Gps_sim::fix(void) const
 {
     return fix_;
 }
