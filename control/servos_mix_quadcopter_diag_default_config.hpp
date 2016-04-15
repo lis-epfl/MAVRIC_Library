@@ -50,10 +50,10 @@ static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_defau
 {
     servos_mix_quadcopter_diag_conf_t conf  = {};
 
-    conf.motor_front_right_dir              = CW;
-    conf.motor_front_left_dir               = CCW;
-    conf.motor_rear_right_dir               = CCW;
-    conf.motor_rear_left_dir                = CW;
+    conf.motor_front_right_dir              = CCW;
+    conf.motor_front_left_dir               = CW;
+    conf.motor_rear_right_dir               = CW;
+    conf.motor_rear_left_dir                = CCW;
     conf.min_thrust                         = -0.9f;
     conf.max_thrust                         = 1.0f;
 

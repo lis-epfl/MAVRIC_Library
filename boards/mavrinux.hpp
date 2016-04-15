@@ -77,6 +77,7 @@ typedef struct
     imu_conf_t              imu_config;
     serial_udp_conf_t       serial_udp_config;
     std::string             flash_filename;
+    dynamic_model_quad_diag_conf_t dynamic_model_config;
 } mavrinux_conf_t;
 
 
@@ -167,16 +168,20 @@ static inline mavrinux_conf_t mavrinux_default_config()
     // -------------------------------------------------------------------------
     conf.imu_config = imu_default_config();
 
-
     // -------------------------------------------------------------------------
     // UDP config
     // -------------------------------------------------------------------------
     conf.serial_udp_config  = serial_udp_default_config();
-
+    
     // -------------------------------------------------------------------------
     // Flash config
     // -------------------------------------------------------------------------
     conf.flash_filename = "flash000.bin";
+
+    // -------------------------------------------------------------------------
+    // Simulation dynamic model config
+    // -------------------------------------------------------------------------
+    conf.dynamic_model_config = dynamic_model_quad_diag_default_config();
 
     return conf;
 }

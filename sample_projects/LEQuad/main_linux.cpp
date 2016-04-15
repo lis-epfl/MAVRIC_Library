@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 {
     uint8_t sysid = 0;
     bool init_success = true;
-    
+
     // -------------------------------------------------------------------------
     // Get command line parameters
     // -------------------------------------------------------------------------
@@ -91,6 +91,7 @@ int main(int argc, char** argv)
     central_data_conf_t cd_config = central_data_default_config();
     cd_config.manual_control_config.mode_source = MODE_SOURCE_GND_STATION;
     cd_config.manual_control_config.control_source = CONTROL_SOURCE_NONE;
+    cd_config.state_config.simulation_mode = HIL_ON;
 
     Central_data cd = Central_data(sysid,
                                    board.imu,
