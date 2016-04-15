@@ -203,7 +203,6 @@ void Navigation::run()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-
 Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const Position_estimation& position_estimation, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config) :
     qe(qe),
     controls_nav(controls_nav),
@@ -226,6 +225,8 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     goal.pos[X] = 0.0f;
     goal.pos[Y] = 0.0f;
     goal.pos[Z] = 0.0f;
+
+    last_update = 0;
 
     dist2wp_sqr = 0.0f;
 

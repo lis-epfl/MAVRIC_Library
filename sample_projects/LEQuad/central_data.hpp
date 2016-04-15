@@ -51,27 +51,37 @@
 #include "drivers/sonar.hpp"
 #include "hal/common/file.hpp"
 
-#include "control/stabilisation_copter.hpp"
 #include "communication/mavlink_communication.hpp"
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "control/navigation.hpp"
 #include "communication/hud_telemetry.hpp"
 #include "communication/state_machine.hpp"
 #include "communication/data_logging.hpp"
-#include "sensing/qfilter.hpp"
 #include "communication/mavlink_stream.hpp"
+#include "communication/state.hpp"
 #include "simulation/simulation.hpp"
 #include "sensing/position_estimation.hpp"
-#include "communication/state.hpp"
-#include "control/manual_control.hpp"
-#include "drivers/battery.hpp"
-#include "control/servos_mix_quadcopter_diag.hpp"
-#include "hal/common/led.hpp"
-#include "drivers/servos_telemetry.hpp"
-#include "control/altitude_controller.hpp"
-
 #include "sensing/altitude_estimation.hpp"
+#include "sensing/qfilter.hpp"
+#include "control/stabilisation_copter.hpp"
+#include "control/navigation.hpp"
+#include "control/manual_control.hpp"
+#include "control/servos_mix_quadcopter_diag.hpp"
+#include "control/velocity_controller_copter.hpp"
+#include "control/vector_field_waypoint.hpp"
+#include "control/altitude_controller.hpp"
+#include "hal/common/led.hpp"
+#include "drivers/battery.hpp"
+#include "drivers/servos_telemetry.hpp"
+
+
+#include "sensing/qfilter_default_config.hpp"
+#include "control/stabilisation_copter_default_config.hpp"
+#include "control/servos_mix_quadcopter_diag_default_config.hpp"
+#include "control/manual_control_default_config.hpp"
+#include "control/attitude_controller_default_config.hpp"
+#include "control/velocity_controller_copter_default_config.hpp"
+#include "communication/remote_default_config.hpp"
 
 extern "C"
 {
@@ -82,15 +92,9 @@ extern "C"
 #include "util/print_util.h"
 #include "util/coord_conventions.h"
 #include "control/stabilisation.h"
-}
-
-extern "C"
-{
 #include "control/attitude_controller.h"
 }
 
-#include "control/velocity_controller_copter.hpp"
-#include "control/vector_field_waypoint.hpp"
 
 
 /**
@@ -102,11 +106,23 @@ public:
     /**
      * \brief   Configuration of the module central data module
      */
-    typedef struct
+     struct conf_t
     {
-        Mavlink_communication::conf_t mavlink_communication_config;      ///<    Configuration for the mavlink communication module
-        Navigation::conf_t navigation_config;
-    }conf_t;
+      state_conf_t state_config;
+      data_logging_conf_t data_logging_config;
+      data_logging_conf_t data_logging_config2;
+      Scheduler::conf_t scheduler_config;
+      Mavlink_communication::conf_t mavlink_communication_config;
+      Navigation::conf_t navigation_config;
+      qfilter_conf_t qfilter_config;
+      Position_estimation::conf_t position_estimation_config;
+      stabilisation_copter_conf_t stabilisation_copter_config;
+      servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
+      manual_control_conf_t manual_control_config;
+      remote_conf_t remote_config;
+      attitude_controller_conf_t attitude_controller_config;
+      velocity_controller_copter_conf_t velocity_controller_copter_config;
+    };
 
     /**
      * \brief   Default configuration
@@ -121,8 +137,22 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, const conf_t& config = default_config());
-
+    Central_data( Imu& imu,
+                  Barometer& barometer,
+                  Gps& gps,
+                  Sonar& sonar,
+                  Serial& serial_mavlink,
+                  Satellite& satellite,
+                  Led& led,
+                  File& file_flash,
+                  Battery& battery,
+                  Servo& servo_0,
+                  Servo& servo_1,
+                  Servo& servo_2,
+                  Servo& servo_3,
+                  File& file1,
+                  File& file2,
+                  const conf_t& config = default_config());
 
     /**
      * \brief   Initialisation
@@ -188,14 +218,40 @@ public:
     Altitude_controller             altitude_controller_;
 
 private:
-    uint8_t sysid_;     ///< System ID
-};
+    uint8_t sysid_;                 ///< System ID
 
+    conf_t config_;    ///< Configuration
+};
 
 
 Central_data::conf_t Central_data::default_config(uint8_t sysid)
 {
     conf_t conf                                                = {};
+
+    conf.state_config = state_default_config();
+
+    conf.data_logging_config = data_logging_default_config();
+    conf.data_logging_config = data_logging_default_config();
+
+    conf.scheduler_config = Scheduler::default_config();
+
+    conf.navigation_config = Navigation::default_config();
+
+    conf.qfilter_config = qfilter_default_config();
+
+    conf.position_estimation_config = Position_estimation::default_config();
+
+    conf.stabilisation_copter_config = stabilisation_copter_default_config();
+
+    conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
+
+    conf.manual_control_config = manual_control_default_config();
+
+    conf.remote_config = remote_default_config();
+
+    conf.attitude_controller_config = attitude_controller_default_config();
+
+    conf.velocity_controller_copter_config = velocity_controller_copter_default_config();
 
     /* Mavlink communication config */
     Mavlink_communication::conf_t mavlink_communication_config = Mavlink_communication::default_config(sysid);
@@ -204,7 +260,6 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     mavlink_communication_config.mavlink_stream_config.debug = true;
     conf.mavlink_communication_config = mavlink_communication_config;
 
-    conf.navigation_config = Navigation::default_config();
     return conf;
 };
 

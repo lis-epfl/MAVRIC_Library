@@ -52,6 +52,7 @@ extern "C"
 int main(int argc, char** argv)
 {
     uint8_t sysid = 0;
+    bool init_success = true;
 
     // -------------------------------------------------------------------------
     // Get command line parameters
@@ -77,11 +78,20 @@ int main(int argc, char** argv)
     File_linux file_log;
     File_linux file_stat;
 
+    // Board initialisation
+    init_success &= board.init();
+
+    board.sim.update();
+
     // -------------------------------------------------------------------------
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using simulated sensors
-    Central_data::conf_t central_data_config = Central_data::default_config(sysid);
+    Central_data::conf_t cd_config = Central_data::default_config(sysid);
+    cd_config.manual_control_config.mode_source = MODE_SOURCE_GND_STATION;
+    cd_config.manual_control_config.control_source = CONTROL_SOURCE_NONE;
+    cd_config.state_config.simulation_mode = HIL_ON;
+
     Central_data cd = Central_data(board.imu,
                                    board.sim.barometer(),
                                    board.sim.gps(),
@@ -97,17 +107,7 @@ int main(int argc, char** argv)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   central_data_config);
-
-
-    // -------------------------------------------------------------------------
-    // Initialisation
-    // -------------------------------------------------------------------------
-    bool init_success = true;
-
-    // Board initialisation
-    init_success &= board.init();
-    board.sim.update();
+                                   cd_config);
 
     // Init central data
     init_success &= cd.init();
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
         onboard_parameters->write_parameters_to_storage();
         init_success = false;
     }
-    
+
     init_success &= mavlink_telemetry_init(&cd);
 
     cd.state.mav_state = MAV_STATE_STANDBY;

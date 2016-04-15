@@ -165,7 +165,7 @@ void Position_estimation::position_correction()
 
     if (init_gps_position)
     {
-        if (gps.fix() == true)
+        if (gps.healthy() == true)
         {
             if ((time_last_gps_posllh_msg < gps.last_position_update_us()))
             {
@@ -262,7 +262,7 @@ void Position_estimation::position_correction()
 
 void Position_estimation::gps_position_init()
 {
-    if ((init_gps_position == false) && (gps.fix() == true))
+    if ((init_gps_position == false) && (gps.healthy() == true))
     {
         if ((time_last_gps_posllh_msg < gps.last_position_update_us())
                 && (time_last_gps_velned_msg < gps.last_velocity_update_us()))
@@ -318,8 +318,8 @@ void Position_estimation::fence_control()
 //------------------------------------------------------------------------------
 
 Position_estimation::Position_estimation(State& state, Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config) :
-        vel({0.0f,0.0f,0.0f}),
-        vel_bf({0.0f,0.0f,0.0f}),
+        vel{0.0f,0.0f,0.0f},
+        vel_bf{0.0f,0.0f,0.0f},
         kp_alt_baro(config.kp_alt_baro),
         kp_vel_baro(config.kp_vel_baro),
         kp_alt_sonar(config.kp_alt_sonar),
@@ -330,7 +330,7 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         init_gps_position(false),
         init_barometer(false),
         last_alt(0),
-        last_vel({0.0f,0.0f,0.0f}),
+        last_vel{0.0f,0.0f,0.0f},
         fence_set(config.fence_set),
         gravity(config.gravity),
         ahrs(ahrs),
@@ -343,10 +343,10 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
     local_position.origin.longitude =  config.origin.longitude;
     local_position.origin.latitude =   config.origin.latitude;
     local_position.origin.altitude =   config.origin.altitude;
-    local_position.pos = {0.0f, 0.0f, 0.0f};
 
     for(uint8_t i = 0; i < 3; i++)
     {
+        local_position.pos[i] = 0.0f;
         kp_pos_gps[i] = config.kp_pos_gps[i];
         kp_vel_gps[i] = config.kp_vel_gps[i];
     }

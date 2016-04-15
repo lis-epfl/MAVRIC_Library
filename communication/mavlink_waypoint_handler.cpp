@@ -803,7 +803,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
             case DESCENT_TO_SMALL_ALTITUDE:
                 print_util_dbg_print("Cust: descent to small alt");
                 state.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
-                state.mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
+                state.mav_mode_custom |= CUST_DESCENT_TO_SMALL_ALTITUDE;
                 waypoint_hold_coordinates = position_estimation.local_position;
                 waypoint_hold_coordinates.pos[Z] = -5.0f;
                 break;
@@ -811,7 +811,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
             case DESCENT_TO_GND:
                 print_util_dbg_print("Cust: descent to gnd");
                 state.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
-                state.mav_mode_custom = CUST_DESCENT_TO_GND;
+                state.mav_mode_custom |= CUST_DESCENT_TO_GND;
                 waypoint_hold_coordinates = position_estimation.local_position;
                 waypoint_hold_coordinates.pos[Z] = 0.0f;
                 navigation.alt_lpf = position_estimation.local_position.pos[2];
@@ -858,7 +858,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
             case DESCENT_TO_GND:
                 print_util_dbg_print("Auto-landing: disarming motors \r\n");
                 navigation.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-                state.mav_mode_custom = CUSTOM_BASE_MODE;
+                //state.mav_mode_custom = CUSTOM_BASE_MODE;
                 hold_waypoint_set = false;
                 navigation.internal_state = NAV_ON_GND;
                 state.mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
@@ -875,6 +875,7 @@ void Mavlink_waypoint_handler::state_machine()
     float thrust;
 
     bool takeoff_result = false;
+    bool new_mode = true;
 
     switch (navigation.internal_state)
     {
@@ -925,17 +926,22 @@ void Mavlink_waypoint_handler::state_machine()
             }
             else if (mav_modes_is_guided(mode_local))
             {
+                print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
+                hold_init(position_estimation.local_position);
                 navigation.internal_state = NAV_HOLD_POSITION;
             }
 
-            state.mav_mode_custom = CUSTOM_BASE_MODE;
             navigation.critical_behavior = CLIMB_TO_SAFE_ALT;
             critical_next_state = false;
             navigation.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
             break;
 
         case NAV_NAVIGATING:
-            waypoint_navigation_handler(mode_change());
+            if (!mav_modes_is_auto(last_mode))
+            {
+                new_mode = mode_change();
+            }
+            waypoint_navigation_handler(new_mode);
 
             navigation.goal = waypoint_coordinates;
 
@@ -943,13 +949,13 @@ void Mavlink_waypoint_handler::state_machine()
             {
                 if (mav_modes_is_guided(mode_local))
                 {
-                    print_util_dbg_print("switching to NAV_HOLD_POSITION\r\n");
+                    print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_NAVIGATING\r\n");
                     waypoint_hold_coordinates = position_estimation.local_position;
                     navigation.internal_state = NAV_HOLD_POSITION;
                 }
                 else
                 {
-                    print_util_dbg_print("switching to NAV_MANUAL_CTRL\r\n");
+                    print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_NAVIGATING\r\n");
                     navigation.internal_state = NAV_MANUAL_CTRL;
                 }
             }
@@ -961,12 +967,12 @@ void Mavlink_waypoint_handler::state_machine()
 
             if (mav_modes_is_auto(mode_local))
             {
-                print_util_dbg_print("switching to NAV_NAVIGATING\r\n");
+                print_util_dbg_print("Switching to NAV_NAVIGATING from NAV_HOLD_POSITION\r\n");
                 navigation.internal_state = NAV_NAVIGATING;
             }
             else if (!mav_modes_is_guided(mode_local))
             {
-                print_util_dbg_print("switching to NAV_MANUAL_CTRL\r\n");
+                print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_HOLD_POSITION\r\n");
                 navigation.internal_state = NAV_MANUAL_CTRL;
             }
             break;
@@ -1031,7 +1037,7 @@ void Mavlink_waypoint_handler::critical_handler()
     if (state.battery_.is_low() ||
             state.connection_lost ||
             state.out_of_fence_2 ||
-            position_estimation.gps.fix() == false)
+            position_estimation.gps.healthy() == false)
     {
         if (navigation.critical_behavior != CRITICAL_LAND)
         {
@@ -1147,7 +1153,7 @@ void Mavlink_waypoint_handler::critical_handler()
             case CRITICAL_LAND:
                 print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
                 navigation.critical_behavior = CLIMB_TO_SAFE_ALT;
-                state.mav_mode_custom = CUSTOM_BASE_MODE;
+                //state.mav_mode_custom = CUSTOM_BASE_MODE;
                 navigation.internal_state = NAV_ON_GND;
                 state.mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
                 state.mav_state = MAV_STATE_EMERGENCY;

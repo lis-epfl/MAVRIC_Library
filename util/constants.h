@@ -102,8 +102,8 @@ typedef enum
  */
 typedef enum
 {
-    CW  = 1,                    ///< Clock wise
-    CCW = -1                    ///< Counter Clock wise
+    CCW =  1,                    ///< Counter Clock wise
+    CW  = -1                     ///< Clock wise
 } rot_dir_t;
 
 

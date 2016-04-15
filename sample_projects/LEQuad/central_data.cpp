@@ -40,20 +40,13 @@
 
 
 #include "sample_projects/LEQuad/central_data.hpp"
-#include "control/stabilisation_copter_default_config.hpp"
-#include "communication/remote_default_config.hpp"
-#include "control/manual_control_default_config.hpp"
-#include "control/attitude_controller_default_config.h"
-#include "control/velocity_controller_copter_default_config.h"
-#include "control/servos_mix_quadcopter_diag_default_config.hpp"
 
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
-#include "sensing/qfilter_default_config.h"
-
 #include "util/print_util.h"
 }
+
 
 
 Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, const conf_t& config):
@@ -70,7 +63,7 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
-    state(battery, state_default_config()),
+    state(battery, config.state_config),
     scheduler(Scheduler::default_config()),
     mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
     ahrs(ahrs_initialized()),
@@ -78,11 +71,12 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.get_mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.get_message_handler(), mavlink_communication.get_mavlink_stream()),
-    data_logging(file1, state, data_logging_default_config()),
-    data_logging2(file2, state, data_logging_default_config()),
+    data_logging(file1, state, config.data_logging_config),
+    data_logging2(file2, state, config.data_logging_config2),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),
     altitude_controller_(command.position, altitude_, command.thrust),
-    sysid_(mavlink_communication.get_sysid())
+    sysid_(mavlink_communication.get_sysid()),
+    config_(config)
 {}
 
 
@@ -97,14 +91,6 @@ bool Central_data::init(void)
     print_util_dbg_print("[CENTRAL_DATA] ...\r\n");
     time_keeper_delay_ms(50);
     print_util_dbg_sep('-');
-
-
-    // -------------------------------------------------------------------------
-    // Init main sheduler
-    // -------------------------------------------------------------------------
-    print_util_dbg_init_msg("[SCHEDULER]", true);
-    time_keeper_delay_ms(50);
-
 
     // -------------------------------------------------------------------------
     //Init state_machine
@@ -123,7 +109,7 @@ bool Central_data::init(void)
     // Init qfilter
     // -------------------------------------------------------------------------
     ret = qfilter_init(&attitude_filter,
-                       qfilter_default_config(),
+                       config_.qfilter_config,
                        &imu,
                        &ahrs);
     print_util_dbg_init_msg("[QFILTER]", ret);
@@ -135,7 +121,7 @@ bool Central_data::init(void)
     // Init stabilisers
     // -------------------------------------------------------------------------
     ret = stabilisation_copter_init(&stabilisation_copter,
-                                    stabilisation_copter_default_config(),
+                                    config_.stabilisation_copter_config,
                                     &controls,
                                     &ahrs,
                                     &position_estimation,
@@ -171,7 +157,7 @@ bool Central_data::init(void)
     // Init servo mixing
     // -------------------------------------------------------------------------
     ret = servos_mix_quadcotper_diag_init(&servo_mix,
-                                          servos_mix_quadcopter_diag_default_config(),
+                                          config_.servos_mix_quadcopter_diag_config,
                                           &command.torque,
                                           &command.thrust,
                                           &servo_0,
@@ -195,7 +181,7 @@ bool Central_data::init(void)
     // Init attitude controller
     //--------------------------------------------------------------------------
     attitude_controller_init(&attitude_controller,
-                             attitude_controller_default_config(),
+                             config_.attitude_controller_config,
                              &ahrs,
                              &command.attitude,
                              &command.rate,
@@ -215,9 +201,8 @@ bool Central_data::init(void)
     //--------------------------------------------------------------------------
     // Init velocity controller
     //--------------------------------------------------------------------------
-    velocity_controller_copter_conf_t velocity_controller_copter_config = velocity_controller_copter_default_config();
     velocity_controller_copter_init(&velocity_controller,
-                                    velocity_controller_copter_config,
+                                    config_.velocity_controller_copter_config,
                                     &ahrs,
                                     &position_estimation,
                                     &command.velocity,
