@@ -880,7 +880,7 @@ void Mavlink_waypoint_handler::state_machine()
     switch (navigation.internal_state)
     {
         case NAV_ON_GND:
-            thrust = manual_control_get_thrust(&manual_control);
+            thrust = manual_control.get_thrust();
 
             if (thrust > -0.7f)
             {
@@ -1372,7 +1372,7 @@ static local_position_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoin
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation, Navigation& navigation, const ahrs_t& ahrs, State& state, const manual_control_t& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream):
             waypoint_count(0),
             current_waypoint_index(0),
             hold_waypoint_set(false),

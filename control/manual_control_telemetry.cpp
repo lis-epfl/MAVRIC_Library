@@ -63,21 +63,21 @@ extern "C"
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t* manual_control, mavlink_command_long_t* packet);
+static mav_result_t manual_control_telemetry_toggle_remote_use(Manual_control* manual_control, mavlink_command_long_t* packet);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t* manual_control, mavlink_command_long_t* packet)
+static mav_result_t manual_control_telemetry_toggle_remote_use(Manual_control* manual_control, mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
 
     if (packet->param1 == 1)
     {
-        manual_control->control_source = CONTROL_SOURCE_REMOTE;
-        manual_control->mode_source = MODE_SOURCE_REMOTE;
+        manual_control->control_source = Manual_control::CONTROL_SOURCE_REMOTE;
+        manual_control->mode_source = Manual_control::MODE_SOURCE_REMOTE;
 
         print_util_dbg_print("Remote control activated\r\n");
 
@@ -85,8 +85,8 @@ static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t*
     }
     else if (packet->param1 == 0)
     {
-        manual_control->control_source = CONTROL_SOURCE_NONE;
-        manual_control->mode_source = MODE_SOURCE_GND_STATION;
+        manual_control->control_source = Manual_control::CONTROL_SOURCE_NONE;
+        manual_control->mode_source = Manual_control::MODE_SOURCE_GND_STATION;
 
         print_util_dbg_print("Remote control disactivated\r\n");
 
@@ -100,7 +100,7 @@ static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t*
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool manual_control_telemetry_init(manual_control_t* manual_control, Mavlink_message_handler* message_handler)
+bool manual_control_telemetry_init(Manual_control* manual_control, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
@@ -125,14 +125,14 @@ bool manual_control_telemetry_init(manual_control_t* manual_control, Mavlink_mes
 }
 
 
-void manual_control_telemetry_send(const manual_control_t* manual_control, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void manual_control_telemetry_send(const Manual_control* manual_control, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     switch (manual_control->control_source)
     {
-        case CONTROL_SOURCE_NONE:
+        case Manual_control::CONTROL_SOURCE_NONE:
             break;
 
-        case CONTROL_SOURCE_REMOTE:
+        case Manual_control::CONTROL_SOURCE_REMOTE:
             mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid,
                                                 mavlink_stream->compid,
                                                 msg,
@@ -164,7 +164,7 @@ void manual_control_telemetry_send(const manual_control_t* manual_control, const
                                                 manual_control->remote.signal_quality);
             break;
 
-        case CONTROL_SOURCE_JOYSTICK:
+        case Manual_control::CONTROL_SOURCE_JOYSTICK:
             mavlink_msg_manual_control_pack(mavlink_stream->sysid,
                                             mavlink_stream->compid,
                                             msg,

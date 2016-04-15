@@ -99,7 +99,7 @@ public:
                            Navigation& navigation,
                            const ahrs_t& ahrs,
                            State& state,
-                           const manual_control_t& manual_control,
+                           const Manual_control& manual_control,
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream);
 
@@ -168,7 +168,7 @@ private:
 
     mav_mode_t last_mode;                                            ///< The mode of the MAV to have a memory of its evolution    
     const ahrs_t& ahrs;                                         ///< The pointer to the attitude estimation structure
-    const manual_control_t& manual_control;                     ///< The pointer to the manual_control structure
+    const Manual_control& manual_control;                     ///< The pointer to the manual_control structure
 
     /**
      * \brief   Drives the stopping behavior

@@ -161,7 +161,7 @@ bool state_machine_init(state_machine_t* state_machine,
                         State* state,
                         const Gps* gps,
                         const Imu* imu,
-                        manual_control_t* manual_control)
+                        Manual_control* manual_control)
 {
     bool init_success = true;
 
@@ -193,9 +193,9 @@ bool state_machine_update(state_machine_t* state_machine)
     mode_custom_new = state_machine->state->mav_mode_custom;
 
     // Get remote signal strength
-    rc_check = manual_control_get_signal_strength(state_machine->manual_control);
+    rc_check = state_machine->manual_control->get_signal_strength();
 
-    mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
+    mode_new = state_machine->manual_control->get_mode_from_source(mode_current);
 
     // ARMING
     if(mav_modes_is_armed(mode_new) && !mav_modes_is_armed(mode_current))
@@ -254,10 +254,10 @@ bool state_machine_update(state_machine_t* state_machine)
             break;
 
         case MAV_STATE_ACTIVE:
-            if ((state_machine->manual_control->mode_source == MODE_SOURCE_REMOTE) || (state_machine->manual_control->mode_source == MODE_SOURCE_JOYSTICK))
+            if ((state_machine->manual_control->mode_source == Manual_control::MODE_SOURCE_REMOTE) || (state_machine->manual_control->mode_source == Manual_control::MODE_SOURCE_JOYSTICK))
             {
                 // check connection with remote
-                if ((state_machine->manual_control->mode_source == MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
+                if ((state_machine->manual_control->mode_source == Manual_control::MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
                 {
                     print_util_dbg_print("Remote control signal lost! Returning to home and land.\r\n");
                     state_new = MAV_STATE_CRITICAL;
@@ -326,7 +326,7 @@ bool state_machine_update(state_machine_t* state_machine)
             if (!state_machine->state->battery_.is_low())
             {
                 // To get out of this state, if we are in the wrong use_mode_from_remote
-                if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)
+                if (state_machine->manual_control->mode_source != Manual_control::MODE_SOURCE_REMOTE)
                 {
                     state_new = MAV_STATE_STANDBY;
                 }

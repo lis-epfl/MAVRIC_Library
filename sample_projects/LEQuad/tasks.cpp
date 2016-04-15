@@ -104,7 +104,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
         }
         else if (mav_modes_is_stabilise(mode))
         {
-            manual_control_get_velocity_vector(&central_data->manual_control, &central_data->controls);
+            central_data->manual_control.get_velocity_vector(&central_data->controls);
 
             central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
             central_data->controls.yaw_mode = YAW_RELATIVE;
@@ -118,7 +118,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
         }
         else if (mav_modes_is_manual(mode))
         {
-            manual_control_get_control_command(&central_data->manual_control, &central_data->controls);
+            central_data->manual_control.get_control_command(&central_data->controls);
 
             central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
             central_data->controls.yaw_mode = YAW_RELATIVE;
@@ -175,7 +175,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         // velocity_controller_copter_update(&central_data->velocity_controller);
 
         // get attitude command from remote
-        manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
+        central_data->manual_control.get_attitude_command(0.02f, &central_data->command.attitude, 1.0f);
 
         // Hardcode altitude command
         central_data->command.position.xyz[0] = 0.0f;
@@ -192,8 +192,8 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     else if (mav_modes_is_manual(mode) && mav_modes_is_stabilise(mode))
     {
         // get command from remote
-        manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
-        manual_control_get_thrust_command(&central_data->manual_control, &central_data->command.thrust);
+        central_data->manual_control.get_attitude_command(0.02f, &central_data->command.attitude, 1.0f);
+        central_data->manual_control.get_thrust_command(&central_data->command.thrust);
 
         // Do control
         attitude_controller_update(&central_data->attitude_controller);

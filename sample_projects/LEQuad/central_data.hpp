@@ -78,7 +78,6 @@
 #include "sensing/qfilter_default_config.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
-#include "control/manual_control_default_config.hpp"
 #include "control/attitude_controller_default_config.hpp"
 #include "control/velocity_controller_copter_default_config.hpp"
 #include "communication/remote_default_config.hpp"
@@ -118,7 +117,7 @@ public:
       Position_estimation::conf_t position_estimation_config;
       stabilisation_copter_conf_t stabilisation_copter_config;
       servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
-      manual_control_conf_t manual_control_config;
+      Manual_control::conf_t manual_control_config;
       remote_conf_t remote_config;
       attitude_controller_conf_t attitude_controller_config;
       velocity_controller_copter_conf_t velocity_controller_copter_config;
@@ -193,7 +192,7 @@ public:
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
 
-    manual_control_t manual_control;                            ///< The joystick parsing structure
+    Manual_control manual_control;                            ///< The joystick parsing structure
 
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
@@ -245,7 +244,7 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
 
     conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
 
-    conf.manual_control_config = manual_control_default_config();
+    conf.manual_control_config = Manual_control::default_config();
 
     conf.remote_config = remote_default_config();
 

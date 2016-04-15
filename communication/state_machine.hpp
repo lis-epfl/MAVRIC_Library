@@ -59,7 +59,7 @@ typedef struct
     remote_t* remote;                                   ///< Pointer to the remote structure
     const Gps* gps;                                     ///< Pointer to the gps structure
     const Imu* imu;                                     ///< Pointer to the imu structure
-    manual_control_t* manual_control;                   ///< Pointer to the manual_control structure
+    Manual_control* manual_control;                   ///< Pointer to the manual_control structure
 } state_machine_t;
 
 
@@ -78,7 +78,7 @@ bool state_machine_init(state_machine_t* state_machine,
                         State* state,
                         const Gps* gps,
                         const Imu* imu,
-                        manual_control_t* manual_control);
+                        Manual_control* manual_control);
 
 /**
  * \brief   Updates the state and mode of the UAV (not implemented yet)

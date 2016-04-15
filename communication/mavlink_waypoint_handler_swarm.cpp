@@ -577,7 +577,7 @@ Mavlink_waypoint_handler_swarm::Mavlink_waypoint_handler_swarm(Position_estimati
                                                                Navigation& navigation,
                                                                const ahrs_t& ahrs,
                                                                State& state,
-                                                               const manual_control_t& manual_control,
+                                                               const Manual_control& manual_control,
                                                                Mavlink_message_handler& message_handler,
                                                                const Mavlink_stream& mavlink_stream):
     Mavlink_waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, message_handler, mavlink_stream)

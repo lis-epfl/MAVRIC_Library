@@ -88,8 +88,8 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Create central data using simulated sensors
     Central_data::conf_t cd_config = Central_data::default_config(sysid);
-    cd_config.manual_control_config.mode_source = MODE_SOURCE_GND_STATION;
-    cd_config.manual_control_config.control_source = CONTROL_SOURCE_NONE;
+    cd_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
+    cd_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
     cd_config.state_config.simulation_mode = HIL_ON;
 
     Central_data cd = Central_data(board.imu,
