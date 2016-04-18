@@ -192,7 +192,7 @@ public:
     bool add_object(Object* obj);
 
     /**
-     * \brief   Return intersection between ray and closest object in world
+     * \brief   Perform intersection between ray and closest object in world
      *
      * \param   ray           Ray to intersect with (input)
      * \param   intersection  Intersection point (output)
@@ -236,12 +236,12 @@ public:
     bool set_center(Vector3f center);
 
     /**
-     * \brief   Return origin point
+     * \brief   Return normal vector
      */
     const Vector3f& normal(void) const;
 
     /**
-     * \brief   Update normal point
+     * \brief   Update normal vector
      */
     bool set_normal(Vector3f normal);
 
