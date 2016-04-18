@@ -251,10 +251,10 @@ static inline dynamic_model_fixed_wing_conf_t dynamic_model_fixed_wing_default_c
     conf.rotor_diameter         = 0.14f;                ///< Mean "effective" rotor diameter
     conf.rotor_foil_area        = 0.18f * 0.015f;       ///< Area of the propeller blades in m^2
     conf.rotor_pitch            = 0.15f;                ///< Rotor pitch in m/revolution (7x6" roughly 0.15m)
-    conf.total_mass             = 0.02f;                ///< Vehicle mass in kg
-    conf.roll_momentum          = 886.0f/(1000.0f*1000.0f);///< Angular momentum constants (assumed to be independent) (in kg/m^2) TODO: correct these
-    conf.pitch_momentum         = 150.0f/(1000.0f*1000.0f);///< Angular momentum constants (assumed to be independent) (in kg/m^2)
-    conf.yaw_momentum           = 1021.0f/(1000.0f*1000.0f);         ///< Approximate motor arm mass * rotor arm length
+    conf.total_mass             = 0.4f;                ///< Vehicle mass in kg
+    conf.roll_momentum          = 16438.7f/(1000.0f*1000.0f);///< Angular momentum constants (assumed to be independent) (in kg/m^2) TODO: correct these
+    conf.pitch_momentum         = 3840.4f/(1000.0f*1000.0f);///< Angular momentum constants (assumed to be independent) (in kg/m^2)
+    conf.yaw_momentum           = 20260.4f/(1000.0f*1000.0f);         ///< Approximate motor arm mass * rotor arm length
     conf.rotor_momentum         = 0.005f * 0.03f;       ///< Rotor inertia  (5g off center mass * rotor radius)
     conf.wind_x                 = 0.0f;                 ///< Wind in x axis, global frame
     conf.wind_y                 = 0.0f;                 ///< Wind in y axis, global frame

@@ -43,6 +43,9 @@
 
 #include "simulation/wing_model.hpp"
 #include <iostream>
+#include <fstream>
+
+extern std::ofstream logfile;
 
 extern "C"
 {
@@ -79,7 +82,8 @@ wing_model_forces_t Wing_model::compute_forces(quat_t wind_bf){
 	float cl = get_cl(aoa/PI*180.0,flap_angle_); //aoa is in rad and needs to be given in degrees
 	float cd = get_cd(aoa/PI*180.0,flap_angle_);
 	float cm = get_cm(aoa/PI*180.0,flap_angle_);
-	printf("%f, %f\n",aoa, cm);
+	logfile << aoa << ",";
+	printf("%f, %f\n",aoa*180/PI, cl);
 	float density=1.225f; //Keep it constant for now
 	float base = 0.5*density*speed_sq*area_;
 	float lift = cl*base; //Doing this to improve the speed -> Correct??
@@ -94,6 +98,7 @@ wing_model_forces_t Wing_model::compute_forces(quat_t wind_bf){
 	forces_wf.force[1] = 0.0;
 	forces_wf.force[2] = -lift*cosinus-drag*sinus;
 	wing_model_forces_t forces_bf = forces_wing_to_bf(forces_wf);
+	printf("\n----->%f\n",forces_bf.force[0]);
 	return forces_bf;
 }
 

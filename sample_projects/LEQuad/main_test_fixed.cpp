@@ -59,7 +59,7 @@ int main(int argc, char** argv)
     // Create log file
 
     logfile.open("log.csv");
-    logfile << "x,y,z,vx,vy,vz,r,p,y,pv,pt" << std::endl;
+    logfile << "x,y,z,vx,vy,vz,r,p,y,pv,aoa1,aoa2,aoa3,aoa4,pt" << std::endl;
     // logfile.close();
 
     Pwm_dummy pwm;
@@ -78,8 +78,8 @@ int main(int argc, char** argv)
     //Create dynamic model
     Dynamic_model_fixed_wing model(servo_motor, servo_flap_left, servo_flap_right);
 
-    // servo_motor.write(1.0f);
-    servo_motor.write(-0.4f);
+    servo_motor.write(100.0f);
+    //servo_motor.write(-0.4f);
 
 
     local_position_t position;

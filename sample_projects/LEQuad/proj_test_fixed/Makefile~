@@ -11,7 +11,7 @@ PROJ_NAME=LEQuad_test_fixed_wing
 # PROJECT FOLDER
 # ------------------------------------------------------------------------------
 # Project source files (*.c and *.cpp)
-LIB_SRCS += sample_projects/LEQuad/main_fixed_wing.cpp
+LIB_SRCS += sample_projects/LEQuad/main_test_fixed.cpp
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
 # ------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ include ${MAVRIC_LIB}rules_linux.mk
 # CC = gcc
 OBJCOPY = objcopy
 
-CFLAGS += -g -O2 -Wall -std=gnu99 -MMD -MP
+CFLAGS += -g3 -O0 -Wall -std=gnu99 -MMD -MP
 
 # Include files from MAVRIC library and source folder
 CFLAGS += -I.
