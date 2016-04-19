@@ -62,7 +62,8 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-State::State(Battery& battery, state_conf_t config):
+State::State(mavlink_stream_t& mavlink_stream, Battery& battery, state_conf_t config):
+    mavlink_stream_(mavlink_stream),
     battery_(battery)
 {
     // Init parameters
