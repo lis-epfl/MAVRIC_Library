@@ -75,15 +75,16 @@ Wing_model::Wing_model(float flap_angle,
 	init_lookup();
 }
 
-wing_model_forces_t Wing_model::compute_forces(quat_t wind_bf){
-	quat_t wind_wf = quaternions_global_to_local(orientation_,wind_bf); //TODO : double check
-	float aoa = atan2(-wind_wf.v[2], -wind_wf.v[0]); //Neglect the lateral wind
-	float speed_sq = SQR(wind_wf.v[0]) + SQR(wind_wf.v[2]); //Neglect the lateral wind
+wing_model_forces_t Wing_model::compute_forces(float wind_bf[3]){
+	float wind_wf[3];
+	//Global to local wind
+	quaternions_rotate_vector(orientation_,wind_bf,wind_wf); //TODO : double check
+	float aoa = atan2(-wind_wf[2], -wind_wf[0]); //Neglect the lateral wind
+	float speed_sq = SQR(wind_wf[0]) + SQR(wind_wf[2]); //Neglect the lateral wind
 	float cl = get_cl(aoa/PI*180.0,flap_angle_); //aoa is in rad and needs to be given in degrees
 	float cd = get_cd(aoa/PI*180.0,flap_angle_);
 	float cm = get_cm(aoa/PI*180.0,flap_angle_);
 	logfile << aoa << ",";
-	printf("%f, %f\n",aoa*180/PI, cl);
 	float density=1.225f; //Keep it constant for now
 	float base = 0.5*density*speed_sq*area_;
 	float lift = cl*base; //Doing this to improve the speed -> Correct??
@@ -98,7 +99,7 @@ wing_model_forces_t Wing_model::compute_forces(quat_t wind_bf){
 	forces_wf.force[1] = 0.0;
 	forces_wf.force[2] = -lift*cosinus-drag*sinus;
 	wing_model_forces_t forces_bf = forces_wing_to_bf(forces_wf);
-	printf("\n----->%f\n",forces_bf.force[0]);
+	printf("Aoa: %3.3f \tPitch in wing: %f\n",aoa/PI*180.0f,forces_bf.torque[1]);
 	return forces_bf;
 }
 
@@ -188,21 +189,13 @@ float Wing_model::get_cm(float aoa, float flap_angle)
 
 wing_model_forces_t Wing_model::forces_wing_to_bf(wing_model_forces_t forces_wf)
 {
-	quat_t tmp;
-	tmp.s = 0.0;
-	tmp.v[0] = forces_wf.force[0];
-	tmp.v[1] = forces_wf.force[1];
-	tmp.v[2] = forces_wf.force[2];
-	tmp = quaternions_local_to_global(orientation_,tmp);
 	wing_model_forces_t forces_bf;
-	forces_bf.force[0] = tmp.v[0];
-	forces_bf.force[1] = tmp.v[1];
-	forces_bf.force[2] = tmp.v[2];
-	quat_t torques_wf;
-	torques_wf.s = 0.0f;
-	for(int i=0; i<3; i++) torques_wf.v[i]=forces_wf.torque[i];
-	quat_t torques_bf = quaternions_local_to_global(orientation_,torques_wf);
-	for(int i=0; i<3; i++) forces_bf.torque[i]=torques_bf.v[i] + forces_bf.force[(i+2)%3]*position_bf_[(i+1)%3] - forces_bf.force[(i+1)%3]*position_bf_[(i+2)%3];
+	// Rotate the forces
+	quaternions_rotate_vector(quaternions_inverse(orientation_),forces_wf.force,forces_bf.force);
+	// Rotate the torques
+	quaternions_rotate_vector(quaternions_inverse(orientation_),forces_wf.torque,forces_bf.torque);
+	// Compute the torques due to the forces being applied away from COG
+	//for(int i=0; i<3; i++) forces_bf.torque[i]+= forces_bf.force[(i+2)%3]*position_bf_[(i+1)%3] - forces_bf.force[(i+1)%3]*position_bf_[(i+2)%3];
 	return forces_bf;
 }
 

@@ -78,7 +78,7 @@ int main(int argc, char** argv)
     //Create dynamic model
     Dynamic_model_fixed_wing model(servo_motor, servo_flap_left, servo_flap_right);
 
-    servo_motor.write(100.0f);
+    servo_motor.write(-10.0f);
     //servo_motor.write(-0.4f);
 
 
@@ -93,6 +93,7 @@ int main(int argc, char** argv)
     float t = time_keeper_get_s();
     for (uint32_t i = 0; i < 1000; i++)
     {
+        printf("-------------------------\n");
         position = model.position_lf();
         velocity = model.velocity_lf();
         ang_velocity = model.angular_velocity_bf();
@@ -101,14 +102,9 @@ int main(int argc, char** argv)
         float q1 = orientation.v[0];
         float q2 = orientation.v[1];
         float q3 = orientation.v[2];
-        printf("Position: (%f, %f, %f)\n", position.pos[0], position.pos[1], position.pos[2]);
-        roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
+              roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
         pitch = asin(2*(q0*q2-q3*q1));
         yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3));
-        printf("Roll: %f Pitch: %f Yaw: %f \n", roll, pitch, yaw);
-        printf("Velocity: (%f, %f, %f)\n", velocity[0], velocity[1], velocity[2]);
-        printf("Angular velocity: (%f, %f, %f)\n\n", ang_velocity[0], ang_velocity[1], ang_velocity[2]);
-        //std::cin.ignore();
 
         // write to log file
         logfile << position.pos[0] << "," << position.pos[1] << "," << position.pos[2] << ",";

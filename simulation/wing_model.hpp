@@ -92,7 +92,7 @@ public:
      *
      * \return  The 3 forces and 3 moments that applies on the wing
      */
-    wing_model_forces_t compute_forces(quat_t wind_bf);
+    wing_model_forces_t compute_forces(float wind_bf[3]);
 
     /**
     * \brief    Allows to change the flap angle

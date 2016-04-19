@@ -98,16 +98,13 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
 bool Dynamic_model_fixed_wing::update(void)
 {
     int32_t i;
-    quat_t qtmp1, qvel_bf, qed;
+    quat_t qtmp1, qed;
     const quat_t up     = { 0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z} };
 
     // Update timing
     float now       = time_keeper_get_us();
     dt_s_           = (now - last_update_us_) / 1000000.0f;
     last_update_us_ = now;
-
-    printf("------------------------------------------\n%f\n",dt_s_);
-
 
     // Do nothing if updated too often
     if (dt_s_ < 0.001f)
@@ -128,8 +125,8 @@ bool Dynamic_model_fixed_wing::update(void)
     float q2 = attitude_.v[1];
     float q3 = attitude_.v[2];
     float pitch = asin(2*(q0*q2-q3*q1));
-    left_flap_.set_flap_angle(90.0f*pitch/PI-15.0f);//flaps_angle_left);//Set these in degrees!!
-    right_flap_.set_flap_angle(90.0f*pitch/PI-15.0f);//flaps_angle_right);
+    left_flap_.set_flap_angle(0.0f);//flaps_angle_left);//Set these in degrees!!
+    right_flap_.set_flap_angle(0.0f);//flaps_angle_right);
 
     // compute torques and forces based on servo commands and positions of the flaps
     forces_from_servos();
@@ -185,28 +182,19 @@ bool Dynamic_model_fixed_wing::update(void)
         rates_bf_[2] = 0;
     }
 
-    for (i = 0; i < 3; i++)
-    {
-        qtmp1.v[i] = vel_[i];
-    }
-    qtmp1.s = 0.0f;
-    qvel_bf = quaternions_global_to_local(attitude_, qtmp1);
+    // Global to local velocity
+    quaternions_rotate_vector(attitude_, vel_.data(), vel_bf_.data());
 
     for (i = 0; i < 3; i++)
     {
-        vel_bf_[i] = qvel_bf.v[i];
-
         // this is the "clean" acceleration without gravity
         acc_bf_[i] = lin_forces_bf_[i] / config_.total_mass - up_vec.v[i] * config_.gravity;
 
         vel_bf_[i] = vel_bf_[i] + acc_bf_[i] * dt_s_;
     }
 
-    // calculate velocity in global frame
-    // vel = qe *vel_bf * qe - 1
-    qvel_bf.s = 0.0f; qvel_bf.v[0] = vel_bf_[0]; qvel_bf.v[1] = vel_bf_[1]; qvel_bf.v[2] = vel_bf_[2];
-    qtmp1 = quaternions_local_to_global(attitude_, qvel_bf);
-    vel_[0] = qtmp1.v[0]; vel_[1] = qtmp1.v[1]; vel_[2] = qtmp1.v[2];
+    // Local to global velocity
+    quaternions_rotate_vector(quaternions_inverse(attitude_),vel_bf_.data(),vel_.data());
 
     for (i = 0; i < 3; i++)
     {
@@ -278,12 +266,13 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
 
     //Get the wind in the bf
       //Take into account the speed of the plane to get the relative wind
-    quat_t wind_gf  = {};
-    wind_gf.s       = 0;
-    wind_gf.v[0]    = config_.wind_x-vel_[0];
-    wind_gf.v[1]    = config_.wind_y-vel_[1];
-    wind_gf.v[2]    = 0.0f-vel_[2];
-    quat_t wind_bf  =  quaternions_global_to_local(attitude_, wind_gf);
+    float wind_gf[3];
+    wind_gf[0] = config_.wind_x-vel_[0];
+    wind_gf[1] = config_.wind_y-vel_[1];
+    wind_gf[2] = 0.0f-vel_[2];
+    float wind_bf[3];
+    //Global to local wind
+    quaternions_rotate_vector(attitude_, wind_gf,wind_bf);
 
 
     //Compute the forces for the motor and each wing
@@ -338,7 +327,7 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
       right_drift_force.force[2];
 }
 
-wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(quat_t wind_bf,float motor_command)
+wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(float wind_bf[3],float motor_command)
 {
   //Same as for quad rotors
   // temporarily save old rotor speeds
@@ -349,8 +338,8 @@ wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(quat_t wind_b
   // calculate torque created by rotor inertia
   float rotor_inertia = (motor_speed_ - old_motor_speed) / dt_s_ * config_.rotor_momentum;
 
-  float sqr_lat_airspeed = SQR(wind_bf.v[1]) + SQR(wind_bf.v[2]);
-  float ldb = lift_drag_base(motor_speed_, sqr_lat_airspeed, -wind_bf.v[0]);
+  float sqr_lat_airspeed = SQR(wind_bf[1]) + SQR(wind_bf[2]);
+  float ldb = lift_drag_base(motor_speed_, sqr_lat_airspeed, -wind_bf[0]);
   wing_model_forces_t motor_forces;
   motor_forces.force[0] = ldb * config_.rotor_cl; //TODO: fix it
   motor_forces.force[1] = 0.0f;
@@ -358,8 +347,6 @@ wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(quat_t wind_b
   motor_forces.torque[ROLL] = 0.0f*(10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;
   motor_forces.torque[PITCH] = 0.0f;
   motor_forces.torque[YAW] = 0.0f;//TODO : make this work
-
-printf("\n--->%f\n",motor_forces.force[0]);
 
   return motor_forces;
 }

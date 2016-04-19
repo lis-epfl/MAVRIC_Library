@@ -223,7 +223,7 @@ private:
      *
      * \return  force structure with 3 forces and 3 torques
      */
-    wing_model_forces_t compute_motor_forces(quat_t wind_bf,float motor_command);
+    wing_model_forces_t compute_motor_forces(float wind_bf[3],float motor_command);
 
     /**
      * \brief   Computes the base coefficient to compute the lift an drag
