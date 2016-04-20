@@ -238,21 +238,21 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->imu.get_config()->magnetometer.scale_factor[Z]                        , "SCALE_MAG_Z");
 
     // Position estimation
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_alt_baro                              , "POS_KP_ALT_BARO");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_vel_baro                              , "POS_KP_VELB");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_pos_gps[0]                            , "POS_KP_POS0");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_pos_gps[1]                            , "POS_KP_POS1");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_pos_gps[2]                            , "POS_KP_POS2");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_alt_baro                              , "POS_KP_ALT_BARO");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_vel_baro                              , "POS_KP_VELB");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_pos_gps[0]                            , "POS_KP_POS0");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_pos_gps[1]                            , "POS_KP_POS1");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->position_estimation.kp_pos_gps[2]                            , "POS_KP_POS2");
 
     // Navigation
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.dist2vel_gain                             , "VEL_DIST2VEL");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.cruise_speed                                  , "VEL_CRUISESPEED");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.max_climb_rate                                , "VEL_CLIMBRATE");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.soft_zone_size                                , "VEL_SOFTZONE");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.hovering_controller.p_gain                    , "VEL_HOVER_PGAIN");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.hovering_controller.differentiator.gain       , "VEL_HOVER_DGAIN");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.wpt_nav_controller.p_gain                 , "VEL_WPT_PGAIN");
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.wpt_nav_controller.differentiator.gain        , "VEL_WPT_DGAIN");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.dist2vel_gain                             , "VEL_DIST2VEL");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.cruise_speed                                  , "VEL_CRUISESPEED");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.max_climb_rate                                , "VEL_CLIMBRATE");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.soft_zone_size                                , "VEL_SOFTZONE");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.hovering_controller.p_gain                    , "VEL_HOVER_PGAIN");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.hovering_controller.differentiator.gain       , "VEL_HOVER_DGAIN");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.wpt_nav_controller.p_gain                 , "VEL_WPT_PGAIN");
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters , &central_data->navigation.wpt_nav_controller.differentiator.gain        , "VEL_WPT_DGAIN");
 
 
     // Control and mode source
@@ -265,7 +265,8 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.threshold_,       "WT_FCT_THRSOLD");
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.goal_direction_,  "GL_DIRECTION"  );
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.pitch_,           "PITCH_CONTROL" );
-
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.intersaccade_time_,  "INTSAC_TIME" );
+    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.weighted_function_,  "WT_FCT" );
 
     // Attitude PID controller gains
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].p_gain,             "ROLL_ATT_R_KP");

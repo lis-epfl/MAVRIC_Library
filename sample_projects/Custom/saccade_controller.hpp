@@ -142,6 +142,8 @@ public:
     float                       sin_azimuth_[2 * N_points];
     float                       can_;
     float                       cad_;
+    float                       intersaccade_time_;
+    float                       weighted_function_;
     uint64_t                    last_saccade_;
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
     flow_t&                     flow_left_;                          ///< Left optic flow camera output
@@ -161,7 +163,7 @@ static inline saccade_controller_conf_t saccade_controller_default_config(void)
     conf.pitch_          = 0.0f;
     conf.gain_           = 1.0f;
     conf.threshold_      = 1.0f;
-    conf.goal_direction_ = 0.0f;
+    conf.goal_direction_ = 1.54f;
 
     return conf;
 };

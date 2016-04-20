@@ -157,6 +157,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 
     if (mav_modes_is_armed(mode) == false)
     {
+        central_data->saccade_controller_.saccade_state_ = INTERSACCADE;
         // Set command to current heading
         central_data->command.attitude.rpy[2] = coord_conventions_quat_to_aero(central_data->ahrs.qe).rpy[2];
         central_data->servo_0.failsafe();
@@ -171,7 +172,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         // 1m altitude command (Above goround level)
         central_data->command.position.xyz[0] = 0.0f;
         central_data->command.position.xyz[1] = 0.0f;
-        central_data->command.position.xyz[2] = -0.6f;
+        central_data->command.position.xyz[2] = -0.5f;
         central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
 
         // Do control
@@ -184,14 +185,14 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     {
         // manual_control_get_velocity_command(&central_data->manual_control, &central_data->command.velocity, 1.0f);
         // velocity_controller_copter_update(&central_data->velocity_controller);
-
+        central_data->saccade_controller_.saccade_state_ = INTERSACCADE;
         // get attitude command from remote
         manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
 
         // 1m altitude command (Above goround level)
         central_data->command.position.xyz[0] = 0.0f;
         central_data->command.position.xyz[1] = 0.0f;
-        central_data->command.position.xyz[2] = -0.6f;
+        central_data->command.position.xyz[2] = -0.5f;
         central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
 
         // Do control
@@ -202,6 +203,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     }
     else if (mav_modes_is_manual(mode) && mav_modes_is_stabilise(mode))
     {
+        central_data->saccade_controller_.saccade_state_ = INTERSACCADE;
         // get command from remote
         manual_control_get_attitude_command(&central_data->manual_control, 0.02f, &central_data->command.attitude, 1.0f);
         manual_control_get_thrust_command(&central_data->manual_control, &central_data->command.thrust);

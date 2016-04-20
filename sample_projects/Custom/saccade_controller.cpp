@@ -70,11 +70,14 @@ Saccade_controller::Saccade_controller( flow_t& flow_left,
 
     last_saccade_ = 0;
 
-    saccade_state_ = SACCADE;
+    weighted_function_ = 0;
+
+    saccade_state_ = INTERSACCADE;
 
     attitude_command_.rpy[0]  = 0;
     attitude_command_.rpy[1]  = 0;
     attitude_command_.rpy[2]  = 0;
+    intersaccade_time_ = 1000;
 
     // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
     // float angle_between_points = (140.625 / N_points);
@@ -119,9 +122,21 @@ bool Saccade_controller::update()
     // Calculate for both left and right the sum of the relative nearnesses
     // which are each given by RN = OF/sin(angle),
     for (uint32_t i = 0; i < N_points; ++i)
-    {
-        relative_nearness_[i]             = maths_f_abs(flow_left_.of.x[i]);// * inv_sin_azimuth_[i]);
-        relative_nearness_[i + N_points]  = maths_f_abs(flow_right_.of.x[i]);// * inv_sin_azimuth_[i + N_points]);
+    {   
+        if(flow_left_.of.x[i] < 0 or flow_left_.of.x[i] == 0. or flow_right_.of.x[i] > 0 or flow_right_.of.x[i] == 0)
+        {
+            relative_nearness_[i]             = maths_f_abs(flow_left_.of.x[i] * inv_sin_azimuth_[i]);
+            relative_nearness_[i + N_points]  = maths_f_abs(flow_right_.of.x[i] * inv_sin_azimuth_[i + N_points]);
+            // relative_nearness_[i]             = flow_left_.of.x[i];
+            // relative_nearness_[i + N_points]  = flow_right_.of.x[i];
+        }
+
+        else if(flow_left_.of.x[i] > 0 or flow_right_.of.x[i] < 0)
+        {
+            relative_nearness_[i]             = 0;
+            relative_nearness_[i + N_points]  = 0;
+        }
+        
     }
 
 
@@ -141,34 +156,78 @@ bool Saccade_controller::update()
     // nearest object direction gives the angle in radians to the azimuth_[i])
 
 
-    // Sigmoid function for direction choice, it takes the can, a threshold and
-    // a gain and describes how important it is for the drone to perform a saccade
-
-    float weighted_function = 1.0f;
-
-    // Calculation of the can and cad
+    // Calculation of the CAN and the CAD
 
     can_ = maths_fast_sqrt(comanv_x * comanv_x + comanv_y * comanv_y);
 
-    float nearest_object_direction = 0.0f;
-    if (comanv_x != 0.0f)
-    {
-        nearest_object_direction = atan2(comanv_y, comanv_x);
+    // Sigmoid function for direction choice, it takes the can, a threshold and
+    // a gain and describes how important it is for the drone to perform a saccade
+
+    weighted_function_ = 1/(1 + pow(can_/threshold_ , - gain_));
+
+
+    // // Intermediate variable that gives the angle to the COMANV
+    // float nearest_object_direction = 0.0f;
+    // if (comanv_x != 0.0f)
+    // {
+    //     nearest_object_direction = atan2(comanv_y, comanv_x);
+    // }
+
+    // cad_ = nearest_object_direction + PI;
+
+
+    //Calculate the components of the unit vector opposite of the nearest object direction.
+
+    float cad_x_unit = - comanv_x / can_;
+    float cad_y_unit = - comanv_y / can_;
+
+    cad_ = atan2(cad_y_unit,cad_x_unit);
+
+    // goal vector representing the goal direciton, here it is set to 90 degrees with respect to the north.
+
+    const float goal[3] = {0,1,0};
+
+    // Output vector of the rotation of the goal vector with the according heading information
+
+    float goal_direction_3D[3];
+
+    quaternions_rotate_vector(quaternions_inverse(ahrs_.qe), goal, goal_direction_3D);
+
+    // Normalization of the goal direction vector.
+    float goal_direction_3D_norm = maths_fast_sqrt(goal_direction_3D[0] * goal_direction_3D[0]+ goal_direction_3D[1] * goal_direction_3D[1] + goal_direction_3D[2] * goal_direction_3D[2]);
+
+    if(goal_direction_3D_norm != 0){
+
+    goal_direction_3D[0] = goal_direction_3D[0] / goal_direction_3D_norm;
+    goal_direction_3D[1] = goal_direction_3D[1] / goal_direction_3D_norm;
+    goal_direction_3D[2] = goal_direction_3D[2] / goal_direction_3D_norm;
+    
     }
 
-    //float weighted_function = 1/(1 + pow(can_/threshold_ , - gain_));
-    cad_ = nearest_object_direction + PI;
-
+    //Current heading information used to see if the drone has finished the saccade and declaration of error variable
 
     aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_.qe);
-    float movement_direction  = 0.0f;
+
     float heading_error = 0.0f;
+
+    //Noise for the goal direction
+
+    float noise = 0.0f;
+
+    float movement_direction_x = 0.0f;
+    float movement_direction_y = 0.0f;
+    float movement_direction = 0.0f;
+
+    //Decide between saccade and intersaccade states
 
     switch (saccade_state_)
     {
         // This is the case where we are performing a saccade
+
         case SACCADE:
+
             heading_error = maths_f_abs( maths_calc_smaller_angle(attitude_command_.rpy[2]-current_rpy.rpy[2]) );
+
             if ( heading_error < 0.1)
             {
                 attitude_command_.rpy[0]  = 0;
@@ -178,16 +237,25 @@ bool Saccade_controller::update()
                 saccade_state_            = INTERSACCADE;
             }
         break;
+
         // In this case, we are now in intersaccadic phase
+
         case INTERSACCADE:
-            if (time_keeper_get_ms() - last_saccade_ > 500)
+
+            if (time_keeper_get_ms() - last_saccade_ > intersaccade_time_)
             {
+
                 // Calculation of the movement direction (in radians)
-                movement_direction = weighted_function * cad_;//+ (1-weighted_function) * (goal_direction_ + noise);
+                // movement_direction = weighted_function_ * cad_ + (1-weighted_function_) * (goal_direction_ - current_rpy.rpy[2] + noise);
+                movement_direction_x = weighted_function_ * cad_x_unit + (1-weighted_function_) * (goal_direction_3D[0]  + noise);
+                movement_direction_y = weighted_function_ * cad_y_unit + (1-weighted_function_) * (goal_direction_3D[1]  + noise);
+                movement_direction = atan2(movement_direction_y,movement_direction_x);
+
                 attitude_command_.rpy[0]  = 0;
                 attitude_command_.rpy[1]  = 0;
-                attitude_command_.rpy[2]  += movement_direction;
+                attitude_command_.rpy[2]  +=movement_direction;
                 attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                //goal_direction_ -= movement_direction;
                 saccade_state_            = SACCADE;
             }
         break;
