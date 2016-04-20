@@ -47,6 +47,7 @@
 #include <stdbool.h>
 
 #include "communication/mav_modes.hpp"
+#include "communication/mavlink_stream.hpp"
 #include "drivers/battery.hpp"
 
 
@@ -141,10 +142,11 @@ public:
     /**
      * \brief   Constructor
      *
+     * \param   mavlink_stream  Mavlink downlink
      * \param   battery         Battery monitor
      * \param   state_config    State configuration structure
      */
-    State(Battery& battery, state_conf_t config = state_default_config());
+    State(mavlink_stream_t& mavlink_stream_, Battery& battery, state_conf_t config = state_default_config());
 
 
     /**
@@ -196,7 +198,8 @@ public:
     bool connection_lost;                               ///< Flag to tell if we have connection with the GND station or not
     bool first_connection_set;                          ///< Flag to tell that we received a first message from the GND station
 
-    Battery& battery_;                                  ///< Pointer to battery structure
+    mavlink_stream_t&   mavlink_stream_;                ///< Mavlink communication, used to inform ground station of state and capabilities of drone
+    Battery&            battery_;                       ///< Pointer to battery structure
 };
 
 
