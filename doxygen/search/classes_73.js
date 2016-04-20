@@ -36,6 +36,7 @@ var searchData=
   ['sonar_5fsim',['Sonar_sim',['../classSonar__sim.html',1,'']]],
   ['sonar_5fsim_5fconf_5ft',['sonar_sim_conf_t',['../structsonar__sim__conf__t.html',1,'']]],
   ['spektrum_5fsatellite',['Spektrum_satellite',['../classSpektrum__satellite.html',1,'']]],
+  ['sphere',['Sphere',['../classraytracing_1_1Sphere.html',1,'raytracing']]],
   ['spi',['Spi',['../classSpi.html',1,'']]],
   ['spi_5favr32',['Spi_avr32',['../classSpi__avr32.html',1,'']]],
   ['spi_5favr32_5fconf_5ft',['spi_avr32_conf_t',['../structspi__avr32__conf__t.html',1,'']]],

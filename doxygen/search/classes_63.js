@@ -14,5 +14,6 @@ var searchData=
   ['curvace_5fraw_5fdata_5ft',['curvace_raw_data_t',['../unioncurvace__raw__data__t.html',1,'']]],
   ['curvace_5froi_5fcoord_5ft',['curvace_roi_coord_t',['../unioncurvace__roi__coord__t.html',1,'']]],
   ['curvace_5fscale_5ffactor_5ft',['curvace_scale_factor_t',['../structcurvace__scale__factor__t.html',1,'']]],
-  ['curvace_5ft',['curvace_t',['../structcurvace__t.html',1,'']]]
+  ['curvace_5ft',['curvace_t',['../structcurvace__t.html',1,'']]],
+  ['cylinder',['Cylinder',['../classraytracing_1_1Cylinder.html',1,'raytracing']]]
 ];

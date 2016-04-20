@@ -11,6 +11,7 @@ var searchData=
   ['capacity',['capacity',['../structsd__spi__t.html#a4bab21719e81c2cae1d553d17255631c',1,'sd_spi_t']]],
   ['capacity_5fmult',['capacity_mult',['../structsd__spi__t.html#a262b022411f1f6838f513ae91d5627cc',1,'sd_spi_t']]],
   ['card_5ftype',['card_type',['../structsd__spi__t.html#a1e3ff5e74b98887358082c91c331e512',1,'sd_spi_t']]],
+  ['center',['center',['../classraytracing_1_1Plane.html#a2b714d84cebdd158bf7ec596372be49e',1,'raytracing::Plane::center()'],['../classraytracing_1_1Sphere.html#a7f3f5de13589628033f6f579c030ab29',1,'raytracing::Sphere::center()'],['../classraytracing_1_1Cylinder.html#a75c08f3a0c0aa3e8a262d7df86692692',1,'raytracing::Cylinder::center()']]],
   ['central_5fdata',['Central_data',['../classCentral__data.html',1,'Central_data'],['../classCentral__data.html#a0b82e9d91420420fa4f19f352f7aa54c',1,'Central_data::Central_data()']]],
   ['central_5fdata_5fconf_5ft',['central_data_conf_t',['../structcentral__data__conf__t.html',1,'']]],
   ['chan_5fdata',['chan_data',['../structubx__nav__dgps__t.html#ad78f11ef13c9c689f032c2722abbd6da',1,'ubx_nav_dgps_t']]],
@@ -85,5 +86,7 @@ var searchData=
   ['curvace_5froi_5fcoord_5ft',['curvace_roi_coord_t',['../unioncurvace__roi__coord__t.html',1,'']]],
   ['curvace_5fscale_5ffactor_5ft',['curvace_scale_factor_t',['../structcurvace__scale__factor__t.html',1,'']]],
   ['curvace_5ft',['curvace_t',['../structcurvace__t.html',1,'']]],
-  ['custom_5fswitch_5fchannel',['custom_switch_channel',['../structremote__mode__conf__t.html#a656f7e86e312e32b20d899ede42d68e6',1,'remote_mode_conf_t::custom_switch_channel()'],['../structremote__mode__t.html#acfe93cab2052e37871292b7aeb3c8468',1,'remote_mode_t::custom_switch_channel()']]]
+  ['custom_5fswitch_5fchannel',['custom_switch_channel',['../structremote__mode__conf__t.html#a656f7e86e312e32b20d899ede42d68e6',1,'remote_mode_conf_t::custom_switch_channel()'],['../structremote__mode__t.html#acfe93cab2052e37871292b7aeb3c8468',1,'remote_mode_t::custom_switch_channel()']]],
+  ['cylinder',['Cylinder',['../classraytracing_1_1Cylinder.html#a0d9540b848c9340baf3ed1dbbfc2855b',1,'raytracing::Cylinder']]],
+  ['cylinder',['Cylinder',['../classraytracing_1_1Cylinder.html',1,'raytracing']]]
 ];

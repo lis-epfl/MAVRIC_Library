@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structspi__avr32__conf__t.html" title="Configuration structure." alt="" coords="7,5,127,35"/>
+<area shape="rect" id="node1" href="$classSonar.html" title="Abstarct class for sonars." alt="" coords="5,32,61,61"/>
+<area shape="rect" id="node3" href="$classSonar__i2cxl.html" title="Sonar_i2cxl" alt="" coords="109,5,200,35"/>
+<area shape="rect" id="node5" href="$classSonar__sim.html" title="Simulation for sonars." alt="" coords="113,59,196,88"/>
 </map>

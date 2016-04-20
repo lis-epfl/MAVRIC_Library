@@ -5,6 +5,7 @@ var searchData=
   ['manual_5fcontrol_5fconf_5ft',['manual_control_conf_t',['../structmanual__control__conf__t.html',1,'']]],
   ['manual_5fcontrol_5ft',['manual_control_t',['../structmanual__control__t.html',1,'']]],
   ['mat',['Mat',['../classMat.html',1,'']]],
+  ['mat_3c_203_2c_201_2c_20float_20_3e',['Mat< 3, 1, float >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_201_20_3e',['Mat< m, 1 >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_20m_20_3e',['Mat< m, m >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_20n_20_3e',['Mat< m, n >',['../classMat.html',1,'']]],

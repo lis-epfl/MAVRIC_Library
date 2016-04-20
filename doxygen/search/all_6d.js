@@ -13,6 +13,7 @@ var searchData=
   ['mask',['mask',['../structubx__cfg__nav__settings__t.html#a7affa443e519b735a2bac1197a6b67f1',1,'ubx_cfg_nav_settings_t']]],
   ['mask1',['mask1',['../structubx__cfg__nav__expert__settings__t.html#a238e1b79b8880f1f4a1ebdccf2e2bd79',1,'ubx_cfg_nav_expert_settings_t']]],
   ['mat',['Mat',['../classMat.html',1,'Mat&lt; N, P, T &gt;'],['../classMat.html#ab29b9cf111199df7fe2dfd645d563b59',1,'Mat::Mat(T value=0.0f, bool diag=false)'],['../classMat.html#a2c9400f204ae3187d183879c4799db79',1,'Mat::Mat(const Mat&lt; N, P &gt; &amp;mat)'],['../classMat.html#add81daa1c3f09622ecd4924c2ce297ba',1,'Mat::Mat(const std::array&lt; T, N *P &gt; arr)'],['../classMat.html#ae70a42918a9b6732017746ccf84aae5e',1,'Mat::Mat(const std::initializer_list&lt; T &gt; list)']]],
+  ['mat_3c_203_2c_201_2c_20float_20_3e',['Mat< 3, 1, float >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_201_20_3e',['Mat< m, 1 >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_20m_20_3e',['Mat< m, m >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_20n_20_3e',['Mat< m, n >',['../classMat.html',1,'']]],

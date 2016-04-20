@@ -18,6 +18,7 @@ var searchData=
   ['newline',['newline',['../classConsole.html#abc52af768266fd42378eb54a79623ef2',1,'Console::newline()'],['../classFile.html#a802599d2c56c6c5985dfeb1aa5aa45bc',1,'File::newline()'],['../classSerial.html#a33d8e661405102e5e5a22e435731d5ea',1,'Serial::newline()'],['../classSerial__linux__io.html#a36b53abc84008de89f2bd19558f47685',1,'Serial_linux_io::newline()']]],
   ['next_5ffix',['next_fix',['../structgps__t.html#ab2b5cf78409706dc1d222d475a2346f3',1,'gps_t']]],
   ['next_5frun',['next_run',['../structtask__entry__t.html#a1acc4a1314f84326105456166f598d0d',1,'task_entry_t']]],
+  ['normal',['normal',['../classraytracing_1_1Intersection.html#a108a955f2a46b82101cdbb5e2aa8bf15',1,'raytracing::Intersection::normal()'],['../classraytracing_1_1Plane.html#ac51a3082ac1da2a7262e3397680adb8d',1,'raytracing::Plane::normal()']]],
   ['north_5fspeed',['north_speed',['../structgps__t.html#aa6ae22c930094f8374a745d83b8e901f',1,'gps_t']]],
   ['num_5fch',['num_ch',['../structubx__nav__sv__info__t.html#a59fc3d45ef9667a0b7c8ebcc93d6c9f5',1,'ubx_nav_sv_info_t']]],
   ['num_5fchannel',['num_channel',['../structubx__nav__dgps__t.html#ac35f5bdef1d1edb9a19f870dfaea93d2',1,'ubx_nav_dgps_t']]],

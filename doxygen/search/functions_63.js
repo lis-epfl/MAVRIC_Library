@@ -2,6 +2,7 @@ var searchData=
 [
   ['calibrate_5fbias',['calibrate_bias',['../classBarometer.html#a4d978549f2dbc110a0e92c7d6c8a7ce4',1,'Barometer']]],
   ['calibrate_5fesc',['calibrate_esc',['../classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a',1,'Servo']]],
+  ['center',['center',['../classraytracing_1_1Plane.html#a2b714d84cebdd158bf7ec596372be49e',1,'raytracing::Plane::center()'],['../classraytracing_1_1Sphere.html#a7f3f5de13589628033f6f579c030ab29',1,'raytracing::Sphere::center()'],['../classraytracing_1_1Cylinder.html#a75c08f3a0c0aa3e8a262d7df86692692',1,'raytracing::Cylinder::center()']]],
   ['central_5fdata',['Central_data',['../classCentral__data.html#a0b82e9d91420420fa4f19f352f7aa54c',1,'Central_data']]],
   ['channel',['channel',['../classSatellite.html#a1258b0b911e76664aaada2bf18cd3ee4',1,'Satellite::channel()'],['../classSpektrum__satellite.html#aecc1c81c4700538c31ebe9c6739fe137',1,'Spektrum_satellite::channel()']]],
   ['clear',['clear',['../classBuffer__tpl.html#a69c24683f731a8251ce53e191f6ca09a',1,'Buffer_tpl']]],
@@ -10,5 +11,6 @@ var searchData=
   ['configure',['configure',['../classGps.html#a485a8f353e92861951bc63985c007243',1,'Gps::configure()'],['../classGps__ublox.html#aa06c870ac330623efb14f2da09a0cfaa',1,'Gps_ublox::configure()'],['../classGpio__avr32.html#ab9c0f2998f0624efc62e367f028dee2c',1,'Gpio_avr32::configure()'],['../classGpio.html#af2c5f3040da67693c9a26bb351d9fb88',1,'Gpio::configure()'],['../classGpio__dummy.html#a632b4df2ad22a109f7c2776a7257482d',1,'Gpio_dummy::configure()'],['../classGpio__stm32.html#a3af5f0fc7d3cba3fef4e2ab6ece12527',1,'Gpio_stm32::configure()'],['../classGps__sim.html#acee2d17338145b1f314f3ca05e35cb6a',1,'Gps_sim::configure()']]],
   ['connection_5fstatus',['connection_status',['../classState.html#af9414375a28112394b48994db66743b6',1,'State']]],
   ['console',['Console',['../classConsole.html#a17ca5bcb69c15274ddfcaa4d7b6f8057',1,'Console']]],
-  ['create_5fnew_5flog_5ffile',['create_new_log_file',['../classData__logging.html#a6a31693af23d1281dd30ad8a54582358',1,'Data_logging']]]
+  ['create_5fnew_5flog_5ffile',['create_new_log_file',['../classData__logging.html#a6a31693af23d1281dd30ad8a54582358',1,'Data_logging']]],
+  ['cylinder',['Cylinder',['../classraytracing_1_1Cylinder.html#a0d9540b848c9340baf3ed1dbbfc2855b',1,'raytracing::Cylinder']]]
 ];

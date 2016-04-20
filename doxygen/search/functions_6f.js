@@ -15,5 +15,6 @@ var searchData=
   ['operator_3c_3c',['operator<<',['../classConsole.html#a7045dbf455db7e4cf41c7ecafdc9cc31',1,'Console::operator&lt;&lt;(const T &amp;data)'],['../classConsole.html#a1661d1665b7f5bdfea455e8963d589ad',1,'Console::operator&lt;&lt;(ConsoleManipulator manip)']]],
   ['operator_5b_5d',['operator[]',['../classMat.html#a66bf4fdc472a4df84877deec04410b2b',1,'Mat']]],
   ['operator_7e',['operator~',['../classMat.html#aaf5a22307d22016a23bee37ad93a2952',1,'Mat']]],
-  ['orientation_5fbf',['orientation_bf',['../classSonar.html#a4d2abf288d8bf7ffaf28e3323f30a08c',1,'Sonar::orientation_bf()'],['../classSonar__i2cxl.html#ac794447ccb918385086fd1ac91673f11',1,'Sonar_i2cxl::orientation_bf()'],['../classSonar__sim.html#a53ce1c938e428e4b92beba5974094334',1,'Sonar_sim::orientation_bf()']]]
+  ['orientation_5fbf',['orientation_bf',['../classSonar.html#a4d2abf288d8bf7ffaf28e3323f30a08c',1,'Sonar::orientation_bf()'],['../classSonar__i2cxl.html#ac794447ccb918385086fd1ac91673f11',1,'Sonar_i2cxl::orientation_bf()'],['../classSonar__sim.html#a53ce1c938e428e4b92beba5974094334',1,'Sonar_sim::orientation_bf()']]],
+  ['origin',['origin',['../classraytracing_1_1Ray.html#ad248739c8b78837066e55d9d2be765ed',1,'raytracing::Ray']]]
 ];
