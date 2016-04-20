@@ -252,7 +252,7 @@ mav_mode_t Manual_control::get_mode_from_source(mav_mode_t mode_current)
     {
         case MODE_SOURCE_GND_STATION:
             new_mode = mode_current;
-            joystick.mav_mode_desired = mode_current;
+            //joystick.mav_mode_desired = mode_current;
             break;
         case MODE_SOURCE_REMOTE:
             if (remote_check(&remote) != SIGNAL_LOST)
@@ -260,7 +260,7 @@ mav_mode_t Manual_control::get_mode_from_source(mav_mode_t mode_current)
                 // Update mode from remote
                 remote_mode_update(&remote);
                 new_mode = remote_mode_get(&remote, mode_current);
-                joystick.mav_mode_desired = mode_current;
+                //joystick.mav_mode_desired = mode_current;
             }
             break;
         case MODE_SOURCE_JOYSTICK:
@@ -271,6 +271,12 @@ mav_mode_t Manual_control::get_mode_from_source(mav_mode_t mode_current)
     return new_mode;
 }
 
+
+bool Manual_control::set_mode_of_source(mav_mode_t mode)
+{
+    // override internal mav_mode of joystick
+    joystick.mav_mode_desired = mode;
+}
 
 signal_quality_t Manual_control::get_signal_strength()
 {

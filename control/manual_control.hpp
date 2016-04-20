@@ -200,6 +200,17 @@ public:
 
 
     /**
+     * \brief   Sets the internal state of the joystick
+     *
+     * \details only mode of joystick is overwritten, remote keeps its interal state
+     *
+     * \param   mode_current            The current mode of the MAV
+     *
+     * \return  The value of the mode
+     */
+    bool set_mode_of_source(mav_mode_t mode_current);
+
+    /**
      * \brief   Returns the quality of the strength of the remote receiver
      *
      * \return  The current status of the remote controller

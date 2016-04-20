@@ -162,47 +162,32 @@ State_machine::State_machine(State& state,
 
 bool State_machine::update(State_machine* state_machine)
 {
-    mav_mode_t mode_current, mode_new;
-    mav_state_t state_current, state_new;
-    mav_mode_custom_t mode_custom_new;
-
+    mav_mode_t mode_new;
     signal_quality_t rc_check;
 
-    // Get current state
-    state_current = state_machine->state_.mav_state;
+    // Get current mode and state
+    const mav_mode_t mode_current = state_machine->state_.mav_mode();
+    const mav_state_t state_current = state_machine->state_.mav_state;
 
     // By default, set new state equal to current state
-    state_new = state_current;
+    mav_state_t state_new = state_current;
+    mav_mode_custom_t mode_custom_new = state_machine->state_.mav_mode_custom;
 
-    // Get current mode
-    mode_current = state_machine->state_.mav_mode;
-
-    mode_custom_new = state_machine->state_.mav_mode_custom;
 
     // Get remote signal strength
     rc_check = state_machine->manual_control_.get_signal_strength();
 
     mode_new = state_machine->manual_control_.get_mode_from_source(mode_current);
 
-    // ARMING
-    if(mav_modes_is_armed(mode_new) && !mav_modes_is_armed(mode_current))
-    {
-        // prevent arming if IMU is not ready
-        if(state_machine->imu_.is_ready())
-        {
-            print_util_dbg_print("[STATE_MACHINE]: arming\r\n");
-        }
-        else
-        {
-            print_util_dbg_print("[STATE_MACHINE]: prevented arming since IMU not ready\r\n");
-            mode_new = mode_new & (~MAV_MODE_FLAG_SAFETY_ARMED);
-        }
-    }
-
-
     state_machine->state_.battery_.update();
 
     state_machine->state_.connection_status();
+
+    // try arming/disarming, if not allowed, reset flag in mode_new
+    if(!state_machine->state_.set_armed(mav_modes_is_armed(mode_new)))
+    {
+        mode_new ^= MAV_MODE_FLAG_SAFETY_ARMED; // toggle armed flag
+    }
 
     // Change state according to signal strength
     switch (state_current)
@@ -337,7 +322,7 @@ bool State_machine::update(State_machine* state_machine)
     }
 
     // Check simulation mode
-    if ( mav_modes_is_hil(state_machine->state_.mav_mode) == true )
+    if ( mav_modes_is_hil(state_machine->state_.mav_mode()) == true )
     {
         mode_new |= MAV_MODE_FLAG_HIL_ENABLED;
     }
@@ -347,9 +332,15 @@ bool State_machine::update(State_machine* state_machine)
     }
 
     // Finally, write new modes and states
-    state_machine->state_.mav_mode        = mode_new;
+    state_machine->state_.mav_mode_       = mode_new;
     state_machine->state_.mav_state       = state_new;
     state_machine->state_.mav_mode_custom = mode_custom_new;
 
+    // overwrite internal state of joystick
+    state_machine->manual_control_.set_mode_of_source(mode_new);
+
     return true;
 }
+
+
+

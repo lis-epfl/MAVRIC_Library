@@ -373,7 +373,7 @@ void Position_estimation::update()
 
         position_integration();
         position_correction();
-        if (mav_modes_is_armed(state.mav_mode) && fence_set)
+        if (state.armed() && fence_set)
         {
             fence_control();
         }
@@ -433,7 +433,7 @@ bool Position_estimation::set_home_position_global(global_position_t new_home_po
 {
     bool result = false;
 
-    if (!mav_modes_is_armed(state.mav_mode))
+    if (!state.armed())
     {
         //coord_conventions_change_origin(&local_position, new_home_pos);
         local_position.origin = new_home_pos;

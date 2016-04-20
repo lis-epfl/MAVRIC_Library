@@ -609,7 +609,7 @@ bool Data_logging::update(void)
                 add_header_name();
             }
 
-            if (!mav_modes_is_armed(state_.mav_mode))
+            if (!state_.armed())
             {
                 time_ms = time_keeper_get_ms();
                 if ((time_ms - logging_time_) > 5000)
@@ -680,7 +680,7 @@ bool Data_logging::start(void)
 {
     bool success = false;
 
-    if (!mav_modes_is_armed(state_.mav_mode))
+    if (!state_.armed())
     {
         log_data_ = true;
         success   = true;
@@ -694,7 +694,7 @@ bool Data_logging::stop(void)
 {
     bool success = false;
 
-    if (!mav_modes_is_armed(state_.mav_mode))
+    if (!state_.armed())
     {
         log_data_ = false;
         success   = true;

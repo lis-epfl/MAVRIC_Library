@@ -55,7 +55,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
 {
     tasks_run_imu_update(central_data);
 
-    mav_mode_t mode = central_data->state.mav_mode;
+    mav_mode_t mode = central_data->state.mav_mode();
 
     if (mav_modes_is_armed(mode))
     {
@@ -75,7 +75,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             }
 
             //if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
-            if (central_data->navigation.internal_state > NAV_ON_GND)
+            if (true)//central_data->navigation.internal_state > NAV_ON_GND)
             {
                 stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
                 servos_mix_quadcopter_diag_update(&central_data->servo_mix);
@@ -96,7 +96,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             }
 
             //if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
-            if (central_data->navigation.internal_state > NAV_ON_GND)
+            if (true)//central_data->navigation.internal_state > NAV_ON_GND)
             {
                 stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
                 servos_mix_quadcopter_diag_update(&central_data->servo_mix);
@@ -110,7 +110,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             central_data->controls.yaw_mode = YAW_RELATIVE;
 
             //if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
-            if (central_data->navigation.internal_state > NAV_ON_GND)
+            if (true)//central_data->navigation.internal_state > NAV_ON_GND)
             {
                 stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
                 servos_mix_quadcopter_diag_update(&central_data->servo_mix);
@@ -151,9 +151,9 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 {
     tasks_run_imu_update(central_data);
 
-    mav_mode_t mode = central_data->state.mav_mode;
+    mav_mode_t mode = central_data->state.mav_mode();
 
-    if (mav_modes_is_armed(mode) == false)
+    if (!central_data->state.armed())
     {
         // Set command to current heading
         central_data->command.attitude.rpy[2] = coord_conventions_quat_to_aero(central_data->ahrs.qe).rpy[2];

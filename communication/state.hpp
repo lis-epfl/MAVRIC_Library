@@ -132,11 +132,16 @@ typedef struct
 static inline state_conf_t state_default_config();
 
 
+/* forward declarations for friend functions */
+class Central_data;
+class Data_logging;
+
 /**
  * \brief The MAV state
  */
 class State
 {
+    friend class State_machine;
 public:
     /**
      * \brief   Constructor
@@ -161,11 +166,41 @@ public:
     void connection_status();
 
 
+    /**
+     * \brief   tries to arm/disarm; checks performed for arming
+     *
+     * \details arming is prevented if
+     *          - IMU not ready (mav_state == MAV_STATE_CALIBRATING)
+     *          - in manual and guided or stabilised mode
+     *          - battery low
+     *
+     * \param   arming      true for arming, false for disarming
+     *
+     * \return true if desired arming state was accepted; false if refused
+     */
+    bool set_armed(bool arming);
 
+
+    /**
+     * \brief                   returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)
+     *
+     * \return                  armed
+     */
+    bool armed() const;
+
+
+    /**
+     * \brief                   returns mav_mode (copy)
+     *
+     * \return                  mav_mode
+     */
+    mav_mode_t mav_mode() const;
+
+    friend bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, Central_data* central_data);
+    friend bool state_telemetry_set_mode(State* state, mav_mode_t mav_mode);
 // TODO:
 // All this should be private
 
-    mav_mode_t mav_mode;                                ///< The value of the MAV mode
     mav_state_t mav_state;                              ///< The value of the MAV state
 
     mav_mode_custom_t mav_mode_custom;                  ///< The value of the custom_mode
@@ -197,6 +232,9 @@ public:
     bool first_connection_set;                          ///< Flag to tell that we received a first message from the GND station
 
     Battery& battery_;                                  ///< Pointer to battery structure
+
+private:
+    mav_mode_t mav_mode_;                                ///< The value of the MAV mode
 };
 
 

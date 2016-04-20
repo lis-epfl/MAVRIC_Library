@@ -520,7 +520,7 @@ void Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoint_handl
 {
     mavlink_set_gps_global_origin_t packet;
 
-    if (!mav_modes_is_armed(waypoint_handler->state.mav_mode))
+    if (!waypoint_handler->state.armed())
     {
         mavlink_msg_set_gps_global_origin_decode(msg, &packet);
 
@@ -861,7 +861,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
                 //state.mav_mode_custom = CUSTOM_BASE_MODE;
                 hold_waypoint_set = false;
                 navigation.internal_state = NAV_ON_GND;
-                state.mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+                state.set_armed(false);
                 state.mav_state = MAV_STATE_STANDBY;
                 break;
         }
@@ -870,7 +870,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
 
 void Mavlink_waypoint_handler::state_machine()
 {
-    mav_mode_t mode_local = state.mav_mode;
+    mav_mode_t mode_local = state.mav_mode();
 
     float thrust;
 
@@ -1155,7 +1155,7 @@ void Mavlink_waypoint_handler::critical_handler()
                 navigation.critical_behavior = CLIMB_TO_SAFE_ALT;
                 //state.mav_mode_custom = CUSTOM_BASE_MODE;
                 navigation.internal_state = NAV_ON_GND;
-                state.mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+                state.set_armed(false);
                 state.mav_state = MAV_STATE_EMERGENCY;
                 break;
         }
@@ -1247,7 +1247,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
 
 bool Mavlink_waypoint_handler::mode_change()
 {
-    return mav_modes_are_equal_autonomous_modes(state.mav_mode, last_mode);
+    return mav_modes_are_equal_autonomous_modes(state.mav_mode(), last_mode);
 }
 
 void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
@@ -1391,7 +1391,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
             travel_time(0),
             critical_next_state(false),
             auto_landing_next_state(0),
-            last_mode(state.mav_mode),
+            last_mode(state.mav_mode()),
             ahrs(ahrs),
             manual_control(manual_control)
 {
@@ -1523,7 +1523,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
 
 bool Mavlink_waypoint_handler::update(Mavlink_waypoint_handler* waypoint_handler)
 {
-    mav_mode_t mode_local = waypoint_handler->state.mav_mode;
+    mav_mode_t mode_local = waypoint_handler->state.mav_mode();
 
 
     switch (waypoint_handler->state.mav_state)
@@ -1605,7 +1605,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
     float rel_pos[3];
 
     if ((waypoint_count > 0)
-            && (position_estimation.init_gps_position || mav_modes_is_hil(state.mav_mode))
+            && (position_estimation.init_gps_position || mav_modes_is_hil(state.mav_mode()))
             && (waypoint_receiving == false))
     {
         for (uint8_t i = 0; i < waypoint_count; i++)

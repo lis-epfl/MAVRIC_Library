@@ -92,6 +92,22 @@ static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_comm
  */
 static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_command_long_t* packet);
 
+
+/**
+ * \brief   Set state->mav_mode
+ *
+ * \details performs the following checks before changing
+ *          - if arming is refused by state, reject new mode
+ *          - if in calibration state, reject new mode
+ *          the HIL flag is ignored
+ *
+ * \param   state               The pointer to the state structure
+ * \param   mav_mode            Desired mav_mode
+ *
+ * \return  success             true if mode was accepted, false if refused
+ */
+bool state_telemetry_set_mode(State* state, mav_mode_t mav_mode);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -106,149 +122,54 @@ void state_telemetry_heartbeat_received(State* state, uint32_t sysid, mavlink_me
 
 void state_telemetry_set_mav_mode(State* state, uint32_t sysid, mavlink_message_t* msg)
 {
+    // decode packet
     mavlink_set_mode_t packet;
-
     mavlink_msg_set_mode_decode(msg, &packet);
 
     // Check if this message is for this system and subsystem
     // No component ID in mavlink_set_mode_t so no control
     if ((uint8_t)packet.target_system == (uint8_t)sysid)
     {
-        print_util_dbg_print("base_mode from msg:");
-        print_util_dbg_print_num(packet.base_mode, 10);
-        print_util_dbg_print(", custom mode:");
-        print_util_dbg_print_num(packet.custom_mode, 10);
-        print_util_dbg_print("\r\n");
-
-        mav_mode_t new_mode;
-        new_mode = packet.base_mode;
-
-        if (state->mav_state == MAV_STATE_CALIBRATING)
-        {
-            print_util_dbg_print("Currently calibrating, impossible to change mode.\r\n");
-        }
-        else
-        {
-            if (mav_modes_is_armed(new_mode))
-            {
-                if (!mav_modes_is_armed(state->mav_mode))
-                {
-                    state->switch_to_active_mode(&state->mav_state);
-                }
-            }
-            else
-            {
-                state->mav_state = MAV_STATE_STANDBY;
-            }
-
-            // state->mav_mode.ARMED = new_mode.ARMED;
-            // state->mav_mode.MANUAL = new_mode.MANUAL;
-            // //state->mav_mode.HIL = new_mode.HIL;
-            // state->mav_mode.STABILISE = new_mode.STABILISE;
-            // state->mav_mode.GUIDED = new_mode.GUIDED;
-            // state->mav_mode.AUTO = new_mode.AUTO;
-            // state->mav_mode.TEST = new_mode.TEST;
-            // state->mav_mode.CUSTOM = new_mode.CUSTOM;
-
-            state->mav_mode = (new_mode & (~MAV_MODE_FLAG_HIL_ENABLED)) + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
-
-            //state->mav_mode_custom = packet.custom_mode;
-
-            print_util_dbg_print("New mav mode:");
-            print_util_dbg_print_num(state->mav_mode, 10);
-            print_util_dbg_print("\r");
-        }
+        // try to set the mode
+        state_telemetry_set_mode(state, packet.base_mode);
     }
 }
 
 static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_command_long_t* packet)
 {
-    mav_result_t result = MAV_RESULT_ACCEPTED;
+    mav_mode_t new_mode = packet->param1;
+    return state_telemetry_set_mode(state,new_mode) ? MAV_RESULT_ACCEPTED : MAV_RESULT_TEMPORARILY_REJECTED;
+}
 
-    mav_mode_t new_mode;
-    new_mode = packet->param1;
-
+bool state_telemetry_set_mode(State* state, mav_mode_t new_mode)
+{
+    // if calibrating, refuse new mode
     if (state->mav_state == MAV_STATE_CALIBRATING)
     {
-        result = MAV_RESULT_TEMPORARILY_REJECTED;
-        print_util_dbg_print("Currently calibrating, impossible to change mode.\r\n");
+        print_util_dbg_print("[STATE TELEMETRY] calibrating -> refusing new mode\r\n");
+        return false;
     }
-    else
+
+    // try to set arming state, if rejected, refuse new mode
+    if(!state->set_armed(mav_modes_is_armed(new_mode)))
     {
-        print_util_dbg_print("base_mode from cmd:");
-        print_util_dbg_print_num(packet->param1, 10);
-        //print_util_dbg_print(", custom mode:");
-        //print_util_dbg_print_num(packet->param2,10);
-        print_util_dbg_print("\r\n");
-
-        if (mav_modes_is_armed(new_mode))
-        {
-            if (!mav_modes_is_armed(state->mav_mode))
-            {
-                state->switch_to_active_mode(&state->mav_state);
-            }
-        }
-        else
-        {
-            state->mav_state = MAV_STATE_STANDBY;
-        }
-
-        state->mav_mode = (new_mode & (~MAV_MODE_FLAG_HIL_ENABLED)) + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
-
-        // state->mav_mode.ARMED = new_mode.ARMED;
-        // state->mav_mode.MANUAL = new_mode.MANUAL;
-        // state->mav_mode.STABILISE = new_mode.STABILISE;
-        // state->mav_mode.GUIDED = new_mode.GUIDED;
-        // state->mav_mode.AUTO = new_mode.AUTO;
-        // state->mav_mode.TEST = new_mode.TEST;
-        // state->mav_mode.CUSTOM = new_mode.CUSTOM;
-
-        //state->mav_mode_custom = packet->param2;
-
-        print_util_dbg_print("New mav mode:");
-        print_util_dbg_print_num(state->mav_mode, 10);
-        print_util_dbg_print("\r\n");
+        print_util_dbg_print("[STATE TELEMETRY] could not change arming state -> refusing new mode\r\n");
+        return false;
     }
 
-    return result;
+    // set HIL flag to current state (we do not support HIL state changes)
+    new_mode &= ~MAV_MODE_FLAG_HIL_ENABLED;     // clear HIL flag
+    new_mode += (state->mav_mode() & MAV_MODE_FLAG_HIL_ENABLED);  // set HIL flag to current state
+
+    // set mav_mode
+    state->mav_mode_ = new_mode;
+    return true;
 }
 
 static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_command_long_t* packet)
 {
-    mav_result_t result = MAV_RESULT_ACCEPTED;
-
-    mav_mode_t new_mode;
     float arm_cmd = packet->param1;
-
-    if (state->mav_state == MAV_STATE_CALIBRATING)
-    {
-        result = MAV_RESULT_TEMPORARILY_REJECTED;
-        print_util_dbg_print("Currently calibrating, impossible to change mode.\r\n");
-    }
-    else
-    {
-        if (arm_cmd == 1)
-        {
-        	new_mode = MAV_MODE_FLAG_SAFETY_ARMED;
-            if (!mav_modes_is_armed(state->mav_mode))
-            {
-                state->switch_to_active_mode(&state->mav_state);
-            }
-        }
-        else
-        {
-        	new_mode = 0;
-            state->mav_state = MAV_STATE_STANDBY;
-        }
-
-        state->mav_mode = (new_mode & (~MAV_MODE_FLAG_HIL_ENABLED)) + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED) + (state->mav_mode & (~MAV_MODE_FLAG_HIL_ENABLED) & (~MAV_MODE_FLAG_SAFETY_ARMED));
-
-        print_util_dbg_print("New mav mode:");
-        print_util_dbg_print_num(state->mav_mode, 10);
-        print_util_dbg_print("\r\n");
-    }
-
-    return result;
+    return state->set_armed(arm_cmd == 1) ? MAV_RESULT_ACCEPTED : MAV_RESULT_TEMPORARILY_REJECTED;
 }
 
 //------------------------------------------------------------------------------
@@ -305,7 +226,7 @@ void state_telemetry_send_heartbeat(const State* state, const Mavlink_stream* ma
                                msg,
                                state->autopilot_type,
                                state->autopilot_name,
-                               state->mav_mode,
+                               state->mav_mode(),
                                state->mav_mode_custom,
                                state->mav_state);
 }

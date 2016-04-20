@@ -90,7 +90,7 @@ void Navigation::set_speed_command(float rel_pos[])
     float dir_desired_sg[3];
     float rel_heading;
 
-    mav_mode_t mode = state.mav_mode;
+    mav_mode_t mode = state.mav_mode();
 
     norm_rel_dist = sqrt(dist2wp_sqr);
 
@@ -251,7 +251,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
 
 bool Navigation::update(Navigation* navigation)
 {
-    mav_mode_t mode_local = navigation->state.mav_mode;
+    mav_mode_t mode_local = navigation->state.mav_mode();
 
     uint32_t t = time_keeper_get_us();
 
