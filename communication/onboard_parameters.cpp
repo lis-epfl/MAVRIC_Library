@@ -114,13 +114,13 @@ static bool onboard_parameters_send_one_parameter_now(onboard_parameters_t* onbo
     onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
     mavlink_message_t msg;
+    float param_value = *(param_set->parameters[index].param);
     mavlink_msg_param_value_pack(onboard_parameters->mavlink_stream->sysid,
                                  onboard_parameters->mavlink_stream->compid,
                                  &msg,
                                  (char*)param_set->parameters[index].param_name,
-                                 *(param_set->parameters[index].param),
-                                 // onboard_parameters_read_parameter(onboard_parameters, index),
-                                 param_set->parameters[index].data_type,
+                                 param_value,
+                                 MAVLINK_TYPE_FLOAT,
                                  param_set->param_count,
                                  index);
 
@@ -284,9 +284,8 @@ static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_p
             if (match)
             {
                 // Only write if there is actually a difference
-                if (*(param->param) != set.param_value && set.param_type == param->data_type)
+                if (*(param->param) != set.param_value)
                 {
-                    // onboard_parameters_update_parameter(onboard_parameters, i, set.param_value);
                     (*param->param) = set.param_value;
                     print_util_dbg_print("... OK \r\n");
                 }
