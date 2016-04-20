@@ -22,7 +22,7 @@ var searchData=
   ['start_5faccelerometer_5fbias_5fcalibration',['start_accelerometer_bias_calibration',['../classImu.html#abcebc61b38b6f1281970331a2ffab0ad',1,'Imu']]],
   ['start_5fgyroscope_5fbias_5fcalibration',['start_gyroscope_bias_calibration',['../classImu.html#a6e3093edec77f8276601c5421aa61cb2',1,'Imu']]],
   ['start_5fmagnetometer_5fbias_5fcalibration',['start_magnetometer_bias_calibration',['../classImu.html#a39a925978d0ec683c83d942d0d70822d',1,'Imu']]],
-  ['state',['State',['../classState.html#a82b5799d3faad48117d922af14ea3bb2',1,'State']]],
+  ['state',['State',['../classState.html#afda032c9312336f847f2a009688c90cc',1,'State']]],
   ['stop',['stop',['../classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253',1,'Data_logging']]],
   ['stop_5faccelerometer_5fbias_5fcalibration',['stop_accelerometer_bias_calibration',['../classImu.html#a5455d91545d19a136b5cf92519daeec1',1,'Imu']]],
   ['stop_5fgyroscope_5fbias_5fcalibration',['stop_gyroscope_bias_calibration',['../classImu.html#a66b1dfbebdce8334d1759c829e6e8d8a',1,'Imu']]],

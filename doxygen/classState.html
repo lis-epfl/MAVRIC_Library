@@ -95,15 +95,15 @@ Collaboration diagram for State:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState__coll__graph.png" border="0" usemap="#State_coll__map" alt="Collaboration graph"/></div>
 <map name="State_coll__map" id="State_coll__map">
-<area shape="rect" id="node2" href="classBattery.html" title="Battery voltage monitor." alt="" coords="53,5,136,160"/></map>
+<area shape="rect" id="node2" href="classBattery.html" title="Battery voltage monitor." alt="" coords="5,297,88,452"/><area shape="rect" id="node4" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="112,280,243,469"/><area shape="rect" id="node6" href="classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="61,6,155,213"/><area shape="rect" id="node8" href="structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="179,58,312,161"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classState-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a82b5799d3faad48117d922af14ea3bb2">State</a> (<a class="el" href="classBattery.html">Battery</a> &amp;battery, <a class="el" href="structstate__conf__t.html">state_conf_t</a> config=state_default_config())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a82b5799d3faad48117d922af14ea3bb2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#afda032c9312336f847f2a009688c90cc">State</a> (<a class="el" href="structmavlink__stream__t.html">mavlink_stream_t</a> &amp;<a class="el" href="classState.html#af98861cb1312d71694785b3c7a02230e">mavlink_stream_</a>, <a class="el" href="classBattery.html">Battery</a> &amp;battery, <a class="el" href="structstate__conf__t.html">state_conf_t</a> config=state_default_config())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#afda032c9312336f847f2a009688c90cc"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a83b946fdb7de29b4140d1ce5ab4635fa">switch_to_active_mode</a> (mav_state_t *<a class="el" href="classState.html#a8a2c155e8675a4b4e3a67b967797d976">mav_state</a>)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the switch to active mode.  <a href="#a83b946fdb7de29b4140d1ce5ab4635fa"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9414375a28112394b48994db66743b6"></a><!-- doxytag: member="State::connection_status" ref="af9414375a28112394b48994db66743b6" args="()" -->
@@ -177,6 +177,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4fefe2a757dabcea7202c49f9173dbc5"></a><!-- doxytag: member="State::first_connection_set" ref="a4fefe2a757dabcea7202c49f9173dbc5" args="" -->
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a4fefe2a757dabcea7202c49f9173dbc5">first_connection_set</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to tell that we received a first message from the GND station. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af98861cb1312d71694785b3c7a02230e"></a><!-- doxytag: member="State::mavlink_stream_" ref="af98861cb1312d71694785b3c7a02230e" args="" -->
+<a class="el" href="structmavlink__stream__t.html">mavlink_stream_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#af98861cb1312d71694785b3c7a02230e">mavlink_stream_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Mavlink communication, used to inform ground station of state and capabilities of drone. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa8af6eff2f240cae87d455db9023e079"></a><!-- doxytag: member="State::battery_" ref="aa8af6eff2f240cae87d455db9023e079" args="" -->
 <a class="el" href="classBattery.html">Battery</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aa8af6eff2f240cae87d455db9023e079">battery_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to battery structure. <br/></td></tr>
@@ -184,13 +187,19 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The MAV state. </p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a82b5799d3faad48117d922af14ea3bb2"></a><!-- doxytag: member="State::State" ref="a82b5799d3faad48117d922af14ea3bb2" args="(Battery &amp;battery, state_conf_t config=state_default_config())" -->
+<a class="anchor" id="afda032c9312336f847f2a009688c90cc"></a><!-- doxytag: member="State::State" ref="afda032c9312336f847f2a009688c90cc" args="(mavlink_stream_t &amp;mavlink_stream_, Battery &amp;battery, state_conf_t config=state_default_config())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classState.html#a82b5799d3faad48117d922af14ea3bb2">State::State</a> </td>
+          <td class="memname"><a class="el" href="classState.html#afda032c9312336f847f2a009688c90cc">State::State</a> </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="structmavlink__stream__t.html">mavlink_stream_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>mavlink_stream_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="classBattery.html">Battery</a> &amp;&#160;</td>
           <td class="paramname"><em>battery</em>, </td>
         </tr>
@@ -212,6 +221,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Constructor. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
+    <tr><td class="paramname">mavlink_stream</td><td>Mavlink downlink </td></tr>
     <tr><td class="paramname">battery</td><td><a class="el" href="classBattery.html" title="Battery voltage monitor.">Battery</a> monitor </td></tr>
     <tr><td class="paramname">state_config</td><td><a class="el" href="classState.html" title="The MAV state.">State</a> configuration structure </td></tr>
   </table>
@@ -268,7 +278,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 15 2016 12:43:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 20 2016 07:58:59 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

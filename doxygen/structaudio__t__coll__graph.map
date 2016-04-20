@@ -1,50 +1,50 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structnavigation__t.html" title="The navigation structure." alt="" coords="1199,1461,1340,1720"/>
-<area shape="rect" id="node67" href="$structmavlink__waypoint__handler__t.html" title="{mavlink_waypoint_handler_t\n|+ waypoint_list\l+ current_waypoint\l+ number_of_waypoints\l+ current_waypoint_count\l+ waypoint_coordinates\l+ waypoint_hold_coordinates\l+ waypoint_critical_coordinates\l+ hold_waypoint_set\l+ waypoint_sending\l+ waypoint_receiving\land 16 more...|}" alt="" coords="1361,1803,1567,2061"/>
-<area shape="rect" id="node4" href="$structposition__estimation__t.html" title="The position estimator structure." alt="" coords="959,1085,1151,1344"/>
-<area shape="rect" id="node41" href="$structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module." alt="" coords="501,1829,645,2035"/>
-<area shape="rect" id="node6" href="$classGps.html" title="Abstract class for GPS." alt="" coords="916,691,1127,949"/>
-<area shape="rect" id="node8" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="1356,760,1468,880"/>
-<area shape="rect" id="node10" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="1353,358,1471,495"/>
-<area shape="rect" id="node12" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="577,734,695,906"/>
-<area shape="rect" id="node14" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1123,375,1181,478"/>
-<area shape="rect" id="node16" href="$classSonar.html" title="Abstarct class for sonars." alt="" coords="1151,725,1281,915"/>
-<area shape="rect" id="node18" href="$classState.html" title="The MAV state." alt="" coords="1492,673,1671,967"/>
-<area shape="rect" id="node89" href="$structonboard__parameters__t.html" title="Main structure of the module onboard parameters." alt="" coords="2220,1137,2369,1292"/>
-<area shape="rect" id="node20" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1540,349,1623,504"/>
-<area shape="rect" id="node22" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="719,656,892,984"/>
-<area shape="rect" id="node24" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="159,734,295,906"/>
-<area shape="rect" id="node52" href="$structstabiliser__t.html" title="The structure used to control the vehicle with 4 PIDs." alt="" coords="439,1155,564,1275"/>
-<area shape="rect" id="node27" href="$structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="1909,332,2040,521"/>
-<area shape="rect" id="node82" href="$structmavlink__communication__t.html" title="Main MAVLink Communication structure." alt="" coords="2095,1513,2268,1668"/>
-<area shape="rect" id="node86" href="$structmavlink__send__msg__handler__t.html" title="MAVLink message handler structure." alt="" coords="1977,760,2172,880"/>
-<area shape="rect" id="node105" href="$structmavlink__message__handler__t.html" title="Main message handler structure." alt="" coords="2835,751,3021,889"/>
-<area shape="rect" id="node29" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="1860,6,1953,213"/>
-<area shape="rect" id="node31" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="1977,58,2111,161"/>
-<area shape="rect" id="node35" href="$structpid__controller__t.html" title="PID controller." alt="" coords="425,699,553,941"/>
-<area shape="rect" id="node37" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="501,367,605,487"/>
-<area shape="rect" id="node39" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="373,358,477,495"/>
-<area shape="rect" id="node43" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="527,1548,657,1633"/>
-<area shape="rect" id="node45" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="159,1548,292,1633"/>
-<area shape="rect" id="node50" href="$structstabiliser__stack__copter__t.html" title="Structure containing the stacked controller." alt="" coords="316,1513,503,1668"/>
-<area shape="rect" id="node56" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="3265,1094,3417,1335"/>
-<area shape="rect" id="node70" href="$structmanual__control__t.html" title="The manual control structure." alt="" coords="2957,1522,3077,1659"/>
-<area shape="rect" id="node58" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="3483,665,3717,975"/>
-<area shape="rect" id="node60" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="3349,743,3459,897"/>
-<area shape="rect" id="node65" href="$structbyte__stream__t.html" title="Byte stream." alt="" coords="3200,1846,3323,2018"/>
-<area shape="rect" id="node72" href="$structjoystick__t.html" title="The structure for the joystick." alt="" coords="3032,1146,3179,1283"/>
-<area shape="rect" id="node74" href="$structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="3189,751,3325,889"/>
-<area shape="rect" id="node76" href="$unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="3045,691,3165,949"/>
-<area shape="rect" id="node84" href="$structmavlink__send__msg__handler__set__t.html" title="MAVLink message handler setting structure." alt="" coords="1977,1155,2196,1275"/>
-<area shape="rect" id="node91" href="$structonboard__parameters__set__t.html" title="Set of onboard parameters." alt="" coords="2341,760,2517,880"/>
-<area shape="rect" id="node93" href="$structonboard__parameters__entry__t.html" title="Structure of onboard parameter." alt="" coords="2335,341,2524,513"/>
-<area shape="rect" id="node96" href="$classFile.html" title="Base class for file objects." alt="" coords="2541,691,2627,949"/>
-<area shape="rect" id="node99" href="$structscheduler__t.html" title="Scheduler." alt="" coords="2571,1155,2709,1275"/>
-<area shape="rect" id="node101" href="$structtask__set__t.html" title="Task set." alt="" coords="2651,751,2811,889"/>
-<area shape="rect" id="node103" href="$structtask__entry__t.html" title="Task entry." alt="" coords="2613,280,2755,573"/>
-<area shape="rect" id="node107" href="$structmavlink__message__handler__msg__callback__set__t.html" title="Set of message callbacks." alt="" coords="3101,367,3400,487"/>
-<area shape="rect" id="node109" href="$structmavlink__message__handler__msg__callback__t.html" title="Message callback." alt="" coords="3113,23,3388,195"/>
-<area shape="rect" id="node111" href="$structmavlink__message__handler__cmd__callback__set__t.html" title="Set of command callbacks." alt="" coords="2779,367,3077,487"/>
-<area shape="rect" id="node113" href="$structmavlink__message__handler__cmd__callback__t.html" title="Command callback." alt="" coords="2791,23,3065,195"/>
-<area shape="rect" id="node119" href="$structwaypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="1364,1461,1489,1720"/>
+<area shape="rect" id="node2" href="$structnavigation__t.html" title="The navigation structure." alt="" coords="1181,1461,1323,1720"/>
+<area shape="rect" id="node68" href="$structmavlink__waypoint__handler__t.html" title="{mavlink_waypoint_handler_t\n|+ waypoint_list\l+ current_waypoint\l+ number_of_waypoints\l+ current_waypoint_count\l+ waypoint_coordinates\l+ waypoint_hold_coordinates\l+ waypoint_critical_coordinates\l+ hold_waypoint_set\l+ waypoint_sending\l+ waypoint_receiving\land 16 more...|}" alt="" coords="1416,1803,1621,2061"/>
+<area shape="rect" id="node4" href="$structposition__estimation__t.html" title="The position estimator structure." alt="" coords="837,1085,1029,1344"/>
+<area shape="rect" id="node42" href="$structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module." alt="" coords="365,1829,509,2035"/>
+<area shape="rect" id="node6" href="$classGps.html" title="Abstract class for GPS." alt="" coords="1016,691,1227,949"/>
+<area shape="rect" id="node8" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="1301,760,1413,880"/>
+<area shape="rect" id="node10" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="1299,358,1416,495"/>
+<area shape="rect" id="node12" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="371,734,488,906"/>
+<area shape="rect" id="node14" href="$structquat__t.html" title="Unit quaternion." alt="" coords="579,375,637,478"/>
+<area shape="rect" id="node16" href="$classSonar.html" title="Abstarct class for sonars." alt="" coords="861,725,992,915"/>
+<area shape="rect" id="node18" href="$classState.html" title="The MAV state." alt="" coords="1525,673,1704,967"/>
+<area shape="rect" id="node90" href="$structonboard__parameters__t.html" title="Main structure of the module onboard parameters." alt="" coords="2156,1137,2305,1292"/>
+<area shape="rect" id="node20" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1440,349,1523,504"/>
+<area shape="rect" id="node22" href="$structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="1727,332,1857,521"/>
+<area shape="rect" id="node83" href="$structmavlink__communication__t.html" title="Main MAVLink Communication structure." alt="" coords="2041,1513,2215,1668"/>
+<area shape="rect" id="node87" href="$structmavlink__send__msg__handler__t.html" title="MAVLink message handler structure." alt="" coords="1829,760,2024,880"/>
+<area shape="rect" id="node106" href="$structmavlink__message__handler__t.html" title="Main message handler structure." alt="" coords="2687,751,2873,889"/>
+<area shape="rect" id="node24" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="1677,6,1771,213"/>
+<area shape="rect" id="node26" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="1795,58,1928,161"/>
+<area shape="rect" id="node28" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="512,656,685,984"/>
+<area shape="rect" id="node30" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="211,734,347,906"/>
+<area shape="rect" id="node53" href="$structstabiliser__t.html" title="The structure used to control the vehicle with 4 PIDs." alt="" coords="629,1155,755,1275"/>
+<area shape="rect" id="node36" href="$structpid__controller__t.html" title="PID controller." alt="" coords="709,699,837,941"/>
+<area shape="rect" id="node38" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="721,367,825,487"/>
+<area shape="rect" id="node40" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="1171,358,1275,495"/>
+<area shape="rect" id="node44" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="108,1548,239,1633"/>
+<area shape="rect" id="node46" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="371,1548,504,1633"/>
+<area shape="rect" id="node51" href="$structstabiliser__stack__copter__t.html" title="Structure containing the stacked controller." alt="" coords="528,1513,715,1668"/>
+<area shape="rect" id="node57" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="3117,1094,3269,1335"/>
+<area shape="rect" id="node71" href="$structmanual__control__t.html" title="The manual control structure." alt="" coords="2799,1522,2919,1659"/>
+<area shape="rect" id="node59" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="3335,665,3569,975"/>
+<area shape="rect" id="node61" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="3201,743,3311,897"/>
+<area shape="rect" id="node66" href="$structbyte__stream__t.html" title="Byte stream." alt="" coords="3041,1846,3164,2018"/>
+<area shape="rect" id="node73" href="$structjoystick__t.html" title="The structure for the joystick." alt="" coords="2884,1146,3031,1283"/>
+<area shape="rect" id="node75" href="$structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="3041,751,3177,889"/>
+<area shape="rect" id="node77" href="$unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="2897,691,3017,949"/>
+<area shape="rect" id="node85" href="$structmavlink__send__msg__handler__set__t.html" title="MAVLink message handler setting structure." alt="" coords="1913,1155,2132,1275"/>
+<area shape="rect" id="node92" href="$structonboard__parameters__set__t.html" title="Set of onboard parameters." alt="" coords="2193,760,2369,880"/>
+<area shape="rect" id="node94" href="$structonboard__parameters__entry__t.html" title="Structure of onboard parameter." alt="" coords="2187,341,2376,513"/>
+<area shape="rect" id="node97" href="$classFile.html" title="Base class for file objects." alt="" coords="2393,691,2479,949"/>
+<area shape="rect" id="node100" href="$structscheduler__t.html" title="Scheduler." alt="" coords="2433,1155,2572,1275"/>
+<area shape="rect" id="node102" href="$structtask__set__t.html" title="Task set." alt="" coords="2503,751,2663,889"/>
+<area shape="rect" id="node104" href="$structtask__entry__t.html" title="Task entry." alt="" coords="2465,280,2607,573"/>
+<area shape="rect" id="node108" href="$structmavlink__message__handler__msg__callback__set__t.html" title="Set of message callbacks." alt="" coords="2631,367,2929,487"/>
+<area shape="rect" id="node110" href="$structmavlink__message__handler__msg__callback__t.html" title="Message callback." alt="" coords="2643,23,2917,195"/>
+<area shape="rect" id="node112" href="$structmavlink__message__handler__cmd__callback__set__t.html" title="Set of command callbacks." alt="" coords="2953,367,3252,487"/>
+<area shape="rect" id="node114" href="$structmavlink__message__handler__cmd__callback__t.html" title="Command callback." alt="" coords="2965,23,3240,195"/>
+<area shape="rect" id="node120" href="$structwaypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="1515,1461,1640,1720"/>
 </map>
