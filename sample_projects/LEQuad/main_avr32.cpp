@@ -81,11 +81,11 @@ int main(void)
     // Create simulation
     // -------------------------------------------------------------------------
     // Simulated servos
-    Pwm_dummy pwm[4];
+    /*Pwm_dummy pwm[4];
     Servo sim_servo_0(pwm[0], servo_default_config_esc());
     Servo sim_servo_1(pwm[1], servo_default_config_esc());
     Servo sim_servo_2(pwm[2], servo_default_config_esc());
-    Servo sim_servo_3(pwm[3], servo_default_config_esc());
+    Servo sim_servo_3(pwm[3], servo_default_config_esc());*/
 
     // // Simulated dynamic model
     // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
@@ -117,7 +117,7 @@ int main(void)
     central_data_conf_t cd_config = central_data_default_config();
 
     // Create central data using real sensors
-    /*Central_data cd = Central_data(MAVLINK_SYS_ID,
+    Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
                                    board.bmp085,
                                    board.gps_ublox,
@@ -135,8 +135,8 @@ int main(void)
                                    file_log,
                                    file_stat,
                                    camera,
-                                   cd_config);*/
-    Central_data cd = Central_data(MAVLINK_SYS_ID,
+                                   cd_config);
+    /*Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
                                    board.bmp085,
                                    board.gps_ublox,
@@ -157,7 +157,7 @@ int main(void)
                                    file_log,
                                    file_stat,
                                    camera,
-                                   cd_config );
+                                   cd_config );*/
 
 
     // -------------------------------------------------------------------------

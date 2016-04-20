@@ -53,7 +53,7 @@ extern "C"
 #include "util/maths.h"
 }
 
-#define MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM 7000
+#define MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM 15000
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------

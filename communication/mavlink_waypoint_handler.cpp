@@ -1531,7 +1531,9 @@ static mav_result_t waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t
 
 static mav_result_t waypoint_handler_set_auto_landing(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
-    mav_result_t result;
+    // mav_result_t result;
+    mav_result_t result = MAV_RESULT_ACCEPTED; // Testing
+    
     print_util_dbg_print("Attempting to land\r\n");
     // Tell the offboard camera to start taking pictures
     //scheduler_run_task_now(scheduler_get_task_by_index(const scheduler_t* scheduler, 15));
@@ -1705,7 +1707,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         // Disarming
         next_state = true;
     }
-/*
+
     // If the tag search has gone on too long, set mode to landing
     if ((time_keeper_get_us() - waypoint_handler->navigation->tag_search_start_time) > TAG_SEARCH_TIMEOUT_US)
     {
@@ -1726,7 +1728,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         waypoint_handler->state->mav_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
         waypoint_handler->state->mav_state = MAV_STATE_STANDBY;
         waypoint_handler->navigation->land_on_tag_behavior = TAG_NOT_FOUND;
-    }*/
+    }
 }
 
 static void waypoint_handler_state_machine(mavlink_waypoint_handler_t* waypoint_handler)
@@ -2443,7 +2445,7 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
             break;
 
         case MAV_STATE_ACTIVE:
-        case MAV_STATE_CRITICAL: // Testing
+        //case MAV_STATE_CRITICAL: // Testing
             waypoint_handler->navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
             waypoint_handler->critical_next_state = false;
 
@@ -2454,7 +2456,7 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
 
             waypoint_handler_state_machine(waypoint_handler);
             break;
-/*
+
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
             if (mav_modes_is_stabilise(mode_local))
@@ -2467,7 +2469,7 @@ bool waypoint_handler_update(mavlink_waypoint_handler_t* waypoint_handler)
                 }
             }
             break;
-*/
+
         default:
             waypoint_handler->navigation->internal_state = NAV_ON_GND;
             break;
