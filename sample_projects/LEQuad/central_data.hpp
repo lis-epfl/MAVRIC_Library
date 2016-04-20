@@ -180,7 +180,6 @@ public:
     Manual_control manual_control;                            ///< The joystick parsing structure
 
     State state;                                                ///< The structure with all state information
-    State_machine state_machine;                              ///< The structure for the state machine
 
     Scheduler scheduler;
     Mavlink_communication mavlink_communication;
@@ -199,6 +198,8 @@ public:
     Navigation navigation;                                      ///< The structure to perform GPS navigation
     Mavlink_waypoint_handler waypoint_handler;
  
+    State_machine state_machine;                              ///< The structure for the state machine
+
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 

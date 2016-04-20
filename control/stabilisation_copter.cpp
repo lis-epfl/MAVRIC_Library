@@ -195,7 +195,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             input.rpy[ROLL] = rpy_local.v[Y];
             input.rpy[PITCH] = -rpy_local.v[X];
 
-            if ((!stabilisation_copter->pos_est->is_healthy()) || (stabilisation_copter->pos_est->get_fence_violation_state() == Position_estimation::OUTSIDE_FENCE2))
+            if ((!stabilisation_copter->pos_est->healthy()) || (stabilisation_copter->pos_est->get_fence_violation_state() == Position_estimation::OUTSIDE_FENCE2))
             {
                 input.rpy[ROLL] = 0.0f;
                 input.rpy[PITCH] = 0.0f;

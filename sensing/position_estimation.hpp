@@ -116,16 +116,6 @@ public:
      */
     void update();
 
-
-    /**
-     * \brief   Tells if the position estimation is healthy
-     *
-     * \details currently returns gps.healthy()
-     *
-     * \return  healthy
-     */
-    bool is_healthy() const;
-
     /**
      * \brief   Returns fence violation state
      * 
@@ -172,6 +162,23 @@ public:
      */
     void set_new_fence_origin();
 
+    /**
+     * \brief   Returns if position estimation is healthy
+     *
+     * \details Checks if gps is healthy and initialized and altitude is healthy (see altitude_healthy())
+     *
+     * \return   healthy     whether 3D position estimation is healthy
+     */
+    bool healthy() const;
+
+    /**
+     * \brief   Returns if altitude estimation is healthy
+     *
+     * \details Checks if barometer is initialized
+     *
+     * \return   healthy     whether altitude estimation is healthy
+     */
+    bool altitude_healthy() const;
 
     local_position_t local_position;        ///< Local position
     float vel[3];                           ///< 3D velocity in global frame
