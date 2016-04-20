@@ -709,7 +709,7 @@ bool Data_logging::add_field(uint8_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -755,7 +755,7 @@ bool Data_logging::add_field(int8_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -801,7 +801,7 @@ bool Data_logging::add_field(uint16_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -847,7 +847,7 @@ bool Data_logging::add_field(int16_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -893,7 +893,7 @@ bool Data_logging::add_field(uint32_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -939,7 +939,7 @@ bool Data_logging::add_field(int32_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -985,7 +985,7 @@ bool Data_logging::add_field(uint64_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1031,7 +1031,7 @@ bool Data_logging::add_field(int64_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1077,7 +1077,7 @@ bool Data_logging::add_field(float* val, const char* param_name, uint32_t precis
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1124,7 +1124,7 @@ bool Data_logging::add_field(double* val, const char* param_name, uint32_t preci
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 

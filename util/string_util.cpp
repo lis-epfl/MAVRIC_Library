@@ -44,13 +44,46 @@
 namespace str
 {
 
-uint8_t strlen(const char* text)
+uint64_t strlen(const char* text)
 {
-    uint8_t i = 0;
-    while (text[i] != '\0')
+    if(text == NULL)
     {
-        i++;
+        return 0;
     }
-    return i;
+    char* t = const_cast<char*>(text);
+    while(*(t++) != '\0');
+    return t - text - 1;
+}
+
+
+int16_t strcmp(const char* str1, const char* str2)
+{
+    int16_t d = 0;
+    char* s1 = const_cast<char*>(str1);
+    char* s2 = const_cast<char*>(str2);
+    do
+    {
+        d = *(s1++) - *(s2++);
+        if(d != 0)
+        {
+            return d;
+        }
+    }while(*s1 != '\0');
+    return 0;
+}
+
+bool strlcpy(char* dst, const char* src, uint16_t max_len)
+{
+    char* s = const_cast<char*>(src);
+    while(*s != '\0')
+    {
+        if(--max_len <= 0)
+        {
+            break;
+        }
+        *(dst++) = *(s++);
+    }
+    *dst = '\0';
+    return max_len > 0;
 }
 };

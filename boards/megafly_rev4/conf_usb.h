@@ -122,8 +122,8 @@ extern "C"
 //! Interface callback definition
 #define  UDI_CDC_ENABLE_EXT()             stdio_usb_enable()
 #define  UDI_CDC_DISABLE_EXT()            stdio_usb_disable()
-#define  UDI_CDC_RX_NOTIFY()			  usb_interupt_rx_notify()
-extern void usb_interupt_rx_notify(void);	// Testing
+#define  UDI_CDC_RX_NOTIFY()			  usb_interupt_rx_notify() // In Serial_usb_avr32()
+extern void usb_interupt_rx_notify(void);
 #define  UDI_CDC_SET_CODING_EXT(cfg)
 #define  UDI_CDC_SET_DTR_EXT(set)
 #define  UDI_CDC_SET_RTS_EXT(set)

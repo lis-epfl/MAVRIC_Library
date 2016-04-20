@@ -39,9 +39,9 @@
  * \details Incomplete implementation (TODO)
  *          - Implemented:
  *              * buffered, blocking writing
- *          - NOT implemented:
  *              * Read functions
  *              * Receive interrupt callback
+ *          - NOT implemented:
  *              * buffered input
  *
  ******************************************************************************/
@@ -169,32 +169,31 @@ public:
      */
     bool read(uint8_t* bytes, const uint32_t size = 1);
 
-
     /**
      * \brief   Interrupt function for the incoming usb data
      */
     static void irq(void);
+
 private:
 
     serial_usb_avr32_conf_t     config_;        ///< Configuration
     Buffer_tpl<1024>            tx_buffer_;     ///< Transmission buffer
     Buffer_tpl<1024>            rx_buffer_;     ///< Reception buffer
-    
-    volatile avr32_usbc_t* uart_;
 
-    static Serial_usb_avr32* handlers_;
-
+    static Serial_usb_avr32* handlers_;         ///< Contains handler information. Static as it needs return the usb serial object
+    serial_interrupt_callback_t irq_callback;   ///< The callback function for when there is data to be read
 
     /**
      * \brief   Interrupt handler to read all incoming data
      */
     void irq_handler(void);
-    serial_interrupt_callback_t irq_callback;
 };
 
 /**
- * \brief   Interrupt, called when there is incoming usb data
+ * \brief   Interrupt, called by asf when there is incoming usb data.
+ * Must be outside the object as asf does not know of any serial_usb_avr32
+ * object.
  */
-void usb_interupt_rx_notify();
+extern "C" void usb_interupt_rx_notify();
 
 #endif /* SERIAL_USB_AVR32_H_ */
