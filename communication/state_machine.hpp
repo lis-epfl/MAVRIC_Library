@@ -47,7 +47,7 @@
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
-#include "drivers/gps.hpp"
+#include "sensing/position_estimation.hpp"
 #include "sensing/imu.hpp"
 
 /**
@@ -67,7 +67,7 @@ public:
      * \return  True if the init succeed, false otherwise
      */
     State_machine(  State& state,
-                    const Gps& gps,
+                    const Position_estimation& position_estimation,
                     const Imu& imu,
                     Manual_control& manual_control);
 
@@ -82,7 +82,7 @@ public:
 
 
     State& state_;                                       ///< Pointer to the state structure
-    const Gps& gps_;                                     ///< Pointer to the gps structure
+    const Position_estimation& position_estimation_;      ///< Pointer to the gps structure
     const Imu& imu_;                                     ///< Pointer to the imu structure
     Manual_control& manual_control_;                     ///< Pointer to the manual_control structure
 private:

@@ -1037,7 +1037,7 @@ void Mavlink_waypoint_handler::critical_handler()
     if (state.battery_.is_low() ||
             state.connection_lost ||
             state.out_of_fence_2 ||
-            position_estimation.gps.healthy() == false)
+            position_estimation.healthy() == false)
     {
         if (navigation.critical_behavior != CRITICAL_LAND)
         {

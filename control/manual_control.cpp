@@ -272,7 +272,7 @@ mav_mode_t Manual_control::get_mode_from_source(mav_mode_t mode_current)
 }
 
 
-bool Manual_control::set_mode_of_source(mav_mode_t mode)
+void Manual_control::set_mode_of_source(mav_mode_t mode)
 {
     // override internal mav_mode of joystick
     joystick.mav_mode_desired = mode;

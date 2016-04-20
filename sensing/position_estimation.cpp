@@ -313,6 +313,22 @@ void Position_estimation::fence_control()
 }
 
 
+bool Position_estimation::healthy() const
+{
+    bool healthy = altitude_healthy();
+    healthy &= init_gps_position;
+    healthy &= gps.healthy();
+
+    return healthy;
+
+}
+
+
+bool Position_estimation::altitude_healthy() const
+{
+    return init_barometer;
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -378,12 +394,6 @@ void Position_estimation::update()
             fence_control();
         }
     }
-}
-
-
-bool Position_estimation::is_healthy() const
-{
-    return gps.healthy();
 }
 
 

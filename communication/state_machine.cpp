@@ -128,7 +128,7 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
     }
 
     // check GPS status
-    if (!gps_.healthy())
+    if (!position_estimation_.healthy())
     {
         if (state_.mav_state == MAV_STATE_ACTIVE)
         {
@@ -151,11 +151,11 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
 //------------------------------------------------------------------------------
 
 State_machine::State_machine(State& state,
-                            const Gps& gps,
+                            const Position_estimation& position_estimation,
                             const Imu& imu,
                             Manual_control& manual_control) :
     state_(state),
-    gps_(gps),
+    position_estimation_(position_estimation),
     imu_(imu),
     manual_control_(manual_control)
 {}
@@ -259,7 +259,7 @@ bool State_machine::update(State_machine* state_machine)
                             !state_machine->state_.connection_lost &&
                             !state_machine->state_.out_of_fence_1 &&
                             !state_machine->state_.out_of_fence_2 &&
-                            state_machine->gps_.healthy())
+                            state_machine->position_estimation_.healthy())
                     {
                         state_new = MAV_STATE_ACTIVE;
                         // Reset all custom flags except collision avoidance flag
