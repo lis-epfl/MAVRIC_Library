@@ -114,13 +114,63 @@ static bool onboard_parameters_send_one_parameter_now(onboard_parameters_t* onbo
     onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
     mavlink_message_t msg;
+
+    // Copy parameter value into a float
+    float param_value = 0.0f;
+    switch(param_set->parameters[index].data_type)
+    {
+        case MAVLINK_TYPE_CHAR:
+            param_value = *((char*)(param_set->parameters[index].param));
+        break;
+
+      	case MAVLINK_TYPE_UINT8_T:
+            param_value = *((uint8_t*)(param_set->parameters[index].param));
+        break;
+
+        case MAVLINK_TYPE_INT8_T:
+            param_value = *((int8_t*)(param_set->parameters[index].param));
+        break;
+
+        case MAVLINK_TYPE_UINT16_T:
+            param_value = *((uint16_t*)(param_set->parameters[index].param));
+        break;
+
+        case MAVLINK_TYPE_INT16_T:
+            param_value = *((int16_t*)(param_set->parameters[index].param));
+        break;
+
+        case MAVLINK_TYPE_UINT32_T:
+            param_value = *((uint32_t*)(param_set->parameters[index].param));
+        break;
+
+        case MAVLINK_TYPE_INT32_T:
+            param_value = *((int32_t*)(param_set->parameters[index].param));
+        break;
+
+        case MAVLINK_TYPE_FLOAT:
+            param_value = *(param_set->parameters[index].param);
+        break;
+
+        case MAVLINK_TYPE_UINT64_T:
+            // not supported
+        break;
+
+        case MAVLINK_TYPE_INT64_T:
+            // not supported
+        break;
+
+      	case MAVLINK_TYPE_DOUBLE:
+            // not supported
+        break;
+    }
+
+    // Prepare message
     mavlink_msg_param_value_pack(onboard_parameters->mavlink_stream->sysid,
                                  onboard_parameters->mavlink_stream->compid,
                                  &msg,
                                  (char*)param_set->parameters[index].param_name,
-                                 *(param_set->parameters[index].param),
-                                 // onboard_parameters_read_parameter(onboard_parameters, index),
-                                 param_set->parameters[index].data_type,
+                                 param_value,
+                                 MAVLINK_TYPE_FLOAT,
                                  param_set->param_count,
                                  index);
 
@@ -283,12 +333,45 @@ static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_p
             // Check if matched
             if (match)
             {
-                // Only write if there is actually a difference
-                if (*(param->param) != set.param_value && set.param_type == param->data_type)
+                switch(param->data_type)
                 {
-                    // onboard_parameters_update_parameter(onboard_parameters, i, set.param_value);
-                    (*param->param) = set.param_value;
-                    print_util_dbg_print("... OK \r\n");
+                    case MAVLINK_TYPE_CHAR:
+                        *((char*)(param->param)) = set.param_value;
+                    break;
+
+                    case MAVLINK_TYPE_UINT8_T:
+                        *((uint8_t*)(param->param)) = set.param_value;
+                    break;
+
+                    case MAVLINK_TYPE_INT8_T:
+                        *((int8_t*)(param->param)) = set.param_value;
+                    break;
+
+                    case MAVLINK_TYPE_UINT16_T:
+                        *((uint16_t*)(param->param)) = set.param_value;
+                    break;
+
+                    case MAVLINK_TYPE_INT16_T:
+                        *((int16_t*)(param->param)) = set.param_value;
+                    break;
+
+                    case MAVLINK_TYPE_UINT32_T:
+                        *((uint32_t*)(param->param)) = set.param_value;
+                    break;
+
+                    case MAVLINK_TYPE_INT32_T:
+                        *((int32_t*)(param->param)) = set.param_value;
+                    break;
+
+                    case MAVLINK_TYPE_FLOAT:
+                        *(param->param) = set.param_value;
+                    break;
+
+                    case MAVLINK_TYPE_UINT64_T:
+                    case MAVLINK_TYPE_INT64_T:
+                    case MAVLINK_TYPE_DOUBLE:
+                        print_util_dbg_print("Parameter type not supported");
+                    break;
                 }
 
                 // Send now
