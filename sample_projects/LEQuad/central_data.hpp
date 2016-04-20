@@ -177,14 +177,15 @@ public:
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
 
+    Manual_control manual_control;                            ///< The joystick parsing structure
+
     State state;                                                ///< The structure with all state information
-    state_machine_t state_machine;                              ///< The structure for the state machine
+    State_machine state_machine;                              ///< The structure for the state machine
 
     Scheduler scheduler;
     Mavlink_communication mavlink_communication;
 
     servos_mix_quadcotper_diag_t servo_mix;
-
 
     qfilter_t attitude_filter;                                  ///< The qfilter structure
     ahrs_t ahrs;                                                ///< The attitude estimation structure
@@ -192,14 +193,11 @@ public:
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
 
-    Manual_control manual_control;                            ///< The joystick parsing structure
-
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation
     Mavlink_waypoint_handler waypoint_handler;
-
  
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;

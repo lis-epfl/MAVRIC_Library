@@ -53,50 +53,52 @@
 /**
  * \brief Defines the state machine structure
  */
-typedef struct
+class State_machine
 {
-    State* state;                                       ///< Pointer to the state structure
-    remote_t* remote;                                   ///< Pointer to the remote structure
-    const Gps* gps;                                     ///< Pointer to the gps structure
-    const Imu* imu;                                     ///< Pointer to the imu structure
-    Manual_control* manual_control;                   ///< Pointer to the manual_control structure
-} state_machine_t;
+public:
+    /**
+     * \brief Initialize the state machine
+     *
+     * \param state                     Pointer to the state structure
+     * \param gps                       Pointer to the gps structure
+     * \param imu                       Pointer to the imu structure
+     * \param manual_control            Pointer to the manual_control structure
+     *
+     * \return  True if the init succeed, false otherwise
+     */
+    State_machine(  State& state,
+                    const Gps& gps,
+                    const Imu& imu,
+                    Manual_control& manual_control);
+
+    /**
+     * \brief   Updates the state machine
+     *
+     * \param   state_machine           Pointer to the state machine structure
+     *
+     * \return Returns the result of the task
+     */
+    static bool update(State_machine* state_machine);
 
 
-/**
- * \brief Initialize the state machine
- *
- * \param state_machine             Pointer to the state machine structure
- * \param state                     Pointer to the state structure
- * \param gps                       Pointer to the gps structure
- * \param imu                       Pointer to the imu structure
- * \param manual_control            Pointer to the manual_control structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool state_machine_init(state_machine_t* state_machine,
-                        State* state,
-                        const Gps* gps,
-                        const Imu* imu,
-                        Manual_control* manual_control);
+    State& state_;                                       ///< Pointer to the state structure
+    const Gps& gps_;                                     ///< Pointer to the gps structure
+    const Imu& imu_;                                     ///< Pointer to the imu structure
+    Manual_control& manual_control_;                     ///< Pointer to the manual_control structure
+private:
+    /**
+     * \brief Updates the custom flag and switch to critical state if needed
+     *
+     * \param current_custom_mode       Pointer to the current MAV custom mode
+     * \param current_state             Pointer to the current MAV state
+     */
+    void set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_state_t *current_state);
+};
 
-/**
- * \brief   Updates the state and mode of the UAV (not implemented yet)
- *
- * \param   state_machine           Pointer to the state machine structure
- *
- * \return Returns the result of the task
- */
-bool state_machine_set_mav_mode_n_state(state_machine_t* state_machine);
 
-/**
- * \brief   Updates the state machine
- *
- * \param   state_machine           Pointer to the state machine structure
- *
- * \return Returns the result of the task
- */
-bool state_machine_update(state_machine_t* state_machine);
+
+
+
 
 
 #endif // STATE_MACHINE_H_
