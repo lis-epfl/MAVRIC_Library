@@ -129,7 +129,7 @@ public:
 
     //Definition of the number of points used for the optic flow on each camera
     // static const uint32_t N_points = 125;
-    static const uint32_t N_points = 73;
+    static const uint32_t N_points = 75;
 
     float                       pitch_;                             ///< Pitch command for forward motion
     float                       gain_;                              ///< Gain for importance of CAN

@@ -266,7 +266,7 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.goal_direction_,  "GL_DIRECTION"  );
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.pitch_,           "PITCH_CONTROL" );
     init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.intersaccade_time_,  "INTSAC_TIME" );
-    init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.weighted_function_,  "WT_FCT" );
+    // init_success &= onboard_parameters_add_parameter_float(onboard_parameters, &central_data->saccade_controller_.weighted_function_,  "WT_FCT" );
 
     // Attitude PID controller gains
     init_success &= onboard_parameters_add_parameter_float( onboard_parameters, &central_data->attitude_controller.rate_pid[ROLL].p_gain,             "ROLL_ATT_R_KP");
@@ -311,7 +311,7 @@ void flow_telemetry_send(const Central_data* cd, const mavlink_stream_t* mavlink
 
     static uint8_t step = 0;
     step = (step + 1) % 3;
-
+    static const uint32_t N_points = 75;
     float of[60];
     char name[7];
 
@@ -328,29 +328,29 @@ void flow_telemetry_send(const Central_data* cd, const mavlink_stream_t* mavlink
 
       case 1:
           strcpy(name, "OF_1");
-          for (uint32_t i = 0; i < 13; i++)
+          for (uint32_t i = 0; i < N_points - 60; i++)
           {
-              // left 60 to 72
+              // left 60 to 78
               of[i] = cd->flow_left_.of.x[i + 60];
           }
-          for (uint32_t i = 0; i < 47 ; i++)
+          for (uint32_t i = 0; i < 120-N_points ; i++)
           {
-              // right 0 to 46
-              of[i + 13] = cd->flow_right_.of.x[i];
+              // right 0 to 40
+              of[i + N_points - 60] = cd->flow_right_.of.x[i];
           }
       break;
 
       case 2:
           strcpy(name, "OF_2");
-          for (uint32_t i = 0; i <26 ; i++)
+          for (uint32_t i = 0; i < 2 * N_points - 120 ; i++)
           {
-              // right 47 to 72
-              of[i] = cd->flow_right_.of.x[i + 47];
+              // right 41 to 78
+              of[i] = cd->flow_right_.of.x[i + 120 - N_points];
           }
-          for (uint32_t i = 0; i < 34; i++)
+          for (uint32_t i = 0; i < 180 - 2 * N_points; i++)
           {
               
-              of[i +26] = 0.0f;
+              of[i + 2 * N_points - 120] = 0.0f;
           }
       break;
     }

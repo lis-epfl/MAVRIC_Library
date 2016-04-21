@@ -80,23 +80,23 @@ Saccade_controller::Saccade_controller( flow_t& flow_left,
     intersaccade_time_ = 1000;
 
     // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
-    // float angle_between_points = (140.625 / N_points);
-    float angle_between_points = (2.*180. / 160.);
+    float angle_between_points = (180. / N_points);
+    // float angle_between_points = (180. / N_points);
 
     // Init azimuth angles
     for (uint32_t i = 0; i < N_points; ++i)
     {
-        // azimuth_[i]             = (-160.875 + i * angle_between_points) * (PI / 180.0f);
-        azimuth_[i]             = (-173.25 + i * angle_between_points) * (PI / 180.0f);
-        inv_sin_azimuth_[i]     = 1.0f/quick_trig_sin(azimuth_[i]);
-        // azimuth_[i + N_points]  = (  19.125 + i * angle_between_points) * (PI / 180.0f);
-        azimuth_[i + N_points]  = (  9. + i * angle_between_points) * (PI / 180.0f);
-        inv_sin_azimuth_[i + N_points]  = 1.0f/quick_trig_sin(azimuth_[i + N_points]);
+
+        azimuth_[i]             = (-179.5 + i * angle_between_points) * (PI / 180.0f);
+        sin_azimuth_[i] = quick_trig_sin(azimuth_[i]);
+        inv_sin_azimuth_[i]     = 1.0f/sin_azimuth_[i];
+        
+        azimuth_[i + N_points]  = (  0.5 + i * angle_between_points) * (PI / 180.0f);
+        sin_azimuth_[i + N_points] = quick_trig_sin(azimuth_[i + N_points]);
+        inv_sin_azimuth_[i + N_points]  = 1.0f/sin_azimuth_[i + N_points];
 
         cos_azimuth_[i] = quick_trig_cos(azimuth_[i]);
         cos_azimuth_[i + N_points] = quick_trig_cos(azimuth_[i + N_points]);
-        sin_azimuth_[i] = quick_trig_sin(azimuth_[i]);
-        sin_azimuth_[i + N_points] = quick_trig_sin(azimuth_[i + N_points]);
     }
 }
 
@@ -183,24 +183,25 @@ bool Saccade_controller::update()
 
     cad_ = atan2(cad_y_unit,cad_x_unit);
 
-    // goal vector representing the goal direciton, here it is set to 90 degrees with respect to the north.
+    // Goal direction in local frame
+    float goal_lf[3]; 
+    goal_lf[0] = quick_trig_cos(goal_direction_);
+    goal_lf[1] = quick_trig_sin(goal_direction_);
+    goal_lf[2] = 0.0f;
 
-    const float goal[3] = {0,1,0};
+    // Goal direction in body frame
 
-    // Output vector of the rotation of the goal vector with the according heading information
-
-    float goal_direction_3D[3];
-
-    quaternions_rotate_vector(quaternions_inverse(ahrs_.qe), goal, goal_direction_3D);
+    float goal_bf[3];
+    quaternions_rotate_vector(quaternions_inverse(ahrs_.qe), goal_lf, goal_bf);
 
     // Normalization of the goal direction vector.
-    float goal_direction_3D_norm = maths_fast_sqrt(goal_direction_3D[0] * goal_direction_3D[0]+ goal_direction_3D[1] * goal_direction_3D[1] + goal_direction_3D[2] * goal_direction_3D[2]);
+    float goal_bf_norm = maths_fast_sqrt(goal_bf[0] * goal_bf[0]+ goal_bf[1] * goal_bf[1] + goal_bf[2] * goal_bf[2]);
 
-    if(goal_direction_3D_norm != 0){
+    if(goal_bf_norm != 0){
 
-    goal_direction_3D[0] = goal_direction_3D[0] / goal_direction_3D_norm;
-    goal_direction_3D[1] = goal_direction_3D[1] / goal_direction_3D_norm;
-    goal_direction_3D[2] = goal_direction_3D[2] / goal_direction_3D_norm;
+    goal_bf[0] = goal_bf[0] / goal_bf_norm;
+    goal_bf[1] = goal_bf[1] / goal_bf_norm;
+    goal_bf[2] = goal_bf[2] / goal_bf_norm;
     
     }
 
@@ -247,15 +248,34 @@ bool Saccade_controller::update()
 
                 // Calculation of the movement direction (in radians)
                 // movement_direction = weighted_function_ * cad_ + (1-weighted_function_) * (goal_direction_ - current_rpy.rpy[2] + noise);
-                movement_direction_x = weighted_function_ * cad_x_unit + (1-weighted_function_) * (goal_direction_3D[0]  + noise);
-                movement_direction_y = weighted_function_ * cad_y_unit + (1-weighted_function_) * (goal_direction_3D[1]  + noise);
+                movement_direction_x = weighted_function_ * cad_x_unit + (1-weighted_function_) * (goal_bf[0]  + noise);
+                movement_direction_y = weighted_function_ * cad_y_unit + (1-weighted_function_) * (goal_bf[1]  + noise);
                 movement_direction = atan2(movement_direction_y,movement_direction_x);
 
                 attitude_command_.rpy[0]  = 0;
                 attitude_command_.rpy[1]  = 0;
                 attitude_command_.rpy[2]  +=movement_direction;
                 attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
-                //goal_direction_ -= movement_direction;
+
+
+                // if(movement_direction < 0){
+                // attitude_command_.rpy[0]  = - 0.03;
+                // attitude_command_.rpy[1]  = 0;
+                // attitude_command_.rpy[2]  +=movement_direction;
+                // attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                // }
+                // else if(movement_direction > 0){
+                // attitude_command_.rpy[0]  = 0.03;
+                // attitude_command_.rpy[1]  = 0;
+                // attitude_command_.rpy[2]  +=movement_direction;
+                // attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                // }
+                // else if(movement_direction == 0){
+                // attitude_command_.rpy[0]  = 0;
+                // attitude_command_.rpy[1]  = 0;
+                // attitude_command_.rpy[2]  +=movement_direction;
+                // attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                // }
                 saccade_state_            = SACCADE;
             }
         break;
