@@ -67,16 +67,16 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     servo_flap_right_(servo_flap_right),
     config_(config),
     motor_speed_(0.0f),
-    left_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f, -0.205f, 0.004f, 0.12f, 0.3f),//TODO: change these to the correct values
-    right_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f, 0.205f, 0.004f, 0.12f, 0.3f),
+    left_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f-0.015f, -0.205f, 0.004f, 0.12f, 0.3f),//TODO: change these to the correct values
+    right_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f-0.015f, 0.205f, 0.004f, 0.12f, 0.3f),
     left_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -0.190f, -0.410f, -0.046f, 0.0f, 0.0f),
     right_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -0.190f, 0.410f, -0.046f, 0.0f, 0.0f),
     torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     rates_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     lin_forces_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     acc_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-    vel_bf_(std::array<float, 3> {{20.0f, 0.0f, 0.0f}}),
-    vel_(std::array<float, 3> {{20.0f, 0.0f, 0.0f}}),
+    vel_bf_(std::array<float, 3> {{5.0f, 0.0f, 0.0f}}),
+    vel_(std::array<float, 3> {{5.0f, 0.0f, 0.0f}}),
     attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
     last_update_us_(time_keeper_get_us()),
     dt_s_(0.004f)
@@ -125,8 +125,9 @@ bool Dynamic_model_fixed_wing::update(void)
     float q2 = attitude_.v[1];
     float q3 = attitude_.v[2];
     float pitch = asin(2*(q0*q2-q3*q1));
-    left_flap_.set_flap_angle(0.0f);//flaps_angle_left);//Set these in degrees!!
-    right_flap_.set_flap_angle(0.0f);//flaps_angle_right);
+    left_flap_.set_flap_angle(90.0f*pitch/PI-15.0f);//flaps_angle_left);//Set these in degrees!!
+    right_flap_.set_flap_angle(90.0f*pitch/PI-15.0f);//flaps_angle_right);
+    printf("Pitch:%f\n",pitch*180.0f/PI);
 
     // compute torques and forces based on servo commands and positions of the flaps
     forces_from_servos();
@@ -270,9 +271,15 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     wind_gf[0] = config_.wind_x-vel_[0];
     wind_gf[1] = config_.wind_y-vel_[1];
     wind_gf[2] = 0.0f-vel_[2];
+    printf("Wind gf: %f, %f\n",wind_gf[0],wind_gf[2]);
     float wind_bf[3];
     //Global to local wind
     quaternions_rotate_vector(attitude_, wind_gf,wind_bf);
+    quat_t wind_quat;
+    wind_quat.s = 0.0f; wind_quat.v[0] = wind_gf[0]; wind_quat.v[1] = wind_gf[1];wind_quat.v[2] = wind_gf[2];
+    quat_t temp = quaternions_global_to_local(attitude_,wind_quat);
+    printf("Wind bf, vector: %f, %f\n",wind_bf[0],wind_bf[2]);
+    printf("Wind bf, quat  : %f, %f\n",temp.v[0],temp.v[2]);
 
 
     //Compute the forces for the motor and each wing
