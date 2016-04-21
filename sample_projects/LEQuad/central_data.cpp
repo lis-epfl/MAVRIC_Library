@@ -64,7 +64,7 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     servo_2(servo_2),
     servo_3(servo_3),
     manual_control(&satellite, Manual_control::default_config(), remote_default_config()),
-    state(battery, config.state_config),
+    state(mavlink_communication.get_mavlink_stream(), battery, config.state_config),
     scheduler(Scheduler::default_config()),
     mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
     ahrs(ahrs_initialized()),

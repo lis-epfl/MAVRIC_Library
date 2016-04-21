@@ -47,7 +47,9 @@
 #include <stdbool.h>
 
 #include "communication/mav_modes.hpp"
+#include "communication/mavlink_stream.hpp"
 #include "drivers/battery.hpp"
+#include "mavlink_message_handler.hpp"
 
 
 /**
@@ -135,7 +137,6 @@ static inline state_conf_t state_default_config();
 /* forward declarations for friend functions */
 class Central_data;
 class Data_logging;
-
 /**
  * \brief The MAV state
  */
@@ -146,10 +147,11 @@ public:
     /**
      * \brief   Constructor
      *
+     * \param   mavlink_stream  Mavlink downlink
      * \param   battery         Battery monitor
      * \param   state_config    State configuration structure
      */
-    State(Battery& battery, state_conf_t config = state_default_config());
+    State(Mavlink_stream& mavlink_stream_, Battery& battery, state_conf_t config = state_default_config());
 
 
     /**
@@ -198,6 +200,7 @@ public:
 
     friend bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, Central_data* central_data);
     friend bool state_telemetry_set_mode(State* state, mav_mode_t mav_mode);
+    friend mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_command_long_t* packet);
 // TODO:
 // All this should be private
 
@@ -235,6 +238,7 @@ public:
 
 private:
     mav_mode_t mav_mode_;                                ///< The value of the MAV mode
+    Mavlink_stream&   mavlink_stream_;                ///< Mavlink communication, used to inform ground station of state and capabilities of drone
 };
 
 

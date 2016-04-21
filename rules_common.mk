@@ -81,4 +81,6 @@ LIB_SRCS += util/coord_conventions.c
 LIB_SRCS += util/matrix.cpp
 LIB_SRCS += util/print_util.c
 LIB_SRCS += util/quick_trig.c
+
+LIB_SRCS += util/raytracing.cpp
 LIB_SRCS += util/string_util.cpp

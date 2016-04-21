@@ -92,7 +92,6 @@ static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_comm
  */
 static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_command_long_t* packet);
 
-
 /**
  * \brief   Set state->mav_mode
  *
@@ -107,6 +106,16 @@ static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_comma
  * \return  success             true if mode was accepted, false if refused
  */
 bool state_telemetry_set_mode(State* state, mav_mode_t mav_mode);
+
+/**
+ * \brief   Callback to the command 520 MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES
+ *
+ * \param   state               The pointer to the state structure
+ * \param   packet              The pointer to the decoded MAVLink message long
+ *
+ * \return  The MAV_RESULT of the command
+ */
+mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -172,6 +181,48 @@ static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_comma
     return state->set_armed(arm_cmd == 1) ? MAV_RESULT_ACCEPTED : MAV_RESULT_TEMPORARILY_REJECTED;
 }
 
+mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_command_long_t* packet)
+{
+    mav_result_t result = MAV_RESULT_ACCEPTED;
+
+    // Autopilot version
+    if (packet->param1 == 1)
+    {
+        const uint8_t flight_custom_version[8]      = "MAVRIC";
+        const uint8_t middleware_custom_version[8]  = "master";
+        const uint8_t os_custom_version[8]          = "no_os";
+
+        mavlink_message_t msg;
+        mavlink_msg_autopilot_version_pack( 0,                                  // uint8_t system_id,
+                                            0,                                  // uint8_t component_id,
+                                            &msg,                                                   // mavlink_message_t* msg,
+                                            0,                                                      // uint64_t capabilities,
+                                            0,                                                      // uint32_t flight_sw_version,
+                                            0,                                                      // uint32_t middleware_sw_version,
+                                            0,                                                      // uint32_t os_sw_version,
+                                            0,                                                      // uint32_t board_version,
+                                            flight_custom_version,                                  // const uint8_t *flight_custom_version,
+                                            middleware_custom_version,                              // const uint8_t *middleware_custom_version,
+                                            os_custom_version,                                      // const uint8_t *os_custom_version,
+                                            0,                                                      // uint16_t vendor_id,
+                                            0,                                                      // uint16_t product_id,
+                                            0 );                                                    // uint64_t uid );
+        state->mavlink_stream_.send(&msg);
+    }
+
+    // Add other capabilities here
+    // if (packet->param2 == 1)
+    // {
+    //    // [...]
+    // }
+    // [...]
+    // if (packet->param6 == 1)
+    // {
+    //    // [...]
+    // }
+    return result;
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -216,6 +267,14 @@ bool state_telemetry_init(State* state, Mavlink_message_handler* message_handler
     callbackcmd.module_struct =                                 state;
     init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
+    callbackcmd.command_id    = MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES; // 520
+    callbackcmd.sysid_filter  = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &state_telemetry_send_autopilot_capabilities;
+    callbackcmd.module_struct =                                 state;
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
+    
     return init_success;
 }
 

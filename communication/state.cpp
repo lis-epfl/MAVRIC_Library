@@ -62,8 +62,9 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-State::State(Battery& battery, state_conf_t config):
-    battery_(battery)
+State::State(Mavlink_stream& mavlink_stream, Battery& battery, state_conf_t config):
+    battery_(battery),
+    mavlink_stream_(mavlink_stream)
 {
     // Init parameters
     autopilot_type = config.autopilot_type;
