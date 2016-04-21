@@ -275,6 +275,7 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     float wind_bf[3];
     //Global to local wind
     quaternions_rotate_vector(attitude_, wind_gf,wind_bf);
+    quaternions_rotate_vector(quaternions_inverse(attitude_), wind_gf,wind_bf);
     quat_t wind_quat;
     wind_quat.s = 0.0f; wind_quat.v[0] = wind_gf[0]; wind_quat.v[1] = wind_gf[1];wind_quat.v[2] = wind_gf[2];
     quat_t temp = quaternions_global_to_local(attitude_,wind_quat);
