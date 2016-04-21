@@ -115,6 +115,8 @@ bool remote_init(remote_t* remote, const remote_conf_t* config)
 	{
 		case REMOTE_TURNIGY:
 			remote->scale = 1.0f / 880.0f;
+			remote->attitude_scale = 0.8f;
+			
 			remote->deadzone = 30;
 
 			remote->channel_inv[CHANNEL_THROTTLE] = NORMAL;
@@ -417,6 +419,26 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t* control
 	controls->rpy[PITCH] 	= remote_get_pitch(remote);
 	controls->rpy[YAW] 		= remote_get_yaw(remote);
 	controls->thrust 		= remote_get_throttle(remote);
+}
+
+void remote_get_command_from_remote_abs_yaw(remote_t* remote, float ki_yaw, control_command_t* controls)
+{
+	remote_update(remote);
+	
+	controls->rpy[ROLL] 	= remote->attitude_scale * remote_get_roll(remote);
+	controls->rpy[PITCH] 	= remote->attitude_scale * remote_get_pitch(remote);
+	controls->theading 		+= ki_yaw * maths_clip(remote_get_yaw(remote),0.5f);
+	controls->thrust 		= remote_get_throttle(remote);
+}
+
+void remote_get_vertical_velocity_vector_from_remote(remote_t* remote, float ki_yaw, control_command_t* controls)
+{
+	remote_update(remote);
+	
+	controls->tvel[X] 	= - 10.0f * remote_get_pitch(remote);
+	controls->tvel[Y] 	= 10.0f * remote_get_roll(remote);
+	controls->tvel[Z] 	= - 1.5f * remote_get_throttle(remote);
+	controls->theading 	+= ki_yaw * maths_clip(remote_get_yaw(remote),0.5f);
 }
 
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls)

@@ -161,6 +161,7 @@ typedef struct
 	channel_inv_t channel_inv[REMOTE_CHANNEL_COUNT];		///< The array of direction of the channels
 	float trims[REMOTE_CHANNEL_COUNT];						///< The array of trim of the remote channels
 	float scale;											///< The scale of the remote channels
+	float attitude_scale;									///< The scale of the remote channels for Przemek robot
 	int16_t deadzone;										///< The size of the deadzone
 	signal_quality_t signal_quality;						///< The quality of signal
 	remote_type_t type;										///< The type of remote
@@ -290,6 +291,26 @@ mav_mode_t remote_mode_get(const remote_t* remote);
  * \param	controls			The pointer to the controls structure
  */
 void remote_get_command_from_remote(remote_t* remote, control_command_t * controls);
+
+
+/**
+ * \brief	Sets the attitude command from the remote (rpy and thrust values)
+ * 
+ * \param	remote				The pointer to the remote structure
+ *\ param	ki_yaw				Gain for integration of the yaw
+ * \param	controls			The pointer to the controls structure
+ */
+void remote_get_command_from_remote_abs_yaw(remote_t* remote, float ki_yaw, control_command_t* controls);
+
+
+/**
+ * \brief	Sets the attitude command from the remote (rpy and thrust values)
+ * 
+ * \param	remote				The pointer to the remote structure
+ *\ param	ki_yaw				Gain for integration of the yaw
+ * \param	controls			The pointer to the controls structure
+ */
+void remote_get_vertical_velocity_vector_from_remote(remote_t* remote, float ki_yaw, control_command_t* controls);
 
 
 /**

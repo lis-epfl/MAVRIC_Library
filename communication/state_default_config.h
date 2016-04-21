@@ -64,7 +64,7 @@ state_t state_default_config =
 	.remote_active = 1,
 	.max_lost_connection = 60.0f,
 	.battery = { 	.type = BATTERY_LIPO_3S,
-					.low_level_limit = 13.3}, //13.3% of the nominal voltage
+					.low_level_limit = 30.3f}, //13.3% of the nominal voltage
 	.source_mode = REMOTE,
 	.fence_1_xy = 100.0f,
 	.fence_1_z = 75.0f,
