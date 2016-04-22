@@ -100,7 +100,7 @@ public:
 
     /**
      * \brief   Method used to update internal state when a message is received
-     * 
+     *
      * \param   sysid         ID of the system
      * \param   msg           Pointer to the incoming message
      */
@@ -250,8 +250,8 @@ static inline gps_mocap_conf_t gps_mocap_default_config()
     gps_mocap_conf_t conf = {};
 
     // EPFL esplanade
-    conf.origin.longitude = 46.51852236174565f;
-    conf.origin.latitude  = 6.566044801857777f;
+    conf.origin.latitude  = 46.51852236174565f;
+    conf.origin.longitude = 6.566044801857777f;
     conf.origin.altitude  = 400.0f;
     conf.origin.heading   = 0.0f;
 

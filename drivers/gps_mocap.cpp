@@ -67,7 +67,6 @@ static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, mavlink_mes
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
 static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, mavlink_message_t* msg)
 {
    gps_mocap->callback(sysid, msg);
@@ -156,7 +155,7 @@ bool Gps_mocap::update(void)
 {
     float t = time_keeper_get_us();
 
-    if ( (t - last_update_us()) > 1000 )
+    if ( (t - last_update_us()) > 1000000 )
     {
          is_healthy_ = false;
     }
