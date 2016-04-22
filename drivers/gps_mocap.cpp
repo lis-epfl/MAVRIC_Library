@@ -128,7 +128,7 @@ void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
     float t = time_keeper_get_us();
 
     // Update velocity
-    float dt_s = (last_update_us_ - t) / 1000000;
+    float dt_s = (t - last_update_us_) / 1000000;
     if (dt_s > 0.0f)
     {
         velocity_lf_[X] = (packet.x - local_position_.pos[X]) / dt_s;
