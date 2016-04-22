@@ -46,6 +46,8 @@
 
 #include <array>
 
+#include "drivers/gps.hpp"
+
 extern "C"
 {
 #include "communication/mavlink_message_handler.hpp"
@@ -64,7 +66,7 @@ typedef struct
 
 /**
  * \brief   Default configuration structure
- * 
+ *
  * \return  config
  */
 static inline gps_mocap_conf_t gps_mocap_default_config();
@@ -72,10 +74,10 @@ static inline gps_mocap_conf_t gps_mocap_default_config();
 
 /**
  * \brief Class to expose data received from motion capture system as GPS data
- * 
+ *
  * \detail The mocap data is received via mavlink messages of type ATT_POS_MOCAP
  */
-class Gps_mocap
+class Gps_mocap: public Gps
 {
 public:
     /**
@@ -86,7 +88,7 @@ public:
 
     /**
      * \brief  Initializes callback to mavlink messages
-     * 
+     *
      * \return Success
      */
     bool init(void);
@@ -200,7 +202,7 @@ public:
      *
      * \return  Value
      */
-    const bool fix(void) const;
+    const gps_fix_t fix(void) const;
 
 
     /**
@@ -221,7 +223,7 @@ private:
 
 /**
  * \brief   Default configuration structure
- * 
+ *
  * \return  config
  */
 static inline gps_mocap_conf_t gps_mocap_default_config()

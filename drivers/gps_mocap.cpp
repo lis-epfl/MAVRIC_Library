@@ -136,9 +136,15 @@ const uint8_t Gps_mocap::num_sats(void) const
 }
 
 
-const bool Gps_mocap::fix(void) const
+const gps_fix_t Gps_mocap::fix(void) const
 {
-    return true;
+    gps_fix_t fix = NO_GPS;
+    if (healthy())
+    {
+        fix = GPS_OK;
+    }
+
+    return fix;
 }
 
 

@@ -56,7 +56,7 @@ typedef enum
     NO_GPS = 0,                            ///< No GPS
     NO_FIX = 1,                            ///< No GPS fix
     GPS_OK = 2,                            ///< GPS ok
-}gps_fix_t;
+} gps_fix_t;
 
 /**
  * \brief Abstract class for GPS
@@ -74,7 +74,7 @@ public:
 
     /**
      * \brief   Initializes the gps
-     * 
+     *
      * \return  Success
      */
     virtual bool init(void) = 0;
