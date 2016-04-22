@@ -64,7 +64,7 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
-    state(battery, config.state_config),
+    state(mavlink_communication.mavlink_stream, battery, config.state_config),
     data_logging(file1, state, config.data_logging_config),
     data_logging2(file2, state, config.data_logging_config2),
     offboard_camera(ob_camera),

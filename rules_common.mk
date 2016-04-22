@@ -1,3 +1,41 @@
+####################################################################################################
+# PROJECT NAME
+####################################################################################################
+# Ensure project name is defined
+ifndef PROJ_NAME
+PROJ_NAME = MAVRIC
+endif
+
+# Add to compile flags
+CFLAGS   += -DPROJECT_NAME=\"$(PROJ_NAME)\"
+CXXFLAGS += -DPROJECT_NAME=\"$(PROJ_NAME)\"
+
+# Report
+$(info Project name     = $(PROJ_NAME))
+
+
+####################################################################################################
+# GIT HASH
+####################################################################################################
+# Find git hash for project (current folder)
+PROJECT_GIT_HASH := $(shell git describe --abbrev=7 --always --tags)
+# Find git hash for library
+MAVRIC_GIT_HASH  := $(shell cd $(MAVRIC_LIB) && git describe --abbrev=7 --always --tags)
+
+# Add to compile flags
+CFLAGS   += -DMAVRIC_GIT_HASH=\"$(MAVRIC_GIT_HASH)\"
+CFLAGS   += -DPROJECT_GIT_HASH=\"$(PROJECT_GIT_HASH)\"
+CXXFLAGS += -DMAVRIC_GIT_HASH=\"$(MAVRIC_GIT_HASH)\"
+CXXFLAGS += -DPROJECT_GIT_HASH=\"$(PROJECT_GIT_HASH)\"
+
+# Report
+$(info Project git hash = $(PROJECT_GIT_HASH))
+$(info Mavric git hash  = $(MAVRIC_GIT_HASH))
+
+
+####################################################################################################
+# COMMON SOURCE FILES
+####################################################################################################
 LIB_SRCS += communication/data_logging.cpp
 LIB_SRCS += communication/data_logging_telemetry.cpp
 LIB_SRCS += communication/hud_telemetry.cpp
@@ -79,4 +117,5 @@ LIB_SRCS += util/coord_conventions.c
 LIB_SRCS += util/matrix.cpp
 LIB_SRCS += util/print_util.c
 LIB_SRCS += util/quick_trig.c
+LIB_SRCS += util/raytracing.cpp
 LIB_SRCS += util/string_util.cpp
