@@ -343,3 +343,37 @@ bool State_machine::update(State_machine* state_machine)
 }
 
 
+
+
+
+bool State_machine::set_mode_guided(bool guided)
+{
+    // if already in desired state, return true
+    if(state_.guided() == guided)
+    {
+        return true;
+    }
+
+    if(guided)
+    {
+        // if position_estimation is not healthy, abort
+        if(!position_estimation_.healthy())
+        {
+            print_util_dbg_print("[STATE_MACHINE]: prevented passing to guided because position estimation is not healthy\r\n");
+            return false;
+        }
+
+        // set guided flag
+        state_.mav_mode_ |= MAV_MODE_FLAG_GUIDED_ENABLED;
+        print_util_dbg_print("[STATE_MACHINE]: passing to guided mode\r\n");
+    }
+    else
+    {
+        // clear guided flag
+        state_.mav_mode_ &= ~MAV_MODE_FLAG_GUIDED_ENABLED;
+        print_util_dbg_print("[STATE_MACHINE]: leave guided mode\r\n");
+    }
+
+    return true;
+}
+

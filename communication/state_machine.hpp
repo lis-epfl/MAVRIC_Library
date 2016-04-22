@@ -80,6 +80,18 @@ public:
      */
     static bool update(State_machine* state_machine);
 
+    /**
+     * \brief   tries to change state.mav_mode to guided/unguided
+     *
+     * \details tries to set/clear the MAV_MODE_FLAG_GUIDED_ENABLED
+     *          The following checks are performed:
+     *          - position_estimation.healthy to pass to guided
+     *
+     * \param   guided      true to pass to guided, false to pass to unguided
+     *
+     * \return true if desired state was accepted; false if refused
+     */
+    bool set_mode_guided(bool guided);
 
     State& state_;                                       ///< Pointer to the state structure
     const Position_estimation& position_estimation_;      ///< Pointer to the gps structure
