@@ -56,7 +56,7 @@ extern "C"
 
 /**
  * \brief Callback function used to update the gps when a mavlink message is received
- * 
+ *
  * \param   gps_mocap     Pointer to Gps_mocap object
  * \param   sysid         ID of the system
  * \param   msg           Pointer to the incoming message
@@ -111,7 +111,7 @@ bool Gps_mocap::init(void)
         callback.compid_filter  = MAV_COMP_ID_ALL;
         callback.function       = (mavlink_msg_callback_function_t) &gps_mocap_callback;
         callback.module_struct  = (handling_module_struct_t)        this;
-        
+
         is_init_ = mavlink_message_handler_add_msg_callback(&message_handler_, &callback);
     }
 
@@ -127,7 +127,7 @@ void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
 
     // Get timing
     float t = time_keeper_get_us();
-    
+
     // Update velocity
     float dt_s = (last_update_us_ - t) / 1000000;
     if (dt_s > 0.0f)
@@ -135,7 +135,7 @@ void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
         velocity_lf_[X] = (packet.x - local_position_.pos[X]) / dt_s;
         velocity_lf_[Y] = (packet.y - local_position_.pos[Y]) / dt_s;
         velocity_lf_[Z] = (packet.z - local_position_.pos[Z]) / dt_s;
-        
+
         if (velocity_lf_[X] != 0.0f)
         {
             heading_ = quick_trig_atan(velocity_lf_[Y] / velocity_lf_[X]);
@@ -146,7 +146,7 @@ void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
     local_position_.pos[X] = packet.x;
     local_position_.pos[Y] = packet.y;
     local_position_.pos[Z] = packet.z;
-    
+
     // Update timing
     last_update_us_ = t;
 }
@@ -154,6 +154,17 @@ void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
 
 bool Gps_mocap::update(void)
 {
+    float t = time_keeper_get_us();
+
+    if ( (t - last_update_us()) > 1000 )
+    {
+         is_healthy_ = false;
+    }
+    else
+    {
+        is_healthy_ = true;
+    }
+
     return true;
 }
 
@@ -244,17 +255,5 @@ const gps_fix_t Gps_mocap::fix(void) const
 
 const bool Gps_mocap::healthy(void) const
 {
-    float t = time_keeper_get_us();
-    
-    if ( (t - last_update_us()) > 1000 )
-    {
-         healthy_ = false;
-    }
-    else
-    {
-        healthy_ = true;
-    }
-
     return is_healthy_;
 }
-==== BASE ====
