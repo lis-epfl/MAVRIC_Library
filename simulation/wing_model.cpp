@@ -63,11 +63,13 @@ Wing_model::Wing_model(float flap_angle,
 	float y_position_bf,
 	float z_position_bf,
 	float area,
-	float chord):
+	float chord,
+	int type):
 		flap_angle_(flap_angle),
 		orientation_(orientation),
 		area_(area),
-		chord_(chord)
+		chord_(chord),
+		type_(type)
 {
 	position_bf_[0] = x_position_bf;
 	position_bf_[1] = y_position_bf;
@@ -75,16 +77,21 @@ Wing_model::Wing_model(float flap_angle,
 	init_lookup();
 }
 
-wing_model_forces_t Wing_model::compute_forces(float wind_bf[3]){
-	float wind_wf[3];
+wing_model_forces_t Wing_model::compute_forces(float wind_bf[3], float ang_rates[3]){
+	//Compute the wind speed at the COG of the wing
+	wind_bf[0] -= (ang_rates[1]*position_bf_[2]-ang_rates[2]*position_bf_[1]);
+	wind_bf[1] -= (ang_rates[2]*position_bf_[0]-ang_rates[0]*position_bf_[2]);
+	wind_bf[2] -= (ang_rates[0]*position_bf_[1]-ang_rates[1]*position_bf_[0]);
+
 	//Global to local wind
-	quaternions_rotate_vector(orientation_,wind_bf,wind_wf); //TODO : double check
+	float wind_wf[3];
+	quaternions_rotate_vector(quaternions_inverse(orientation_),wind_bf,wind_wf);
 	float aoa = atan2(-wind_wf[2], -wind_wf[0]); //Neglect the lateral wind
-//	printf("AOA:%f,Wind, bf:%f,%f,Wind, wf:%f,%f\n",aoa*180.0f/PI, wind_bf[0],wind_bf[2],wind_wf[0],wind_wf[2]);
 	float speed_sq = SQR(wind_wf[0]) + SQR(wind_wf[2]); //Neglect the lateral wind
-	float cl = get_cl(aoa/PI*180.0,flap_angle_); //aoa is in rad and needs to be given in degrees
-	float cd = get_cd(aoa/PI*180.0,flap_angle_);
-	float cm = get_cm(aoa/PI*180.0,flap_angle_);
+	float cl = get_cl(aoa);
+	float cd = get_cd(aoa);
+	float cm = get_cm(aoa);
+	printf("%f\n",aoa/PI*180);
 	logfile << aoa << ",";
 	float density=1.225f; //Keep it constant for now
 	float base = 0.5*density*speed_sq*area_;
@@ -100,7 +107,6 @@ wing_model_forces_t Wing_model::compute_forces(float wind_bf[3]){
 	forces_wf.force[1] = 0.0;
 	forces_wf.force[2] = -lift*cosinus-drag*sinus;
 	wing_model_forces_t forces_bf = forces_wing_to_bf(forces_wf);
-//	printf("Aoa: %3.3f \tPitch in wing: %f\n",aoa/PI*180.0f,forces_bf.torque[1]);
 	return forces_bf;
 }
 
@@ -113,88 +119,106 @@ void Wing_model::set_flap_angle(float angle){
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-float Wing_model::get_cl(float aoa, float flap_angle)
+float Wing_model::get_cl(float aoa)
 {
-	if(flap_angle!=0)
+	float coeff=0.0f;
+	if(type_ == 1) // Type 1 = zagi 12
 	{
-		return get_cl(aoa+6.0/40.0*flap_angle, 0)+0.3/40.0*flap_angle;
+		aoa = (aoa+flap_angle_*0.15f)*57.2957f;//*180/pi -> Take flap angle into account and transform it in degrees
+		if(aoa<-90)
+		{
+			coeff = lookup_Cl_[0];
+		}
+		else if(aoa>90)
+		{
+			coeff = lookup_Cl_[180];
+		}
+		else if(floor(aoa)==ceil(aoa))
+		{
+			coeff = lookup_Cl_[(int)floor(aoa)+90];
+		}
+		else
+		{
+			coeff = (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cl_[(int)ceil(aoa)+90]-lookup_Cl_[(int)floor(aoa)+90])+lookup_Cl_[(int)floor(aoa)+90];
+		}
+		coeff += 0.4297f*flap_angle_;
 	}
-	else if(aoa<-90)
+	else //Return the flat profile
 	{
-		return lookup_Cl_[0];
+		coeff = 2.0f*PI*aoa;
 	}
-	else if(aoa>90)
-	{
-		return lookup_Cl_[180];
-	}
-	else if(floor(aoa)==ceil(aoa))
-	{
-		return lookup_Cl_[(int)floor(aoa)+90];
-	}
-	else
-	{
-		return (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cl_[(int)ceil(aoa)+90]-lookup_Cl_[(int)floor(aoa)+90])+lookup_Cl_[(int)floor(aoa)+90];
-	}
-	return 0;
+	return coeff;
 }
 
-float Wing_model::get_cd(float aoa,float flap_angle)
+float Wing_model::get_cd(float aoa)
 {
-	if(flap_angle!=0)
+	float coeff = 0.0f;
+	if(type_ == 1) // Type 1 = zagi 12
 	{
-		return get_cd(aoa+6.0/40.0*flap_angle, 0)+abs(0.045/40.0*flap_angle);
+		aoa = (aoa+flap_angle_*0.15f)*57.2957f;//*180/pi -> Take flap angle into account and transform it in degrees
+		if(aoa<-90)
+		{
+			coeff = lookup_Cd_[0];
+		}
+		else if(aoa>90)
+		{
+			coeff = lookup_Cd_[180];
+		}
+		else if(floor(aoa)==ceil(aoa))
+		{
+			coeff = lookup_Cd_[(int)floor(aoa)+90];
+		}
+		else
+		{
+			coeff = (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cd_[(int)ceil(aoa)+90]-lookup_Cd_[(int)floor(aoa)+90])+lookup_Cd_[(int)floor(aoa)+90];
+		}
+		coeff += abs(0.0644577f*flap_angle_);
 	}
-	else if(aoa<-90)
+	else //Return the flat profile
 	{
-		return lookup_Cd_[0];
+		coeff = 1.28f*sin(aoa);
 	}
-	else if(aoa>90)
-	{
-		return lookup_Cd_[180];
-	}
-	else if(floor(aoa)==ceil(aoa))
-	{
-		return lookup_Cd_[(int)floor(aoa)+90];
-	}
-	else
-	{
-		return (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cd_[(int)ceil(aoa)+90]-lookup_Cd_[(int)floor(aoa)+90])+lookup_Cd_[(int)floor(aoa)+90];
-	}
-	return 0;
+	return coeff;
 }
 
-float Wing_model::get_cm(float aoa, float flap_angle)
+float Wing_model::get_cm(float aoa)
 {
-	if(flap_angle!=0)
+	float coeff = 0.0f;
+	if(type_ == 1) // Type 1 = zagi 12
 	{
-		return get_cm(aoa+6.0/40.0*flap_angle, 0)-0.15/40.0*flap_angle;
+		aoa = (aoa+flap_angle_*0.15f)*57.2957f;// *180/pi -> Take flap angle into account and transform it in degrees
+		if(aoa<-90)
+		{
+			coeff = lookup_Cm_[0];
+		}
+		else if(aoa>90)
+		{
+			coeff = lookup_Cm_[180];
+		}
+		else if(floor(aoa)==ceil(aoa))
+		{
+			coeff = lookup_Cm_[(int)floor(aoa)+90];
+		}
+		else
+		{
+			coeff = (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cm_[(int)ceil(aoa)+90]-lookup_Cm_[(int)floor(aoa)+90])+lookup_Cm_[(int)floor(aoa)+90];
+		}
+		coeff -= 0.214859f*flap_angle_;
 	}
-	else if(aoa<-90)
+	else //Return the flat profile
 	{
-		return lookup_Cm_[0];
+		coeff = 0.25f*(get_cl(aoa)*cos(aoa)+get_cd(aoa)*sin(aoa));
 	}
-	else if(aoa>90)
-	{
-		return lookup_Cm_[180];
-	}
-	else if(floor(aoa)==ceil(aoa))
-	{
-		return lookup_Cm_[(int)floor(aoa)+90];
-	}
-	else
-	{
-		return (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cm_[(int)ceil(aoa)+90]-lookup_Cm_[(int)floor(aoa)+90])+lookup_Cm_[(int)floor(aoa)+90];
-	}
-	return 0;
+	return coeff;
 }
 
 wing_model_forces_t Wing_model::forces_wing_to_bf(wing_model_forces_t forces_wf)
 {
 	wing_model_forces_t forces_bf;
 	// Rotate the forces
-	quaternions_rotate_vector(quaternions_inverse(orientation_),forces_wf.force,forces_bf.force);
+	quaternions_rotate_vector(orientation_,forces_wf.force,forces_bf.force);
 	// Rotate the torques
-	quaternions_rotate_vector(quaternions_inverse(orientation_),forces_wf.torque,forces_bf.torque);
+	quaternions_rotate_vector(orientation_,forces_wf.torque,forces_bf.torque);
 	// Compute the torques due to the forces being applied away from COG
 	for(int i=0; i<3; i++) forces_bf.torque[i]+= forces_bf.force[(i+2)%3]*position_bf_[(i+1)%3] - forces_bf.force[(i+1)%3]*position_bf_[(i+2)%3];
 	return forces_bf;

@@ -78,7 +78,7 @@ int main(int argc, char** argv)
     //Create dynamic model
     Dynamic_model_fixed_wing model(servo_motor, servo_flap_left, servo_flap_right);
 
-    servo_motor.write(-0.5f);
+    servo_motor.write(0.5f);
     //servo_motor.write(-0.4f);
 
 
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     //Begin simulation
     time_keeper_init();
     float t = time_keeper_get_s();
-    for (uint32_t i = 0; i < 100; i++)
+    for (uint32_t i = 0; i < 10000; i++)
     {
         printf("-------------------------\n");
         position = model.position_lf();

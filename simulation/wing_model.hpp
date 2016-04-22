@@ -75,6 +75,7 @@ public:
      * \param   z_position    z distance between wing COG and plane COG
      * \param   area          area of the wing in m^2
      * \param   chord         chord length of the wing
+     * \param   type          type of the wing (1 for zagi12, anything else for flat wing)
      */
     Wing_model(float flap_angle,
       quat_t orientation,
@@ -82,27 +83,29 @@ public:
       float y_position_bf,
       float z_position_bf,
       float area,
-      float chord);
+      float chord,
+      int type);
 
      /**
      * \brief   Computes the forces applied on the wing
      * \detail  Takes the wind speed vector and computes the force that applies on the wing (3 forces and 3 moments are possible)
      *
-     * \param	wind_bf	speed of wind relatively to the plane, in bf
+     * \param	  wind_bf   speed of wind relatively to the plane, in bf
+     * \param   ang_rates angular speed of the plan in bf
      *
      * \return  The 3 forces and 3 moments that applies on the wing
      */
-    wing_model_forces_t compute_forces(float wind_bf[3]);
+    wing_model_forces_t compute_forces(float wind_bf[3], float ang_rates[3]);
 
     /**
     * \brief    Allows to change the flap angle
     *
-    * \param    angle   the new angle, in degrees
+    * \param    angle   the new angle, in radians
     */
     void set_flap_angle(float angle);
 
 private:
-    float flap_angle_;        // angle of the flap
+    float flap_angle_;        // angle of the flap in radians
     quat_t orientation_;      // orientation of the wing in bf reference
     float position_bf_[3];    // position of the wing COG from the plane COG in bf
     float area_;              // surface of the wing (m^2)
@@ -110,6 +113,7 @@ private:
     float lookup_Cl_[181];    // Lookup table of the Cl coefficient
     float lookup_Cd_[181];    // Lookup table of the Cd coefficient
     float lookup_Cm_[181];    // Lookup table of the Cm coefficient
+    int   type_;              // Type of the wing 1 = Zagi12, other = flat
 
     /**
     * \brief    Initializes the 3 lookup tables
@@ -121,21 +125,21 @@ private:
     *
     * \Return   value of Cl
     */
-    float get_cl(float aoa, float flap_angle);
+    float get_cl(float aoa);
 
     /**
     * \brief    Get Cd coefficient
     *
     * \Return   value of Cd
     */
-    float get_cd(float aoa, float flap_angle);
+    float get_cd(float aoa);
 
     /**
     * \brief    Get Cm coefficient
     *
     * \Return   value of Cm
     */
-    float get_cm(float aoa, float flap_angle);
+    float get_cm(float aoa);
 
     /**
     * \brief    Transform the forces from wing reference frame to bf
