@@ -225,6 +225,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     goal.pos[X] = 0.0f;
     goal.pos[Y] = 0.0f;
     goal.pos[Z] = 0.0f;
+    goal.heading = 0.0f;
 
     last_update = 0;
 
