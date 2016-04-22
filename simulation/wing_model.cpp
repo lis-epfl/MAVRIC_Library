@@ -45,8 +45,6 @@
 #include <iostream>
 #include <fstream>
 
-extern std::ofstream logfile;
-
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
@@ -91,8 +89,7 @@ wing_model_forces_t Wing_model::compute_forces(float wind_bf[3], float ang_rates
 	float cl = get_cl(aoa);
 	float cd = get_cd(aoa);
 	float cm = get_cm(aoa);
-	printf("%f\n",aoa/PI*180);
-	logfile << aoa << ",";
+	//printf("%f\n",aoa/PI*180);
 	float density=1.225f; //Keep it constant for now
 	float base = 0.5*density*speed_sq*area_;
 	float lift = cl*base; //Doing this to improve the speed -> Correct??

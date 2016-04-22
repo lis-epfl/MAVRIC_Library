@@ -59,7 +59,7 @@ int main(int argc, char** argv)
     // Create log file
 
     logfile.open("log.csv");
-    logfile << "x,y,z,vx,vy,vz,r,p,y,pv,aoa1,aoa2,aoa3,aoa4,pt" << std::endl;
+    logfile << "t,x,y,z,vx,vy,vz,roll,pitch,yaw" << std::endl;
     // logfile.close();
 
     Pwm_dummy pwm;
@@ -91,9 +91,11 @@ int main(int argc, char** argv)
     //Begin simulation
     time_keeper_init();
     float t = time_keeper_get_s();
-    for (uint32_t i = 0; i < 10000; i++)
+    float start = t;
+    for (uint32_t i = 0; i < 1000000; i++)
     {
-        printf("-------------------------\n");
+        if(i%100000==0) printf("%d/100\n",i/10000);
+        //printf("-------------------------\n");
         position = model.position_lf();
         velocity = model.velocity_lf();
         ang_velocity = model.angular_velocity_bf();
@@ -105,13 +107,14 @@ int main(int argc, char** argv)
         roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
         pitch = asin(2*(q0*q2-q3*q1));
         yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3));
+        //printf("--> %f\n", yaw/PI*180);
 
         // write to log file
-        logfile << position.pos[0] << "," << position.pos[1] << "," << position.pos[2] << ",";
+        logfile << t-start << "," << position.pos[0] << "," << position.pos[1] << "," << position.pos[2] << ",";
         logfile << velocity[0] << "," << velocity[1] << "," << velocity[2] << ",";
-        logfile << roll << "," << pitch << "," << yaw << "," << ang_velocity[2] << ",";
+        logfile << roll << "," << pitch << "," << yaw << std::endl;
 
-        while(time_keeper_get_s() - t < 0.004f){}
+        while(time_keeper_get_s() - t < 0.001f){}
         t = time_keeper_get_s();
         model.update();
     }

@@ -52,8 +52,6 @@ extern "C"
 //#include "hal/common/time_keeper.hpp"
 }
 
-extern std::ofstream logfile;
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -109,14 +107,13 @@ bool Dynamic_model_fixed_wing::update(void)
     // Do nothing if updated too often
     if (dt_s_ < 0.001f)
     {
-      dt_s_ = 0.001f;
-    //    return true; TODO: put this line back when finished debugging
+        return true;
     }
 
     // Clip dt if too large, this is not realistic but the simulation will be more precise
     if (dt_s_ > 0.1f)
     {
-        dt_s_ = 0.01f;
+        dt_s_ = 0.1f;
     }
 
     //TODO: rmove this after testing
@@ -126,7 +123,7 @@ bool Dynamic_model_fixed_wing::update(void)
     float q3 = attitude_.v[2];
     float pitch = asin(2*(q0*q2-q3*q1));
     left_flap_.set_flap_angle(-25.0f/180.0f*PI);//Set these in degrees!!
-    right_flap_.set_flap_angle(-24.75f/180.0f*PI);
+    right_flap_.set_flap_angle(-25.0f/180.0f*PI);
 
     // compute torques and forces based on servo commands and positions of the flaps
     forces_from_servos();
@@ -160,7 +157,7 @@ bool Dynamic_model_fixed_wing::update(void)
     // check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
     if (local_position_.pos[Z] > 0)
     {
-        printf("Touched the ground\n");//TODO: REMOVE
+        //printf("Touched the ground\n");//TODO: REMOVE
         //Stop falling
         vel_[Z] = 0.0f;
         local_position_.pos[Z] = 0.0f;
@@ -297,8 +294,6 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
 			 right_flap_force.torque[PITCH] +
        left_drift_force.torque[PITCH] +
        right_drift_force.torque[PITCH];
-
-    logfile << torques_bf_[PITCH] << std::endl;
 
     //Get the torque around z axis (yaw)
     torques_bf_[YAW] = motor_forces.torque[YAW] +
