@@ -208,8 +208,8 @@ void imu_telemetry_send_scaled(const Imu* imu, const Mavlink_stream* mavlink_str
     std::array<float, 3> gyro = imu->gyro();
     std::array<float, 3> mag  = imu->mag();
 
-    mavlink_msg_scaled_imu_pack(mavlink_stream->sysid,
-                                mavlink_stream->compid,
+    mavlink_msg_scaled_imu_pack(mavlink_stream->sysid(),
+                                mavlink_stream->compid(),
                                 msg,
                                 time_keeper_get_ms(),
                                 1000 * acc[X],

@@ -109,8 +109,8 @@ void gps_telemetry_send_raw(const Gps* gps, const Mavlink_stream* mavlink_stream
     float ground_speed = maths_fast_sqrt(gps->velocity_lf()[X] * gps->velocity_lf()[X]
                                          + gps->velocity_lf()[Y] * gps->velocity_lf()[Y]
                                          + gps->velocity_lf()[Z] * gps->velocity_lf()[Z]);
-    mavlink_msg_gps_raw_int_pack(mavlink_stream->sysid,
-                                 mavlink_stream->compid,
+    mavlink_msg_gps_raw_int_pack(mavlink_stream->sysid(),
+                                 mavlink_stream->compid(),
                                  msg,
                                  gps->last_update_us(),
                                  gps->fix(),

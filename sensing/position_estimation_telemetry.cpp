@@ -111,8 +111,8 @@ bool position_estimation_telemetry_init(Position_estimation* pos_est, Mavlink_me
 
 void position_estimation_telemetry_send_position(const Position_estimation* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_local_position_ned_pack(mavlink_stream->sysid,
-                                        mavlink_stream->compid,
+    mavlink_msg_local_position_ned_pack(mavlink_stream->sysid(),
+                                        mavlink_stream->compid(),
                                         msg,
                                         time_keeper_get_ms(),
                                         pos_est->local_position.pos[0],
@@ -129,8 +129,8 @@ void position_estimation_telemetry_send_global_position(const Position_estimatio
     global_position_t gpos = coord_conventions_local_to_global_position(pos_est->local_position);
 
     //mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
-    mavlink_msg_global_position_int_pack(mavlink_stream->sysid,
-                                         mavlink_stream->compid,
+    mavlink_msg_global_position_int_pack(mavlink_stream->sysid(),
+                                         mavlink_stream->compid(),
                                          msg,
                                          time_keeper_get_ms(),
                                          gpos.latitude * 10000000,

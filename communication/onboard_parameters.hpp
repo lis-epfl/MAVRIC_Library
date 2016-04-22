@@ -143,13 +143,13 @@ private:
         bool  schedule_for_transmission;                            ///< Boolean to activate the transmission of the parameter
     };
     
-    bool debug;                                             ///< Indicates if debug messages should be printed for each param change
-    File& file;                                             ///< File storage to keep parameters between flights
-    const State& state;                                     ///< Pointer to the state structure
-    const Mavlink_stream& mavlink_stream;                   ///< Pointer to mavlink_stream
-    uint32_t param_count;                                   ///< Number of onboard parameter effectively in the array
-    uint32_t max_param_count;                               ///< Maximum number of parameters
-    param_entry_t* parameters;                 ///< Onboard parameters array, needs memory allocation
+    bool debug_;                                             ///< Indicates if debug messages should be printed for each param change
+    File& file_;                                             ///< File storage to keep parameters between flights
+    const State& state_;                                     ///< Pointer to the state structure
+    const Mavlink_stream& mavlink_stream_;                   ///< Pointer to mavlink_stream
+    uint32_t param_count_;                                   ///< Number of onboard parameter effectively in the array
+    uint32_t max_param_count_;                               ///< Maximum number of parameters
+    param_entry_t* parameters_;                              ///< Onboard parameters array, needs memory allocation
 
 
 

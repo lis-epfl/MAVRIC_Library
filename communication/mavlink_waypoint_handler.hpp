@@ -133,42 +133,45 @@ public:
      */
     void hold_init(local_position_t local_pos);
 
-    uint16_t waypoint_count;                                    ///< The total number of waypoints
+    inline uint16_t waypoint_count() const {return waypoint_count_;};
+
+    
     local_position_t waypoint_hold_coordinates;                 ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
 
 protected:
-    int8_t current_waypoint_index;                              ///< The number of the current waypoint
-    bool hold_waypoint_set;                                     ///< Flag to tell if the hold position waypoint is set
-    uint32_t start_wpt_time;                                    ///< The time at which the MAV starts to travel towards its waypoint
-    const Mavlink_stream& mavlink_stream;                       ///< The pointer to MAVLink stream
+    uint16_t waypoint_count_;                                     ///< The total number of waypoints
+    int8_t current_waypoint_index_;                              ///< The number of the current waypoint
+    bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
+    uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
+    const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
     
-    State& state;                                               ///< The pointer to the state structure
-    Navigation& navigation;                                     ///< The pointer to the navigation structure
-    Position_estimation& position_estimation;                   ///< The pointer to the position estimation structure
+    State& state_;                                               ///< The pointer to the state structure
+    Navigation& navigation_;                                     ///< The pointer to the navigation structure
+    Position_estimation& position_estimation_;                   ///< The pointer to the position estimation structure
 
 private:
-    waypoint_struct_t current_waypoint;                         ///< The structure of the current waypoint
-    local_position_t waypoint_coordinates;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-    local_position_t waypoint_critical_coordinates;             ///< The coordinates of the waypoint in critical state
+    waypoint_struct_t current_waypoint_;                         ///< The structure of the current waypoint
+    local_position_t waypoint_coordinates_;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+    local_position_t waypoint_critical_coordinates_;             ///< The coordinates of the waypoint in critical state
 
-    bool waypoint_sending;                                      ///< Flag to tell whether waypoint are being sent
-    bool waypoint_receiving;                                    ///< Flag to tell whether waypoint are being received or not
+    bool waypoint_sending_;                                      ///< Flag to tell whether waypoint are being sent
+    bool waypoint_receiving_;                                    ///< Flag to tell whether waypoint are being received or not
 
-    int32_t sending_waypoint_num;                               ///< The ID number of the sending waypoint
-    int32_t waypoint_request_number;                            ///< The ID number of the requested waypoint
-    uint16_t waypoint_onboard_count;                              ///< The number of waypoint onboard
+    int32_t sending_waypoint_num_;                               ///< The ID number of the sending waypoint
+    int32_t waypoint_request_number_;                            ///< The ID number of the requested waypoint
+    uint16_t waypoint_onboard_count_;                            ///< The number of waypoint onboard
 
-    uint32_t start_timeout;                                     ///< The start time for the waypoint timeout
-    uint32_t timeout_max_waypoint;                              ///< The max waiting time for communication
-    uint32_t travel_time;                                       ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
+    uint32_t start_timeout_;                                     ///< The start time for the waypoint timeout
+    uint32_t timeout_max_waypoint_;                              ///< The max waiting time for communication
+    uint32_t travel_time_;                                       ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
-    bool critical_next_state;                                   ///< Flag to change critical state in its dedicated state machine
-    bool auto_landing_next_state;                               ///< Flag to change critical state in its dedicated state machine
+    bool critical_next_state_;                                   ///< Flag to change critical state in its dedicated state machine
+    bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
 
-    mav_mode_t last_mode;                                            ///< The mode of the MAV to have a memory of its evolution    
-    const ahrs_t& ahrs;                                         ///< The pointer to the attitude estimation structure
-    const Manual_control& manual_control;                     ///< The pointer to the manual_control structure
+    mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution    
+    const ahrs_t& ahrs_;                                         ///< The pointer to the attitude estimation structure
+    const Manual_control& manual_control_;                       ///< The pointer to the manual_control structure
 
     /**
      * \brief   Drives the stopping behavior

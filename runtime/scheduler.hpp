@@ -142,16 +142,6 @@ public:
 
 
     /**
-     * \brief               Returns whether scheduler is in debug mode (printing messages)
-     *
-     * \param task_index    Index of the target task
-     *
-     * \return              Pointer to the target task
-     */
-    bool is_debug();
-
-
-    /**
      * \brief           Suspends all tasks
      *
      * \param delay     Duration (us)
@@ -175,12 +165,12 @@ public:
 
 
 private:
-    strategy_t schedule_strategy;               ///<    Scheduling strategy
-    bool debug;                                 ///<    Indicates whether the scheduler should print debug messages
-    uint32_t task_count;                        ///<    Number_of_tasks
-    uint32_t max_task_count;                    ///<    Maximum number of tasks
-    uint32_t current_schedule_slot;             ///<    Slot of the task being executed
-    Scheduler_task* tasks;                     ///<    Array of tasks_entry to be executed, needs memory allocation
+    strategy_t schedule_strategy_;               ///<    Scheduling strategy
+    bool debug_;                                 ///<    Indicates whether the scheduler should print debug messages
+    uint32_t task_count_;                        ///<    Number_of_tasks
+    uint32_t max_task_count_;                    ///<    Maximum number of tasks
+    uint32_t current_schedule_slot_;             ///<    Slot of the task being executed
+    Scheduler_task* tasks_;                      ///<    Array of tasks_entry to be executed, needs memory allocation
 };
 
 #endif /* SCHEDULER_HPP_ */

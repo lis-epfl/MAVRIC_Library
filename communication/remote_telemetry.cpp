@@ -125,8 +125,8 @@ bool remote_telemetry_init(remote_t* remote, Mavlink_message_handler* mavlink_ha
 
 void remote_telemetry_send_raw(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_rc_channels_raw_pack(mavlink_stream->sysid,
-                                     mavlink_stream->compid,
+    mavlink_msg_rc_channels_raw_pack(mavlink_stream->sysid(),
+                                     mavlink_stream->compid(),
                                      msg,
                                      time_keeper_get_ms(),
                                      0,
@@ -143,8 +143,8 @@ void remote_telemetry_send_raw(const remote_t* remote, Mavlink_stream* mavlink_s
 
     mavlink_stream->send(msg);
 
-    mavlink_msg_rc_channels_raw_pack(mavlink_stream->sysid,
-                                     mavlink_stream->compid,
+    mavlink_msg_rc_channels_raw_pack(mavlink_stream->sysid(),
+                                     mavlink_stream->compid(),
                                      msg,
                                      time_keeper_get_ms(),
                                      1,
@@ -163,8 +163,8 @@ void remote_telemetry_send_raw(const remote_t* remote, Mavlink_stream* mavlink_s
 
 void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid,
-                                        mavlink_stream->compid,
+    mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid(),
+                                        mavlink_stream->compid(),
                                         msg,
                                         time_keeper_get_ms(),
                                         0,
@@ -181,8 +181,8 @@ void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlin
 
     mavlink_stream->send(msg);
 
-    mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid,
-                                        mavlink_stream->compid,
+    mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid(),
+                                        mavlink_stream->compid(),
                                         msg,
                                         time_keeper_get_ms(),
                                         1,

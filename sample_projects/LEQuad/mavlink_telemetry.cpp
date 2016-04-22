@@ -126,7 +126,7 @@ bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, C
     // init_success &= data_logging->add_field(&central_data->gps.longitude, "longitude", 7);
     // init_success &= data_logging->add_field(&central_data->gps.altitude, "altitude", 3);
 
-    init_success &= data_logging->add_field((uint32_t*)&central_data->state.mav_state, "mav_state");
+    init_success &= data_logging->add_field((uint32_t*)&central_data->state.mav_state_, "mav_state_");
     init_success &= data_logging->add_field(&central_data->state.mav_mode_, "mav_mode");
 
     return init_success;
@@ -149,7 +149,7 @@ bool mavlink_telemetry_add_data_logging_parameters_stat(Data_logging* data_loggi
 bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 {
     bool init_success = true;
-    Mavlink_message_handler* message_handler = &central_data->mavlink_communication.get_message_handler();
+    Mavlink_message_handler* message_handler = &central_data->mavlink_communication.message_handler();
     init_success &= state_telemetry_init(&central_data->state,
                                          message_handler);
 
@@ -195,7 +195,7 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     //stabiliser_t* position_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.position_stabiliser;
 
     // System ID
-    //init_success &= onboard_parameters->add_parameter_uint32(&central_data->mavlink_communication.get_sysid(), "ID_SYSID");
+    //init_success &= onboard_parameters->add_parameter_uint32(&central_data->mavlink_communication.sysid(), "ID_SYSID");
 
     // Test attitude controller gains
     //init_success &= onboard_parameters->add_parameter_float(&central_data->attitude_controller.p_gain_angle[ROLL],    "GAIN_A_ROLL"        );
@@ -355,8 +355,8 @@ void altitude_estimation_telemetry_send(const Altitude_estimation* altitude_esti
     cov[1] = P(1,1);
     cov[2] = P(2,2);
 
-    mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid,
-                                            mavlink_stream->compid,
+    mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
+                                            mavlink_stream->compid(),
                                             msg,
                                             time_keeper_get_ms(),
                                             0,
@@ -387,12 +387,12 @@ bool mavlink_telemetry_init(Central_data* central_data)
 
     init_success &= central_data->data_logging.create_new_log_file("Log_file",
                     true,
-                    central_data->mavlink_communication.get_sysid());
+                    central_data->mavlink_communication.sysid());
 
 
     init_success &= central_data->data_logging2.create_new_log_file("Log_Stat",
                     false,
-                    central_data->mavlink_communication.get_sysid());
+                    central_data->mavlink_communication.sysid());
 
     init_success &= mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging, central_data);
 
@@ -433,7 +433,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
 
     init_success &= mavlink_communication.add_msg_send(100000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&altitude_estimation_telemetry_send,                            &central_data->altitude_estimation_,    MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV           );// ID 64
 
-    init_success &= central_data->mavlink_communication.get_scheduler().sort_tasks();
+    init_success &= central_data->mavlink_communication.scheduler().sort_tasks();
 
     print_util_dbg_init_msg("[TELEMETRY]", init_success);
 

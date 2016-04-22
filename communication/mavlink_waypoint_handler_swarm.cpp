@@ -103,14 +103,15 @@ void Mavlink_waypoint_handler_swarm::set_circle_scenario(mavlink_command_long_t*
     local_position_t waypoint_transfo;
     global_position_t waypoint_global;
 
-    waypoint_count = 2;
-    current_waypoint_index = -1;
+    waypoint_count_ = 2;
+    current_waypoint_index_ = -1;
 
-    waypoint_transfo.origin = position_estimation.local_position.origin;
+    waypoint_transfo.origin = position_estimation_.local_position.origin;
 
     // Start waypoint
-    waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_stream.sysid - 1));
-    waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_stream.sysid - 1));
+    uint32_t sysid = mavlink_stream_.sysid();
+    waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (sysid - 1));
+    waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (sysid - 1));
     waypoint_transfo.pos[Z] = altitude;
     waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
 
@@ -121,7 +122,7 @@ void Mavlink_waypoint_handler_swarm::set_circle_scenario(mavlink_command_long_t*
     print_util_dbg_print(", ");
     print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
-    print_util_dbg_print_num(mavlink_stream.sysid, 10);
+    print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
     waypoint.x = waypoint_global.latitude;
     waypoint.y = waypoint_global.longitude;
@@ -135,13 +136,13 @@ void Mavlink_waypoint_handler_swarm::set_circle_scenario(mavlink_command_long_t*
     waypoint.param1 = 10.0f; // Hold time in decimal seconds
     waypoint.param2 = 4.0f; // Acceptance radius in meters
     waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-    waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + angle_step * (mavlink_stream.sysid - 1))); // Desired yaw angle at MISSION (rotary wing)
+    waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + angle_step * (sysid - 1))); // Desired yaw angle at MISSION (rotary wing)
 
     waypoint_list[0] = waypoint;
 
     // End waypoint
-    waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_stream.sysid - 1) + PI);
-    waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_stream.sysid - 1) + PI);
+    waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (sysid - 1) + PI);
+    waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (sysid - 1) + PI);
     waypoint_transfo.pos[Z] = altitude;
     waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
 
@@ -152,7 +153,7 @@ void Mavlink_waypoint_handler_swarm::set_circle_scenario(mavlink_command_long_t*
     print_util_dbg_print(", ");
     print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
-    print_util_dbg_print_num(mavlink_stream.sysid, 10);
+    print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
 
     waypoint.x = waypoint_global.latitude;
@@ -167,25 +168,25 @@ void Mavlink_waypoint_handler_swarm::set_circle_scenario(mavlink_command_long_t*
     waypoint.param1 = 10.0f; // Hold time in decimal seconds
     waypoint.param2 = 4.0f; // Acceptance radius in meters
     waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-    waypoint.param4 = maths_rad_to_deg(angle_step * (mavlink_stream.sysid - 1)); // Desired yaw angle at MISSION (rotary wing)
+    waypoint.param4 = maths_rad_to_deg(angle_step * (sysid - 1)); // Desired yaw angle at MISSION (rotary wing)
 
     waypoint_list[1] = waypoint;
 
     if (packet->param5 == 1)
     {
-        state.nav_plan_active = true;
+        state_.nav_plan_active = true;
         print_util_dbg_print("Auto-continue, nav plan active");
 
-        start_wpt_time = time_keeper_get_ms();
+        start_wpt_time_ = time_keeper_get_ms();
     }
     else
     {
-        state.nav_plan_active = false;
+        state_.nav_plan_active = false;
         print_util_dbg_print("nav plan inactive");
-        if (navigation.internal_state > NAV_ON_GND)
+        if (navigation_.internal_state_ > Navigation::NAV_ON_GND)
         {
             print_util_dbg_print("Resetting hold waypoint");
-            hold_waypoint_set = false;
+            hold_waypoint_set_ = false;
         }
     }
 }
@@ -204,14 +205,14 @@ void Mavlink_waypoint_handler_swarm::set_circle_uniform_scenario(mavlink_command
     local_position_t waypoint_transfo;
     global_position_t waypoint_global;
 
-    waypoint_count = 0;
-    current_waypoint_index = -1;
+    waypoint_count_ = 0;
+    current_waypoint_index_ = -1;
 
-    waypoint_transfo.origin = position_estimation.local_position.origin;
+    waypoint_transfo.origin = position_estimation_.local_position.origin;
 
     for (i = 0; i < 10; ++i)
     {
-        waypoint_count++;
+        waypoint_count_++;
 
         x = 2.0f * PI * rand();
 
@@ -228,7 +229,7 @@ void Mavlink_waypoint_handler_swarm::set_circle_uniform_scenario(mavlink_command
         print_util_dbg_print(", ");
         print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
         print_util_dbg_print("). For system:");
-        print_util_dbg_print_num(mavlink_stream.sysid, 10);
+        print_util_dbg_print_num(mavlink_stream_.sysid(), 10);
         print_util_dbg_print(".\r\n");
         waypoint.x = waypoint_global.latitude;
         waypoint.y = waypoint_global.longitude;
@@ -256,19 +257,19 @@ void Mavlink_waypoint_handler_swarm::set_circle_uniform_scenario(mavlink_command
 
     if (packet->param5 == 1)
     {
-        state.nav_plan_active = true;
+        state_.nav_plan_active = true;
         print_util_dbg_print("Auto-continue, nav plan active");
 
-        start_wpt_time = time_keeper_get_ms();
+        start_wpt_time_ = time_keeper_get_ms();
     }
     else
     {
-        state.nav_plan_active = false;
+        state_.nav_plan_active = false;
         print_util_dbg_print("nav plan inactive");
-        if (navigation.internal_state > NAV_ON_GND)
+        if (navigation_.internal_state_ > Navigation::NAV_ON_GND)
         {
             print_util_dbg_print("Resetting hold waypoint");
-            hold_waypoint_set = false;
+            hold_waypoint_set_ = false;
         }
     }
 }
@@ -286,21 +287,22 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
 
     global_position_t waypoint_global;
 
-    waypoint_count = 2;
-    current_waypoint_index = -1;
+    waypoint_count_ = 2;
+    current_waypoint_index_ = -1;
 
-    waypoint_transfo.origin = position_estimation.local_position.origin;
+    waypoint_transfo.origin = position_estimation_.local_position.origin;
 
     // Start waypoint
-    if (mavlink_stream.sysid <= (num_of_vhc / 2.0f))
+    uint32_t sysid = mavlink_stream_.sysid();
+    if (sysid <= (num_of_vhc / 2.0f))
     {
         waypoint_transfo.pos[X] = lateral_dist;
-        waypoint_transfo.pos[Y] = dist / 2.0f * (mavlink_stream.sysid - 1);
+        waypoint_transfo.pos[Y] = dist / 2.0f * (sysid - 1);
     }
     else
     {
         waypoint_transfo.pos[X] = - lateral_dist;
-        waypoint_transfo.pos[Y] = dist / 2.0f * (mavlink_stream.sysid - 1 - (num_of_vhc / 2.0f));
+        waypoint_transfo.pos[Y] = dist / 2.0f * (sysid - 1 - (num_of_vhc / 2.0f));
     }
 
     waypoint_transfo.pos[Z] = altitude;
@@ -313,7 +315,7 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
     print_util_dbg_print(", ");
     print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
-    print_util_dbg_print_num(mavlink_stream.sysid, 10);
+    print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
     waypoint.x = waypoint_global.latitude;
     waypoint.y = waypoint_global.longitude;
@@ -327,7 +329,7 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
     waypoint.param1 = 10.0f; // Hold time in decimal seconds
     waypoint.param2 = 4.0f; // Acceptance radius in meters
     waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-    if (mavlink_stream.sysid <= (num_of_vhc / 2.0f))
+    if (sysid <= (num_of_vhc / 2.0f))
     {
         waypoint.param4 = 180.0f; // Desired yaw angle at MISSION (rotary wing)
     }
@@ -339,15 +341,15 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
     waypoint_list[0] = waypoint;
 
     // End waypoint
-    if (mavlink_stream.sysid <= (num_of_vhc / 2.0f))
+    if (sysid <= (num_of_vhc / 2.0f))
     {
         waypoint_transfo.pos[X] = -lateral_dist;
-        waypoint_transfo.pos[Y] = dist / 2.0f * (mavlink_stream.sysid - 1);
+        waypoint_transfo.pos[Y] = dist / 2.0f * (sysid - 1);
     }
     else
     {
         waypoint_transfo.pos[X] = lateral_dist;
-        waypoint_transfo.pos[Y] = dist / 2.0f * (mavlink_stream.sysid - 1 - (num_of_vhc / 2.0f));
+        waypoint_transfo.pos[Y] = dist / 2.0f * (sysid - 1 - (num_of_vhc / 2.0f));
     }
 
     waypoint_transfo.pos[Z] = altitude;
@@ -360,7 +362,7 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
     print_util_dbg_print(", ");
     print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
-    print_util_dbg_print_num(mavlink_stream.sysid, 10);
+    print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
     waypoint.x = waypoint_global.latitude;
     waypoint.y = waypoint_global.longitude;
@@ -374,7 +376,7 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
     waypoint.param1 = 10.0f; // Hold time in decimal seconds
     waypoint.param2 = 4.0f; // Acceptance radius in meters
     waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-    if (mavlink_stream.sysid <= (num_of_vhc / 2.0f))
+    if (sysid <= (num_of_vhc / 2.0f))
     {
         waypoint.param4 = 0.0f; // Desired yaw angle at MISSION (rotary wing)
     }
@@ -387,19 +389,19 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
 
     if (packet->param5 == 1)
     {
-        state.nav_plan_active = true;
+        state_.nav_plan_active = true;
         print_util_dbg_print("Auto-continue, nav plan active");
 
-        start_wpt_time = time_keeper_get_ms();
+        start_wpt_time_ = time_keeper_get_ms();
     }
     else
     {
-        state.nav_plan_active = false;
+        state_.nav_plan_active = false;
         print_util_dbg_print("nav plan inactive");
-        if (navigation.internal_state > NAV_ON_GND)
+        if (navigation_.internal_state_ > Navigation::NAV_ON_GND)
         {
             print_util_dbg_print("Resetting hold waypoint");
-            hold_waypoint_set = false;
+            hold_waypoint_set_ = false;
         }
     }
 }
@@ -419,36 +421,37 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
 
     global_position_t waypoint_global;
 
-    waypoint_count = 2;
-    current_waypoint_index = -1;
+    waypoint_count_ = 2;
+    current_waypoint_index_ = -1;
 
-    waypoint_transfo.origin = position_estimation.local_position.origin;
+    waypoint_transfo.origin = position_estimation_.local_position.origin;
 
     // Start waypoint
-    if ((float)((mavlink_stream.sysid - 1) % num_of_vhc) <= (num_of_vhc / 2.0f - 1.0f))
+    uint32_t sysid = mavlink_stream_.sysid();
+    if ((float)((sysid - 1) % num_of_vhc) <= (num_of_vhc / 2.0f - 1.0f))
     {
-        if ((float)(mavlink_stream.sysid % num_of_vhc) == (num_of_vhc / 2.0f)) //higher ID
+        if ((float)(sysid % num_of_vhc) == (num_of_vhc / 2.0f)) //higher ID
         {
             waypoint_transfo.pos[X] = lateral_dist;
             waypoint_transfo.pos[Y] = 0.0f;
         }
         else
         {
-            waypoint_transfo.pos[X] = lateral_dist + dist * cos(angle_step * ((mavlink_stream.sysid - 1) % 10));
-            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((mavlink_stream.sysid - 1) % 10));
+            waypoint_transfo.pos[X] = lateral_dist + dist * cos(angle_step * ((sysid - 1) % 10));
+            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((sysid - 1) % 10));
         }
     }
     else
     {
-        if (maths_f_abs(mavlink_stream.sysid % num_of_vhc - (num_of_vhc / 2.0f)) == (num_of_vhc / 2.0f))
+        if (maths_f_abs(sysid % num_of_vhc - (num_of_vhc / 2.0f)) == (num_of_vhc / 2.0f))
         {
             waypoint_transfo.pos[X] = - lateral_dist;
             waypoint_transfo.pos[Y] = 0.0f;
         }
         else
         {
-            waypoint_transfo.pos[X] = - lateral_dist - dist * cos(angle_step * ((mavlink_stream.sysid - 1) % 10 - floor(num_of_vhc / 2)));
-            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((mavlink_stream.sysid - 1) % 10 - floor(num_of_vhc / 2)));
+            waypoint_transfo.pos[X] = - lateral_dist - dist * cos(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
+            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
         }
     }
 
@@ -462,7 +465,7 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
     print_util_dbg_print(", ");
     print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
-    print_util_dbg_print_num(mavlink_stream.sysid, 10);
+    print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
     waypoint.x = waypoint_global.latitude;
     waypoint.y = waypoint_global.longitude;
@@ -476,7 +479,7 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
     waypoint.param1 = 10.0f; // Hold time in decimal seconds
     waypoint.param2 = 4.0f; // Acceptance radius in meters
     waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-    if ((float)((mavlink_stream.sysid - 1) % num_of_vhc) <= (num_of_vhc / 2.0f - 1.0f))
+    if ((float)((sysid - 1) % num_of_vhc) <= (num_of_vhc / 2.0f - 1.0f))
     {
         waypoint.param4 = 180.0f; // Desired yaw angle at MISSION (rotary wing)
     }
@@ -488,30 +491,30 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
     waypoint_list[0] = waypoint;
 
     // End waypoint
-    if ((float)((mavlink_stream.sysid - 1) % num_of_vhc) <= (num_of_vhc / 2.0f - 1.0f))
+    if ((float)((sysid - 1) % num_of_vhc) <= (num_of_vhc / 2.0f - 1.0f))
     {
-        if ((float)(mavlink_stream.sysid % num_of_vhc) == (num_of_vhc / 2.0f)) //higher ID
+        if ((float)(sysid % num_of_vhc) == (num_of_vhc / 2.0f)) //higher ID
         {
             waypoint_transfo.pos[X] = - lateral_dist;
             waypoint_transfo.pos[Y] = 0.0f;
         }
         else
         {
-            waypoint_transfo.pos[X] = - lateral_dist + dist * cos(angle_step * ((mavlink_stream.sysid - 1) % 10));
-            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((mavlink_stream.sysid - 1) % 10));
+            waypoint_transfo.pos[X] = - lateral_dist + dist * cos(angle_step * ((sysid - 1) % 10));
+            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((sysid - 1) % 10));
         }
     }
     else
     {
-        if (maths_f_abs(mavlink_stream.sysid % num_of_vhc - (num_of_vhc / 2.0f)) == (num_of_vhc / 2.0f))
+        if (maths_f_abs(sysid % num_of_vhc - (num_of_vhc / 2.0f)) == (num_of_vhc / 2.0f))
         {
             waypoint_transfo.pos[X] = lateral_dist;
             waypoint_transfo.pos[Y] = 0.0f;
         }
         else
         {
-            waypoint_transfo.pos[X] = lateral_dist - dist * cos(angle_step * ((mavlink_stream.sysid - 1) % 10 - floor(num_of_vhc / 2)));
-            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((mavlink_stream.sysid - 1) % 10 - floor(num_of_vhc / 2)));
+            waypoint_transfo.pos[X] = lateral_dist - dist * cos(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
+            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
         }
     }
 
@@ -525,7 +528,7 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
     print_util_dbg_print(", ");
     print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
-    print_util_dbg_print_num(mavlink_stream.sysid, 10);
+    print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
     waypoint.x = waypoint_global.latitude;
     waypoint.y = waypoint_global.longitude;
@@ -539,7 +542,7 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
     waypoint.param1 = 10.0f; // Hold time in decimal seconds
     waypoint.param2 = 4.0f; // Acceptance radius in meters
     waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-    if ((float)((mavlink_stream.sysid - 1) % num_of_vhc) <= (num_of_vhc / 2.0f - 1.0f))
+    if ((float)((sysid - 1) % num_of_vhc) <= (num_of_vhc / 2.0f - 1.0f))
     {
         waypoint.param4 = 0.0f; // Desired yaw angle at MISSION (rotary wing)
     }
@@ -552,19 +555,19 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
 
     if (packet->param5 == 1)
     {
-        state.nav_plan_active = true;
+        state_.nav_plan_active = true;
         print_util_dbg_print("Auto-continue, nav plan active");
 
-        start_wpt_time = time_keeper_get_ms();
+        start_wpt_time_ = time_keeper_get_ms();
     }
     else
     {
-        state.nav_plan_active = false;
+        state_.nav_plan_active = false;
         print_util_dbg_print("nav plan inactive");
-        if (navigation.internal_state > NAV_ON_GND)
+        if (navigation_.internal_state_ > Navigation::NAV_ON_GND)
         {
             print_util_dbg_print("Resetting hold waypoint");
-            hold_waypoint_set = false;
+            hold_waypoint_set_ = false;
         }
     }
 }
@@ -573,14 +576,14 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler_swarm::Mavlink_waypoint_handler_swarm(Position_estimation& position_estimation,
-                                                               Navigation& navigation,
+Mavlink_waypoint_handler_swarm::Mavlink_waypoint_handler_swarm(Position_estimation& position_estimation_,
+                                                               Navigation& navigation_,
                                                                const ahrs_t& ahrs,
-                                                               State& state,
+                                                               State& state_,
                                                                const Manual_control& manual_control,
                                                                Mavlink_message_handler& message_handler,
-                                                               const Mavlink_stream& mavlink_stream):
-    Mavlink_waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, message_handler, mavlink_stream)
+                                                               const Mavlink_stream& mavlink_stream_):
+    Mavlink_waypoint_handler(position_estimation_, navigation_, ahrs, state_, manual_control, message_handler, mavlink_stream_)
 {
     Mavlink_message_handler::cmd_callback_t callbackcmd;
 

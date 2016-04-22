@@ -60,7 +60,7 @@ bool Mavlink_message_handler::match_msg(msg_callback_t* msg_callback, mavlink_me
 {
     bool match = false;
 
-    uint8_t sysid = mavlink_stream.sysid;
+    uint8_t sysid = mavlink_stream_.sysid();
 
     if (msg->sysid != sysid)    // This message is not from this system
     {
@@ -84,7 +84,7 @@ bool Mavlink_message_handler::match_cmd(cmd_callback_t* cmd_callback, mavlink_me
 {
     bool match = false;
 
-    uint8_t sysid = mavlink_stream.sysid;
+    uint8_t sysid = mavlink_stream_.sysid();
 
     if (msg->sysid != sysid)    // This message is not from this system
     {
@@ -113,8 +113,8 @@ void Mavlink_message_handler::sort_latest_cmd_callback()
 
     //as the list is already sorted, we just need to compare the latest element from the list with previous one,
     //until we find a command_id lower than the current one
-    cmd_callback_t temp = cmd_callback_list[cmd_callback_count];
-    j = cmd_callback_count;
+    cmd_callback_t temp = cmd_callback_list[cmd_callback_count_];
+    j = cmd_callback_count_;
     while ((j > 0) && (cmd_callback_list[j - 1].command_id > temp.command_id))
     {
         //swap them
@@ -130,8 +130,8 @@ void Mavlink_message_handler::sort_latest_msg_callback()
 
     //as the list is already sorted, we just need to compare the latest element from the list with previous one,
     //until we find a message_id lower than the current one
-    msg_callback_t temp = msg_callback_list[msg_callback_count];
-    j =  msg_callback_count;
+    msg_callback_t temp = msg_callback_list[msg_callback_count_];
+    j =  msg_callback_count_;
     while ((j > 0) && (msg_callback_list[j - 1].message_id > temp.message_id))
     {
         //swap them
@@ -147,47 +147,47 @@ void Mavlink_message_handler::sort_latest_msg_callback()
 //------------------------------------------------------------------------------
 
 Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream, const conf_t& config) : 
-        mavlink_stream(mavlink_stream)
+        mavlink_stream_(mavlink_stream)
 {
     // Init debug mode
-    debug = config.debug;
+    debug_ = config.debug;
 
-    msg_callback_count = 0;
-    cmd_callback_count = 0;
+    msg_callback_count_ = 0;
+    cmd_callback_count_ = 0;
 
     // allocate memory for message callbacks
-    for(msg_callback_count_max = config.max_msg_callback_count; msg_callback_count_max > 0; msg_callback_count_max--)
+    for(msg_callback_count_max_ = config.max_msg_callback_count; msg_callback_count_max_ > 0; msg_callback_count_max_--)
     {
-        msg_callback_list = (msg_callback_t*)malloc(sizeof(msg_callback_t)*msg_callback_count_max);
+        msg_callback_list = (msg_callback_t*)malloc(sizeof(msg_callback_t)*msg_callback_count_max_);
         if(msg_callback_list != NULL)
         {
             break;
         }
     }
-    if(msg_callback_count_max < config.max_msg_callback_count)
+    if(msg_callback_count_max_ < config.max_msg_callback_count)
     {
         print_util_dbg_print("[MESSAGE HANDLER] constructor: tried to allocate msg_callback_list for ");
         print_util_dbg_print_num(config.max_msg_callback_count,10);
         print_util_dbg_print(" callbacks; only space for ");
-        print_util_dbg_print_num(msg_callback_count_max,10);
+        print_util_dbg_print_num(msg_callback_count_max_,10);
         print_util_dbg_print("\r\n");
     }
 
     // allocate memory for command callbacks
-    for(cmd_callback_count_max = config.max_cmd_callback_count; cmd_callback_count_max > 0; cmd_callback_count_max--)
+    for(cmd_callback_count_max_ = config.max_cmd_callback_count; cmd_callback_count_max_ > 0; cmd_callback_count_max_--)
     {
-        cmd_callback_list = (cmd_callback_t*)malloc(sizeof(cmd_callback_t)*cmd_callback_count_max);
+        cmd_callback_list = (cmd_callback_t*)malloc(sizeof(cmd_callback_t)*cmd_callback_count_max_);
         if(cmd_callback_list != NULL)
         {
             break;
         }
     }
-    if(cmd_callback_count_max < config.max_cmd_callback_count)
+    if(cmd_callback_count_max_ < config.max_cmd_callback_count)
     {
         print_util_dbg_print("[MESSAGE HANDLER] constructor: tried to allocate cmd_callback_list for ");
         print_util_dbg_print_num(config.max_cmd_callback_count,10);
         print_util_dbg_print(" callbacks; only space for ");
-        print_util_dbg_print_num(cmd_callback_count_max,10);
+        print_util_dbg_print_num(cmd_callback_count_max_,10);
         print_util_dbg_print("\r\n");
     }
 }
@@ -205,11 +205,10 @@ bool Mavlink_message_handler::add_msg_callback(msg_callback_t* msg_callback)
     }
     else
     {
-        if (msg_callback_count <  msg_callback_count_max)
+        if (msg_callback_count_ <  msg_callback_count_max_)
         {
-            msg_callback_t* new_callback = &msg_callback_list[msg_callback_count];
+            msg_callback_t* new_callback = &msg_callback_list[msg_callback_count_];
 
-            new_callback->sys_id        = &mavlink_stream.sysid;
             new_callback->message_id    = msg_callback->message_id;
             new_callback->sysid_filter  = msg_callback->sysid_filter;
             new_callback->compid_filter = msg_callback->compid_filter;
@@ -219,7 +218,7 @@ bool Mavlink_message_handler::add_msg_callback(msg_callback_t* msg_callback)
             //sort_message_callback
             sort_latest_msg_callback();
 
-            msg_callback_count += 1;
+            msg_callback_count_ += 1;
 
             add_callback_success &= true;
         }
@@ -247,9 +246,9 @@ bool Mavlink_message_handler::add_cmd_callback(cmd_callback_t* cmd_callback)
     }
     else
     {
-        if (cmd_callback_count <  cmd_callback_count_max)
+        if (cmd_callback_count_ <  cmd_callback_count_max_)
         {
-            cmd_callback_t* new_callback = &cmd_callback_list[cmd_callback_count];
+            cmd_callback_t* new_callback = &cmd_callback_list[cmd_callback_count_];
 
             new_callback->command_id = cmd_callback->command_id;
             new_callback->sysid_filter = cmd_callback->sysid_filter;
@@ -261,7 +260,7 @@ bool Mavlink_message_handler::add_cmd_callback(cmd_callback_t* cmd_callback)
             //sort_command_callback
             sort_latest_cmd_callback();
 
-            cmd_callback_count += 1;
+            cmd_callback_count_ += 1;
 
             add_callback_success &= true;
         }
@@ -329,7 +328,7 @@ void Mavlink_message_handler::receive(Mavlink_stream::msg_received_t* rec)
         mavlink_msg_command_long_decode(msg, &cmd);
 
         //print packet command and parameters for debug
-        if (debug)
+        if (debug_)
         {
             cmd_default_dbg(&cmd);
         }
@@ -337,12 +336,12 @@ void Mavlink_message_handler::receive(Mavlink_stream::msg_received_t* rec)
         if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
         {
             // The command has valid command ID
-            if ((cmd.target_system == mavlink_stream.sysid) || (cmd.target_system == MAV_SYS_ID_ALL))
+            if ((cmd.target_system == mavlink_stream_.sysid()) || (cmd.target_system == MAV_SYS_ID_ALL))
             {
                 mav_result_t result = MAV_RESULT_UNSUPPORTED;
 
                 // The command is for this system
-                for (uint32_t i = 0; i < cmd_callback_count; ++i)
+                for (uint32_t i = 0; i < cmd_callback_count_; ++i)
                 {
                     if (match_cmd(&cmd_callback_list[i], msg, &cmd))
                     {
@@ -352,7 +351,7 @@ void Mavlink_message_handler::receive(Mavlink_stream::msg_received_t* rec)
                         // Call appropriate function callback
                         result = function(module_struct, &cmd);
 
-                        if (((i + 1) != cmd_callback_count) && ((cmd_callback_list[i + 1].command_id) > cmd.command))
+                        if (((i + 1) != cmd_callback_count_) && ((cmd_callback_list[i + 1].command_id) > cmd.command))
                         {
                             //as callback_list is sorted by command_id, no need to go further in the list
                             break;
@@ -361,35 +360,33 @@ void Mavlink_message_handler::receive(Mavlink_stream::msg_received_t* rec)
                 }
                 // Send acknowledgment message
                 mavlink_message_t msg;
-                mavlink_msg_command_ack_pack(mavlink_stream.sysid,
-                                             mavlink_stream.compid,
+                mavlink_msg_command_ack_pack(mavlink_stream_.sysid(),
+                                             mavlink_stream_.compid(),
                                              &msg,
                                              cmd.command,
                                              result);
-                mavlink_stream.send(&msg);
+                mavlink_stream_.send(&msg);
             }
         }
     }
     else if (msg->msgid >= 0 && msg->msgid < MAV_MSG_ENUM_END)
     {
-        if (debug)
+        if (debug_)
         {
             msg_default_dbg(msg);
         }
 
         // The message has a valid message ID, and is not a command
-        for (uint32_t i = 0; i < msg_callback_count; ++i)
+        for (uint32_t i = 0; i < msg_callback_count_; ++i)
         {
             if (match_msg(&msg_callback_list[i], msg))
             {
                 Mavlink_message_handler::msg_callback_func_t function        = msg_callback_list[i].function;
                 handling_module_struct_t        module_struct   = msg_callback_list[i].module_struct;
-                uint32_t                        sys_id          = *msg_callback_list[i].sys_id;
-
                 // Call appropriate function callback
-                function(module_struct, sys_id, msg);
+                function(module_struct, mavlink_stream_.sysid(), msg);
 
-                if (((i + 1) != msg_callback_count) && ((msg_callback_list[i + 1].message_id) > msg->msgid))
+                if (((i + 1) != msg_callback_count_) && ((msg_callback_list[i + 1].message_id) > msg->msgid))
                 {
                     //as callback_list is sorted by message_id, no need to go further in the list
                     break;

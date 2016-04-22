@@ -62,7 +62,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-State::State(Mavlink_stream& mavlink_stream, Battery& battery, state_conf_t config):
+State::State(Mavlink_stream& mavlink_stream, Battery& battery, State::conf_t config):
     battery_(battery),
     mavlink_stream_(mavlink_stream)
 {
@@ -70,7 +70,7 @@ State::State(Mavlink_stream& mavlink_stream, Battery& battery, state_conf_t conf
     autopilot_type = config.autopilot_type;
     autopilot_name = config.autopilot_name;
 
-    mav_state = config.mav_state;
+    mav_state_ = config.mav_state;
     mav_mode_ = config.mav_mode;
 
     mav_mode_custom = config.mav_mode_custom;
@@ -107,9 +107,9 @@ State::State(Mavlink_stream& mavlink_stream, Battery& battery, state_conf_t conf
     msg_count = 0;
 }
 
-void State::switch_to_active_mode(mav_state_t* mav_state)
+void State::switch_to_active_mode(mav_state_t* mav_state_)
 {
-    *mav_state = MAV_STATE_ACTIVE;
+    *mav_state_ = MAV_STATE_ACTIVE;
 
     // Tell other modules to reset position and re-compute waypoints
     reset_position = true;
@@ -141,7 +141,7 @@ bool State::set_armed(bool arming)
     if(arming)
     {
         // check if imu is ready
-        if(mav_state == MAV_STATE_CALIBRATING)
+        if(mav_state_ == MAV_STATE_CALIBRATING)
         {
             print_util_dbg_print("[STATE]: prevented arming because IMU not ready\r\n");
             return false;
@@ -167,7 +167,7 @@ bool State::set_armed(bool arming)
         mav_mode_ |= MAV_MODE_FLAG_SAFETY_ARMED;
 
         // switch state to active
-        switch_to_active_mode(&mav_state);
+        switch_to_active_mode(&mav_state_);
     }
     else
     {
@@ -176,20 +176,8 @@ bool State::set_armed(bool arming)
         print_util_dbg_print("[STATE]: disarming\r\n");
 
         // set state to standby
-        mav_state = MAV_STATE_STANDBY;
+        mav_state_ = MAV_STATE_STANDBY;
     }
 
     return true;
-}
-
-
-bool State::armed() const
-{
-    return ((mav_mode_ & MAV_MODE_FLAG_SAFETY_ARMED) == MAV_MODE_FLAG_SAFETY_ARMED);
-}
-
-
-mav_mode_t State::mav_mode() const
-{
-    return mav_mode_;
 }

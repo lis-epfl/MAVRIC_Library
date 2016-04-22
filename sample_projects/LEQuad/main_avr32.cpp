@@ -154,7 +154,7 @@ int main(void)
     // Init central data
     init_success &= cd.init();
 
-    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.get_onboard_parameters();
+    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
     init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
 
     print_util_dbg_print("onboard_parameters\r\n");
@@ -175,7 +175,7 @@ int main(void)
     print_util_dbg_print("mavlink_telemetry_init\r\n");
     delay_ms(150);
 
-    cd.state.mav_state = MAV_STATE_STANDBY;
+    cd.state.mav_state_ = MAV_STATE_STANDBY;
 
     init_success &= tasks_create_tasks(&cd);
 

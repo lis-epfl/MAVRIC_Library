@@ -117,12 +117,26 @@ public:
      */
     void flush();
 
-    uint32_t sysid;             ///< System ID
-    uint32_t compid;            ///< System Component ID
+    /**
+     * \brief   Return sysid of this stream
+     * 
+     * \return  sysid
+     */
+    inline uint32_t sysid() const {return sysid_;};    // inline for higher exec speed
+
+    /**
+     * \brief   Return sysid of this stream
+     * 
+     * \return  sysid
+     */
+    inline uint32_t compid() const {return compid_;};    // inline for higher exec speed
+
 private:
-    Serial& serial;
-    uint8_t mavlink_channel;    ///< Channel number used internally by mavlink to retrieve incomplete incoming message
-    bool debug;                 ///< Debug flag
+    uint32_t sysid_;             ///< System ID
+    uint32_t compid_;            ///< System Component ID
+    Serial& serial_;
+    uint8_t mavlink_channel_;    ///< Channel number used internally by mavlink to retrieve incomplete incoming message
+    bool debug_;                  ///< Debug flag
 };
 
 #endif /* MAVLINK_STREAM_H */

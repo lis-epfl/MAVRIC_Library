@@ -54,8 +54,8 @@ void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const Mavlink_stream* mavl
     aero_attitude_t aero_attitude;
     aero_attitude = coord_conventions_quat_to_aero(ahrs->qe);
 
-    mavlink_msg_attitude_pack(mavlink_stream->sysid,
-                              mavlink_stream->compid,
+    mavlink_msg_attitude_pack(mavlink_stream->sysid(),
+                              mavlink_stream->compid(),
                               msg,
                               time_keeper_get_ms(),
                               aero_attitude.rpy[0],
@@ -68,8 +68,8 @@ void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const Mavlink_stream* mavl
 
 void ahrs_telemetry_send_attitude_quaternion(const ahrs_t* ahrs, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_attitude_quaternion_pack(mavlink_stream->sysid,
-                                         mavlink_stream->compid,
+    mavlink_msg_attitude_quaternion_pack(mavlink_stream->sysid(),
+                                         mavlink_stream->compid(),
                                          msg,
                                          time_keeper_get_ms(),
                                          ahrs->qe.s,

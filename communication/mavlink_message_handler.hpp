@@ -99,7 +99,6 @@ public:
      */
     typedef struct
     {
-        const uint32_t*                     sys_id;                     ///<    Pointer to the system ID
         uint8_t                         message_id;                     ///<    The function will be called only for messages with ID message_id
         uint8_t                         sysid_filter;                   ///<    The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)
         mav_component_t                 compid_filter;                  ///<    The function will be called only for messages coming from component compid_filter (0 for all)
@@ -193,12 +192,12 @@ public:
 
 
 private:
-    bool debug;                                                     ///<    Indicates whether debug message are written for every incoming message
-    Mavlink_stream& mavlink_stream;
-    uint32_t msg_callback_count;                                    ///<    Number of message callback currently registered
-    uint32_t msg_callback_count_max;                                ///<    Maximum number of message callback that can be registered
-    uint32_t cmd_callback_count;                                    ///<    Number of command callback currently registered
-    uint32_t cmd_callback_count_max;                                ///<    Maximum number of command callback that can be registered
+    bool debug_;                                                     ///<    Indicates whether debug message are written for every incoming message
+    Mavlink_stream& mavlink_stream_;
+    uint32_t msg_callback_count_;                                    ///<    Number of message callback currently registered
+    uint32_t msg_callback_count_max_;                                ///<    Maximum number of message callback that can be registered
+    uint32_t cmd_callback_count_;                                    ///<    Number of command callback currently registered
+    uint32_t cmd_callback_count_max_;                                ///<    Maximum number of command callback that can be registered
     msg_callback_t* msg_callback_list;      ///<    List of command callbacks
     cmd_callback_t* cmd_callback_list;      ///<    List of message callbacks
     

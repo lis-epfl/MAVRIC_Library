@@ -107,7 +107,7 @@ public:
      */
      struct conf_t
     {
-      state_conf_t state_config;
+      State::conf_t state_config;
       data_logging_conf_t data_logging_config;
       data_logging_conf_t data_logging_config2;
       Scheduler::conf_t scheduler_config;
@@ -226,7 +226,7 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
 {
     conf_t conf                                                = {};
 
-    conf.state_config = state_default_config();
+    conf.state_config = State::default_config();
 
     conf.data_logging_config = data_logging_default_config();
     conf.data_logging_config = data_logging_default_config();

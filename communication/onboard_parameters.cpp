@@ -54,31 +54,31 @@ extern "C"
 
 
 Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config) :
-        file(file),
-        state(state),
-        mavlink_stream(mavlink_stream),
-        param_count(0)
+        file_(file),
+        state_(state),
+        mavlink_stream_(mavlink_stream),
+        param_count_(0)
 {
     bool init_success = true;
 
     // Init debug mode
-    debug = config.debug;
+    debug_ = config.debug;
 
     // allocate memory for command callbacks
-    for(max_param_count = config.max_param_count; max_param_count > 0; max_param_count--)
+    for(max_param_count_ = config.max_param_count; max_param_count_ > 0; max_param_count_--)
     {
-        parameters = (param_entry_t*)malloc(sizeof(param_entry_t)*max_param_count);
-        if(parameters != NULL)
+        parameters_ = (param_entry_t*)malloc(sizeof(param_entry_t)*max_param_count_);
+        if(parameters_ != NULL)
         {
             break;
         }
     }
-    if(max_param_count < config.max_param_count)
+    if(max_param_count_ < config.max_param_count)
     {
         print_util_dbg_print("[ONBOARD PARAMETERS] constructor: tried to allocate list for ");
         print_util_dbg_print_num(config.max_param_count,10);
         print_util_dbg_print(" parameters; only space for ");
-        print_util_dbg_print_num(max_param_count,10);
+        print_util_dbg_print_num(max_param_count_,10);
         print_util_dbg_print("\r\n");
     }
 
@@ -140,11 +140,11 @@ bool Onboard_parameters::add_parameter_uint32(uint32_t* val, const char* param_n
     }
     else
     {
-        if (param_count < max_param_count)
+        if (param_count_ < max_param_count_)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                param_entry_t* new_param = &parameters[param_count++];
+                param_entry_t* new_param = &parameters_[param_count_++];
 
                 new_param->param                     = (float*) val;
                 strcpy(new_param->param_name,       param_name);
@@ -187,11 +187,11 @@ bool Onboard_parameters::add_parameter_int32(int32_t* val, const char* param_nam
     }
     else
     {
-        if (param_count < max_param_count)
+        if (param_count_ < max_param_count_)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                param_entry_t* new_param = &parameters[param_count++];
+                param_entry_t* new_param = &parameters_[param_count_++];
 
                 new_param->param                     = (float*) val;
                 strcpy(new_param->param_name,       param_name);
@@ -234,11 +234,11 @@ bool Onboard_parameters::add_parameter_float(float* val, const char* param_name)
     }
     else
     {
-        if (param_count < max_param_count)
+        if (param_count_ < max_param_count_)
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                param_entry_t* new_param = &parameters[param_count++];
+                param_entry_t* new_param = &parameters_[param_count_++];
 
                 new_param->param                     = val;
                 strcpy(new_param->param_name,       param_name);
@@ -277,29 +277,29 @@ bool Onboard_parameters::read_parameters_from_storage()
     float cksum2 = 0.0f;
 
     // Declare a local array large enough
-    uint32_t to_read = file.length();
+    uint32_t to_read = file_.length();
     float* values    = (float*)malloc(sizeof(uint8_t) * to_read);
 
     // Read from file
-    file.seek(0, FILE_SEEK_START);
-    file.read((uint8_t*)values, to_read);
+    file_.seek(0, FILE_SEEK_START);
+    file_.read((uint8_t*)values, to_read);
 
     // Do checksum
-    for (uint32_t i = 0; i < (param_count + 1); i++)
+    for (uint32_t i = 0; i < (param_count_ + 1); i++)
     {
         cksum1 += values[i];
         cksum2 += cksum1;
     }
 
     // Copy params
-    if ((param_count == values[0])
-            && (cksum1 == values[param_count + 1])
-            && (cksum2 == values[param_count + 2]))
+    if ((param_count_ == values[0])
+            && (cksum1 == values[param_count_ + 1])
+            && (cksum2 == values[param_count_ + 2]))
     {
         print_util_dbg_print("[FLASH] Read successful\r\n");
-        for (uint32_t i = 1; i < (param_count + 1); i++)
+        for (uint32_t i = 1; i < (param_count_ + 1); i++)
         {
-            *(parameters[i - 1].param) = values[i];
+            *(parameters_[i - 1].param) = values[i];
         }
         success = true;
     }
@@ -325,30 +325,30 @@ bool Onboard_parameters::write_parameters_to_storage()
 
     // Compute the required space in memory
     // (1 param_count + parameters + 2 checksums) floats
-    uint32_t bytes_to_write = 4 * (param_count + 3);
+    uint32_t bytes_to_write = 4 * (param_count_ + 3);
 
     // Declare a local array large enough
     float* values = (float*)malloc(sizeof(uint8_t) * bytes_to_write);
 
     // Init checksums
-    values[0] = param_count;
+    values[0] = param_count_;
     cksum1 += values[0];
     cksum2 += cksum1;
 
     // Copy parameters to local array and do checksum
-    for (uint32_t i = 1; i <= param_count; i++)
+    for (uint32_t i = 1; i <= param_count_; i++)
     {
-        values[i] = *(parameters[i - 1].param);
+        values[i] = *(parameters_[i - 1].param);
 
         cksum1 += values[i];
         cksum2 += cksum1;
     }
-    values[param_count + 1] = cksum1;
-    values[param_count + 2] = cksum2;
+    values[param_count_ + 1] = cksum1;
+    values[param_count_ + 2] = cksum2;
 
     // Write to file
-    file.seek(0, FILE_SEEK_START);
-    success &= file.write((uint8_t*)values, bytes_to_write);
+    file_.seek(0, FILE_SEEK_START);
+    success &= file_.write((uint8_t*)values, bytes_to_write);
 
     // Free memory
     free(values);
@@ -367,9 +367,9 @@ bool Onboard_parameters::send_all_scheduled_parameters(Onboard_parameters* onboa
     bool success = true;
 
 
-    for (uint8_t i = 0; i < onboard_parameters->param_count; i++)
+    for (uint8_t i = 0; i < onboard_parameters->param_count_; i++)
     {
-        if (onboard_parameters->parameters[i].schedule_for_transmission)
+        if (onboard_parameters->parameters_[i].schedule_for_transmission)
         {
             success = onboard_parameters->send_one_parameter_now(i);
         }
@@ -388,9 +388,9 @@ void Onboard_parameters::schedule_all_parameters(Onboard_parameters* onboard_par
     {
 
         // schedule all parameters for transmission
-        for (uint8_t i = 0; i < onboard_parameters->param_count; i++)
+        for (uint8_t i = 0; i < onboard_parameters->param_count_; i++)
         {
-            onboard_parameters->parameters[i].schedule_for_transmission = true;
+            onboard_parameters->parameters_[i].schedule_for_transmission = true;
         }
     }
 }
@@ -408,7 +408,7 @@ void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, 
         if (request.param_index != -1)
         {
             // Control if the index is in the range of existing parameters and schedule it for transmission
-            if ((uint32_t)request.param_index <= onboard_parameters->param_count)
+            if ((uint32_t)request.param_index <= onboard_parameters->param_count_)
             {
                 // Send now
                 onboard_parameters->send_one_parameter_now(request.param_index);
@@ -417,12 +417,12 @@ void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, 
         else
         {
             char* key = (char*) request.param_id;
-            for (uint16_t i = 0; i < onboard_parameters->param_count; i++)
+            for (uint16_t i = 0; i < onboard_parameters->param_count_; i++)
             {
                 bool match = true;
 
                 // Get pointer to parameter number i
-                param_entry_t* param = &onboard_parameters->parameters[i];
+                param_entry_t* param = &onboard_parameters->parameters_[i];
 
                 for (uint16_t j = 0; j < param->param_name_length; j++)
                 {
@@ -449,7 +449,7 @@ void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, 
                     // Exit external (i) for() loop
                     break;
                 }
-            } //end of for (uint16_t i = 0; i < param_set->param_count; i++)
+            } //end of for (uint16_t i = 0; i < param_set->param_count_; i++)
         } //end of else
     } //end of if ((uint8_t)request.target_system == (uint8_t)sysid)
 }
@@ -465,12 +465,12 @@ void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameter
 
     // Check if this message is for this system and subsystem
     if (((uint8_t)set.target_system       == (uint8_t)sysid)
-            && (set.target_component == onboard_parameters->mavlink_stream.compid))
+            && (set.target_component == onboard_parameters->mavlink_stream_.compid()))
     {
         char* key = (char*) set.param_id;
         param_entry_t* param;
 
-        if (onboard_parameters->debug == true)
+        if (onboard_parameters->debug_ == true)
         {
             print_util_dbg_print("Setting parameter ");
             print_util_dbg_print(set.param_id);
@@ -479,9 +479,9 @@ void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameter
             print_util_dbg_print("\r\n");
         }
 
-        for (uint16_t i = 0; i < onboard_parameters->param_count; i++)
+        for (uint16_t i = 0; i < onboard_parameters->param_count_; i++)
         {
-            param = &onboard_parameters->parameters[i];
+            param = &onboard_parameters->parameters_[i];
             match = true;
 
             for (uint16_t j = 0; j < param->param_name_length; j++)
@@ -552,7 +552,7 @@ void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameter
         }
         if (!match)
         {
-            if (onboard_parameters->debug == true)
+            if (onboard_parameters->debug_ == true)
             {
                 print_util_dbg_print("Set parameter error! Parameter ");
                 print_util_dbg_print(set.param_id);
@@ -567,7 +567,7 @@ mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_p
 {
     mav_result_t result = MAV_RESULT_DENIED;
 
-    if (!onboard_parameters->state.armed())
+    if (!onboard_parameters->state_.armed())
     {
         // Onboard parameters storage
         if (msg->param1 == 0)
@@ -617,38 +617,38 @@ bool Onboard_parameters::send_one_parameter_now(uint32_t index)
 
     // Copy parameter value into a float
     float param_value = 0.0f;
-    switch(parameters[index].data_type)
+    switch(parameters_[index].data_type)
     {
         case MAVLINK_TYPE_CHAR:
-            param_value = *((char*)(parameters[index].param));
+            param_value = *((char*)(parameters_[index].param));
         break;
 
         case MAVLINK_TYPE_UINT8_T:
-            param_value = *((uint8_t*)(parameters[index].param));
+            param_value = *((uint8_t*)(parameters_[index].param));
         break;
 
         case MAVLINK_TYPE_INT8_T:
-            param_value = *((int8_t*)(parameters[index].param));
+            param_value = *((int8_t*)(parameters_[index].param));
         break;
 
         case MAVLINK_TYPE_UINT16_T:
-            param_value = *((uint16_t*)(parameters[index].param));
+            param_value = *((uint16_t*)(parameters_[index].param));
         break;
 
         case MAVLINK_TYPE_INT16_T:
-            param_value = *((int16_t*)(parameters[index].param));
+            param_value = *((int16_t*)(parameters_[index].param));
         break;
 
         case MAVLINK_TYPE_UINT32_T:
-            param_value = *((uint32_t*)(parameters[index].param));
+            param_value = *((uint32_t*)(parameters_[index].param));
         break;
 
         case MAVLINK_TYPE_INT32_T:
-            param_value = *((int32_t*)(parameters[index].param));
+            param_value = *((int32_t*)(parameters_[index].param));
         break;
 
         case MAVLINK_TYPE_FLOAT:
-            param_value = *(parameters[index].param);
+            param_value = *(parameters_[index].param);
         break;
 
         case MAVLINK_TYPE_UINT64_T:
@@ -665,25 +665,25 @@ bool Onboard_parameters::send_one_parameter_now(uint32_t index)
     }
 
     // Prepare message
-    mavlink_msg_param_value_pack(mavlink_stream.sysid,
-                                 mavlink_stream.compid,
+    mavlink_msg_param_value_pack(mavlink_stream_.sysid(),
+                                 mavlink_stream_.compid(),
                                  &msg,
-                                 (char*)parameters[index].param_name,
+                                 (char*)parameters_[index].param_name,
                                  param_value,
                                  MAVLINK_TYPE_FLOAT,
-                                 param_count,
+                                 param_count_,
                                  index);
 
     // Schedule for transmission
-    parameters[index].schedule_for_transmission = true;
+    parameters_[index].schedule_for_transmission = true;
 
     // Try to send
-    success = mavlink_stream.send(&msg);
+    success = mavlink_stream_.send(&msg);
 
     if (success)
     {
         // If successfully sent, un-schedule
-        parameters[index].schedule_for_transmission = false;
+        parameters_[index].schedule_for_transmission = false;
     }
 
     return success;

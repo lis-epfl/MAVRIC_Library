@@ -69,7 +69,7 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
     //check battery level
     if (state_.battery_.is_low())
     {
-        if (state_.mav_state == MAV_STATE_ACTIVE)
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
         {
             print_util_dbg_print("Battery low! Performing critical landing.\r\n");
             state_new = MAV_STATE_CRITICAL;
@@ -84,7 +84,7 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
     // check connection with GND station
     if (state_.connection_lost)
     {
-        if (state_.mav_state == MAV_STATE_ACTIVE)
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
         {
             print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
             state_new = MAV_STATE_CRITICAL;
@@ -100,7 +100,7 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
     // check whether out_of_fence_1
     if (state_.out_of_fence_1)
     {
-        if (state_.mav_state == MAV_STATE_ACTIVE)
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
         {
             print_util_dbg_print("Out of fence 1!\r\n");
             state_new = MAV_STATE_CRITICAL;
@@ -115,7 +115,7 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
     // check whether out_of_fence_2
     if (state_.out_of_fence_2)
     {
-        if (state_.mav_state == MAV_STATE_ACTIVE)
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
         {
             print_util_dbg_print("Out of fence 2!\r\n");
             state_new = MAV_STATE_CRITICAL;
@@ -130,7 +130,7 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
     // check GPS status
     if (!position_estimation_.healthy())
     {
-        if (state_.mav_state == MAV_STATE_ACTIVE)
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
         {
             print_util_dbg_print("GPS bad!\r\n");
             state_new = MAV_STATE_CRITICAL;
@@ -167,7 +167,7 @@ bool State_machine::update(State_machine* state_machine)
 
     // Get current mode and state
     const mav_mode_t mode_current = state_machine->state_.mav_mode();
-    const mav_state_t state_current = state_machine->state_.mav_state;
+    const mav_state_t state_current = state_machine->state_.mav_state_;
 
     // By default, set new state equal to current state
     mav_state_t state_new = state_current;
@@ -333,7 +333,7 @@ bool State_machine::update(State_machine* state_machine)
 
     // Finally, write new modes and states
     state_machine->state_.mav_mode_       = mode_new;
-    state_machine->state_.mav_state       = state_new;
+    state_machine->state_.mav_state_       = state_new;
     state_machine->state_.mav_mode_custom = mode_custom_new;
 
     // overwrite internal state of joystick
@@ -341,6 +341,5 @@ bool State_machine::update(State_machine* state_machine)
 
     return true;
 }
-
 
 

@@ -114,7 +114,7 @@ void Navigation::set_speed_command(float rel_pos[])
     dir_desired_sg[Y] /= norm_rel_dist;
     dir_desired_sg[Z] /= norm_rel_dist;
 
-    if ((mav_modes_is_auto(mode) && ((state.nav_plan_active && (internal_state == NAV_NAVIGATING)) || (internal_state == NAV_STOP_THERE))) || ((state.mav_state == MAV_STATE_CRITICAL) && (critical_behavior == FLY_TO_HOME_WP)))
+    if ((mav_modes_is_auto(mode) && ((state.nav_plan_active && (internal_state_ == NAV_NAVIGATING)) || (internal_state_ == NAV_STOP_THERE))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
     {
 
         if (((maths_f_abs(rel_pos[X]) <= 1.0f) && (maths_f_abs(rel_pos[Y]) <= 1.0f)) || ((maths_f_abs(rel_pos[X]) <= 5.0f) && (maths_f_abs(rel_pos[Y]) <= 5.0f) && (maths_f_abs(rel_pos[Z]) >= 3.0f)))
@@ -160,7 +160,7 @@ void Navigation::set_speed_command(float rel_pos[])
     //  print_util_dbg_print_num(rel_heading,10);
     //  print_util_dbg_print("\r\n");
     //  print_util_dbg_print("nav state: ");
-    //  print_util_dbg_print_num(internal_state,10);
+    //  print_util_dbg_print_num(internal_state_,10);
     //  print_util_dbg_print("\r\n");
     //  // print_util_dbg_print("Actual_vel_bf(x100): (");
     //  // print_util_dbg_print_num(position_estimation.vel_bf[X] * 100,10);
@@ -179,7 +179,7 @@ void Navigation::set_speed_command(float rel_pos[])
     controls_nav.tvel[Z] = dir_desired_sg[Z];
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 
-    if ((internal_state == NAV_LANDING) && (auto_landing_behavior == DESCENT_TO_GND))
+    if ((internal_state_ == NAV_LANDING) && (auto_landing_behavior == Navigation::DESCENT_TO_GND))
     {
         // Constant velocity to the ground
         controls_nav.tvel[Z] = 0.3f;
@@ -258,7 +258,7 @@ bool Navigation::update(Navigation* navigation)
     navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
     navigation->last_update = t;
 
-    switch (navigation->state.mav_state)
+    switch (navigation->state.mav_state_)
     {
         case MAV_STATE_STANDBY:
             navigation->controls_nav.tvel[X] = 0.0f;
@@ -267,7 +267,7 @@ bool Navigation::update(Navigation* navigation)
             break;
 
         case MAV_STATE_ACTIVE:
-            if (navigation->internal_state > NAV_ON_GND)
+            if (navigation->internal_state_ > NAV_ON_GND)
             {
                 navigation->run();
             }
@@ -277,7 +277,7 @@ bool Navigation::update(Navigation* navigation)
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
             if (mav_modes_is_stabilise(mode_local))
             {
-                if ((navigation->internal_state == NAV_NAVIGATING) || (navigation->internal_state == NAV_LANDING))
+                if ((navigation->internal_state_ == NAV_NAVIGATING) || (navigation->internal_state_ == NAV_LANDING))
                 {
 
                     navigation->run();

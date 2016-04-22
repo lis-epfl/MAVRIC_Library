@@ -50,8 +50,8 @@ extern "C"
 
 void barometer_telemetry_send(const Barometer* barometer, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_scaled_pressure_pack(mavlink_stream->sysid,
-                                     mavlink_stream->compid,
+    mavlink_msg_scaled_pressure_pack(mavlink_stream->sysid(),
+                                     mavlink_stream->compid(),
                                      msg,
                                      time_keeper_get_ms(),
                                      barometer->altitude_gf(),

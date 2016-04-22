@@ -133,8 +133,8 @@ void manual_control_telemetry_send(const Manual_control* manual_control, const M
             break;
 
         case Manual_control::CONTROL_SOURCE_REMOTE:
-            mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid,
-                                                mavlink_stream->compid,
+            mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid(),
+                                                mavlink_stream->compid(),
                                                 msg,
                                                 time_keeper_get_ms(),
                                                 0,
@@ -148,8 +148,8 @@ void manual_control_telemetry_send(const Manual_control* manual_control, const M
                                                 manual_control->remote.channels[7] * 10000.0f,
                                                 manual_control->remote.mode.current_desired_mode);
             mavlink_stream->send(msg);
-            mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid,
-                                                mavlink_stream->compid,
+            mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid(),
+                                                mavlink_stream->compid(),
                                                 msg,
                                                 time_keeper_get_ms(),
                                                 1,
@@ -165,10 +165,10 @@ void manual_control_telemetry_send(const Manual_control* manual_control, const M
             break;
 
         case Manual_control::CONTROL_SOURCE_JOYSTICK:
-            mavlink_msg_manual_control_pack(mavlink_stream->sysid,
-                                            mavlink_stream->compid,
+            mavlink_msg_manual_control_pack(mavlink_stream->sysid(),
+                                            mavlink_stream->compid(),
                                             msg,
-                                            mavlink_stream->sysid,
+                                            mavlink_stream->sysid(),
                                             manual_control->joystick.channels.x * 1000,
                                             manual_control->joystick.channels.y * 1000,
                                             manual_control->joystick.channels.z * 1000,

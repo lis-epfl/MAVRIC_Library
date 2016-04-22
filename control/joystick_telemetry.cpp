@@ -106,10 +106,10 @@ bool joystick_telemetry_init(joystick_t* joystick, Mavlink_message_handler* mess
 
 void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_manual_control_pack(mavlink_stream->sysid,
-                                    mavlink_stream->compid,
+    mavlink_msg_manual_control_pack(mavlink_stream->sysid(),
+                                    mavlink_stream->compid(),
                                     msg,
-                                    mavlink_stream->sysid,
+                                    mavlink_stream->sysid(),
                                     joystick->channels.x * 1000,
                                     joystick->channels.y * 1000,
                                     joystick->channels.z * 1000,

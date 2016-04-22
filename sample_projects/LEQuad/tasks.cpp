@@ -65,7 +65,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 
             // if no waypoints are set, we do position hold therefore the yaw mode is absolute
-            if (((central_data->state.nav_plan_active && (central_data->navigation.internal_state == NAV_NAVIGATING)) || (central_data->navigation.internal_state == NAV_STOP_THERE)) || ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == FLY_TO_HOME_WP)))
+            if (((central_data->state.nav_plan_active && (central_data->navigation.internal_state_ == Navigation::NAV_NAVIGATING)) || (central_data->navigation.internal_state_ == Navigation::NAV_STOP_THERE)) || ((central_data->state.mav_state_ == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
             {
                 central_data->controls.yaw_mode = YAW_RELATIVE;
             }
@@ -75,7 +75,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             }
 
             //if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
-            if (true)//central_data->navigation.internal_state > NAV_ON_GND)
+            if (true)//central_data->navigation.internal_state_ > NAV_ON_GND)
             {
                 stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
                 servos_mix_quadcopter_diag_update(&central_data->servo_mix);
@@ -86,7 +86,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             central_data->controls = central_data->controls_nav;
             central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 
-            if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == FLY_TO_HOME_WP))
+            if ((central_data->state.mav_state_ == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))
             {
                 central_data->controls.yaw_mode = YAW_RELATIVE;
             }
@@ -96,7 +96,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             }
 
             //if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
-            if (true)//central_data->navigation.internal_state > NAV_ON_GND)
+            if (true)//central_data->navigation.internal_state_ > NAV_ON_GND)
             {
                 stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
                 servos_mix_quadcopter_diag_update(&central_data->servo_mix);
@@ -110,7 +110,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             central_data->controls.yaw_mode = YAW_RELATIVE;
 
             //if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
-            if (true)//central_data->navigation.internal_state > NAV_ON_GND)
+            if (true)//central_data->navigation.internal_state_ > NAV_ON_GND)
             {
                 stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
                 servos_mix_quadcopter_diag_update(&central_data->servo_mix);

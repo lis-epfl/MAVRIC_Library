@@ -63,10 +63,42 @@ class Navigation
 {
 
 public:
+    enum internal_state_t
+    {
+        NAV_ON_GND,
+        NAV_TAKEOFF,
+        NAV_MANUAL_CTRL,
+        NAV_NAVIGATING,
+        NAV_HOLD_POSITION,
+        NAV_STOP_ON_POSITION,
+        NAV_STOP_THERE,
+        NAV_LANDING,
+    };
+
+    /**
+     * \brief   The critical behavior enum
+     */
+    enum critical_behavior_enum
+    {
+        CLIMB_TO_SAFE_ALT,                                  ///< First critical behavior
+        FLY_TO_HOME_WP,                                     ///< Second critical behavior, comes after Navigation::CLIMB_TO_SAFE_ALT
+        HOME_LAND,                                          ///< Third critical behavior, comes after Navigation::FLY_TO_HOME_WP
+        CRITICAL_LAND                                       ///< Fourth critical behavior
+    };
+
+    /**
+     * \brief   The auto-landing enum
+     */
+    typedef enum
+    {
+        DESCENT_TO_SMALL_ALTITUDE,                          ///< First auto landing behavior
+        DESCENT_TO_GND                                      ///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
+    } auto_landing_behavior_t;
+
     /**
      * \brief The navigation configuration structure
      */
-    typedef struct
+    struct conf_t
     {
         float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
         float cruise_speed;                                 ///< The cruise speed in m/s
@@ -80,7 +112,7 @@ public:
 
         pid_controller_t hovering_controller;               ///< hovering controller
         pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
-    } conf_t;
+    };
 
     /**
      * \brief   Constructor
@@ -122,7 +154,7 @@ public:
     float dist2wp_sqr;                                  ///< The square of the distance to the waypoint
 
 
-    navigation_internal_state_t internal_state;         ///< The internal state of the navigation module
+    internal_state_t internal_state_;                   ///< The internal state of the navigation module
     critical_behavior_enum critical_behavior;           ///< The critical behavior enum
     auto_landing_behavior_t auto_landing_behavior;      ///< The autolanding behavior enum
 

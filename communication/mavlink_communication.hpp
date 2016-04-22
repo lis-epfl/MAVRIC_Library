@@ -134,35 +134,27 @@ public:
      *
      * \return  sysid of the underlying mavlink_stream
      */
-     uint32_t get_sysid();
-
-    /**
-     * \brief   Returns address of sysid of the underlying mavlink_stream
-     *
-     *
-     * \return  address of sysid of the underlying mavlink_stream
-     */
-     uint32_t* get_sysid_ptr();
+     uint32_t sysid();
 
     /*
      * \brief   Returns scheduler
      */
-    Scheduler& get_scheduler();
+    Scheduler& scheduler();
     
     /*
      * \brief   Returns message_handler
      */
-    Mavlink_message_handler& get_message_handler();
+    Mavlink_message_handler& message_handler();
 
     /*
      * \brief   Returns mavlink_stream
      */
-    Mavlink_stream& get_mavlink_stream();
+    Mavlink_stream& mavlink_stream();
 
     /*
      * \brief   Returns onboard_parameters struct
      */
-    Onboard_parameters& get_onboard_parameters();
+    Onboard_parameters& onboard_parameters();
   
     /**
      * \brief   Run task scheduler update if the buffer is empty
@@ -185,13 +177,13 @@ private:
         handling_telemetry_module_struct_t      module_struct;          ///<    Pointer to module data structure to be given as argument to the function
     };
     
-    Scheduler                       scheduler;                      ///<    Task set for scheduling of down messages
-    Mavlink_stream                  mavlink_stream;                 ///<    Mavlink interface using streams
-    Mavlink_message_handler         message_handler;                ///<    Message handler
-    Onboard_parameters              onboard_parameters;             ///<    Onboard parameters
-    uint32_t msg_sending_count;                                     ///<    Number of message callback currently registered
-    uint32_t max_msg_sending_count;                                 ///<    Maximum number of callback that can be registered
-    send_msg_handler_t* msg_send_list;                      ///<    List of message callbacks
+    Scheduler                   scheduler_;                      ///<    Task set for scheduling of down messages
+    Mavlink_stream              mavlink_stream_;                 ///<    Mavlink interface using streams
+    Mavlink_message_handler     message_handler_;                ///<    Message handler
+    Onboard_parameters          onboard_parameters_;             ///<    Onboard parameters
+    uint32_t                    msg_sending_count_;                                     ///<    Number of message callback currently registered
+    uint32_t                    max_msg_sending_count_;                                 ///<    Maximum number of callback that can be registered
+    send_msg_handler_t*         msg_send_list_;                      ///<    List of message callbacks
 
 
     /**
@@ -202,6 +194,15 @@ private:
      * \return  The result of execution of the task
      */
     static bool send_message(send_msg_handler_t* msg_send);
+
+    /**
+     * \brief   Toggle mavlink telemetry stream
+     *
+     * \param scheduler     scheduler of the MAV
+     * \param sysid         MAV sysid
+     * \param msg           pointer to the stream you want to toggle
+     */
+    static void toggle_telemetry_stream(Scheduler* scheduler, uint32_t sysid, mavlink_message_t* msg);
 
 
 };

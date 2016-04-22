@@ -52,40 +52,40 @@ void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink
 {
     Scheduler_task* stab_task = scheduler->get_task_by_id(0);
 
-    mavlink_msg_named_value_float_pack(mavlink_stream->sysid,
-                                       mavlink_stream->compid,
+    mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
+                                       mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
                                        "stabAvgDelay",
                                        stab_task->delay_avg);
     mavlink_stream->send(msg);
 
-    mavlink_msg_named_value_float_pack(mavlink_stream->sysid,
-                                       mavlink_stream->compid,
+    mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
+                                       mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
                                        "stabDelayVar",
                                        maths_fast_sqrt(stab_task->delay_var_squared));
     mavlink_stream->send(msg);
 
-    mavlink_msg_named_value_float_pack(mavlink_stream->sysid,
-                                       mavlink_stream->compid,
+    mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
+                                       mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
                                        "stabMaxDelay",
                                        stab_task->delay_max);
     mavlink_stream->send(msg);
 
-    mavlink_msg_named_value_float_pack(mavlink_stream->sysid,
-                                       mavlink_stream->compid,
+    mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
+                                       mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
                                        "stabRTvio",
                                        stab_task->rt_violations);
     mavlink_stream->send(msg);
 
-    mavlink_msg_named_value_float_pack(mavlink_stream->sysid,
-                                       mavlink_stream->compid,
+    mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
+                                       mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
                                        "stabExTime",

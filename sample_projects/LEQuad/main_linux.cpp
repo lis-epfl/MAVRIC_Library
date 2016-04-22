@@ -113,7 +113,7 @@ int main(int argc, char** argv)
     init_success &= cd.init();
 
 
-    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.get_onboard_parameters();
+    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
     init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
 
     // Try to read from flash, if unsuccessful, write to flash
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
 
     init_success &= mavlink_telemetry_init(&cd);
 
-    cd.state.mav_state = MAV_STATE_STANDBY;
+    cd.state.mav_state_ = MAV_STATE_STANDBY;
 
     init_success &= tasks_create_tasks(&cd);
 

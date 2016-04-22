@@ -153,7 +153,7 @@ static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_comm
 bool state_telemetry_set_mode(State* state, mav_mode_t new_mode)
 {
     // if calibrating, refuse new mode
-    if (state->mav_state == MAV_STATE_CALIBRATING)
+    if (state->mav_state_ == MAV_STATE_CALIBRATING)
     {
         print_util_dbg_print("[STATE TELEMETRY] calibrating -> refusing new mode\r\n");
         return false;
@@ -280,20 +280,20 @@ bool state_telemetry_init(State* state, Mavlink_message_handler* message_handler
 
 void state_telemetry_send_heartbeat(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_heartbeat_pack(mavlink_stream->sysid,
-                               mavlink_stream->compid,
+    mavlink_msg_heartbeat_pack(mavlink_stream->sysid(),
+                               mavlink_stream->compid(),
                                msg,
                                state->autopilot_type,
                                state->autopilot_name,
                                state->mav_mode(),
                                state->mav_mode_custom,
-                               state->mav_state);
+                               state->mav_state_);
 }
 
 void state_telemetry_send_status(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_sys_status_pack(mavlink_stream->sysid,
-                                mavlink_stream->compid,
+    mavlink_msg_sys_status_pack(mavlink_stream->sysid(),
+                                mavlink_stream->compid(),
                                 msg,
                                 state->sensor_present,                      // sensors present
                                 state->sensor_enabled,                      // sensors enabled

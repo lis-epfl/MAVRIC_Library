@@ -470,7 +470,7 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
     vector_field->velocity_command->xyz[Z] += tmp_vector[Z];
 
     // Go through waypoint list
-    for (uint16_t i = 0; i < vector_field->waypoint_handler->waypoint_count; ++i)
+    for (uint16_t i = 0; i < vector_field->waypoint_handler->waypoint_count(); ++i)
     {
         // Get waypoint in NED coordinates
         Mavlink_waypoint_handler::waypoint_struct_t waypoint = convert_waypoint_to_local_ned(&vector_field->waypoint_handler->waypoint_list[i],

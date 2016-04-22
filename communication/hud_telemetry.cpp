@@ -78,8 +78,8 @@ void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_s
         heading = (int16_t)(180.0f * aero_attitude.rpy[2] / PI);
     }
 
-    mavlink_msg_vfr_hud_pack(mavlink_stream->sysid,
-                             mavlink_stream->sysid,
+    mavlink_msg_vfr_hud_pack(mavlink_stream->sysid(),
+                             mavlink_stream->sysid(),
                              msg,
                              airspeed,
                              groundspeed,

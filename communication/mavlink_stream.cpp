@@ -54,13 +54,13 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_stream::Mavlink_stream(Serial& serial, const conf_t& config) : serial(serial)
+Mavlink_stream::Mavlink_stream(Serial& serial, const conf_t& config) : serial_(serial)
 {
     // Init static variable storing number of mavlink stream instances
     static uint8_t nb_mavlink_stream_instances = 0;
     if (nb_mavlink_stream_instances < MAVLINK_COMM_NUM_BUFFERS)
     {
-        mavlink_channel =  nb_mavlink_stream_instances;
+        mavlink_channel_ =  nb_mavlink_stream_instances;
         nb_mavlink_stream_instances     += 1;
     }
     else
@@ -73,9 +73,9 @@ Mavlink_stream::Mavlink_stream(Serial& serial, const conf_t& config) : serial(se
         }
     }
 
-    sysid          = config.sysid;
-    compid         = config.compid;
-    debug          = config.debug;
+    sysid_          = config.sysid;
+    compid_         = config.compid;
+    debug_          = config.debug;
 }
 
 
@@ -88,9 +88,9 @@ bool Mavlink_stream::send(mavlink_message_t* msg) const
     uint16_t len = mavlink_msg_to_send_buffer(buf, msg);
 
     // Send byte per byte
-    if (serial.writeable() >= len)
+    if (serial_.writeable() >= len)
     {
-        success &= serial.write(buf, len);
+        success &= serial_.write(buf, len);
     }
     else
     {
@@ -106,13 +106,13 @@ bool Mavlink_stream::receive(Mavlink_stream::msg_received_t* rec)
     uint8_t byte;
     
     // Try to decode bytes until a message is complete, or there is nothing left to read
-    while (serial.readable() > 0)
+    while (serial_.readable() > 0)
     {
         // read one byte
-        serial.read(&byte);
+        serial_.read(&byte);
 
         // Use the byte to decode current message
-        if (mavlink_parse_char(mavlink_channel, byte, &rec->msg, &rec->status))
+        if (mavlink_parse_char(mavlink_channel_, byte, &rec->msg, &rec->status))
         {
             return true;
         }
@@ -122,5 +122,5 @@ bool Mavlink_stream::receive(Mavlink_stream::msg_received_t* rec)
 
 void Mavlink_stream::flush()
 {
-    serial.flush();
+    serial_.flush();
 }
