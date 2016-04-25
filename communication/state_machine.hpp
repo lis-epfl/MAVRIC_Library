@@ -44,61 +44,76 @@
 #ifndef STATE_MACHINE_H_
 #define STATE_MACHINE_H_
 
-#include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
-#include "drivers/gps.hpp"
+#include "sensing/position_estimation.hpp"
 #include "sensing/imu.hpp"
 
 /**
  * \brief Defines the state machine structure
  */
-typedef struct
+class State_machine
 {
-    mavlink_waypoint_handler_t* waypoint_handler;       ///< Pointer to the mavlink waypoint handler structure
-    State* state;                                       ///< Pointer to the state structure
-    remote_t* remote;                                   ///< Pointer to the remote structure
-    const Gps* gps;                                     ///< Pointer to the gps structure
-    const Imu* imu;                                     ///< Pointer to the imu structure
-    manual_control_t* manual_control;                   ///< Pointer to the manual_control structure
-} state_machine_t;
+public:
+    /**
+     * \brief Initialize the state machine
+     *
+     * \param state                     Pointer to the state structure
+     * \param gps                       Pointer to the gps structure
+     * \param imu                       Pointer to the imu structure
+     * \param manual_control            Pointer to the manual_control structure
+     *
+     * \return  True if the init succeed, false otherwise
+     */
+    State_machine(  State& state,
+                    const Position_estimation& position_estimation,
+                    const Imu& imu,
+                    Manual_control& manual_control);
+
+    /**
+     * \brief   Updates the state machine
+     *
+     * \param   state_machine           Pointer to the state machine structure
+     *
+     * \return Returns the result of the task
+     */
+    static bool update(State_machine* state_machine);
+
+    /**
+     * \brief   tries to change state.mav_mode to guided/unguided
+     *
+     * \details tries to set/clear the MAV_MODE_FLAG_GUIDED_ENABLED
+     *          The following checks are performed:
+     *          - position_estimation.healthy to pass to guided
+     *
+     * \param   guided      true to pass to guided, false to pass to unguided
+     *
+     * \return true if desired state was accepted; false if refused
+     */
+    bool set_mode_guided(bool guided);
+
+    State& state_;                                       ///< Pointer to the state structure
+    const Position_estimation& position_estimation_;      ///< Pointer to the gps structure
+    const Imu& imu_;                                     ///< Pointer to the imu structure
+    Manual_control& manual_control_;                     ///< Pointer to the manual_control structure
+private:
+    /**
+     * \brief Updates the custom flag and switch to critical state if needed
+     *
+     * \param current_custom_mode       Pointer to the current MAV custom mode
+     * \param current_state             Pointer to the current MAV state
+     */
+    void set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_state_t *current_state);
+};
 
 
-/**
- * \brief Initialize the state machine
- *
- * \param state_machine             Pointer to the state machine structure
- * \param state                     Pointer to the state structure
- * \param gps                       Pointer to the gps structure
- * \param imu                       Pointer to the imu structure
- * \param manual_control            Pointer to the manual_control structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool state_machine_init(state_machine_t* state_machine,
-                        State* state,
-                        const Gps* gps,
-                        const Imu* imu,
-                        manual_control_t* manual_control);
 
-/**
- * \brief   Updates the state and mode of the UAV (not implemented yet)
- *
- * \param   state_machine           Pointer to the state machine structure
- *
- * \return Returns the result of the task
- */
-bool state_machine_set_mav_mode_n_state(state_machine_t* state_machine);
 
-/**
- * \brief   Updates the state machine
- *
- * \param   state_machine           Pointer to the state machine structure
- *
- * \return Returns the result of the task
- */
-bool state_machine_update(state_machine_t* state_machine);
+
+
+
+
 
 
 #endif // STATE_MACHINE_H_

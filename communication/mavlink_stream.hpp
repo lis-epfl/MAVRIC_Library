@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_stream.h
+ * \file mavlink_stream.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -65,79 +65,78 @@ extern "C"
 
 
 /**
- * \brief   Mavlink structures for the receive message and its status
- */
-typedef struct
-{
-    mavlink_message_t msg;          ///< Mavlink message
-    mavlink_status_t status;        ///< Status on the message
-} mavlink_received_t;
-
-
-/**
  * \brief   Main structure for the MAVLink stream module
  */
-typedef struct
+class Mavlink_stream
 {
-    Serial*      serial;
-    uint32_t sysid;         ///< System ID
-    uint32_t compid;        ///< System Component ID
-    mavlink_received_t rec;     ///< Last received message
-    bool msg_available;     ///< Indicates if a new message is available and not handled yet
-    uint8_t mavlink_channel;    ///< Channel number used internally by mavlink to retrieve incomplete incoming message
-    bool debug;         ///< Debug flag
-} mavlink_stream_t;
+public:
+
+    /**
+     * \brief   Mavlink structures for the receive message and its status
+     */
+    typedef struct
+    {
+        mavlink_message_t msg;          ///< Mavlink message
+        mavlink_status_t status;        ///< Status on the message
+    } msg_received_t;
+
+    /**
+     * \brief   Configuration structure for the module MAVLink stream
+     */
+    struct conf_t
+    {
+        uint32_t sysid;                 ///< System ID
+        uint32_t compid;                ///< System Component ID
+        bool     debug;                 ///< Debug flag
+    };
 
 
-/**
- * \brief   Configuration structure for the module MAVLink stream
- */
-typedef struct
-{
-    uint32_t sysid;                 ///< System ID
-    uint32_t compid;                ///< System Component ID
-    bool     debug;                 ///< Debug flag
-} mavlink_stream_conf_t;
+    Mavlink_stream(Serial& serial, const conf_t& config);
 
 
-/**
- * \brief   Initialization of MAVLink sysid, compid and scheduler to send messages
- *
- * \param   mavlink_stream      Pointer to the MAVLink stream structure
- * \param   config              Configuration
- * \param   rx_stream;          Output stream
- * \param   tx_stream;          Input stream
- *
- * \return  Success
- */
-bool mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config, Serial* serial);
+    /**
+     * \brief   Send Mavlink stream
+     *
+     * \param   msg                 msg to stream
+     *
+     * \return success
+     */
+    bool send(mavlink_message_t* msg) const;
 
+    /**
+     * \brief   Mavlink parsing of message; the message is not available in this module afterwards
+     *
+     * \param   rec             Address where to store the received message
+     *
+     * \return  Success         True if a message was successfully decoded, false else
+     */
+    bool receive(msg_received_t* rec);
 
-/**
- * \brief   Send Mavlink stream
- *
- * \param   mavlink_stream      Pointer to the MAVLink stream structure
- * \param   msg                 msg to stream
- *
- * \return success
- */
-bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+    /**
+     * \brief   Flushing MAVLink stream
+     */
+    void flush();
 
+    /**
+     * \brief   Return sysid of this stream
+     * 
+     * \return  sysid
+     */
+    inline uint32_t sysid() const {return sysid_;};    // inline for higher exec speed
 
-/**
- * \brief   Mavlink parsing of message
- *
- * \param   mavlink_stream  Pointer to the MAVLink receive stream structure
- *
- * \return  Success         True if a message was successfully decoded, false else
- */
-bool mavlink_stream_receive(mavlink_stream_t* mavlink_stream);
+    /**
+     * \brief   Return sysid of this stream
+     * 
+     * \return  sysid
+     */
+    inline uint32_t compid() const {return compid_;};    // inline for higher exec speed
 
-
-/**
- * \brief   Flushing MAVLink stream
- */
-void mavlink_stream_flush(mavlink_stream_t* mavlink_stream);
-
+private:
+    uint32_t sysid_;             ///< System ID
+    uint32_t compid_;            ///< System Component ID
+    Serial& serial_;
+    uint8_t mavlink_channel_;    ///< Channel number used internally by mavlink to retrieve incomplete incoming message
+    bool debug_;                  ///< Debug flag
+};
 
 #endif /* MAVLINK_STREAM_H */

@@ -50,7 +50,7 @@ extern "C"
 }
 
 
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const position_estimation_t* pos_est, torque_command_t* torque, thrust_command_t* thrust)
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const Position_estimation* pos_est, torque_command_t* torque, thrust_command_t* thrust)
 {
     bool init_success = true;
 
@@ -81,7 +81,7 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
     return init_success;
 }
 
-void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation)
+void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* position_estimation)
 {
     aero_attitude_t attitude_yaw_inverse;
     quat_t q_rot;
@@ -195,7 +195,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             input.rpy[ROLL] = rpy_local.v[Y];
             input.rpy[PITCH] = -rpy_local.v[X];
 
-            if ((!stabilisation_copter->pos_est->gps->healthy()) || (stabilisation_copter->pos_est->state->out_of_fence_2))
+            if ((!stabilisation_copter->pos_est->healthy()) || (stabilisation_copter->pos_est->get_fence_violation_state() == Position_estimation::OUTSIDE_FENCE2))
             {
                 input.rpy[ROLL] = 0.0f;
                 input.rpy[PITCH] = 0.0f;
@@ -231,7 +231,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
         // -- no break here  - we want to run the lower level modes as well! --
 
         case RATE_COMMAND_MODE: // this level is always run
-            // get rate measurements from AHRS (filtered angular rates)
+            // get rate measurements from ahrs_t (filtered angular rates)
             for (i = 0; i < 3; i++)
             {
                 rpyt_errors[i] = input.rpy[i] - stabilisation_copter->ahrs->angular_speed[i];

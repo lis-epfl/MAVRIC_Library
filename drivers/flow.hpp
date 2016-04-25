@@ -73,12 +73,50 @@ typedef enum
 
 
 /**
- * \brief   Data structure for Flow
+ * \brief   Configuration structure for the module Flow module
  */
 typedef struct
 {
-    mavlink_stream_t    mavlink_stream;     ///< Mavlink interface using streams
-    Serial*             uart;               ///< Serial device
+    Mavlink_stream::conf_t mavlink_stream_config;
+} flow_conf_t;
+
+
+/**
+ * \brief   Default configuration
+ *
+ * \return  Config structure
+ */
+static inline flow_conf_t flow_default_config();
+
+
+
+
+/**
+ * \brief   Data structure for Flow
+ */
+class Flow
+{
+public:
+    /**
+     * \brief Constructor
+     *
+     * \param uart          Pointer to serial peripheral
+     * \param config        configuration of module (containing mavlink_stream config)
+     *
+     */
+    Flow(Serial& uart, flow_conf_t config = flow_default_config());
+
+    /**
+     * \brief Update function
+     *
+     * \return      Success
+     */
+    static bool update(Flow* flow);
+    
+private:
+
+    Serial&           uart;               ///< Serial device
+    Mavlink_stream    mavlink_stream;     ///< Mavlink interface using streams
 
     uint8_t     of_count;   ///< Number of optic flow vectors
     flow_data_t of;         ///< Optic flow vectors
@@ -90,28 +128,20 @@ typedef struct
 
     flow_handshake_state_t  handshake_state;    ///< Indicates the current reception state for encapsulated data
     uint32_t last_update_us;                    ///< Last update time in microseconds
-} flow_t;
+};
 
 
-/**
- * \brief Init function
- *
- * \param flow  Pointer to flow structure
- * \param uart  Pointer to serial peripheral
- *
- * \return      Success
- */
-bool flow_init(flow_t* flow, Serial* uart);
+static inline flow_conf_t flow_default_config()
+{
+    flow_conf_t config                  = {};
 
-
-/**
- * \brief Update function
- *
- * \param flow      Pointer to flow structure
- *
- * \return      Success
- */
-bool flow_update(flow_t* flow);
+    Mavlink_stream::conf_t stream_config = {};
+    stream_config.sysid   = 1;
+    stream_config.compid  = 50;
+    stream_config.debug   = true;
+    config.mavlink_stream_config = stream_config;
+    return config;
+};
 
 
 #endif /* FLOW_HPP_ */
