@@ -227,6 +227,7 @@ void offboard_camera_goal_location_telemetry_send(const Central_data* central_da
 void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
     int is_camera_running = -1;
+    // Switch boolean to int as mavlink sends ints/flaots
     switch(camera->is_camera_running_)
     {
         case true:
