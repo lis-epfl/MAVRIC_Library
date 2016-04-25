@@ -88,6 +88,11 @@ public:
      */
     const float& last_update_us(void) const;
 
+    /**
+     * \brief   Updates the time that the tag was last updated
+     */
+    void update_last_update_us();
+
     bool get_is_camera_running();
     int get_camera_id();
 

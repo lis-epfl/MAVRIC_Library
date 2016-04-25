@@ -111,3 +111,8 @@ int Offboard_Camera::get_camera_id()
 {
     return camera_id_;
 }
+
+void Offboard_Camera::update_last_update_us()
+{
+    last_update_us_ = time_keeper_get_us();
+}
