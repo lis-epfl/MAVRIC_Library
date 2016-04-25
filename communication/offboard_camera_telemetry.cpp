@@ -102,7 +102,7 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 
         // Get drone height, drone height tells you the pixel dimensions on the ground, +z is down
         float drone_height = 0.0f;
-        if (packet->param7 > -900000000 && packet->param7 < MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM) // Get drone height from the packet if available
+        if ((packet->param7 > -900000000) && (packet->param7 < MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM) // Get drone height from the packet if available
             // Restrict to drone heights that are within a set range
         {
            drone_height = -packet->param7 / 1000.0f;
@@ -115,7 +115,7 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         // Get tag location in m
         float picture_forward_offset = 0.0f;
         float picture_right_offset = 0.0f;
-        if (packet->param5 > -900000000 && packet->param6 > -900000000) // Get tag location from packet in m if available
+        if ((packet->param5 > -900000000) && (packet->param6 > -900000000)) // Get tag location from packet in m if available
         {
             // Forward corresponds to param6 as the picamera code outputs (right,down)
             picture_forward_offset = -packet->param6 / 1000.0f; // Negative, because in vision positive is towards the bottom of the picture
