@@ -66,6 +66,7 @@ extern "C"
 #include "hal/avr32/twim_default_config.h"
 #include "util/streams.h"
 #include "hal/analog_monitor.h"
+#include "util/maths.h"
 }
 
 
