@@ -35,42 +35,77 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief   Interface for Optic Flow sensors
+ * \brief Driver for optic flow sensors
  *
  ******************************************************************************/
 
-#ifndef FLOW_HPP_
-#define FLOW_HPP_
+#ifndef FLOW_PX4_HPP_
+#define FLOW_PX4_HPP_
 
 #include "drivers/flow.hpp"
 #include "communication/mavlink_stream.hpp"
 #include <stdint.h>
 #include "hal/common/serial.hpp"
 
+const float filter_constant = (1./250.)/((1./100.) + (1./500.) );
 
 /**
  * \brief   Array of 2-D optic flow vectors
  */
-typedef struct
+typedef union
 {
-    float x[125];     ///< Horizontal component
-    float y[125];     ///< Vertical component
-} flow_data_t;
+    struct
+    {
+        int16_t x[125];     ///< Horizontal component
+        int16_t y[125];     ///< Vertical component
+    };
+    uint8_t data[500];      ///< Raw access to data
+} flow_px4_data_t;
 
 
 /**
- * \brief   Interface for Optic Flow sensors
+ * \brief   State of encapsulated data transfer
  */
-class  Flow
+typedef enum
+{
+    FLOW_NO_HANDSHAKE       = 0,    ///< No handshake received
+    FLOW_HANDSHAKE_DATA     = 1,    ///< Normal data will be received
+    FLOW_HANDSHAKE_METADATA = 2,    ///< Metadata will be received
+} flow_px4_handshake_state_t;
+
+
+/**
+ * \brief   Driver for PX4Flow
+ */
+class  Flow_px4: public Flow
 {
 public:
+    /**
+    * \brief    Init function
+    * \param    uart    Pointer to serial peripheral
+    * \return   Success
+    */
+    Flow_px4(Serial& uart);
 
-    virtual bool update(void) = 0;
+    /**
+    * \brief    Update function
+    * \return   Success
+    */
+    bool update(void);
 
-    flow_data_t of;               ///< Optic flow vectors
-    uint8_t     of_count;         ///< Number of optic flow vectors
-    flow_data_t of_loc;           ///< Location of optic flow vectors
-    uint32_t    last_update_us;   ///< Last update time in microseconds
+private:
+    Serial&             uart_;               ///< Serial device
+    Mavlink_stream      mavlink_stream_;     ///< Mavlink interface using streams
+
+    flow_px4_data_t of_tmp_;        ///< Temporary optic flow vectors
+    flow_px4_data_t of_loc_tmp_;    ///< Temporary location of optic flow vectors
+    uint16_t    packet_count_;  ///< Number of encapsulated data packets expected
+    uint32_t    byte_count_;    ///< Total size of data to receive (in bytes)
+
+    flow_px4_handshake_state_t  handshake_state;    ///< Indicates the current reception state for encapsulated data
 };
 
-#endif /* FLOW_HPP_ */
+
+
+
+#endif /* FLOW_PX4_HPP_ */

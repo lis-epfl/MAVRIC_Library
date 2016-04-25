@@ -90,7 +90,14 @@ public:
         bool     debug;                 ///< Debug flag
     };
 
+    /**
+     * \brief   Default config of MAVLink stream
+     */
+    static conf_t default_config(void);
 
+    /**
+     * \brief Constructor
+     */
     Mavlink_stream(Serial& serial, const conf_t& config);
 
 
@@ -119,14 +126,14 @@ public:
 
     /**
      * \brief   Return sysid of this stream
-     * 
+     *
      * \return  sysid
      */
     inline uint32_t sysid() const {return sysid_;};    // inline for higher exec speed
 
     /**
      * \brief   Return sysid of this stream
-     * 
+     *
      * \return  sysid
      */
     inline uint32_t compid() const {return compid_;};    // inline for higher exec speed

@@ -30,47 +30,45 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file flow.hpp
+ * \file flow_sim.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief   Interface for Optic Flow sensors
+ * \brief   Simulated Optic Flow sensors
  *
  ******************************************************************************/
 
-#ifndef FLOW_HPP_
-#define FLOW_HPP_
+#ifndef FLOW_SIM_HPP_
+#define FLOW_SIM_HPP_
 
 #include "drivers/flow.hpp"
-#include "communication/mavlink_stream.hpp"
-#include <stdint.h>
-#include "hal/common/serial.hpp"
-
-
-/**
- * \brief   Array of 2-D optic flow vectors
- */
-typedef struct
-{
-    float x[125];     ///< Horizontal component
-    float y[125];     ///< Vertical component
-} flow_data_t;
-
+#include "util/raytracing.hpp"
+#include "util/matrix.hpp"
+#include "simulation/dynamic_model.hpp"
 
 /**
  * \brief   Interface for Optic Flow sensors
  */
-class  Flow
+class  Flow_sim: public Flow
 {
+    static const uint32_t ray_count_ = 90;
 public:
+    Flow_sim(Dynamic_model& dynamic_model_, raytracing::World& world, float orientation_azimuth = 0.0f);
 
-    virtual bool update(void) = 0;
+    bool update(void);
 
-    flow_data_t of;               ///< Optic flow vectors
-    uint8_t     of_count;         ///< Number of optic flow vectors
-    flow_data_t of_loc;           ///< Location of optic flow vectors
-    uint32_t    last_update_us;   ///< Last update time in microseconds
+    // flow_data_t of;               ///< Optic flow vectors
+    // uint8_t     of_count;         ///< Number of optic flow vectors
+    // flow_data_t of_loc;           ///< Location of optic flow vectors
+    // uint32_t    last_update_us;   ///< Last update time in microseconds
+
+private:
+    Dynamic_model&      dynamic_model_;
+    raytracing::World&  world_;
+
+    raytracing::Ray     rays_[ray_count_];
+    Mat<2,3>            jacob_[ray_count_];
 };
 
-#endif /* FLOW_HPP_ */
+#endif /* FLOW_SIM_HPP_ */

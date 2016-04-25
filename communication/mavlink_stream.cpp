@@ -78,6 +78,15 @@ Mavlink_stream::Mavlink_stream(Serial& serial, const conf_t& config) : serial_(s
     debug_          = config.debug;
 }
 
+Mavlink_stream::conf_t Mavlink_stream::default_config(void)
+{
+    Mavlink_stream::conf_t conf = {};
+    conf. sysid = 1;
+    conf.compid = 50;
+    conf.debug  = false;
+    return conf;
+}
+
 
 bool Mavlink_stream::send(mavlink_message_t* msg) const
 {
@@ -104,7 +113,7 @@ bool Mavlink_stream::send(mavlink_message_t* msg) const
 bool Mavlink_stream::receive(Mavlink_stream::msg_received_t* rec)
 {
     uint8_t byte;
-    
+
     // Try to decode bytes until a message is complete, or there is nothing left to read
     while (serial_.readable() > 0)
     {
