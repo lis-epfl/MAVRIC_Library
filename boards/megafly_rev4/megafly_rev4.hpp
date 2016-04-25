@@ -388,6 +388,11 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.offboard_camera_config.allowable_horizontal_tag_offset_sqr     = 1.0f;
     conf.offboard_camera_config.max_acc_drone_height_from_camera_mm     = 15000.0f;
     conf.offboard_camera_config.tag_search_timeout_us                   = 60000000.0f;
+    conf.offboard_camera_config.camera_res[0]                           = 1280
+    conf.offboard_camera_config.camera_res[1]                           = 960
+    conf.offboard_camera_config.camera_rotation                         = 90.0f * PI / 180;
+    conf.offboard_camera_config.camera_fov[0]                           = 53.50f * PI / 180;
+    conf.offboard_camera_config.camera_fov[1]                           = 41.41f * PI / 180;
 
     return conf;
 }

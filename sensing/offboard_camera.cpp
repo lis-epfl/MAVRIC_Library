@@ -60,22 +60,14 @@ Offboard_Camera::Offboard_Camera(offboard_camera_conf_t config):
     last_update_us_(time_keeper_get_us()),
     allowable_horizontal_tag_offset_sqr_(config.allowable_horizontal_tag_offset_sqr),
     float max_acc_drone_height_from_camera_mm_(config.max_acc_drone_height_from_camera_mm),
-    tag_search_timeout_us_(config.tag_search_timeout_us)
+    tag_search_timeout_us_(config.tag_search_timeout_us),
+    camera_res_(camera_res),
+    camera_rotation_(camera_rotation),
+    camera_fov_(camera_fov)
 
 {
     // Set picture count to 0
     picture_count = 0.0f;
-
-    // Set camera resolution
-    camera_res[0] = 1280;
-    camera_res[1] = 960;
-
-    // Set camera rotation
-    camera_rotation = 90.0f * PI / 180;
-
-    // Set camera field of view
-    camera_fov[0] = 53.50f * PI / 180;
-    camera_fov[1] = 41.41f * PI / 180;
 }
 
 
@@ -135,4 +127,29 @@ float Offboard_Camera::get_tag_search_timeout_us()
 void Offboard_Camera::update_last_update_us()
 {
     last_update_us_ = time_keeper_get_us();
+}
+
+int Offboard_Camera::get_camera_x_resolution()
+{
+    return camera_res_[0];
+}
+
+int Offboard_Camera::get_camera_y_resolution()
+{
+    return camera_reso_[1];
+}
+
+float Offboard_Camera::get_camera_rotation()
+{
+    return camera_rotation_;
+}
+
+float Offboard_Camera::get_camera_x_fov()
+{
+    return camera_fov_[0];
+}
+
+float Offboard_Camera::get_camera_y_fov()
+{
+    return camera_fov_[1];
 }

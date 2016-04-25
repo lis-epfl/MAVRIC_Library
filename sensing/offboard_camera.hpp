@@ -60,6 +60,9 @@ typedef struct
     bool initial_camera_state;                          ///< The starting on/off state of the camera
     float allowable_horizontal_tag_offset_sqr;          ///< The square distance from the drone to the center of the tag that is acceptable
     float max_acc_drone_height_from_camera_mm;          ///< The maximum acceptable drone height where the code will trust the cameras height estimation
+    int camera_res[2];                                  ///< The resolution of the offboard camera
+    float camera_rotation;                              ///< The rotation of the offboard camera w.r.t. the front of the drone, CCW from drone to camera is +
+    float camera_fov[2];                                ///< The field of view of the camera in radians
 } offboard_camera_conf_t;
 
 
@@ -119,12 +122,21 @@ public:
     float get_allowable_horizontal_tag_offset_sqr();
     float get_max_acc_drone_height_from_camera_mm();
     float get_tag_search_timeout_us();
+    int get_camera_x_resolution();
+    int get_camera_y_resolution();
+    float get_camera_rotation();
+    float get_camera_x_fov();
+    float get_camera_y_fov();
+    
 private:
     Offboard_Camera();
 
     float allowable_horizontal_tag_offset_sqr_;     ///< The maximum allowable horizontal distance between the tag and the drone before the drone will start to descend
     float max_acc_drone_height_from_camera_mm_;     ///< The maximum acceptable altitude where the code will trust the cameras height estimation
     float tag_search_timeout_us_;                   ///< The allowable time to try to search for the tag
+    int camera_res_[2];                              ///< The resolution of the offboard camera
+    float camera_rotation_;                          ///< The rotation of the offboard camera w.r.t. the front of the drone, CCW from drone to camera is +
+    float camera_fov_[2];                            ///< The field of view of the camera in radians
 };
 
 

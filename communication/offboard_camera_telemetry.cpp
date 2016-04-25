@@ -131,8 +131,8 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
                 pixel_width = width / resolution
                 pixel_width = 2 * drone_height * tan(fov/2) / resolution
             */
-            float pixel_width = 2 * (-drone_height) * tan(camera.camera_fov[0]) / (camera.camera_res[0]); // drone_height negated as +z is down
-            float pixel_height = 2 * (-drone_height) * tan(camera.camera_fov[1]) / (camera.camera_res[1]); // drone_height negated as +z is down
+            float pixel_width = 2 * (-drone_height) * tan(camera.get_camera_x_fov()) / (camera.get_camera_x_res()); // drone_height negated as +z is down
+            float pixel_height = 2 * (-drone_height) * tan(camera.get_camera_y_fov()) / (camera.get_camera_y_res()); // drone_height negated as +z is down
 
             // Get drone offset
             // Forward corresponds to param4 as the picamera code outputs (right,down)
@@ -143,10 +143,10 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         
         // Rotate offset to align with drone
         quat_t q_rot, q_offset;
-        q_rot.s = cos(camera.camera_rotation/2); // Based off how camera is mounted
+        q_rot.s = cos(camera.get_camera_rotation()/2); // Based off how camera is mounted
         q_rot.v[0] = 0;
         q_rot.v[1] = 0;
-        q_rot.v[2] = 1*sin(camera.camera_rotation/2);
+        q_rot.v[2] = 1*sin(camera.get_camera_rotation()/2);
         q_offset.s = 0;
         q_offset.v[0] = picture_forward_offset;
         q_offset.v[1] = picture_right_offset;
