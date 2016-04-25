@@ -30,13 +30,13 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_telemetry.c
+ * \file offboard_camera_telemetry.c
  *
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
- * \brief This module takes care of sending periodic telemetric messages for
- * the state
+ * \brief This module takes care of sending and receiving messages between the
+ * offboard camera and the MAVRIC autopilot for tag recognition purposes.
  *
  ******************************************************************************/
 
@@ -89,8 +89,8 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
          * The incoming packet is of this format:
          * param1: camera number
          * param2: camera status
-         * param3: tag horizontal location, positive is right
-         * param4: tag vertical location, positive is down
+         * param3: tag horizontal location in pixels, positive is right
+         * param4: tag vertical location in pixels, positive is down
          * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000000000 for unknown
          * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1000000000 for unknown
          * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1000000000 for unknown
@@ -103,7 +103,7 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         // Get drone height, drone height tells you the pixel dimensions on the ground, +z is down
         float drone_height = 0.0f;
         if (packet->param7 > -900000000 && packet->param7 < camera.get_max_acc_drone_height_from_camera()) // Get drone height from the packet if available
-            // Restrict to drone heights that are within a set range
+        // Restrict to drone heights that are within a set range
         {
            drone_height = -packet->param7 / 1000.0f;
         }
@@ -115,7 +115,7 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         // Get tag location in m
         float picture_forward_offset = 0.0f;
         float picture_right_offset = 0.0f;
-        if (packet->param5 > -900000000 && packet->param6 > -900000000) // Get tag location from packet in m if available
+        if ((packet->param5 > -900000000) && (packet->param6 > -900000000)) // Get tag location from packet in m if available
         {
             // Forward corresponds to param6 as the picamera code outputs (right,down)
             picture_forward_offset = -packet->param6 / 1000.0f; // Negative, because in vision positive is towards the bottom of the picture
@@ -152,13 +152,8 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         q_offset.v[1] = picture_right_offset;
         q_offset.v[2] = 0;
         quat_t q_new_dir = quaternions_rotate(q_offset, q_rot);
-        /*
-        print_util_dbg_print("Tag loc:");
-        print_util_dbg_print_vector(q_new_dir.v, 4);
-        print_util_dbg_print("\r\n");
-        */
 
-        // Convert due to yaw change
+        // Convert to local coordinates due to yaw not facing north
         float yaw = coord_conventions_get_yaw(central_data->ahrs.qe);
         quat_t q_yaw_rot;
         q_yaw_rot.s = cos(yaw/2);
@@ -166,11 +161,6 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         q_yaw_rot.v[1] = 0;
         q_yaw_rot.v[2] = -1*sin(yaw/2); // Negative to rotate CCW
         quat_t q_new_local_dir = quaternions_rotate(q_new_dir, q_yaw_rot);
-        /*
-        print_util_dbg_print("Tag loc - yaw:");
-        print_util_dbg_print_vector(q_new_local_dir.v, 4);
-        print_util_dbg_print("\r\n");
-        */
 
         // Determine how far the drone is from the tag in north and east coordinates
         float drone_x_offset = q_new_local_dir.v[0];
@@ -184,6 +174,9 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = tag_x_pos;
         central_data->waypoint_handler.waypoint_hold_coordinates.pos[1] = tag_y_pos;
         central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = central_data->waypoint_handler.navigation->tag_search_altitude;
+
+        // Update recorded time
+        camera.update_last_update_us();
     }
     
     result = MAV_RESULT_ACCEPTED;
@@ -234,6 +227,7 @@ void offboard_camera_goal_location_telemetry_send(const Central_data* central_da
 void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
     int is_camera_running = -1;
+    // Switch boolean to int as mavlink sends ints/flaots
     switch(camera->is_camera_running_)
     {
         case true:

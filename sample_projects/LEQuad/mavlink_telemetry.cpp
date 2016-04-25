@@ -356,8 +356,8 @@ bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_para
     /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
     init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.control_source, "CTRL_CTRL_SRC");
     init_success &= onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
-return true;
-    //return init_success;
+    
+    return init_success;
 }
 
 

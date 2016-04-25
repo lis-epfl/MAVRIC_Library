@@ -49,6 +49,7 @@ extern "C"
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
 #include "util/constants.h"
+#include "util/maths.h"
 }
 
 
@@ -70,11 +71,11 @@ Offboard_Camera::Offboard_Camera(offboard_camera_conf_t config):
     camera_res[1] = 960;
 
     // Set camera rotation
-    camera_rotation = 1.5708;
+    camera_rotation = 90.0f * PI / 180;
 
     // Set camera field of view
-    camera_fov[0] = 0.9337512;
-    camera_fov[1] = 0.72274086;
+    camera_fov[0] = 53.50f * PI / 180;
+    camera_fov[1] = 41.41f * PI / 180;
 }
 
 
@@ -129,4 +130,9 @@ float Offboard_Camera::get_max_acc_drone_height_from_camera_mm()
 float Offboard_Camera::get_tag_search_timeout_us()
 {
     return tag_search_timeout_us_;
+}
+
+void Offboard_Camera::update_last_update_us()
+{
+    last_update_us_ = time_keeper_get_us();
 }
