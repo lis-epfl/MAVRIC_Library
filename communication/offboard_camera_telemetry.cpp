@@ -89,8 +89,8 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
          * The incoming packet is of this format:
          * param1: camera number
          * param2: camera status
-         * param3: tag horizontal location, positive is right
-         * param4: tag vertical location, positive is down
+         * param3: tag horizontal location in pixels, positive is right
+         * param4: tag vertical location in pixels, positive is down
          * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000000000 for unknown
          * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1000000000 for unknown
          * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1000000000 for unknown
@@ -152,13 +152,8 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         q_offset.v[1] = picture_right_offset;
         q_offset.v[2] = 0;
         quat_t q_new_dir = quaternions_rotate(q_offset, q_rot);
-        /*
-        print_util_dbg_print("Tag loc:");
-        print_util_dbg_print_vector(q_new_dir.v, 4);
-        print_util_dbg_print("\r\n");
-        */
 
-        // Convert due to yaw change
+        // Convert to local coordinates due to yaw not facing north
         float yaw = coord_conventions_get_yaw(central_data->ahrs.qe);
         quat_t q_yaw_rot;
         q_yaw_rot.s = cos(yaw/2);
@@ -166,11 +161,6 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         q_yaw_rot.v[1] = 0;
         q_yaw_rot.v[2] = -1*sin(yaw/2); // Negative to rotate CCW
         quat_t q_new_local_dir = quaternions_rotate(q_new_dir, q_yaw_rot);
-        /*
-        print_util_dbg_print("Tag loc - yaw:");
-        print_util_dbg_print_vector(q_new_local_dir.v, 4);
-        print_util_dbg_print("\r\n");
-        */
 
         // Determine how far the drone is from the tag in north and east coordinates
         float drone_x_offset = q_new_local_dir.v[0];
