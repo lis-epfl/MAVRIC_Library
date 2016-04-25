@@ -30,13 +30,13 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_telemetry.c
+ * \file offboard_camera_telemetry.c
  *
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
- * \brief This module takes care of sending periodic telemetric messages for
- * the state
+ * \brief This module takes care of sending and receiving messages between the
+ * offboard camera and the MAVRIC autopilot for tag recognition purposes.
  *
  ******************************************************************************/
 
