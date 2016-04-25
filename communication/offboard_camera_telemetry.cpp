@@ -171,9 +171,11 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         float tag_y_pos = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1] + drone_y_offset;
 
         // Set hold position
-        central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = tag_x_pos;
-        central_data->waypoint_handler.waypoint_hold_coordinates.pos[1] = tag_y_pos;
-        central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = central_data->waypoint_handler.navigation->tag_search_altitude;
+        camera.tag_position.pos[0] = tag_x_pos;
+        camera.tag_position.pos[1] = tag_y_pos;
+        camera.tag_position.pos[2] = central_data->waypoint_handler.navigation->tag_search_altitude;
+        camera.tag_position.heading = central_data->waypoint_handler.navigation->position_estimation->local_position.heading;
+        camera.tag_position.origin = central_data->waypoint_handler.navigation->position_estimation->local_position.origin;
     }
     
     result = MAV_RESULT_ACCEPTED;

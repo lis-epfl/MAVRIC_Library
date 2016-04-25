@@ -1663,7 +1663,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
     // Set position vectors to shorten code later
     for (uint8_t i = 0; i < 3; i++)
     {
-        tag_pos[i] = waypoint_handler->waypoint_hold_coordinates.pos[i];
+        tag_pos[i] = camera.tag_location.pos[i];
         cur_pos[i] = waypoint_handler->position_estimation->local_position.pos[i];
     }
 

@@ -98,6 +98,7 @@ public:
     bool is_camera_running_;            ///< States whether the camera should be running
     float last_update_us_;              ///< Last update time in microseconds
     float picture_count;                ///< The count of the pictures received
+    local_position_t tag_location;      ///< The location of the tag in the local frame
 private:
     Offboard_Camera();
 };
