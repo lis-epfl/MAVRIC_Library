@@ -250,34 +250,14 @@ bool tasks_led_toggle(Led* led)
 
     return true;
 }
-/*
-bool tasks_offboard_camera_update(Offboard_Camera* camera)
-{
-    camera->update();
-    return true;
-}*/
+
 
 bool tasks_offboard_camera_update(Central_data* central_data)
 {
-    // Set waypoint to search for tag and land
-    /*
-    central_data->waypoint_handler.navigation->internal_state = NAV_LAND_ON_TAG;
-    print_util_dbg_print("internal_state = NAV_LAND_ON_TAG");
-
-    // Set hold position point
-    central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = central_data->waypoint_handler.position_estimation->local_position.pos[0];
-    central_data->waypoint_handler.waypoint_hold_coordinates.pos[1] = central_data->waypoint_handler.position_estimation->local_position.pos[1];
-    central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = -10.0f;
-    central_data->waypoint_handler.navigation->tag_search_altitude = central_data->waypoint_handler.waypoint_hold_coordinates.pos[2];
-
-    // Set new tag search start time
-    central_data->waypoint_handler.navigation->tag_search_start_time = time_keeper_get_us();
-
-    // Land
-    */
     central_data->offboard_camera.update(&(central_data->raspi_mavlink_communication.scheduler));
     return true;
 }
+
 
 bool tasks_data_logging_update(Central_data* central_data)
 {
