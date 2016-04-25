@@ -109,8 +109,6 @@ int main(void)
     File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
     File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
 
-    Offboard_Camera camera_object = Offboard_Camera(1, false);
-    Offboard_Camera& camera = camera_object;
     // -------------------------------------------------------------------------
     // Create central data
     // -------------------------------------------------------------------------
@@ -134,7 +132,7 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   camera,
+                                   board.camera,
                                    cd_config);
     /*Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,
@@ -156,7 +154,7 @@ int main(void)
                                    sim_servo_3,
                                    file_log,
                                    file_stat,
-                                   camera,
+                                   board.camera,
                                    cd_config );*/
 
 

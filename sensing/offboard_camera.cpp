@@ -53,10 +53,14 @@ extern "C"
 
 
 
-Offboard_Camera::Offboard_Camera(int camera_id, bool is_camera_running):
-    camera_id_(camera_id),
+Offboard_Camera::Offboard_Camera(offboard_camera_conf_t config):
+    camera_id_(config.camera_id),
     is_camera_running_(is_camera_running),
-    last_update_us_(time_keeper_get_us())
+    last_update_us_(time_keeper_get_us()),
+    allowable_horizontal_tag_offset_sqr_(config.allowable_horizontal_tag_offset_sqr),
+    float max_acc_drone_height_from_camera_mm_(config.max_acc_drone_height_from_camera_mm),
+    tag_search_timeout_us_(config.tag_search_timeout_us)
+
 {
     // Set picture count to 0
     picture_count = 0.0f;
@@ -110,4 +114,19 @@ bool Offboard_Camera::get_is_camera_running()
 int Offboard_Camera::get_camera_id()
 {
     return camera_id_;
+}
+
+float Offboard_Camera::get_allowable_horizontal_tag_offset_sqr()
+{
+    return allowable_horizontal_tag_offset_sqr_;
+}
+
+float Offboard_Camera::get_max_acc_drone_height_from_camera_mm()
+{
+    return max_acc_drone_height_from_camera_mm_;
+}
+
+float Offboard_Camera::get_tag_search_timeout_us()
+{
+    return tag_search_timeout_us_;
 }

@@ -1677,7 +1677,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
         float horizontal_distance_to_tag_sqr = (cur_pos[0] - tag_pos[0]) * (cur_pos[0] - tag_pos[0]) + (cur_pos[1] - tag_pos[1]) * (cur_pos[1] - tag_pos[1]);
 
         // If we are not above tag
-        if (horizontal_distance_to_tag_sqr > ALLOWABLE_HORIZONTAL_TAG_OFFSET_SQR)
+        if (horizontal_distance_to_tag_sqr > camera.get_allowable_horizontal_tag_offset_sqr())
         {
             // Stay at tag search altitude
             waypoint_handler->waypoint_hold_coordinates.pos[2] = waypoint_handler->navigation->tag_search_altitude;
@@ -1706,7 +1706,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
     }
 
     // If the tag search has gone on too long, set mode to landing
-    if ((time_keeper_get_us() - waypoint_handler->navigation->tag_search_start_time) > TAG_SEARCH_TIMEOUT_US)
+    if ((time_keeper_get_us() - waypoint_handler->navigation->tag_search_start_time) > camera.get_tag_search_timeout_us())
     {
         print_util_dbg_print("Auto-landing on tag: Timeout: Switch to normal landing\r\n");
         waypoint_handler->navigation->internal_state = NAV_LANDING;

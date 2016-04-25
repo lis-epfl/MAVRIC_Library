@@ -50,6 +50,19 @@ extern "C"
 
 }
 
+
+/**
+ * \brief   Configuration structure
+ */
+typedef struct
+{
+    int camera_id;                                      ///< The camera id to send to the offboard camera computer
+    bool initial_camera_state;                          ///< The starting on/off state of the camera
+    float allowable_horizontal_tag_offset_sqr;          ///< The square distance from the drone to the center of the tag that is acceptable
+    float max_acc_drone_height_from_camera_mm;          ///< The maximum acceptable drone height where the code will trust the cameras height estimation
+} offboard_camera_conf_t;
+
+
 class Central_data;
 
 /**
@@ -67,10 +80,9 @@ public:
     /**
      * \brief Constructor
      *
-     * \param camera_id             The id number of the camera
-     * \param is_camera_running     States if this camera should be running
+     * \param config    The offboard camera configuration
      */
-    Offboard_Camera(int camera_id, bool is_camera_running);
+    Offboard_Camera(offboard_camera_conf_t config);
 
 
     /**
@@ -98,8 +110,16 @@ public:
     bool is_camera_running_;            ///< States whether the camera should be running
     float last_update_us_;              ///< Last update time in microseconds
     float picture_count;                ///< The count of the pictures received
+
+    float get_allowable_horizontal_tag_offset_sqr();
+    float get_max_acc_drone_height_from_camera_mm();
+    float get_tag_search_timeout_us();
 private:
     Offboard_Camera();
+
+    float allowable_horizontal_tag_offset_sqr_;     ///< The maximum allowable horizontal distance between the tag and the drone before the drone will start to descend
+    float max_acc_drone_height_from_camera_mm_;     ///< The maximum acceptable altitude where the code will trust the cameras height estimation
+    float tag_search_timeout_us_;                   ///< The allowable time to try to search for the tag
 };
 
 

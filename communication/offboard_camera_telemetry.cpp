@@ -53,7 +53,7 @@ extern "C"
 #include "util/maths.h"
 }
 
-#define MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM 15000
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 
         // Get drone height, drone height tells you the pixel dimensions on the ground, +z is down
         float drone_height = 0.0f;
-        if (packet->param7 > -900000000 && packet->param7 < MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM) // Get drone height from the packet if available
+        if (packet->param7 > -900000000 && packet->param7 < camera.get_max_acc_drone_height_from_camera()) // Get drone height from the packet if available
             // Restrict to drone heights that are within a set range
         {
            drone_height = -packet->param7 / 1000.0f;

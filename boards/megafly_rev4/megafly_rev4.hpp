@@ -85,6 +85,7 @@ typedef struct
     i2c_avr32_conf_t        i2c1_config;
     imu_conf_t              imu_config;
     servo_conf_t            servo_config[8];
+    offboard_camera_conf_t  offboard_camera_config;
 } megafly_rev4_conf_t;
 
 
@@ -159,6 +160,7 @@ public:
     Servo               servo_5;
     Servo               servo_6;
     Servo               servo_7;
+    Offboard_Camera     offboard_camera;
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
@@ -375,6 +377,17 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.servo_config[5] = servo_default_config_esc();
     conf.servo_config[6] = servo_default_config_esc();
     conf.servo_config[7] = servo_default_config_esc();
+
+
+    // -------------------------------------------------------------------------
+    // Offboard camera config
+    // -------------------------------------------------------------------------
+    conf.offboard_camera_config                                         = {};
+    conf.offboard_camera_config.camera_id                               = 1;
+    conf.offboard_camera_config.initial_camera_state                    = false;
+    conf.offboard_camera_config.allowable_horizontal_tag_offset_sqr     = 1.0f;
+    conf.offboard_camera_config.max_acc_drone_height_from_camera_mm     = 15000.0f;
+    conf.offboard_camera_config.tag_search_timeout_us                   = 60000000.0f;
 
     return conf;
 }
