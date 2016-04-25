@@ -97,6 +97,16 @@ typedef struct
 bool ahrs_init(ahrs_t* ahrs);
 
 
+/**
+ * \brief   Returns an initialized ahrs_t
+ *
+ * \detail  Used to initialize ahrs in initalizer list
+ *
+ * \return  Initialized ahrs_t
+ */
+ahrs_t ahrs_initialized(void);
+
+
 #ifdef __cplusplus
 }
 #endif

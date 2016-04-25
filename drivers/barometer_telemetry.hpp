@@ -54,7 +54,7 @@
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void barometer_telemetry_send(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void barometer_telemetry_send(const Barometer* barometer, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif /* BAROMETER_TELEMETRY_HPP_ */

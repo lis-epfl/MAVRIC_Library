@@ -52,7 +52,6 @@ extern "C"
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
-
 /**
  * \brief                   Computes the relative position and distance to the given way point
  *
@@ -64,20 +63,6 @@ extern "C"
  */
 static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_pos[], const float local_pos[3]);
 
-/**
- * \brief                   Sets the Robot speed to reach waypoint
- *
- * \param   rel_pos         Relative position of the waypoint
- * \param   navigation  The structure of navigation data
- */
-static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation);
-
-/**
- * \brief                       Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
- *
- * \param   navigation          The navigation structure
- */
-static void navigation_run(navigation_t* navigation);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -97,7 +82,7 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
 }
 
 
-static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation)
+void Navigation::set_speed_command(float rel_pos[])
 {
     float  norm_rel_dist;
     float v_desired = 0.0f;
@@ -105,12 +90,12 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
     float dir_desired_sg[3];
     float rel_heading;
 
-    mav_mode_t mode = navigation->state->mav_mode;
+    mav_mode_t mode = state.mav_mode();
 
-    norm_rel_dist = sqrt(navigation->dist2wp_sqr);
+    norm_rel_dist = sqrt(dist2wp_sqr);
 
     // calculate dir_desired in local frame
-    aero_attitude_t attitude_yaw = coord_conventions_quat_to_aero(*navigation->qe);
+    aero_attitude_t attitude_yaw = coord_conventions_quat_to_aero(qe);
     attitude_yaw.rpy[0] = 0.0f;
     attitude_yaw.rpy[1] = 0.0f;
     attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
@@ -129,7 +114,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
     dir_desired_sg[Y] /= norm_rel_dist;
     dir_desired_sg[Z] /= norm_rel_dist;
 
-    if ((mav_modes_is_auto(mode) && ((navigation->state->nav_plan_active && (navigation->internal_state == NAV_NAVIGATING)) || (navigation->internal_state == NAV_STOP_THERE))) || ((navigation->state->mav_state == MAV_STATE_CRITICAL) && (navigation->critical_behavior == FLY_TO_HOME_WP)))
+    if ((mav_modes_is_auto(mode) && ((state.nav_plan_active && (internal_state_ == NAV_NAVIGATING)) || (internal_state_ == NAV_STOP_THERE))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
     {
 
         if (((maths_f_abs(rel_pos[X]) <= 1.0f) && (maths_f_abs(rel_pos[Y]) <= 1.0f)) || ((maths_f_abs(rel_pos[X]) <= 5.0f) && (maths_f_abs(rel_pos[Y]) <= 5.0f) && (maths_f_abs(rel_pos[Z]) >= 3.0f)))
@@ -138,22 +123,22 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
         }
         else
         {
-            rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y], rel_pos[X]) - navigation->position_estimation->local_position.heading);
+            rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y], rel_pos[X]) - position_estimation.local_position.heading);
         }
 
-        navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
-        v_desired = pid_controller_update_dt(&navigation->wpt_nav_controller, norm_rel_dist, navigation->dt);
+        wpt_nav_controller.clip_max = cruise_speed;
+        v_desired = pid_controller_update_dt(&wpt_nav_controller, norm_rel_dist, dt);
     }
     else
     {
         rel_heading = 0.0f;
-        navigation->hovering_controller.clip_max = navigation->cruise_speed;
-        v_desired = pid_controller_update_dt(&navigation->hovering_controller, norm_rel_dist, navigation->dt);
+        hovering_controller.clip_max = cruise_speed;
+        v_desired = pid_controller_update_dt(&hovering_controller, norm_rel_dist, dt);
     }
 
-    if (v_desired *  maths_f_abs(dir_desired_sg[Z]) > navigation->max_climb_rate)
+    if (v_desired *  maths_f_abs(dir_desired_sg[Z]) > max_climb_rate)
     {
-        v_desired = navigation->max_climb_rate / maths_f_abs(dir_desired_sg[Z]);
+        v_desired = max_climb_rate / maths_f_abs(dir_desired_sg[Z]);
     }
 
 
@@ -162,9 +147,9 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
     dir_desired_sg[Y] *= v_desired;
     dir_desired_sg[Z] *= v_desired;
 
-    // navigation->loop_count++;
-    // navigation->loop_count = navigation->loop_count % 50;
-    // if (navigation->loop_count == 0)
+    // loop_count++;
+    // loop_count = loop_count % 50;
+    // if (loop_count == 0)
     // {
     //  // print_util_dbg_print("Desired_vel_sg(x100): (");
     //  // print_util_dbg_print_num(dir_desired_sg[X] * 100,10);
@@ -175,121 +160,117 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
     //  print_util_dbg_print_num(rel_heading,10);
     //  print_util_dbg_print("\r\n");
     //  print_util_dbg_print("nav state: ");
-    //  print_util_dbg_print_num(navigation->internal_state,10);
+    //  print_util_dbg_print_num(internal_state_,10);
     //  print_util_dbg_print("\r\n");
     //  // print_util_dbg_print("Actual_vel_bf(x100): (");
-    //  // print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
-    //  // print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
-    //  // print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
+    //  // print_util_dbg_print_num(position_estimation.vel_bf[X] * 100,10);
+    //  // print_util_dbg_print_num(position_estimation.vel_bf[Y] * 100,10);
+    //  // print_util_dbg_print_num(position_estimation.vel_bf[Z] * 100,10);
     //  // print_util_dbg_print("). \r\n");
     //  // print_util_dbg_print("Actual_pos(x100): (");
-    //  // print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
-    //  // print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
-    //  // print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
+    //  // print_util_dbg_print_num(position_estimation.local_position.pos[X] * 100,10);
+    //  // print_util_dbg_print_num(position_estimation.local_position.pos[Y] * 100,10);
+    //  // print_util_dbg_print_num(position_estimation.local_position.pos[Z] * 100,10);
     //  // print_util_dbg_print("). \r\n");
     // }
 
-    navigation->controls_nav->tvel[X] = dir_desired_sg[X];
-    navigation->controls_nav->tvel[Y] = dir_desired_sg[Y];
-    navigation->controls_nav->tvel[Z] = dir_desired_sg[Z];
-    navigation->controls_nav->rpy[YAW] = navigation->kp_yaw * rel_heading;
+    controls_nav.tvel[X] = dir_desired_sg[X];
+    controls_nav.tvel[Y] = dir_desired_sg[Y];
+    controls_nav.tvel[Z] = dir_desired_sg[Z];
+    controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 
-    if ((navigation->internal_state == NAV_LANDING) && (navigation->auto_landing_behavior == DESCENT_TO_GND))
+    if ((internal_state_ == NAV_LANDING) && (auto_landing_behavior == Navigation::DESCENT_TO_GND))
     {
         // Constant velocity to the ground
-        navigation->controls_nav->tvel[Z] = 0.3f;
+        controls_nav.tvel[Z] = 0.3f;
     }
 }
 
-static void navigation_run(navigation_t* navigation)
+void Navigation::run()
 {
     float rel_pos[3];
 
     // Control in translational speed of the platform
-    navigation->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.pos,
+    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(goal.pos,
                               rel_pos,
-                              navigation->position_estimation->local_position.pos);
-    navigation_set_speed_command(rel_pos, navigation);
+                              position_estimation.local_position.pos);
+    set_speed_command(rel_pos);
 
-    navigation->controls_nav->theading = navigation->goal.heading;
+    controls_nav.theading = goal.heading;
 }
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_conf_t nav_config, control_command_t* controls_nav, const quat_t* qe, const position_estimation_t* position_estimation, State* state, mavlink_communication_t* mavlink_communication)
+Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const Position_estimation& position_estimation, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config) :
+    qe(qe),
+    controls_nav(controls_nav),
+    position_estimation(position_estimation),
+    state(state),
+    mavlink_stream(mavlink_stream)
 {
-    bool init_success = true;
-
-    //navigation pointer init
-    navigation->controls_nav = controls_nav;
-    navigation->qe = qe;
-    navigation->position_estimation = position_estimation;
-    navigation->state = state;
-    navigation->mavlink_stream = &mavlink_communication->mavlink_stream;
-
     //navigation controller init
-    navigation->controls_nav->rpy[ROLL] = 0.0f;
-    navigation->controls_nav->rpy[PITCH] = 0.0f;
-    navigation->controls_nav->rpy[YAW] = 0.0f;
-    navigation->controls_nav->tvel[X] = 0.0f;
-    navigation->controls_nav->tvel[Y] = 0.0f;
-    navigation->controls_nav->tvel[Z] = 0.0f;
-    navigation->controls_nav->theading = 0.0f;
-    navigation->controls_nav->thrust = -1.0f;
-    navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
-    navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
+    controls_nav.rpy[ROLL] = 0.0f;
+    controls_nav.rpy[PITCH] = 0.0f;
+    controls_nav.rpy[YAW] = 0.0f;
+    controls_nav.tvel[X] = 0.0f;
+    controls_nav.tvel[Y] = 0.0f;
+    controls_nav.tvel[Z] = 0.0f;
+    controls_nav.theading = 0.0f;
+    controls_nav.thrust = -1.0f;
+    controls_nav.control_mode = VELOCITY_COMMAND_MODE;
+    controls_nav.yaw_mode = YAW_ABSOLUTE;
 
-    navigation->goal.pos[X] = 0.0f;
-    navigation->goal.pos[Y] = 0.0f;
-    navigation->goal.pos[Z] = 0.0f;
+    goal.pos[X] = 0.0f;
+    goal.pos[Y] = 0.0f;
+    goal.pos[Z] = 0.0f;
+    goal.heading = 0.0f;
 
-    navigation->last_update = 0;
+    last_update = 0;
 
-    navigation->dist2wp_sqr = 0.0f;
+    dist2wp_sqr = 0.0f;
 
-    navigation->wpt_nav_controller = nav_config.wpt_nav_controller;
-    navigation->hovering_controller = nav_config.hovering_controller;
+    wpt_nav_controller = nav_config.wpt_nav_controller;
+    hovering_controller = nav_config.hovering_controller;
 
-    navigation->dist2vel_gain = nav_config.dist2vel_gain;
-    navigation->cruise_speed = nav_config.cruise_speed;
-    navigation->max_climb_rate = nav_config.max_climb_rate;
+    dist2vel_gain = nav_config.dist2vel_gain;
+    cruise_speed = nav_config.cruise_speed;
+    max_climb_rate = nav_config.max_climb_rate;
 
-    navigation->soft_zone_size = nav_config.soft_zone_size;
+    soft_zone_size = nav_config.soft_zone_size;
 
-    navigation->alt_lpf = nav_config.alt_lpf;
-    navigation->LPF_gain = nav_config.LPF_gain;
-    navigation->kp_yaw = nav_config.kp_yaw;
+    alt_lpf = nav_config.alt_lpf;
+    LPF_gain = nav_config.LPF_gain;
+    kp_yaw = nav_config.kp_yaw;
 
-    navigation->loop_count = 0;
+    loop_count = 0;
 
-    navigation->dt = 0.004;
-
-    return init_success;
+    dt = 0.004;
 }
 
-bool navigation_update(navigation_t* navigation)
+
+bool Navigation::update(Navigation* navigation)
 {
-    mav_mode_t mode_local = navigation->state->mav_mode;
+    mav_mode_t mode_local = navigation->state.mav_mode();
 
     uint32_t t = time_keeper_get_us();
 
     navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
     navigation->last_update = t;
 
-    switch (navigation->state->mav_state)
+    switch (navigation->state.mav_state_)
     {
         case MAV_STATE_STANDBY:
-            navigation->controls_nav->tvel[X] = 0.0f;
-            navigation->controls_nav->tvel[Y] = 0.0f;
-            navigation->controls_nav->tvel[Z] = 0.0f;
+            navigation->controls_nav.tvel[X] = 0.0f;
+            navigation->controls_nav.tvel[Y] = 0.0f;
+            navigation->controls_nav.tvel[Z] = 0.0f;
             break;
 
         case MAV_STATE_ACTIVE:
-            if (navigation->internal_state > NAV_ON_GND)
+            if (navigation->internal_state_ > NAV_ON_GND)
             {
-                navigation_run(navigation);
+                navigation->run();
             }
             break;
 
@@ -297,15 +278,15 @@ bool navigation_update(navigation_t* navigation)
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
             if (mav_modes_is_stabilise(mode_local))
             {
-                if ((navigation->internal_state == NAV_NAVIGATING) || (navigation->internal_state == NAV_LANDING))
+                if ((navigation->internal_state_ == NAV_NAVIGATING) || (navigation->internal_state_ == NAV_LANDING))
                 {
 
-                    navigation_run(navigation);
+                    navigation->run();
 
-                    if (navigation->state->out_of_fence_2)
+                    if (navigation->state.out_of_fence_2)
                     {
                         // Constant velocity to the ground
-                        navigation->controls_nav->tvel[Z] = 1.0f;
+                        navigation->controls_nav.tvel[Z] = 1.0f;
                     }
 
                 }
@@ -313,11 +294,13 @@ bool navigation_update(navigation_t* navigation)
             break;
 
         default:
-            navigation->controls_nav->tvel[X] = 0.0f;
-            navigation->controls_nav->tvel[Y] = 0.0f;
-            navigation->controls_nav->tvel[Z] = 0.0f;
+            navigation->controls_nav.tvel[X] = 0.0f;
+            navigation->controls_nav.tvel[Y] = 0.0f;
+            navigation->controls_nav.tvel[Z] = 0.0f;
             break;
     }
 
     return true;
 }
+
+

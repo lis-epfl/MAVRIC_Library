@@ -56,7 +56,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool joystick_telemetry_init(joystick_t* joystick, mavlink_message_handler_t* message_handler);
+bool joystick_telemetry_init(joystick_t* joystick, Mavlink_message_handler* message_handler);
 
 /**
  * \brief   Parse received MAVLink message in structure
@@ -65,7 +65,7 @@ bool joystick_telemetry_init(joystick_t* joystick, mavlink_message_handler_t* me
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif /* JOYSTICK_TELEMETRY_H_ */

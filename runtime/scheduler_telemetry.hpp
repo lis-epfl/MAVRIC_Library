@@ -45,11 +45,8 @@
 #define SCHEDULER_TELEMETRY_H_
 
 #include "communication/mavlink_stream.hpp"
+#include "runtime/scheduler.hpp"
 
-extern "C"
-{
-#include "runtime/scheduler.h"
-}
 
 /**
  * \brief   Function to send real time statistics
@@ -58,6 +55,6 @@ extern "C"
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* SCHEDULER_TELEMETRY_H_ */

@@ -95,7 +95,7 @@ public:
 
 private:
     Serial&             uart_;               ///< Serial device
-    mavlink_stream_t    mavlink_stream_;     ///< Mavlink interface using streams
+    Mavlink_stream      mavlink_stream_;     ///< Mavlink interface using streams
 
     flow_px4_data_t of_tmp_;        ///< Temporary optic flow vectors
     flow_px4_data_t of_loc_tmp_;    ///< Temporary location of optic flow vectors

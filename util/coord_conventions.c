@@ -115,3 +115,11 @@ float coord_conventions_get_yaw(quat_t qe)
 {
     return  atan2(2 * (qe.s * qe.v[2] + qe.v[0] * qe.v[1]) , (qe.s * qe.s + qe.v[0] * qe.v[0] - qe.v[1] * qe.v[1] - qe.v[2] * qe.v[2]));
 }
+
+/* THIS IS EVIL */
+void coord_conventions_change_origin(local_position_t* position, global_position_t origin)
+{
+    global_position_t global_position = coord_conventions_local_to_global_position(*position);
+    *position = coord_conventions_global_to_local_position(global_position, origin);
+
+}

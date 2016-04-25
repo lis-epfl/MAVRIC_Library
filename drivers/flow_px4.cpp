@@ -53,156 +53,143 @@ extern "C"
 //------------------------------------------------------------------------------
 
 Flow_px4::Flow_px4(Serial& uart):
-  uart_(uart)
+  uart_(uart),
+  mavlink_stream_(uart_, Mavlink_stream::default_config())
 {
     // Init members
     last_update_us  = time_keeper_get_us();
     handshake_state = FLOW_NO_HANDSHAKE;
     of_count        = 0;
-
-    // Init MAVLink stream
-    mavlink_stream_conf_t mavlink_stream_conf = {};
-    mavlink_stream_conf.sysid   = 1;
-    mavlink_stream_conf.compid  = 50;
-    mavlink_stream_conf.debug   = true;
-    mavlink_stream_init( &mavlink_stream_,
-                         &mavlink_stream_conf,
-                         &uart_);
 }
 
 
 bool Flow_px4::update(void)
 {
+    Mavlink_stream::msg_received_t* rec = NULL;
+
     // Receive incoming bytes
-    while (mavlink_stream_receive(&mavlink_stream_))
+    while (mavlink_stream_.receive(rec))
     {
-        // Check if a new message is here
-        if (mavlink_stream_.msg_available == true)
+        // Get pointer to new message
+        mavlink_message_t* msg = &rec->msg;
+
+        // declare messages
+        mavlink_optical_flow_t          optical_flow_msg;
+        mavlink_data_transmission_handshake_t   handshake_msg;
+        mavlink_encapsulated_data_t     data_msg;
+
+        switch (msg->msgid)
         {
-            // Get pointer to new message
-            mavlink_message_t* msg = &mavlink_stream_.rec.msg;
+            case MAVLINK_MSG_ID_OPTICAL_FLOW:
+                // Decode message
+                mavlink_msg_optical_flow_decode(msg, &optical_flow_msg);
+                break;
 
-            // Indicate that the message was handled
-            mavlink_stream_.msg_available = false;
+            case MAVLINK_MSG_ID_DATA_TRANSMISSION_HANDSHAKE:
+                // Decode message
+                mavlink_msg_data_transmission_handshake_decode(msg, &handshake_msg);
 
-            // declare messages
-            mavlink_optical_flow_t          optical_flow_msg;
-            mavlink_data_transmission_handshake_t   handshake_msg;
-            mavlink_encapsulated_data_t     data_msg;
+                // Get type of handshake
+                switch (handshake_msg.jpg_quality)
+                {
+                    case 0:
+                        handshake_state = FLOW_HANDSHAKE_DATA;
+                        break;
 
-            switch (msg->msgid)
-            {
-                case MAVLINK_MSG_ID_OPTICAL_FLOW:
-                    // Decode message
-                    mavlink_msg_optical_flow_decode(msg, &optical_flow_msg);
-                    break;
+                    case 255:
+                        handshake_state = FLOW_HANDSHAKE_METADATA;
+                        break;
 
-                case MAVLINK_MSG_ID_DATA_TRANSMISSION_HANDSHAKE:
-                    // Decode message
-                    mavlink_msg_data_transmission_handshake_decode(msg, &handshake_msg);
+                    default:
+                        handshake_state = FLOW_HANDSHAKE_DATA;
+                        break;
+                }
 
-                    // Get type of handshake
-                    switch (handshake_msg.jpg_quality)
-                    {
-                        case 0:
-                            handshake_state = FLOW_HANDSHAKE_DATA;
-                            break;
+                // Get number of of vectors
+                of_count        = handshake_msg.width;
+                if (of_count > 125)
+                {
+                    of_count = 125;
+                }
 
-                        case 255:
-                            handshake_state = FLOW_HANDSHAKE_METADATA;
-                            break;
+                // Get total payload size
+                packet_count_       = handshake_msg.packets;
+                byte_count_       = handshake_msg.size;
+                if (byte_count_ > 500)
+                {
+                    byte_count_ = 500;
+                }
+                break;
 
-                        default:
-                            handshake_state = FLOW_HANDSHAKE_DATA;
-                            break;
-                    }
+            case MAVLINK_MSG_ID_ENCAPSULATED_DATA:
+                // Decode message
+                mavlink_msg_encapsulated_data_decode(msg, &data_msg);
 
-                    // Get number of of vectors
-                    of_count        = handshake_msg.width;
-                    if (of_count > 125)
-                    {
-                        of_count = 125;
-                    }
-
-                    // Get total payload size
-                    packet_count_       = handshake_msg.packets;
-                    byte_count_       = handshake_msg.size;
-                    if (byte_count_ > 500)
-                    {
-                        byte_count_ = 500;
-                    }
-                    break;
-
-                case MAVLINK_MSG_ID_ENCAPSULATED_DATA:
-                    // Decode message
-                    mavlink_msg_encapsulated_data_decode(msg, &data_msg);
-
-                    // Handle according to hanshake state
-                    switch (handshake_state)
-                    {
-                        case FLOW_HANDSHAKE_METADATA:
-                            if (data_msg.seqnr < packet_count_ - 1)
+                // Handle according to hanshake state
+                switch (handshake_state)
+                {
+                    case FLOW_HANDSHAKE_METADATA:
+                        if (data_msg.seqnr < packet_count_ - 1)
+                        {
+                            // not last packet
+                            for (uint32_t i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
                             {
-                                // not last packet
-                                for (uint32_t i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
-                                {
-                                    of_loc_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
-                                }
+                                of_loc_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
                             }
-                            else if (data_msg.seqnr < packet_count_)
+                        }
+                        else if (data_msg.seqnr < packet_count_)
+                        {
+                            // last packet
+                            for (uint32_t i = 0; i < byte_count_; ++i)
                             {
-                                // last packet
-                                for (uint32_t i = 0; i < byte_count_; ++i)
-                                {
-                                    of_loc_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
-                                }
-
-                                // swap bytes
-                                for (uint32_t i = 0; i < of_count; ++i)
-                                {
-                                    of_loc.x[i] =  endian_rev16s(of_loc_tmp_.x[i]);
-                                    of_loc.y[i] = endian_rev16s(of_loc_tmp_.y[i]);
-                                }
-
+                                of_loc_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
                             }
-                            break;
 
-                        default:
-                            if (data_msg.seqnr < (packet_count_ - 1))
+                            // swap bytes
+                            for (uint32_t i = 0; i < of_count; ++i)
                             {
-                                // not last packet
-                                for (uint32_t i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
-                                {
-                                    of_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
-                                }
+                                of_loc.x[i] =  endian_rev16s(of_loc_tmp_.x[i]);
+                                of_loc.y[i] = endian_rev16s(of_loc_tmp_.y[i]);
                             }
-                            else if (data_msg.seqnr == (packet_count_ - 1))
+
+                        }
+                        break;
+
+                    default:
+                        if (data_msg.seqnr < (packet_count_ - 1))
+                        {
+                            // not last packet
+                            for (uint32_t i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
                             {
-                                // last packet
-                                for (uint32_t i = 0; i < byte_count_ % MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
-                                {
-                                    of_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
-                                }
-
-                                // swap bytes and filter for high frequency noise
-                                for (int i = 0; i < of_count; ++i)
-                                {
-                                    of.x[i] = filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.x[i])) +
-                                              (1.0f - filter_constant) * of.x[i];
-                                    of.y[i] = filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.y[i])) +
-                                              (1.0f - filter_constant) * of.y[i];
-                                }
-
-                                // Update time
-                                last_update_us  = time_keeper_get_us();
+                                of_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
                             }
-                            break;
-                    }
-                    break;
+                        }
+                        else if (data_msg.seqnr == (packet_count_ - 1))
+                        {
+                            // last packet
+                            for (uint32_t i = 0; i < byte_count_ % MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
+                            {
+                                of_tmp_.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+                            }
 
-                default:
-                    break;
-            }
+                            // swap bytes and filter for high frequency noise
+                            for (int i = 0; i < of_count; ++i)
+                            {
+                                of.x[i] = filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.x[i])) +
+                                          (1.0f - filter_constant) * of.x[i];
+                                of.y[i] = filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.y[i])) +
+                                          (1.0f - filter_constant) * of.y[i];
+                            }
+
+                            // Update time
+                            last_update_us  = time_keeper_get_us();
+                        }
+                        break;
+                }
+                break;
+
+            default:
+                break;
         }
     }
 
