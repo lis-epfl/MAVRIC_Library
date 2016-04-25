@@ -49,6 +49,7 @@ extern "C"
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
 #include "util/constants.h"
+#include "util/maths.h"
 }
 
 
@@ -66,11 +67,11 @@ Offboard_Camera::Offboard_Camera(int camera_id, bool is_camera_running):
     camera_res[1] = 960;
 
     // Set camera rotation
-    camera_rotation = 1.5708;
+    camera_rotation = 90.0f * PI / 180;
 
     // Set camera field of view
-    camera_fov[0] = 0.9337512;
-    camera_fov[1] = 0.72274086;
+    camera_fov[0] = 53.50f * PI / 180;
+    camera_fov[1] = 41.41f * PI / 180;
 }
 
 
