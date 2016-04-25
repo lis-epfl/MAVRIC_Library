@@ -4,6 +4,7 @@ var searchData=
   ['last_5fheartbeat_5fmsg',['last_heartbeat_msg',['../structState_1_1conf__t.html#a8d681b5bdb91acefeef4fb64f2be46a4',1,'State::conf_t::last_heartbeat_msg()'],['../classState.html#af0385b450d3af94a99270134bbd442f4',1,'State::last_heartbeat_msg()']]],
   ['last_5fsatellite_5fupdate',['last_satellite_update',['../structremote__t.html#a5c2ef89ddf281d357248f03b216fea02',1,'remote_t']]],
   ['last_5fupdate',['last_update',['../structpid__controller__t.html#a7fe3e6bae7b9ef2fd628504a9b51aa8a',1,'pid_controller_t::last_update()'],['../structahrs__t.html#aa122262b513cbfd29de7a90e9a8175ca',1,'ahrs_t::last_update()']]],
+  ['last_5fupdate_5fus',['last_update_us',['../classFlow.html#acc04aa9b0b912198c001f62ef49ae41b',1,'Flow']]],
   ['last_5fupdate_5fus_5f',['last_update_us_',['../classBarometer.html#a63c4bcc303bc908beafd88c443012985',1,'Barometer']]],
   ['latitude',['latitude',['../structubx__nav__pos__llh__t.html#a7d1ba587900afd53e25a0cf7cf17c8c0',1,'ubx_nav_pos_llh_t::latitude()'],['../structgps__t.html#af54fe11cbde7878a0727616f24dd8fc7',1,'gps_t::latitude()'],['../structglobal__position__t.html#abb11cc9a6ed7de72abdfc4eaedfb5b69',1,'global_position_t::latitude()']]],
   ['led',['led',['../classCentral__data.html#ad8249c334277847c69106384dc3f00bd',1,'Central_data']]],

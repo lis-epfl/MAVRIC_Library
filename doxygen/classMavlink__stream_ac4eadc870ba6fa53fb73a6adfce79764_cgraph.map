@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSerial.html#a7defcc73aba6631c903b58641362aa5f" title="Test if there are bytes available to read." alt="" coords="219,5,331,35"/>
+<area shape="rect" id="node5" href="$classSerial.html#a863184953fb46582053208c076e75656" title="Read bytes from the serial line." alt="" coords="231,59,319,88"/>
+</map>

@@ -33,7 +33,7 @@
 <area shape="rect" id="node53" href="$classData__logging.html" title="The class of the log of the data." alt="" coords="2227,1328,2384,1587"/>
 <area shape="rect" id="node55" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="4855,899,5001,1071"/>
 <area shape="rect" id="node122" href="$structservos__telemetry__t.html" title="The servo telemetry definition." alt="" coords="4764,1415,4897,1500"/>
-<area shape="rect" id="node60" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="4128,435,4261,607"/>
+<area shape="rect" id="node60" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="4128,427,4261,616"/>
 <area shape="rect" id="node62" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="3064,435,3200,607"/>
 <area shape="rect" id="node66" href="$classGps.html" title="Abstract class for GPS." alt="" coords="2917,1328,3128,1587"/>
 <area shape="rect" id="node71" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="3609,856,3863,1115"/>

@@ -4,6 +4,7 @@ var searchData=
   ['magnetometer_5fsim',['Magnetometer_sim',['../classMagnetometer__sim.html',1,'']]],
   ['manual_5fcontrol',['Manual_control',['../classManual__control.html',1,'']]],
   ['mat',['Mat',['../classMat.html',1,'']]],
+  ['mat_3c_202_2c_203_20_3e',['Mat< 2, 3 >',['../classMat.html',1,'']]],
   ['mat_3c_203_2c_201_2c_20float_20_3e',['Mat< 3, 1, float >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_201_20_3e',['Mat< m, 1 >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_20m_20_3e',['Mat< m, m >',['../classMat.html',1,'']]],

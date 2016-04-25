@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="145,5,247,35"/>
+<area shape="rect" id="node3" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="169,5,271,35"/>
+<area shape="rect" id="node5" href="$classMavlink__stream.html#a5ecf1738030684f0879f7846057d5a9e" title="Flushing MAVLink stream." alt="" coords="145,59,295,88"/>
 </map>

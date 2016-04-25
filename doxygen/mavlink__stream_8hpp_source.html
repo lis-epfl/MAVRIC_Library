@@ -163,29 +163,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00090"></a><a class="code" href="structMavlink__stream_1_1conf__t.html#acf2c7a3d64b1a7e58b8bfc1e5256fbed">00090</a>         <span class="keywordtype">bool</span>     <a class="code" href="structMavlink__stream_1_1conf__t.html#acf2c7a3d64b1a7e58b8bfc1e5256fbed" title="Debug flag.">debug</a>;                 
 <a name="l00091"></a>00091     };
 <a name="l00092"></a>00092 
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>(<a class="code" href="classSerial.html">Serial</a>&amp; serial, <span class="keyword">const</span> <a class="code" href="structMavlink__stream_1_1conf__t.html" title="Configuration structure for the module MAVLink stream.">conf_t</a>&amp; config);
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096 
-<a name="l00104"></a>00104     <span class="keywordtype">bool</span> <a class="code" href="classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream.">send</a>(mavlink_message_t* msg) <span class="keyword">const</span>;
-<a name="l00105"></a>00105 
-<a name="l00113"></a>00113     <span class="keywordtype">bool</span> <a class="code" href="classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764" title="Mavlink parsing of message; the message is not available in this module afterwards.">receive</a>(<a class="code" href="structMavlink__stream_1_1msg__received__t.html" title="Mavlink structures for the receive message and its status.">msg_received_t</a>* rec);
-<a name="l00114"></a>00114 
-<a name="l00118"></a>00118     <span class="keywordtype">void</span> <a class="code" href="classMavlink__stream.html#a5ecf1738030684f0879f7846057d5a9e" title="Flushing MAVLink stream.">flush</a>();
-<a name="l00119"></a>00119 
-<a name="l00125"></a><a class="code" href="classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87">00125</a>     <span class="keyword">inline</span> uint32_t <a class="code" href="classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87" title="Return sysid of this stream.">sysid</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> sysid_;};    <span class="comment">// inline for higher exec speed</span>
+<a name="l00096"></a>00096     <span class="keyword">static</span> <a class="code" href="structMavlink__stream_1_1conf__t.html" title="Configuration structure for the module MAVLink stream.">conf_t</a> <a class="code" href="classMavlink__stream.html#ad88987a667986e20cbf7b440f94f9f31" title="Default config of MAVLink stream.">default_config</a>(<span class="keywordtype">void</span>);
+<a name="l00097"></a>00097 
+<a name="l00101"></a>00101     <a class="code" href="classMavlink__stream.html#a1affe5d609ea1f6ffaeee19905090b9d" title="Constructor.">Mavlink_stream</a>(<a class="code" href="classSerial.html">Serial</a>&amp; serial, <span class="keyword">const</span> <a class="code" href="structMavlink__stream_1_1conf__t.html" title="Configuration structure for the module MAVLink stream.">conf_t</a>&amp; config);
+<a name="l00102"></a>00102 
+<a name="l00103"></a>00103 
+<a name="l00111"></a>00111     <span class="keywordtype">bool</span> <a class="code" href="classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream.">send</a>(mavlink_message_t* msg) <span class="keyword">const</span>;
+<a name="l00112"></a>00112 
+<a name="l00120"></a>00120     <span class="keywordtype">bool</span> <a class="code" href="classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764" title="Mavlink parsing of message; the message is not available in this module afterwards.">receive</a>(<a class="code" href="structMavlink__stream_1_1msg__received__t.html" title="Mavlink structures for the receive message and its status.">msg_received_t</a>* rec);
+<a name="l00121"></a>00121 
+<a name="l00125"></a>00125     <span class="keywordtype">void</span> <a class="code" href="classMavlink__stream.html#a5ecf1738030684f0879f7846057d5a9e" title="Flushing MAVLink stream.">flush</a>();
 <a name="l00126"></a>00126 
-<a name="l00132"></a><a class="code" href="classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441">00132</a>     <span class="keyword">inline</span> uint32_t <a class="code" href="classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream.">compid</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> compid_;};    <span class="comment">// inline for higher exec speed</span>
+<a name="l00132"></a><a class="code" href="classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87">00132</a>     <span class="keyword">inline</span> uint32_t <a class="code" href="classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87" title="Return sysid of this stream.">sysid</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> sysid_;};    <span class="comment">// inline for higher exec speed</span>
 <a name="l00133"></a>00133 
-<a name="l00134"></a>00134 <span class="keyword">private</span>:
-<a name="l00135"></a>00135     uint32_t sysid_;             
-<a name="l00136"></a>00136     uint32_t compid_;            
-<a name="l00137"></a>00137     <a class="code" href="classSerial.html">Serial</a>&amp; serial_;
-<a name="l00138"></a>00138     uint8_t mavlink_channel_;    
-<a name="l00139"></a>00139     <span class="keywordtype">bool</span> debug_;                  
-<a name="l00140"></a>00140 };
-<a name="l00141"></a>00141 
-<a name="l00142"></a>00142 <span class="preprocessor">#endif </span><span class="comment">/* MAVLINK_STREAM_H */</span>
+<a name="l00139"></a><a class="code" href="classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441">00139</a>     <span class="keyword">inline</span> uint32_t <a class="code" href="classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream.">compid</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> compid_;};    <span class="comment">// inline for higher exec speed</span>
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141 <span class="keyword">private</span>:
+<a name="l00142"></a>00142     uint32_t sysid_;             
+<a name="l00143"></a>00143     uint32_t compid_;            
+<a name="l00144"></a>00144     <a class="code" href="classSerial.html">Serial</a>&amp; serial_;
+<a name="l00145"></a>00145     uint8_t mavlink_channel_;    
+<a name="l00146"></a>00146     <span class="keywordtype">bool</span> debug_;                  
+<a name="l00147"></a>00147 };
+<a name="l00148"></a>00148 
+<a name="l00149"></a>00149 <span class="preprocessor">#endif </span><span class="comment">/* MAVLINK_STREAM_H */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -204,7 +205,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 25 2016 13:22:56 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 14:48:12 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,3 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classSerial.html#a33d8e661405102e5e5a22e435731d5ea" title="write newline character to stream (&#39; &#39;)" alt="" coords="144,5,251,35"/>
+<area shape="rect" id="node3" href="$classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream." alt="" coords="145,5,295,35"/>
+<area shape="rect" id="node9" href="$classSerial.html#a33d8e661405102e5e5a22e435731d5ea" title="write newline character to stream (&#39; &#39;)" alt="" coords="167,59,273,88"/>
+<area shape="rect" id="node5" href="$classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="344,5,571,35"/>
+<area shape="rect" id="node7" href="$classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="620,5,828,35"/>
 </map>

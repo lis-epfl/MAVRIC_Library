@@ -128,8 +128,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="structOnboard__parameters_1_1conf__t.html">Onboard_parameters::conf_t</a></td><td class="indexvalue">Configuration for the module onboard parameters </td></tr>
   <tr><td class="indexkey"><a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a></td><td class="indexvalue"><a class="el" href="classScheduler.html" title="Scheduler.">Scheduler</a> configuration </td></tr>
   <tr><td class="indexkey"><a class="el" href="structCentral__data_1_1conf__t.html">Central_data::conf_t</a></td><td class="indexvalue">Configuration of the module central data module </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structNavigation_1_1conf__t.html">Navigation::conf_t</a></td><td class="indexvalue">The navigation configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structPosition__estimation_1_1conf__t.html">Position_estimation::conf_t</a></td><td class="indexvalue">The position estimator structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structNavigation_1_1conf__t.html">Navigation::conf_t</a></td><td class="indexvalue">The navigation configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structManual__control_1_1conf__t.html">Manual_control::conf_t</a></td><td class="indexvalue">Configuration for manual control </td></tr>
   <tr><td class="indexkey"><a class="el" href="structPwm__stm32_1_1config__t.html">Pwm_stm32::config_t</a></td><td class="indexvalue">STM32_PWM configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="classConsole.html">Console&lt; Writeable &gt;</a></td><td class="indexvalue">Class template to write to any write-able module in human-readable format </td></tr>
@@ -161,9 +161,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="classFile__fat__fs.html">File_fat_fs</a></td><td class="indexvalue"><a class="el" href="classFile.html" title="Base class for file objects.">File</a> objects on linux platforms </td></tr>
   <tr><td class="indexkey"><a class="el" href="classFile__flash__avr32.html">File_flash_avr32</a></td><td class="indexvalue"><a class="el" href="classFile.html" title="Base class for file objects.">File</a> objects on linux platforms </td></tr>
   <tr><td class="indexkey"><a class="el" href="classFile__linux.html">File_linux</a></td><td class="indexvalue"><a class="el" href="classFile.html" title="Base class for file objects.">File</a> objects on linux platforms </td></tr>
-  <tr><td class="indexkey"><a class="el" href="classFlow.html">Flow</a></td><td class="indexvalue">Data structure for <a class="el" href="classFlow.html" title="Data structure for Flow.">Flow</a> </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structflow__conf__t.html">flow_conf_t</a></td><td class="indexvalue">Configuration structure for the module <a class="el" href="classFlow.html" title="Data structure for Flow.">Flow</a> module </td></tr>
-  <tr><td class="indexkey"><a class="el" href="unionflow__data__t.html">flow_data_t</a></td><td class="indexvalue">Array of 2-D optic flow vectors </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classFlow.html">Flow</a></td><td class="indexvalue">Interface for Optic <a class="el" href="classFlow.html" title="Interface for Optic Flow sensors.">Flow</a> sensors </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structflow__data__t.html">flow_data_t</a></td><td class="indexvalue">Array of 2-D optic flow vectors </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classFlow__px4.html">Flow_px4</a></td><td class="indexvalue">Driver for PX4Flow </td></tr>
+  <tr><td class="indexkey"><a class="el" href="unionflow__px4__data__t.html">flow_px4_data_t</a></td><td class="indexvalue">Array of 2-D optic flow vectors </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classFlow__sim.html">Flow_sim</a></td><td class="indexvalue">Interface for Optic <a class="el" href="classFlow.html" title="Interface for Optic Flow sensors.">Flow</a> sensors </td></tr>
   <tr><td class="indexkey"><a class="el" href="classGimbal__controller.html">Gimbal_controller</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="structgimbal__controller__conf__t.html">gimbal_controller_conf_t</a></td><td class="indexvalue">Gimbal controller configuration </td></tr>
   <tr><td class="indexkey"><a class="el" href="structglobal__position__t.html">global_position_t</a></td><td class="indexvalue">Global position structure </td></tr>
@@ -366,7 +368,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 25 2016 13:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 14:48:13 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

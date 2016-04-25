@@ -1,3 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classSpektrum__satellite.html#adb6188c9e279d061ea4b524201975c33" title="Takes care of incoming data." alt="" coords="167,5,396,35"/>
+<area shape="rect" id="node3" href="$classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764" title="Mavlink parsing of message; the message is not available in this module afterwards." alt="" coords="200,32,363,61"/>
+<area shape="rect" id="node9" href="$classSpektrum__satellite.html#adb6188c9e279d061ea4b524201975c33" title="Takes care of incoming data." alt="" coords="167,85,396,115"/>
+<area shape="rect" id="node5" href="$classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="447,5,655,35"/>
+<area shape="rect" id="node7" href="$classFlow__px4.html#a04bbe222cd92cae344e75e69b1d6a513" title="Update function." alt="" coords="488,59,613,88"/>
 </map>

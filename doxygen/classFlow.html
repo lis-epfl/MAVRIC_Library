@@ -80,100 +80,56 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">Flow Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="Flow" -->
-<p>Data structure for <a class="el" href="classFlow.html" title="Data structure for Flow.">Flow</a>.  
+<p>Interface for Optic <a class="el" href="classFlow.html" title="Interface for Optic Flow sensors.">Flow</a> sensors.  
  <a href="classFlow.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="flow_8hpp_source.html">flow.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for Flow:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFlow__inherit__graph.png" border="0" usemap="#Flow_inherit__map" alt="Inheritance graph"/></div>
+<map name="Flow_inherit__map" id="Flow_inherit__map">
+<area shape="rect" id="node3" href="classFlow__px4.html" title="Driver for PX4Flow." alt="" coords="5,193,104,295"/><area shape="rect" id="node5" href="classFlow__sim.html" title="Interface for Optic Flow sensors." alt="" coords="128,193,227,295"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for Flow:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFlow__coll__graph.png" border="0" usemap="#Flow_coll__map" alt="Collaboration graph"/></div>
+<map name="Flow_coll__map" id="Flow_coll__map">
+<area shape="rect" id="node2" href="structflow__data__t.html" title="Array of 2&#45;D optic flow vectors." alt="" coords="23,6,111,109"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classFlow-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlow.html#a56277d83754532334c63e5c22d9307f6">Flow</a> (<a class="el" href="classSerial.html">Serial</a> &amp;uart, <a class="el" href="structflow__conf__t.html">flow_conf_t</a> config=flow_default_config())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a56277d83754532334c63e5c22d9307f6"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlow.html#aa36f172da9c8a006f64d67a792cc7e01">update</a> (<a class="el" href="classFlow.html">Flow</a> *flow)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Update function.  <a href="#aa36f172da9c8a006f64d67a792cc7e01"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38890faa8ae83f7609088851c04ddc89"></a><!-- doxytag: member="Flow::update" ref="a38890faa8ae83f7609088851c04ddc89" args="(void)=0" -->
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> (void)=0</td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2e40007cb869003b5879103e435976ac"></a><!-- doxytag: member="Flow::of" ref="a2e40007cb869003b5879103e435976ac" args="" -->
+<a class="el" href="structflow__data__t.html">flow_data_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlow.html#a2e40007cb869003b5879103e435976ac">of</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Optic flow vectors. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7863ea43464518fd30ee304402be0ea7"></a><!-- doxytag: member="Flow::of_count" ref="a7863ea43464518fd30ee304402be0ea7" args="" -->
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlow.html#a7863ea43464518fd30ee304402be0ea7">of_count</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of optic flow vectors. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5f7666054c014a911bd4ca8f694ce987"></a><!-- doxytag: member="Flow::of_loc" ref="a5f7666054c014a911bd4ca8f694ce987" args="" -->
+<a class="el" href="structflow__data__t.html">flow_data_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlow.html#a5f7666054c014a911bd4ca8f694ce987">of_loc</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Location of optic flow vectors. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acc04aa9b0b912198c001f62ef49ae41b"></a><!-- doxytag: member="Flow::last_update_us" ref="acc04aa9b0b912198c001f62ef49ae41b" args="" -->
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlow.html#acc04aa9b0b912198c001f62ef49ae41b">last_update_us</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Last update time in microseconds. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Data structure for <a class="el" href="classFlow.html" title="Data structure for Flow.">Flow</a>. </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a56277d83754532334c63e5c22d9307f6"></a><!-- doxytag: member="Flow::Flow" ref="a56277d83754532334c63e5c22d9307f6" args="(Serial &amp;uart, flow_conf_t config=flow_default_config())" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classFlow.html#a56277d83754532334c63e5c22d9307f6">Flow::Flow</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSerial.html">Serial</a> &amp;&#160;</td>
-          <td class="paramname"><em>uart</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structflow__conf__t.html">flow_conf_t</a>&#160;</td>
-          <td class="paramname"><em>config</em> = <code>flow_default_config()</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Constructor. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">uart</td><td>Pointer to serial peripheral </td></tr>
-    <tr><td class="paramname">config</td><td>configuration of module (containing mavlink_stream config) </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="aa36f172da9c8a006f64d67a792cc7e01"></a><!-- doxytag: member="Flow::update" ref="aa36f172da9c8a006f64d67a792cc7e01" args="(Flow *flow)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classFlow.html#aa36f172da9c8a006f64d67a792cc7e01">Flow::update</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classFlow.html">Flow</a> *&#160;</td>
-          <td class="paramname"><em>flow</em></td><td>)</td>
-          <td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Update function. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classFlow_aa36f172da9c8a006f64d67a792cc7e01_cgraph.png" border="0" usemap="#classFlow_aa36f172da9c8a006f64d67a792cc7e01_cgraph" alt=""/></div>
-<map name="classFlow_aa36f172da9c8a006f64d67a792cc7e01_cgraph" id="classFlow_aa36f172da9c8a006f64d67a792cc7e01_cgraph">
-<area shape="rect" id="node3" href="classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764" title="Mavlink parsing of message; the message is not available in this module afterwards." alt="" coords="153,5,316,35"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<div class="textblock"><p>Interface for Optic <a class="el" href="classFlow.html" title="Interface for Optic Flow sensors.">Flow</a> sensors. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/drivers/<a class="el" href="flow_8hpp_source.html">flow.hpp</a></li>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/drivers/flow.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -193,7 +149,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 25 2016 13:22:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 14:48:13 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

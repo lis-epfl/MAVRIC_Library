@@ -80,7 +80,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Mavlink_stream Class Reference</div>  </div>
 </div><!--header-->
@@ -102,7 +103,8 @@ Classes</h2></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1affe5d609ea1f6ffaeee19905090b9d"></a><!-- doxytag: member="Mavlink_stream::Mavlink_stream" ref="a1affe5d609ea1f6ffaeee19905090b9d" args="(Serial &amp;serial, const conf_t &amp;config)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Mavlink_stream</b> (<a class="el" href="classSerial.html">Serial</a> &amp;serial, const <a class="el" href="structMavlink__stream_1_1conf__t.html">conf_t</a> &amp;config)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__stream.html#a1affe5d609ea1f6ffaeee19905090b9d">Mavlink_stream</a> (<a class="el" href="classSerial.html">Serial</a> &amp;serial, const <a class="el" href="structMavlink__stream_1_1conf__t.html">conf_t</a> &amp;config)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f">send</a> (mavlink_message_t *msg) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Send Mavlink stream.  <a href="#a00524b173f3d900665e1f512cbce083f"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764">receive</a> (<a class="el" href="structMavlink__stream_1_1msg__received__t.html">msg_received_t</a> *rec)</td></tr>
@@ -114,6 +116,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return sysid of this stream.  <a href="#a9c107e822e225e84e619a13328a95a87"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441">compid</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return sysid of this stream.  <a href="#a9f6ba4b8a474acfdf4041343ee7db441"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad88987a667986e20cbf7b440f94f9f31"></a><!-- doxytag: member="Mavlink_stream::default_config" ref="ad88987a667986e20cbf7b440f94f9f31" args="(void)" -->
+static <a class="el" href="structMavlink__stream_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__stream.html#ad88987a667986e20cbf7b440f94f9f31">default_config</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default config of MAVLink stream. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Main structure for the MAVLink stream module. </p>
@@ -171,11 +178,20 @@ Here is the caller graph for this function:</div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Success True if a message was successfully decoded, false else </dd></dl>
 
 <p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__stream_ac4eadc870ba6fa53fb73a6adfce79764_cgraph.png" border="0" usemap="#classMavlink__stream_ac4eadc870ba6fa53fb73a6adfce79764_cgraph" alt=""/></div>
+<map name="classMavlink__stream_ac4eadc870ba6fa53fb73a6adfce79764_cgraph" id="classMavlink__stream_ac4eadc870ba6fa53fb73a6adfce79764_cgraph">
+<area shape="rect" id="node3" href="classSerial.html#a7defcc73aba6631c903b58641362aa5f" title="Test if there are bytes available to read." alt="" coords="219,5,331,35"/><area shape="rect" id="node5" href="classSerial.html#a863184953fb46582053208c076e75656" title="Read bytes from the serial line." alt="" coords="231,59,319,88"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__stream_ac4eadc870ba6fa53fb73a6adfce79764_icgraph.png" border="0" usemap="#classMavlink__stream_ac4eadc870ba6fa53fb73a6adfce79764_icgraph" alt=""/></div>
 <map name="classMavlink__stream_ac4eadc870ba6fa53fb73a6adfce79764_icgraph" id="classMavlink__stream_ac4eadc870ba6fa53fb73a6adfce79764_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="220,5,428,35"/><area shape="rect" id="node5" href="classFlow.html#aa36f172da9c8a006f64d67a792cc7e01" title="Update function." alt="" coords="276,59,372,88"/></map>
+<area shape="rect" id="node3" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="220,5,428,35"/><area shape="rect" id="node5" href="classFlow__px4.html#a04bbe222cd92cae344e75e69b1d6a513" title="Update function." alt="" coords="261,59,387,88"/></map>
 </div>
 </p>
 
@@ -204,6 +220,15 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__stream_a00524b173f3d900665e1f512cbce083f_cgraph.png" border="0" usemap="#classMavlink__stream_a00524b173f3d900665e1f512cbce083f_cgraph" alt=""/></div>
+<map name="classMavlink__stream_a00524b173f3d900665e1f512cbce083f_cgraph" id="classMavlink__stream_a00524b173f3d900665e1f512cbce083f_cgraph">
+<area shape="rect" id="node3" href="classSerial.html#afd01f2d7dc0fb63d859599fb03003689" title="Test if there is space available to write bytes." alt="" coords="205,5,320,35"/><area shape="rect" id="node5" href="classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044" title="Write bytes on the serial line." alt="" coords="217,59,308,88"/></map>
+</div>
+</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -238,7 +263,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__stream_a9c107e822e225e84e619a13328a95a87_icgraph.png" border="0" usemap="#classMavlink__stream_a9c107e822e225e84e619a13328a95a87_icgraph" alt=""/></div>
 <map name="classMavlink__stream_a9c107e822e225e84e619a13328a95a87_icgraph" id="classMavlink__stream_a9c107e822e225e84e619a13328a95a87_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream." alt="" coords="221,5,421,35"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="208,59,435,88"/><area shape="rect" id="node5" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c" title="Default configuration." alt="" coords="483,5,733,35"/><area shape="rect" id="node9" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="504,59,712,88"/></map>
+<area shape="rect" id="node3" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream." alt="" coords="221,5,421,35"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="208,59,435,88"/><area shape="rect" id="node11" href="classMavlink__stream.html#ad88987a667986e20cbf7b440f94f9f31" title="Default config of MAVLink stream." alt="" coords="220,112,423,141"/><area shape="rect" id="node5" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c" title="Default configuration." alt="" coords="483,5,733,35"/><area shape="rect" id="node9" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="504,59,712,88"/></map>
 </div>
 </p>
 
@@ -266,7 +291,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 25 2016 13:22:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 14:48:13 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

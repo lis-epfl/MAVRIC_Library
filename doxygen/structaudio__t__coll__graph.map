@@ -5,7 +5,7 @@
 <area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="1264,553,1376,673"/>
 <area shape="rect" id="node16" href="$classNavigation.html" title="The navigation structure." alt="" coords="1025,826,1188,1171"/>
 <area shape="rect" id="node6" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="1261,263,1379,401"/>
-<area shape="rect" id="node11" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="1661,913,1795,1085"/>
+<area shape="rect" id="node11" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="1661,904,1795,1093"/>
 <area shape="rect" id="node14" href="$structMavlink__waypoint__handler_1_1waypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="1819,869,2104,1128"/>
 <area shape="rect" id="node19" href="$structquat__t.html" title="Unit quaternion." alt="" coords="988,562,1047,665"/>
 <area shape="rect" id="node40" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="681,913,799,1085"/>

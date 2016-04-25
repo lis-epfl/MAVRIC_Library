@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MAV&#39;RIC: flow_data_t Union Reference</title>
+<title>MAV&#39;RIC: Flow_sim Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -79,36 +79,45 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-attribs">Public Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">flow_data_t Union Reference</div>  </div>
+<div class="title">Flow_sim Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="flow_data_t" -->
-<p>Array of 2-D optic flow vectors.  
- <a href="unionflow__data__t.html#details">More...</a></p>
+<!-- doxytag: class="Flow_sim" --><!-- doxytag: inherits="Flow" -->
+<p>Interface for Optic <a class="el" href="classFlow.html" title="Interface for Optic Flow sensors.">Flow</a> sensors.  
+ <a href="classFlow__sim.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="flow_8hpp_source.html">flow.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="flow__sim_8hpp_source.html">flow_sim.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for Flow_sim:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFlow__sim__inherit__graph.png" border="0" usemap="#Flow__sim_inherit__map" alt="Inheritance graph"/></div>
+<map name="Flow__sim_inherit__map" id="Flow__sim_inherit__map">
+<area shape="rect" id="node2" href="classFlow.html" title="Interface for Optic Flow sensors." alt="" coords="5,6,128,143"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for Flow_sim:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFlow__sim__coll__graph.png" border="0" usemap="#Flow__sim_coll__map" alt="Collaboration graph"/></div>
+<map name="Flow__sim_coll__map" id="Flow__sim_coll__map">
+<area shape="rect" id="node2" href="classFlow.html" title="Interface for Optic Flow sensors." alt="" coords="5,193,128,330"/><area shape="rect" id="node4" href="structflow__data__t.html" title="Array of 2&#45;D optic flow vectors." alt="" coords="23,6,111,109"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
-<p><a href="unionflow__data__t-members.html">List of all members.</a></p>
+<p><a href="classFlow__sim-members.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" ><a class="anchor" id="ac451d11774fa2e01540c91d5a620d208"></a><!-- doxytag: member="flow_data_t::@5" ref="ac451d11774fa2e01540c91d5a620d208" args="" -->
-struct {</td></tr>
-<tr><td class="memItemLeft" >&#160;&#160;&#160;int16_t&#160;&#160;&#160;<a class="el" href="unionflow__data__t.html#a853efac66b70c323af5e5935e61aa9b3">x</a> [125]</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Horizontal component. <br/></td></tr>
-<tr><td class="memItemLeft" >&#160;&#160;&#160;int16_t&#160;&#160;&#160;<a class="el" href="unionflow__data__t.html#a120a7c884b2f813bb0ec0b9d440fd638">y</a> [125]</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertical component. <br/></td></tr>
-<tr><td class="memItemLeft" valign="top">};&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac07c23a25c7f23d2ea0053f0934fdda8"></a><!-- doxytag: member="flow_data_t::data" ref="ac07c23a25c7f23d2ea0053f0934fdda8" args="[500]" -->
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionflow__data__t.html#ac07c23a25c7f23d2ea0053f0934fdda8">data</a> [500]</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Raw access to data. <br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abdc12ac88f43af310d414d192fa629b0"></a><!-- doxytag: member="Flow_sim::Flow_sim" ref="abdc12ac88f43af310d414d192fa629b0" args="(Dynamic_model &amp;dynamic_model_, raytracing::World &amp;world, float orientation_azimuth=0.0f)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>Flow_sim</b> (<a class="el" href="classDynamic__model.html">Dynamic_model</a> &amp;dynamic_model_, <a class="el" href="classraytracing_1_1World.html">raytracing::World</a> &amp;world, float orientation_azimuth=0.0f)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a88320ba804a1e67f140675dd8caad04a"></a><!-- doxytag: member="Flow_sim::update" ref="a88320ba804a1e67f140675dd8caad04a" args="(void)" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> (void)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Array of 2-D optic flow vectors. </p>
-</div><hr/>The documentation for this union was generated from the following file:<ul>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/drivers/<a class="el" href="flow_8hpp_source.html">flow.hpp</a></li>
+<div class="textblock"><p>Interface for Optic <a class="el" href="classFlow.html" title="Interface for Optic Flow sensors.">Flow</a> sensors. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/simulation/<a class="el" href="flow__sim_8hpp_source.html">flow_sim.hpp</a></li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/simulation/flow_sim.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -128,7 +137,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="u
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 25 2016 13:22:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 14:48:13 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

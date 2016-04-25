@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764" title="Mavlink parsing of message; the message is not available in this module afterwards." alt="" coords="180,32,343,61"/>
+<area shape="rect" id="node5" href="$classSerial.html#a7defcc73aba6631c903b58641362aa5f" title="Test if there are bytes available to read." alt="" coords="392,5,504,35"/>
+<area shape="rect" id="node7" href="$classSerial.html#a863184953fb46582053208c076e75656" title="Read bytes from the serial line." alt="" coords="404,59,492,88"/>
+</map>

@@ -138,7 +138,7 @@ var searchData=
   ['startup_5fcalib_5fgyro_5fthreshold',['startup_calib_gyro_threshold',['../structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7',1,'imu_conf_t']]],
   ['state',['State',['../classState.html',1,'State'],['../classCentral__data.html#a15d4c15c6c91701595dbc6bb3d68b927',1,'Central_data::state()'],['../classState.html#ad1a7b3d20f3299c0fe55986dc1a5c185',1,'State::State()']]],
   ['state_5f',['state_',['../classMavlink__waypoint__handler.html#a8f6d41542592069ceed685f693efc2d0',1,'Mavlink_waypoint_handler::state_()'],['../classState__machine.html#a1d458bc645f27269f102e6048d122e91',1,'State_machine::state_()']]],
-  ['state_5fmachine',['State_machine',['../classState__machine.html',1,'State_machine'],['../classState__machine.html#aa6930615caaef9ed099113c3b4860e5d',1,'State_machine::State_machine()'],['../classCentral__data.html#a1e2ce004ad84e7016f7afd982c6f9399',1,'Central_data::state_machine()']]],
+  ['state_5fmachine',['State_machine',['../classState__machine.html',1,'State_machine'],['../classCentral__data.html#a1e2ce004ad84e7016f7afd982c6f9399',1,'Central_data::state_machine()'],['../classState__machine.html#aa6930615caaef9ed099113c3b4860e5d',1,'State_machine::State_machine()']]],
   ['state_5ftelemetry_5fsend_5fautopilot_5fcapabilities',['state_telemetry_send_autopilot_capabilities',['../classState.html#a4664b4ca5c776f7a5db625292bd8b91c',1,'State']]],
   ['state_5ftelemetry_5fset_5fmode',['state_telemetry_set_mode',['../classState.html#a14cbfb43a63cbf6cd4f0fa30c72023bb',1,'State']]],
   ['static_5fhold_5fthresh',['static_hold_thresh',['../structubx__cfg__nav__settings__t.html#a2ce746bee4c0055747c4987420ceb2aa',1,'ubx_cfg_nav_settings_t']]],
