@@ -43,6 +43,7 @@
 
 #include "communication/state_telemetry.hpp"
 #include "communication/state.hpp"
+#include "util/version.hpp"
 
 extern "C"
 {
@@ -269,22 +270,18 @@ static mav_result_t state_telemetry_send_autopilot_capabilities(State* state, ma
     // Autopilot version
     if (packet->param1 == 1)
     {
-        const uint8_t flight_custom_version[8]      = "MAVRIC";
-        const uint8_t middleware_custom_version[8]  = "master";
-        const uint8_t os_custom_version[8]          = "no_os";
-
         mavlink_message_t msg;
-        mavlink_msg_autopilot_version_pack( state->mavlink_stream_.sysid,                                  // uint8_t system_id,
-                                            state->mavlink_stream_.sysid,                                  // uint8_t component_id,
+        mavlink_msg_autopilot_version_pack( state->mavlink_stream_.sysid,                           // uint8_t system_id,
+                                            state->mavlink_stream_.sysid,                           // uint8_t component_id,
                                             &msg,                                                   // mavlink_message_t* msg,
                                             0,                                                      // uint64_t capabilities,
-                                            0,                                                      // uint32_t flight_sw_version,
-                                            0,                                                      // uint32_t middleware_sw_version,
+                                            version::project,                                       // uint32_t flight_sw_version,
+                                            version::mavric,                                        // uint32_t middleware_sw_version,
                                             0,                                                      // uint32_t os_sw_version,
                                             0,                                                      // uint32_t board_version,
-                                            flight_custom_version,                                  // const uint8_t *flight_custom_version,
-                                            middleware_custom_version,                              // const uint8_t *middleware_custom_version,
-                                            os_custom_version,                                      // const uint8_t *os_custom_version,
+                                            version::project_git_hash,                              // const uint8_t *flight_custom_version,
+                                            version::mavric_git_hash,                               // const uint8_t *middleware_custom_version,
+                                            version::project_name,                                  // const uint8_t *os_custom_version,
                                             0,                                                      // uint16_t vendor_id,
                                             0,                                                      // uint16_t product_id,
                                             0 );                                                    // uint64_t uid );
@@ -355,7 +352,7 @@ bool state_telemetry_init(State* state, mavlink_message_handler_t* message_handl
     callbackcmd.function = (mavlink_cmd_callback_function_t)    &state_telemetry_send_autopilot_capabilities;
     callbackcmd.module_struct =                                 state;
     init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
-    
+
     return init_success;
 }
 
