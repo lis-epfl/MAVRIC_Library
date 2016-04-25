@@ -99,7 +99,7 @@ void Mavlink_communication::toggle_telemetry_stream(Scheduler* scheduler, uint32
 
                 if (request.req_message_rate > 0)
                 {
-                    task->change_period(SchedulerIMEBASE / (uint32_t)request.req_message_rate);
+                    task->change_period(Scheduler::TIMEBASE / (uint32_t)request.req_message_rate);
                 }
             }
             else
@@ -114,7 +114,7 @@ void Mavlink_communication::toggle_telemetry_stream(Scheduler* scheduler, uint32
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_communication::Mavlink_communication(Serial& serial, State& state, File& file_storage, const conf_t& config) : 
+Mavlink_communication::Mavlink_communication(Serial& serial, State& state, File& file_storage, const conf_t& config) :
     scheduler_(config.scheduler_config),
     mavlink_stream_(serial, config.mavlink_stream_config),
     message_handler_(mavlink_stream_, config.message_handler_config),

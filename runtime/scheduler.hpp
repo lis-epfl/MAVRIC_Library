@@ -48,9 +48,6 @@
 #include "runtime/scheduler_task.hpp"
 
 
-#define SchedulerIMEBASE 1000000  ///< time base for the scheduler
-
-
 /**
  * \brief   Scheduler
  *
@@ -59,6 +56,8 @@ class Scheduler
 {
 
 public:
+    ///< time base for the scheduler
+    static const uint32_t TIMEBASE = 1000000;
 
     /**
      * \brief   Scheduling strategy
