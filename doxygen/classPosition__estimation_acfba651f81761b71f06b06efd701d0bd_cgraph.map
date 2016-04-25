@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classPosition__estimation.html#a358ae802e65eede79495c339689813c8" title="Returns if altitude estimation is healthy." alt="" coords="240,5,475,35"/>
+<area shape="rect" id="node5" href="$classGps.html#ae1c19ee151945184d4432471fac01aec" title="Indicates whether the measurements can be trusted." alt="" coords="309,59,405,88"/>
+</map>

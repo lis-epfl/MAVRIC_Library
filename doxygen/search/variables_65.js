@@ -13,5 +13,5 @@ var searchData=
   ['engine_5fnav_5fsetting',['engine_nav_setting',['../structgps__t.html#a6f3d05db0625f121ee267c502db4cdd5',1,'gps_t']]],
   ['erase_5fgroup_5fsize',['erase_group_size',['../structsd__spi__t.html#a43e1b4534aa5af64389d99d254566211',1,'sd_spi_t']]],
   ['error',['error',['../structpid__controller__t.html#a8ed90ee7713408394747f92385718212',1,'pid_controller_t']]],
-  ['execution_5ftime',['execution_time',['../structtask__entry__t.html#aa14db6e9d1de92e877694bbeb29d9c4e',1,'task_entry_t']]]
+  ['execution_5ftime',['execution_time',['../classScheduler__task.html#ab508718b7cbebfd0fee85c28f3053585',1,'Scheduler_task']]]
 ];

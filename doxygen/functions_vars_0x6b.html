@@ -81,7 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li class="current"><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
       <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
       <li><a href="functions_rela.html"><span>Related&#160;Functions</span></a></li>
     </ul>
   </div>
@@ -136,30 +138,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="structqfilter__t.html#ad6630f81781d3ebc0f9f59b52342c1dd">qfilter_t</a>
 </li>
 <li>kp_alt_baro
-: <a class="el" href="structposition__estimation__t.html#ab23c58dfc209009d7fb66d85f8c57e6f">position_estimation_t</a>
+: <a class="el" href="structPosition__estimation_1_1conf__t.html#ae7501898524b314da28cf60734a5d107">Position_estimation::conf_t</a>
+, <a class="el" href="classPosition__estimation.html#a9bd64901feb3e3140cfd1115145760e3">Position_estimation</a>
 </li>
 <li>kp_alt_sonar
-: <a class="el" href="structposition__estimation__t.html#aa578fa6dc2cad1246ce6a8a1028a471f">position_estimation_t</a>
+: <a class="el" href="structPosition__estimation_1_1conf__t.html#a97c014556c163a8df4b81f1c4ea7e5ca">Position_estimation::conf_t</a>
 </li>
 <li>kp_mag
-: <a class="el" href="structqfilter__t.html#ae8445fb02e62262031a7e214f0f8377b">qfilter_t</a>
-, <a class="el" href="structqfilter__conf__t.html#aa8dc87e773de894d764c95802bbfa8be">qfilter_conf_t</a>
+: <a class="el" href="structqfilter__conf__t.html#aa8dc87e773de894d764c95802bbfa8be">qfilter_conf_t</a>
+, <a class="el" href="structqfilter__t.html#ae8445fb02e62262031a7e214f0f8377b">qfilter_t</a>
 </li>
 <li>kp_pos_gps
-: <a class="el" href="structposition__estimation__t.html#a109383baa19541de01429a54e7146159">position_estimation_t</a>
+: <a class="el" href="structPosition__estimation_1_1conf__t.html#a7de2808c1c75952e93c4caadb52251ab">Position_estimation::conf_t</a>
+, <a class="el" href="classPosition__estimation.html#a573eecd2064aacfd7150051ee13102c4">Position_estimation</a>
 </li>
 <li>kp_vel_baro
-: <a class="el" href="structposition__estimation__t.html#a0c455bbf93e9dc33f7a106a166aa13b7">position_estimation_t</a>
+: <a class="el" href="structPosition__estimation_1_1conf__t.html#a09b8a5184bee8122c2073d3b18d2d85f">Position_estimation::conf_t</a>
+, <a class="el" href="classPosition__estimation.html#a5378f164008abb6f8b8bb67edf5165f2">Position_estimation</a>
 </li>
 <li>kp_vel_gps
-: <a class="el" href="structposition__estimation__t.html#a87e594d4d947ab6dd3bb3db4c868108a">position_estimation_t</a>
+: <a class="el" href="structPosition__estimation_1_1conf__t.html#abc56da847d44a054c250019219920a88">Position_estimation::conf_t</a>
 </li>
 <li>kp_vel_sonar
-: <a class="el" href="structposition__estimation__t.html#ae1e0cde188f08dcc12bb2413cc63b53c">position_estimation_t</a>
+: <a class="el" href="structPosition__estimation_1_1conf__t.html#a8a7c4d5f4b3d1faa42a96e3ecfa502c1">Position_estimation::conf_t</a>
 </li>
 <li>kp_yaw
-: <a class="el" href="structnavigation__t.html#af9d54535f9788c05c6c00346d97babcd">navigation_t</a>
-, <a class="el" href="structnavigation__conf__t.html#aab5990c13334ab3976f20e062298d384">navigation_conf_t</a>
+: <a class="el" href="structNavigation_1_1conf__t.html#adc1e8e91c84aafab8ae33823362b9565">Navigation::conf_t</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -168,7 +172,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -180,7 +184,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 21 2016 13:21:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 13:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

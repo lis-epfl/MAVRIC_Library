@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$structmavlink__send__msg__handler__t.html" title="MAVLink message handler structure." alt="" coords="23,552,217,672"/>
-<area shape="rect" id="node4" href="$structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="55,280,185,469"/>
-<area shape="rect" id="node6" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="5,6,99,213"/>
-<area shape="rect" id="node8" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="123,58,256,161"/>
-</map>

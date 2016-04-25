@@ -81,7 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li class="current"><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
       <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
       <li><a href="functions_rela.html"><span>Related&#160;Functions</span></a></li>
     </ul>
   </div>
@@ -152,9 +154,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>rcc_timer_config
 : <a class="el" href="structPwm__stm32_1_1config__t.html#af3f9368fa432b136b2f4d564f4e354b0">Pwm_stm32::config_t</a>
 </li>
-<li>rec
-: <a class="el" href="structmavlink__stream__t.html#ae6b160a13b0fec82a3d77b37ddd5e704">mavlink_stream_t</a>
-</li>
 <li>reference_heading
 : <a class="el" href="structstabilisation__ywing__t.html#a2f3f403498634917f01144641a04b4a4">stabilisation_ywing_t</a>
 </li>
@@ -174,8 +173,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structaudio__t.html#afd2ba2d13bc699e9419743ed2cdb6e53">audio_t</a>
 </li>
 <li>remote
-: <a class="el" href="structstate__machine__t.html#ab43b1e11745e3d3c162cc309348d9088">state_machine_t</a>
-, <a class="el" href="structmanual__control__t.html#a0b5a59ef6d9f65fbc7febfa7bb837412">manual_control_t</a>
+: <a class="el" href="classManual__control.html#ac5bd8680fbda07384a88506d44f163f7">Manual_control</a>
 , <a class="el" href="structstabilisation__ywing__t.html#a621f36c226787bdffc4f82d322cc55d9">stabilisation_ywing_t</a>
 , <a class="el" href="structaudio__t.html#a1c1ef0bc7df83d2e362d4c5258b6be3a">audio_t</a>
 , <a class="el" href="structepuck__communication__t.html#a3566893ee9f99ac473995d8d87b8fc40">epuck_communication_t</a>
@@ -184,20 +182,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structservo__conf__t.html#a4e89b131e5441c7a2aa19b2167729d0b">servo_conf_t</a>
 </li>
 <li>repeat_period
-: <a class="el" href="structtask__entry__t.html#aa41c24011386954e4dc29ceff2e4ffd1">task_entry_t</a>
+: <a class="el" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed">Scheduler_task</a>
 </li>
 <li>res
-: <a class="el" href="structubx__tim__vrfy__t.html#a0fcdf1a1c135f7bf04fc37ae9eedfd7c">ubx_tim_vrfy_t</a>
-, <a class="el" href="structubx__cfg__rxm__t.html#aaa6d1eccadd16cd425bfb91e58255fc4">ubx_cfg_rxm_t</a>
+: <a class="el" href="structubx__cfg__rxm__t.html#aaa6d1eccadd16cd425bfb91e58255fc4">ubx_cfg_rxm_t</a>
 , <a class="el" href="structubx__cfg__tp__t.html#ac6ab9d7fd80a2359d7d66a8d4fb9fbb0">ubx_cfg_tp_t</a>
 , <a class="el" href="structubx__cfg__fxn__t.html#a87e29658c4d0c49f55931858ab95fd9f">ubx_cfg_fxn_t</a>
 , <a class="el" href="structubx__nav__solution__t.html#a7a91cfd79ced433fad3b8b145ec4f1da">ubx_nav_solution_t</a>
 , <a class="el" href="structubx__tim__tp__t.html#ad7c5e48f09cc53c245d180c3e7ec61d1">ubx_tim_tp_t</a>
+, <a class="el" href="structubx__tim__vrfy__t.html#a0fcdf1a1c135f7bf04fc37ae9eedfd7c">ubx_tim_vrfy_t</a>
 </li>
 <li>res0
-: <a class="el" href="structubx__cfg__prt__t.html#a36c43281f93c03023208a56ff9388c55">ubx_cfg_prt_t</a>
-, <a class="el" href="structubx__cfg__tp5__t.html#a7c813899a00dbbda57dc4a9fd8935688">ubx_cfg_tp5_t</a>
+: <a class="el" href="structubx__cfg__tp5__t.html#a7c813899a00dbbda57dc4a9fd8935688">ubx_cfg_tp5_t</a>
 , <a class="el" href="structubx__cfg__inf__t.html#a67cbe48fb315483398e9147dde1e98e6">ubx_cfg_inf_t</a>
+, <a class="el" href="structubx__cfg__prt__t.html#a36c43281f93c03023208a56ff9388c55">ubx_cfg_prt_t</a>
 </li>
 <li>res1
 : <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a64afea00df5f76b15806d2cf6727f5d9">ubx_cfg_nav_expert_settings_t</a>
@@ -233,42 +231,42 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="structubx__nav__solution__t.html#a01f323bab7b30d7190cf22fe00de2b0d">ubx_nav_solution_t</a>
 </li>
 <li>res3
-: <a class="el" href="structubx__cfg__prt__t.html#a74a03d2bbf01448eb923206104f48549">ubx_cfg_prt_t</a>
+: <a class="el" href="structubx__cfg__pm__t.html#afe5d53bb2154780cbec20850ab671c8c">ubx_cfg_pm_t</a>
 , <a class="el" href="structubx__cfg__nav__settings__t.html#a0450692d0d8293ec9583c5a691a22195">ubx_cfg_nav_settings_t</a>
 , <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a6eda43072d254597968db6765f1865f1">ubx_cfg_nav_expert_settings_t</a>
-, <a class="el" href="structubx__cfg__pm__t.html#afe5d53bb2154780cbec20850ab671c8c">ubx_cfg_pm_t</a>
 , <a class="el" href="structubx__cfg__pm2__t.html#a13c9115263bcb97cc0165e85ba443d77">ubx_cfg_pm2_t</a>
+, <a class="el" href="structubx__cfg__prt__t.html#a74a03d2bbf01448eb923206104f48549">ubx_cfg_prt_t</a>
 </li>
 <li>res4
-: <a class="el" href="structubx__cfg__nav__settings__t.html#aad86c5fc2c0ec4ce512b6a82849c0596">ubx_cfg_nav_settings_t</a>
-, <a class="el" href="structubx__cfg__nav__expert__settings__t.html#aad788dab25e2963b4e1836545fe6d1ad">ubx_cfg_nav_expert_settings_t</a>
+: <a class="el" href="structubx__cfg__nav__expert__settings__t.html#aad788dab25e2963b4e1836545fe6d1ad">ubx_cfg_nav_expert_settings_t</a>
+, <a class="el" href="structubx__cfg__nav__settings__t.html#aad86c5fc2c0ec4ce512b6a82849c0596">ubx_cfg_nav_settings_t</a>
 , <a class="el" href="structubx__cfg__pm2__t.html#ad3cdeacabab909f987fe5557e5afba95">ubx_cfg_pm2_t</a>
 </li>
 <li>res5
-: <a class="el" href="structubx__cfg__pm2__t.html#a46286ee6910efd57c1da1d4cdcfc4c06">ubx_cfg_pm2_t</a>
-, <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a6e3a5c86b9fdcecafec5f2eeae3eb3fa">ubx_cfg_nav_expert_settings_t</a>
+: <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a6e3a5c86b9fdcecafec5f2eeae3eb3fa">ubx_cfg_nav_expert_settings_t</a>
+, <a class="el" href="structubx__cfg__pm2__t.html#a46286ee6910efd57c1da1d4cdcfc4c06">ubx_cfg_pm2_t</a>
 </li>
 <li>res6
 : <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a42829fdd192de30a55929c778b4c8d48">ubx_cfg_nav_expert_settings_t</a>
 , <a class="el" href="structubx__cfg__pm2__t.html#af645fd5d2b73bf748f1ee7070d972dcc">ubx_cfg_pm2_t</a>
 </li>
 <li>res7
-: <a class="el" href="structubx__cfg__pm2__t.html#afe654c4c5d36db92a17c34163d3932df">ubx_cfg_pm2_t</a>
-, <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a38adcc7fc420248d43e1aadecb1dda05">ubx_cfg_nav_expert_settings_t</a>
+: <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a38adcc7fc420248d43e1aadecb1dda05">ubx_cfg_nav_expert_settings_t</a>
+, <a class="el" href="structubx__cfg__pm2__t.html#afe654c4c5d36db92a17c34163d3932df">ubx_cfg_pm2_t</a>
 </li>
 <li>res8
-: <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a8297fbc00a747b4d4168ee1c043983a0">ubx_cfg_nav_expert_settings_t</a>
-, <a class="el" href="structubx__cfg__pm2__t.html#a647905472e45fb17bf5d22cac5f624bb">ubx_cfg_pm2_t</a>
+: <a class="el" href="structubx__cfg__pm2__t.html#a647905472e45fb17bf5d22cac5f624bb">ubx_cfg_pm2_t</a>
+, <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a8297fbc00a747b4d4168ee1c043983a0">ubx_cfg_nav_expert_settings_t</a>
 </li>
 <li>res9
-: <a class="el" href="structubx__cfg__pm2__t.html#accbee442bb27d3adec7c6d5f79476c59">ubx_cfg_pm2_t</a>
-, <a class="el" href="structubx__cfg__nav__expert__settings__t.html#acbe8656365987b0962a44ef42d99ca5b">ubx_cfg_nav_expert_settings_t</a>
+: <a class="el" href="structubx__cfg__nav__expert__settings__t.html#acbe8656365987b0962a44ef42d99ca5b">ubx_cfg_nav_expert_settings_t</a>
+, <a class="el" href="structubx__cfg__pm2__t.html#accbee442bb27d3adec7c6d5f79476c59">ubx_cfg_pm2_t</a>
 </li>
 <li>reserved
 : <a class="el" href="structubx__nav__sv__info__t.html#a960d66cb5f501fa0b484fbb40ffee988">ubx_nav_sv_info_t</a>
 </li>
 <li>reset_position
-: <a class="el" href="structstate__conf__t.html#a2b91b549b0e8daf33db2d7c8dfb2c275">state_conf_t</a>
+: <a class="el" href="structState_1_1conf__t.html#a1184a9916979c038afbfad396c8fcd4f">State::conf_t</a>
 , <a class="el" href="classState.html#a4f26f45df1ca725c68e8ba73bd99db17">State</a>
 </li>
 <li>rf_group_delay
@@ -276,10 +274,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="structubx__cfg__tp5__t.html#aa78ed24f026e82f9f65e10c2c936c018">ubx_cfg_tp5_t</a>
 </li>
 <li>right_hemisphere
-: <a class="el" href="unioncurvace__calibration__matrix__t.html#a3ef6f589923b96348eefa3488bd7f5bc">curvace_calibration_matrix_t</a>
-, <a class="el" href="unioncurvace__roi__coord__t.html#af2ce98909f65b285f06e8084c1ff18c3">curvace_roi_coord_t</a>
-, <a class="el" href="unioncurvace__data__t.html#a51c5fb66d0ecbb10e9f8099a01bea32e">curvace_data_t</a>
+: <a class="el" href="unioncurvace__roi__coord__t.html#af2ce98909f65b285f06e8084c1ff18c3">curvace_roi_coord_t</a>
 , <a class="el" href="unioncurvace__raw__data__t.html#a9061bb9e9bd3a852690781412b322183">curvace_raw_data_t</a>
+, <a class="el" href="unioncurvace__calibration__matrix__t.html#a3ef6f589923b96348eefa3488bd7f5bc">curvace_calibration_matrix_t</a>
+, <a class="el" href="unioncurvace__data__t.html#a51c5fb66d0ecbb10e9f8099a01bea32e">curvace_data_t</a>
 </li>
 <li>roi_coord
 : <a class="el" href="structcurvace__t.html#adb09a0186fddf71f7457e7bbd45a5453">curvace_t</a>
@@ -321,9 +319,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structdynamic__model__quad__diag__conf__t.html#a1ab497ff762ccc0cff82cb586e03ba43">dynamic_model_quad_diag_conf_t</a>
 </li>
 <li>rpy
-: <a class="el" href="structattitude__command__t.html#a4b05a80c9b476c13217cf95d56ca3ae8">attitude_command_t</a>
-, <a class="el" href="structcontrol__command__t.html#a6c432578ccf6b02c4a0a383cac113d52">control_command_t</a>
+: <a class="el" href="structcontrol__command__t.html#a6c432578ccf6b02c4a0a383cac113d52">control_command_t</a>
 , <a class="el" href="structaero__attitude__t.html#a4d5779a210f5d31955687d3d91e971c4">aero_attitude_t</a>
+, <a class="el" href="structattitude__command__t.html#a4b05a80c9b476c13217cf95d56ca3ae8">attitude_command_t</a>
 </li>
 <li>rpy_controller
 : <a class="el" href="structstabiliser__t.html#ac1e1019078fab6c1b8cd09d030ddf2c5">stabiliser_t</a>
@@ -332,10 +330,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structattitude__error__estimator__t.html#aa7b99f9a229355fd2cfacdb7432f278e">attitude_error_estimator_t</a>
 </li>
 <li>rt_violations
-: <a class="el" href="structtask__entry__t.html#a15de8a27a56420dbe8d6c79c8fe795c3">task_entry_t</a>
+: <a class="el" href="classScheduler__task.html#a8c1f95c5d9bef0da1e99d35332be8736">Scheduler_task</a>
 </li>
 <li>run_mode
-: <a class="el" href="structtask__entry__t.html#a36f75f3ef1eaa2f807e93c16dc292c21">task_entry_t</a>
+: <a class="el" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e">Scheduler_task</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -344,7 +342,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -356,7 +354,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 21 2016 13:21:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 13:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

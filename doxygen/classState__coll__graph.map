@@ -1,6 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="5,297,88,452"/>
-<area shape="rect" id="node4" href="$structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="112,280,243,469"/>
-<area shape="rect" id="node6" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="61,6,155,213"/>
-<area shape="rect" id="node8" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="179,58,312,161"/>
+<area shape="rect" id="node2" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="53,5,136,160"/>
 </map>

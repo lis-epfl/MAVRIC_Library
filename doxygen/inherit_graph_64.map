@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structgps__t.html" title="Type definition for GPS data." alt="" coords="7,5,60,35"/>
+<area shape="rect" id="node1" href="$classGps.html" title="Abstract class for GPS." alt="" coords="7,32,52,61"/>
+<area shape="rect" id="node3" href="$classGps__sim.html" title="Simulation for GPS." alt="" coords="107,5,181,35"/>
+<area shape="rect" id="node5" href="$classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="103,59,185,88"/>
 </map>

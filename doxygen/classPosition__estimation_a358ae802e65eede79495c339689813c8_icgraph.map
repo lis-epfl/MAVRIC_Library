@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd" title="Returns if position estimation is healthy." alt="" coords="288,32,475,61"/>
+<area shape="rect" id="node5" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="555,5,709,35"/>
+<area shape="rect" id="node7" href="$classState__machine.html#acebe98d8028a28f00cf2c8d4bdd5b421" title="tries to change state.mav_mode to guided/unguided" alt="" coords="523,59,741,88"/>
+</map>

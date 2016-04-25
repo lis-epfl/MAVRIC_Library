@@ -81,7 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>All</span></a></li>
       <li class="current"><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
       <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
       <li><a href="functions_rela.html"><span>Related&#160;Functions</span></a></li>
     </ul>
   </div>
@@ -143,8 +145,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>Magnetometer_sim()
 : <a class="el" href="classMagnetometer__sim.html#a6c85e1deb5c9b68cf8e595ae276056af">Magnetometer_sim</a>
 </li>
+<li>Manual_control()
+: <a class="el" href="classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b">Manual_control</a>
+</li>
 <li>Mat()
-: <a class="el" href="classMat.html#ae70a42918a9b6732017746ccf84aae5e">Mat&lt; N, P, T &gt;</a>
+: <a class="el" href="classMat.html#ab29b9cf111199df7fe2dfd645d563b59">Mat&lt; N, P, T &gt;</a>
+</li>
+<li>mav_mode()
+: <a class="el" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">State</a>
+</li>
+<li>Mavlink_communication()
+: <a class="el" href="classMavlink__communication.html#afd98f83687a03493ef1cf2fb3e3e3a34">Mavlink_communication</a>
+</li>
+<li>Mavlink_message_handler()
+: <a class="el" href="classMavlink__message__handler.html#a60ee5337c71f77a361cc7bf9d1819fd4">Mavlink_message_handler</a>
+</li>
+<li>Mavlink_waypoint_handler()
+: <a class="el" href="classMavlink__waypoint__handler.html#a5e3ced73a844cec5ecef909dfe15e6ec">Mavlink_waypoint_handler</a>
 </li>
 <li>Mavrimini()
 : <a class="el" href="classMavrimini.html#a09691e19c19e12dbaf16fa06bbfdc70d">Mavrimini</a>
@@ -155,12 +172,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>Megafly_rev4()
 : <a class="el" href="classMegafly__rev4.html#ae9d9107f12e56cc1e4a5cb6d53b8d0c3">Megafly_rev4</a>
 </li>
+<li>msg_default_dbg()
+: <a class="el" href="classMavlink__message__handler.html#ab73889a37846fd1f3f39d8540ca7d03d">Mavlink_message_handler</a>
+</li>
 <li>multiply()
 : <a class="el" href="classmat_1_1op.html#ae31a07ca6ab6171909b2d7d2983418d3">mat::op</a>
 , <a class="el" href="classMat.html#a7697ab3cd1dc042f7550007d8e5e341d">Mat&lt; N, P, T &gt;</a>
+, <a class="el" href="classmat_1_1op.html#ac432bca76fb1e08daf389ede95918105">mat::op</a>
+, <a class="el" href="classMat.html#a297986cd3d5772a2698a2b8b930dd34b">Mat&lt; N, P, T &gt;</a>
 </li>
 <li>multiply_inplace()
-: <a class="el" href="classMat.html#afe0f1a4c749dd84c5427275db826d006">Mat&lt; N, P, T &gt;</a>
+: <a class="el" href="classMat.html#a9735113a8979b4aa2d162e8455fe2607">Mat&lt; N, P, T &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -169,7 +191,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -181,7 +203,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 21 2016 13:21:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 13:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

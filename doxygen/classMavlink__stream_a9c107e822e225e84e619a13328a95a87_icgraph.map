@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream." alt="" coords="221,5,421,35"/>
+<area shape="rect" id="node7" href="$classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="208,59,435,88"/>
+<area shape="rect" id="node5" href="$classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c" title="Default configuration." alt="" coords="483,5,733,35"/>
+<area shape="rect" id="node9" href="$classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="504,59,712,88"/>
+</map>

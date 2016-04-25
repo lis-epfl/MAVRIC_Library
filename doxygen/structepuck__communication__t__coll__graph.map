@@ -1,9 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="232,385,384,626"/>
+<area shape="rect" id="node2" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="144,385,296,626"/>
 <area shape="rect" id="node4" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="5,6,240,317"/>
 <area shape="rect" id="node6" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="264,84,373,239"/>
-<area shape="rect" id="node8" href="$structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="408,411,539,600"/>
-<area shape="rect" id="node10" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="407,58,500,265"/>
-<area shape="rect" id="node12" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="524,110,657,213"/>
-<area shape="rect" id="node14" href="$structbyte__stream__t.html" title="Byte stream." alt="" coords="563,419,685,591"/>
+<area shape="rect" id="node8" href="$structbyte__stream__t.html" title="Byte stream." alt="" coords="320,419,443,591"/>
 </map>

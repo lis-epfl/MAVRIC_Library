@@ -81,7 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
       <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
       <li><a href="functions_rela.html"><span>Related&#160;Functions</span></a></li>
     </ul>
   </div>
@@ -126,8 +128,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>handle_interrupt()
 : <a class="el" href="classSpektrum__satellite.html#adb6188c9e279d061ea4b524201975c33">Spektrum_satellite</a>
 </li>
-<li>handshake_state
-: <a class="el" href="structflow__t.html#af143a5f6e111c77a79c3be5c5c323146">flow_t</a>
+<li>handling_module_struct_t
+: <a class="el" href="classMavlink__message__handler.html#aeaf031bfd583498b1f6cb2aa79fc1ac0">Mavlink_message_handler</a>
+</li>
+<li>handling_telemetry_module_struct_t
+: <a class="el" href="classMavlink__communication.html#acf53cd972106c98a9b10c0d40e9e8647">Mavlink_communication</a>
 </li>
 <li>have_raw_velocity
 : <a class="el" href="structgps__t.html#a0e5f56cb48fad71fac7d64d75726e9fc">gps_t</a>
@@ -135,63 +140,70 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>hdop
 : <a class="el" href="structgps__t.html#ac4b5c6c3d8d655767447eb2aa3db2518">gps_t</a>
 </li>
-<li>heading()
-: <a class="el" href="classGps.html#a828a818f4707850a53dcc6c2c82a8cbe">Gps</a>
+<li>heading
+: <a class="el" href="structlocal__position__t.html#a69242f563451a594891002cfca4de72c">local_position_t</a>
+, <a class="el" href="classGps.html#a828a818f4707850a53dcc6c2c82a8cbe">Gps</a>
 , <a class="el" href="classGps__ublox.html#a05642d8db171ef1367eb6c262696e58e">Gps_ublox</a>
 , <a class="el" href="classGps__sim.html#adca81e05bdb78b5220f0b5d88df7dca1">Gps_sim</a>
 , <a class="el" href="structglobal__position__t.html#abe141f6b97703b3a9a3016aeb11c304c">global_position_t</a>
-, <a class="el" href="structlocal__position__t.html#a69242f563451a594891002cfca4de72c">local_position_t</a>
 </li>
 <li>heading_2d
 : <a class="el" href="structubx__nav__vel__ned__t.html#a86200b9c9ab44118f0a0283bca4feff4">ubx_nav_vel_ned_t</a>
 </li>
 <li>heading_accuracy()
-: <a class="el" href="classGps__sim.html#aa156e7278294e81c186ad02c7cc8f943">Gps_sim</a>
+: <a class="el" href="classGps__ublox.html#a713c26d9c39d7cf75df535b3160d9351">Gps_ublox</a>
+, <a class="el" href="classGps__sim.html#aa156e7278294e81c186ad02c7cc8f943">Gps_sim</a>
 , <a class="el" href="structubx__nav__vel__ned__t.html#aa11b82785885a8e79e58218ab5b20786">ubx_nav_vel_ned_t</a>
 , <a class="el" href="structgps__t.html#a04072a8af0b17a88a8a8fdede6ab5555">gps_t</a>
 , <a class="el" href="classGps.html#aa07958fdbf794195f07b87aade88c088">Gps</a>
-, <a class="el" href="classGps__ublox.html#a713c26d9c39d7cf75df535b3160d9351">Gps_ublox</a>
 </li>
 <li>healthy
 : <a class="el" href="structgps__t.html#af408a6413ae85ca3e6e3e3f6ab5fe6d6">gps_t</a>
-, <a class="el" href="classSonar__sim.html#ae2e214d94c7a8d520521772a248cb2f7">Sonar_sim</a>
 , <a class="el" href="classGps.html#ae1c19ee151945184d4432471fac01aec">Gps</a>
 , <a class="el" href="classGps__ublox.html#add94e86e4207210e1280d9a7ee692c2e">Gps_ublox</a>
 , <a class="el" href="classSonar.html#a60e9267a7d64420ad9b172c33f4877f4">Sonar</a>
 , <a class="el" href="classSonar__i2cxl.html#ae45131b955c719ff894a46e928e4da80">Sonar_i2cxl</a>
+, <a class="el" href="classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd">Position_estimation</a>
 , <a class="el" href="classGps__sim.html#a187a543a034baad5db61835db170c4a0">Gps_sim</a>
+, <a class="el" href="classSonar__sim.html#ae2e214d94c7a8d520521772a248cb2f7">Sonar_sim</a>
 </li>
 <li>Hmc5883l()
 : <a class="el" href="classHmc5883l.html#a2e3760bcdaa3004c53d1cafcfcb53fe8">Hmc5883l</a>
 </li>
-<li>hold_waypoint_set
-: <a class="el" href="structmavlink__waypoint__handler__t.html#aaa15ebced5c311683ed8fa9ef7ffdea2">mavlink_waypoint_handler_t</a>
+<li>hold_init()
+: <a class="el" href="classMavlink__waypoint__handler.html#ac05cdec6fc03627312b32ab260f60f73">Mavlink_waypoint_handler</a>
+</li>
+<li>hold_waypoint_set_
+: <a class="el" href="classMavlink__waypoint__handler.html#a133c84082db029768e132ecb54ba8515">Mavlink_waypoint_handler</a>
 </li>
 <li>home_coordinates
 : <a class="el" href="structdynamic__model__quad__diag__conf__t.html#a85b64cf1027157d609fa60cac44429c3">dynamic_model_quad_diag_conf_t</a>
 </li>
+<li>HOME_LAND
+: <a class="el" href="classNavigation.html#ad0adfd57f80c0bc89edcf6b45909998dac1e2c07d6a19e36a522839435578f0f0">Navigation</a>
+</li>
 <li>horizontal_accuracy
-: <a class="el" href="structubx__nav__pos__llh__t.html#a37574e9885d3fa1268c2010184d48c48">ubx_nav_pos_llh_t</a>
-, <a class="el" href="structgps__t.html#ae7f7b21657d1adb7038bd3933d4a81c3">gps_t</a>
+: <a class="el" href="structgps__t.html#ae7f7b21657d1adb7038bd3933d4a81c3">gps_t</a>
+, <a class="el" href="structubx__nav__pos__llh__t.html#a37574e9885d3fa1268c2010184d48c48">ubx_nav_pos_llh_t</a>
 </li>
 <li>horizontal_position_accuracy()
-: <a class="el" href="classGps__ublox.html#a512cae752e08b5c60f293c029bbb17aa">Gps_ublox</a>
+: <a class="el" href="classGps__sim.html#a85ee4e542a8ac860ad7845cc086d2774">Gps_sim</a>
 , <a class="el" href="classGps.html#a615de69d1b16f9d04058eeca55fb17ad">Gps</a>
-, <a class="el" href="classGps__sim.html#a85ee4e542a8ac860ad7845cc086d2774">Gps_sim</a>
+, <a class="el" href="classGps__ublox.html#a512cae752e08b5c60f293c029bbb17aa">Gps_ublox</a>
 </li>
 <li>horizontal_status
 : <a class="el" href="structgps__t.html#ac11a2c4b6291bc7e0db1510f514683ae">gps_t</a>
 </li>
 <li>hour
-: <a class="el" href="structubx__nav__timeutc__t.html#a2c68e9306f2e066a5982aa0f3eb63893">ubx_nav_timeutc_t</a>
-, <a class="el" href="structdate__time__t.html#ab9ee4c9f9a31aac8fea020d567697120">date_time_t</a>
+: <a class="el" href="structdate__time__t.html#ab9ee4c9f9a31aac8fea020d567697120">date_time_t</a>
+, <a class="el" href="structubx__nav__timeutc__t.html#a2c68e9306f2e066a5982aa0f3eb63893">ubx_nav_timeutc_t</a>
 </li>
 <li>hover_point
 : <a class="el" href="structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b">altitude_controller_conf_t</a>
 </li>
 <li>hovering_controller
-: <a class="el" href="structnavigation__t.html#a0961b5b9c6c766a0887fe638359e748f">navigation_t</a>
-, <a class="el" href="structnavigation__conf__t.html#aec7e8f3db1d60ca5b45cd7c86e5a2a4f">navigation_conf_t</a>
+: <a class="el" href="structNavigation_1_1conf__t.html#a882555b2baf7599d8597dcb8b3b10ab6">Navigation::conf_t</a>
+, <a class="el" href="classNavigation.html#aa06ed70f97081dd8ab999eb61138964a">Navigation</a>
 </li>
 <li>hud_structure
 : <a class="el" href="classCentral__data.html#ac6293592dec12f4f428f6ade761adfee">Central_data</a>
@@ -206,7 +218,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -218,7 +230,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 21 2016 13:21:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 13:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

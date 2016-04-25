@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classState.html#a5bd439b7d249b36977ab846ca0581d7e" title="returns mav_mode (copy)" alt="" coords="276,5,401,35"/>
+<area shape="rect" id="node5" href="$classManual__control.html#a04eb17506ddb846ef7b2783ef8026ba7" title="Returns the quality of the strength of the remote receiver." alt="" coords="224,59,453,88"/>
+<area shape="rect" id="node7" href="$classManual__control.html#a6f599094c842aa31844bef96e31d286c" title="Returns the value of the mode from the desired source input." alt="" coords="212,112,465,141"/>
+<area shape="rect" id="node9" href="$classBattery.html#aed1638135e4a066740a8e2b184f41684" title="Updates the battery voltage level." alt="" coords="284,165,393,195"/>
+<area shape="rect" id="node15" href="$classState.html#af9414375a28112394b48994db66743b6" title="Check the connection status with the GND station." alt="" coords="256,219,421,248"/>
+<area shape="rect" id="node17" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="277,323,400,352"/>
+<area shape="rect" id="node21" href="$classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="577,269,687,299"/>
+<area shape="rect" id="node23" href="$classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="533,376,731,405"/>
+<area shape="rect" id="node25" href="$classImu.html#ae7d0dd2732b6e735a123a551eb83227c" title="Get the readiness of the IMU." alt="" coords="288,427,389,456"/>
+<area shape="rect" id="node29" href="$classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd" title="Returns if position estimation is healthy." alt="" coords="245,480,432,509"/>
+<area shape="rect" id="node35" href="$classManual__control.html#a714ae93dfee6464520dc799e7d832fc5" title="Sets the internal state of the joystick." alt="" coords="220,533,457,563"/>
+<area shape="rect" id="node11" href="$classAdc.html#a7c7ee3f985b2b67990d61893faae8b32" title="Update function." alt="" coords="587,191,677,220"/>
+<area shape="rect" id="node13" href="$classAdc.html#a9733298b7e9cde8e5b91b64a1ca2b586" title="Get the voltage in volts." alt="" coords="585,137,679,167"/>
+<area shape="rect" id="node19" href="$classState.html#af6d4a1f3caba5370f6d6243d24ad218b" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="584,323,680,352"/>
+<area shape="rect" id="node31" href="$classPosition__estimation.html#a358ae802e65eede79495c339689813c8" title="Returns if altitude estimation is healthy." alt="" coords="515,508,749,537"/>
+<area shape="rect" id="node33" href="$classGps.html#ae1c19ee151945184d4432471fac01aec" title="Indicates whether the measurements can be trusted." alt="" coords="584,455,680,484"/>
+</map>

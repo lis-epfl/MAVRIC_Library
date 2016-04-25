@@ -81,7 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li class="current"><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
       <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
       <li><a href="functions_rela.html"><span>Related&#160;Functions</span></a></li>
     </ul>
   </div>
@@ -133,9 +135,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structgps__t.html#aa9688b58a0154e3e4d293dfdf09d1424">gps_t</a>
 </li>
 <li>imu
-: <a class="el" href="structstate__machine__t.html#ad77fcafdcc58986034bba342ea496218">state_machine_t</a>
-, <a class="el" href="classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac">Central_data</a>
+: <a class="el" href="classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac">Central_data</a>
 , <a class="el" href="structqfilter__t.html#a2cf64aec409b092ce9b1b3e7d6bced66">qfilter_t</a>
+</li>
+<li>imu_
+: <a class="el" href="classState__machine.html#a02adec4dd6e2b86ce915cd8c09b07788">State_machine</a>
 </li>
 <li>in_proto_mask
 : <a class="el" href="structubx__cfg__prt__t.html#ac2a34cdc2f56fb050be705242fa6fef5">ubx_cfg_prt_t</a>
@@ -164,22 +168,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>ini_fix_3d
 : <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a71a18555a13e21e8ade6acb6db3de35b">ubx_cfg_nav_expert_settings_t</a>
 </li>
-<li>init_barometer
-: <a class="el" href="structposition__estimation__t.html#af900a5721547402294f3029fa0f23c24">position_estimation_t</a>
-</li>
 <li>init_done
 : <a class="el" href="structsd__spi__t.html#a4fcec872bef23282f9479756eb4e5b1b">sd_spi_t</a>
-</li>
-<li>init_gps_position
-: <a class="el" href="structposition__estimation__t.html#aa3e6b324ede16bf38db6e6b1c4e7da0e">position_estimation_t</a>
 </li>
 <li>integrator
 : <a class="el" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83">pid_controller_conf_t</a>
 , <a class="el" href="structpid__controller__t.html#afec426f1733f04074b98327c0071f537">pid_controller_t</a>
 </li>
 <li>internal_state
-: <a class="el" href="structnavigation__t.html#a92861124be36d6445554c23b286468d3">navigation_t</a>
-, <a class="el" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0">ahrs_t</a>
+: <a class="el" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0">ahrs_t</a>
+</li>
+<li>internal_state_
+: <a class="el" href="classNavigation.html#af1f6f101be169f793743fa3ee2bc2d47">Navigation</a>
 </li>
 <li>interrupts
 : <a class="el" href="structgyro__config.html#ab1bc6a6a55ed2fac02fa92bfca1be58a">gyro_config</a>
@@ -188,13 +188,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structubx__cfg__tp__t.html#ab3b08c602736f5e553e1437202b17ede">ubx_cfg_tp_t</a>
 </li>
 <li>itow
-: <a class="el" href="structubx__nav__sv__info__t.html#a02a7186f7953c4256db55825de4232b8">ubx_nav_sv_info_t</a>
-, <a class="el" href="structubx__tim__vrfy__t.html#adac78be51ab9b9d94e692f6049e83f67">ubx_tim_vrfy_t</a>
+: <a class="el" href="structubx__nav__status__t.html#aa4d4659af6bb196093380bb742793ef7">ubx_nav_status_t</a>
 , <a class="el" href="structubx__nav__pos__llh__t.html#ae67928fcfc201826b69fc6d4263db8a9">ubx_nav_pos_llh_t</a>
-, <a class="el" href="structubx__nav__dgps__t.html#a83d3cdb3776bd9a15b1be018fdc1f0fb">ubx_nav_dgps_t</a>
+, <a class="el" href="structubx__nav__sv__info__t.html#a02a7186f7953c4256db55825de4232b8">ubx_nav_sv_info_t</a>
 , <a class="el" href="structubx__nav__vel__ned__t.html#acd66ba7feeedb37272e2c43338a980f4">ubx_nav_vel_ned_t</a>
-, <a class="el" href="structubx__nav__status__t.html#aa4d4659af6bb196093380bb742793ef7">ubx_nav_status_t</a>
+, <a class="el" href="structubx__tim__vrfy__t.html#adac78be51ab9b9d94e692f6049e83f67">ubx_tim_vrfy_t</a>
 , <a class="el" href="structubx__nav__timeutc__t.html#ab30a57c51d2cbc7093630e05f0f3ded9">ubx_nav_timeutc_t</a>
+, <a class="el" href="structubx__nav__dgps__t.html#a83d3cdb3776bd9a15b1be018fdc1f0fb">ubx_nav_dgps_t</a>
 , <a class="el" href="structubx__nav__solution__t.html#a6609f5733f8c3f2423a5241757c80d6b">ubx_nav_solution_t</a>
 </li>
 </ul>
@@ -204,7 +204,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -216,7 +216,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 21 2016 13:21:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 13:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

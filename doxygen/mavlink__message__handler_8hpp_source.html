@@ -133,104 +133,93 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00051"></a>00051 <span class="preprocessor">#define MAV_SYS_ID_ALL 0</span>
 <a name="l00052"></a>00052 <span class="preprocessor"></span><span class="preprocessor">#define MAV_MSG_ENUM_END 255</span>
 <a name="l00053"></a>00053 <span class="preprocessor"></span>
-<a name="l00059"></a>00059 <span class="keyword">typedef</span> <span class="keywordtype">void</span>* handling_module_struct_t;
+<a name="l00054"></a>00054 
+<a name="l00059"></a>00059 <span class="keyword">typedef</span> <span class="keyword">enum</span> MAV_RESULT mav_result_t;
 <a name="l00060"></a>00060 
-<a name="l00065"></a>00065 <span class="keyword">typedef</span> <span class="keyword">enum</span> MAV_RESULT mav_result_t;
-<a name="l00066"></a>00066 
-<a name="l00070"></a>00070 <span class="keyword">typedef</span> void (*mavlink_msg_callback_function_t)(handling_module_struct_t, uint32_t sysid, mavlink_message_t*);
+<a name="l00061"></a>00061 
+<a name="l00068"></a><a class="code" href="classMavlink__message__handler.html">00068</a> <span class="keyword">class </span><a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>
+<a name="l00069"></a>00069 {
+<a name="l00070"></a>00070 <span class="keyword">public</span>:
 <a name="l00071"></a>00071 
-<a name="l00072"></a>00072 
-<a name="l00076"></a>00076 <span class="keyword">typedef</span> mav_result_t (*mavlink_cmd_callback_function_t)(handling_module_struct_t, mavlink_command_long_t*);
-<a name="l00077"></a>00077 
+<a name="l00077"></a><a class="code" href="classMavlink__message__handler.html#aeaf031bfd583498b1f6cb2aa79fc1ac0">00077</a>     <span class="keyword">typedef</span> <span class="keywordtype">void</span>* <a class="code" href="classMavlink__message__handler.html#aeaf031bfd583498b1f6cb2aa79fc1ac0" title="Pointer a module&#39;s data structure.">handling_module_struct_t</a>;
 <a name="l00078"></a>00078 
-<a name="l00083"></a>00083 <span class="keyword">typedef</span> <span class="keyword">enum</span> MAV_COMPONENT mav_component_t;
+<a name="l00082"></a><a class="code" href="classMavlink__message__handler.html#a2339211b086a53edae752ba3940dbcc9">00082</a>     <span class="keyword">typedef</span> void (*<a class="code" href="classMavlink__message__handler.html#a2339211b086a53edae752ba3940dbcc9" title="Prototype of callback functions for MAVLink messages.">msg_callback_func_t</a>)(<a class="code" href="classMavlink__message__handler.html#aeaf031bfd583498b1f6cb2aa79fc1ac0" title="Pointer a module&#39;s data structure.">handling_module_struct_t</a>, uint32_t sysid, mavlink_message_t*);
+<a name="l00083"></a>00083 
 <a name="l00084"></a>00084 
-<a name="l00085"></a>00085 
-<a name="l00089"></a><a class="code" href="structmavlink__message__handler__msg__callback__t.html">00089</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00090"></a>00090 {
-<a name="l00091"></a><a class="code" href="structmavlink__message__handler__msg__callback__t.html#a599c25a3ba54216b257e5d7389cde124">00091</a>     <span class="keyword">const</span> uint32_t*                     <a class="code" href="structmavlink__message__handler__msg__callback__t.html#a599c25a3ba54216b257e5d7389cde124" title="Pointer to the system ID.">sys_id</a>;                     
-<a name="l00092"></a><a class="code" href="structmavlink__message__handler__msg__callback__t.html#a56760906841dd9fe4b87377ad9b004ac">00092</a>     uint8_t                         <a class="code" href="structmavlink__message__handler__msg__callback__t.html#a56760906841dd9fe4b87377ad9b004ac" title="The function will be called only for messages with ID message_id.">message_id</a>;                     
-<a name="l00093"></a><a class="code" href="structmavlink__message__handler__msg__callback__t.html#a5fc641a1f1c96aa7b5ecae452430c1d2">00093</a>     uint8_t                         <a class="code" href="structmavlink__message__handler__msg__callback__t.html#a5fc641a1f1c96aa7b5ecae452430c1d2" title="The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)...">sysid_filter</a>;                   
-<a name="l00094"></a><a class="code" href="structmavlink__message__handler__msg__callback__t.html#a7dacafe3f72851215864962ce11c41ed">00094</a>     mav_component_t                 <a class="code" href="structmavlink__message__handler__msg__callback__t.html#a7dacafe3f72851215864962ce11c41ed" title="The function will be called only for messages coming from component compid_filter (0 for all)...">compid_filter</a>;                  
-<a name="l00095"></a><a class="code" href="structmavlink__message__handler__msg__callback__t.html#afe96e343602d46139e1429da7dedfa50">00095</a>     mavlink_msg_callback_function_t <span class="keyword">function</span>;                       
-<a name="l00096"></a><a class="code" href="structmavlink__message__handler__msg__callback__t.html#a62207b6f3e0542c139192f8d5275fd5c">00096</a>     handling_module_struct_t        <a class="code" href="structmavlink__message__handler__msg__callback__t.html#a62207b6f3e0542c139192f8d5275fd5c" title="Pointer to module data structure to be given as argument to the function.">module_struct</a>;                  
-<a name="l00097"></a>00097 } <a class="code" href="structmavlink__message__handler__msg__callback__t.html" title="Message callback.">mavlink_message_handler_msg_callback_t</a>;
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099 
-<a name="l00103"></a><a class="code" href="structmavlink__message__handler__cmd__callback__t.html">00103</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00104"></a>00104 {
-<a name="l00105"></a><a class="code" href="structmavlink__message__handler__cmd__callback__t.html#a8536861198730d7c767faf04a996d4a1">00105</a>     uint16_t                        <a class="code" href="structmavlink__message__handler__cmd__callback__t.html#a8536861198730d7c767faf04a996d4a1" title="The function will be called only for commands with ID command_id.">command_id</a>;                     
-<a name="l00106"></a><a class="code" href="structmavlink__message__handler__cmd__callback__t.html#aee5acda6446d0f035cf85512b23b5420">00106</a>     uint8_t                         <a class="code" href="structmavlink__message__handler__cmd__callback__t.html#aee5acda6446d0f035cf85512b23b5420" title="The function will be called only for commands coming from MAVs with ID sysid_filter (0 for all)...">sysid_filter</a>;                   
-<a name="l00107"></a><a class="code" href="structmavlink__message__handler__cmd__callback__t.html#a7fa053317e0aca444bcc38e1d2208a4d">00107</a>     mav_component_t                 <a class="code" href="structmavlink__message__handler__cmd__callback__t.html#a7fa053317e0aca444bcc38e1d2208a4d" title="The function will be called only for commands coming from component compid_filter (0 for all)...">compid_filter</a>;                  
-<a name="l00108"></a><a class="code" href="structmavlink__message__handler__cmd__callback__t.html#abe619619dde56eff3e56d156d033b7b5">00108</a>     mav_component_t                 <a class="code" href="structmavlink__message__handler__cmd__callback__t.html#abe619619dde56eff3e56d156d033b7b5" title="The function will be called only if the commands targets the component compid_target of this system (...">compid_target</a>;                  
-<a name="l00109"></a><a class="code" href="structmavlink__message__handler__cmd__callback__t.html#a5701f8836553e52e2a1d95507b87cd0b">00109</a>     mavlink_cmd_callback_function_t <span class="keyword">function</span>;                       
-<a name="l00110"></a><a class="code" href="structmavlink__message__handler__cmd__callback__t.html#ad757c354f919b2768360c9f762604667">00110</a>     handling_module_struct_t        <a class="code" href="structmavlink__message__handler__cmd__callback__t.html#ad757c354f919b2768360c9f762604667" title="Pointer to module data structure to be given as argument to the function.">module_struct</a>;                  
-<a name="l00111"></a>00111 } <a class="code" href="structmavlink__message__handler__cmd__callback__t.html" title="Command callback.">mavlink_message_handler_cmd_callback_t</a>;
-<a name="l00112"></a>00112 
-<a name="l00113"></a>00113 
-<a name="l00120"></a><a class="code" href="structmavlink__message__handler__msg__callback__set__t.html">00120</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00121"></a>00121 {
-<a name="l00122"></a><a class="code" href="structmavlink__message__handler__msg__callback__set__t.html#a72af6888f28571bde596207bdfe23cee">00122</a>     uint32_t <a class="code" href="structmavlink__message__handler__msg__callback__set__t.html#a72af6888f28571bde596207bdfe23cee" title="Number of message callback currently registered.">callback_count</a>;                                        
-<a name="l00123"></a><a class="code" href="structmavlink__message__handler__msg__callback__set__t.html#ae0524500560d30911b2756d1510a53e0">00123</a>     uint32_t <a class="code" href="structmavlink__message__handler__msg__callback__set__t.html#ae0524500560d30911b2756d1510a53e0" title="Maximum number of callback that can be registered.">max_callback_count</a>;                                    
-<a name="l00124"></a><a class="code" href="structmavlink__message__handler__msg__callback__set__t.html#a00953cbe52547a30284eec3d81021191">00124</a>     <a class="code" href="structmavlink__message__handler__msg__callback__t.html" title="Message callback.">mavlink_message_handler_msg_callback_t</a> callback_list[];         
-<a name="l00125"></a>00125 } <a class="code" href="structmavlink__message__handler__msg__callback__set__t.html" title="Set of message callbacks.">mavlink_message_handler_msg_callback_set_t</a>;
-<a name="l00126"></a>00126 
-<a name="l00127"></a>00127 
-<a name="l00134"></a><a class="code" href="structmavlink__message__handler__cmd__callback__set__t.html">00134</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00135"></a>00135 {
-<a name="l00136"></a><a class="code" href="structmavlink__message__handler__cmd__callback__set__t.html#a13d94324f0037fac3d321ecf4c638c12">00136</a>     uint32_t <a class="code" href="structmavlink__message__handler__cmd__callback__set__t.html#a13d94324f0037fac3d321ecf4c638c12" title="Number of command callback currently registered.">callback_count</a>;                                        
-<a name="l00137"></a><a class="code" href="structmavlink__message__handler__cmd__callback__set__t.html#a1da5e8cdce39e8bd77e3406270cc693c">00137</a>     uint32_t <a class="code" href="structmavlink__message__handler__cmd__callback__set__t.html#a1da5e8cdce39e8bd77e3406270cc693c" title="Maximum number of callback that can be registered.">max_callback_count</a>;                                    
-<a name="l00138"></a><a class="code" href="structmavlink__message__handler__cmd__callback__set__t.html#abb70bd1d9b0eedd625f5a53f0d33f9e7">00138</a>     <a class="code" href="structmavlink__message__handler__cmd__callback__t.html" title="Command callback.">mavlink_message_handler_cmd_callback_t</a> callback_list[];         
-<a name="l00139"></a>00139 } <a class="code" href="structmavlink__message__handler__cmd__callback__set__t.html" title="Set of command callbacks.">mavlink_message_handler_cmd_callback_set_t</a>;
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141 
-<a name="l00148"></a><a class="code" href="structmavlink__message__handler__t.html">00148</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00149"></a>00149 {
-<a name="l00150"></a><a class="code" href="structmavlink__message__handler__t.html#aa47aa49e599357b06f6ab1d4de287d6f">00150</a>     <a class="code" href="structmavlink__message__handler__msg__callback__set__t.html" title="Set of message callbacks.">mavlink_message_handler_msg_callback_set_t</a>* <a class="code" href="structmavlink__message__handler__t.html#aa47aa49e599357b06f6ab1d4de287d6f" title="Set of message callbacks.">msg_callback_set</a>;   
-<a name="l00151"></a><a class="code" href="structmavlink__message__handler__t.html#a4d0037820949eb6456e1ea035035d478">00151</a>     <a class="code" href="structmavlink__message__handler__cmd__callback__set__t.html" title="Set of command callbacks.">mavlink_message_handler_cmd_callback_set_t</a>* <a class="code" href="structmavlink__message__handler__t.html#a4d0037820949eb6456e1ea035035d478" title="Set of command callbacks.">cmd_callback_set</a>;   
-<a name="l00152"></a><a class="code" href="structmavlink__message__handler__t.html#aff84e135d82fb5155268df3730addcba">00152</a>     <span class="keywordtype">bool</span> <a class="code" href="structmavlink__message__handler__t.html#aff84e135d82fb5155268df3730addcba" title="Indicates whether debug message are written for every incoming message.">debug</a>;                                                     
-<a name="l00153"></a>00153     <span class="keyword">const</span> <a class="code" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module.">mavlink_stream_t</a>* mavlink_stream;
-<a name="l00154"></a>00154 } <a class="code" href="structmavlink__message__handler__t.html" title="Main message handler structure.">mavlink_message_handler_t</a>;
+<a name="l00088"></a><a class="code" href="classMavlink__message__handler.html#abc1bb0acbdc99322232f2f12ff33cf36">00088</a>     <span class="keyword">typedef</span> mav_result_t (*<a class="code" href="classMavlink__message__handler.html#abc1bb0acbdc99322232f2f12ff33cf36" title="Prototype of callback functions for MAVLink commands.">cmd_callback_func_t</a>)(<a class="code" href="classMavlink__message__handler.html#aeaf031bfd583498b1f6cb2aa79fc1ac0" title="Pointer a module&#39;s data structure.">handling_module_struct_t</a>, mavlink_command_long_t*);
+<a name="l00089"></a>00089 
+<a name="l00090"></a>00090 
+<a name="l00095"></a><a class="code" href="classMavlink__message__handler.html#a89f6704fca454949d1565731d0d9631b">00095</a>     <span class="keyword">typedef</span> <span class="keyword">enum</span> MAV_COMPONENT <a class="code" href="classMavlink__message__handler.html#a89f6704fca454949d1565731d0d9631b" title="Enumeration of MAV components.">mav_component_t</a>;
+<a name="l00096"></a>00096 
+<a name="l00100"></a><a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html">00100</a>     <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00101"></a>00101     {
+<a name="l00102"></a><a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html#aa63afd467ff165248e559a63d996b5fe">00102</a>         uint8_t                         <a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html#aa63afd467ff165248e559a63d996b5fe" title="The function will be called only for messages with ID message_id.">message_id</a>;                     
+<a name="l00103"></a><a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html#abb18729bf6da7c89dcd9c2b429c8f62c">00103</a>         uint8_t                         <a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html#abb18729bf6da7c89dcd9c2b429c8f62c" title="The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)...">sysid_filter</a>;                   
+<a name="l00104"></a><a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html#a7cc36ad7df63c55dc819c847096e164e">00104</a>         <a class="code" href="classMavlink__message__handler.html#a89f6704fca454949d1565731d0d9631b" title="Enumeration of MAV components.">mav_component_t</a>                 <a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html#a7cc36ad7df63c55dc819c847096e164e" title="The function will be called only for messages coming from component compid_filter (0 for all)...">compid_filter</a>;                  
+<a name="l00105"></a><a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html#a4d2e4d840045c266711bdee8dec1b985">00105</a>         <a class="code" href="classMavlink__message__handler.html#a2339211b086a53edae752ba3940dbcc9" title="Prototype of callback functions for MAVLink messages.">msg_callback_func_t</a>             <span class="keyword">function</span>;                       
+<a name="l00106"></a><a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html#afe3d15ae38a47ef9eed4ab20adcf6549">00106</a>         <a class="code" href="classMavlink__message__handler.html#aeaf031bfd583498b1f6cb2aa79fc1ac0" title="Pointer a module&#39;s data structure.">handling_module_struct_t</a>        <a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html#afe3d15ae38a47ef9eed4ab20adcf6549" title="Pointer to module data structure to be given as argument to the function.">module_struct</a>;                  
+<a name="l00107"></a>00107     } <a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html" title="Message callback.">msg_callback_t</a>;
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 
+<a name="l00113"></a><a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html">00113</a>     <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00114"></a>00114     {
+<a name="l00115"></a><a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#aff3f4a4c29f1b5fc7ac52c94fbda7deb">00115</a>         uint16_t                        <a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#aff3f4a4c29f1b5fc7ac52c94fbda7deb" title="The function will be called only for commands with ID command_id.">command_id</a>;                     
+<a name="l00116"></a><a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#a01ebd622ecff1ef72cbcd48ce8da0fb0">00116</a>         uint8_t                         <a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#a01ebd622ecff1ef72cbcd48ce8da0fb0" title="The function will be called only for commands coming from MAVs with ID sysid_filter (0 for all)...">sysid_filter</a>;                   
+<a name="l00117"></a><a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#aae4bd88bd452738f4dfe3a859a017955">00117</a>         <a class="code" href="classMavlink__message__handler.html#a89f6704fca454949d1565731d0d9631b" title="Enumeration of MAV components.">mav_component_t</a>                 <a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#aae4bd88bd452738f4dfe3a859a017955" title="The function will be called only for commands coming from component compid_filter (0 for all)...">compid_filter</a>;                  
+<a name="l00118"></a><a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#a9d1f56cf2f4c47d419b04d4b6eaa1c1d">00118</a>         <a class="code" href="classMavlink__message__handler.html#a89f6704fca454949d1565731d0d9631b" title="Enumeration of MAV components.">mav_component_t</a>                 <a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#a9d1f56cf2f4c47d419b04d4b6eaa1c1d" title="The function will be called only if the commands targets the component compid_target of this system (...">compid_target</a>;                  
+<a name="l00119"></a><a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#a7bfbf5aead1f45abfdbc5e7dad91c04c">00119</a>         <a class="code" href="classMavlink__message__handler.html#abc1bb0acbdc99322232f2f12ff33cf36" title="Prototype of callback functions for MAVLink commands.">cmd_callback_func_t</a>             <span class="keyword">function</span>;                       
+<a name="l00120"></a><a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#aed13b019bfdaa98d3cdf07e6a89e54a8">00120</a>         <a class="code" href="classMavlink__message__handler.html#aeaf031bfd583498b1f6cb2aa79fc1ac0" title="Pointer a module&#39;s data structure.">handling_module_struct_t</a>        <a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html#aed13b019bfdaa98d3cdf07e6a89e54a8" title="Pointer to module data structure to be given as argument to the function.">module_struct</a>;                  
+<a name="l00121"></a>00121     } <a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html" title="Command callback.">cmd_callback_t</a>;
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123 
+<a name="l00127"></a><a class="code" href="structMavlink__message__handler_1_1conf__t.html">00127</a>     <span class="keyword">struct </span><a class="code" href="structMavlink__message__handler_1_1conf__t.html" title="Structure used to hold parameters during initialisation.">conf_t</a>
+<a name="l00128"></a>00128     {
+<a name="l00129"></a><a class="code" href="structMavlink__message__handler_1_1conf__t.html#a895b1eb9c777ca7c2189e214e1e4bc8e">00129</a>         uint32_t <a class="code" href="structMavlink__message__handler_1_1conf__t.html#a895b1eb9c777ca7c2189e214e1e4bc8e" title="Maximum number of message callbacks.">max_msg_callback_count</a>;                                
+<a name="l00130"></a><a class="code" href="structMavlink__message__handler_1_1conf__t.html#af86df30f18dc98a14cf548dd1103dc1f">00130</a>         uint32_t <a class="code" href="structMavlink__message__handler_1_1conf__t.html#af86df30f18dc98a14cf548dd1103dc1f" title="Maximum number of command callbacks.">max_cmd_callback_count</a>;                                
+<a name="l00131"></a><a class="code" href="structMavlink__message__handler_1_1conf__t.html#a1edac2c7fcdf5491869ba13778db10f5">00131</a>         <span class="keywordtype">bool</span> <a class="code" href="structMavlink__message__handler_1_1conf__t.html#a1edac2c7fcdf5491869ba13778db10f5" title="Indicates whether debug message are written for every incoming message.">debug</a>;                                                     
+<a name="l00132"></a>00132     };
+<a name="l00133"></a>00133 
+<a name="l00141"></a>00141     <a class="code" href="classMavlink__message__handler.html#a60ee5337c71f77a361cc7bf9d1819fd4" title="Constructor.">Mavlink_message_handler</a>(<a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream, <span class="keyword">const</span> <a class="code" href="structMavlink__message__handler_1_1conf__t.html" title="Structure used to hold parameters during initialisation.">conf_t</a>&amp; config);
+<a name="l00142"></a>00142     
+<a name="l00154"></a>00154     <span class="keywordtype">bool</span> <a class="code" href="classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message.">add_msg_callback</a>(<a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html" title="Message callback.">msg_callback_t</a>* msg_callback);
 <a name="l00155"></a>00155 
-<a name="l00156"></a>00156 
-<a name="l00160"></a><a class="code" href="structmavlink__message__handler__conf__t.html">00160</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00161"></a>00161 {
-<a name="l00162"></a><a class="code" href="structmavlink__message__handler__conf__t.html#a6dcd938a0085f7b1fb7d086ecd4a333b">00162</a>     uint32_t <a class="code" href="structmavlink__message__handler__conf__t.html#a6dcd938a0085f7b1fb7d086ecd4a333b" title="Maximum number of message callbacks.">max_msg_callback_count</a>;                                
-<a name="l00163"></a><a class="code" href="structmavlink__message__handler__conf__t.html#ab5cfa82b2d17ed8af3378dde53acf1a4">00163</a>     uint32_t <a class="code" href="structmavlink__message__handler__conf__t.html#ab5cfa82b2d17ed8af3378dde53acf1a4" title="Maximum number of command callbacks.">max_cmd_callback_count</a>;                                
-<a name="l00164"></a><a class="code" href="structmavlink__message__handler__conf__t.html#a9423f9bf673ca6d0246518f343fa74b6">00164</a>     <span class="keywordtype">bool</span> <a class="code" href="structmavlink__message__handler__conf__t.html#a9423f9bf673ca6d0246518f343fa74b6" title="Indicates whether debug message are written for every incoming message.">debug</a>;                                                     
-<a name="l00165"></a>00165 } <a class="code" href="structmavlink__message__handler__conf__t.html" title="Structure used to hold parameters during initialisation.">mavlink_message_handler_conf_t</a>;
-<a name="l00166"></a>00166 
-<a name="l00167"></a>00167 
-<a name="l00177"></a>00177 <span class="keywordtype">bool</span> mavlink_message_handler_init(<a class="code" href="structmavlink__message__handler__t.html" title="Main message handler structure.">mavlink_message_handler_t</a>*            message_handler,
-<a name="l00178"></a>00178                                   <span class="keyword">const</span> <a class="code" href="structmavlink__message__handler__conf__t.html" title="Structure used to hold parameters during initialisation.">mavlink_message_handler_conf_t</a>*     config,
-<a name="l00179"></a>00179                                   <span class="keyword">const</span> <a class="code" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module.">mavlink_stream_t</a>* mavlink_stream);
-<a name="l00180"></a>00180 
-<a name="l00181"></a>00181 
-<a name="l00194"></a>00194 <span class="keywordtype">bool</span> mavlink_message_handler_add_msg_callback(<a class="code" href="structmavlink__message__handler__t.html" title="Main message handler structure.">mavlink_message_handler_t</a>*                    message_handler,
-<a name="l00195"></a>00195         <a class="code" href="structmavlink__message__handler__msg__callback__t.html" title="Message callback.">mavlink_message_handler_msg_callback_t</a>*     msg_callback);
-<a name="l00196"></a>00196 
-<a name="l00197"></a>00197 
-<a name="l00210"></a>00210 <span class="keywordtype">bool</span> mavlink_message_handler_add_cmd_callback(<a class="code" href="structmavlink__message__handler__t.html" title="Main message handler structure.">mavlink_message_handler_t</a>*                    message_handler,
-<a name="l00211"></a>00211         <a class="code" href="structmavlink__message__handler__cmd__callback__t.html" title="Command callback.">mavlink_message_handler_cmd_callback_t</a>*     cmd_callback);
-<a name="l00212"></a>00212 
-<a name="l00213"></a>00213 
-<a name="l00220"></a>00220 <span class="keywordtype">void</span> mavlink_message_handler_msg_default_dbg(mavlink_message_t* msg);
-<a name="l00221"></a>00221 
-<a name="l00222"></a>00222 
-<a name="l00229"></a>00229 <span class="keywordtype">void</span> mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd);
+<a name="l00167"></a>00167     <span class="keywordtype">bool</span> <a class="code" href="classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command.">add_cmd_callback</a>(<a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html" title="Command callback.">cmd_callback_t</a>* cmd_callback);
+<a name="l00168"></a>00168 
+<a name="l00175"></a>00175     <span class="keywordtype">void</span> <a class="code" href="classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca...">receive</a>(<a class="code" href="structMavlink__stream_1_1msg__received__t.html" title="Mavlink structures for the receive message and its status.">Mavlink_stream::msg_received_t</a>* rec);
+<a name="l00176"></a>00176 
+<a name="l00183"></a>00183     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classMavlink__message__handler.html#ab73889a37846fd1f3f39d8540ca7d03d" title="Dummy message callback for debug purpose.">msg_default_dbg</a>(mavlink_message_t* msg);
+<a name="l00184"></a>00184 
+<a name="l00191"></a>00191     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16" title="Dummy command callback for debug purpose.">cmd_default_dbg</a>(mavlink_command_long_t* cmd);
+<a name="l00192"></a>00192 
+<a name="l00193"></a>00193 
+<a name="l00194"></a>00194 <span class="keyword">private</span>:
+<a name="l00195"></a>00195     <span class="keywordtype">bool</span> debug_;                                                     
+<a name="l00196"></a>00196     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream_;
+<a name="l00197"></a>00197     uint32_t msg_callback_count_;                                    
+<a name="l00198"></a>00198     uint32_t msg_callback_count_max_;                                
+<a name="l00199"></a>00199     uint32_t cmd_callback_count_;                                    
+<a name="l00200"></a>00200     uint32_t cmd_callback_count_max_;                                
+<a name="l00201"></a>00201     <a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html" title="Message callback.">msg_callback_t</a>* msg_callback_list;      
+<a name="l00202"></a>00202     <a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html" title="Command callback.">cmd_callback_t</a>* cmd_callback_list;      
+<a name="l00203"></a>00203     
+<a name="l00210"></a>00210     <span class="keywordtype">void</span> sort_latest_msg_callback();
+<a name="l00211"></a>00211 
+<a name="l00219"></a>00219     <span class="keywordtype">void</span> sort_latest_cmd_callback();
+<a name="l00220"></a>00220 
+<a name="l00229"></a>00229     <span class="keywordtype">bool</span> match_msg(<a class="code" href="structMavlink__message__handler_1_1msg__callback__t.html" title="Message callback.">msg_callback_t</a>* msg_callback, mavlink_message_t* msg);
 <a name="l00230"></a>00230 
-<a name="l00231"></a>00231 
-<a name="l00238"></a>00238 <span class="keywordtype">void</span> mavlink_message_handler_receive(<a class="code" href="structmavlink__message__handler__t.html" title="Main message handler structure.">mavlink_message_handler_t</a>* message_handler, <a class="code" href="structmavlink__received__t.html" title="Mavlink structures for the receive message and its status.">mavlink_received_t</a>* rec);
-<a name="l00239"></a>00239 
-<a name="l00240"></a>00240 
-<a name="l00241"></a>00241 <span class="preprocessor">#endif </span><span class="comment">/* MAVLINK_MESSAGE_HANDLING_H */</span>
+<a name="l00240"></a>00240     <span class="keywordtype">bool</span> match_cmd(<a class="code" href="structMavlink__message__handler_1_1cmd__callback__t.html" title="Command callback.">cmd_callback_t</a>* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd);
+<a name="l00241"></a>00241 
+<a name="l00242"></a>00242 };
+<a name="l00243"></a>00243 
+<a name="l00244"></a>00244 <span class="preprocessor">#endif </span><span class="comment">/* MAVLINK_MESSAGE_HANDLING_H */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -242,7 +231,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 21 2016 13:21:20 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 13:22:56 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

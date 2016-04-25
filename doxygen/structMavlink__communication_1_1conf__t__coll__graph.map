@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structScheduler_1_1conf__t.html" title="Scheduler configuration." alt="" coords="5,5,144,125"/>
+<area shape="rect" id="node4" href="$structMavlink__message__handler_1_1conf__t.html" title="Structure used to hold parameters during initialisation." alt="" coords="168,5,387,125"/>
+<area shape="rect" id="node6" href="$structOnboard__parameters_1_1conf__t.html" title="Configuration for the module onboard parameters." alt="" coords="411,14,597,117"/>
+<area shape="rect" id="node8" href="$structMavlink__stream_1_1conf__t.html" title="Configuration structure for the module MAVLink stream." alt="" coords="621,5,779,125"/>
+</map>

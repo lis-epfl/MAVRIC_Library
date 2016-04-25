@@ -1,20 +1,19 @@
 var searchData=
 [
   ['h_5f',['H_',['../classKalman.html#afd42db08fb3bd019b8ac9e3a9059b60a',1,'Kalman']]],
-  ['handshake_5fstate',['handshake_state',['../structflow__t.html#af143a5f6e111c77a79c3be5c5c323146',1,'flow_t']]],
   ['have_5fraw_5fvelocity',['have_raw_velocity',['../structgps__t.html#a0e5f56cb48fad71fac7d64d75726e9fc',1,'gps_t']]],
   ['hdop',['hdop',['../structgps__t.html#ac4b5c6c3d8d655767447eb2aa3db2518',1,'gps_t']]],
   ['heading',['heading',['../structglobal__position__t.html#abe141f6b97703b3a9a3016aeb11c304c',1,'global_position_t::heading()'],['../structlocal__position__t.html#a69242f563451a594891002cfca4de72c',1,'local_position_t::heading()']]],
   ['heading_5f2d',['heading_2d',['../structubx__nav__vel__ned__t.html#a86200b9c9ab44118f0a0283bca4feff4',1,'ubx_nav_vel_ned_t']]],
   ['heading_5faccuracy',['heading_accuracy',['../structubx__nav__vel__ned__t.html#aa11b82785885a8e79e58218ab5b20786',1,'ubx_nav_vel_ned_t::heading_accuracy()'],['../structgps__t.html#a04072a8af0b17a88a8a8fdede6ab5555',1,'gps_t::heading_accuracy()']]],
   ['healthy',['healthy',['../structgps__t.html#af408a6413ae85ca3e6e3e3f6ab5fe6d6',1,'gps_t']]],
-  ['hold_5fwaypoint_5fset',['hold_waypoint_set',['../structmavlink__waypoint__handler__t.html#aaa15ebced5c311683ed8fa9ef7ffdea2',1,'mavlink_waypoint_handler_t']]],
+  ['hold_5fwaypoint_5fset_5f',['hold_waypoint_set_',['../classMavlink__waypoint__handler.html#a133c84082db029768e132ecb54ba8515',1,'Mavlink_waypoint_handler']]],
   ['home_5fcoordinates',['home_coordinates',['../structdynamic__model__quad__diag__conf__t.html#a85b64cf1027157d609fa60cac44429c3',1,'dynamic_model_quad_diag_conf_t']]],
   ['horizontal_5faccuracy',['horizontal_accuracy',['../structubx__nav__pos__llh__t.html#a37574e9885d3fa1268c2010184d48c48',1,'ubx_nav_pos_llh_t::horizontal_accuracy()'],['../structgps__t.html#ae7f7b21657d1adb7038bd3933d4a81c3',1,'gps_t::horizontal_accuracy()']]],
   ['horizontal_5fstatus',['horizontal_status',['../structgps__t.html#ac11a2c4b6291bc7e0db1510f514683ae',1,'gps_t']]],
   ['hour',['hour',['../structubx__nav__timeutc__t.html#a2c68e9306f2e066a5982aa0f3eb63893',1,'ubx_nav_timeutc_t::hour()'],['../structdate__time__t.html#ab9ee4c9f9a31aac8fea020d567697120',1,'date_time_t::hour()']]],
   ['hover_5fpoint',['hover_point',['../structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b',1,'altitude_controller_conf_t']]],
-  ['hovering_5fcontroller',['hovering_controller',['../structnavigation__t.html#a0961b5b9c6c766a0887fe638359e748f',1,'navigation_t::hovering_controller()'],['../structnavigation__conf__t.html#aec7e8f3db1d60ca5b45cd7c86e5a2a4f',1,'navigation_conf_t::hovering_controller()']]],
+  ['hovering_5fcontroller',['hovering_controller',['../structNavigation_1_1conf__t.html#a882555b2baf7599d8597dcb8b3b10ab6',1,'Navigation::conf_t::hovering_controller()'],['../classNavigation.html#aa06ed70f97081dd8ab999eb61138964a',1,'Navigation::hovering_controller()']]],
   ['hud_5fstructure',['hud_structure',['../classCentral__data.html#ac6293592dec12f4f428f6ade761adfee',1,'Central_data']]],
   ['hw_5fversion',['hw_version',['../structubx__mon__ver__t.html#ab88ba534ab797ea8978d1575f82adb13',1,'ubx_mon_ver_t']]]
 ];

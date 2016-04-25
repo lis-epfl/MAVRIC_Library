@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__waypoint__handler.html#a5e3ced73a844cec5ecef909dfe15e6ec" title="Initialize the waypoint handler." alt="" coords="312,5,648,35"/>
+<area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="369,59,591,88"/>
+</map>

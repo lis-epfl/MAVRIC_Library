@@ -81,7 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
       <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
       <li><a href="functions_rela.html"><span>Related&#160;Functions</span></a></li>
     </ul>
   </div>
@@ -145,8 +147,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>Imu()
 : <a class="el" href="classImu.html#a4c65a502923f48c797f7548df754ff7c">Imu</a>
 </li>
-<li>imu
-: <a class="el" href="structstate__machine__t.html#ad77fcafdcc58986034bba342ea496218">state_machine_t</a>
+<li>imu_
+: <a class="el" href="classState__machine.html#a02adec4dd6e2b86ce915cd8c09b07788">State_machine</a>
 </li>
 <li>in_proto_mask
 : <a class="el" href="structubx__cfg__prt__t.html#ac2a34cdc2f56fb050be705242fa6fef5">ubx_cfg_prt_t</a>
@@ -225,14 +227,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classAltitude__estimation.html#a074cd11f32f798347d274bd64c2d90e7">Altitude_estimation</a>
 , <a class="el" href="classMagnetometer.html#aca0d01b4a8d631408a1039c0e196560c">Magnetometer</a>
 </li>
-<li>init_barometer
-: <a class="el" href="structposition__estimation__t.html#af900a5721547402294f3029fa0f23c24">position_estimation_t</a>
-</li>
 <li>init_done
 : <a class="el" href="structsd__spi__t.html#a4fcec872bef23282f9479756eb4e5b1b">sd_spi_t</a>
 </li>
-<li>init_gps_position
-: <a class="el" href="structposition__estimation__t.html#aa3e6b324ede16bf38db6e6b1c4e7da0e">position_estimation_t</a>
+<li>init_homing_waypoint()
+: <a class="el" href="classMavlink__waypoint__handler.html#a6e65a0cfc44b105f003a62c4790348ab">Mavlink_waypoint_handler</a>
 </li>
 <li>integrator
 : <a class="el" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83">pid_controller_conf_t</a>
@@ -240,17 +239,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>internal_state
 : <a class="el" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0">ahrs_t</a>
-, <a class="el" href="structnavigation__t.html#a92861124be36d6445554c23b286468d3">navigation_t</a>
+</li>
+<li>internal_state_
+: <a class="el" href="classNavigation.html#af1f6f101be169f793743fa3ee2bc2d47">Navigation</a>
 </li>
 <li>interrupts
 : <a class="el" href="structgyro__config.html#ab1bc6a6a55ed2fac02fa92bfca1be58a">gyro_config</a>
 </li>
 <li>intersect()
-: <a class="el" href="classraytracing_1_1Object.html#ae22336ed5e654882cbc3a78646a8a4c3">raytracing::Object</a>
-, <a class="el" href="classraytracing_1_1Sphere.html#a25f57ba3ec1730982ea8547190f08b9c">raytracing::Sphere</a>
+: <a class="el" href="classraytracing_1_1World.html#a96fa455ff421c041179c8f0f95d8f027">raytracing::World</a>
 , <a class="el" href="classraytracing_1_1Cylinder.html#a37610a42815ccb173582685a9c1b1db4">raytracing::Cylinder</a>
+, <a class="el" href="classraytracing_1_1Object.html#ae22336ed5e654882cbc3a78646a8a4c3">raytracing::Object</a>
+, <a class="el" href="classraytracing_1_1Sphere.html#a25f57ba3ec1730982ea8547190f08b9c">raytracing::Sphere</a>
 , <a class="el" href="classraytracing_1_1Plane.html#ae4f1230ea35246a50ebc989021e2fe8e">raytracing::Plane</a>
-, <a class="el" href="classraytracing_1_1World.html#a96fa455ff421c041179c8f0f95d8f027">raytracing::World</a>
 </li>
 <li>Intersection()
 : <a class="el" href="classraytracing_1_1Intersection.html#a153a86346bbbdc8ccf5f15afe896faf6">raytracing::Intersection</a>
@@ -262,15 +263,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classMat.html#a44ec1c22b000eaf908df319d85eb211e">Mat&lt; N, P, T &gt;</a>
 </li>
 <li>inverse()
-: <a class="el" href="classmat_1_1op.html#aceae11aa2480d32843753543b80e2971">mat::op</a>
+: <a class="el" href="classmat_1_1op.html#aff774e25c1ebe4118dc8ba3f81dd795f">mat::op</a>
 , <a class="el" href="classMat.html#a546d0408c1b17f00a7176dcd3e6c10ed">Mat&lt; N, P, T &gt;</a>
-, <a class="el" href="classmat_1_1op.html#afeae12fb4e830d030604380ef243b21b">mat::op</a>
 </li>
 <li>irq()
 : <a class="el" href="classSerial__usb__avr32.html#a3fbeee58fedefddb2bf19a3dcd24ec32">Serial_usb_avr32</a>
 </li>
 <li>irq_handler()
 : <a class="el" href="classSerial__stm32.html#a883789759916689a6fe66b25db5249a7">Serial_stm32</a>
+</li>
+<li>is_due()
+: <a class="el" href="classScheduler__task.html#a318a64cf7c3c47422164ccc3d9e5f931">Scheduler_task</a>
 </li>
 <li>is_low()
 : <a class="el" href="classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0">Battery</a>
@@ -286,14 +289,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classImu.html#ae7d0dd2732b6e735a123a551eb83227c">Imu</a>
 </li>
 <li>itow
-: <a class="el" href="structubx__nav__pos__llh__t.html#ae67928fcfc201826b69fc6d4263db8a9">ubx_nav_pos_llh_t</a>
-, <a class="el" href="structubx__nav__vel__ned__t.html#acd66ba7feeedb37272e2c43338a980f4">ubx_nav_vel_ned_t</a>
-, <a class="el" href="structubx__nav__timeutc__t.html#ab30a57c51d2cbc7093630e05f0f3ded9">ubx_nav_timeutc_t</a>
-, <a class="el" href="structubx__tim__vrfy__t.html#adac78be51ab9b9d94e692f6049e83f67">ubx_tim_vrfy_t</a>
+: <a class="el" href="structubx__tim__vrfy__t.html#adac78be51ab9b9d94e692f6049e83f67">ubx_tim_vrfy_t</a>
 , <a class="el" href="structubx__nav__dgps__t.html#a83d3cdb3776bd9a15b1be018fdc1f0fb">ubx_nav_dgps_t</a>
-, <a class="el" href="structubx__nav__status__t.html#aa4d4659af6bb196093380bb742793ef7">ubx_nav_status_t</a>
-, <a class="el" href="structubx__nav__sv__info__t.html#a02a7186f7953c4256db55825de4232b8">ubx_nav_sv_info_t</a>
+, <a class="el" href="structubx__nav__timeutc__t.html#ab30a57c51d2cbc7093630e05f0f3ded9">ubx_nav_timeutc_t</a>
 , <a class="el" href="structubx__nav__solution__t.html#a6609f5733f8c3f2423a5241757c80d6b">ubx_nav_solution_t</a>
+, <a class="el" href="structubx__nav__sv__info__t.html#a02a7186f7953c4256db55825de4232b8">ubx_nav_sv_info_t</a>
+, <a class="el" href="structubx__nav__vel__ned__t.html#acd66ba7feeedb37272e2c43338a980f4">ubx_nav_vel_ned_t</a>
+, <a class="el" href="structubx__nav__pos__llh__t.html#ae67928fcfc201826b69fc6d4263db8a9">ubx_nav_pos_llh_t</a>
+, <a class="el" href="structubx__nav__status__t.html#aa4d4659af6bb196093380bb742793ef7">ubx_nav_status_t</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -302,7 +305,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -314,7 +317,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 21 2016 13:21:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 13:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

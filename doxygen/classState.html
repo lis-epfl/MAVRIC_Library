@@ -79,8 +79,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#friends">Friends</a>  </div>
   <div class="headertitle">
 <div class="title">State Class Reference</div>  </div>
 </div><!--header-->
@@ -95,27 +98,40 @@ Collaboration diagram for State:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState__coll__graph.png" border="0" usemap="#State_coll__map" alt="Collaboration graph"/></div>
 <map name="State_coll__map" id="State_coll__map">
-<area shape="rect" id="node2" href="classBattery.html" title="Battery voltage monitor." alt="" coords="5,297,88,452"/><area shape="rect" id="node4" href="structmavlink__stream__t.html" title="Main structure for the MAVLink stream module." alt="" coords="112,280,243,469"/><area shape="rect" id="node6" href="classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="61,6,155,213"/><area shape="rect" id="node8" href="structmavlink__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="179,58,312,161"/></map>
+<area shape="rect" id="node2" href="classBattery.html" title="Battery voltage monitor." alt="" coords="53,5,136,160"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classState-members.html">List of all members.</a></p>
 <table class="memberdecls">
+<tr><td colspan="2"><h2><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structState_1_1conf__t.html">conf_t</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration structure.  <a href="structState_1_1conf__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#afda032c9312336f847f2a009688c90cc">State</a> (<a class="el" href="structmavlink__stream__t.html">mavlink_stream_t</a> &amp;<a class="el" href="classState.html#af98861cb1312d71694785b3c7a02230e">mavlink_stream_</a>, <a class="el" href="classBattery.html">Battery</a> &amp;battery, <a class="el" href="structstate__conf__t.html">state_conf_t</a> config=state_default_config())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#afda032c9312336f847f2a009688c90cc"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a83b946fdb7de29b4140d1ce5ab4635fa">switch_to_active_mode</a> (mav_state_t *<a class="el" href="classState.html#a8a2c155e8675a4b4e3a67b967797d976">mav_state</a>)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the switch to active mode.  <a href="#a83b946fdb7de29b4140d1ce5ab4635fa"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#ad1a7b3d20f3299c0fe55986dc1a5c185">State</a> (<a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream_, <a class="el" href="classBattery.html">Battery</a> &amp;battery, <a class="el" href="structState_1_1conf__t.html">conf_t</a> config=<a class="el" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082">default_config</a>())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#ad1a7b3d20f3299c0fe55986dc1a5c185"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437">switch_to_active_mode</a> (mav_state_t *<a class="el" href="classState.html#aacaa15cd7016181bf7c4a056cfd85008">mav_state_</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the switch to active mode.  <a href="#a24a57c4fe42e2f8d7d3fb4601e9ac437"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9414375a28112394b48994db66743b6"></a><!-- doxytag: member="State::connection_status" ref="af9414375a28112394b48994db66743b6" args="()" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#af9414375a28112394b48994db66743b6">connection_status</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the connection status with the GND station. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a41daea810832a042add30c2c4bdbaa13">set_armed</a> (bool arming)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">tries to arm/disarm; checks performed for arming  <a href="#a41daea810832a042add30c2c4bdbaa13"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#af6d4a1f3caba5370f6d6243d24ad218b">armed</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)  <a href="#af6d4a1f3caba5370f6d6243d24ad218b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a63b01719374e440e90efbd7fa25ada34">guided</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in guided mode (MAV_MODE_FLAG_GUIDED_ENABLED set)  <a href="#a63b01719374e440e90efbd7fa25ada34"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">mav_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">mav_mode</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns mav_mode (copy)  <a href="#a5bd439b7d249b36977ab846ca0581d7e"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structState_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082">default_config</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration.  <a href="#acdcf5e3dd67db48259373cdf7e66e082"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a71654f074c1bb1ca869d0f1da2b6d337"></a><!-- doxytag: member="State::mav_mode" ref="a71654f074c1bb1ca869d0f1da2b6d337" args="" -->
-mav_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a71654f074c1bb1ca869d0f1da2b6d337">mav_mode</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The value of the MAV mode. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a2c155e8675a4b4e3a67b967797d976"></a><!-- doxytag: member="State::mav_state" ref="a8a2c155e8675a4b4e3a67b967797d976" args="" -->
-mav_state_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a8a2c155e8675a4b4e3a67b967797d976">mav_state</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacaa15cd7016181bf7c4a056cfd85008"></a><!-- doxytag: member="State::mav_state_" ref="aacaa15cd7016181bf7c4a056cfd85008" args="" -->
+mav_state_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aacaa15cd7016181bf7c4a056cfd85008">mav_state_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The value of the MAV state. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a73fb170a4e632ac69134b3c8810129"></a><!-- doxytag: member="State::mav_mode_custom" ref="a7a73fb170a4e632ac69134b3c8810129" args="" -->
 mav_mode_custom_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a7a73fb170a4e632ac69134b3c8810129">mav_mode_custom</a></td></tr>
@@ -177,24 +193,31 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4fefe2a757dabcea7202c49f9173dbc5"></a><!-- doxytag: member="State::first_connection_set" ref="a4fefe2a757dabcea7202c49f9173dbc5" args="" -->
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a4fefe2a757dabcea7202c49f9173dbc5">first_connection_set</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to tell that we received a first message from the GND station. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af98861cb1312d71694785b3c7a02230e"></a><!-- doxytag: member="State::mavlink_stream_" ref="af98861cb1312d71694785b3c7a02230e" args="" -->
-<a class="el" href="structmavlink__stream__t.html">mavlink_stream_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#af98861cb1312d71694785b3c7a02230e">mavlink_stream_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Mavlink communication, used to inform ground station of state and capabilities of drone. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa8af6eff2f240cae87d455db9023e079"></a><!-- doxytag: member="State::battery_" ref="aa8af6eff2f240cae87d455db9023e079" args="" -->
 <a class="el" href="classBattery.html">Battery</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aa8af6eff2f240cae87d455db9023e079">battery_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to battery structure. <br/></td></tr>
+<tr><td colspan="2"><h2><a name="friends"></a>
+Friends</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abf215f6a2b080c5da71b952292d35db2"></a><!-- doxytag: member="State::State_machine" ref="abf215f6a2b080c5da71b952292d35db2" args="" -->
+class&#160;</td><td class="memItemRight" valign="bottom"><b>State_machine</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a1b0077b766933ac429fdb1c2a6c9d5a6">mavlink_telemetry_add_data_logging_parameters</a> (<a class="el" href="classData__logging.html">Data_logging</a> *data_logging, <a class="el" href="classCentral__data.html">Central_data</a> *central_data)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Add onboard logging parameters.  <a href="#a1b0077b766933ac429fdb1c2a6c9d5a6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a14cbfb43a63cbf6cd4f0fa30c72023bb">state_telemetry_set_mode</a> (<a class="el" href="classState.html">State</a> *state, mav_mode_t <a class="el" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">mav_mode</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set state-&gt;mav_mode.  <a href="#a14cbfb43a63cbf6cd4f0fa30c72023bb"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">mav_result_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a4664b4ca5c776f7a5db625292bd8b91c">state_telemetry_send_autopilot_capabilities</a> (<a class="el" href="classState.html">State</a> *state, mavlink_command_long_t *packet)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback to the command 520 MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES.  <a href="#a4664b4ca5c776f7a5db625292bd8b91c"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The MAV state. </p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="afda032c9312336f847f2a009688c90cc"></a><!-- doxytag: member="State::State" ref="afda032c9312336f847f2a009688c90cc" args="(mavlink_stream_t &amp;mavlink_stream_, Battery &amp;battery, state_conf_t config=state_default_config())" -->
+<a class="anchor" id="ad1a7b3d20f3299c0fe55986dc1a5c185"></a><!-- doxytag: member="State::State" ref="ad1a7b3d20f3299c0fe55986dc1a5c185" args="(Mavlink_stream &amp;mavlink_stream_, Battery &amp;battery, conf_t config=default_config())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classState.html#afda032c9312336f847f2a009688c90cc">State::State</a> </td>
+          <td class="memname"><a class="el" href="classState.html#ad1a7b3d20f3299c0fe55986dc1a5c185">State::State</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structmavlink__stream__t.html">mavlink_stream_t</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;&#160;</td>
           <td class="paramname"><em>mavlink_stream_</em>, </td>
         </tr>
         <tr>
@@ -206,8 +229,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structstate__conf__t.html">state_conf_t</a>&#160;</td>
-          <td class="paramname"><em>config</em> = <code>state_default_config()</code>&#160;</td>
+          <td class="paramtype"><a class="el" href="structState_1_1conf__t.html">State::conf_t</a>&#160;</td>
+          <td class="paramname"><em>config</em> = <code><a class="el" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082">default_config</a>()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -231,15 +254,168 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a83b946fdb7de29b4140d1ce5ab4635fa"></a><!-- doxytag: member="State::switch_to_active_mode" ref="a83b946fdb7de29b4140d1ce5ab4635fa" args="(mav_state_t *mav_state)" -->
+<a class="anchor" id="af6d4a1f3caba5370f6d6243d24ad218b"></a><!-- doxytag: member="State::armed" ref="af6d4a1f3caba5370f6d6243d24ad218b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classState.html#a83b946fdb7de29b4140d1ce5ab4635fa">State::switch_to_active_mode</a> </td>
+          <td class="memname">bool <a class="el" href="classState.html#af6d4a1f3caba5370f6d6243d24ad218b">State::armed</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set) </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>armed </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_af6d4a1f3caba5370f6d6243d24ad218b_icgraph.png" border="0" usemap="#classState_af6d4a1f3caba5370f6d6243d24ad218b_icgraph" alt=""/></div>
+<map name="classState_af6d4a1f3caba5370f6d6243d24ad218b_icgraph" id="classState_af6d4a1f3caba5370f6d6243d24ad218b_icgraph">
+<area shape="rect" id="node3" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card." alt="" coords="228,5,372,35"/><area shape="rect" id="node5" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data." alt="" coords="235,59,365,88"/><area shape="rect" id="node7" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data." alt="" coords="235,112,365,141"/><area shape="rect" id="node9" href="classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="239,165,361,195"/><area shape="rect" id="node13" href="classPosition__estimation.html#a8856c10ee31f3aab47c029bf798906d0" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="209,219,391,248"/><area shape="rect" id="node15" href="classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="153,272,447,301"/><area shape="rect" id="node11" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="579,165,733,195"/><area shape="rect" id="node17" href="classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21" title="set the home position and altitude to currrent position" alt="" coords="497,272,815,301"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="acdcf5e3dd67db48259373cdf7e66e082"></a><!-- doxytag: member="State::default_config" ref="acdcf5e3dd67db48259373cdf7e66e082" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structState_1_1conf__t.html">State::conf_t</a> <a class="el" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082">State::default_config</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Default configuration. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Config structure </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a63b01719374e440e90efbd7fa25ada34"></a><!-- doxytag: member="State::guided" ref="a63b01719374e440e90efbd7fa25ada34" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#a63b01719374e440e90efbd7fa25ada34">State::guided</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns whether in guided mode (MAV_MODE_FLAG_GUIDED_ENABLED set) </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>guided </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_a63b01719374e440e90efbd7fa25ada34_icgraph.png" border="0" usemap="#classState_a63b01719374e440e90efbd7fa25ada34_icgraph" alt=""/></div>
+<map name="classState_a63b01719374e440e90efbd7fa25ada34_icgraph" id="classState_a63b01719374e440e90efbd7fa25ada34_icgraph">
+<area shape="rect" id="node3" href="classState__machine.html#acebe98d8028a28f00cf2c8d4bdd5b421" title="tries to change state.mav_mode to guided/unguided" alt="" coords="152,5,371,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a5bd439b7d249b36977ab846ca0581d7e"></a><!-- doxytag: member="State::mav_mode" ref="a5bd439b7d249b36977ab846ca0581d7e" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mav_mode_t <a class="el" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">State::mav_mode</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns mav_mode (copy) </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>mav_mode </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_a5bd439b7d249b36977ab846ca0581d7e_icgraph.png" border="0" usemap="#classState_a5bd439b7d249b36977ab846ca0581d7e_icgraph" alt=""/></div>
+<map name="classState_a5bd439b7d249b36977ab846ca0581d7e_icgraph" id="classState_a5bd439b7d249b36977ab846ca0581d7e_icgraph">
+<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="543,5,764,35"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="179,57,437,87"/><area shape="rect" id="node10" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="231,111,385,140"/><area shape="rect" id="node12" href="classNavigation.html#ade9f978504febc6325012ae8bf5ff19f" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode." alt="" coords="243,164,373,193"/><area shape="rect" id="node7" href="classMavlink__waypoint__handler.html#a5e3ced73a844cec5ecef909dfe15e6ec" title="Initialize the waypoint handler." alt="" coords="485,59,821,88"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a41daea810832a042add30c2c4bdbaa13"></a><!-- doxytag: member="State::set_armed" ref="a41daea810832a042add30c2c4bdbaa13" args="(bool arming)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#a41daea810832a042add30c2c4bdbaa13">State::set_armed</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>arming</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>tries to arm/disarm; checks performed for arming </p>
+<p>arming is prevented if</p>
+<ul>
+<li>IMU not ready (mav_state_ == MAV_STATE_CALIBRATING)</li>
+<li>in manual and guided or stabilised mode</li>
+<li>battery low</li>
+</ul>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arming</td><td>true for arming, false for disarming</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>true if desired arming state was accepted; false if refused </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_a41daea810832a042add30c2c4bdbaa13_cgraph.png" border="0" usemap="#classState_a41daea810832a042add30c2c4bdbaa13_cgraph" alt=""/></div>
+<map name="classState_a41daea810832a042add30c2c4bdbaa13_cgraph" id="classState_a41daea810832a042add30c2c4bdbaa13_cgraph">
+<area shape="rect" id="node3" href="classState.html#af6d4a1f3caba5370f6d6243d24ad218b" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="228,5,324,35"/><area shape="rect" id="node5" href="classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="221,59,331,88"/><area shape="rect" id="node7" href="classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="177,112,375,141"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_a41daea810832a042add30c2c4bdbaa13_icgraph.png" border="0" usemap="#classState_a41daea810832a042add30c2c4bdbaa13_icgraph" alt=""/></div>
+<map name="classState_a41daea810832a042add30c2c4bdbaa13_icgraph" id="classState_a41daea810832a042add30c2c4bdbaa13_icgraph">
+<area shape="rect" id="node3" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="177,5,332,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a24a57c4fe42e2f8d7d3fb4601e9ac437"></a><!-- doxytag: member="State::switch_to_active_mode" ref="a24a57c4fe42e2f8d7d3fb4601e9ac437" args="(mav_state_t *mav_state_)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437">State::switch_to_active_mode</a> </td>
           <td>(</td>
           <td class="paramtype">mav_state_t *&#160;</td>
-          <td class="paramname"><em>mav_state</em></td><td>)</td>
+          <td class="paramname"><em>mav_state_</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -249,10 +425,135 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Makes the switch to active mode. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">mav_state</td><td>MAV state </td></tr>
+    <tr><td class="paramname">mav_state_</td><td>MAV state </td></tr>
   </table>
   </dd>
 </dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_a24a57c4fe42e2f8d7d3fb4601e9ac437_icgraph.png" border="0" usemap="#classState_a24a57c4fe42e2f8d7d3fb4601e9ac437_icgraph" alt=""/></div>
+<map name="classState_a24a57c4fe42e2f8d7d3fb4601e9ac437_icgraph" id="classState_a24a57c4fe42e2f8d7d3fb4601e9ac437_icgraph">
+<area shape="rect" id="node3" href="classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="253,5,376,35"/><area shape="rect" id="node5" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="425,32,580,61"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<hr/><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" id="a1b0077b766933ac429fdb1c2a6c9d5a6"></a><!-- doxytag: member="State::mavlink_telemetry_add_data_logging_parameters" ref="a1b0077b766933ac429fdb1c2a6c9d5a6" args="(Data_logging *data_logging, Central_data *central_data)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#a1b0077b766933ac429fdb1c2a6c9d5a6">mavlink_telemetry_add_data_logging_parameters</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classData__logging.html">Data_logging</a> *&#160;</td>
+          <td class="paramname"><em>data_logging</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCentral__data.html">Central_data</a> *&#160;</td>
+          <td class="paramname"><em>central_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Add onboard logging parameters. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The initialization status of the module, succeed == true </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4664b4ca5c776f7a5db625292bd8b91c"></a><!-- doxytag: member="State::state_telemetry_send_autopilot_capabilities" ref="a4664b4ca5c776f7a5db625292bd8b91c" args="(State *state, mavlink_command_long_t *packet)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mav_result_t <a class="el" href="classState.html#a4664b4ca5c776f7a5db625292bd8b91c">state_telemetry_send_autopilot_capabilities</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classState.html">State</a> *&#160;</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">mavlink_command_long_t *&#160;</td>
+          <td class="paramname"><em>packet</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Callback to the command 520 MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>The pointer to the state structure </td></tr>
+    <tr><td class="paramname">packet</td><td>The pointer to the decoded MAVLink message long</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The MAV_RESULT of the command </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a14cbfb43a63cbf6cd4f0fa30c72023bb"></a><!-- doxytag: member="State::state_telemetry_set_mode" ref="a14cbfb43a63cbf6cd4f0fa30c72023bb" args="(State *state, mav_mode_t mav_mode)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#a14cbfb43a63cbf6cd4f0fa30c72023bb">state_telemetry_set_mode</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classState.html">State</a> *&#160;</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">mav_mode_t&#160;</td>
+          <td class="paramname"><em>mav_mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Set state-&gt;mav_mode. </p>
+<p>performs the following checks before changing</p>
+<ul>
+<li>if arming is refused by state, reject new mode</li>
+<li>if in calibration state, reject new mode the HIL flag is ignored</li>
+</ul>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>The pointer to the state structure </td></tr>
+    <tr><td class="paramname">mav_mode</td><td>Desired mav_mode</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success true if mode was accepted, false if refused </dd></dl>
 
 </div>
 </div>
@@ -266,7 +567,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -278,7 +579,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 21 2016 13:21:21 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 25 2016 13:22:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

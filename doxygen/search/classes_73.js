@@ -1,8 +1,8 @@
 var searchData=
 [
   ['satellite',['Satellite',['../classSatellite.html',1,'']]],
-  ['scheduler_5fconf_5ft',['scheduler_conf_t',['../structscheduler__conf__t.html',1,'']]],
-  ['scheduler_5ft',['scheduler_t',['../structscheduler__t.html',1,'']]],
+  ['scheduler',['Scheduler',['../classScheduler.html',1,'']]],
+  ['scheduler_5ftask',['Scheduler_task',['../classScheduler__task.html',1,'']]],
   ['sd_5fspi_5ft',['sd_spi_t',['../structsd__spi__t.html',1,'']]],
   ['serial',['Serial',['../classSerial.html',1,'']]],
   ['serial_5favr32',['Serial_avr32',['../classSerial__avr32.html',1,'']]],
@@ -49,6 +49,5 @@ var searchData=
   ['stabiliser_5fstack_5fcopter_5ft',['stabiliser_stack_copter_t',['../structstabiliser__stack__copter__t.html',1,'']]],
   ['stabiliser_5ft',['stabiliser_t',['../structstabiliser__t.html',1,'']]],
   ['state',['State',['../classState.html',1,'']]],
-  ['state_5fconf_5ft',['state_conf_t',['../structstate__conf__t.html',1,'']]],
-  ['state_5fmachine_5ft',['state_machine_t',['../structstate__machine__t.html',1,'']]]
+  ['state_5fmachine',['State_machine',['../classState__machine.html',1,'']]]
 ];

@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="375,32,668,61"/>
+<area shape="rect" id="node5" href="$classState.html#af6d4a1f3caba5370f6d6243d24ad218b" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="805,5,901,35"/>
+<area shape="rect" id="node7" href="$classPosition__estimation.html#a179579cd27313fe0f8bb38695124d431" title="Reset the origin of the fence (e.g. common for many entities or when armed)" alt="" coords="719,59,988,88"/>
+</map>

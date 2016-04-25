@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['uart',['uart',['../structflow__t.html#a34296fa59fcfaa835f5e9b4be1dc5a11',1,'flow_t']]],
   ['uart_5fbuffer_5fin',['uart_buffer_in',['../structepuck__communication__t.html#a7a46d39588e72e12a35b4aac95e00a60',1,'epuck_communication_t']]],
   ['uart_5fbuffer_5fout',['uart_buffer_out',['../structepuck__communication__t.html#aea9e92c309a5e7be5c5990b97ed0d509',1,'epuck_communication_t']]],
   ['uart_5fstream_5fin',['uart_stream_in',['../structepuck__communication__t.html#a79d734bc5fbd0cd3e28ac6a3855a9f80',1,'epuck_communication_t']]],

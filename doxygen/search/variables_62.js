@@ -1,7 +1,7 @@
 var searchData=
 [
   ['b_5f',['B_',['../classKalman.html#acf8e90cf222702a93cc079769813c7c0',1,'Kalman']]],
-  ['barometer',['barometer',['../classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e',1,'Central_data::barometer()'],['../structposition__estimation__t.html#a422f4cdc5d51e3c2f21ada0c1432aed5',1,'position_estimation_t::barometer()']]],
+  ['barometer',['barometer',['../classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e',1,'Central_data']]],
   ['base_5fhealth',['base_health',['../structubx__nav__dgps__t.html#ae32b24ce493c04451063f95f7c8e5c0d',1,'ubx_nav_dgps_t']]],
   ['base_5fid',['base_id',['../structubx__nav__dgps__t.html#a943b371eb1753d81aeaf082310b2a407',1,'ubx_nav_dgps_t']]],
   ['base_5ftow',['base_tow',['../structubx__cfg__fxn__t.html#ad67f012b730f61443ffba40bda2c5755',1,'ubx_cfg_fxn_t']]],
