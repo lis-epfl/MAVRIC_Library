@@ -91,9 +91,9 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
          * param2: camera status
          * param3: tag horizontal location in pixels, positive is right
          * param4: tag vertical location in pixels, positive is down
-         * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000000000 for unknown
-         * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1000000000 for unknown
-         * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1000000000 for unknown
+         * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1 for unknown
+         * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1 for unknown
+         * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1 for unknown as positive is up
          */
 
         /*
@@ -102,7 +102,10 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 
         // Get drone height, drone height tells you the pixel dimensions on the ground, +z is down
         float drone_height = 0.0f;
-        if ((packet->param7 > -900000000) && (packet->param7 < MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM)) // Get drone height from the packet if available
+
+        // Get drone height from packet if available and reasonable
+        if ((packet->param7 > 0.0f) &&                              // Packet outputs + as up, must be greater than 0
+            (packet->param7 < MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM)) // Don't allow too high estimations as accuracy decreases with altitude
             // Restrict to drone heights that are within a set range
         {
            drone_height = -packet->param7 / 1000.0f;
@@ -115,7 +118,12 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         // Get tag location in m
         float picture_forward_offset = 0.0f;
         float picture_right_offset = 0.0f;
-        if ((packet->param5 > -900000000) && (packet->param6 > -900000000)) // Get tag location from packet in m if available
+        if ((packet->param7 > 0.0f) &&                                                  // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
+            (packet->param7 < MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM) &&                   // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
+            (packet->param5 > -(2 * -drone_height * tan(camera.camera_fov[0] / 2))) &&  // Ensure that x distance to tag is within frame
+            (packet->param5 <  (2 * -drone_height * tan(camera.camera_fov[0] / 2))) &&  // Ensure that x distance to tag is within frame
+            (packet->param6 > -(2 * -drone_height * tan(camera.camera_fov[1] / 2))) &&  // Ensure that y distance to tag is within frame
+            (packet->param6 <  (2 * -drone_height * tan(camera.camera_fov[1] / 2))))    // Ensure that y distance to tag is within frame                    
         {
             // Forward corresponds to param6 as the picamera code outputs (right,down)
             picture_forward_offset = -packet->param6 / 1000.0f; // Negative, because in vision positive is towards the bottom of the picture
