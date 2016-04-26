@@ -41,30 +41,35 @@
 
 #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/central_data.hpp"
-#include "drivers/sonar_i2cxl.hpp"
-#include "communication/onboard_parameters.hpp"
-#include "communication/mavlink_waypoint_handler.hpp"
+
+#include "communication/data_logging_telemetry.hpp"
 #include "communication/hud_telemetry.hpp"
-#include "control/stabilisation_telemetry.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/mavlink_stream.hpp"
-#include "communication/state.hpp"
-#include "sensing/position_estimation.hpp"
+#include "communication/onboard_parameters.hpp"
 #include "communication/remote_telemetry.hpp"
-#include "drivers/servos_telemetry.hpp"
+#include "communication/state.hpp"
 #include "communication/state_telemetry.hpp"
-#include "drivers/gps_telemetry.hpp"
-#include "sensing/imu_telemetry.hpp"
-#include "control/manual_control_telemetry.hpp"
-#include "drivers/barometer_telemetry.hpp"
-#include "sensing/ahrs_telemetry.hpp"
-#include "sensing/position_estimation_telemetry.hpp"
+
+#include "control/stabilisation_telemetry.hpp"
 #include "control/joystick_telemetry.hpp"
-// #include "simulation_telemetry.hpp"
+#include "control/manual_control_telemetry.hpp"
+
+#include "sensing/ahrs_ekf_telemetry.hpp"
+#include "sensing/ahrs_telemetry.hpp"
+#include "sensing/imu_telemetry.hpp"
+#include "sensing/position_estimation.hpp"
+#include "sensing/position_estimation_telemetry.hpp"
+
+#include "drivers/barometer_telemetry.hpp"
+#include "drivers/gps_telemetry.hpp"
+
+#include "drivers/servos_telemetry.hpp"
+#include "drivers/sonar_i2cxl.hpp"
+#include "drivers/sonar_telemetry.hpp"
+
 #include "runtime/scheduler.hpp"
 #include "runtime/scheduler_telemetry.hpp"
-#include "drivers/sonar_telemetry.hpp"
-#include "communication/data_logging_telemetry.hpp"
-#include "control/manual_control_telemetry.hpp"
 
 
 //------------------------------------------------------------------------------
@@ -163,19 +168,22 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
                                             message_handler);
 
     init_success &= manual_control_telemetry_init(&central_data->manual_control,
-                    message_handler);
+                                                  message_handler);
 
     init_success &= position_estimation_telemetry_init(&central_data->position_estimation,
-                    message_handler);
+                                                       message_handler);
 
     init_success &= gps_telemetry_init(&central_data->gps,
                                        message_handler);
 
     init_success &= data_logging_telemetry_init(&central_data->data_logging,
-                    message_handler);
+                                                message_handler);
 
     init_success &= data_logging_telemetry_init(&central_data->data_logging2,
-                    message_handler);
+                                                message_handler);
+
+    init_success &= ahrs_ekf_telemetry_init(&central_data->ahrs_ekf,
+                                            message_handler);
 
     return init_success;
 }
@@ -341,6 +349,10 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
     init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.control_source, "CTRL_CTRL_SRC");
     init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
+
+    init_success &= onboard_parameters->add_parameter_float(&central_data->ahrs_ekf.mag_global_[X], "MAG_X");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->ahrs_ekf.mag_global_[Y], "MAG_Y");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->ahrs_ekf.mag_global_[Z], "MAG_Z");
 
     return init_success;
 }
