@@ -91,9 +91,9 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
          * param2: camera status
          * param3: tag horizontal location in pixels, positive is right
          * param4: tag vertical location in pixels, positive is down
-         * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1 for unknown
-         * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1 for unknown
-         * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1 for unknown as positive is up
+         * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000 for unknown
+         * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1000 for unknown
+         * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1000 for unknown as positive is up
          */
 
         /*
