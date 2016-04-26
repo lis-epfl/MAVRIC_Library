@@ -97,6 +97,18 @@ public:
 	 */
 	bool update(void);
 
+	/**
+	 * \brief 	Performs the north vector calibration
+	 */
+	void calibrating_north_vector(void);
+
+	/**
+	 * \brief 	Returns the flag telling whether the module is in calibration mode or not
+	 *
+	 * \return 	true if not in calibration mode, false otherwise
+	 */
+	const bool is_ready(void) const;
+
 	float mag_global_[3];								///< The magnetic North vector
 	float mag_lpf_[3];									///< The magnetometer low pass filter for North vector calibration
 	Imu& imu_;											///< The Reference to the IMU structure
@@ -133,7 +145,6 @@ private:
 	Mat<7,7> Id_;										///< The 7x7 identity matrix
 
 	ahrs_t* ahrs_;										///< The pointer to the ahrs structure
-	bool north_calib_started_;							///< The flag to calibrate the north vector at the end of the procedure
 	ahrs_ekf_conf_t config_;							///< The config structure for the EKF module
 };
 

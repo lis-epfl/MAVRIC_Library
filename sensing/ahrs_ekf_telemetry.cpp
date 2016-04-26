@@ -75,25 +75,7 @@ static mav_result_t ahrs_ekf_telemetry_calibrate_north_vector(Ahrs_ekf* ahrs_ekf
 	{
 		result = MAV_RESULT_ACCEPTED;
 
-		if (!ahrs_ekf->calibrating_north_vector_)
-		{
-			ahrs_ekf->calibrating_north_vector_ = true;
-
-			print_util_dbg_print("Starting North vector calibration\r\n");
-			print_util_dbg_print("Old North vector :");
-			print_util_dbg_print_vector(ahrs_ekf->mag_global_,5);
-			print_util_dbg_print("\r\n");
-
-			for (uint16_t i = 0; i < 3; ++i)
-			{
-				ahrs_ekf->mag_lpf_[i] = ahrs_ekf->imu_.mag()[i];
-			}
-			
-		}
-		else
-		{
-			ahrs_ekf->calibrating_north_vector_ = false;
-		}
+		ahrs_ekf->calibrating_north_vector();
 		
 	}
 	else

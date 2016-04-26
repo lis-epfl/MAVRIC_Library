@@ -72,7 +72,7 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream()),
-    state_machine(state, position_estimation, imu, manual_control),
+    state_machine(state, position_estimation, imu, ahrs_ekf, manual_control),
     data_logging(file1, state, config.data_logging_config),
     data_logging2(file2, state, config.data_logging_config2),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),

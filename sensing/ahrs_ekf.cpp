@@ -492,7 +492,6 @@ Ahrs_ekf::Ahrs_ekf(const ahrs_ekf_conf_t& config, Imu& imu, ahrs_t* ahrs) :
 	calibrating_north_vector_(false),
 	Id_(Mat<7,7>(1.0f,true)),
 	ahrs_(ahrs),
-	north_calib_started_(false),
 	config_(config)
 {
 	mag_lpf_[0] = 0.0f;
@@ -535,31 +534,10 @@ bool Ahrs_ekf::update(void)
 
 		if (!calibrating_north_vector_)
 		{
-			if (north_calib_started_)
-			{
-				north_calib_started_ = false;
-				float angle = atan2(mag_lpf_[Z], maths_fast_sqrt(mag_lpf_[X]*mag_lpf_[X] + mag_lpf_[Y]*mag_lpf_[Y]));
-
-				float norm_mag = vectors_norm(mag_lpf_);
-
-				mag_global_[0] = cos(angle)*norm_mag;
-				mag_global_[1] = 0.0f;
-				mag_global_[2] = sin(angle)*norm_mag;
-				
-				print_util_dbg_print("North vector angle (x100):");
-				print_util_dbg_print_num(angle*100,10);
-				print_util_dbg_print("\r\n");
-
-				print_util_dbg_print("New North vector :");
-				print_util_dbg_print_vector(mag_global_,5);
-				print_util_dbg_print("\r\n");
-			}
-
 			update_step_mag();
 		}
 		else
 		{
-			north_calib_started_ = true;
 			for (i = 0; i < 3; ++i)
 			{
 				aero_attitude_t aero = coord_conventions_quat_to_aero(ahrs_->qe);
@@ -617,4 +595,48 @@ bool Ahrs_ekf::update(void)
 	ahrs_->linear_acc[Z] = 9.81f * (imu_.acc()[Z] - up_bf.v[Z]) ; // TODO: review this line!
 
 	return task_return;
+}
+
+void Ahrs_ekf::calibrating_north_vector(void)
+{
+	if (!calibrating_north_vector_)
+	{
+		calibrating_north_vector_ = true;
+
+		print_util_dbg_print("Starting North vector calibration\r\n");
+		print_util_dbg_print("Old North vector :");
+		print_util_dbg_print_vector(mag_global_,5);
+		print_util_dbg_print("\r\n");
+
+		for (uint16_t i = 0; i < 3; ++i)
+		{
+			mag_lpf_[i] = imu_.mag()[i];
+		}
+		
+	}
+	else
+	{
+		calibrating_north_vector_ = false;
+
+		float angle = atan2( mag_lpf_[Z], maths_fast_sqrt( mag_lpf_[X]* mag_lpf_[X] +  mag_lpf_[Y]* mag_lpf_[Y]));
+
+		float norm_mag = vectors_norm(mag_lpf_);
+
+		mag_global_[0] = cos(angle)*norm_mag;
+		mag_global_[1] = 0.0f;
+		mag_global_[2] = sin(angle)*norm_mag;
+		
+		print_util_dbg_print("North vector angle (x100):");
+		print_util_dbg_print_num(angle*100,10);
+		print_util_dbg_print("\r\n");
+
+		print_util_dbg_print("New North vector :");
+		print_util_dbg_print_vector(mag_global_,5);
+		print_util_dbg_print("\r\n");
+	}
+}
+
+const bool Ahrs_ekf::is_ready(void) const
+{
+	return !calibrating_north_vector_;
 }

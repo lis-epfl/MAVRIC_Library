@@ -47,6 +47,7 @@
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
+#include "sensing/ahrs_ekf.hpp"
 #include "sensing/position_estimation.hpp"
 #include "sensing/imu.hpp"
 
@@ -69,6 +70,7 @@ public:
     State_machine(  State& state,
                     const Position_estimation& position_estimation,
                     const Imu& imu,
+                    const Ahrs_ekf& ahrs_ekf,
                     Manual_control& manual_control);
 
     /**
@@ -93,10 +95,11 @@ public:
      */
     bool set_mode_guided(bool guided);
 
-    State& state_;                                       ///< Pointer to the state structure
-    const Position_estimation& position_estimation_;      ///< Pointer to the gps structure
-    const Imu& imu_;                                     ///< Pointer to the imu structure
-    Manual_control& manual_control_;                     ///< Pointer to the manual_control structure
+    State& state_;                                       ///< Reference to the state structure
+    const Position_estimation& position_estimation_;     ///< Reference to the gps structure
+    const Imu& imu_;                                     ///< Reference to the imu structure
+    const Ahrs_ekf& ahrs_ekf_;                           ///< Reference to the EKF attitude estimation
+    Manual_control& manual_control_;                     ///< Reference to the manual_control structure
 private:
     /**
      * \brief Updates the custom flag and switch to critical state if needed
