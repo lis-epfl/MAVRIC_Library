@@ -111,9 +111,6 @@ public:
     bool get_is_camera_running();
     int get_camera_id();
 
-    int camera_res[2];                  ///< Camera resolution, horizontal x vertical
-    float camera_rotation;              ///< Camera rotation [rad] from front of drone, CCW is positive
-    float camera_fov[2];                ///< Camera field of view [rad], horizontal x vertical
     int camera_id_;                     ///< ID number of camera
     bool is_camera_running_;            ///< States whether the camera should be running
     float last_update_us_;              ///< Last update time in microseconds
