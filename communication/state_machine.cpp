@@ -183,11 +183,24 @@ bool State_machine::update(State_machine* state_machine)
 
     state_machine->state_.connection_status();
 
+    // try passing to/leaving guided mode if requested
+    if(!state_machine->set_mode_guided(mav_modes_is_guided(mode_new)))
+    {
+        mode_new ^= MAV_MODE_FLAG_GUIDED_ENABLED; // toggle guided flag
+    }
+
+    if(!state_machine->set_mode_stabilize(mav_modes_is_stabilise(mode_new)))
+    {
+        mode_new ^= MAV_MODE_FLAG_STABILIZE_ENABLED; // toggle stabilize flag   
+    }
+
     // try arming/disarming, if not allowed, reset flag in mode_new
     if(!state_machine->state_.set_armed(mav_modes_is_armed(mode_new)))
     {
         mode_new ^= MAV_MODE_FLAG_SAFETY_ARMED; // toggle armed flag
     }
+
+
 
     // Change state according to signal strength
     switch (state_current)
@@ -372,6 +385,37 @@ bool State_machine::set_mode_guided(bool guided)
         // clear guided flag
         state_.mav_mode_ &= ~MAV_MODE_FLAG_GUIDED_ENABLED;
         print_util_dbg_print("[STATE_MACHINE]: leave guided mode\r\n");
+    }
+
+    return true;
+}
+
+bool State_machine::set_mode_stabilize(bool stabilize)
+{
+    // if already in desired state, return true
+    if(state_.stabilize() == stabilize)
+    {
+        return true;
+    }
+
+    if(stabilize)
+    {
+        // if position_estimation is not healthy, abort
+        if(!position_estimation_.healthy())
+        {
+            print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because position estimation is not healthy\r\n");
+            return false;
+        }
+
+        // set stabilize flag
+        state_.mav_mode_ |= MAV_MODE_FLAG_STABILIZE_ENABLED;
+        print_util_dbg_print("[STATE_MACHINE]: passing to stabilize mode\r\n");
+    }
+    else
+    {
+        // clear stabilize flag
+        state_.mav_mode_ &= ~MAV_MODE_FLAG_STABILIZE_ENABLED;
+        print_util_dbg_print("[STATE_MACHINE]: leave stabilize mode\r\n");
     }
 
     return true;

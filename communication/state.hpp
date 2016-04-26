@@ -157,6 +157,14 @@ public:
      */
     inline bool guided() const {return ((mav_mode_ & MAV_MODE_FLAG_GUIDED_ENABLED) == MAV_MODE_FLAG_GUIDED_ENABLED);};
 
+    /**
+     * \brief                   returns whether in stabilize mode (MAV_MODE_FLAG_STABILIZE_ENABLED set)
+     *
+     * \return                  guided
+     */
+    inline bool stabilize() const {return ((mav_mode_ & MAV_MODE_FLAG_STABILIZE_ENABLED) == MAV_MODE_FLAG_STABILIZE_ENABLED);};
+
+
 
     /**
      * \brief                   returns mav_mode (copy)
