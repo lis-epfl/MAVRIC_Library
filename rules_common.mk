@@ -98,6 +98,8 @@ LIB_SRCS += runtime/scheduler_task.cpp
 LIB_SRCS += runtime/scheduler_telemetry.cpp
 
 LIB_SRCS += sensing/ahrs.c
+LIB_SRCS += sensing/ahrs_ekf.cpp
+LIB_SRCS += sensing/ahrs_ekf_telemetry.cpp
 LIB_SRCS += sensing/ahrs_telemetry.cpp
 LIB_SRCS += sensing/altitude_estimation.cpp
 LIB_SRCS += sensing/imu.cpp
