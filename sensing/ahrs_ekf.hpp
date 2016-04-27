@@ -102,13 +102,6 @@ public:
      */
     void calibrating_north_vector(void);
 
-    /**
-     * \brief   Returns the flag telling whether the module is in calibration mode or not
-     *
-     * \return  true if not in calibration mode, false otherwise
-     */
-    const bool is_ready(void) const;
-
     float mag_global_[3];                               ///< The magnetic North vector
     float mag_lpf_[3];                                  ///< The magnetometer low pass filter for North vector calibration
     Imu& imu_;                                          ///< The Reference to the IMU structure

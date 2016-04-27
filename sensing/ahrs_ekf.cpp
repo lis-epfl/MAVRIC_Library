@@ -535,6 +535,7 @@ bool Ahrs_ekf::update(void)
         if (!calibrating_north_vector_)
         {
             update_step_mag();
+            ahrs_->internal_state = AHRS_READY;
         }
         else
         {
@@ -555,8 +556,6 @@ bool Ahrs_ekf::update(void)
                 mag_lpf_[i] = compass_lpf * mag_lpf_[i] + (1.0f-compass_lpf) * qe_mag.v[i];
             }
         }
-        
-        ahrs_->internal_state = AHRS_READY;
     }
     else
     {
@@ -573,7 +572,6 @@ bool Ahrs_ekf::update(void)
         {
             x_state_(i,0) = state_previous(i,0);
         }
-        //x_state_ = state_previous;
     }
 
     ahrs_->qe.s = x_state_(3,0);
@@ -603,6 +601,8 @@ void Ahrs_ekf::calibrating_north_vector(void)
     {
         calibrating_north_vector_ = true;
 
+        ahrs_->internal_state = AHRS_INITIALISING;
+
         print_util_dbg_print("Starting North vector calibration\r\n");
         print_util_dbg_print("Old North vector :");
         print_util_dbg_print_vector(mag_global_,5);
@@ -617,6 +617,8 @@ void Ahrs_ekf::calibrating_north_vector(void)
     else
     {
         calibrating_north_vector_ = false;
+
+        ahrs_->internal_state = AHRS_READY;
 
         float angle = atan2( mag_lpf_[Z], maths_fast_sqrt( mag_lpf_[X]* mag_lpf_[X] +  mag_lpf_[Y]* mag_lpf_[Y]));
 
@@ -634,9 +636,4 @@ void Ahrs_ekf::calibrating_north_vector(void)
         print_util_dbg_print_vector(mag_global_,5);
         print_util_dbg_print("\r\n");
     }
-}
-
-const bool Ahrs_ekf::is_ready(void) const
-{
-    return !calibrating_north_vector_;
 }

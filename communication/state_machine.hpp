@@ -47,9 +47,13 @@
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
-#include "sensing/ahrs_ekf.hpp"
 #include "sensing/position_estimation.hpp"
 #include "sensing/imu.hpp"
+
+extern "C"
+{
+#include "sensing/ahrs.h"
+}
 
 /**
  * \brief Defines the state machine structure
@@ -70,7 +74,7 @@ public:
     State_machine(  State& state,
                     const Position_estimation& position_estimation,
                     const Imu& imu,
-                    const Ahrs_ekf& ahrs_ekf,
+                    const ahrs_t& ahrs,
                     Manual_control& manual_control);
 
     /**
@@ -98,7 +102,7 @@ public:
     State& state_;                                       ///< Reference to the state structure
     const Position_estimation& position_estimation_;     ///< Reference to the gps structure
     const Imu& imu_;                                     ///< Reference to the imu structure
-    const Ahrs_ekf& ahrs_ekf_;                           ///< Reference to the EKF attitude estimation
+    const ahrs_t& ahrs_;                                 ///< Pointer to the attitude estimation structure
     Manual_control& manual_control_;                     ///< Reference to the manual_control structure
 private:
     /**
