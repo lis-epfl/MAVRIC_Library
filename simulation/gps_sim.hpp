@@ -169,7 +169,7 @@ public:
      *
      * \return  Value
      */
-    const bool& fix(void) const;
+    const gps_fix_t& fix(void) const;
 
 
     /**
@@ -193,7 +193,7 @@ private:
     float               heading_;                           ///< Heading in degrees
     float               heading_accuracy_;                  ///< Accuracy of heading in degrees
     uint8_t             num_sats_;                          ///< Number of visible satelites
-    bool                fix_;                               ///< Indicates whether a fix was acquired
+    gps_fix_t           fix_;                               ///< Indicates whether a fix was acquired
     bool                healthy_;                           ///< Indicates whether the measurements can be trusted
 };
 

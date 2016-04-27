@@ -30,31 +30,63 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file toggle_logging_default_config.hpp
+ * \file altitude_controller.cpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief Default configuration for the data_logging module
+ * \brief   A simple altitude controller for copter
  *
  ******************************************************************************/
 
 
-#ifndef TOGGLE_LOGGING_DEFAULT_CONFIG_H_
-#define TOGGLE_LOGGING_DEFAULT_CONFIG_H_
+#include "control/altitude_controller.hpp"
 
-#include "communication/toggle_logging.hpp"
 
-static inline toggle_logging_conf_t toggle_logging_default_config()
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Altitude_controller::Altitude_controller(const position_command_t& position_command, 
+                                         const altitude_t& altitude, 
+                                         thrust_command_t& thrust_command,
+                                         altitude_controller_conf_t config):
+    position_command_(position_command),
+    altitude_(altitude),
+    thrust_command_(thrust_command)
 {
-    toggle_logging_conf_t conf    = {};
+    hover_point_ = config.hover_point;
+    pid_controller_init(&pid_, &config.pid_config);
+}
 
-    conf.debug                  = true;
-    conf.max_data_logging_count = 50;
-    conf.max_logs               = 500;
-    conf.log_data               = 0;  // 1: log data, 0: no log data
 
-    return conf;
-};
+bool Altitude_controller::init(void)
+{   
+    return true;
+}
 
-#endif // TOGGLE_LOGGING_DEFAULT_CONFIG_H_
+
+bool Altitude_controller::update(void)
+{
+    float error = 0.0f;
+
+    switch (position_command_.mode)
+    {
+        case POSITION_COMMAND_MODE_LOCAL:
+            error = position_command_.xyz[2] - (-altitude_.above_ground);
+            break;
+
+        case POSITION_COMMAND_MODE_GLOBAL:
+            error = position_command_.xyz[2] - (-altitude_.above_sea);
+            break;
+    }
+
+    thrust_command_.thrust = hover_point_ - pid_controller_update(&pid_, error);
+
+    return true;
+}

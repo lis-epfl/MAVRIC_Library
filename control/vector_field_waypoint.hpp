@@ -56,8 +56,8 @@ extern "C"
  */
 typedef struct
 {
-    const mavlink_waypoint_handler_t*   waypoint_handler;           ///< Waypoint list (input)
-    const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
+    const Mavlink_waypoint_handler*   waypoint_handler;             ///< Waypoint list (input)
+    const Position_estimation*        pos_est;                      ///< Estimated position and speed (input)
     velocity_command_t*                 velocity_command;           ///< Velocity command (output)
 } vector_field_waypoint_t;
 
@@ -79,7 +79,7 @@ typedef struct
  * \param   pos_est             Pointer to the estimated speed and position (input)
  * \param   velocity_command    Pointer to velocity command (output)
  */
-void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* pos_est, velocity_command_t* velocity_command);
+void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* pos_est, velocity_command_t* velocity_command);
 
 
 /**

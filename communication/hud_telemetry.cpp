@@ -49,7 +49,7 @@ extern "C"
 #include "util/coord_conventions.h"
 }
 
-bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimation_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
+bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const Position_estimation* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
 {
     bool init_success = true;
 
@@ -60,7 +60,7 @@ bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, cons
     return init_success;
 }
 
-void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     float groundspeed   = sqrt(hud_telemetry_structure->pos_est->vel[0] * hud_telemetry_structure->pos_est->vel[0] + hud_telemetry_structure->pos_est->vel[1] * hud_telemetry_structure->pos_est->vel[1]);
     float airspeed      = groundspeed;
@@ -78,8 +78,8 @@ void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_s
         heading = (int16_t)(180.0f * aero_attitude.rpy[2] / PI);
     }
 
-    mavlink_msg_vfr_hud_pack(mavlink_stream->sysid,
-                             mavlink_stream->sysid,
+    mavlink_msg_vfr_hud_pack(mavlink_stream->sysid(),
+                             mavlink_stream->sysid(),
                              msg,
                              airspeed,
                              groundspeed,

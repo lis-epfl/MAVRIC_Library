@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2016, MAV'RIC Development Team
+ * Copyright (c) 2009-2015, MAV'RIC Development Team
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,77 +30,45 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_estimation.h
+ * \file flow_sim.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief   Altitude estimation
+ * \brief   Simulated Optic Flow sensors
  *
  ******************************************************************************/
 
+#ifndef FLOW_SIM_HPP_
+#define FLOW_SIM_HPP_
 
-#ifndef ALTITUDE_ESTIMATION_H_
-#define ALTITUDE_ESTIMATION_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "sensing/altitude.h"
-#include "sonar.h"
-#include "barometer.h"
-#include "sensing/ahrs.h"
-
+#include "drivers/flow.hpp"
+#include "util/raytracing.hpp"
+#include "util/matrix.hpp"
+#include "simulation/dynamic_model.hpp"
 
 /**
- * \brief Altitude estimator structure
+ * \brief   Interface for Optic Flow sensors
  */
-typedef struct
+class  Flow_sim: public Flow
 {
-    const sonar_t*      sonar;                  ///< Pointer to sonar (input)
-    const barometer_t*  barometer;              ///< Pointer to barometer (input)
-    const ahrs_t*       ahrs;                   ///< Pointer to estimated attitude and acceleration (input)
-    altitude_t*         altitude_estimated;     ///< Pointer to estimated altitude (output)
-} altitude_estimation_t;
+    static const uint32_t ray_count_ = 90;
+public:
+    Flow_sim(Dynamic_model& dynamic_model_, raytracing::World& world, float orientation_azimuth = 0.0f);
 
+    bool update(void);
 
-/**
- * \brief Altitude estimation configuration
- */
-typedef struct
-{
-} altitude_estimation_conf_t;
+    // flow_data_t of;               ///< Optic flow vectors
+    // uint8_t     of_count;         ///< Number of optic flow vectors
+    // flow_data_t of_loc;           ///< Location of optic flow vectors
+    // uint32_t    last_update_us;   ///< Last update time in microseconds
 
+private:
+    Dynamic_model&      dynamic_model_;
+    raytracing::World&  world_;
 
-/**
- * \brief                       Initializes the altitude estimation structure
- *
- * \param   estimator           Pointer to data structure
- * \param   config              Pointer to configuration
- * \param   sonar               Pointer to the sonar
- * \param   barometer           Pointer to the barometer
- * \param   ahrs                Pointer to the ahrs
- * \param   altitude_estimated  Pointer to the estimated altitude
- */
-void altitude_estimation_init(altitude_estimation_t* estimator,
-                              const altitude_estimation_conf_t* config,
-                              const sonar_t* sonar,
-                              const barometer_t* barometer,
-                              const ahrs_t* ahrs,
-                              altitude_t* altitude_estimated);
+    raytracing::Ray     rays_[ray_count_];
+    Mat<2,3>            jacob_[ray_count_];
+};
 
-
-/**
- * \brief                   Main update function
- *
- * \param   estimator       Pointer to data structure
- */
-void altitude_estimation_update(altitude_estimation_t* estimator);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* ALTITUDE_ESTIMATION_H_ */
+#endif /* FLOW_SIM_HPP_ */

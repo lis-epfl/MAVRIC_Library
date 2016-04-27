@@ -51,7 +51,6 @@ extern "C"
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-
 int main(int argc, char** argv)
 {
     uint8_t sysid = 0;
@@ -75,8 +74,8 @@ int main(int argc, char** argv)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using simulated sensors
-    Central_data cd = Central_data(sysid,
-                                   board.imu,
+    Central_data::conf_t cd_config = Central_data::default_config(sysid);
+    Central_data cd = Central_data(board.imu,
                                    board.sim.barometer(),
                                    board.sim.gps(),
                                    board.sim.sonar(),
@@ -91,7 +90,8 @@ int main(int argc, char** argv)
                                    board.servo_2,
                                    board.servo_3,
                                    dummy_file1,
-                                   dummy_file2);
+                                   dummy_file2,
+                                   cd_config );
 
     // Init central data
     init_success &= cd.init();
@@ -101,63 +101,67 @@ int main(int argc, char** argv)
     // Create tasks and telemetry
     // -------------------------------------------------------------------------
 
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
+    init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
 
     // // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
-    {
-        // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-        init_success = false;
-    }
+    // if (onboard_parameters->read_parameters_from_storage() == false)
+    // {
+    //     // onboard_parameters->write_parameters_to_storage();
+    //     init_success = false;
+    // }
 
     init_success &= mavlink_telemetry_init(&cd);
 
-    cd.state.mav_state = MAV_STATE_STANDBY;
+    cd.state.mav_state_ = MAV_STATE_STANDBY;
 
     init_success &= tasks_create_tasks(&cd);
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
-    // -------------------------------------------------------------------------
-    // Main loop
-    // -------------------------------------------------------------------------
+    // // -------------------------------------------------------------------------
+    // // Main loop
+    // // -------------------------------------------------------------------------
 
-    // static uint8_t step = 0;
-    // while(1)
-    // {
-    //  step += 1;
+    // // static uint8_t step = 0;
+    // // while(1)
+    // // {
+    // //  step += 1;
 
-    //  if(step%2 == 0)
-    //  {
-    //      // board.red_led.toggle();
-    //  }
+    // //  if(step%2 == 0)
+    // //  {
+    // //      // board.red_led.toggle();
+    // //  }
 
-    //  // gpio_toggle(GPIOA, GPIO2);
-    //  // usart_send_blocking(UART4, step);
-    //  // usart_send(UART4, step);
-    //  // if( step == 80 )
-    //  // {
-    //  //  step = 1;
-    //  //  usart_send(UART4, '\r');
-    //  //  usart_send(UART4, '\n');
-    //  // }
-    //  // usart_enable_tx_interrupt(USART2);
-    //  board.serial_1.write(&step);
+    // //  // gpio_toggle(GPIOA, GPIO2);
+    // //  // usart_send_blocking(UART4, step);
+    // //  // usart_send(UART4, step);
+    // //  // if( step == 80 )
+    // //  // {
+    // //  //  step = 1;
+    // //  //  usart_send(UART4, '\r');
+    // //  //  usart_send(UART4, '\n');
+    // //  // }
+    // //  // usart_enable_tx_interrupt(USART2);
+    // //  board.serial_1.write(&step);
 
-    // }
+    // // }
 
-    board.green_led.on();
-    board.red_led.on();
+    if (init_success)
+    {
+        board.green_led.off();
+        board.red_led.off();
+    }
 
     while (1 == 1)
     {
-        gpio_toggle(GPIOC, GPIO14);
+        //gpio_toggle(GPIOC, GPIO14);
         // print_util_dbg_print("[HELLO].\r\n");
 
-        time_keeper_delay_ms(100);
+         //time_keeper_delay_ms(100);
 
         // board.red_led.toggle();
-        scheduler_update(&cd.scheduler);
+        cd.scheduler.update();
     }
 
     return 0;

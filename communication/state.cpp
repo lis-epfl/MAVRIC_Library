@@ -62,28 +62,31 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-State::State(Battery& battery, state_conf_t config):
-    battery_(battery)
+State::State(Mavlink_stream& mavlink_stream, Battery& battery, State::conf_t config):
+    battery_(battery),
+    mavlink_stream_(mavlink_stream)
 {
     // Init parameters
     autopilot_type = config.autopilot_type;
     autopilot_name = config.autopilot_name;
 
-    mav_state = config.mav_state;
-    mav_mode = config.mav_mode;
+    mav_state_ = config.mav_state;
+    mav_mode_ = config.mav_mode;
 
     mav_mode_custom = config.mav_mode_custom;
 
-    simulation_mode = config.simulation_mode;
-
-    if (simulation_mode == HIL_ON)
+    if (config.simulation_mode == HIL_ON)
     {
-        mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
+        mav_mode_ |= MAV_MODE_FLAG_HIL_ENABLED;
     }
     else
     {
-        mav_mode &= ~MAV_MODE_FLAG_HIL_ENABLED;
+        mav_mode_ &= ~MAV_MODE_FLAG_HIL_ENABLED;
     }
+
+    sensor_present = config.sensor_present;
+    sensor_enabled = config.sensor_enabled;
+    sensor_health = config.sensor_health;
 
     fence_1_xy = config.fence_1_xy;
     fence_1_z = config.fence_1_z;
@@ -104,9 +107,9 @@ State::State(Battery& battery, state_conf_t config):
     msg_count = 0;
 }
 
-void State::switch_to_active_mode(mav_state_t* mav_state)
+void State::switch_to_active_mode(mav_state_t* mav_state_)
 {
-    *mav_state = MAV_STATE_ACTIVE;
+    *mav_state_ = MAV_STATE_ACTIVE;
 
     // Tell other modules to reset position and re-compute waypoints
     reset_position = true;
@@ -125,4 +128,56 @@ void State::connection_status()
     {
         connection_lost = false;
     }
+}
+
+bool State::set_armed(bool arming)
+{
+    // if already in desired state, return true
+    if(armed() == arming)
+    {
+        return true;
+    }
+
+    if(arming)
+    {
+        // check if imu is ready
+        if(mav_state_ == MAV_STATE_CALIBRATING)
+        {
+            print_util_dbg_print("[STATE]: prevented arming because IMU not ready\r\n");
+            return false;
+        }
+
+        // check if not in manual mode and stabilized or guided mode
+        // (not in velocity or position hold)
+        if(mav_modes_is_manual(mav_mode_) && (mav_modes_is_stabilise(mav_mode_) || mav_modes_is_guided(mav_mode_)))
+        {
+            print_util_dbg_print("[STATE]: prevented arming because in stabilise or guided mode\r\n");
+            return false;
+        }
+
+        // check if battery not low
+        if(battery_.is_low())
+        {
+            print_util_dbg_print("[STATE]: prevented arming because battery low\r\n");
+            return false;
+        }
+
+        // set armed flag
+        print_util_dbg_print("[STATE]: arming\r\n");
+        mav_mode_ |= MAV_MODE_FLAG_SAFETY_ARMED;
+
+        // switch state to active
+        switch_to_active_mode(&mav_state_);
+    }
+    else
+    {
+        // clear armed flag
+        mav_mode_ &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+        print_util_dbg_print("[STATE]: disarming\r\n");
+
+        // set state to standby
+        mav_state_ = MAV_STATE_STANDBY;
+    }
+
+    return true;
 }

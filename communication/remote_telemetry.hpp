@@ -58,7 +58,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool remote_telemetry_init(remote_t* remote, mavlink_message_handler_t* mavlink_handler);
+bool remote_telemetry_init(remote_t* remote, Mavlink_message_handler* mavlink_handler);
 
 
 /**
@@ -68,7 +68,7 @@ bool remote_telemetry_init(remote_t* remote, mavlink_message_handler_t* mavlink_
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void remote_telemetry_send_raw(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
@@ -78,6 +78,6 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* REMOTE_TELEMETRY_H_ */

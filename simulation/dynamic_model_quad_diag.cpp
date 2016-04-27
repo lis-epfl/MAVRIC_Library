@@ -55,25 +55,25 @@ extern "C"
 //------------------------------------------------------------------------------
 
 Dynamic_model_quad_diag::Dynamic_model_quad_diag(Servo& servo_rear_left,
-        Servo& servo_front_left,
-        Servo& servo_front_right,
-        Servo& servo_rear_right,
-        dynamic_model_quad_diag_conf_t config):
+                                                 Servo& servo_front_left,
+                                                 Servo& servo_front_right,
+                                                 Servo& servo_rear_right,
+                                                 dynamic_model_quad_diag_conf_t config):
     servo_front_right_(servo_front_right),
     servo_front_left_(servo_front_left),
     servo_rear_right_(servo_rear_right),
     servo_rear_left_(servo_rear_left),
     config_(config),
-    rotorspeeds_(std::array<float, 4> { {0.0f, 0.0f, 0.0f, 0.0f}}),
-torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-rates_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-lin_forces_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-acc_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-vel_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-vel_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
-last_update_us_(time_keeper_get_us()),
-dt_s_(0.004f)
+    rotorspeeds_(std::array<float,4>{{0.0f, 0.0f, 0.0f, 0.0f}}),
+    torques_bf_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    rates_bf_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    lin_forces_bf_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    acc_bf_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    vel_bf_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    vel_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
+    last_update_us_(0.0f),
+    dt_s_(0.004f)
 {
     // Init local position
     local_position_.pos[0]  = 0.0f;

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file attitude_controller_default_config.h
+ * \file attitude_controller_default_config.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -43,11 +43,10 @@
 #ifndef ATTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
 #define ATTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+extern "C"
+{
 #include "control/attitude_controller.h"
+}
 
 static inline attitude_controller_conf_t attitude_controller_default_config()
 {
@@ -164,9 +163,5 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
 
     return conf;
 };
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // ATTITUDE_CONTROLLER_DEFAULT_CONFIG_H_

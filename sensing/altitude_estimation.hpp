@@ -30,61 +30,93 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file matrixlib_float.h
+ * \file altitude_estimation.hpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *
- * \brief Source file for the floating point versions of some matrix operation
- * functions
+ * \brief   Altitude estimation
  *
  ******************************************************************************/
 
 
-#ifndef __MF_H__
-#define __MF_H__
+#ifndef ALTITUDE_ESTIMATION_HPP_
+#define ALTITUDE_ESTIMATION_HPP_
 
-#ifdef __cplusplus
+
+#include "drivers/sonar.hpp"
+#include "drivers/barometer.hpp"
+
+#include "util/kalman.hpp"
+
 extern "C"
 {
-#endif
+#include "sensing/altitude.h"
+#include "sensing/ahrs.h"
+}
 
-#include <stdint.h>
-
-#ifndef USE_MATF
-#define USE_MATF            0
-#endif
 
 /**
- * \brief Enumerates errors module can throw
+ * \brief   Configuration structure
  */
-enum matf_errors
+typedef struct
 {
-    MATF_ERROR_BASE = 0x3F00,
+} altitude_estimation_conf_t;
+
+
+/**
+ * \brief   Default configuration
+ * 
+ * \return  Configuration structure
+ */
+static inline altitude_estimation_conf_t altitude_estimation_default_config(void);
+
+
+/**
+ * \brief   Altitude estimator
+ */
+class Altitude_estimation: public Kalman<3,1,1>
+{
+public:
+    Altitude_estimation(Sonar& sonar, 
+                        Barometer& barometer, 
+                        ahrs_t& ahrs, 
+                        altitude_t& altitude, 
+                        altitude_estimation_conf_t config = altitude_estimation_default_config() );
+
+    /**
+     * \brief   Initialization
+     * 
+     * \return  Success
+     */
+    bool init(void);
+
+
+    /**
+     * \brief   Main update function
+     * 
+     * \return  Success
+     */
+    bool update(void);
+
+
+private:
+    const Sonar&        sonar_;           ///< Sonar, must be downward facing (input)
+    const Barometer&    barometer_;       ///< Barometer (input)
+    const ahrs_t&       ahrs_;            ///< Attitude and acceleration (input)
+    altitude_t&         altitude_;        ///< Estimated altitude (output)
+
+    altitude_estimation_conf_t config_;   ///< Configuration
+
+    float last_sonar_update_us_;          ///< Last time we updated the estimate using sonar
 };
 
-//----------------------------
-// Public function prototypes
-//----------------------------
 
-float* matf_zeros(int32_t, int32_t, float*);
-float* matf_diag(int32_t, int32_t, float*, float, int32_t, int32_t);
-float* matf_std(int32_t, float*, float*);
-float* matf_copy(int32_t, int32_t, float*, float*);
-float* matf_cross(float* a, float* b, float* c);
-float* matf_copy_part(float*, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, float*, int32_t, int32_t, int32_t, int32_t);
-float  matf_norm(int32_t, float*);
-float  matf_sum(int32_t, float*);
-float* matf_add(int32_t, int32_t, float*, float*, float*);
-float* matf_multiply_factor(int32_t n1, int32_t n2, float* A, float* B, float c);
-float* matf_sub(int32_t, int32_t, float*, float*, float*);
-float* matf_tr(int32_t, int32_t, float*, float*);
-float* matf_multiply(int32_t, int32_t, int32_t, float*, float*, float*);
-float* matf_multiply_Bt(int32_t, int32_t, int32_t, float*, float*, float*);
-// float* matf_invert(int32_t numRowsCols, float* dstM, float* srcM);
+static inline altitude_estimation_conf_t altitude_estimation_default_config(void)
+{
+    altitude_estimation_conf_t conf = {};
 
-
-#ifdef __cplusplus
+    return conf;
 }
-#endif
 
-#endif
+#endif /* ALTITUDE_ESTIMATION_HPP_ */

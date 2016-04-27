@@ -69,7 +69,7 @@ void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t s
  *
  * \return  True if the init succeed, false otherwise
  */
-bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, mavlink_message_handler_t* message_handler);
+bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, Mavlink_message_handler* message_handler);
 
 
 #endif /* GIMBAL_CONTROL_TELEMETRY_H_ */

@@ -53,27 +53,24 @@ extern "C"
 
 
 
-Imu::Imu(Accelerometer& accelerometer,
-         Gyroscope& gyroscope,
-         Magnetometer& magnetometer,
-         imu_conf_t config):
+Imu::Imu(Accelerometer& accelerometer, Gyroscope& gyroscope, Magnetometer& magnetometer, imu_conf_t config):
     accelerometer_(accelerometer),
     gyroscope_(gyroscope),
     magnetometer_(magnetometer),
     config_(config),
-    oriented_acc_(std::array<float, 3> { {0.0f, 0.0f, 0.0f}}),
-oriented_gyro_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-oriented_mag_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-scaled_acc_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-scaled_gyro_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-scaled_mag_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-do_accelerometer_bias_calibration_(false),
-do_gyroscope_bias_calibration_(false),
-do_magnetometer_bias_calibration_(false),
-is_ready_(false),
-dt_s_(0.004f),
-last_update_us_(time_keeper_get_us()),
-timestamp_gyro_stable(time_keeper_get_s())
+    oriented_acc_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    oriented_gyro_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    oriented_mag_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    scaled_acc_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    scaled_gyro_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    scaled_mag_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    do_accelerometer_bias_calibration_(false),
+    do_gyroscope_bias_calibration_(false),
+    do_magnetometer_bias_calibration_(false),
+    is_ready_(false),
+    dt_s_(0.004f),
+    last_update_us_(0.0f),
+    timestamp_gyro_stable(0.0f)
 {}
 
 
@@ -170,10 +167,14 @@ imu_conf_t* Imu::get_config(void)
 bool Imu::start_accelerometer_bias_calibration(void)
 {
     // Success if not already doing magnetometer calibration
+    // Since this calib needs the robot to remain still, 
+    //      whereas for the magneto calib we need to move the robot
     bool success = !do_magnetometer_bias_calibration_;
 
     if (success)
     {
+        // Start calibration
+        is_ready_ = false;
         do_accelerometer_bias_calibration_      = true;
         config_.accelerometer.mean_values[X]    = scaled_acc_[X];
         config_.accelerometer.mean_values[Y]    = scaled_acc_[Y];
@@ -187,10 +188,14 @@ bool Imu::start_accelerometer_bias_calibration(void)
 bool Imu::start_gyroscope_bias_calibration(void)
 {
     // Success if not already doing magnetometer calibration
+    // Since this calib needs the robot to remain still, 
+    //      whereas for the magneto calib we need to move the robot
     bool success = !do_magnetometer_bias_calibration_;
 
     if (success)
     {
+        // Start calibration
+        is_ready_ = false;
         do_gyroscope_bias_calibration_      = true;
         config_.gyroscope.mean_values[X]    = scaled_gyro_[X];
         config_.gyroscope.mean_values[Y]    = scaled_gyro_[Y];
@@ -204,12 +209,16 @@ bool Imu::start_gyroscope_bias_calibration(void)
 bool Imu::start_magnetometer_bias_calibration(void)
 {
     // Success if not already doing accelerometer or gyroscope calibration
+    // Since this calib needs the robot to be moved, 
+    //      whereas for the 2 other calibs we need to have the robot still
     bool success  = true;
     success &= !do_accelerometer_bias_calibration_;
     success &= !do_gyroscope_bias_calibration_;
 
     if (success)
     {
+        // Start calibration
+        is_ready_ = false;
         do_magnetometer_bias_calibration_   = true;
         config_.magnetometer.max_values[X]  = -10000.0f;
         config_.magnetometer.max_values[Y]  = -10000.0f;
@@ -234,6 +243,8 @@ bool Imu::stop_accelerometer_bias_calibration(void)
     // Update biases
     if (success)
     {
+        // Stop calibration
+        is_ready_ = true;
         config_.accelerometer.bias[X] += config_.accelerometer.mean_values[X];
         config_.accelerometer.bias[Y] += config_.accelerometer.mean_values[Y];
         config_.accelerometer.bias[Z] += config_.accelerometer.mean_values[Z] - (-1.0f);
@@ -254,6 +265,8 @@ bool Imu::stop_gyroscope_bias_calibration(void)
     // Update biases
     if (success)
     {
+        // Stop calibration
+        is_ready_ = true;
         config_.gyroscope.bias[X] += config_.gyroscope.mean_values[X];
         config_.gyroscope.bias[Y] += config_.gyroscope.mean_values[Y];
         config_.gyroscope.bias[Z] += config_.gyroscope.mean_values[Z];
@@ -272,9 +285,14 @@ bool Imu::stop_magnetometer_bias_calibration(void)
     do_magnetometer_bias_calibration_ = false;
 
     // Update biases
-    config_.magnetometer.bias[X] += 0.5f * (config_.magnetometer.max_values[X] + config_.magnetometer.min_values[X]);
-    config_.magnetometer.bias[Y] += 0.5f * (config_.magnetometer.max_values[Y] + config_.magnetometer.min_values[Y]);
-    config_.magnetometer.bias[Z] += 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
+    if (success)
+    {
+        // Stop calibration
+        is_ready_ = true;
+        config_.magnetometer.bias[X] += 0.5f * (config_.magnetometer.max_values[X] + config_.magnetometer.min_values[X]);
+        config_.magnetometer.bias[Y] += 0.5f * (config_.magnetometer.max_values[Y] + config_.magnetometer.min_values[Y]);
+        config_.magnetometer.bias[Z] += 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
+    }
 
     return success;
 }

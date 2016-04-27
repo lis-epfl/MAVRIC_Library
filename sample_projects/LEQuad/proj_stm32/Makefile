@@ -5,7 +5,7 @@
 ################################################################################
 
 # Binaries will be generated with this name
-PROJ_NAME=LEQuad_mavrimini
+PROJ_NAME=LEQuadST
 
 # ------------------------------------------------------------------------------
 # PROJECT FOLDER
@@ -140,11 +140,11 @@ NO_COLOR=\033[0m
 OK_COLOR=\033[32;01m
 ERROR_COLOR=\033[31;01m
 WARN_COLOR=\033[33;01m
- 
+
 OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
- 
+
 AWK_CMD = awk '{ printf "%-60s %-10s\n",$$1, $$2; }'
 PRINT_ERROR = printf "$@ $(ERROR_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n" && false
 PRINT_WARNING = printf "$@ $(WARN_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n"
@@ -169,14 +169,14 @@ $(CM3_LIB_DIR)/lib$(CM3_LIBNAME).a:
 	@$(BUILD_CMD)
 
 # Linking
-${PROJ_NAME}.elf ${PROJ_NAME}.bin: $(CM3_LIB_DIR)/lib$(CM3_LIBNAME).a ${OBJS} 
+${PROJ_NAME}.elf ${PROJ_NAME}.bin: $(CM3_LIB_DIR)/lib$(CM3_LIBNAME).a ${OBJS}
 	@echo Linking...
-	@$(LD) $(LDFLAGS) $(CM3_ARCH_FLAGS) $(OBJS) $(LDLIBS) ${OBJS} -o ${PROJ_NAME}.elf 
+	@$(LD) $(LDFLAGS) $(CM3_ARCH_FLAGS) $(OBJS) $(LDLIBS) ${OBJS} -o ${PROJ_NAME}.elf
 	@$(OBJCOPY) -O ihex $(PROJ_NAME).elf $(PROJ_NAME).hex
 	@$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
 	@$(SIZER) $(PROJ_NAME).elf
 	@$(BUILD_CMD)
-	
+
 # C files in Library
 ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.c
 	@mkdir -p $(dir $@)
@@ -191,6 +191,9 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 
 flash: $(PROJ_NAME).bin
 	@st-flash write $(PROJ_NAME).bin 0x8000000
+
+dfu: $(PROJ_NAME).bin
+	@dfu-util -a 0 -s 0x8000000:leave -D LEQuad_mavrimini.bin
 
 .PHONY: clean rebuild
 clean:
