@@ -77,9 +77,10 @@ typedef struct
     thrust_command_t* thrust_command;                           ///< The pointer to the thrust command (output)
     const Imu* imu;                                             ///< The pointer to the IMU structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
-    const position_estimation_t* pos_est;                       ///< The pointer to the position estimation structure
+    const Position_estimation* pos_est;                         ///< The pointer to the position estimation structure
     const Airspeed_analog* airspeed_analog;                     ///< The pointer to the analog airspeed sensor structure
-    navigation_t* navigation;                                   ///< The pointer to the navigation structure
+    const Navigation* navigation;                               ///< The pointer to the navigation structure
+    const Gps* gps;                                             ///< The pointer to the GPS structure
     float thrust_apriori;                                       ///< A priori on the thrust for velocity control
     float pitch_angle_apriori;                                  ///< Constant a priori on the pitch angle
     float pitch_angle_apriori_gain;                             ///< Gain of the pitch angle a priori which is function of the roll value
@@ -122,7 +123,7 @@ typedef struct
  *
  * \return  True if the init succeed, false otherwise
  */
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const stabilisation_wing_conf_t stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation);
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const stabilisation_wing_conf_t stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const Position_estimation* pos_est, const Airspeed_analog* airspeed_analog, const Navigation* navigation, const Gps* gps);
 
 /**
  * \brief                       Main Controller for controlling and stabilizing the wing

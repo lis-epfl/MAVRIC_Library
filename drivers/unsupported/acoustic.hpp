@@ -54,9 +54,9 @@
 
 extern "C"
 {
+#include "sensing/ahrs.h"
 #include "util/streams.h"
 #include "buffer.h"
-#include "sensing/ahrs.h"
 #include "control/stabilisation.h"
 }
 
@@ -83,12 +83,12 @@ typedef struct
     //byte_stream_t* audio_stream_out;                  ///< Acoustic out coming stream
 
     ahrs_t*                     ahrs;                   ///< The pointer to the attitude estimation structure
-    position_estimation_t*      position_estimation;    ///< The pointer to the position estimation structure
+    Position_estimation*        position_estimation;    ///< The pointer to the position estimation structure
     remote_t*                   remote;                 ///< The pointer to the remote structure
     navigation_t*               navigation;             ///< The pointer to the navigation control structure
     stabilisation_copter_t*     stabilisation_copter;   ///< The pointer to the stabilization copter structure
     control_command_t*          controls_nav;           ///< The pointer to the control structure
-    mavlink_waypoint_handler_t* waypoint_handler;       ///< The pointer to the waypoint handler structure
+    Mavlink_waypoint_handler*   waypoint_handler;       ///< The pointer to the waypoint handler structure
     byte_stream_t*              telemetry_down_stream;  ///< The pointer to the down coming telemetry byte stream
 } audio_t;
 
@@ -110,12 +110,12 @@ typedef struct
 void acoustic_init(audio_t*         audio_data,
                    int32_t                      UID,
                    ahrs_t*                      ahrs,
-                   position_estimation_t*       position_estimation,
+                   Position_estimation*       position_estimation,
                    remote_t*                    remote,
                    navigation_t*                navigation,
                    stabilisation_copter_t*      stabilisation_copter,
                    control_command_t*           controls_nav,
-                   mavlink_waypoint_handler_t*  waypoint_handler,
+                   Mavlink_waypoint_handler*  waypoint_handler,
                    byte_stream_t*               telemetry_down_stream);
 
 

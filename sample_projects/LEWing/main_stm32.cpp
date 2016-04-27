@@ -75,10 +75,8 @@ int main(int argc, char** argv)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using simulated sensors
-    central_data_conf_t cd_config = central_data_default_config();
-
-    Central_data cd = Central_data(sysid,
-                                   board.imu,
+    Central_data::conf_t cd_config = Central_data::default_config(sysid);
+    Central_data cd = Central_data(board.imu,
                                    board.sim.barometer(),
                                    board.sim.gps(),
                                    board.sim.sonar(),
@@ -105,18 +103,19 @@ int main(int argc, char** argv)
     // Create tasks and telemetry
     // -------------------------------------------------------------------------
 
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
+    init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
 
     // // Try to read from flash, if unsuccessful, write to flash
-    // if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
+    // if (onboard_parameters->read_parameters_from_storage() == false)
     // {
-    //     // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+    //     // onboard_parameters->write_parameters_to_storage();
     //     init_success = false;
     // }
 
     init_success &= mavlink_telemetry_init(&cd);
 
-    cd.state.mav_state = MAV_STATE_STANDBY;
+    cd.state.mav_state_ = MAV_STATE_STANDBY;
 
     init_success &= tasks_create_tasks(&cd);
 
@@ -164,7 +163,7 @@ int main(int argc, char** argv)
          //time_keeper_delay_ms(100);
 
         // board.red_led.toggle();
-        scheduler_update(&cd.scheduler);
+        cd.scheduler.update();
     }
 
     return 0;

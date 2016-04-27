@@ -47,10 +47,10 @@ extern "C"
 #include "hal/common/time_keeper.hpp"
 }
 
-void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_named_value_float_pack(mavlink_stream->sysid,
-                                       mavlink_stream->compid,
+    mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
+                                       mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
                                        "sonar",

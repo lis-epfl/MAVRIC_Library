@@ -57,7 +57,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool imu_telemetry_init(Imu* imu, mavlink_message_handler_t* message_handler);
+bool imu_telemetry_init(Imu* imu, Mavlink_message_handler* message_handler);
 
 
 /**
@@ -67,6 +67,6 @@ bool imu_telemetry_init(Imu* imu, mavlink_message_handler_t* message_handler);
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void imu_telemetry_send_scaled(const Imu* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void imu_telemetry_send_scaled(const Imu* imu, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* IMU_TELEMETRY_HPP_ */

@@ -61,7 +61,7 @@ bool mavlink_telemetry_init(Central_data* central_data);
  *
  * \return  The initialization status of the module, succeed == true
  */
-bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_parameters, Central_data* central_data);
+bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
 
 
 #endif /* MAVLINK_DOWN_TELEMETRY_H_ */

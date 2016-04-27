@@ -79,7 +79,7 @@ float heading_from_velocity_vector(float *input_vel)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const stabilisation_wing_conf_t stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est, const Airspeed_analog* airspeed_analog, navigation_t* navigation)
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const stabilisation_wing_conf_t stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const Position_estimation* pos_est, const Airspeed_analog* airspeed_analog, const Navigation* navigation, const Gps* gps)
 {
     bool init_success = true;
     
@@ -93,6 +93,7 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const sta
     stabilisation_wing->pos_est = pos_est;
     stabilisation_wing->airspeed_analog = airspeed_analog;
     stabilisation_wing->navigation = navigation;
+    stabilisation_wing->gps = gps;
     stabilisation_wing->thrust_apriori  = stabiliser_conf.thrust_apriori;
     stabilisation_wing->pitch_angle_apriori = stabiliser_conf.pitch_angle_apriori;
     stabilisation_wing->pitch_angle_apriori_gain = stabiliser_conf.pitch_angle_apriori_gain;
@@ -160,8 +161,8 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         }
         
         // Compute current heading
-        gps_speed_global[X] = stabilisation_wing->pos_est->gps->velocity_lf()[0];
-        gps_speed_global[Y] = stabilisation_wing->pos_est->gps->velocity_lf()[1];
+        gps_speed_global[X] = stabilisation_wing->gps->velocity_lf()[0];
+        gps_speed_global[Y] = stabilisation_wing->gps->velocity_lf()[1];
         gps_speed_global[Z] = stabilisation_wing->pos_est->vel[Z];
         
         // Transform global to semi-local
@@ -222,14 +223,14 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
         
         // Overwrite the commands during different key phases (take-off and landing)
-        if(stabilisation_wing->navigation->internal_state == NAV_TAKEOFF)
+        if(stabilisation_wing->navigation->internal_state_ == Navigation::NAV_TAKEOFF)
         {
             // Take-off: fixed 0 roll angle, fixed defined pitch angle and fixed defined constant thrust value.
             input.rpy[0] = 0.0f;
             input.rpy[1] = stabilisation_wing->take_off_pitch;
             input.thrust = stabilisation_wing->take_off_thrust;
         }
-        else if(stabilisation_wing->navigation->internal_state == NAV_LANDING)
+        else if(stabilisation_wing->navigation->internal_state_ == Navigation::NAV_LANDING)
         {
             // Landing: Limit the roll computed by the velocity layer (navigation), shut down the motor and impose a little pitch down to assure gliding without stall.
             if(input.rpy[0] > stabilisation_wing->landing_max_roll)

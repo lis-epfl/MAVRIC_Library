@@ -50,7 +50,7 @@ extern "C"
 }
 
 
-Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Airspeed_analog& airspeed_analog, File& file1, File& file2, central_data_conf_t config):
+Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Airspeed_analog& airspeed_analog, File& file1, File& file2, const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -64,11 +64,19 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
+    manual_control(&satellite, Manual_control::default_config(), remote_default_config()),    
+    state(mavlink_communication.mavlink_stream(), battery, config.state_config),
     airspeed_analog(airspeed_analog),
-    state(battery, state_wing_default_config()),
+    scheduler(Scheduler::default_config()),
+    mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
+    ahrs(ahrs_initialized()),
+    position_estimation(state, barometer, sonar, gps, ahrs),
+    navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
+    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream()),
+    state_machine(state, position_estimation, imu, manual_control),
     data_logging(file1, state, data_logging_default_config()),
     data_logging2(file2, state, data_logging_default_config()),
-    sysid_(sysid),
+    sysid_(mavlink_communication.sysid()),
     config_(config)
 {}
 
@@ -77,7 +85,6 @@ bool Central_data::init(void)
 {
     bool init_success = true;
     bool ret;
-
     print_util_dbg_sep('%');
     time_keeper_delay_ms(50);
     print_util_dbg_sep('-');
@@ -85,55 +92,6 @@ bool Central_data::init(void)
     print_util_dbg_print("[CENTRAL_DATA] ...\r\n");
     time_keeper_delay_ms(50);
     print_util_dbg_sep('-');
-
-
-    // -------------------------------------------------------------------------
-    // Init main sheduler
-    // -------------------------------------------------------------------------
-    ret = scheduler_init(&scheduler, scheduler_default_config());
-    print_util_dbg_init_msg("[SCHEDULER]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init mavlink communication
-    // -------------------------------------------------------------------------
-    mavlink_communication_conf_t mavlink_communication_config = config_.mavlink_communication_config;
-    mavlink_communication_config.mavlink_stream_config.sysid = sysid_;
-    mavlink_communication_config.message_handler_config.debug = true;
-    mavlink_communication_config.onboard_parameters_config.debug = true;
-    mavlink_communication_config.mavlink_stream_config.debug = true;
-    ret = mavlink_communication_init(&mavlink_communication,
-                                     mavlink_communication_config,
-                                     &serial_mavlink,
-                                     &state,
-                                     &file_flash);
-    print_util_dbg_init_msg("[MAVLINK]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    //Init state_machine
-    // -------------------------------------------------------------------------
-    ret = state_machine_init(&state_machine,
-                             &state,
-                             &gps,
-                             &imu,
-                             &manual_control);
-    print_util_dbg_init_msg("[STATE MACHINE]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init ahrs
-    // -------------------------------------------------------------------------
-    ret = ahrs_init(&ahrs);
-    print_util_dbg_init_msg("[AHRS]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
 
 
     // -------------------------------------------------------------------------
@@ -148,59 +106,6 @@ bool Central_data::init(void)
     init_success &= ret;
     time_keeper_delay_ms(50);
 
-
-    // -------------------------------------------------------------------------
-    // Init position_estimation_init
-    // -------------------------------------------------------------------------
-    ret = position_estimation_init(&position_estimation,
-                                   config_.position_estimation_config,
-                                   &state,
-                                   &barometer,
-                                   &sonar,
-                                   &gps,
-                                   &ahrs);
-    print_util_dbg_init_msg("[POS EST]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init navigation
-    // -------------------------------------------------------------------------
-    navigation_conf_t nav_config = config_.navigation_config;
-    nav_config.navigation_type = DUBIN;
-    nav_config.takeoff_altitude = -40.0f;
-    ret = navigation_init(&navigation,
-                          nav_config,
-                          &controls_nav,
-                          &ahrs.qe,
-                          &position_estimation,
-                          &state,
-                          &mavlink_communication);/*,
-                            &sonar_i2cxl);*/
-    print_util_dbg_init_msg("[NAV]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init waypoint handler
-    // -------------------------------------------------------------------------
-    ret = waypoint_handler_init(&waypoint_handler,
-                                &position_estimation,
-                                &navigation,
-                                &ahrs,
-                                &state,
-                                &manual_control,
-                                &mavlink_communication,
-                                &mavlink_communication.mavlink_stream);
-    waypoint_handler_init_homing_waypoint(&waypoint_handler);
-    waypoint_handler_nav_plan_init(&waypoint_handler);
-    print_util_dbg_init_msg("[WAYPOINT]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
     // -------------------------------------------------------------------------
     // Init stabilisers
     // -------------------------------------------------------------------------
@@ -213,7 +118,8 @@ bool Central_data::init(void)
                                     &ahrs,
                                     &position_estimation,
                                     &airspeed_analog,
-                                    &navigation);
+                                    &navigation,
+                                    &gps);
     print_util_dbg_init_msg("[STABILISATION COPTER]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
@@ -262,17 +168,6 @@ bool Central_data::init(void)
                           &servo_1,
                           &servo_2,
                           &servo_3);
-
-    // -------------------------------------------------------------------------
-    // Init manual control
-    // -------------------------------------------------------------------------
-    ret = manual_control_init(&manual_control,
-                              &satellite,
-                              config_.manual_control_config,
-                              config_.remote_config);
-    print_util_dbg_init_msg("[MANUAL CTRL]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
 
     //--------------------------------------------------------------------------
     // Init vector field navigation

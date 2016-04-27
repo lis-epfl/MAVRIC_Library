@@ -72,12 +72,8 @@
 #include "drivers/airspeed_analog.hpp"
 
 #include "control/stabilisation_wing_default_config.hpp"
-#include "communication/mavlink_communication_default_config.hpp"
-#include "sensing/position_estimation_default_config.hpp"
 #include "control/servos_mix_wing_default_config.hpp"
-#include "control/manual_control_default_config.hpp"
 #include "communication/remote_default_config.hpp"
-#include "control/navigation_default_config.hpp"
 #include "sensing/ahrs_madgwick_default_config.hpp"
 
 extern "C"
@@ -87,28 +83,9 @@ extern "C"
 #include "util/print_util.h"
 #include "util/coord_conventions.h"
 #include "control/stabilisation.h"
-#include "runtime/scheduler_default_config.h"
 }
 
 #include "control/vector_field_waypoint.hpp"
-
-typedef struct
-{
-    state_conf_t state_config;
-    data_logging_conf_t data_logging_config;
-    data_logging_conf_t data_logging_config2;
-    scheduler_conf_t scheduler_config;
-    mavlink_communication_conf_t mavlink_communication_config;
-    ahrs_madgwick_conf_t ahrs_madgwick_config;
-    position_estimation_conf_t position_estimation_config;
-    navigation_conf_t navigation_config;
-    stabilisation_wing_conf_t stabilisation_wing_config;
-    servos_mix_wing_conf_t servos_mix_wing_config;
-    manual_control_conf_t manual_control_config;
-    remote_conf_t remote_config;
-}central_data_conf_t;
-
-static inline central_data_conf_t central_data_default_config();
 
 /**
  * \brief The central data structure
@@ -116,11 +93,35 @@ static inline central_data_conf_t central_data_default_config();
 class Central_data
 {
 public:
+    struct conf_t
+    {
+        State::conf_t state_config;
+        data_logging_conf_t data_logging_config;
+        data_logging_conf_t data_logging_config2;
+        Scheduler::conf_t scheduler_config;
+        Mavlink_communication::conf_t mavlink_communication_config;
+        Navigation::conf_t navigation_config;
+        ahrs_madgwick_conf_t ahrs_madgwick_config;
+        Position_estimation::conf_t position_estimation_config;
+        stabilisation_wing_conf_t stabilisation_wing_config;
+        servos_mix_wing_conf_t servos_mix_wing_config;
+        Manual_control::conf_t manual_control_config;
+        remote_conf_t remote_config;
+    };
+
+    /**
+     * \brief   Default configuration
+     *
+     * \param   sysid       System id (default value = 1)
+     *
+     * \return  Config structure
+     */
+    static inline conf_t default_config(uint8_t sysid = 1);
+
     /**
      * \brief   Constructor
      */
-    Central_data(   uint8_t sysid, 
-                    Imu& imu, 
+    Central_data(   Imu& imu, 
                     Barometer& barometer, 
                     Gps& gps, 
                     Sonar& sonar, 
@@ -136,7 +137,7 @@ public:
                     Airspeed_analog& airspeed_analog, 
                     File& file1, 
                     File& file2,
-                    central_data_conf_t config = central_data_default_config() );
+                    const conf_t& config = default_config());
 
 
     /**
@@ -163,10 +164,14 @@ public:
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
 
+    Manual_control manual_control;                            ///< The joystick parsing structure
+
+    State state;                                                ///< The structure with all state information
+
     Airspeed_analog& airspeed_analog;   ///< Reference to the analog airspeed
 
-    scheduler_t scheduler;
-    mavlink_communication_t mavlink_communication;
+    Scheduler scheduler;
+    Mavlink_communication mavlink_communication;
 
     command_t command;
     servos_mix_wing_t servo_mix;
@@ -178,16 +183,14 @@ public:
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
 
-    manual_control_t manual_control;                            ///< The joystick parsing structure
-
     stabilisation_wing_t stabilisation_wing;                   ///< The stabilisation structure for a wing
 
-    position_estimation_t position_estimation;                  ///< The position estimaton structure
-    mavlink_waypoint_handler_t waypoint_handler;
-    navigation_t navigation;                                    ///< The structure to perform GPS navigation
+    Position_estimation position_estimation;                  ///< The position estimaton structure
+    Navigation navigation;                                    ///< The structure to perform GPS navigation
+    Mavlink_waypoint_handler waypoint_handler;
 
-    State state;                                                ///< The structure with all state information
-    state_machine_t state_machine;                              ///< The structure for the state machine
+    
+    State_machine state_machine;                              ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;
@@ -200,35 +203,43 @@ public:
 private:
     uint8_t sysid_;     ///< System ID
 
-    central_data_conf_t config_;    ///< Configuration
+    conf_t config_;    ///< Configuration
 };
 
-static inline central_data_conf_t central_data_default_config()
+Central_data::conf_t Central_data::default_config(uint8_t sysid)
 {
-    central_data_conf_t conf = {};
+    conf_t conf                                                = {};
 
-    conf.state_config = state_default_config();
+    conf.state_config = State::wing_default_config();
 
     conf.data_logging_config = data_logging_default_config();
     conf.data_logging_config = data_logging_default_config();
 
-    conf.scheduler_config = scheduler_default_config();
+    conf.scheduler_config = Scheduler::default_config();
 
-    conf.mavlink_communication_config = mavlink_communication_default_config();
+    conf.navigation_config = Navigation::default_config();
+    conf.navigation_config.navigation_type = DUBIN;
+    conf.navigation_config.takeoff_altitude = -40.0f;
+
 
     conf.ahrs_madgwick_config = ahrs_madgwick_default_config();
 
-    conf.position_estimation_config = position_estimation_default_config();
-
-    conf.navigation_config = navigation_default_config();
+    conf.position_estimation_config = Position_estimation::default_config();
 
     conf.stabilisation_wing_config = stabilisation_wing_default_config();
 
     conf.servos_mix_wing_config = servos_mix_wing_default_config();
 
-    conf.manual_control_config = manual_control_default_config();
+    conf.manual_control_config = Manual_control::default_config();
 
     conf.remote_config = remote_default_config();
+
+    /* Mavlink communication config */
+    Mavlink_communication::conf_t mavlink_communication_config = Mavlink_communication::default_config(sysid);
+    mavlink_communication_config.message_handler_config.debug = true;
+    mavlink_communication_config.onboard_parameters_config.debug = true;
+    mavlink_communication_config.mavlink_stream_config.debug = true;
+    conf.mavlink_communication_config = mavlink_communication_config;
 
     return conf;
 }
