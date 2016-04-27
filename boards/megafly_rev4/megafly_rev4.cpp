@@ -293,17 +293,6 @@ bool Megafly_rev4::init(void)
 
     time_keeper_delay_ms(3000);
 
-    servo_0.set_servo_min();
-    servo_1.set_servo_min();
-    servo_2.set_servo_min();
-    servo_3.set_servo_min();
-    servo_4.set_servo_min();
-    servo_5.set_servo_min();
-    servo_6.set_servo_min();
-    servo_7.set_servo_min();
-
-    time_keeper_delay_ms(3000);
-
     servo_0.failsafe();
     servo_1.failsafe();
     servo_2.failsafe();
