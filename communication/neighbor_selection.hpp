@@ -61,7 +61,7 @@ public:
         float size_vhc;                                         ///< The size of a vehicle to detect a collision (might be bigger than the real size)
         float safe_size_vhc;                                    ///< The safe size for collision avoidance
         float max_speed;                                        ///< The max allowed speed for the collision avoidance strategy
-        float cruise_speeed;                                    ///< The cruise speed
+        float cruise_speed;                                    ///< The cruise speed
         float orca_time_step_s;                                 ///< The time step for the ORCA strategy
         float neighbor_timeout_limit_s;                         ///< The maximum time interval between two messages from a neighbor before deleting it
         float freq_lpf;                                         ///< The low pass filter for the communication frequency
@@ -180,7 +180,7 @@ Neighbors::conf_t Neighbors::default_config(void)
     conf.size_vhc = 2.0f;
     conf.safe_size_vhc = 3.0f;
     conf.max_speed = 4.5f;
-    conf.cruise_speeed = 3.0f;
+    conf.cruise_speed = 3.0f;
     conf.orca_time_step_s = 0.01f;
     conf.neighbor_timeout_limit_s = 4.0f;
     conf.freq_lpf = 0.2f;

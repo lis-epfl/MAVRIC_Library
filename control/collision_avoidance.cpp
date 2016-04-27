@@ -85,13 +85,7 @@ static mav_result_t collision_avoidance_set_parameters(collision_avoidance_t* co
             break;
 
         case HUMAN:
-        case POTENTIAL_FIELD:
-        case FLOCKING:
-        default:
-        break;
-
-        /*case HUMAN:
-            result = human_set_parameters_value(&collision_avoidance->human,packet);
+            // result = human_set_parameters_value(&collision_avoidance->pfm,packet);
             break;
 
         case POTENTIAL_FIELD:
@@ -99,8 +93,11 @@ static mav_result_t collision_avoidance_set_parameters(collision_avoidance_t* co
             break;
 
         case FLOCKING:
-            result = flocking_set_parameters_value(&collision_avoidance->flocking,packet);
-            break;*/
+            // result = flocking_set_parameters_value(&collision_avoidance->pfm,packet);
+            break;
+
+        default:
+            break;
     }
 
     if (result == MAV_RESULT_ACCEPTED)
@@ -196,27 +193,26 @@ bool collision_avoidance_init(collision_avoidance_t* collision_avoidance, collis
                                     state);
     
     /*init_success &= human_init(   &collision_avoidance->human,
-                                    collision_avoidance_config->human_config,
+                                    config.human_config,
                                     &collision_avoidance->neighbors,
                                     position_estimation,
                                     ahrs,
                                     state,
                                     navigation,
-                                    mavlink_waypoint_handler);
+                                    mavlink_waypoint_handler);*/
     
     
     init_success &= pfm_init(&collision_avoidance->pfm,
-                                collision_avoidance_config->pfm_config,
-                                &collision_avoidance->neighbors,
+                                config.pfm_config,
+                                collision_avoidance->neighbors,
                                 position_estimation,
                                 ahrs,
                                 state,
-                                navigation,
-                                mavlink_waypoint_handler);
+                                navigation);
     
     
-    init_success &= flocking_init(  &collision_avoidance->flocking,
-                                        collision_avoidance_config->flocking_config,
+    /*init_success &= flocking_init(  &collision_avoidance->flocking,
+                                        config.flocking_config,
                                         &collision_avoidance->neighbors,
                                         position_estimation,
                                         ahrs,
@@ -271,19 +267,11 @@ bool collision_avoidance_update(collision_avoidance_t* collision_avoidance)
         switch(collision_avoidance->strategy)
         {
             case ORCA:
-                //orca_collision_avoidance(&collision_avoidance->orca);
                 orca_compute_new_velocity(&collision_avoidance->orca, collision_avoidance->controls_nav->tvel, new_velocity);
                 break;
 
             case HUMAN:
-            case POTENTIAL_FIELD:
-            case FLOCKING:
-            default:
-            break;
-
-            /*case HUMAN:
-                //human_collision_avoidance(&collision_avoidance->human);
-                human_compute_new_velocity(&collision_avoidance->human, new_velocity);
+                // human_compute_new_velocity(&collision_avoidance->human, new_velocity);
                 break;
 
             case POTENTIAL_FIELD:
@@ -291,9 +279,10 @@ bool collision_avoidance_update(collision_avoidance_t* collision_avoidance)
                 break;
 
             case FLOCKING:
-                //flocking_collision_avoidance(&collision_avoidance->flocking);
-                flocking_compute_new_velocity(&collision_avoidance->flocking,collision_avoidance->controls_nav->tvel, new_velocity);
-                break;*/
+                // flocking_compute_new_velocity(&collision_avoidance->flocking,collision_avoidance->controls_nav->tvel, new_velocity);
+                break;
+            default:
+                break;
         }
         
         collision_avoidance->controls_nav->tvel[X] = new_velocity[X];

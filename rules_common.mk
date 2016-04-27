@@ -65,6 +65,7 @@ LIB_SRCS += control/manual_control_telemetry.cpp
 LIB_SRCS += control/navigation.cpp
 LIB_SRCS += control/orca.cpp
 LIB_SRCS += control/pid_controller.c
+LIB_SRCS += control/pfm.cpp
 LIB_SRCS += control/servos_mix_quadcopter_cross.cpp
 LIB_SRCS += control/servos_mix_quadcopter_diag.cpp
 LIB_SRCS += control/stabilisation.c
