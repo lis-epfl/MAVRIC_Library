@@ -87,12 +87,12 @@ typedef struct
     int8_t loop_count_orca;
     int8_t loop_count_collisions;
     
-    Neighbors*              neighbors;              ///< The pointer to the neighbor structure
-    const Position_estimation* position_estimation; ///< The pointer to the position estimation structure
-    const ahrs_t*               ahrs;               ///< The pointer to the attitude estimation structure
-    const State*                    state;                  ///< The pointer to the state structure
-    Navigation*             navigation;             ///< The pointer to the navigation structure
-    control_command_t* controls_nav;                    ///< The pointer to the controls_nav structure
+    Neighbors*                 neighbors;               ///< The pointer to the neighbor structure
+    const Position_estimation* position_estimation;     ///< The pointer to the position estimation structure
+    const ahrs_t*              ahrs;                    ///< The pointer to the attitude estimation structure
+    const State*               state;                   ///< The pointer to the state structure
+    Navigation*                navigation;              ///< The pointer to the navigation structure
+    control_command_t*         controls_nav;            ///< The pointer to the controls_nav structure
 } orca_t;
 
 /**
@@ -113,7 +113,8 @@ typedef struct
  * \param   position_estimation     The pointer to the position structure
  * \param   ahrs                    The pointer to the attitude estimation structure
  * \param   state                   The pointer to the state structure
- * \param   navigation_             The pointer to the navigation_ structure
+ * \param   navigation_             The pointer to the navigation structure
+ * \param   controls_nav            The pointer to the control nav structure
  *
  * \return  True if the init succeed, false otherwise
  */
