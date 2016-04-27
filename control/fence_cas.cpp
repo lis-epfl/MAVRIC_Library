@@ -210,26 +210,8 @@ float Fence_CAS::detect_line(local_position_t Al, local_position_t Bl,local_posi
 
 }
 
-float Fence_CAS::detect_seg(local_position_t Al, local_position_t Bl,local_position_t Cl, float V[3], float I[3],float J[3])
+float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3])
 {
-	float A[3]={Al.pos[0],Al.pos[1],Al.pos[2]};
-	float B[3]={Bl.pos[0],Bl.pos[1],Bl.pos[2]};
-	float C[3]={Cl.pos[0],Cl.pos[1],Cl.pos[2]};
-	//ONLY 2D detection:
-	A[2]=C[2];
-	B[2]=C[2];
-	float S[3]={0,0,0};
-	float Vnorm[3]={0,0,0};
-	vectors_normalize(V,Vnorm);
-	float Vval = vectors_norm(V);
-
-	float dmin=2*this->r_pz; //can be adjusted
-	float tahead = 2.0;//can be adjusted
-
-	for(int i =0; i<3;i++)
-	{
-		S[i]= C[i] + Vnorm[i] *  (this->r_pz/*protection zone*/ +SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + tahead * Vval /*d_ahead*/);
-	}
 
 	float	u[3] = {S[0]-C[0],S[1]-C[1],S[2]-C[2]};	//quad segment
 	float	v[3] = {B[0]-A[0],B[1]-A[1],B[2]-A[2]};	//fence segment
@@ -296,10 +278,10 @@ float Fence_CAS::detect_seg(local_position_t Al, local_position_t Bl,local_posit
 	tc = (abs(tN) < SMALL_NUM ? 0.0 : tN / tD);
 
 
-	print_util_dbg_print("||sc");
-	print_util_dbg_putfloat(sc,4);
-	print_util_dbg_print("\t||tc");
-	print_util_dbg_putfloat(tc,4);
+//	print_util_dbg_print("||sc");
+//	print_util_dbg_putfloat(sc,4);
+//	print_util_dbg_print("\t||tc");
+//	print_util_dbg_putfloat(tc,4);
 	// get the difference of the two closest points
 
 	float dp[3]={0,0,0}; //dp= distance vecto between I and J, dp = J-I
@@ -322,16 +304,19 @@ float Fence_CAS::detect_seg(local_position_t Al, local_position_t Bl,local_posit
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Fence_CAS::Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* postion_estimation)
+Fence_CAS::Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* postion_estimation, control_command_t* controls)
 :	sensor_res(3),
 	a_max(1),
 	r_pz(0),
 	discomfort(0),
 	waypoint_handler(waypoint_handler),
 	pos_est(postion_estimation),
+	controls(controls),
 	detected_point({0,0,0}),
 	repulsion({0,0,0}),
-	fov(60.0)
+	maxsens(5.0),
+	tahead(2.0),
+	coef_roll(0.8)
 {
 
 }
@@ -342,21 +327,10 @@ Fence_CAS::~Fence_CAS(void)
 //call with tasks
 bool Fence_CAS::update(void)
 {
-	//use waypoint_handler->fence_list[i];
-	//and waypoint_handler->number_of_fence_points;
-
-	//print_util_dbg_print("TEST UPDATE");
-	//recupère les variables central_data
-	//pour chaque fence
-		//pour chaque doublet de points
-			//create_edge
-			//calcul SI l uav detecte la fence
-				//si oui
-					//calcul des repulsions
-					//mélange les repulsiosn avec la vitesse
-
-	//injecte la nouevlle vitesse dans central-data
-
+	float dist[waypoint_handler->number_of_fence_points];
+	for (int k=0;k<3;k++){
+		this->repulsion[k]=0.0;
+	}
 	for (int i=0; i < waypoint_handler->number_of_fence_points; i++)
 	{
 		int j=0;
@@ -383,56 +357,87 @@ bool Fence_CAS::update(void)
 		float J[3]={0,0,0}; //Detected point on quad segment
 
 		float V[3]={0,0,0};
-		float gamma=0.0;
 
 		for (int k=0;k<3;k++){
 			V[k]=pos_est->vel[k];
 		}
 
-		//print A, B , C
+		float A[3]={Alpoint.pos[0],Alpoint.pos[1],Alpoint.pos[2]};
+		float B[3]={Blpoint.pos[0],Blpoint.pos[1],Blpoint.pos[2]};
+		float C[3]={this->pos_est->last_gps_pos.pos[0],this->pos_est->last_gps_pos.pos[1],this->pos_est->last_gps_pos.pos[2]};
+		//ONLY 2D detection:
+		A[2]=C[2];
+		B[2]=C[2];
+		float S[3]={0,0,0};
+		float Vnorm[3]={0,0,0};
+		vectors_normalize(V,Vnorm);
+		float Vval = vectors_norm(V);
 
-		print_util_dbg_print("Apoint||");
-		print_util_dbg_putfloat(i+1,0);
-	//	print_util_dbg_print("||");
-	//	print_util_dbg_putfloat(A[0],2);
-	//	print_util_dbg_print("||");
-	//	print_util_dbg_putfloat(A[1],2);
-	//	print_util_dbg_print("||");
-	//	print_util_dbg_putfloat(A[2],2);
-		print_util_dbg_print("||\t");
-		print_util_dbg_print("Bpoint||");
-		print_util_dbg_putfloat(j+1,0);
-	//	print_util_dbg_putfloat(B[0],2);
-	//	print_util_dbg_print("||");
-	//	print_util_dbg_putfloat(B[1],2);
-	//	print_util_dbg_print("||");
-	//	print_util_dbg_putfloat(B[2],2);
-		print_util_dbg_print("||\t");
+		float dmin=2*this->r_pz; //can be adjusted
 
-
-		float dist = 0.0;
-//		dist = detect_line(Alpoint,Blpoint,this->pos_est->last_gps_pos,V, gamma,I);
-		dist = detect_seg(Alpoint,Blpoint,this->pos_est->last_gps_pos,V,I,J);
-
-		float maxsens = 5;
-		if((dist > 0)&(dist < maxsens))
+		for(int i =0; i<3;i++)
 		{
-			print_util_dbg_print("Ipoint||");
-			print_util_dbg_putfloat(I[0],2);
-			print_util_dbg_print("||");
-			print_util_dbg_putfloat(I[1],2);
-			print_util_dbg_print("||");
-			print_util_dbg_putfloat(I[2],2);
-			for (int k=0;k<3;k++){
-				this->repulsion[k]=-V[k];
-			}
+			S[i]= C[i] + Vnorm[i] *  (this->r_pz/*protection zone*/ +SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + this->tahead * Vval /*d_ahead*/);
 		}
-		print_util_dbg_print("||");
-		print_util_dbg_putfloat(dist,5);
-		print_util_dbg_print("||\n");
+
+
+//		dist = detect_line(Alpoint,Blpoint,this->pos_est->last_gps_pos,V, gamma,I);
+		dist[i] = detect_seg(A,B,C,S,V,I,J);
+
+		float rep[3]={B[1]-A[1],A[0]-B[0],0.0};
+
+		gftobftransform(C, S, rep);
+		if((dist[i] >= 0)&(dist[i] < this->maxsens))
+		{
+//			print_util_dbg_print("Ipoint||");
+//			print_util_dbg_putfloat(I[0],2);
+//			print_util_dbg_print("||");
+//			print_util_dbg_putfloat(I[1],2);
+//			print_util_dbg_print("||");
+//			print_util_dbg_putfloat(I[2],2);
+			float ratio = dist[i]/this->maxsens;
+			this->repulsion[0]+=0.0;
+
+			this->repulsion[1]+=-rep[1]*this->coef_roll*0.25*PI*interpolate(ratio,0);
+
+			this->repulsion[2]+=0.0;
+
+			print_util_dbg_print("||");
+			print_util_dbg_putfloat(i,5);
+			print_util_dbg_print("|dist_detected|");
+			print_util_dbg_putfloat(dist[i],5);
+			print_util_dbg_print("||\n");
+
+		}
+		else if (dist[i] < 0)
+		{
+
+		}
+
+
 	}
 
 	return true;
+}
+float  Fence_CAS::interpolate(float r, int type)
+{
+	if(type==0) // linear interpolation
+	{
+		if(r>0.0)
+		{
+			return 1-r;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	return 0.0;
+}
+void Fence_CAS::gftobftransform(float C[3], float S[3], float rep[3])
+{
+	rep[0]=(S[0]-C[0])*rep[0] + (C[1]-S[1])*rep[1];
+	rep[1]=(S[1]-C[1])*rep[0] + (S[0]-C[0])*rep[1];
 }
 void Fence_CAS::add_fence(void)
 {
@@ -479,172 +484,3 @@ float Fence_CAS::get_repulsion(int axis)
 {
 	return this->repulsion[axis];
 }
-
-
-// to use:
-
-//position_estimation_t
-/*float vel_bf[3];                        ///< 3D velocity in body frame
-    float vel[3];                           ///< 3D velocity in global frame
-
-    float last_alt;                         ///< Value of the last altitude estimation
-    float last_vel[3];                      ///< Last 3D velocity
-
-    local_position_t local_position;        ///< Local position
-    local_position_t last_gps_pos;          ///< Coordinates of the last GPS position
-
-    bool fence_set; */
-//http://geomalgorithms.com/a07-_distance.html#dist3D_Segment_to_Segment()
-//12.04.2016
-//#define SMALL_NUM   0.00000001 // anything that avoids division overflow
-//// dot product (3D) which allows vector operations in arguments
-//#define dot(u,v)   ((u).x * (v).x + (u).y * (v).y + (u).z * (v).z)
-//#define norm(v)    sqrt(dot(v,v))  // norm = length of  vector
-//#define d(u,v)     norm(u-v)        // distance = norm of difference
-//#define abs(x)     ((x) >= 0 ? (x) : -(x))   //  absolute value
-//
-//
-//
-//// dist3D_Line_to_Line(): get the 3D minimum distance between 2 lines
-////    Input:  two 3D lines L1 and L2
-////    Return: the shortest distance between L1 and L2
-//float
-//dist3D_Line_to_Line( Line L1, Line L2)
-//{
-//    Vector   u = L1.P1 - L1.P0;
-//    Vector   v = L2.P1 - L2.P0;
-//    Vector   w = L1.P0 - L2.P0;
-//    float    a = dot(u,u);         // always >= 0
-//    float    b = dot(u,v);
-//    float    c = dot(v,v);         // always >= 0
-//    float    d = dot(u,w);
-//    float    e = dot(v,w);
-//    float    D = a*c - b*b;        // always >= 0
-//    float    sc, tc;
-//
-//    // compute the line parameters of the two closest points
-//    if (D < SMALL_NUM) {          // the lines are almost parallel
-//        sc = 0.0;
-//        tc = (b>c ? d/b : e/c);    // use the largest denominator
-//    }
-//    else {
-//        sc = (b*e - c*d) / D;
-//        tc = (a*e - b*d) / D;
-//    }
-//
-//    // get the difference of the two closest points
-//    Vector   dP = w + (sc * u) - (tc * v);  // =  L1(sc) - L2(tc)
-//
-//    return norm(dP);   // return the closest distance
-//}
-////===================================================================
-//
-//
-//// dist3D_Segment_to_Segment(): get the 3D minimum distance between 2 segments
-////    Input:  two 3D line segments S1 and S2
-////    Return: the shortest distance between S1 and S2
-//float
-//dist3D_Segment_to_Segment( Segment S1, Segment S2)
-//{
-//    Vector   u = S1.P1 - S1.P0;
-//    Vector   v = S2.P1 - S2.P0;
-//    Vector   w = S1.P0 - S2.P0;
-//    float    a = dot(u,u);         // always >= 0
-//    float    b = dot(u,v);
-//    float    c = dot(v,v);         // always >= 0
-//    float    d = dot(u,w);
-//    float    e = dot(v,w);
-//    float    D = a*c - b*b;        // always >= 0
-//    float    sc, sN, sD = D;       // sc = sN / sD, default sD = D >= 0
-//    float    tc, tN, tD = D;       // tc = tN / tD, default tD = D >= 0
-//
-//    // compute the line parameters of the two closest points
-//    if (D < SMALL_NUM) { // the lines are almost parallel
-//        sN = 0.0;         // force using point P0 on segment S1
-//        sD = 1.0;         // to prevent possible division by 0.0 later
-//        tN = e;
-//        tD = c;
-//    }
-//    else {                 // get the closest points on the infinite lines
-//        sN = (b*e - c*d);
-//        tN = (a*e - b*d);
-//        if (sN < 0.0) {        // sc < 0 => the s=0 edge is visible
-//            sN = 0.0;
-//            tN = e;
-//            tD = c;
-//        }
-//        else if (sN > sD) {  // sc > 1  => the s=1 edge is visible
-//            sN = sD;
-//            tN = e + b;
-//            tD = c;
-//        }
-//    }
-//
-//    if (tN < 0.0) {            // tc < 0 => the t=0 edge is visible
-//        tN = 0.0;
-//        // recompute sc for this edge
-//        if (-d < 0.0)
-//            sN = 0.0;
-//        else if (-d > a)
-//            sN = sD;
-//        else {
-//            sN = -d;
-//            sD = a;
-//        }
-//    }
-//    else if (tN > tD) {      // tc > 1  => the t=1 edge is visible
-//        tN = tD;
-//        // recompute sc for this edge
-//        if ((-d + b) < 0.0)
-//            sN = 0;
-//        else if ((-d + b) > a)
-//            sN = sD;
-//        else {
-//            sN = (-d +  b);
-//            sD = a;
-//        }
-//    }
-//    // finally do the division to get sc and tc
-//    sc = (abs(sN) < SMALL_NUM ? 0.0 : sN / sD);
-//    tc = (abs(tN) < SMALL_NUM ? 0.0 : tN / tD);
-//
-//    // get the difference of the two closest points
-//    Vector   dP = w + (sc * u) - (tc * v);  // =  S1(sc) - S2(tc)
-//
-//    return norm(dP);   // return the closest distance
-//}
-////===================================================================
-//
-//
-//// cpa_time(): compute the time of CPA for two tracks
-////    Input:  two tracks Tr1 and Tr2
-////    Return: the time at which the two tracks are closest
-//float
-//cpa_time( Track Tr1, Track Tr2 )
-//{
-//    Vector   dv = Tr1.v - Tr2.v;
-//
-//    float    dv2 = dot(dv,dv);
-//    if (dv2 < SMALL_NUM)      // the  tracks are almost parallel
-//        return 0.0;             // any time is ok.  Use time 0.
-//
-//    Vector   w0 = Tr1.P0 - Tr2.P0;
-//    float    cpatime = -dot(w0,dv) / dv2;
-//
-//    return cpatime;             // time of CPA
-//}
-////===================================================================
-//
-//
-//// cpa_distance(): compute the distance at CPA for two tracks
-////    Input:  two tracks Tr1 and Tr2
-////    Return: the distance for which the two tracks are closest
-//float
-//cpa_distance( Track Tr1, Track Tr2 )
-//{
-//    float    ctime = cpa_time( Tr1, Tr2);
-//    Point    P1 = Tr1.P0 + (ctime * Tr1.v);
-//    Point    P2 = Tr2.P0 + (ctime * Tr2.v);
-//
-//    return d(P1,P2);            // distance at CPA
-//}

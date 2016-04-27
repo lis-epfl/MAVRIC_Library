@@ -60,7 +60,7 @@ extern "C"
 class Fence_CAS
 {
 public:
-	Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* postion_estimation);
+	Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* postion_estimation,control_command_t* controls );
 	~Fence_CAS(void);
 	bool update(void);
 	void add_fence(void);
@@ -75,23 +75,29 @@ public:
 	void set_r_pz(void);
 	void get_r_pz(void);
 	float get_repulsion(int axis);
+	void gftobftransform(float C[3], float S[3], float rep[3]);
+	float interpolate(float r, int type);
+	float 								maxsens;
+	float								a_max; ///<maximal deceleration [m/s^2]
+	float								r_pz; ///< radius of Protection Zone
+	float								discomfort; ///<[0,1] intensity of the reaction
+	float								tahead; ///<[0,1] intensity of the reaction
+	float								coef_roll; ///<[0,1] intensity of the reaction
+
+
 
 
 private:
 
-	float detect_seg(local_position_t Al, local_position_t Bl,local_position_t Cl, float V[3], float I[3],float J[3]);
+	float detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3]);
 	float detect_line(local_position_t A, local_position_t B,local_position_t C, float V[3], float gamma, float I[3]);
 	uint8_t								sensor_res; ///< simulate sensor resolution, spatial resolution between two sensors. [deg]
-	float								a_max; ///<maximal deceleration [m/s^2]
-	float								r_pz; ///< radius of Protection Zone
-	float								discomfort; ///<[0,1] intensity of the reaction
 	mavlink_waypoint_handler_t* 		waypoint_handler;
-const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
+	const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
+	control_command_t* 					controls;
 	//velocity_command_t&                 velocity_command;           ///< Velocity command (output)
 	float 								detected_point[3];
 	float 								repulsion[3];
-	float 								fov; ///< Field of View, total angle of detection [deg]
-
 };
 
 #endif /*FENCE_CAS_H_*/
