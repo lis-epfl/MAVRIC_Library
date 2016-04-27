@@ -69,7 +69,7 @@
 #include "control/manual_control.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/velocity_controller_copter.hpp"
-#include "control/vector_field_waypoint.hpp"
+#include "automatic_navigation/vector_field_waypoint.hpp"
 #include "control/altitude_controller.hpp"
 #include "hal/common/led.hpp"
 #include "drivers/battery.hpp"

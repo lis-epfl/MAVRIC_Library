@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/vector_field_waypoint.hpp"
+#include "automatic_navigation/vector_field_waypoint.hpp"
 
 extern "C"
 {
