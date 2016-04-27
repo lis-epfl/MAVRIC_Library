@@ -65,7 +65,7 @@
 #include "drivers/sonar_telemetry.hpp"
 #include "communication/data_logging_telemetry.hpp"
 #include "control/manual_control_telemetry.hpp"
-
+#include "communication/neighbor_selection.hpp"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -176,6 +176,9 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 
     init_success &= data_logging_telemetry_init(&central_data->data_logging2,
                     message_handler);
+
+    init_success &= neighbor_selection_telemetry_init(&central_data->neighbor_selection,
+                                                      message_handler);
 
     return init_success;
 }

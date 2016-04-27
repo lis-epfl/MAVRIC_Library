@@ -59,6 +59,7 @@
 #include "communication/data_logging.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/state.hpp"
+#include "communication/neighbor_selection.hpp"
 #include "simulation/simulation.hpp"
 #include "sensing/position_estimation.hpp"
 #include "sensing/altitude_estimation.hpp"
@@ -112,6 +113,7 @@ public:
       data_logging_conf_t data_logging_config2;
       Scheduler::conf_t scheduler_config;
       Mavlink_communication::conf_t mavlink_communication_config;
+      Neighbors::conf_t neighbors_config;
       Navigation::conf_t navigation_config;
       qfilter_conf_t qfilter_config;
       Position_estimation::conf_t position_estimation_config;
@@ -184,6 +186,8 @@ public:
     Scheduler scheduler;
     Mavlink_communication mavlink_communication;
 
+    Neighbors neighbor_selection; 
+
     servos_mix_quadcotper_diag_t servo_mix;
 
     qfilter_t attitude_filter;                                  ///< The qfilter structure
@@ -240,6 +244,8 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.position_estimation_config = Position_estimation::default_config();
 
     conf.stabilisation_copter_config = stabilisation_copter_default_config();
+
+    conf.neighbors_config = Neighbors::default_config();
 
     conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
 
