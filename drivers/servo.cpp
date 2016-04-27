@@ -134,3 +134,9 @@ void Servo::set_servo_max(void)
 {
     write(config_.max, true);
 }
+
+
+void Servo::set_servo_min(void)
+{
+    write(config_.min, true);
+}

@@ -69,6 +69,9 @@ extern "C"
 }
 
 
+// Preprocessor definitions
+#define CALIBRATE_ESC 1 /* 0 for false, 1 for true. IF TRUE, TAKE OFF PROPS */
+
 /**
  * \brief   Configuration structure
  */
