@@ -78,7 +78,7 @@ int main(int argc, char** argv)
     //Create dynamic model
     Dynamic_model_fixed_wing model(servo_motor, servo_flap_left, servo_flap_right);
 
-    servo_motor.write(0.5f);
+    servo_motor.write(0.0f);
     //servo_motor.write(-0.4f);
 
 
@@ -92,9 +92,9 @@ int main(int argc, char** argv)
     time_keeper_init();
     float t = time_keeper_get_s();
     float start = t;
-    for (uint32_t i = 0; i < 1000000; i++)
+    for (uint32_t i = 0; i < 10000; i++)
     {
-        if(i%100000==0) printf("%d/100\n",i/10000);
+        //if(i%100000==0) printf("%d/100\n",i/10000);
         //printf("-------------------------\n");
         position = model.position_lf();
         velocity = model.velocity_lf();
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
         logfile << velocity[0] << "," << velocity[1] << "," << velocity[2] << ",";
         logfile << roll << "," << pitch << "," << yaw << std::endl;
 
-        while(time_keeper_get_s() - t < 0.001f){}
+        while(time_keeper_get_s() - t < 0.004f){}
         t = time_keeper_get_s();
         model.update();
     }
