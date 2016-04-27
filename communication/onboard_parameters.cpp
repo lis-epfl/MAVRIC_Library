@@ -349,7 +349,7 @@ bool Onboard_parameters::write_parameters_to_storage()
     // Write to file
     file_.seek(0, FILE_SEEK_START);
     success &= file_.write((uint8_t*)values, bytes_to_write);
-
+    success &= file_.flush();
     // Free memory
     free(values);
 
