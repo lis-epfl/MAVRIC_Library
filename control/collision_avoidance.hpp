@@ -47,9 +47,9 @@
 #include "communication/neighbor_selection.hpp"
 #include "control/navigation.hpp"
 #include "control/orca.hpp"
-//#include "control/human.h"
+#include "control/human.hpp"
 #include "control/pfm.hpp"
-//#include "control/flocking.h"
+#include "control/flocking.hpp"
 
 #include "communication/state.hpp"
 #include "sensing/position_estimation.hpp"
@@ -85,9 +85,9 @@ typedef struct
     collision_avoidance_strategy_t strategy;        ///< The collision avoidance strategy
 
     orca_t orca;                                    ///< The ORCA structure
-    //human_t human;                                ///< The human-like structure
+    human_t human;                                ///< The human-like structure
     pfm_t pfm;                                      ///< The potential field structure
-    //flocking_t flocking;                          ///< The flocking structure
+    flocking_t flocking;                          ///< The flocking structure
 
     Navigation* navigation;                         ///< The pointer to the navigation structure
     State* state;                                   ///< The pointer to the state structure
@@ -102,9 +102,9 @@ typedef struct
     collision_avoidance_strategy_t strategy;        ///< The collision avoidance strategy
     
     orca_conf_t orca_config;                        ///< The pointer to the config structure for the ORCA strategy
-    //human_conf_t human_config;                    ///< The pointer to the config structure for the human-like strategy
+    human_conf_t human_config;                    ///< The pointer to the config structure for the human-like strategy
     pfm_conf_t pfm_config;                          ///< The pointer to the config structure for the potential field strategy
-    //flocking_conf_t flocking_config;              ///< The pointer to the config structure for the flocking strategy
+    flocking_conf_t flocking_config;              ///< The pointer to the config structure for the flocking strategy
 }collision_avoidance_conf_t;
 
 /**
@@ -148,9 +148,9 @@ static inline collision_avoidance_conf_t collision_avoidance_default_config(void
     collision_avoidance_conf_t conf;
 
     conf.orca_config = orca_default_config();
-    //conf.human_config = human_default_config();
+    conf.human_config = human_default_config();
     conf.pfm_config = pfm_default_config();
-    //conf.flocking_config = flocking_default_config();
+    conf.flocking_config = flocking_default_config();
 
     return conf;
 }

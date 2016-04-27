@@ -372,3 +372,13 @@ void Neighbors::collision_log_smallest_distance(void)
     }
     local_density_ = number_of_neighbors_ * 4.0f/3.0f*PI*max_dist_*max_dist_*max_dist_;
 }
+
+const float& Neighbors::near_miss_dist_sqr(void) const
+{
+    return near_miss_dist_sqr_;
+}
+
+const float& Neighbors::collision_dist_sqr(void) const
+{
+    return collision_dist_sqr_;
+}

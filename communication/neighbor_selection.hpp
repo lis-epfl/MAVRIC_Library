@@ -122,6 +122,9 @@ public:
 
     bool update(void);
 
+    const float& near_miss_dist_sqr(void) const;
+    const float& collision_dist_sqr(void) const;
+
 private:
     float mean_comm_frequency_;                                 ///< The mean value of the communication frequency
     float variance_comm_frequency_;                             ///< The variance of the communication frequency
