@@ -48,6 +48,7 @@ extern "C"
 #include "util/coord_conventions.h"
 #include "util/print_util.h"
 #include <stdbool.h>
+#include <stdlib.h>
 #include "util/maths.h"
 }
 
