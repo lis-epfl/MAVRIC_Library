@@ -227,7 +227,6 @@ void pfm_compute_new_velocity(pfm_t *pfm, float new_velocity[])
     float force_from_potential[3];
     float att_force[3] = {0, 0, 0};
     float rep_force[3] = {0, 0, 0};
-    quat_t q_velocity, q_velocity_bf;
     float velocity_norm;
     float new_velocity_gf[3];
     
@@ -253,9 +252,6 @@ void pfm_compute_new_velocity(pfm_t *pfm, float new_velocity[])
             new_velocity_gf[i] *= pfm->neighbors->config_.cruise_speed;
         }
     }
-    
-    q_velocity = quaternions_create_from_vector(new_velocity_gf);
-    q_velocity_bf = quaternions_global_to_local(pfm->ahrs->qe, q_velocity);
     
     aero_attitude_t attitude_yaw = coord_conventions_quat_to_aero(pfm->ahrs->qe);
     attitude_yaw.rpy[0] = 0.0f;

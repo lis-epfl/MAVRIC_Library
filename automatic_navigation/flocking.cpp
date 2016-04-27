@@ -294,8 +294,8 @@ void flocking_compute_new_velocity(flocking_t *flocking, float const optimal_vel
     float u_vm[3] = {0.0f, 0.0f, 0.0f};
     float u_nav[3] = {0.0f, 0.0f, 0.0f};
     //float u[3];
-    
-    quat_t q_velocity, q_velocity_bf;
+
+    float new_velocity_gf[3];
     
     float dist = 0.0f;
     float dist_alpha, velocity_norm;
@@ -371,26 +371,26 @@ void flocking_compute_new_velocity(flocking_t *flocking, float const optimal_vel
         u_nav[i] *= maths_f_min(1, flocking->neighbors->config_.cruise_speed/norm_u_nav);
         //u_nav[i] *= maths_f_min(1, flocking->k123/flocking->k3*flocking->neighbors->config_.cruise_speed/vectors_norm(u_nav));
         
-        new_velocity[i] = u_mp[i]+u_vm[i]+u_nav[i] + flocking->position_estimation->vel[i];
+        new_velocity_gf[i] = u_mp[i]+u_vm[i]+u_nav[i] + flocking->position_estimation->vel[i];
         //u[i] = (flocking->k1*u_mp[i]+flocking->k2*u_vm[i]+flocking->k3*u_nav[i])/flocking->k123;
-        //new_velocity[i] = flocking->gain_control2vel*u[i]; //to remove if second line used
+        //new_velocity_gf[i] = flocking->gain_control2vel*u[i]; //to remove if second line used
     }
     
-    velocity_norm = vectors_norm(new_velocity);
+    velocity_norm = vectors_norm(new_velocity_gf);
     if(velocity_norm > flocking->neighbors->config_.cruise_speed)
     {
         for (i = 0; i < 3; i++)
         {
-            new_velocity[i] /= velocity_norm;
-            new_velocity[i] *= flocking->neighbors->config_.cruise_speed;
+            new_velocity_gf[i] /= velocity_norm;
+            new_velocity_gf[i] *= flocking->neighbors->config_.cruise_speed;
         }
     }
     
-    q_velocity = quaternions_create_from_vector(new_velocity);
-    q_velocity_bf = quaternions_global_to_local(flocking->ahrs->qe, q_velocity);
-    
-    for (i = 0; i < 3; i++)
-    {
-        new_velocity[i] = q_velocity_bf.v[i];
-    }
+    aero_attitude_t attitude_yaw = coord_conventions_quat_to_aero(flocking->ahrs->qe);
+    attitude_yaw.rpy[0] = 0.0f;
+    attitude_yaw.rpy[1] = 0.0f;
+    attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+    quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+    quaternions_rotate_vector(q_rot, new_velocity_gf, new_velocity);
 }

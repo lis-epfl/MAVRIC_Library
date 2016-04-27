@@ -203,8 +203,9 @@ void human_compute_new_velocity(human_t *human, float new_velocity[])
     float theta, phi, t;
     float theta_speed, phi_speed;
     float dist, f, f_best, best_dist_sqr, remain_dist_sqr;
-    
-    quat_t q_temp,q1, q2, q_local;
+    float new_velocity_gf[3];
+
+    quat_t q_temp, q1, q2, q_local;
     
     float relative_velocity[3], relative_position[3], relative_futur_position[3], futur_position[3];
     float goal_position[3], current_position[3], relative_goal_position[3];
@@ -331,12 +332,14 @@ void human_compute_new_velocity(human_t *human, float new_velocity[])
     
     for (i = 0; i < 3; i++)
     {
-        new_velocity[i] = velocity_norm*best_direction[i];
+        new_velocity_gf[i] = velocity_norm*best_direction[i];
     }
-    q_temp = quaternions_create_from_vector(new_velocity);
-    q_temp = quaternions_global_to_local(human->ahrs->qe, q_temp);
-    for (i = 0; i < 3; i++)
-    {
-        new_velocity[i] = q_temp.v[i];
-    }
+
+    aero_attitude_t attitude_yaw = coord_conventions_quat_to_aero(human->ahrs->qe);
+    attitude_yaw.rpy[0] = 0.0f;
+    attitude_yaw.rpy[1] = 0.0f;
+    attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+    quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+    quaternions_rotate_vector(q_rot, new_velocity_gf, new_velocity);
 }
