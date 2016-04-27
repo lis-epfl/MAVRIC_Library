@@ -135,4 +135,19 @@ mav_result_t flocking_set_parameters_value(flocking_t* flocking, mavlink_command
  */
 void flocking_compute_new_velocity(flocking_t* flocking, float const optimal_velocity[], float new_velocity[]);
 
+static inline flocking_conf_t flocking_default_config(void)
+{
+    flocking_conf_t conf;
+    conf.d = 8.0f;
+    conf.a = 1.0f;
+    conf.b = 9.0f;
+    conf.c1 = 0.4f;
+    conf.c2 = 0.75f;
+    //conf.k1 = 1.0f;
+    //conf.k2 = 1.0f;
+    //conf.k3 = 1.0f;
+
+    return conf;
+};
+
 #endif // FLOCKING_H__
