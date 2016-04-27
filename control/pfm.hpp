@@ -44,9 +44,6 @@
 #ifndef PFM_H__
 #define PFM_H__
 
-
-
-
 #include "communication/neighbor_selection.hpp"
 #include "control/navigation.hpp"
 #include "sensing/position_estimation.hpp"
@@ -62,8 +59,6 @@ extern "C"
  */
 typedef struct
 {
-    int8_t loop_count_pfm;                              ///< The number of time the function was entered
-
     float gain_attr;                                    ///< The gain for the attractive force
     float gain_rep;                                     ///< The gain for the repulsive force
     float dist_threshold_attr;                          ///< The threshold distance between linear and constant attractive force

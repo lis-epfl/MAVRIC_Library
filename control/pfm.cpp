@@ -176,8 +176,6 @@ bool pfm_init(pfm_t *pfm, pfm_conf_t pfm_config, const Neighbors *neighbors, con
     pfm->dist_threshold_rep = pfm_config.dist_threshold_rep;
     pfm->gain_force2velocity = neighbors->config_.cruise_speed/(pfm->dist_threshold_attr*pfm->gain_attr);
     
-    pfm->loop_count_pfm = 0;
-    
     print_util_dbg_print("PFM initialized.\r\n");
 
     return init_success;
