@@ -339,8 +339,8 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
 //  init_success &= onboard_parameters->add_parameter_int32(( int32_t*)&central_data->state_machine.low_battery_counter            , "SAFE_COUNT"     );
 
     /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
-    init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.control_source, "CTRL_CTRL_SRC");
-    init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
+    init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.control_source_, "CTRL_CTRL_SRC");
+    init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.mode_source_,     "COM_RC_IN_MODE");
 
     return init_success;
 }

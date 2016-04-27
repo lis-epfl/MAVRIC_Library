@@ -239,10 +239,10 @@ bool State_machine::update(State_machine* state_machine)
             break;
 
         case MAV_STATE_ACTIVE:
-            if ((state_machine->manual_control_.mode_source == Manual_control::MODE_SOURCE_REMOTE) || (state_machine->manual_control_.mode_source == Manual_control::MODE_SOURCE_JOYSTICK))
+            if ((state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) || (state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_JOYSTICK))
             {
                 // check connection with remote
-                if ((state_machine->manual_control_.mode_source == Manual_control::MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
+                if ((state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
                 {
                     print_util_dbg_print("Remote control signal lost! Returning to home and land.\r\n");
                     state_new = MAV_STATE_CRITICAL;
@@ -311,7 +311,7 @@ bool State_machine::update(State_machine* state_machine)
             if (!state_machine->state_.battery_.is_low())
             {
                 // To get out of this state, if we are in the wrong use_mode_from_remote
-                if (state_machine->manual_control_.mode_source != Manual_control::MODE_SOURCE_REMOTE)
+                if (state_machine->manual_control_.mode_source() != Manual_control::MODE_SOURCE_REMOTE)
                 {
                     state_new = MAV_STATE_STANDBY;
                 }
