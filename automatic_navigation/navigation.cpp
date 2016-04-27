@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/navigation.hpp"
+#include "automatic_navigation/navigation.hpp"
 #include "hal/common/time_keeper.hpp"
 
 extern "C"

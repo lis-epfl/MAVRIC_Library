@@ -41,7 +41,7 @@
 
 
 #include "control/flocking.hpp"
-#include "control/navigation.hpp"
+#include "automatic_navigation/navigation.hpp"
 
 extern "C"
 {

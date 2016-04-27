@@ -65,7 +65,7 @@
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/qfilter.hpp"
 #include "control/stabilisation_copter.hpp"
-#include "control/navigation.hpp"
+#include "automatic_navigation/navigation.hpp"
 #include "control/manual_control.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/velocity_controller_copter.hpp"

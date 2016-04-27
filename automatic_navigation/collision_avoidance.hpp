@@ -45,7 +45,7 @@
 
 
 #include "communication/neighbor_selection.hpp"
-#include "control/navigation.hpp"
+#include "automatic_navigation/navigation.hpp"
 #include "control/orca.hpp"
 #include "control/human.hpp"
 #include "control/pfm.hpp"

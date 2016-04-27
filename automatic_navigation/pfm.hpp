@@ -45,7 +45,7 @@
 #define PFM_H__
 
 #include "communication/neighbor_selection.hpp"
-#include "control/navigation.hpp"
+#include "automatic_navigation/navigation.hpp"
 #include "sensing/position_estimation.hpp"
 
 extern "C" 

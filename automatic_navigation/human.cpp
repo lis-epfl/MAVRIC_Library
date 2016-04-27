@@ -42,7 +42,7 @@
 
 
 #include "control/human.hpp"
-#include "control/navigation.hpp"
+#include "automatic_navigation/navigation.hpp"
 
 extern "C"
 {
