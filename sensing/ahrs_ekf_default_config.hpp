@@ -46,20 +46,20 @@
 
 static inline ahrs_ekf_conf_t ahrs_ekf_default_config() 
 {
-	ahrs_ekf_conf_t conf = {};
+    ahrs_ekf_conf_t conf = {};
 
-	conf.sigma_w_sqr = 0.0000000001f;
-	conf.sigma_r_sqr = 0.000001f;
-	conf.R_acc = 0.004f;
-	conf.R_mag = 0.007f;
-	conf.acc_norm_noise = 0.05f;
-	conf.acc_multi_noise = 4.0f;
+    conf.sigma_w_sqr = 0.0000000001f;
+    conf.sigma_r_sqr = 0.000001f;
+    conf.R_acc = 0.004f;
+    conf.R_mag = 0.007f;
+    conf.acc_norm_noise = 0.05f;
+    conf.acc_multi_noise = 4.0f;
 
-	conf.mag_global[0] = 0.632037f;
-	conf.mag_global[1] = 0.0f;
-	conf.mag_global[2] = 1.16161f;
+    conf.mag_global[0] = 0.632037f;
+    conf.mag_global[1] = 0.0f;
+    conf.mag_global[2] = 1.16161f;
 
-	return conf;
+    return conf;
 };
 
 #endif /* AHRS_EKF_DEFAULT_CONFIG_H_ */

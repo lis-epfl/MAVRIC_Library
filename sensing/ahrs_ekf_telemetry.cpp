@@ -69,21 +69,21 @@ static mav_result_t ahrs_ekf_telemetry_calibrate_north_vector(Ahrs_ekf* ahrs_ekf
 
 static mav_result_t ahrs_ekf_telemetry_calibrate_north_vector(Ahrs_ekf* ahrs_ekf, mavlink_command_long_t* packet)
 {
-	mav_result_t result;
+    mav_result_t result;
 
-	if (packet->param1 == 2)
-	{
-		result = MAV_RESULT_ACCEPTED;
+    if (packet->param1 == 2)
+    {
+        result = MAV_RESULT_ACCEPTED;
 
-		ahrs_ekf->calibrating_north_vector();
-		
-	}
-	else
-	{
-		result = MAV_RESULT_UNSUPPORTED;
-	}
+        ahrs_ekf->calibrating_north_vector();
+        
+    }
+    else
+    {
+        result = MAV_RESULT_UNSUPPORTED;
+    }
 
-	return result;
+    return result;
 
 }
 
@@ -93,7 +93,7 @@ static mav_result_t ahrs_ekf_telemetry_calibrate_north_vector(Ahrs_ekf* ahrs_ekf
 
 bool ahrs_ekf_telemetry_init(const Ahrs_ekf* ahrs_ekf, Mavlink_message_handler* message_handler)
 {
-	bool init_success = true;
+    bool init_success = true;
 
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;

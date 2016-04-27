@@ -62,16 +62,16 @@ extern "C"
  */
 typedef struct
 {
-	float sigma_w_sqr;									///< The square of the variance on the gyro bias
-	float sigma_r_sqr;									///< The square of the variance on the quaternion
+    float sigma_w_sqr;                                  ///< The square of the variance on the gyro bias
+    float sigma_r_sqr;                                  ///< The square of the variance on the quaternion
 
-	float acc_norm_noise;								///< The noise gain depending on the norm of the acceleration
-	float acc_multi_noise;								///< The multiplication factor in the computation of the noise for the accelerometer
+    float acc_norm_noise;                               ///< The noise gain depending on the norm of the acceleration
+    float acc_multi_noise;                              ///< The multiplication factor in the computation of the noise for the accelerometer
 
-	float R_acc;										///< The variance of the accelerometer
-	float R_mag;										///< The variance of the magnetometer
+    float R_acc;                                        ///< The variance of the accelerometer
+    float R_mag;                                        ///< The variance of the magnetometer
 
-	float mag_global[3];								///< The value of the north vector
+    float mag_global[3];                                ///< The value of the north vector
 }ahrs_ekf_conf_t;
 
 
@@ -81,71 +81,71 @@ typedef struct
 class Ahrs_ekf
 {
 public:
-	/**
-	 * \brief	AHRS EKF controller
-	 *
-	 * \param	config 			The reference to the ahrs_ekf configuration structure
-	 * \param 	imu 			The reference to the IMU structure
-	 * \param 	ahrs 			The pointer to the AHRS structure
-	 */
-	Ahrs_ekf(const ahrs_ekf_conf_t& config, Imu& imu, ahrs_t* ahrs);
+    /**
+     * \brief   AHRS EKF controller
+     *
+     * \param   config          The reference to the ahrs_ekf configuration structure
+     * \param   imu             The reference to the IMU structure
+     * \param   ahrs            The pointer to the AHRS structure
+     */
+    Ahrs_ekf(const ahrs_ekf_conf_t& config, Imu& imu, ahrs_t* ahrs);
 
-	/**
-	 * \brief	Performs the EKF algorithm
-	 *
-	 * \return	true if success
-	 */
-	bool update(void);
+    /**
+     * \brief   Performs the EKF algorithm
+     *
+     * \return  true if success
+     */
+    bool update(void);
 
-	/**
-	 * \brief 	Performs the north vector calibration
-	 */
-	void calibrating_north_vector(void);
+    /**
+     * \brief   Performs the north vector calibration
+     */
+    void calibrating_north_vector(void);
 
-	/**
-	 * \brief 	Returns the flag telling whether the module is in calibration mode or not
-	 *
-	 * \return 	true if not in calibration mode, false otherwise
-	 */
-	const bool is_ready(void) const;
+    /**
+     * \brief   Returns the flag telling whether the module is in calibration mode or not
+     *
+     * \return  true if not in calibration mode, false otherwise
+     */
+    const bool is_ready(void) const;
 
-	float mag_global_[3];								///< The magnetic North vector
-	float mag_lpf_[3];									///< The magnetometer low pass filter for North vector calibration
-	Imu& imu_;											///< The Reference to the IMU structure
-	bool calibrating_north_vector_;						///< Flag to start the north vector calibration
+    float mag_global_[3];                               ///< The magnetic North vector
+    float mag_lpf_[3];                                  ///< The magnetometer low pass filter for North vector calibration
+    Imu& imu_;                                          ///< The Reference to the IMU structure
+    bool calibrating_north_vector_;                     ///< Flag to start the north vector calibration
 
 private:
 
-	/**
-	 * \brief	Initialize the state and matrix of the EKF
-	 */
-	void init_kalman(void);
+    /**
+     * \brief   Initialize the state and matrix of the EKF
+     */
+    void init_kalman(void);
 
-	/**
-	 * \brief	Performs the prediction step of the EKF
-	 */
-	void predict_step(void);
+    /**
+     * \brief   Performs the prediction step of the EKF
+     */
+    void predict_step(void);
 
-	/**
-	 * \brief	Performs the update step with the accelerometer
-	 */
-	void update_step_acc(void);
+    /**
+     * \brief   Performs the update step with the accelerometer
+     */
+    void update_step_acc(void);
 
-	/**
-	 * \brief	Performs the update step with the magnetometer
-	 */
-	void update_step_mag(void);
+    /**
+     * \brief   Performs the update step with the magnetometer
+     */
+    void update_step_mag(void);
 
-	Mat<7,1> x_state_;									///< The state of extended Kalman filter
-	Mat<7,7> F_;										///< The state transition matrix
-	Mat<7,7> P_;										///< The state covariance matrix
-	Mat<7,7> Q_;										///< The process noise covariance matrix
-	Mat<3,3> R_acc_;									///< The accelerometer measruement noise matrix
-	Mat<3,3> R_mag_;									///< The magnetometer measurement noise matrix
-	Mat<7,7> Id_;										///< The 7x7 identity matrix
+    Mat<7,1> x_state_;                                  ///< The state of extended Kalman filter
+    Mat<7,7> F_;                                        ///< The state transition matrix
+    Mat<7,7> P_;                                        ///< The state covariance matrix
+    Mat<7,7> Q_;                                        ///< The process noise covariance matrix
+    Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
+    Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
+    Mat<7,7> Id_;                                       ///< The 7x7 identity matrix
 
-	ahrs_t* ahrs_;										///< The pointer to the ahrs structure
-	ahrs_ekf_conf_t config_;							///< The config structure for the EKF module
+    ahrs_t* ahrs_;                                      ///< The pointer to the ahrs structure
+    ahrs_ekf_conf_t config_;                            ///< The config structure for the EKF module
 };
 
 
