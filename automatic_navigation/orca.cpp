@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/orca.hpp"
+#include "automatic_navigation/orca.hpp"
 #include "communication/mav_modes.hpp"
 
 extern "C"

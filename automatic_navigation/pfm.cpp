@@ -41,7 +41,7 @@
  ******************************************************************************/
 
 
-#include "control/pfm.hpp"
+#include "automatic_navigation/pfm.hpp"
 
 extern "C" 
 {

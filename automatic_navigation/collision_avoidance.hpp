@@ -46,10 +46,10 @@
 
 #include "communication/neighbor_selection.hpp"
 #include "automatic_navigation/navigation.hpp"
-#include "control/orca.hpp"
-#include "control/human.hpp"
-#include "control/pfm.hpp"
-#include "control/flocking.hpp"
+#include "automatic_navigation/orca.hpp"
+#include "automatic_navigation/human.hpp"
+#include "automatic_navigation/pfm.hpp"
+#include "automatic_navigation/flocking.hpp"
 
 #include "communication/state.hpp"
 #include "sensing/position_estimation.hpp"

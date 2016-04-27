@@ -41,7 +41,7 @@
  ******************************************************************************/
 
 
-#include "control/human.hpp"
+#include "automatic_navigation/human.hpp"
 #include "automatic_navigation/navigation.hpp"
 
 extern "C"

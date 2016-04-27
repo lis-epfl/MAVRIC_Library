@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/flocking.hpp"
+#include "automatic_navigation/flocking.hpp"
 #include "automatic_navigation/navigation.hpp"
 
 extern "C"
