@@ -62,8 +62,8 @@ public:
         float safe_size_vhc;                                    ///< The safe size for collision avoidance
         float max_speed;                                        ///< The max allowed speed for the collision avoidance strategy
         float cruise_speeed;                                    ///< The cruise speed
-        float orca_time_step_ms;                                ///< The time step for the ORCA strategy
-        float neighbor_timeout_limit_ms;                        ///< The maximum time interval between two messages from a neighbor before deleting it
+        float orca_time_step_s;                                 ///< The time step for the ORCA strategy
+        float neighbor_timeout_limit_s;                         ///< The maximum time interval between two messages from a neighbor before deleting it
         float freq_lpf;                                         ///< The low pass filter for the communication frequency
     }conf_t;
 
@@ -105,23 +105,10 @@ public:
     uint8_t number_of_neighbors_;                               ///< The actual number of neighbors at a given time step
     track_t* neighbors_list_;                                   ///< The list of neighbors structure
     float* comm_frequency_list_;                                ///< The list of communication frequency with the neighbors
-    float mean_comm_frequency_;                                 ///< The mean value of the communication frequency
-    float variance_comm_frequency_;                             ///< The variance of the communication frequency
-    uint32_t previous_time_;                                    ///< The time of the previous loop
-    uint32_t update_time_interval_;                             ///< The time between two communication frequency update, in ms
-    float min_dist_;                                            ///< The minimal distance with all neighbors at each time step
-    float max_dist_;                                            ///< The maximal distance with all neighbors at each time step
-    float local_density_;                                       ///< The instantaneous local density
-    collision_log_t collision_log_;                             ///< The collision log structure
-    float collision_dist_sqr_;                                  ///< The square of the collision distance
-    float near_miss_dist_sqr_;                                  ///< The square of the near-miss distance
 
     conf_t config_;                                             ///< The config structure of the module
 
     Position_estimation& position_estimation_;                  ///< The reference to the position estimator structure
-
-    State& state_;                                              ///< The reference to the state structure
-    const Mavlink_stream& mavlink_stream_;                      ///< The reference to the MAVLink stream
 
     /**
      * \brief   Initialize the neighbor selection module
@@ -133,6 +120,21 @@ public:
     Neighbors(Position_estimation& position_estimation, State& state, const Mavlink_stream& mavlink_stream, const conf_t& config = default_config());
 
     bool update(void);
+
+private:
+    float mean_comm_frequency_;                                 ///< The mean value of the communication frequency
+    float variance_comm_frequency_;                             ///< The variance of the communication frequency
+    uint32_t previous_time_;                                    ///< The time of the previous loop
+    uint32_t update_time_interval_;                             ///< The time between two communication frequency update, in ms
+    float min_dist_;                                            ///< The minimal distance with all neighbors at each time step
+    float max_dist_;                                            ///< The maximal distance with all neighbors at each time step
+    float local_density_;                                       ///< The instantaneous local density
+    collision_log_t collision_log_;                             ///< The collision log structure
+    float collision_dist_sqr_;                                  ///< The square of the collision distance
+    float near_miss_dist_sqr_;                                  ///< The square of the near-miss distance
+
+    State& state_;                                              ///< The reference to the state structure
+    const Mavlink_stream& mavlink_stream_;                      ///< The reference to the MAVLink stream
 
     /**
      * \brief   Extrapolate the position of each UAS between two messages, deletes the message if time elapsed too long from last message
@@ -148,8 +150,6 @@ public:
      * \brief   Update the log of the near miss and collisions and compute the minimal distance between all MAVs
      */
     void collision_log_smallest_distance(void);
-
-private:
 } ;
 
 /**
@@ -181,8 +181,8 @@ Neighbors::conf_t Neighbors::default_config(void)
     conf.safe_size_vhc = 3.0f;
     conf.max_speed = 4.5f;
     conf.cruise_speeed = 3.0f;
-    conf.orca_time_step_ms = 10;
-    conf.neighbor_timeout_limit_ms = 4000;
+    conf.orca_time_step_s = 0.01f;
+    conf.neighbor_timeout_limit_s = 4.0f;
     conf.freq_lpf = 0.2f;
 
     return conf;

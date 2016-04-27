@@ -53,13 +53,14 @@ extern "C"
 
 Neighbors::Neighbors(Position_estimation& position_estimation, State& state, const Mavlink_stream& mavlink_stream, const conf_t& config):
     number_of_neighbors_(0),
+    config_(config),
+    position_estimation_(position_estimation),
     mean_comm_frequency_(0.0f),
     variance_comm_frequency_(0.0f),
     previous_time_(0),
     update_time_interval_(1000), // 1 sec
     local_density_(0),
-    config_(config),
-    position_estimation_(position_estimation),
+    
     state_(state),
     mavlink_stream_(mavlink_stream)
 {
@@ -226,7 +227,7 @@ void Neighbors::extrapolate_or_delete_position(void)
     {
         delta_t = actual_time- neighbors_list_[ind].time_msg_received;
 
-        if (delta_t >= config_.neighbor_timeout_limit_ms)
+        if (delta_t >= (config_.neighbor_timeout_limit_s*1000))
         {
             print_util_dbg_print("Suppressing neighbor number ");
             print_util_dbg_print_num(ind,10);
@@ -243,7 +244,7 @@ void Neighbors::extrapolate_or_delete_position(void)
             
             
         }
-        else if (delta_t > config_.orca_time_step_ms)
+        else if ( delta_t > (config_.orca_time_step_s*1000) )
         {
             // extrapolating the last known position assuming a constant velocity
             
