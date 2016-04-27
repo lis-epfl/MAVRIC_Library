@@ -66,7 +66,7 @@
 #include "communication/data_logging_telemetry.hpp"
 #include "control/manual_control_telemetry.hpp"
 #include "communication/neighbor_selection.hpp"
-#include "control/orca.hpp"
+#include "control/collision_avoidance.hpp"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -181,7 +181,7 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
     init_success &= neighbor_selection_telemetry_init(&central_data->neighbor_selection,
                                                       message_handler);
 
-    init_success &= orca_telemetry_init(&central_data->orca,
+    init_success &= collision_avoidance_telemetry_init(&central_data->collision_avoidance,
                                         message_handler);
 
     return init_success;

@@ -281,7 +281,11 @@ bool tasks_navigation_update(Central_data* central_data)
 
     if ( mav_modes_is_custom(central_data->state.mav_mode()) )
     {
-        run_success &= orca_update(&central_data->orca);
+        run_success &= collision_avoidance_update(&central_data->collision_avoidance);
+    }
+    else
+    {
+        central_data->state.mav_mode_custom &= ~CUST_COLLISION_AVOIDANCE;
     }
     return run_success;
 }

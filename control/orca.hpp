@@ -44,7 +44,6 @@
 #define ORCA_H__
 
 #include "communication/neighbor_selection.hpp"
-#include "control/navigation.hpp"
 #include "sensing/position_estimation.hpp"
 
 #include "communication/mavlink_message_handler.hpp"
@@ -52,7 +51,6 @@
 
 extern "C"
 {
-#include "control/stabilisation.h"
 #include "sensing/ahrs.h"
 #include <stdbool.h>
 #include <stdint.h>
@@ -91,8 +89,6 @@ typedef struct
     const Position_estimation* position_estimation;     ///< The pointer to the position estimation structure
     const ahrs_t*              ahrs;                    ///< The pointer to the attitude estimation structure
     const State*               state;                   ///< The pointer to the state structure
-    Navigation*                navigation;              ///< The pointer to the navigation structure
-    control_command_t*         controls_nav;            ///< The pointer to the controls_nav structure
 } orca_t;
 
 /**
@@ -113,32 +109,29 @@ typedef struct
  * \param   position_estimation     The pointer to the position structure
  * \param   ahrs                    The pointer to the attitude estimation structure
  * \param   state                   The pointer to the state structure
- * \param   navigation_             The pointer to the navigation structure
- * \param   controls_nav            The pointer to the control nav structure
  *
  * \return  True if the init succeed, false otherwise
  */
-bool orca_init(orca_t *orca, orca_conf_t orca_config, Neighbors* neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const State* state, Navigation* navigation, control_command_t* controls_nav);
+bool orca_init(orca_t *orca, orca_conf_t orca_config, Neighbors* neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const State* state);
 
 /**
- * \brief   Initialise the ORCA telemetry module
+ * \brief   Computes the new collision-free velocity
  *
- * \param   orca                    The pointer to the ORCA structure
- * \param   message_handler         The pointer to the message handler structure
- *
- * \return  True if the init succeed, false otherwise
+ * \param   orca                    The pointer to the ORCA struct
+ * \param   optimal_velocity        A 3D array
+ * \param   new_velocity            The 3D output array
  */
-bool orca_telemetry_init(orca_t* orca, Mavlink_message_handler* message_handler);
-
+void orca_compute_new_velocity(orca_t* orca, float const optimal_velocity[], float new_velocity[]);
 
 /**
- * \brief   Performs the ORCA update module
+ * \brief   Set the value of the comfort slider
  *
- * \param   orca                    The pointer to the ORCA structure
- *
- * \return  True if the init succeed, false otherwise
+ * \param   orca                    The pointer to the ORCA struct
+ * \param   packet                  The pointer to the decoded MAVLink message long
+ * 
+ * \return  The MAV_RESULT of the command
  */
-bool orca_update(orca_t* orca);
+mav_result_t orca_set_parameters_value(orca_t* orca, mavlink_command_long_t* packet);
 
 static inline orca_conf_t orca_default_config()
 {

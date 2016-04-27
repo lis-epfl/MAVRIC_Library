@@ -105,7 +105,8 @@ public:
     uint8_t number_of_neighbors_;                               ///< The actual number of neighbors at a given time step
     track_t* neighbors_list_;                                   ///< The list of neighbors structure
     float* comm_frequency_list_;                                ///< The list of communication frequency with the neighbors
-
+    collision_log_t collision_log_;                             ///< The collision log structure
+    
     conf_t config_;                                             ///< The config structure of the module
 
     Position_estimation& position_estimation_;                  ///< The reference to the position estimator structure
@@ -129,7 +130,6 @@ private:
     float min_dist_;                                            ///< The minimal distance with all neighbors at each time step
     float max_dist_;                                            ///< The maximal distance with all neighbors at each time step
     float local_density_;                                       ///< The instantaneous local density
-    collision_log_t collision_log_;                             ///< The collision log structure
     float collision_dist_sqr_;                                  ///< The square of the collision distance
     float near_miss_dist_sqr_;                                  ///< The square of the near-miss distance
 

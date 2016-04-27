@@ -81,7 +81,7 @@
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
 #include "control/attitude_controller_default_config.hpp"
 #include "control/velocity_controller_copter_default_config.hpp"
-#include "control/orca.hpp"
+#include "control/collision_avoidance.hpp"
 #include "communication/remote_default_config.hpp"
 
 extern "C"
@@ -116,7 +116,7 @@ public:
       Mavlink_communication::conf_t mavlink_communication_config;
       Neighbors::conf_t neighbors_config;
       Navigation::conf_t navigation_config;
-      orca_conf_t orca_config;
+      collision_avoidance_conf_t collision_avoidance_config;
       qfilter_conf_t qfilter_config;
       Position_estimation::conf_t position_estimation_config;
       stabilisation_copter_conf_t stabilisation_copter_config;
@@ -189,7 +189,7 @@ public:
     Mavlink_communication mavlink_communication;
 
     Neighbors neighbor_selection;
-    orca_t orca;
+    collision_avoidance_t collision_avoidance;
 
     servos_mix_quadcotper_diag_t servo_mix;
 
@@ -242,7 +242,7 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
 
     conf.navigation_config = Navigation::default_config();
 
-    conf.orca_config = orca_default_config();
+    conf.collision_avoidance_config = collision_avoidance_default_config();
 
     conf.qfilter_config = qfilter_default_config();
 

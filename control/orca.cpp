@@ -109,25 +109,6 @@ static float orca_linear_program3(plane_t const planes[], uint8_t const plane_si
  */
 static void orca_linear_program4(plane_t const planes[], uint8_t const plane_size, uint8_t const ind, float const max_speed, float new_velocity[], uint8_t max_number_of_planes);
 
-/**
- * \brief   Computes the new collision-free velocity
- *
- * \param   orca                    The pointer to the ORCA struct
- * \param   optimal_velocity        A 3D array
- * \param   new_velocity            The 3D output array
- */
-static void orca_compute_new_velocity(orca_t* orca, float const optimal_velocity[], float new_velocity[]);
-
-/**
- * \brief   Set the value of the comfort slider
- *
- * \param   orca                    The pointer to the ORCA struct
- * \param   packet                  The pointer to the decoded MAVLink message long
- * 
- * \return  The MAV_RESULT of the command
- */
-static mav_result_t orca_set_parameters_value(orca_t* orca, mavlink_command_long_t* packet);
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -564,7 +545,67 @@ static void orca_linear_program4(plane_t const planes[], uint8_t const plane_siz
     }
 }
 
-static void orca_compute_new_velocity(orca_t *orca, float const optimal_velocity[], float new_velocity[])
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool orca_init(orca_t *orca, orca_conf_t orca_config, Neighbors* neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const State* state)
+{
+    bool init_success = true;
+    
+    orca->neighbors = neighbors;
+    orca->position_estimation = position_estimation;
+    orca->ahrs = ahrs;
+    orca->state = state;
+        
+    orca->time_horizon = orca_config.time_horizon;
+    orca->inv_time_horizon = 1.0f / orca->time_horizon;
+    
+    orca->loop_count_orca = 0;
+    orca->loop_count_collisions = 0;
+
+    orca->max_number_of_planes = neighbors->config_.max_num_neighbors;
+    
+    orca->comfort_slider = orca_config.comfort_slider;
+    
+    print_util_dbg_print("[ORCA] initialised.\r\n");
+    
+    return init_success;
+}
+
+mav_result_t orca_set_parameters_value(orca_t* orca, mavlink_command_long_t* packet)
+{
+    mav_result_t result = MAV_RESULT_ACCEPTED;
+    
+    print_util_dbg_print("Setting new ORCA parameters.\r\n");
+    
+    if(packet->param1 < 0.0001f)
+    {
+        result = MAV_RESULT_FAILED;
+    }
+    
+    if (packet->param2 > 1.0f)
+    {
+        //orca->comfort_slider = 1.0f;
+        result = MAV_RESULT_FAILED;
+    }
+    else if (packet->param2 < 0.0f)
+    {
+        //orca->comfort_slider = 0.0;
+        result = MAV_RESULT_FAILED;
+    }
+    
+    if(result == MAV_RESULT_ACCEPTED)
+    {
+        orca->time_horizon = packet->param1;
+        orca->comfort_slider = packet->param2;
+    }
+    
+    return result;
+}
+
+
+void orca_compute_new_velocity(orca_t *orca, float const optimal_velocity[], float new_velocity[])
 {
     uint8_t ind, i;
     
@@ -762,98 +803,3 @@ static void orca_compute_new_velocity(orca_t *orca, float const optimal_velocity
     }*/
 }
 
-static mav_result_t orca_set_parameters_value(orca_t* orca, mavlink_command_long_t* packet)
-{
-    mav_result_t result = MAV_RESULT_ACCEPTED;
-    
-    print_util_dbg_print("Setting new ORCA parameters.\r\n");
-    
-    if(packet->param1 < 0.0001f)
-    {
-        result = MAV_RESULT_FAILED;
-    }
-    
-    if (packet->param2 > 1.0f)
-    {
-        //orca->comfort_slider = 1.0f;
-        result = MAV_RESULT_FAILED;
-    }
-    else if (packet->param2 < 0.0f)
-    {
-        //orca->comfort_slider = 0.0;
-        result = MAV_RESULT_FAILED;
-    }
-    
-    if(result == MAV_RESULT_ACCEPTED)
-    {
-        orca->time_horizon = packet->param1;
-        orca->comfort_slider = packet->param2;
-    }
-    
-    return result;
-}
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool orca_init(orca_t *orca, orca_conf_t orca_config, Neighbors* neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const State* state, Navigation* navigation, control_command_t* controls_nav)
-{
-    bool init_success = true;
-    
-    orca->neighbors = neighbors;
-    orca->position_estimation = position_estimation;
-    orca->ahrs = ahrs;
-    orca->navigation = navigation;
-    orca->state = state;
-    orca->controls_nav = controls_nav;
-        
-    orca->time_horizon = orca_config.time_horizon;
-    orca->inv_time_horizon = 1.0f / orca->time_horizon;
-    
-    orca->loop_count_orca = 0;
-    orca->loop_count_collisions = 0;
-
-    orca->max_number_of_planes = neighbors->config_.max_num_neighbors;
-    
-    orca->comfort_slider = orca_config.comfort_slider;
-    
-    print_util_dbg_print("[ORCA] initialised.\r\n");
-    
-    return init_success;
-}
-
-bool orca_telemetry_init(orca_t* orca, Mavlink_message_handler* message_handler)
-{
-    bool init_success = true;
-
-    // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_NAV_PATHPLANNING; // 81
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)            &orca_set_parameters_value;
-    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) orca;
-    init_success &= message_handler->add_cmd_callback(&callbackcmd);
-
-    return init_success;
-}
-
-bool orca_update(orca_t* orca)
-{
-    float new_velocity[3];
-
-    mav_mode_t mode_local = orca->state->mav_mode();
-
-    if((orca->state->mav_state_ == MAV_STATE_ACTIVE) && 
-    ((orca->navigation->internal_state_ > Navigation::NAV_TAKEOFF) && (orca->navigation->internal_state_ < Navigation::NAV_STOP_ON_POSITION))
-    && (mav_modes_is_auto(mode_local) || mav_modes_is_guided(mode_local)))
-    {
-        
-        orca_compute_new_velocity(orca, orca->controls_nav->tvel, new_velocity);
-    }
-
-    return true;
-}

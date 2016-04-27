@@ -191,13 +191,13 @@ bool Central_data::init(void)
     //--------------------------------------------------------------------------
     // Init ORCA
     //--------------------------------------------------------------------------
-    orca_init(  &orca,
-                config_.orca_config,
+    collision_avoidance_init(  &collision_avoidance,
+                config_.collision_avoidance_config,
                 &neighbor_selection,
-                &position_estimation,
-                &ahrs,
                 &state,
                 &navigation,
+                &position_estimation,
+                &ahrs,
                 &controls_nav);
 
 

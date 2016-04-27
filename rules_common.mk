@@ -57,6 +57,7 @@ LIB_SRCS += control/altitude_controller.cpp
 LIB_SRCS += control/attitude_controller.c
 LIB_SRCS += control/attitude_controller_p2.c
 LIB_SRCS += control/attitude_error_estimator.c
+LIB_SRCS += control/collision_avoidance.cpp
 LIB_SRCS += control/joystick.cpp
 LIB_SRCS += control/joystick_telemetry.cpp
 LIB_SRCS += control/manual_control.cpp
