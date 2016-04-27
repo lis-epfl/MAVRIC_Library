@@ -304,6 +304,17 @@ bool Megafly_rev4::init(void)
 
     time_keeper_delay_ms(50);
 
+#else
+
+    print_util_dbg_init_msg("[PWM0]", false);
+    print_util_dbg_init_msg("[PWM1]", false);
+    print_util_dbg_init_msg("[PWM2]", false);
+    print_util_dbg_init_msg("[PWM3]", false);
+    print_util_dbg_init_msg("[PWM4]", false);
+    print_util_dbg_init_msg("[PWM5]", false);
+    print_util_dbg_init_msg("[PWM6]", false);
+    print_util_dbg_init_msg("[PWM7]", false);
+
 #endif
 
     Enable_global_interrupt();
