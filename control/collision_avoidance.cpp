@@ -207,7 +207,6 @@ bool collision_avoidance_init(collision_avoidance_t* collision_avoidance, collis
                                 collision_avoidance->neighbors,
                                 position_estimation,
                                 ahrs,
-                                state,
                                 navigation);
     
     

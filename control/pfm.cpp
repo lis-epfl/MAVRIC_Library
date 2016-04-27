@@ -161,7 +161,7 @@ static void pfm_calculate_repulsive_force(pfm_t *pfm, float repulsive_force[])
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool pfm_init(pfm_t *pfm, pfm_conf_t pfm_config, Neighbors *neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const State* state, Navigation* navigation)
+bool pfm_init(pfm_t *pfm, pfm_conf_t pfm_config, const Neighbors *neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const Navigation* navigation)
 {
     bool init_success = true;
 
@@ -169,7 +169,6 @@ bool pfm_init(pfm_t *pfm, pfm_conf_t pfm_config, Neighbors *neighbors, const Pos
     pfm->position_estimation = position_estimation;
     pfm->ahrs = ahrs;
     pfm->navigation = navigation;
-    pfm->state = state;
     
     pfm->gain_attr = pfm_config.gain_attr;
     pfm->gain_rep = pfm_config.gain_rep;
@@ -232,6 +231,7 @@ void pfm_compute_new_velocity(pfm_t *pfm, float new_velocity[])
     float rep_force[3] = {0, 0, 0};
     quat_t q_velocity, q_velocity_bf;
     float velocity_norm;
+    float new_velocity_gf[3];
     
     pfm_calculate_attractive_force(pfm, att_force);
     pfm_calculate_repulsive_force(pfm, rep_force);
@@ -243,24 +243,27 @@ void pfm_compute_new_velocity(pfm_t *pfm, float new_velocity[])
     
     for (i = 0; i < 3; i++)
     {
-        new_velocity[i] = pfm->gain_force2velocity*force_from_potential[i];
+        new_velocity_gf[i] = pfm->gain_force2velocity*force_from_potential[i];
     }
     
-    velocity_norm = vectors_norm(new_velocity);
+    velocity_norm = vectors_norm(new_velocity_gf);
     if(velocity_norm > pfm->neighbors->config_.cruise_speed)
     {
         for (i = 0; i < 3; i++)
         {
-            new_velocity[i] /= velocity_norm;
-            new_velocity[i] *= pfm->neighbors->config_.cruise_speed;
+            new_velocity_gf[i] /= velocity_norm;
+            new_velocity_gf[i] *= pfm->neighbors->config_.cruise_speed;
         }
     }
     
-    q_velocity = quaternions_create_from_vector(new_velocity);
+    q_velocity = quaternions_create_from_vector(new_velocity_gf);
     q_velocity_bf = quaternions_global_to_local(pfm->ahrs->qe, q_velocity);
     
-    for (i = 0; i < 3; i++)
-    {
-        new_velocity[i] = q_velocity_bf.v[i];
-    }
+    aero_attitude_t attitude_yaw = coord_conventions_quat_to_aero(pfm->ahrs->qe);
+    attitude_yaw.rpy[0] = 0.0f;
+    attitude_yaw.rpy[1] = 0.0f;
+    attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+    quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+    quaternions_rotate_vector(q_rot, new_velocity_gf, new_velocity);
 }

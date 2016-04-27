@@ -70,11 +70,10 @@ typedef struct
     float dist_threshold_rep;                           ///< The threshold distance of the repulsive force from a quad
     float gain_force2velocity;                          ///< The gain to transform the force into velocity
     
-    Neighbors*                  neighbors;              ///< The pointer to the neighbor structure
+    const Neighbors*            neighbors;              ///< The pointer to the neighbor structure
     const Position_estimation*  position_estimation;    ///< The pointer to the position estimation structure
     const ahrs_t*               ahrs;                   ///< The pointer to the attitude estimation structure
-    const State*                state;                  ///< The pointer to the state structure
-    Navigation*                 navigation;             ///< The pointer to the navigation structure
+    const Navigation*           navigation;             ///< The pointer to the navigation structure
 } pfm_t;
 
 /**
@@ -94,16 +93,15 @@ typedef struct
  * \brief   Initialize the PFM module
  *
  * \param   pfm                         The pointer to the pfm structure
- * \param   pfm_config                  The pointer to the config structure
+ * \param   pfm_config                  The config structure
  * \param   neighbors                   The pointer to the neighbor data structure
- * \param   position_estimation     The pointer to the position structure
+ * \param   position_estimation         The pointer to the position structure
  * \param   ahrs                        The pointer to the attitude estimation structure
- * \param   state                       The pointer to the state structure
  * \param   navigation                  The pointer to the navigation structure
  *
  * \return  True if the init succeed, false otherwise
  */
-bool pfm_init(pfm_t *pfm, pfm_conf_t pfm_config, Neighbors *neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const State* state,Navigation* navigation);
+bool pfm_init(pfm_t *pfm, pfm_conf_t pfm_config, const Neighbors *neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const Navigation* navigation);
 
 /**
  * \brief   Set the value of the different parameters
