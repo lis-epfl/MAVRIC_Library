@@ -215,44 +215,49 @@ bool Megafly_rev4::init(void)
     ret = pwm_0.init();
     print_util_dbg_init_msg("[PWM0]", ret);
     init_success &= ret;
-    servo_0.failsafe();
-    time_keeper_delay_ms(50);
     ret = pwm_1.init();
     print_util_dbg_init_msg("[PWM1]", ret);
     init_success &= ret;
-    servo_1.failsafe();
-    time_keeper_delay_ms(50);
     ret = pwm_2.init();
     print_util_dbg_init_msg("[PWM2]", ret);
     init_success &= ret;
-    servo_2.failsafe();
-    time_keeper_delay_ms(50);
     ret = pwm_3.init();
     print_util_dbg_init_msg("[PWM3]", ret);
     init_success &= ret;
-    servo_3.failsafe();
-    time_keeper_delay_ms(50);
     ret = pwm_4.init();
     print_util_dbg_init_msg("[PWM4]", ret);
     init_success &= ret;
-    servo_4.failsafe();
-    time_keeper_delay_ms(50);
     ret = pwm_5.init();
     print_util_dbg_init_msg("[PWM5]", ret);
     init_success &= ret;
-    servo_5.failsafe();
-    time_keeper_delay_ms(50);
     ret = pwm_6.init();
     print_util_dbg_init_msg("[PWM6]", ret);
     init_success &= ret;
-    servo_6.failsafe();
-    time_keeper_delay_ms(50);
     ret = pwm_7.init();
     print_util_dbg_init_msg("[PWM7]", ret);
     init_success &= ret;
-    servo_7.failsafe();
-    time_keeper_delay_ms(50);
 
+    servo_0.set_servo_max();
+    servo_1.set_servo_max();
+    servo_2.set_servo_max();
+    servo_3.set_servo_max();
+    servo_4.set_servo_max();
+    servo_5.set_servo_max();
+    servo_6.set_servo_max();
+    servo_7.set_servo_max();
+
+    time_keeper_delay_ms(2000);
+
+    servo_0.failsafe();
+    servo_1.failsafe();
+    servo_2.failsafe();
+    servo_3.failsafe();
+    servo_4.failsafe();
+    servo_5.failsafe();
+    servo_6.failsafe();
+    servo_7.failsafe();
+
+    time_keeper_delay_ms(50);
 
     Enable_global_interrupt();
 

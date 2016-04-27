@@ -139,6 +139,10 @@ public:
      */
     void calibrate_esc(void);
 
+    /**
+     * \brief   Sets the maximum value of the servo
+     */
+    void set_servo_max(void);
 
 private:
     Pwm&            pwm_;       ///< Reference to pwm
