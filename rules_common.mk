@@ -44,6 +44,7 @@ LIB_SRCS += communication/mavlink_message_handler.cpp
 LIB_SRCS += communication/mavlink_stream.cpp            
 LIB_SRCS += communication/mavlink_waypoint_handler.cpp
 LIB_SRCS += communication/mavlink_waypoint_handler_swarm.cpp
+LIB_SRCS += communication/neighbor_selection.cpp
 LIB_SRCS += communication/onboard_parameters.cpp
 LIB_SRCS += communication/remote.cpp
 LIB_SRCS += communication/remote_telemetry.cpp
