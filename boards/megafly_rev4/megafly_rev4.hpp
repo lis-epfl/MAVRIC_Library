@@ -71,8 +71,10 @@ extern "C"
 
 // Preprocessor definitions
 
-/* 0 for false
- * 1 for true
+/* 
+ * Should the ESC be calibrated?
+ * 0 for false (normal flight)
+ * 1 for true (calibration)
  * !!!IMPORTANT!!!
  * IF CALIBRATING, TAKE OFF PROPS 
  */
