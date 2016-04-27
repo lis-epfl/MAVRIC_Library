@@ -62,60 +62,60 @@ extern "C"
  * \brief The 3D plane structure
  */
 typedef struct{
-	float normal[3];									///< The normal vector to the plane
-	float point[3];										///< A point of the plane
+    float normal[3];                                    ///< The normal vector to the plane
+    float point[3];                                     ///< A point of the plane
 } plane_t;
 
 /**
  * \brief The 3D line structure
  */
 typedef struct{
-	float direction[3];									///< The direction vector of a line
-	float point[3];										///< A point of the line
+    float direction[3];                                 ///< The direction vector of a line
+    float point[3];                                     ///< A point of the line
 } line_t;
 
 /**
- * \brief	Structure of the ORCA module
+ * \brief   Structure of the ORCA module
  */
 typedef struct
 {
-	float time_horizon;									///< The time horizon of the method
-	float inv_time_horizon;								///< The inverse of the time horizon
-	float comfort_slider;								///< The value of the comfort slider
-	uint8_t max_number_of_planes;						///< The maximum number of planes
+    float time_horizon;                                 ///< The time horizon of the method
+    float inv_time_horizon;                             ///< The inverse of the time horizon
+    float comfort_slider;                               ///< The value of the comfort slider
+    uint8_t max_number_of_planes;                       ///< The maximum number of planes
 
-	int8_t loop_count_orca;
-	int8_t loop_count_collisions;
-	
-	Neighbors* 				neighbors;				///< The pointer to the neighbor structure
-	const Position_estimation* position_estimation;	///< The pointer to the position estimation structure
-	const ahrs_t* 				ahrs;				///< The pointer to the attitude estimation structure
-	const State*					state;					///< The pointer to the state structure
-	Navigation*				navigation;				///< The pointer to the navigation structure
-	control_command_t* controls_nav;                    ///< The pointer to the controls_nav structure
+    int8_t loop_count_orca;
+    int8_t loop_count_collisions;
+    
+    Neighbors*              neighbors;              ///< The pointer to the neighbor structure
+    const Position_estimation* position_estimation; ///< The pointer to the position estimation structure
+    const ahrs_t*               ahrs;               ///< The pointer to the attitude estimation structure
+    const State*                    state;                  ///< The pointer to the state structure
+    Navigation*             navigation;             ///< The pointer to the navigation structure
+    control_command_t* controls_nav;                    ///< The pointer to the controls_nav structure
 } orca_t;
 
 /**
- * \brief	Config structure of the ORCA module
+ * \brief   Config structure of the ORCA module
  */
 typedef struct
 {
-	float time_horizon;									///< The time horizon of the method
-	float comfort_slider;								///< The value of the comfort slider
+    float time_horizon;                                 ///< The time horizon of the method
+    float comfort_slider;                               ///< The value of the comfort slider
 } orca_config_t;
 
 /**
- * \brief	Initialize the ORCA module
+ * \brief   Initialize the ORCA module
  *
- * \param	orca					The pointer to the ORCA structure
- * \param	orca_config				The pointer to the config structure of the ORCA module
- * \param	neighbors				The pointer to the neighbor data structure
- * \param	position_estimation		The pointer to the position structure
- * \param	ahrs					The pointer to the attitude estimation structure
- * \param	state					The pointer to the state structure
- * \param	navigation_				The pointer to the navigation_ structure
+ * \param   orca                    The pointer to the ORCA structure
+ * \param   orca_config             The pointer to the config structure of the ORCA module
+ * \param   neighbors               The pointer to the neighbor data structure
+ * \param   position_estimation     The pointer to the position structure
+ * \param   ahrs                    The pointer to the attitude estimation structure
+ * \param   state                   The pointer to the state structure
+ * \param   navigation_             The pointer to the navigation_ structure
  *
- * \return	True if the init succeed, false otherwise
+ * \return  True if the init succeed, false otherwise
  */
 bool orca_init(orca_t *orca, orca_config_t* orca_config, Neighbors* neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, State* state, Navigation* navigation, control_command_t* controls_nav);
 
