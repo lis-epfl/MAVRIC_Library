@@ -51,36 +51,75 @@ extern "C"
 #include "util/maths.h"
 }
 
-Neighbors::Neighbors(Position_estimation& position_estimation, State& state, const Mavlink_stream& mavlink_stream):
+Neighbors::Neighbors(Position_estimation& position_estimation, State& state, const Mavlink_stream& mavlink_stream, const conf_t& config):
+	number_of_neighbors_(0),
+	mean_comm_frequency_(0.0f),
+	variance_comm_frequency_(0.0f),
+	previous_time_(0),
+	update_time_interval_(1000), // 1 sec
+	local_density_(0),
+	config_(config),
 	position_estimation_(position_estimation),
 	state_(state),
 	mavlink_stream_(mavlink_stream)
 {
-	number_of_neighbors_ = 0;
+	neighbors_list_ = (track_t*)malloc(sizeof(track_t[config_.max_num_neighbors]));
+	comm_frequency_list_ = (float*)malloc(sizeof(float[config_.max_num_neighbors]));
 	
-	
-	mean_comm_frequency_ = 0.0f;
-	variance_comm_frequency_ = 0.0f;
-	
-	previous_time_ = time_keeper_get_ms();
-	
-	update_time_interval_ = 1000.0f; // 1 sec
-	
-	safe_size_ = safe_size__VHC;
-	min_dist_ = 20.0f * safe_size__VHC + 1.0f;
+	min_dist_ = 20.0f * config_.safe_size_vhc + 1.0f;
 	max_dist_ = -1.0f;
 	
 	uint8_t i;
+
 	collision_log_.count_near_miss = 0;
 	collision_log_.count_collision = 0;
-	for (i = 0; i < MAX_NUM_NEIGHBORS; i++)
+
+	collision_log_.near_miss_flag = (bool*)malloc(sizeof(bool[config_.max_num_neighbors]));
+	collision_log_.collision_flag = (bool*)malloc(sizeof(bool[config_.max_num_neighbors]));
+	collision_log_.transition_flag = (bool*)malloc(sizeof(bool[config_.max_num_neighbors]));
+
+	for (i = 0; i < config_.max_num_neighbors; i++)
 	{
 		collision_log_.near_miss_flag[i] = false;
 		collision_log_.collision_flag[i] = false;
 		collision_log_.transition_flag[i] = false;
 	}
-	collision_dist_sqr_ = SQR(2.0f * SIZE_VHC);
-	near_miss_dist_sqr_ = SQR(2.0f * safe_size__VHC);
+
+	collision_dist_sqr_ = SQR(2.0f * config_.size_vhc);
+	near_miss_dist_sqr_ = SQR(2.0f * config_.safe_size_vhc);
+
+	if(!neighbors_list_ || !collision_log_.near_miss_flag || !collision_log_.collision_flag || !collision_log_.transition_flag)
+	{
+		print_util_dbg_print("[NEIGHBOR]: memory allocation problem!\r\n");
+	}
+}
+
+bool neighbor_selection_telemetry_init(Neighbors* neighbors, Mavlink_message_handler* message_handler)
+{
+	bool init_success = true;
+	
+	// Add callbacks for onboard parameters requests
+	Mavlink_message_handler::msg_callback_t callback;
+
+	callback.message_id 	= MAVLINK_MSG_ID_GLOBAL_POSITION_INT; // 33
+	callback.sysid_filter 	= MAV_SYS_ID_ALL;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (Mavlink_message_handler::msg_callback_func_t)		&neighbor_selection_read_message_from_neighbors;
+	callback.module_struct 	= (Mavlink_message_handler::handling_module_struct_t)	neighbors;
+	init_success &= message_handler->add_msg_callback(&callback);
+
+	print_util_dbg_print("[NEIGHBOR SELECTION] Initialised.\r\n");
+	
+	return init_success;
+}
+
+bool Neighbors::update(void)
+{
+	extrapolate_or_delete_position();
+	collision_log_smallest_distance();
+	compute_communication_frequency();
+
+	return true;
 }
 
 void neighbor_selection_read_message_from_neighbors(Neighbors* neighbors, uint32_t sysid, mavlink_message_t* msg)
@@ -137,7 +176,7 @@ void neighbor_selection_read_message_from_neighbors(Neighbors* neighbors, uint32
 		
 		if (i >= neighbors->number_of_neighbors_)
 		{
-			if (neighbors->number_of_neighbors_ < MAX_NUM_NEIGHBORS)
+			if (neighbors->number_of_neighbors_ < neighbors->config_.max_num_neighbors)
 			{
 				actual_neighbor = neighbors->number_of_neighbors_;
 				neighbors->number_of_neighbors_++;
@@ -168,31 +207,12 @@ void neighbor_selection_read_message_from_neighbors(Neighbors* neighbors, uint32
 		neighbors->neighbors_list_[actual_neighbor].velocity[Y] = packet.vy / 100.0f;
 		neighbors->neighbors_list_[actual_neighbor].velocity[Z] = packet.vz / 100.0f;
 		
-		neighbors->neighbors_list_[actual_neighbor].size = SIZE_VHC;
+		neighbors->neighbors_list_[actual_neighbor].size = neighbors->config_.size_vhc;
 		
 		neighbors->neighbors_list_[actual_neighbor].time_msg_received = time_keeper_get_ms();
 		
 		neighbors->neighbors_list_[actual_neighbor].msg_count++;
 	}
-}
-
-bool neighbor_selection_telemetry_init(Neighbors* neighbors, Mavlink_message_handler* message_handler)
-{
-	bool init_success = true;
-	
-	// Add callbacks for onboard parameters requests
-	Mavlink_message_handler::msg_callback_t callback;
-
-	callback.message_id 	= MAVLINK_MSG_ID_GLOBAL_POSITION_INT; // 33
-	callback.sysid_filter 	= MAV_SYS_ID_ALL;
-	callback.compid_filter 	= MAV_COMP_ID_ALL;
-	callback.function 		= (Mavlink_message_handler::msg_callback_func_t)	&neighbor_selection_read_message_from_neighbors;
-	callback.module_struct 	= (Mavlink_message_handler::handling_module_struct_t)		neighbors;
-	init_success &= message_handler->add_msg_callback(&callback);
-
-	print_util_dbg_print("[NEIGHBOR SELECTION] Initialised.\r\n");
-	
-	return init_success;
 }
 
 void Neighbors::extrapolate_or_delete_position(void)
@@ -206,7 +226,7 @@ void Neighbors::extrapolate_or_delete_position(void)
 	{
 		delta_t = actual_time- neighbors_list_[ind].time_msg_received;
 
-		if (delta_t >= NEIGHBOR_TIMEOUT_LIMIT_MS)
+		if (delta_t >= config_.neighbor_timeout_limit_ms)
 		{
 			print_util_dbg_print("Suppressing neighbor number ");
 			print_util_dbg_print_num(ind,10);
@@ -223,7 +243,7 @@ void Neighbors::extrapolate_or_delete_position(void)
 			
 			
 		}
-		else if (delta_t > ORCA_TIME_STEP_MILLIS)
+		else if (delta_t > config_.orca_time_step_ms)
 		{
 			// extrapolating the last known position assuming a constant velocity
 			
@@ -260,7 +280,7 @@ void Neighbors::compute_communication_frequency(void)
 			
 			for (i=0;i<number_of_neighbors_;++i)
 			{
-				neighbors_list_[i].comm_frequency = FREQ_LPF*neighbors_list_[i].comm_frequency + (1.0f-FREQ_LPF)*neighbors_list_[i].msg_count*1000.0f/(actual_time - previous_time_);
+				neighbors_list_[i].comm_frequency = config_.freq_lpf*neighbors_list_[i].comm_frequency + (1.0f-config_.freq_lpf)*neighbors_list_[i].msg_count*1000.0f/(actual_time - previous_time_);
 				comm_frequency_list_[(neighbors_list_[i].neighbor_ID-1)%10] = neighbors_list_[i].comm_frequency;
 				
 				neighbors_list_[i].msg_count = 0;
@@ -281,7 +301,7 @@ void Neighbors::compute_communication_frequency(void)
 			variance_comm_frequency_ = 0.0f;
 		}
 
-		comm_frequency_list_[(mavlink_stream_.sysid()-1)%10] = FREQ_LPF*comm_frequency_list_[(mavlink_stream_.sysid()-1)%10] + (1.0f-FREQ_LPF) * state_.msg_count *1000.0f/(actual_time- previous_time_);
+		comm_frequency_list_[(mavlink_stream_.sysid()-1)%10] = config_.freq_lpf*comm_frequency_list_[(mavlink_stream_.sysid()-1)%10] + (1.0f-config_.freq_lpf) * state_.msg_count *1000.0f/(actual_time- previous_time_);
 		state_.msg_count = 0;
 		
 		previous_time_ = actual_time;
@@ -294,7 +314,7 @@ void Neighbors::collision_log_smallest_distance(void)
 	float relative_position[3];
 	float distSqr, dist;
 	
-	min_dist_ = 20.0f * SIZE_VHC + 1.0f;
+	min_dist_ = 20.0f * config_.size_vhc + 1.0f;
 	max_dist_ = -1.0;
 
 	if (state_.armed())

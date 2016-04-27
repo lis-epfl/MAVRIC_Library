@@ -49,58 +49,62 @@
 #include "communication/state.hpp"
 #include "sensing/position_estimation.hpp"
 
-#define MAX_NUM_NEIGHBORS 15                                        ///< The maximum number of neighbors
-
-#define SIZE_VHC 2.0f                                               ///< The safety size for the collision avoidance strategy
-#define safe_size__VHC 3.0f                                         ///< The safety size for the collision avoidance strategy
-
-#define MAXSPEED 4.5f                                               ///< The maximum speed of the vehicle
-#define CRUISESPEED 3.0f                                            ///< The cruise speed of the vehicle in m/s
-
-#define ORCA_TIME_STEP_MILLIS 10.0f                                 ///< The time step for the task
-
-#define NEIGHBOR_TIMEOUT_LIMIT_MS 4000                              ///< 4 seconds timeout limit
-
-#define FREQ_LPF 0.2f
-
-/**
- * \brief The track neighbor structure
- */
-typedef struct
-{
-    uint8_t neighbor_ID;                                            ///< The MAVLink ID of the vehicle
-    float position[3];                                              ///< The 3D position of the neighbor in m
-    float velocity[3];                                              ///< The 3D velocity of the neighbor in m/s
-    float size;                                                     ///< The physical size of the neighbor in m
-    uint32_t time_msg_received;                                     ///< The time at which the message was received in ms
-    float comm_frequency;                                           ///< The frequency of message reception
-    uint32_t msg_count;                                             ///< The number of message received
-    float extrapolated_position[3];                                 ///< The 3D position of the neighbor
-} track_neighbor_t;                                                 ///< The structure of information about a neighbor 
-
-/**
- * \brief The collision log structure
- */
-typedef struct
-{
-    bool near_miss_flag[MAX_NUM_NEIGHBORS];
-    bool collision_flag[MAX_NUM_NEIGHBORS];
-    bool transition_flag[MAX_NUM_NEIGHBORS];
-    uint32_t count_collision;
-    uint32_t count_near_miss;
-    
-} collision_log_t;
-
 /**
  * \brief The neighbor structure
  */
 class Neighbors
 {
 public:
+    typedef struct
+    {
+        uint8_t max_num_neighbors;                              ///< The maximum number of neighors
+        float size_vhc;                                         ///< The size of a vehicle to detect a collision (might be bigger than the real size)
+        float safe_size_vhc;                                    ///< The safe size for collision avoidance
+        float max_speed;                                        ///< The max allowed speed for the collision avoidance strategy
+        float cruise_speeed;                                    ///< The cruise speed
+        float orca_time_step_ms;                                ///< The time step for the ORCA strategy
+        float neighbor_timeout_limit_ms;                        ///< The maximum time interval between two messages from a neighbor before deleting it
+        float freq_lpf;                                         ///< The low pass filter for the communication frequency
+    }conf_t;
+
+    /**
+     * \brief The collision log structure
+     */
+    typedef struct
+    {
+        bool* near_miss_flag;                                   ///< A flag to tell if two vehicles are in near miss
+        bool* collision_flag;                                   ///< A flag to tell if two vehicles are in collision
+        bool* transition_flag;                                  ///< A flag to tell if two vehicles are in transition between the two other modes
+        uint32_t count_collision;                               ///< The current number of collisions for the vehicle
+        uint32_t count_near_miss;                               ///< The current number of near miss for the vehicle
+        
+    } collision_log_t;
+
+    /**
+     * \brief The structure of information about a neighbor 
+     */
+    typedef struct
+    {
+        uint8_t neighbor_ID;                                    ///< The MAVLink ID of the vehicle
+        float position[3];                                      ///< The 3D position of the neighbor in m
+        float velocity[3];                                      ///< The 3D velocity of the neighbor in m/s
+        float size;                                             ///< The physical size of the neighbor in m
+        uint32_t time_msg_received;                             ///< The time at which the message was received in ms
+        float comm_frequency;                                   ///< The frequency of message reception
+        uint32_t msg_count;                                     ///< The number of message received
+        float extrapolated_position[3];                         ///< The 3D position of the neighbor
+    } track_t;
+
+    /**
+     * \brief   Default configuration
+     *
+     * \return  Config structure
+     */
+    static inline conf_t default_config(void);
+
     uint8_t number_of_neighbors_;                               ///< The actual number of neighbors at a given time step
-    float safe_size_;                                           ///< The safe size for collision avoidance
-    track_neighbor_t neighbors_list_[MAX_NUM_NEIGHBORS];        ///< The list of neighbors structure
-    float comm_frequency_list_[MAX_NUM_NEIGHBORS];
+    track_t* neighbors_list_;                                   ///< The list of neighbors structure
+    float* comm_frequency_list_;                                ///< The list of communication frequency with the neighbors
     float mean_comm_frequency_;                                 ///< The mean value of the communication frequency
     float variance_comm_frequency_;                             ///< The variance of the communication frequency
     uint32_t previous_time_;                                    ///< The time of the previous loop
@@ -112,40 +116,36 @@ public:
     float collision_dist_sqr_;                                  ///< The square of the collision distance
     float near_miss_dist_sqr_;                                  ///< The square of the near-miss distance
 
-    Position_estimation& position_estimation_;                  ///< The pointer to the position estimator structure
+    conf_t config_;                                             ///< The config structure of the module
 
-    State& state_;                                              ///< The pointer to the state structure
-    const Mavlink_stream& mavlink_stream_;
+    Position_estimation& position_estimation_;                  ///< The reference to the position estimator structure
+
+    State& state_;                                              ///< The reference to the state structure
+    const Mavlink_stream& mavlink_stream_;                      ///< The reference to the MAVLink stream
 
     /**
      * \brief   Initialize the neighbor selection module
      *
-     * \param neighbors             The pointer to the neighbor struct
-     * \param position_estimation   The pointer to the position estimator struct
-     * \param message_handler       The pointer to the message handler structure
-     *
-     * \return  True if the init succeed, false otherwise
+     * \param position_estimation   The reference to the position estimator structure
+     * \param mavlink_stream        The reference to the MAVLink stream structure
+     * \param config                The reference to the config structure of the module
      */
-    Neighbors(Position_estimation& position_estimation, State& state, const Mavlink_stream& mavlink_stream);
+    Neighbors(Position_estimation& position_estimation, State& state, const Mavlink_stream& mavlink_stream, const conf_t& config = default_config());
+
+    bool update(void);
 
     /**
      * \brief   Extrapolate the position of each UAS between two messages, deletes the message if time elapsed too long from last message
-     *
-     * \param   neighbors           The pointer to the neighbors struct
      */
     void extrapolate_or_delete_position(void);
 
     /**
      * \brief   Computes the mean and the variance of the communication frequency
-     *
-     * \param   neighbors           The pointer to the neighbors struct
      */
     void compute_communication_frequency(void);
 
     /**
      * \brief   Update the log of the near miss and collisions and compute the minimal distance between all MAVs
-     *
-     * \param   neighbors           The pointer to the neighbors struct
      */
     void collision_log_smallest_distance(void);
 
@@ -164,11 +164,29 @@ void neighbor_selection_read_message_from_neighbors(Neighbors* neighbors, uint32
 /**
  * \brief   Initialize the neighbor selection telemetery module
  *
- * \param neighbors             The pointer to the neighbor struct
- * \param message_handler       The pointer to the message handler structure
+ * \param   neighbors           The pointer to the neighbor struct
+ * \param   message_handler     The pointer to the message handler structure
  *
  * \return  True if the init succeed, false otherwise
  */
 bool neighbor_selection_telemetry_init(Neighbors* neighbors, Mavlink_message_handler* message_handler);
+
+
+Neighbors::conf_t Neighbors::default_config(void)
+{
+    conf_t conf = {};
+
+    conf.max_num_neighbors = 15;
+    conf.size_vhc = 2.0f;
+    conf.safe_size_vhc = 3.0f;
+    conf.max_speed = 4.5f;
+    conf.cruise_speeed = 3.0f;
+    conf.orca_time_step_ms = 10;
+    conf.neighbor_timeout_limit_ms = 4000;
+    conf.freq_lpf = 0.2f;
+
+    return conf;
+};
+
 
 #endif // NEIGHBOR_SEL_H__
