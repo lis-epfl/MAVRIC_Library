@@ -131,7 +131,7 @@ public:
      *
      * \return  Success
      */
-    static bool update(Navigation* navigation);
+    bool update(void);
 
     /**
      * \brief   default configuration for navigation

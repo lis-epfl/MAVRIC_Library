@@ -49,7 +49,7 @@ extern "C"
 #include "util/quaternions.h"
 }
 
-#define KP_YAW 0.2f
+#define RVO_EPSILON 0.0001f
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -797,7 +797,7 @@ static mav_result_t orca_set_parameters_value(orca_t* orca, mavlink_command_long
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool orca_init(orca_t *orca, orca_config_t* orca_config, Neighbors* neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, State* state, Navigation* navigation, control_command_t* controls_nav)
+bool orca_init(orca_t *orca, orca_conf_t orca_config, Neighbors* neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const State* state, Navigation* navigation, control_command_t* controls_nav)
 {
     bool init_success = true;
     
@@ -808,7 +808,7 @@ bool orca_init(orca_t *orca, orca_config_t* orca_config, Neighbors* neighbors, c
     orca->state = state;
     orca->controls_nav = controls_nav;
         
-    orca->time_horizon = orca_config->time_horizon;
+    orca->time_horizon = orca_config.time_horizon;
     orca->inv_time_horizon = 1.0f / orca->time_horizon;
     
     orca->loop_count_orca = 0;
@@ -816,7 +816,7 @@ bool orca_init(orca_t *orca, orca_config_t* orca_config, Neighbors* neighbors, c
 
     orca->max_number_of_planes = neighbors->config_.max_num_neighbors;
     
-    orca->comfort_slider = orca_config->comfort_slider;
+    orca->comfort_slider = orca_config.comfort_slider;
     
     print_util_dbg_print("[ORCA] initialised.\r\n");
     
@@ -846,21 +846,14 @@ bool orca_update(orca_t* orca)
     float new_velocity[3];
 
     mav_mode_t mode_local = orca->state->mav_mode();
-    
-    bool navigation_task_return = orca->navigation->update(orca->navigation);
-
-    orca->neighbors->update();
 
     if((orca->state->mav_state_ == MAV_STATE_ACTIVE) && 
-        ((orca->navigation->internal_state_ > Navigation::NAV_TAKEOFF) && (orca->navigation->internal_state_ < Navigation::NAV_STOP_ON_POSITION))
-        && (mav_modes_is_auto(mode_local) || (mav_modes_is_guided(mode_local)) )
-        )
+    ((orca->navigation->internal_state_ > Navigation::NAV_TAKEOFF) && (orca->navigation->internal_state_ < Navigation::NAV_STOP_ON_POSITION))
+    && (mav_modes_is_auto(mode_local) || mav_modes_is_guided(mode_local)))
     {
-        if ( mav_modes_is_custom(mode_local) )
-        {
-            orca_compute_new_velocity(orca, orca->controls_nav->tvel, new_velocity);
-        }
+        
+        orca_compute_new_velocity(orca, orca->controls_nav->tvel, new_velocity);
     }
 
-    return navigation_task_return;
+    return true;
 }

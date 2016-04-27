@@ -189,6 +189,19 @@ bool Central_data::init(void)
     altitude_controller_.init();
 
     //--------------------------------------------------------------------------
+    // Init ORCA
+    //--------------------------------------------------------------------------
+    orca_init(  &orca,
+                config_.orca_config,
+                &neighbor_selection,
+                &position_estimation,
+                &ahrs,
+                &state,
+                &navigation,
+                &controls_nav);
+
+
+    //--------------------------------------------------------------------------
     // Init velocity controller
     //--------------------------------------------------------------------------
     velocity_controller_copter_init(&velocity_controller,

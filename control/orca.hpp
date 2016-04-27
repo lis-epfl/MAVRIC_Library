@@ -46,17 +46,17 @@
 #include "communication/neighbor_selection.hpp"
 #include "control/navigation.hpp"
 #include "sensing/position_estimation.hpp"
+
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
 
 extern "C"
 {
+#include "control/stabilisation.h"
+#include "sensing/ahrs.h"
 #include <stdbool.h>
 #include <stdint.h>
 }
-
-#define TIME_HORIZON 12.0f
-#define RVO_EPSILON 0.0001f
 
 /**
  * \brief The 3D plane structure
@@ -102,13 +102,13 @@ typedef struct
 {
     float time_horizon;                                 ///< The time horizon of the method
     float comfort_slider;                               ///< The value of the comfort slider
-} orca_config_t;
+} orca_conf_t;
 
 /**
  * \brief   Initialize the ORCA module
  *
  * \param   orca                    The pointer to the ORCA structure
- * \param   orca_config             The pointer to the config structure of the ORCA module
+ * \param   orca_config             The config structure of the ORCA module
  * \param   neighbors               The pointer to the neighbor data structure
  * \param   position_estimation     The pointer to the position structure
  * \param   ahrs                    The pointer to the attitude estimation structure
@@ -117,7 +117,7 @@ typedef struct
  *
  * \return  True if the init succeed, false otherwise
  */
-bool orca_init(orca_t *orca, orca_config_t* orca_config, Neighbors* neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, State* state, Navigation* navigation, control_command_t* controls_nav);
+bool orca_init(orca_t *orca, orca_conf_t orca_config, Neighbors* neighbors, const Position_estimation* position_estimation, const ahrs_t *ahrs, const State* state, Navigation* navigation, control_command_t* controls_nav);
 
 /**
  * \brief   Initialise the ORCA telemetry module
@@ -138,5 +138,16 @@ bool orca_telemetry_init(orca_t* orca, Mavlink_message_handler* message_handler)
  * \return  True if the init succeed, false otherwise
  */
 bool orca_update(orca_t* orca);
+
+static inline orca_conf_t orca_default_config()
+{
+    orca_conf_t conf = {};
+
+    conf.comfort_slider = 0.0f;
+    conf.time_horizon = 12.0f;
+
+    return conf;
+};
+
 
 #endif // ORCA_H__

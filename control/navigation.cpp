@@ -250,27 +250,27 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
 }
 
 
-bool Navigation::update(Navigation* navigation)
+bool Navigation::update(void)
 {
-    mav_mode_t mode_local = navigation->state.mav_mode();
+    mav_mode_t mode_local = state.mav_mode();
 
     uint32_t t = time_keeper_get_us();
 
-    navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
-    navigation->last_update = t;
+    dt = (float)(t - last_update) / 1000000.0f;
+    last_update = t;
 
-    switch (navigation->state.mav_state_)
+    switch (state.mav_state_)
     {
         case MAV_STATE_STANDBY:
-            navigation->controls_nav.tvel[X] = 0.0f;
-            navigation->controls_nav.tvel[Y] = 0.0f;
-            navigation->controls_nav.tvel[Z] = 0.0f;
+            controls_nav.tvel[X] = 0.0f;
+            controls_nav.tvel[Y] = 0.0f;
+            controls_nav.tvel[Z] = 0.0f;
             break;
 
         case MAV_STATE_ACTIVE:
-            if (navigation->internal_state_ > NAV_ON_GND)
+            if (internal_state_ > NAV_ON_GND)
             {
-                navigation->run();
+                run();
             }
             break;
 
@@ -278,15 +278,15 @@ bool Navigation::update(Navigation* navigation)
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
             if (mav_modes_is_stabilise(mode_local))
             {
-                if ((navigation->internal_state_ == NAV_NAVIGATING) || (navigation->internal_state_ == NAV_LANDING))
+                if ((internal_state_ == NAV_NAVIGATING) || (internal_state_ == NAV_LANDING))
                 {
 
-                    navigation->run();
+                    run();
 
-                    if (navigation->state.out_of_fence_2)
+                    if (state.out_of_fence_2)
                     {
                         // Constant velocity to the ground
-                        navigation->controls_nav.tvel[Z] = 1.0f;
+                        controls_nav.tvel[Z] = 1.0f;
                     }
 
                 }
@@ -294,9 +294,9 @@ bool Navigation::update(Navigation* navigation)
             break;
 
         default:
-            navigation->controls_nav.tvel[X] = 0.0f;
-            navigation->controls_nav.tvel[Y] = 0.0f;
-            navigation->controls_nav.tvel[Z] = 0.0f;
+            controls_nav.tvel[X] = 0.0f;
+            controls_nav.tvel[Y] = 0.0f;
+            controls_nav.tvel[Z] = 0.0f;
             break;
     }
 
