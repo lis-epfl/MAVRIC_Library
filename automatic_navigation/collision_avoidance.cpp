@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/collision_avoidance.hpp"
+#include "automatic_navigation/collision_avoidance.hpp"
 #include "communication/mav_modes.hpp"
 
 extern "C"

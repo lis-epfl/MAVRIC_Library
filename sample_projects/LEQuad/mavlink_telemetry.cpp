@@ -66,7 +66,7 @@
 #include "communication/data_logging_telemetry.hpp"
 #include "control/manual_control_telemetry.hpp"
 #include "communication/neighbor_selection.hpp"
-#include "control/collision_avoidance.hpp"
+#include "automatic_navigation/collision_avoidance.hpp"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

@@ -81,7 +81,7 @@
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
 #include "control/attitude_controller_default_config.hpp"
 #include "control/velocity_controller_copter_default_config.hpp"
-#include "control/collision_avoidance.hpp"
+#include "automatic_navigation/collision_avoidance.hpp"
 #include "communication/remote_default_config.hpp"
 
 extern "C"
