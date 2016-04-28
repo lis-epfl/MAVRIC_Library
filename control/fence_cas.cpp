@@ -65,10 +65,6 @@ float Fence_CAS::detect_line(local_position_t Al, local_position_t Bl,local_posi
 
 	float A[3]={Al.pos[0],Al.pos[1],Al.pos[2]};
 	float B[3]={Bl.pos[0],Bl.pos[1],Bl.pos[2]};
-
-	//CYSTU hardcode les points:
-	//float A[3]={-10,-10,0};
-	//float B[3]={-10,10,0};
 	float C[3]={Cl.pos[0],Cl.pos[1],Cl.pos[2]};
 
 	float Cp[3]={0,0,0};
@@ -84,16 +80,6 @@ float Fence_CAS::detect_line(local_position_t Al, local_position_t Bl,local_posi
 		I[i]=0;
 		Cp[i]= C[i] + Vnorm[i] *  SCP(V,V)/(2*this->a_max);
 	}
-	/*
-	print_util_dbg_print("Cppoint||");
-	print_util_dbg_putfloat(Cp[0],2);
-	print_util_dbg_print("||");
-	print_util_dbg_putfloat(Cp[1],2);
-	print_util_dbg_print("||");
-	print_util_dbg_putfloat(Cp[2],2);
-	print_util_dbg_print("||\t");
-	*/
-
 	for(int i =0; i<3;i++)
 	{
 		CCp[i]= Cp[i]-C[i];
@@ -116,30 +102,8 @@ float Fence_CAS::detect_line(local_position_t Al, local_position_t Bl,local_posi
 			S[i]= C[i] + (this->r_pz+dmin)/quick_trig_tan(gamma) * CCp[i]+(this->r_pz+dmin)*pCCp[i];
 		}
 	}
-	/*
-	print_util_dbg_print("Spoint||");
-	print_util_dbg_putfloat(S[0],2);
-	print_util_dbg_print("||");
-	print_util_dbg_putfloat(S[1],2);
-	print_util_dbg_print("||");
-	print_util_dbg_putfloat(S[2],2);
-	print_util_dbg_print("||\t");
-	*/
+	//The exact point of intersection is C + F*h
 
-
-
-
-	/// S found, compute detection?
-
-	/*
-	E = B-A = ( Bx-Ax, By-Ay )
-	F = D-C = ( Dx-Cx, Dy-Cy )
-	P = ( -Ey, Ex )
-	h = ( (A-C) * P ) / ( F * P )
-	This h number is the key. If h is between 0 and 1, the lines intersect, otherwise they don't. If F*P is zero, of course you cannot make the calculation, but in this case the lines are parallel and therefore only intersect in the obvious cases.
-
-	The exact point of intersection is C + F*h
-	*/
 	float E[3]={0,0,0};
 	for(int i =0; i<3;i++)
 	{
@@ -159,15 +123,6 @@ float Fence_CAS::detect_line(local_position_t Al, local_position_t Bl,local_posi
 
 	//h is the distance from A to B of which point is detected
 	float h= ((C[0]-A[0])*P[0]+(C[1]-A[1])*P[1])/(F[0]*P[0]+F[1]*P[1]);
-
-
-	print_util_dbg_print("Cpoint||");
-	print_util_dbg_putfloat(C[0],2);
-	print_util_dbg_print("||");
-	print_util_dbg_putfloat(C[1],2);
-//	print_util_dbg_print("||");
-//	print_util_dbg_putfloat(C[2],2);
-	print_util_dbg_print("||");
 	float dist=0;
 	if ((h>1.0)|(h<0.0))
 	{
@@ -200,12 +155,6 @@ float Fence_CAS::detect_line(local_position_t Al, local_position_t Bl,local_posi
 		I[2] = maxsens*maxsens;
 
 	}
-
-	/*
-	print_util_dbg_print("\t distt||");
-	print_util_dbg_putfloat(h, 5);
-	print_util_dbg_print("||\n");*/
-
 	return dist;
 
 }
@@ -248,7 +197,6 @@ float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , flo
 			tD = c;
 		}
 	}
-
 	if (tN < 0.0) {            // tc < 0 => the t=0 edge is visible
 		tN = 0.0;
 		// recompute sc for this edge
@@ -276,14 +224,6 @@ float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , flo
 	// finally do the division to get sc and tc
 	sc = (abs(sN) < SMALL_NUM ? 0.0 : sN / sD);
 	tc = (abs(tN) < SMALL_NUM ? 0.0 : tN / tD);
-
-
-//	print_util_dbg_print("||sc");
-//	print_util_dbg_putfloat(sc,4);
-//	print_util_dbg_print("\t||tc");
-//	print_util_dbg_putfloat(tc,4);
-	// get the difference of the two closest points
-
 	float dp[3]={0,0,0}; //dp= distance vecto between I and J, dp = J-I
 
 	for (int i=0; i<3;i++)
@@ -296,7 +236,8 @@ float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , flo
 	I[2]=C[2];
 	J[2]=C[2];
 //	dp[2]=0; //only 2D
-	return vectors_norm(dp);   // return the closest distance
+//	return (sc>0.001?vectors_norm(dp):-vectors_norm(dp));   // return the closest distance
+	return vectors_norm(dp);
 }
 
 
@@ -314,11 +255,10 @@ Fence_CAS::Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_esti
 	controls(controls),
 	detected_point({0,0,0}),
 	repulsion({0,0,0}),
-	maxsens(5.0),
-	tahead(2.0),
-	coef_roll(0.8)
+	maxsens(10.0),
+	tahead(2.0)
 {
-
+	this->coef_roll=0.02;
 }
 Fence_CAS::~Fence_CAS(void)
 {
@@ -384,32 +324,29 @@ bool Fence_CAS::update(void)
 //		dist = detect_line(Alpoint,Blpoint,this->pos_est->last_gps_pos,V, gamma,I);
 		dist[i] = detect_seg(A,B,C,S,V,I,J);
 
-		float rep[3]={B[1]-A[1],A[0]-B[0],0.0};
+		float rep[3]={A[1]-B[1],B[0]-A[0],0.0};
 
 		gftobftransform(C, S, rep);
-		if((dist[i] >= 0)&(dist[i] < this->maxsens))
+		vectors_normalize(rep,rep);
+		if((dist[i] >= -this->maxsens)&(dist[i] < this->maxsens))
 		{
-//			print_util_dbg_print("Ipoint||");
-//			print_util_dbg_putfloat(I[0],2);
-//			print_util_dbg_print("||");
-//			print_util_dbg_putfloat(I[1],2);
-//			print_util_dbg_print("||");
-//			print_util_dbg_putfloat(I[2],2);
 			float ratio = dist[i]/this->maxsens;
 			this->repulsion[0]+=0.0;
 
-			this->repulsion[1]+=-rep[1]*this->coef_roll*0.25*PI*interpolate(ratio,0);
+			this->repulsion[1]+=(rep[1]>=0?1:-1)*this->coef_roll*0.25*PI*interpolate(ratio,0);
 
 			this->repulsion[2]+=0.0;
 
 			print_util_dbg_print("||");
-			print_util_dbg_putfloat(i,5);
+			print_util_dbg_putfloat(rep[1],5);
+			print_util_dbg_print("||");
+						print_util_dbg_putfloat(this->repulsion[1],5);
 			print_util_dbg_print("|dist_detected|");
 			print_util_dbg_putfloat(dist[i],5);
 			print_util_dbg_print("||\n");
 
 		}
-		else if (dist[i] < 0)
+		else
 		{
 
 		}
