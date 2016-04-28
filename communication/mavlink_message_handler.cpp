@@ -137,7 +137,7 @@ static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_messag
     uint8_t sysid = message_handler->mavlink_stream->sysid;
     uint8_t compid = message_handler->mavlink_stream->compid;
     if ((msg->sysid != sysid) ||                                // This message is not from this system
-        ((msg->sysid == sysid) && (msg->compid != compid)))     // This message is from our system but an offboard computer  
+        ((msg->sysid == sysid) && (msg->compid != compid)))     // This message is from our system but a different component
     {
         if (cmd_callback->command_id == cmd->command)       // The message has the good ID
         {
