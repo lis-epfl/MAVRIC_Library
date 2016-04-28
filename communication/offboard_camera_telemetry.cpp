@@ -217,9 +217,9 @@ void offboard_camera_goal_location_telemetry_send(const Central_data* central_da
                                 msg,
                                 "Tag_Search_Goal_Location",
                                 time_keeper_get_us(),
-                                central_data->waypoint_handler.navigation->goal.pos[0] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[0],
-                                central_data->waypoint_handler.navigation->goal.pos[1] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1],
-                                //central_data->waypoint_handler.navigation->goal.pos[2] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2]);
+                                central_data->offboard_camera.tag_position.pos[0] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[0],
+                                central_data->offboard_camera.tag_position.pos[1] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1],
+                                //central_data->offboard_camera.tag_position.pos[2] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2]);
                                 central_data->offboard_camera.picture_count);
 }
 
