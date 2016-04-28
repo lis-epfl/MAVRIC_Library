@@ -567,7 +567,7 @@ mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_p
 {
     mav_result_t result = MAV_RESULT_DENIED;
 
-    if (!onboard_parameters->state_.armed())
+    if (!onboard_parameters->state_.is_armed())
     {
         // Onboard parameters storage
         if (msg->param1 == 0)
@@ -688,4 +688,3 @@ bool Onboard_parameters::send_one_parameter_now(uint32_t index)
 
     return success;
 }
-

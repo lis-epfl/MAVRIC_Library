@@ -189,9 +189,9 @@ bool State_machine::update(State_machine* state_machine)
         mode_new ^= MAV_MODE_FLAG_GUIDED_ENABLED; // toggle guided flag
     }
 
-    if(!state_machine->set_mode_stabilize(mav_modes_is_stabilise(mode_new)))
+    if(!state_machine->set_mode_stabilize(mav_modes_is_stabilize(mode_new)))
     {
-        mode_new ^= MAV_MODE_FLAG_STABILIZE_ENABLED; // toggle stabilize flag   
+        mode_new ^= MAV_MODE_FLAG_STABILIZE_ENABLED; // toggle stabilize flag
     }
 
     // try arming/disarming, if not allowed, reset flag in mode_new
@@ -286,7 +286,7 @@ bool State_machine::update(State_machine* state_machine)
 
                 case SIGNAL_LOST:
                     // If in manual mode, do emergency landing (cut off motors)
-                    if (mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilise(mode_current)))
+                    if (mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilize(mode_current)))
                     {
                         print_util_dbg_print("Switch to Emergency mode!\r\n");
                         state_new = MAV_STATE_EMERGENCY;
@@ -362,7 +362,7 @@ bool State_machine::update(State_machine* state_machine)
 bool State_machine::set_mode_guided(bool guided)
 {
     // if already in desired state, return true
-    if(state_.guided() == guided)
+    if(state_.is_guided() == guided)
     {
         return true;
     }
@@ -393,7 +393,7 @@ bool State_machine::set_mode_guided(bool guided)
 bool State_machine::set_mode_stabilize(bool stabilize)
 {
     // if already in desired state, return true
-    if(state_.stabilize() == stabilize)
+    if(state_.is_stabilize() == stabilize)
     {
         return true;
     }
@@ -420,4 +420,3 @@ bool State_machine::set_mode_stabilize(bool stabilize)
 
     return true;
 }
-
