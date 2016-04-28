@@ -119,13 +119,13 @@ bool Central_data::init(void)
     // -------------------------------------------------------------------------
     // Init raspberry pi mavlink communication
     // -------------------------------------------------------------------------
-    mavlink_communication_conf_t raspi_mavlink_communication_config = mavlink_communication_default_config();
+    /*mavlink_communication_conf_t raspi_mavlink_communication_config = mavlink_communication_default_config();
     raspi_mavlink_communication_config.mavlink_stream_config.sysid = sysid_;
     raspi_mavlink_communication_config.message_handler_config.debug = true;
     raspi_mavlink_communication_config.onboard_parameters_config.debug = true;
-    raspi_mavlink_communication_config.mavlink_stream_config.debug = true;
+    raspi_mavlink_communication_config.mavlink_stream_config.debug = true;*/
     ret = mavlink_communication_init(&raspi_mavlink_communication,
-                                     raspi_mavlink_communication_config,
+                                     mavlink_communication_config,
                                      &raspi_serial_mavlink,
                                      &state,
                                      &file_flash);
