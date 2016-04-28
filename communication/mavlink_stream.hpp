@@ -63,12 +63,20 @@ extern "C"
 
 #define MAVLINK_BASE_STATION_ID 255
 
+/* Forward declaration for friend function */
+class Onboard_parameters;
+class Central_data;
 
 /**
  * \brief   Main structure for the MAVLink stream module
  */
 class Mavlink_stream
 {
+    /* FRIENDS */
+    /* this function is a friend to add sysid to onboard parameters */
+    friend bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
+
+
 public:
 
     /**
