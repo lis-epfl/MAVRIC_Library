@@ -1,25 +1,25 @@
 /*******************************************************************************
- * Copyright (c) 2009-2016, MAV'RIC Development Team
- * All rights reserved.
+ * Copyfront (c) 2009-2016, MAV'RIC Development Team
+ * All fronts reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * 1. Redistributions of source code must retain the above copyright notice,
+ * 1. Redistributions of source code must retain the above copyfront notice,
  * this list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * 2. Redistributions in binary form must reproduce the above copyfront notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
  *
- * 3. Neither the name of the copyright holder nor the names of its contributors
+ * 3. Neither the name of the copyfront holder nor the names of its contributors
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYFRONT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYFRONT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -54,12 +54,12 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Saccade_controller::Saccade_controller( flow_t& flow_left,
-                                        flow_t& flow_right,
+Saccade_controller::Saccade_controller( flow_t& flow_back,
+                                        flow_t& flow_front,
                                         const ahrs_t& ahrs,
                                         saccade_controller_conf_t config ):
-  flow_left_(flow_left),
-  flow_right_(flow_right),
+  flow_back_(flow_back),
+  flow_front_(flow_front),
   ahrs_(ahrs)
 {
     // Init members
@@ -72,12 +72,13 @@ Saccade_controller::Saccade_controller( flow_t& flow_left,
 
     weighted_function_ = 0;
 
-    saccade_state_ = INTERSACCADE;
+    saccade_state_ = PRESACCADE;
 
     attitude_command_.rpy[0]  = 0;
     attitude_command_.rpy[1]  = 0;
     attitude_command_.rpy[2]  = 0;
     intersaccade_time_ = 1000;
+    is_time_initialized_ = false;
 
     // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
     float angle_between_points = (180. / N_points);
@@ -87,16 +88,17 @@ Saccade_controller::Saccade_controller( flow_t& flow_left,
     for (uint32_t i = 0; i < N_points; ++i)
     {
 
-        azimuth_[i]             = (-179.5 + i * angle_between_points) * (PI / 180.0f);
+        azimuth_[i]             = (91.5 + i * angle_between_points) * (PI / 180.0f);
         sin_azimuth_[i] = quick_trig_sin(azimuth_[i]);
         inv_sin_azimuth_[i]     = 1.0f/sin_azimuth_[i];
         
-        azimuth_[i + N_points]  = (  0.5 + i * angle_between_points) * (PI / 180.0f);
+        azimuth_[i + N_points]  = (  -88.5 + i * angle_between_points) * (PI / 180.0f);
         sin_azimuth_[i + N_points] = quick_trig_sin(azimuth_[i + N_points]);
         inv_sin_azimuth_[i + N_points]  = 1.0f/sin_azimuth_[i + N_points];
 
         cos_azimuth_[i] = quick_trig_cos(azimuth_[i]);
         cos_azimuth_[i + N_points] = quick_trig_cos(azimuth_[i + N_points]);
+
     }
 }
 
@@ -105,13 +107,8 @@ bool Saccade_controller::init(void)
     return true;
 }
 
-/*void Saccade_controller::set_direction(heading_angle)
-{
-  Voir comment définir ca
-}*/
 
 
-// #include <stdio.h>
 
 bool Saccade_controller::update()
 {
@@ -119,24 +116,42 @@ bool Saccade_controller::update()
     // ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
     // float noise = 0.0f;
 
-    // Calculate for both left and right the sum of the relative nearnesses
+    // Calculate for both back and front the sum of the relative nearnesses
     // which are each given by RN = OF/sin(angle),
+    for(uint32_t i = 0; i < N_points; ++i)
+    {
+        relative_nearness_[i] = 0;
+        relative_nearness_[i + N_points] = 0;
+    }
+
     for (uint32_t i = 0; i < N_points; ++i)
     {   
-        if(flow_left_.of.x[i] < 0 or flow_left_.of.x[i] == 0. or flow_right_.of.x[i] > 0 or flow_right_.of.x[i] == 0)
+        
+        if(i<36)
         {
-            relative_nearness_[i]             = maths_f_abs(flow_left_.of.x[i] * inv_sin_azimuth_[i]);
-            relative_nearness_[i + N_points]  = maths_f_abs(flow_right_.of.x[i] * inv_sin_azimuth_[i + N_points]);
-            // relative_nearness_[i]             = flow_left_.of.x[i];
-            // relative_nearness_[i + N_points]  = flow_right_.of.x[i];
+            if(flow_back_.of.x[i]> 0)
+            {
+                relative_nearness_[i]   = maths_f_abs(flow_back_.of.x[i] * inv_sin_azimuth_[i]);
+            }
+
+            else if (flow_front_.of.x[i] < 0)
+            {
+                relative_nearness_[i + N_points]  = maths_f_abs(flow_front_.of.x[i] * inv_sin_azimuth_[i + N_points]);
+            }   
         }
 
-        else if(flow_left_.of.x[i] > 0 or flow_right_.of.x[i] < 0)
+        else if(i>36)
         {
-            relative_nearness_[i]             = 0;
-            relative_nearness_[i + N_points]  = 0;
+            if(flow_back_.of.x[i] < 0) 
+            {
+                relative_nearness_[i]   = maths_f_abs(flow_back_.of.x[i] * inv_sin_azimuth_[i]);
+            }
+            
+            else if (flow_front_.of.x[i] > 0)
+            {
+                relative_nearness_[i + N_points]  = maths_f_abs(flow_front_.of.x[i] * inv_sin_azimuth_[i + N_points]);
+            }
         }
-        
     }
 
 
@@ -218,11 +233,35 @@ bool Saccade_controller::update()
     float movement_direction_x = 0.0f;
     float movement_direction_y = 0.0f;
     float movement_direction = 0.0f;
+    float begin_time = 0.0f;
+
 
     //Decide between saccade and intersaccade states
 
     switch (saccade_state_)
     {
+
+        case PRESACCADE:
+
+            if(!is_time_initialized_)
+            {
+                begin_time = time_keeper_get_ms();
+                is_time_initialized_ = true;
+            }
+
+            movement_direction = atan2(goal_lf[1],goal_lf[0]);
+
+            attitude_command_.rpy[0]  = 0;
+            attitude_command_.rpy[1]  = pitch_;
+            attitude_command_.rpy[2]  = movement_direction;
+            attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+
+            if(time_keeper_get_ms()-begin_time < 500)
+            {
+                saccade_state_            = SACCADE;
+            }
+
+        break;
         // This is the case where we are performing a saccade
 
         case SACCADE:
@@ -257,25 +296,6 @@ bool Saccade_controller::update()
                 attitude_command_.rpy[2]  +=movement_direction;
                 attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
 
-
-                // if(movement_direction < 0){
-                // attitude_command_.rpy[0]  = - 0.03;
-                // attitude_command_.rpy[1]  = 0;
-                // attitude_command_.rpy[2]  +=movement_direction;
-                // attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
-                // }
-                // else if(movement_direction > 0){
-                // attitude_command_.rpy[0]  = 0.03;
-                // attitude_command_.rpy[1]  = 0;
-                // attitude_command_.rpy[2]  +=movement_direction;
-                // attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
-                // }
-                // else if(movement_direction == 0){
-                // attitude_command_.rpy[0]  = 0;
-                // attitude_command_.rpy[1]  = 0;
-                // attitude_command_.rpy[2]  +=movement_direction;
-                // attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
-                // }
                 saccade_state_            = SACCADE;
             }
         break;

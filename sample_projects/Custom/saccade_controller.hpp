@@ -1,25 +1,25 @@
 /*******************************************************************************
- * Copyright (c) 2009-2016, MAV'RIC Development Team
- * All rights reserved.
+ * Copyfront (c) 2009-2016, MAV'RIC Development Team
+ * All fronts reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * 1. Redistributions of source code must retain the above copyright notice,
+ * 1. Redistributions of source code must retain the above copyfront notice,
  * this list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * 2. Redistributions in binary form must reproduce the above copyfront notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
  *
- * 3. Neither the name of the copyright holder nor the names of its contributors
+ * 3. Neither the name of the copyfront holder nor the names of its contributors
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYFRONT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYFRONT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -78,8 +78,8 @@ static inline saccade_controller_conf_t saccade_controller_default_config(void);
 /**
  * \brief Saccade controller structure
  *
- * \param   flow_left           Left optic flow camera input
- * \param   flow_right;         Right optic flow camera input
+ * \param   flow_back           back optic flow camera input
+ * \param   flow_front;         Front optic flow camera input
  * \param   pitch               Pitch command for forward motion
  * \param   gain                Gain for weighting function
  * \param   threshold           Threshold for weighting function
@@ -92,8 +92,10 @@ static inline saccade_controller_conf_t saccade_controller_default_config(void);
 
  typedef enum
 {
-    SACCADE,            ///< Idle state
-    INTERSACCADE,        ///< Getting temperature state
+    PRESACCADE,         ///< presaccade state
+    SACCADE,            ///< Saccade state
+    INTERSACCADE,        ///< intersaccade state
+
 } saccade_state_t;
 
 
@@ -103,12 +105,12 @@ public:
     /**
      * \brief                Constructor
      *
-     * \param   flow_left    Serial port for left optic flow camera
-     * \param   flow_right   Serial port for right optic flow cameras
+     * \param   flow_back    Serial port for back optic flow camera
+     * \param   flow_front   Serial port for front optic flow cameras
      * \param   ahrs         Attitude and heading reference system
      * \param   config       Configuration structure
      */
-    Saccade_controller(flow_t& flow_left, flow_t& flow_right, const ahrs_t& ahrs, saccade_controller_conf_t config);
+    Saccade_controller(flow_t& flow_back, flow_t& flow_front, const ahrs_t& ahrs, saccade_controller_conf_t config);
 
 
     /**
@@ -144,13 +146,19 @@ public:
     float                       cad_;
     float                       intersaccade_time_;
     float                       weighted_function_;
-    uint64_t                    last_saccade_;
-    attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
-    flow_t&                     flow_left_;                          ///< Left optic flow camera output
-    flow_t&                     flow_right_;                         ///< Right optic flow camera output
-    const ahrs_t&               ahrs_;                               ///< Attitude and heading reference system
 
-    saccade_state_t             saccade_state_;
+    uint64_t                    last_saccade_;
+
+    attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
+    
+    flow_t&                     flow_back_;                          ///< back optic flow camera output
+    flow_t&                     flow_front_;                         ///< Front optic flow camera output
+    
+    const ahrs_t&               ahrs_;                               ///< Attitude and heading reference system
+    
+    bool                        is_time_initialized_;               ///< Flag for time of presaccadic state
+
+    saccade_state_t             saccade_state_;                     ///< Saccade modes (intersaccade, saccade, presaccade)
 
 };
 
@@ -163,7 +171,7 @@ static inline saccade_controller_conf_t saccade_controller_default_config(void)
     conf.pitch_          = 0.0f;
     conf.gain_           = 1.0f;
     conf.threshold_      = 1.0f;
-    conf.goal_direction_ = 1.54f;
+    conf.goal_direction_ = 1.5f;
 
     return conf;
 };

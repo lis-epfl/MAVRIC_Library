@@ -150,8 +150,8 @@ bool state_machine_update(state_machine_t* state_machine)
                 // check connection with remote
                 if ((state_machine->manual_control->mode_source == MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
                 {
-                    state_new = MAV_STATE_CRITICAL;
-                    mode_custom_new |= CUST_REMOTE_LOST;
+                    // state_new = MAV_STATE_CRITICAL;
+                    // mode_custom_new |= CUST_REMOTE_LOST;
                 }
                 else
                 {
@@ -169,7 +169,7 @@ bool state_machine_update(state_machine_t* state_machine)
             if (state_machine->state->battery_.is_low())
             {
                 print_util_dbg_print("Battery low! Performing critical landing.\r\n");
-                state_new = MAV_STATE_CRITICAL;
+                // state_new = MAV_STATE_CRITICAL;
                 mode_custom_new |= CUST_BATTERY_LOW;
             }
             else
@@ -181,7 +181,7 @@ bool state_machine_update(state_machine_t* state_machine)
             if (state_machine->state->connection_lost)
             {
                 print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
-                state_new = MAV_STATE_CRITICAL;
+                // state_new = MAV_STATE_CRITICAL;
                 mode_custom_new |= CUST_HEARTBEAT_LOST;
             }
             else
@@ -193,7 +193,7 @@ bool state_machine_update(state_machine_t* state_machine)
             if (state_machine->state->out_of_fence_1)
             {
                 print_util_dbg_print("Out of fence 1!\r\n");
-                state_new = MAV_STATE_CRITICAL;
+                // state_new = MAV_STATE_CRITICAL;
                 mode_custom_new |= CUST_FENCE_1;
             }
             else
@@ -205,7 +205,7 @@ bool state_machine_update(state_machine_t* state_machine)
             if (state_machine->state->out_of_fence_2)
             {
                 print_util_dbg_print("Out of fence 2!\r\n");
-                state_new = MAV_STATE_CRITICAL;
+                // state_new = MAV_STATE_CRITICAL;
                 mode_custom_new |= CUST_FENCE_2;
             }
             else
@@ -217,7 +217,7 @@ bool state_machine_update(state_machine_t* state_machine)
             if (state_machine->gps->healthy() == false)
             {
                 print_util_dbg_print("GPS bad!\r\n");
-                state_new = MAV_STATE_CRITICAL;
+                // state_new = MAV_STATE_CRITICAL;
                 mode_custom_new |= CUST_GPS_BAD;
             }
             else
@@ -225,124 +225,127 @@ bool state_machine_update(state_machine_t* state_machine)
                 mode_custom_new &= ~CUST_GPS_BAD;
             }
 
-            break;
+            // break;
 
         case MAV_STATE_CRITICAL:
-            switch (rc_check)
-            {
-                case SIGNAL_GOOD:
-                    if (!state_machine->state->battery_.is_low() &&
-                            !state_machine->state->connection_lost &&
-                            !state_machine->state->out_of_fence_1 &&
-                            !state_machine->state->out_of_fence_2 &&
-                            state_machine->gps->healthy())
-                    {
-                        state_new = MAV_STATE_ACTIVE;
-                        // Reset all custom flags except collision avoidance flag
-                        mode_custom_new &= static_cast<mav_mode_custom_t>(0xFFFFF820);
-                    }
-                    break;
-
-                case SIGNAL_BAD:
-                    // Stay in critical mode
-                    break;
-
-                case SIGNAL_LOST:
-                    // If in manual mode, do emergency landing (cut off motors)
-                    if (mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilise(mode_current)))
-                    {
-                        print_util_dbg_print("Switch to Emergency mode!\r\n");
-                        state_new = MAV_STATE_EMERGENCY;
-                    }
-                    // If in another mode, stay in critical mode
-                    // higher level navigation module will take care of coming back home
-                    break;
-            }
-
-            //check battery level
-            if (state_machine->state->battery_.is_low())
-            {
-                mode_custom_new |= CUST_BATTERY_LOW;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_BATTERY_LOW;
-            }
-
-            // check connection with GND station
-            if (state_machine->state->connection_lost)
-            {
-                mode_custom_new |= CUST_HEARTBEAT_LOST;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_HEARTBEAT_LOST;
-            }
-
-            // check whether out_of_fence_1
-            if (state_machine->state->out_of_fence_1)
-            {
-                mode_custom_new |= CUST_FENCE_1;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_FENCE_1;
-            }
-
-            // check whether out_of_fence_2
-            if (state_machine->state->out_of_fence_2)
-            {
-                mode_custom_new |= CUST_FENCE_2;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_FENCE_2;
-            }
-
-            // check GPS status
-            if (!state_machine->gps->healthy())
-            {
-                mode_custom_new |= CUST_GPS_BAD;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_GPS_BAD;
-            }
-
-            if (!mav_modes_is_armed(mode_new))
-            {
-                state_new = MAV_STATE_STANDBY;
-            }
-            break;
-
         case MAV_STATE_EMERGENCY:
-            // Recovery is not possible -> switch off motors
-            mode_new &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+                state_current = MAV_STATE_ACTIVE;
+        break;
+        //     switch (rc_check)
+        //     {
+        //         case SIGNAL_GOOD:
+        //             if (!state_machine->state->battery_.is_low() &&
+        //                     !state_machine->state->connection_lost &&
+        //                     !state_machine->state->out_of_fence_1 &&
+        //                     !state_machine->state->out_of_fence_2 &&
+        //                     state_machine->gps->healthy())
+        //             {
+        //                 state_new = MAV_STATE_ACTIVE;
+        //                 // Reset all custom flags except collision avoidance flag
+        //                 mode_custom_new &= static_cast<mav_mode_custom_t>(0xFFFFF820);
+        //             }
+        //             break;
 
-            if (!state_machine->state->battery_.is_low())
-            {
-                // To get out of this state, if we are in the wrong use_mode_from_remote
-                if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)
-                {
-                    state_new = MAV_STATE_STANDBY;
-                }
+        //         case SIGNAL_BAD:
+        //             // Stay in critical mode
+        //             break;
 
-                switch (rc_check)
-                {
-                    case SIGNAL_GOOD:
-                        state_new = MAV_STATE_STANDBY;
-                        break;
+        //         case SIGNAL_LOST:
+        //             // If in manual mode, do emergency landing (cut off motors)
+        //             if (mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilise(mode_current)))
+        //             {
+        //                 print_util_dbg_print("Switch to Emergency mode!\r\n");
+        //                 state_new = MAV_STATE_EMERGENCY;
+        //             }
+        //             // If in another mode, stay in critical mode
+        //             // higher level navigation module will take care of coming back home
+        //             break;
+        //     }
 
-                    case SIGNAL_BAD:
-                        // Stay in emergency mode
-                        break;
+        //     //check battery level
+        //     if (state_machine->state->battery_.is_low())
+        //     {
+        //         mode_custom_new |= CUST_BATTERY_LOW;
+        //     }
+        //     else
+        //     {
+        //         mode_custom_new &= ~CUST_BATTERY_LOW;
+        //     }
 
-                    case SIGNAL_LOST:
-                        // Stay in emergency mode
-                        break;
-                }
-            }
-            break;
+        //     // check connection with GND station
+        //     if (state_machine->state->connection_lost)
+        //     {
+        //         mode_custom_new |= CUST_HEARTBEAT_LOST;
+        //     }
+        //     else
+        //     {
+        //         mode_custom_new &= ~CUST_HEARTBEAT_LOST;
+        //     }
+
+        //     // check whether out_of_fence_1
+        //     if (state_machine->state->out_of_fence_1)
+        //     {
+        //         mode_custom_new |= CUST_FENCE_1;
+        //     }
+        //     else
+        //     {
+        //         mode_custom_new &= ~CUST_FENCE_1;
+        //     }
+
+        //     // check whether out_of_fence_2
+        //     if (state_machine->state->out_of_fence_2)
+        //     {
+        //         mode_custom_new |= CUST_FENCE_2;
+        //     }
+        //     else
+        //     {
+        //         mode_custom_new &= ~CUST_FENCE_2;
+        //     }
+
+        //     // check GPS status
+        //     if (!state_machine->gps->healthy())
+        //     {
+        //         mode_custom_new |= CUST_GPS_BAD;
+        //     }
+        //     else
+        //     {
+        //         mode_custom_new &= ~CUST_GPS_BAD;
+        //     }
+
+        //     if (!mav_modes_is_armed(mode_new))
+        //     {
+        //         state_new = MAV_STATE_STANDBY;
+        //     }
+        //     break;
+
+        // case MAV_STATE_EMERGENCY:
+        //     // Recovery is not possible -> switch off motors
+        //     mode_new &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+
+        //     if (!state_machine->state->battery_.is_low())
+        //     {
+        //         // To get out of this state, if we are in the wrong use_mode_from_remote
+        //         if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)
+        //         {
+        //             state_new = MAV_STATE_STANDBY;
+        //         }
+
+        //         switch (rc_check)
+        //         {
+        //             case SIGNAL_GOOD:
+        //                 state_new = MAV_STATE_STANDBY;
+        //                 break;
+
+        //             case SIGNAL_BAD:
+        //                 // Stay in emergency mode
+        //                 break;
+
+        //             case SIGNAL_LOST:
+        //                 // Stay in emergency mode
+        //                 break;
+        //         }
+        //     }
+        //     break;
     }
 
 
