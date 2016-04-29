@@ -418,6 +418,8 @@ bool Ahrs_ekf::update(void)
 
     if (imu_.is_ready())
     {
+        ahrs_.internal_state = AHRS_READY;
+
         predict_step();
 
         update_step_acc();
@@ -426,6 +428,8 @@ bool Ahrs_ekf::update(void)
     }
     else
     {
+        ahrs_.internal_state = AHRS_LEVELING;
+
         // Follow accelerometer and magnetometer blindly during IMU calibration
         R_acc_ = Mat<3,3>(0.1f,true);
         R_mag_ = Mat<3,3>(10.0f,true);
