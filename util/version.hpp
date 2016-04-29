@@ -30,41 +30,55 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file scheduler_default_config.h
+ * \file versions.hpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief Default configuration for the scheduler
+ * \brief   Code version
  *
  ******************************************************************************/
 
 
-#ifndef SCHEDULER_DEFAULT_CONFIG_H_
-#define SCHEDULER_DEFAULT_CONFIG_H_
+#ifndef VERSIONS_HPP_
+#define VERSIONS_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "runtime/scheduler.h"
-
-
-static inline scheduler_conf_t scheduler_default_config()
+namespace version
 {
-    scheduler_conf_t conf  = {};
 
-    conf.max_task_count    = 15;
-    // conf.schedule_strategy = FIXED_PRIORITY;
-    conf.schedule_strategy = ROUND_ROBIN;
-    conf.debug             = true;
+    // Version of MAVRIC Library
+    const uint32_t mavric =   (1 << 24)   // major
+                            + (5 << 16)   // minor
+                            + (0 << 8)    // patch
+                            + (0 << 0);   // release
 
-    return conf;
-};
+    // Git hash for MAVRIC Library
+    #ifdef MAVRIC_GIT_HASH
+        const uint8_t mavric_git_hash[8] = MAVRIC_GIT_HASH;
+    #else
+        const uint8_t mavric_git_hash[8] = "unknown";
+    #endif
 
+    // Version of project
+    #ifdef PROJECT_VERSION
+        const uint32_t project = PROJECT_VERSION;
+    #else
+        const uint32_t project = 0;
+    #endif
 
-#ifdef __cplusplus
+    // Git hash of project
+    #ifdef PROJECT_GIT_HASH
+        const uint8_t project_git_hash[8] = PROJECT_GIT_HASH;
+    #else
+        const uint8_t project_git_hash[8] = "unknown";
+    #endif
+
+    // Project name
+    #ifdef PROJECT_NAME
+        const uint8_t project_name[] = PROJECT_NAME;
+    #else
+        const uint8_t project_name[] = "unknown";
+    #endif
 }
-#endif
 
-#endif // SCHEDULER_DEFAULT_CONFIG_H_
+#endif /* VERSIONS_HPP_ */

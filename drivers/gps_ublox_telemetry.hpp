@@ -58,7 +58,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool gps_ublox_telemetry_init(Gps* gps, mavlink_message_handler_t* message_handler);
+bool gps_ublox_telemetry_init(Gps* gps, Mavlink_message_handler* message_handler);
 
 
 #endif /* GPS_UBLOX_TELEMETRY_H_ */

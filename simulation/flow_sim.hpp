@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2016, MAV'RIC Development Team
+ * Copyright (c) 2009-2015, MAV'RIC Development Team
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,33 +30,45 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_estimation_default_config.h
+ * \file flow_sim.hpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *
- * \brief Default configuration for position estimation
+ * \brief   Simulated Optic Flow sensors
  *
  ******************************************************************************/
 
+#ifndef FLOW_SIM_HPP_
+#define FLOW_SIM_HPP_
 
-#ifndef POSITION_ESTIMATION_DEFAULT_CONFIG_H_
-#define POSITION_ESTIMATION_DEFAULT_CONFIG_H_
+#include "drivers/flow.hpp"
+#include "util/raytracing.hpp"
+#include "util/matrix.hpp"
+#include "simulation/dynamic_model.hpp"
 
-#include "sensing/position_estimation.hpp"
-
-static inline position_estimation_conf_t position_estimation_default_config()
+/**
+ * \brief   Interface for Optic Flow sensors
+ */
+class  Flow_sim: public Flow
 {
-    position_estimation_conf_t conf = {};
+    static const uint32_t ray_count_ = 90;
+public:
+    Flow_sim(Dynamic_model& dynamic_model_, raytracing::World& world, float orientation_azimuth = 0.0f);
 
-    conf.origin                     = {};
-    //default home location (EFPL Esplanade)
-    conf.origin.longitude           = 6.566044801857777f;
-    conf.origin.latitude            = 46.51852236174565f;
-    conf.origin.altitude            = 400.0f;
-    conf.gravity                    = 9.81f;
-    conf.fence_set                  = false;
+    bool update(void);
 
-    return conf;
+    // flow_data_t of;               ///< Optic flow vectors
+    // uint8_t     of_count;         ///< Number of optic flow vectors
+    // flow_data_t of_loc;           ///< Location of optic flow vectors
+    // uint32_t    last_update_us;   ///< Last update time in microseconds
+
+private:
+    Dynamic_model&      dynamic_model_;
+    raytracing::World&  world_;
+
+    raytracing::Ray     rays_[ray_count_];
+    Mat<2,3>            jacob_[ray_count_];
 };
 
-#endif // POSITION_ESTIMATION_DEFAULT_CONFIG_H_
+#endif /* FLOW_SIM_HPP_ */

@@ -35,84 +35,42 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief Driver for optic flow sensors
+ * \brief   Interface for Optic Flow sensors
  *
  ******************************************************************************/
 
-#ifndef FLOW_H_
-#define FLOW_H_
+#ifndef FLOW_HPP_
+#define FLOW_HPP_
 
+#include "drivers/flow.hpp"
 #include "communication/mavlink_stream.hpp"
 #include <stdint.h>
 #include "hal/common/serial.hpp"
 
-// float const filter_constant = (1./250.)/((1./100.) + (1./500.) );
-float const filter_constant = 1;
+
 /**
  * \brief   Array of 2-D optic flow vectors
  */
-typedef union
+typedef struct
 {
-    struct
-    {
-        int16_t x[125];     ///< Horizontal component
-        int16_t y[125];     ///< Vertical component
-    };
-    uint8_t data[500];      ///< Raw access to data
+    float x[125];     ///< Horizontal component
+    float y[125];     ///< Vertical component
 } flow_data_t;
 
 
 /**
- * \brief   State of encapsulated data transfer
+ * \brief   Interface for Optic Flow sensors
  */
-typedef enum
+class  Flow
 {
-    FLOW_NO_HANDSHAKE       = 0,    ///< No handshake received
-    FLOW_HANDSHAKE_DATA     = 1,    ///< Normal data will be received
-    FLOW_HANDSHAKE_METADATA = 2,    ///< Metadata will be received
-} flow_handshake_state_t;
+public:
 
+    virtual bool update(void) = 0;
 
-/**
- * \brief   Data structure for Flow
- */
-typedef struct
-{
-    Serial*             uart;               ///< Serial device
-    mavlink_stream_t    mavlink_stream;     ///< Mavlink interface using streams
-
-    uint8_t     of_count;   ///< Number of optic flow vectors
-    flow_data_t of;         ///< Optic flow vectors
-    flow_data_t of_tmp;     ///< Temporary optic flow vectors
-    flow_data_t of_loc;     ///< Location of optic flow vectors
-    flow_data_t of_loc_tmp; ///< Temporary location of optic flow vectors
-    uint16_t    n_packets;  ///< Number of encapsulated data packets expected
-    uint32_t    size_data;  ///< Total size of data to receive (in bytes)
-
-    flow_handshake_state_t  handshake_state;    ///< Indicates the current reception state for encapsulated data
-    uint32_t last_update_us;                    ///< Last update time in microseconds
-} flow_t;
-
-
-/**
- * \brief Init function
- *
- * \param flow  Pointer to flow structure
- * \param uart  Pointer to serial peripheral
- *
- * \return      Success
- */
-bool flow_init(flow_t* flow, Serial* uart);
-
-
-/**
- * \brief Update function
- *
- * \param flow      Pointer to flow structure
- *
- * \return      Success
- */
-bool flow_update(flow_t* flow);
-
+    flow_data_t of;               ///< Optic flow vectors
+    uint8_t     of_count;         ///< Number of optic flow vectors
+    flow_data_t of_loc;           ///< Location of optic flow vectors
+    uint32_t    last_update_us;   ///< Last update time in microseconds
+};
 
 #endif /* FLOW_HPP_ */

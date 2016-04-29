@@ -49,6 +49,7 @@ extern "C"
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
 #include "util/constants.h"
+#include "util/quick_trig.h"
 }
 
 
@@ -69,8 +70,8 @@ Imu::Imu(Accelerometer& accelerometer, Gyroscope& gyroscope, Magnetometer& magne
     do_magnetometer_bias_calibration_(false),
     is_ready_(false),
     dt_s_(0.004f),
-    last_update_us_(time_keeper_get_us()),
-    timestamp_gyro_stable(time_keeper_get_s())
+    last_update_us_(0.0f),
+    timestamp_gyro_stable(0.0f)
 {}
 
 
@@ -158,6 +159,12 @@ const std::array<float, 3>& Imu::mag(void) const
 }
 
 
+const std::array<float, 3>& Imu::magnetic_north(void) const
+{
+    return config_.magnetic_north;
+}
+
+
 imu_conf_t* Imu::get_config(void)
 {
     return &config_;
@@ -167,10 +174,14 @@ imu_conf_t* Imu::get_config(void)
 bool Imu::start_accelerometer_bias_calibration(void)
 {
     // Success if not already doing magnetometer calibration
+    // Since this calib needs the robot to remain still,
+    //      whereas for the magneto calib we need to move the robot
     bool success = !do_magnetometer_bias_calibration_;
 
     if (success)
     {
+        // Start calibration
+        is_ready_ = false;
         do_accelerometer_bias_calibration_      = true;
         config_.accelerometer.mean_values[X]    = scaled_acc_[X];
         config_.accelerometer.mean_values[Y]    = scaled_acc_[Y];
@@ -184,10 +195,14 @@ bool Imu::start_accelerometer_bias_calibration(void)
 bool Imu::start_gyroscope_bias_calibration(void)
 {
     // Success if not already doing magnetometer calibration
+    // Since this calib needs the robot to remain still,
+    //      whereas for the magneto calib we need to move the robot
     bool success = !do_magnetometer_bias_calibration_;
 
     if (success)
     {
+        // Start calibration
+        is_ready_ = false;
         do_gyroscope_bias_calibration_      = true;
         config_.gyroscope.mean_values[X]    = scaled_gyro_[X];
         config_.gyroscope.mean_values[Y]    = scaled_gyro_[Y];
@@ -201,12 +216,16 @@ bool Imu::start_gyroscope_bias_calibration(void)
 bool Imu::start_magnetometer_bias_calibration(void)
 {
     // Success if not already doing accelerometer or gyroscope calibration
+    // Since this calib needs the robot to be moved,
+    //      whereas for the 2 other calibs we need to have the robot still
     bool success  = true;
     success &= !do_accelerometer_bias_calibration_;
     success &= !do_gyroscope_bias_calibration_;
 
     if (success)
     {
+        // Start calibration
+        is_ready_ = false;
         do_magnetometer_bias_calibration_   = true;
         config_.magnetometer.max_values[X]  = -10000.0f;
         config_.magnetometer.max_values[Y]  = -10000.0f;
@@ -214,6 +233,35 @@ bool Imu::start_magnetometer_bias_calibration(void)
         config_.magnetometer.min_values[X]  =  10000.0f;
         config_.magnetometer.min_values[Y]  =  10000.0f;
         config_.magnetometer.min_values[Z]  =  10000.0f;
+    }
+
+    return success;
+}
+
+
+bool Imu::start_magnetic_north_calibration(void)
+{
+    // Success if not already doing magnetometer calibration
+    // Since this calib needs the robot to remain still,
+    //      whereas for the magneto calib we need to move the robot
+    bool success = !do_magnetometer_bias_calibration_;
+
+    if (success)
+    {
+        // Start calibration
+        is_ready_ = false;
+        do_magnetic_north_calibration_      = true;
+
+        // Compute amplitude of magnetic field
+        magnetic_norm_ = maths_fast_sqrt( scaled_mag_[0] * scaled_mag_[0]
+                                        + scaled_mag_[1] * scaled_mag_[1]
+                                        + scaled_mag_[2] * scaled_mag_[2] );
+
+        // Compute magnetic inclination angle as angle = pi/2 - acos( dot(acc, mag) )
+        magnetic_inclination_ = - 0.5f * PI + quick_trig_acos( (scaled_acc_[0] * scaled_mag_[0]
+                                                              + scaled_acc_[1] * scaled_mag_[1]
+                                                              + scaled_acc_[2] * scaled_mag_[2]) / magnetic_norm_ );
+
     }
 
     return success;
@@ -231,6 +279,8 @@ bool Imu::stop_accelerometer_bias_calibration(void)
     // Update biases
     if (success)
     {
+        // Stop calibration
+        is_ready_ = true;
         config_.accelerometer.bias[X] += config_.accelerometer.mean_values[X];
         config_.accelerometer.bias[Y] += config_.accelerometer.mean_values[Y];
         config_.accelerometer.bias[Z] += config_.accelerometer.mean_values[Z] - (-1.0f);
@@ -251,6 +301,8 @@ bool Imu::stop_gyroscope_bias_calibration(void)
     // Update biases
     if (success)
     {
+        // Stop calibration
+        is_ready_ = true;
         config_.gyroscope.bias[X] += config_.gyroscope.mean_values[X];
         config_.gyroscope.bias[Y] += config_.gyroscope.mean_values[Y];
         config_.gyroscope.bias[Z] += config_.gyroscope.mean_values[Z];
@@ -269,9 +321,36 @@ bool Imu::stop_magnetometer_bias_calibration(void)
     do_magnetometer_bias_calibration_ = false;
 
     // Update biases
-    config_.magnetometer.bias[X] += 0.5f * (config_.magnetometer.max_values[X] + config_.magnetometer.min_values[X]);
-    config_.magnetometer.bias[Y] += 0.5f * (config_.magnetometer.max_values[Y] + config_.magnetometer.min_values[Y]);
-    config_.magnetometer.bias[Z] += 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
+    if (success)
+    {
+        // Stop calibration
+        is_ready_ = true;
+        config_.magnetometer.bias[X] += 0.5f * (config_.magnetometer.max_values[X] + config_.magnetometer.min_values[X]);
+        config_.magnetometer.bias[Y] += 0.5f * (config_.magnetometer.max_values[Y] + config_.magnetometer.min_values[Y]);
+        config_.magnetometer.bias[Z] += 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
+    }
+
+    return success;
+}
+
+bool Imu::stop_magnetic_north_calibration(void)
+{
+    // Success if calibration is ongoing
+    bool success = do_magnetic_north_calibration_;
+
+    // Stop calibrating
+    do_magnetic_north_calibration_ = false;
+
+    // Update biases
+    if (success)
+    {
+        // Stop calibration
+        is_ready_ = true;
+
+        config_.magnetic_north[0] = magnetic_norm_ * quick_trig_cos(magnetic_inclination_);
+        config_.magnetic_north[1] = 0.0f;
+        config_.magnetic_north[2] = magnetic_norm_ * quick_trig_sin(magnetic_inclination_);
+    }
 
     return success;
 }
@@ -346,5 +425,26 @@ void Imu::do_calibration(void)
             config_.magnetometer.max_values[i]  = maths_f_max(config_.magnetometer.max_values[i], scaled_mag_[i]);
             config_.magnetometer.min_values[i]  = maths_f_min(config_.magnetometer.min_values[i], scaled_mag_[i]);
         }
+    }
+
+    // Do megnatic north calibration
+    if (do_magnetic_north_calibration_)
+    {
+        // Compute amplitude of magnetic field
+        float norm = maths_fast_sqrt( scaled_mag_[0] * scaled_mag_[0]
+                                    + scaled_mag_[1] * scaled_mag_[1]
+                                    + scaled_mag_[2] * scaled_mag_[2] );
+
+        // Apply low pass filter on the norm
+        magnetic_norm_ = (1.0f - config_.lpf_mean) * magnetic_norm_ + config_.lpf_mean * norm;
+
+        // Compute magnetic inclination angle as angle = pi/2 - acos( dot(acc, mag) )
+        float angle = - 0.5f * PI + quick_trig_acos( (scaled_acc_[0] * scaled_mag_[0]
+                                                    + scaled_acc_[1] * scaled_mag_[1]
+                                                    + scaled_acc_[2] * scaled_mag_[2]) / norm );
+
+        // Apply low pass filter on the inclination angle
+        magnetic_inclination_ = (1.0f - config_.lpf_mean) * magnetic_inclination_ + config_.lpf_mean * angle;
+
     }
 }

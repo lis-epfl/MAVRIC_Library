@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2016, MAV'RIC Development Team
+ * Copyright (c) 2009-2015, MAV'RIC Development Team
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,44 +30,82 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_communication_default_config.h
+ * \file flow.hpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief Default configuration for the mavlink communication module
+ * \brief Driver for optic flow sensors
  *
  ******************************************************************************/
 
+#ifndef FLOW_PX4_HPP_
+#define FLOW_PX4_HPP_
 
-#ifndef MAVLINK_COMMUNICATION_DEFAULT_CONFIG_H_
-#define MAVLINK_COMMUNICATION_DEFAULT_CONFIG_H_
+#include "drivers/flow.hpp"
+#include "communication/mavlink_stream.hpp"
+#include <stdint.h>
+#include "hal/common/serial.hpp"
 
-#include "communication/mavlink_communication.hpp"
+const float filter_constant = (1./250.)/((1./100.) + (1./500.) );
 
-static inline mavlink_communication_conf_t mavlink_communication_default_config()
+/**
+ * \brief   Array of 2-D optic flow vectors
+ */
+typedef union
 {
-    mavlink_communication_conf_t conf                  = {};
+    struct
+    {
+        int16_t x[125];     ///< Horizontal component
+        int16_t y[125];     ///< Vertical component
+    };
+    uint8_t data[500];      ///< Raw access to data
+} flow_px4_data_t;
 
-    conf.scheduler_config                              = {};
-    conf.scheduler_config.max_task_count               = 30;
-    conf.scheduler_config.schedule_strategy            = FIXED_PRIORITY;
-    conf.scheduler_config.debug                        = false;
-    conf.mavlink_stream_config                         = {};
-    conf.mavlink_stream_config.sysid                   = 1;
-    conf.mavlink_stream_config.compid                  = 50;
-    conf.mavlink_stream_config.debug                   = false,
-                               conf.message_handler_config                        = {};
-    conf.message_handler_config.max_msg_callback_count = 20;
-    conf.message_handler_config.max_cmd_callback_count = 20;
-    conf.message_handler_config.debug                  = false;
-    conf.onboard_parameters_config                     = {};
-    conf.onboard_parameters_config.max_param_count     = MAX_ONBOARD_PARAM_COUNT;
-    conf.onboard_parameters_config.debug               = false  ;
-    conf.max_msg_sending_count                         = 22;
 
-    return conf;
+/**
+ * \brief   State of encapsulated data transfer
+ */
+typedef enum
+{
+    FLOW_NO_HANDSHAKE       = 0,    ///< No handshake received
+    FLOW_HANDSHAKE_DATA     = 1,    ///< Normal data will be received
+    FLOW_HANDSHAKE_METADATA = 2,    ///< Metadata will be received
+} flow_px4_handshake_state_t;
+
+
+/**
+ * \brief   Driver for PX4Flow
+ */
+class  Flow_px4: public Flow
+{
+public:
+    /**
+    * \brief    Init function
+    * \param    uart    Pointer to serial peripheral
+    * \return   Success
+    */
+    Flow_px4(Serial& uart);
+
+    /**
+    * \brief    Update function
+    * \return   Success
+    */
+    bool update(void);
+
+private:
+    Serial&             uart_;               ///< Serial device
+    Mavlink_stream      mavlink_stream_;     ///< Mavlink interface using streams
+
+    flow_px4_data_t of_tmp_;        ///< Temporary optic flow vectors
+    flow_px4_data_t of_loc_tmp_;    ///< Temporary location of optic flow vectors
+    uint16_t    packet_count_;  ///< Number of encapsulated data packets expected
+    uint32_t    byte_count_;    ///< Total size of data to receive (in bytes)
+
+    flow_px4_handshake_state_t  handshake_state;    ///< Indicates the current reception state for encapsulated data
 };
 
 
-#endif // MAVLINK_COMMUNICATION_DEFAULT_CONFIG_H_
+
+
+#endif /* FLOW_PX4_HPP_ */

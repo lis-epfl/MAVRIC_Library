@@ -54,44 +54,41 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool mavlink_stream_init(mavlink_stream_t* mavlink_stream,
-                         const mavlink_stream_conf_t* config,
-                         Serial* serial)
+Mavlink_stream::Mavlink_stream(Serial& serial, const conf_t& config) : serial_(serial)
 {
-    bool success = false;
-
     // Init static variable storing number of mavlink stream instances
     static uint8_t nb_mavlink_stream_instances = 0;
     if (nb_mavlink_stream_instances < MAVLINK_COMM_NUM_BUFFERS)
     {
-        mavlink_stream->mavlink_channel =  nb_mavlink_stream_instances;
+        mavlink_channel_ =  nb_mavlink_stream_instances;
         nb_mavlink_stream_instances     += 1;
-
-        mavlink_stream->serial            = serial;
-        mavlink_stream->sysid             = config->sysid;
-        mavlink_stream->compid            = config->compid;
-        mavlink_stream->msg_available     = false;
-        mavlink_stream->debug          = config->debug;
-
-        success = true;
     }
     else
     {
         // ERROR !
-        if (config->debug == true)
+        if (config.debug == true)
         {
             print_util_dbg_print("[MAVLINK STREAM] Error: Too many instances !\r\n");
             print_util_dbg_print("[MAVLINK STREAM] Try to increase MAVLINK_COMM_NUM_BUFFERS\r\n");
         }
-
-        success = false;
     }
 
-    return success;
+    sysid_          = config.sysid;
+    compid_         = config.compid;
+    debug_          = config.debug;
+}
+
+Mavlink_stream::conf_t Mavlink_stream::default_config(void)
+{
+    Mavlink_stream::conf_t conf = {};
+    conf. sysid = 1;
+    conf.compid = 50;
+    conf.debug  = false;
+    return conf;
 }
 
 
-bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+bool Mavlink_stream::send(mavlink_message_t* msg) const
 {
     bool success = true;
     uint8_t buf[MAVLINK_MAX_PACKET_LEN];
@@ -100,9 +97,9 @@ bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message
     uint16_t len = mavlink_msg_to_send_buffer(buf, msg);
 
     // Send byte per byte
-    if (mavlink_stream->serial->writeable() >= len)
+    if (serial_.writeable() >= len)
     {
-        success &= mavlink_stream->serial->write(buf, len);
+        success &= serial_.write(buf, len);
     }
     else
     {
@@ -113,30 +110,27 @@ bool mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message
 }
 
 
-bool mavlink_stream_receive(mavlink_stream_t* mavlink_stream)
+bool Mavlink_stream::receive(Mavlink_stream::msg_received_t* rec)
 {
     uint8_t byte;
-    mavlink_received_t* rec = &mavlink_stream->rec;
 
     // Try to decode bytes until a message is complete, or there is nothing left to read
-    while ((mavlink_stream->msg_available == false) && (mavlink_stream->serial->readable() > 0))
+    while (serial_.readable() > 0)
     {
         // read one byte
-        mavlink_stream->serial->read(&byte);
+        serial_.read(&byte);
 
         // Use the byte to decode current message
-        if (mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status))
+        if (mavlink_parse_char(mavlink_channel_, byte, &rec->msg, &rec->status))
         {
-            // If message was sucessfully decoded, exit while loop
-            mavlink_stream->msg_available = true;
+            return true;
         }
     }
-
-    return mavlink_stream->msg_available;
+    return false;
 }
 
-
-void mavlink_stream_flush(mavlink_stream_t* mavlink_stream)
+void Mavlink_stream::flush()
 {
-    mavlink_stream->serial->flush();
+    serial_.flush();
 }
+==== BASE ====

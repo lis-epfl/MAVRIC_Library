@@ -57,6 +57,6 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool data_logging_telemetry_init(Data_logging* data_logging, mavlink_message_handler_t* message_handler);
+bool data_logging_telemetry_init(Data_logging* data_logging, Mavlink_message_handler* message_handler);
 
 #endif /* data_logging_TELEMETRY_HPP_ */

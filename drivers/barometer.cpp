@@ -81,7 +81,8 @@ const float& Barometer::temperature(void) const
 
 void Barometer::calibrate_bias(float current_altitude_gf)
 {
-    altitude_bias_gf_ += (altitude_gf_ - current_altitude_gf);
+    altitude_bias_gf_ = altitude_filtered - current_altitude_gf;
+    altitude_gf_ = current_altitude_gf;
 }
 
 

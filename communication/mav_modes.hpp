@@ -49,6 +49,7 @@ extern "C"
 {
 #include <stdint.h>
 #include <stdbool.h>
+#include "util/print_util.h"
 }
 
 /**
@@ -119,28 +120,10 @@ typedef enum
     CUST_HEARTBEAT_LOST = 512,                  ///< Heartbeat loss flag
     CUST_REMOTE_LOST = 1024,                    ///< Remote lost flag
     CUST_GPS_BAD = 2048                         ///< GPS loss flag
-} mav_mode_custom_t;
+} mav_mode_custom_list_t;
 
 #define mav_mode_t uint8_t
-
-/**
- * \brief  Funtion to allow logic operations on enum in C++
- */
-inline mav_mode_custom_t operator |=(mav_mode_custom_t a, mav_mode_custom_t b)
-{
-    return static_cast<mav_mode_custom_t>(static_cast<int>(a) | static_cast<int>(b));
-}
-
-inline mav_mode_custom_t operator&=(mav_mode_custom_t a, mav_mode_custom_t b)
-{
-    return static_cast<mav_mode_custom_t>(static_cast<int>(a) & static_cast<int>(b));
-}
-
-inline mav_mode_custom_t operator~(mav_mode_custom_t a)
-{
-    return static_cast<mav_mode_custom_t>(~static_cast<int>(a));
-}
-
+#define mav_mode_custom_t uint32_t
 
 /*
  * \brief Returns whether motors are armed or not
@@ -208,7 +191,7 @@ static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
  *
  * \return true if MAV is in stabilise piloting mode, false otherwise
  */
-static inline bool mav_modes_is_stabilise(const mav_mode_t mav_mode)
+static inline bool mav_modes_is_stabilize(const mav_mode_t mav_mode)
 {
     if ((mav_mode & MAV_MODE_FLAG_STABILIZE_ENABLED) == MAV_MODE_FLAG_STABILIZE_ENABLED)
     {
