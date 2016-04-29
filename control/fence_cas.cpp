@@ -334,7 +334,7 @@ bool Fence_CAS::update(void)
 		{
 			float ratio = dist[i]/this->maxsens;
 			this->repulsion[0]+=0.0;
-			rep[1]=(rep[1]>=0?1:-1);
+			rep[1]=(rep[1]>=0?1:-1); // 1 = clockwise / -1 = counterclockwise
 			print_util_dbg_print("||");
 			print_util_dbg_putfloat(rep[1],5);
 			rep[1]=1.0;
