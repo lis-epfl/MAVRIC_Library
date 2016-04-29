@@ -57,23 +57,6 @@ extern "C"
 #include "sensing/ahrs.h"
 }
 
-/**
- * \brief The AHRS EKF config structure
- */
-typedef struct
-{
-    float sigma_w_sqr;                                  ///< The square of the variance on the gyro bias
-    float sigma_r_sqr;                                  ///< The square of the variance on the quaternion
-
-    float acc_norm_noise;                               ///< The noise gain depending on the norm of the acceleration
-    float acc_multi_noise;                              ///< The multiplication factor in the computation of the noise for the accelerometer
-
-    float R_acc;                                        ///< The variance of the accelerometer
-    float R_mag;                                        ///< The variance of the magnetometer
-
-    float mag_global[3];                                ///< The value of the north vector
-}ahrs_ekf_conf_t;
-
 
 /**
  * \brief The AHRS EKF class
@@ -82,13 +65,30 @@ class Ahrs_ekf
 {
 public:
     /**
+     * \brief The AHRS EKF config structure
+     */
+    struct conf_t
+    {
+        float sigma_w_sqr;                            ///< The square of the variance on the gyro bias
+        float sigma_r_sqr;                            ///< The square of the variance on the quaternion
+
+        float acc_norm_noise;                         ///< The noise gain depending on the norm of the acceleration
+        float acc_multi_noise;                        ///< The multiplication factor in the computation of the noise for the accelerometer
+
+        float R_acc;                                  ///< The variance of the accelerometer
+        float R_mag;                                  ///< The variance of the magnetometer
+
+        float mag_global[3];                          ///< The value of the north vector
+    };
+
+    /**
      * \brief   AHRS EKF controller
      *
      * \param   config          The reference to the ahrs_ekf configuration structure
      * \param   imu             The reference to the IMU structure
      * \param   ahrs            The pointer to the AHRS structure
      */
-    Ahrs_ekf(const ahrs_ekf_conf_t& config, Imu& imu, ahrs_t* ahrs);
+    Ahrs_ekf(Imu& imu, ahrs_t* ahrs, const Ahrs_ekf::conf_t config = default_config());
 
     /**
      * \brief   Performs the EKF algorithm
@@ -101,6 +101,8 @@ public:
      * \brief   Performs the north vector calibration
      */
     void calibrating_north_vector(void);
+
+    static inline Ahrs_ekf::conf_t default_config();
 
     float mag_global_[3];                               ///< The magnetic North vector
     float mag_lpf_[3];                                  ///< The magnetometer low pass filter for North vector calibration
@@ -138,10 +140,25 @@ private:
     Mat<7,7> Id_;                                       ///< The 7x7 identity matrix
 
     ahrs_t* ahrs_;                                      ///< The pointer to the ahrs structure
-    ahrs_ekf_conf_t config_;                            ///< The config structure for the EKF module
+    conf_t config_;                                     ///< The config structure for the EKF module
 };
 
+Ahrs_ekf::conf_t Ahrs_ekf::default_config() 
+{
+    Ahrs_ekf::conf_t conf = {};
 
+    conf.sigma_w_sqr = 0.0000000001f;
+    conf.sigma_r_sqr = 0.000001f;
+    conf.R_acc = 0.004f;
+    conf.R_mag = 0.007f;
+    conf.acc_norm_noise = 0.05f;
+    conf.acc_multi_noise = 4.0f;
 
+    conf.mag_global[0] = 0.632037f;
+    conf.mag_global[1] = 0.0f;
+    conf.mag_global[2] = 1.16161f;
+
+    return conf;
+};
 
 #endif // __AHRS_EKF_HPP__

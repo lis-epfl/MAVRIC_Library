@@ -379,7 +379,7 @@ void Ahrs_ekf::update_step_mag(void)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Ahrs_ekf::Ahrs_ekf(const ahrs_ekf_conf_t& config, Imu& imu, ahrs_t* ahrs) :
+Ahrs_ekf::Ahrs_ekf(Imu& imu, ahrs_t* ahrs, const Ahrs_ekf::conf_t config):
     imu_(imu),
     calibrating_north_vector_(false),
     Id_(Mat<7,7>(1.0f,true)),

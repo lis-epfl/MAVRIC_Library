@@ -84,7 +84,7 @@
 
 
 #include "sensing/ahrs_ekf.hpp"
-#include "sensing/ahrs_ekf_default_config.hpp"
+//#include "sensing/ahrs_ekf_default_config.hpp"
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/position_estimation.hpp"
@@ -123,7 +123,7 @@ public:
       Mavlink_communication::conf_t mavlink_communication_config;
       Navigation::conf_t navigation_config;
       qfilter_conf_t qfilter_config;
-      ahrs_ekf_conf_t ahrs_ekf_config;
+      Ahrs_ekf::conf_t ahrs_ekf_config;
       Position_estimation::conf_t position_estimation_config;
       stabilisation_copter_conf_t stabilisation_copter_config;
       servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
@@ -249,7 +249,7 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
 
     conf.qfilter_config = qfilter_default_config();
 
-    conf.ahrs_ekf_config = ahrs_ekf_default_config();
+    conf.ahrs_ekf_config = Ahrs_ekf::default_config();
 
     conf.position_estimation_config = Position_estimation::default_config();
 
