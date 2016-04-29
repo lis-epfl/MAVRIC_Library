@@ -38,9 +38,9 @@
  *
  ******************************************************************************/
 
-#include "central_data.hpp"
-#include "mavlink_telemetry.hpp"
-#include "tasks.hpp"
+#include "sample_projects/Custom/central_data_custom.hpp"
+#include "sample_projects/Custom/mavlink_telemetry.hpp"
+#include "sample_projects/Custom/tasks_custom.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
@@ -53,6 +53,8 @@
 // #include "simulation/simulation.hpp"
 // #include "hal/dummy/adc_dummy.hpp"
 // #include "hal/dummy/pwm_dummy.hpp"
+
+#include "drivers/flow_px4.hpp"
 
 extern "C"
 {
@@ -68,6 +70,8 @@ extern "C"
 
 int main(void)
 {
+    bool init_success = true;
+
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
@@ -87,24 +91,30 @@ int main(void)
 
     Megafly_rev4 board = Megafly_rev4(board_config);
 
+    // Board initialisation
+    init_success &= board.init();
+
     // Create dummy GPS
     Serial_dummy serial_dummy;
     Gps_ublox gps_dummy(serial_dummy);
 
+    // Files
     fat_fs_mounting_t fat_fs_mounting;
     fat_fs_mounting_init(&fat_fs_mounting);
-
     File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
     File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
+
+    // Flow cameras
+    Flow_px4 flow_front(board.uart3);
+    Flow_px4 flow_rear(board.uart4);
 
     // -------------------------------------------------------------------------
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using real sensors
-    Central_data cd = Central_data(MAVLINK_SYS_ID,
-                                   board.imu,
+    Central_data::conf_t cd_config = Central_data::default_config(MAVLINK_SYS_ID);
+    Central_data_custom cd = Central_data_custom(board.imu,
                                    board.bmp085,
-                                   //  board.gps_ublox,
                                    gps_dummy,
                                    board.sonar_i2cxl,          // Warning:
                                    board.uart0,
@@ -118,41 +128,78 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   board.uart3,   // flow left
-                                   board.uart4);  // flow right
+                                   flow_front,   // flow left
+                                   flow_rear,
+                                   cd_config );  // flow right
 
     // -------------------------------------------------------------------------
-    // Initialisation
+    // Create simulation
     // -------------------------------------------------------------------------
-    bool init_success = true;
+    // // Simulated servos
+    // Pwm_dummy pwm[4];
+    // Servo sim_servo_0(pwm[0], servo_default_config_esc());
+    // Servo sim_servo_1(pwm[1], servo_default_config_esc());
+    // Servo sim_servo_2(pwm[2], servo_default_config_esc());
+    // Servo sim_servo_3(pwm[3], servo_default_config_esc());
 
-    // Board initialisation
-    init_success &= board.init();
+    // // Simulated dynamic model
+    // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
+    // Simulation sim                       = Simulation(sim_model);
 
+    // // Simulated battery
+    // Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
+    // Battery  sim_battery     = Battery(sim_adc_battery);
+
+    // // Simulated IMU
+    // Imu      sim_imu         = Imu(  sim.accelerometer(),
+    //                                  sim.gyroscope(),
+    //                                  sim.magnetometer() );
+
+    // // set the flag to simulation
+    // cd_config.state_config.simulation_mode = HIL_ON;
+    // Central_data cd = Central_data( MAVLINK_SYS_ID,
+    //                              sim_imu,
+    //                              sim.barometer(),
+    //                              sim.gps(),
+    //                              sim.sonar(),
+    //                              board.uart0,                // mavlink serial
+    //                              board.spektrum_satellite,
+    //                              board.green_led,
+    //                              board.file_flash,
+    //                              sim_battery,
+    //                              sim_servo_0,
+    //                              sim_servo_1,
+    //                              sim_servo_2,
+    //                              sim_servo_3 ,
+    //                              file_log,
+    //                              file_stat,
+    //                              cd_config );
 
     // Init central data
     init_success &= cd.init();
 
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
+    init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
 
     print_util_dbg_print("onboard_parameters\r\n");
     delay_ms(150);
 
     // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
+    if (onboard_parameters->read_parameters_from_storage() == false)
     {
-        onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-        init_success = false;
+       onboard_parameters->write_parameters_to_storage();
+       init_success = false;
     }
 
-    print_util_dbg_print("created new log files\r\n");
+    print_util_dbg_print("creating new log files\r\n");
+    delay_ms(150);
 
     init_success &= mavlink_telemetry_init(&cd);
 
     print_util_dbg_print("mavlink_telemetry_init\r\n");
     delay_ms(150);
 
-    cd.state.mav_state = MAV_STATE_STANDBY;
+    cd.state.mav_state_ = MAV_STATE_STANDBY;
 
     init_success &= tasks_create_tasks(&cd);
 
@@ -161,14 +208,14 @@ int main(void)
 
     if (init_success)
     {
-        piezo_speaker_quick_startup();
+       piezo_speaker_quick_startup();
 
-        // Switch off red LED
-        board.red_led.off();
+       // Switch off red LED
+       board.red_led.off();
     }
     else
     {
-        piezo_speaker_critical_error_melody();
+       piezo_speaker_critical_error_melody();
     }
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
@@ -178,7 +225,7 @@ int main(void)
     // -------------------------------------------------------------------------
     while (1 == 1)
     {
-        scheduler_update(&cd.scheduler);
+       cd.scheduler.update();
     }
 
     return 0;
