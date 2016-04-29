@@ -1556,10 +1556,12 @@ static mav_result_t waypoint_handler_set_auto_landing(mavlink_waypoint_handler_t
         print_util_dbg_print("internal_state = NAV_LAND_ON_TAG\r\n");
 
         // Set hold position point
-        waypoint_handler->waypoint_hold_coordinates.pos[0] = waypoint_handler->position_estimation->local_position.pos[0];
-        waypoint_handler->waypoint_hold_coordinates.pos[1] = waypoint_handler->position_estimation->local_position.pos[1];
-        waypoint_handler->waypoint_hold_coordinates.pos[2] = -10.0f;
+        waypoint_handler->tag_location.pos[0] = waypoint_handler->position_estimation->local_position.pos[0];
+        waypoint_handler->tag_location.pos[1] = waypoint_handler->position_estimation->local_position.pos[1];
+        waypoint_handler->tag_location.pos[2] = -10.0f;
         waypoint_handler->navigation->tag_search_altitude = waypoint_handler->waypoint_hold_coordinates.pos[2];
+        waypoint_handler->tag_location.heading = waypoint_handler->navigation->position_estimation->local_position.heading;
+        waypoint_handler->tag_location.origin = waypoint_handler->navigation->position_estimation->local_position.origin;
 
         // Set new tag search start time
         waypoint_handler->navigation->tag_search_start_time = time_keeper_get_us();
@@ -1663,7 +1665,7 @@ static void waypoint_handler_auto_land_on_tag_handler(mavlink_waypoint_handler_t
     // Set position vectors to shorten code later
     for (uint8_t i = 0; i < 3; i++)
     {
-        tag_pos[i] = camera.tag_location.pos[i];
+        tag_pos[i] = waypoint_handler->tag_location.pos[i];
         cur_pos[i] = waypoint_handler->position_estimation->local_position.pos[i];
     }
 

@@ -86,7 +86,8 @@ typedef struct
     local_position_t waypoint_coordinates;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
     local_position_t waypoint_hold_coordinates;                 ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
     local_position_t waypoint_critical_coordinates;             ///< The coordinates of the waypoint in critical state
-
+    local_position_t tag_location;                              ///< The location of the tag in the local frame
+    
     bool hold_waypoint_set;                                     ///< Flag to tell if the hold position waypoint is set
 
     bool waypoint_sending;                                      ///< Flag to tell whether waypoint are being sent
