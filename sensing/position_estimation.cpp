@@ -57,7 +57,7 @@ extern "C"
 void Position_estimation::position_integration()
 {
     int32_t i;
-    float dt = ahrs.dt;
+    float dt = ahrs.dt_s;
 
     quat_t qvel_bf, qvel;
 
@@ -112,7 +112,7 @@ void Position_estimation::position_correction()
     float gps_dt = 0.0f;
 
     //we use ahrs.dt since it is updated at the same frequency as position_estimation
-    float dt = ahrs.dt;
+    float dt = ahrs.dt_s;
 
     // // quat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
     // quat_t vel_correction = {};
@@ -366,7 +366,7 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         kp_pos_gps[i] = config.kp_pos_gps[i];
         kp_vel_gps[i] = config.kp_vel_gps[i];
     }
-    
+
     if (fence_set)
     {
         set_new_fence_origin();

@@ -175,10 +175,10 @@ void velocity_controller_copter_update(velocity_controller_copter_t* controller)
     errors[Z] = velocity_command_global[Z] - controller->pos_est->vel[Z];       // WARNING: it was multiplied by (-1) in stabilisation_copter.c
 
     // Update PID
-    thrust_vector[X] = pid_controller_update_dt(&controller->pid[X], errors[X], controller->ahrs->dt);              // should be multiplied by mass
-    thrust_vector[Y] = pid_controller_update_dt(&controller->pid[Y], errors[Y], controller->ahrs->dt);              // should be multiplied by mass
+    thrust_vector[X] = pid_controller_update_dt(&controller->pid[X], errors[X], controller->ahrs->dt_s);                // should be multiplied by mass
+    thrust_vector[Y] = pid_controller_update_dt(&controller->pid[Y], errors[Y], controller->ahrs->dt_s);                // should be multiplied by mass
     // thrust_vector[Z] = - GRAVITY + pid_controller_update_dt( &controller->pid[Z], errors[Z], controller->ahrs->dt ); // should be multiplied by mass
-    thrust_vector[Z] = pid_controller_update_dt(&controller->pid[Z], errors[Z], controller->ahrs->dt);  // should be multiplied by mass
+    thrust_vector[Z] = pid_controller_update_dt(&controller->pid[Z], errors[Z], controller->ahrs->dt_s);                // should be multiplied by mass
 
 
     aero_attitude_t attitude_yaw_inverse = coord_conventions_quat_to_aero(controller->ahrs->qe);

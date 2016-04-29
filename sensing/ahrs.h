@@ -79,8 +79,8 @@ typedef struct
     // quat_t north_vec;                    ///< The quaternion of the north vector
 
     ahrs_state_t internal_state;        ///< Leveling state of the ahrs
-    uint32_t     last_update;           ///< The time of the last IMU update in ms
-    float        dt;                    ///< The time interval between two IMU updates
+    uint32_t     last_update_s;         ///< The time of the last IMU update in ms
+    float        dt_s;                  ///< The time interval between two IMU updates
 } ahrs_t;
 
 

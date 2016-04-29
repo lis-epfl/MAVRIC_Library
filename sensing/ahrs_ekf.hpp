@@ -1,40 +1,40 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without 
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice, 
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
 /*******************************************************************************
  * \file ahrs_ekf.hpp
- * 
+ *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
- *   
+ *
  * \brief Extended Kalman Filter attitude estimation, mixing accelerometer and magnetometer
  * x[0] : bias_x
  * x[1] : bias_y
@@ -52,7 +52,7 @@
 #include "util/matrix.hpp"
 #include "sensing/imu.hpp"
 
-extern "C" 
+extern "C"
 {
 #include "sensing/ahrs.h"
 }
@@ -64,6 +64,7 @@ extern "C"
 class Ahrs_ekf
 {
 public:
+
     /**
      * \brief The AHRS EKF config structure
      */
@@ -77,18 +78,16 @@ public:
 
         float R_acc;                                  ///< The variance of the accelerometer
         float R_mag;                                  ///< The variance of the magnetometer
-
-        float mag_global[3];                          ///< The value of the north vector
     };
 
     /**
      * \brief   AHRS EKF controller
      *
-     * \param   config          The reference to the ahrs_ekf configuration structure
-     * \param   imu             The reference to the IMU structure
-     * \param   ahrs            The pointer to the AHRS structure
+     * \param   imu             IMU structure (input)
+     * \param   ahrs            Attitude estimation structure (output)
+     * \param   config          Configuration structure
      */
-    Ahrs_ekf(Imu& imu, ahrs_t* ahrs, const Ahrs_ekf::conf_t config = default_config());
+    Ahrs_ekf(const Imu& imu, ahrs_t& ahrs, const Ahrs_ekf::conf_t config = default_config());
 
     /**
      * \brief   Performs the EKF algorithm
@@ -102,12 +101,11 @@ public:
      */
     void calibrating_north_vector(void);
 
+    /**
+     * \brief   Default configuration structure
+     */
     static inline Ahrs_ekf::conf_t default_config();
 
-    float mag_global_[3];                               ///< The magnetic North vector
-    float mag_lpf_[3];                                  ///< The magnetometer low pass filter for North vector calibration
-    Imu& imu_;                                          ///< The Reference to the IMU structure
-    bool calibrating_north_vector_;                     ///< Flag to start the north vector calibration
 
 private:
 
@@ -131,6 +129,7 @@ private:
      */
     void update_step_mag(void);
 
+
     Mat<7,1> x_state_;                                  ///< The state of extended Kalman filter
     Mat<7,7> F_;                                        ///< The state transition matrix
     Mat<7,7> P_;                                        ///< The state covariance matrix
@@ -139,11 +138,13 @@ private:
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
     Mat<7,7> Id_;                                       ///< The 7x7 identity matrix
 
-    ahrs_t* ahrs_;                                      ///< The pointer to the ahrs structure
     conf_t config_;                                     ///< The config structure for the EKF module
+
+    const Imu& imu_;                                    ///< The Reference to the IMU structure
+    ahrs_t& ahrs_;                                      ///< The pointer to the ahrs structure
 };
 
-Ahrs_ekf::conf_t Ahrs_ekf::default_config() 
+Ahrs_ekf::conf_t Ahrs_ekf::default_config()
 {
     Ahrs_ekf::conf_t conf = {};
 
@@ -153,10 +154,6 @@ Ahrs_ekf::conf_t Ahrs_ekf::default_config()
     conf.R_mag = 0.007f;
     conf.acc_norm_noise = 0.05f;
     conf.acc_multi_noise = 4.0f;
-
-    conf.mag_global[0] = 0.632037f;
-    conf.mag_global[1] = 0.0f;
-    conf.mag_global[2] = 1.16161f;
 
     return conf;
 };

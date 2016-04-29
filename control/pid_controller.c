@@ -145,7 +145,7 @@ static float pid_controller_differentiate(differentiator_t* diff, float input, f
 
 bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf_t* config)
 {
-    uint32_t t = time_keeper_get_us();
+    float t = time_keeper_get_s();
 
     controller->p_gain          = config->p_gain;
     controller->clip_min        = config->clip_min;
@@ -154,10 +154,10 @@ bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf
     controller->differentiator  = config->differentiator;
     controller->soft_zone_width = config->soft_zone_width;
 
-    controller->output      = 0.0f;
-    controller->error       = 0.0f;
-    controller->last_update = t;
-    controller->dt          = 0.0f;
+    controller->output        = 0.0f;
+    controller->error         = 0.0f;
+    controller->last_update_s = t;
+    controller->dt_s          = 1.0f;
 
     return true;
 }
@@ -166,10 +166,10 @@ bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf
 
 void pid_controller_init_pass_through(pid_controller_t* controller)
 {
-    uint32_t t = time_keeper_get_us();
+    float t = time_keeper_get_s();
 
-    controller->dt = 0.0f;
-    controller->last_update = t;
+    controller->dt_s          = 1.0f;
+    controller->last_update_s = t;
 
     controller->p_gain      = 1.0f;
     controller->clip_min    = -10000.0f;
@@ -194,13 +194,13 @@ void pid_controller_reset_integrator(pid_controller_t* controller)
 
 float pid_controller_update(pid_controller_t* controller, float error)
 {
-    uint32_t t = time_keeper_get_us();
-    controller->error       = maths_soft_zone(error, controller->soft_zone_width);
-    controller->dt          = (float)(t - controller->last_update) / 1000000.0f;
-    controller->last_update = t;
+    float t                   = time_keeper_get_s();
+    controller->error         = maths_soft_zone(error, controller->soft_zone_width);
+    controller->dt_s          = t - controller->last_update_s;
+    controller->last_update_s = t;
     controller->output      = controller->p_gain * controller->error
-                              + pid_controller_integrate(&controller->integrator, controller->error, controller->dt)
-                              + pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt);
+                              + pid_controller_integrate(&controller->integrator, controller->error, controller->dt_s)
+                              + pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt_s);
 
     if (controller->output < controller->clip_min)
     {
@@ -218,12 +218,12 @@ float pid_controller_update(pid_controller_t* controller, float error)
 
 float pid_controller_update_dt(pid_controller_t* controller, float error, float dt)
 {
-    controller->error       = error;
-    controller->dt          = dt;
-    controller->last_update = time_keeper_get_us();
+    controller->error         = error;
+    controller->dt_s          = dt;
+    controller->last_update_s = time_keeper_get_s();
     controller->output      = controller->p_gain * controller->error
-                              + pid_controller_integrate(&controller->integrator, controller->error, controller->dt)
-                              + pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt);
+                              + pid_controller_integrate(&controller->integrator, controller->error, controller->dt_s)
+                              + pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt_s);
 
     if (controller->output < controller->clip_min)
     {
