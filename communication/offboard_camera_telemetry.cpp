@@ -102,10 +102,14 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 
         // Get drone height, drone height tells you the pixel dimensions on the ground, +z is down
         float drone_height = 0.0f;
+<<<<<<< HEAD
 
         // Get drone height from packet if available and reasonable
         if ((packet->param7 > 0.0f) &&                              // Packet outputs + as up, must be greater than 0
             (packet->param7 < MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM)) // Don't allow too high estimations as accuracy decreases with altitude
+=======
+        if ((packet->param7 > -900000000) && (packet->param7 < MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM)) // Get drone height from the packet if available
+>>>>>>> feature/tag_detection_read_from_obcamera
             // Restrict to drone heights that are within a set range
         {
            drone_height = -packet->param7 / 1000.0f;
@@ -179,12 +183,18 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         float tag_y_pos = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1] + drone_y_offset;
 
         // Set hold position
+<<<<<<< HEAD
         central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = tag_x_pos;
         central_data->waypoint_handler.waypoint_hold_coordinates.pos[1] = tag_y_pos;
         central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = central_data->waypoint_handler.navigation->tag_search_altitude;
 
         // Update recorded time
         camera.update_last_update_us();
+=======
+        central_data->waypoint_handler.tag_location.pos[0] = tag_x_pos;
+        central_data->waypoint_handler.tag_location.pos[1] = tag_y_pos;
+        central_data->waypoint_handler.tag_location.pos[2] = central_data->waypoint_handler.navigation->tag_search_altitude;
+>>>>>>> feature/tag_detection_read_from_obcamera
     }
     
     result = MAV_RESULT_ACCEPTED;
@@ -226,9 +236,9 @@ void offboard_camera_goal_location_telemetry_send(const Central_data* central_da
                                 msg,
                                 "Tag_Search_Goal_Location",
                                 time_keeper_get_us(),
-                                central_data->waypoint_handler.navigation->goal.pos[0] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[0],
-                                central_data->waypoint_handler.navigation->goal.pos[1] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1],
-                                //central_data->waypoint_handler.navigation->goal.pos[2] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2]);
+                                central_data->waypoint_handler.tag_location.pos[0] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[0],
+                                central_data->waypoint_handler.tag_location.pos[1] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1],
+                                //central_data->offboard_camera.tag_position.pos[2] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2]);
                                 central_data->offboard_camera.picture_count);
 }
 
