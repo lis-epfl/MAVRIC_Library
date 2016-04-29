@@ -2,6 +2,7 @@ var searchData=
 [
   ['calibrate_5fbias',['calibrate_bias',['../classBarometer.html#a4d978549f2dbc110a0e92c7d6c8a7ce4',1,'Barometer']]],
   ['calibrate_5fesc',['calibrate_esc',['../classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a',1,'Servo']]],
+  ['calibrating_5fnorth_5fvector',['calibrating_north_vector',['../classAhrs__ekf.html#a4cec1cbd87e6f6b2798ce3a8d925d92a',1,'Ahrs_ekf']]],
   ['center',['center',['../classraytracing_1_1Plane.html#a2b714d84cebdd158bf7ec596372be49e',1,'raytracing::Plane::center()'],['../classraytracing_1_1Sphere.html#a7f3f5de13589628033f6f579c030ab29',1,'raytracing::Sphere::center()'],['../classraytracing_1_1Cylinder.html#a75c08f3a0c0aa3e8a262d7df86692692',1,'raytracing::Cylinder::center()']]],
   ['central_5fdata',['Central_data',['../classCentral__data.html#a3410a3c3bc015e41c395b492947c96b9',1,'Central_data']]],
   ['change_5fperiod',['change_period',['../classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5',1,'Scheduler_task']]],

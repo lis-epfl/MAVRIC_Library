@@ -9,7 +9,9 @@
 <area shape="rect" id="node16" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="633,781,849,1091"/>
 <area shape="rect" id="node18" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="695,445,807,565"/>
 <area shape="rect" id="node20" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="701,93,819,230"/>
-<area shape="rect" id="node22" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="873,807,1127,1065"/>
-<area shape="rect" id="node24" href="$classState.html" title="The MAV state." alt="" coords="1151,694,1329,1178"/>
-<area shape="rect" id="node26" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1199,428,1281,583"/>
+<area shape="rect" id="node22" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="873,850,991,1022"/>
+<area shape="rect" id="node24" href="$structquat__t.html" title="Unit quaternion." alt="" coords="903,454,961,557"/>
+<area shape="rect" id="node26" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1015,807,1145,1065"/>
+<area shape="rect" id="node28" href="$classState.html" title="The MAV state." alt="" coords="1169,694,1348,1178"/>
+<area shape="rect" id="node30" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1217,428,1300,583"/>
 </map>

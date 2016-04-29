@@ -10,6 +10,7 @@ var searchData=
   ['adc_5favr32_5fconf_5ft',['adc_avr32_conf_t',['../structadc__avr32__conf__t.html',1,'']]],
   ['adc_5fdummy',['Adc_dummy',['../classAdc__dummy.html',1,'']]],
   ['aero_5fattitude_5ft',['aero_attitude_t',['../structaero__attitude__t.html',1,'']]],
+  ['ahrs_5fekf',['Ahrs_ekf',['../classAhrs__ekf.html',1,'']]],
   ['ahrs_5fmadgwick_5fconf_5ft',['ahrs_madgwick_conf_t',['../structahrs__madgwick__conf__t.html',1,'']]],
   ['ahrs_5fmadgwick_5ft',['ahrs_madgwick_t',['../structahrs__madgwick__t.html',1,'']]],
   ['ahrs_5ft',['ahrs_t',['../structahrs__t.html',1,'']]],

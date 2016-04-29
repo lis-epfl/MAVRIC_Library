@@ -1,6 +1,8 @@
 var searchData=
 [
   ['r_5f',['R_',['../classKalman.html#aed56eb17f9b2e79632d02d1a8ba1e11f',1,'Kalman']]],
+  ['r_5facc',['R_acc',['../structAhrs__ekf_1_1conf__t.html#ac8f6b0a369bbe3938e2fef1c27bf6923',1,'Ahrs_ekf::conf_t']]],
+  ['r_5fmag',['R_mag',['../structAhrs__ekf_1_1conf__t.html#a59eed74ea7158ec728b841224a976b37',1,'Ahrs_ekf::conf_t']]],
   ['rail',['rail',['../structadc__avr32__conf__t.html#a44f8dc5f2edc74a7235cdc06a245ac09',1,'adc_avr32_conf_t']]],
   ['rate',['rate',['../structcommand__t.html#abe03f9ba4c033a2c08b6a8238ae290dc',1,'command_t::rate()'],['../structubx__cfg__msg__rate__t.html#a67ce70a804cdc9898a00e0fbcd3ca63a',1,'ubx_cfg_msg_rate_t::rate()'],['../structubx__cfg__msg__rate__send__t.html#a1a8425c3eff13f17b0028d435eca3885',1,'ubx_cfg_msg_rate_send_t::rate()']]],
   ['rate_5fcommand',['rate_command',['../structattitude__controller__t.html#a243e855091a1466da90e802fa9fcc062',1,'attitude_controller_t']]],

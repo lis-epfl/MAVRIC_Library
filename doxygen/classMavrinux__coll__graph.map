@@ -12,13 +12,13 @@
 <area shape="rect" id="node21" href="$classFile__linux.html" title="File objects on linux platforms." alt="" coords="1069,315,1165,573"/>
 <area shape="rect" id="node23" href="$classFile.html" title="Base class for file objects." alt="" coords="1075,5,1160,264"/>
 <area shape="rect" id="node25" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1189,367,1272,521"/>
-<area shape="rect" id="node27" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1296,315,1549,573"/>
-<area shape="rect" id="node29" href="$classLed__dummy.html" title="{Led_dummy\n||+ Led_dummy()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1573,375,1685,513"/>
-<area shape="rect" id="node31" href="$classLed.html" title="{Led\n||+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1591,75,1668,195"/>
-<area shape="rect" id="node36" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1709,384,1867,504"/>
-<area shape="rect" id="node38" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1709,75,1867,195"/>
-<area shape="rect" id="node40" href="$classAdc__dummy.html" title="{Adc_dummy\n||+ Adc_dummy()\l+ init()\l+ update()\l+ voltage()\l}" alt="" coords="1891,375,2005,513"/>
-<area shape="rect" id="node42" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="1907,75,1989,195"/>
-<area shape="rect" id="node44" href="$classDynamic__model__quad__diag.html" title="Simulated dynamics of a quadcopter in diag configuration." alt="" coords="2029,332,2232,556"/>
-<area shape="rect" id="node46" href="$classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model." alt="" coords="2053,31,2208,238"/>
+<area shape="rect" id="node27" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1296,315,1427,573"/>
+<area shape="rect" id="node29" href="$classLed__dummy.html" title="{Led_dummy\n||+ Led_dummy()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1451,375,1563,513"/>
+<area shape="rect" id="node31" href="$classLed.html" title="{Led\n||+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1468,75,1545,195"/>
+<area shape="rect" id="node36" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1587,384,1744,504"/>
+<area shape="rect" id="node38" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1587,75,1744,195"/>
+<area shape="rect" id="node40" href="$classAdc__dummy.html" title="{Adc_dummy\n||+ Adc_dummy()\l+ init()\l+ update()\l+ voltage()\l}" alt="" coords="1768,375,1883,513"/>
+<area shape="rect" id="node42" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="1784,75,1867,195"/>
+<area shape="rect" id="node44" href="$classDynamic__model__quad__diag.html" title="Simulated dynamics of a quadcopter in diag configuration." alt="" coords="1907,332,2109,556"/>
+<area shape="rect" id="node46" href="$classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model." alt="" coords="1931,31,2085,238"/>
 </map>

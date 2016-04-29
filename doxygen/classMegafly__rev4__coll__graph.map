@@ -30,7 +30,7 @@
 <area shape="rect" id="node59" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="2107,368,2264,488"/>
 <area shape="rect" id="node61" href="$classAdc__avr32.html" title="Implementation of Analog to digital converters on avr32 *." alt="" coords="2283,730,2387,867"/>
 <area shape="rect" id="node63" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2293,368,2376,488"/>
-<area shape="rect" id="node65" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="2411,669,2664,928"/>
-<area shape="rect" id="node67" href="$classHmc5883l.html" title="Driver for HMC5883L magnetometer." alt="" coords="2688,687,2819,911"/>
-<area shape="rect" id="node69" href="$classMagnetometer.html" title="Abstract class for magnetometers." alt="" coords="2688,325,2819,531"/>
+<area shape="rect" id="node65" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="2411,669,2541,928"/>
+<area shape="rect" id="node67" href="$classHmc5883l.html" title="Driver for HMC5883L magnetometer." alt="" coords="2565,687,2696,911"/>
+<area shape="rect" id="node69" href="$classMagnetometer.html" title="Abstract class for magnetometers." alt="" coords="2565,325,2696,531"/>
 </map>

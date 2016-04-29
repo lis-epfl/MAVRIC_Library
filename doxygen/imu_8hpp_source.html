@@ -148,13 +148,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00066"></a>00066 
 <a name="l00070"></a><a class="code" href="structimu__sensor__config__t.html">00070</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
 <a name="l00071"></a>00071 {
-<a name="l00072"></a><a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a">00072</a>     std::array&lt;float, 3&gt; <a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>;          
-<a name="l00073"></a><a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e">00073</a>     std::array&lt;float, 3&gt; <a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>;  
-<a name="l00074"></a><a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4">00074</a>     std::array&lt;float, 3&gt;    <a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>;       
-<a name="l00075"></a><a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361">00075</a>     std::array&lt;uint8_t, 3&gt; <a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>;        
-<a name="l00076"></a><a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1">00076</a>     std::array&lt;float, 3&gt; <a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>;    
-<a name="l00077"></a><a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025">00077</a>     std::array&lt;float, 3&gt; <a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>;    
-<a name="l00078"></a><a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56">00078</a>     std::array&lt;float, 3&gt; <a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>;   
+<a name="l00072"></a><a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a">00072</a>     std::array&lt;float, 3&gt;    <a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>;         
+<a name="l00073"></a><a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e">00073</a>     std::array&lt;float, 3&gt;    <a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>; 
+<a name="l00074"></a><a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4">00074</a>     std::array&lt;float, 3&gt;    <a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>;         
+<a name="l00075"></a><a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361">00075</a>     std::array&lt;uint8_t, 3&gt;  <a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>;         
+<a name="l00076"></a><a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1">00076</a>     std::array&lt;float, 3&gt;    <a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>;   
+<a name="l00077"></a><a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025">00077</a>     std::array&lt;float, 3&gt;    <a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>;   
+<a name="l00078"></a><a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56">00078</a>     std::array&lt;float, 3&gt;    <a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>;  
 <a name="l00079"></a>00079 } <a class="code" href="structimu__sensor__config__t.html" title="Sensor configuration.">imu_sensor_config_t</a>;
 <a name="l00080"></a>00080 
 <a name="l00081"></a>00081 
@@ -163,214 +163,231 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00087"></a><a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f">00087</a>     <a class="code" href="structimu__sensor__config__t.html" title="Sensor configuration.">imu_sensor_config_t</a> <a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>;  
 <a name="l00088"></a><a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da">00088</a>     <a class="code" href="structimu__sensor__config__t.html" title="Sensor configuration.">imu_sensor_config_t</a> <a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>;      
 <a name="l00089"></a><a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0">00089</a>     <a class="code" href="structimu__sensor__config__t.html" title="Sensor configuration.">imu_sensor_config_t</a> <a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>;   
-<a name="l00090"></a><a class="code" href="structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8">00090</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8" title="Low pass filter gain for accelerometer.">lpf_acc</a>;                      
-<a name="l00091"></a><a class="code" href="structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd">00091</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd" title="Low pass filter gain for accelerometer.">lpf_gyro</a>;                     
-<a name="l00092"></a><a class="code" href="structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82">00092</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82" title="Low pass filter gain for accelerometer.">lpf_mag</a>;                      
-<a name="l00093"></a><a class="code" href="structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e">00093</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e" title="Low pass filter gain for the mean values.">lpf_mean</a>;                     
-<a name="l00094"></a><a class="code" href="structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7">00094</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7" title="Threshold on gyroscope value used to decide wheter the autopilot is held stable.">startup_calib_gyro_threshold</a>; 
-<a name="l00095"></a><a class="code" href="structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38">00095</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38" title="Duration in seconds of the automatic startup calibration of gyroscopes.">startup_calib_duration_s</a>;     
-<a name="l00096"></a>00096 } <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a>;
-<a name="l00097"></a>00097 
+<a name="l00090"></a><a class="code" href="structimu__conf__t.html#a29f30ccd3cfcb6080d6d063a948fb54d">00090</a>     std::array&lt;float, 3&gt; <a class="code" href="structimu__conf__t.html#a29f30ccd3cfcb6080d6d063a948fb54d" title="X, Y and Z components of magnetic north vector (includes magnetic inclination)">magnetic_north</a>;
+<a name="l00091"></a><a class="code" href="structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8">00091</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8" title="Low pass filter gain for accelerometer.">lpf_acc</a>;                      
+<a name="l00092"></a><a class="code" href="structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd">00092</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd" title="Low pass filter gain for accelerometer.">lpf_gyro</a>;                     
+<a name="l00093"></a><a class="code" href="structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82">00093</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82" title="Low pass filter gain for accelerometer.">lpf_mag</a>;                      
+<a name="l00094"></a><a class="code" href="structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e">00094</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e" title="Low pass filter gain for the mean values.">lpf_mean</a>;                     
+<a name="l00095"></a><a class="code" href="structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7">00095</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7" title="Threshold on gyroscope value used to decide wheter the autopilot is held stable.">startup_calib_gyro_threshold</a>; 
+<a name="l00096"></a><a class="code" href="structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38">00096</a>     <span class="keywordtype">float</span> <a class="code" href="structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38" title="Duration in seconds of the automatic startup calibration of gyroscopes.">startup_calib_duration_s</a>;     
+<a name="l00097"></a>00097 } <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a>;
 <a name="l00098"></a>00098 
-<a name="l00104"></a>00104 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a> imu_default_config(<span class="keywordtype">void</span>);
-<a name="l00105"></a>00105 
+<a name="l00099"></a>00099 
+<a name="l00105"></a>00105 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a> imu_default_config(<span class="keywordtype">void</span>);
 <a name="l00106"></a>00106 
-<a name="l00116"></a><a class="code" href="classImu.html">00116</a> <span class="keyword">class </span><a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>
-<a name="l00117"></a>00117 {
-<a name="l00118"></a>00118 <span class="keyword">public</span>:
-<a name="l00122"></a>00122     <a class="code" href="classImu.html#a4c65a502923f48c797f7548df754ff7c" title="Constructor.">Imu</a>(<a class="code" href="classAccelerometer.html" title="Abstract class for accelerometers.">Accelerometer</a>&amp; accelerometer,
-<a name="l00123"></a>00123         <a class="code" href="classGyroscope.html" title="Abstract class for gyroscopes.">Gyroscope</a>&amp; gyroscope,
-<a name="l00124"></a>00124         <a class="code" href="classMagnetometer.html" title="Abstract class for magnetometers.">Magnetometer</a>&amp; magnetometer,
-<a name="l00125"></a>00125         <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a> config = imu_default_config());
-<a name="l00126"></a>00126 
+<a name="l00107"></a>00107 
+<a name="l00117"></a><a class="code" href="classImu.html">00117</a> <span class="keyword">class </span><a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>
+<a name="l00118"></a>00118 {
+<a name="l00119"></a>00119 <span class="keyword">public</span>:
+<a name="l00123"></a>00123     <a class="code" href="classImu.html#a4c65a502923f48c797f7548df754ff7c" title="Constructor.">Imu</a>(<a class="code" href="classAccelerometer.html" title="Abstract class for accelerometers.">Accelerometer</a>&amp; accelerometer,
+<a name="l00124"></a>00124         <a class="code" href="classGyroscope.html" title="Abstract class for gyroscopes.">Gyroscope</a>&amp; gyroscope,
+<a name="l00125"></a>00125         <a class="code" href="classMagnetometer.html" title="Abstract class for magnetometers.">Magnetometer</a>&amp; magnetometer,
+<a name="l00126"></a>00126         <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a> config = imu_default_config());
 <a name="l00127"></a>00127 
-<a name="l00133"></a>00133     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#af02e49dcc3c53c8907f5abed61300b53" title="Main update.">update</a>(<span class="keywordtype">void</span>);
-<a name="l00134"></a>00134 
+<a name="l00128"></a>00128 
+<a name="l00134"></a>00134     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#af02e49dcc3c53c8907f5abed61300b53" title="Main update.">update</a>(<span class="keywordtype">void</span>);
 <a name="l00135"></a>00135 
-<a name="l00141"></a>00141     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classImu.html#a92ded52326d119f04ed38e202b340bf0" title="Get last update time in microseconds.">last_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00142"></a>00142 
+<a name="l00136"></a>00136 
+<a name="l00142"></a>00142     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classImu.html#a92ded52326d119f04ed38e202b340bf0" title="Get last update time in microseconds.">last_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00143"></a>00143 
-<a name="l00149"></a>00149     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classImu.html#abdd7a53ccd0ee2008674f0b4a2a1d58d" title="Get time between two last updates in seconds.">dt_s</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00150"></a>00150 
+<a name="l00144"></a>00144 
+<a name="l00150"></a>00150     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classImu.html#abdd7a53ccd0ee2008674f0b4a2a1d58d" title="Get time between two last updates in seconds.">dt_s</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00151"></a>00151 
-<a name="l00157"></a>00157     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classImu.html#a51e30d145a6b2970d0ff8d8c6a982329" title="Get X, Y and Z components of acceleration in g.">acc</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00158"></a>00158 
+<a name="l00152"></a>00152 
+<a name="l00158"></a>00158     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classImu.html#a51e30d145a6b2970d0ff8d8c6a982329" title="Get X, Y and Z components of acceleration in g.">acc</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00159"></a>00159 
-<a name="l00165"></a>00165     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classImu.html#a1c9d0538ed5e4c159de6b7dc1d44b3b2" title="Get X, Y and Z components of angular velocity in rad/s.">gyro</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00166"></a>00166 
+<a name="l00160"></a>00160 
+<a name="l00166"></a>00166     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classImu.html#a1c9d0538ed5e4c159de6b7dc1d44b3b2" title="Get X, Y and Z components of angular velocity in rad/s.">gyro</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00167"></a>00167 
-<a name="l00173"></a>00173     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classImu.html#a44da2e3f7ec6d731fe6187ca1a59d75a" title="Get X, Y and Z components of magnetic field (normalized)">mag</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00174"></a>00174 
-<a name="l00180"></a>00180     <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classImu.html#ae7d0dd2732b6e735a123a551eb83227c" title="Get the readiness of the IMU.">is_ready</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00181"></a>00181 
-<a name="l00189"></a>00189     <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a>* <a class="code" href="classImu.html#adc14809ab2886ccadeb35f9ede31a1fb" title="Temporary method to get pointer to configuration.">get_config</a>(<span class="keywordtype">void</span>);
+<a name="l00168"></a>00168 
+<a name="l00174"></a>00174     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classImu.html#a44da2e3f7ec6d731fe6187ca1a59d75a" title="Get X, Y and Z components of magnetic field (normalized)">mag</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00175"></a>00175 
+<a name="l00181"></a>00181     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classImu.html#a4c4e9d92bfac136f435fb85bfb8f7fbb" title="Get X, Y and Z components of magnetic north (in NED frame)">magnetic_north</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00182"></a>00182 
+<a name="l00183"></a>00183 
+<a name="l00189"></a>00189     <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classImu.html#ae7d0dd2732b6e735a123a551eb83227c" title="Get the readiness of the IMU.">is_ready</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00190"></a>00190 
-<a name="l00191"></a>00191     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00192"></a>00192     <span class="comment">//</span>
-<a name="l00193"></a>00193     <span class="comment">// TODO implement calibration</span>
-<a name="l00194"></a>00194     <span class="comment">//</span>
-<a name="l00195"></a>00195     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00196"></a>00196 
-<a name="l00209"></a>00209     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#abcebc61b38b6f1281970331a2ffab0ad" title="Start accelerometer bias calibration.">start_accelerometer_bias_calibration</a>(<span class="keywordtype">void</span>);
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211 
-<a name="l00224"></a>00224     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a6e3093edec77f8276601c5421aa61cb2" title="Start gyroscope bias calibration.">start_gyroscope_bias_calibration</a>(<span class="keywordtype">void</span>);
-<a name="l00225"></a>00225 
-<a name="l00226"></a>00226 
-<a name="l00242"></a>00242     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a39a925978d0ec683c83d942d0d70822d" title="Start magnetometer bias calibration.">start_magnetometer_bias_calibration</a>(<span class="keywordtype">void</span>);
-<a name="l00243"></a>00243 
-<a name="l00244"></a>00244 
-<a name="l00252"></a>00252     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a5455d91545d19a136b5cf92519daeec1" title="Stop accelerometer bias calibration.">stop_accelerometer_bias_calibration</a>(<span class="keywordtype">void</span>);
+<a name="l00198"></a>00198     <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a>* <a class="code" href="classImu.html#adc14809ab2886ccadeb35f9ede31a1fb" title="Temporary method to get pointer to configuration.">get_config</a>(<span class="keywordtype">void</span>);
+<a name="l00199"></a>00199 
+<a name="l00200"></a>00200     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00201"></a>00201     <span class="comment">//</span>
+<a name="l00202"></a>00202     <span class="comment">// TODO implement calibration</span>
+<a name="l00203"></a>00203     <span class="comment">//</span>
+<a name="l00204"></a>00204     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00205"></a>00205 
+<a name="l00218"></a>00218     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#abcebc61b38b6f1281970331a2ffab0ad" title="Start accelerometer bias calibration.">start_accelerometer_bias_calibration</a>(<span class="keywordtype">void</span>);
+<a name="l00219"></a>00219 
+<a name="l00220"></a>00220 
+<a name="l00233"></a>00233     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a6e3093edec77f8276601c5421aa61cb2" title="Start gyroscope bias calibration.">start_gyroscope_bias_calibration</a>(<span class="keywordtype">void</span>);
+<a name="l00234"></a>00234 
+<a name="l00235"></a>00235 
+<a name="l00251"></a>00251     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a39a925978d0ec683c83d942d0d70822d" title="Start magnetometer bias calibration.">start_magnetometer_bias_calibration</a>(<span class="keywordtype">void</span>);
+<a name="l00252"></a>00252 
 <a name="l00253"></a>00253 
-<a name="l00254"></a>00254 
-<a name="l00262"></a>00262     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a66b1dfbebdce8334d1759c829e6e8d8a" title="Stop gyroscope bias calibration.">stop_gyroscope_bias_calibration</a>(<span class="keywordtype">void</span>);
-<a name="l00263"></a>00263 
-<a name="l00264"></a>00264 
-<a name="l00273"></a>00273     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a90376d4f0fb362e2f3bfaa90d5f78f7c" title="Stop magnetometer bias calibration.">stop_magnetometer_bias_calibration</a>(<span class="keywordtype">void</span>);
-<a name="l00274"></a>00274 
-<a name="l00275"></a>00275 
-<a name="l00276"></a>00276 
-<a name="l00277"></a>00277 <span class="keyword">private</span>:
-<a name="l00285"></a>00285     <span class="keywordtype">void</span> do_startup_calibration(<span class="keywordtype">void</span>);
-<a name="l00286"></a>00286 
+<a name="l00266"></a>00266     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a34d5d16b124054ce5e9b0cedfce1672e" title="Start calibration of magnetic field inclination.">start_magnetic_north_calibration</a>(<span class="keywordtype">void</span>);
+<a name="l00267"></a>00267 
+<a name="l00268"></a>00268 
+<a name="l00276"></a>00276     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a5455d91545d19a136b5cf92519daeec1" title="Stop accelerometer bias calibration.">stop_accelerometer_bias_calibration</a>(<span class="keywordtype">void</span>);
+<a name="l00277"></a>00277 
+<a name="l00278"></a>00278 
+<a name="l00286"></a>00286     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a66b1dfbebdce8334d1759c829e6e8d8a" title="Stop gyroscope bias calibration.">stop_gyroscope_bias_calibration</a>(<span class="keywordtype">void</span>);
 <a name="l00287"></a>00287 
-<a name="l00293"></a>00293     <span class="keywordtype">void</span> do_calibration(<span class="keywordtype">void</span>);
-<a name="l00294"></a>00294 
-<a name="l00295"></a>00295 
-<a name="l00296"></a>00296     <a class="code" href="classAccelerometer.html" title="Abstract class for accelerometers.">Accelerometer</a>&amp;  accelerometer_;     
-<a name="l00297"></a>00297     <a class="code" href="classGyroscope.html" title="Abstract class for gyroscopes.">Gyroscope</a>&amp;      gyroscope_;         
-<a name="l00298"></a>00298     <a class="code" href="classMagnetometer.html" title="Abstract class for magnetometers.">Magnetometer</a>&amp;   magnetometer_;      
+<a name="l00288"></a>00288 
+<a name="l00297"></a>00297     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#a90376d4f0fb362e2f3bfaa90d5f78f7c" title="Stop magnetometer bias calibration.">stop_magnetometer_bias_calibration</a>(<span class="keywordtype">void</span>);
+<a name="l00298"></a>00298 
 <a name="l00299"></a>00299 
-<a name="l00300"></a>00300     <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a>      config_;            
-<a name="l00301"></a>00301 
-<a name="l00302"></a>00302     std::array&lt;float, 3&gt; oriented_acc_; 
-<a name="l00303"></a>00303     std::array&lt;float, 3&gt; oriented_gyro_;
-<a name="l00304"></a>00304     std::array&lt;float, 3&gt; oriented_mag_; 
-<a name="l00305"></a>00305 
-<a name="l00306"></a>00306     std::array&lt;float, 3&gt; scaled_acc_;   
-<a name="l00307"></a>00307     std::array&lt;float, 3&gt; scaled_gyro_;  
-<a name="l00308"></a>00308     std::array&lt;float, 3&gt; scaled_mag_;   
+<a name="l00307"></a>00307     <span class="keywordtype">bool</span> <a class="code" href="classImu.html#add6b6798ab385e2bddc443a54ee7734c" title="Stop calibration of magnetic inclination.">stop_magnetic_north_calibration</a>(<span class="keywordtype">void</span>);
+<a name="l00308"></a>00308 
 <a name="l00309"></a>00309 
-<a name="l00310"></a>00310     <span class="keywordtype">bool</span> do_accelerometer_bias_calibration_;    
-<a name="l00311"></a>00311     <span class="keywordtype">bool</span> do_gyroscope_bias_calibration_;        
-<a name="l00312"></a>00312     <span class="keywordtype">bool</span> do_magnetometer_bias_calibration_;     
-<a name="l00313"></a>00313     <span class="keywordtype">bool</span> is_ready_;                             
-<a name="l00314"></a>00314 
-<a name="l00315"></a>00315     <span class="keywordtype">float</span> dt_s_;                        
-<a name="l00316"></a>00316     <span class="keywordtype">float</span> last_update_us_;              
-<a name="l00317"></a>00317     <span class="keywordtype">float</span> timestamp_gyro_stable;        
-<a name="l00318"></a>00318 };
+<a name="l00310"></a>00310 <span class="keyword">private</span>:
+<a name="l00318"></a>00318     <span class="keywordtype">void</span> do_startup_calibration(<span class="keywordtype">void</span>);
 <a name="l00319"></a>00319 
 <a name="l00320"></a>00320 
-<a name="l00321"></a>00321 
-<a name="l00327"></a>00327 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a> imu_default_config()
-<a name="l00328"></a>00328 {
-<a name="l00329"></a>00329     <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a> conf = {};
-<a name="l00330"></a>00330 
-<a name="l00331"></a>00331     <span class="comment">// Accelerometer</span>
-<a name="l00332"></a>00332     <span class="comment">// Bias</span>
-<a name="l00333"></a>00333     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;      
-<a name="l00334"></a>00334     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
-<a name="l00335"></a>00335     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
-<a name="l00336"></a>00336 
-<a name="l00337"></a>00337     <span class="comment">// Scale</span>
-<a name="l00338"></a>00338     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 1.0f;      
-<a name="l00339"></a>00339     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 1.0f;
-<a name="l00340"></a>00340     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 1.0f;
-<a name="l00341"></a>00341 
-<a name="l00342"></a>00342     <span class="comment">// Axis and sign</span>
-<a name="l00343"></a>00343     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f; 
-<a name="l00344"></a>00344     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = +1.0f;
-<a name="l00345"></a>00345     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = +1.0f;
-<a name="l00346"></a>00346     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;     
-<a name="l00347"></a>00347     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
-<a name="l00348"></a>00348     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
-<a name="l00349"></a>00349 
-<a name="l00350"></a>00350     <span class="comment">// Min and max values</span>
-<a name="l00351"></a>00351     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[0] = -10000.0f;
-<a name="l00352"></a>00352     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[1] = -10000.0f;
-<a name="l00353"></a>00353     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[2] = -10000.0f;
-<a name="l00354"></a>00354     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[0] = 10000.0f;
-<a name="l00355"></a>00355     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[1] = 10000.0f;
-<a name="l00356"></a>00356     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[2] = 10000.0f;
-<a name="l00357"></a>00357     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[0] = 0.0f;
-<a name="l00358"></a>00358     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[1] = 0.0f;
-<a name="l00359"></a>00359     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[2] = 0.0f;
-<a name="l00360"></a>00360 
-<a name="l00361"></a>00361     <span class="comment">// Gyroscope</span>
-<a name="l00362"></a>00362     <span class="comment">// Bias</span>
-<a name="l00363"></a>00363     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;      
-<a name="l00364"></a>00364     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
-<a name="l00365"></a>00365     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
+<a name="l00326"></a>00326     <span class="keywordtype">void</span> do_calibration(<span class="keywordtype">void</span>);
+<a name="l00327"></a>00327 
+<a name="l00328"></a>00328 
+<a name="l00329"></a>00329     <a class="code" href="classAccelerometer.html" title="Abstract class for accelerometers.">Accelerometer</a>&amp;  accelerometer_;     
+<a name="l00330"></a>00330     <a class="code" href="classGyroscope.html" title="Abstract class for gyroscopes.">Gyroscope</a>&amp;      gyroscope_;         
+<a name="l00331"></a>00331     <a class="code" href="classMagnetometer.html" title="Abstract class for magnetometers.">Magnetometer</a>&amp;   magnetometer_;      
+<a name="l00332"></a>00332 
+<a name="l00333"></a>00333     <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a>      config_;            
+<a name="l00334"></a>00334 
+<a name="l00335"></a>00335     std::array&lt;float, 3&gt; oriented_acc_; 
+<a name="l00336"></a>00336     std::array&lt;float, 3&gt; oriented_gyro_;
+<a name="l00337"></a>00337     std::array&lt;float, 3&gt; oriented_mag_; 
+<a name="l00338"></a>00338 
+<a name="l00339"></a>00339     std::array&lt;float, 3&gt; scaled_acc_;   
+<a name="l00340"></a>00340     std::array&lt;float, 3&gt; scaled_gyro_;  
+<a name="l00341"></a>00341     std::array&lt;float, 3&gt; scaled_mag_;   
+<a name="l00342"></a>00342     <span class="keywordtype">float</span> magnetic_inclination_;        
+<a name="l00343"></a>00343     <span class="keywordtype">float</span> magnetic_norm_;               
+<a name="l00344"></a>00344 
+<a name="l00345"></a>00345     <span class="keywordtype">bool</span> do_accelerometer_bias_calibration_;    
+<a name="l00346"></a>00346     <span class="keywordtype">bool</span> do_gyroscope_bias_calibration_;        
+<a name="l00347"></a>00347     <span class="keywordtype">bool</span> do_magnetometer_bias_calibration_;     
+<a name="l00348"></a>00348     <span class="keywordtype">bool</span> do_magnetic_north_calibration_;        
+<a name="l00349"></a>00349     <span class="keywordtype">bool</span> is_ready_;                             
+<a name="l00350"></a>00350 
+<a name="l00351"></a>00351     <span class="keywordtype">float</span> dt_s_;                        
+<a name="l00352"></a>00352     <span class="keywordtype">float</span> last_update_us_;              
+<a name="l00353"></a>00353     <span class="keywordtype">float</span> timestamp_gyro_stable;        
+<a name="l00354"></a>00354 };
+<a name="l00355"></a>00355 
+<a name="l00356"></a>00356 
+<a name="l00357"></a>00357 
+<a name="l00363"></a>00363 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a> imu_default_config()
+<a name="l00364"></a>00364 {
+<a name="l00365"></a>00365     <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a> conf = {};
 <a name="l00366"></a>00366 
-<a name="l00367"></a>00367     <span class="comment">// Scale</span>
-<a name="l00368"></a>00368     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 1.0f;      
-<a name="l00369"></a>00369     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 1.0f;
-<a name="l00370"></a>00370     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 1.0f;
-<a name="l00371"></a>00371 
-<a name="l00372"></a>00372     <span class="comment">// Axis and sign</span>
-<a name="l00373"></a>00373     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f; 
-<a name="l00374"></a>00374     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = +1.0f;
-<a name="l00375"></a>00375     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = +1.0f;
-<a name="l00376"></a>00376     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;     
-<a name="l00377"></a>00377     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
-<a name="l00378"></a>00378     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
-<a name="l00379"></a>00379 
-<a name="l00380"></a>00380     <span class="comment">// Min and max values</span>
-<a name="l00381"></a>00381     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[0] = -10000.0f;
-<a name="l00382"></a>00382     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[1] = -10000.0f;
-<a name="l00383"></a>00383     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[2] = -10000.0f;
-<a name="l00384"></a>00384     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[0] = 10000.0f;
-<a name="l00385"></a>00385     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[1] = 10000.0f;
-<a name="l00386"></a>00386     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[2] = 10000.0f;
-<a name="l00387"></a>00387     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[0] = 0.0f;
-<a name="l00388"></a>00388     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[1] = 0.0f;
-<a name="l00389"></a>00389     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[2] = 0.0f;
-<a name="l00390"></a>00390 
-<a name="l00391"></a>00391     <span class="comment">// Magnetometer</span>
-<a name="l00392"></a>00392     <span class="comment">// Bias</span>
-<a name="l00393"></a>00393     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;       
-<a name="l00394"></a>00394     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
-<a name="l00395"></a>00395     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
+<a name="l00367"></a>00367     <span class="comment">// Accelerometer</span>
+<a name="l00368"></a>00368     <span class="comment">// Bias</span>
+<a name="l00369"></a>00369     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;      
+<a name="l00370"></a>00370     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
+<a name="l00371"></a>00371     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
+<a name="l00372"></a>00372 
+<a name="l00373"></a>00373     <span class="comment">// Scale</span>
+<a name="l00374"></a>00374     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 1.0f;      
+<a name="l00375"></a>00375     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 1.0f;
+<a name="l00376"></a>00376     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 1.0f;
+<a name="l00377"></a>00377 
+<a name="l00378"></a>00378     <span class="comment">// Axis and sign</span>
+<a name="l00379"></a>00379     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f; 
+<a name="l00380"></a>00380     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = +1.0f;
+<a name="l00381"></a>00381     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = +1.0f;
+<a name="l00382"></a>00382     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;     
+<a name="l00383"></a>00383     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
+<a name="l00384"></a>00384     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
+<a name="l00385"></a>00385 
+<a name="l00386"></a>00386     <span class="comment">// Min and max values</span>
+<a name="l00387"></a>00387     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[0] = -10000.0f;
+<a name="l00388"></a>00388     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[1] = -10000.0f;
+<a name="l00389"></a>00389     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[2] = -10000.0f;
+<a name="l00390"></a>00390     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[0] = 10000.0f;
+<a name="l00391"></a>00391     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[1] = 10000.0f;
+<a name="l00392"></a>00392     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[2] = 10000.0f;
+<a name="l00393"></a>00393     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[0] = 0.0f;
+<a name="l00394"></a>00394     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[1] = 0.0f;
+<a name="l00395"></a>00395     conf.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[2] = 0.0f;
 <a name="l00396"></a>00396 
-<a name="l00397"></a>00397     <span class="comment">// Scale</span>
-<a name="l00398"></a>00398     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 1.0f;       
-<a name="l00399"></a>00399     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 1.0f;
-<a name="l00400"></a>00400     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 1.0f;
-<a name="l00401"></a>00401 
-<a name="l00402"></a>00402     <span class="comment">// Axis and sign</span>
-<a name="l00403"></a>00403     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f;  
-<a name="l00404"></a>00404     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = +1.0f;
-<a name="l00405"></a>00405     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = +1.0f;
-<a name="l00406"></a>00406     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;      
-<a name="l00407"></a>00407     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
-<a name="l00408"></a>00408     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
-<a name="l00409"></a>00409 
-<a name="l00410"></a>00410     <span class="comment">// Min and max values</span>
-<a name="l00411"></a>00411     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[0] = -10000.0f;
-<a name="l00412"></a>00412     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[1] = -10000.0f;
-<a name="l00413"></a>00413     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[2] = -10000.0f;
-<a name="l00414"></a>00414     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[0] = 10000.0f;
-<a name="l00415"></a>00415     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[1] = 10000.0f;
-<a name="l00416"></a>00416     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[2] = 10000.0f;
-<a name="l00417"></a>00417     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[0] = 0.0f;
-<a name="l00418"></a>00418     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[1] = 0.0f;
-<a name="l00419"></a>00419     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[2] = 0.0f;
-<a name="l00420"></a>00420 
-<a name="l00421"></a>00421     <span class="comment">// Low pass filter</span>
-<a name="l00422"></a>00422     conf.<a class="code" href="structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8" title="Low pass filter gain for accelerometer.">lpf_acc</a>    = 0.1f;
-<a name="l00423"></a>00423     conf.<a class="code" href="structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd" title="Low pass filter gain for accelerometer.">lpf_gyro</a>   = 0.05f;
-<a name="l00424"></a>00424     conf.<a class="code" href="structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82" title="Low pass filter gain for accelerometer.">lpf_mag</a>    = 0.1f;
-<a name="l00425"></a>00425     conf.<a class="code" href="structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e" title="Low pass filter gain for the mean values.">lpf_mean</a>   = 0.01f;
+<a name="l00397"></a>00397     <span class="comment">// Gyroscope</span>
+<a name="l00398"></a>00398     <span class="comment">// Bias</span>
+<a name="l00399"></a>00399     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;      
+<a name="l00400"></a>00400     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
+<a name="l00401"></a>00401     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
+<a name="l00402"></a>00402 
+<a name="l00403"></a>00403     <span class="comment">// Scale</span>
+<a name="l00404"></a>00404     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 1.0f;      
+<a name="l00405"></a>00405     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 1.0f;
+<a name="l00406"></a>00406     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 1.0f;
+<a name="l00407"></a>00407 
+<a name="l00408"></a>00408     <span class="comment">// Axis and sign</span>
+<a name="l00409"></a>00409     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f; 
+<a name="l00410"></a>00410     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = +1.0f;
+<a name="l00411"></a>00411     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = +1.0f;
+<a name="l00412"></a>00412     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;     
+<a name="l00413"></a>00413     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
+<a name="l00414"></a>00414     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
+<a name="l00415"></a>00415 
+<a name="l00416"></a>00416     <span class="comment">// Min and max values</span>
+<a name="l00417"></a>00417     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[0] = -10000.0f;
+<a name="l00418"></a>00418     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[1] = -10000.0f;
+<a name="l00419"></a>00419     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[2] = -10000.0f;
+<a name="l00420"></a>00420     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[0] = 10000.0f;
+<a name="l00421"></a>00421     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[1] = 10000.0f;
+<a name="l00422"></a>00422     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[2] = 10000.0f;
+<a name="l00423"></a>00423     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[0] = 0.0f;
+<a name="l00424"></a>00424     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[1] = 0.0f;
+<a name="l00425"></a>00425     conf.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[2] = 0.0f;
 <a name="l00426"></a>00426 
-<a name="l00427"></a>00427     <span class="comment">// startup calibration length</span>
-<a name="l00428"></a>00428     conf.<a class="code" href="structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7" title="Threshold on gyroscope value used to decide wheter the autopilot is held stable.">startup_calib_gyro_threshold</a> = 0.5f;
-<a name="l00429"></a>00429     conf.<a class="code" href="structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38" title="Duration in seconds of the automatic startup calibration of gyroscopes.">startup_calib_duration_s</a>     = 10.0f;
-<a name="l00430"></a>00430 
-<a name="l00431"></a>00431     <span class="keywordflow">return</span> conf;
-<a name="l00432"></a>00432 }
-<a name="l00433"></a>00433 
-<a name="l00434"></a>00434 <span class="preprocessor">#endif </span><span class="comment">/* IMU_HPP_ */</span>
+<a name="l00427"></a>00427     <span class="comment">// Magnetometer</span>
+<a name="l00428"></a>00428     <span class="comment">// Bias</span>
+<a name="l00429"></a>00429     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;       
+<a name="l00430"></a>00430     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
+<a name="l00431"></a>00431     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
+<a name="l00432"></a>00432 
+<a name="l00433"></a>00433     <span class="comment">// Scale</span>
+<a name="l00434"></a>00434     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 1.0f;       
+<a name="l00435"></a>00435     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 1.0f;
+<a name="l00436"></a>00436     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 1.0f;
+<a name="l00437"></a>00437 
+<a name="l00438"></a>00438     <span class="comment">// Axis and sign</span>
+<a name="l00439"></a>00439     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f;  
+<a name="l00440"></a>00440     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = +1.0f;
+<a name="l00441"></a>00441     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = +1.0f;
+<a name="l00442"></a>00442     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;      
+<a name="l00443"></a>00443     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
+<a name="l00444"></a>00444     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
+<a name="l00445"></a>00445 
+<a name="l00446"></a>00446     <span class="comment">// Min and max values</span>
+<a name="l00447"></a>00447     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[0] = -10000.0f;
+<a name="l00448"></a>00448     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[1] = -10000.0f;
+<a name="l00449"></a>00449     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a9410ab05f261963644e622d148dfb8f1" title="Used only during calibration: max scaled value.">max_values</a>[2] = -10000.0f;
+<a name="l00450"></a>00450     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[0] = 10000.0f;
+<a name="l00451"></a>00451     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[1] = 10000.0f;
+<a name="l00452"></a>00452     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#aa9528554f0d8e43f6a483e677d184025" title="Used only during calibration: min scaled value.">min_values</a>[2] = 10000.0f;
+<a name="l00453"></a>00453     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[0] = 0.0f;
+<a name="l00454"></a>00454     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[1] = 0.0f;
+<a name="l00455"></a>00455     conf.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a7874f284291922820a112dec8a0f3b56" title="Used only during calibration: mean scaled value.">mean_values</a>[2] = 0.0f;
+<a name="l00456"></a>00456 
+<a name="l00457"></a>00457     <span class="comment">// Magnetic north (default value in Lausanne: 62° inclination)</span>
+<a name="l00458"></a>00458     conf.<a class="code" href="structimu__conf__t.html#a29f30ccd3cfcb6080d6d063a948fb54d" title="X, Y and Z components of magnetic north vector (includes magnetic inclination)">magnetic_north</a>[0] = 0.46947156f;   <span class="comment">// cos(62°)</span>
+<a name="l00459"></a>00459     conf.<a class="code" href="structimu__conf__t.html#a29f30ccd3cfcb6080d6d063a948fb54d" title="X, Y and Z components of magnetic north vector (includes magnetic inclination)">magnetic_north</a>[1] = 0.0f;
+<a name="l00460"></a>00460     conf.<a class="code" href="structimu__conf__t.html#a29f30ccd3cfcb6080d6d063a948fb54d" title="X, Y and Z components of magnetic north vector (includes magnetic inclination)">magnetic_north</a>[2] = 0.88294759f;   <span class="comment">// sin(62°)</span>
+<a name="l00461"></a>00461 
+<a name="l00462"></a>00462     <span class="comment">// Low pass filter</span>
+<a name="l00463"></a>00463     conf.<a class="code" href="structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8" title="Low pass filter gain for accelerometer.">lpf_acc</a>    = 0.1f;
+<a name="l00464"></a>00464     conf.<a class="code" href="structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd" title="Low pass filter gain for accelerometer.">lpf_gyro</a>   = 0.05f;
+<a name="l00465"></a>00465     conf.<a class="code" href="structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82" title="Low pass filter gain for accelerometer.">lpf_mag</a>    = 0.1f;
+<a name="l00466"></a>00466     conf.<a class="code" href="structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e" title="Low pass filter gain for the mean values.">lpf_mean</a>   = 0.01f;
+<a name="l00467"></a>00467 
+<a name="l00468"></a>00468     <span class="comment">// startup calibration length</span>
+<a name="l00469"></a>00469     conf.<a class="code" href="structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7" title="Threshold on gyroscope value used to decide wheter the autopilot is held stable.">startup_calib_gyro_threshold</a> = 0.5f;
+<a name="l00470"></a>00470     conf.<a class="code" href="structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38" title="Duration in seconds of the automatic startup calibration of gyroscopes.">startup_calib_duration_s</a>     = 10.0f;
+<a name="l00471"></a>00471 
+<a name="l00472"></a>00472     <span class="keywordflow">return</span> conf;
+<a name="l00473"></a>00473 }
+<a name="l00474"></a>00474 
+<a name="l00475"></a>00475 <span class="preprocessor">#endif </span><span class="comment">/* IMU_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -389,7 +406,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 29 2016 14:00:24 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 29 2016 15:29:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

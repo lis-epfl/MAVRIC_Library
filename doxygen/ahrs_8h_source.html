@@ -155,8 +155,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00079"></a>00079     <span class="comment">// quat_t north_vec;                    ///&lt; The quaternion of the north vector</span>
 <a name="l00080"></a>00080 
 <a name="l00081"></a><a class="code" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0">00081</a>     ahrs_state_t <a class="code" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0" title="Leveling state of the ahrs.">internal_state</a>;        
-<a name="l00082"></a><a class="code" href="structahrs__t.html#aa122262b513cbfd29de7a90e9a8175ca">00082</a>     uint32_t     <a class="code" href="structahrs__t.html#aa122262b513cbfd29de7a90e9a8175ca" title="The time of the last IMU update in ms.">last_update</a>;           
-<a name="l00083"></a><a class="code" href="structahrs__t.html#a09ac8b47ce59461e361697668cd7c3b7">00083</a>     <span class="keywordtype">float</span>        <a class="code" href="structahrs__t.html#a09ac8b47ce59461e361697668cd7c3b7" title="The time interval between two IMU updates.">dt</a>;                    
+<a name="l00082"></a><a class="code" href="structahrs__t.html#a7b42987de5731cdf7672657f53606f30">00082</a>     <span class="keywordtype">float</span>        <a class="code" href="structahrs__t.html#a7b42987de5731cdf7672657f53606f30" title="The time of the last IMU update in ms.">last_update_s</a>;            
+<a name="l00083"></a><a class="code" href="structahrs__t.html#a1e7dd06d26de9010ae5639f2dd763126">00083</a>     <span class="keywordtype">float</span>        <a class="code" href="structahrs__t.html#a1e7dd06d26de9010ae5639f2dd763126" title="The time interval between two IMU updates.">dt_s</a>;                  
 <a name="l00084"></a>00084 } <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>;
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086 
@@ -192,7 +192,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 29 2016 14:00:24 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 29 2016 15:29:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

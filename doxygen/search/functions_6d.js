@@ -4,6 +4,7 @@ var searchData=
   ['mag_5fx',['mag_X',['../classHmc5883l.html#aa8dcfdf7450081d61fad3aabad5d80d1',1,'Hmc5883l::mag_X()'],['../classMagnetometer.html#ac32e10370b7dd62bdeb4522c8c3520d0',1,'Magnetometer::mag_X()'],['../classMagnetometer__sim.html#a9cbb1bc9a324d311b4344e0c03441425',1,'Magnetometer_sim::mag_X()']]],
   ['mag_5fy',['mag_Y',['../classHmc5883l.html#a4b6a1f55d99c8328430e431747a0b911',1,'Hmc5883l::mag_Y()'],['../classMagnetometer.html#a5419734fba94a893f8fc3546e7c74f6e',1,'Magnetometer::mag_Y()'],['../classMagnetometer__sim.html#ab8133debea59e905f6f8e758cee4de31',1,'Magnetometer_sim::mag_Y()']]],
   ['mag_5fz',['mag_Z',['../classHmc5883l.html#ae49a59255bca590132ed8d3b33db5c2f',1,'Hmc5883l::mag_Z()'],['../classMagnetometer.html#a4061856c6672b53c14e522a99d1bf32d',1,'Magnetometer::mag_Z()'],['../classMagnetometer__sim.html#ae3e888034388e06e4dd793579e7aee58',1,'Magnetometer_sim::mag_Z()']]],
+  ['magnetic_5fnorth',['magnetic_north',['../classImu.html#a4c4e9d92bfac136f435fb85bfb8f7fbb',1,'Imu']]],
   ['magnetometer',['magnetometer',['../classSimulation.html#ac45b5eab0d4031225b402079d941823b',1,'Simulation']]],
   ['magnetometer_5fsim',['Magnetometer_sim',['../classMagnetometer__sim.html#a6c85e1deb5c9b68cf8e595ae276056af',1,'Magnetometer_sim']]],
   ['manual_5fcontrol',['Manual_control',['../classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b',1,'Manual_control']]],

@@ -2,6 +2,8 @@ var searchData=
 [
   ['above_5fground',['above_ground',['../structaltitude__t.html#a69e78114ff2707b4c0c851287c7b208d',1,'altitude_t']]],
   ['above_5fsea',['above_sea',['../structaltitude__t.html#aebebc045369813f9db1711973d1fc10e',1,'altitude_t']]],
+  ['acc_5fmulti_5fnoise',['acc_multi_noise',['../structAhrs__ekf_1_1conf__t.html#a2d37c89f7d801eaa935f16dee06a35b3',1,'Ahrs_ekf::conf_t']]],
+  ['acc_5fnorm_5fnoise',['acc_norm_noise',['../structAhrs__ekf_1_1conf__t.html#a36cabd431a469abf42bafa07d626e458',1,'Ahrs_ekf::conf_t']]],
   ['accelerometer',['accelerometer',['../structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f',1,'imu_conf_t']]],
   ['accumulator',['accumulator',['../structintegrator__t.html#ac156d57488fae220e95c78232201e116',1,'integrator_t']]],
   ['accuracy_5fstatus',['accuracy_status',['../structgps__t.html#a146aa256fe962a62979c63f668196c11',1,'gps_t']]],
@@ -10,6 +12,7 @@ var searchData=
   ['age',['age',['../structubx__nav__dgps__t.html#af105bf6a7427425404336b94aed579f6',1,'ubx_nav_dgps_t']]],
   ['age_5fc',['age_c',['../structubx__nav__dgps__t.html#a0fdef1ab32a45544b89fbbd1214a6e5d',1,'ubx_nav_dgps_t']]],
   ['ahrs',['ahrs',['../structhud__telemetry__structure__t.html#a6e4bd43fd858a86d66c0c2414d5242a8',1,'hud_telemetry_structure_t::ahrs()'],['../structattitude__controller__t.html#aed54250d8ad11b4345150fe001dd2e45',1,'attitude_controller_t::ahrs()'],['../structattitude__controller__p2__t.html#afb04d52906602036af7ebc27cf35daba',1,'attitude_controller_p2_t::ahrs()'],['../structattitude__error__estimator__t.html#abdb541e4bf6dacd727de5d171e0063ca',1,'attitude_error_estimator_t::ahrs()'],['../structstabilisation__copter__t.html#ae39f04db9005e2ba44828b41f5bd19e6',1,'stabilisation_copter_t::ahrs()'],['../structstabilisation__ywing__t.html#a84c6221d8d45b4a04ca0f467e211951a',1,'stabilisation_ywing_t::ahrs()'],['../structvelocity__controller__copter__t.html#aa4bde5e260a76c16daa342a98e1568d2',1,'velocity_controller_copter_t::ahrs()'],['../structaudio__t.html#a87e9d96babf38a2edd2eab0cf83d29fd',1,'audio_t::ahrs()'],['../structcurvace__t.html#ad9afa07b9f26a699b097db5865c9f6df',1,'curvace_t::ahrs()'],['../classCentral__data.html#afe742c039f320c7fd634467d35541e13',1,'Central_data::ahrs()'],['../structqfilter__t.html#add4a07787495611044f7441c4c83e681',1,'qfilter_t::ahrs()']]],
+  ['ahrs_5f',['ahrs_',['../classState__machine.html#a99e83dd9aaaf364aefb1fbd1f0aff8db',1,'State_machine']]],
   ['air_5fdensity',['air_density',['../structdynamic__model__quad__diag__conf__t.html#a3e15fab9940be3c8ca4106708604e337',1,'dynamic_model_quad_diag_conf_t']]],
   ['airspeed',['airspeed',['../structairspeed__analog__t.html#a7e9796a78f9e004a7947c5917780c005',1,'airspeed_analog_t']]],
   ['all',['all',['../unioncurvace__raw__data__t.html#a03210fd50774dd5539b8bc126d0925d7',1,'curvace_raw_data_t::all()'],['../unioncurvace__data__t.html#ac2ba3b8564151852ba29aec89105402a',1,'curvace_data_t::all()'],['../unioncurvace__roi__coord__t.html#a5d75a63997f4b5801918e58a9e4c4049',1,'curvace_roi_coord_t::all()'],['../unioncurvace__calibration__matrix__t.html#a0c3dbf977ea12aa00c7f2dfcf8aa7e6c',1,'curvace_calibration_matrix_t::all()']]],

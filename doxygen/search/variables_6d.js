@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['magnetic_5fnorth',['magnetic_north',['../structimu__conf__t.html#a29f30ccd3cfcb6080d6d063a948fb54d',1,'imu_conf_t']]],
   ['magnetometer',['magnetometer',['../structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0',1,'imu_conf_t']]],
   ['mak2',['mak2',['../structubx__cfg__nav__expert__settings__t.html#a03ddf27e7a4a029a3fb7a24a5865599b',1,'ubx_cfg_nav_expert_settings_t']]],
   ['manual_5fcontrol',['manual_control',['../classCentral__data.html#a4ebebc34142e1ebf0853109d197d6669',1,'Central_data']]],

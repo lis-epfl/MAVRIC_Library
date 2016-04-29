@@ -36,6 +36,8 @@ var searchData=
   ['servos',['servos',['../structservos__telemetry__t.html#a27d77773a1c11ea34ec90adf97eefd4b',1,'servos_telemetry_t']]],
   ['setpoints',['setpoints',['../structadaptive__parameter__t.html#a5226a7119476dbfa9e3da11aa798386a',1,'adaptive_parameter_t']]],
   ['setvalues',['setvalues',['../structadaptive__parameter__t.html#af24f52ebf7fc9d40bead05710d23bc29',1,'adaptive_parameter_t']]],
+  ['sigma_5fr_5fsqr',['sigma_r_sqr',['../structAhrs__ekf_1_1conf__t.html#a0a823d587bfcc11d8b3a5b9eecafff48',1,'Ahrs_ekf::conf_t']]],
+  ['sigma_5fw_5fsqr',['sigma_w_sqr',['../structAhrs__ekf_1_1conf__t.html#a3088f1e150ec081b2938c68a1cbdd622',1,'Ahrs_ekf::conf_t']]],
   ['sign',['sign',['../structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4',1,'imu_sensor_config_t']]],
   ['signal_5fquality',['signal_quality',['../structremote__t.html#a5eb14a352a516d5d95e99946100b8db3',1,'remote_t']]],
   ['simulation_5fmode',['simulation_mode',['../structState_1_1conf__t.html#a98d578d8174b3825674faa2726e9191e',1,'State::conf_t']]],
