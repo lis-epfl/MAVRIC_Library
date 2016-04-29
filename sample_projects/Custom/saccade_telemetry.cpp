@@ -63,7 +63,11 @@ void saccade_telemetry_send_vector(const Saccade_controller* Saccade_controller,
                                  msg,
                                  "CAN and CAD",
                                  time_keeper_get_us(),
-                                 Saccade_controller->can_,
-                                 Saccade_controller->cad_,
-                                 0);
+                                 Saccade_controller->flow_front_.of.x[20],
+                                 1000*(Saccade_controller->derotation_constant_*Saccade_controller->ahrs_.angular_speed[2]),
+                                 (Saccade_controller->flow_front_.of.x[20] - 1000*(Saccade_controller->derotation_constant_*Saccade_controller->ahrs_.angular_speed[2])));
+                               
+                                 // Saccade_controller->can_,
+                                 // Saccade_controller->cad_,
+                                 // 0);
 }

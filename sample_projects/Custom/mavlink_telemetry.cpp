@@ -347,10 +347,17 @@ void flow_telemetry_send(const Central_data* cd, const mavlink_stream_t* mavlink
               // right 41 to 78
               of[i] = cd->flow_right_.of.x[i + 120 - N_points];
           }
-          for (uint32_t i = 0; i < 180 - 2 * N_points; i++)
+
+          for (uint32_t i = 0; i < 2; i++)
           {
               
-              of[i + 2 * N_points - 120] = 0.0f;
+              of[i + 2 * N_points - 120] = cd->ahrs.angular_speed[2];
+          }
+
+          for (uint32_t i = 0; i < 180 - 2 * N_points-2; i++)
+          {
+              
+              of[i + 2 * N_points - 120 + 1] = 0.0f;
           }
       break;
     }
@@ -443,7 +450,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
 
     //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           &central_data->flow_front_,             MAVLINK_MSG_ID_OPTICAL_FLOW);
-    init_success &= mavlink_communication_add_msg_send(mavlink_communication,  10000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           central_data,             MAVLINK_MSG_ID_OPTICAL_FLOW);
+    //init_success &= mavlink_communication_add_msg_send(mavlink_communication,  10000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&flow_telemetry_send,                                           central_data,             MAVLINK_MSG_ID_OPTICAL_FLOW);
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&saccade_telemetry_send_vector,                                 &central_data->saccade_controller_,     MAVLINK_MSG_ID_DEBUG_VECT);   // ID 24
     init_success &= mavlink_communication_add_msg_send(mavlink_communication,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (mavlink_send_msg_function_t)&altitude_estimation_telemetry_send,                            &central_data->altitude_estimation_,    MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV           );// ID 64
 

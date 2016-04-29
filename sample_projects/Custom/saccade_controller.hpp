@@ -49,10 +49,12 @@ extern "C"
 #include "util/coord_conventions.h"
 #include "util/quick_trig.h"
 #include "sensing/ahrs.h"
+
 }
 
 #include "drivers/flow.hpp"
 
+#include "util/buffer.hpp"
 #include "hal/common/time_keeper.hpp"
 
 /**
@@ -138,6 +140,8 @@ public:
     float                       threshold_;                         ///< Threshold for importance of CAN
     float                       goal_direction_;                    ///< Goal direction for drone
     float                       azimuth_ [2 * N_points];            ///< Table of azimuthal angles
+    float                       derotated_flow_front_ [N_points];  ///< Table of Relative nearness
+    float                       derotated_flow_back_ [N_points];  ///< Table of Relative nearness
     float                       relative_nearness_ [2 * N_points];  ///< Table of Relative nearness
     float                       inv_sin_azimuth_ [2 * N_points];
     float                       cos_azimuth_[2 * N_points];
@@ -146,6 +150,8 @@ public:
     float                       cad_;
     float                       intersaccade_time_;
     float                       weighted_function_;
+    float                       derotation_constant_;
+    float                       last_derotation_yaw_velocity_;
 
     uint64_t                    last_saccade_;
 
@@ -160,6 +166,7 @@ public:
 
     saccade_state_t             saccade_state_;                     ///< Saccade modes (intersaccade, saccade, presaccade)
 
+    Buffer_tpl<3,float>         yaw_velocity_buffer_;
 };
 
 

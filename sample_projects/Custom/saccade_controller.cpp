@@ -80,6 +80,8 @@ Saccade_controller::Saccade_controller( flow_t& flow_back,
     intersaccade_time_ = 1000;
     is_time_initialized_ = false;
 
+    derotation_constant_ = (160*180)/(190*PI*195);
+
     // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
     float angle_between_points = (180. / N_points);
     // float angle_between_points = (180. / N_points);
@@ -99,8 +101,19 @@ Saccade_controller::Saccade_controller( flow_t& flow_back,
         cos_azimuth_[i] = quick_trig_cos(azimuth_[i]);
         cos_azimuth_[i + N_points] = quick_trig_cos(azimuth_[i + N_points]);
 
+        derotated_flow_front_[i] = 0.0f;
+        derotated_flow_back_[i] = 0.0f;
+
     }
+
+    yaw_velocity_buffer_.put_lossy(0.0f);
+    yaw_velocity_buffer_.put_lossy(0.0f);
+    yaw_velocity_buffer_.put_lossy(0.0f);
+
+    last_derotation_yaw_velocity_ = 0.0f;
 }
+
+
 
 bool Saccade_controller::init(void)
 {
@@ -116,12 +129,31 @@ bool Saccade_controller::update()
     // ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
     // float noise = 0.0f;
 
+    flow_update(&flow_back_);
+    flow_update(&flow_front_);
+
+    yaw_velocity_buffer_.put_lossy(ahrs_.angular_speed[2]);
+    yaw_velocity_buffer_ .get(last_derotation_yaw_velocity_);
+
+
     // Calculate for both back and front the sum of the relative nearnesses
     // which are each given by RN = OF/sin(angle),
     for(uint32_t i = 0; i < N_points; ++i)
     {
-        relative_nearness_[i] = 0;
-        relative_nearness_[i + N_points] = 0;
+        if(flow_back_.of.x[i] != 0)
+        {
+            derotated_flow_back_[i] = flow_back_.of.x[i] +last_derotation_yaw_velocity_*derotation_constant_*1000;
+        }
+
+        else if(flow_front_.of.x[i] != 0)
+        {
+            derotated_flow_front_[i] = flow_front_.of.x[i] + last_derotation_yaw_velocity_*derotation_constant_*1000;
+        }
+
+        relative_nearness_[i] = 0.0f;
+        relative_nearness_[i + N_points] = 0.0f;
+
+        
     }
 
     for (uint32_t i = 0; i < N_points; ++i)
@@ -129,27 +161,27 @@ bool Saccade_controller::update()
         
         if(i<36)
         {
-            if(flow_back_.of.x[i]> 0)
+            if(derotated_flow_back_[i]> 0)
             {
-                relative_nearness_[i]   = maths_f_abs(flow_back_.of.x[i] * inv_sin_azimuth_[i]);
+                relative_nearness_[i]   = maths_f_abs(derotated_flow_back_[i] * inv_sin_azimuth_[i]);
             }
 
-            else if (flow_front_.of.x[i] < 0)
+            else if (derotated_flow_front_[i] < 0)
             {
-                relative_nearness_[i + N_points]  = maths_f_abs(flow_front_.of.x[i] * inv_sin_azimuth_[i + N_points]);
-            }   
+                relative_nearness_[i + N_points]  = maths_f_abs(derotated_flow_front_[i] * inv_sin_azimuth_[i]);
+            }
         }
 
         else if(i>36)
         {
-            if(flow_back_.of.x[i] < 0) 
+            if(derotated_flow_back_[i] < 0) 
             {
-                relative_nearness_[i]   = maths_f_abs(flow_back_.of.x[i] * inv_sin_azimuth_[i]);
+                relative_nearness_[i]   = maths_f_abs(derotated_flow_back_[i] * inv_sin_azimuth_[i]);
             }
             
-            else if (flow_front_.of.x[i] > 0)
+            else if (derotated_flow_front_[i] > 0)
             {
-                relative_nearness_[i + N_points]  = maths_f_abs(flow_front_.of.x[i] * inv_sin_azimuth_[i + N_points]);
+                relative_nearness_[i + N_points]  = maths_f_abs(derotated_flow_front_[i] * inv_sin_azimuth_[i + N_points]);
             }
         }
     }
@@ -286,7 +318,6 @@ bool Saccade_controller::update()
             {
 
                 // Calculation of the movement direction (in radians)
-                // movement_direction = weighted_function_ * cad_ + (1-weighted_function_) * (goal_direction_ - current_rpy.rpy[2] + noise);
                 movement_direction_x = weighted_function_ * cad_x_unit + (1-weighted_function_) * (goal_bf[0]  + noise);
                 movement_direction_y = weighted_function_ * cad_y_unit + (1-weighted_function_) * (goal_bf[1]  + noise);
                 movement_direction = atan2(movement_direction_y,movement_direction_x);
