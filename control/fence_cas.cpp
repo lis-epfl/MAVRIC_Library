@@ -255,10 +255,12 @@ Fence_CAS::Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_esti
 	controls(controls),
 	detected_point({0,0,0}),
 	repulsion({0,0,0}),
-	maxsens(10.0),
-	tahead(2.0)
+//	maxsens(10.0),
+	tahead(2.0),
+	coef_roll(0.005),
+	maxsens(10.0)
 {
-	this->coef_roll=0.02;
+
 }
 Fence_CAS::~Fence_CAS(void)
 {
@@ -268,6 +270,7 @@ Fence_CAS::~Fence_CAS(void)
 bool Fence_CAS::update(void)
 {
 	float dist[waypoint_handler->number_of_fence_points];
+	int detected=0.0;
 	for (int k=0;k<3;k++){
 		this->repulsion[k]=0.0;
 	}
@@ -320,7 +323,6 @@ bool Fence_CAS::update(void)
 			S[i]= C[i] + Vnorm[i] *  (this->r_pz/*protection zone*/ +SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + this->tahead * Vval /*d_ahead*/);
 		}
 
-
 //		dist = detect_line(Alpoint,Blpoint,this->pos_est->last_gps_pos,V, gamma,I);
 		dist[i] = detect_seg(A,B,C,S,V,I,J);
 
@@ -328,30 +330,50 @@ bool Fence_CAS::update(void)
 
 		gftobftransform(C, S, rep);
 		vectors_normalize(rep,rep);
-		if((dist[i] >= -this->maxsens)&(dist[i] < this->maxsens))
+		if((dist[i] >= -(this->maxsens))&(dist[i] < this->maxsens))
 		{
 			float ratio = dist[i]/this->maxsens;
 			this->repulsion[0]+=0.0;
-
-			this->repulsion[1]+=(rep[1]>=0?1:-1)*this->coef_roll*0.25*PI*interpolate(ratio,0);
+			rep[1]=(rep[1]>=0?1:-1);
+			print_util_dbg_print("||");
+			print_util_dbg_putfloat(rep[1],5);
+			rep[1]=1.0;
+			this->repulsion[1]+=rep[1]*this->coef_roll*0.25*PI*interpolate(ratio,0);
 
 			this->repulsion[2]+=0.0;
 
+
 			print_util_dbg_print("||");
-			print_util_dbg_putfloat(rep[1],5);
-			print_util_dbg_print("||");
-						print_util_dbg_putfloat(this->repulsion[1],5);
+			print_util_dbg_putfloat(this->repulsion[1],5);
 			print_util_dbg_print("|dist_detected|");
 			print_util_dbg_putfloat(dist[i],5);
+//			print_util_dbg_print("||\n");
+			print_util_dbg_print("|vel bf|");
+			print_util_dbg_putfloat(pos_est->vel_bf[1],5);
 			print_util_dbg_print("||\n");
-
+			detected++;
 		}
 		else
 		{
-
+//			pos_est->vel_bf[1]=0.0;
 		}
-
-
+	}
+	//Cliping
+	if(this->repulsion[1]>0.25*PI)
+	{
+		this->repulsion[1]=0.25*PI;
+	}
+	if(this->repulsion[1]<-0.25*PI)
+	{
+		this->repulsion[1]=-0.25*PI;
+	}
+//	this->repulsion[0]=0.0;
+//	this->repulsion[1]=0.0;
+//	this->repulsion[2]=0.0;
+	if(detected==0)
+	{
+//		controls->tvel[1]=0.0;
+		controls->rpy[ROLL] = 0.0;
 	}
 
 	return true;
@@ -373,8 +395,9 @@ float  Fence_CAS::interpolate(float r, int type)
 }
 void Fence_CAS::gftobftransform(float C[3], float S[3], float rep[3])
 {
-	rep[0]=(S[0]-C[0])*rep[0] + (C[1]-S[1])*rep[1];
+	float temp = (S[0]-C[0])*rep[0] + (C[1]-S[1])*rep[1];
 	rep[1]=(S[1]-C[1])*rep[0] + (S[0]-C[0])*rep[1];
+	rep[0]=temp;
 }
 void Fence_CAS::add_fence(void)
 {
