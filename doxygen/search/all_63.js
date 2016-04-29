@@ -71,7 +71,7 @@ var searchData=
   ['console_3c_20file_20_3e',['Console< File >',['../classConsole.html',1,'']]],
   ['control_5fcommand_5ft',['control_command_t',['../structcontrol__command__t.html',1,'']]],
   ['control_5fmode',['control_mode',['../structcontrol__command__t.html#a87d5ac00a916836b082bec211ac8bc2c',1,'control_command_t']]],
-  ['control_5fsource',['control_source',['../structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392',1,'Manual_control::conf_t::control_source()'],['../classManual__control.html#a02a83edd71e8035b6705165452b6aa17',1,'Manual_control::control_source()']]],
+  ['control_5fsource',['control_source',['../structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392',1,'Manual_control::conf_t::control_source()'],['../classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0',1,'Manual_control::control_source()']]],
   ['control_5fsource_5ft',['control_source_t',['../classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d',1,'Manual_control']]],
   ['control_5fvariable',['control_variable',['../structadaptive__parameter__t.html#a2214c801b54e043dba02bd31247350d7',1,'adaptive_parameter_t']]],
   ['controls',['controls',['../structhud__telemetry__structure__t.html#aabd4e47aa99ccbcb74262e895af3b6b9',1,'hud_telemetry_structure_t::controls()'],['../structstabilisation__copter__t.html#ab9f8d10267c735e57f271f3f25a213a7',1,'stabilisation_copter_t::controls()'],['../classCentral__data.html#abad328ece4b1c4d9b5cea4a958ccdf5e',1,'Central_data::controls()']]],

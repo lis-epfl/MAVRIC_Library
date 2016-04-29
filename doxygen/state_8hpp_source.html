@@ -190,81 +190,100 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00143"></a>00143     <span class="keywordtype">bool</span> <a class="code" href="classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming">set_armed</a>(<span class="keywordtype">bool</span> arming);
 <a name="l00144"></a>00144 
 <a name="l00145"></a>00145 
-<a name="l00151"></a><a class="code" href="classState.html#af6d4a1f3caba5370f6d6243d24ad218b">00151</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#af6d4a1f3caba5370f6d6243d24ad218b" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)">armed</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_SAFETY_ARMED) == MAV_MODE_FLAG_SAFETY_ARMED);};
+<a name="l00151"></a><a class="code" href="classState.html#aed82df84db5ad27e500e51d212ba051d">00151</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed">is_armed</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_SAFETY_ARMED) == MAV_MODE_FLAG_SAFETY_ARMED);};
 <a name="l00152"></a>00152 
-<a name="l00158"></a><a class="code" href="classState.html#a63b01719374e440e90efbd7fa25ada34">00158</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#a63b01719374e440e90efbd7fa25ada34" title="returns whether in guided mode (MAV_MODE_FLAG_GUIDED_ENABLED set)">guided</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_GUIDED_ENABLED) == MAV_MODE_FLAG_GUIDED_ENABLED);};
-<a name="l00159"></a>00159 
+<a name="l00153"></a>00153 
+<a name="l00159"></a><a class="code" href="classState.html#a081ab79c23acceca7cd0ac5d6530d0df">00159</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#a081ab79c23acceca7cd0ac5d6530d0df" title="returns whether in manual mode">is_manual</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED);};
 <a name="l00160"></a>00160 
-<a name="l00166"></a><a class="code" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">00166</a>     <span class="keyword">inline</span> mav_mode_t <a class="code" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e" title="returns mav_mode (copy)">mav_mode</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> mav_mode_;};
-<a name="l00167"></a>00167 
+<a name="l00161"></a>00161 
+<a name="l00167"></a><a class="code" href="classState.html#ac8b8b3ab65fc3cbd51f0ab3183fee949">00167</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#ac8b8b3ab65fc3cbd51f0ab3183fee949" title="returns whether in hil mode">is_hil</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_HIL_ENABLED) == MAV_MODE_FLAG_HIL_ENABLED);};
 <a name="l00168"></a>00168 
-<a name="l00174"></a>00174     <span class="keyword">static</span> <span class="keyword">inline</span> conf_t <a class="code" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082" title="Default configuration.">default_config</a>();
-<a name="l00175"></a>00175 
-<a name="l00176"></a>00176     <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#a1b0077b766933ac429fdb1c2a6c9d5a6" title="Add onboard logging parameters.">mavlink_telemetry_add_data_logging_parameters</a>(<a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>* data_logging, <a class="code" href="classCentral__data.html" title="The central data structure.">Central_data</a>* central_data);
-<a name="l00177"></a>00177     <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#a14cbfb43a63cbf6cd4f0fa30c72023bb" title="Set state-&gt;mav_mode.">state_telemetry_set_mode</a>(<a class="code" href="classState.html" title="The MAV state.">State</a>* state, mav_mode_t <a class="code" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e" title="returns mav_mode (copy)">mav_mode</a>);
-<a name="l00178"></a>00178     <span class="keyword">friend</span> mav_result_t <a class="code" href="classState.html#a4664b4ca5c776f7a5db625292bd8b91c" title="Callback to the command 520 MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES.">state_telemetry_send_autopilot_capabilities</a>(<a class="code" href="classState.html" title="The MAV state.">State</a>* state, mavlink_command_long_t* packet);
-<a name="l00179"></a>00179 <span class="comment">// TODO:</span>
-<a name="l00180"></a>00180 <span class="comment">// All this should be private</span>
-<a name="l00181"></a>00181 
-<a name="l00182"></a><a class="code" href="classState.html#aacaa15cd7016181bf7c4a056cfd85008">00182</a>     mav_state_t <a class="code" href="classState.html#aacaa15cd7016181bf7c4a056cfd85008" title="The value of the MAV state.">mav_state_</a>;                              
-<a name="l00183"></a><a class="code" href="classState.html#a7a73fb170a4e632ac69134b3c8810129">00183</a>     mav_mode_custom_t <a class="code" href="classState.html#a7a73fb170a4e632ac69134b3c8810129" title="The value of the custom_mode.">mav_mode_custom</a>;                  
+<a name="l00169"></a>00169 
+<a name="l00175"></a><a class="code" href="classState.html#a1b9ecd8f5193b68277d954d90500c738">00175</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#a1b9ecd8f5193b68277d954d90500c738" title="returns whether in stabilize mode">is_stabilize</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_STABILIZE_ENABLED) == MAV_MODE_FLAG_STABILIZE_ENABLED);};
+<a name="l00176"></a>00176 
+<a name="l00177"></a>00177 
+<a name="l00183"></a><a class="code" href="classState.html#ae26f0aab78aa060c68533bf3a05476a9">00183</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#ae26f0aab78aa060c68533bf3a05476a9" title="returns whether in guided mode">is_guided</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_GUIDED_ENABLED) == MAV_MODE_FLAG_GUIDED_ENABLED);};
 <a name="l00184"></a>00184 
-<a name="l00185"></a><a class="code" href="classState.html#a57dd147ce2074c80265f9fed83b22ace">00185</a>     uint8_t <a class="code" href="classState.html#a57dd147ce2074c80265f9fed83b22ace" title="The type of the autopilot (MAV_TYPE enum in common.h)">autopilot_type</a>;                             
-<a name="l00186"></a><a class="code" href="classState.html#a7dc79d2606db040d9871416720193c0a">00186</a>     uint8_t <a class="code" href="classState.html#a7dc79d2606db040d9871416720193c0a" title="The name of the autopilot (MAV_AUTOPILOT enum in common.h)">autopilot_name</a>;                             
-<a name="l00187"></a>00187 
-<a name="l00188"></a><a class="code" href="classState.html#aab829f0a974b60a46f17cfc0f6dc76e7">00188</a>     uint32_t <a class="code" href="classState.html#aab829f0a974b60a46f17cfc0f6dc76e7" title="The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present...">sensor_present</a>;                            
-<a name="l00189"></a><a class="code" href="classState.html#a088465780aac8a1243ebce1d20db5353">00189</a>     uint32_t <a class="code" href="classState.html#a088465780aac8a1243ebce1d20db5353" title="The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)">sensor_enabled</a>;                            
-<a name="l00190"></a><a class="code" href="classState.html#a2e9aa6811920f686f167fdd091287810">00190</a>     uint32_t <a class="code" href="classState.html#a2e9aa6811920f686f167fdd091287810" title="The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled...">sensor_health</a>;                             
-<a name="l00191"></a>00191 
-<a name="l00192"></a><a class="code" href="classState.html#afd5e38f8723362798fcff3bb9abd5c64">00192</a>     <span class="keywordtype">float</span> <a class="code" href="classState.html#afd5e38f8723362798fcff3bb9abd5c64" title="Size of fence 1 in the XY plane, in meters.">fence_1_xy</a>;                                   
-<a name="l00193"></a><a class="code" href="classState.html#a01fe52db49b657ad2af5493db8599043">00193</a>     <span class="keywordtype">float</span> <a class="code" href="classState.html#a01fe52db49b657ad2af5493db8599043" title="Size of fence 1 in the Z direction, in meters.">fence_1_z</a>;                                    
-<a name="l00194"></a><a class="code" href="classState.html#af58a6be64539bc5d7e897c49411895e0">00194</a>     <span class="keywordtype">float</span> <a class="code" href="classState.html#af58a6be64539bc5d7e897c49411895e0" title="Size of fence 2 in the XY plane, in meters.">fence_2_xy</a>;                                   
-<a name="l00195"></a><a class="code" href="classState.html#aaf21576c878c62405a7928b7ecb10a2d">00195</a>     <span class="keywordtype">float</span> <a class="code" href="classState.html#aaf21576c878c62405a7928b7ecb10a2d" title="Size of fence 2 in the Z direction, in meters.">fence_2_z</a>;                                    
-<a name="l00196"></a><a class="code" href="classState.html#abb09d2da7b0c2869d093a44e8b451daf">00196</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#abb09d2da7b0c2869d093a44e8b451daf" title="Flag to tell whether we are out the first fence or not.">out_of_fence_1</a>;                                
-<a name="l00197"></a><a class="code" href="classState.html#afb2b944fd84462f85c6a8dd32e546e19">00197</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#afb2b944fd84462f85c6a8dd32e546e19" title="Flag to tell whether we are out the second fence or not.">out_of_fence_2</a>;                                
-<a name="l00198"></a>00198 
-<a name="l00199"></a><a class="code" href="classState.html#a326e60a03ccb49d621d1156beecc00af">00199</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#a326e60a03ccb49d621d1156beecc00af" title="Flag to tell that a flight plan (min 1 waypoint) is active.">nav_plan_active</a>;                               
-<a name="l00200"></a><a class="code" href="classState.html#a47abf5b5e97a58291a32b888815214e6">00200</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#a47abf5b5e97a58291a32b888815214e6" title="Flag to tell whether the vehicle is airborne or not.">in_the_air</a>;                                    
-<a name="l00201"></a><a class="code" href="classState.html#a4f26f45df1ca725c68e8ba73bd99db17">00201</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#a4f26f45df1ca725c68e8ba73bd99db17" title="Flag to enable the reset of the position estimation.">reset_position</a>;                                
-<a name="l00202"></a>00202 
-<a name="l00203"></a><a class="code" href="classState.html#af0385b450d3af94a99270134bbd442f4">00203</a>     <span class="keywordtype">double</span> <a class="code" href="classState.html#af0385b450d3af94a99270134bbd442f4" title="Time of reception of the last heartbeat message from the ground station.">last_heartbeat_msg</a>;                          
-<a name="l00204"></a><a class="code" href="classState.html#ac56ad89ec0f4e439bc9e959bc9079839">00204</a>     <span class="keywordtype">double</span> <a class="code" href="classState.html#ac56ad89ec0f4e439bc9e959bc9079839" title="Maximum time without reception of a heartbeat message from the ground station.">max_lost_connection</a>;                         
-<a name="l00205"></a>00205 
-<a name="l00206"></a><a class="code" href="classState.html#a5b04b891bec84abbd684a321f9bbe6bd">00206</a>     uint32_t <a class="code" href="classState.html#a5b04b891bec84abbd684a321f9bbe6bd" title="Number of heartbeat message received from the Ground station.">msg_count</a>;                                 
+<a name="l00185"></a>00185 
+<a name="l00191"></a><a class="code" href="classState.html#af426e69418fcda56e04b37ad489d9969">00191</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#af426e69418fcda56e04b37ad489d9969" title="returns whether in auto mode">is_auto</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_AUTO_ENABLED) == MAV_MODE_FLAG_AUTO_ENABLED);};
+<a name="l00192"></a>00192 
+<a name="l00198"></a><a class="code" href="classState.html#af161943f8f505072c634ede35620e384">00198</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#af161943f8f505072c634ede35620e384" title="returns whether in custom mode">is_custom</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) == MAV_MODE_FLAG_CUSTOM_MODE_ENABLED);};
+<a name="l00199"></a>00199 
+<a name="l00200"></a>00200 
+<a name="l00206"></a><a class="code" href="classState.html#aed990a94eea505fa04cb7c216292c95c">00206</a>     <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#aed990a94eea505fa04cb7c216292c95c" title="returns whether in test mode">is_test</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> ((mav_mode_ &amp; MAV_MODE_FLAG_TEST_ENABLED) == MAV_MODE_FLAG_TEST_ENABLED);};
 <a name="l00207"></a>00207 
-<a name="l00208"></a><a class="code" href="classState.html#aaebfe88d27bc9add93483b7a813bc427">00208</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#aaebfe88d27bc9add93483b7a813bc427" title="Flag to tell if we have connection with the GND station or not.">connection_lost</a>;                               
-<a name="l00209"></a><a class="code" href="classState.html#a4fefe2a757dabcea7202c49f9173dbc5">00209</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#a4fefe2a757dabcea7202c49f9173dbc5" title="Flag to tell that we received a first message from the GND station.">first_connection_set</a>;                          
-<a name="l00210"></a>00210 
-<a name="l00211"></a><a class="code" href="classState.html#aa8af6eff2f240cae87d455db9023e079">00211</a>     <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp; <a class="code" href="classState.html#aa8af6eff2f240cae87d455db9023e079" title="Pointer to battery structure.">battery_</a>;                                  
-<a name="l00212"></a>00212 
-<a name="l00213"></a>00213 <span class="keyword">private</span>:
-<a name="l00214"></a>00214     mav_mode_t mav_mode_;                               
-<a name="l00215"></a>00215     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp;   mavlink_stream_;                  
-<a name="l00216"></a>00216 };
-<a name="l00217"></a>00217 
-<a name="l00218"></a>00218 
-<a name="l00219"></a><a class="code" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082">00219</a> <a class="code" href="structState_1_1conf__t.html" title="Configuration structure.">State::conf_t</a> <a class="code" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082" title="Default configuration.">State::default_config</a>()
-<a name="l00220"></a>00220 {
-<a name="l00221"></a>00221     <a class="code" href="structState_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                  = {};
-<a name="l00222"></a>00222 
-<a name="l00223"></a>00223     conf.<a class="code" href="structState_1_1conf__t.html#a30c29acad4f110a7f2bbba4f09f601c5" title="The value of the MAV mode.">mav_mode</a>                = MAV_MODE_SAFE;
-<a name="l00224"></a>00224     conf.<a class="code" href="structState_1_1conf__t.html#a0201cf6ef69aec6ecf890cabcd54c6a3" title="The value of the MAV state.">mav_state</a>               = MAV_STATE_BOOT;
-<a name="l00225"></a>00225     conf.<a class="code" href="structState_1_1conf__t.html#a98d578d8174b3825674faa2726e9191e" title="The value of the simulation_mode (0: real, 1: simulation)">simulation_mode</a>         = HIL_OFF;
-<a name="l00226"></a>00226     conf.<a class="code" href="structState_1_1conf__t.html#a9ecdc7a3e740807aca79bb31c5a3b162" title="The type of the autopilot (MAV_TYPE enum in common.h)">autopilot_type</a>          = MAV_TYPE_QUADROTOR;
-<a name="l00227"></a>00227     conf.<a class="code" href="structState_1_1conf__t.html#a7c210bb9356c06d7cfec0b6aa73699f4" title="The name of the autopilot (MAV_AUTOPILOT enum in common.h)">autopilot_name</a>          = MAV_AUTOPILOT_MAVRIC;
-<a name="l00228"></a>00228     conf.<a class="code" href="structState_1_1conf__t.html#ad16db78865dde0e15cba68341305078e" title="The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present...">sensor_present</a>          = 0b1111110000100111;
-<a name="l00229"></a>00229     conf.<a class="code" href="structState_1_1conf__t.html#ab99b9c0d40074f9acda6ed4aad74aca8" title="The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)">sensor_enabled</a>          = 0b1111110000100111;
-<a name="l00230"></a>00230     conf.<a class="code" href="structState_1_1conf__t.html#a83ea0395e86a56e64441771b04539d6d" title="The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled...">sensor_health</a>           = 0b1111110000100111;
-<a name="l00231"></a>00231     conf.<a class="code" href="structState_1_1conf__t.html#a49f6adf4f77695e4f70d937cdd16003f" title="Maximum time without reception of a heartbeat message from the ground station.">max_lost_connection</a>     = 60.0f;
-<a name="l00232"></a>00232     conf.<a class="code" href="structState_1_1conf__t.html#aa352fbf3d8277028018363e286b03d4c" title="Size of fence 1 in the XY plane, in meters.">fence_1_xy</a>              = 100.0f;
-<a name="l00233"></a>00233     conf.<a class="code" href="structState_1_1conf__t.html#ac76bccef7b58fea0ecd0f0d6ac81d7d6" title="Size of fence 1 in the Z direction, in meters.">fence_1_z</a>               = 75.0f;
-<a name="l00234"></a>00234     conf.<a class="code" href="structState_1_1conf__t.html#af6e0b97d9259b618a09bd89ca3cd52dc" title="Size of fence 2 in the XY plane, in meters.">fence_2_xy</a>              = 125.0f;
-<a name="l00235"></a>00235     conf.<a class="code" href="structState_1_1conf__t.html#ab401ae8821d8a4108a9f5fbbcee74871" title="Size of fence 2 in the Z direction, in meters.">fence_2_z</a>               = 100.0f;
+<a name="l00208"></a>00208 
+<a name="l00214"></a><a class="code" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">00214</a>     <span class="keyword">inline</span> mav_mode_t <a class="code" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e" title="returns mav_mode (copy)">mav_mode</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> mav_mode_;};
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216 
+<a name="l00222"></a>00222     <span class="keyword">static</span> <span class="keyword">inline</span> conf_t <a class="code" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082" title="Default configuration.">default_config</a>();
+<a name="l00223"></a>00223 
+<a name="l00224"></a>00224     <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#a1b0077b766933ac429fdb1c2a6c9d5a6" title="Add onboard logging parameters.">mavlink_telemetry_add_data_logging_parameters</a>(<a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>* data_logging, <a class="code" href="classCentral__data.html" title="The central data structure.">Central_data</a>* central_data);
+<a name="l00225"></a>00225     <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="classState.html#a14cbfb43a63cbf6cd4f0fa30c72023bb" title="Set state-&gt;mav_mode.">state_telemetry_set_mode</a>(<a class="code" href="classState.html" title="The MAV state.">State</a>* state, mav_mode_t <a class="code" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e" title="returns mav_mode (copy)">mav_mode</a>);
+<a name="l00226"></a>00226     <span class="keyword">friend</span> mav_result_t <a class="code" href="classState.html#a4664b4ca5c776f7a5db625292bd8b91c" title="Callback to the command 520 MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES.">state_telemetry_send_autopilot_capabilities</a>(<a class="code" href="classState.html" title="The MAV state.">State</a>* state, mavlink_command_long_t* packet);
+<a name="l00227"></a>00227 
+<a name="l00228"></a>00228 <span class="comment">// TODO:</span>
+<a name="l00229"></a>00229 <span class="comment">// All this should be private</span>
+<a name="l00230"></a>00230 
+<a name="l00231"></a><a class="code" href="classState.html#aacaa15cd7016181bf7c4a056cfd85008">00231</a>     mav_state_t <a class="code" href="classState.html#aacaa15cd7016181bf7c4a056cfd85008" title="The value of the MAV state.">mav_state_</a>;                              
+<a name="l00232"></a><a class="code" href="classState.html#a7a73fb170a4e632ac69134b3c8810129">00232</a>     mav_mode_custom_t <a class="code" href="classState.html#a7a73fb170a4e632ac69134b3c8810129" title="The value of the custom_mode.">mav_mode_custom</a>;                  
+<a name="l00233"></a>00233 
+<a name="l00234"></a><a class="code" href="classState.html#a57dd147ce2074c80265f9fed83b22ace">00234</a>     uint8_t <a class="code" href="classState.html#a57dd147ce2074c80265f9fed83b22ace" title="The type of the autopilot (MAV_TYPE enum in common.h)">autopilot_type</a>;                             
+<a name="l00235"></a><a class="code" href="classState.html#a7dc79d2606db040d9871416720193c0a">00235</a>     uint8_t <a class="code" href="classState.html#a7dc79d2606db040d9871416720193c0a" title="The name of the autopilot (MAV_AUTOPILOT enum in common.h)">autopilot_name</a>;                             
 <a name="l00236"></a>00236 
-<a name="l00237"></a>00237     <span class="keywordflow">return</span> conf;
-<a name="l00238"></a>00238 }
-<a name="l00239"></a>00239 
-<a name="l00240"></a>00240 <span class="preprocessor">#endif //STATE_H_</span>
+<a name="l00237"></a><a class="code" href="classState.html#aab829f0a974b60a46f17cfc0f6dc76e7">00237</a>     uint32_t <a class="code" href="classState.html#aab829f0a974b60a46f17cfc0f6dc76e7" title="The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present...">sensor_present</a>;                            
+<a name="l00238"></a><a class="code" href="classState.html#a088465780aac8a1243ebce1d20db5353">00238</a>     uint32_t <a class="code" href="classState.html#a088465780aac8a1243ebce1d20db5353" title="The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)">sensor_enabled</a>;                            
+<a name="l00239"></a><a class="code" href="classState.html#a2e9aa6811920f686f167fdd091287810">00239</a>     uint32_t <a class="code" href="classState.html#a2e9aa6811920f686f167fdd091287810" title="The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled...">sensor_health</a>;                             
+<a name="l00240"></a>00240 
+<a name="l00241"></a><a class="code" href="classState.html#afd5e38f8723362798fcff3bb9abd5c64">00241</a>     <span class="keywordtype">float</span> <a class="code" href="classState.html#afd5e38f8723362798fcff3bb9abd5c64" title="Size of fence 1 in the XY plane, in meters.">fence_1_xy</a>;                                   
+<a name="l00242"></a><a class="code" href="classState.html#a01fe52db49b657ad2af5493db8599043">00242</a>     <span class="keywordtype">float</span> <a class="code" href="classState.html#a01fe52db49b657ad2af5493db8599043" title="Size of fence 1 in the Z direction, in meters.">fence_1_z</a>;                                    
+<a name="l00243"></a><a class="code" href="classState.html#af58a6be64539bc5d7e897c49411895e0">00243</a>     <span class="keywordtype">float</span> <a class="code" href="classState.html#af58a6be64539bc5d7e897c49411895e0" title="Size of fence 2 in the XY plane, in meters.">fence_2_xy</a>;                                   
+<a name="l00244"></a><a class="code" href="classState.html#aaf21576c878c62405a7928b7ecb10a2d">00244</a>     <span class="keywordtype">float</span> <a class="code" href="classState.html#aaf21576c878c62405a7928b7ecb10a2d" title="Size of fence 2 in the Z direction, in meters.">fence_2_z</a>;                                    
+<a name="l00245"></a><a class="code" href="classState.html#abb09d2da7b0c2869d093a44e8b451daf">00245</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#abb09d2da7b0c2869d093a44e8b451daf" title="Flag to tell whether we are out the first fence or not.">out_of_fence_1</a>;                                
+<a name="l00246"></a><a class="code" href="classState.html#afb2b944fd84462f85c6a8dd32e546e19">00246</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#afb2b944fd84462f85c6a8dd32e546e19" title="Flag to tell whether we are out the second fence or not.">out_of_fence_2</a>;                                
+<a name="l00247"></a>00247 
+<a name="l00248"></a><a class="code" href="classState.html#a326e60a03ccb49d621d1156beecc00af">00248</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#a326e60a03ccb49d621d1156beecc00af" title="Flag to tell that a flight plan (min 1 waypoint) is active.">nav_plan_active</a>;                               
+<a name="l00249"></a><a class="code" href="classState.html#a47abf5b5e97a58291a32b888815214e6">00249</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#a47abf5b5e97a58291a32b888815214e6" title="Flag to tell whether the vehicle is airborne or not.">in_the_air</a>;                                    
+<a name="l00250"></a><a class="code" href="classState.html#a4f26f45df1ca725c68e8ba73bd99db17">00250</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#a4f26f45df1ca725c68e8ba73bd99db17" title="Flag to enable the reset of the position estimation.">reset_position</a>;                                
+<a name="l00251"></a>00251 
+<a name="l00252"></a><a class="code" href="classState.html#af0385b450d3af94a99270134bbd442f4">00252</a>     <span class="keywordtype">double</span> <a class="code" href="classState.html#af0385b450d3af94a99270134bbd442f4" title="Time of reception of the last heartbeat message from the ground station.">last_heartbeat_msg</a>;                          
+<a name="l00253"></a><a class="code" href="classState.html#ac56ad89ec0f4e439bc9e959bc9079839">00253</a>     <span class="keywordtype">double</span> <a class="code" href="classState.html#ac56ad89ec0f4e439bc9e959bc9079839" title="Maximum time without reception of a heartbeat message from the ground station.">max_lost_connection</a>;                         
+<a name="l00254"></a>00254 
+<a name="l00255"></a><a class="code" href="classState.html#a5b04b891bec84abbd684a321f9bbe6bd">00255</a>     uint32_t <a class="code" href="classState.html#a5b04b891bec84abbd684a321f9bbe6bd" title="Number of heartbeat message received from the Ground station.">msg_count</a>;                                 
+<a name="l00256"></a>00256 
+<a name="l00257"></a><a class="code" href="classState.html#aaebfe88d27bc9add93483b7a813bc427">00257</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#aaebfe88d27bc9add93483b7a813bc427" title="Flag to tell if we have connection with the GND station or not.">connection_lost</a>;                               
+<a name="l00258"></a><a class="code" href="classState.html#a4fefe2a757dabcea7202c49f9173dbc5">00258</a>     <span class="keywordtype">bool</span> <a class="code" href="classState.html#a4fefe2a757dabcea7202c49f9173dbc5" title="Flag to tell that we received a first message from the GND station.">first_connection_set</a>;                          
+<a name="l00259"></a>00259 
+<a name="l00260"></a><a class="code" href="classState.html#aa8af6eff2f240cae87d455db9023e079">00260</a>     <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp; <a class="code" href="classState.html#aa8af6eff2f240cae87d455db9023e079" title="Pointer to battery structure.">battery_</a>;                                  
+<a name="l00261"></a>00261 
+<a name="l00262"></a>00262 <span class="keyword">private</span>:
+<a name="l00263"></a>00263     mav_mode_t mav_mode_;                               
+<a name="l00264"></a>00264     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp;   mavlink_stream_;                  
+<a name="l00265"></a>00265 };
+<a name="l00266"></a>00266 
+<a name="l00267"></a>00267 
+<a name="l00268"></a><a class="code" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082">00268</a> <a class="code" href="structState_1_1conf__t.html" title="Configuration structure.">State::conf_t</a> <a class="code" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082" title="Default configuration.">State::default_config</a>()
+<a name="l00269"></a>00269 {
+<a name="l00270"></a>00270     <a class="code" href="structState_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                  = {};
+<a name="l00271"></a>00271 
+<a name="l00272"></a>00272     conf.<a class="code" href="structState_1_1conf__t.html#a30c29acad4f110a7f2bbba4f09f601c5" title="The value of the MAV mode.">mav_mode</a>                = MAV_MODE_SAFE;
+<a name="l00273"></a>00273     conf.<a class="code" href="structState_1_1conf__t.html#a0201cf6ef69aec6ecf890cabcd54c6a3" title="The value of the MAV state.">mav_state</a>               = MAV_STATE_BOOT;
+<a name="l00274"></a>00274     conf.<a class="code" href="structState_1_1conf__t.html#a98d578d8174b3825674faa2726e9191e" title="The value of the simulation_mode (0: real, 1: simulation)">simulation_mode</a>         = HIL_OFF;
+<a name="l00275"></a>00275     conf.<a class="code" href="structState_1_1conf__t.html#a9ecdc7a3e740807aca79bb31c5a3b162" title="The type of the autopilot (MAV_TYPE enum in common.h)">autopilot_type</a>          = MAV_TYPE_QUADROTOR;
+<a name="l00276"></a>00276     conf.<a class="code" href="structState_1_1conf__t.html#a7c210bb9356c06d7cfec0b6aa73699f4" title="The name of the autopilot (MAV_AUTOPILOT enum in common.h)">autopilot_name</a>          = MAV_AUTOPILOT_MAVRIC;
+<a name="l00277"></a>00277     conf.<a class="code" href="structState_1_1conf__t.html#ad16db78865dde0e15cba68341305078e" title="The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present...">sensor_present</a>          = 0b1111110000100111;
+<a name="l00278"></a>00278     conf.<a class="code" href="structState_1_1conf__t.html#ab99b9c0d40074f9acda6ed4aad74aca8" title="The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)">sensor_enabled</a>          = 0b1111110000100111;
+<a name="l00279"></a>00279     conf.<a class="code" href="structState_1_1conf__t.html#a83ea0395e86a56e64441771b04539d6d" title="The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled...">sensor_health</a>           = 0b1111110000100111;
+<a name="l00280"></a>00280     conf.<a class="code" href="structState_1_1conf__t.html#a49f6adf4f77695e4f70d937cdd16003f" title="Maximum time without reception of a heartbeat message from the ground station.">max_lost_connection</a>     = 60.0f;
+<a name="l00281"></a>00281     conf.<a class="code" href="structState_1_1conf__t.html#aa352fbf3d8277028018363e286b03d4c" title="Size of fence 1 in the XY plane, in meters.">fence_1_xy</a>              = 100.0f;
+<a name="l00282"></a>00282     conf.<a class="code" href="structState_1_1conf__t.html#ac76bccef7b58fea0ecd0f0d6ac81d7d6" title="Size of fence 1 in the Z direction, in meters.">fence_1_z</a>               = 75.0f;
+<a name="l00283"></a>00283     conf.<a class="code" href="structState_1_1conf__t.html#af6e0b97d9259b618a09bd89ca3cd52dc" title="Size of fence 2 in the XY plane, in meters.">fence_2_xy</a>              = 125.0f;
+<a name="l00284"></a>00284     conf.<a class="code" href="structState_1_1conf__t.html#ab401ae8821d8a4108a9f5fbbcee74871" title="Size of fence 2 in the Z direction, in meters.">fence_2_z</a>               = 100.0f;
+<a name="l00285"></a>00285 
+<a name="l00286"></a>00286     <span class="keywordflow">return</span> conf;
+<a name="l00287"></a>00287 }
+<a name="l00288"></a>00288 
+<a name="l00289"></a>00289 <span class="preprocessor">#endif //STATE_H_</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -283,7 +302,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 25 2016 14:48:12 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 29 2016 14:00:23 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

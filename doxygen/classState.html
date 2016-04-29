@@ -118,10 +118,22 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the connection status with the GND station. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a41daea810832a042add30c2c4bdbaa13">set_armed</a> (bool arming)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">tries to arm/disarm; checks performed for arming  <a href="#a41daea810832a042add30c2c4bdbaa13"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#af6d4a1f3caba5370f6d6243d24ad218b">armed</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)  <a href="#af6d4a1f3caba5370f6d6243d24ad218b"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a63b01719374e440e90efbd7fa25ada34">guided</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in guided mode (MAV_MODE_FLAG_GUIDED_ENABLED set)  <a href="#a63b01719374e440e90efbd7fa25ada34"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aed82df84db5ad27e500e51d212ba051d">is_armed</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether armed  <a href="#aed82df84db5ad27e500e51d212ba051d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a081ab79c23acceca7cd0ac5d6530d0df">is_manual</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in manual mode  <a href="#a081ab79c23acceca7cd0ac5d6530d0df"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#ac8b8b3ab65fc3cbd51f0ab3183fee949">is_hil</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in hil mode  <a href="#ac8b8b3ab65fc3cbd51f0ab3183fee949"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a1b9ecd8f5193b68277d954d90500c738">is_stabilize</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in stabilize mode  <a href="#a1b9ecd8f5193b68277d954d90500c738"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#ae26f0aab78aa060c68533bf3a05476a9">is_guided</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in guided mode  <a href="#ae26f0aab78aa060c68533bf3a05476a9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#af426e69418fcda56e04b37ad489d9969">is_auto</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in auto mode  <a href="#af426e69418fcda56e04b37ad489d9969"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#af161943f8f505072c634ede35620e384">is_custom</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in custom mode  <a href="#af161943f8f505072c634ede35620e384"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aed990a94eea505fa04cb7c216292c95c">is_test</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in test mode  <a href="#aed990a94eea505fa04cb7c216292c95c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">mav_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">mav_mode</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns mav_mode (copy)  <a href="#a5bd439b7d249b36977ab846ca0581d7e"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
@@ -254,34 +266,6 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>State_machine</b></t
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="af6d4a1f3caba5370f6d6243d24ad218b"></a><!-- doxytag: member="State::armed" ref="af6d4a1f3caba5370f6d6243d24ad218b" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classState.html#af6d4a1f3caba5370f6d6243d24ad218b">State::armed</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set) </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>armed </dd></dl>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classState_af6d4a1f3caba5370f6d6243d24ad218b_icgraph.png" border="0" usemap="#classState_af6d4a1f3caba5370f6d6243d24ad218b_icgraph" alt=""/></div>
-<map name="classState_af6d4a1f3caba5370f6d6243d24ad218b_icgraph" id="classState_af6d4a1f3caba5370f6d6243d24ad218b_icgraph">
-<area shape="rect" id="node3" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card." alt="" coords="228,5,372,35"/><area shape="rect" id="node5" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data." alt="" coords="235,59,365,88"/><area shape="rect" id="node7" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data." alt="" coords="235,112,365,141"/><area shape="rect" id="node9" href="classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="239,165,361,195"/><area shape="rect" id="node13" href="classPosition__estimation.html#a8856c10ee31f3aab47c029bf798906d0" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="209,219,391,248"/><area shape="rect" id="node15" href="classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="153,272,447,301"/><area shape="rect" id="node11" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="579,165,733,195"/><area shape="rect" id="node17" href="classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21" title="set the home position and altitude to currrent position" alt="" coords="497,272,815,301"/></map>
-</div>
-</p>
-
-</div>
-</div>
 <a class="anchor" id="acdcf5e3dd67db48259373cdf7e66e082"></a><!-- doxytag: member="State::default_config" ref="acdcf5e3dd67db48259373cdf7e66e082" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -302,12 +286,12 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a63b01719374e440e90efbd7fa25ada34"></a><!-- doxytag: member="State::guided" ref="a63b01719374e440e90efbd7fa25ada34" args="() const " -->
+<a class="anchor" id="aed82df84db5ad27e500e51d212ba051d"></a><!-- doxytag: member="State::is_armed" ref="aed82df84db5ad27e500e51d212ba051d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classState.html#a63b01719374e440e90efbd7fa25ada34">State::guided</a> </td>
+          <td class="memname">bool <a class="el" href="classState.html#aed82df84db5ad27e500e51d212ba051d">State::is_armed</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const<code> [inline]</code></td>
@@ -316,17 +300,168 @@ Here is the caller graph for this function:</div>
 </div>
 <div class="memdoc">
 
-<p>returns whether in guided mode (MAV_MODE_FLAG_GUIDED_ENABLED set) </p>
+<p>returns whether armed </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>armed </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_aed82df84db5ad27e500e51d212ba051d_icgraph.png" border="0" usemap="#classState_aed82df84db5ad27e500e51d212ba051d_icgraph" alt=""/></div>
+<map name="classState_aed82df84db5ad27e500e51d212ba051d_icgraph" id="classState_aed82df84db5ad27e500e51d212ba051d_icgraph">
+<area shape="rect" id="node3" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card." alt="" coords="244,5,388,35"/><area shape="rect" id="node5" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data." alt="" coords="251,59,381,88"/><area shape="rect" id="node7" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data." alt="" coords="251,112,381,141"/><area shape="rect" id="node9" href="classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="255,165,377,195"/><area shape="rect" id="node13" href="classPosition__estimation.html#a8856c10ee31f3aab47c029bf798906d0" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="225,219,407,248"/><area shape="rect" id="node15" href="classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="169,272,463,301"/><area shape="rect" id="node11" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="595,165,749,195"/><area shape="rect" id="node17" href="classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21" title="set the home position and altitude to currrent position" alt="" coords="513,272,831,301"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="af426e69418fcda56e04b37ad489d9969"></a><!-- doxytag: member="State::is_auto" ref="af426e69418fcda56e04b37ad489d9969" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#af426e69418fcda56e04b37ad489d9969">State::is_auto</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns whether in auto mode </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>auto </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af161943f8f505072c634ede35620e384"></a><!-- doxytag: member="State::is_custom" ref="af161943f8f505072c634ede35620e384" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#af161943f8f505072c634ede35620e384">State::is_custom</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns whether in custom mode </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>custom </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae26f0aab78aa060c68533bf3a05476a9"></a><!-- doxytag: member="State::is_guided" ref="ae26f0aab78aa060c68533bf3a05476a9" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#ae26f0aab78aa060c68533bf3a05476a9">State::is_guided</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns whether in guided mode </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>guided </dd></dl>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classState_a63b01719374e440e90efbd7fa25ada34_icgraph.png" border="0" usemap="#classState_a63b01719374e440e90efbd7fa25ada34_icgraph" alt=""/></div>
-<map name="classState_a63b01719374e440e90efbd7fa25ada34_icgraph" id="classState_a63b01719374e440e90efbd7fa25ada34_icgraph">
-<area shape="rect" id="node3" href="classState__machine.html#acebe98d8028a28f00cf2c8d4bdd5b421" title="tries to change state.mav_mode to guided/unguided" alt="" coords="152,5,371,35"/></map>
+<div class="center"><img src="classState_ae26f0aab78aa060c68533bf3a05476a9_icgraph.png" border="0" usemap="#classState_ae26f0aab78aa060c68533bf3a05476a9_icgraph" alt=""/></div>
+<map name="classState_ae26f0aab78aa060c68533bf3a05476a9_icgraph" id="classState_ae26f0aab78aa060c68533bf3a05476a9_icgraph">
+<area shape="rect" id="node3" href="classState__machine.html#acebe98d8028a28f00cf2c8d4bdd5b421" title="tries to change state.mav_mode to guided/unguided" alt="" coords="171,5,389,35"/><area shape="rect" id="node5" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="439,5,593,35"/></map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="ac8b8b3ab65fc3cbd51f0ab3183fee949"></a><!-- doxytag: member="State::is_hil" ref="ac8b8b3ab65fc3cbd51f0ab3183fee949" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#ac8b8b3ab65fc3cbd51f0ab3183fee949">State::is_hil</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns whether in hil mode </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>hil </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a081ab79c23acceca7cd0ac5d6530d0df"></a><!-- doxytag: member="State::is_manual" ref="a081ab79c23acceca7cd0ac5d6530d0df" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#a081ab79c23acceca7cd0ac5d6530d0df">State::is_manual</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns whether in manual mode </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>manual </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1b9ecd8f5193b68277d954d90500c738"></a><!-- doxytag: member="State::is_stabilize" ref="a1b9ecd8f5193b68277d954d90500c738" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#a1b9ecd8f5193b68277d954d90500c738">State::is_stabilize</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns whether in stabilize mode </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>stabilize </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_a1b9ecd8f5193b68277d954d90500c738_icgraph.png" border="0" usemap="#classState_a1b9ecd8f5193b68277d954d90500c738_icgraph" alt=""/></div>
+<map name="classState_a1b9ecd8f5193b68277d954d90500c738_icgraph" id="classState_a1b9ecd8f5193b68277d954d90500c738_icgraph">
+<area shape="rect" id="node3" href="classState__machine.html#a0571b5f753aea38c4f6dd5f0cfecc909" title="tries to change state.mav_mode to stabilize/not stabilize" alt="" coords="181,5,411,35"/><area shape="rect" id="node5" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="460,5,615,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="aed990a94eea505fa04cb7c216292c95c"></a><!-- doxytag: member="State::is_test" ref="aed990a94eea505fa04cb7c216292c95c" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classState.html#aed990a94eea505fa04cb7c216292c95c">State::is_test</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>returns whether in test mode </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>test </dd></dl>
 
 </div>
 </div>
@@ -393,7 +528,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState_a41daea810832a042add30c2c4bdbaa13_cgraph.png" border="0" usemap="#classState_a41daea810832a042add30c2c4bdbaa13_cgraph" alt=""/></div>
 <map name="classState_a41daea810832a042add30c2c4bdbaa13_cgraph" id="classState_a41daea810832a042add30c2c4bdbaa13_cgraph">
-<area shape="rect" id="node3" href="classState.html#af6d4a1f3caba5370f6d6243d24ad218b" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="228,5,324,35"/><area shape="rect" id="node5" href="classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="221,59,331,88"/><area shape="rect" id="node7" href="classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="177,112,375,141"/></map>
+<area shape="rect" id="node3" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="219,5,333,35"/><area shape="rect" id="node5" href="classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="221,59,331,88"/><area shape="rect" id="node7" href="classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="177,112,375,141"/></map>
 </div>
 </p>
 
@@ -580,7 +715,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 25 2016 14:48:13 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 29 2016 14:00:24 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

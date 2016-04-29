@@ -83,7 +83,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="classManual__control.html">Manual_control</a>, including all inherited members.<table>
-  <tr class="memlist"><td><a class="el" href="classManual__control.html#a02a83edd71e8035b6705165452b6aa17">control_source</a></td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0">control_source</a>() const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td><code> [inline]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>CONTROL_SOURCE_JOYSTICK</b> enum value (defined in <a class="el" href="classManual__control.html">Manual_control</a>)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>CONTROL_SOURCE_NONE</b> enum value (defined in <a class="el" href="classManual__control.html">Manual_control</a>)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>CONTROL_SOURCE_REMOTE</b> enum value (defined in <a class="el" href="classManual__control.html">Manual_control</a>)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
@@ -103,13 +103,16 @@ This is the complete list of members for <a class="el" href="classManual__contro
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a000d94be2eae9353d1ede1a21bf476f8">get_velocity_vector</a>(control_command_t *controls)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#aa2103487ba9916640ba227ffbe3f2997">joystick</a></td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b">Manual_control</a>(Satellite *sat, conf_t config, remote_conf_t remote_config)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classManual__control.html#a91c3d95804b76b263e485df3ec51bd31">mode_source</a></td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classManual__control.html#aa8fcc0d79c1350e5dfcc3a674949a82d">mavlink_telemetry_add_onboard_parameters</a>(Onboard_parameters *onboard_parameters, Central_data *central_data)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td><code> [friend]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091">mode_source</a>() const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td><code> [inline]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>MODE_SOURCE_GND_STATION</b> enum value (defined in <a class="el" href="classManual__control.html">Manual_control</a>)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>MODE_SOURCE_JOYSTICK</b> enum value (defined in <a class="el" href="classManual__control.html">Manual_control</a>)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>MODE_SOURCE_REMOTE</b> enum value (defined in <a class="el" href="classManual__control.html">Manual_control</a>)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87">mode_source_t</a> enum name</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#ac5bd8680fbda07384a88506d44f163f7">remote</a></td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classManual__control.html#aa4e82c0d03995afa253aac4c50caa035">set_control_source</a>(control_source_t control_source)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a714ae93dfee6464520dc799e7d832fc5">set_mode_of_source</a>(mav_mode_t mode_current)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classManual__control.html#a62a53dd52299a4fc43389a9ab0a1ddfa">set_mode_source</a>(mode_source_t mode_source)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td><code> [inline]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -128,7 +131,7 @@ This is the complete list of members for <a class="el" href="classManual__contro
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 25 2016 14:48:13 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 29 2016 14:00:24 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

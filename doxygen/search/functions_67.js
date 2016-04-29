@@ -26,7 +26,6 @@ var searchData=
   ['gps',['gps',['../classSimulation.html#a2b299a8bca9fda856b3f24fb5073b072',1,'Simulation']]],
   ['gps_5fsim',['Gps_sim',['../classGps__sim.html#ad9bbdb231ef9310c787fb0fa41c675a5',1,'Gps_sim']]],
   ['gps_5fublox',['Gps_ublox',['../classGps__ublox.html#a43880f1402723a1b1874ff1e3b0bd9d8',1,'Gps_ublox']]],
-  ['guided',['guided',['../classState.html#a63b01719374e440e90efbd7fa25ada34',1,'State']]],
   ['gyro',['gyro',['../classGyroscope.html#afb31903ff6966d7732283a19e93083ac',1,'Gyroscope::gyro()'],['../classLsm330dlc.html#a02afabcfcdca4902a840f29aaaa48084',1,'Lsm330dlc::gyro()'],['../classImu.html#a1c9d0538ed5e4c159de6b7dc1d44b3b2',1,'Imu::gyro()'],['../classGyroscope__sim.html#adb8f2a838ec9932714fb93f3baa58424',1,'Gyroscope_sim::gyro()']]],
   ['gyro_5fx',['gyro_X',['../classGyroscope.html#a24d51a35560490b8a5cbc7f9dab35480',1,'Gyroscope::gyro_X()'],['../classLsm330dlc.html#a9d5f7665a630ccf266744255c0b26680',1,'Lsm330dlc::gyro_X()'],['../classGyroscope__sim.html#ae17e44874fd915c21b63cb67967681ed',1,'Gyroscope_sim::gyro_X()']]],
   ['gyro_5fy',['gyro_Y',['../classGyroscope.html#a4630986e4538ed8e977ed22449e45c05',1,'Gyroscope::gyro_Y()'],['../classLsm330dlc.html#a74a98465fe3aee533a88bc07b342e17a',1,'Lsm330dlc::gyro_Y()'],['../classGyroscope__sim.html#ae9ef31a3e6cc28e93efa01ceb128dcd2',1,'Gyroscope_sim::gyro_Y()']]],

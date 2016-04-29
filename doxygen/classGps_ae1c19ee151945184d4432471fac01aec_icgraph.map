@@ -1,5 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd" title="Returns if position estimation is healthy." alt="" coords="149,32,336,61"/>
-<area shape="rect" id="node5" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="416,5,571,35"/>
-<area shape="rect" id="node7" href="$classState__machine.html#acebe98d8028a28f00cf2c8d4bdd5b421" title="tries to change state.mav_mode to guided/unguided" alt="" coords="384,59,603,88"/>
+<area shape="rect" id="node3" href="$classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd" title="Returns if position estimation is healthy." alt="" coords="149,25,336,54"/>
+<area shape="rect" id="node5" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="663,25,817,54"/>
+<area shape="rect" id="node7" href="$classState__machine.html#acebe98d8028a28f00cf2c8d4bdd5b421" title="tries to change state.mav_mode to guided/unguided" alt="" coords="389,25,608,54"/>
+<area shape="rect" id="node10" href="$classState__machine.html#a0571b5f753aea38c4f6dd5f0cfecc909" title="tries to change state.mav_mode to stabilize/not stabilize" alt="" coords="384,78,613,108"/>
 </map>

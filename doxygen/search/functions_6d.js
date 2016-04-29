@@ -16,6 +16,7 @@ var searchData=
   ['mavrimini',['Mavrimini',['../classMavrimini.html#a09691e19c19e12dbaf16fa06bbfdc70d',1,'Mavrimini']]],
   ['mavrinux',['Mavrinux',['../classMavrinux.html#a6ea0c7ca4f869f53c7f3e75d2e4fd74d',1,'Mavrinux']]],
   ['megafly_5frev4',['Megafly_rev4',['../classMegafly__rev4.html#ae9d9107f12e56cc1e4a5cb6d53b8d0c3',1,'Megafly_rev4']]],
+  ['mode_5fsource',['mode_source',['../classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091',1,'Manual_control']]],
   ['msg_5fdefault_5fdbg',['msg_default_dbg',['../classMavlink__message__handler.html#ab73889a37846fd1f3f39d8540ca7d03d',1,'Mavlink_message_handler']]],
   ['multiply',['multiply',['../classmat_1_1op.html#ac432bca76fb1e08daf389ede95918105',1,'mat::op::multiply(const Mat&lt; N, P, T &gt; &amp;m1, const Mat&lt; N, P, T &gt; &amp;m2, Mat&lt; N, P, T &gt; &amp;res)'],['../classmat_1_1op.html#ae31a07ca6ab6171909b2d7d2983418d3',1,'mat::op::multiply(const Mat&lt; N, P, T &gt; &amp;m1, const T value, Mat&lt; N, P, T &gt; &amp;res)'],['../classMat.html#a297986cd3d5772a2698a2b8b930dd34b',1,'Mat::multiply(const Mat &amp;m) const '],['../classMat.html#a7697ab3cd1dc042f7550007d8e5e341d',1,'Mat::multiply(const T value) const ']]],
   ['multiply_5finplace',['multiply_inplace',['../classMat.html#a9735113a8979b4aa2d162e8455fe2607',1,'Mat::multiply_inplace(const Mat &amp;m)'],['../classMat.html#afe0f1a4c749dd84c5427275db826d006',1,'Mat::multiply_inplace(const T value)']]]

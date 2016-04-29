@@ -72,7 +72,6 @@ var searchData=
   ['aop_5fopb_5fmax_5ferr',['aop_opb_max_err',['../structubx__cfg__nav__expert__settings__t.html#ac3fec32d16f34ec3c861de8e7106e185',1,'ubx_cfg_nav_expert_settings_t']]],
   ['apx',['Apx',['../structderotation__matrix__t.html#a2a4aa73b6021204516467b1155769301',1,'derotation_matrix_t']]],
   ['apy',['Apy',['../structderotation__matrix__t.html#aa26cd3174403b17bdaf104edd38170c6',1,'derotation_matrix_t']]],
-  ['armed',['armed',['../classState.html#af6d4a1f3caba5370f6d6243d24ad218b',1,'State']]],
   ['arx',['Arx',['../structderotation__matrix__t.html#ac830964ab71c18125116001c75d8729f',1,'derotation_matrix_t']]],
   ['ary',['Ary',['../structderotation__matrix__t.html#a1d3cf2f49038b3b7eb492656476228e3',1,'derotation_matrix_t']]],
   ['attach',['attach',['../classSerial__avr32.html#a8e4c8096f42bee9019832e79251bac4a',1,'Serial_avr32::attach()'],['../classSerial__usb__avr32.html#aad76baf4c47fcdb7162d57b69cb37f12',1,'Serial_usb_avr32::attach()'],['../classSerial.html#a6828a2d281fc081b0f87dc41782610f8',1,'Serial::attach()'],['../classSerial__dummy.html#a3877a82dbfd8137619e6c13cfe2f5aba',1,'Serial_dummy::attach()'],['../classSerial__linux__io.html#add9d5a92540beace4af02a37ccc17c2e',1,'Serial_linux_io::attach()'],['../classSerial__udp.html#a38d75a506a699c4d289a806e40bd197a',1,'Serial_udp::attach()'],['../classSerial__stm32.html#aa435ed0428ae9eecd57cbeb38de2f7a9',1,'Serial_stm32::attach()']]],

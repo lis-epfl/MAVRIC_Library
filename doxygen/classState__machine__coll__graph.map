@@ -1,15 +1,15 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classManual__control.html" title="The manual control structure." alt="" coords="313,694,575,1074"/>
+<area shape="rect" id="node2" href="$classManual__control.html" title="The manual control structure." alt="" coords="313,798,575,1074"/>
 <area shape="rect" id="node4" href="$structjoystick__t.html" title="The structure for the joystick." alt="" coords="152,437,299,574"/>
 <area shape="rect" id="node6" href="$structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="5,93,141,230"/>
 <area shape="rect" id="node8" href="$unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="165,32,285,291"/>
 <area shape="rect" id="node10" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="368,385,520,626"/>
 <area shape="rect" id="node12" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="309,6,544,317"/>
 <area shape="rect" id="node14" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="568,84,677,239"/>
-<area shape="rect" id="node16" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="633,729,849,1039"/>
+<area shape="rect" id="node16" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="633,781,849,1091"/>
 <area shape="rect" id="node18" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="695,445,807,565"/>
 <area shape="rect" id="node20" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="701,93,819,230"/>
-<area shape="rect" id="node22" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="873,755,1127,1013"/>
-<area shape="rect" id="node24" href="$classState.html" title="The MAV state." alt="" coords="1151,694,1329,1074"/>
+<area shape="rect" id="node22" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="873,807,1127,1065"/>
+<area shape="rect" id="node24" href="$classState.html" title="The MAV state." alt="" coords="1151,694,1329,1178"/>
 <area shape="rect" id="node26" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1199,428,1281,583"/>
 </map>

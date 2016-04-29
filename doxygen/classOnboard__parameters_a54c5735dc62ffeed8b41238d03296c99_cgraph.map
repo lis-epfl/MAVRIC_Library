@@ -1,4 +1,5 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classFile.html#a08f1d2f6938eaedb287ad8e9da16c130" title="Seek to a given offset within the file." alt="" coords="375,5,452,35"/>
 <area shape="rect" id="node5" href="$classFile.html#aa4e2675444fe53c5c9862118fe66662a" title="Write to the file." alt="" coords="375,59,452,88"/>
+<area shape="rect" id="node7" href="$classFile.html#a70d3f3645b0c3f2ec6d61955536ae737" title="flush buffer to file; Not implemented;" alt="" coords="375,112,452,141"/>
 </map>

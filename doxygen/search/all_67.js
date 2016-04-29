@@ -41,7 +41,6 @@ var searchData=
   ['grid_5foffset',['grid_offset',['../structubx__cfg__pm__t.html#a602d0fb5fdcbc3da255d81c3d0b780fa',1,'ubx_cfg_pm_t::grid_offset()'],['../structubx__cfg__pm2__t.html#afc00ffc90793837ecd19da396ed2acc9',1,'ubx_cfg_pm2_t::grid_offset()']]],
   ['ground_5fspeed',['ground_speed',['../structgps__t.html#af27678536c3e3c2ef30d5775d6b291d9',1,'gps_t']]],
   ['ground_5fspeed_5f2d',['ground_speed_2d',['../structubx__nav__vel__ned__t.html#a61a2e5b8bb036dc4ad824ba0458e3adf',1,'ubx_nav_vel_ned_t']]],
-  ['guided',['guided',['../classState.html#a63b01719374e440e90efbd7fa25ada34',1,'State']]],
   ['gyro',['gyro',['../classGyroscope.html#afb31903ff6966d7732283a19e93083ac',1,'Gyroscope::gyro()'],['../classLsm330dlc.html#a02afabcfcdca4902a840f29aaaa48084',1,'Lsm330dlc::gyro()'],['../classImu.html#a1c9d0538ed5e4c159de6b7dc1d44b3b2',1,'Imu::gyro()'],['../classGyroscope__sim.html#adb8f2a838ec9932714fb93f3baa58424',1,'Gyroscope_sim::gyro()']]],
   ['gyro_5fbias',['gyro_bias',['../structqfilter__t.html#a0ae513402d753684caf990ae640caccc',1,'qfilter_t']]],
   ['gyro_5fconfig',['gyro_config',['../structgyro__config.html',1,'']]],

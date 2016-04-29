@@ -36,7 +36,7 @@ var searchData=
   ['configure_5ftimer',['configure_timer',['../structgps__t.html#aa4d3be82d28fb99dcc48f36e93ab46e2',1,'gps_t']]],
   ['connection_5flost',['connection_lost',['../structState_1_1conf__t.html#aeb0c4f23300021dda36d418f1b577737',1,'State::conf_t::connection_lost()'],['../classState.html#aaebfe88d27bc9add93483b7a813bc427',1,'State::connection_lost()']]],
   ['control_5fmode',['control_mode',['../structcontrol__command__t.html#a87d5ac00a916836b082bec211ac8bc2c',1,'control_command_t']]],
-  ['control_5fsource',['control_source',['../structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392',1,'Manual_control::conf_t::control_source()'],['../classManual__control.html#a02a83edd71e8035b6705165452b6aa17',1,'Manual_control::control_source()']]],
+  ['control_5fsource',['control_source',['../structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392',1,'Manual_control::conf_t']]],
   ['control_5fvariable',['control_variable',['../structadaptive__parameter__t.html#a2214c801b54e043dba02bd31247350d7',1,'adaptive_parameter_t']]],
   ['controls',['controls',['../structhud__telemetry__structure__t.html#aabd4e47aa99ccbcb74262e895af3b6b9',1,'hud_telemetry_structure_t::controls()'],['../structstabilisation__copter__t.html#ab9f8d10267c735e57f271f3f25a213a7',1,'stabilisation_copter_t::controls()'],['../classCentral__data.html#abad328ece4b1c4d9b5cea4a958ccdf5e',1,'Central_data::controls()']]],
   ['controls_5fnav',['controls_nav',['../structaudio__t.html#afa00adfedc60f21c72644e3bf5831212',1,'audio_t::controls_nav()'],['../classCentral__data.html#ad0ca56077e524d66d745664a54592541',1,'Central_data::controls_nav()']]],

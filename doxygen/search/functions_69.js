@@ -12,8 +12,16 @@ var searchData=
   ['inverse',['inverse',['../classmat_1_1op.html#a2b5778a59c3dfb7d3167a348e55c7da2',1,'mat::op::inverse()'],['../classMat.html#a546d0408c1b17f00a7176dcd3e6c10ed',1,'Mat::inverse()'],['../classmat_1_1op.html#afeae12fb4e830d030604380ef243b21b',1,'mat::op::inverse(const Mat&lt; 1, 1, float &gt; &amp;m, Mat&lt; 1, 1, float &gt; &amp;res)'],['../classmat_1_1op.html#aff774e25c1ebe4118dc8ba3f81dd795f',1,'mat::op::inverse(const Mat&lt; 2, 2, float &gt; &amp;m, Mat&lt; 2, 2, float &gt; &amp;res)'],['../classmat_1_1op.html#aceae11aa2480d32843753543b80e2971',1,'mat::op::inverse(const Mat&lt; 3, 3, float &gt; &amp;m, Mat&lt; 3, 3, float &gt; &amp;res)']]],
   ['irq',['irq',['../classSerial__usb__avr32.html#a3fbeee58fedefddb2bf19a3dcd24ec32',1,'Serial_usb_avr32']]],
   ['irq_5fhandler',['irq_handler',['../classSerial__stm32.html#a883789759916689a6fe66b25db5249a7',1,'Serial_stm32']]],
+  ['is_5farmed',['is_armed',['../classState.html#aed82df84db5ad27e500e51d212ba051d',1,'State']]],
+  ['is_5fauto',['is_auto',['../classState.html#af426e69418fcda56e04b37ad489d9969',1,'State']]],
+  ['is_5fcustom',['is_custom',['../classState.html#af161943f8f505072c634ede35620e384',1,'State']]],
   ['is_5fdue',['is_due',['../classScheduler__task.html#a318a64cf7c3c47422164ccc3d9e5f931',1,'Scheduler_task']]],
+  ['is_5fguided',['is_guided',['../classState.html#ae26f0aab78aa060c68533bf3a05476a9',1,'State']]],
+  ['is_5fhil',['is_hil',['../classState.html#ac8b8b3ab65fc3cbd51f0ab3183fee949',1,'State']]],
   ['is_5flow',['is_low',['../classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0',1,'Battery']]],
+  ['is_5fmanual',['is_manual',['../classState.html#a081ab79c23acceca7cd0ac5d6530d0df',1,'State']]],
   ['is_5fopen',['is_open',['../classFile__fat__fs.html#adfffa32bd3ab907e8d603e524d8deadd',1,'File_fat_fs::is_open()'],['../classFile__flash__avr32.html#ac1853251843a89677d7abf36878f6723',1,'File_flash_avr32::is_open()'],['../classFile.html#aa99244d6f853aa094edc5c2e690afe5d',1,'File::is_open()'],['../classFile__dummy.html#af78a867c64106da1f9ece6c5a9154eb4',1,'File_dummy::is_open()'],['../classFile__linux.html#a681acd549d5862d822835f0ed008a458',1,'File_linux::is_open()']]],
-  ['is_5fready',['is_ready',['../classImu.html#ae7d0dd2732b6e735a123a551eb83227c',1,'Imu']]]
+  ['is_5fready',['is_ready',['../classImu.html#ae7d0dd2732b6e735a123a551eb83227c',1,'Imu']]],
+  ['is_5fstabilize',['is_stabilize',['../classState.html#a1b9ecd8f5193b68277d954d90500c738',1,'State']]],
+  ['is_5ftest',['is_test',['../classState.html#aed990a94eea505fa04cb7c216292c95c',1,'State']]]
 ];

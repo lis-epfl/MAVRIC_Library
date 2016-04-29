@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState.html#af6d4a1f3caba5370f6d6243d24ad218b" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="224,5,320,35"/>
+<area shape="rect" id="node3" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="215,5,329,35"/>
 <area shape="rect" id="node5" href="$classConsole.html#a580258fef02bc374fa8153ad2eb5d699" title="Returns a pointer to writeable." alt="" coords="201,59,343,88"/>
 <area shape="rect" id="node7" href="$classFile.html#a70d3f3645b0c3f2ec6d61955536ae737" title="flush buffer to file; Not implemented;" alt="" coords="233,112,311,141"/>
 <area shape="rect" id="node9" href="$classFile.html#a01ba05798bfabf002236f8b2fc59d006" title="Close the file." alt="" coords="231,165,313,195"/>
