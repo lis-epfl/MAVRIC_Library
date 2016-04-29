@@ -110,10 +110,6 @@ void Ahrs_ekf::predict_step(void)
     x_kk1(0,0) = x_k1k1(0,0);
     x_kk1(1,0) = x_k1k1(1,0);
     x_kk1(2,0) = x_k1k1(2,0);
-    /*x_kk1(3,0) = x_k1k1(3,0) + 0.5f* (-(w_x-x_k1k1(0,0))*x_k1k1(4,0) - (w_y-x_k1k1(1,0))*x_k1k1(5,0) - (w_z-x_k1k1(2,0))*x_k1k1(6,0)) * dt;
-    x_kk1(4,0) = x_k1k1(4,0) + 0.5f* ((w_x-x_k1k1(0,0))*x_k1k1(3,0) - (w_z-x_k1k1(2,0))*x_k1k1(5,0) + (w_y-x_k1k1(1,0))*x_k1k1(6,0)) * dt;
-    x_kk1(5,0) = x_k1k1(5,0) + 0.5f* ((w_y-x_k1k1(1,0))*x_k1k1(3,0) + (w_z-x_k1k1(2,0))*x_k1k1(4,0) - (w_x-x_k1k1(0,0))*x_k1k1(6,0)) * dt;
-    x_kk1(6,0) = x_k1k1(6,0) + 0.5f* ((w_z-x_k1k1(2,0))*x_k1k1(3,0) - (w_y-x_k1k1(1,0))*x_k1k1(4,0) + (w_x-x_k1k1(0,0))*x_k1k1(5,0)) * dt;*/
 
     x_kk1(3,0) = x_k1k1(3,0) + 0.5f* (-(w_x-x_k1k1(0,0))*x_k1k1(4,0) - (w_y-x_k1k1(1,0))*x_k1k1(5,0) - (w_z-x_k1k1(2,0))*x_k1k1(6,0)) * dt;
     x_kk1(4,0) = x_k1k1(4,0) + 0.5f* ((w_x-x_k1k1(0,0))*x_k1k1(3,0) + (w_z-x_k1k1(2,0))*x_k1k1(5,0) - (w_y-x_k1k1(1,0))*x_k1k1(6,0)) * dt;
@@ -124,39 +120,6 @@ void Ahrs_ekf::predict_step(void)
     F_(0,0) = 1.0f;
     F_(1,1) = 1.0f;
     F_(2,2) = 1.0f;
-
-    /*F_(3,0) = x_k1k1(4,0) * dt;
-    F_(3,1) = x_k1k1(5,0) * dt;
-    F_(3,2) = x_k1k1(6,0) * dt;
-    F_(3,3) = 1.0f; // 1.0f + 0.0f;
-    F_(3,4) = -(w_x-x_k1k1(0,0)) * dt;
-    F_(3,5) = -(w_y-x_k1k1(1,0)) * dt;
-    F_(3,6) = -(w_z-x_k1k1(2,0)) * dt;
-    
-    F_(4,0) = -x_k1k1(3,0) * dt;
-    F_(4,1) = -x_k1k1(6,0) * dt;
-    F_(4,2) = x_k1k1(5,0) * dt;
-    F_(4,3) = (w_x-x_k1k1(0,0)) * dt;
-    F_(4,4) = 1.0f; // 1.0f + 0.0f;
-    F_(4,5) = -(w_z-x_k1k1(2,0)) * dt;
-    F_(4,6) = (w_y-x_k1k1(1,0)) * dt;
-    
-    F_(5,0) = x_k1k1(6,0) * dt;
-    F_(5,1) = -x_k1k1(3,0) * dt;
-    F_(5,2) = -x_k1k1(4,0) * dt;
-    F_(5,3) = (w_y-x_k1k1(1,0)) * dt;
-    F_(5,4) = (w_z-x_k1k1(2,0)) * dt;
-    F_(5,5) = 1.0f; // 1.0f + 0.0f;
-    F_(5,6) = -(w_x-x_k1k1(0,0)) * dt;
-    
-    F_(6,0) = -x_k1k1(5,0) * dt;
-    F_(6,1) = x_k1k1(4,0) * dt;
-    F_(6,2) = -x_k1k1(3,0) * dt;
-    F_(6,3) = (w_z-x_k1k1(2,0)) * dt;
-    F_(6,4) = -(w_y-x_k1k1(1,0)) * dt;
-    F_(6,5) = (w_x-x_k1k1(0,0)) * dt;
-    F_(6,6) = 1.0f; // 1.0f + 0.0f;*/
-
 
     F_(3,0) = x_k1k1(4,0) * dt;
     F_(3,1) = x_k1k1(5,0) * dt;
@@ -251,19 +214,6 @@ void Ahrs_ekf::predict_step(void)
     // P_(k,k-1) = F_(k)*P_(k-1,k-1)*F_(k)' + Q_(k)
     P_ = (F_ % P_ % F_.transpose()) + Q_;
 
-    /*Mat<4,1> quat;
-    for (i = 0; i < 4; ++i)
-    {
-        quat(i,0) = x_kk1(i+3,0);
-    }
-    Mat<4,1> quat_normalized;
-    op::normalize(quat,quat_normalized);
-    x_state_ = x_kk1;
-    for (i = 3; i < 7; ++i)
-    {
-        x_state_(i,0) = quat_normalized(i-3,0);
-    }*/
-
     quat_t quat;
     quat.s = x_kk1(3,0);
     quat.v[0] = x_kk1(4,0);
@@ -297,7 +247,6 @@ void Ahrs_ekf::update_step_acc(void)
     h_acc_xkk1(0,0) = -2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0)) * acc_z_global;
     h_acc_xkk1(1,0) = -2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0)) * acc_z_global;
     h_acc_xkk1(2,0) = -(1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0))) * acc_z_global;
-    //h_acc_xkk1(2,0) = -(x_kk1(3,0)*x_kk1(3,0) - x_kk1(4,0)*x_kk1(4,0) - x_kk1(5,0)*x_kk1(5,0) + x_kk1(6,0)*x_kk1(6,0)) * acc_z_global;
 
     // H_acc(k) = jacobian(h_acc(x(k,k-1)))
     Mat<3,7> H_acc_k;
@@ -316,10 +265,6 @@ void Ahrs_ekf::update_step_acc(void)
     H_acc_k(2,4) = -4.0f * x_kk1(4,0) * acc_z_global;
     H_acc_k(2,5) = -4.0f * x_kk1(5,0) * acc_z_global;
     H_acc_k(2,6) = 0.0f;
-    /*H_acc_k(2,3) = 2.0f * x_kk1(3,0) * acc_z_global;
-    H_acc_k(2,4) = -2.0f * x_kk1(4,0) * acc_z_global;
-    H_acc_k(2,5) = -2.0f * x_kk1(5,0) * acc_z_global;
-    H_acc_k(2,6) = 2.0f * x_kk1(6,0) * acc_z_global;*/
 
     // Innovation y(k) = z(k) - h(x(k,k-1))
     Mat<3,1> yk_acc = z_acc - h_acc_xkk1;
@@ -342,19 +287,6 @@ void Ahrs_ekf::update_step_acc(void)
 
     // Updated state estimate: x(k,k) = x(k,k-1) + K(k)*y_k
     Mat<7,1> x_kk = x_kk1 + (K_acc % yk_acc);
-
-    /*Mat<4,1> quat;
-    for (i = 0; i < 4; ++i)
-    {
-        quat(i,0) = x_kk(i+3,0);
-    }
-    Mat<4,1> quat_normalized;
-    op::normalize(quat,quat_normalized);
-    x_state = x_kk;
-    for (i = 3; i < 7; ++i)
-    {
-        x_state_(i,0) = quat_normalized(i-3,0);
-    }*/
 
     quat_t quat;
     quat.s = x_kk(3,0);
@@ -380,23 +312,6 @@ void Ahrs_ekf::update_step_mag(void)
 
     Mat<7,1> x_kk1 = x_state_;
 
-    /*mag_global_[0] = 1.0f;
-    mag_global_[1] = 0.0f;
-    mag_global_[2] = 0.0f;
-    
-    quat_t qtmp1 = quaternions_create_from_vector(imu_.scaled_compass.data); 
-    quat_t qe_mag_global = quaternions_local_to_global(ahrs_->qe, qtmp1);
-    //qe_mag_global.v[X] /= mag_norm;
-    //qe_mag_global.v[Y] /= mag_norm;
-    qe_mag_global.v[Z] = 0.0f;   // set z component in global frame to 0
-    quat_t mag_corrected_local = quaternions_global_to_local(ahrs_->qe, qe_mag_global);     
-
-    Mat<3,1> z_mag;
-    for (i = 0; i < 3; ++i)
-    {
-        z_mag(i,0) = mag_corrected_local.v[i];
-    }*/
-
     Mat<3,1> z_mag;
     for (i = 0; i < 3; ++i)
     {
@@ -406,10 +321,8 @@ void Ahrs_ekf::update_step_mag(void)
     // h_mag(x(k,k-1))
     Mat<3,1> h_mag_xkk1;
     h_mag_xkk1(0,0) = (1.0f - 2.0f*(x_kk1(5,0)*x_kk1(5,0) + x_kk1(6,0)*x_kk1(6,0)))*mag_global_[0] + 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global_[2];
-    //h_mag_xkk1(0,0) = (x_kk1(3,0)*x_kk1(3,0) + x_kk1(4,0)*x_kk1(4,0) - x_kk1(5,0)*x_kk1(5,0) - x_kk1(6,0)*x_kk1(6,0))*mag_global_[0] + 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global_[2];
     h_mag_xkk1(1,0) = 2.0f*(x_kk1(4,0)*x_kk1(5,0) - x_kk1(3,0)*x_kk1(6,0))*mag_global_[0] + 2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0))*mag_global_[2];
     h_mag_xkk1(2,0) = 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global_[0] + (1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0)))*mag_global_[2];
-    //h_mag_xkk1(2,0) = 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global_[0] + (x_kk1(3,0)*x_kk1(3,0) - x_kk1(4,0)*x_kk1(4,0) - x_kk1(5,0)*x_kk1(5,0) + x_kk1(6,0)*x_kk1(6,0))*mag_global_[2];
 
     // H_mag(k) = jacobian(h_mag(x(k,k-1)))
     Mat<3,7> H_mag_k;
@@ -418,10 +331,6 @@ void Ahrs_ekf::update_step_mag(void)
     H_mag_k(0,4) = 2.0f * x_kk1(6,0) * mag_global_[2];
     H_mag_k(0,5) = -4.0f * x_kk1(5,0) * mag_global_[0] - 2.0f * x_kk1(3,0) * mag_global_[2];
     H_mag_k(0,6) = -4.0f * x_kk1(6,0) * mag_global_[0] + 2.0f * x_kk1(4,0) * mag_global_[2];
-    /*H_mag_k(0,3) = 2.0f * x_kk1(3,0) * mag_global_[0] - 2.0f * x_kk1(5,0) * mag_global_[2];
-    H_mag_k(0,4) = 2.0f * x_kk1(4,0) * mag_global_[0] + 2.0f * x_kk1(6,0) * mag_global_[2];
-    H_mag_k(0,5) = -2.0f * x_kk1(5,0) * mag_global_[0] - 2.0f * x_kk1(3,0) * mag_global_[2];
-    H_mag_k(0,6) = -2.0f * x_kk1(6,0) * mag_global_[0] + 2.0f * x_kk1(4,0) * mag_global_[2];*/
 
     H_mag_k(1,3) = -2.0f * x_kk1(6,0) * mag_global_[0] + 2.0f * x_kk1(4,0) * mag_global_[2];
     H_mag_k(1,4) = 2.0f * x_kk1(5,0) * mag_global_[0] + 2.0f * x_kk1(3,0) * mag_global_[2];
@@ -432,10 +341,6 @@ void Ahrs_ekf::update_step_mag(void)
     H_mag_k(2,4) = 2.0f * x_kk1(6,0) * mag_global_[0] - 4.0f * x_kk1(4,0) * mag_global_[2];
     H_mag_k(2,5) = -2.0f * x_kk1(3,0) * mag_global_[0] - 4.0f * x_kk1(5,0) * mag_global_[2];
     H_mag_k(2,6) = 2.0f * x_kk1(4,0) * mag_global_[0];
-    /*H_mag_k(2,3) = -2.0f * x_kk1(5,0) * mag_global_[0] + 2.0f * x_kk1(3,0) * mag_global_[2];
-    H_mag_k(2,4) = 2.0f * x_kk1(6,0) * mag_global_[0] - 2.0f * x_kk1(4,0) * mag_global_[2];
-    H_mag_k(2,5) = -2.0f * x_kk1(3,0) * mag_global_[0] - 2.0f * x_kk1(5,0) * mag_global_[2];
-    H_mag_k(2,6) = 2.0f * x_kk1(4,0) * mag_global_[0] + 2.0f * x_kk1(6,0) * mag_global_[2];*/
 
     // Innovation y(k) = z(k) - h(x(k,k-1))
     Mat<3,1> yk_mag = z_mag - h_mag_xkk1;
@@ -451,19 +356,6 @@ void Ahrs_ekf::update_step_mag(void)
     // Updated state estimate: x(k,k) = x(k,k-1) + K(k)*y_k
     Mat<7,1> x_kk = x_kk1 + (K_mag % yk_mag);
     //Mat<7,1> x_kk = x_kk1;
-
-    /*Mat<4,1> quat;
-    for (i = 0; i < 4; ++i)
-    {
-        quat(i,0) = x_kk(i+3,0);
-    }
-    Mat<4,1> quat_normalized;
-    op::normalize(quat,quat_normalized);
-    x_state_ = x_kk;
-    for (i = 3; i < 7; ++i)
-    {
-        x_state_(i,0) = quat_normalized(i-3,0);
-    }*/
 
     quat_t quat;
     quat.s = x_kk(3,0);
@@ -542,8 +434,6 @@ bool Ahrs_ekf::update(void)
             for (i = 0; i < 3; ++i)
             {
                 aero_attitude_t aero = coord_conventions_quat_to_aero(ahrs_->qe);
-                /*aero.rpy[ROLL] = -aero.rpy[ROLL];
-                aero.rpy[PITCH] = -aero.rpy[PITCH];*/
                 aero.rpy[YAW] = 0.0f;
                 quat_t qe = coord_conventions_quaternion_from_aero(aero);
                 float mag[3];
@@ -588,9 +478,9 @@ bool Ahrs_ekf::update(void)
     up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;
     up_bf = quaternions_global_to_local(ahrs_->qe, up);
 
-    ahrs_->linear_acc[X] = 9.81f * (imu_.acc()[X] - up_bf.v[X]) ; // TODO: review this line!
-    ahrs_->linear_acc[Y] = 9.81f * (imu_.acc()[Y] - up_bf.v[Y]) ; // TODO: review this line!
-    ahrs_->linear_acc[Z] = 9.81f * (imu_.acc()[Z] - up_bf.v[Z]) ; // TODO: review this line!
+    ahrs_->linear_acc[X] = 9.81f * (imu_.acc()[X] - up_bf.v[X]); // TODO: review this line!
+    ahrs_->linear_acc[Y] = 9.81f * (imu_.acc()[Y] - up_bf.v[Y]); // TODO: review this line!
+    ahrs_->linear_acc[Z] = 9.81f * (imu_.acc()[Z] - up_bf.v[Z]); // TODO: review this line!
 
     return task_return;
 }
