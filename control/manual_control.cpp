@@ -64,8 +64,8 @@ extern "C"
 //------------------------------------------------------------------------------
 
 Manual_control::Manual_control(Satellite* sat, conf_t config, remote_conf_t remote_config) :
-    mode_source(config.mode_source),
-    control_source(config.control_source)
+    mode_source_(config.mode_source),
+    control_source_(config.control_source)
 {
     remote_init(&remote, sat, remote_config);
     joystick_init(&joystick);
@@ -74,7 +74,7 @@ Manual_control::Manual_control(Satellite* sat, conf_t config, remote_conf_t remo
 
 void Manual_control::get_control_command(control_command_t* controls)
 {
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_control_command(&remote, controls);
@@ -94,7 +94,7 @@ void Manual_control::get_control_command(control_command_t* controls)
 
 void Manual_control::get_velocity_vector(control_command_t* controls)
 {
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_velocity_vector(&remote, controls);
@@ -169,7 +169,7 @@ float Manual_control::get_thrust() const
 {
     float thrust = 0.0f;
 
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             thrust = remote_get_throttle(&remote);
@@ -187,7 +187,7 @@ float Manual_control::get_thrust() const
 
 void Manual_control::get_torque_command(torque_command_t* command, float scale) const
 {
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_torque_command(&remote, command, scale);
@@ -203,7 +203,7 @@ void Manual_control::get_torque_command(torque_command_t* command, float scale) 
 
 void Manual_control::get_rate_command(rate_command_t* command, float scale) const
 {
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_rate_command(&remote, command, scale);
@@ -219,7 +219,7 @@ void Manual_control::get_rate_command(rate_command_t* command, float scale) cons
 
 void Manual_control::get_thrust_command(thrust_command_t* command) const
 {
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_thrust_command(&remote, command);
@@ -235,7 +235,7 @@ void Manual_control::get_thrust_command(thrust_command_t* command) const
 
 void Manual_control::get_attitude_command_absolute_yaw(attitude_command_t* command, float scale) const
 {
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_attitude_command_absolute_yaw(&remote, command, scale);
@@ -251,7 +251,7 @@ void Manual_control::get_attitude_command_absolute_yaw(attitude_command_t* comma
 
 void Manual_control::get_attitude_command(const float k_yaw, attitude_command_t* command, float scale) const
 {
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_attitude_command(&remote, k_yaw, command, scale);
@@ -267,7 +267,7 @@ void Manual_control::get_attitude_command(const float k_yaw, attitude_command_t*
 
 void Manual_control::get_attitude_command_vtol(const float k_yaw, attitude_command_t* command, float scale, float reference_pitch) const
 {
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_attitude_command_vtol(&remote, k_yaw, command, scale, reference_pitch);
@@ -283,7 +283,7 @@ void Manual_control::get_attitude_command_vtol(const float k_yaw, attitude_comma
 
 void Manual_control::get_velocity_command(velocity_command_t* command, float scale) const
 {
-    switch (control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_velocity_command(&remote, command, scale);
@@ -301,7 +301,7 @@ mav_mode_t Manual_control::get_mode_from_source(mav_mode_t mode_current)
 {
     mav_mode_t new_mode = mode_current;
 
-    switch (mode_source)
+    switch (mode_source_)
     {
         case MODE_SOURCE_GND_STATION:
             new_mode = mode_current;
@@ -336,7 +336,7 @@ signal_quality_t Manual_control::get_signal_strength()
     signal_quality_t rc_check;
 
     // Get remote signal strength
-    if (control_source == CONTROL_SOURCE_REMOTE)
+    if (control_source_ == CONTROL_SOURCE_REMOTE)
     {
         rc_check = remote_check(&remote);
     }

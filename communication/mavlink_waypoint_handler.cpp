@@ -521,7 +521,7 @@ void Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoint_handl
 {
     mavlink_set_gps_global_origin_t packet;
 
-    if (!waypoint_handler->state_.armed())
+    if (!waypoint_handler->state_.is_armed())
     {
         mavlink_msg_set_gps_global_origin_decode(msg, &packet);
 
@@ -542,7 +542,7 @@ void Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoint_handl
             print_util_dbg_print_num(waypoint_handler->position_estimation_.local_position.origin.altitude * 1000.0f, 10);
             print_util_dbg_print(")\r\n");
 
-        
+
             waypoint_handler->position_estimation_.set_new_fence_origin();
 
             mavlink_message_t _msg;
@@ -802,7 +802,8 @@ mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler
     mav_result_t result;
 
 
-    if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_HOLD_POSITION))
+    if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_HOLD_POSITION)
+        || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_THERE))
     {
         result = MAV_RESULT_ACCEPTED;
 
@@ -1792,7 +1793,7 @@ bool Mavlink_waypoint_handler::update(Mavlink_waypoint_handler* waypoint_handler
 
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mav_modes_is_stabilise(mode_local))
+            if (mav_modes_is_stabilize(mode_local))
             {
                 if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_LANDING))
                 {

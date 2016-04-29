@@ -199,7 +199,7 @@ static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
  *
  * \return true if MAV is in stabilise piloting mode, false otherwise
  */
-static inline bool mav_modes_is_stabilise(const mav_mode_t mav_mode)
+static inline bool mav_modes_is_stabilize(const mav_mode_t mav_mode)
 {
     if ((mav_mode & MAV_MODE_FLAG_STABILIZE_ENABLED) == MAV_MODE_FLAG_STABILIZE_ENABLED)
     {
