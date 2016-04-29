@@ -269,12 +269,38 @@ Fence_CAS::~Fence_CAS(void)
 //call with tasks
 bool Fence_CAS::update(void)
 {
+	//initializaion of variables
 	float dist[waypoint_handler->number_of_fence_points];
 	int detected=0.0;
-	for (int k=0;k<3;k++){
+	for (int k=0;k<3;k++)
+	{
 		this->repulsion[k]=0.0;
 	}
-	for (int i=0; i < waypoint_handler->number_of_fence_points; i++)
+	float C[3]={this->pos_est->last_gps_pos.pos[0],this->pos_est->last_gps_pos.pos[1],this->pos_est->last_gps_pos.pos[2]};
+	float S[3]={0,0,0};
+
+	float I[3]={0,0,0}; //Detected point on fence segment
+	float J[3]={0,0,0}; //Detected point on quad segment
+
+	float V[3]={0,0,0};
+
+	for (int k=0;k<3;k++)
+	{
+		V[k]=pos_est->vel[k];
+	}
+
+	float Vnorm[3]={0,0,0};
+	vectors_normalize(V,Vnorm);
+	float Vval = vectors_norm(V);
+
+	float dmin=2*this->r_pz; //can be adjusted
+
+	for(int i =0; i<3;i++)
+	{
+		S[i]= C[i] + Vnorm[i] *  (this->r_pz/*protection zone*/ +SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + this->tahead * Vval /*d_ahead*/);
+	}
+
+	for (int i=0; i < waypoint_handler->number_of_fence_points; i++) //loop through all pair of fence points
 	{
 		int j=0;
 		if (i == waypoint_handler->number_of_fence_points - 1)
@@ -286,71 +312,64 @@ bool Fence_CAS::update(void)
 			j=i+1;
 		}
 
-		global_position_t Agpoint;
-		Agpoint.latitude=this->waypoint_handler->fence_list[i].x;
-		Agpoint.longitude=this->waypoint_handler->fence_list[i].y;
-		Agpoint.altitude=(float)this->waypoint_handler->fence_list[i].z;
-		Agpoint.heading=0.0f;
-		global_position_t Bgpoint={this->waypoint_handler->fence_list[j].y,this->waypoint_handler->fence_list[j].x,(float)this->waypoint_handler->fence_list[j].z,0.0f};
+		global_position_t Agpoint = {this->waypoint_handler->fence_list[i].y, this->waypoint_handler->fence_list[i].x,(float)this->waypoint_handler->fence_list[i].z, 0.0f};
+		global_position_t Bgpoint = {this->waypoint_handler->fence_list[j].y, this->waypoint_handler->fence_list[j].x,(float)this->waypoint_handler->fence_list[j].z, 0.0f};
 
 		local_position_t Alpoint = coord_conventions_global_to_local_position(Agpoint,this->pos_est->local_position.origin);
 		local_position_t Blpoint = coord_conventions_global_to_local_position(Bgpoint,this->pos_est->local_position.origin);
 
-		float I[3]={0,0,0}; //Detected point on fence segment
-		float J[3]={0,0,0}; //Detected point on quad segment
-
-		float V[3]={0,0,0};
-
-		for (int k=0;k<3;k++){
-			V[k]=pos_est->vel[k];
-		}
 
 		float A[3]={Alpoint.pos[0],Alpoint.pos[1],Alpoint.pos[2]};
 		float B[3]={Blpoint.pos[0],Blpoint.pos[1],Blpoint.pos[2]};
-		float C[3]={this->pos_est->last_gps_pos.pos[0],this->pos_est->last_gps_pos.pos[1],this->pos_est->last_gps_pos.pos[2]};
 		//ONLY 2D detection:
 		A[2]=C[2];
 		B[2]=C[2];
-		float S[3]={0,0,0};
-		float Vnorm[3]={0,0,0};
-		vectors_normalize(V,Vnorm);
-		float Vval = vectors_norm(V);
 
-		float dmin=2*this->r_pz; //can be adjusted
-
-		for(int i =0; i<3;i++)
-		{
-			S[i]= C[i] + Vnorm[i] *  (this->r_pz/*protection zone*/ +SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + this->tahead * Vval /*d_ahead*/);
-		}
 
 //		dist = detect_line(Alpoint,Blpoint,this->pos_est->last_gps_pos,V, gamma,I);
 		dist[i] = detect_seg(A,B,C,S,V,I,J);
 
-		float rep[3]={A[1]-B[1],B[0]-A[0],0.0};
 
-		gftobftransform(C, S, rep);
-		vectors_normalize(rep,rep);
+
 		if((dist[i] >= -(this->maxsens))&(dist[i] < this->maxsens))
 		{
-			float ratio = dist[i]/this->maxsens;
-			this->repulsion[0]+=0.0;
-			rep[1]=(rep[1]>=0?1:-1); // 1 = clockwise / -1 = counterclockwise
+			print_util_dbg_print("|CS|");
+			print_util_dbg_putfloat(S[0]-C[0],5);
+			print_util_dbg_print("||");
+			print_util_dbg_putfloat(S[1]-C[1],5);
+
+			float rep[3]={A[1]-B[1],B[0]-A[0],0.0};
+			print_util_dbg_print("|rep|");
+			print_util_dbg_putfloat(rep[0],5);
 			print_util_dbg_print("||");
 			print_util_dbg_putfloat(rep[1],5);
-			rep[1]=1.0;
-			this->repulsion[1]+=rep[1]*this->coef_roll*0.25*PI*interpolate(ratio,0);
 
-			this->repulsion[2]+=0.0;
-
-
+			gftobftransform(C, S, rep);
+			vectors_normalize(rep,rep);
+			print_util_dbg_print("|bf|");
+			print_util_dbg_putfloat(rep[0],5);
 			print_util_dbg_print("||");
-			print_util_dbg_putfloat(this->repulsion[1],5);
-			print_util_dbg_print("|dist_detected|");
-			print_util_dbg_putfloat(dist[i],5);
-//			print_util_dbg_print("||\n");
-			print_util_dbg_print("|vel bf|");
-			print_util_dbg_putfloat(pos_est->vel_bf[1],5);
+			print_util_dbg_putfloat(rep[1],5);
 			print_util_dbg_print("||\n");
+			float ratio = dist[i]/this->maxsens;
+
+//			this->repulsion[0]+=0.0;
+
+			rep[1]=(rep[1]>=0?1:-1); // 1 = clockwise / -1 = counterclockwise
+//			print_util_dbg_print("||");
+//			print_util_dbg_putfloat(rep[1],5);
+//			rep[1]=1.0;
+			this->repulsion[1]+=rep[1]*this->coef_roll*0.25*PI*interpolate(ratio,0);
+//			this->repulsion[2]+=0.0;
+
+//			print_util_dbg_print("||");
+//			print_util_dbg_putfloat(this->repulsion[1],5);
+//			print_util_dbg_print("|dist_detected|");
+//			print_util_dbg_putfloat(dist[i],5);
+////			print_util_dbg_print("||\n");
+//			print_util_dbg_print("|vel bf|");
+//			print_util_dbg_putfloat(pos_est->vel_bf[1],5);
+
 			detected++;
 		}
 		else
@@ -378,7 +397,7 @@ bool Fence_CAS::update(void)
 
 	return true;
 }
-float  Fence_CAS::interpolate(float r, int type)
+float  Fence_CAS::interpolate(float r, int type) //type=x, 0: linear, 1: cos, 2:cos2
 {
 	if(type==0) // linear interpolation
 	{
@@ -391,13 +410,37 @@ float  Fence_CAS::interpolate(float r, int type)
 			return 1;
 		}
 	}
+	else if(type==1) // cos interpolation
+	{
+		if(r>0.0)
+		{
+			return 0.5*quick_trig_cos(r*PI)+0.5;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	if(type==2) // cos2 interpolation
+	{
+		if(r>0.0)
+		{
+			return quick_trig_cos(r*PI/2.0+PI/2.0)+1;
+		}
+		else
+		{
+			return 1;
+		}
+	}
 	return 0.0;
 }
 void Fence_CAS::gftobftransform(float C[3], float S[3], float rep[3])
 {
-	float temp = (S[0]-C[0])*rep[0] + (C[1]-S[1])*rep[1];
-	rep[1]=(S[1]-C[1])*rep[0] + (S[0]-C[0])*rep[1];
-	rep[0]=temp;
+	float temp0 = (S[0]-C[0])*rep[0] + (C[1]-S[1])*rep[1];
+	float temp1 = (S[1]-C[1])*rep[0] + (S[0]-C[0])*rep[1];
+	rep[0]=temp0;
+	rep[1]=temp1;
+	rep[2]=0.0;
 }
 void Fence_CAS::add_fence(void)
 {
