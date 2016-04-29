@@ -194,9 +194,9 @@ public:
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
-    Mavlink_waypoint_handler waypoint_handler;
     Navigation navigation;                                      ///< The structure to perform GPS navigation
- 
+    Mavlink_waypoint_handler waypoint_handler;
+
     State_machine state_machine;                              ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
