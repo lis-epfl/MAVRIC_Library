@@ -389,7 +389,7 @@ void Position_estimation::update()
 
         position_integration();
         position_correction();
-        if (state.armed() && fence_set)
+        if (state.is_armed() && fence_set)
         {
             fence_control();
         }
@@ -443,7 +443,7 @@ bool Position_estimation::set_home_position_global(global_position_t new_home_po
 {
     bool result = false;
 
-    if (!state.armed())
+    if (!state.is_armed())
     {
         //coord_conventions_change_origin(&local_position, new_home_pos);
         local_position.origin = new_home_pos;

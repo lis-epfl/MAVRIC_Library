@@ -99,11 +99,25 @@ public:
      */
     bool set_mode_guided(bool guided);
 
-    State& state_;                                       ///< Reference to the state structure
-    const Position_estimation& position_estimation_;     ///< Reference to the gps structure
-    const Imu& imu_;                                     ///< Reference to the imu structure
+    /**
+     * \brief   tries to change state.mav_mode to stabilize/not stabilize
+     *
+     * \details tries to set/clear the MAV_MODE_FLAG_GUIDED_ENABLED
+     *          The following checks are performed:
+     *          - position_estimation.healthy to pass to stabilize
+     *
+     * \param   stabilize      true to pass to stabilize, false to pass to unguided
+     *
+     * \return true if desired state was accepted; false if refused
+     */
+    bool set_mode_stabilize(bool stabilize);
+
+    State& state_;                                       ///< Pointer to the state structure
+    const Position_estimation& position_estimation_;      ///< Pointer to the gps structure
+    const Imu& imu_;                                     ///< Pointer to the imu structure
     const ahrs_t& ahrs_;                                 ///< Pointer to the attitude estimation structure
-    Manual_control& manual_control_;                     ///< Reference to the manual_control structure
+    Manual_control& manual_control_;                     ///< Pointer to the manual_control structure
+
 private:
     /**
      * \brief Updates the custom flag and switch to critical state if needed

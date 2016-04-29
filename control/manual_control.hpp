@@ -52,14 +52,16 @@ extern "C"
 #include "control/stabilisation.h"
 }
 
-
-
+/* forward declaration for friend function */
+class Onboard_parameters;
 
 /**
  * \brief The manual control structure
  */
 class Manual_control
 {
+friend bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
+
 public:
     /**
      * \brief   The source mode enum
@@ -216,15 +218,46 @@ public:
      */
     signal_quality_t get_signal_strength();
 
+    /**
+     * \brief   Set the mode source (which control source can change the mode (remote, joystick, groundstation))
+     *
+     * \param   mode_source         which control source can change the mode (remote, joystick, groundstation)
+     */
+    inline void set_mode_source(mode_source_t mode_source) {mode_source_ = mode_source;};
+
+    /**
+     * \brief   Return the mode source (which control source can change the mode (remote, joystick, groundstation))
+     *
+     * \return   mode_source         which control source can change the mode (remote, joystick, groundstation)
+     */
+    inline mode_source_t mode_source() const {return mode_source_;};    
+
+    /**
+     * \brief   Set the control source (which control source has control (remote, joystick, none))
+     *
+     * \param   control_source         which control source has control (remote, joystick, none)
+     */
+    inline void set_control_source(control_source_t control_source) {control_source_ = control_source;};
+
+    /**
+     * \brief   Return the control source (which control source has control (remote, joystick, none))
+     *
+     * \return   control_source         which control source has control (remote, joystick, none)
+     */
+    inline control_source_t control_source() const {return control_source_;};
+
 
     static inline conf_t default_config();
 
 
-    mode_source_t           mode_source;        ///< The source mode
-    control_source_t        control_source;     ///< Flag to tell whether the remote is active or not
 
     remote_t                remote;             ///< The pointer to the remote structure
     joystick_t              joystick;           ///< The pointer to the joystick structure
+private:
+    mode_source_t           mode_source_;        ///< The source mode
+    control_source_t        control_source_;     ///< Flag to tell whether the remote is active or not
+
+
 } ;
 
 
