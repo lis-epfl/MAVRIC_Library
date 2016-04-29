@@ -57,13 +57,13 @@ bool tasks_run_stabilisation(Central_data* central_data)
 {
     tasks_run_imu_update(central_data);
 
-    mav_mode_t mode = central_data->state.mav_mode();
+    const State& state = central_data->state;
 
-    if (mav_modes_is_armed(mode))
+    if (state.is_armed())
     {
-        if (mav_modes_is_auto(mode))
+        if (state.is_auto())
         {
-            if (mav_modes_is_custom(mode))
+            if (state.is_custom())
             {
                 central_data->manual_control.get_velocity_vector_wing(0.02f, &central_data->controls);
                 float pitch_value = central_data->controls.tvel[Z];
@@ -85,7 +85,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
                 servos_mix_wing_update(&central_data->servo_mix);
             }
         }
-        else if (mav_modes_is_guided(mode))
+        else if (state.is_guided())
         {
             central_data->manual_control.get_angle_command_wing(&central_data->controls);
 
@@ -97,7 +97,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
                 servos_mix_wing_update(&central_data->servo_mix);
             }
         }
-        else if (mav_modes_is_stabilise(mode))
+        else if (state.is_stabilize())
         {
             central_data->manual_control.get_rate_command_wing(&central_data->controls);
 
@@ -109,7 +109,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
                 servos_mix_wing_update(&central_data->servo_mix);
             }
         }
-        else if (mav_modes_is_manual(mode))
+        else if (state.is_manual())
         {
             central_data->manual_control.get_control_command(&central_data->controls);
 

@@ -113,7 +113,7 @@ void Manual_control::get_velocity_vector(control_command_t* controls)
 
 void Manual_control::get_rate_command_wing(control_command_t* controls)
 {
-    switch(control_source)
+    switch(control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_rate_command_wing(&remote, controls);
@@ -131,7 +131,7 @@ void Manual_control::get_rate_command_wing(control_command_t* controls)
 
 void Manual_control::get_angle_command_wing(control_command_t* controls)
 {
-    switch(control_source)
+    switch(control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_angle_command_wing(&remote, controls);
@@ -149,7 +149,7 @@ void Manual_control::get_angle_command_wing(control_command_t* controls)
 
 void Manual_control::get_velocity_vector_wing(const float ki_yaw, control_command_t* controls)
 {
-    switch(control_source)
+    switch(control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
             remote_get_velocity_wing(&remote, ki_yaw, controls);

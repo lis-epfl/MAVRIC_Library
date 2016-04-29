@@ -64,7 +64,7 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
-    manual_control(&satellite, Manual_control::default_config(), remote_default_config()),    
+    manual_control(&satellite, config.manual_control_config, config.remote_config),    
     state(mavlink_communication.mavlink_stream(), battery, config.state_config),
     airspeed_analog(airspeed_analog),
     scheduler(Scheduler::default_config()),
