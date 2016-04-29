@@ -349,7 +349,7 @@ bool Onboard_parameters::write_parameters_to_storage()
     // Write to file
     file_.seek(0, FILE_SEEK_START);
     success &= file_.write((uint8_t*)values, bytes_to_write);
-
+    success &= file_.flush();
     // Free memory
     free(values);
 
@@ -567,7 +567,7 @@ mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_p
 {
     mav_result_t result = MAV_RESULT_DENIED;
 
-    if (!onboard_parameters->state_.armed())
+    if (!onboard_parameters->state_.is_armed())
     {
         // Onboard parameters storage
         if (msg->param1 == 0)
@@ -688,4 +688,3 @@ bool Onboard_parameters::send_one_parameter_now(uint32_t index)
 
     return success;
 }
-
