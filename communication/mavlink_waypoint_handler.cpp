@@ -758,7 +758,6 @@ mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_ha
     {
         if ( (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_THERE) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) )
         {
-            print_util_dbg_print("Init Dubin after having stop\r\n");
             waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
         }
 
@@ -1229,7 +1228,6 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
     {
         if (state_.nav_plan_active)
         {
-            print_util_dbg_print("Init in navigation handler\r\n");
             navigation_.dubin_state = DUBIN_INIT;
         }
         hold_waypoint_set_ = false;
@@ -1249,10 +1247,10 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
         float margin = 0.0f;
         if (navigation_.navigation_type == DUBIN)
         {
-            margin = 25.0f;
+            margin = 36.0f;
         }
 
-        if (navigation_.dist2wp_sqr < (current_waypoint_.param2 * current_waypoint_.param2+margin))
+        if (navigation_.dist2wp_sqr < (current_waypoint_.param2 * current_waypoint_.param2 + margin))
         {
             if (waypoint_list[current_waypoint_index_].current > 0)
             {
@@ -1315,7 +1313,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
 
                 for (i=0;i<3;i++)
                 {
-                    rel_pos[i] = outter_pt[i]-waypoint_coordinates_.waypoint.pos[i];
+                    rel_pos[i] = outter_pt[i]-position_estimation_.local_position.pos[i];
                 }
 
                 float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
@@ -1484,8 +1482,6 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
     // WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
     wpt.radius = current_waypoint->param2;
     wpt.loiter_time = current_waypoint->param1;
-
-    print_util_dbg_print("Init in set wpt from frame\r\n");
 
     *dubin_state = DUBIN_INIT;
 
