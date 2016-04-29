@@ -252,13 +252,16 @@ bool Imu::start_magnetic_north_calibration(void)
         is_ready_ = false;
         do_magnetic_north_calibration_      = true;
 
-        // Compute magnetic inclination angle as angle = pi/2 - acos( dot(acc, mag) )
-        magnetic_inclination_ = 0.5f * PI - quick_trig_acos( scaled_acc_[0] * scaled_mag_[0]
-                                                           + scaled_acc_[1] * scaled_mag_[1]
-                                                           + scaled_acc_[2] * scaled_mag_[2] );
+        // Compute amplitude of magnetic field
+        magnetic_norm_ = maths_fast_sqrt( scaled_mag_[0] * scaled_mag_[0]
+                                        + scaled_mag_[1] * scaled_mag_[1]
+                                        + scaled_mag_[2] * scaled_mag_[2] );
 
-        // TODO change
-        magnetic_norm_ = 1.0f;
+        // Compute magnetic inclination angle as angle = pi/2 - acos( dot(acc, mag) )
+        magnetic_inclination_ = - 0.5f * PI + quick_trig_acos( (scaled_acc_[0] * scaled_mag_[0]
+                                                              + scaled_acc_[1] * scaled_mag_[1]
+                                                              + scaled_acc_[2] * scaled_mag_[2]) / magnetic_norm_ );
+
     }
 
     return success;
@@ -427,15 +430,21 @@ void Imu::do_calibration(void)
     // Do megnatic north calibration
     if (do_magnetic_north_calibration_)
     {
+        // Compute amplitude of magnetic field
+        float norm = maths_fast_sqrt( scaled_mag_[0] * scaled_mag_[0]
+                                    + scaled_mag_[1] * scaled_mag_[1]
+                                    + scaled_mag_[2] * scaled_mag_[2] );
+
+        // Apply low pass filter on the norm
+        magnetic_norm_ = (1.0f - config_.lpf_mean) * magnetic_norm_ + config_.lpf_mean * norm;
+
         // Compute magnetic inclination angle as angle = pi/2 - acos( dot(acc, mag) )
-        float angle = 0.5f * PI - quick_trig_acos( scaled_acc_[0] * scaled_mag_[0]
-                                                 + scaled_acc_[1] * scaled_mag_[1]
-                                                 + scaled_acc_[2] * scaled_mag_[2] );
+        float angle = - 0.5f * PI + quick_trig_acos( (scaled_acc_[0] * scaled_mag_[0]
+                                                    + scaled_acc_[1] * scaled_mag_[1]
+                                                    + scaled_acc_[2] * scaled_mag_[2]) / norm );
 
         // Apply low pass filter on the inclination angle
         magnetic_inclination_ = (1.0f - config_.lpf_mean) * magnetic_inclination_ + config_.lpf_mean * angle;
 
-        // TODO change
-        magnetic_norm_ = 1.0f;
     }
 }
