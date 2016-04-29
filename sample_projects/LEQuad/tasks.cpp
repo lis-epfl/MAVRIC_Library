@@ -283,25 +283,16 @@ bool tasks_create_tasks(Central_data* central_data)
     // init_success &= scheduler->add_task(4000,      Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::Scheduler_task::PRIORITY_HIGHEST, (Scheduler_task::task_function_t)&tasks_run_stabilisation_quaternion              , (Scheduler_task::task_argument_t)central_data                         , 0);
 
     init_success &= scheduler->add_task(4000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH , (Scheduler_task::task_function_t)&tasks_altitude_estimation                          , (Scheduler_task::task_argument_t)&central_data->altitude_estimation_ , 12);
-
     init_success &= scheduler->add_task(15000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_RELATIVE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&tasks_run_barometer_update                      , (Scheduler_task::task_argument_t)central_data                     , 2);
     init_success &= scheduler->add_task(100000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&tasks_run_gps_update                            , (Scheduler_task::task_argument_t)central_data                     , 3);
-
     init_success &= scheduler->add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&Navigation::update                               , (Scheduler_task::task_argument_t)&central_data->navigation            , 5);
     init_success &= scheduler->add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update                 , (Scheduler_task::task_argument_t)&central_data->waypoint_handler      , 6);
-
     init_success &= scheduler->add_task(200000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL , (Scheduler_task::task_function_t)&State_machine::update                            , (Scheduler_task::task_argument_t)&central_data->state_machine         , 7);
-
     init_success &= scheduler->add_task(4000,     Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL , (Scheduler_task::task_function_t)&Mavlink_communication::update                    , (Scheduler_task::task_argument_t)&central_data->mavlink_communication , 8);
-
     init_success &= scheduler->add_task(20000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH , (Scheduler_task::task_function_t)&remote_update                                     , (Scheduler_task::task_argument_t)&central_data->manual_control.remote , 10);
-
     init_success &= scheduler->add_task(100000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH    , (Scheduler_task::task_function_t)&tasks_run_sonar_update                         , (Scheduler_task::task_argument_t)central_data                         , 13);
-
     init_success &= scheduler->add_task(500000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_LOW    , (Scheduler_task::task_function_t)&tasks_led_toggle                                , (Scheduler_task::task_argument_t)&central_data->led                   , 1);
-
     // init_success &= scheduler->add_task(4000,      Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_LOWEST , (Scheduler_task::task_function_t)&tasks_sleep                                     , (Scheduler_task::task_argument_t)central_data                         , 14);
-
     init_success &= scheduler->add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL , (Scheduler_task::task_function_t)&tasks_data_logging_update                       , (Scheduler_task::task_argument_t)central_data                         , 11);
 
     init_success &= scheduler->sort_tasks();

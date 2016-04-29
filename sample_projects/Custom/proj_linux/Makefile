@@ -12,8 +12,13 @@ PROJ_NAME=Custom_mavrinux
 # ------------------------------------------------------------------------------
 # Project source files (*.c and *.cpp)
 LIB_SRCS += sample_projects/Custom/main_linux.cpp
-LIB_SRCS += sample_projects/Custom/central_data.cpp
-LIB_SRCS += sample_projects/Custom/tasks.cpp
+
+LIB_SRCS += sample_projects/LEQuad/central_data.cpp
+LIB_SRCS += sample_projects/Custom/central_data_custom.cpp
+
+LIB_SRCS += sample_projects/LEQuad/tasks.cpp
+LIB_SRCS += sample_projects/Custom/tasks_custom.cpp
+
 LIB_SRCS += sample_projects/Custom/mavlink_telemetry.cpp
 LIB_SRCS += sample_projects/Custom/saccade_controller.cpp
 LIB_SRCS += sample_projects/Custom/saccade_telemetry.cpp

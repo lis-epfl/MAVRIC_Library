@@ -38,11 +38,13 @@
  *
  ******************************************************************************/
 
-#include "central_data.hpp"
-#include "mavlink_telemetry.hpp"
-#include "tasks.hpp"
+#include "sample_projects/Custom/central_data_custom.hpp"
+#include "sample_projects/Custom/mavlink_telemetry.hpp"
+#include "sample_projects/Custom/tasks_custom.hpp"
 
 #include "boards/mavrinux.hpp"
+#include "simulation/flow_sim.hpp"
+#include "util/raytracing.hpp"
 
 extern "C"
 {
@@ -53,6 +55,7 @@ extern "C"
 int main(int argc, char** argv)
 {
     uint8_t sysid = 0;
+    bool init_success = true;
 
     // -------------------------------------------------------------------------
     // Get command line parameters
@@ -75,78 +78,66 @@ int main(int argc, char** argv)
     // Create board
     Mavrinux board(board_config);
 
+    // Files
     File_linux file_log;
     File_linux file_stat;
 
-    // -------------------------------------------------------------------------
-    // Serial for PX4Flow cameras
-    // -------------------------------------------------------------------------
-    Serial_dummy serial_flow_left;
-    Serial_dummy serial_flow_right;
+    // Flow cameras
+    raytracing::World world;
+    raytracing::Plane plane;
+    world.add_object(&plane);
+    Flow_sim flow_1(board.dynamic_model, world);
+    Flow_sim flow_2(board.dynamic_model, world);
+
+    // Board initialisation
+    init_success &= board.init();
+
+    board.sim.update();
+
 
     // -------------------------------------------------------------------------
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using simulated sensors
-    Central_data cd = Central_data(sysid,
-                                   board.imu,
-                                   board.sim.barometer(),
-                                   board.sim.gps(),
-                                   board.sim.sonar(),
-                                   board.mavlink_serial,
-                                   board.spektrum_satellite,
-                                   board.led,
-                                   board.file_flash,
-                                   board.battery,
-                                   board.servo_0,
-                                   board.servo_1,
-                                   board.servo_2,
-                                   board.servo_3,
-                                   file_log,
-                                   file_stat,
-                                  //  board.mavlink_serial,
-                                  //  board.mavlink_serial);
-                                   serial_flow_left,
-                                   serial_flow_right);
-
-
-    // -------------------------------------------------------------------------
-    // Initialisation
-    // -------------------------------------------------------------------------
-    bool init_success = true;
-
-    // Board initialisation
-    init_success &= board.init();
-    board.sim.update();
+    Central_data::conf_t cd_config = Central_data::default_config(sysid);
+    cd_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
+    cd_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
+    cd_config.state_config.simulation_mode = HIL_ON;
+    Central_data_custom cd = Central_data_custom(board.imu,
+                                                 board.sim.barometer(),
+                                                 board.sim.gps(),
+                                                 board.sim.sonar(),
+                                                 board.mavlink_serial,
+                                                 board.spektrum_satellite,
+                                                 board.led,
+                                                 board.file_flash,
+                                                 board.battery,
+                                                 board.servo_0,
+                                                 board.servo_1,
+                                                 board.servo_2,
+                                                 board.servo_3,
+                                                 file_log,
+                                                 file_stat,
+                                                 flow_1,
+                                                 flow_2,
+                                                 cd_config);
 
     // Init central data
     init_success &= cd.init();
 
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
+    init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
 
     // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
+    if (onboard_parameters->read_parameters_from_storage() == false)
     {
-        onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+        onboard_parameters->write_parameters_to_storage();
         init_success = false;
     }
 
-    // init_success &= cd.data_logging.create_new_log_file("Log_file",
-    //                 true,
-    //                 &cd.toggle_logging,
-    //                 &cd.state,
-    //                 cd.mavlink_communication.mavlink_stream.sysid);
-    //
-    // init_success &= cd.data_logging2.create_new_log_file("Log_stat",
-    //                 false,
-    //                 &cd.toggle_logging,
-    //                 &cd.state,
-    //                 cd.mavlink_communication.mavlink_stream.sysid);
-
-
     init_success &= mavlink_telemetry_init(&cd);
 
-    cd.state.mav_state = MAV_STATE_STANDBY;
+    cd.state.mav_state_ = MAV_STATE_STANDBY;
 
     init_success &= tasks_create_tasks(&cd);
 
@@ -155,18 +146,9 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-
-    uint32_t step = 0;
-
-    while (1 == 1)
+    while (1)
     {
-        scheduler_update(&cd.scheduler);
-        step++;
-
-          if (step == 1000)
-          {
-            flow_update(&(cd.flow_right_));
-          }
+        cd.scheduler.update();
     }
 
     return 0;

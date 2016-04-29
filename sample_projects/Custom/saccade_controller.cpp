@@ -54,8 +54,8 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Saccade_controller::Saccade_controller( flow_t& flow_back,
-                                        flow_t& flow_front,
+Saccade_controller::Saccade_controller( Flow& flow_back,
+                                        Flow& flow_front,
                                         const ahrs_t& ahrs,
                                         saccade_controller_conf_t config ):
   flow_back_(flow_back),
@@ -93,7 +93,7 @@ Saccade_controller::Saccade_controller( flow_t& flow_back,
         azimuth_[i]             = (91.5 + i * angle_between_points) * (PI / 180.0f);
         sin_azimuth_[i] = quick_trig_sin(azimuth_[i]);
         inv_sin_azimuth_[i]     = 1.0f/sin_azimuth_[i];
-        
+
         azimuth_[i + N_points]  = (  -88.5 + i * angle_between_points) * (PI / 180.0f);
         sin_azimuth_[i + N_points] = quick_trig_sin(azimuth_[i + N_points]);
         inv_sin_azimuth_[i + N_points]  = 1.0f/sin_azimuth_[i + N_points];
@@ -129,8 +129,8 @@ bool Saccade_controller::update()
     // ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
     // float noise = 0.0f;
 
-    flow_update(&flow_back_);
-    flow_update(&flow_front_);
+    flow_back_.update();
+    flow_front_.update();
 
     yaw_velocity_buffer_.put_lossy(ahrs_.angular_speed[2]);
     yaw_velocity_buffer_ .get(last_derotation_yaw_velocity_);
@@ -153,12 +153,12 @@ bool Saccade_controller::update()
         relative_nearness_[i] = 0.0f;
         relative_nearness_[i + N_points] = 0.0f;
 
-        
+
     }
 
     for (uint32_t i = 0; i < N_points; ++i)
-    {   
-        
+    {
+
         if(i<36)
         {
             if(derotated_flow_back_[i]> 0)
@@ -174,11 +174,11 @@ bool Saccade_controller::update()
 
         else if(i>36)
         {
-            if(derotated_flow_back_[i] < 0) 
+            if(derotated_flow_back_[i] < 0)
             {
                 relative_nearness_[i]   = maths_f_abs(derotated_flow_back_[i] * inv_sin_azimuth_[i]);
             }
-            
+
             else if (derotated_flow_front_[i] > 0)
             {
                 relative_nearness_[i + N_points]  = maths_f_abs(derotated_flow_front_[i] * inv_sin_azimuth_[i + N_points]);
@@ -231,7 +231,7 @@ bool Saccade_controller::update()
     cad_ = atan2(cad_y_unit,cad_x_unit);
 
     // Goal direction in local frame
-    float goal_lf[3]; 
+    float goal_lf[3];
     goal_lf[0] = quick_trig_cos(goal_direction_);
     goal_lf[1] = quick_trig_sin(goal_direction_);
     goal_lf[2] = 0.0f;
@@ -249,7 +249,7 @@ bool Saccade_controller::update()
     goal_bf[0] = goal_bf[0] / goal_bf_norm;
     goal_bf[1] = goal_bf[1] / goal_bf_norm;
     goal_bf[2] = goal_bf[2] / goal_bf_norm;
-    
+
     }
 
     //Current heading information used to see if the drone has finished the saccade and declaration of error variable

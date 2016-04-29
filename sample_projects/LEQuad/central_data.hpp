@@ -197,7 +197,7 @@ public:
     servos_mix_quadcotper_diag_t servo_mix;
 
     qfilter_t attitude_filter;                                  ///< The qfilter structure
-    
+
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
 
@@ -209,7 +209,7 @@ public:
     Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation
     Mavlink_waypoint_handler waypoint_handler;
- 
+
     State_machine state_machine;                              ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
@@ -227,8 +227,8 @@ public:
     Altitude_estimation             altitude_estimation_;
     Altitude_controller             altitude_controller_;
 
-private:
-    uint8_t sysid_;                 ///< System ID
+protected:
+    uint8_t sysid_;    ///< System ID
 
     conf_t config_;    ///< Configuration
 };

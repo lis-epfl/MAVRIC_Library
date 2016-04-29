@@ -42,7 +42,7 @@
 #ifndef MAVLINK_TELEMETRY_H_
 #define MAVLINK_TELEMETRY_H_
 
-#include "central_data.hpp"
+#include "sample_projects/Custom/central_data_custom.hpp"
 
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_stream.hpp"
@@ -53,7 +53,7 @@
  *
  * \return  The initialization status of the module, suceed == true
  */
-bool mavlink_telemetry_init(Central_data* central_data);
+bool mavlink_telemetry_init(Central_data_custom* central_data);
 
 /**
  * \brief   Add all onboard parameters to the parameter list
@@ -62,7 +62,7 @@ bool mavlink_telemetry_init(Central_data* central_data);
  *
  * \return  The initialization status of the module, succeed == true
  */
-bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_parameters, Central_data* central_data);
+bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data_custom* central_data);
 
 
 #endif /* MAVLINK_DOWN_TELEMETRY_H_ */

@@ -54,7 +54,7 @@
  * \param   mavlink_stream          Pointer to the MAVLink stream structure
  * \param   msg                     Pointer to the MAVLink message
  */
-void saccade_telemetry_send_vector(const Saccade_controller* Saccade_controller, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void saccade_telemetry_send_vector(const Saccade_controller* Saccade_controller, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif /* SACCADE_TELEMETRY_H_ */

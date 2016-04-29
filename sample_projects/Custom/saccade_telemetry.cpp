@@ -56,17 +56,17 @@ extern "C"
 
 
 
-void saccade_telemetry_send_vector(const Saccade_controller* Saccade_controller, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void saccade_telemetry_send_vector(const Saccade_controller* Saccade_controller, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_debug_vect_pack(mavlink_stream->sysid,
-                                 mavlink_stream->compid,
+    mavlink_msg_debug_vect_pack(mavlink_stream->sysid(),
+                                 mavlink_stream->compid(),
                                  msg,
                                  "CAN and CAD",
                                  time_keeper_get_us(),
                                  Saccade_controller->flow_front_.of.x[20],
                                  1000*(Saccade_controller->derotation_constant_*Saccade_controller->ahrs_.angular_speed[2]),
                                  (Saccade_controller->flow_front_.of.x[20] - 1000*(Saccade_controller->derotation_constant_*Saccade_controller->ahrs_.angular_speed[2])));
-                               
+
                                  // Saccade_controller->can_,
                                  // Saccade_controller->cad_,
                                  // 0);

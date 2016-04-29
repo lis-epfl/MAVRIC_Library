@@ -112,7 +112,7 @@ public:
      * \param   ahrs         Attitude and heading reference system
      * \param   config       Configuration structure
      */
-    Saccade_controller(flow_t& flow_back, flow_t& flow_front, const ahrs_t& ahrs, saccade_controller_conf_t config);
+    Saccade_controller(Flow& flow_back, Flow& flow_front, const ahrs_t& ahrs, saccade_controller_conf_t config);
 
 
     /**
@@ -156,12 +156,12 @@ public:
     uint64_t                    last_saccade_;
 
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
-    
-    flow_t&                     flow_back_;                          ///< back optic flow camera output
-    flow_t&                     flow_front_;                         ///< Front optic flow camera output
-    
+
+    Flow&                     flow_back_;                          ///< back optic flow camera output
+    Flow&                     flow_front_;                         ///< Front optic flow camera output
+
     const ahrs_t&               ahrs_;                               ///< Attitude and heading reference system
-    
+
     bool                        is_time_initialized_;               ///< Flag for time of presaccadic state
 
     saccade_state_t             saccade_state_;                     ///< Saccade modes (intersaccade, saccade, presaccade)
