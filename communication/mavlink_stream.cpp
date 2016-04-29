@@ -133,4 +133,3 @@ void Mavlink_stream::flush()
 {
     serial_.flush();
 }
-==== BASE ====
