@@ -184,9 +184,9 @@ public:
 
 
     /**
-     * \brief                   returns whether in guided mode
+     * \brief                   returns whether in auto mode
      *
-     * \return                  guided
+     * \return                  auto
      */
     inline bool is_auto() const {return ((mav_mode_ & MAV_MODE_FLAG_AUTO_ENABLED) == MAV_MODE_FLAG_AUTO_ENABLED);};
 
