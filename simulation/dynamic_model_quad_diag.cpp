@@ -148,12 +148,6 @@ bool Dynamic_model_quad_diag::update(void)
         vel_[Z] = 0.0f;
         local_position_.pos[Z] = 0.0f;
 
-        // simulate "acceleration" caused by contact force with ground, compensating gravity
-        for (i = 0; i < 3; i++)
-        {
-            lin_forces_bf_[i] = up_vec.v[i] * config_.total_mass * config_.gravity;
-        }
-
         // slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
         for (i = 0; i < 3; i++)
         {
