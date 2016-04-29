@@ -186,11 +186,9 @@ bool Flow_px4::update(void)
                         }
                         break;
                 }
-                break;
 
-                default:
-                    break;
-            }
+            default:
+            break;
         }
     }
 
