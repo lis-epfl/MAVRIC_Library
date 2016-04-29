@@ -79,9 +79,9 @@ static void attitude_controller_rate_loop(attitude_controller_t* controller)
     errors[YAW]   = controller->rate_command->xyz[YAW]   - controller->ahrs->angular_speed[YAW];
 
     // Update PIDs
-    controller->torque_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->rate_pid[ROLL]),  errors[ROLL],  controller->ahrs->dt);
-    controller->torque_command->xyz[PITCH] = pid_controller_update_dt(&(controller->rate_pid[PITCH]), errors[PITCH], controller->ahrs->dt);
-    controller->torque_command->xyz[YAW]   = pid_controller_update_dt(&(controller->rate_pid[YAW]),   errors[YAW],   controller->ahrs->dt);
+    controller->torque_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->rate_pid[ROLL]),  errors[ROLL],  controller->ahrs->dt_s);
+    controller->torque_command->xyz[PITCH] = pid_controller_update_dt(&(controller->rate_pid[PITCH]), errors[PITCH], controller->ahrs->dt_s);
+    controller->torque_command->xyz[YAW]   = pid_controller_update_dt(&(controller->rate_pid[YAW]),   errors[YAW],   controller->ahrs->dt_s);
 }
 
 
@@ -100,9 +100,9 @@ static void attitude_controller_angle_loop(attitude_controller_t* controller)
     errors[YAW]     = controller->attitude_error_estimator.rpy_errors[YAW];
 
     // Update PIDs
-    controller->rate_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->angle_pid[ROLL]),  errors[ROLL],  controller->ahrs->dt);
-    controller->rate_command->xyz[PITCH] = pid_controller_update_dt(&(controller->angle_pid[PITCH]), errors[PITCH], controller->ahrs->dt);
-    controller->rate_command->xyz[YAW]   = pid_controller_update_dt(&(controller->angle_pid[YAW]),   errors[YAW],   controller->ahrs->dt);
+    controller->rate_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->angle_pid[ROLL]),  errors[ROLL],  controller->ahrs->dt_s);
+    controller->rate_command->xyz[PITCH] = pid_controller_update_dt(&(controller->angle_pid[PITCH]), errors[PITCH], controller->ahrs->dt_s);
+    controller->rate_command->xyz[YAW]   = pid_controller_update_dt(&(controller->angle_pid[YAW]),   errors[YAW],   controller->ahrs->dt_s);
 }
 
 

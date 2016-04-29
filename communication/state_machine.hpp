@@ -50,6 +50,11 @@
 #include "sensing/position_estimation.hpp"
 #include "sensing/imu.hpp"
 
+extern "C"
+{
+#include "sensing/ahrs.h"
+}
+
 /**
  * \brief Defines the state machine structure
  */
@@ -69,6 +74,7 @@ public:
     State_machine(  State& state,
                     const Position_estimation& position_estimation,
                     const Imu& imu,
+                    const ahrs_t& ahrs,
                     Manual_control& manual_control);
 
     /**
@@ -109,7 +115,9 @@ public:
     State& state_;                                       ///< Pointer to the state structure
     const Position_estimation& position_estimation_;      ///< Pointer to the gps structure
     const Imu& imu_;                                     ///< Pointer to the imu structure
+    const ahrs_t& ahrs_;                                 ///< Pointer to the attitude estimation structure
     Manual_control& manual_control_;                     ///< Pointer to the manual_control structure
+
 private:
     /**
      * \brief Updates the custom flag and switch to critical state if needed
