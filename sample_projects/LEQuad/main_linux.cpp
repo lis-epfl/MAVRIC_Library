@@ -91,7 +91,6 @@ int main(int argc, char** argv)
     cd_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
     cd_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
     cd_config.state_config.simulation_mode = HIL_ON;
-    cd_config.navigation_config.navigation_type = DUBIN;
 
     Central_data cd = Central_data(board.imu,
                                    board.sim.barometer(),
