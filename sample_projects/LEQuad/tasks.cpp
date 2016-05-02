@@ -47,7 +47,8 @@
 void tasks_run_imu_update(Central_data* central_data)
 {
     central_data->imu.update();
-    qfilter_update(&central_data->attitude_filter);
+    //qfilter_update(&central_data->attitude_filter);
+    central_data->ahrs_ekf.update();
     central_data->position_estimation.update();
 }
 
@@ -55,11 +56,11 @@ bool tasks_run_stabilisation(Central_data* central_data)
 {
     tasks_run_imu_update(central_data);
 
-    mav_mode_t mode = central_data->state.mav_mode();
+    const State& state = central_data->state;
 
-    if (mav_modes_is_armed(mode))
+    if (state.is_armed())
     {
-        if (mav_modes_is_auto(mode))
+        if (state.is_auto())
         {
             central_data->controls = central_data->controls_nav;
             central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
@@ -81,7 +82,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
                 servos_mix_quadcopter_diag_update(&central_data->servo_mix);
             }
         }
-        else if (mav_modes_is_guided(mode))
+        else if (state.is_guided())
         {
             central_data->controls = central_data->controls_nav;
             central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
@@ -102,7 +103,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
                 servos_mix_quadcopter_diag_update(&central_data->servo_mix);
             }
         }
-        else if (mav_modes_is_stabilise(mode))
+        else if (state.is_stabilize())
         {
             central_data->manual_control.get_velocity_vector(&central_data->controls);
 
@@ -116,7 +117,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
                 servos_mix_quadcopter_diag_update(&central_data->servo_mix);
             }
         }
-        else if (mav_modes_is_manual(mode))
+        else if (state.is_manual())
         {
             central_data->manual_control.get_control_command(&central_data->controls);
 
@@ -151,9 +152,9 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 {
     tasks_run_imu_update(central_data);
 
-    mav_mode_t mode = central_data->state.mav_mode();
+    const State& state = central_data->state;
 
-    if (!central_data->state.armed())
+    if (!state.is_armed())
     {
         // Set command to current heading
         central_data->command.attitude.rpy[2] = coord_conventions_quat_to_aero(central_data->ahrs.qe).rpy[2];
@@ -162,14 +163,14 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
         central_data->servo_2.failsafe();
         central_data->servo_3.failsafe();
     }
-    else if (mav_modes_is_auto(mode))
+    else if (state.is_auto())
     {
         // vector_field_waypoint_update(&central_data->vector_field_waypoint);
         // velocity_controller_copter_update(&central_data->velocity_controller);
         // attitude_controller_update(&central_data->attitude_controller);
         // servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
-    else if (mav_modes_is_manual(mode) && mav_modes_is_guided(mode))
+    else if (state.is_manual() && state.is_guided())
     {
         // manual_control_get_velocity_command(&central_data->manual_control, &central_data->command.velocity, 1.0f);
         // velocity_controller_copter_update(&central_data->velocity_controller);
@@ -189,7 +190,7 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
 
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
-    else if (mav_modes_is_manual(mode) && mav_modes_is_stabilise(mode))
+    else if (state.is_manual() && state.is_stabilize())
     {
         // get command from remote
         central_data->manual_control.get_attitude_command(0.02f, &central_data->command.attitude, 1.0f);

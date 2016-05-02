@@ -63,7 +63,6 @@ extern "C"
 
 #define MAVLINK_BASE_STATION_ID 255
 
-
 /**
  * \brief   Main structure for the MAVLink stream module
  */
@@ -138,8 +137,10 @@ public:
      */
     inline uint32_t compid() const {return compid_;};    // inline for higher exec speed
 
+    uint32_t sysid_;             ///< System ID 
+
 private:
-    uint32_t sysid_;             ///< System ID
+
     uint32_t compid_;            ///< System Component ID
     Serial& serial_;
     uint8_t mavlink_channel_;    ///< Channel number used internally by mavlink to retrieve incomplete incoming message

@@ -153,10 +153,12 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
 State_machine::State_machine(State& state,
                             const Position_estimation& position_estimation,
                             const Imu& imu,
+                            const ahrs_t& ahrs,
                             Manual_control& manual_control) :
     state_(state),
     position_estimation_(position_estimation),
     imu_(imu),
+    ahrs_(ahrs),
     manual_control_(manual_control)
 {}
 
@@ -183,11 +185,24 @@ bool State_machine::update(State_machine* state_machine)
 
     state_machine->state_.connection_status();
 
+    // try passing to/leaving guided mode if requested
+    if(!state_machine->set_mode_guided(mav_modes_is_guided(mode_new)))
+    {
+        mode_new ^= MAV_MODE_FLAG_GUIDED_ENABLED; // toggle guided flag
+    }
+
+    if(!state_machine->set_mode_stabilize(mav_modes_is_stabilize(mode_new)))
+    {
+        mode_new ^= MAV_MODE_FLAG_STABILIZE_ENABLED; // toggle stabilize flag
+    }
+
     // try arming/disarming, if not allowed, reset flag in mode_new
     if(!state_machine->state_.set_armed(mav_modes_is_armed(mode_new)))
     {
         mode_new ^= MAV_MODE_FLAG_SAFETY_ARMED; // toggle armed flag
     }
+
+
 
     // Change state according to signal strength
     switch (state_current)
@@ -199,7 +214,7 @@ bool State_machine::update(State_machine* state_machine)
             break;
 
         case MAV_STATE_CALIBRATING:
-            if (state_machine->imu_.is_ready())
+            if (state_machine->imu_.is_ready() && (state_machine->ahrs_.internal_state == AHRS_READY))
             {
                 state_new = MAV_STATE_STANDBY;
             }
@@ -218,7 +233,7 @@ bool State_machine::update(State_machine* state_machine)
                 mode_custom_new = CUSTOM_BASE_MODE;
             }
 
-            if (!state_machine->imu_.is_ready())
+            if (!state_machine->imu_.is_ready() || !(state_machine->ahrs_.internal_state == AHRS_READY))
             {
                 state_new = MAV_STATE_CALIBRATING;
             }
@@ -226,10 +241,10 @@ bool State_machine::update(State_machine* state_machine)
             break;
 
         case MAV_STATE_ACTIVE:
-            if ((state_machine->manual_control_.mode_source == Manual_control::MODE_SOURCE_REMOTE) || (state_machine->manual_control_.mode_source == Manual_control::MODE_SOURCE_JOYSTICK))
+            if ((state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) || (state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_JOYSTICK))
             {
                 // check connection with remote
-                if ((state_machine->manual_control_.mode_source == Manual_control::MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
+                if ((state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
                 {
                     print_util_dbg_print("Remote control signal lost! Returning to home and land.\r\n");
                     state_new = MAV_STATE_CRITICAL;
@@ -273,7 +288,7 @@ bool State_machine::update(State_machine* state_machine)
 
                 case SIGNAL_LOST:
                     // If in manual mode, do emergency landing (cut off motors)
-                    if (mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilise(mode_current)))
+                    if (mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilize(mode_current)))
                     {
                         print_util_dbg_print("Switch to Emergency mode!\r\n");
                         state_new = MAV_STATE_EMERGENCY;
@@ -298,7 +313,7 @@ bool State_machine::update(State_machine* state_machine)
             if (!state_machine->state_.battery_.is_low())
             {
                 // To get out of this state, if we are in the wrong use_mode_from_remote
-                if (state_machine->manual_control_.mode_source != Manual_control::MODE_SOURCE_REMOTE)
+                if (state_machine->manual_control_.mode_source() != Manual_control::MODE_SOURCE_REMOTE)
                 {
                     state_new = MAV_STATE_STANDBY;
                 }
@@ -349,7 +364,7 @@ bool State_machine::update(State_machine* state_machine)
 bool State_machine::set_mode_guided(bool guided)
 {
     // if already in desired state, return true
-    if(state_.guided() == guided)
+    if(state_.is_guided() == guided)
     {
         return true;
     }
@@ -377,3 +392,33 @@ bool State_machine::set_mode_guided(bool guided)
     return true;
 }
 
+bool State_machine::set_mode_stabilize(bool stabilize)
+{
+    // if already in desired state, return true
+    if(state_.is_stabilize() == stabilize)
+    {
+        return true;
+    }
+
+    if(stabilize)
+    {
+        // if position_estimation is not healthy, abort
+        if(!position_estimation_.healthy())
+        {
+            print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because position estimation is not healthy\r\n");
+            return false;
+        }
+
+        // set stabilize flag
+        state_.mav_mode_ |= MAV_MODE_FLAG_STABILIZE_ENABLED;
+        print_util_dbg_print("[STATE_MACHINE]: passing to stabilize mode\r\n");
+    }
+    else
+    {
+        // clear stabilize flag
+        state_.mav_mode_ &= ~MAV_MODE_FLAG_STABILIZE_ENABLED;
+        print_util_dbg_print("[STATE_MACHINE]: leave stabilize mode\r\n");
+    }
+
+    return true;
+}

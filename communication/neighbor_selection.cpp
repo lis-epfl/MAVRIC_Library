@@ -319,7 +319,7 @@ void Neighbors::collision_log_smallest_distance(void)
     min_dist_ = 20.0f * config_.size_vhc + 1.0f;
     max_dist_ = -1.0;
 
-    if (state_.armed())
+    if (state_.is_armed())
     {
         for (ind = 0; ind < number_of_neighbors_; ind++)
         {

@@ -45,44 +45,47 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "automatic_navigation/collision_avoidance.hpp"
+#include "automatic_navigation/navigation.hpp"
+#include "automatic_navigation/vector_field_waypoint.hpp"
 
-#include "sensing/imu.hpp"
-#include "drivers/gps.hpp"
-#include "drivers/sonar.hpp"
-#include "hal/common/file.hpp"
+#include "communication/data_logging.hpp"
+#include "communication/hud_telemetry.hpp"
 
 #include "communication/mavlink_communication.hpp"
-#include "communication/onboard_parameters.hpp"
-#include "communication/mavlink_waypoint_handler.hpp"
-#include "communication/hud_telemetry.hpp"
-#include "communication/state_machine.hpp"
-#include "communication/data_logging.hpp"
 #include "communication/mavlink_stream.hpp"
-#include "communication/state.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/neighbor_selection.hpp"
-#include "simulation/simulation.hpp"
-#include "sensing/position_estimation.hpp"
-#include "sensing/altitude_estimation.hpp"
-#include "sensing/qfilter.hpp"
-#include "control/stabilisation_copter.hpp"
-#include "automatic_navigation/navigation.hpp"
+#include "communication/onboard_parameters.hpp"
+#include "communication/state.hpp"
+#include "communication/state_machine.hpp"
+#include "communication/remote_default_config.hpp"
+
+#include "control/altitude_controller.hpp"
+#include "control/attitude_controller_default_config.hpp"
 #include "control/manual_control.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
+#include "control/servos_mix_quadcopter_diag_default_config.hpp"
+#include "control/stabilisation_copter.hpp"
+#include "control/stabilisation_copter_default_config.hpp"
 #include "control/velocity_controller_copter.hpp"
-#include "automatic_navigation/vector_field_waypoint.hpp"
-#include "control/altitude_controller.hpp"
-#include "hal/common/led.hpp"
+#include "control/velocity_controller_copter_default_config.hpp"
+
 #include "drivers/battery.hpp"
+#include "drivers/gps.hpp"
+#include "drivers/sonar.hpp"
 #include "drivers/servos_telemetry.hpp"
 
+#include "hal/common/file.hpp"
+#include "hal/common/led.hpp"
 
+#include "sensing/ahrs_ekf.hpp"
+#include "sensing/altitude_estimation.hpp"
+#include "sensing/imu.hpp"
+#include "sensing/position_estimation.hpp"
+#include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
-#include "control/stabilisation_copter_default_config.hpp"
-#include "control/servos_mix_quadcopter_diag_default_config.hpp"
-#include "control/attitude_controller_default_config.hpp"
-#include "control/velocity_controller_copter_default_config.hpp"
-#include "automatic_navigation/collision_avoidance.hpp"
-#include "communication/remote_default_config.hpp"
+#include "simulation/simulation.hpp"
 
 extern "C"
 {
@@ -118,6 +121,7 @@ public:
       Navigation::conf_t navigation_config;
       collision_avoidance_conf_t collision_avoidance_config;
       qfilter_conf_t qfilter_config;
+      Ahrs_ekf::conf_t ahrs_ekf_config;
       Position_estimation::conf_t position_estimation_config;
       stabilisation_copter_conf_t stabilisation_copter_config;
       servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
@@ -194,7 +198,9 @@ public:
     servos_mix_quadcotper_diag_t servo_mix;
 
     qfilter_t attitude_filter;                                  ///< The qfilter structure
+    
     ahrs_t ahrs;                                                ///< The attitude estimation structure
+    Ahrs_ekf ahrs_ekf;
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
@@ -245,6 +251,8 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.collision_avoidance_config = collision_avoidance_default_config();
 
     conf.qfilter_config = qfilter_default_config();
+
+    conf.ahrs_ekf_config = Ahrs_ekf::default_config();
 
     conf.position_estimation_config = Position_estimation::default_config();
 
