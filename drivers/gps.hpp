@@ -53,9 +53,12 @@ extern "C"
 
 typedef enum
 {
-    NO_GPS = 0,                            ///< No GPS
-    NO_FIX = 1,                            ///< No GPS fix
-    GPS_OK = 2,                            ///< GPS ok
+    NO_GPS = 0,
+    NO_FIX = 1,
+    FIX_2D = 2,
+    FIX_3D = 3,
+    DGPS = 4,
+    RTK = 5,
 }gps_fix_t;
 
 /**
