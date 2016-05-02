@@ -90,6 +90,7 @@ public:
 
     attitude_command_t			attitude_command_desired_;	///< Attitude command (input from head-tracker) [°]
     attitude_command_t			attitude_output_;			///< Output to PWM (output) [°]
+    float						commTrig_;					///< debug variable
 
 private:
     /**

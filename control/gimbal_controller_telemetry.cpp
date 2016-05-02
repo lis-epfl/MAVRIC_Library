@@ -60,6 +60,8 @@ void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t s
     gimbal_controller->attitude_command_desired_.rpy[1] = packet.angle[1];
     gimbal_controller->attitude_command_desired_.rpy[2] = packet.angle[2];
 
+    gimbal_controller->commTrig_ = time_keeper_get_us()/1000.0f;
+
     /*print_util_dbg_print("GIMBAL\r\n");
 	print_util_dbg_print("roll ");
 	print_util_dbg_putfloat(gimbal_controller->attitude_command_desired_.rpy[0],3);
