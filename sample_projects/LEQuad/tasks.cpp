@@ -47,7 +47,8 @@
 void tasks_run_imu_update(Central_data* central_data)
 {
     central_data->imu.update();
-    qfilter_update(&central_data->attitude_filter);
+    //qfilter_update(&central_data->attitude_filter);
+    central_data->ahrs_ekf.update();
     central_data->position_estimation.update();
 }
 

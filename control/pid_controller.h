@@ -101,8 +101,8 @@ typedef struct
     differentiator_t differentiator;    ///< Differentiator parameters
     float output;                       ///< Output
     float error;                        ///< Error
-    uint32_t last_update;               ///< Last update time in timer tick
-    float dt;                           ///< Time step
+    float last_update_s;                ///< Last update time in seconds
+    float dt_s;                         ///< Time step
     float soft_zone_width;              ///< Approximate width of a "soft zone" on the error input, i.e. a region of low gain around the target point. Value 0 -> switched off
 } pid_controller_t;
 

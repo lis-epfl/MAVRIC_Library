@@ -197,7 +197,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         feedforward[3] = (airspeed_desired - 13.0f)/8.0f + 0.2f;
         
         // run PID update on all velocity controllers
-        stabilisation_run_feedforward(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->ahrs->dt, rpyt_errors, feedforward);
+        stabilisation_run_feedforward(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->ahrs->dt_s, rpyt_errors, feedforward);
         
         
         ////////////////
@@ -263,7 +263,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
         
         // run PID update on all attitude_filter controllers
-        stabilisation_run(&stabilisation_wing->stabiliser_stack.attitude_stabiliser, stabilisation_wing->ahrs->dt, rpyt_errors);
+        stabilisation_run(&stabilisation_wing->stabiliser_stack.attitude_stabiliser, stabilisation_wing->ahrs->dt_s, rpyt_errors);
         
         // use output of attitude_filter controller to set rate setpoints for rate controller 
         input = stabilisation_wing->stabiliser_stack.attitude_stabiliser.output;
@@ -279,7 +279,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
         
         // run PID update on all rate controllers
-        stabilisation_run(&stabilisation_wing->stabiliser_stack.rate_stabiliser, stabilisation_wing->ahrs->dt, rpyt_errors);
+        stabilisation_run(&stabilisation_wing->stabiliser_stack.rate_stabiliser, stabilisation_wing->ahrs->dt_s, rpyt_errors);
     }
 
     stabilisation_wing->torque_command->xyz[0] = stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[ROLL];

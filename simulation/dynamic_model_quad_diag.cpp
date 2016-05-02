@@ -142,16 +142,16 @@ bool Dynamic_model_quad_diag::update(void)
 
     // velocity and position integration
 
-    // check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
-    if (local_position_.pos[Z] > 0)
+    // check altitude - if it is lower than ground, clamp everything (this is in NED, assuming negative altitude)
+    if (local_position_.pos[Z] > -0.001)
     {
-        vel_[Z] = 0.0f;
+        // vel_[Z] = 0.0f;
         local_position_.pos[Z] = 0.0f;
 
-        // simulate "acceleration" caused by contact force with ground, compensating gravity
+        // Add resistive force towards ground, proportionnal to distance to ground
         for (i = 0; i < 3; i++)
         {
-            lin_forces_bf_[i] = up_vec.v[i] * config_.total_mass * config_.gravity;
+            lin_forces_bf_[i] += up_vec.v[i] * config_.total_mass * config_.gravity + local_position_.pos[Z] * 1000.0f;
         }
 
         // slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)

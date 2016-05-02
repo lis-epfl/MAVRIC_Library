@@ -272,8 +272,8 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
 void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
 {
     // Compute time
-    float t = time_keeper_get_us();
-    float dt = 1e-6 * (float)(t - ahrs_madgwick->ahrs->last_update);
+    float t = time_keeper_get_s();
+    float dt_s = (float)(t - ahrs_madgwick->ahrs->last_update_s);
     
     std::array<float, 3> acc  = ahrs_madgwick->imu->acc();
     std::array<float, 3> gyro = ahrs_madgwick->imu->gyro();
@@ -288,7 +288,7 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
     float hc_z = ahrs_madgwick->airspeed_analog->get_airspeed() * gyro[Y];
     
     // Longitudinal accelerations
-    float hdv_x = - (ahrs_madgwick->airspeed_analog->get_airspeed() - ahrs_madgwick->airspeed_analog->get_last_airspeed())/dt;
+    float hdv_x = - (ahrs_madgwick->airspeed_analog->get_airspeed() - ahrs_madgwick->airspeed_analog->get_last_airspeed())/dt_s;
     
     
     /////////////////////////////////////////////////////////////
@@ -318,7 +318,7 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
     ahrs_madgwick_algo( gx, gy, gz,
                         ax, ay, az,
                         mx, my, mz,
-                        ahrs_madgwick->beta, ahrs_madgwick->zeta, dt);
+                        ahrs_madgwick->beta, ahrs_madgwick->zeta, dt_s);
     
     
     /////////////////////////////////////////////////////////////////
@@ -343,8 +343,8 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
     quat_t q_ned = quaternions_multiply(qtmp,q_nwu2ned);
     
     // Time
-    ahrs_madgwick->ahrs->last_update    = t;
-    ahrs_madgwick->ahrs->dt             = dt;
+    ahrs_madgwick->ahrs->last_update_s    = t;
+    ahrs_madgwick->ahrs->dt_s             = dt_s;
 
     // Quaternion in NED
     ahrs_madgwick->ahrs->qe = q_ned;
