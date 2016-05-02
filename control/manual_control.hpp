@@ -120,10 +120,9 @@ public:
 /**
  * \brief   Get the input from the joystick (Symbiotic project)
  *
- * \param   manual_control  The pointer to the manual control structure
  * \param   controls        The pointer to the command structure that will be executed
  */
-void manual_control_get_from_joystick_symbiotic(manual_control_t* manual_control, control_command_t* controls);
+    void manual_control_get_from_joystick_symbiotic(control_command_t* controls);
 
 
 /**
@@ -216,7 +215,7 @@ void manual_control_get_from_joystick_symbiotic(manual_control_t* manual_control
  *
  * \return  The value of the mode
  */
-mav_mode_t manual_control_get_mode_from_remote(manual_control_t* manual_control, mav_mode_t mode_current);
+mav_mode_t manual_control_get_mode_from_remote(mav_mode_t mode_current);
 
     /**
      * \brief   Sets the internal state of the joystick

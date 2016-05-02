@@ -172,17 +172,17 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
     mavlink_stream->send(msg);
 }
 
-void  sensors_set_telemetry_send(Central_data *central_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void  sensors_set_telemetry_send(Central_data *central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
 
 	float semilocal_vel[3];
 	aero_attitude_t aero_attitude;
 
 	//compute the semilocal velocity
-	position_estimation_get_semilocal_velocity(&central_data->navigation, semilocal_vel);
+	central_data->navigation.position_estimation_get_semilocal_velocity(semilocal_vel);
 
 	//navigation.qe is the body attitude in quaternion
-	aero_attitude = coord_conventions_quat_to_aero(*central_data->navigation.qe);
+	aero_attitude = coord_conventions_quat_to_aero(central_data->navigation.qe);
 
 	/*mavlink_msg_angle_rate_velocity_sensors_pack(mavlink_stream->sysid,
             mavlink_stream->compid,
@@ -195,8 +195,8 @@ void  sensors_set_telemetry_send(Central_data *central_data, const mavlink_strea
 			semilocal_vel[Z],
 			0.0f);*/
 
-	mavlink_msg_highres_imu_pack(mavlink_stream->sysid,
-			mavlink_stream->compid,
+	mavlink_msg_highres_imu_pack(mavlink_stream->sysid(),
+			mavlink_stream->compid(),
 			msg,
 			time_keeper_get_ms(),
 			maths_rad_to_deg(aero_attitude.rpy[0]),

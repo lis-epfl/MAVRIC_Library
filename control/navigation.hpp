@@ -140,6 +140,14 @@ public:
      */
     static inline conf_t default_config();
 
+
+    /**
+     * \brief   give back the semilocal vel
+     *
+     * \return -
+     */
+    void position_estimation_get_semilocal_velocity(float semilocal_vel[3]);
+
     float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
     pid_controller_t hovering_controller;               ///< hovering controller
     pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller

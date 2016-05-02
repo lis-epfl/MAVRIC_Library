@@ -111,12 +111,12 @@ void Manual_control::get_velocity_vector(control_command_t* controls)
     }
 }
 
-void manual_control_get_from_joystick_symbiotic(manual_control_t* manual_control, control_command_t* controls)
+void Manual_control::manual_control_get_from_joystick_symbiotic(control_command_t* controls)
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_velocity_vector_version2(&manual_control->joystick, controls);
+            joystick_get_velocity_vector_version2(&joystick, controls);
             break;
         default:
         	print_util_dbg_print("Error in geting drone's command from joystick [manual_control_get_from_joystick_symbiotic]");
@@ -283,15 +283,15 @@ mav_mode_t Manual_control::get_mode_from_source(mav_mode_t mode_current)
     return new_mode;
 }
 
-mav_mode_t manual_control_get_mode_from_remote(manual_control_t* manual_control, mav_mode_t mode_current)
+mav_mode_t Manual_control::manual_control_get_mode_from_remote(mav_mode_t mode_current)
 {
     mav_mode_t new_mode = mode_current;
 
-	if (remote_check(&manual_control->remote) != SIGNAL_LOST)
+	if (remote_check(&remote) != SIGNAL_LOST)
 	{
 		// Update mode from remote
-		remote_mode_update(&manual_control->remote);
-		new_mode = remote_mode_get(&manual_control->remote, mode_current);
+		remote_mode_update(&remote);
+		new_mode = remote_mode_get(&remote, mode_current);
 	}
 
     return new_mode;

@@ -181,3 +181,8 @@ bool State::set_armed(bool arming)
 
     return true;
 }
+
+void State::set_mode(mav_mode_t new_mav_mode)
+{
+	mav_mode_ = new_mav_mode;
+}

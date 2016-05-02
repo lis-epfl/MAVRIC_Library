@@ -139,6 +139,6 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
  * \param   stabilisation_copter    The stabilisation structure
  * \param   central_data		    The central data class
  */
-void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* stabilisation_copter, navigation_t* nav);
+void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* stabilisation_copter);
 
 #endif /* STABILISATION_COPTER_H_ */
