@@ -1,4 +1,4 @@
-This document describes the necessary steps to pare two XBees.
+﻿This document describes the necessary steps to pare two XBees.
 # 1. On Windows
 ## 1.1 Getting X-CTU
 
@@ -110,3 +110,4 @@ Change the Pan ID
 * 1122: Alex
 * 1111: Basil
 * 4567: Matteo
+* 3333: Matt

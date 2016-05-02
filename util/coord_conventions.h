@@ -144,6 +144,19 @@ quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero);
 float coord_conventions_get_yaw(quat_t qe);
 
 
+/**
+ * \brief           Changes the origin of the local position
+ *
+ * \details         THIS IS EVIL!!!
+ *
+ * \param position  pointer to position whose origin is changed
+ *
+ * \param origin    new origin
+ *
+ */
+void coord_conventions_change_origin(local_position_t* position, global_position_t origin);
+
+
 #ifdef __cplusplus
 }
 #endif

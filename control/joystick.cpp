@@ -84,18 +84,13 @@ static void joystick_button_1(joystick_t* joystick, bool button_1)
         {
             if (mav_modes_is_armed(joystick->mav_mode_desired))
             {
-                print_util_dbg_print("Disarming from joystick\r\n");
                 joystick->mav_mode_desired &= ~MAV_MODE_FLAG_SAFETY_ARMED;
                 joystick->arm_action = ARM_ACTION_DISARMING;
             }
             else
             {
-                print_util_dbg_print("Arming from joystick\r\n");
-                if ((joystick->mav_mode_desired & 0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
-                {
-                    joystick->mav_mode_desired |= MAV_MODE_FLAG_SAFETY_ARMED;
-                    joystick->arm_action = ARM_ACTION_ARMING;
-                }
+                joystick->mav_mode_desired |= MAV_MODE_FLAG_SAFETY_ARMED;
+                joystick->arm_action = ARM_ACTION_ARMING;
             }
             joystick->buttons.button_mask |= 0x0001;
         }
@@ -182,13 +177,11 @@ mav_mode_t joystick_get_mode(joystick_t* joystick, const mav_mode_t current_mode
     {
         new_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
         joystick->arm_action = ARM_ACTION_NONE;
-        print_util_dbg_print("Arming in new fct\r\n");
     }
     else if (joystick->arm_action == ARM_ACTION_DISARMING)
     {
         new_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
         joystick->arm_action = ARM_ACTION_NONE;
-        print_util_dbg_print("Disarming in new fct\r\n");
     }
 
     return new_mode;

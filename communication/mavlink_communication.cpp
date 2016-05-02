@@ -42,36 +42,34 @@
 
 
 #include "communication/mavlink_communication.hpp"
-
+#include "util/print_util.h"
 extern "C"
 {
-#include "util/print_util.h"
 #include "hal/common/time_keeper.hpp"
 #include <stdlib.h>
 }
 
 //------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-/**
- * \brief   Toggle mavlink telemetry stream
- *
- * \param scheduler     scheduler of the MAV
- * \param sysid         MAV sysid
- * \param msg           pointer to the stream you want to toggle
- */
-static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler, uint32_t sysid, mavlink_message_t* msg);
-
-
-//------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler, uint32_t sysid, mavlink_message_t* msg)
+bool Mavlink_communication::send_message(send_msg_handler_t* msg_send)
 {
-    // Get task set
-    task_set_t* mavlink_task_set = scheduler->task_set;
+    bool success = true;
 
+    Mavlink_communication::send_msg_function_t function = msg_send->function;
+    handling_telemetry_module_struct_t module_struct = msg_send->module_struct;
+
+    mavlink_message_t msg;
+    function(module_struct, msg_send->mavlink_stream, &msg);
+
+    success &= msg_send->mavlink_stream->send(&msg);
+
+    return success;
+}
+
+void Mavlink_communication::toggle_telemetry_stream(Scheduler* scheduler, uint32_t sysid, mavlink_message_t* msg)
+{
     // Decode message
     mavlink_request_data_stream_t request;
     mavlink_msg_request_data_stream_decode(msg, &request);
@@ -79,46 +77,29 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
     if (((request.target_system == sysid) || (request.target_system == MAV_SYS_ID_ALL)))
         //&&(request.target_component == 0))
     {
-        if (scheduler->debug)
-        {
-            print_util_dbg_print("stream request:");
-            print_util_dbg_print_num(request.target_component, 10);
-            print_util_dbg_print(" stream=");
-            print_util_dbg_print_num(request.req_stream_id, 10);
-            print_util_dbg_print(" start_stop=");
-            print_util_dbg_print_num(request.start_stop, 10);
-            print_util_dbg_print(" rate=");
-            print_util_dbg_print_num(request.req_message_rate, 10);
-            print_util_dbg_print("\r\n");
-        }
-
         if (request.req_stream_id == 255)
         {
             // send full list of streams
-            for (uint32_t i = 0; i < mavlink_task_set->task_count; i++)
-            {
-                task_entry_t* task = scheduler_get_task_by_index(scheduler, i);
-                scheduler_run_task_now(task);
-            }
+            scheduler->run_all_tasks_now();
         }
         else
         {
-            task_entry_t* task = scheduler_get_task_by_id(scheduler, request.req_stream_id);
+            Scheduler_task* task = scheduler->get_task_by_id(request.req_stream_id);
 
             if (task != NULL)
             {
                 if (request.start_stop)
                 {
-                    scheduler_change_run_mode(task, RUN_REGULAR);
+                    task->set_run_mode(Scheduler_task::Scheduler_task::RUN_REGULAR);
                 }
                 else
                 {
-                    scheduler_change_run_mode(task, RUN_NEVER);
+                    task->set_run_mode(Scheduler_task::Scheduler_task::RUN_NEVER);
                 }
 
                 if (request.req_message_rate > 0)
                 {
-                    scheduler_change_task_period(task, SCHEDULER_TIMEBASE / (uint32_t)request.req_message_rate);
+                    task->change_period(Scheduler::TIMEBASE / (uint32_t)request.req_message_rate);
                 }
             }
             else
@@ -133,187 +114,129 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t config, Serial* serial, const State* state, File* file_storage)
+Mavlink_communication::Mavlink_communication(Serial& serial, State& state, File& file_storage, const conf_t& config) :
+    scheduler_(config.scheduler_config),
+    mavlink_stream_(serial, config.mavlink_stream_config),
+    message_handler_(mavlink_stream_, config.message_handler_config),
+    onboard_parameters_(scheduler_, file_storage, state, message_handler_, mavlink_stream_, config.onboard_parameters_config),
+    msg_sending_count_(0)
 {
     bool init_success = true;
 
-    // Init MAVLink schedule
-    init_success &= scheduler_init(&mavlink_communication->scheduler,
-                                   config.scheduler_config);
-
-    // Init MAVLink stream
-    init_success &= mavlink_stream_init(&mavlink_communication->mavlink_stream,
-                                        &config.mavlink_stream_config,
-                                        serial);
-    //rx_stream,
-    //tx_stream );
-
-    init_success &= mavlink_message_handler_init(&mavlink_communication->message_handler,
-                    &config.message_handler_config,
-                    &mavlink_communication->mavlink_stream);
-
-    // Init onboard parameters
-    init_success &= onboard_parameters_init(&mavlink_communication->onboard_parameters,
-                                            &config.onboard_parameters_config,
-                                            &mavlink_communication->scheduler,
-                                            file_storage,
-                                            state,
-                                            &mavlink_communication->message_handler,
-                                            &mavlink_communication->mavlink_stream);
-
-    mavlink_communication->send_msg_handler_set = (mavlink_send_msg_handler_set_t*)malloc(sizeof(mavlink_send_msg_handler_set_t) + sizeof(mavlink_send_msg_handler_t[config.max_msg_sending_count]));
-
-
-    if (mavlink_communication->send_msg_handler_set != NULL)
+    // try to allocate memory for config.max_msg_sending_count messages, if not possible
+    // reduce max_msg_sending_count messages, until enough space is available
+    for(max_msg_sending_count_ = config.max_msg_sending_count; max_msg_sending_count_ > 0; max_msg_sending_count_--)
     {
-        mavlink_communication->send_msg_handler_set->max_msg_sending_count = config.max_msg_sending_count;
-        mavlink_communication->send_msg_handler_set->msg_sending_count = 0;
-
-        init_success &= true;
-    }
-    else
-    {
-        print_util_dbg_print("[MAVLINK COMMUNICATION] ERROR ! Bad memory allocation\r\n");
-
-        mavlink_communication->send_msg_handler_set->max_msg_sending_count = 0;
-        mavlink_communication->send_msg_handler_set->msg_sending_count = 0;
-
-        init_success &= false;
+        msg_send_list_ = (send_msg_handler_t*)malloc(sizeof(send_msg_handler_t[max_msg_sending_count_]));
+        if(msg_send_list_ != NULL)
+        {
+            break;
+        }
     }
 
-    mavlink_communication->send_msg_handler_set->max_msg_sending_count = config.max_msg_sending_count;
+    if(max_msg_sending_count_ != config.max_msg_sending_count)
+    {
+        init_success = false;
+        print_util_dbg_print("[MAVLINK COMMUNICATION].configure ERROR ! reserved ");
+        print_util_dbg_print_num(max_msg_sending_count_,10);
+        print_util_dbg_print(" instead of ");
+        print_util_dbg_print_num(config.max_msg_sending_count,10);
+        print_util_dbg_print("\r\n");
+    }
 
     // Add callback to activate / disactivate streams
-    mavlink_message_handler_msg_callback_t callback;
+    Mavlink_message_handler::msg_callback_t callback;
 
     callback.message_id     = MAVLINK_MSG_ID_REQUEST_DATA_STREAM; // 66
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (mavlink_msg_callback_function_t) &mavlink_communication_toggle_telemetry_stream;
-    callback.module_struct  = (handling_module_struct_t)        &mavlink_communication->scheduler;
-    init_success &= mavlink_message_handler_add_msg_callback(&mavlink_communication->message_handler, &callback);
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &toggle_telemetry_stream;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)        &scheduler_;
+    init_success &= message_handler_.add_msg_callback(&callback);
 
-    return init_success;
-}
-
-
-bool mavlink_communication_update(mavlink_communication_t* mavlink_communication)
-{
-    mavlink_stream_t* mavlink_stream = &mavlink_communication->mavlink_stream;
-    mavlink_message_handler_t* handler = &mavlink_communication->message_handler;
-
-    // Receive new message
-    while (mavlink_stream_receive(mavlink_stream))
+    if(!init_success)
     {
-        // Handle message
-        if (mavlink_stream->msg_available == true)
-        {
-            mavlink_message_handler_receive(handler, &mavlink_stream->rec);
-            mavlink_stream->msg_available = false;
-        }
-    }
-
-    // Send messages
-    scheduler_update(&mavlink_communication->scheduler);
-
-    return true;
-}
-
-bool mavlink_communication_update_receive(mavlink_communication_t* mavlink_communication)
-{
-    mavlink_stream_t* mavlink_stream = &mavlink_communication->mavlink_stream;
-    mavlink_message_handler_t* handler = &mavlink_communication->message_handler;
-
-    // Receive new message
-    while (mavlink_stream_receive(mavlink_stream))
-    {
-        // Handle message
-        if (mavlink_stream->msg_available == true)
-        {
-            mavlink_message_handler_receive(handler, &mavlink_stream->rec);
-            mavlink_stream->msg_available = false;
-        }
-    }
-
-    return true;
-}
-
-bool mavlink_communication_update_send(mavlink_communication_t* mavlink_communication)
-{
-    // Send messages
-    scheduler_update(&mavlink_communication->scheduler);
-
-    return true;
-}
-
-
-void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_communication, uint32_t delay)
-{
-    uint32_t i;
-    for (i = 0; i < mavlink_communication->scheduler.task_set->task_count; i++)
-    {
-        scheduler_suspend_task(&mavlink_communication->scheduler.task_set->tasks[i], delay);
+        print_util_dbg_print("[MAVLINK COMMUNICATION] constructor error\r\n");
     }
 }
 
+void Mavlink_communication::suspend_downstream(uint32_t delay)
+{
+    scheduler_.suspend_all_tasks(delay);
+}
 
-bool mavlink_communication_add_msg_send(mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
+
+bool Mavlink_communication::add_msg_send(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Mavlink_communication::send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
 {
     bool add_success = true;
 
-    mavlink_send_msg_handler_set_t* send_handler = mavlink_communication->send_msg_handler_set;
-
-    if (send_handler == NULL)
+    if (msg_sending_count_ <  max_msg_sending_count_)
     {
-        print_util_dbg_print("[MAVLINK COMMUNICATION] Error: null pointer.\r\n");
-        add_success &= false;
+        send_msg_handler_t* new_msg_send = &msg_send_list_[msg_sending_count_++];
+
+        new_msg_send->mavlink_stream = &mavlink_stream_;
+        new_msg_send->function = function;
+        new_msg_send->module_struct = module_structure;
+
+        add_success &= true;
+
+        add_success &= scheduler_.add_task(repeat_period,
+                                          run_mode,
+                                          timing_mode,
+                                          priority,
+                                          (Scheduler_task::task_function_t)&send_message,
+                                          (Scheduler_task::task_argument_t)new_msg_send,
+                                          task_id);
     }
     else
     {
-        if (send_handler->msg_sending_count <  send_handler->max_msg_sending_count)
-        {
-            mavlink_send_msg_handler_t* new_msg_send = &send_handler->msg_send_list[send_handler->msg_sending_count];
+        print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
 
-            new_msg_send->mavlink_stream = &mavlink_communication->mavlink_stream;
-            new_msg_send->function = function;
-            new_msg_send->module_struct = module_structure;
-
-            send_handler->msg_sending_count += 1;
-
-            add_success &= true;
-
-            add_success &= scheduler_add_task(&mavlink_communication->scheduler,
-                                              repeat_period,
-                                              run_mode,
-                                              timing_mode,
-                                              priority,
-                                              (task_function_t)&mavlink_communication_send_message,
-                                              (task_argument_t)new_msg_send,
-                                              task_id);
-        }
-        else
-        {
-            print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
-
-            add_success &= false;
-        }
+        add_success &= false;
     }
 
     return add_success;
 }
 
 
-bool mavlink_communication_send_message(mavlink_send_msg_handler_t* msg_send)
+Scheduler& Mavlink_communication::scheduler()
 {
-    bool success = true;
+    return scheduler_;
+}
 
-    mavlink_send_msg_function_t function = msg_send->function;
-    handling_telemetry_module_struct_t module_struct = msg_send->module_struct;
+Mavlink_message_handler& Mavlink_communication::message_handler()
+{
+    return message_handler_;
+}
 
-    mavlink_message_t msg;
-    function(module_struct, msg_send->mavlink_stream, &msg);
+Mavlink_stream& Mavlink_communication::mavlink_stream()
+{
+    return mavlink_stream_;
+}
 
-    success &= mavlink_stream_send(msg_send->mavlink_stream, &msg);
+Onboard_parameters& Mavlink_communication::onboard_parameters()
+{
+    return onboard_parameters_;
+}
 
-    return success;
+
+uint32_t Mavlink_communication::sysid()
+{
+    return mavlink_stream_.sysid();
+}
+
+
+bool Mavlink_communication::update(Mavlink_communication* mavlink_communication)
+{
+    // Receive new message
+    Mavlink_stream::msg_received_t rec;
+    while (mavlink_communication->mavlink_stream_.receive(&rec))
+    {
+            mavlink_communication->message_handler_.receive(&rec);
+    }
+
+    // Send messages
+    mavlink_communication->scheduler_.update();
+
+    return true;
 }

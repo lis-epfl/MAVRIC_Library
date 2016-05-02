@@ -60,7 +60,7 @@ extern "C"
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Function to send the MAVLink roll, pitch and yaw errors message
@@ -69,7 +69,7 @@ void stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* 
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Function to send the MAVLink roll, pitch, yaw and thrust setpoints message
@@ -78,7 +78,7 @@ void stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* controls, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Task to send the MAVLink command message depending on the control mode
@@ -87,7 +87,7 @@ void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* c
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void stabilisation_telemetry_send_control(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void stabilisation_telemetry_send_control(const control_command_t* controls, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Task to send the MAVLink messages with the output of the PID controllers
@@ -96,7 +96,7 @@ void stabilisation_telemetry_send_control(const control_command_t* controls, con
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_copter, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_copter, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Task to send the MAVLink messages with a given set of sensors value

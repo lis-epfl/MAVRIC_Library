@@ -114,30 +114,30 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool joystick_telemetry_init(joystick_t* joystick, mavlink_message_handler_t* message_handler)
+bool joystick_telemetry_init(joystick_t* joystick, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
     // Add callbacks for waypoint handler messages requests
-    mavlink_message_handler_msg_callback_t callback;
+    Mavlink_message_handler::msg_callback_t callback;
 
     callback.message_id     = MAVLINK_MSG_ID_MANUAL_CONTROL; // 69
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (mavlink_msg_callback_function_t) &joystick_telemetry_parse_msg;
-    callback.module_struct  = (handling_module_struct_t)        joystick;
-    init_success &= mavlink_message_handler_add_msg_callback(message_handler, &callback);
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &joystick_telemetry_parse_msg;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) joystick;
+    init_success &= message_handler->add_msg_callback(&callback);
 
     return init_success;
 }
 
 
-void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_manual_control_pack(mavlink_stream->sysid,
-                                    mavlink_stream->compid,
+    mavlink_msg_manual_control_pack(mavlink_stream->sysid(),
+                                    mavlink_stream->compid(),
                                     msg,
-                                    mavlink_stream->sysid,
+                                    mavlink_stream->sysid(),
                                     joystick->channels.x * 1000,
                                     joystick->channels.y * 1000,
                                     joystick->channels.z * 1000,

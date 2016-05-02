@@ -86,7 +86,7 @@ typedef struct
     stabiliser_stack_copter_t stabiliser_stack;                 ///< The pointer to the PID parameters values for the stacked controller
     control_command_t* controls;                                ///< The pointer to the control structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
-    const position_estimation_t* pos_est;                       ///< The pointer to the position estimation structure
+    const Position_estimation* pos_est;                         ///< The pointer to the position estimation structure
     torque_command_t* torque_command;                           ///< The pointer to the torque command structure
     thrust_command_t* thrust_command;                           ///< The pointer to the thrust command structure
 } stabilisation_copter_t;
@@ -114,7 +114,7 @@ typedef struct
  *
  * \return  True if the init succeed, false otherwise
  */
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const position_estimation_t* pos_est, torque_command_t* torque, thrust_command_t* thrust);
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const Position_estimation* pos_est, torque_command_t* torque, thrust_command_t* thrust);
 
 /**
  * \brief                           Main Controller for controlling and stabilizing the quad in position (not using velocity control)
@@ -124,7 +124,7 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
  * \param   waypoint_handler        The waypoint handler structure, to get hold_position coordinates
  * \param   position_estimation     The position estimator structure to compute position error
  */
-void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation);
+void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* position_estimation);
 
 /**
  * \brief                           Main Controller for controlling and stabilizing the quad

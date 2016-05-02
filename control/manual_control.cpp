@@ -63,29 +63,24 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool manual_control_init(manual_control_t* manual_control, Satellite* sat, manual_control_conf_t config, remote_conf_t remote_config)
+Manual_control::Manual_control(Satellite* sat, conf_t config, remote_conf_t remote_config) :
+    mode_source_(config.mode_source),
+    control_source_(config.control_source)
 {
-    bool init_success = true;
-
-    manual_control->mode_source     = config.mode_source;
-    manual_control->control_source  = config.control_source;
-
-    init_success &= remote_init(&manual_control->remote, sat, remote_config);
-    init_success &= joystick_init(&manual_control->joystick);
-
-    return init_success;
+    remote_init(&remote, sat, remote_config);
+    joystick_init(&joystick);
 }
 
 
-void manual_control_get_control_command(manual_control_t* manual_control, control_command_t* controls)
+void Manual_control::get_control_command(control_command_t* controls)
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_control_command(&manual_control->remote, controls);
+            remote_get_control_command(&remote, controls);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_control_command(&manual_control->joystick, controls);
+            joystick_get_control_command(&joystick, controls);
             break;
         case CONTROL_SOURCE_NONE:
             controls->rpy[ROLL] = 0.0f;
@@ -97,15 +92,15 @@ void manual_control_get_control_command(manual_control_t* manual_control, contro
 }
 
 
-void manual_control_get_velocity_vector(manual_control_t* manual_control, control_command_t* controls)
+void Manual_control::get_velocity_vector(control_command_t* controls)
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_velocity_vector(&manual_control->remote, controls);
+            remote_get_velocity_vector(&remote, controls);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_velocity_vector(&manual_control->joystick, controls);
+            joystick_get_velocity_vector(&joystick, controls);
             break;
         case CONTROL_SOURCE_NONE:
             controls->tvel[X] = 0.0f;
@@ -129,17 +124,17 @@ void manual_control_get_from_joystick_symbiotic(manual_control_t* manual_control
 }
 
 
-float manual_control_get_thrust(const manual_control_t* manual_control)
+float Manual_control::get_thrust() const
 {
     float thrust = 0.0f;
 
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            thrust = remote_get_throttle(&manual_control->remote);
+            thrust = remote_get_throttle(&remote);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            thrust = joystick_get_throttle(&manual_control->joystick);
+            thrust = joystick_get_throttle(&joystick);
             break;
         case CONTROL_SOURCE_NONE:
             thrust = -1.0f;
@@ -149,15 +144,15 @@ float manual_control_get_thrust(const manual_control_t* manual_control)
 }
 
 
-void manual_control_get_torque_command(const manual_control_t* manual_control, torque_command_t* command, float scale)
+void Manual_control::get_torque_command(torque_command_t* command, float scale) const
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_torque_command(&manual_control->remote, command, scale);
+            remote_get_torque_command(&remote, command, scale);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_torque_command(&manual_control->joystick, command, scale);
+            joystick_get_torque_command(&joystick, command, scale);
             break;
         case CONTROL_SOURCE_NONE:
             break;
@@ -165,15 +160,15 @@ void manual_control_get_torque_command(const manual_control_t* manual_control, t
 }
 
 
-void manual_control_get_rate_command(const manual_control_t* manual_control, rate_command_t* command, float scale)
+void Manual_control::get_rate_command(rate_command_t* command, float scale) const
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_rate_command(&manual_control->remote, command, scale);
+            remote_get_rate_command(&remote, command, scale);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_rate_command(&manual_control->joystick, command, scale);
+            joystick_get_rate_command(&joystick, command, scale);
             break;
         case CONTROL_SOURCE_NONE:
             break;
@@ -181,15 +176,15 @@ void manual_control_get_rate_command(const manual_control_t* manual_control, rat
 }
 
 
-void manual_control_get_thrust_command(const manual_control_t* manual_control, thrust_command_t* command)
+void Manual_control::get_thrust_command(thrust_command_t* command) const
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_thrust_command(&manual_control->remote, command);
+            remote_get_thrust_command(&remote, command);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_thrust_command(&manual_control->joystick, command);
+            joystick_get_thrust_command(&joystick, command);
             break;
         case CONTROL_SOURCE_NONE:
             break;
@@ -197,15 +192,15 @@ void manual_control_get_thrust_command(const manual_control_t* manual_control, t
 }
 
 
-void manual_control_get_attitude_command_absolute_yaw(const manual_control_t* manual_control, attitude_command_t* command, float scale)
+void Manual_control::get_attitude_command_absolute_yaw(attitude_command_t* command, float scale) const
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_attitude_command_absolute_yaw(&manual_control->remote, command, scale);
+            remote_get_attitude_command_absolute_yaw(&remote, command, scale);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_attitude_command_absolute_yaw(&manual_control->joystick, command, scale);
+            joystick_get_attitude_command_absolute_yaw(&joystick, command, scale);
             break;
         case CONTROL_SOURCE_NONE:
             break;
@@ -213,15 +208,15 @@ void manual_control_get_attitude_command_absolute_yaw(const manual_control_t* ma
 }
 
 
-void manual_control_get_attitude_command(const manual_control_t* manual_control, const float k_yaw, attitude_command_t* command, float scale)
+void Manual_control::get_attitude_command(const float k_yaw, attitude_command_t* command, float scale) const
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_attitude_command(&manual_control->remote, k_yaw, command, scale);
+            remote_get_attitude_command(&remote, k_yaw, command, scale);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_attitude_command(&manual_control->joystick, k_yaw, command, scale);
+            joystick_get_attitude_command(&joystick, k_yaw, command, scale);
             break;
         case CONTROL_SOURCE_NONE:
             break;
@@ -229,15 +224,15 @@ void manual_control_get_attitude_command(const manual_control_t* manual_control,
 }
 
 
-void manual_control_get_attitude_command_vtol(const manual_control_t* manual_control, const float k_yaw, attitude_command_t* command, float scale, float reference_pitch)
+void Manual_control::get_attitude_command_vtol(const float k_yaw, attitude_command_t* command, float scale, float reference_pitch) const
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_attitude_command_vtol(&manual_control->remote, k_yaw, command, scale, reference_pitch);
+            remote_get_attitude_command_vtol(&remote, k_yaw, command, scale, reference_pitch);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_attitude_command_vtol(&manual_control->joystick, k_yaw, command, scale, reference_pitch);
+            joystick_get_attitude_command_vtol(&joystick, k_yaw, command, scale, reference_pitch);
             break;
         case CONTROL_SOURCE_NONE:
             break;
@@ -245,15 +240,15 @@ void manual_control_get_attitude_command_vtol(const manual_control_t* manual_con
 }
 
 
-void manual_control_get_velocity_command(const manual_control_t* manual_control, velocity_command_t* command, float scale)
+void Manual_control::get_velocity_command(velocity_command_t* command, float scale) const
 {
-    switch (manual_control->control_source)
+    switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_velocity_command(&manual_control->remote, command, scale);
+            remote_get_velocity_command(&remote, command, scale);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick_get_velocity_command(&manual_control->joystick, command, scale);
+            joystick_get_velocity_command(&joystick, command, scale);
             break;
         case CONTROL_SOURCE_NONE:
             break;
@@ -261,27 +256,27 @@ void manual_control_get_velocity_command(const manual_control_t* manual_control,
 }
 
 
-mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control, mav_mode_t mode_current)
+mav_mode_t Manual_control::get_mode_from_source(mav_mode_t mode_current)
 {
     mav_mode_t new_mode = mode_current;
 
-    switch (manual_control->mode_source)
+    switch (mode_source_)
     {
         case MODE_SOURCE_GND_STATION:
             new_mode = mode_current;
-            manual_control->joystick.mav_mode_desired = mode_current;
+            //joystick.mav_mode_desired = mode_current;
             break;
         case MODE_SOURCE_REMOTE:
-            if (remote_check(&manual_control->remote) != SIGNAL_LOST)
+            if (remote_check(&remote) != SIGNAL_LOST)
             {
                 // Update mode from remote
-                remote_mode_update(&manual_control->remote);
-                new_mode = remote_mode_get(&manual_control->remote, mode_current);
-                manual_control->joystick.mav_mode_desired = mode_current;
+                remote_mode_update(&remote);
+                new_mode = remote_mode_get(&remote, mode_current);
+                //joystick.mav_mode_desired = mode_current;
             }
             break;
         case MODE_SOURCE_JOYSTICK:
-            new_mode = joystick_get_mode(&manual_control->joystick, mode_current);
+            new_mode = joystick_get_mode(&joystick, mode_current);
             break;
     }
 
@@ -303,14 +298,20 @@ mav_mode_t manual_control_get_mode_from_remote(manual_control_t* manual_control,
 }
 
 
-signal_quality_t manual_control_get_signal_strength(manual_control_t* manual_control)
+void Manual_control::set_mode_of_source(mav_mode_t mode)
+{
+    // override internal mav_mode of joystick
+    joystick.mav_mode_desired = mode;
+}
+
+signal_quality_t Manual_control::get_signal_strength()
 {
     signal_quality_t rc_check;
 
     // Get remote signal strength
-    if (manual_control->control_source == CONTROL_SOURCE_REMOTE)
+    if (control_source_ == CONTROL_SOURCE_REMOTE)
     {
-        rc_check = remote_check(&manual_control->remote);
+        rc_check = remote_check(&remote);
     }
     else
     {

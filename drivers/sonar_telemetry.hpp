@@ -54,6 +54,6 @@
  * \param   mavlink_stream  The pointer to the MAVLink stream structure
  * \param   msg             The pointer to the MAVLink message
  */
-void sonar_telemetry_send(const Sonar* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void sonar_telemetry_send(const Sonar* sonar, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* SONAR_I2CXL_TELEMETRY_H_ */
