@@ -137,7 +137,8 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
  * \return  Task status return
  */
 bool mavlink_communication_update(mavlink_communication_t* mavlink_communication);
-
+bool mavlink_communication_update_receive(mavlink_communication_t* mavlink_communication);
+bool mavlink_communication_update_send(mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief   Suspending sending of messages

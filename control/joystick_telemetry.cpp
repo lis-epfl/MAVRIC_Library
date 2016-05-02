@@ -46,6 +46,11 @@
 #include "util/print_util.h"
 //#include "util/constants.h"
 
+extern "C"
+{
+#include "hal/common/time_keeper.hpp"
+}
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -83,16 +88,14 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
         joystick->channels.x = packet.x / 1000.0f;
         joystick->channels.y = packet.y / 1000.0f;
         joystick->channels.z = packet.z / 1000.0f;
-        //joystick->channels.r = packet.r / 1000.0f;
+        joystick->channels.r = packet.r / 1000.0f;
 
         //Alex for test frequency purpose
-        print_util_dbg_putfloat(joystick->channels.r,1);
+        print_util_dbg_putfloat((float) joystick->commTrigger,0);
                 print_util_dbg_print("\r\n");
 
-        if(joystick->channels.r > 0.0f)
-        	joystick->channels.r = -1.0f;
-        else
-        	joystick->channels.r = 1.0f;
+       	joystick->commTrigger = time_keeper_get_us()/1000.0f;
+        //Alex end
 
         joystick_button_mask(joystick, packet.buttons);
     }

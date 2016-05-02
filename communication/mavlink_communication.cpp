@@ -219,6 +219,33 @@ bool mavlink_communication_update(mavlink_communication_t* mavlink_communication
     return true;
 }
 
+bool mavlink_communication_update_receive(mavlink_communication_t* mavlink_communication)
+{
+    mavlink_stream_t* mavlink_stream = &mavlink_communication->mavlink_stream;
+    mavlink_message_handler_t* handler = &mavlink_communication->message_handler;
+
+    // Receive new message
+    while (mavlink_stream_receive(mavlink_stream))
+    {
+        // Handle message
+        if (mavlink_stream->msg_available == true)
+        {
+            mavlink_message_handler_receive(handler, &mavlink_stream->rec);
+            mavlink_stream->msg_available = false;
+        }
+    }
+
+    return true;
+}
+
+bool mavlink_communication_update_send(mavlink_communication_t* mavlink_communication)
+{
+    // Send messages
+    scheduler_update(&mavlink_communication->scheduler);
+
+    return true;
+}
+
 
 void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_communication, uint32_t delay)
 {
