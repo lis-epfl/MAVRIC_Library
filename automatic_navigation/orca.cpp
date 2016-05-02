@@ -51,6 +51,9 @@ extern "C"
 
 #define RVO_EPSILON 0.0001f
 
+const uint8_t max_number_of_planes = 10;
+
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
@@ -107,7 +110,7 @@ static float orca_linear_program3(plane_t const planes[], uint8_t const plane_si
  * \param   new_velocity        The 3D output array
  * \param   max_num_of_planes   The maximum number of planes
  */
-static void orca_linear_program4(plane_t const planes[], uint8_t const plane_size, uint8_t const ind, float const max_speed, float new_velocity[], uint8_t max_number_of_planes);
+static void orca_linear_program4(plane_t const planes[], uint8_t const plane_size, uint8_t const ind, float const max_speed, float new_velocity[]);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -447,7 +450,7 @@ static float orca_linear_program3(plane_t const planes[], uint8_t const plane_si
     return plane_size;
 }
 
-static void orca_linear_program4(plane_t const planes[], uint8_t const plane_size, uint8_t const ind, float const max_speed, float new_velocity[], uint8_t max_number_of_planes)
+static void orca_linear_program4(plane_t const planes[], uint8_t const plane_size, uint8_t const ind, float const max_speed, float new_velocity[])
 {
     uint8_t i;
     
@@ -563,8 +566,6 @@ bool orca_init(orca_t *orca, orca_conf_t orca_config, Neighbors* neighbors, cons
     
     orca->loop_count_orca = 0;
     orca->loop_count_collisions = 0;
-
-    orca->max_number_of_planes = neighbors->config_.max_num_neighbors;
     
     orca->comfort_slider = orca_config.comfort_slider;
     
@@ -609,7 +610,7 @@ void orca_compute_new_velocity(orca_t *orca, float const optimal_velocity[], flo
 {
     uint8_t ind, i;
     
-    plane_t planes[orca->max_number_of_planes];
+    plane_t planes[max_number_of_planes];
     
     quat_t q_neighbor, q_neighbor_bf;
     
@@ -753,7 +754,7 @@ void orca_compute_new_velocity(orca_t *orca, float const optimal_velocity[], flo
     
     if (plane_fail < orca->neighbors->number_of_neighbors_)
     {
-        orca_linear_program4(planes,orca->neighbors->number_of_neighbors_,plane_fail,orca->neighbors->config_.max_speed,performance_velocity, orca->max_number_of_planes);
+        orca_linear_program4(planes,orca->neighbors->number_of_neighbors_,plane_fail,orca->neighbors->config_.max_speed,performance_velocity);
     }
     
     float comfort_velocity[3];
@@ -761,7 +762,7 @@ void orca_compute_new_velocity(orca_t *orca, float const optimal_velocity[], flo
     plane_fail = orca_linear_program3(planes,orca->neighbors->number_of_neighbors_,orca->position_estimation->vel_bf,orca->neighbors->config_.max_speed,comfort_velocity,false);
     if (plane_fail < orca->neighbors->number_of_neighbors_)
     {
-        orca_linear_program4(planes,orca->neighbors->number_of_neighbors_,plane_fail,orca->neighbors->config_.max_speed,comfort_velocity, orca->max_number_of_planes);
+        orca_linear_program4(planes,orca->neighbors->number_of_neighbors_,plane_fail,orca->neighbors->config_.max_speed,comfort_velocity);
     }
     
     for (i = 0; i < 3; i++)
