@@ -371,12 +371,12 @@ bool State_machine::set_mode_guided(bool guided)
 
     if(guided)
     {
-        // if position_estimation is not healthy, abort
-        if(!position_estimation_.healthy())
-        {
-            print_util_dbg_print("[STATE_MACHINE]: prevented passing to guided because position estimation is not healthy\r\n");
-            return false;
-        }
+        // // if position_estimation is not healthy, abort
+        // if(!position_estimation_.healthy())
+        // {
+        //     print_util_dbg_print("[STATE_MACHINE]: prevented passing to guided because position estimation is not healthy\r\n");
+        //     return false;
+        // }
 
         // set guided flag
         state_.mav_mode_ |= MAV_MODE_FLAG_GUIDED_ENABLED;
@@ -402,12 +402,12 @@ bool State_machine::set_mode_stabilize(bool stabilize)
 
     if(stabilize)
     {
-        // if position_estimation is not healthy, abort
-        if(!position_estimation_.healthy())
-        {
-            print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because position estimation is not healthy\r\n");
-            return false;
-        }
+        // // if position_estimation is not healthy, abort
+        // if(!position_estimation_.healthy())
+        // {
+        //     print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because position estimation is not healthy\r\n");
+        //     return false;
+        // }
 
         // set stabilize flag
         state_.mav_mode_ |= MAV_MODE_FLAG_STABILIZE_ENABLED;
