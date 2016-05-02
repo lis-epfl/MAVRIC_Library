@@ -211,8 +211,8 @@ Navigation::conf_t Navigation::default_config()
     conf.wpt_nav_controller.differentiator.clip      = 0.46f;
     conf.wpt_nav_controller.output                   = 0.0f;
     conf.wpt_nav_controller.error                    = 0.0f;
-    conf.wpt_nav_controller.last_update              = 0.0f;
-    conf.wpt_nav_controller.dt                       = 1;
+    conf.wpt_nav_controller.last_update_s            = 0.0f;
+    conf.wpt_nav_controller.dt_s                     = 1;
     conf.wpt_nav_controller.soft_zone_width          = 0.0f;
     conf.hovering_controller                         = {};
     conf.hovering_controller.p_gain                  = 0.4f;
@@ -229,8 +229,8 @@ Navigation::conf_t Navigation::default_config()
     conf.hovering_controller.differentiator.clip     = 0.46f;
     conf.hovering_controller.output                  = 0.0f;
     conf.hovering_controller.error                   = 0.0f;
-    conf.hovering_controller.last_update             = 0.0f;
-    conf.hovering_controller.dt                      = 1;
+    conf.hovering_controller.last_update_s           = 0.0f;
+    conf.hovering_controller.dt_s                    = 1;
     conf.hovering_controller.soft_zone_width         = 0.0f;
 
     return conf;

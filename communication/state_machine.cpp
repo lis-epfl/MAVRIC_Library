@@ -153,10 +153,12 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
 State_machine::State_machine(State& state,
                             const Position_estimation& position_estimation,
                             const Imu& imu,
+                            const ahrs_t& ahrs,
                             Manual_control& manual_control) :
     state_(state),
     position_estimation_(position_estimation),
     imu_(imu),
+    ahrs_(ahrs),
     manual_control_(manual_control)
 {}
 
@@ -212,7 +214,7 @@ bool State_machine::update(State_machine* state_machine)
             break;
 
         case MAV_STATE_CALIBRATING:
-            if (state_machine->imu_.is_ready())
+            if (state_machine->imu_.is_ready() && (state_machine->ahrs_.internal_state == AHRS_READY))
             {
                 state_new = MAV_STATE_STANDBY;
             }
@@ -231,7 +233,7 @@ bool State_machine::update(State_machine* state_machine)
                 mode_custom_new = CUSTOM_BASE_MODE;
             }
 
-            if (!state_machine->imu_.is_ready())
+            if (!state_machine->imu_.is_ready() || !(state_machine->ahrs_.internal_state == AHRS_READY))
             {
                 state_new = MAV_STATE_CALIBRATING;
             }
