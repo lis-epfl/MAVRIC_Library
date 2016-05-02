@@ -68,7 +68,7 @@ var searchData=
   ['state_5f',['state_',['../classMavlink__waypoint__handler.html#a8f6d41542592069ceed685f693efc2d0',1,'Mavlink_waypoint_handler::state_()'],['../classState__machine.html#a1d458bc645f27269f102e6048d122e91',1,'State_machine::state_()']]],
   ['state_5fmachine',['state_machine',['../classCentral__data.html#a1e2ce004ad84e7016f7afd982c6f9399',1,'Central_data']]],
   ['static_5fhold_5fthresh',['static_hold_thresh',['../structubx__cfg__nav__settings__t.html#a2ce746bee4c0055747c4987420ceb2aa',1,'ubx_cfg_nav_settings_t']]],
-  ['status',['status',['../structMavlink__stream_1_1msg__received__t.html#aeaf94fd0cc0a6502fd88f7e55476ee55',1,'Mavlink_stream::msg_received_t::status()'],['../structubx__cfg__tp__t.html#aa5f0e32aacd0be25df50ca023a788208',1,'ubx_cfg_tp_t::status()'],['../structubx__nav__dgps__t.html#a7ab02de10dbd66a6a6d049ba80cad3b8',1,'ubx_nav_dgps_t::status()'],['../structgps__t.html#aaa0854f799a40951088f9c39699292a7',1,'gps_t::status()']]],
+  ['status',['status',['../structMavlink__stream_1_1msg__received__t.html#aeaf94fd0cc0a6502fd88f7e55476ee55',1,'Mavlink_stream::msg_received_t::status()'],['../structubx__cfg__tp__t.html#aa5f0e32aacd0be25df50ca023a788208',1,'ubx_cfg_tp_t::status()'],['../structubx__nav__dgps__t.html#a7ab02de10dbd66a6a6d049ba80cad3b8',1,'ubx_nav_dgps_t::status()'],['../structgps__t.html#aad28348e1c78537111eabd454d667608',1,'gps_t::status()']]],
   ['step',['step',['../structgps__t.html#acc0f0e2065502d06f14e57e98b7252d4',1,'gps_t']]],
   ['sv_5fid',['sv_id',['../structubx__nav__dgps__t.html#a1447e57c558bdb490de7e8c159231003',1,'ubx_nav_dgps_t']]],
   ['svid',['svid',['../structubx__nav__sv__info__t.html#a094d5806bd93a9e8fbc718c1c9cf6919',1,'ubx_nav_sv_info_t']]],

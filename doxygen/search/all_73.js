@@ -148,7 +148,7 @@ var searchData=
   ['state_5ftelemetry_5fsend_5fautopilot_5fcapabilities',['state_telemetry_send_autopilot_capabilities',['../classState.html#a4664b4ca5c776f7a5db625292bd8b91c',1,'State']]],
   ['state_5ftelemetry_5fset_5fmode',['state_telemetry_set_mode',['../classState.html#a14cbfb43a63cbf6cd4f0fa30c72023bb',1,'State']]],
   ['static_5fhold_5fthresh',['static_hold_thresh',['../structubx__cfg__nav__settings__t.html#a2ce746bee4c0055747c4987420ceb2aa',1,'ubx_cfg_nav_settings_t']]],
-  ['status',['status',['../structMavlink__stream_1_1msg__received__t.html#aeaf94fd0cc0a6502fd88f7e55476ee55',1,'Mavlink_stream::msg_received_t::status()'],['../structubx__cfg__tp__t.html#aa5f0e32aacd0be25df50ca023a788208',1,'ubx_cfg_tp_t::status()'],['../structubx__nav__dgps__t.html#a7ab02de10dbd66a6a6d049ba80cad3b8',1,'ubx_nav_dgps_t::status()'],['../structgps__t.html#aaa0854f799a40951088f9c39699292a7',1,'gps_t::status()']]],
+  ['status',['status',['../structMavlink__stream_1_1msg__received__t.html#aeaf94fd0cc0a6502fd88f7e55476ee55',1,'Mavlink_stream::msg_received_t::status()'],['../structubx__cfg__tp__t.html#aa5f0e32aacd0be25df50ca023a788208',1,'ubx_cfg_tp_t::status()'],['../structubx__nav__dgps__t.html#a7ab02de10dbd66a6a6d049ba80cad3b8',1,'ubx_nav_dgps_t::status()'],['../structgps__t.html#aad28348e1c78537111eabd454d667608',1,'gps_t::status()']]],
   ['step',['step',['../structgps__t.html#acc0f0e2065502d06f14e57e98b7252d4',1,'gps_t']]],
   ['stop',['stop',['../classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253',1,'Data_logging']]],
   ['stop_5faccelerometer_5fbias_5fcalibration',['stop_accelerometer_bias_calibration',['../classImu.html#a5455d91545d19a136b5cf92519daeec1',1,'Imu']]],
