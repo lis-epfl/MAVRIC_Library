@@ -80,7 +80,7 @@ public:
 	float 								maxsens;
 	float								a_max; ///<maximal deceleration [m/s^2]
 	float								r_pz; ///< radius of Protection Zone
-	float								discomfort; ///<[0,1] intensity of the reaction
+	float								comfort; ///<[0,1] intensity of the reaction
 	float								tahead; ///<[0,1] intensity of the reaction
 	float								coef_roll; ///<[0,1] intensity of the reaction
 

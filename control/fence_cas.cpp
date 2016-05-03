@@ -54,6 +54,7 @@ extern "C"
 #include "util/vectors.h"
 
 #define SMALL_NUM 0.000001
+#define CLOSE_NUM 0.1
 }
 
 
@@ -249,13 +250,12 @@ Fence_CAS::Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_esti
 :	sensor_res(3),
 	a_max(1),
 	r_pz(0),
-	discomfort(0),
+	comfort(0.5),
 	waypoint_handler(waypoint_handler),
 	pos_est(postion_estimation),
 	controls(controls),
 	detected_point({0,0,0}),
 	repulsion({0,0,0}),
-//	maxsens(10.0),
 	tahead(2.0),
 	coef_roll(0.005),
 	maxsens(10.0)
@@ -294,6 +294,7 @@ bool Fence_CAS::update(void)
 	float Vval = vectors_norm(V);
 
 	float dmin=2*this->r_pz; //can be adjusted
+	float max_ang= 0.25*PI*(1-this->comfort);
 
 	for(int i =0; i<3;i++)
 	{
@@ -314,7 +315,6 @@ bool Fence_CAS::update(void)
 
 		global_position_t Agpoint = {this->waypoint_handler->fence_list[i].y, this->waypoint_handler->fence_list[i].x,(float)this->waypoint_handler->fence_list[i].z, 0.0f};
 		global_position_t Bgpoint = {this->waypoint_handler->fence_list[j].y, this->waypoint_handler->fence_list[j].x,(float)this->waypoint_handler->fence_list[j].z, 0.0f};
-
 		local_position_t Alpoint = coord_conventions_global_to_local_position(Agpoint,this->pos_est->local_position.origin);
 		local_position_t Blpoint = coord_conventions_global_to_local_position(Bgpoint,this->pos_est->local_position.origin);
 
@@ -331,44 +331,68 @@ bool Fence_CAS::update(void)
 
 
 
+
 		if((dist[i] >= -(this->maxsens))&(dist[i] < this->maxsens))
 		{
-			print_util_dbg_print("|CS|");
-			print_util_dbg_putfloat(S[0]-C[0],5);
-			print_util_dbg_print("||");
-			print_util_dbg_putfloat(S[1]-C[1],5);
+			int interp_type = 2;
+
+			//test if the drone is locked in an angle
+			if(((maths_f_abs(dist[i]-dist[i-1])<CLOSE_NUM)&&(i>0))||(((maths_f_abs(dist[i]-dist[0])<CLOSE_NUM)&&(i==waypoint_handler->number_of_fence_points-1))))
+//			if(0);
+			{
+				int l=0;
+				if(i==0)
+				{
+					l = waypoint_handler->number_of_fence_points-1;
+				}
+				else
+				{
+					l = i-1;
+				}
+				global_position_t Dgpoint = {this->waypoint_handler->fence_list[l].y, this->waypoint_handler->fence_list[l].x,(float)this->waypoint_handler->fence_list[l].z, 0.0f};
+				local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
+				float D[3]={Dlpoint.pos[0],Dlpoint.pos[1],Dlpoint.pos[2]};
+				float K_aigu=2*this->maxsens;
+				float Ap[3]={(D[0]-A[0])*K_aigu, (D[1]-A[1])*K_aigu, (D[2]-A[2])*K_aigu };
+				float Bp[3]={(B[0]-A[0])*K_aigu, (B[1]-A[1])*K_aigu, (B[2]-A[2])*K_aigu };
+				float interm_dist = detect_seg(Ap,Bp,C,S,V,I,J);
+				float rep[3]={Ap[1]-Bp[1],Bp[0]-Ap[0],0.0};
+				gftobftransform(C, S, rep);
+				vectors_normalize(rep,rep);
+				rep[1]=(rep[1]>=0?1:-1);
+				float ratio = interm_dist/this->maxsens;
+				this->repulsion[1]+=-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type);
+			}
+
+//			print_util_dbg_print("|CS|");
+//			print_util_dbg_putfloat(S[0]-C[0],5);
+//			print_util_dbg_print("||");
+//			print_util_dbg_putfloat(S[1]-C[1],5);
 
 			float rep[3]={A[1]-B[1],B[0]-A[0],0.0};
-			print_util_dbg_print("|rep|");
-			print_util_dbg_putfloat(rep[0],5);
-			print_util_dbg_print("||");
-			print_util_dbg_putfloat(rep[1],5);
+
+//			print_util_dbg_print("|rep|");
+//			print_util_dbg_putfloat(rep[0],5);
+//			print_util_dbg_print("||");
+//			print_util_dbg_putfloat(rep[1],5);
 
 			gftobftransform(C, S, rep);
 			vectors_normalize(rep,rep);
-			print_util_dbg_print("|bf|");
-			print_util_dbg_putfloat(rep[0],5);
-			print_util_dbg_print("||");
-			print_util_dbg_putfloat(rep[1],5);
-			print_util_dbg_print("||\n");
+
+//			print_util_dbg_print("|bf|");
+//			print_util_dbg_putfloat(rep[0],5);
+//			print_util_dbg_print("||");
+//			print_util_dbg_putfloat(rep[1],5);
+//			print_util_dbg_print("||\n");
+
 			float ratio = dist[i]/this->maxsens;
 
 //			this->repulsion[0]+=0.0;
 
 			rep[1]=(rep[1]>=0?1:-1); // 1 = clockwise / -1 = counterclockwise
-//			print_util_dbg_print("||");
-//			print_util_dbg_putfloat(rep[1],5);
-//			rep[1]=1.0;
-			this->repulsion[1]+=rep[1]*this->coef_roll*0.25*PI*interpolate(ratio,0);
+			this->repulsion[1]+=-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type);
 //			this->repulsion[2]+=0.0;
 
-//			print_util_dbg_print("||");
-//			print_util_dbg_putfloat(this->repulsion[1],5);
-//			print_util_dbg_print("|dist_detected|");
-//			print_util_dbg_putfloat(dist[i],5);
-////			print_util_dbg_print("||\n");
-//			print_util_dbg_print("|vel bf|");
-//			print_util_dbg_putfloat(pos_est->vel_bf[1],5);
 
 			detected++;
 		}
@@ -378,20 +402,16 @@ bool Fence_CAS::update(void)
 		}
 	}
 	//Cliping
-	if(this->repulsion[1]>0.25*PI)
+	if(this->repulsion[1]>max_ang)
 	{
-		this->repulsion[1]=0.25*PI;
+		this->repulsion[1]=max_ang;
 	}
-	if(this->repulsion[1]<-0.25*PI)
+	if(this->repulsion[1]<-max_ang)
 	{
-		this->repulsion[1]=-0.25*PI;
+		this->repulsion[1]=-max_ang;
 	}
-//	this->repulsion[0]=0.0;
-//	this->repulsion[1]=0.0;
-//	this->repulsion[2]=0.0;
 	if(detected==0)
 	{
-//		controls->tvel[1]=0.0;
 		controls->rpy[ROLL] = 0.0;
 	}
 
@@ -436,8 +456,10 @@ float  Fence_CAS::interpolate(float r, int type) //type=x, 0: linear, 1: cos, 2:
 }
 void Fence_CAS::gftobftransform(float C[3], float S[3], float rep[3])
 {
-	float temp0 = (S[0]-C[0])*rep[0] + (C[1]-S[1])*rep[1];
-	float temp1 = (S[1]-C[1])*rep[0] + (S[0]-C[0])*rep[1];
+//	float temp0 = (S[0]-C[0])*rep[0] + (C[1]-S[1])*rep[1];
+//	float temp1 = (S[1]-C[1])*rep[0] + (S[0]-C[0])*rep[1];
+	float temp0 = (S[0]-C[0])*rep[0] + (S[1]-C[1])*rep[1];
+	float temp1 = (S[1]-C[1])*rep[0] + (C[0]-S[0])*rep[1];
 	rep[0]=temp0;
 	rep[1]=temp1;
 	rep[2]=0.0;
