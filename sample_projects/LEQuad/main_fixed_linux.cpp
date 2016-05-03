@@ -134,9 +134,25 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
+    bool started=false;
     while (1)
     {
-        cd.scheduler.update();
+      //Wait for initialization to finish
+      if(cd.state.mav_state_>=3 && !started)
+      {
+        started=true;
+        //Change position
+        board.dynamic_model.set_position(0.0f, 0.0f, -100.0f);
+        board.dynamic_model.set_speed(10.0f, 0.0f, 0.0f);
+      }
+      else if(cd.state.mav_state_<3 && started)
+      {
+        started=false;
+        //Change position
+        board.dynamic_model.set_position(0.0f, 0.0f, 0.0f);
+        board.dynamic_model.set_speed(0.0f, 0.0f, 0.0f);
+      }
+      cd.scheduler.update();
     }
 
     return 0;

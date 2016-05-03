@@ -75,11 +75,13 @@ Wing_model::Wing_model(float flap_angle,
 	init_lookup();
 }
 
-wing_model_forces_t Wing_model::compute_forces(float wind_bf[3], float ang_rates[3]){
+wing_model_forces_t Wing_model::compute_forces(float wind[3], float ang_rates[3]){
 	//Compute the wind speed at the COG of the wing
-	wind_bf[0] -= (ang_rates[1]*position_bf_[2]-ang_rates[2]*position_bf_[1]);
-	wind_bf[1] -= (ang_rates[2]*position_bf_[0]-ang_rates[0]*position_bf_[2]);
-	wind_bf[2] -= (ang_rates[0]*position_bf_[1]-ang_rates[1]*position_bf_[0]);
+
+	float wind_bf[3];
+	wind_bf[0] = wind[0] - (ang_rates[1]*position_bf_[2]-ang_rates[2]*position_bf_[1]);
+	wind_bf[1] = wind[1] - (ang_rates[2]*position_bf_[0]-ang_rates[0]*position_bf_[2]);
+	wind_bf[2] = wind[2] - (ang_rates[0]*position_bf_[1]-ang_rates[1]*position_bf_[0]);
 
 	//Global to local wind
 	float wind_wf[3];
@@ -89,7 +91,6 @@ wing_model_forces_t Wing_model::compute_forces(float wind_bf[3], float ang_rates
 	float cl = get_cl(aoa);
 	float cd = get_cd(aoa);
 	float cm = get_cm(aoa);
-	//printf("%f\n",aoa/PI*180);
 	float density=1.225f; //Keep it constant for now
 	float base = 0.5*density*speed_sq*area_;
 	float lift = cl*base; //Doing this to improve the speed -> Correct??
@@ -100,9 +101,9 @@ wing_model_forces_t Wing_model::compute_forces(float wind_bf[3], float ang_rates
 	forces_wf.torque[ROLL] = 0.0;
 	forces_wf.torque[PITCH] = cm*chord_*base; //Positive when plane lift its nose
 	forces_wf.torque[YAW] = 0.0;
-	forces_wf.force[0] = -drag*cosinus+lift*sinus; //Drag and lift are // and orthogonal to the wind
-	forces_wf.force[1] = 0.0;
-	forces_wf.force[2] = -lift*cosinus-drag*sinus;
+	forces_wf.force[X] = -drag*cosinus+lift*sinus; //Drag and lift are // and orthogonal to the wind
+	forces_wf.force[Y] = 0.0;
+	forces_wf.force[Z] = -lift*cosinus-drag*sinus;
 	wing_model_forces_t forces_bf = forces_wing_to_bf(forces_wf);
 	return forces_bf;
 }
@@ -253,7 +254,7 @@ wing_model_forces_t Wing_model::forces_wing_to_bf(wing_model_forces_t forces_wf)
 	// Rotate the torques
 	quaternions_rotate_vector(orientation_,forces_wf.torque,forces_bf.torque);
 	// Compute the torques due to the forces being applied away from COG
-	for(int i=0; i<3; i++) forces_bf.torque[i]+= forces_bf.force[(i+2)%3]*position_bf_[(i+1)%3] - forces_bf.force[(i+1)%3]*position_bf_[(i+2)%3];
+	for(int i=0; i<3; i++) forces_bf.torque[i] += forces_bf.force[(i+2)%3]*position_bf_[(i+1)%3] - forces_bf.force[(i+1)%3]*position_bf_[(i+2)%3];
 	return forces_bf;
 }
 

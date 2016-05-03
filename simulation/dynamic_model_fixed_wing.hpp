@@ -190,6 +190,24 @@ public:
      */
      const float x_speed_bf(void) const;
 
+     /**
+      * \brief   Set position in local frame
+      *
+      * \param   x_pos      x position in NED coordinates
+      * \param   y_pos      y position in NED coordinates
+      * \param   z_pos      z position in NED coordinates
+      */
+     void set_position(float x_pos, float y_pos, float z_pos);
+
+     /**
+      * \brief   Set speed in earth frame
+      *
+      * \param    v_x       x speed in earth coordinates
+      * \param    v_y       y speed in earth coordinates
+      * \param    v_z       z speed in earth coordinates
+      */
+     void set_speed(float v_x, float v_y, float v_z);
+
 private:
     Servo& servo_motor_;         ///< Reference to motor servo
     Servo& servo_flap_left_;     ///< Reference to left flap servo

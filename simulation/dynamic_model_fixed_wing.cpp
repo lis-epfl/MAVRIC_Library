@@ -47,11 +47,6 @@
 #include <iostream>
 #include <fstream>
 
-extern "C"
-{
-//#include "hal/common/time_keeper.hpp"
-}
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -73,8 +68,8 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     rates_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     lin_forces_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     acc_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-    vel_bf_(std::array<float, 3> {{5.0f, 0.0f, 0.0f}}),
-    vel_(std::array<float, 3> {{5.0f, 0.0f, 0.0f}}),
+    vel_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
+    vel_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
     last_update_us_(time_keeper_get_us()),
     dt_s_(0.004f)
@@ -82,7 +77,7 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     // Init local position
     local_position_.pos[0]  = 0.0f;
     local_position_.pos[1]  = 0.0f;
-    local_position_.pos[2]  = -500.0f;
+    local_position_.pos[2]  = 0.0f;
     local_position_.heading = 0.0f;
     local_position_.origin.latitude         = config_.home_coordinates[0];
     local_position_.origin.longitude        = config_.home_coordinates[1];
@@ -256,6 +251,23 @@ const float Dynamic_model_fixed_wing::x_speed_bf(void) const
   return vel_bf_[X];
 }
 
+void Dynamic_model_fixed_wing::set_position(float x_pos, float y_pos, float z_pos)
+{
+  local_position_.pos[0]  = x_pos;
+  local_position_.pos[1]  = y_pos;
+  local_position_.pos[2]  = z_pos;
+  // Set global position accordingly
+  global_position_ = coord_conventions_local_to_global_position(local_position_);
+}
+
+void Dynamic_model_fixed_wing::set_speed(float v_x, float v_y, float v_z)
+{
+  vel_[0]=v_x;
+  vel_[1]=v_y;
+  vel_[2]=v_z;
+  //Set the BF speed accordingly
+  quaternions_rotate_vector(quaternions_inverse(attitude_),vel_.data(),vel_bf_.data());
+}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -265,10 +277,10 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
 {
     // Get the servos commands and set the flap angles
     float motor_command = servo_motor_.read() - config_.rotor_rpm_offset;
-    float flaps_angle_left = (servo_flap_left_.read() - config_.flap_offset)*config_.flap_max; // *40 degrees in radians
-    float flaps_angle_right = (servo_flap_right_.read() - config_.flap_offset)*config_.flap_max; // *40 degrees in radians
-    left_flap_.set_flap_angle(flaps_angle_left);
-    right_flap_.set_flap_angle(flaps_angle_right);
+    float flaps_angle_left = (servo_flap_left_.read() - config_.flap_offset)*config_.flap_max;
+    float flaps_angle_right = (servo_flap_right_.read() - config_.flap_offset)*config_.flap_max;
+    left_flap_.set_flap_angle(0.0*flaps_angle_left);//TODO: remove 0.0*
+    right_flap_.set_flap_angle(0.0*flaps_angle_right);
 
     //Get the wind in the bf
     //Take into account the speed of the plane to get the relative wind
@@ -281,7 +293,7 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     quaternions_rotate_vector(quaternions_inverse(attitude_), wind_gf,wind_bf);
 
     //Compute the forces for the motor and each wing
-    wing_model_forces_t motor_forces = compute_motor_forces(wind_bf, motor_command);
+    wing_model_forces_t motor_forces = compute_motor_forces(wind_bf, 0.0*motor_command);//TODO: remove 0.0*
     //Sending the angular velocity to the flap to improve force approximation
     wing_model_forces_t left_flap_force = left_flap_.compute_forces(wind_bf,rates_bf_.data());
     wing_model_forces_t right_flap_force = right_flap_.compute_forces(wind_bf,rates_bf_.data());
@@ -295,7 +307,7 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
 			left_drift_force.torque[ROLL] +
       right_drift_force.torque[ROLL];
 
-      //Get the torque around y axis (pitch)
+    //Get the torque around y axis (pitch)
     torques_bf_[PITCH] = motor_forces.torque[PITCH] +
 			 left_flap_force.torque[PITCH] +
 			 right_flap_force.torque[PITCH] +
@@ -310,25 +322,25 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
            right_drift_force.torque[YAW];
 
     //Get the force in X axis
-    lin_forces_bf_[X] = motor_forces.force[0] +
-			left_flap_force.force[0] +
-			right_flap_force.force[0] +
-      left_drift_force.force[0] +
-      right_drift_force.force[0];
+    lin_forces_bf_[X] = motor_forces.force[X] +
+			left_flap_force.force[X] +
+			right_flap_force.force[X] +
+      left_drift_force.force[X] +
+      right_drift_force.force[X];
 
     //Get the force in Y axis
-    lin_forces_bf_[Y] = motor_forces.force[1] +
-			left_flap_force.force[1] +
-			right_flap_force.force[1] +
-      left_drift_force.force[1] +
-      right_drift_force.force[1];
+    lin_forces_bf_[Y] = motor_forces.force[Y] +
+			left_flap_force.force[Y] +
+			right_flap_force.force[Y] +
+      left_drift_force.force[Y] +
+      right_drift_force.force[Y];
 
     //Get the force in Z axis
-    lin_forces_bf_[Z] = motor_forces.force[2] +
-			left_flap_force.force[2] +
-			right_flap_force.force[2] +
-      left_drift_force.force[2] +
-      right_drift_force.force[2];
+    lin_forces_bf_[Z] = motor_forces.force[Z] +
+			left_flap_force.force[Z] +
+			right_flap_force.force[Z] +
+      left_drift_force.force[Z] +
+      right_drift_force.force[Z];
 }
 
 wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(float wind_bf[3],float motor_command)
@@ -348,7 +360,7 @@ wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(float wind_bf
   motor_forces.force[0] = ldb * config_.rotor_cl;
   motor_forces.force[1] = 0.0f;
   motor_forces.force[2] = 0.0f;
-  motor_forces.torque[ROLL] = (10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;
+  motor_forces.torque[ROLL] = 0.0f*(10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;
   motor_forces.torque[PITCH] = 0.0f;
   motor_forces.torque[YAW] = 0.0f;
 

@@ -92,7 +92,9 @@ int main(int argc, char** argv)
     time_keeper_init();
     float t = time_keeper_get_s();
     float start = t;
-    for (uint32_t i = 0; i < 1000000; i++)
+    model.set_position(0.0f, 0.0f, -100.0f);
+    model.set_speed(10.0f, 0.0f, 0.0f);
+    for (uint32_t i = 0; i < 100000; i++)
     {
         //if(i%100000==0) printf("%d/100\n",i/10000);
         //printf("-------------------------\n");
