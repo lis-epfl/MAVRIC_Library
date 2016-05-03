@@ -202,6 +202,11 @@ bool offboard_camera_telemetry_init(Central_data* central_data, mavlink_message_
     // Set the tag landing altitude to be the starting altitude
     central_data->waypoint_handler.navigation->tag_search_altitude = -10.0f;
 
+    // Init tag_location vector to 0
+    central_data->waypoint_handler.tag_location.pos[0] = 0
+    central_data->waypoint_handler.tag_location.pos[1] = 0
+    central_data->waypoint_handler.tag_location.pos[2] = 0
+
     // Add callbacks for cmd
     mavlink_message_handler_cmd_callback_t callbackcmd;
     callbackcmd.command_id = MAV_CMD_DO_CONTROL_VIDEO; // 200
