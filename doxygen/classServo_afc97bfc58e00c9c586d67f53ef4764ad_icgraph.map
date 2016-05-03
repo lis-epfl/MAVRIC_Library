@@ -1,3 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="147,5,288,35"/>
+<area shape="rect" id="node3" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="153,5,295,35"/>
+<area shape="rect" id="node5" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="148,59,300,88"/>
+<area shape="rect" id="node9" href="$classServo.html#a91d7c835b5b0e44a9c57f34ea24affe5" title="Sets the minimum value to the servo." alt="" coords="149,112,299,141"/>
+<area shape="rect" id="node7" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="349,59,475,88"/>
 </map>

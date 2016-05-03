@@ -31,7 +31,7 @@
 <area shape="rect" id="node45" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="2892,1047,3023,1132"/>
 <area shape="rect" id="node49" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="2727,1038,2868,1141"/>
 <area shape="rect" id="node53" href="$classData__logging.html" title="The class of the log of the data." alt="" coords="1288,1432,1445,1691"/>
-<area shape="rect" id="node55" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="4451,1003,4597,1175"/>
+<area shape="rect" id="node55" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="4451,986,4597,1193"/>
 <area shape="rect" id="node122" href="$structservos__telemetry__t.html" title="The servo telemetry definition." alt="" coords="4324,1519,4457,1604"/>
 <area shape="rect" id="node60" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="1923,479,2056,668"/>
 <area shape="rect" id="node62" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="1628,487,1764,659"/>

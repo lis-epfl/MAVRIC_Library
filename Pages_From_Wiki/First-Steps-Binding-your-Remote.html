@@ -62,9 +62,9 @@
             <div class="page-header sub-header clearfix">
             <h1><a href="../Pages_From_Wiki/Calibration-Bias-Factors.html">Pages From Wiki</a> <i class="glyphicon glyphicon-chevron-right"></i> <a href="../Pages_From_Wiki/First-Steps-Binding-your-Remote.html">First-Steps-Binding-your-Remote</a>            </h1>
                     <span style="float: left; font-size: 10px; color: gray;">
-                        Monday, May 2, 2016                    </span>
+                        Tuesday, May 3, 2016                    </span>
                     <span style="float: right; font-size: 10px; color: gray;">
-                        6:31 PM                    </span>
+                        9:17 AM                    </span>
         </div>
     
     <p>This part explain how to pair your remote with the satellite on the autopilot side, which is called the binding process.</p>
@@ -105,12 +105,13 @@ or</li>
 <p>As you can see, the propeller doesn't start turning at the same time, for this:</p>
 <ul>
 <li>Open Atmel Studio and your project in MAVRIC\LEQuad</li>
-<li>Open the file /src/central_data.c</li>
-<li>write 'pwm_servos_calibrate_esc( &amp;central_data.servos);' just before 'pwm_servos_write_to_hardware( &amp;central_data.servos );'</li>
+<li>Open the file /src/megafly_rev4.cpp</li>
+<li>Change the preprocessor definition for CALIBRATE_ESC to 1</li>
 <li>Build and flash your drone with that code.</li>
+<li>Remove the propellers from the quad.</li>
 <li>Unplug the USB cable used for flashing or the AVR programmer, and plug the battery to the drone, then press the reset button (next to the USB port, on the other face).</li>
 <li>Arm the quad and check with the remote controller that every motors are turning at the same speed.</li>
-<li>In Atmel, remove 'pwm_servos_calibrate_esc( &amp;central_data.servos);'</li>
+<li>In Atmel, Change the preprocessor definition for CALIBRATE_ESC to 0</li>
 <li>Build and flash your drone with that code.</li>
 </ul>
 <p>You are done !</p>

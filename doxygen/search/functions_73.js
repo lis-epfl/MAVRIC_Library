@@ -32,6 +32,8 @@ var searchData=
   ['set_5fpulse_5fwidth_5fus',['set_pulse_width_us',['../classPwm__avr32.html#a01ecd378dac69f8d99c318ac43e57b28',1,'Pwm_avr32::set_pulse_width_us()'],['../classPwm.html#ad37f30f6859c8c9e988a5e4d0ddbdb90',1,'Pwm::set_pulse_width_us()'],['../classPwm__dummy.html#a838d5f39d7f7bcf279e595093e54242d',1,'Pwm_dummy::set_pulse_width_us()'],['../classPwm__stm32.html#ac9524ba2c47972d70f4779e394c21dbd',1,'Pwm_stm32::set_pulse_width_us()']]],
   ['set_5fradius',['set_radius',['../classraytracing_1_1Sphere.html#a927e6076a0ea237cf436129709288acf',1,'raytracing::Sphere::set_radius()'],['../classraytracing_1_1Cylinder.html#aecbb83c0e4ccd6ac2a48913ebd2408b5',1,'raytracing::Cylinder::set_radius()']]],
   ['set_5frun_5fmode',['set_run_mode',['../classScheduler__task.html#a81635f94d0854c6a604a83fcf697efef',1,'Scheduler_task']]],
+  ['set_5fservo_5fmax',['set_servo_max',['../classServo.html#af8a414bfdd3d55cb55fa7155e17d4396',1,'Servo']]],
+  ['set_5fservo_5fmin',['set_servo_min',['../classServo.html#a91d7c835b5b0e44a9c57f34ea24affe5',1,'Servo']]],
   ['simulation',['Simulation',['../classSimulation.html#a89a33c403d6d5e6e0e0ace1b706ce7bc',1,'Simulation']]],
   ['sonar',['sonar',['../classSimulation.html#aaa6af22e24b433fa4de1a2fe28946c2b',1,'Simulation']]],
   ['sonar_5fi2cxl',['Sonar_i2cxl',['../classSonar__i2cxl.html#a3f4f6a528824adf73084eec85ff3e158',1,'Sonar_i2cxl']]],
