@@ -77,9 +77,6 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
     // Increment counter
     central_data->offboard_camera.picture_count++;
 
-    // Only change stuff if we are search for a tag
-    if (central_data->waypoint_handler.navigation->internal_state == NAV_LAND_ON_TAG)
-    {
         // Set waypoint enum to tag found
         central_data->waypoint_handler.navigation->land_on_tag_behavior = TAG_FOUND;
 
@@ -185,7 +182,6 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 
         // Update recorded time
         camera.update_last_update_us();
-    }
     
     result = MAV_RESULT_ACCEPTED;
     return result;
