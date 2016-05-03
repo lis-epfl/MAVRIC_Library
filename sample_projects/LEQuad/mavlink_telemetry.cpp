@@ -213,7 +213,7 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain,              "ROLL_R_KP");
     init_success &= onboard_parameters->add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.clip,         "ROLL_R_I_CLIP");
     init_success &= onboard_parameters->add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.gain,         "ROLL_R_KI");
-    init_success &= onboard_parameters->add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip,     "ROLL_R_D_CLIp");
+    init_success &= onboard_parameters->add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip,     "ROLL_R_D_CLIP");
     init_success &= onboard_parameters->add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain,     "ROLL_R_KD");
 
     // Roll attitude
