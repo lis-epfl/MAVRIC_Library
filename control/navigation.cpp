@@ -42,6 +42,7 @@
 
 #include "control/navigation.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "control/dubin.hpp"
 
 extern "C"
 {
@@ -62,7 +63,6 @@ extern "C"
  * \return                  Distance to waypoint squared
  */
 static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_pos[], const float local_pos[3]);
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -186,17 +186,117 @@ void Navigation::set_speed_command(float rel_pos[])
     }
 }
 
+void Navigation::set_dubin_velocity(dubin_t* dubin)
+{
+    float dir_desired[3];
+
+    quat_t q_rot;
+    aero_attitude_t attitude_yaw;
+
+    switch(dubin_state)
+    {
+        case DUBIN_INIT:
+            dubin_circle(   dir_desired, 
+                            dubin->circle_center_1, 
+                            goal.radius, 
+                            position_estimation.local_position.pos, 
+                            cruise_speed,
+                            one_over_scaling );
+            break;
+        case DUBIN_CIRCLE1:
+            dubin_circle(   dir_desired, 
+                            dubin->circle_center_1, 
+                            dubin->radius_1, 
+                            position_estimation.local_position.pos, 
+                            cruise_speed,
+                            one_over_scaling );
+        break;
+
+        case DUBIN_STRAIGHT:
+            dubin_line( dir_desired, 
+                        dubin->line_direction,
+                        dubin->tangent_point_2,
+                        position_estimation.local_position.pos,
+                        cruise_speed,
+                        one_over_scaling);
+        break;
+
+        case DUBIN_CIRCLE2:
+            dubin_circle(   dir_desired, 
+                            dubin->circle_center_2, 
+                            goal.radius, 
+                            position_estimation.local_position.pos, 
+                            cruise_speed,
+                            one_over_scaling );
+        break;
+    }
+
+    float vert_vel = vertical_vel_gain * (goal.waypoint.pos[Z] - position_estimation.local_position.pos[Z]);
+
+    if (maths_f_abs(vert_vel) > max_climb_rate)
+    {
+        vert_vel = maths_sign(vert_vel) * max_climb_rate;
+    }
+
+    dir_desired[Z] = vert_vel;
+
+    // Transform the vector in the semi-global reference frame
+    attitude_yaw = coord_conventions_quat_to_aero(qe);
+    attitude_yaw.rpy[0] = 0.0f;
+    attitude_yaw.rpy[1] = 0.0f;
+    attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
+    q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+    float dir_desired_sg[3];
+    quaternions_rotate_vector(q_rot, dir_desired, dir_desired_sg);
+
+    controls_nav.tvel[X] = dir_desired_sg[X];
+    controls_nav.tvel[Y] = dir_desired_sg[Y];
+    controls_nav.tvel[Z] = dir_desired_sg[Z];
+
+    float rel_heading;
+    rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - position_estimation.local_position.heading);
+    
+    controls_nav.rpy[YAW] = kp_yaw * rel_heading;
+}
+
+
 void Navigation::run()
 {
     float rel_pos[3];
 
     // Control in translational speed of the platform
-    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(goal.pos,
+    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(goal.waypoint.pos,
                               rel_pos,
                               position_estimation.local_position.pos);
-    set_speed_command(rel_pos);
+    
+    switch(navigation_type)
+    {
+        case DIRECT_TO:
+            set_speed_command(rel_pos);
+        break;
 
-    controls_nav.theading = goal.heading;
+        case DUBIN:
+            if (state.autopilot_type == MAV_TYPE_QUADROTOR)
+            {
+                if ( (internal_state_ == NAV_NAVIGATING) || (internal_state_ == NAV_HOLD_POSITION) )
+                {
+                    set_dubin_velocity( &goal.dubin);
+                }
+                else
+                {
+                    set_speed_command(rel_pos);
+                }
+            }
+            else
+            {
+                set_dubin_velocity(&goal.dubin);
+            }
+            // Add here other types of navigation strategies
+        break;
+    }
+
+    controls_nav.theading = goal.waypoint.heading;
 }
 
 //------------------------------------------------------------------------------
@@ -211,6 +311,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     mavlink_stream(mavlink_stream)
 {
     //navigation controller init
+
     controls_nav.rpy[ROLL] = 0.0f;
     controls_nav.rpy[PITCH] = 0.0f;
     controls_nav.rpy[YAW] = 0.0f;
@@ -222,10 +323,10 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     controls_nav.control_mode = VELOCITY_COMMAND_MODE;
     controls_nav.yaw_mode = YAW_ABSOLUTE;
 
-    goal.pos[X] = 0.0f;
-    goal.pos[Y] = 0.0f;
-    goal.pos[Z] = 0.0f;
-    goal.heading = 0.0f;
+    goal.waypoint.pos[X] = 0.0f;
+    goal.waypoint.pos[Y] = 0.0f;
+    goal.waypoint.pos[Z] = 0.0f;
+    goal.waypoint.heading = 0.0f;
 
     last_update = 0;
 
@@ -234,11 +335,26 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     wpt_nav_controller = nav_config.wpt_nav_controller;
     hovering_controller = nav_config.hovering_controller;
 
+    one_over_scaling = nav_config.one_over_scaling;
+
+    safe_altitude = nav_config.safe_altitude;
+    minimal_radius = nav_config.minimal_radius;
+    heading_acceptance = nav_config.heading_acceptance;
+    vertical_vel_gain = nav_config.vertical_vel_gain;
+    takeoff_altitude = nav_config.takeoff_altitude;
+
+    soft_zone_size = nav_config.soft_zone_size;
+
     dist2vel_gain = nav_config.dist2vel_gain;
     cruise_speed = nav_config.cruise_speed;
     max_climb_rate = nav_config.max_climb_rate;
 
-    soft_zone_size = nav_config.soft_zone_size;
+    navigation_type = nav_config.navigation_type;
+    dubin_state = DUBIN_INIT;
+
+    internal_state_ = NAV_ON_GND;
+    critical_behavior = CLIMB_TO_SAFE_ALT;
+    auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 
     alt_lpf = nav_config.alt_lpf;
     LPF_gain = nav_config.LPF_gain;

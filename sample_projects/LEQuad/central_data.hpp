@@ -93,7 +93,6 @@
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "sensing/ahrs.h"
 #include "sensing/altitude.h"
 #include "control/pid_controller.h"
@@ -209,7 +208,7 @@ public:
     Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation
     Mavlink_waypoint_handler waypoint_handler;
- 
+
     State_machine state_machine;                              ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure

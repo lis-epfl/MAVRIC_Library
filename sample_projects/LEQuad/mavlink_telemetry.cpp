@@ -70,6 +70,8 @@
 #include "runtime/scheduler.hpp"
 #include "runtime/scheduler_telemetry.hpp"
 
+#include "hal/common/time_keeper.hpp"
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -130,7 +132,7 @@ bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, C
     // init_success &= data_logging->add_field(&central_data->gps.longitude, "longitude", 7);
     // init_success &= data_logging->add_field(&central_data->gps.altitude, "altitude", 3);
 
-    init_success &= data_logging->add_field((uint32_t*)&central_data->state.mav_state_, "mav_state_");
+    init_success &= data_logging->add_field((uint32_t*)&central_data->state.mav_state_, "mav_state");
     init_success &= data_logging->add_field(&central_data->state.mav_mode_, "mav_mode");
 
     return init_success;
@@ -160,17 +162,11 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
     init_success &= imu_telemetry_init(&central_data->imu,
                                        message_handler);
 
-    init_success &= remote_telemetry_init(&central_data->manual_control.remote,
-                                          message_handler);
+    init_success &= manual_control_telemetry_init(  &central_data->manual_control,
+                                                    message_handler);
 
-    init_success &= joystick_telemetry_init(&central_data->manual_control.joystick,
-                                            message_handler);
-
-    init_success &= manual_control_telemetry_init(&central_data->manual_control,
-                                                  message_handler);
-
-    init_success &= position_estimation_telemetry_init(&central_data->position_estimation,
-                                                       message_handler);
+    init_success &= position_estimation_telemetry_init( &central_data->position_estimation,
+                                                        message_handler);
 
     init_success &= gps_telemetry_init(&central_data->gps,
                                        message_handler);
