@@ -78,6 +78,9 @@ int main(void)
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
 
+    // Battery configuration
+    board_config.battery_config.type = BATTERY_LIPO_2S;
+
     // Modify board configuration for PX4flow
     board_config.uart3_config.serial_device         = AVR32_SERIAL_3;
     board_config.uart3_config.mode                  = AVR32_SERIAL_IN_OUT;
