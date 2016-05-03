@@ -133,7 +133,7 @@ void State::connection_status()
 bool State::set_armed(bool arming)
 {
     // if already in desired state, return true
-    if(armed() == arming)
+    if(is_armed() == arming)
     {
         return true;
     }
@@ -149,7 +149,7 @@ bool State::set_armed(bool arming)
 
         // check if not in manual mode and stabilized or guided mode
         // (not in velocity or position hold)
-        if(mav_modes_is_manual(mav_mode_) && (mav_modes_is_stabilise(mav_mode_) || mav_modes_is_guided(mav_mode_)))
+        if(mav_modes_is_manual(mav_mode_) && (mav_modes_is_stabilize(mav_mode_) || mav_modes_is_guided(mav_mode_)))
         {
             print_util_dbg_print("[STATE]: prevented arming because in stabilise or guided mode\r\n");
             return false;

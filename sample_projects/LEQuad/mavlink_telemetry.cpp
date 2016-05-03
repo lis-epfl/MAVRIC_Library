@@ -41,30 +41,34 @@
 
 #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/central_data.hpp"
-#include "drivers/sonar_i2cxl.hpp"
-#include "communication/onboard_parameters.hpp"
-#include "communication/mavlink_waypoint_handler.hpp"
+
+#include "communication/data_logging_telemetry.hpp"
 #include "communication/hud_telemetry.hpp"
-#include "control/stabilisation_telemetry.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/mavlink_stream.hpp"
-#include "communication/state.hpp"
-#include "sensing/position_estimation.hpp"
+#include "communication/onboard_parameters.hpp"
 #include "communication/remote_telemetry.hpp"
-#include "drivers/servos_telemetry.hpp"
+#include "communication/state.hpp"
 #include "communication/state_telemetry.hpp"
-#include "drivers/gps_telemetry.hpp"
-#include "sensing/imu_telemetry.hpp"
-#include "control/manual_control_telemetry.hpp"
-#include "drivers/barometer_telemetry.hpp"
-#include "sensing/ahrs_telemetry.hpp"
-#include "sensing/position_estimation_telemetry.hpp"
+
+#include "control/stabilisation_telemetry.hpp"
 #include "control/joystick_telemetry.hpp"
-// #include "simulation_telemetry.hpp"
+#include "control/manual_control_telemetry.hpp"
+
+#include "sensing/ahrs_telemetry.hpp"
+#include "sensing/imu_telemetry.hpp"
+#include "sensing/position_estimation.hpp"
+#include "sensing/position_estimation_telemetry.hpp"
+
+#include "drivers/barometer_telemetry.hpp"
+#include "drivers/gps_telemetry.hpp"
+
+#include "drivers/servos_telemetry.hpp"
+#include "drivers/sonar_i2cxl.hpp"
+#include "drivers/sonar_telemetry.hpp"
+
 #include "runtime/scheduler.hpp"
 #include "runtime/scheduler_telemetry.hpp"
-#include "drivers/sonar_telemetry.hpp"
-#include "communication/data_logging_telemetry.hpp"
-#include "control/manual_control_telemetry.hpp"
 
 
 //------------------------------------------------------------------------------
@@ -163,19 +167,19 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
                                             message_handler);
 
     init_success &= manual_control_telemetry_init(&central_data->manual_control,
-                    message_handler);
+                                                  message_handler);
 
     init_success &= position_estimation_telemetry_init(&central_data->position_estimation,
-                    message_handler);
+                                                       message_handler);
 
     init_success &= gps_telemetry_init(&central_data->gps,
                                        message_handler);
 
     init_success &= data_logging_telemetry_init(&central_data->data_logging,
-                    message_handler);
+                                                message_handler);
 
     init_success &= data_logging_telemetry_init(&central_data->data_logging2,
-                    message_handler);
+                                                message_handler);
 
     return init_success;
 }
@@ -195,7 +199,7 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     //stabiliser_t* position_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.position_stabiliser;
 
     // System ID
-    //init_success &= onboard_parameters->add_parameter_uint32(&central_data->mavlink_communication.sysid(), "ID_SYSID");
+    init_success &= onboard_parameters->add_parameter_uint32(&central_data->mavlink_communication.mavlink_stream().sysid_, "ID_SYSID");
 
     // Test attitude controller gains
     //init_success &= onboard_parameters->add_parameter_float(&central_data->attitude_controller.p_gain_angle[ROLL],    "GAIN_A_ROLL"        );
@@ -290,17 +294,14 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     // qfilter
     init_success &= onboard_parameters->add_parameter_float(&central_data->attitude_filter.kp                                        , "QF_KP_ACC");
     init_success &= onboard_parameters->add_parameter_float(&central_data->attitude_filter.kp_mag                                    , "QF_KP_MAG");
-    //init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain         , "YAW_A_D_GAIN"   );
 
     // Biases
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.bias[X]                                    , "BIAS_GYRO_X");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.bias[Y]                                    , "BIAS_GYRO_Y");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.bias[Z]                                    , "BIAS_GYRO_Z");
-
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.bias[X]                                , "BIAS_ACC_X");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.bias[Y]                                , "BIAS_ACC_Y");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.bias[Z]                                , "BIAS_ACC_Z");
-
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.bias[X]                                 , "BIAS_MAG_X");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.bias[Y]                                 , "BIAS_MAG_Y");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.bias[Z]                                 , "BIAS_MAG_Z");
@@ -309,24 +310,26 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[X]                            , "SCALE_GYRO_X");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[Y]                            , "SCALE_GYRO_Y");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[Z]                            , "SCALE_GYRO_Z");
-
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[X]                       , "SCALE_ACC_X");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[Y]                       , "SCALE_ACC_Y");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[Z]                       , "SCALE_ACC_Z");
-
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[X]                        , "SCALE_MAG_X");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[Y]                        , "SCALE_MAG_Y");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[Z]                        , "SCALE_MAG_Z");
 
+    // Magnetic north
+    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[X], "NORTH_MAG_X");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[Y], "NORTH_MAG_Y");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[Z], "NORTH_MAG_Z");
 
+    // Position estimation
     init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_alt_baro                              , "POS_KP_ALT_BARO");
     init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_baro                              , "POS_KP_VELB");
     init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[0]                            , "POS_KP_POS0");
     init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[1]                            , "POS_KP_POS1");
     init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[2]                            , "POS_KP_POS2");
 
-
-
+    // Navigation
     init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.dist2vel_gain                             , "VEL_DIST2VEL");
     init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.cruise_speed                                  , "VEL_CRUISESPEED");
     init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.max_climb_rate                                , "VEL_CLIMBRATE");
@@ -336,11 +339,10 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.wpt_nav_controller.p_gain                 , "VEL_WPT_PGAIN");
     init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.wpt_nav_controller.differentiator.gain        , "VEL_WPT_DGAIN");
 
-//  init_success &= onboard_parameters->add_parameter_int32(( int32_t*)&central_data->state_machine.low_battery_counter            , "SAFE_COUNT"     );
-
     /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
-    init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.control_source, "CTRL_CTRL_SRC");
-    init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.mode_source,     "COM_RC_IN_MODE");
+    init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.control_source_, "CTRL_CTRL_SRC");
+    init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.mode_source_,     "COM_RC_IN_MODE");
+
 
     return init_success;
 }

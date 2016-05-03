@@ -55,7 +55,7 @@ Scheduler::Scheduler(const Scheduler::conf_t config) :
     // allocate memory for tasks
     for(max_task_count_ = config.max_task_count; max_task_count_ > 0; max_task_count_--)
     {
-        tasks_ = (Scheduler_task*)malloc(sizeof(Scheduler_task[config.max_task_count]));
+        tasks_ = (Scheduler_task*)malloc(sizeof(Scheduler_task)*max_task_count_);
 
         if(tasks_ != NULL)
         {

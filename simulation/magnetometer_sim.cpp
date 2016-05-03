@@ -68,8 +68,8 @@ bool Magnetometer_sim::update(void)
     // Update dynamic model
     success &= dynamic_model_.update();
 
-    // Field pointing 60 degrees down to the north (NED)
-    const float mag_field_lf[3]     = { 0.5f, 0.0f, 0.86f };
+    // Field pointing 62 degrees down to the north (NED)
+    const float mag_field_lf[3]     = { 0.46947156f, 0.0f, 0.88294759f };
     float mag_field_bf[3];
 
     // Get current attitude

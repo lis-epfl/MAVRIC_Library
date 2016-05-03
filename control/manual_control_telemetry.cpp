@@ -76,8 +76,8 @@ static mav_result_t manual_control_telemetry_toggle_remote_use(Manual_control* m
 
     if (packet->param1 == 1)
     {
-        manual_control->control_source = Manual_control::CONTROL_SOURCE_REMOTE;
-        manual_control->mode_source = Manual_control::MODE_SOURCE_REMOTE;
+        manual_control->set_control_source(Manual_control::CONTROL_SOURCE_REMOTE);
+        manual_control->set_mode_source(Manual_control::MODE_SOURCE_REMOTE);
 
         print_util_dbg_print("Remote control activated\r\n");
 
@@ -85,8 +85,8 @@ static mav_result_t manual_control_telemetry_toggle_remote_use(Manual_control* m
     }
     else if (packet->param1 == 0)
     {
-        manual_control->control_source = Manual_control::CONTROL_SOURCE_NONE;
-        manual_control->mode_source = Manual_control::MODE_SOURCE_GND_STATION;
+        manual_control->set_control_source(Manual_control::CONTROL_SOURCE_NONE);
+        manual_control->set_mode_source(Manual_control::MODE_SOURCE_GND_STATION);
 
         print_util_dbg_print("Remote control disactivated\r\n");
 
@@ -127,7 +127,7 @@ bool manual_control_telemetry_init(Manual_control* manual_control, Mavlink_messa
 
 void manual_control_telemetry_send(const Manual_control* manual_control, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    switch (manual_control->control_source)
+    switch (manual_control->control_source())
     {
         case Manual_control::CONTROL_SOURCE_NONE:
             break;
