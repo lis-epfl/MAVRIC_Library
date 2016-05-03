@@ -211,7 +211,7 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.dsm_power_pin_config.pin = AVR32_PIN_PC01;
 
     // -------------------------------------------------------------------------
-    // Servo config
+    // Battery config
     // -------------------------------------------------------------------------
     conf.battery_config = battery_default_config();
 
