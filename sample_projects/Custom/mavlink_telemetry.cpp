@@ -322,7 +322,7 @@ void flow_telemetry_send(const Central_data_custom* cd, const Mavlink_stream* ma
           for (uint32_t i = 0; i < 60; i++)
           {
               // left 0 to 59
-              of[i] = cd->flow_left_.of.x[i];
+              of[i] = cd->flow_1_.of.x[i];
           }
       break;
 
@@ -331,12 +331,12 @@ void flow_telemetry_send(const Central_data_custom* cd, const Mavlink_stream* ma
           for (uint32_t i = 0; i < N_points - 60; i++)
           {
               // left 60 to 78
-              of[i] = cd->flow_left_.of.x[i + 60];
+              of[i] = cd->flow_1_.of.x[i + 60];
           }
           for (uint32_t i = 0; i < 120-N_points ; i++)
           {
               // right 0 to 40
-              of[i + N_points - 60] = cd->flow_right_.of.x[i];
+              of[i + N_points - 60] = cd->flow_2_.of.x[i];
           }
       break;
 
@@ -345,7 +345,7 @@ void flow_telemetry_send(const Central_data_custom* cd, const Mavlink_stream* ma
           for (uint32_t i = 0; i < 2 * N_points - 120 ; i++)
           {
               // right 41 to 78
-              of[i] = cd->flow_right_.of.x[i + 120 - N_points];
+              of[i] = cd->flow_2_.of.x[i + 120 - N_points];
           }
 
           for (uint32_t i = 0; i < 2; i++)

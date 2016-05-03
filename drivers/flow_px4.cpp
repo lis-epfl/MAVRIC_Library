@@ -65,13 +65,13 @@ Flow_px4::Flow_px4(Serial& uart):
 
 bool Flow_px4::update(void)
 {
-    Mavlink_stream::msg_received_t* rec = NULL;
+    Mavlink_stream::msg_received_t rec;
 
     // Receive incoming bytes
-    while (mavlink_stream_.receive(rec))
+    while (mavlink_stream_.receive(&rec))
     {
         // Get pointer to new message
-        mavlink_message_t* msg = &rec->msg;
+        mavlink_message_t* msg = &rec.msg;
 
         // declare messages
         mavlink_optical_flow_t          optical_flow_msg;

@@ -67,8 +67,8 @@ public:
     bool init(void);
 
     // Reference to flow cameras
-    Flow& flow_left_;
-    Flow& flow_right_;
+    Flow& flow_1_;
+    Flow& flow_2_;
 
     // saccade controller
     Saccade_controller saccade_controller_;
