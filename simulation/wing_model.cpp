@@ -75,11 +75,12 @@ Wing_model::Wing_model(float flap_angle,
 	init_lookup();
 }
 
-wing_model_forces_t Wing_model::compute_forces(float wind_bf[3], float ang_rates[3]){
+wing_model_forces_t Wing_model::compute_forces(float wind[3], float ang_rates[3]){
 	//Compute the wind speed at the COG of the wing
-	wind_bf[0] -= (ang_rates[1]*position_bf_[2]-ang_rates[2]*position_bf_[1]);
-	wind_bf[1] -= (ang_rates[2]*position_bf_[0]-ang_rates[0]*position_bf_[2]);
-	wind_bf[2] -= (ang_rates[0]*position_bf_[1]-ang_rates[1]*position_bf_[0]);
+	float wind_bf[3];
+	wind_bf[0] = wind[0] - (ang_rates[1]*position_bf_[2]-ang_rates[2]*position_bf_[1]);
+	wind_bf[1] = wind[1] - (ang_rates[2]*position_bf_[0]-ang_rates[0]*position_bf_[2]);
+	wind_bf[2] = wind[2] - (ang_rates[0]*position_bf_[1]-ang_rates[1]*position_bf_[0]);
 
 	//Global to local wind
 	float wind_wf[3];
@@ -108,7 +109,22 @@ wing_model_forces_t Wing_model::compute_forces(float wind_bf[3], float ang_rates
 }
 
 void Wing_model::set_flap_angle(float angle){
-	flap_angle_ = angle;
+	if(angle!=angle) //check for nan
+	{
+		flap_angle_ = 0.0f;
+	}
+	else if (angle>0.7f)//TODO fix better than that
+	{
+		flap_angle_=0.7f;
+	}
+	else if (angle<-0.7f)
+	{
+		flap_angle_=-0.7f;
+	}
+	else
+	{
+		flap_angle_ = angle;
+	}
 }
 
 
@@ -121,6 +137,7 @@ float Wing_model::get_cl(float aoa)
 	float coeff=0.0f;
 	if(type_ == 1) // Type 1 = zagi 12
 	{
+		printf("->%f\n", flap_angle_);
 		aoa = (aoa+flap_angle_*0.15f)*57.2957f;//*180/pi -> Take flap angle into account and transform it in degrees
 		if(aoa<-90)
 		{

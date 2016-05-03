@@ -65,8 +65,8 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     servo_flap_right_(servo_flap_right),
     config_(config),
     motor_speed_(0.0f),
-    left_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f+0.020f, -0.205f, 0.004f, 0.12f, 0.3f,1),//TODO: change these to the correct values
-    right_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f+0.020f, 0.205f, 0.004f, 0.12f, 0.3f,1),
+    left_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f, -0.205f, 0.004f, 0.12f, 0.3f,1),//TODO: change these to the correct values
+    right_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f, 0.205f, 0.004f, 0.12f, 0.3f,1),
     left_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -0.190f, -0.410f, -0.046f, 0.014f, 0.1f,0),
     right_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -0.190f, 0.410f, -0.046f, 0.014f, 0.1f,0),
     torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
@@ -124,8 +124,8 @@ bool Dynamic_model_fixed_wing::update(void)
     float pitch = asin(2*(q0*q2-q3*q1));
     float roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
     float gain = 0.01f;
-    left_flap_.set_flap_angle(-20.0f/180.0f*PI-roll*gain);//Set these in degrees!!
-    right_flap_.set_flap_angle(-20.0f/180.0f*PI+roll*gain);
+    left_flap_.set_flap_angle(-0.0f/180.0f*PI-roll*gain+pitch*gain*10.0f);
+    right_flap_.set_flap_angle(-0.0f/180.0f*PI+roll*gain+pitch*gain*10.0f);
 
     // compute torques and forces based on servo commands and positions of the flaps
     forces_from_servos();
@@ -345,7 +345,7 @@ wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(float wind_bf
   motor_forces.force[0] = ldb * config_.rotor_cl; //TODO: fix it
   motor_forces.force[1] = 0.0f;
   motor_forces.force[2] = 0.0f;
-  motor_forces.torque[ROLL] = 0.0f*(10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;
+  motor_forces.torque[ROLL] = (10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;
   motor_forces.torque[PITCH] = 0.0f;
   motor_forces.torque[YAW] = 0.0f;//TODO : make this work
 
