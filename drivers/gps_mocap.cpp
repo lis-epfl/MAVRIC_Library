@@ -77,7 +77,7 @@ static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, mavlink_mes
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Gps_mocap::Gps_mocap(mavlink_message_handler_t& message_handler, gps_mocap_conf_t config):
+Gps_mocap::Gps_mocap(Mavlink_message_handler& message_handler, gps_mocap_conf_t config):
     message_handler_(message_handler),
     config_(config),
     is_init_(false),
@@ -103,15 +103,15 @@ bool Gps_mocap::init(void)
     if (is_init_ == false)
     {
         // Add callbacks for waypoint handler messages requests
-        mavlink_message_handler_msg_callback_t callback;
+        Mavlink_message_handler::msg_callback_t callback;
 
         callback.message_id     = MAVLINK_MSG_ID_ATT_POS_MOCAP; // 69
         callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
         callback.compid_filter  = MAV_COMP_ID_ALL;
-        callback.function       = (mavlink_msg_callback_function_t) &gps_mocap_callback;
-        callback.module_struct  = (handling_module_struct_t)        this;
+        callback.function       = (Mavlink_message_handler::msg_callback_func_t) &gps_mocap_callback;
+        callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)        this;
 
-        is_init_ = mavlink_message_handler_add_msg_callback(&message_handler_, &callback);
+        is_init_ = message_handler_.add_msg_callback(&callback);
     }
 
     return is_init_;
@@ -245,7 +245,7 @@ const gps_fix_t Gps_mocap::fix(void) const
     gps_fix_t fix = NO_GPS;
     if (healthy())
     {
-        fix = GPS_OK;
+        fix = RTK;
     }
 
     return fix;

@@ -105,28 +105,28 @@ static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_co
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool remote_telemetry_init(remote_t* remote, mavlink_message_handler_t* mavlink_handler)
+bool remote_telemetry_init(remote_t* remote, Mavlink_message_handler* mavlink_handler)
 {
     bool init_success = true;
 
-    mavlink_message_handler_cmd_callback_t callbackcmd;
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
 
     callbackcmd.command_id    = MAV_CMD_START_RX_PAIR; // 500
     callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL;
-    callbackcmd.function      = (mavlink_cmd_callback_function_t)   &remote_telemetry_satellite_bind;
-    callbackcmd.module_struct =                                     remote;
-    init_success &= mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
+    callbackcmd.function      = (Mavlink_message_handler::cmd_callback_func_t)    &remote_telemetry_satellite_bind;
+    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) remote;
+    init_success &= mavlink_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;
 }
 
 
-void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void remote_telemetry_send_raw(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_rc_channels_raw_pack(mavlink_stream->sysid,
-                                     mavlink_stream->compid,
+    mavlink_msg_rc_channels_raw_pack(mavlink_stream->sysid(),
+                                     mavlink_stream->compid(),
                                      msg,
                                      time_keeper_get_ms(),
                                      0,
@@ -141,10 +141,10 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
                                      // remote->mode.current_desired_mode);
                                      remote->signal_quality);
 
-    mavlink_stream_send(mavlink_stream, msg);
+    mavlink_stream->send(msg);
 
-    mavlink_msg_rc_channels_raw_pack(mavlink_stream->sysid,
-                                     mavlink_stream->compid,
+    mavlink_msg_rc_channels_raw_pack(mavlink_stream->sysid(),
+                                     mavlink_stream->compid(),
                                      msg,
                                      time_keeper_get_ms(),
                                      1,
@@ -161,10 +161,10 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 }
 
 
-void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid,
-                                        mavlink_stream->compid,
+    mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid(),
+                                        mavlink_stream->compid(),
                                         msg,
                                         time_keeper_get_ms(),
                                         0,
@@ -179,10 +179,10 @@ void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t
                                         remote->mode.current_desired_mode);
     // remote->signal_quality   );
 
-    mavlink_stream_send(mavlink_stream, msg);
+    mavlink_stream->send(msg);
 
-    mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid,
-                                        mavlink_stream->compid,
+    mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid(),
+                                        mavlink_stream->compid(),
                                         msg,
                                         time_keeper_get_ms(),
                                         1,

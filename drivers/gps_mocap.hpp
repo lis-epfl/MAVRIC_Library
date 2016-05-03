@@ -87,7 +87,7 @@ public:
     /**
      * \brief Constructor
      */
-    Gps_mocap(mavlink_message_handler_t& message_handler, gps_mocap_conf_t config = gps_mocap_default_config() );
+    Gps_mocap(Mavlink_message_handler& message_handler, gps_mocap_conf_t config = gps_mocap_default_config() );
 
 
     /**
@@ -227,7 +227,7 @@ public:
 
 
 private:
-    mavlink_message_handler_t& message_handler_;       ///< Reference to message handler for callbacks
+    Mavlink_message_handler& message_handler_;       ///< Reference to message handler for callbacks
     gps_mocap_conf_t config_;                          ///< Configuration
 
     local_position_t local_position_;                  ///< Local position

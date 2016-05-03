@@ -1394,7 +1394,7 @@ typedef struct
     uint32_t time_last_msg;                     ///< Time reference in ms of microcontroller
     uint32_t time_gps;                          ///< Time reference in ms of gps
 
-    uint8_t  status;                            ///< GPS status
+    gps_fix_t  status;                          ///< GPS status
 
     uint8_t  horizontal_status;                 ///< Horizontal status
 
@@ -2940,7 +2940,7 @@ static void gps_ublox_update(gps_t* gps)
     {
         if ((tnow - gps->idle_timer) > gps->idle_timeout)
         {
-            gps->status = NO_GPS;
+            gps->status = NO_FIX;
 
             gps->healthy = false;
 
@@ -2955,10 +2955,10 @@ static void gps_ublox_update(gps_t* gps)
 
         gps->time_last_msg = tnow;
 
-        gps->healthy = true;
-
-        if (gps->status == GPS_OK)
+        if (gps->status >= FIX_3D)
         {
+            gps->healthy = true;
+
             // Check for horizontal accuracy
             if (gps->horizontal_accuracy < UBX_POSITION_PRECISION)
             {
@@ -4007,15 +4007,46 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                     print_util_dbg_print_num(gps_status->uptime, 10);
                     print_util_dbg_print("\r\n");
                 }
-                gps->next_fix = (gps_status->fix_type == GPS_FIX_TYPE_3DFIX);
-                if (!gps->next_fix)
+
+                switch(gps_status->fix_type)
                 {
-                    gps->status = NO_FIX;
+                    case GPS_FIX_TYPE_NOFIX :
+                        gps->status = NO_FIX;
+                        break;
+
+                    case GPS_FIX_TYPE_DEADRECK :
+                        gps->status = NO_FIX;
+                        break;
+
+                    case GPS_FIX_TYPE_2DFIX:
+                        gps->status = FIX_2D;
+                        break;
+
+                    case GPS_FIX_TYPE_3DFIX:
+                    case GPS_FIX_TYPE_GPSDEADRECK:
+                        if (gps_status->flags & 0x01)
+                        {
+                            if (gps_status->flags & 0x02)
+                            {
+                                gps->status = DGPS;
+                            }
+                            else
+                            {
+                                gps->status = FIX_3D;
+                            }
+                        }
+                        else
+                        {
+                            // DOP is not sufficient to be used
+                            gps->status = NO_FIX;
+                        }
+                        break;
+
+                    case GPS_FIX_TYPE_TIMEONLY:
+                        gps->status = NO_FIX;
+                    break;
                 }
-                else
-                {
-                    gps->status = GPS_OK;
-                }
+
             }
             break;
 
@@ -4049,14 +4080,43 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                     print_util_dbg_print_num(gps_solution->satellites, 10);
                     print_util_dbg_print("\r\n");
                 }
-                gps->next_fix = (gps_solution->fix_type == GPS_FIX_TYPE_3DFIX);
-                if (!gps->next_fix)
+                switch(gps_solution->fix_type)
                 {
-                    gps->status = NO_FIX;
-                }
-                else
-                {
-                    gps->status = GPS_OK;
+                    case GPS_FIX_TYPE_NOFIX :
+                        gps->status = NO_FIX;
+                        break;
+
+                    case GPS_FIX_TYPE_DEADRECK :
+                        gps->status = NO_FIX;
+                        break;
+
+                    case GPS_FIX_TYPE_2DFIX:
+                        gps->status = FIX_2D;
+                        break;
+
+                    case GPS_FIX_TYPE_3DFIX:
+                    case GPS_FIX_TYPE_GPSDEADRECK:
+                        if (gps_solution->fix_status & 0x01)
+                        {
+                            if (gps_solution->fix_status & 0x02)
+                            {
+                                gps->status = DGPS;
+                            }
+                            else
+                            {
+                                gps->status = FIX_3D;
+                            }
+                        }
+                        else
+                        {
+                            // DOP is not sufficient to be used
+                            gps->status = NO_FIX;
+                        }
+                        break;
+
+                    case GPS_FIX_TYPE_TIMEONLY:
+                        gps->status = NO_FIX;
+                    break;
                 }
 
                 gps->num_sats = gps_solution->satellites;

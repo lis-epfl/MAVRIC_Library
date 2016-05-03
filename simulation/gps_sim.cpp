@@ -95,7 +95,7 @@ bool Gps_sim::update(void)
     heading_accuracy_   = 5.0f;
     num_sats_   = 5;
     healthy_    = true;
-    fix_        = GPS_OK;
+    fix_        = FIX_3D;
 
     return success;
 }

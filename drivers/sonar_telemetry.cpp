@@ -48,10 +48,10 @@ extern "C"
 #include "util/maths.h"
 }
 
-void sonar_telemetry_send(const Sonar* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void sonar_telemetry_send(const Sonar* sonar, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_distance_sensor_pack(mavlink_stream->sysid,
-                                     mavlink_stream->compid,
+    mavlink_msg_distance_sensor_pack(mavlink_stream->sysid(),
+                                     mavlink_stream->compid(),
                                      msg,
                                      time_keeper_get_ms(),
                                      maths_f_max(-sonar->velocity() * 100.0f, 0.0f),        // min distance => we send negative velocity instead

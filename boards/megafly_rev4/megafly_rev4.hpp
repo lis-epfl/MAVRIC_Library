@@ -69,6 +69,17 @@ extern "C"
 }
 
 
+// Preprocessor definitions
+
+/* 
+ * Should the ESC be calibrated?
+ * 0 for false (normal flight)
+ * 1 for true (calibration)
+ * !!!IMPORTANT!!!
+ * IF CALIBRATING, TAKE OFF PROPS 
+ */
+#define CALIBRATE_ESC 0
+
 /**
  * \brief   Configuration structure
  */
@@ -76,6 +87,7 @@ typedef struct
 {
     gpio_avr32_conf_t       dsm_receiver_pin_config;
     gpio_avr32_conf_t       dsm_power_pin_config;
+    battery_conf_t          battery_config;
     serial_avr32_conf_t     uart0_config;
     serial_avr32_conf_t     uart1_config;
     serial_avr32_conf_t     uart3_config;
@@ -198,6 +210,10 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.dsm_power_pin_config     = gpio_avr32_default_config();
     conf.dsm_power_pin_config.pin = AVR32_PIN_PC01;
 
+    // -------------------------------------------------------------------------
+    // Battery config
+    // -------------------------------------------------------------------------
+    conf.battery_config = battery_default_config();
 
     // -------------------------------------------------------------------------
     // UART0 configuration

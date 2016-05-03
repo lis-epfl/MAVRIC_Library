@@ -128,3 +128,15 @@ void Servo::calibrate_esc(void)
     time_keeper_delay_ms(2000);
     failsafe(true);
 }
+
+
+void Servo::set_servo_max(void)
+{
+    write(config_.max, true);
+}
+
+
+void Servo::set_servo_min(void)
+{
+    write(config_.min, true);
+}
