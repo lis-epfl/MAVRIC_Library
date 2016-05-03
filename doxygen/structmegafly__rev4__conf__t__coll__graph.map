@@ -6,5 +6,6 @@
 <area shape="rect" id="node10" href="$structserial__avr32__gpio__map__t.html" title="Gpio map." alt="" coords="357,49,523,151"/>
 <area shape="rect" id="node12" href="$structservo__conf__t.html" title="Configuration structure for servo." alt="" coords="531,323,683,512"/>
 <area shape="rect" id="node14" href="$structgpio__avr32__conf__t.html" title="{gpio_avr32_conf_t\n|+ pin\l+ dir\l+ pull\l|}" alt="" coords="707,357,835,477"/>
-<area shape="rect" id="node16" href="$structserial__usb__avr32__conf__t.html" title="Configuration structure." alt="" coords="861,375,1024,460"/>
+<area shape="rect" id="node16" href="$structbattery__conf__t.html" title="Configuration for Battery." alt="" coords="859,357,976,477"/>
+<area shape="rect" id="node18" href="$structserial__usb__avr32__conf__t.html" title="Configuration structure." alt="" coords="1000,375,1163,460"/>
 </map>
