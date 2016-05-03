@@ -86,7 +86,7 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
     gps_ublox(uart3),
     sonar_i2cxl(i2c1),
     adc_battery(analog_monitor, {ANALOG_RAIL_10}),
-    battery(adc_battery),
+    battery(adc_battery, config.battery_config),
     pwm_0(0),
     pwm_1(1),
     pwm_2(2),
