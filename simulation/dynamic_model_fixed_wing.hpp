@@ -63,7 +63,8 @@ typedef struct
     float rotor_lpf;                    ///< Low-pass filtered response of the rotors to simulate inertia and lag
     float rotor_rpm_gain;               ///< Gain linking the command to rpm*/
     float rotor_rpm_offset;             ///< Offset to convert servo commands to rpm
-    float flap_offset;             ///< Offset to convert servo commands to rpm
+    float flap_offset;                  ///< Offset to convert servo commands to flap angle
+    float flap_max;                     ///< Maximum angle of the flaps (In rad)
 
     float rotor_cd;                     ///< Rotor drag coefficient
     float rotor_cl;                     ///< Rotor lift coefficient
@@ -182,6 +183,13 @@ public:
      */
     const quat_t& attitude(void) const;
 
+    /**
+     * \brief   Get x speed in BF
+     *
+     * \return Value
+     */
+     const float x_speed_bf(void) const;
+
 private:
     Servo& servo_motor_;         ///< Reference to motor servo
     Servo& servo_flap_left_;     ///< Reference to left flap servo
@@ -246,6 +254,8 @@ static inline dynamic_model_fixed_wing_conf_t dynamic_model_fixed_wing_default_c
     conf.rotor_lpf              = 0.1f;                 ///< Low pass filter constant (adjusted for time) to express rotor inertia/lag. 1.0       = no inertia, 0.0 = infinite inertia
     conf.rotor_rpm_gain         = 4000.0f;              ///< The gain linking the rotor command to rpm
     conf.rotor_rpm_offset       = -1.0f;                ///< Offset to convert servo commands to rpm (servo command that corresponds to zero rpm)
+    conf.flap_offset            = 0.0f;                 ///< Offset to convert servo commands to flap angle (servo command that corresponds to zero angle)
+    conf.flap_max               = 0.69813170079f;       ///< Maximum angle of the flaps (In rad) corresponds to a servo command of 1
     conf.rotor_cd               = 0.03f;                ///< Coefficient of drag of rotor blade
     conf.rotor_cl               = 1.0f;                 ///< Coefficient of lift of rotor blade
     conf.rotor_diameter         = 0.14f;                ///< Mean "effective" rotor diameter
@@ -270,4 +280,4 @@ static inline dynamic_model_fixed_wing_conf_t dynamic_model_fixed_wing_default_c
 }
 
 
-#endif /* DYNAMIC_MODEL_QUAD_DIAG_HPP_ */
+#endif /* DYNAMIC_MODEL_FIXED_WING_HPP_ */

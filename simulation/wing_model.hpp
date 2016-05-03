@@ -112,7 +112,7 @@ private:
     float chord_;             // length of the chord (m)
     float lookup_Cl_[181];    // Lookup table of the Cl coefficient
     float lookup_Cd_[181];    // Lookup table of the Cd coefficient
-    float lookup_Cm_[181];    // Lookup table of the Cm coefficient
+    float lookup_Cm_[4][181];    // Lookup table of the Cm coefficient
     int   type_;              // Type of the wing 1 = Zagi12, other = flat
 
     /**

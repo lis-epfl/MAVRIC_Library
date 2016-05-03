@@ -50,7 +50,7 @@
 #include "drivers/spektrum_satellite.hpp"
 
 #include "simulation/simulation.hpp"
-#include "simulation/dynamic_model_quad_diag.hpp"
+#include "simulation/dynamic_model_fixed_wing.hpp"
 
 #include "hal/linux/serial_linux_io.hpp"
 #include "hal/linux/serial_udp.hpp"
@@ -76,7 +76,7 @@ typedef struct
     imu_conf_t              imu_config;
     serial_udp_conf_t       serial_udp_config;
     std::string             flash_filename;
-    dynamic_model_quad_diag_conf_t dynamic_model_config;
+    dynamic_model_fixed_wing_conf_t dynamic_model_config;
 } mavrinux_conf_t;
 
 
@@ -126,7 +126,7 @@ public:
     Servo       servo_3;
     Servo		servo_4;
 	  Servo		servo_5;
-    Dynamic_model_quad_diag dynamic_model;
+    Dynamic_model_fixed_wing dynamic_model;
     Simulation              sim;
     Imu                     imu;
 
@@ -177,7 +177,7 @@ static inline mavrinux_conf_t mavrinux_default_config()
     // -------------------------------------------------------------------------
     // Simulation dynamic model config
     // -------------------------------------------------------------------------
-    conf.dynamic_model_config = dynamic_model_quad_diag_default_config();
+    conf.dynamic_model_config = dynamic_model_fixed_wing_default_config();
 
     return conf;
 }
