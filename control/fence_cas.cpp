@@ -295,6 +295,7 @@ bool Fence_CAS::update(void)
 
 	float dmin=2*this->r_pz; //can be adjusted
 	float max_ang= 0.25*PI*(1-this->comfort);
+	int interp_type = 2;
 
 	for(int i =0; i<3;i++)
 	{
@@ -331,38 +332,94 @@ bool Fence_CAS::update(void)
 
 
 
+		float angle_rep_radius = 1;
+		//fence points repulsion
+		if(waypoint_handler->fance_angle_list[i]>PI/2.0)
+		{
 
+		}
+		else
+		{
+			angle_rep_radius = 1.8*quick_trig_cos(waypoint_handler->fance_angle_list[i]/2.0)*2*this->maxsens;
+		}
+		//test if angle_rep_radius isn't to big and influence other fences
+		float D[3]={0,0,0};
+		if(i==0)
+		{
+			global_position_t Dgpoint = {this->waypoint_handler->fence_list[waypoint_handler->number_of_fence_points-1].y, this->waypoint_handler->fence_list[waypoint_handler->number_of_fence_points-1].x,(float)this->waypoint_handler->fence_list[waypoint_handler->number_of_fence_points-1].z, 0.0f};
+			local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
+			D[0]=Dlpoint.pos[0];D[1]=Dlpoint.pos[1];D[2]=Dlpoint.pos[2];
+		}
+		else
+		{
+			global_position_t Dgpoint = {this->waypoint_handler->fence_list[i-1].y, this->waypoint_handler->fence_list[i-1].x,(float)this->waypoint_handler->fence_list[i-1].z, 0.0f};
+			local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
+			D[0]=Dlpoint.pos[0];D[1]=Dlpoint.pos[1];D[2]=Dlpoint.pos[2];
+		}
+		float fence2[3]={D[0]-A[0],D[1]-A[1],D[2]-A[2]};//D[3]={Dlpoint.pos[0],Dlpoint.pos[1],Dlpoint.pos[2]};
+		float fence1[3]={B[0]-A[0],B[1]-A[1],B[2]-A[2]};
+		if(vectors_norm(fence1)<angle_rep_radius)
+		{
+			angle_rep_radius = vectors_norm(fence1);
+		}
+		if(vectors_norm(fence2)<angle_rep_radius)
+		{
+			angle_rep_radius = vectors_norm(fence2);
+		}
+		//fence point repulsion
+		if((dist[i] >= -(angle_rep_radius))&(dist[i] < angle_rep_radius))
+		{
+			if(angle_rep_radius!=0)
+			{
+//				print_util_dbg_print("|fencepoint|");print_util_dbg_putfloat(i,5);print_util_dbg_print("\\");print_util_dbg_putfloat(angle_rep_radius,5);print_util_dbg_print("\n");
+				float ratio=dist[i]/angle_rep_radius;
+				this->repulsion[1]+=-this->coef_roll*max_ang*interpolate(ratio,interp_type); //sens of repulsion fixed
+
+			}
+		}
+
+		//fence repulsion
 		if((dist[i] >= -(this->maxsens))&(dist[i] < this->maxsens))
 		{
 			int interp_type = 2;
 
-			//test if the drone is locked in an angle
-			if(((maths_f_abs(dist[i]-dist[i-1])<CLOSE_NUM)&&(i>0))||(((maths_f_abs(dist[i]-dist[0])<CLOSE_NUM)&&(i==waypoint_handler->number_of_fence_points-1))))
-//			if(0);
-			{
-				int l=0;
-				if(i==0)
-				{
-					l = waypoint_handler->number_of_fence_points-1;
-				}
-				else
-				{
-					l = i-1;
-				}
-				global_position_t Dgpoint = {this->waypoint_handler->fence_list[l].y, this->waypoint_handler->fence_list[l].x,(float)this->waypoint_handler->fence_list[l].z, 0.0f};
-				local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
-				float D[3]={Dlpoint.pos[0],Dlpoint.pos[1],Dlpoint.pos[2]};
-				float K_aigu=2*this->maxsens;
-				float Ap[3]={(D[0]-A[0])*K_aigu, (D[1]-A[1])*K_aigu, (D[2]-A[2])*K_aigu };
-				float Bp[3]={(B[0]-A[0])*K_aigu, (B[1]-A[1])*K_aigu, (B[2]-A[2])*K_aigu };
-				float interm_dist = detect_seg(Ap,Bp,C,S,V,I,J);
-				float rep[3]={Ap[1]-Bp[1],Bp[0]-Ap[0],0.0};
-				gftobftransform(C, S, rep);
-				vectors_normalize(rep,rep);
-				rep[1]=(rep[1]>=0?1:-1);
-				float ratio = interm_dist/this->maxsens;
-				this->repulsion[1]+=-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type);
-			}
+			//test if the drone is locked in an angle //small angle avoiding
+//			if(i==0)
+//			{
+//				global_position_t Dgpoint = {this->waypoint_handler->fence_list[waypoint_handler->number_of_fence_points-1].y, this->waypoint_handler->fence_list[waypoint_handler->number_of_fence_points-1].x,(float)this->waypoint_handler->fence_list[waypoint_handler->number_of_fence_points-1].z, 0.0f};
+//				local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
+//				float D[3]={Dlpoint.pos[0],Dlpoint.pos[1],Dlpoint.pos[2]};
+//				dist[waypoint_handler->number_of_fence_points-1]=detect_seg(D,A,C,S,V,I,J);
+//			}
+//
+//			if(((maths_f_abs(dist[i]-dist[i-1])<CLOSE_NUM)&&(i>0))||(((maths_f_abs(dist[waypoint_handler->number_of_fence_points-1]-dist[0])<CLOSE_NUM)&&(i==0))))
+//			{
+//				int l=0;
+//				if(i==0)
+//				{
+//					l = waypoint_handler->number_of_fence_points-1;
+//				}
+//				else
+//				{
+//					l = i-1;
+//				}
+//				global_position_t Dgpoint = {this->waypoint_handler->fence_list[l].y, this->waypoint_handler->fence_list[l].x,(float)this->waypoint_handler->fence_list[l].z, 0.0f};
+//				local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
+//				float D[3]={Dlpoint.pos[0],Dlpoint.pos[1],Dlpoint.pos[2]};
+//				float K_aigu=this->maxsens;
+//				float Ap[3]={(D[0]-A[0])*K_aigu, (D[1]-A[1])*K_aigu, (D[2]-A[2])*K_aigu };
+//				float Bp[3]={(B[0]-A[0])*K_aigu, (B[1]-A[1])*K_aigu, (B[2]-A[2])*K_aigu };
+//				float interm_dist = detect_seg(Ap,Bp,C,S,V,I,J);
+//				float rep[3]={Ap[1]-Bp[1],Bp[0]-Ap[0],0.0};
+//				gftobftransform(C, S, rep);
+//				vectors_normalize(rep,rep);
+//				rep[1]=(rep[1]>=0?1:-1);
+//				float ratio = interm_dist/this->maxsens;
+//				this->repulsion[1]+=-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type);
+//				print_util_dbg_print("||Second order fence");
+//				print_util_dbg_print("||\n");
+//			}
+			//end f small angle avoiding
 
 //			print_util_dbg_print("|CS|");
 //			print_util_dbg_putfloat(S[0]-C[0],5);
@@ -508,4 +565,8 @@ void Fence_CAS::set_sensor_res(void)
 float Fence_CAS::get_repulsion(int axis)
 {
 	return this->repulsion[axis];
+}
+float Fence_CAS::get_max_angle(void)
+{
+	return 0.25*PI*(1-this->comfort);
 }

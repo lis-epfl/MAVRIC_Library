@@ -75,6 +75,7 @@ public:
 	void set_r_pz(void);
 	void get_r_pz(void);
 	float get_repulsion(int axis);
+	float get_max_angle(void);
 	void gftobftransform(float C[3], float S[3], float rep[3]);
 	float interpolate(float r, int type);
 	float 								maxsens;

@@ -81,7 +81,8 @@ typedef struct
 typedef struct
 {
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
-    waypoint_struct_t fence_list[MAX_WAYPOINTS];             	///< The array of all waypoints (max MAX_WAYPOINTS)
+    waypoint_struct_t fence_list[MAX_WAYPOINTS];             	///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float fance_angle_list[MAX_WAYPOINTS];						///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
     waypoint_struct_t current_waypoint;                         ///< The structure of the current waypoint
     uint16_t number_of_waypoints;                               ///< The total number of waypoints
     uint16_t number_of_fence_points;
@@ -188,6 +189,11 @@ void waypoint_handler_hold_init(mavlink_waypoint_handler_t* waypoint_handler, lo
  * \param   msg                     The pointer to the MAVLink message
  */
 void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+/**
+ * \brief   Compute angle between fence points
+ * \return  Angle formed with the two adjacent fencepoints in radians
+ */
+void mavlink_waypoint_handler_fencepoint_angle(mavlink_waypoint_handler_t* waypoint_handler);
 
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

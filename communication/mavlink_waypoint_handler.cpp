@@ -49,6 +49,7 @@ extern "C"
 #include "util/print_util.h"
 #include "util/maths.h"
 #include "util/constants.h"
+#include "util/quick_trig.h"
 }
 
 //------------------------------------------------------------------------------
@@ -1126,6 +1127,9 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 
                         waypoint_handler->state->nav_plan_active = false;
                         waypoint_handler_nav_plan_init(waypoint_handler);
+
+                        //cystu compute fencepoint angle
+                        mavlink_waypoint_handler_fencepoint_angle(waypoint_handler);
                     }
                     else
                     {
@@ -2550,7 +2554,10 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 
             }
         }
+        //cystu compute fencepoint angle
+        mavlink_waypoint_handler_fencepoint_angle(waypoint_handler);
     }
+
 }
 
 void waypoint_handler_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_position_t local_pos)
@@ -2583,3 +2590,47 @@ void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint
                                      "travel_time",
                                      waypoint_handler->travel_time);
 }
+
+void mavlink_waypoint_handler_fencepoint_angle(mavlink_waypoint_handler_t* waypoint_handler)
+{
+	for (int i=0; i < waypoint_handler->number_of_fence_points; i++) //loop through all pair of fence points
+		{
+			int j=0;
+			if (i == waypoint_handler->number_of_fence_points - 1)
+			{
+				j=0;
+			}
+			else
+			{
+				j=i+1;
+			}
+			int k=0;
+			if (i == waypoint_handler->number_of_fence_points - 1)
+			{
+				k=1;
+			}
+			else if (i == waypoint_handler->number_of_fence_points - 2)
+			{
+				k=0;
+			}
+			else
+			{
+				k=i+2;
+			}
+			waypoint_handler->fence_list[i];
+			float ij[3]=	{waypoint_handler->fence_list[j].x-waypoint_handler->fence_list[i].x,
+					waypoint_handler->fence_list[j].y-waypoint_handler->fence_list[i].y,
+					waypoint_handler->fence_list[j].z-waypoint_handler->fence_list[i].z};
+			float jk[3]=	{waypoint_handler->fence_list[k].x-waypoint_handler->fence_list[j].x,
+					waypoint_handler->fence_list[k].y-waypoint_handler->fence_list[j].y,
+					waypoint_handler->fence_list[k].z-waypoint_handler->fence_list[j].z};
+			float angle=quick_trig_atan((ij[1]*jk[0]-ij[0]*jk[1])/(ij[1]*jk[1]+ij[0]*jk[0]))-PI;
+
+			if(angle<0)
+			{
+				angle += 2*PI;
+			}
+			waypoint_handler->fance_angle_list[j]=angle;
+		}
+}
+
