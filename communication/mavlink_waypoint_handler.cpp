@@ -1558,7 +1558,6 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
                                                     maths_sign(waypoint_next_->radius));
 
                 navigation_.dubin_state = DUBIN_CIRCLE1;
-                print_util_dbg_print("DUBIN_CIRCLE1\r\n");
             }
             else
             {
@@ -1573,7 +1572,6 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
                 waypoint_next_->dubin.circle_center_2[Z] = 0.0f;
 
                 navigation_.dubin_state = DUBIN_CIRCLE2;
-                print_util_dbg_print("DUBIN_CIRCLE2\r\n");
             }
 
             break;
@@ -1587,7 +1585,6 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
             if (maths_f_abs(heading_diff) < navigation_.heading_acceptance)
             {
                 navigation_.dubin_state = DUBIN_STRAIGHT;
-                print_util_dbg_print("DUBIN_STRAIGHT\r\n");
             }
             break;
         case DUBIN_STRAIGHT:
@@ -1600,7 +1597,6 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
             if (scalar_product < 0.0f)
             {
                 navigation_.dubin_state = DUBIN_CIRCLE2;
-                print_util_dbg_print("DUBIN_CIRCLE2\r\n");
             }
 
         case DUBIN_CIRCLE2:
