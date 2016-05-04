@@ -116,6 +116,10 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create central data using real sensors
     Central_data::conf_t cd_config = Central_data::default_config(MAVLINK_SYS_ID);
+    cd_config.servos_mix_quadcopter_diag_config.motor_front_right_dir = CW;
+    cd_config.servos_mix_quadcopter_diag_config.motor_front_left_dir = CCW;
+    cd_config.servos_mix_quadcopter_diag_config.motor_rear_right_dir = CCW;
+    cd_config.servos_mix_quadcopter_diag_config.motor_rear_left_dir = CW;
     Central_data_custom cd = Central_data_custom(board.imu,
                                    board.bmp085,
                                    gps_dummy,
