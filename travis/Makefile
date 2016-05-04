@@ -9,7 +9,7 @@
 # Main rule
 all: sample_projects doc	
 
-sample_projects: LEQuad_linux LEWing_linux LEQuad_stm32 LEWing_stm32 LEQuad_avr32 LEWing_avr32
+sample_projects: LEQuad_linux LEQuad_stm32 LEQuad_avr32
 
 LEQuad_linux:
 	cd ../sample_projects/LEQuad/proj_linux && make clean && make && make clean
@@ -19,15 +19,6 @@ LEQuad_avr32:
 
 LEQuad_stm32:
 	cd ../sample_projects/LEQuad/proj_stm32 && make clean && make && make clean
-
-LEWing_linux:
-	cd ../sample_projects/LEWing/proj_linux && make clean && make && make clean
-
-LEWing_avr32:
-	cd ../sample_projects/LEWing/proj_avr32 && make clean && make && make clean
-
-LEWing_stm32:
-	cd ../sample_projects/LEWing/proj_stm32 && make clean && make && make clean
 
 doc: doc_doxygen doc_daux
 
