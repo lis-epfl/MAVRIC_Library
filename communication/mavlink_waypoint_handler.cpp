@@ -1250,7 +1250,8 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
             margin = 36.0f;
         }
 
-        if (navigation_.dist2wp_sqr < (current_waypoint_.param2 * current_waypoint_.param2 + margin))
+        if (navigation_.dist2wp_sqr < (current_waypoint_.param2 * current_waypoint_.param2 + margin) ||
+               (navigation_.navigation_type == DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
         {
             if (waypoint_list[current_waypoint_index_].current > 0)
             {
