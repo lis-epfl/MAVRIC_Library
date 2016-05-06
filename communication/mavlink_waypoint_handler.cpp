@@ -46,6 +46,7 @@
 
 extern "C"
 {
+#include <math.h>
 #include "util/print_util.h"
 #include "util/maths.h"
 #include "util/constants.h"
@@ -2621,16 +2622,24 @@ void mavlink_waypoint_handler_fencepoint_angle(mavlink_waypoint_handler_t* waypo
 			float ij[3]=	{waypoint_handler->fence_list[j].x-waypoint_handler->fence_list[i].x,
 					waypoint_handler->fence_list[j].y-waypoint_handler->fence_list[i].y,
 					waypoint_handler->fence_list[j].z-waypoint_handler->fence_list[i].z};
-			float jk[3]=	{waypoint_handler->fence_list[k].x-waypoint_handler->fence_list[j].x,
-					waypoint_handler->fence_list[k].y-waypoint_handler->fence_list[j].y,
-					waypoint_handler->fence_list[k].z-waypoint_handler->fence_list[j].z};
-			float angle=quick_trig_atan((ij[1]*jk[0]-ij[0]*jk[1])/(ij[1]*jk[1]+ij[0]*jk[0]))-PI;
-
+			float jk[3]=	{waypoint_handler->fence_list[j].x-waypoint_handler->fence_list[k].x,
+					waypoint_handler->fence_list[j].y-waypoint_handler->fence_list[k].y,
+					waypoint_handler->fence_list[j].z-waypoint_handler->fence_list[k].z};
+			float angle = atan2((ij[1]*jk[0]-ij[0]*jk[1]),(ij[1]*jk[1]+ij[0]*jk[0]));
 			if(angle<0)
 			{
 				angle += 2*PI;
 			}
+
+
 			waypoint_handler->fance_angle_list[j]=angle;
+//
+//			print_util_dbg_print("|fencepoint|");print_util_dbg_putfloat(j+1,0);print_util_dbg_print("||");
+//			print_util_dbg_putfloat(waypoint_handler->fence_list[j].x,2);print_util_dbg_print("||");
+//			print_util_dbg_putfloat(waypoint_handler->fence_list[j].y,2);print_util_dbg_print("||");
+//			print_util_dbg_putfloat(angle,5);print_util_dbg_print("||");
+//			print_util_dbg_putfloat(angle*MATH_RAD_TO_DEG,5);print_util_dbg_print("\n");
+
 		}
 }
 

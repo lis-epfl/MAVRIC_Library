@@ -332,7 +332,7 @@ bool Fence_CAS::update(void)
 
 
 
-		float angle_rep_radius = 1;
+		float angle_rep_radius = this->maxsens;
 		//fence points repulsion
 		if(waypoint_handler->fance_angle_list[i]>PI/2.0)
 		{
@@ -340,9 +340,11 @@ bool Fence_CAS::update(void)
 		}
 		else
 		{
-			angle_rep_radius = 1.8*quick_trig_cos(waypoint_handler->fance_angle_list[i]/2.0)*2*this->maxsens;
+			float cos = quick_trig_cos(waypoint_handler->fance_angle_list[i]/2.0)*(1 - waypoint_handler->fance_angle_list[i]/PI)*2;
+			angle_rep_radius = 4*cos*cos*cos*this->maxsens;
 		}
 		//test if angle_rep_radius isn't to big and influence other fences
+
 		float D[3]={0,0,0};
 		if(i==0)
 		{
@@ -366,13 +368,26 @@ bool Fence_CAS::update(void)
 		{
 			angle_rep_radius = vectors_norm(fence2);
 		}
+		float AC[3]={C[0]-A[0],C[1]-A[1],C[2]};
+		float distAC = vectors_norm(AC);
+
+		if(i==3)
+		{
+			print_util_dbg_print("||");print_util_dbg_putfloat(i+1,0);
+			print_util_dbg_print("|dist|");print_util_dbg_putfloat(distAC,5);
+			print_util_dbg_print("|angle_rep|");print_util_dbg_putfloat(angle_rep_radius,5);
+			print_util_dbg_print("|angle|");print_util_dbg_putfloat(waypoint_handler->fance_angle_list[i]*MATH_RAD_TO_DEG,5);
+			print_util_dbg_print("\n");
+		}
+
+		//use the distance to the points and not to the fences.
+
 		//fence point repulsion
-		if((dist[i] >= -(angle_rep_radius))&(dist[i] < angle_rep_radius))
+		if((distAC >= -(angle_rep_radius))&(distAC < angle_rep_radius))
 		{
 			if(angle_rep_radius!=0)
 			{
-//				print_util_dbg_print("|fencepoint|");print_util_dbg_putfloat(i,5);print_util_dbg_print("\\");print_util_dbg_putfloat(angle_rep_radius,5);print_util_dbg_print("\n");
-				float ratio=dist[i]/angle_rep_radius;
+				float ratio=distAC/angle_rep_radius*8;
 				this->repulsion[1]+=-this->coef_roll*max_ang*interpolate(ratio,interp_type); //sens of repulsion fixed
 
 			}
