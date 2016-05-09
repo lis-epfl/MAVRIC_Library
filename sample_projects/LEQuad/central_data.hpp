@@ -249,6 +249,7 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.navigation_config = Navigation::default_config();
 
     conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
+    conf.waypoint_handler_config.auto_take_off_altitude = 1.0f;
 
     conf.qfilter_config = qfilter_default_config();
 
