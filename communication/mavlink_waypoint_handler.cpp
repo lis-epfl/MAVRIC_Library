@@ -1591,7 +1591,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     waypoint.x = 0.0f;
     waypoint.y = 0.0f;
-    waypoint.z = -10.0f;
+    waypoint.z = -config_.auto_take_off_altitude;;
 
     waypoint.param1 = 10; // Hold time in decimal seconds
     waypoint.param2 = 2; // Acceptance radius in meters
