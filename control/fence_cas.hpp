@@ -40,15 +40,10 @@
  *
  ******************************************************************************/
 
-
 #ifndef FENCE_CAS_H_
 #define FENCE_CAS_H_
 
-
-//check if thoses are usefull
-//#include "control/fence.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
-//#include "sensing/position_estimation.hpp"
 #include "sensing/position_estimation.hpp"
 
 
@@ -60,45 +55,97 @@ extern "C"
 class Fence_CAS
 {
 public:
+    /**
+     * \brief   Constructor
+     *
+     * \param   waypoint_handler    For fencepoints
+     * \param   position_estimation For position and speed
+     * \param   controls            For resetting the roll command
+     */
 	Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* postion_estimation,control_command_t* controls );
 	~Fence_CAS(void);
+    /**
+     * \brief   Main update function - compute the repulsion with the fences
+     *
+     * \return  success
+     */
 	bool 	update(void);
-	void 	add_fence(void);
-	void 	del_fence(uint8_t fence_id);
-
-	void 	set_sensor_res(void);
-	void 	get_sensor_res(void);
 	void 	set_disconfort(void);
 	void 	get_disconfort(void);
 	void 	set_a_max(void);
 	void 	get_a_max(void);
 	void 	set_r_pz(void);
 	void 	get_r_pz(void);
+    /**
+     * \brief   Returns the repulsion on the choose axis
+     *
+     * \param index of the axis [0,1,2] = [X,ROLL,Z]
+     *
+     * \return  repulsion value
+     */
 	float 	get_repulsion(int axis);
+    /**
+     * \brief   Returns the maximal angle per update
+     *
+     * \return  maximal angle per update
+     *
+     */
 	float 	get_max_angle(void);
+    /**
+     * \brief   Transform Global frame to body frame coordinates
+     *
+     * \param Center of new coordinate system
+     *
+     * \param Heading of new coordinate system
+     *
+     * \param vector to transform
+     *
+     */
 	void 	gftobftransform(float C[3], float S[3], float rep[3]);
+    /**
+     * \brief   Choose the interpolation function for the repulsion
+     *
+     * \param value to interpolate
+     *
+     * \param type of interpolation [0,1,2] = [linear,cos,cos2]
+     *
+     * \return  interpolation value
+     */
 	float 	interpolate(float r, int type);
-	float 								maxsens;
-	float								a_max; ///<maximal deceleration [m/s^2]
-	float								r_pz; ///< radius of Protection Zone
-	float								comfort; ///<[0,1] intensity of the reaction
-	float								tahead; ///<[0,1] intensity of the reaction
-	float								coef_roll; ///<[0,1] intensity of the reaction
+
+	float	maxsens;	///< Maximal detection distance, 		typically 10
+	float	a_max; 		///< Maximal deceleration [m/s^2], 		typically 1
+	float	r_pz; 		///< Radius of Protection Zone, 		typically 1
+	float	comfort; 	///< [0,1] Intensity of the reaction, 	typically 0.845
+	float	tahead; 	///< [0,10] Intensity of the reaction, 	typically 2
+	float	coef_roll; 	///< [0,1] Intensity of the reaction, 	typically 0.01
 
 
 
 
 private:
-
+    /**
+     * \brief Detect the point of intersection of two segment and return the smallest distance between them
+     *
+     * \param Segment 1 point A (Fence A)
+     * \param Segment 1 point B (Fence B)
+     *
+     * \param Segment 2 point A (Quand center)
+     * \param Segment 2 point B	(Quad heading)
+     *
+     * \param Velocity of the quad
+     *
+     * \param Interception point on segment 1 (Fence segment)
+     * \param Interception point on segment 2 (Quad segment)
+     *
+     * \return  distance between the segments
+     */
 	float 	detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3]);
-	float 	detect_line(local_position_t A, local_position_t B,local_position_t C, float V[3], float gamma, float I[3]);
-	uint8_t								sensor_res; ///< simulate sensor resolution, spatial resolution between two sensors. [deg]
-	mavlink_waypoint_handler_t* 		waypoint_handler;
-	const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
-	control_command_t* 					controls;
-	//velocity_command_t&                 velocity_command;           ///< Velocity command (output)
-	float 								detected_point[3];
-	float 								repulsion[3];
+
+	mavlink_waypoint_handler_t* 		waypoint_handler;			///< Waypoint handler (extract fencepoints)
+	const position_estimation_t*        pos_est;                    ///< Estimated position and speed (extract the velocity and the position)
+	control_command_t* 					controls;					///< Control command (output the repulsion)
+	float 								repulsion[3];				///< Repulsion vector in semi-local frame (only act on ROLL, rep[1])
 };
 
 #endif /*FENCE_CAS_H_*/
