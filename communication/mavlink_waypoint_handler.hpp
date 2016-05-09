@@ -114,7 +114,6 @@ public:
     /**
      * \brief   Initialize a home waypoint at (0,0,0) at start up
      *
-     * \param home_waypoint_altitude	The altitude for the first waypoint
      * \details Is called by the constructor
      *
      */
