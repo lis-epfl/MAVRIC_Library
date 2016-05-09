@@ -93,9 +93,21 @@ Gimbal_controller::Gimbal_controller(Navigation& navigation, Servo& servo_pitch,
     attitude_command_range_[MAX_RANGE_GIMBAL] = config.attitude_command_range_config[MAX_RANGE_GIMBAL];
 }
 
+void Gimbal_controller::get_fake_pitch(stabilisation_copter_t *stab)
+{
+	float 				semilocal_vel[3];
+
+	//get semilocal velocity
+	navigation_.position_estimation_get_semilocal_velocity(semilocal_vel);
+
+	fake_pitch_ = -maths_rad_to_deg(atan2(semilocal_vel[2], semilocal_vel[0]));
+
+	roll_body_ = coord_conventions_quat_to_aero(stab->ahrs->qe).rpy[0];
+}
 
 bool Gimbal_controller::update(Gimbal_controller *gimbal_controller)
 {
+	//free head motion based on platform referential
 
 	attitude_command_t 	att_user_head;
 	attitude_command_t	att_mimick_plane;
@@ -113,7 +125,7 @@ bool Gimbal_controller::update(Gimbal_controller *gimbal_controller)
 	att_mimick_plane.rpy[2] = 0.0f;
 
 	//apply the angle correction only if the quad as a given forward velocity
-	if(semilocal_vel[0] < 0.5f) //0.5m/s
+	if(semilocal_vel[0] < 0.4f) //0.4m/s
 		att_mimick_plane.rpy[1] = 0.0f;
 
 	/*print_util_dbg_print("semilocal_vel\r\n");

@@ -280,7 +280,8 @@ void Mavlink_message_handler::msg_default_dbg(mavlink_message_t* msg)
 {
     if ((msg->sysid == MAVLINK_BASE_STATION_ID)
             && (msg->msgid != MAVLINK_MSG_ID_MANUAL_CONTROL)
-            && (msg->msgid != MAVLINK_MSG_ID_HEARTBEAT))
+            && (msg->msgid != MAVLINK_MSG_ID_HEARTBEAT)
+			&& (msg->msgid != MAVLINK_MSG_ID_GIMBAL_COMMAND))
     {
         print_util_dbg_print("Received message with ID ");
         print_util_dbg_print_num(msg->msgid,10);

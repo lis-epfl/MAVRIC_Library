@@ -91,8 +91,8 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
         joystick->channels.r = packet.r / 1000.0f;
 
         //--- Alex for test frequency purpose
-        print_util_dbg_putfloat((float) joystick->commTrigger,0);
-                print_util_dbg_print("\r\n");
+        //print_util_dbg_putfloat((float) joystick->commTrigger,0);
+        //        print_util_dbg_print("\r\n");
 
        	joystick->commTrigger = time_keeper_get_us()/1000.0f;
         //--- Alex end

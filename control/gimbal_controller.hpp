@@ -46,8 +46,7 @@
 #include "control/control_command.h"
 #include "control/pid_controller.h"
 #include "drivers/servo.hpp"
-#include "control/navigation.hpp"
-
+#include "control/stabilisation_copter.hpp"
 
 class Gimbal_controller
 {
@@ -72,6 +71,11 @@ public:
      */
     Gimbal_controller(Navigation& navigation, Servo& servo_pitch, Servo& servo_yaw, conf_t config = default_config());
 
+    /**
+	 * \brief   Compute the fake pitch
+	 *
+	 */
+	void get_fake_pitch(stabilisation_copter_t *stab);
 
     /**
      * \brief   Main update function - sends gimbal command to two PWM outputs (for pitch and yaw)
@@ -91,6 +95,8 @@ public:
     attitude_command_t			attitude_command_desired_;	///< Attitude command (input from head-tracker) [°]
     attitude_command_t			attitude_output_;			///< Output to PWM (output) [°]
     float						commTrig_;					///< debug variable
+    float						fake_pitch_;				///< Pitch a plane would have (instead of a quadcopter)
+    float						roll_body_;
 
 private:
     /**
