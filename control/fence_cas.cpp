@@ -384,15 +384,15 @@ bool Fence_CAS::update(void)
 				float rep[3]={A[0]-S[0],A[1]-S[1],0.0};
 				gftobftransform(C, S, rep);
 				vectors_normalize(rep,rep);
-				rep[1]=(rep[1]>=0?1:-1) ;
+				rep[1]=(rep[1]>=0?-1:1) ;
 				this->repulsion[1]+=- rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type); //sens of repulsion fixed
 				detected++;
-				print_util_dbg_print("|REPULSION|");print_util_dbg_putfloat(i+1,0);
-				print_util_dbg_print("|olddistAC|");print_util_dbg_putfloat(old_distAC[i],5);
-				print_util_dbg_print("|distAC|");print_util_dbg_putfloat(distAC,5);
-				print_util_dbg_print("|angle_rep|");print_util_dbg_putfloat(angle_rep_radius,5);
-				print_util_dbg_print("|angle|");print_util_dbg_putfloat(waypoint_handler->fance_angle_list[i]*MATH_RAD_TO_DEG,5);
-				print_util_dbg_print("\n");
+//				print_util_dbg_print("|REPULSION|");print_util_dbg_putfloat(i+1,0);
+//				print_util_dbg_print("|olddistAC|");print_util_dbg_putfloat(old_distAC[i],5);
+//				print_util_dbg_print("|distAC|");print_util_dbg_putfloat(distAC,5);
+//				print_util_dbg_print("|angle_rep|");print_util_dbg_putfloat(angle_rep_radius,5);
+//				print_util_dbg_print("|angle|");print_util_dbg_putfloat(waypoint_handler->fance_angle_list[i]*MATH_RAD_TO_DEG,5);
+//				print_util_dbg_print("\n");
 			}
 		}
 		old_distAC[i]=distAC;
