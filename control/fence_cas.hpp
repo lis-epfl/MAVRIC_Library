@@ -62,22 +62,22 @@ class Fence_CAS
 public:
 	Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* postion_estimation,control_command_t* controls );
 	~Fence_CAS(void);
-	bool update(void);
-	void add_fence(void);
-	void del_fence(uint8_t fence_id);
+	bool 	update(void);
+	void 	add_fence(void);
+	void 	del_fence(uint8_t fence_id);
 
-	void set_sensor_res(void);
-	void get_sensor_res(void);
-	void set_disconfort(void);
-	void get_disconfort(void);
-	void set_a_max(void);
-	void get_a_max(void);
-	void set_r_pz(void);
-	void get_r_pz(void);
-	float get_repulsion(int axis);
-	float get_max_angle(void);
-	void gftobftransform(float C[3], float S[3], float rep[3]);
-	float interpolate(float r, int type);
+	void 	set_sensor_res(void);
+	void 	get_sensor_res(void);
+	void 	set_disconfort(void);
+	void 	get_disconfort(void);
+	void 	set_a_max(void);
+	void 	get_a_max(void);
+	void 	set_r_pz(void);
+	void 	get_r_pz(void);
+	float 	get_repulsion(int axis);
+	float 	get_max_angle(void);
+	void 	gftobftransform(float C[3], float S[3], float rep[3]);
+	float 	interpolate(float r, int type);
 	float 								maxsens;
 	float								a_max; ///<maximal deceleration [m/s^2]
 	float								r_pz; ///< radius of Protection Zone
@@ -90,8 +90,8 @@ public:
 
 private:
 
-	float detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3]);
-	float detect_line(local_position_t A, local_position_t B,local_position_t C, float V[3], float gamma, float I[3]);
+	float 	detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3]);
+	float 	detect_line(local_position_t A, local_position_t B,local_position_t C, float V[3], float gamma, float I[3]);
 	uint8_t								sensor_res; ///< simulate sensor resolution, spatial resolution between two sensors. [deg]
 	mavlink_waypoint_handler_t* 		waypoint_handler;
 	const position_estimation_t*        pos_est;                    ///< Estimated position and speed (input)
