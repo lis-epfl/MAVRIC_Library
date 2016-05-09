@@ -114,11 +114,9 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create central data
     // -------------------------------------------------------------------------
-    central_data_conf_t cd_config = central_data_default_config();
-
     // Create central data using real sensors
-    Central_data cd = Central_data(MAVLINK_SYS_ID,
-                                   board.imu,
+    Central_data::conf_t cd_config = Central_data::default_config(MAVLINK_SYS_ID);
+    Central_data cd = Central_data(board.imu,
                                    board.bmp085,
                                    board.gps_ublox,
                                    board.sonar_i2cxl,      // Warning:
@@ -158,7 +156,6 @@ int main(void)
                                    file_stat,
                                    camera,
                                    cd_config );*/
-
 
     // -------------------------------------------------------------------------
     // Create simulation
@@ -206,15 +203,16 @@ int main(void)
     // Init central data
     init_success &= cd.init();
 
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
+    init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
 
     print_util_dbg_print("onboard_parameters\r\n");
     delay_ms(150);
 
     // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
+    if (onboard_parameters->read_parameters_from_storage() == false)
     {
-        onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+        onboard_parameters->write_parameters_to_storage();
         init_success = false;
     }
 
@@ -226,7 +224,7 @@ int main(void)
     print_util_dbg_print("mavlink_telemetry_init\r\n");
     delay_ms(150);
 
-    cd.state.mav_state = MAV_STATE_STANDBY;
+    cd.state.mav_state_ = MAV_STATE_STANDBY;
 
     init_success &= tasks_create_tasks(&cd);
 
@@ -252,7 +250,7 @@ int main(void)
     // -------------------------------------------------------------------------
     while (1 == 1)
     {
-        scheduler_update(&cd.scheduler);
+        cd.scheduler.update();
     }
 
     return 0;

@@ -69,8 +69,8 @@ void curvace_telemetry_send(const curvace_t* curvace, const mavlink_stream_t* ma
 
     // Send in 6 chunks
     offset = sensor_id * nb_of_per_message;
-    mavlink_msg_spherical_optic_flow_pack(mavlink_stream->sysid,
-                                          mavlink_stream->compid,
+    mavlink_msg_spherical_optic_flow_pack(mavlink_stream->sysid(),
+                                          mavlink_stream->compid(),
                                           msg,
                                           time_keeper_get_ms(),
                                           sensor_id,

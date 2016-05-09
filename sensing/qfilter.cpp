@@ -102,14 +102,14 @@ void qfilter_update(qfilter_t* qf)
     float ki_mag = qf->ki_mag;
 
     // Update time in us
-    float now_us    = time_keeper_get_us();
+    float now_s    = time_keeper_get_s();
 
     // Delta t in seconds
-    float dt     = 1e-6 * (float)(now_us - qf->ahrs->last_update);
+    float dt_s     = (float)(now_s - qf->ahrs->last_update_s);
 
     // Write to ahrs structure
-    qf->ahrs->dt          = dt;
-    qf->ahrs->last_update = now_us;
+    qf->ahrs->dt_s          = dt_s;
+    qf->ahrs->last_update_s = now_s;
 
 
     // up_bf = qe^-1 *(0,0,0,-1) * qe
@@ -236,10 +236,10 @@ void qfilter_update(qfilter_t* qf)
     qed = quaternions_multiply(qf->ahrs->qe, qtmp1);
 
     // TODO: correct this formulas!
-    qf->ahrs->qe.s = qf->ahrs->qe.s + qed.s * dt;
-    qf->ahrs->qe.v[X] += qed.v[X] * dt;
-    qf->ahrs->qe.v[Y] += qed.v[Y] * dt;
-    qf->ahrs->qe.v[Z] += qed.v[Z] * dt;
+    qf->ahrs->qe.s = qf->ahrs->qe.s + qed.s * dt_s;
+    qf->ahrs->qe.v[X] += qed.v[X] * dt_s;
+    qf->ahrs->qe.v[Y] += qed.v[Y] * dt_s;
+    qf->ahrs->qe.v[Z] += qed.v[Z] * dt_s;
 
     snorm = qf->ahrs->qe.s * qf->ahrs->qe.s + qf->ahrs->qe.v[X] * qf->ahrs->qe.v[X] + qf->ahrs->qe.v[Y] * qf->ahrs->qe.v[Y] + qf->ahrs->qe.v[Z] * qf->ahrs->qe.v[Z];
     if (snorm < 0.0001f)
@@ -257,13 +257,13 @@ void qfilter_update(qfilter_t* qf)
     qf->ahrs->qe.v[Z] /= norm;
 
     // bias estimate update
-    qf->gyro_bias[X] += - dt * ki * omc[X];
-    qf->gyro_bias[Y] += - dt * ki * omc[Y];
-    qf->gyro_bias[Z] += - dt * ki * omc[Z];
+    qf->gyro_bias[X] += - dt_s * ki * omc[X];
+    qf->gyro_bias[Y] += - dt_s * ki * omc[Y];
+    qf->gyro_bias[Z] += - dt_s * ki * omc[Z];
 
-    qf->gyro_bias[X] += - dt * ki_mag * omc_mag[X];
-    qf->gyro_bias[Y] += - dt * ki_mag * omc_mag[Y];
-    qf->gyro_bias[Z] += - dt * ki_mag * omc_mag[Z];
+    qf->gyro_bias[X] += - dt_s * ki_mag * omc_mag[X];
+    qf->gyro_bias[Y] += - dt_s * ki_mag * omc_mag[Y];
+    qf->gyro_bias[Z] += - dt_s * ki_mag * omc_mag[Z];
 
     // Update linear acceleration
     qf->ahrs->linear_acc[X] = 9.81f * (acc[X] - up_bf.v[X]) ;

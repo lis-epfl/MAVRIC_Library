@@ -43,7 +43,7 @@
 #ifndef OFFBOARD_CAMERA_HPP_
 #define OFFBOARD_CAMERA_HPP_
 
-#include "runtime/scheduler.h"
+#include "runtime/scheduler.hpp"
 
 extern "C"
 {
@@ -78,7 +78,7 @@ public:
      *
      * \return  Success
      */
-    bool update(const scheduler_t* scheduler);
+    bool update(const Scheduler* scheduler);
 
 
     /**

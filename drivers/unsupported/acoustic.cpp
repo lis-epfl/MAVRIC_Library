@@ -331,15 +331,15 @@ static void acoustic_set_waypoint_command(audio_t* audio_data)
 //------------------------------------------------------------------------------
 
 
-void acoustic_init(audio_t*         audio_data,
+void acoustic_init(audio_t*                     audio_data,
                    int32_t                      UID,
                    ahrs_t*                      ahrs,
-                   position_estimation_t*       position_estimation,
+                   Position_estimation*         position_estimation,
                    remote_t*                    remote,
                    navigation_t*                navigation,
                    stabilisation_copter_t*      stabilisation_copter,
                    control_command_t*           controls_nav,
-                   mavlink_waypoint_handler_t*  waypoint_handler,
+                   Mavlink_waypoint_handler*    waypoint_handler,
                    byte_stream_t*               telemetry_down_stream)
 {
     //init dependencies

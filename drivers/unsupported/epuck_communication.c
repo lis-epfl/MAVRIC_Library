@@ -80,7 +80,7 @@ bool epuck_communication_update(epuck_communication_t* epuck_communication)
     mavlink_message_t msg;
 
     mavlink_msg_rc_channels_scaled_pack(epuck_communication->mavlink_stream.sysid,
-                                        epuck_communication->mavlink_stream.compid,
+                                        epuck_communication->mavlink_stream.compid(),
                                         &msg,
                                         time_keeper_get_ms(),
                                         0,
