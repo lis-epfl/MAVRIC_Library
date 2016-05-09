@@ -308,6 +308,10 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.bias[Y]                                 , "BIAS_MAG_Y");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.bias[Z]                                 , "BIAS_MAG_Z");
 
+    // North vector
+    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[X], "NORTH_MAG_X");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[Y], "NORTH_MAG_Y");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[Z], "NORTH_MAG_Z");
 
 
     // Position estimation
