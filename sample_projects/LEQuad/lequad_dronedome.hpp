@@ -54,8 +54,7 @@ public:
     /**
      * \brief   Constructor
      */
-    LEQuad_dronedome( uint8_t sysid,
-                      Imu& imu,
+    LEQuad_dronedome( Imu& imu,
                       Barometer& barometer,
                       Gps& gps,
                       Sonar& sonar,
@@ -70,10 +69,10 @@ public:
                       Servo& servo_3,
                       File& file1,
                       File& file2,
-                      central_data_conf_t config = central_data_default_config() ):
-        Central_data(sysid, imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
+                      Central_data::conf_t config = Central_data::default_config() ):
+          Central_data(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
                      battery, servo_0, servo_1, servo_2, servo_3, file1, file2, config),
-        gps_mocap_(mavlink_communication.message_handler)
+          gps_mocap_(mavlink_communication.message_handler())
       {};
 
       /**

@@ -40,6 +40,8 @@
 
 #include "boards/mavrinux.hpp"
 #include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/lequad_dronedome.hpp"
+
 #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
 
@@ -92,7 +94,8 @@ int main(int argc, char** argv)
     cd_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
     cd_config.state_config.simulation_mode = HIL_ON;
 
-    Central_data cd = Central_data(board.imu,
+    // Central_data cd = Central_data(board.imu,
+    LEQuad_dronedome cd = LEQuad_dronedome(board.imu,
                                    board.sim.barometer(),
                                    board.sim.gps(),
                                    board.sim.sonar(),
