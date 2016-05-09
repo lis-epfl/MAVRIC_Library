@@ -216,5 +216,14 @@ bool Central_data::init(void)
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);
 
+    //--------------------------------------------------------------------------
+    // Init Waypoint handler
+    //--------------------------------------------------------------------------
+#if defined DRONE_DOME
+    waypoint_handler.set_home_waypoint_altitude(-5.0f);
+#elif defined OUTDOOR
+    waypoint_handler.set_home_waypoint_altitude(-10.0f);
+#endif
+
     return init_success;
 }
