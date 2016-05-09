@@ -33,12 +33,13 @@ or
 
 As you can see, the propeller doesn't start turning at the same time, for this:
 * Open Atmel Studio and your project in MAVRIC\LEQuad
-* Open the file /src/central_data.c
-* write 'pwm_servos_calibrate_esc( &central_data.servos);' just before 'pwm_servos_write_to_hardware( &central_data.servos );'
+* Open the file /src/megafly_rev4.cpp
+* Change the preprocessor definition for CALIBRATE_ESC to 1
 * Build and flash your drone with that code. 
+* Remove the propellers from the quad.
 * Unplug the USB cable used for flashing or the AVR programmer, and plug the battery to the drone, then press the reset button (next to the USB port, on the other face).
 * Arm the quad and check with the remote controller that every motors are turning at the same speed.
-* In Atmel, remove 'pwm_servos_calibrate_esc( &central_data.servos);'
+* In Atmel, Change the preprocessor definition for CALIBRATE_ESC to 0
 * Build and flash your drone with that code.
 
 You are done !
