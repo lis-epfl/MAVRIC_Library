@@ -87,7 +87,7 @@ public:
      *
      * \return  Update time
      */
-    const float last_update_us(void) const;
+    float last_update_us(void) const;
 
 
     /**
@@ -95,7 +95,7 @@ public:
      *
      * \return  Update time
      */
-    const float last_position_update_us(void) const;
+    float last_position_update_us(void) const;
 
 
     /**
@@ -103,7 +103,7 @@ public:
      *
      * \return  Update time
      */
-    const float last_velocity_update_us(void) const;
+    float last_velocity_update_us(void) const;
 
 
     /**
@@ -111,7 +111,7 @@ public:
      *
      * \return  position
      */
-    const global_position_t position_gf(void) const;
+    global_position_t position_gf(void) const;
 
 
     /**
@@ -119,7 +119,7 @@ public:
      *
      * \return  accuracy
      */
-    const float horizontal_position_accuracy(void) const;
+    float horizontal_position_accuracy(void) const;
 
 
     /**
@@ -127,7 +127,7 @@ public:
      *
      * \return  accuracy
      */
-    const float vertical_position_accuracy(void) const;
+    float vertical_position_accuracy(void) const;
 
 
     /**
@@ -135,7 +135,7 @@ public:
      *
      * \return  3D velocity
      */
-    const std::array<float, 3> velocity_lf(void) const;
+    std::array<float, 3> velocity_lf(void) const;
 
 
     /**
@@ -143,7 +143,7 @@ public:
      *
      * \return  velocity accuracy
      */
-    const float velocity_accuracy(void) const;
+    float velocity_accuracy(void) const;
 
 
     /**
@@ -151,7 +151,7 @@ public:
      *
      * \return  heading
      */
-    const float heading(void) const;
+    float heading(void) const;
 
 
     /**
@@ -159,7 +159,7 @@ public:
      *
      * \return  accuracy
      */
-    const float heading_accuracy(void) const;
+    float heading_accuracy(void) const;
 
 
     /**
@@ -167,7 +167,7 @@ public:
      *
      * \return  Value
      */
-    const uint8_t num_sats(void) const;
+    uint8_t num_sats(void) const;
 
 
     /**
@@ -175,7 +175,7 @@ public:
      *
      * \return  Value
      */
-    const gps_fix_t fix(void) const;
+    gps_fix_t fix(void) const;
 
 
     /**
@@ -183,7 +183,7 @@ public:
      *
      * \return  Value
      */
-    const bool healthy(void) const;
+    bool healthy(void) const;
 
 
     /**

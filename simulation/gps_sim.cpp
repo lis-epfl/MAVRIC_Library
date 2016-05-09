@@ -105,79 +105,79 @@ void Gps_sim::configure(void)
     ;
 }
 
-const float Gps_sim::last_update_us(void) const
+float Gps_sim::last_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-const float Gps_sim::last_position_update_us(void) const
+float Gps_sim::last_position_update_us(void) const
 {
     return last_position_update_us_;
 }
 
 
-const float Gps_sim::last_velocity_update_us(void) const
+float Gps_sim::last_velocity_update_us(void) const
 {
     return last_velocity_update_us_;
 }
 
 
-const global_position_t Gps_sim::position_gf(void) const
+global_position_t Gps_sim::position_gf(void) const
 {
     return global_position_;
 }
 
 
-const float Gps_sim::horizontal_position_accuracy(void) const
+float Gps_sim::horizontal_position_accuracy(void) const
 {
     return horizontal_position_accuracy_;
 }
 
 
-const float Gps_sim::vertical_position_accuracy(void) const
+float Gps_sim::vertical_position_accuracy(void) const
 {
     return vertical_position_accuracy_;
 }
 
 
-const std::array<float, 3> Gps_sim::velocity_lf(void) const
+std::array<float, 3> Gps_sim::velocity_lf(void) const
 {
     return velocity_lf_;
 }
 
 
-const float Gps_sim::velocity_accuracy(void) const
+float Gps_sim::velocity_accuracy(void) const
 {
     return velocity_accuracy_;
 }
 
 
-const float Gps_sim::heading(void) const
+float Gps_sim::heading(void) const
 {
     return heading_;
 }
 
 
-const float Gps_sim::heading_accuracy(void) const
+float Gps_sim::heading_accuracy(void) const
 {
     return heading_accuracy_;
 }
 
 
-const uint8_t Gps_sim::num_sats(void) const
+uint8_t Gps_sim::num_sats(void) const
 {
     return num_sats_;
 }
 
 
-const gps_fix_t Gps_sim::fix(void) const
+gps_fix_t Gps_sim::fix(void) const
 {
     return fix_;
 }
 
 
-const bool Gps_sim::healthy(void) const
+bool Gps_sim::healthy(void) const
 {
     return healthy_;
 }

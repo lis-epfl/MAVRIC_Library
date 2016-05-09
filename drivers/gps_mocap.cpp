@@ -77,7 +77,7 @@ static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, mavlink_mes
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Gps_mocap::Gps_mocap(Mavlink_message_handler& message_handler, gps_mocap_conf_t config):
+Gps_mocap::Gps_mocap(Mavlink_message_handler& message_handler, conf_t config):
     message_handler_(message_handler),
     config_(config),
     is_init_(false),
@@ -174,73 +174,73 @@ void Gps_mocap::configure(void)
 }
 
 
-const float Gps_mocap::last_update_us(void) const
+float Gps_mocap::last_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-const float Gps_mocap::last_position_update_us(void) const
+float Gps_mocap::last_position_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-const float Gps_mocap::last_velocity_update_us(void) const
+float Gps_mocap::last_velocity_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-const global_position_t Gps_mocap::position_gf(void) const
+global_position_t Gps_mocap::position_gf(void) const
 {
     return coord_conventions_local_to_global_position(local_position_);
 }
 
 
-const float Gps_mocap::horizontal_position_accuracy(void) const
+float Gps_mocap::horizontal_position_accuracy(void) const
 {
     return config_.horizontal_position_accuracy;
 }
 
 
-const float Gps_mocap::vertical_position_accuracy(void) const
+float Gps_mocap::vertical_position_accuracy(void) const
 {
     return config_.vertical_position_accuracy;
 }
 
 
-const std::array<float, 3> Gps_mocap::velocity_lf(void) const
+std::array<float, 3> Gps_mocap::velocity_lf(void) const
 {
     return velocity_lf_;
 }
 
 
-const float Gps_mocap::velocity_accuracy(void) const
+float Gps_mocap::velocity_accuracy(void) const
 {
     return config_.velocity_accuracy;
 }
 
 
-const float Gps_mocap::heading(void) const
+float Gps_mocap::heading(void) const
 {
     return heading_;
 }
 
 
-const float Gps_mocap::heading_accuracy(void) const
+float Gps_mocap::heading_accuracy(void) const
 {
     return config_.heading_accuracy;
 }
 
 
-const uint8_t Gps_mocap::num_sats(void) const
+uint8_t Gps_mocap::num_sats(void) const
 {
     return 16;
 }
 
 
-const gps_fix_t Gps_mocap::fix(void) const
+gps_fix_t Gps_mocap::fix(void) const
 {
     gps_fix_t fix = NO_GPS;
     if (healthy())
@@ -252,7 +252,7 @@ const gps_fix_t Gps_mocap::fix(void) const
 }
 
 
-const bool Gps_mocap::healthy(void) const
+bool Gps_mocap::healthy(void) const
 {
     return is_healthy_;
 }

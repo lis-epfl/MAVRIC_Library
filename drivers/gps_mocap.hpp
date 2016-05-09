@@ -56,27 +56,6 @@ extern "C"
 
 
 /**
- * \brief   Configuration structure
- */
-typedef struct
-{
-    global_position_t origin;
-    float horizontal_position_accuracy;
-    float vertical_position_accuracy;
-    float velocity_accuracy;
-    float heading_accuracy;
-} gps_mocap_conf_t;
-
-
-/**
- * \brief   Default configuration structure
- *
- * \return  config
- */
-static inline gps_mocap_conf_t gps_mocap_default_config();
-
-
-/**
  * \brief Class to expose data received from motion capture system as GPS data
  *
  * \detail The mocap data is received via mavlink messages of type ATT_POS_MOCAP
@@ -85,9 +64,21 @@ class Gps_mocap: public Gps
 {
 public:
     /**
+     * \brief   Configuration structure
+     */
+    typedef struct
+    {
+        global_position_t origin;
+        float horizontal_position_accuracy;
+        float vertical_position_accuracy;
+        float velocity_accuracy;
+        float heading_accuracy;
+    } conf_t;
+
+    /**
      * \brief Constructor
      */
-    Gps_mocap(Mavlink_message_handler& message_handler, gps_mocap_conf_t config = gps_mocap_default_config() );
+    Gps_mocap(Mavlink_message_handler& message_handler, conf_t config = default_config() );
 
 
     /**
@@ -127,7 +118,7 @@ public:
      *
      * \return  Update time
      */
-    const float last_update_us(void) const;
+    float last_update_us(void) const;
 
 
     /**
@@ -135,7 +126,7 @@ public:
      *
      * \return  Update time
      */
-    const float last_position_update_us(void) const;
+    float last_position_update_us(void) const;
 
 
     /**
@@ -143,7 +134,7 @@ public:
      *
      * \return  Update time
      */
-    const float last_velocity_update_us(void) const;
+    float last_velocity_update_us(void) const;
 
 
     /**
@@ -151,7 +142,7 @@ public:
      *
      * \return  position
      */
-    const global_position_t position_gf(void) const;
+    global_position_t position_gf(void) const;
 
 
     /**
@@ -159,7 +150,7 @@ public:
      *
      * \return  accuracy
      */
-    const float horizontal_position_accuracy(void) const;
+    float horizontal_position_accuracy(void) const;
 
 
     /**
@@ -167,7 +158,7 @@ public:
      *
      * \return  accuracy
      */
-    const float vertical_position_accuracy(void) const;
+    float vertical_position_accuracy(void) const;
 
 
     /**
@@ -175,7 +166,7 @@ public:
      *
      * \return  3D velocity
      */
-    const std::array<float, 3> velocity_lf(void) const;
+    std::array<float, 3> velocity_lf(void) const;
 
 
     /**
@@ -183,7 +174,7 @@ public:
      *
      * \return  velocity accuracy
      */
-    const float velocity_accuracy(void) const;
+    float velocity_accuracy(void) const;
 
 
     /**
@@ -191,7 +182,7 @@ public:
      *
      * \return  heading
      */
-    const float heading(void) const;
+    float heading(void) const;
 
 
     /**
@@ -199,7 +190,7 @@ public:
      *
      * \return  accuracy
      */
-    const float heading_accuracy(void) const;
+    float heading_accuracy(void) const;
 
 
     /**
@@ -207,7 +198,7 @@ public:
      *
      * \return  Value
      */
-    const uint8_t num_sats(void) const;
+    uint8_t num_sats(void) const;
 
 
     /**
@@ -215,7 +206,7 @@ public:
      *
      * \return  Value
      */
-    const gps_fix_t fix(void) const;
+    gps_fix_t fix(void) const;
 
 
     /**
@@ -223,12 +214,18 @@ public:
      *
      * \return  Value
      */
-    const bool healthy(void) const;
+    bool healthy(void) const;
 
+    /**
+     * \brief   Default configuration structure
+     *
+     * \return  config
+     */
+    static inline conf_t default_config();
 
 private:
-    Mavlink_message_handler& message_handler_;       ///< Reference to message handler for callbacks
-    gps_mocap_conf_t config_;                          ///< Configuration
+    Mavlink_message_handler& message_handler_;         ///< Reference to message handler for callbacks
+    conf_t config_;                                    ///< Configuration
 
     local_position_t local_position_;                  ///< Local position
     std::array<float, 3> velocity_lf_;                 ///< Velocity in local frame
@@ -245,9 +242,9 @@ private:
  *
  * \return  config
  */
-static inline gps_mocap_conf_t gps_mocap_default_config()
+inline Gps_mocap::conf_t Gps_mocap::default_config()
 {
-    gps_mocap_conf_t conf = {};
+    conf_t conf = {};
 
     // EPFL esplanade
     conf.origin.latitude  = 46.51852236174565f;
