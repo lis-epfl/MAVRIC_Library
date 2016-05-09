@@ -39,6 +39,9 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/lequad_dronedome.hpp"
+
+
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
@@ -68,7 +71,7 @@ extern "C"
 int main(void)
 {
     bool init_success = true;
-    
+
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
@@ -91,7 +94,8 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create central data using real sensors
     Central_data::conf_t cd_config = Central_data::default_config(MAVLINK_SYS_ID);
-    Central_data cd = Central_data(board.imu,
+    // Central_data cd = Central_data(board.imu,
+    LEQuad_dronedome cd = LEQuad_dronedome(board.imu,
                                    board.bmp085,
                                    board.gps_ublox,
                                    board.sonar_i2cxl,      // Warning:

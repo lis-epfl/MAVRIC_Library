@@ -198,7 +198,7 @@ public:
     servos_mix_quadcotper_diag_t servo_mix;
 
     qfilter_t attitude_filter;                                  ///< The qfilter structure
-    
+
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
 
@@ -210,7 +210,7 @@ public:
     Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation
     Mavlink_waypoint_handler waypoint_handler;
- 
+
     State_machine state_machine;                              ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
@@ -269,10 +269,10 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.velocity_controller_copter_config = velocity_controller_copter_default_config();
 
     /* Mavlink communication config */
-    Mavlink_communication::conf_t mavlink_communication_config = Mavlink_communication::default_config(sysid);
-    mavlink_communication_config.message_handler_config.debug = true;
+    Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);
+    mavlink_communication_config.message_handler_config.debug    = false;
     mavlink_communication_config.onboard_parameters_config.debug = true;
-    mavlink_communication_config.mavlink_stream_config.debug = true;
+    mavlink_communication_config.mavlink_stream_config.debug     = false;
     conf.mavlink_communication_config = mavlink_communication_config;
 
     return conf;

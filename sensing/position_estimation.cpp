@@ -372,7 +372,7 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         set_new_fence_origin();
     }
 
-    gps_position_init();
+    // gps_position_init();
 }
 
 
