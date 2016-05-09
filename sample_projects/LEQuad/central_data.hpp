@@ -122,6 +122,7 @@ public:
       Scheduler::conf_t scheduler_config;
       Mavlink_communication::conf_t mavlink_communication_config;
       Navigation::conf_t navigation_config;
+      Mavlink_waypoint_handler::conf_t waypoint_handler_config;
       qfilter_conf_t qfilter_config;
       Ahrs_ekf::conf_t ahrs_ekf_config;
       Position_estimation::conf_t position_estimation_config;
@@ -246,6 +247,8 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.scheduler_config = Scheduler::default_config();
 
     conf.navigation_config = Navigation::default_config();
+
+    conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
 
     conf.qfilter_config = qfilter_default_config();
 
