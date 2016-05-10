@@ -253,13 +253,6 @@ bool tasks_led_toggle(Led* led)
 }
 
 
-bool tasks_offboard_tag_search_update(Central_data* central_data)
-{
-    central_data->offboard_tag_search.update(&(central_data->raspi_mavlink_communication.scheduler()));
-    return true;
-}
-
-
 bool tasks_data_logging_update(Central_data* central_data)
 {
     bool run_success = true;
@@ -306,8 +299,6 @@ bool tasks_create_tasks(Central_data* central_data)
     init_success &= scheduler->add_task(20000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH , (Scheduler_task::task_function_t)&remote_update                                     , (Scheduler_task::task_argument_t)&central_data->manual_control.remote , 10);
 
     init_success &= scheduler->add_task(100000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH    , (Scheduler_task::task_function_t)&tasks_run_sonar_update                         , (Scheduler_task::task_argument_t)central_data                         , 13);
-
-    init_success &= scheduler->add_task(10000000, Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_LOW    , (Scheduler_task::task_function_t)&tasks_offboard_tag_search_update                    , (Scheduler_task::task_argument_t)central_data       , 15);
 
     init_success &= scheduler->add_task(500000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_LOW    , (Scheduler_task::task_function_t)&tasks_led_toggle                                , (Scheduler_task::task_argument_t)&central_data->led                   , 1);
 

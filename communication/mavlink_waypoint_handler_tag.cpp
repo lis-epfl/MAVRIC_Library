@@ -59,7 +59,8 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& 
                            const Manual_control& manual_control,
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream,
-                           Offboard_Tag_Search& offboard_tag_search) :
+                           Offboard_Tag_Search& offboard_tag_search,
+                           Mavlink_communication* raspi_mavlink_communication) :
             Mavlink_waypoint_handler(position_estimation,
                                     navigation,
                                     ahrs,
@@ -67,7 +68,8 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& 
                                     manual_control,
                                     message_handler,
                                     mavlink_stream),
-            offboard_tag_search_(offboard_tag_search)
+            offboard_tag_search_(offboard_tag_search),
+            raspi_mavlink_communication_(raspi_mavlink_communication)
 {
 
 }
@@ -79,8 +81,6 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
     mav_result_t result = MAV_RESULT_ACCEPTED; // Testing
     
     print_util_dbg_print("Attempting to land\r\n");
-    // Tell the offboard camera to start taking pictures
-    //scheduler_run_task_now(scheduler_get_task_by_index(const scheduler_t* scheduler, 15));
 
     //if ((waypoint_handler->navigation_.internal_state == NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state == NAV_HOLD_POSITION))
     {
@@ -100,7 +100,7 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
         waypoint_handler->navigation_.tag_search_start_time = time_keeper_get_us();
 
         // Land
-        //central_data->offboard_tag_search.update(&(central_data->raspi_mavlink_communication.scheduler));
+        waypoint_handler->offboard_tag_search_.update(&(waypoint_handler->raspi_mavlink_communication_->scheduler()));
     }
     /*else
     {

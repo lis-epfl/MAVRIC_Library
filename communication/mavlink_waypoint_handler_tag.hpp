@@ -86,7 +86,8 @@ public:
                            const Manual_control& manual_control,
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream,
-                           Offboard_Tag_Search& offboard_tag_search);
+                           Offboard_Tag_Search& offboard_tag_search,
+                           Mavlink_communication* raspi_mavlink_communication);
 
 
     
@@ -95,6 +96,7 @@ public:
 
 protected:
     Offboard_Tag_Search& offboard_tag_search_;
+    Mavlink_communication* raspi_mavlink_communication_;
 
     void auto_land_on_tag_handler();
     virtual void state_machine();
