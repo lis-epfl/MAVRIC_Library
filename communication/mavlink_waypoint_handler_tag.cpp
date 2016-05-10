@@ -71,7 +71,23 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& 
             offboard_tag_search_(offboard_tag_search),
             raspi_mavlink_communication_(raspi_mavlink_communication)
 {
+    bool init_success = true;
 
+    // Add callbacks for waypoint handler commands requests
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
+
+    callbackcmd.command_id = MAV_CMD_NAV_LAND; // 21
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_CAMERA; // 100
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &Mavlink_waypoint_handler_tag::set_auto_landing;
+    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+
+    if(!init_success)
+    {
+        print_util_dbg_print("[MAVLINK_WAYPOINT_HANDLER] constructor: ERROR\r\n");
+    }
 }
 
 
