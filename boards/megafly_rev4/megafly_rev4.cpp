@@ -106,7 +106,7 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
     servo_5(pwm_5, config.servo_config[5]),
     servo_6(pwm_6, config.servo_config[6]),
     servo_7(pwm_7, config.servo_config[7]),
-    offboard_camera(config.offboard_camera_config)
+    offboard_tag_search(config.offboard_tag_search_config)
 {}
 
 

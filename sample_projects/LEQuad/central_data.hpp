@@ -76,7 +76,7 @@
 #include "drivers/gps.hpp"
 #include "drivers/sonar.hpp"
 #include "drivers/servos_telemetry.hpp"
-#include "sensing/offboard_camera.hpp"
+#include "sensing/offboard_tag_search.hpp"
 #include "control/altitude_controller.hpp"
 
 
@@ -165,7 +165,7 @@ public:
                   Servo& servo_3,
                   File& file1,
                   File& file2,
-                  Offboard_Camera& ob_camera,
+                  Offboard_Tag_Search& offboard_tag_search,
                   const conf_t& config = default_config());
 
     /**
@@ -232,7 +232,7 @@ public:
     vector_field_waypoint_t         vector_field_waypoint;
 
 
-    Offboard_Camera& offboard_camera;                          ///< The offboard camera control class reference
+    Offboard_Tag_Search& offboard_tag_search;                          ///< The offboard camera control class reference
 
     altitude_t                      altitude_;
     Altitude_estimation             altitude_estimation_;

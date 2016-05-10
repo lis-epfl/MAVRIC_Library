@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file offboard_camera_telemetry.c
+ * \file offboard_tag_search_telemetry.c
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -42,7 +42,7 @@
 
 
 //#include "communication/state_telemetry.hpp"
-#include "communication/offboard_camera_telemetry.hpp"
+#include "communication/offboard_tag_search_telemetry.hpp"
 
 #include <cstdlib>
 
@@ -65,22 +65,22 @@ extern "C"
  * \param   sysid               The system ID
  * \param   msg                 The received MAVLink message structure
  */
-static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data* central_data, mavlink_command_long_t* packet);
+static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Central_data* central_data, mavlink_command_long_t* packet);
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data* central_data, mavlink_command_long_t* packet)
+static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Central_data* central_data, mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
     // Increment counter
-    central_data->offboard_camera.increment_picture_count();
+    central_data->offboard_tag_search.increment_picture_count();
 
         // Set waypoint enum to tag found
         central_data->navigation.land_on_tag_behavior = Navigation::land_on_tag_behavior_t::TAG_FOUND;
 
-        Offboard_Camera camera = central_data->offboard_camera;
+        Offboard_Tag_Search camera = central_data->offboard_tag_search;
 
         /*
          * The incoming packet is of this format:
@@ -191,7 +191,7 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool offboard_camera_telemetry_init(Central_data* central_data, Mavlink_message_handler* message_handler)
+bool offboard_tag_search_telemetry_init(Central_data* central_data, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
@@ -202,9 +202,9 @@ bool offboard_camera_telemetry_init(Central_data* central_data, Mavlink_message_
     central_data->navigation.tag_search_altitude = -10.0f;
 
     // Init tag_location vector to 0
-    central_data->offboard_camera.tag_location().pos[0] = 0.0f;
-    central_data->offboard_camera.tag_location().pos[1] = 0.0f;
-    central_data->offboard_camera.tag_location().pos[2] = 0.0f;
+    central_data->offboard_tag_search.tag_location().pos[0] = 0.0f;
+    central_data->offboard_tag_search.tag_location().pos[1] = 0.0f;
+    central_data->offboard_tag_search.tag_location().pos[2] = 0.0f;
 
     // Add callbacks for cmd
     Mavlink_message_handler::cmd_callback_t callbackcmd;
@@ -212,27 +212,27 @@ bool offboard_camera_telemetry_init(Central_data* central_data, Mavlink_message_
     callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // WRONG 190
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &offboard_camera_telemetry_receive_camera_output;
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &offboard_tag_search_telemetry_receive_camera_output;
     callbackcmd.module_struct =                                 central_data;
     init_success &= message_handler->add_cmd_callback(&callbackcmd);
     print_util_dbg_init_msg("[PICAMERA TELEMETRY INIT]", init_success);
     return init_success;
 }
 
-void offboard_camera_goal_location_telemetry_send(const Central_data* central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void offboard_tag_search_goal_location_telemetry_send(const Central_data* central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_debug_vect_pack(mavlink_stream->sysid(),
                                 mavlink_stream->compid(),
                                 msg,
                                 "Tag_Search_Goal_Location",
                                 time_keeper_get_us(),
-                                central_data->offboard_camera.tag_location().pos[0] - central_data->position_estimation.local_position.pos[0],
-                                central_data->offboard_camera.tag_location().pos[1] - central_data->position_estimation.local_position.pos[1],
-                                //central_data->offboard_camera.tag_location().pos[2] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2]);
-                                central_data->offboard_camera.picture_count());
+                                central_data->offboard_tag_search.tag_location().pos[0] - central_data->position_estimation.local_position.pos[0],
+                                central_data->offboard_tag_search.tag_location().pos[1] - central_data->position_estimation.local_position.pos[1],
+                                //central_data->offboard_tag_search.tag_location().pos[2] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2]);
+                                central_data->offboard_tag_search.picture_count());
 }
 
-void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void offboard_tag_search_telemetry_send_start_stop(const Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     int is_camera_running = -1;
     // Switch boolean to int as mavlink sends ints/flaots

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file offboard_camera_telemetry.h
+ * \file offboard_tag_search_telemetry.h
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -41,12 +41,12 @@
  ******************************************************************************/
 
 
-#ifndef OFFBOARD_CAMERA_TELEMETRY_H_
-#define OFFBOARD_CAMERA_TELEMETRY_H_
+#ifndef OFFBOARD_TAG_SEARCH_TELEMETRY_H_
+#define OFFBOARD_TAG_SEARCH_TELEMETRY_H_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "sensing/offboard_camera.hpp"
+#include "sensing/offboard_tag_search.hpp"
 #include "sample_projects/LEQuad/central_data.hpp"
 
 /**
@@ -58,9 +58,9 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool offboard_camera_telemetry_init(Central_data* central_data, Mavlink_message_handler* message_handler);
+bool offboard_tag_search_telemetry_init(Central_data* central_data, Mavlink_message_handler* message_handler);
 
-void offboard_camera_goal_location_telemetry_send(const Central_data* central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void offboard_tag_search_goal_location_telemetry_send(const Central_data* central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Function to send the MAVLink start/stop camera do command
@@ -69,6 +69,6 @@ void offboard_camera_goal_location_telemetry_send(const Central_data* central_da
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void offboard_tag_search_telemetry_send_start_stop(const Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* OFFBOARD_CAMERA_TELEMETRY_H_ */
+#endif /* OFFBOARD_TAG_SEARCH_TELEMETRY_H_ */

@@ -59,7 +59,7 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& 
                            const Manual_control& manual_control,
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream,
-                           Offboard_Camera& offboard_camera) :
+                           Offboard_Tag_Search& offboard_tag_search) :
             Mavlink_waypoint_handler(position_estimation,
                                     navigation,
                                     ahrs,
@@ -67,7 +67,7 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& 
                                     manual_control,
                                     message_handler,
                                     mavlink_stream),
-            offboard_camera_(offboard_camera)
+            offboard_tag_search_(offboard_tag_search)
 {
 
 }
@@ -89,18 +89,18 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
         print_util_dbg_print("internal_state = NAV_LAND_ON_TAG\r\n");
 
         // Set hold position point
-        waypoint_handler->offboard_camera_.tag_location().pos[0] = waypoint_handler->position_estimation_.local_position.pos[0];
-        waypoint_handler->offboard_camera_.tag_location().pos[1] = waypoint_handler->position_estimation_.local_position.pos[1];
-        waypoint_handler->offboard_camera_.tag_location().pos[2] = -10.0f;
+        waypoint_handler->offboard_tag_search_.tag_location().pos[0] = waypoint_handler->position_estimation_.local_position.pos[0];
+        waypoint_handler->offboard_tag_search_.tag_location().pos[1] = waypoint_handler->position_estimation_.local_position.pos[1];
+        waypoint_handler->offboard_tag_search_.tag_location().pos[2] = -10.0f;
         waypoint_handler->navigation_.tag_search_altitude = waypoint_handler->waypoint_hold_coordinates.pos[2];
-        waypoint_handler->offboard_camera_.tag_location().heading = waypoint_handler->position_estimation_.local_position.heading;
-        waypoint_handler->offboard_camera_.tag_location().origin = waypoint_handler->position_estimation_.local_position.origin;
+        waypoint_handler->offboard_tag_search_.tag_location().heading = waypoint_handler->position_estimation_.local_position.heading;
+        waypoint_handler->offboard_tag_search_.tag_location().origin = waypoint_handler->position_estimation_.local_position.origin;
 
         // Set new tag search start time
         waypoint_handler->navigation_.tag_search_start_time = time_keeper_get_us();
 
         // Land
-        //central_data->offboard_camera.update(&(central_data->raspi_mavlink_communication.scheduler));
+        //central_data->offboard_tag_search.update(&(central_data->raspi_mavlink_communication.scheduler));
     }
     /*else
     {
@@ -119,7 +119,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
     // Set position vectors to shorten code later
     for (uint8_t i = 0; i < 3; i++)
     {
-        tag_pos[i] = offboard_camera_.tag_location().pos[i];
+        tag_pos[i] = offboard_tag_search_.tag_location().pos[i];
         cur_pos[i] = position_estimation_.local_position.pos[i];
     }
 
@@ -133,7 +133,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
         float horizontal_distance_to_tag_sqr = (cur_pos[0] - tag_pos[0]) * (cur_pos[0] - tag_pos[0]) + (cur_pos[1] - tag_pos[1]) * (cur_pos[1] - tag_pos[1]);
 
         // If we are not above tag
-        if (horizontal_distance_to_tag_sqr > offboard_camera_.allowable_horizontal_tag_offset_sqr())
+        if (horizontal_distance_to_tag_sqr > offboard_tag_search_.allowable_horizontal_tag_offset_sqr())
         {
             // Stay at tag search altitude
             waypoint_hold_coordinates.pos[2] = navigation_.tag_search_altitude;
@@ -162,7 +162,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
     }
 
     // If the tag search has gone on too long, set mode to landing
-    if ((time_keeper_get_us() - navigation_.tag_search_start_time) > offboard_camera_.tag_search_timeout_us())
+    if ((time_keeper_get_us() - navigation_.tag_search_start_time) > offboard_tag_search_.tag_search_timeout_us())
     {
         print_util_dbg_print("Auto-landing on tag: Timeout: Switch to normal landing\r\n");
         navigation_.internal_state_ = Navigation::internal_state_t::NAV_LANDING;

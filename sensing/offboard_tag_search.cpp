@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file offboard_camera.c
+ * \file offboard_tag_search.c
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "sensing/offboard_camera.hpp"
+#include "sensing/offboard_tag_search.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
 #include "sample_projects/LEQuad/central_data.hpp"
 
@@ -54,7 +54,7 @@ extern "C"
 
 
 
-Offboard_Camera::Offboard_Camera(offboard_camera_conf_t config):
+Offboard_Tag_Search::Offboard_Tag_Search(offboard_tag_search_conf_t config):
     camera_id_(config.camera_id),
     is_camera_running_(config.initial_camera_state),
     last_update_us_(time_keeper_get_us()),
@@ -71,7 +71,7 @@ Offboard_Camera::Offboard_Camera(offboard_camera_conf_t config):
 }
 
 
-bool Offboard_Camera::update(const Scheduler* scheduler)
+bool Offboard_Tag_Search::update(const Scheduler* scheduler)
 {
     bool success = true;
     
@@ -94,77 +94,77 @@ bool Offboard_Camera::update(const Scheduler* scheduler)
 }
 
 
-const float& Offboard_Camera::last_update_us(void) const
+const float& Offboard_Tag_Search::last_update_us(void) const
 {
     return last_update_us_;
 }
 
-const bool& Offboard_Camera::is_camera_running() const
+const bool& Offboard_Tag_Search::is_camera_running() const
 {
     return is_camera_running_;
 }
 
-int Offboard_Camera::camera_id() const
+int Offboard_Tag_Search::camera_id() const
 {
     return camera_id_;
 }
 
-float  Offboard_Camera::allowable_horizontal_tag_offset_sqr() const
+float  Offboard_Tag_Search::allowable_horizontal_tag_offset_sqr() const
 {
     return allowable_horizontal_tag_offset_sqr_;
 }
 
-float Offboard_Camera::max_acc_drone_height_from_camera_mm() const
+float Offboard_Tag_Search::max_acc_drone_height_from_camera_mm() const
 {
     return max_acc_drone_height_from_camera_mm_;
 }
 
-const float& Offboard_Camera::tag_search_timeout_us() const
+const float& Offboard_Tag_Search::tag_search_timeout_us() const
 {
     return tag_search_timeout_us_;
 }
 
-void Offboard_Camera::update_last_update_us()
+void Offboard_Tag_Search::update_last_update_us()
 {
     last_update_us_ = time_keeper_get_us();
 }
 
-int Offboard_Camera::camera_x_resolution() const
+int Offboard_Tag_Search::camera_x_resolution() const
 {
     return camera_res_[0];
 }
 
-int Offboard_Camera::camera_y_resolution() const
+int Offboard_Tag_Search::camera_y_resolution() const
 {
     return camera_res_[1];
 }
 
-float Offboard_Camera::camera_rotation() const
+float Offboard_Tag_Search::camera_rotation() const
 {
     return camera_rotation_;
 }
 
-float Offboard_Camera::camera_x_fov() const
+float Offboard_Tag_Search::camera_x_fov() const
 {
     return camera_fov_[0];
 }
 
-float Offboard_Camera::camera_y_fov() const
+float Offboard_Tag_Search::camera_y_fov() const
 {
     return camera_fov_[1];
 }
 
-local_position_t& Offboard_Camera::tag_location()
+local_position_t& Offboard_Tag_Search::tag_location()
 {
     return tag_location_;
 }
 
-const float& Offboard_Camera::picture_count() const
+const float& Offboard_Tag_Search::picture_count() const
 {
     return picture_count_;
 }
 
-void Offboard_Camera::increment_picture_count()
+void Offboard_Tag_Search::increment_picture_count()
 {
     picture_count_++;
 }

@@ -52,7 +52,7 @@
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
-#include "sensing/offboard_camera.hpp"
+#include "sensing/offboard_tag_search.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 #define ALLOWABLE_HORIZONTAL_TAG_OFFSET_SQR 1.0        ///< The square distance from the drone to the center of the tag that is acceptable
@@ -86,7 +86,7 @@ public:
                            const Manual_control& manual_control,
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream,
-                           Offboard_Camera& offboard_camera);
+                           Offboard_Tag_Search& offboard_tag_search);
 
 
     
@@ -94,7 +94,7 @@ public:
     static mav_result_t set_auto_landing(Mavlink_waypoint_handler_tag* waypoint_handler, mavlink_command_long_t* packet);
 
 protected:
-    Offboard_Camera& offboard_camera_;
+    Offboard_Tag_Search& offboard_tag_search_;
 
     void auto_land_on_tag_handler();
     virtual void state_machine();

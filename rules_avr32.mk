@@ -25,8 +25,8 @@ LIB_SRCS += hal/avr32/fat_fs_mounting.cpp
 LIB_SRCS += hal/avr32/FatFs/atadrive.c
 LIB_SRCS += hal/avr32/FatFs/sdcard.c
 LIB_SRCS += hal/avr32/FatFs/usbdisk.c
-LIB_SRCS += communication/offboard_camera_telemetry.cpp
-LIB_SRCS += sensing/offboard_camera.cpp
+LIB_SRCS += communication/offboard_tag_search_telemetry.cpp
+LIB_SRCS += sensing/offboard_tag_search.cpp
 
 
 

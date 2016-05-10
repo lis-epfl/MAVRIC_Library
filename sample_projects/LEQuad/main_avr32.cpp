@@ -46,7 +46,7 @@
 // #include "hal/dummy/file_dummy.hpp"
 #include "hal/avr32/file_flash_avr32.hpp"
 #include "hal/avr32/serial_usb_avr32.hpp"
-#include "sensing/offboard_camera.hpp"
+#include "sensing/offboard_tag_search.hpp"
 
 // //uncomment to go in simulation
 // #include "simulation/dynamic_model_quad_diag.hpp"
@@ -130,7 +130,7 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   board.offboard_camera,
+                                   board.offboard_tag_search,
                                    cd_config);
     /*Central_data cd = Central_data(MAVLINK_SYS_ID,
                                    board.imu,

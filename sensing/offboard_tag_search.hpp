@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file offboard_camera.hpp
+ * \file offboard_tag_search.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef OFFBOARD_CAMERA_HPP_
-#define OFFBOARD_CAMERA_HPP_
+#ifndef OFFBOARD_TAG_SEARCH_HPP_
+#define OFFBOARD_TAG_SEARCH_HPP_
 
 #include "runtime/scheduler.hpp"
 #include "util/coord_conventions.h"
@@ -67,7 +67,7 @@ typedef struct
     float camera_fov_x;                                 ///< The horizontal field of view of the camera in radians
     float camera_fov_y;                                 ///< The vertical field of view of the camera in radians
     float tag_search_timeout_us;                        ///< The time allowed before the tag search will time out and descend
-} offboard_camera_conf_t;
+} offboard_tag_search_conf_t;
 
 
 class Central_data;
@@ -81,7 +81,7 @@ class Central_data;
  *          of the offboard camera, just related to whether the camera should be runnning
  *          or not.
  */
-class Offboard_Camera
+class Offboard_Tag_Search
 {
 public:
     /**
@@ -89,7 +89,7 @@ public:
      *
      * \param config    The offboard camera configuration
      */
-    Offboard_Camera(offboard_camera_conf_t config);
+    Offboard_Tag_Search(offboard_tag_search_conf_t config);
 
 
     /**
@@ -130,7 +130,7 @@ public:
     float camera_y_fov() const;
     local_position_t& tag_location();
 private:
-    Offboard_Camera();
+    Offboard_Tag_Search();
 
     const int camera_id_;                               ///< ID number of camera
     bool is_camera_running_;                            ///< States whether the camera should be running
@@ -146,4 +146,4 @@ private:
 };
 
 
-#endif /* OFFBOARD_CAMERA_HPP_ */
+#endif /* OFFBOARD_TAG_SEARCH_HPP_ */

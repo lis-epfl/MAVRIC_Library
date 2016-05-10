@@ -49,7 +49,7 @@ extern "C"
 
 
 
-Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Camera& ob_camera, const conf_t& config):
+Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Tag_Search& offboard_tag_search, const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -73,11 +73,11 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
-    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), ob_camera),
+    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), offboard_tag_search),
     state_machine(state, position_estimation, imu, ahrs, manual_control),
     data_logging(file1, state, config.data_logging_config),
     data_logging2(file2, state, config.data_logging_config2),
-    offboard_camera(ob_camera),
+    offboard_tag_search(offboard_tag_search),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),
     altitude_controller_(command.position, altitude_, command.thrust),
     sysid_(mavlink_communication.sysid()),

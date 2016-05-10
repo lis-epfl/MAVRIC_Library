@@ -102,8 +102,8 @@ bool sonar_update(Central_data* central_data);
 /**
  * \brief			Run the offboard camera task
  */
-bool tasks_offboard_camera_update(Central_data* central_data);
-//bool tasks_offboard_camera_update(Offboard_Camera* camera);
+bool tasks_offboard_tag_search_update(Central_data* central_data);
+//bool tasks_offboard_tag_search_update(Offboard_Tag_Search* camera);
 
 /**
  * \brief            Run the LED toggle task

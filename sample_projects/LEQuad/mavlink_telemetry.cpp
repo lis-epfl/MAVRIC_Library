@@ -69,7 +69,7 @@
 
 #include "communication/data_logging_telemetry.hpp"
 #include "control/manual_control_telemetry.hpp"
-#include "communication/offboard_camera_telemetry.hpp"
+#include "communication/offboard_tag_search_telemetry.hpp"
 
 #include "runtime/scheduler.hpp"
 #include "runtime/scheduler_telemetry.hpp"
@@ -134,8 +134,8 @@ bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, C
     init_success &= data_logging->add_field(&central_data->navigation.goal.pos[1], "goal_y", 3);
     init_success &= data_logging->add_field(&central_data->navigation.goal.pos[2], "goal_z", 3);
 /*
-    init_success &= data_logging->add_field(&central_data->offboard_camera.is_camera_running(), "is_camera_on");
-    init_success &= data_logging->add_field(&central_data->offboard_camera.picture_count(), "photo_count", 3);
+    init_success &= data_logging->add_field(&central_data->offboard_tag_search.is_camera_running(), "is_camera_on");
+    init_success &= data_logging->add_field(&central_data->offboard_tag_search.picture_count(), "photo_count", 3);
 */
     // init_success &= data_logging->add_field(&central_data->gps.latitude, "latitude", 7);
     // init_success &= data_logging->add_field(&central_data->gps.longitude, "longitude", 7);
@@ -192,7 +192,7 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
     init_success &= data_logging_telemetry_init(&central_data->data_logging2,
                                                 message_handler);
 
-    init_success &= offboard_camera_telemetry_init(central_data,
+    init_success &= offboard_tag_search_telemetry_init(central_data,
                     &central_data->raspi_mavlink_communication.message_handler());
 
     return init_success;
@@ -447,8 +447,8 @@ bool mavlink_telemetry_init(Central_data* central_data)
     //init_success &= mavlink_communication.add_msg_send(100000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&sonar_telemetry_send,                            &central_data->sonar_i2cxl.data,            MAVLINK_MSG_ID_DISTANCE_SENSOR  );// ID 132
     //init_success &= mavlink_communication.add_msg_send(250000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&acoustic_telemetry_send,                                     &central_data->audio_data,              MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
 
-    init_success &= mavlink_communication.add_msg_send(250000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_camera_goal_location_telemetry_send,                  central_data,                           MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
-    init_success &= raspi_mavlink_communication.add_msg_send(1000000,   Scheduler_task::RUN_ONCE,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_camera_telemetry_send_start_stop,                 &central_data->offboard_camera,         MAVLINK_MSG_ID_COMMAND_LONG           );// ID 76
+    init_success &= mavlink_communication.add_msg_send(250000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_goal_location_telemetry_send,                  central_data,                           MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
+    init_success &= raspi_mavlink_communication.add_msg_send(1000000,   Scheduler_task::RUN_ONCE,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_telemetry_send_start_stop,                 &central_data->offboard_tag_search,         MAVLINK_MSG_ID_COMMAND_LONG           );// ID 76
 
     init_success &= mavlink_communication.add_msg_send(100000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&altitude_estimation_telemetry_send,                            &central_data->altitude_estimation_,    MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV           );// ID 64
 
