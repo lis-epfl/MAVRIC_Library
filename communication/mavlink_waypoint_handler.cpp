@@ -1394,8 +1394,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
             auto_landing_next_state_(0),
             last_mode_(state_.mav_mode()),
             ahrs_(ahrs_),
-            manual_control_(manual_control_),
-			home_waypoint_altitude_(-10.0f)
+            manual_control_(manual_control_)
 {
     bool init_success = true;
 
@@ -1591,7 +1590,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     waypoint.x = 0.0f;
     waypoint.y = 0.0f;
-    waypoint.z = home_waypoint_altitude_;
+    waypoint.z = -10.0f;
 
     waypoint.param1 = 10; // Hold time in decimal seconds
     waypoint.param2 = 2; // Acceptance radius in meters
@@ -1632,11 +1631,6 @@ void Mavlink_waypoint_handler::nav_plan_init()
             }
         }
     }
-}
-
-void Mavlink_waypoint_handler::set_home_waypoint_altitude(float altitude)
-{
-	home_waypoint_altitude_ = altitude;
 }
 
 void Mavlink_waypoint_handler::hold_init(local_position_t local_pos)

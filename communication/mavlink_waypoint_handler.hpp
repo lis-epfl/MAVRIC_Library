@@ -133,13 +133,6 @@ public:
      */
     void hold_init(local_position_t local_pos);
 
-    /**
-      * \brief   Set home waypoint altitude
-      *
-      * \param   altitude        		The altitude of the home waypoint
-      */
-     void set_home_waypoint_altitude(float altitude);
-
     inline uint16_t waypoint_count() const {return waypoint_count_;};
 
     
@@ -179,8 +172,6 @@ private:
     mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution    
     const ahrs_t& ahrs_;                                         ///< The pointer to the attitude estimation structure
     const Manual_control& manual_control_;                       ///< The pointer to the manual_control structure
-
-    float home_waypoint_altitude_;								 ///< The altitude of the home waypoint
 
     /**
      * \brief   Drives the stopping behavior
