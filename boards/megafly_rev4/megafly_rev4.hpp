@@ -286,7 +286,14 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     // -------------------------------------------------------------------------
     // UART USB configuration
     // -------------------------------------------------------------------------
-    conf.uart_usb_config        = {};
+    conf.uart_usb_config                        = {};
+    conf.uart_usb_config.mode                   = AVR32_USB_SERIAL_IN_OUT;
+    conf.uart_usb_config.options                = {};
+    conf.uart_usb_config.options.baudrate       = 38400;
+    conf.uart_usb_config.options.charlength     = 8;
+    conf.uart_usb_config.options.paritytype     = USART_NO_PARITY;
+    conf.uart_usb_config.options.stopbits       = USART_1_STOPBIT;
+    conf.uart_usb_config.options.channelmode    = USART_NORMAL_CHMODE;
 
 
     // -------------------------------------------------------------------------
