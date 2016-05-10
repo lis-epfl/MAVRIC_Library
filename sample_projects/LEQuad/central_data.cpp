@@ -49,12 +49,13 @@ extern "C"
 
 
 
-Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, const conf_t& config):
+Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Tag_Search& offboard_tag_search, const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
     sonar(sonar),
     serial_mavlink(serial_mavlink),
+    raspi_serial_mavlink(raspi_serial_mavlink),
     satellite(satellite),
     led(led),
     file_flash(file_flash),
@@ -67,6 +68,7 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     state(mavlink_communication.mavlink_stream(), battery, config.state_config),
     scheduler(Scheduler::default_config()),
     mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
+    raspi_mavlink_communication(raspi_serial_mavlink, state, file_flash, config.mavlink_communication_config),
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
