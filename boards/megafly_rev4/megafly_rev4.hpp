@@ -411,6 +411,7 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.offboard_tag_search_config.camera_rotation                         = 90.0f * PI / 180;
     conf.offboard_tag_search_config.camera_fov_x                            = 53.50f * PI / 180;
     conf.offboard_tag_search_config.camera_fov_y                            = 41.41f * PI / 180;
+    conf.offboard_tag_search_config.max_acc_time_since_last_detection_us    = 10000000.0f;
 
     return conf;
 }

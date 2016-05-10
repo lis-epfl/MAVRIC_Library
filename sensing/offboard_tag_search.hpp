@@ -67,6 +67,7 @@ typedef struct
     float camera_fov_x;                                 ///< The horizontal field of view of the camera in radians
     float camera_fov_y;                                 ///< The vertical field of view of the camera in radians
     float tag_search_timeout_us;                        ///< The time allowed before the tag search will time out and descend
+    float max_acc_time_since_last_detection_us;         ///< The maximum acceptable time since the last detection in us for healthy data
 } offboard_tag_search_conf_t;
 
 
@@ -117,6 +118,16 @@ public:
      */
     void increment_picture_count();
 
+    /**
+     * \brief   Checks if the current tag reading is healthy.
+     *
+     * An unhealthy reading could be due to some of the following:
+     *      - Too significant time has passed since the last reading
+     *
+     * \return  Boolean stating if the data is healthy
+     */
+    bool is_healthy() const;
+
     const bool& is_camera_running() const;
     int camera_id() const;
     const float& picture_count() const;
@@ -129,7 +140,8 @@ public:
     float camera_x_fov() const;
     float camera_y_fov() const;
     local_position_t& tag_location();
-private:
+
+protected:
     Offboard_Tag_Search();
 
     const int camera_id_;                               ///< ID number of camera
@@ -143,6 +155,7 @@ private:
     const int camera_res_[2];                           ///< The resolution of the offboard camera
     const float camera_rotation_;                       ///< The rotation of the offboard camera w.r.t. the front of the drone, CCW from drone to camera is +
     const float camera_fov_[2];                         ///< The field of view of the camera in radians
+    const float max_acc_time_since_last_detection_us_;  ///< The maximum acceptible time since last detection in us for a healthy read
 };
 
 

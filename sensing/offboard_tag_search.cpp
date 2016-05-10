@@ -63,7 +63,8 @@ Offboard_Tag_Search::Offboard_Tag_Search(offboard_tag_search_conf_t config):
     tag_search_timeout_us_(config.tag_search_timeout_us),
     camera_res_({config.camera_res_x, config.camera_res_y}),
     camera_rotation_(config.camera_rotation),
-    camera_fov_({config.camera_fov_x, config.camera_fov_y})
+    camera_fov_({config.camera_fov_x, config.camera_fov_y}),
+    max_acc_time_since_last_detection_us_(config.max_acc_time_since_last_detection_us)
 
 {
     // Set picture count to 0
@@ -91,6 +92,19 @@ bool Offboard_Tag_Search::update(const Scheduler* scheduler)
     camera_send_message_task->run_now();
 
     return success;
+}
+
+
+bool Offboard_Tag_Search::is_healthy() const
+{
+    if ((time_keeper_get_us() - last_update_us()) > max_acc_time_since_last_detection_us_)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 

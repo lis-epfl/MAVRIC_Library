@@ -125,8 +125,9 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
 
     bool next_state = false;
 
-    // If the camera has detected the tag...
-    if (navigation_.land_on_tag_behavior == Navigation::land_on_tag_behavior_t::TAG_FOUND)
+    // If the camera has detected the tag and the data is healthy...
+    if ((navigation_.land_on_tag_behavior == Navigation::land_on_tag_behavior_t::TAG_FOUND) &&
+        (offboard_tag_search_.is_healthy()))
     {
         // The hold coordinates has been already been updated during the tag location reading...
         // Changed the z goal to ground if we are positioned directly above the tag
