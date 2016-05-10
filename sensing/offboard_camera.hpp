@@ -119,7 +119,7 @@ public:
 
     const bool& is_camera_running() const;
     int camera_id() const;
-    const int& picture_count() const;
+    const float& picture_count() const;
     float allowable_horizontal_tag_offset_sqr() const;
     float max_acc_drone_height_from_camera_mm() const;
     const float& tag_search_timeout_us() const;

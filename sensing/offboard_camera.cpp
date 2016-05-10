@@ -159,7 +159,7 @@ local_position_t& Offboard_Camera::tag_location()
     return tag_location_;
 }
 
-const int& Offboard_Camera::picture_count() const
+const float& Offboard_Camera::picture_count() const
 {
     return picture_count_;
 }
