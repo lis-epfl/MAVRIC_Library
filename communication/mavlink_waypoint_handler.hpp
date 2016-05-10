@@ -82,7 +82,7 @@ typedef struct
 {
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
     waypoint_struct_t fence_list[MAX_WAYPOINTS];             	///< The array of all fencepoints (max MAX_WAYPOINTS)
-    float fance_angle_list[MAX_WAYPOINTS];						///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+    float fence_angle_list[MAX_WAYPOINTS];						///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
     waypoint_struct_t current_waypoint;                         ///< The structure of the current waypoint
     uint16_t number_of_waypoints;                               ///< The total number of waypoints
     uint16_t number_of_fence_points;

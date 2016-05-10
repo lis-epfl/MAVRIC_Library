@@ -152,8 +152,8 @@ Fence_CAS::Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_esti
 	waypoint_handler(waypoint_handler),
 	pos_est(postion_estimation),
 	controls(controls),
-	repulsion({0,0,0}),
 	tahead(2.0),
+	repulsion({0,0,0}),
 	coef_roll(0.01),
 	maxsens(10.0)
 {
@@ -166,9 +166,8 @@ Fence_CAS::~Fence_CAS(void)
 bool Fence_CAS::update(void)
 {
 	// Initializaion of variables
-	float dist[waypoint_handler->number_of_fence_points];	// Table of distance to each fence
-	static float old_distAC[MAX_WAYPOINTS];					// Table of the old distance to each fencepoint (used for small angles)
-	bool detected=false;									// Flag to reset the ROLL command
+
+//	bool detected=false;									// Flag to reset the ROLL command
 	for (int k=0;k<3;k++)									// Reset the repulsion command
 	{
 		this->repulsion[k]=0.0;
@@ -197,11 +196,19 @@ bool Fence_CAS::update(void)
 	{
 		S[i]= C[i] + Vnorm[i] * (this->r_pz/*protection zone*/ +SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + this->tahead * Vval /*d_ahead*/);
 	}
+	/*FOR EACH FENCE*/
+	int nbFencePoints = waypoint_handler->number_of_fence_points;
+	waypoint_struct_t* CurFence_list  = this->waypoint_handler->fence_list;
+	float* CurAngle_list = waypoint_handler->fence_angle_list;
 
-	for (int i=0; i < waypoint_handler->number_of_fence_points; i++) // loop through all pair of fence points
+
+	float dist[nbFencePoints];	// Table of distance to each fence
+	static float old_distAC[MAX_WAYPOINTS];					// Table of the old distance to each fencepoint (used for small angles)
+
+	for (int i=0; i < nbFencePoints; i++) // loop through all pair of fence points
 	{
 		int j=0;
-		if (i == waypoint_handler->number_of_fence_points - 1)
+		if (i == nbFencePoints - 1)
 		{
 			j=0;
 		}
@@ -210,8 +217,8 @@ bool Fence_CAS::update(void)
 			j=i+1;
 		}
 		// First point A, second point B
-		global_position_t Agpoint = {this->waypoint_handler->fence_list[i].y, this->waypoint_handler->fence_list[i].x,(float)this->waypoint_handler->fence_list[i].z, 0.0f};
-		global_position_t Bgpoint = {this->waypoint_handler->fence_list[j].y, this->waypoint_handler->fence_list[j].x,(float)this->waypoint_handler->fence_list[j].z, 0.0f};
+		global_position_t Agpoint = {CurFence_list[i].y, CurFence_list[i].x,(float)CurFence_list[i].z, 0.0f};
+		global_position_t Bgpoint = {CurFence_list[j].y, CurFence_list[j].x,(float)CurFence_list[j].z, 0.0f};
 		local_position_t Alpoint = coord_conventions_global_to_local_position(Agpoint,this->pos_est->local_position.origin);
 		local_position_t Blpoint = coord_conventions_global_to_local_position(Bgpoint,this->pos_est->local_position.origin);
 
@@ -223,24 +230,24 @@ bool Fence_CAS::update(void)
 
 		/*Fencepoint repulsion*/
 		float angle_rep_radius = this->maxsens;
-		if(waypoint_handler->fance_angle_list[i]>PI/2.0) // Check if the angle is smaller than pi/2
+		if(CurAngle_list[i]>PI/2.0) // Check if the angle is smaller than pi/2
 		{
-
+			;
 		}
 		else	// The angle is smaller than pi/2
 		{
-			float cos = quick_trig_cos(waypoint_handler->fance_angle_list[i]/2.0)*(1 - waypoint_handler->fance_angle_list[i]/PI)*2;
+			float cos = quick_trig_cos(CurAngle_list[i]/2.0)*(1 - CurAngle_list[i]/PI)*2;
 			angle_rep_radius = 4*cos*cos*cos*this->maxsens; // The smaller the angle, the bigger the repulsion radius
 			float D[3]={0,0,0}; // D is the precedent point (current A, next B, precedent D)
 			if(i==0)
 			{
-				global_position_t Dgpoint = {this->waypoint_handler->fence_list[waypoint_handler->number_of_fence_points-1].y, this->waypoint_handler->fence_list[waypoint_handler->number_of_fence_points-1].x,(float)this->waypoint_handler->fence_list[waypoint_handler->number_of_fence_points-1].z, 0.0f};
+				global_position_t Dgpoint = {CurFence_list[nbFencePoints-1].y, CurFence_list[nbFencePoints-1].x,(float)CurFence_list[nbFencePoints-1].z, 0.0f};
 				local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
 				D[0]=Dlpoint.pos[0];D[1]=Dlpoint.pos[1];D[2]=Dlpoint.pos[2];
 			}
 			else
 			{
-				global_position_t Dgpoint = {this->waypoint_handler->fence_list[i-1].y, this->waypoint_handler->fence_list[i-1].x,(float)this->waypoint_handler->fence_list[i-1].z, 0.0f};
+				global_position_t Dgpoint = {CurFence_list[i-1].y, CurFence_list[i-1].x,(float)CurFence_list[i-1].z, 0.0f};
 				local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
 				D[0]=Dlpoint.pos[0];D[1]=Dlpoint.pos[1];D[2]=Dlpoint.pos[2];
 			}
@@ -268,7 +275,7 @@ bool Fence_CAS::update(void)
 				vectors_normalize(rep,rep);
 				rep[1]=(rep[1]>=0?-1:1) ;								// Extract repulsion direction in body frame
 				this->repulsion[1]+=- rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type); // Add repulsion
-				detected=true;												// Enable detection flag
+//				detected=true;												// Enable detection flag
 			}
 		}
 		old_distAC[i]=distAC;											// Store old distance to fencepoint
@@ -287,7 +294,7 @@ bool Fence_CAS::update(void)
 // 			this->repulsion[0]+=0.0;
 			this->repulsion[1]+=-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type);
 // 			this->repulsion[2]+=0.0;
-			detected=true;												// Enable detection flag
+//			detected=true;												// Enable detection flag
 		}
 		else
 		{
@@ -295,6 +302,8 @@ bool Fence_CAS::update(void)
 		}
 
 	}
+	/*END FOR EACH FENCE*/
+
 	// Clip the repulsion
 	if(this->repulsion[1]>max_ang)
 	{
@@ -304,10 +313,12 @@ bool Fence_CAS::update(void)
 	{
 		this->repulsion[1]=-max_ang;
 	}
-	if(detected==false)	// Reset the roll is nothing is detected
-	{
-		controls->rpy[ROLL] = 0.0;
-	}
+
+//	May be deleted
+//	if(detected==false)	// Reset the roll is nothing is detected
+//	{
+//		controls->rpy[ROLL] = 0.0;
+//	}
 
 	return true;
 }

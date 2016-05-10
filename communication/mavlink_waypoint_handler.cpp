@@ -2632,7 +2632,7 @@ void mavlink_waypoint_handler_fencepoint_angle(mavlink_waypoint_handler_t* waypo
 			}
 
 
-			waypoint_handler->fance_angle_list[j]=angle;
+			waypoint_handler->fence_angle_list[j]=angle;
 //
 //			print_util_dbg_print("|fencepoint|");print_util_dbg_putfloat(j+1,0);print_util_dbg_print("||");
 //			print_util_dbg_putfloat(waypoint_handler->fence_list[j].x,2);print_util_dbg_print("||");

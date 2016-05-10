@@ -134,7 +134,7 @@ bool joystick_init(joystick_t* joystick)
     //joystick channels init
     joystick->channels.x = 0.0f;
     joystick->channels.y = 0.0f;
-    joystick->channels.z = -1.0f;
+    joystick->channels.z = 0.0f;
     joystick->channels.r = 0.0f;
 
     //joystick buttons init
@@ -205,7 +205,7 @@ void joystick_get_velocity_vector_version2(const joystick_t* joystick, control_c
 {
 	//all joystick input are [-1;1]
     controls->tvel[X] = joystick->channels.x * 5.0f; //max 5m/s in forward motion
-    controls->rpy[ROLL] = joystick->channels.y * 0.52f; //max [0.78rad = 30°]
+    controls->rpy[ROLL] = joystick->channels.y * 0.78f; //max [0.78rad = 30°]
     controls->tvel[Z] = joystick->channels.z * 4.0f; //max 3m/s in vertical motion
 
     //controls->rpy[YAW] = joystick->channels.r;
