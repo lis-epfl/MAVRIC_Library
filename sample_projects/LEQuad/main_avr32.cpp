@@ -96,6 +96,7 @@ int main(void)
                                    board.gps_ublox,
                                    board.sonar_i2cxl,      // Warning:
                                    board.uart0,
+                                   board.uart_usb,
                                    board.spektrum_satellite,
                                    board.green_led,
                                    board.file_flash,
@@ -106,6 +107,7 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
+                                   board.offboard_tag_search,
                                    cd_config );
 
     // -------------------------------------------------------------------------
@@ -139,6 +141,7 @@ int main(void)
     //                              sim.gps(),
     //                              sim.sonar(),
     //                              board.uart0,                // mavlink serial
+    //                              board.uart_usb,
     //                              board.spektrum_satellite,
     //                              board.green_led,
     //                              board.file_flash,
@@ -149,6 +152,7 @@ int main(void)
     //                              sim_servo_3 ,
     //                              file_log,
     //                              file_stat,
+    //                              board.offboard_tag_search,
     //                              cd_config );
 
     // Init central data
