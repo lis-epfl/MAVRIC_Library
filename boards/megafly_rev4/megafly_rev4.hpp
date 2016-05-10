@@ -92,6 +92,7 @@ typedef struct
     serial_avr32_conf_t     uart0_config;
     serial_avr32_conf_t     uart1_config;
     serial_avr32_conf_t     uart3_config;
+    serial_avr32_conf_t     uart4_config;
     serial_usb_avr32_conf_t uart_usb_config;
     i2c_avr32_conf_t        i2c0_config;
     i2c_avr32_conf_t        i2c1_config;
