@@ -166,6 +166,50 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
         }
     }
 
+    // Magnetic north calibration
+    if (packet->param6 == 1)
+    {
+        success &= imu->start_magnetic_north_calibration();
+        if (success)
+        {
+            print_util_dbg_print("[IMU CALIB] Start magnetic north calibration\r\n");
+        }
+        else
+        {
+            print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start magnetic north calibration\r\n");
+        }
+    }
+    else
+    {
+        if (imu->stop_magnetic_north_calibration())
+        {
+            print_util_dbg_print("[IMU CALIB] Stop magnetic north calibration\r\n");
+        }
+    }
+
+    // Stop all calibrations
+    if (packet->param7 == 1)
+    {
+        if (imu->stop_accelerometer_bias_calibration())
+        {
+            print_util_dbg_print("[IMU CALIB] Stop accelerometer calibration\r\n");
+        }
+
+        if (imu->stop_gyroscope_bias_calibration())
+        {
+            print_util_dbg_print("[IMU CALIB] Stop gyroscope calibration\r\n");
+        }
+
+        if (imu->stop_magnetometer_bias_calibration())
+        {
+            print_util_dbg_print("[IMU CALIB] Stop magnetometer calibration\r\n");
+        }
+
+        if (imu->stop_magnetic_north_calibration())
+        {
+            print_util_dbg_print("[IMU CALIB] Stop magnetic north calibration\r\n");
+        }
+    }
 
     // Result code
     if (success)

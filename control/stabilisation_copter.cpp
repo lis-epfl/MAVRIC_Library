@@ -94,14 +94,14 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
     q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
 
     float pos_error[4];
-    pos_error[X] = waypoint_handler->waypoint_hold_coordinates.pos[X] - position_estimation->local_position.pos[X];
-    pos_error[Y] = waypoint_handler->waypoint_hold_coordinates.pos[Y] - position_estimation->local_position.pos[Y];
-    pos_error[3] = -(waypoint_handler->waypoint_hold_coordinates.pos[Z] - position_estimation->local_position.pos[Z]);
+    pos_error[X] = waypoint_handler->waypoint_hold_coordinates.waypoint.pos[X] - position_estimation->local_position.pos[X];
+    pos_error[Y] = waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Y] - position_estimation->local_position.pos[Y];
+    pos_error[3] = -(waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Z] - position_estimation->local_position.pos[Z]);
 
     pos_error[YAW] = input->rpy[YAW];
 
     // run PID update on all velocity controllers
-    stabilisation_run(&stabilisation_copter->stabiliser_stack.position_stabiliser, stabilisation_copter->ahrs->dt, pos_error);
+    stabilisation_run(&stabilisation_copter->stabiliser_stack.position_stabiliser, stabilisation_copter->ahrs->dt_s, pos_error);
 
     float pid_output_global[3];
 
@@ -179,7 +179,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             rpyt_errors[YAW] = input.rpy[YAW];
 
             // run PID update on all velocity controllers
-            stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
+            stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
 
             //velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisation_param.controls->thrust);
             stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_copter->thrust_hover_point;
@@ -223,7 +223,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             rpyt_errors[3] = input.thrust;      // no feedback for thrust at this level
 
             // run PID update on all attitude_filter controllers
-            stabilisation_run(&stabilisation_copter->stabiliser_stack.attitude_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
+            stabilisation_run(&stabilisation_copter->stabiliser_stack.attitude_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
 
             // use output of attitude_filter controller to set rate setpoints for rate controller
             input = stabilisation_copter->stabiliser_stack.attitude_stabiliser.output;
@@ -239,7 +239,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 
             // run PID update on all rate controllers
-            stabilisation_run(&stabilisation_copter->stabiliser_stack.rate_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
+            stabilisation_run(&stabilisation_copter->stabiliser_stack.rate_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
     }
 
     stabilisation_copter->torque_command->xyz[0] = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[ROLL];

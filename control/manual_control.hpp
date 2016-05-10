@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file manual_control.h
+ * \file manual_control.hpp
  *
  * \author MAV'RIC Team
  *
@@ -52,14 +52,16 @@ extern "C"
 #include "control/stabilisation.h"
 }
 
-
-
+/* forward declaration for friend function */
+class Onboard_parameters;
 
 /**
  * \brief The manual control structure
  */
 class Manual_control
 {
+friend bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
+
 public:
     /**
      * \brief   The source mode enum
@@ -114,6 +116,29 @@ public:
      * \param   controls        The pointer to the command structure that will be executed
      */
     void get_velocity_vector(control_command_t* controls);
+
+    /**
+     * \brief   Selects the source input for the rate command for the wing
+     *
+     * \param   controls        The pointer to the command structure that will be executed
+     */
+    void get_rate_command_wing(control_command_t* controls);
+
+
+    /**
+     * \brief   Selects the source input for the attitude command for the wing
+     *
+     * \param   controls        The pointer to the command structure that will be executed
+     */
+    void get_angle_command_wing(control_command_t* controls);
+
+    /**
+     * \brief   Selects the source input for the velocity command for the wing
+     *
+     * \param   ki_yaw          The yaw integrator gain
+     * \param   controls        The pointer to the command structure that will be executed
+     */
+    void get_velocity_vector_wing(const float ki_yaw, control_command_t* controls);
 
 
     /**
@@ -216,17 +241,47 @@ public:
      */
     signal_quality_t get_signal_strength();
 
+    /**
+     * \brief   Set the mode source (which control source can change the mode (remote, joystick, groundstation))
+     *
+     * \param   mode_source         which control source can change the mode (remote, joystick, groundstation)
+     */
+    inline void set_mode_source(mode_source_t mode_source) {mode_source_ = mode_source;};
+
+    /**
+     * \brief   Return the mode source (which control source can change the mode (remote, joystick, groundstation))
+     *
+     * \return   mode_source         which control source can change the mode (remote, joystick, groundstation)
+     */
+    inline mode_source_t mode_source() const {return mode_source_;};    
+
+    /**
+     * \brief   Set the control source (which control source has control (remote, joystick, none))
+     *
+     * \param   control_source         which control source has control (remote, joystick, none)
+     */
+    inline void set_control_source(control_source_t control_source) {control_source_ = control_source;};
+
+    /**
+     * \brief   Return the control source (which control source has control (remote, joystick, none))
+     *
+     * \return   control_source         which control source has control (remote, joystick, none)
+     */
+    inline control_source_t control_source() const {return control_source_;};
+
 
     static inline conf_t default_config();
 
 
-    mode_source_t           mode_source;        ///< The source mode
-    control_source_t        control_source;     ///< Flag to tell whether the remote is active or not
 
     remote_t                remote;             ///< The pointer to the remote structure
     joystick_t              joystick;           ///< The pointer to the joystick structure
-} ;
+private:
+    mode_source_t           mode_source_;        ///< The source mode
+    control_source_t        control_source_;     ///< Flag to tell whether the remote is active or not
 
+
+} ;
 
 Manual_control::conf_t Manual_control::default_config()
 {

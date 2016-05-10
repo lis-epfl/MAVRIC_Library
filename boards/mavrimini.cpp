@@ -85,6 +85,8 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     spektrum_satellite(serial_2, dsm_receiver_gpio, dsm_power_gpio),
     adc_battery(12.3f),
     battery(adc_battery),
+    adc_airspeed(12.0f),
+    airspeed_analog(adc_airspeed,airspeed_analog_default_config()),
     pwm_0(config.pwm_config[0]),
     pwm_1(config.pwm_config[1]),
     pwm_2(config.pwm_config[2]),

@@ -144,18 +144,66 @@ public:
 
 
     /**
-     * \brief                   returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)
+     * \brief                   returns whether armed
      *
      * \return                  armed
      */
-    inline bool armed() const {return ((mav_mode_ & MAV_MODE_FLAG_SAFETY_ARMED) == MAV_MODE_FLAG_SAFETY_ARMED);};
+    inline bool is_armed() const {return ((mav_mode_ & MAV_MODE_FLAG_SAFETY_ARMED) == MAV_MODE_FLAG_SAFETY_ARMED);};
+
 
     /**
-     * \brief                   returns whether in guided mode (MAV_MODE_FLAG_GUIDED_ENABLED set)
+    * \brief                   returns whether in manual mode
+    *
+    * \return                  manual
+    */
+    inline bool is_manual() const {return ((mav_mode_ & MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED);};
+
+
+    /**
+    * \brief                   returns whether in hil mode
+    *
+    * \return                  hil
+    */
+    inline bool is_hil() const {return ((mav_mode_ & MAV_MODE_FLAG_HIL_ENABLED) == MAV_MODE_FLAG_HIL_ENABLED);};
+
+
+    /**
+    * \brief                   returns whether in stabilize mode
+    *
+    * \return                  stabilize
+    */
+    inline bool is_stabilize() const {return ((mav_mode_ & MAV_MODE_FLAG_STABILIZE_ENABLED) == MAV_MODE_FLAG_STABILIZE_ENABLED);};
+
+
+    /**
+     * \brief                   returns whether in guided mode
      *
      * \return                  guided
      */
-    inline bool guided() const {return ((mav_mode_ & MAV_MODE_FLAG_GUIDED_ENABLED) == MAV_MODE_FLAG_GUIDED_ENABLED);};
+    inline bool is_guided() const {return ((mav_mode_ & MAV_MODE_FLAG_GUIDED_ENABLED) == MAV_MODE_FLAG_GUIDED_ENABLED);};
+
+
+    /**
+     * \brief                   returns whether in auto mode
+     *
+     * \return                  auto
+     */
+    inline bool is_auto() const {return ((mav_mode_ & MAV_MODE_FLAG_AUTO_ENABLED) == MAV_MODE_FLAG_AUTO_ENABLED);};
+
+    /**
+     * \brief                   returns whether in custom mode
+     *
+     * \return                  custom
+     */
+    inline bool is_custom() const {return ((mav_mode_ & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) == MAV_MODE_FLAG_CUSTOM_MODE_ENABLED);};
+
+
+    /**
+     * \brief                   returns whether in test mode
+     *
+     * \return                  test
+     */
+    inline bool is_test() const {return ((mav_mode_ & MAV_MODE_FLAG_TEST_ENABLED) == MAV_MODE_FLAG_TEST_ENABLED);};
 
 
     /**
@@ -167,15 +215,23 @@ public:
 
 
     /**
-     * \brief   Default configuration
+     * \brief   Default configuration for quadrotor
      *
      * \return  Config structure
      */
     static inline conf_t default_config();
 
+    /**
+     * \brief   Default configuration for wing
+     *
+     * \return  Config structure
+     */
+    static inline conf_t wing_default_config();
+
     friend bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, Central_data* central_data);
     friend bool state_telemetry_set_mode(State* state, mav_mode_t mav_mode);
     friend mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_command_long_t* packet);
+
 // TODO:
 // All this should be private
 
@@ -233,6 +289,28 @@ State::conf_t State::default_config()
     conf.fence_1_z               = 75.0f;
     conf.fence_2_xy              = 125.0f;
     conf.fence_2_z               = 100.0f;
+
+    return conf;
+}
+
+
+State::conf_t State::wing_default_config()
+{
+    conf_t conf            = {};
+
+    conf.mav_mode                = MAV_MODE_SAFE;
+    conf.mav_state               = MAV_STATE_BOOT;
+    conf.simulation_mode         = HIL_OFF;
+    conf.autopilot_type          = MAV_TYPE_FIXED_WING;
+    conf.autopilot_name          = MAV_AUTOPILOT_MAVRIC;
+    conf.sensor_present          = 0b1111110000100111;
+    conf.sensor_enabled          = 0b1111110000100111;
+    conf.sensor_health           = 0b1111110000100111;
+    conf.max_lost_connection     = 60.0f;
+    conf.fence_1_xy              = 500.0f;
+    conf.fence_1_z               = 150.0f;
+    conf.fence_2_xy              = 600.0f;
+    conf.fence_2_z               = 200.0f;
 
     return conf;
 }

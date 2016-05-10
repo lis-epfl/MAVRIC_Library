@@ -30,88 +30,38 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs_madgwick.h
+ * \file mavlink_telemetry.h
  *
  * \author MAV'RIC Team
- * \author SOH Madgwick
- * \author Julien Lecoeur
  *
- * \brief Implementation of Madgwick's AHRS algorithms.
- *
- * See: http://www.x-io.co.uk/node/8#open_source_ahrs_and_imu_algorithms
- *
- * Date         Author          Notes
- * 29/09/2011   SOH Madgwick    Initial release
- * 02/10/2011   SOH Madgwick    Optimised for reduced CPU load
- * 19/02/2012   SOH Madgwick    Magnetometer measurement is normalised
- * 04/02/2014   Julien Lecoeur  Adapt to MAVRIC
+ * \brief Definition of the messages sent by the autopilot to the ground station
  *
  ******************************************************************************/
 
 
-/**
- *   Disclaimer: this WIP
- */
+#ifndef MAVLINK_TELEMETRY_H_
+#define MAVLINK_TELEMETRY_H_
 
-
-#ifndef AHRS_MADGWICK_H_
-#define AHRS_MADGWICK_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#include "sensing/ahrs.h"
-#include "imu.h"
+#include "sample_projects/LEWing/central_data.hpp"
+#include "communication/onboard_parameters.hpp"
+#include "communication/mavlink_stream.hpp"
 
 
 /**
- * \brief   Configuration for ahrs _madgwick
- */
-typedef struct
-{
-    float   beta;       // 2 * proportional gain (Kp)
-    float   zeta;           // Gain for gyro drift compensation
-} ahrs_madgwick_conf_t;
-
-
-/**
- * \brief   Structure for the Madgwick attitude estimation filter
- */
-typedef struct
-{
-    imu_t*  imu;            // Pointer to IMU sensors
-    ahrs_t* ahrs;           // Estimated attitude
-    float   ref_b[3];       // Reference direction of magnetic flux in earth frame (x component)
-    float   beta;           // 2 * proportional gain (Kp)
-    float   zeta;           // Gain for gyro drift compensation
-} ahrs_madgwick_t;
-
-
-/**
- * \brief   Init function
+ * \brief     Initialise all the mavlink streams and call the onboard parameters register
  *
- * \param   ahrs_madgwick   Pointer to data structure
- * \param   config          Pointer to config structure
- * \param   ahrs            Pointer to AHRS structure
- * \param   imu             Pointer to IMU structure
- *
- * \return  True if success, false if not
+ * \return  The initialization status of the module, suceed == true
  */
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
-
+bool mavlink_telemetry_init(Central_data* central_data);
 
 /**
- * \brief   Main update function
+ * \brief   Add all onboard parameters to the parameter list
  *
- * \param   ahrs_madgwick   Pointer to data structure
+ * \param   onboard_parameters      The pointer to the onboard parameters structure
+ *
+ * \return  The initialization status of the module, succeed == true
  */
-void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick);
+bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
 
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* AHRS_MADGWICK_H_ */
+#endif /* MAVLINK_DOWN_TELEMETRY_H_ */

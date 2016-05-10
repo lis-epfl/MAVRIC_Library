@@ -101,8 +101,8 @@ typedef struct
     differentiator_t differentiator;    ///< Differentiator parameters
     float output;                       ///< Output
     float error;                        ///< Error
-    uint32_t last_update;               ///< Last update time in timer tick
-    float dt;                           ///< Time step
+    float last_update_s;                ///< Last update time in seconds
+    float dt_s;                         ///< Time step
     float soft_zone_width;              ///< Approximate width of a "soft zone" on the error input, i.e. a region of low gain around the target point. Value 0 -> switched off
 } pid_controller_t;
 
@@ -155,6 +155,19 @@ float pid_controller_update(pid_controller_t* controller, float error);
  * \return              The controller output
  */
 float pid_controller_update_dt(pid_controller_t* controller, float error, float dt);
+
+
+/**
+ * \brief               Update the PID controller for a given time step
+ *
+ * \param   controller  Pointer to the PID controller structure
+ * \param   error       Error in the controlled variable
+ * \param   feedforward Feed-forward
+ * \param   dt          Timestep
+ *
+ * \return              The controller output
+ */
+float pid_controller_update_feedforward_dt(pid_controller_t* controller, float error, float feedforward, float dt);
 
 
 #ifdef __cplusplus

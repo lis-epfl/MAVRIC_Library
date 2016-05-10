@@ -67,7 +67,7 @@ void Data_logging::add_header_name(void)
     bool init = true;
 
     uint16_t i;
-    
+
     init &= console_.write("time");
     put_r_or_n(0);
 
@@ -534,8 +534,8 @@ Data_logging::Data_logging(File& file, State& state, data_logging_conf_t config)
     state_(state)
 {
     data_log_ = (data_logging_entry_t*)malloc(sizeof(data_logging_entry_t[config_.max_data_logging_count]));
-    
-    //in case malloc failed 
+
+    //in case malloc failed
     if (data_log_ == NULL)
     {
         config_.max_data_logging_count = 0;
@@ -609,7 +609,7 @@ bool Data_logging::update(void)
                 add_header_name();
             }
 
-            if (!state_.armed())
+            if (!state_.is_armed())
             {
                 time_ms = time_keeper_get_ms();
                 if ((time_ms - logging_time_) > 5000)
@@ -680,7 +680,7 @@ bool Data_logging::start(void)
 {
     bool success = false;
 
-    if (!state_.armed())
+    if (!state_.is_armed())
     {
         log_data_ = true;
         success   = true;
@@ -694,7 +694,7 @@ bool Data_logging::stop(void)
 {
     bool success = false;
 
-    if (!state_.armed())
+    if (!state_.is_armed())
     {
         log_data_ = false;
         success   = true;

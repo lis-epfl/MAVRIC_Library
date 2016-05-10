@@ -51,13 +51,13 @@
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
+#include "control/dubin.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
-
 
 class Mavlink_waypoint_handler
 {
@@ -136,11 +136,12 @@ public:
     inline uint16_t waypoint_count() const {return waypoint_count_;};
 
     
-    local_position_t waypoint_hold_coordinates;                 ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-    waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
+    waypoint_local_struct_t waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+    
+    waypoint_struct_t waypoint_list[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
 protected:
-    uint16_t waypoint_count_;                                     ///< The total number of waypoints
+    uint16_t waypoint_count_;                                    ///< The total number of waypoints
     int8_t current_waypoint_index_;                              ///< The number of the current waypoint
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
@@ -151,9 +152,13 @@ protected:
     Position_estimation& position_estimation_;                   ///< The pointer to the position estimation structure
 
 private:
+
+    waypoint_local_struct_t waypoint_coordinates_;               ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+    waypoint_local_struct_t waypoint_critical_coordinates_;      ///< The coordinates of the waypoint in critical state
+    waypoint_local_struct_t waypoint_next_;                       ///< The coordinates of the next waypoint
+
     waypoint_struct_t current_waypoint_;                         ///< The structure of the current waypoint
-    local_position_t waypoint_coordinates_;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-    local_position_t waypoint_critical_coordinates_;             ///< The coordinates of the waypoint in critical state
+    waypoint_struct_t next_waypoint_;                            ///< The structure of the next waypoint
 
     bool waypoint_sending_;                                      ///< Flag to tell whether waypoint are being sent
     bool waypoint_receiving_;                                    ///< Flag to tell whether waypoint are being received or not
@@ -184,6 +189,14 @@ private:
      *
      */
     void state_machine();
+
+    /**
+     * \brief   Computes the state machine for the Dubin navigation type
+     *
+     * \param   waypoint_handler        The pointer to the waypoint handler structure
+     * \param   waypoint_next_           The next waypoint structure
+     */
+    void dubin_state_machine(waypoint_local_struct_t* waypoint_next_);
 
     /**
      * \brief   Drives the critical navigation behavior
@@ -369,14 +382,5 @@ private:
      */
     static mav_result_t set_auto_landing(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 };
-
-
-
-
-
-
-
-
-
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

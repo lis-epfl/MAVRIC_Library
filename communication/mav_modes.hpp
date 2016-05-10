@@ -122,6 +122,14 @@ typedef enum
     CUST_GPS_BAD = 2048                         ///< GPS loss flag
 } mav_mode_custom_list_t;
 
+typedef enum 
+{
+    DUBIN_INIT = 0,
+    DUBIN_CIRCLE1 = 1, 
+    DUBIN_STRAIGHT = 2,
+    DUBIN_CIRCLE2 = 3,
+}dubin_state_t;
+
 #define mav_mode_t uint8_t
 #define mav_mode_custom_t uint32_t
 
@@ -191,7 +199,7 @@ static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
  *
  * \return true if MAV is in stabilise piloting mode, false otherwise
  */
-static inline bool mav_modes_is_stabilise(const mav_mode_t mav_mode)
+static inline bool mav_modes_is_stabilize(const mav_mode_t mav_mode)
 {
     if ((mav_mode & MAV_MODE_FLAG_STABILIZE_ENABLED) == MAV_MODE_FLAG_STABILIZE_ENABLED)
     {
