@@ -167,7 +167,10 @@ public:
     internal_state_t internal_state_;                   ///< The internal state of the navigation module
     critical_behavior_enum critical_behavior;           ///< The critical behavior enum
     auto_landing_behavior_t auto_landing_behavior;      ///< The autolanding behavior enum
-
+    land_on_tag_behavior_t land_on_tag_behavior;        ///< The land on tag behavior enum
+    float tag_search_altitude;                          ///< The altitude that the drone should search for the tag at
+    uint32_t tag_search_start_time;                     ///< The start time that the offboard camera has been searching for the tag, causes a timeout if too long
+    
     const quat_t& qe;                                   ///< The pointer to the attitude quaternion structure
 
 private:
