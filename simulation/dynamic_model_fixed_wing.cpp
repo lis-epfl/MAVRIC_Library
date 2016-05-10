@@ -279,8 +279,8 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     float motor_command = servo_motor_.read() - config_.rotor_rpm_offset;
     float flaps_angle_left = (servo_flap_left_.read() - config_.flap_offset)*config_.flap_max;
     float flaps_angle_right = (servo_flap_right_.read() - config_.flap_offset)*config_.flap_max;
-    left_flap_.set_flap_angle(0.0*flaps_angle_left);//TODO: remove 0.0*
-    right_flap_.set_flap_angle(0.0*flaps_angle_right);
+    left_flap_.set_flap_angle(0.0*flaps_angle_left-20.0/180.0*PI);//TODO: remove 0.0*
+    right_flap_.set_flap_angle(0.0*flaps_angle_right-20.0/180.0*PI);
 
     //Get the wind in the bf
     //Take into account the speed of the plane to get the relative wind
