@@ -116,7 +116,7 @@ static void get_velocity_command_from_semilocal_to_global(const velocity_control
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const position_estimation_t* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
+void velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const Position_estimation* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
 {
     // Init dependencies
     controller->velocity_command    = velocity_command;
@@ -175,10 +175,10 @@ void velocity_controller_copter_update(velocity_controller_copter_t* controller)
     errors[Z] = velocity_command_global[Z] - controller->pos_est->vel[Z];       // WARNING: it was multiplied by (-1) in stabilisation_copter.c
 
     // Update PID
-    thrust_vector[X] = pid_controller_update_dt(&controller->pid[X], errors[X], controller->ahrs->dt);              // should be multiplied by mass
-    thrust_vector[Y] = pid_controller_update_dt(&controller->pid[Y], errors[Y], controller->ahrs->dt);              // should be multiplied by mass
+    thrust_vector[X] = pid_controller_update_dt(&controller->pid[X], errors[X], controller->ahrs->dt_s);                // should be multiplied by mass
+    thrust_vector[Y] = pid_controller_update_dt(&controller->pid[Y], errors[Y], controller->ahrs->dt_s);                // should be multiplied by mass
     // thrust_vector[Z] = - GRAVITY + pid_controller_update_dt( &controller->pid[Z], errors[Z], controller->ahrs->dt ); // should be multiplied by mass
-    thrust_vector[Z] = pid_controller_update_dt(&controller->pid[Z], errors[Z], controller->ahrs->dt);  // should be multiplied by mass
+    thrust_vector[Z] = pid_controller_update_dt(&controller->pid[Z], errors[Z], controller->ahrs->dt_s);                // should be multiplied by mass
 
 
     aero_attitude_t attitude_yaw_inverse = coord_conventions_quat_to_aero(controller->ahrs->qe);

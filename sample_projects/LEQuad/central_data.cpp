@@ -44,12 +44,12 @@
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
-
 #include "util/print_util.h"
 }
 
 
-Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2,  Offboard_Camera& ob_camera, central_data_conf_t config):
+
+Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, Offboard_Camera& ob_camera, const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -64,13 +64,23 @@ Central_data::Central_data(uint8_t sysid, Imu& imu, Barometer& barometer, Gps& g
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
-    state(mavlink_communication.mavlink_stream, battery, config.state_config),
+    manual_control(&satellite, config.manual_control_config, config.remote_config),
+    state(mavlink_communication.mavlink_stream(), battery, config.state_config),
+    scheduler(Scheduler::default_config()),
+    mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
+    raspi_mavlink_communication(raspi_serial_mavlink, state, file_flash, config.mavlink_communication_config),
+    ahrs(ahrs_initialized()),
+    ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
+    position_estimation(state, barometer, sonar, gps, ahrs),
+    navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
+    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), ob_camera),
+    state_machine(state, position_estimation, imu, ahrs, manual_control),
     data_logging(file1, state, config.data_logging_config),
     data_logging2(file2, state, config.data_logging_config2),
     offboard_camera(ob_camera),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),
     altitude_controller_(command.position, altitude_, command.thrust),
-    sysid_(sysid),
+    sysid_(mavlink_communication.sysid()),
     config_(config)
 {}
 
@@ -79,7 +89,6 @@ bool Central_data::init(void)
 {
     bool init_success = true;
     bool ret;
-
     print_util_dbg_sep('%');
     time_keeper_delay_ms(50);
     print_util_dbg_sep('-');
@@ -90,73 +99,6 @@ bool Central_data::init(void)
 
 
     // -------------------------------------------------------------------------
-    // Init main sheduler
-    // -------------------------------------------------------------------------
-    ret = scheduler_init(&scheduler, config_.scheduler_config);
-    print_util_dbg_init_msg("[SCHEDULER]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init mavlink communication
-    // -------------------------------------------------------------------------
-    mavlink_communication_conf_t mavlink_communication_config = config_.mavlink_communication_config;
-    mavlink_communication_config.mavlink_stream_config.sysid = sysid_;
-    mavlink_communication_config.message_handler_config.debug = true;
-    mavlink_communication_config.onboard_parameters_config.debug = true;
-    mavlink_communication_config.mavlink_stream_config.debug = true;
-    ret = mavlink_communication_init(&mavlink_communication,
-                                     mavlink_communication_config,
-                                     &serial_mavlink,
-                                     &state,
-                                     &file_flash);
-    print_util_dbg_init_msg("[MAVLINK]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init raspberry pi mavlink communication
-    // -------------------------------------------------------------------------
-    mavlink_communication_conf_t raspi_mavlink_communication_config = mavlink_communication_default_config();
-    raspi_mavlink_communication_config.mavlink_stream_config.sysid = sysid_;
-    raspi_mavlink_communication_config.message_handler_config.debug = true;
-    raspi_mavlink_communication_config.onboard_parameters_config.debug = true;
-    raspi_mavlink_communication_config.mavlink_stream_config.debug = true;
-    ret = mavlink_communication_init(&raspi_mavlink_communication,
-                                     raspi_mavlink_communication_config,
-                                     &raspi_serial_mavlink,
-                                     &state,
-                                     &file_flash);
-    print_util_dbg_init_msg("[RASPI MAVLINK]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    //Init state_machine
-    // -------------------------------------------------------------------------
-    ret = state_machine_init(&state_machine,
-                             &state,
-                             &gps,
-                             &imu,
-                             &manual_control);
-    print_util_dbg_init_msg("[STATE MACHINE]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init ahrs
-    // -------------------------------------------------------------------------
-    ret = ahrs_init(&ahrs);
-    print_util_dbg_init_msg("[AHRS]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
     // Init qfilter
     // -------------------------------------------------------------------------
     ret = qfilter_init(&attitude_filter,
@@ -164,55 +106,6 @@ bool Central_data::init(void)
                        &imu,
                        &ahrs);
     print_util_dbg_init_msg("[QFILTER]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init position_estimation_init
-    // -------------------------------------------------------------------------
-    ret = position_estimation_init(&position_estimation,
-                                   config_.position_estimation_config,
-                                   &state,
-                                   &barometer,
-                                   &sonar,
-                                   &gps,
-                                   &ahrs);
-    print_util_dbg_init_msg("[POS EST]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init navigation
-    // -------------------------------------------------------------------------
-    ret = navigation_init(&navigation,
-                          config_.navigation_config,
-                          &controls_nav,
-                          &ahrs.qe,
-                          &position_estimation,
-                          &state,
-                          &mavlink_communication);/*,
-                            &sonar_i2cxl);*/
-    print_util_dbg_init_msg("[NAV]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
-
-
-    // -------------------------------------------------------------------------
-    // Init waypoint handler
-    // -------------------------------------------------------------------------
-    ret = waypoint_handler_init(&waypoint_handler,
-                                &position_estimation,
-                                &navigation,
-                                &ahrs,
-                                &state,
-                                &manual_control,
-                                &mavlink_communication,
-                                &mavlink_communication.mavlink_stream);
-    waypoint_handler_init_homing_waypoint(&waypoint_handler);
-    waypoint_handler_nav_plan_init(&waypoint_handler);
-    print_util_dbg_init_msg("[WAYPOINT]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
 
@@ -276,17 +169,6 @@ bool Central_data::init(void)
                           &servo_1,
                           &servo_2,
                           &servo_3);
-
-    // -------------------------------------------------------------------------
-    // Init manual control
-    // -------------------------------------------------------------------------
-    ret = manual_control_init(&manual_control,
-                              &satellite,
-                              config_.manual_control_config,
-                              config_.remote_config);
-    print_util_dbg_init_msg("[MANUAL CTRL]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
 
     //--------------------------------------------------------------------------
     // Init attitude controller

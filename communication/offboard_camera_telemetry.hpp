@@ -58,9 +58,9 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool offboard_camera_telemetry_init(Central_data* central_data, mavlink_message_handler_t* message_handler);
+bool offboard_camera_telemetry_init(Central_data* central_data, Mavlink_message_handler* message_handler);
 
-void offboard_camera_goal_location_telemetry_send(const Central_data* central_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void offboard_camera_goal_location_telemetry_send(const Central_data* central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Function to send the MAVLink start/stop camera do command
@@ -69,6 +69,6 @@ void offboard_camera_goal_location_telemetry_send(const Central_data* central_da
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* OFFBOARD_CAMERA_TELEMETRY_H_ */

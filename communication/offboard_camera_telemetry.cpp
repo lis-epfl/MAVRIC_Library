@@ -75,13 +75,10 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
     mav_result_t result;
 
     // Increment counter
-    central_data->offboard_camera.picture_count++;
+    central_data->offboard_camera.increment_picture_count();
 
-    // Only change stuff if we are search for a tag
-    if (central_data->waypoint_handler.navigation->internal_state == NAV_LAND_ON_TAG)
-    {
         // Set waypoint enum to tag found
-        central_data->waypoint_handler.navigation->land_on_tag_behavior = TAG_FOUND;
+        central_data->navigation.land_on_tag_behavior = Navigation::land_on_tag_behavior_t::TAG_FOUND;
 
         Offboard_Camera camera = central_data->offboard_camera;
 
@@ -91,9 +88,9 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
          * param2: camera status
          * param3: tag horizontal location in pixels, positive is right
          * param4: tag vertical location in pixels, positive is down
-         * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1 for unknown
-         * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1 for unknown
-         * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1 for unknown as positive is up
+         * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000 for unknown
+         * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1000 for unknown
+         * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1000 for unknown as positive is up
          */
 
         /*
@@ -105,24 +102,24 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 
         // Get drone height from packet if available and reasonable
         if ((packet->param7 > 0.0f) &&                                          // Packet outputs + as up, must be greater than 0
-            (packet->param7 < camera.get_max_acc_drone_height_from_camera()))   // Don't allow too high estimations as accuracy decreases with altitude
+            (packet->param7 < camera.max_acc_drone_height_from_camera_mm()))   // Don't allow too high estimations as accuracy decreases with altitude
         {
            drone_height = -packet->param7 / 1000.0f;
         }
         else // Get drone height from the local position, drone height tells you the pixel dimensions on the ground, +z is down
         {
-           drone_height = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2];
+           drone_height = central_data->position_estimation.local_position.pos[2];
         }
         
         // Get tag location in m
         float picture_forward_offset = 0.0f;
         float picture_right_offset = 0.0f;
-        if ((packet->param7 > 0.0f) &&                                                      // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
-            (packet->param7 < MAX_ACC_DRONE_HEIGHT_FROM_CAMERA_MM) &&                       // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
-            (packet->param5 > -(2 * -drone_height * tan(camera.get_camera_x_fov() / 2))) && // Ensure that x distance to tag is within frame
-            (packet->param5 <  (2 * -drone_height * tan(camera.get_camera_x_fov() / 2))) && // Ensure that x distance to tag is within frame
-            (packet->param6 > -(2 * -drone_height * tan(camera.get_camera_y_res() / 2))) && // Ensure that y distance to tag is within frame
-            (packet->param6 <  (2 * -drone_height * tan(camera.get_camera_y_res() / 2))))   // Ensure that y distance to tag is within frame                    
+        if ((packet->param7 > 0.0f) &&                                                  // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
+            (packet->param7 < camera.max_acc_drone_height_from_camera_mm()) &&          // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
+            (packet->param5 > -(2 * -drone_height * tan(camera.camera_x_fov() / 2))) && // Ensure that x distance to tag is within frame
+            (packet->param5 <  (2 * -drone_height * tan(camera.camera_x_fov() / 2))) && // Ensure that x distance to tag is within frame
+            (packet->param6 > -(2 * -drone_height * tan(camera.camera_y_fov() / 2))) && // Ensure that y distance to tag is within frame
+            (packet->param6 <  (2 * -drone_height * tan(camera.camera_y_fov() / 2))))   // Ensure that y distance to tag is within frame                    
         {
             // Forward corresponds to param6 as the picamera code outputs (right,down)
             picture_forward_offset = -packet->param6 / 1000.0f; // Negative, because in vision positive is towards the bottom of the picture
@@ -138,8 +135,8 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
                 pixel_width = width / resolution
                 pixel_width = 2 * drone_height * tan(fov/2) / resolution
             */
-            float pixel_width = 2 * (-drone_height) * tan(camera.get_camera_x_fov()) / (camera.get_camera_x_res()); // drone_height negated as +z is down
-            float pixel_height = 2 * (-drone_height) * tan(camera.get_camera_y_fov()) / (camera.get_camera_y_res()); // drone_height negated as +z is down
+            float pixel_width = 2 * (-drone_height) * tan(camera.camera_x_fov()) / (camera.camera_x_resolution()); // drone_height negated as +z is down
+            float pixel_height = 2 * (-drone_height) * tan(camera.camera_y_fov()) / (camera.camera_y_resolution()); // drone_height negated as +z is down
 
             // Get drone offset
             // Forward corresponds to param4 as the picamera code outputs (right,down)
@@ -150,10 +147,10 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         
         // Rotate offset to align with drone
         quat_t q_rot, q_offset;
-        q_rot.s = cos(camera.get_camera_rotation()/2); // Based off how camera is mounted
+        q_rot.s = cos(camera.camera_rotation()/2); // Based off how camera is mounted
         q_rot.v[0] = 0;
         q_rot.v[1] = 0;
-        q_rot.v[2] = 1*sin(camera.get_camera_rotation()/2);
+        q_rot.v[2] = 1*sin(camera.camera_rotation()/2);
         q_offset.s = 0;
         q_offset.v[0] = picture_forward_offset;
         q_offset.v[1] = picture_right_offset;
@@ -174,17 +171,16 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
         float drone_y_offset = q_new_local_dir.v[1];
 
         // Get local tag position from drone position and offset
-        float tag_x_pos = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[0] + drone_x_offset;
-        float tag_y_pos = central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1] + drone_y_offset;
+        float tag_x_pos = central_data->position_estimation.local_position.pos[0] + drone_x_offset;
+        float tag_y_pos = central_data->position_estimation.local_position.pos[1] + drone_y_offset;
 
         // Set hold position
-        central_data->waypoint_handler.waypoint_hold_coordinates.pos[0] = tag_x_pos;
-        central_data->waypoint_handler.waypoint_hold_coordinates.pos[1] = tag_y_pos;
-        central_data->waypoint_handler.waypoint_hold_coordinates.pos[2] = central_data->waypoint_handler.navigation->tag_search_altitude;
+        camera.tag_location().pos[0] = tag_x_pos;
+        camera.tag_location().pos[1] = tag_y_pos;
+        camera.tag_location().pos[2] = central_data->navigation.tag_search_altitude;
 
         // Update recorded time
         camera.update_last_update_us();
-    }
     
     result = MAV_RESULT_ACCEPTED;
     return result;
@@ -195,47 +191,52 @@ static mav_result_t offboard_camera_telemetry_receive_camera_output(Central_data
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool offboard_camera_telemetry_init(Central_data* central_data, mavlink_message_handler_t* message_handler)
+bool offboard_camera_telemetry_init(Central_data* central_data, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
     // Set tag landing state to tag not found
-    central_data->waypoint_handler.navigation->land_on_tag_behavior = TAG_NOT_FOUND;
+    central_data->navigation.land_on_tag_behavior = Navigation::land_on_tag_behavior_t::TAG_NOT_FOUND;
 
     // Set the tag landing altitude to be the starting altitude
-    central_data->waypoint_handler.navigation->tag_search_altitude = -10.0f;
+    central_data->navigation.tag_search_altitude = -10.0f;
+
+    // Init tag_location vector to 0
+    central_data->offboard_camera.tag_location().pos[0] = 0.0f;
+    central_data->offboard_camera.tag_location().pos[1] = 0.0f;
+    central_data->offboard_camera.tag_location().pos[2] = 0.0f;
 
     // Add callbacks for cmd
-    mavlink_message_handler_cmd_callback_t callbackcmd;
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
     callbackcmd.command_id = MAV_CMD_DO_CONTROL_VIDEO; // 200
     callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // WRONG 190
-    callbackcmd.function = (mavlink_cmd_callback_function_t)    &offboard_camera_telemetry_receive_camera_output;
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &offboard_camera_telemetry_receive_camera_output;
     callbackcmd.module_struct =                                 central_data;
-    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
     print_util_dbg_init_msg("[PICAMERA TELEMETRY INIT]", init_success);
     return init_success;
 }
 
-void offboard_camera_goal_location_telemetry_send(const Central_data* central_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void offboard_camera_goal_location_telemetry_send(const Central_data* central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_debug_vect_pack(mavlink_stream->sysid,
-                                mavlink_stream->compid,
+    mavlink_msg_debug_vect_pack(mavlink_stream->sysid(),
+                                mavlink_stream->compid(),
                                 msg,
                                 "Tag_Search_Goal_Location",
                                 time_keeper_get_us(),
-                                central_data->waypoint_handler.navigation->goal.pos[0] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[0],
-                                central_data->waypoint_handler.navigation->goal.pos[1] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[1],
-                                //central_data->waypoint_handler.navigation->goal.pos[2] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2]);
-                                central_data->offboard_camera.picture_count);
+                                central_data->offboard_camera.tag_location().pos[0] - central_data->position_estimation.local_position.pos[0],
+                                central_data->offboard_camera.tag_location().pos[1] - central_data->position_estimation.local_position.pos[1],
+                                //central_data->offboard_camera.tag_location().pos[2] - central_data->waypoint_handler.navigation->position_estimation->local_position.pos[2]);
+                                central_data->offboard_camera.picture_count());
 }
 
-void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     int is_camera_running = -1;
     // Switch boolean to int as mavlink sends ints/flaots
-    switch(camera->is_camera_running_)
+    switch(camera->is_camera_running())
     {
         case true:
             is_camera_running = 1;
@@ -244,15 +245,15 @@ void offboard_camera_telemetry_send_start_stop(const Offboard_Camera* camera, co
             is_camera_running = 0;
             break;
     }
-    mavlink_msg_command_long_pack(  mavlink_stream->sysid,      // system_id
-                                    mavlink_stream->compid,     // component_id
+    mavlink_msg_command_long_pack(  mavlink_stream->sysid(),      // system_id
+                                    mavlink_stream->compid(),     // component_id
                                     msg,                        // mavlink_msg
                                     0,      // target_system
                                     0,      // target_component
                                     MAV_CMD_DO_CONTROL_VIDEO,   // command
                                     0,     // confirmation
-                                    camera->camera_id_,    // param1
-                                    is_camera_running,          // param2
+                                    camera->camera_id(),    // param1
+                                    camera->is_camera_running(),          // param2
                                     0,                          // param3
                                     0,                          // param4
                                     0,                          // param5

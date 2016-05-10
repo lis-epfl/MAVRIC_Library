@@ -43,7 +43,8 @@
 #ifndef OFFBOARD_CAMERA_HPP_
 #define OFFBOARD_CAMERA_HPP_
 
-#include "runtime/scheduler.h"
+#include "runtime/scheduler.hpp"
+#include "util/coord_conventions.h"
 
 extern "C"
 {
@@ -60,9 +61,12 @@ typedef struct
     bool initial_camera_state;                          ///< The starting on/off state of the camera
     float allowable_horizontal_tag_offset_sqr;          ///< The square distance from the drone to the center of the tag that is acceptable
     float max_acc_drone_height_from_camera_mm;          ///< The maximum acceptable drone height where the code will trust the cameras height estimation
-    int camera_res[2];                                  ///< The resolution of the offboard camera
+    int camera_res_x;                                   ///< The x resolution of the offboard camera
+    int camera_res_y;                                   ///< The y resolution of the offboard camera
     float camera_rotation;                              ///< The rotation of the offboard camera w.r.t. the front of the drone, CCW from drone to camera is +
-    float camera_fov[2];                                ///< The field of view of the camera in radians
+    float camera_fov_x;                                 ///< The horizontal field of view of the camera in radians
+    float camera_fov_y;                                 ///< The vertical field of view of the camera in radians
+    float tag_search_timeout_us;                        ///< The time allowed before the tag search will time out and descend
 } offboard_camera_conf_t;
 
 
@@ -93,7 +97,7 @@ public:
      *
      * \return  Success
      */
-    bool update(const scheduler_t* scheduler);
+    bool update(const Scheduler* scheduler);
 
 
     /**
@@ -108,32 +112,37 @@ public:
      */
     void update_last_update_us();
 
-    bool get_is_camera_running();
-    int get_camera_id();
+    /**
+     * \brief   Increments the picture count by one
+     */
+    void increment_picture_count();
 
-    int camera_id_;                     ///< ID number of camera
-    bool is_camera_running_;            ///< States whether the camera should be running
-    float last_update_us_;              ///< Last update time in microseconds
-    float picture_count;                ///< The count of the pictures received
-
-    float get_allowable_horizontal_tag_offset_sqr();
-    float get_max_acc_drone_height_from_camera_mm();
-    float get_tag_search_timeout_us();
-    int get_camera_x_resolution();
-    int get_camera_y_resolution();
-    float get_camera_rotation();
-    float get_camera_x_fov();
-    float get_camera_y_fov();
-    
+    const bool& is_camera_running() const;
+    int camera_id() const;
+    const int& picture_count() const;
+    float allowable_horizontal_tag_offset_sqr() const;
+    float max_acc_drone_height_from_camera_mm() const;
+    const float& tag_search_timeout_us() const;
+    int camera_x_resolution() const;
+    int camera_y_resolution() const;
+    float camera_rotation() const;
+    float camera_x_fov() const;
+    float camera_y_fov() const;
+    local_position_t& tag_location();
 private:
     Offboard_Camera();
 
-    float allowable_horizontal_tag_offset_sqr_;     ///< The maximum allowable horizontal distance between the tag and the drone before the drone will start to descend
-    float max_acc_drone_height_from_camera_mm_;     ///< The maximum acceptable altitude where the code will trust the cameras height estimation
-    float tag_search_timeout_us_;                   ///< The allowable time to try to search for the tag
-    int camera_res_[2];                              ///< The resolution of the offboard camera
-    float camera_rotation_;                          ///< The rotation of the offboard camera w.r.t. the front of the drone, CCW from drone to camera is +
-    float camera_fov_[2];                            ///< The field of view of the camera in radians
+    const int camera_id_;                               ///< ID number of camera
+    bool is_camera_running_;                            ///< States whether the camera should be running
+    float last_update_us_;                              ///< Last update time in microseconds
+    float picture_count_;                               ///< The count of the pictures received
+    local_position_t tag_location_;                     ///< The location of the tag in the local frame
+    const float allowable_horizontal_tag_offset_sqr_;   ///< The maximum allowable horizontal distance between the tag and the drone before the drone will start to descend
+    const float max_acc_drone_height_from_camera_mm_;   ///< The maximum acceptable altitude where the code will trust the cameras height estimation
+    const float tag_search_timeout_us_;                 ///< The allowable time to try to search for the tag
+    const int camera_res_[2];                           ///< The resolution of the offboard camera
+    const float camera_rotation_;                       ///< The rotation of the offboard camera w.r.t. the front of the drone, CCW from drone to camera is +
+    const float camera_fov_[2];                         ///< The field of view of the camera in radians
 };
 
 

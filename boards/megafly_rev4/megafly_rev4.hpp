@@ -60,6 +60,7 @@
 #include "hal/avr32/pwm_avr32.hpp"
 #include "drivers/servo.hpp"
 #include "hal/avr32/led_avr32.hpp"
+#include "sensing/offboard_camera.hpp"
 
 extern "C"
 {
@@ -70,6 +71,17 @@ extern "C"
 }
 
 
+// Preprocessor definitions
+
+/* 
+ * Should the ESC be calibrated?
+ * 0 for false (normal flight)
+ * 1 for true (calibration)
+ * !!!IMPORTANT!!!
+ * IF CALIBRATING, TAKE OFF PROPS 
+ */
+#define CALIBRATE_ESC 0
+
 /**
  * \brief   Configuration structure
  */
@@ -77,6 +89,7 @@ typedef struct
 {
     gpio_avr32_conf_t       dsm_receiver_pin_config;
     gpio_avr32_conf_t       dsm_power_pin_config;
+    battery_conf_t          battery_config;
     serial_avr32_conf_t     uart0_config;
     serial_avr32_conf_t     uart1_config;
     serial_avr32_conf_t     uart3_config;
@@ -203,6 +216,10 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.dsm_power_pin_config     = gpio_avr32_default_config();
     conf.dsm_power_pin_config.pin = AVR32_PIN_PC01;
 
+    // -------------------------------------------------------------------------
+    // Battery config
+    // -------------------------------------------------------------------------
+    conf.battery_config = battery_default_config();
 
     // -------------------------------------------------------------------------
     // UART0 configuration
@@ -389,11 +406,11 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.offboard_camera_config.allowable_horizontal_tag_offset_sqr     = 1.0f;
     conf.offboard_camera_config.max_acc_drone_height_from_camera_mm     = 15000.0f;
     conf.offboard_camera_config.tag_search_timeout_us                   = 60000000.0f;
-    conf.offboard_camera_config.camera_res[0]                           = 1280
-    conf.offboard_camera_config.camera_res[1]                           = 960
+    conf.offboard_camera_config.camera_res_x                            = 1280;
+    conf.offboard_camera_config.camera_res_y                            = 960;
     conf.offboard_camera_config.camera_rotation                         = 90.0f * PI / 180;
-    conf.offboard_camera_config.camera_fov[0]                           = 53.50f * PI / 180;
-    conf.offboard_camera_config.camera_fov[1]                           = 41.41f * PI / 180;
+    conf.offboard_camera_config.camera_fov_x                            = 53.50f * PI / 180;
+    conf.offboard_camera_config.camera_fov_y                            = 41.41f * PI / 180;
 
     return conf;
 }
