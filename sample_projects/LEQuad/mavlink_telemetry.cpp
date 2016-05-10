@@ -59,7 +59,8 @@
 #include "sensing/imu_telemetry.hpp"
 #include "sensing/position_estimation.hpp"
 #include "sensing/position_estimation_telemetry.hpp"
-
+#include "sensing/offboard_tag_search_telemetry.hpp"
+ 
 #include "drivers/barometer_telemetry.hpp"
 #include "drivers/gps_telemetry.hpp"
 
