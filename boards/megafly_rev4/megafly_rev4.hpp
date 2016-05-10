@@ -60,7 +60,8 @@
 #include "hal/avr32/pwm_avr32.hpp"
 #include "drivers/servo.hpp"
 #include "hal/avr32/led_avr32.hpp"
-
+#include "sensing/offboard_tag_search.hpp"
+ 
 extern "C"
 {
 #include "hal/avr32/twim_default_config.h"
@@ -96,6 +97,7 @@ typedef struct
     i2c_avr32_conf_t        i2c1_config;
     imu_conf_t              imu_config;
     servo_conf_t            servo_config[8];
+    offboard_tag_search_conf_t  offboard_tag_search_config;
 } megafly_rev4_conf_t;
 
 
@@ -169,6 +171,7 @@ public:
     Servo               servo_5;
     Servo               servo_6;
     Servo               servo_7;
+    Offboard_Tag_Search offboard_tag_search;
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
@@ -263,6 +266,22 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.uart3_config.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
 
 
+    // -------------------------------------------------------------------------
+    // UART4 configuration
+    // -------------------------------------------------------------------------
+    conf.uart4_config                       = {};
+    conf.uart4_config.serial_device         = AVR32_SERIAL_4;
+    conf.uart4_config.mode                  = AVR32_SERIAL_IN_OUT;
+    conf.uart4_config.options               = {};
+    conf.uart4_config.options.baudrate      = 57600;
+    conf.uart4_config.options.charlength    = 8;
+    conf.uart4_config.options.paritytype    = USART_NO_PARITY;
+    conf.uart4_config.options.stopbits      = USART_1_STOPBIT;
+    conf.uart4_config.options.channelmode   = USART_NORMAL_CHMODE;
+    conf.uart4_config.rx_pin_map            = {AVR32_USART4_RXD_2_PIN, AVR32_USART4_RXD_2_FUNCTION};
+    conf.uart4_config.tx_pin_map            = {AVR32_USART4_TXD_2_PIN, AVR32_USART4_TXD_2_FUNCTION};
+
+    
     // -------------------------------------------------------------------------
     // UART USB configuration
     // -------------------------------------------------------------------------
@@ -366,6 +385,24 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.servo_config[5] = servo_default_config_esc();
     conf.servo_config[6] = servo_default_config_esc();
     conf.servo_config[7] = servo_default_config_esc();
+
+
+    // -------------------------------------------------------------------------
+    // Offboard camera config
+    // -------------------------------------------------------------------------
+    conf.offboard_tag_search_config                                         = {};
+    conf.offboard_tag_search_config.camera_id                               = 1;
+    conf.offboard_tag_search_config.initial_camera_state                    = false;
+    conf.offboard_tag_search_config.allowable_horizontal_tag_offset_sqr     = 1.0f;
+    conf.offboard_tag_search_config.max_acc_drone_height_from_camera_mm     = 15000.0f;
+    conf.offboard_tag_search_config.tag_search_timeout_us                   = 60000000.0f;
+    conf.offboard_tag_search_config.camera_res_x                            = 1280;
+    conf.offboard_tag_search_config.camera_res_y                            = 960;
+    conf.offboard_tag_search_config.camera_rotation                         = 90.0f * PI / 180;
+    conf.offboard_tag_search_config.camera_fov_x                            = 53.50f * PI / 180;
+    conf.offboard_tag_search_config.camera_fov_y                            = 41.41f * PI / 180;
+    conf.offboard_tag_search_config.max_acc_time_since_last_detection_us    = 10000000.0f;
+
 
     return conf;
 }
