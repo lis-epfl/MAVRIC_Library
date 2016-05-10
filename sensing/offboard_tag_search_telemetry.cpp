@@ -42,7 +42,7 @@
 
 
 //#include "communication/state_telemetry.hpp"
-#include "communication/offboard_tag_search_telemetry.hpp"
+#include "sensing/offboard_tag_search_telemetry.hpp"
 
 #include <cstdlib>
 
