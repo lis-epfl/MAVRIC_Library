@@ -94,6 +94,7 @@ bool Offboard_Tag_Search::update(const Scheduler* scheduler, bool camera_state)
 
 bool Offboard_Tag_Search::is_healthy() const
 {
+    // Check last detection time
     if ((time_keeper_get_us() - last_update_us()) > max_acc_time_since_last_detection_us_)
     {
         return false;

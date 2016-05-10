@@ -130,6 +130,7 @@ public:
      */
     bool is_healthy() const;
 
+    // Getters and setters
     const bool& is_camera_running() const;
     int camera_id() const;
     const float& picture_count() const;
