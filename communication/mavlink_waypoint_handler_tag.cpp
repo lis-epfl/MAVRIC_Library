@@ -133,6 +133,10 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
         // Changed the z goal to ground if we are positioned directly above the tag
         float horizontal_distance_to_tag_sqr = (cur_pos[0] - tag_pos[0]) * (cur_pos[0] - tag_pos[0]) + (cur_pos[1] - tag_pos[1]) * (cur_pos[1] - tag_pos[1]);
 
+        // Set hold location to tag location
+        waypoint_hold_coordinates.pos[0] = offboard_tag_search_.tag_location().pos[0];
+        waypoint_hold_coordinates.pos[1] = offboard_tag_search_.tag_location().pos[1];
+
         // If we are not above tag
         if (horizontal_distance_to_tag_sqr > offboard_tag_search_.allowable_horizontal_tag_offset_sqr())
         {
@@ -151,7 +155,10 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
     else if (navigation_.land_on_tag_behavior == Navigation::land_on_tag_behavior_t::TAG_NOT_FOUND)// Else we need to search for the tag ...
     {
         // Set the hold position to be the current location
-        
+        waypoint_hold_coordinates.pos[0] = position_estimation_.local_position.pos[0];
+        waypoint_hold_coordinates.pos[1] = position_estimation_.local_position.pos[1];
+        // Except make the z axis go to the tag search altitude
+        waypoint_hold_coordinates.pos[2] = navigation_.tag_search_altitude;
     }
 
     // Calculate low-pass filter altitude for when to turn off motors
