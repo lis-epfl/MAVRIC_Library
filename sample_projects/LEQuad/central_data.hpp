@@ -54,7 +54,7 @@
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
-#include "communication/mavlink_waypoint_handler.hpp"
+#include "communication/mavlink_waypoint_handler_tag.hpp"
 #include "communication/onboard_parameters.hpp"
 #include "communication/state.hpp"
 #include "communication/state_machine.hpp"
@@ -90,6 +90,7 @@
 #include "sensing/position_estimation.hpp"
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
+#include "sensing/offboard_tag_search.hpp"
 
 extern "C"
 {
@@ -151,6 +152,7 @@ public:
                   Gps& gps,
                   Sonar& sonar,
                   Serial& serial_mavlink,
+                  Serial& raspi_serial_mavlink,
                   Satellite& satellite,
                   Led& led,
                   File& file_flash,
@@ -161,6 +163,7 @@ public:
                   Servo& servo_3,
                   File& file1,
                   File& file2,
+                  Offboard_Tag_Search& offboard_tag_search,
                   const conf_t& config = default_config());
 
     /**
@@ -178,6 +181,7 @@ public:
     Gps&            gps;                ///< Reference to GPS
     Sonar&          sonar;              ///< Reference to sonar
     Serial&         serial_mavlink;     ///< Reference to telemetry serial
+    Serial&         raspi_serial_mavlink;   ///< Reference to raspberry pi telemetry serial
     Satellite&      satellite;          ///< Reference to remote control satellite
     Led&            led;                ///< Reference to the leds
     File&           file_flash;         ///< Reference to flash storage
@@ -193,6 +197,7 @@ public:
 
     Scheduler scheduler;
     Mavlink_communication mavlink_communication;
+    Mavlink_communication raspi_mavlink_communication;
 
     servos_mix_quadcotper_diag_t servo_mix;
 
@@ -208,7 +213,7 @@ public:
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation
-    Mavlink_waypoint_handler waypoint_handler;
+    Mavlink_waypoint_handler_tag waypoint_handler;
  
     State_machine state_machine;                              ///< The structure for the state machine
 
@@ -226,6 +231,8 @@ public:
     altitude_t                      altitude_;
     Altitude_estimation             altitude_estimation_;
     Altitude_controller             altitude_controller_;
+
+    Offboard_Tag_Search& offboard_tag_search;                          ///< The offboard camera control class reference
 
 private:
     uint8_t sysid_;                 ///< System ID
