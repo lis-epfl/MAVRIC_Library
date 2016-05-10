@@ -150,7 +150,6 @@ protected:
     Navigation& navigation_;                                     ///< The pointer to the navigation structure
     Position_estimation& position_estimation_;                   ///< The pointer to the position estimation structure
 
-private:
     waypoint_struct_t current_waypoint_;                         ///< The structure of the current waypoint
     local_position_t waypoint_coordinates_;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
     local_position_t waypoint_critical_coordinates_;             ///< The coordinates of the waypoint in critical state
