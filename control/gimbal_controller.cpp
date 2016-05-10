@@ -102,7 +102,9 @@ void Gimbal_controller::get_fake_pitch(stabilisation_copter_t *stab)
 
 	fake_pitch_ = -maths_rad_to_deg(atan2(semilocal_vel[2], semilocal_vel[0]));
 
-	roll_body_ = coord_conventions_quat_to_aero(stab->ahrs->qe).rpy[0];
+	vel_x_semilocal_ = semilocal_vel[0];
+
+	roll_body_ = maths_rad_to_deg(coord_conventions_quat_to_aero(stab->ahrs->qe).rpy[0]);
 }
 
 bool Gimbal_controller::update(Gimbal_controller *gimbal_controller)

@@ -96,7 +96,8 @@ public:
     attitude_command_t			attitude_output_;			///< Output to PWM (output) [°]
     float						commTrig_;					///< debug variable
     float						fake_pitch_;				///< Pitch a plane would have (instead of a quadcopter)
-    float						roll_body_;
+    float						roll_body_;					///< Roll of the body
+    float						vel_x_semilocal_;			///< Velocity x in semi local frame
 
 private:
     /**
