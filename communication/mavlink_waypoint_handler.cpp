@@ -999,6 +999,7 @@ void Mavlink_waypoint_handler::state_machine()
             break;
 
         case Navigation::NAV_LANDING:
+        default:
             auto_landing_handler();
 
             navigation_.goal = waypoint_hold_coordinates;
