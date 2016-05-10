@@ -73,8 +73,18 @@ public:
         NAV_STOP_ON_POSITION,
         NAV_STOP_THERE,
         NAV_LANDING,
+        NAV_LAND_ON_TAG,
     };
 
+    /**
+     * \brief   The auto-landing enum
+     */
+    enum land_on_tag_behavior_t
+    {
+        TAG_NOT_FOUND,                                      ///< Tag has not yet been found, search for tag
+        TAG_FOUND                                           ///< Tag has been found, go to location
+    };
+    
     /**
      * \brief   The critical behavior enum
      */
