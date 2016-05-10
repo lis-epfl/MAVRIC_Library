@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_waypoint_handler_tag.c
+ * \file mavlink_waypoint_handler_tag.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -80,7 +80,7 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& 
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_CAMERA; // 100
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &Mavlink_waypoint_handler_tag::set_auto_landing;
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_landing;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler.add_cmd_callback(&callbackcmd);
 

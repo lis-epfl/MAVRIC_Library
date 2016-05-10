@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_waypoint_handler_tag.h
+ * \file mavlink_waypoint_handler_tag.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
