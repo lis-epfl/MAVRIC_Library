@@ -44,6 +44,7 @@ LIB_SRCS += communication/mavlink_message_handler.cpp
 LIB_SRCS += communication/mavlink_stream.cpp
 LIB_SRCS += communication/mavlink_waypoint_handler.cpp
 LIB_SRCS += communication/mavlink_waypoint_handler_swarm.cpp
+LIB_SRCS += communication/mavlink_waypoint_handler_tag.cpp
 LIB_SRCS += communication/onboard_parameters.cpp
 LIB_SRCS += communication/remote.cpp
 LIB_SRCS += communication/remote_telemetry.cpp
@@ -106,6 +107,8 @@ LIB_SRCS += sensing/imu_telemetry.cpp
 LIB_SRCS += sensing/position_estimation.cpp
 LIB_SRCS += sensing/position_estimation_telemetry.cpp
 LIB_SRCS += sensing/qfilter.cpp
+LIB_SRCS += sensing/offboard_tag_search.cpp
+LIB_SRCS += sensing/offboard_tag_search_telemetry.cpp
 
 LIB_SRCS += simulation/accelerometer_sim.cpp
 LIB_SRCS += simulation/barometer_sim.cpp
