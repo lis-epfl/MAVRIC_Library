@@ -182,7 +182,7 @@ protected:
      * \brief   State machine to drive the navigation module
      *
      */
-    void state_machine();
+    virtual void state_machine();
 
     /**
      * \brief   Drives the critical navigation behavior
