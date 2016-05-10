@@ -30,12 +30,12 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_waypoint_handler.c
+ * \file mavlink_waypoint_handler_tag.c
  *
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
- * \brief The MAVLink waypoint handler
+ * \brief The MAVLink tag waypoint handler
  *
  ******************************************************************************/
 
