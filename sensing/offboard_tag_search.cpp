@@ -72,15 +72,12 @@ Offboard_Tag_Search::Offboard_Tag_Search(offboard_tag_search_conf_t config):
 }
 
 
-bool Offboard_Tag_Search::update(const Scheduler* scheduler)
+bool Offboard_Tag_Search::update(const Scheduler* scheduler, bool camera_state)
 {
     bool success = true;
     
-
-    // TEMPORARY...
     // Switch camera on and off
-    is_camera_running_ = true;
-    // ...TEMPORARY
+    is_camera_running_ = camera_state;
 
     // Update timing
     uint32_t t      = time_keeper_get_us();

@@ -96,9 +96,11 @@ public:
     /**
      * \brief   Main update
      *
+     * \param   scheduler       The scheduler communicates with the offboard computer
+     * \param   camera_state    The new state of the camera
      * \return  Success
      */
-    bool update(const Scheduler* scheduler);
+    bool update(const Scheduler* scheduler, bool camera_state);
 
 
     /**

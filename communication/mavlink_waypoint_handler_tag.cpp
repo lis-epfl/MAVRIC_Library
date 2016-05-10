@@ -116,7 +116,7 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
         waypoint_handler->navigation_.tag_search_start_time = time_keeper_get_us();
 
         // Land
-        waypoint_handler->offboard_tag_search_.update(&(waypoint_handler->raspi_mavlink_communication_->scheduler()));
+        waypoint_handler->offboard_tag_search_.update(&(waypoint_handler->raspi_mavlink_communication_->scheduler()), true);
     }
     /*else
     {
