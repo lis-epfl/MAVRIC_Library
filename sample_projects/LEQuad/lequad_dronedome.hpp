@@ -67,11 +67,16 @@ public:
                       Servo& servo_1,
                       Servo& servo_2,
                       Servo& servo_3,
+                      Servo& servo_4,
+                      Servo& servo_5,
+                      Servo& servo_6,
+                      Servo& servo_7,
                       File& file1,
                       File& file2,
                       Central_data::conf_t config = Central_data::default_config() ):
           Central_data(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
-                     battery, servo_0, servo_1, servo_2, servo_3, file1, file2, config),
+                     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
+                     file1, file2, config),
           gps_mocap_(mavlink_communication.message_handler())
       {};
 
