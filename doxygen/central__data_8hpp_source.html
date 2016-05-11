@@ -192,21 +192,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00113"></a>00113 <span class="keyword">public</span>:
 <a name="l00117"></a><a class="code" href="structCentral__data_1_1conf__t.html">00117</a>      <span class="keyword">struct </span><a class="code" href="structCentral__data_1_1conf__t.html" title="Configuration of the module central data module.">conf_t</a>
 <a name="l00118"></a>00118     {
-<a name="l00119"></a>00119       <a class="code" href="structState_1_1conf__t.html" title="Configuration structure.">State::conf_t</a> state_config;
-<a name="l00120"></a>00120       <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_config;
-<a name="l00121"></a>00121       <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_config2;
-<a name="l00122"></a>00122       <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a> scheduler_config;
-<a name="l00123"></a>00123       <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">Mavlink_communication::conf_t</a> mavlink_communication_config;
-<a name="l00124"></a>00124       <a class="code" href="structNavigation_1_1conf__t.html" title="The navigation configuration structure.">Navigation::conf_t</a> navigation_config;
-<a name="l00125"></a>00125       <a class="code" href="structqfilter__conf__t.html" title="The structure for configuring the quaternion-based attitude estimation.">qfilter_conf_t</a> qfilter_config;
-<a name="l00126"></a>00126       <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> ahrs_ekf_config;
-<a name="l00127"></a>00127       <a class="code" href="structPosition__estimation_1_1conf__t.html" title="The position estimator structure.">Position_estimation::conf_t</a> position_estimation_config;
-<a name="l00128"></a>00128       <a class="code" href="structstabilisation__copter__conf__t.html" title="Structure containing the configuration data.">stabilisation_copter_conf_t</a> stabilisation_copter_config;
-<a name="l00129"></a>00129       <a class="code" href="structservos__mix__quadcopter__diag__conf__t.html" title="The servo mix structure for a quad in cross shape.">servos_mix_quadcopter_diag_conf_t</a> servos_mix_quadcopter_diag_config;
-<a name="l00130"></a>00130       <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">Manual_control::conf_t</a> manual_control_config;
-<a name="l00131"></a>00131       <a class="code" href="structremote__conf__t.html" title="The configuration structure of the remote.">remote_conf_t</a> remote_config;
-<a name="l00132"></a>00132       <a class="code" href="structattitude__controller__conf__t.html" title="Attitude controller configuration.">attitude_controller_conf_t</a> attitude_controller_config;
-<a name="l00133"></a>00133       <a class="code" href="structvelocity__controller__copter__conf__t.html" title="Velocity controller configuration.">velocity_controller_copter_conf_t</a> velocity_controller_copter_config;
+<a name="l00119"></a>00119         <a class="code" href="structState_1_1conf__t.html" title="Configuration structure.">State::conf_t</a> state_config;
+<a name="l00120"></a>00120         <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_continuous_config;
+<a name="l00121"></a>00121         <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_stat_config;
+<a name="l00122"></a>00122         <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a> scheduler_config;
+<a name="l00123"></a>00123         <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">Mavlink_communication::conf_t</a> mavlink_communication_config;
+<a name="l00124"></a>00124         <a class="code" href="structNavigation_1_1conf__t.html" title="The navigation configuration structure.">Navigation::conf_t</a> navigation_config;
+<a name="l00125"></a>00125         <a class="code" href="structqfilter__conf__t.html" title="The structure for configuring the quaternion-based attitude estimation.">qfilter_conf_t</a> qfilter_config;
+<a name="l00126"></a>00126         <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> ahrs_ekf_config;
+<a name="l00127"></a>00127         <a class="code" href="structPosition__estimation_1_1conf__t.html" title="The position estimator structure.">Position_estimation::conf_t</a> position_estimation_config;
+<a name="l00128"></a>00128         <a class="code" href="structstabilisation__copter__conf__t.html" title="Structure containing the configuration data.">stabilisation_copter_conf_t</a> stabilisation_copter_config;
+<a name="l00129"></a>00129         <a class="code" href="structservos__mix__quadcopter__diag__conf__t.html" title="The servo mix structure for a quad in cross shape.">servos_mix_quadcopter_diag_conf_t</a> servos_mix_quadcopter_diag_config;
+<a name="l00130"></a>00130         <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">Manual_control::conf_t</a> manual_control_config;
+<a name="l00131"></a>00131         <a class="code" href="structremote__conf__t.html" title="The configuration structure of the remote.">remote_conf_t</a> remote_config;
+<a name="l00132"></a>00132         <a class="code" href="structattitude__controller__conf__t.html" title="Attitude controller configuration.">attitude_controller_conf_t</a> attitude_controller_config;
+<a name="l00133"></a>00133         <a class="code" href="structvelocity__controller__copter__conf__t.html" title="Velocity controller configuration.">velocity_controller_copter_conf_t</a> velocity_controller_copter_config;
 <a name="l00134"></a>00134     };
 <a name="l00135"></a>00135 
 <a name="l00143"></a>00143     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structCentral__data_1_1conf__t.html" title="Configuration of the module central data module.">conf_t</a> <a class="code" href="classCentral__data.html#ae085498f8120c097faead909bbab38f9" title="Default configuration.">default_config</a>(uint8_t sysid = 1);
@@ -256,7 +256,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00197"></a>00197     <a class="code" href="structservos__mix__quadcotper__diag__t.html" title="servos mix structure">servos_mix_quadcotper_diag_t</a> servo_mix;
 <a name="l00198"></a>00198 
 <a name="l00199"></a><a class="code" href="classCentral__data.html#ac9e7f27b6316566522fe78bafaae26a2">00199</a>     <a class="code" href="structqfilter__t.html" title="The structure for the quaternion-based attitude estimation.">qfilter_t</a> <a class="code" href="classCentral__data.html#ac9e7f27b6316566522fe78bafaae26a2" title="The qfilter structure.">attitude_filter</a>;                                  
-<a name="l00200"></a>00200     
+<a name="l00200"></a>00200 
 <a name="l00201"></a><a class="code" href="classCentral__data.html#afe742c039f320c7fd634467d35541e13">00201</a>     <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a> <a class="code" href="classCentral__data.html#afe742c039f320c7fd634467d35541e13" title="The attitude estimation structure.">ahrs</a>;                                                
 <a name="l00202"></a>00202     <a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a> ahrs_ekf;
 <a name="l00203"></a>00203 
@@ -268,14 +268,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00209"></a><a class="code" href="classCentral__data.html#a622352cfa900297e78d4bf91565978d9">00209</a>     <a class="code" href="classPosition__estimation.html">Position_estimation</a> <a class="code" href="classCentral__data.html#a622352cfa900297e78d4bf91565978d9" title="The position estimaton structure.">position_estimation</a>;                    
 <a name="l00210"></a><a class="code" href="classCentral__data.html#ac588f56b7ccefe4095381546a4d1ea52">00210</a>     <a class="code" href="classNavigation.html" title="The navigation structure.">Navigation</a> <a class="code" href="classCentral__data.html#ac588f56b7ccefe4095381546a4d1ea52" title="The structure to perform GPS navigation.">navigation</a>;                                      
 <a name="l00211"></a>00211     <a class="code" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a> waypoint_handler;
-<a name="l00212"></a>00212  
+<a name="l00212"></a>00212 
 <a name="l00213"></a><a class="code" href="classCentral__data.html#a1e2ce004ad84e7016f7afd982c6f9399">00213</a>     <a class="code" href="classState__machine.html" title="Defines the state machine structure.">State_machine</a> <a class="code" href="classCentral__data.html#a1e2ce004ad84e7016f7afd982c6f9399" title="The structure for the state machine.">state_machine</a>;                              
 <a name="l00214"></a>00214 
 <a name="l00215"></a><a class="code" href="classCentral__data.html#ac6293592dec12f4f428f6ade761adfee">00215</a>     <a class="code" href="structhud__telemetry__structure__t.html" title="The HUD structure to send the MAVLink HUD message.">hud_telemetry_structure_t</a> <a class="code" href="classCentral__data.html#ac6293592dec12f4f428f6ade761adfee" title="The HUD structure.">hud_structure</a>;                    
 <a name="l00216"></a>00216     <a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a> servos_telemetry;
 <a name="l00217"></a>00217 
-<a name="l00218"></a>00218     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging;
-<a name="l00219"></a>00219     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging2;
+<a name="l00218"></a>00218     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging_continuous;
+<a name="l00219"></a>00219     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging_stat;
 <a name="l00220"></a>00220 
 <a name="l00221"></a>00221     <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a>                       command;
 <a name="l00222"></a>00222     <a class="code" href="structattitude__controller__t.html" title="Attitude controller structure.">attitude_controller_t</a>           attitude_controller;
@@ -299,8 +299,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00240"></a>00240 
 <a name="l00241"></a>00241     conf.state_config = <a class="code" href="classCentral__data.html#ae085498f8120c097faead909bbab38f9" title="Default configuration.">State::default_config</a>();
 <a name="l00242"></a>00242 
-<a name="l00243"></a>00243     conf.data_logging_config = data_logging_default_config();
-<a name="l00244"></a>00244     conf.data_logging_config = data_logging_default_config();
+<a name="l00243"></a>00243     conf.data_logging_continuous_config = data_logging_default_config();
+<a name="l00244"></a>00244     conf.data_logging_stat_config       = data_logging_default_config();
 <a name="l00245"></a>00245 
 <a name="l00246"></a>00246     conf.scheduler_config = <a class="code" href="classCentral__data.html#ae085498f8120c097faead909bbab38f9" title="Default configuration.">Scheduler::default_config</a>();
 <a name="l00247"></a>00247 
@@ -353,7 +353,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 11 2016 08:36:59 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 11 2016 12:16:34 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
