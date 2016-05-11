@@ -89,6 +89,10 @@ int main(int argc, char** argv)
                                    board.servo_1,
                                    board.servo_2,
                                    board.servo_3,
+                                   board.servo_4,
+                                   board.servo_5,
+                                   board.servo_6,
+                                   board.servo_7,
                                    dummy_file1,
                                    dummy_file2,
                                    cd_config );
