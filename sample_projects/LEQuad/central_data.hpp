@@ -159,6 +159,10 @@ public:
                   Servo& servo_1,
                   Servo& servo_2,
                   Servo& servo_3,
+                  Servo& servo_4,
+                  Servo& servo_5,
+                  Servo& servo_6,
+                  Servo& servo_7,
                   File& file1,
                   File& file2,
                   const conf_t& config = default_config());
@@ -186,6 +190,10 @@ public:
     Servo&          servo_1;            ///< Reference to servos structure
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
+    Servo&          servo_4;            ///< Reference to servos structure
+    Servo&          servo_5;            ///< Reference to servos structure
+    Servo&          servo_6;            ///< Reference to servos structure
+    Servo&          servo_7;            ///< Reference to servos structure
 
     Manual_control manual_control;                            ///< The joystick parsing structure
 

@@ -126,6 +126,8 @@ public:
     Servo       servo_3;
     Servo		servo_4;
 	Servo		servo_5;
+    Servo       servo_6;
+    Servo       servo_7;
     Dynamic_model_quad_diag dynamic_model;
     Simulation              sim;
     Imu                     imu;
