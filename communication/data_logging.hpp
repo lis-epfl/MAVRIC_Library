@@ -53,7 +53,7 @@
  */
 typedef struct
 {
-    double* param;                                              ///< Pointer to the parameter value
+    const double* param;                                              ///< Pointer to the parameter value
     char param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];  ///< Parameter name composed of 16 characters
     mavlink_message_type_t data_type;                           ///< Parameter type
     uint8_t precision;                                          ///< Number of digit after the zero
@@ -146,7 +146,7 @@ public:
      * \return  True if the parameter was added, false otherwise
      */
     template<typename T>
-    bool add_field(T* val, const char* param_name);
+    bool add_field(const T* val, const char* param_name);
 
 
     /**
@@ -162,7 +162,7 @@ public:
      * \return  True if the parameter was added, false otherwise
      */
     template<typename T>
-    bool add_field(T* val, const char* param_name, uint32_t precision);
+    bool add_field(const T* val, const char* param_name, uint32_t precision);
 
 
 private:
