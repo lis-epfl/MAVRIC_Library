@@ -117,21 +117,21 @@ public:
      */
      struct conf_t
     {
-      State::conf_t state_config;
-      data_logging_conf_t data_logging_config;
-      data_logging_conf_t data_logging_config2;
-      Scheduler::conf_t scheduler_config;
-      Mavlink_communication::conf_t mavlink_communication_config;
-      Navigation::conf_t navigation_config;
-      qfilter_conf_t qfilter_config;
-      Ahrs_ekf::conf_t ahrs_ekf_config;
-      Position_estimation::conf_t position_estimation_config;
-      stabilisation_copter_conf_t stabilisation_copter_config;
-      servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
-      Manual_control::conf_t manual_control_config;
-      remote_conf_t remote_config;
-      attitude_controller_conf_t attitude_controller_config;
-      velocity_controller_copter_conf_t velocity_controller_copter_config;
+        State::conf_t state_config;
+        data_logging_conf_t data_logging_continuous_config;
+        data_logging_conf_t data_logging_stat_config;
+        Scheduler::conf_t scheduler_config;
+        Mavlink_communication::conf_t mavlink_communication_config;
+        Navigation::conf_t navigation_config;
+        qfilter_conf_t qfilter_config;
+        Ahrs_ekf::conf_t ahrs_ekf_config;
+        Position_estimation::conf_t position_estimation_config;
+        stabilisation_copter_conf_t stabilisation_copter_config;
+        servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
+        Manual_control::conf_t manual_control_config;
+        remote_conf_t remote_config;
+        attitude_controller_conf_t attitude_controller_config;
+        velocity_controller_copter_conf_t velocity_controller_copter_config;
     };
 
     /**
@@ -202,7 +202,7 @@ public:
     servos_mix_quadcotper_diag_t servo_mix;
 
     qfilter_t attitude_filter;                                  ///< The qfilter structure
-    
+
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
 
@@ -213,15 +213,20 @@ public:
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation
+<<<<<<< HEAD
     Mavlink_waypoint_handler_tag waypoint_handler;
  
+=======
+    Mavlink_waypoint_handler waypoint_handler;
+
+>>>>>>> 84d0ecb75e595e2b66ed54cd0c634e88c3bd3de1
     State_machine state_machine;                              ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
-    Data_logging    data_logging;
-    Data_logging    data_logging2;
+    Data_logging    data_logging_continuous;
+    Data_logging    data_logging_stat;
 
     command_t                       command;
     attitude_controller_t           attitude_controller;
@@ -247,8 +252,8 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
 
     conf.state_config = State::default_config();
 
-    conf.data_logging_config = data_logging_default_config();
-    conf.data_logging_config2 = data_logging_default_config();
+    conf.data_logging_continuous_config = data_logging_default_config();
+    conf.data_logging_stat_config       = data_logging_default_config();
 
     conf.scheduler_config = Scheduler::default_config();
 
