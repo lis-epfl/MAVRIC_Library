@@ -133,6 +133,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             central_data->servo_1.failsafe();
             central_data->servo_2.failsafe();
             central_data->servo_3.failsafe();
+            central_data->servo_4.failsafe();
         }
     }
     else
@@ -141,6 +142,51 @@ bool tasks_run_stabilisation(Central_data* central_data)
         central_data->servo_1.failsafe();
         central_data->servo_2.failsafe();
         central_data->servo_3.failsafe();
+        central_data->servo_4.failsafe();
+
+        if(state.is_custom())
+        {
+            //write to additional servos
+            //left weg
+            float left_weg = remote_get_throttle(&central_data->manual_control.remote) + remote_get_yaw(&central_data->manual_control.remote);
+            if (left_weg < central_data->servo_5.servo_min())
+            {
+                left_weg = central_data->servo_5.servo_min();
+            }
+            else if (left_weg > central_data->servo_5.servo_max())
+            {
+                left_weg = central_data->servo_5.servo_max();
+            }
+            //left weg
+            float right_weg = remote_get_throttle(&central_data->manual_control.remote) - remote_get_yaw(&central_data->manual_control.remote);
+            if (right_weg < central_data->servo_6.servo_min())
+            {
+                right_weg = central_data->servo_6.servo_min();
+            }
+            else if (right_weg > central_data->servo_6.servo_max())
+            {
+                right_weg = central_data->servo_6.servo_max();
+            }
+            //openning / closing of robot
+            float motor = remote_get_channel(&central_data->manual_control.remote, CHANNEL_AUX2) * 1.5f;
+            if (motor < central_data->servo_7.servo_min())
+            {
+                motor = central_data->servo_7.servo_min();
+            }
+            else if (motor > central_data->servo_7.servo_max())
+            {
+                motor = central_data->servo_7.servo_max();
+            }
+            central_data->servo_5.write(left_weg);
+            central_data->servo_6.write(right_weg);
+            central_data->servo_7.write(motor);
+        }
+        else
+        {
+            //stop the whegs
+            central_data->servo_5.failsafe();
+            central_data->servo_6.failsafe();
+        }
     }
 
     return true;

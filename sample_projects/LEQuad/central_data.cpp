@@ -154,10 +154,11 @@ bool Central_data::init(void)
                                           config_.servos_mix_quadcopter_diag_config,
                                           &command.torque,
                                           &command.thrust,
+                                          //change to servo 0 2 3 and 4 because on this board servo_1 is destroid
                                           &servo_0,
-                                          &servo_1,
                                           &servo_2,
-                                          &servo_3);
+                                          &servo_3,
+                                          &servo_4);
     print_util_dbg_init_msg("[SERVOS MIX]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);

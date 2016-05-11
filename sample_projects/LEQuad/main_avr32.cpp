@@ -74,6 +74,15 @@ int main(void)
     // -------------------------------------------------------------------------
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
+    //change min value for being able to not turn if you provide the minimum command
+    board_config.servo_config[5].min = -1.0f;
+    board_config.servo_config[6].min = -1.0f;
+    //this one is a standard servo
+    board_config.servo_config[7]        = servo_default_config_standard();
+    //initiate fully close
+    board_config.servo_config[7].min = -1.125f;
+    board_config.servo_config[7].failsafe = -1.125f;
+    board_config.servo_config[7].max = 1.5f;
     Megafly_rev4 board = Megafly_rev4(board_config);
 
     // Board initialisation
