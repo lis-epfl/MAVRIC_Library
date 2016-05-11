@@ -131,7 +131,7 @@ bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, C
     // init_success &= data_logging->add_field(&central_data->gps.altitude, "altitude", 3);
 
     init_success &= data_logging->add_field((uint32_t*)&central_data->state.mav_state_, "mav_state_");
-    // init_success &= data_logging->add_field(&central_data->state.mav_mode_, "mav_mode");
+    init_success &= data_logging->add_field(central_data->state.mav_mode_.bits_ptr(), "mav_mode");
 
     return init_success;
 };
@@ -175,10 +175,10 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
     init_success &= gps_telemetry_init(&central_data->gps,
                                        message_handler);
 
-    init_success &= data_logging_telemetry_init(&central_data->data_logging,
+    init_success &= data_logging_telemetry_init(&central_data->data_logging_continuous,
                                                 message_handler);
 
-    init_success &= data_logging_telemetry_init(&central_data->data_logging2,
+    init_success &= data_logging_telemetry_init(&central_data->data_logging_stat,
                                                 message_handler);
 
     return init_success;
@@ -387,18 +387,18 @@ bool mavlink_telemetry_init(Central_data* central_data)
 {
     bool init_success = true;
 
-    init_success &= central_data->data_logging.create_new_log_file("Log_file",
+    init_success &= central_data->data_logging_continuous.create_new_log_file("Log_file",
                     true,
                     central_data->mavlink_communication.sysid());
 
 
-    init_success &= central_data->data_logging2.create_new_log_file("Log_Stat",
+    init_success &= central_data->data_logging_stat.create_new_log_file("Log_Stat",
                     false,
                     central_data->mavlink_communication.sysid());
 
-    init_success &= mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging, central_data);
+    init_success &= mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging_continuous, central_data);
 
-    init_success &= mavlink_telemetry_add_data_logging_parameters_stat(&central_data->data_logging2, central_data);
+    init_success &= mavlink_telemetry_add_data_logging_parameters_stat(&central_data->data_logging_stat, central_data);
 
     init_success &= mavlink_telemetry_init_communication_module(central_data);
 
