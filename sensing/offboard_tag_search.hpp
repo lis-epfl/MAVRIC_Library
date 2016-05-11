@@ -133,7 +133,7 @@ public:
     // Getters and setters
     const bool& is_camera_running() const;
     int camera_id() const;
-    const float& picture_count() const;
+    const int16_t& picture_count() const;
     float allowable_horizontal_tag_offset_sqr() const;
     float max_acc_drone_height_from_camera_mm() const;
     const float& tag_search_timeout_us() const;
@@ -150,7 +150,7 @@ protected:
     const int camera_id_;                               ///< ID number of camera
     bool is_camera_running_;                            ///< States whether the camera should be running
     float last_update_us_;                              ///< Last update time in microseconds
-    float picture_count_;                               ///< The count of the pictures received
+    int16_t picture_count_;                               ///< The count of the pictures received
     local_position_t tag_location_;                     ///< The location of the tag in the local frame
     const float allowable_horizontal_tag_offset_sqr_;   ///< The maximum allowable horizontal distance between the tag and the drone before the drone will start to descend
     const float max_acc_drone_height_from_camera_mm_;   ///< The maximum acceptable altitude where the code will trust the cameras height estimation

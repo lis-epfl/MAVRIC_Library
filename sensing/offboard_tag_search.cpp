@@ -68,7 +68,7 @@ Offboard_Tag_Search::Offboard_Tag_Search(offboard_tag_search_conf_t config):
 
 {
     // Set picture count to 0
-    picture_count_ = 0.0f;
+    picture_count_ = 0;
 }
 
 
@@ -171,7 +171,7 @@ local_position_t& Offboard_Tag_Search::tag_location()
     return tag_location_;
 }
 
-const float& Offboard_Tag_Search::picture_count() const
+const int16_t& Offboard_Tag_Search::picture_count() const
 {
     return picture_count_;
 }

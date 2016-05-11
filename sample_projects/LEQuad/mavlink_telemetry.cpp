@@ -132,7 +132,7 @@ bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, C
     init_success &= data_logging->add_field(&central_data->offboard_tag_search.tag_location().pos[2], "tag_z", 3);
 
     init_success &= data_logging->add_field(&central_data->offboard_tag_search.is_camera_running(), "camera_on");
-    init_success &= data_logging->add_field(&central_data->offboard_tag_search.picture_count(), "pic_count", 3);
+    init_success &= data_logging->add_field(&central_data->offboard_tag_search.picture_count(), "pic_count");
 
     // init_success &= data_logging->add_field(&central_data->gps.latitude, "latitude", 7);
     // init_success &= data_logging->add_field(&central_data->gps.longitude, "longitude", 7);
