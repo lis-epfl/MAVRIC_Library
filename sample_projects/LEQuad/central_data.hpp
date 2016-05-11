@@ -45,9 +45,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-
-
-
+#define OUTDOOR
+//#define DRONE_DOME
 
 #include "communication/data_logging.hpp"
 #include "communication/hud_telemetry.hpp"
