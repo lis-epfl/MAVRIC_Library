@@ -49,7 +49,7 @@ extern "C"
 
 
 
-Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, File& file1, File& file2, const conf_t& config):
+Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -63,6 +63,10 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
+    servo_4(servo_4),
+    servo_5(servo_5),
+    servo_6(servo_6),
+    servo_7(servo_7),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
     state(mavlink_communication.mavlink_stream(), battery, config.state_config),
     scheduler(Scheduler::default_config()),
@@ -165,7 +169,11 @@ bool Central_data::init(void)
                           &servo_0,
                           &servo_1,
                           &servo_2,
-                          &servo_3);
+                          &servo_3,
+                          &servo_4,
+                          &servo_5,
+                          &servo_6,
+                          &servo_7);
 
     //--------------------------------------------------------------------------
     // Init attitude controller
