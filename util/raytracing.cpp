@@ -40,14 +40,14 @@
  ******************************************************************************/
 
 #include "util/raytracing.hpp"
+extern "C"
+{
+  #include "util/maths.h"
+}
 
 namespace raytracing
 {
 
-extern "C"
-{
-#include "util/maths.h"
-}
 
 float norm(Vector3f& vector)
 {
