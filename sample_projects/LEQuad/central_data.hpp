@@ -248,7 +248,7 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.state_config = State::default_config();
 
     conf.data_logging_config = data_logging_default_config();
-    conf.data_logging_config = data_logging_default_config();
+    conf.data_logging_config2 = data_logging_default_config();
 
     conf.scheduler_config = Scheduler::default_config();
 
