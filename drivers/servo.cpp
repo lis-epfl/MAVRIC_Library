@@ -140,3 +140,15 @@ void Servo::set_servo_min(void)
 {
     write(config_.min, true);
 }
+
+
+float Servo::servo_max(void)
+{
+    return config_.max;
+}
+
+
+float Servo::servo_min(void)
+{
+    return config_.min;
+}

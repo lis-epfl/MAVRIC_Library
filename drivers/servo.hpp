@@ -149,6 +149,16 @@ public:
      */
     void set_servo_min(void);
 
+    /**
+     * \brief   Gets the maximum value to the servo
+     */
+    float servo_max(void);
+
+    /**
+     * \brief   Gets the minimum value to the servo
+     */
+    float servo_min(void);
+
 private:
     Pwm&            pwm_;       ///< Reference to pwm
     servo_conf_t    config_;    ///< Configuration
