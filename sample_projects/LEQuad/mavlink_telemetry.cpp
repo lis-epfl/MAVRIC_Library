@@ -131,7 +131,7 @@ bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, C
     // init_success &= data_logging->add_field(&central_data->gps.altitude, "altitude", 3);
 
     init_success &= data_logging->add_field((uint32_t*)&central_data->state.mav_state_, "mav_state_");
-    init_success &= data_logging->add_field(&central_data->state.mav_mode_, "mav_mode");
+    // init_success &= data_logging->add_field(&central_data->state.mav_mode_, "mav_mode");
 
     return init_success;
 };

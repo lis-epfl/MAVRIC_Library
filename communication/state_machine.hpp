@@ -125,7 +125,7 @@ private:
      * \param current_custom_mode       Pointer to the current MAV custom mode
      * \param current_state             Pointer to the current MAV state
      */
-    void set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_state_t *current_state);
+    void set_custom_mode(Mav_mode::custom_mode_t *current_custom_mode, mav_state_t *current_state);
 };
 
 

@@ -106,7 +106,7 @@ static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_comma
  *
  * \return  success             true if mode was accepted, false if refused
  */
-bool state_telemetry_set_mode(State* state, mav_mode_t mav_mode);
+bool state_telemetry_set_mode(State* state, Mav_mode mav_mode);
 
 /**
  * \brief   Callback to the command 520 MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES
@@ -147,11 +147,11 @@ void state_telemetry_set_mav_mode(State* state, uint32_t sysid, mavlink_message_
 
 static mav_result_t state_telemetry_set_mode_from_cmd(State* state, mavlink_command_long_t* packet)
 {
-    mav_mode_t new_mode = packet->param1;
+    Mav_mode new_mode = packet->param1;
     return state_telemetry_set_mode(state,new_mode) ? MAV_RESULT_ACCEPTED : MAV_RESULT_TEMPORARILY_REJECTED;
 }
 
-bool state_telemetry_set_mode(State* state, mav_mode_t new_mode)
+bool state_telemetry_set_mode(State* state, Mav_mode new_mode)
 {
     // if calibrating, refuse new mode
     if (state->mav_state_ == MAV_STATE_CALIBRATING)
@@ -161,15 +161,14 @@ bool state_telemetry_set_mode(State* state, mav_mode_t new_mode)
     }
 
     // try to set arming state, if rejected, refuse new mode
-    if(!state->set_armed(mav_modes_is_armed(new_mode)))
+    if(!state->set_armed(new_mode.is_armed()))
     {
         print_util_dbg_print("[STATE TELEMETRY] could not change arming state -> refusing new mode\r\n");
         return false;
     }
 
     // set HIL flag to current state (we do not support HIL state changes)
-    new_mode &= ~MAV_MODE_FLAG_HIL_ENABLED;     // clear HIL flag
-    new_mode += (state->mav_mode() & MAV_MODE_FLAG_HIL_ENABLED);  // set HIL flag to current state
+    new_mode.set_hil_flag(state->mav_mode().is_hil());
 
     // set mav_mode
     state->mav_mode_ = new_mode;
@@ -283,7 +282,7 @@ void state_telemetry_send_heartbeat(const State* state, const Mavlink_stream* ma
                                msg,
                                state->autopilot_type,
                                state->autopilot_name,
-                               state->mav_mode(),
+                               state->mav_mode().bits(),
                                state->mav_mode_custom,
                                state->mav_state_);
 }

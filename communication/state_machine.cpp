@@ -61,9 +61,9 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_state_t *current_state)
+void State_machine::set_custom_mode(Mav_mode::custom_mode_t *current_custom_mode, mav_state_t *current_state)
 {
-    mav_mode_custom_t mode_custom_new = *current_custom_mode;
+    Mav_mode::custom_mode_t mode_custom_new = *current_custom_mode;
     mav_state_t state_new = *current_state;
 
     //check battery level
@@ -74,11 +74,11 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
             print_util_dbg_print("Battery low! Performing critical landing.\r\n");
             state_new = MAV_STATE_CRITICAL;
         }
-        mode_custom_new |= CUST_BATTERY_LOW;
+        mode_custom_new |= Mav_mode::CUST_BATTERY_LOW;
     }
     else
     {
-        mode_custom_new &= ~CUST_BATTERY_LOW;
+        mode_custom_new &= ~Mav_mode::CUST_BATTERY_LOW;
     }
 
     // check connection with GND station
@@ -90,11 +90,11 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
             state_new = MAV_STATE_CRITICAL;
         }
 
-        mode_custom_new |= CUST_HEARTBEAT_LOST;
+        mode_custom_new |= Mav_mode::CUST_HEARTBEAT_LOST;
     }
     else
     {
-        mode_custom_new &= ~CUST_HEARTBEAT_LOST;
+        mode_custom_new &= ~Mav_mode::CUST_HEARTBEAT_LOST;
     }
 
     // check whether out_of_fence_1
@@ -105,11 +105,11 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
             print_util_dbg_print("Out of fence 1!\r\n");
             state_new = MAV_STATE_CRITICAL;
         }
-        mode_custom_new |= CUST_FENCE_1;
+        mode_custom_new |= Mav_mode::CUST_FENCE_1;
     }
     else
     {
-        mode_custom_new &= ~CUST_FENCE_1;
+        mode_custom_new &= ~Mav_mode::CUST_FENCE_1;
     }
 
     // check whether out_of_fence_2
@@ -120,11 +120,11 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
             print_util_dbg_print("Out of fence 2!\r\n");
             state_new = MAV_STATE_CRITICAL;
         }
-        mode_custom_new |= CUST_FENCE_2;
+        mode_custom_new |= Mav_mode::CUST_FENCE_2;
     }
     else
     {
-        mode_custom_new &= ~CUST_FENCE_2;
+        mode_custom_new &= ~Mav_mode::CUST_FENCE_2;
     }
 
     // check GPS status
@@ -135,11 +135,11 @@ void State_machine::set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_
             print_util_dbg_print("GPS bad!\r\n");
             state_new = MAV_STATE_CRITICAL;
         }
-        mode_custom_new |= CUST_GPS_BAD;
+        mode_custom_new |= Mav_mode::CUST_GPS_BAD;
     }
     else
     {
-        mode_custom_new &= ~CUST_GPS_BAD;
+        mode_custom_new &= ~Mav_mode::CUST_GPS_BAD;
     }
 
     *current_custom_mode = mode_custom_new;
@@ -164,16 +164,16 @@ State_machine::State_machine(State& state,
 
 bool State_machine::update(State_machine* state_machine)
 {
-    mav_mode_t mode_new;
+    Mav_mode mode_new;
     signal_quality_t rc_check;
 
     // Get current mode and state
-    const mav_mode_t mode_current = state_machine->state_.mav_mode();
+    const Mav_mode mode_current = state_machine->state_.mav_mode();
     const mav_state_t state_current = state_machine->state_.mav_state_;
 
     // By default, set new state equal to current state
     mav_state_t state_new = state_current;
-    mav_mode_custom_t mode_custom_new = state_machine->state_.mav_mode_custom;
+    Mav_mode::custom_mode_t mode_custom_new = state_machine->state_.mav_mode_custom;
 
 
     // Get remote signal strength
@@ -185,21 +185,22 @@ bool State_machine::update(State_machine* state_machine)
 
     state_machine->state_.connection_status();
 
-    // try passing to/leaving guided mode if requested
-    if(!state_machine->set_mode_guided(mav_modes_is_guided(mode_new)))
+    // try passing to/leaving stabilize mode if requested
+    if(!state_machine->set_mode_stabilize(mode_new.is_stabilize()))
     {
-        mode_new ^= MAV_MODE_FLAG_GUIDED_ENABLED; // toggle guided flag
+        mode_new.set_stabilize_flag(!mode_new.is_stabilize()); // toggle stabilize flag
     }
 
-    if(!state_machine->set_mode_stabilize(mav_modes_is_stabilize(mode_new)))
+    // try passing to/leaving guided mode if requested
+    if(!state_machine->set_mode_guided(mode_new.is_guided()))
     {
-        mode_new ^= MAV_MODE_FLAG_STABILIZE_ENABLED; // toggle stabilize flag
+        mode_new.set_guided_flag(!mode_new.is_guided()); // toggle guided flag
     }
 
     // try arming/disarming, if not allowed, reset flag in mode_new
-    if(!state_machine->state_.set_armed(mav_modes_is_armed(mode_new)))
+    if(!state_machine->state_.set_armed(mode_new.is_armed()))
     {
-        mode_new ^= MAV_MODE_FLAG_SAFETY_ARMED; // toggle armed flag
+        mode_new.set_armed_flag(!mode_new.is_armed()); // toggle armed flag
     }
 
 
@@ -225,12 +226,12 @@ bool State_machine::update(State_machine* state_machine)
             state_machine->state_.out_of_fence_1 = false;
             state_machine->state_.out_of_fence_2 = false;
 
-            if (mav_modes_is_armed(mode_new))
+            if (mode_new.is_armed())
             {
                 print_util_dbg_print("Switching from state_machine.\r\n");
                 state_machine->state_.switch_to_active_mode(&state_new);
 
-                mode_custom_new = CUSTOM_BASE_MODE;
+                mode_custom_new = Mav_mode::CUSTOM_BASE_MODE;
             }
 
             if (!state_machine->imu_.is_ready() || !(state_machine->ahrs_.internal_state == AHRS_READY))
@@ -248,13 +249,13 @@ bool State_machine::update(State_machine* state_machine)
                 {
                     print_util_dbg_print("Remote control signal lost! Returning to home and land.\r\n");
                     state_new = MAV_STATE_CRITICAL;
-                    mode_custom_new |= CUST_REMOTE_LOST;
+                    mode_custom_new |= Mav_mode::CUST_REMOTE_LOST;
                 }
                 else
                 {
-                    mode_custom_new &= ~CUST_REMOTE_LOST;
+                    mode_custom_new &= ~Mav_mode::CUST_REMOTE_LOST;
 
-                    if (!mav_modes_is_armed(mode_new))
+                    if (!mode_new.is_armed())
                     {
                         state_new = MAV_STATE_STANDBY;
                         print_util_dbg_print("Switching off motors from state_machine!\r\n");
@@ -278,7 +279,7 @@ bool State_machine::update(State_machine* state_machine)
                     {
                         state_new = MAV_STATE_ACTIVE;
                         // Reset all custom flags except collision avoidance flag
-                        mode_custom_new &= static_cast<mav_mode_custom_t>(0xFFFFF820);
+                        mode_custom_new &= static_cast<Mav_mode::custom_mode_t>(0xFFFFF820);
                     }
                     break;
 
@@ -288,7 +289,7 @@ bool State_machine::update(State_machine* state_machine)
 
                 case SIGNAL_LOST:
                     // If in manual mode, do emergency landing (cut off motors)
-                    if (mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilize(mode_current)))
+                    if (mode_current.is_manual())
                     {
                         print_util_dbg_print("Switch to Emergency mode!\r\n");
                         state_new = MAV_STATE_EMERGENCY;
@@ -300,7 +301,7 @@ bool State_machine::update(State_machine* state_machine)
 
             state_machine->set_custom_mode(&mode_custom_new, &state_new);
 
-            if (!mav_modes_is_armed(mode_new))
+            if (!mode_new.is_armed())
             {
                 state_new = MAV_STATE_STANDBY;
             }
@@ -308,7 +309,7 @@ bool State_machine::update(State_machine* state_machine)
 
         case MAV_STATE_EMERGENCY:
             // Recovery is not possible -> switch off motors
-            mode_new &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+            mode_new.set_armed_flag(false);
 
             if (!state_machine->state_.battery_.is_low())
             {
@@ -337,14 +338,7 @@ bool State_machine::update(State_machine* state_machine)
     }
 
     // Check simulation mode
-    if ( mav_modes_is_hil(state_machine->state_.mav_mode()) == true )
-    {
-        mode_new |= MAV_MODE_FLAG_HIL_ENABLED;
-    }
-    else
-    {
-        mode_new &= ~MAV_MODE_FLAG_HIL_ENABLED;
-    }
+    mode_new.set_hil_flag(state_machine->state_.mav_mode().is_hil());
 
     // Finally, write new modes and states
     state_machine->state_.mav_mode_       = mode_new;
@@ -379,13 +373,13 @@ bool State_machine::set_mode_guided(bool guided)
         }
 
         // set guided flag
-        state_.mav_mode_ |= MAV_MODE_FLAG_GUIDED_ENABLED;
+        state_.mav_mode_.set_guided_flag(true);
         print_util_dbg_print("[STATE_MACHINE]: passing to guided mode\r\n");
     }
     else
     {
         // clear guided flag
-        state_.mav_mode_ &= ~MAV_MODE_FLAG_GUIDED_ENABLED;
+        state_.mav_mode_.set_guided_flag(false);
         print_util_dbg_print("[STATE_MACHINE]: leave guided mode\r\n");
     }
 
@@ -410,13 +404,13 @@ bool State_machine::set_mode_stabilize(bool stabilize)
         }
 
         // set stabilize flag
-        state_.mav_mode_ |= MAV_MODE_FLAG_STABILIZE_ENABLED;
+        state_.mav_mode_.set_stabilize_flag(true);
         print_util_dbg_print("[STATE_MACHINE]: passing to stabilize mode\r\n");
     }
     else
     {
         // clear stabilize flag
-        state_.mav_mode_ &= ~MAV_MODE_FLAG_STABILIZE_ENABLED;
+        state_.mav_mode_.set_stabilize_flag(false);
         print_util_dbg_print("[STATE_MACHINE]: leave stabilize mode\r\n");
     }
 

@@ -169,7 +169,7 @@ private:
     bool critical_next_state_;                                   ///< Flag to change critical state in its dedicated state machine
     bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
 
-    mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution    
+    Mav_mode last_mode_;                                         ///< The mode of the MAV to have a memory of its evolution
     const ahrs_t& ahrs_;                                         ///< The pointer to the attitude estimation structure
     const Manual_control& manual_control_;                       ///< The pointer to the manual_control structure
 
