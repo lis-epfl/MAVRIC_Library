@@ -213,13 +213,9 @@ public:
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation
-<<<<<<< HEAD
-    Mavlink_waypoint_handler_tag waypoint_handler;
- 
-=======
-    Mavlink_waypoint_handler waypoint_handler;
 
->>>>>>> 84d0ecb75e595e2b66ed54cd0c634e88c3bd3de1
+    Mavlink_waypoint_handler_tag waypoint_handler;
+
     State_machine state_machine;                              ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
