@@ -42,6 +42,7 @@ LIB_SRCS += drivers/gps_ublox.cpp
 LIB_SRCS += drivers/gps_telemetry.cpp       
 LIB_SRCS += drivers/hmc5883l.cpp  
 LIB_SRCS += drivers/lsm330dlc.cpp            
+LIB_SRCS += drivers/mpu_6050.cpp            
 LIB_SRCS += drivers/servo.cpp                              
 LIB_SRCS += drivers/servos_telemetry.c
 LIB_SRCS += drivers/sonar_i2cxl.cpp
