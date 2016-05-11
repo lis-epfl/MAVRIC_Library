@@ -10,6 +10,8 @@ var searchData=
   ['serial_5fudp',['Serial_udp',['../classSerial__udp.html#ae661f6b19d2f11a9ad4ac1eb3685db59',1,'Serial_udp']]],
   ['serial_5fusb_5favr32',['Serial_usb_avr32',['../classSerial__usb__avr32.html#ad54bffcb2133151b1f7fc84f9ab44ad7',1,'Serial_usb_avr32']]],
   ['servo',['Servo',['../classServo.html#a2a4eacedcd7b7f4728b84e07d4645e5a',1,'Servo']]],
+  ['servo_5fmax',['servo_max',['../classServo.html#adc300eff0012c5912a7bc48dcb50a743',1,'Servo']]],
+  ['servo_5fmin',['servo_min',['../classServo.html#ade56632653d160c3d624dd46125cef5b',1,'Servo']]],
   ['set_5farmed',['set_armed',['../classState.html#a41daea810832a042add30c2c4bdbaa13',1,'State']]],
   ['set_5faxis',['set_axis',['../classraytracing_1_1Cylinder.html#ab234830c2a63f2b8b5c1fdfd26e5c303',1,'raytracing::Cylinder']]],
   ['set_5fcenter',['set_center',['../classraytracing_1_1Plane.html#a1ae930694c62b2d949fca661e5a894d6',1,'raytracing::Plane::set_center()'],['../classraytracing_1_1Sphere.html#a898515e359551197c7040002c83b27a9',1,'raytracing::Sphere::set_center()'],['../classraytracing_1_1Cylinder.html#ae7f2218c94305e0232cceff50c19b6c9',1,'raytracing::Cylinder::set_center()']]],

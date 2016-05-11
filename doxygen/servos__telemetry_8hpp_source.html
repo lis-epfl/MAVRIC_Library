@@ -136,14 +136,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00054"></a>00054 
 <a name="l00058"></a><a class="code" href="structservos__telemetry__t.html">00058</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
 <a name="l00059"></a>00059 {
-<a name="l00060"></a><a class="code" href="structservos__telemetry__t.html#a27d77773a1c11ea34ec90adf97eefd4b">00060</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servos[4];                   
+<a name="l00060"></a><a class="code" href="structservos__telemetry__t.html#a051001ba64b00e7c08054e30b70fee31">00060</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servos[8];                   
 <a name="l00061"></a>00061 } <a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a>;
 <a name="l00062"></a>00062 
-<a name="l00072"></a>00072 <span class="keywordtype">void</span> servos_telemetry_init(<a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a>* servos_telemetry, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_0, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_1, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_2, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_3);
-<a name="l00073"></a>00073 
-<a name="l00081"></a>00081 <span class="keywordtype">void</span> servos_telemetry_mavlink_send(<a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a>* servos_telemetry, <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>* <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>, mavlink_message_t* msg);
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083 <span class="preprocessor">#endif </span><span class="comment">/* SERVOS_TELEMETRY_H_ */</span>
+<a name="l00076"></a>00076 <span class="keywordtype">void</span> servos_telemetry_init(<a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a>* servos_telemetry, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_0, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_1, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_2, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_3, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_4, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_5, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_6, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>* servo_7);
+<a name="l00077"></a>00077 
+<a name="l00085"></a>00085 <span class="keywordtype">void</span> servos_telemetry_mavlink_send(<a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a>* servos_telemetry, <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>* <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>, mavlink_message_t* msg);
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087 <span class="preprocessor">#endif </span><span class="comment">/* SERVOS_TELEMETRY_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -162,7 +162,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 11 2016 12:16:34 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 11 2016 12:46:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

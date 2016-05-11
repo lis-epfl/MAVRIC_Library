@@ -12,7 +12,7 @@
 <area shape="rect" id="node22" href="$classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="529,6,660,213"/>
 <area shape="rect" id="node24" href="$classSonar__i2cxl.html" title="{Sonar_i2cxl\n||+ Sonar_i2cxl()\l+ init()\l+ update()\l+ last_update_us()\l+ orientation_bf()\l+ distance()\l+ velocity()\l+ healthy()\l}" alt="" coords="581,695,712,902"/>
 <area shape="rect" id="node26" href="$classSonar.html" title="Abstarct class for sonars." alt="" coords="664,333,795,523"/>
-<area shape="rect" id="node28" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="736,695,883,902"/>
+<area shape="rect" id="node28" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="736,678,883,919"/>
 <area shape="rect" id="node30" href="$classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="907,669,1117,928"/>
 <area shape="rect" id="node32" href="$classGps.html" title="Abstract class for GPS." alt="" coords="907,299,1117,557"/>
 <area shape="rect" id="node34" href="$classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="1141,687,1283,911"/>

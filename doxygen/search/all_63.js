@@ -10,7 +10,7 @@ var searchData=
   ['capacity_5fmult',['capacity_mult',['../structsd__spi__t.html#a262b022411f1f6838f513ae91d5627cc',1,'sd_spi_t']]],
   ['card_5ftype',['card_type',['../structsd__spi__t.html#a1e3ff5e74b98887358082c91c331e512',1,'sd_spi_t']]],
   ['center',['center',['../classraytracing_1_1Plane.html#a2b714d84cebdd158bf7ec596372be49e',1,'raytracing::Plane::center()'],['../classraytracing_1_1Sphere.html#a7f3f5de13589628033f6f579c030ab29',1,'raytracing::Sphere::center()'],['../classraytracing_1_1Cylinder.html#a75c08f3a0c0aa3e8a262d7df86692692',1,'raytracing::Cylinder::center()']]],
-  ['central_5fdata',['Central_data',['../classCentral__data.html',1,'Central_data'],['../classCentral__data.html#a3410a3c3bc015e41c395b492947c96b9',1,'Central_data::Central_data()']]],
+  ['central_5fdata',['Central_data',['../classCentral__data.html',1,'Central_data'],['../classCentral__data.html#a9c1d6f66199fb6ee6e53de858cecda29',1,'Central_data::Central_data()']]],
   ['chan_5fdata',['chan_data',['../structubx__nav__dgps__t.html#ad78f11ef13c9c689f032c2722abbd6da',1,'ubx_nav_dgps_t']]],
   ['change_5fperiod',['change_period',['../classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5',1,'Scheduler_task']]],
   ['channel',['channel',['../classSatellite.html#a1258b0b911e76664aaada2bf18cd3ee4',1,'Satellite::channel()'],['../classSpektrum__satellite.html#aecc1c81c4700538c31ebe9c6739fe137',1,'Spektrum_satellite::channel()'],['../structtLED__DESCRIPTOR.html#a87c42b45cbaa8d445bfde93f3656730b',1,'tLED_DESCRIPTOR::CHANNEL()']]],

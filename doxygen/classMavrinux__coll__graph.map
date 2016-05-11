@@ -8,7 +8,7 @@
 <area shape="rect" id="node10" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="604,57,713,212"/>
 <area shape="rect" id="node12" href="$classGpio__dummy.html" title="{Gpio_dummy\n||+ Gpio_dummy()\l+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="757,341,875,547"/>
 <area shape="rect" id="node14" href="$classGpio.html" title="{Gpio\n||+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="769,40,863,229"/>
-<area shape="rect" id="node16" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="899,341,1045,547"/>
+<area shape="rect" id="node16" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="899,323,1045,565"/>
 <area shape="rect" id="node21" href="$classFile__linux.html" title="File objects on linux platforms." alt="" coords="1069,315,1165,573"/>
 <area shape="rect" id="node23" href="$classFile.html" title="Base class for file objects." alt="" coords="1075,5,1160,264"/>
 <area shape="rect" id="node25" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1189,367,1272,521"/>
