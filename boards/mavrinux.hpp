@@ -120,6 +120,8 @@ public:
     Pwm_dummy   pwm_3;
     Pwm_dummy   pwm_4;
     Pwm_dummy   pwm_5;
+    Pwm_dummy   pwm_6;
+    Pwm_dummy   pwm_7;
     Servo       servo_0;
     Servo       servo_1;
     Servo       servo_2;

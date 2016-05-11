@@ -57,7 +57,7 @@ extern "C"
  */
 typedef struct
 {
-    Servo* servos[4];                   ///< The pointer to the first servo
+    Servo* servos[8];                   ///< The pointer to the first servo
 } servos_telemetry_t;
 
 /**
