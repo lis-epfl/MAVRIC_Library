@@ -79,7 +79,7 @@ int main(void)
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
 
     // Battery configuration
-    board_config.battery_config.type = BATTERY_LIPO_2S;
+    board_config.battery_config.type = BATTERY_LIPO_3S;
 
     // Modify board configuration for PX4flow
     board_config.uart3_config.serial_device         = AVR32_SERIAL_3;
@@ -108,18 +108,15 @@ int main(void)
     File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
 
     // Flow cameras
-    Flow_px4 flow_front(board.uart3);
-    Flow_px4 flow_rear(board.uart4);
+    Flow_px4 flow_front(board.uart4);
+    Flow_px4 flow_rear(board.uart3);
 
     // -------------------------------------------------------------------------
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using real sensors
     Central_data::conf_t cd_config = Central_data::default_config(MAVLINK_SYS_ID);
-    cd_config.servos_mix_quadcopter_diag_config.motor_front_right_dir = CW;
-    cd_config.servos_mix_quadcopter_diag_config.motor_front_left_dir = CCW;
-    cd_config.servos_mix_quadcopter_diag_config.motor_rear_right_dir = CCW;
-    cd_config.servos_mix_quadcopter_diag_config.motor_rear_left_dir = CW;
+
     Central_data_custom cd = Central_data_custom(board.imu,
                                    board.bmp085,
                                    gps_dummy,
