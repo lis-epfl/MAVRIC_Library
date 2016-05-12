@@ -222,161 +222,30 @@ void Mavlink_waypoint_handler_tag::state_machine()
 {
     mav_mode_t mode_local = state_.mav_mode();
 
-    float thrust;
-
-    bool takeoff_result = false;
-    bool new_mode = true;
-
-    switch (navigation_.internal_state_)
+    // Check if it is land on tag state
+    if (navigation_.internal_state_ = Navigation::NAV_LAND_ON_TAG)
     {
-        case Navigation::NAV_ON_GND:
-            thrust = manual_control_.get_thrust();
+        auto_land_on_tag_handler();
 
-            if (thrust > -0.7f)
-            {
-                if (mav_modes_is_guided(mode_local) || mav_modes_is_auto(mode_local))
-                {
-                    hold_waypoint_set_ = false;
-                    navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
-                }
-                else
-                {
-                    navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-                }
-            }
-            break;
+        navigation_.goal = waypoint_hold_coordinates;
+        /*
+        float goal_output[3];
+        goal_output[0] = waypoint_handler->navigation_.goal.pos[0] - waypoint_handler->position_estimation_.local_position.pos[0];
+        goal_output[1] = waypoint_handler->navigation_.goal.pos[1] - waypoint_handler->position_estimation_.local_position.pos[1];
+        goal_output[2] = waypoint_handler->navigation_.goal.pos[2] - waypoint_handler->position_estimation_.local_position.pos[2];
+        print_util_dbg_print("Goal:");
+        print_util_dbg_print_vector(goal_output, 4);
+        print_util_dbg_print("\r\n");
+        */
 
-        case Navigation::NAV_TAKEOFF:
-            takeoff_result = take_off_handler();
-
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if (takeoff_result)
-            {
-                if (mav_modes_is_auto(mode_local))
-                {
-                    navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
-                }
-                else if (mav_modes_is_guided(mode_local))
-                {
-                    navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
-                }
-            }
-
-            if ((!mav_modes_is_guided(mode_local)) && (!mav_modes_is_auto(mode_local)))
-            {
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
-            break;
-
-        case Navigation::NAV_MANUAL_CTRL:
-            if (mav_modes_is_auto(mode_local))
-            {
-                navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
-            }
-            else if (mav_modes_is_guided(mode_local))
-            {
-                print_util_dbg_print("Switching to Navigation::NAV_HOLD_POSITION from Navigation::NAV_MANUAL_CTRL\r\n");
-                hold_init(position_estimation_.local_position);
-                navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
-            }
-
-            navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-            critical_next_state_ = false;
-            navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
-            break;
-
-        case Navigation::NAV_NAVIGATING:
-            if (!mav_modes_is_auto(last_mode_))
-            {
-                new_mode = mode_change();
-            }
-            waypoint_navigation_handler(new_mode);
-
-            navigation_.goal = waypoint_coordinates_;
-
-            if (!mav_modes_is_auto(mode_local))
-            {
-                if (mav_modes_is_guided(mode_local))
-                {
-                    print_util_dbg_print("Switching to Navigation::NAV_HOLD_POSITION from Navigation::NAV_NAVIGATING\r\n");
-                    waypoint_hold_coordinates = position_estimation_.local_position;
-                    navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
-                }
-                else
-                {
-                    print_util_dbg_print("Switching to Navigation::NAV_MANUAL_CTRL from Navigation::NAV_NAVIGATING\r\n");
-                    navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-                }
-            }
-
-            break;
-
-        case Navigation::NAV_HOLD_POSITION:
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if (mav_modes_is_auto(mode_local))
-            {
-                print_util_dbg_print("Switching to Navigation::NAV_NAVIGATING from Navigation::NAV_HOLD_POSITION\r\n");
-                navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
-            }
-            else if (!mav_modes_is_guided(mode_local))
-            {
-                print_util_dbg_print("Switching to Navigation::NAV_MANUAL_CTRL from Navigation::NAV_HOLD_POSITION\r\n");
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
-            break;
-
-        case Navigation::NAV_STOP_ON_POSITION:
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
-            {
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
-            break;
-
-        case Navigation::NAV_STOP_THERE:
-            stopping_handler();
-
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
-            {
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
-            break;
-
-        case Navigation::NAV_LANDING:
-            auto_landing_handler();
-
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
-            {
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
-            break;
-
-        case Navigation::NAV_LAND_ON_TAG:
-            auto_land_on_tag_handler();
-
-            navigation_.goal = waypoint_hold_coordinates;
-            /*
-            float goal_output[3];
-            goal_output[0] = waypoint_handler->navigation_.goal.pos[0] - waypoint_handler->position_estimation_.local_position.pos[0];
-            goal_output[1] = waypoint_handler->navigation_.goal.pos[1] - waypoint_handler->position_estimation_.local_position.pos[1];
-            goal_output[2] = waypoint_handler->navigation_.goal.pos[2] - waypoint_handler->position_estimation_.local_position.pos[2];
-            print_util_dbg_print("Goal:");
-            print_util_dbg_print_vector(goal_output, 4);
-            print_util_dbg_print("\r\n");
-            */
-
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
-            {
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
-            break;
+        if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
+        {
+            navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
+        }
+    }
+    else // Call super.state_machine()
+    {
+        Mavlink_waypoint_handler::state_machine();
     }
 }
 
