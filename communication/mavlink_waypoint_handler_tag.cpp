@@ -108,12 +108,12 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
         waypoint_handler->offboard_tag_search_.tag_location().pos[0] = waypoint_handler->position_estimation_.local_position.pos[0];
         waypoint_handler->offboard_tag_search_.tag_location().pos[1] = waypoint_handler->position_estimation_.local_position.pos[1];
         waypoint_handler->offboard_tag_search_.tag_location().pos[2] = -10.0f;
-        waypoint_handler->navigation_.tag_search_altitude = waypoint_handler->waypoint_hold_coordinates.pos[2];
+        waypoint_handler->tag_search_altitude_ = waypoint_handler->waypoint_hold_coordinates.pos[2];
         waypoint_handler->offboard_tag_search_.tag_location().heading = waypoint_handler->position_estimation_.local_position.heading;
         waypoint_handler->offboard_tag_search_.tag_location().origin = waypoint_handler->position_estimation_.local_position.origin;
 
         // Set new tag search start time
-        waypoint_handler->navigation_.tag_search_start_time = time_keeper_get_us();
+        waypoint_handler->tag_search_start_time_ = time_keeper_get_us();
 
         // Land
         waypoint_handler->offboard_tag_search_.update(&(waypoint_handler->raspi_mavlink_communication_->scheduler()), true);
@@ -142,7 +142,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
     bool next_state = false;
 
     // If the camera has detected the tag and the data is healthy...
-    if ((navigation_.land_on_tag_behavior == Navigation::land_on_tag_behavior_t::TAG_FOUND) &&
+    if ((offboard_tag_search_.land_on_tag_behavior() == Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND) &&
         (offboard_tag_search_.is_healthy()))
     {
         // The hold coordinates has been already been updated during the tag location reading...
@@ -157,7 +157,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
         if (horizontal_distance_to_tag_sqr > offboard_tag_search_.allowable_horizontal_tag_offset_sqr())
         {
             // Stay at tag search altitude
-            waypoint_hold_coordinates.pos[2] = navigation_.tag_search_altitude;
+            waypoint_hold_coordinates.pos[2] = tag_search_altitude_;
 
         }
         else // Descend to ground 
@@ -165,16 +165,16 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
             waypoint_hold_coordinates.pos[2] = 0.0f;
 
             // Set tag search altitude to current height, so it will reposition itself at this altitude if it drifts away
-            navigation_.tag_search_altitude = position_estimation_.local_position.pos[2];
+            tag_search_altitude_ = position_estimation_.local_position.pos[2];
         }
     }
-    else if (navigation_.land_on_tag_behavior == Navigation::land_on_tag_behavior_t::TAG_NOT_FOUND)// Else we need to search for the tag ...
+    else if (offboard_tag_search_.land_on_tag_behavior() == Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND)// Else we need to search for the tag ...
     {
         // Set the hold position to be the current location
         waypoint_hold_coordinates.pos[0] = position_estimation_.local_position.pos[0];
         waypoint_hold_coordinates.pos[1] = position_estimation_.local_position.pos[1];
         // Except make the z axis go to the tag search altitude
-        waypoint_hold_coordinates.pos[2] = navigation_.tag_search_altitude;
+        waypoint_hold_coordinates.pos[2] = tag_search_altitude_;
     }
 
     // Calculate low-pass filter altitude for when to turn off motors
@@ -186,12 +186,12 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
     }
 
     // If the tag search has gone on too long, set mode to landing
-    if ((time_keeper_get_us() - navigation_.tag_search_start_time) > offboard_tag_search_.tag_search_timeout_us())
+    if ((time_keeper_get_us() - tag_search_start_time_) > offboard_tag_search_.tag_search_timeout_us())
     {
         print_util_dbg_print("Auto-landing on tag: Timeout: Switch to normal landing\r\n");
         navigation_.internal_state_ = Navigation::internal_state_t::NAV_LANDING;
         navigation_.auto_landing_behavior = Navigation::auto_landing_behavior_t::DESCENT_TO_GND;
-        navigation_.land_on_tag_behavior = Navigation::land_on_tag_behavior_t::TAG_NOT_FOUND;
+        offboard_tag_search_.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND);
     }
 
     if (next_state)
@@ -379,4 +379,19 @@ void Mavlink_waypoint_handler_tag::state_machine()
             }
             break;
     }
+}
+
+const float& Mavlink_waypoint_handler_tag::tag_search_altitude() const
+{
+    return tag_search_altitude_;
+}
+
+void Mavlink_waypoint_handler_tag::tag_search_altitude(float alt)
+{
+    tag_search_altitude_ = alt;
+}
+
+const uint32_t Mavlink_waypoint_handler_tag::tag_search_start_time() const
+{
+    return tag_search_start_time_;
 }

@@ -180,3 +180,13 @@ void Offboard_Tag_Search::increment_picture_count()
 {
     picture_count_++;
 }
+
+Offboard_Tag_Search::land_on_tag_behavior_t Offboard_Tag_Search::land_on_tag_behavior() const
+{
+    return land_on_tag_behavior_;
+}
+
+void Offboard_Tag_Search::land_on_tag_behavior(land_on_tag_behavior_t behavior)
+{
+    land_on_tag_behavior_ = behavior;
+}

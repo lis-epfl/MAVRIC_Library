@@ -78,7 +78,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Central_
     central_data->offboard_tag_search.increment_picture_count();
 
     // Set waypoint enum to tag found
-    central_data->navigation.land_on_tag_behavior = Navigation::land_on_tag_behavior_t::TAG_FOUND;
+    central_data->offboard_tag_search.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND);
 
     Offboard_Tag_Search camera = central_data->offboard_tag_search;
 
@@ -177,7 +177,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Central_
     // Set hold position
     camera.tag_location().pos[0] = tag_x_pos;
     camera.tag_location().pos[1] = tag_y_pos;
-    camera.tag_location().pos[2] = central_data->navigation.tag_search_altitude;
+    camera.tag_location().pos[2] = central_data->waypoint_handler.tag_search_altitude();
 
     // Update recorded time
     camera.update_last_update_us();
@@ -196,10 +196,10 @@ bool offboard_tag_search_telemetry_init(Central_data* central_data, Mavlink_mess
     bool init_success = true;
 
     // Set tag landing state to tag not found
-    central_data->navigation.land_on_tag_behavior = Navigation::land_on_tag_behavior_t::TAG_NOT_FOUND;
+    central_data->offboard_tag_search.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND);
 
     // Set the tag landing altitude to be the starting altitude
-    central_data->navigation.tag_search_altitude = -10.0f;
+    central_data->waypoint_handler.tag_search_altitude(-10.0f);
 
     // Init tag_location vector to 0
     central_data->offboard_tag_search.tag_location().pos[0] = 0.0f;

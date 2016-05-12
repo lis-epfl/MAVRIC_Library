@@ -86,6 +86,15 @@ class Offboard_Tag_Search
 {
 public:
     /**
+     * \brief   The auto-landing enum
+     */
+    enum land_on_tag_behavior_t
+    {
+        TAG_NOT_FOUND,                                      ///< Tag has not yet been found, search for tag
+        TAG_FOUND                                           ///< Tag has been found, go to location
+    };
+
+    /**
      * \brief Constructor
      *
      * \param config    The offboard camera configuration
@@ -143,7 +152,8 @@ public:
     float camera_x_fov() const;
     float camera_y_fov() const;
     local_position_t& tag_location();
-
+    land_on_tag_behavior_t land_on_tag_behavior() const;
+    void land_on_tag_behavior(land_on_tag_behavior_t land_on_tag_behavior);
 protected:
     Offboard_Tag_Search();
 
@@ -159,6 +169,8 @@ protected:
     const float camera_rotation_;                       ///< The rotation of the offboard camera w.r.t. the front of the drone, CCW from drone to camera is +
     const float camera_fov_[2];                         ///< The field of view of the camera in radians
     const float max_acc_time_since_last_detection_us_;  ///< The maximum acceptible time since last detection in us for a healthy read
+    land_on_tag_behavior_t land_on_tag_behavior_;        ///< The land on tag behavior enum
+
 };
 
 
