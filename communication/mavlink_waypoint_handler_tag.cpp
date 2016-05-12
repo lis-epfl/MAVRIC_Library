@@ -223,7 +223,7 @@ void Mavlink_waypoint_handler_tag::state_machine()
     mav_mode_t mode_local = state_.mav_mode();
 
     // Check if it is land on tag state
-    if (navigation_.internal_state_ = Navigation::NAV_LAND_ON_TAG)
+    if (navigation_.internal_state_ == Navigation::NAV_LAND_ON_TAG)
     {
         auto_land_on_tag_handler();
 
