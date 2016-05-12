@@ -107,7 +107,7 @@ int main(void)
                                    board.servo_3,
                                    file_log,
                                    file_stat,
-                                   board.offboard_tag_search,
+                                   board_config.offboard_tag_search_config,
                                    cd_config );
 
     // -------------------------------------------------------------------------

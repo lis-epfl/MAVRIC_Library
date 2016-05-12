@@ -45,6 +45,10 @@
 
 #include "runtime/scheduler.hpp"
 #include "util/coord_conventions.h"
+#include "sensing/ahrs.h"
+#include "sensing/position_estimation.hpp"
+
+class Mavlink_waypoint_handler_tag;
 
 extern "C"
 {
@@ -113,9 +117,12 @@ public:
     /**
      * \brief Constructor
      *
-     * \param config    The offboard camera configuration
+     * \param position_estimation   Central_data's position_estimation
+     * \param ahrs                  Central_data's ahrs
+     * \param waypoint_handler      Central_data'a waypoint_handler
+     * \param config                The offboard camera configuration
      */
-    Offboard_Tag_Search(offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
+    Offboard_Tag_Search(Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
 
 
     /**
@@ -170,6 +177,9 @@ public:
     local_position_t& tag_location();
     land_on_tag_behavior_t land_on_tag_behavior() const;
     void land_on_tag_behavior(land_on_tag_behavior_t land_on_tag_behavior);
+    Position_estimation& position_estimation();
+    const ahrs_t& ahrs() const;
+    Mavlink_waypoint_handler_tag& waypoint_handler();
 protected:
     Offboard_Tag_Search();
 
@@ -179,6 +189,9 @@ protected:
     int16_t picture_count_;                             ///< The count of the pictures received
     local_position_t tag_location_;                     ///< The location of the tag in the local frame
     land_on_tag_behavior_t land_on_tag_behavior_;       ///< The land on tag behavior enum
+    Position_estimation& position_estimation_;
+    const ahrs_t& ahrs_;
+    Mavlink_waypoint_handler_tag& waypoint_handler_;
 
 };
 

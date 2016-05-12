@@ -54,10 +54,13 @@ extern "C"
 
 
 
-Offboard_Tag_Search::Offboard_Tag_Search(offboard_tag_search_conf_t config):
+Offboard_Tag_Search::Offboard_Tag_Search(Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, offboard_tag_search_conf_t config):
     conf_(config),
     is_camera_running_(config.initial_camera_state),
-    last_update_us_(time_keeper_get_us())
+    last_update_us_(time_keeper_get_us()),
+    position_estimation_(position_estimation),
+    ahrs_(ahrs),
+    waypoint_handler_(waypoint_handler)
 {
     // Set picture count to 0
     picture_count_ = 0;
@@ -181,4 +184,19 @@ Offboard_Tag_Search::land_on_tag_behavior_t Offboard_Tag_Search::land_on_tag_beh
 void Offboard_Tag_Search::land_on_tag_behavior(land_on_tag_behavior_t behavior)
 {
     land_on_tag_behavior_ = behavior;
+}
+
+Position_estimation& Offboard_Tag_Search::position_estimation()
+{
+    return position_estimation_;
+}
+
+const ahrs_t& Offboard_Tag_Search::ahrs() const
+{
+    return ahrs_;
+}
+
+Mavlink_waypoint_handler_tag& Offboard_Tag_Search::waypoint_handler()
+{
+    return waypoint_handler_;
 }

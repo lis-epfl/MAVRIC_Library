@@ -173,7 +173,6 @@ public:
     Servo               servo_5;
     Servo               servo_6;
     Servo               servo_7;
-    Offboard_Tag_Search offboard_tag_search;
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove

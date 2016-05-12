@@ -47,8 +47,7 @@
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
 #include "sensing/offboard_tag_search.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
-
+#include "communication/mavlink_waypoint_handler_tag.hpp"
 /**
  * \brief   Initialise the offboard camera telemetry module
  *
@@ -58,9 +57,9 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool offboard_tag_search_telemetry_init(Central_data* central_data, Mavlink_message_handler* message_handler);
+bool offboard_tag_search_telemetry_init(Offboard_Tag_Search* offboard_tag_search, Mavlink_message_handler* message_handler);
 
-void offboard_tag_search_goal_location_telemetry_send(const Central_data* central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void offboard_tag_search_goal_location_telemetry_send(Offboard_Tag_Search* offboard_tag_search, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Function to send the MAVLink start/stop camera do command

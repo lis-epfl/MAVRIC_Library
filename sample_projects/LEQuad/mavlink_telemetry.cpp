@@ -189,7 +189,7 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
     init_success &= data_logging_telemetry_init(&central_data->data_logging_stat,
                                                 message_handler);
 
-    init_success &= offboard_tag_search_telemetry_init(central_data,
+    init_success &= offboard_tag_search_telemetry_init(&central_data->offboard_tag_search,
                     &central_data->raspi_mavlink_communication.message_handler());
 
     return init_success;
@@ -447,7 +447,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
 
     init_success &= mavlink_communication.add_msg_send(100000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&altitude_estimation_telemetry_send,                            &central_data->altitude_estimation_,    MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV           );// ID 64
 
-    init_success &= mavlink_communication.add_msg_send(250000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_goal_location_telemetry_send,                  central_data,                           MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
+    init_success &= mavlink_communication.add_msg_send(250000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_goal_location_telemetry_send,                  &central_data->offboard_tag_search,                           MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
     init_success &= raspi_mavlink_communication.add_msg_send(1000000,   Scheduler_task::RUN_ONCE,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_telemetry_send_start_stop,                 &central_data->offboard_tag_search,         MAVLINK_MSG_ID_COMMAND_LONG           );// ID 76
     
     init_success &= central_data->mavlink_communication.scheduler().sort_tasks();

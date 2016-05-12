@@ -163,7 +163,7 @@ public:
                   Servo& servo_3,
                   File& file1,
                   File& file2,
-                  Offboard_Tag_Search& offboard_tag_search,
+                  offboard_tag_search_conf_t& offboard_tag_search_conf,
                   const conf_t& config = default_config());
 
     /**
@@ -233,7 +233,7 @@ public:
     Altitude_estimation             altitude_estimation_;
     Altitude_controller             altitude_controller_;
 
-    Offboard_Tag_Search& offboard_tag_search;                          ///< The offboard camera control class reference
+    Offboard_Tag_Search offboard_tag_search;                          ///< The offboard camera control class reference
 
 private:
     uint8_t sysid_;                 ///< System ID
