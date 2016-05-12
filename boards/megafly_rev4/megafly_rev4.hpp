@@ -392,18 +392,7 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     // -------------------------------------------------------------------------
     // Offboard camera config
     // -------------------------------------------------------------------------
-    conf.offboard_tag_search_config                                         = {};
-    conf.offboard_tag_search_config.camera_id                               = 1;
-    conf.offboard_tag_search_config.initial_camera_state                    = false;
-    conf.offboard_tag_search_config.allowable_horizontal_tag_offset_sqr     = 1.0f;
-    conf.offboard_tag_search_config.max_acc_drone_height_from_camera_mm     = 15000.0f;
-    conf.offboard_tag_search_config.tag_search_timeout_us                   = 60000000.0f;
-    conf.offboard_tag_search_config.camera_res_x                            = 1280;
-    conf.offboard_tag_search_config.camera_res_y                            = 960;
-    conf.offboard_tag_search_config.camera_rotation                         = maths_deg_to_rad(90.0f);
-    conf.offboard_tag_search_config.camera_fov_x                            = maths_deg_to_rad(53.50f);
-    conf.offboard_tag_search_config.camera_fov_y                            = maths_deg_to_rad(41.41f);
-    conf.offboard_tag_search_config.max_acc_time_since_last_detection_us    = 10000000.0f;
+    conf.offboard_tag_search_config                                         = offboard_tag_search_conf_default();
 
 
     return conf;
