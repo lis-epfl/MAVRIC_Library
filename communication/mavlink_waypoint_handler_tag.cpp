@@ -189,7 +189,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
     {
         print_util_dbg_print("Auto-landing on tag: Timeout: Switch to normal landing\r\n");
         navigation_.internal_state_ = Navigation::internal_state_t::NAV_LANDING;
-        navigation_.auto_landing_behavior = Navigation::auto_landing_behavior_t::DESCENT_TO_GND;
+        navigation_.auto_landing_behavior = Navigation::auto_landing_behavior_t::DESCENT_TO_SMALL_ALTITUDE;
         offboard_tag_search_.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND);
     }
 
