@@ -61,23 +61,24 @@
 #include "drivers/servo.hpp"
 #include "hal/avr32/led_avr32.hpp"
 #include "sensing/offboard_tag_search.hpp"
- 
+
 extern "C"
 {
 #include "hal/avr32/twim_default_config.h"
 #include "util/streams.h"
+#include "util/maths.h"
 #include "hal/analog_monitor.h"
 }
 
 
 // Preprocessor definitions
 
-/* 
+/*
  * Should the ESC be calibrated?
  * 0 for false (normal flight)
  * 1 for true (calibration)
  * !!!IMPORTANT!!!
- * IF CALIBRATING, TAKE OFF PROPS 
+ * IF CALIBRATING, TAKE OFF PROPS
  */
 #define CALIBRATE_ESC 0
 
@@ -282,7 +283,7 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.uart4_config.rx_pin_map            = {AVR32_USART4_RXD_2_PIN, AVR32_USART4_RXD_2_FUNCTION};
     conf.uart4_config.tx_pin_map            = {AVR32_USART4_TXD_2_PIN, AVR32_USART4_TXD_2_FUNCTION};
 
-    
+
     // -------------------------------------------------------------------------
     // UART USB configuration
     // -------------------------------------------------------------------------
@@ -399,9 +400,9 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.offboard_tag_search_config.tag_search_timeout_us                   = 60000000.0f;
     conf.offboard_tag_search_config.camera_res_x                            = 1280;
     conf.offboard_tag_search_config.camera_res_y                            = 960;
-    conf.offboard_tag_search_config.camera_rotation                         = 90.0f * PI / 180;
-    conf.offboard_tag_search_config.camera_fov_x                            = 53.50f * PI / 180;
-    conf.offboard_tag_search_config.camera_fov_y                            = 41.41f * PI / 180;
+    conf.offboard_tag_search_config.camera_rotation                         = maths_deg_to_rad(90.0f);
+    conf.offboard_tag_search_config.camera_fov_x                            = maths_deg_to_rad(53.50f);
+    conf.offboard_tag_search_config.camera_fov_y                            = maths_deg_to_rad(41.41f);
     conf.offboard_tag_search_config.max_acc_time_since_last_detection_us    = 10000000.0f;
 
 
