@@ -97,7 +97,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Central_
      * Set the x and y hold position to be equal to the tag location
      */
 
-    // Get drone height, drone height tells you the pixel dimensions on the ground, +z is down
+    // Get drone height, drone height tells you the pixel dimensions when projected on the ground, positive z is down
     float drone_height = 0.0f;
 
     // Get drone height from packet if available and reasonable
