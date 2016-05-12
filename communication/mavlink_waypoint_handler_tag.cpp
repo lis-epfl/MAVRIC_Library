@@ -104,11 +104,14 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
         waypoint_handler->navigation_.internal_state_ = Navigation::internal_state_t::NAV_LAND_ON_TAG;
         print_util_dbg_print("internal_state = NAV_LAND_ON_TAG\r\n");
 
-        // Set hold position point
-        waypoint_handler->offboard_tag_search_.tag_location().pos[0] = waypoint_handler->position_estimation_.local_position.pos[0];
-        waypoint_handler->offboard_tag_search_.tag_location().pos[1] = waypoint_handler->position_estimation_.local_position.pos[1];
-        waypoint_handler->offboard_tag_search_.tag_location().pos[2] = -10.0f;
-        waypoint_handler->tag_search_altitude_ = waypoint_handler->waypoint_hold_coordinates.pos[2];
+        // Set hold position point and set tag location
+        waypoint_handler->waypoint_hold_coordinates.pos[0] = waypoint_handler->position_estimation_.local_position.pos[0];
+        waypoint_handler->waypoint_hold_coordinates.pos[1] = waypoint_handler->position_estimation_.local_position.pos[1];
+        waypoint_handler->tag_search_altitude_ = -10.0f;
+        waypoint_handler->waypoint_hold_coordinates.pos[2] = waypoint_handler->tag_search_altitude_;
+        waypoint_handler->offboard_tag_search_.tag_location().pos[0] = 0.0f;
+        waypoint_handler->offboard_tag_search_.tag_location().pos[1] = 0.0f;
+        waypoint_handler->offboard_tag_search_.tag_location().pos[2] = 0.0f;
         waypoint_handler->offboard_tag_search_.tag_location().heading = waypoint_handler->position_estimation_.local_position.heading;
         waypoint_handler->offboard_tag_search_.tag_location().origin = waypoint_handler->position_estimation_.local_position.origin;
 
@@ -170,11 +173,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
     }
     else if (offboard_tag_search_.land_on_tag_behavior() == Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND)// Else we need to search for the tag ...
     {
-        // Set the hold position to be the current location
-        waypoint_hold_coordinates.pos[0] = position_estimation_.local_position.pos[0];
-        waypoint_hold_coordinates.pos[1] = position_estimation_.local_position.pos[1];
-        // Except make the z axis go to the tag search altitude
-        waypoint_hold_coordinates.pos[2] = tag_search_altitude_;
+        // Don't change the hold coordinates
     }
 
     // Calculate low-pass filter altitude for when to turn off motors
