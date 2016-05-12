@@ -170,7 +170,7 @@ float Wing_model::get_cd(float aoa)
 		{
 			coeff = (aoa-floor(aoa))/(ceil(aoa)-floor(aoa))*(lookup_Cd_[(int)ceil(aoa)+90]-lookup_Cd_[(int)floor(aoa)+90])+lookup_Cd_[(int)floor(aoa)+90];
 		}
-		coeff += abs(0.0644577f*flap_angle_);
+		coeff += fabs(0.0644577f*flap_angle_);
 	}
 	else //Return the flat profile
 	{

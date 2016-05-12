@@ -39,9 +39,9 @@
  ******************************************************************************/
 
 #include "boards/mavrinux_fixed.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
+#include "sample_projects/LEWing/central_data.hpp"
+#include "sample_projects/LEWing/mavlink_telemetry.hpp"
+#include "sample_projects/LEWing/tasks.hpp"
 
 extern "C"
 {
@@ -105,6 +105,7 @@ int main(int argc, char** argv)
                                    board.servo_1,
                                    board.servo_2,
                                    board.servo_3,
+                                   board.airspeed_analog,
                                    file_log,
                                    file_stat,
                                    cd_config);

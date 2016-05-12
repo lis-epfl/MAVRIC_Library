@@ -78,7 +78,7 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
 {}
 
 
-bool Mavrinux::init(void)
+bool Mavrinux::init(void
 {
     bool init_success = true;
     bool ret;

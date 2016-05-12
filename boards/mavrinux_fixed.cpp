@@ -39,11 +39,13 @@
  ******************************************************************************/
 
 #include "boards/mavrinux_fixed.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "drivers/airspeed_analog.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
+
 }
 
 
@@ -65,6 +67,8 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
     sim(dynamic_model),
     imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer(), config.imu_config),
     adc_battery(12.34f),   battery(adc_battery),
+    adc_airspeed(12.0f),
+    airspeed_analog(adc_airspeed,airspeed_analog_default_config()),
     spektrum_satellite(dsm_serial, dsm_receiver_pin, dsm_power_pin),
     led(),
     mavlink_serial(config.serial_udp_config),

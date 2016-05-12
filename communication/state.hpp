@@ -299,6 +299,7 @@ State::conf_t State::wing_default_config()
     conf_t conf            = {};
 
     conf.mav_mode                = MAV_MODE_SAFE;
+    //conf.mav_mode                = MAV_MODE_ATTITUDE_CONTROL;
     conf.mav_state               = MAV_STATE_BOOT;
     conf.simulation_mode         = HIL_OFF;
     conf.autopilot_type          = MAV_TYPE_FIXED_WING;
