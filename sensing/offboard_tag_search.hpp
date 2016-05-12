@@ -89,8 +89,6 @@ static inline offboard_tag_search_conf_t offboard_tag_search_conf_default() {
     return conf;
 }
 
-class Central_data;
-
 /**
  * \brief   Offboard Camera Master Controller
  *
