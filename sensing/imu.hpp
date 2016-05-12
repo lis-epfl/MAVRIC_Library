@@ -186,7 +186,7 @@ public:
      *
      * \return  True if the IMU is ready, false otherwise
      */
-    const bool is_ready(void) const;
+    bool is_ready(void) const;
 
     /**
      * \brief   Temporary method to get pointer to configuration
@@ -309,6 +309,13 @@ public:
 
 private:
     /**
+     * \brief   Tests if a calibration is ongoing
+     *
+     * \return  boolean
+     */
+    bool is_calibration_ongoing(void) const;
+
+    /**
      * \brief   Startup calibration
      *
      * \detail  Should not be used in flight
@@ -342,6 +349,7 @@ private:
     float magnetic_inclination_;        ///< Angle between horizontal plane and magnetic north (magnetic dip)
     float magnetic_norm_;               ///< Norm of magnetic north
 
+    bool do_startup_calibration_;               ///< Flag indicating if calibration should be done
     bool do_accelerometer_bias_calibration_;    ///< Flag indicating if calibration should be done
     bool do_gyroscope_bias_calibration_;        ///< Flag indicating if calibration should be done
     bool do_magnetometer_bias_calibration_;     ///< Flag indicating if calibration should be done
