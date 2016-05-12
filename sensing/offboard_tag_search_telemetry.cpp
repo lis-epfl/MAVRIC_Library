@@ -112,14 +112,17 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Central_
     }
     
     // Get tag location in m
+    float dist_to_edge_of_fov_x = -drone_height * tan(camera.camera_x_fov() / 2); // Distance from center to x edge in m
+    float dist_to_edge_of_fov_y = -drone_height * tan(camera.camera_y_fov() / 2); // Distance from center to y edge in m
     float picture_forward_offset = 0.0f;
     float picture_right_offset = 0.0f;
+    // Attempt to get tag distance using camera approximation
     if ((packet->param7 > 0.0f) &&                                                  // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
         (packet->param7 < camera.max_acc_drone_height_from_camera_mm()) &&          // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
-        (packet->param5 > -(2 * -drone_height * tan(camera.camera_x_fov() / 2))) && // Ensure that x distance to tag is within frame
-        (packet->param5 <  (2 * -drone_height * tan(camera.camera_x_fov() / 2))) && // Ensure that x distance to tag is within frame
-        (packet->param6 > -(2 * -drone_height * tan(camera.camera_y_fov() / 2))) && // Ensure that y distance to tag is within frame
-        (packet->param6 <  (2 * -drone_height * tan(camera.camera_y_fov() / 2))))   // Ensure that y distance to tag is within frame                    
+        (packet->param5 > -(dist_to_edge_of_fov_x)) &&                              // Ensure that x distance to tag is within frame
+        (packet->param5 <  (dist_to_edge_of_fov_x)) &&                              // Ensure that x distance to tag is within frame
+        (packet->param6 > -(dist_to_edge_of_fov_y)) &&                              // Ensure that y distance to tag is within frame
+        (packet->param6 <  (dist_to_edge_of_fov_y)))                                // Ensure that y distance to tag is within frame
     {
         // Forward corresponds to param6 as the picamera code outputs (right,down)
         picture_forward_offset = -packet->param6 / 1000.0f; // Negative, because in vision positive is towards the bottom of the picture
