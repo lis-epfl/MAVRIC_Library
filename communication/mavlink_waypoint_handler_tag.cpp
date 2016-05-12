@@ -60,7 +60,7 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& 
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream,
                            Offboard_Tag_Search& offboard_tag_search,
-                           Mavlink_communication* raspi_mavlink_communication) :
+                           Mavlink_communication& raspi_mavlink_communication) :
             Mavlink_waypoint_handler(position_estimation,
                                     navigation,
                                     ahrs,
@@ -119,7 +119,7 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
         waypoint_handler->tag_search_start_time_ = time_keeper_get_us();
 
         // Land
-        waypoint_handler->offboard_tag_search_.update(&(waypoint_handler->raspi_mavlink_communication_->scheduler()), true);
+        waypoint_handler->offboard_tag_search_.update(&(waypoint_handler->raspi_mavlink_communication_.scheduler()), true);
     }
     /*else
     {

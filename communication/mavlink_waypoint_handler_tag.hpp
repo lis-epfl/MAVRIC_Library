@@ -85,10 +85,10 @@ public:
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream,
                            Offboard_Tag_Search& offboard_tag_search,
-                           Mavlink_communication* raspi_mavlink_communication);
+                           Mavlink_communication& raspi_mavlink_communication);
 
 
-    
+
 
     static mav_result_t set_auto_landing(Mavlink_waypoint_handler_tag* waypoint_handler, mavlink_command_long_t* packet);
 
@@ -98,7 +98,7 @@ public:
 
 protected:
     Offboard_Tag_Search& offboard_tag_search_;
-    Mavlink_communication* raspi_mavlink_communication_;
+    Mavlink_communication& raspi_mavlink_communication_;
     float tag_search_altitude_;                           ///< The altitude that the drone should search for the tag at
     uint32_t tag_search_start_time_;                      ///< The start time that the offboard camera has been searching for the tag, causes a timeout if too long
 
