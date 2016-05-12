@@ -256,8 +256,8 @@ bool tasks_data_logging_update(Central_data* central_data)
 {
     bool run_success = true;
 
-    run_success &= central_data->data_logging.update();
-    run_success &= central_data->data_logging2.update();
+    run_success &= central_data->data_logging_continuous.update();
+    run_success &= central_data->data_logging_stat.update();
 
     return run_success;
 }

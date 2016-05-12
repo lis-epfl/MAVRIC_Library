@@ -139,6 +139,25 @@ public:
      */
     void calibrate_esc(void);
 
+    /**
+     * \brief   Sets the maximum value to the servo
+     */
+    void set_servo_max(void);
+
+    /**
+     * \brief   Sets the minimum value to the servo
+     */
+    void set_servo_min(void);
+
+    /**
+     * \brief   Gets the maximum value to the servo
+     */
+    float servo_max(void);
+
+    /**
+     * \brief   Gets the minimum value to the servo
+     */
+    float servo_min(void);
 
 private:
     Pwm&            pwm_;       ///< Reference to pwm

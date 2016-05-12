@@ -30,125 +30,74 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servo.cpp
+ * \file lequad_dronedome.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
  *
- * \brief Driver for servomotors using PWM
+ * \brief Place where the central data is stored and initialized
  *
  ******************************************************************************/
 
 
-#include "drivers/servo.hpp"
+#ifndef LEQUAD_DRONEDOME_HPP_
+#define LEQUAD_DRONEDOME_HPP_
 
-extern "C"
+#include "sample_projects/LEQuad/central_data.hpp"
+#include "drivers/gps_mocap.hpp"
+
+/**
+ * \brief Central data for indoor use
+ */
+class LEQuad_dronedome: public Central_data
 {
-#include "hal/common/time_keeper.hpp"
-}
+public:
+    /**
+     * \brief   Constructor
+     */
+    LEQuad_dronedome( Imu& imu,
+                      Barometer& barometer,
+                      Gps& gps,
+                      Sonar& sonar,
+                      Serial& serial_mavlink,
+                      Satellite& satellite,
+                      Led& led,
+                      File& file_flash,
+                      Battery& battery,
+                      Servo& servo_0,
+                      Servo& servo_1,
+                      Servo& servo_2,
+                      Servo& servo_3,
+                      Servo& servo_4,
+                      Servo& servo_5,
+                      Servo& servo_6,
+                      Servo& servo_7,
+                      File& file1,
+                      File& file2,
+                      Central_data::conf_t config = Central_data::default_config() ):
+          Central_data(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
+                     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
+                     file1, file2, config),
+          gps_mocap_(mavlink_communication.message_handler())
+      {};
+
+      /**
+       * \brief   Initialisation
+       * \return [description]
+       */
+      bool init(void)
+      {
+          bool success = Central_data::init();
+
+          bool ret = gps_mocap_.init();
+          print_util_dbg_init_msg("[GPS_MOCAP]", ret);
+          success &= ret;
+
+          return success;
+      }
+
+private:
+    Gps_mocap gps_mocap_;
+};
 
 
-Servo::Servo(Pwm& pwm, const servo_conf_t config):
-    pwm_(pwm),
-    config_(config),
-    value_(config.failsafe)
-{
-    pwm_.set_period_us(1000000.0f / config_.repeat_freq);
-    failsafe(true);
-}
-
-
-float Servo::read(void) const
-{
-    return value_;
-}
-
-
-bool Servo::write(float value, bool to_hardware)
-{
-    bool success = false;
-
-    float trimmed_value = value + config_.trim;
-
-    if (trimmed_value < config_.min)
-    {
-        value_ = config_.min;
-    }
-    else if (trimmed_value > config_.max)
-    {
-        value_ = config_.max;
-    }
-    else
-    {
-        value_ = trimmed_value;
-        success      = true;
-    }
-
-    if (to_hardware == true)
-    {
-        success &= write_to_hardware();
-    }
-
-    return success;
-}
-
-
-bool Servo::failsafe(bool to_hardware)
-{
-    bool success = true;
-
-    value_ = config_.failsafe;
-
-    if (to_hardware == true)
-    {
-        success &= write_to_hardware();
-    }
-
-    return success;
-}
-
-
-bool Servo::write_to_hardware(void)
-{
-    bool success = true;
-
-    // Compute pulse length
-    uint16_t pulse_us = (config_.pulse_magnitude_us * value_) + config_.pulse_center_us;
-
-    // Write to pwm line
-    success &= pwm_.set_pulse_width_us(pulse_us);
-
-    return success;
-}
-
-
-void Servo::calibrate_esc(void)
-{
-    write(config_.max, true);
-    time_keeper_delay_ms(2000);
-    failsafe(true);
-}
-
-
-void Servo::set_servo_max(void)
-{
-    write(config_.max, true);
-}
-
-
-void Servo::set_servo_min(void)
-{
-    write(config_.min, true);
-}
-
-
-float Servo::servo_max(void)
-{
-    return config_.max;
-}
-
-
-float Servo::servo_min(void)
-{
-    return config_.min;
-}
+#endif /* LEQUAD_DRONEDOME_HPP_ */

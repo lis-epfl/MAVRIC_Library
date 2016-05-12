@@ -1394,7 +1394,7 @@ typedef struct
     uint32_t time_last_msg;                     ///< Time reference in ms of microcontroller
     uint32_t time_gps;                          ///< Time reference in ms of gps
 
-    uint8_t  status;                            ///< GPS status
+    gps_fix_t  status;                          ///< GPS status
 
     uint8_t  horizontal_status;                 ///< Horizontal status
 
@@ -2940,7 +2940,7 @@ static void gps_ublox_update(gps_t* gps)
     {
         if ((tnow - gps->idle_timer) > gps->idle_timeout)
         {
-            gps->status = NO_GPS;
+            gps->status = NO_FIX;
 
             gps->healthy = false;
 
@@ -2955,7 +2955,7 @@ static void gps_ublox_update(gps_t* gps)
 
         gps->time_last_msg = tnow;
 
-        if (gps->status == GPS_OK)
+        if (gps->status >= FIX_3D)
         {
             gps->healthy = true;
 
@@ -4007,15 +4007,46 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                     print_util_dbg_print_num(gps_status->uptime, 10);
                     print_util_dbg_print("\r\n");
                 }
-                gps->next_fix = (gps_status->fix_type == GPS_FIX_TYPE_3DFIX);
-                if (!gps->next_fix)
+
+                switch(gps_status->fix_type)
                 {
-                    gps->status = NO_FIX;
+                    case GPS_FIX_TYPE_NOFIX :
+                        gps->status = NO_FIX;
+                        break;
+
+                    case GPS_FIX_TYPE_DEADRECK :
+                        gps->status = NO_FIX;
+                        break;
+
+                    case GPS_FIX_TYPE_2DFIX:
+                        gps->status = FIX_2D;
+                        break;
+
+                    case GPS_FIX_TYPE_3DFIX:
+                    case GPS_FIX_TYPE_GPSDEADRECK:
+                        if (gps_status->flags & 0x01)
+                        {
+                            if (gps_status->flags & 0x02)
+                            {
+                                gps->status = DGPS;
+                            }
+                            else
+                            {
+                                gps->status = FIX_3D;
+                            }
+                        }
+                        else
+                        {
+                            // DOP is not sufficient to be used
+                            gps->status = NO_FIX;
+                        }
+                        break;
+
+                    case GPS_FIX_TYPE_TIMEONLY:
+                        gps->status = NO_FIX;
+                    break;
                 }
-                else
-                {
-                    gps->status = GPS_OK;
-                }
+
             }
             break;
 
@@ -4049,14 +4080,43 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                     print_util_dbg_print_num(gps_solution->satellites, 10);
                     print_util_dbg_print("\r\n");
                 }
-                gps->next_fix = (gps_solution->fix_type == GPS_FIX_TYPE_3DFIX);
-                if (!gps->next_fix)
+                switch(gps_solution->fix_type)
                 {
-                    gps->status = NO_FIX;
-                }
-                else
-                {
-                    gps->status = GPS_OK;
+                    case GPS_FIX_TYPE_NOFIX :
+                        gps->status = NO_FIX;
+                        break;
+
+                    case GPS_FIX_TYPE_DEADRECK :
+                        gps->status = NO_FIX;
+                        break;
+
+                    case GPS_FIX_TYPE_2DFIX:
+                        gps->status = FIX_2D;
+                        break;
+
+                    case GPS_FIX_TYPE_3DFIX:
+                    case GPS_FIX_TYPE_GPSDEADRECK:
+                        if (gps_solution->fix_status & 0x01)
+                        {
+                            if (gps_solution->fix_status & 0x02)
+                            {
+                                gps->status = DGPS;
+                            }
+                            else
+                            {
+                                gps->status = FIX_3D;
+                            }
+                        }
+                        else
+                        {
+                            // DOP is not sufficient to be used
+                            gps->status = NO_FIX;
+                        }
+                        break;
+
+                    case GPS_FIX_TYPE_TIMEONLY:
+                        gps->status = NO_FIX;
+                    break;
                 }
 
                 gps->num_sats = gps_solution->satellites;
@@ -5269,6 +5329,12 @@ Gps_ublox::Gps_ublox(Serial& serial):
 }
 
 
+bool Gps_ublox::init(void)
+{
+    return true;
+}
+
+
 bool Gps_ublox::update(void)
 {
     // Update old structure
@@ -5299,79 +5365,79 @@ bool Gps_ublox::update(void)
 }
 
 
-const float& Gps_ublox::last_update_us(void) const
+float Gps_ublox::last_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-const float& Gps_ublox::last_position_update_us(void) const
+float Gps_ublox::last_position_update_us(void) const
 {
     return last_position_update_us_;
 }
 
 
-const float& Gps_ublox::last_velocity_update_us(void) const
+float Gps_ublox::last_velocity_update_us(void) const
 {
     return last_velocity_update_us_;
 }
 
 
-const global_position_t& Gps_ublox::position_gf(void) const
+global_position_t Gps_ublox::position_gf(void) const
 {
     return position_gf_;
 }
 
 
-const float& Gps_ublox::horizontal_position_accuracy(void) const
+float Gps_ublox::horizontal_position_accuracy(void) const
 {
     return horizontal_position_accuracy_;
 }
 
 
-const float& Gps_ublox::vertical_position_accuracy(void) const
+float Gps_ublox::vertical_position_accuracy(void) const
 {
     return vertical_position_accuracy_;
 }
 
 
-const std::array<float, 3>& Gps_ublox::velocity_lf(void) const
+std::array<float, 3> Gps_ublox::velocity_lf(void) const
 {
     return velocity_lf_;
 }
 
 
-const float& Gps_ublox::velocity_accuracy(void) const
+float Gps_ublox::velocity_accuracy(void) const
 {
     return velocity_accuracy_;
 }
 
 
-const float& Gps_ublox::heading(void) const
+float Gps_ublox::heading(void) const
 {
     return heading_;
 }
 
 
-const float& Gps_ublox::heading_accuracy(void) const
+float Gps_ublox::heading_accuracy(void) const
 {
     return heading_accuracy_;
 }
 
 
-const uint8_t& Gps_ublox::num_sats(void) const
+uint8_t Gps_ublox::num_sats(void) const
 {
     return num_sats_;
 }
 
 
-const gps_fix_t& Gps_ublox::fix(void) const
+gps_fix_t Gps_ublox::fix(void) const
 {
     return fix_;
 }
 
 
-const bool& Gps_ublox::healthy(void) const
+bool Gps_ublox::healthy(void) const
 {
     return healthy_;
 }

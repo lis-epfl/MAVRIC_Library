@@ -48,12 +48,16 @@ extern "C"
 #include "hal/common/time_keeper.hpp"
 }
 
-void servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0, Servo* servo_1, Servo* servo_2, Servo* servo_3)
+void servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0, Servo* servo_1, Servo* servo_2, Servo* servo_3, Servo* servo_4, Servo* servo_5, Servo* servo_6, Servo* servo_7)
 {
     servos_telemetry->servos[0] = servo_0;
     servos_telemetry->servos[1] = servo_1;
     servos_telemetry->servos[2] = servo_2;
     servos_telemetry->servos[3] = servo_3;
+    servos_telemetry->servos[4] = servo_4;
+    servos_telemetry->servos[5] = servo_5;
+    servos_telemetry->servos[6] = servo_6;
+    servos_telemetry->servos[7] = servo_7;
 }
 
 void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
@@ -67,13 +71,9 @@ void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, Mavlink
                                       (uint16_t)(1500 + 500 * servos_telemetry->servos[1]->read()),
                                       (uint16_t)(1500 + 500 * servos_telemetry->servos[2]->read()),
                                       (uint16_t)(1500 + 500 * servos_telemetry->servos[3]->read()),
-                                      0,
-                                      0,
-                                      0,
-                                      0
-                                      //(uint16_t)( 1500 + 500 * servos_telemetry->servos[4]->read() ),
-                                      //(uint16_t)( 1500 + 500 * servos_telemetry->servos[5]->read() ),
-                                      //(uint16_t)( 1500 + 500 * servos_telemetry->servos[6]->read() ),
-                                      //(uint16_t)( 1500 + 500 * servos_telemetry->servos[7]->read() )
+                                      (uint16_t)( 1500 + 500 * servos_telemetry->servos[4]->read() ),
+                                      (uint16_t)( 1500 + 500 * servos_telemetry->servos[5]->read() ),
+                                      (uint16_t)( 1500 + 500 * servos_telemetry->servos[6]->read() ),
+                                      (uint16_t)( 1500 + 500 * servos_telemetry->servos[7]->read() )
                                      );
 }
