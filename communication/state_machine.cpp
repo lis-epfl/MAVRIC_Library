@@ -185,17 +185,7 @@ bool State_machine::update(State_machine* state_machine)
 
     state_machine->state_.connection_status();
 
-    // try passing to/leaving stabilize mode if requested
-    if(!state_machine->set_mode_stabilize(mode_new.is_stabilize()))
-    {
-        mode_new.set_stabilize_flag(!mode_new.is_stabilize()); // toggle stabilize flag
-    }
-
-    // try passing to/leaving guided mode if requested
-    if(!state_machine->set_mode_guided(mode_new.is_guided()))
-    {
-        mode_new.set_guided_flag(!mode_new.is_guided()); // toggle guided flag
-    }
+    state_machine->set_ctrl_mode(mode_new);
 
     // try arming/disarming, if not allowed, reset flag in mode_new
     if(!state_machine->state_.set_armed(mode_new.is_armed()))
@@ -352,67 +342,63 @@ bool State_machine::update(State_machine* state_machine)
 }
 
 
-
-
-
-bool State_machine::set_mode_guided(bool guided)
+bool State_machine::set_ctrl_mode(Mav_mode mode)
 {
-    // if already in desired state, return true
-    if(state_.is_guided() == guided)
+    bool success = true;
+
+    // check if we can set/clear stabilize flag
+    if(is_set_stabilize_allowed(mode.is_stabilize()))
     {
-        return true;
+        print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because position estimation is not healthy\r\n");
+        success = false;
     }
 
-    if(guided)
+    // check if we can set/clear guided flag
+    if(!is_set_guided_allowed(mode.is_guided()))
     {
-        // if position_estimation is not healthy, abort
-        if(!position_estimation_.healthy())
-        {
-            print_util_dbg_print("[STATE_MACHINE]: prevented passing to guided because position estimation is not healthy\r\n");
-            return false;
-        }
-
-        // set guided flag
-        state_.mav_mode_.set_guided_flag(true);
-        print_util_dbg_print("[STATE_MACHINE]: passing to guided mode\r\n");
-    }
-    else
-    {
-        // clear guided flag
-        state_.mav_mode_.set_guided_flag(false);
-        print_util_dbg_print("[STATE_MACHINE]: leave guided mode\r\n");
+        print_util_dbg_print("[STATE_MACHINE]: prevented passing to guided because position estimation is not healthy\r\n");
+        success = false;
     }
 
-    return true;
+    if(success)
+    {
+        state_.mav_mode_.set_ctrl_mode(static_cast<Mav_mode::ctrl_mode_t>(mode.bits()));
+    }
+
+    return success;
 }
 
-bool State_machine::set_mode_stabilize(bool stabilize)
+
+bool State_machine::is_set_guided_allowed(bool guided)
 {
-    // if already in desired state, return true
-    if(state_.is_stabilize() == stabilize)
-    {
-        return true;
-    }
+    bool success = true;
 
-    if(stabilize)
+    // if already in desired state, skip tests and return true
+    if(state_.is_guided() != guided)
     {
-        // if position_estimation is not healthy, abort
-        if(!position_estimation_.healthy())
+        // if we change to guided, test if position estimation is healthy
+        if(success & guided)
         {
-            print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because position estimation is not healthy\r\n");
-            return false;
+            // if position_estimation is not healthy, abort
+            success &= position_estimation_.healthy();
         }
-
-        // set stabilize flag
-        state_.mav_mode_.set_stabilize_flag(true);
-        print_util_dbg_print("[STATE_MACHINE]: passing to stabilize mode\r\n");
     }
-    else
+    return success;
+}
+
+bool State_machine::is_set_stabilize_allowed(bool stabilize)
+{
+    bool success = true;
+
+    // if already in desired state, skip tests and return true
+    if(state_.is_stabilize() != stabilize)
     {
-        // clear stabilize flag
-        state_.mav_mode_.set_stabilize_flag(false);
-        print_util_dbg_print("[STATE_MACHINE]: leave stabilize mode\r\n");
+        // if we change to stabilize, test if position estimation is healthy
+        if(success & stabilize)
+        {
+            // if position_estimation is not healthy, abort
+            success &= position_estimation_.healthy();
+        }
     }
-
-    return true;
+    return success;
 }
