@@ -168,11 +168,11 @@ static inline  i2c_stm32_conf_t i2c_stm32_default_config()
     conf.rcc_i2c_config     = RCC_I2C1;
     conf.rcc_sda_port_config     = RCC_GPIOB;
     conf.sda_config.port    = GPIO_STM32_PORT_B;
-    conf.sda_config.pin     = GPIO_STM32_PIN_6;
+    conf.sda_config.pin     = GPIO_STM32_PIN_7;
     // conf.sda_config.alt_fct = GPIO_STM32_AF_4;
     conf.rcc_clk_port_config     = RCC_GPIOB;
     conf.clk_config.port    = GPIO_STM32_PORT_B;
-    conf.clk_config.pin     = GPIO_STM32_PIN_7;
+    conf.clk_config.pin     = GPIO_STM32_PIN_6;
     // conf.clk_config.alt_fct = GPIO_STM32_AF_4;
     conf.tenbit_config      = false;
     return conf;
