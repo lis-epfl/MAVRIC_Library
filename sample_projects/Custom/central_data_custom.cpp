@@ -51,11 +51,12 @@ Central_data_custom::Central_data_custom(Imu& imu, Barometer& barometer, Gps& gp
                           Sonar& sonar, Serial& serial_mavlink, Satellite& satellite,
                           Led& led, File& file_flash, Battery& battery,
                           Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3,
+                          Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7,
                           File& file1, File& file2,
                           Flow& flow_1, Flow& flow_2,
                           const conf_t& config):
     Central_data(imu, barometer, gps, sonar, serial_mavlink, satellite, led, file_flash, battery,
-                 servo_0, servo_1, servo_2, servo_3, file1, file2, config),
+                 servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7, file1, file2, config),
     flow_1_(flow_1),
     flow_2_(flow_2),
     saccade_controller_(flow_1_, flow_2_, ahrs, saccade_controller_default_config())

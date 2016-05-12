@@ -60,6 +60,7 @@ public:
                 Sonar& sonar, Serial& serial_mavlink, Satellite& satellite,
                 Led& led, File& file_flash, Battery& battery,
                 Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3,
+                Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7,
                 File& file1, File& file2,
                 Flow& flow_left_, Flow& flow_right_,
                 const conf_t& config = default_config());

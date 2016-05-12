@@ -130,6 +130,10 @@ int main(void)
                                    board.servo_1,
                                    board.servo_2,
                                    board.servo_3,
+                                   board.servo_4,
+                                   board.servo_5,
+                                   board.servo_6,
+                                   board.servo_7,
                                    file_log,
                                    file_stat,
                                    flow_front,   // flow left
