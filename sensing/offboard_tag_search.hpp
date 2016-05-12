@@ -161,7 +161,7 @@ public:
     const int16_t& picture_count() const;
     float allowable_horizontal_tag_offset_sqr() const;
     float max_acc_drone_height_from_camera_mm() const;
-    const float& tag_search_timeout_us() const;
+    float tag_search_timeout_us() const;
     int camera_x_resolution() const;
     int camera_y_resolution() const;
     float camera_rotation() const;
@@ -173,19 +173,12 @@ public:
 protected:
     Offboard_Tag_Search();
 
-    const int camera_id_;                               ///< ID number of camera
+    offboard_tag_search_conf_t conf_;                   ///< The configuration of the offboard tag search object
     bool is_camera_running_;                            ///< States whether the camera should be running
     float last_update_us_;                              ///< Last update time in microseconds
-    int16_t picture_count_;                               ///< The count of the pictures received
+    int16_t picture_count_;                             ///< The count of the pictures received
     local_position_t tag_location_;                     ///< The location of the tag in the local frame
-    const float allowable_horizontal_tag_offset_sqr_;   ///< The maximum allowable horizontal distance between the tag and the drone before the drone will start to descend
-    const float max_acc_drone_height_from_camera_mm_;   ///< The maximum acceptable altitude where the code will trust the cameras height estimation
-    const float tag_search_timeout_us_;                 ///< The allowable time to try to search for the tag
-    const int camera_res_[2];                           ///< The resolution of the offboard camera
-    const float camera_rotation_;                       ///< The rotation of the offboard camera w.r.t. the front of the drone, CCW from drone to camera is +
-    const float camera_fov_[2];                         ///< The field of view of the camera in radians
-    const float max_acc_time_since_last_detection_us_;  ///< The maximum acceptible time since last detection in us for a healthy read
-    land_on_tag_behavior_t land_on_tag_behavior_;        ///< The land on tag behavior enum
+    land_on_tag_behavior_t land_on_tag_behavior_;       ///< The land on tag behavior enum
 
 };
 

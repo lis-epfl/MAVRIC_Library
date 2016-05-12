@@ -55,17 +55,9 @@ extern "C"
 
 
 Offboard_Tag_Search::Offboard_Tag_Search(offboard_tag_search_conf_t config):
-    camera_id_(config.camera_id),
+    conf_(config),
     is_camera_running_(config.initial_camera_state),
-    last_update_us_(time_keeper_get_us()),
-    allowable_horizontal_tag_offset_sqr_(config.allowable_horizontal_tag_offset_sqr),
-    max_acc_drone_height_from_camera_mm_(config.max_acc_drone_height_from_camera_mm),
-    tag_search_timeout_us_(config.tag_search_timeout_us),
-    camera_res_({config.camera_res_x, config.camera_res_y}),
-    camera_rotation_(config.camera_rotation),
-    camera_fov_({config.camera_fov_x, config.camera_fov_y}),
-    max_acc_time_since_last_detection_us_(config.max_acc_time_since_last_detection_us)
-
+    last_update_us_(time_keeper_get_us())
 {
     // Set picture count to 0
     picture_count_ = 0;
@@ -95,7 +87,7 @@ bool Offboard_Tag_Search::update(const Scheduler* scheduler, bool camera_state)
 bool Offboard_Tag_Search::is_healthy() const
 {
     // Check last detection time
-    if ((time_keeper_get_us() - last_update_us()) > max_acc_time_since_last_detection_us_)
+    if ((time_keeper_get_us() - last_update_us()) > conf_.max_acc_time_since_last_detection_us)
     {
         return false;
     }
@@ -118,22 +110,22 @@ const bool& Offboard_Tag_Search::is_camera_running() const
 
 int Offboard_Tag_Search::camera_id() const
 {
-    return camera_id_;
+    return conf_.camera_id;
 }
 
 float  Offboard_Tag_Search::allowable_horizontal_tag_offset_sqr() const
 {
-    return allowable_horizontal_tag_offset_sqr_;
+    return conf_.allowable_horizontal_tag_offset_sqr;
 }
 
 float Offboard_Tag_Search::max_acc_drone_height_from_camera_mm() const
 {
-    return max_acc_drone_height_from_camera_mm_;
+    return conf_.max_acc_drone_height_from_camera_mm;
 }
 
-const float& Offboard_Tag_Search::tag_search_timeout_us() const
+float Offboard_Tag_Search::tag_search_timeout_us() const
 {
-    return tag_search_timeout_us_;
+    return conf_.tag_search_timeout_us;
 }
 
 void Offboard_Tag_Search::update_last_update_us()
@@ -143,27 +135,27 @@ void Offboard_Tag_Search::update_last_update_us()
 
 int Offboard_Tag_Search::camera_x_resolution() const
 {
-    return camera_res_[0];
+    return conf_.camera_res_x;
 }
 
 int Offboard_Tag_Search::camera_y_resolution() const
 {
-    return camera_res_[1];
+    return conf_.camera_res_y;
 }
 
 float Offboard_Tag_Search::camera_rotation() const
 {
-    return camera_rotation_;
+    return conf_.camera_rotation;
 }
 
 float Offboard_Tag_Search::camera_x_fov() const
 {
-    return camera_fov_[0];
+    return conf_.camera_fov_x;
 }
 
 float Offboard_Tag_Search::camera_y_fov() const
 {
-    return camera_fov_[1];
+    return conf_.camera_fov_y;
 }
 
 local_position_t& Offboard_Tag_Search::tag_location()
