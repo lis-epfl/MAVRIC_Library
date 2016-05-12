@@ -168,7 +168,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
             waypoint_hold_coordinates.pos[2] = 0.0f;
 
             // Set tag search altitude to current height, so it will reposition itself at this altitude if it drifts away
-            tag_search_altitude_ = position_estimation_.local_position.pos[2];
+            tag_search_altitude_ = navigation_.alt_lpf;
         }
     }
     else if (offboard_tag_search_.land_on_tag_behavior() == Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND)// Else we need to search for the tag ...
