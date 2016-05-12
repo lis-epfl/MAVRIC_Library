@@ -95,7 +95,7 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
 {
     // mav_result_t result;
     mav_result_t result = MAV_RESULT_ACCEPTED; // Testing
-    
+
     print_util_dbg_print("Attempting to land\r\n");
 
     //if ((waypoint_handler->navigation_.internal_state == NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state == NAV_HOLD_POSITION))
@@ -163,7 +163,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
             waypoint_hold_coordinates.pos[2] = tag_search_altitude_;
 
         }
-        else // Descend to ground 
+        else // Descend to ground
         {
             waypoint_hold_coordinates.pos[2] = 0.0f;
 
