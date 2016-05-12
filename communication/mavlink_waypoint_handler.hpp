@@ -55,7 +55,7 @@
 //#include "control/fence.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
-
+#define MAX_OUTFENCE 5 			///< The maximal number of outterfences
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
@@ -83,9 +83,43 @@ typedef struct
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
     waypoint_struct_t fence_list[MAX_WAYPOINTS];             	///< The array of all fencepoints (max MAX_WAYPOINTS)
     float fence_angle_list[MAX_WAYPOINTS];						///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+
+    waypoint_struct_t outfence_1_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_1_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+    waypoint_struct_t outfence_2_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_2_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+    waypoint_struct_t outfence_3_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_3_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+    waypoint_struct_t outfence_4_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_4_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+    waypoint_struct_t outfence_5_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_5_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+
     waypoint_struct_t current_waypoint;                         ///< The structure of the current waypoint
     uint16_t number_of_waypoints;                               ///< The total number of waypoints
-    uint16_t number_of_fence_points;
+    uint16_t number_of_fence_points;							///< The total number of waypoints
+    uint16_t number_of_outfence_1_points;						///< The total number of waypoints
+    uint16_t number_of_outfence_2_points;						///< The total number of waypoints
+    uint16_t number_of_outfence_3_points;						///< The total number of waypoints
+    uint16_t number_of_outfence_4_points;						///< The total number of waypoints
+    uint16_t number_of_outfence_5_points;						///< The total number of waypoints
+
+
+
+
+
+    uint16_t* all_fence_points[MAX_OUTFENCE+1] = {&number_of_fence_points,
+    		&number_of_outfence_1_points, &number_of_outfence_2_points,
+			&number_of_outfence_3_points, &number_of_outfence_4_points,
+			&number_of_outfence_5_points};			///< Table with the total number of waypoints for a outfence
+
+    waypoint_struct_t* all_fences[MAX_OUTFENCE+1] = {fence_list, outfence_1_list,
+    		outfence_2_list, outfence_3_list, outfence_4_list, outfence_5_list};
+
+    float* all_fence_angles[MAX_OUTFENCE+1] = {fence_angle_list,
+    		outfence_1_angle_list, outfence_2_angle_list, outfence_3_angle_list,
+			outfence_4_angle_list, outfence_5_angle_list};
+
     int8_t current_waypoint_count;                              ///< The number of the current waypoint
 
     local_position_t waypoint_coordinates;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
@@ -193,7 +227,7 @@ void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint
  * \brief   Compute angle between fence points
  * \return  Angle formed with the two adjacent fencepoints in radians
  */
-void mavlink_waypoint_handler_fencepoint_angle(mavlink_waypoint_handler_t* waypoint_handler);
+void mavlink_waypoint_handler_fencepoint_angle(waypoint_struct_t* fence_list, uint16_t number_of_fence_points,float* fence_angle_list );
 
 
 #endif // MAVLINK_WAYPOINT_HANDLER__
