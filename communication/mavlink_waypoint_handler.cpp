@@ -1325,7 +1325,7 @@ static local_position_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoin
             waypoint_coor.pos[Y] = current_waypoint_->y;
             waypoint_coor.pos[Z] = current_waypoint_->z;
             waypoint_coor.heading = maths_deg_to_rad(current_waypoint_->param4);
-            waypoint_coor.origin = coord_conventions_local_to_global_position(waypoint_coor);
+            // waypoint_coor.origin = coord_conventions_local_to_global_position(waypoint_coor);
             break;
 
         case MAV_FRAME_MISSION:
@@ -1579,15 +1579,13 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 {
     waypoint_struct_t waypoint;
 
-    waypoint_count_ = 4;
-
-    waypoint_onboard_count_ = waypoint_count_;
-
     //Set home waypoint
+    // waypoint_count_ = 1;
+    // waypoint_onboard_count_ = waypoint_count_;
     // waypoint.autocontinue = 0;
     // waypoint.current = 1;
     // waypoint.frame = MAV_FRAME_LOCAL_NED;
-    waypoint.command = MAV_CMD_NAV_WAYPOINT;
+    // waypoint.command = MAV_CMD_NAV_WAYPOINT;
 
     // waypoint.x = 0.0f;
     // waypoint.y = 0.0f;
@@ -1600,14 +1598,71 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     //
     // waypoint_list[0] = waypoint;
 
+    // -----------------------------------------
+
+    // // For drone dome demo
+    // waypoint_count_ = 4;
+    // waypoint_onboard_count_ = waypoint_count_;
+    // waypoint.command = MAV_CMD_NAV_WAYPOINT;
+    // waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+    //
+    // waypoint.current = 1;
+    // waypoint.autocontinue = 1;
+    // waypoint.x = 46.5185374499607391f;
+    // waypoint.y = 6.5660664439201355f;
+    // waypoint.z = config_.auto_take_off_altitude;
+    // waypoint.param1 = 0.0f; // Hold time in decimal seconds
+    // waypoint.param2 = 0.5f; // Acceptance radius in meters
+    // waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    // waypoint.param4 = -90; // Desired yaw angle at MISSION (rotary wing)
+    // waypoint_list[0] = waypoint;
+    //
+    // waypoint.current = 0;
+    // waypoint.autocontinue = 1;
+    // waypoint.x = 46.5185369885404185f;
+    // waypoint.y = 6.56602554023265839f;
+    // waypoint.z = config_.auto_take_off_altitude;
+    // waypoint.param1 = 0.0f; // Hold time in decimal seconds
+    // waypoint.param2 = 0.5f; // Acceptance radius in meters
+    // waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    // waypoint.param4 = 180; // Desired yaw angle at MISSION (rotary wing)
+    // waypoint_list[1] = waypoint;
+    //
+    // waypoint.current = 0;
+    // waypoint.autocontinue = 1;
+    // waypoint.x = 46.5185088418934924f;
+    // waypoint.y = 6.56602822244167328f;
+    // waypoint.z = config_.auto_take_off_altitude;
+    // waypoint.param1 = 0.0f; // Hold time in decimal seconds
+    // waypoint.param2 = 0.5f; // Acceptance radius in meters
+    // waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    // waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+    // waypoint_list[2] = waypoint;
+    //
+    // waypoint.current = 0;
+    // waypoint.autocontinue = 1;
+    // waypoint.x = 46.5185102261551719f;
+    // waypoint.y = 6.56607180833816528f;
+    // waypoint.z = config_.auto_take_off_altitude;
+    // waypoint.param1 = 0.0f; // Hold time in decimal seconds
+    // waypoint.param2 = 0.5f; // Acceptance radius in meters
+    // waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    // waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
+    // waypoint_list[3] = waypoint;
+
+    // -----------------------------------------
+
     // For drone dome demo
-    waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+    waypoint_count_ = 8;
+    waypoint_onboard_count_ = waypoint_count_;
+    waypoint.command = MAV_CMD_NAV_WAYPOINT;
+    waypoint.frame = MAV_FRAME_LOCAL_NED;
 
     waypoint.current = 1;
     waypoint.autocontinue = 1;
-    waypoint.x = 46.5185374499607391f;
-    waypoint.y = 6.5660664439201355f;
-    waypoint.z = config_.auto_take_off_altitude;
+    waypoint.x = 2.0f;
+    waypoint.y = 0.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
     waypoint.param1 = 0.0f; // Hold time in decimal seconds
     waypoint.param2 = 0.5f; // Acceptance radius in meters
     waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
@@ -1616,9 +1671,9 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     waypoint.current = 0;
     waypoint.autocontinue = 1;
-    waypoint.x = 46.5185369885404185f;
-    waypoint.y = 6.56602554023265839f;
-    waypoint.z = config_.auto_take_off_altitude;
+    waypoint.x = 2.0f;
+    waypoint.y = -2.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
     waypoint.param1 = 0.0f; // Hold time in decimal seconds
     waypoint.param2 = 0.5f; // Acceptance radius in meters
     waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
@@ -1627,9 +1682,9 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     waypoint.current = 0;
     waypoint.autocontinue = 1;
-    waypoint.x = 46.5185088418934924f;
-    waypoint.y = 6.56602822244167328f;
-    waypoint.z = config_.auto_take_off_altitude;
+    waypoint.x = -2.0f;
+    waypoint.y = -2.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
     waypoint.param1 = 0.0f; // Hold time in decimal seconds
     waypoint.param2 = 0.5f; // Acceptance radius in meters
     waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
@@ -1638,15 +1693,58 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     waypoint.current = 0;
     waypoint.autocontinue = 1;
-    waypoint.x = 46.5185102261551719f;
-    waypoint.y = 6.56607180833816528f;
-    waypoint.z = config_.auto_take_off_altitude;
+    waypoint.x = -2.0f;
+    waypoint.y = 0.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
     waypoint.param1 = 0.0f; // Hold time in decimal seconds
     waypoint.param2 = 0.5f; // Acceptance radius in meters
     waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
     waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
     waypoint_list[3] = waypoint;
 
+    waypoint.current = 0;
+    waypoint.autocontinue = 1;
+    waypoint.x = 2.0f;
+    waypoint.y = 0.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
+    waypoint.param1 = 0.0f; // Hold time in decimal seconds
+    waypoint.param2 = 0.5f; // Acceptance radius in meters
+    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+    waypoint_list[4] = waypoint;
+
+    waypoint.current = 0;
+    waypoint.autocontinue = 1;
+    waypoint.x = 2.0f;
+    waypoint.y = 2.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
+    waypoint.param1 = 0.0f; // Hold time in decimal seconds
+    waypoint.param2 = 0.5f; // Acceptance radius in meters
+    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = 180; // Desired yaw angle at MISSION (rotary wing)
+    waypoint_list[5] = waypoint;
+
+    waypoint.current = 0;
+    waypoint.autocontinue = 1;
+    waypoint.x = -2.0f;
+    waypoint.y = 2.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
+    waypoint.param1 = 0.0f; // Hold time in decimal seconds
+    waypoint.param2 = 0.5f; // Acceptance radius in meters
+    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = -90; // Desired yaw angle at MISSION (rotary wing)
+    waypoint_list[6] = waypoint;
+
+    waypoint.current = 0;
+    waypoint.autocontinue = 1;
+    waypoint.x = -2.0f;
+    waypoint.y = 0.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
+    waypoint.param1 = 0.0f; // Hold time in decimal seconds
+    waypoint.param2 = 0.5f; // Acceptance radius in meters
+    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
+    waypoint_list[7] = waypoint;
 }
 
 
