@@ -1,26 +1,26 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="1212,895,1428,1206"/>
-<area shape="rect" id="node8" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|+ waypoint_hold_coordinates\l+ waypoint_list\l# waypoint_count_\l# current_waypoint_index_\l# hold_waypoint_set_\l# start_wpt_time_\l# mavlink_stream_\l# state_\l# navigation_\l# position_estimation_\l|+ Mavlink_waypoint_handler()\l+ init_homing_waypoint()\l+ nav_plan_init()\l+ hold_init()\l+ waypoint_count()\l+ update()\l}" alt="" coords="1239,1360,1433,1688"/>
-<area shape="rect" id="node31" href="$structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module." alt="" coords="492,1421,636,1627"/>
-<area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="1264,553,1376,673"/>
-<area shape="rect" id="node16" href="$classNavigation.html" title="The navigation structure." alt="" coords="1025,878,1188,1223"/>
-<area shape="rect" id="node6" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="1261,263,1379,401"/>
-<area shape="rect" id="node11" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="1661,956,1795,1145"/>
-<area shape="rect" id="node14" href="$structMavlink__waypoint__handler_1_1waypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="1819,921,2104,1180"/>
-<area shape="rect" id="node19" href="$structquat__t.html" title="Unit quaternion." alt="" coords="988,562,1047,665"/>
+<area shape="rect" id="node2" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="1191,887,1407,1215"/>
+<area shape="rect" id="node8" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|+ waypoint_hold_coordinates\l+ waypoint_list\l# waypoint_count_\l# current_waypoint_index_\l# hold_waypoint_set_\l# start_wpt_time_\l# mavlink_stream_\l# state_\l# navigation_\l# position_estimation_\l|+ Mavlink_waypoint_handler()\l+ init_homing_waypoint()\l+ nav_plan_init()\l+ hold_init()\l+ waypoint_count()\l+ update()\l+ default_config()\l}" alt="" coords="1217,1361,1412,1706"/>
+<area shape="rect" id="node31" href="$structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module." alt="" coords="492,1430,636,1637"/>
+<area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="1243,553,1355,673"/>
+<area shape="rect" id="node16" href="$classNavigation.html" title="The navigation structure." alt="" coords="1025,904,1167,1197"/>
+<area shape="rect" id="node6" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="1240,263,1357,401"/>
+<area shape="rect" id="node11" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="1640,956,1773,1145"/>
+<area shape="rect" id="node14" href="$structMavlink__waypoint__handler_1_1waypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="1797,921,2083,1180"/>
+<area shape="rect" id="node19" href="$structquat__t.html" title="Unit quaternion." alt="" coords="983,562,1041,665"/>
 <area shape="rect" id="node40" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="681,965,799,1137"/>
-<area shape="rect" id="node21" href="$structpid__controller__t.html" title="PID controller." alt="" coords="895,211,1023,453"/>
+<area shape="rect" id="node21" href="$structpid__controller__t.html" title="PID controller." alt="" coords="887,211,1015,453"/>
 <area shape="rect" id="node45" href="$structstabiliser__t.html" title="The structure used to control the vehicle with 4 PIDs." alt="" coords="501,553,627,673"/>
-<area shape="rect" id="node23" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="843,15,947,135"/>
-<area shape="rect" id="node25" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="971,6,1075,143"/>
+<area shape="rect" id="node23" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="835,15,939,135"/>
+<area shape="rect" id="node25" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="963,6,1067,143"/>
 <area shape="rect" id="node27" href="$classState.html" title="The MAV state." alt="" coords="823,809,1001,1293"/>
 <area shape="rect" id="node29" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="871,536,953,691"/>
 <area shape="rect" id="node33" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="159,1008,289,1093"/>
 <area shape="rect" id="node36" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="313,1008,447,1093"/>
 <area shape="rect" id="node38" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="53,246,189,418"/>
 <area shape="rect" id="node43" href="$structstabiliser__stack__copter__t.html" title="Structure containing the stacked controller." alt="" coords="471,973,657,1128"/>
-<area shape="rect" id="node49" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="1789,1403,1941,1645"/>
-<area shape="rect" id="node51" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="2261,895,2496,1206"/>
-<area shape="rect" id="node53" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="2128,973,2237,1128"/>
-<area shape="rect" id="node57" href="$structbyte__stream__t.html" title="Byte stream." alt="" coords="1965,1438,2088,1610"/>
+<area shape="rect" id="node49" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="1768,1413,1920,1654"/>
+<area shape="rect" id="node51" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="2240,895,2475,1206"/>
+<area shape="rect" id="node53" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="2107,973,2216,1128"/>
+<area shape="rect" id="node57" href="$structbyte__stream__t.html" title="Byte stream." alt="" coords="1944,1447,2067,1619"/>
 </map>

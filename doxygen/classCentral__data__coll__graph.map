@@ -4,29 +4,29 @@
 <area shape="rect" id="node6" href="$classAltitude__controller.html" title="Altitude controller." alt="" coords="181,1501,328,1621"/>
 <area shape="rect" id="node8" href="$structaltitude__t.html" title="Structure containing the Altitude." alt="" coords="352,1510,467,1613"/>
 <area shape="rect" id="node10" href="$structattitude__controller__t.html" title="Attitude controller structure." alt="" coords="1469,1458,1640,1665"/>
-<area shape="rect" id="node12" href="$structrate__command__t.html" title="Rate command structure." alt="" coords="2515,1047,2632,1132"/>
+<area shape="rect" id="node12" href="$structrate__command__t.html" title="Rate command structure." alt="" coords="2511,1047,2628,1132"/>
 <area shape="rect" id="node115" href="$structcommand__t.html" title="Global command structure." alt="" coords="2707,1467,2797,1656"/>
 <area shape="rect" id="node14" href="$structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="1236,1029,1407,1149"/>
 <area shape="rect" id="node16" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1508,75,1567,178"/>
 <area shape="rect" id="node18" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1235,487,1352,659"/>
 <area shape="rect" id="node23" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="2119,1038,2257,1141"/>
-<area shape="rect" id="node84" href="$classNavigation.html" title="The navigation structure." alt="" coords="2332,401,2495,746"/>
+<area shape="rect" id="node84" href="$classNavigation.html" title="The navigation structure." alt="" coords="2332,427,2473,720"/>
 <area shape="rect" id="node43" href="$structvelocity__controller__copter__t.html" title="Velocity controller structure." alt="" coords="2132,1467,2313,1656"/>
 <area shape="rect" id="node57" href="$structhud__telemetry__structure__t.html" title="The HUD structure to send the MAVLink HUD message." alt="" coords="1609,1021,1783,1158"/>
 <area shape="rect" id="node68" href="$structqfilter__t.html" title="The structure for the quaternion&#45;based attitude estimation." alt="" coords="753,1458,844,1665"/>
 <area shape="rect" id="node93" href="$structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module." alt="" coords="2821,1458,2965,1665"/>
 <area shape="rect" id="node125" href="$classState__machine.html" title="Defines the state machine structure." alt="" coords="941,1458,1096,1665"/>
-<area shape="rect" id="node21" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="3061,1047,3195,1132"/>
+<area shape="rect" id="node21" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="3071,1047,3204,1132"/>
 <area shape="rect" id="node140" href="$structservos__mix__quadcotper__diag__t.html" title="servos mix structure" alt="" coords="2989,1423,3192,1699"/>
 <area shape="rect" id="node27" href="$structpid__controller__t.html" title="PID controller." alt="" coords="2231,6,2359,247"/>
-<area shape="rect" id="node29" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="3593,418,3809,729"/>
-<area shape="rect" id="node77" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|+ waypoint_hold_coordinates\l+ waypoint_list\l# waypoint_count_\l# current_waypoint_index_\l# hold_waypoint_set_\l# start_wpt_time_\l# mavlink_stream_\l# state_\l# navigation_\l# position_estimation_\l|+ Mavlink_waypoint_handler()\l+ init_homing_waypoint()\l+ nav_plan_init()\l+ hold_init()\l+ waypoint_count()\l+ update()\l}" alt="" coords="3852,925,4047,1253"/>
+<area shape="rect" id="node29" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="3593,409,3809,737"/>
+<area shape="rect" id="node77" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|+ waypoint_hold_coordinates\l+ waypoint_list\l# waypoint_count_\l# current_waypoint_index_\l# hold_waypoint_set_\l# start_wpt_time_\l# mavlink_stream_\l# state_\l# navigation_\l# position_estimation_\l|+ Mavlink_waypoint_handler()\l+ init_homing_waypoint()\l+ nav_plan_init()\l+ hold_init()\l+ waypoint_count()\l+ update()\l+ default_config()\l}" alt="" coords="3852,917,4047,1262"/>
 <area shape="rect" id="node135" href="$structvector__field__waypoint__t.html" title="Vector field navigation." alt="" coords="3369,1501,3527,1621"/>
 <area shape="rect" id="node31" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="3645,67,3757,187"/>
 <area shape="rect" id="node33" href="$classManual__control.html" title="The manual control structure." alt="" coords="505,951,767,1227"/>
 <area shape="rect" id="node35" href="$structjoystick__t.html" title="The structure for the joystick." alt="" coords="469,505,616,642"/>
 <area shape="rect" id="node37" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="640,453,792,694"/>
-<area shape="rect" id="node39" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="459,49,568,204"/>
+<area shape="rect" id="node39" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="460,49,569,204"/>
 <area shape="rect" id="node41" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="1120,1458,1213,1665"/>
 <area shape="rect" id="node45" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="2892,1047,3023,1132"/>
 <area shape="rect" id="node49" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="2727,1038,2868,1141"/>

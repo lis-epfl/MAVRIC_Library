@@ -110,37 +110,39 @@ Collaboration diagram for Gps_sim:</div>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#ad9bbdb231ef9310c787fb0fa41c675a5">Gps_sim</a> (<a class="el" href="classDynamic__model.html">Dynamic_model</a> &amp;dynamic_model)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#ad9bbdb231ef9310c787fb0fa41c675a5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a5a0f8cc60e1abe43405a1fa1659ac62a">init</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the gps.  <a href="#a5a0f8cc60e1abe43405a1fa1659ac62a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acee2d17338145b1f314f3ca05e35cb6a"></a><!-- doxytag: member="Gps_sim::configure" ref="acee2d17338145b1f314f3ca05e35cb6a" args="(void)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#acee2d17338145b1f314f3ca05e35cb6a">configure</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the GPS. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a31264788b969fe38e96bc71e830ad0de">update</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function  Reads new values from sensor.  <a href="#a31264788b969fe38e96bc71e830ad0de"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a984e3e800e3df262819b9658084912bc">last_update_us</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last update time in microseconds.  <a href="#a984e3e800e3df262819b9658084912bc"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a72e1353e778a5298fb8792e3b6dc0e0d">last_position_update_us</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last position update time in microseconds.  <a href="#a72e1353e778a5298fb8792e3b6dc0e0d"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a3c775f684a4b5677dfc10ff292b80722">last_velocity_update_us</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last velocity update time in microseconds.  <a href="#a3c775f684a4b5677dfc10ff292b80722"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structglobal__position__t.html">global_position_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a11f67d1be8a3a48f4078d336cf1cf1b1">position_gf</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get position in global frame.  <a href="#a11f67d1be8a3a48f4078d336cf1cf1b1"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a85ee4e542a8ac860ad7845cc086d2774">horizontal_position_accuracy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get horizontal position accuracy in m.  <a href="#a85ee4e542a8ac860ad7845cc086d2774"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#aa64d91b4eafb42b7a8fa1740571b6d99">vertical_position_accuracy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get vertical position accuracy in m.  <a href="#aa64d91b4eafb42b7a8fa1740571b6d99"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const std::array&lt; float, 3 &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a74eebaf8e8638575363eb8ea568e624c">velocity_lf</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get velocity in local frame in m/s.  <a href="#a74eebaf8e8638575363eb8ea568e624c"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a466b3909810081551fe0f62c05e8be27">velocity_accuracy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get velocity accuracy in m/s.  <a href="#a466b3909810081551fe0f62c05e8be27"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#adca81e05bdb78b5220f0b5d88df7dca1">heading</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get heading in degrees.  <a href="#adca81e05bdb78b5220f0b5d88df7dca1"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#aa156e7278294e81c186ad02c7cc8f943">heading_accuracy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get heading accuracy in degrees.  <a href="#aa156e7278294e81c186ad02c7cc8f943"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const uint8_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a7b96a3dba5d11961e9e2700e0aba2ac8">num_sats</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of satellites.  <a href="#a7b96a3dba5d11961e9e2700e0aba2ac8"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const gps_fix_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a0d506add15fc6f3a3e59afa2ba099871">fix</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether fix are received.  <a href="#a0d506add15fc6f3a3e59afa2ba099871"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const bool &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a187a543a034baad5db61835db170c4a0">healthy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the measurements can be trusted.  <a href="#a187a543a034baad5db61835db170c4a0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#ab808dddd0d156dae82c6081dc211034e">last_update_us</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last update time in microseconds.  <a href="#ab808dddd0d156dae82c6081dc211034e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#ac5e559b53f97bcadff1b84a25c2f3968">last_position_update_us</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last position update time in microseconds.  <a href="#ac5e559b53f97bcadff1b84a25c2f3968"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#af59b06895d39422309e1c1ab57f6ae7f">last_velocity_update_us</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last velocity update time in microseconds.  <a href="#af59b06895d39422309e1c1ab57f6ae7f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structglobal__position__t.html">global_position_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#abb928470a925ec14ab126485fd4eff24">position_gf</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get position in global frame.  <a href="#abb928470a925ec14ab126485fd4eff24"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#aab941a901c24b96070bc990450921d88">horizontal_position_accuracy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get horizontal position accuracy in m.  <a href="#aab941a901c24b96070bc990450921d88"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a9c82a0097d3bde5bc813de2758602cbd">vertical_position_accuracy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get vertical position accuracy in m.  <a href="#a9c82a0097d3bde5bc813de2758602cbd"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::array&lt; float, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a2275541d19cd9551f5dc868496d7066a">velocity_lf</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get velocity in local frame in m/s.  <a href="#a2275541d19cd9551f5dc868496d7066a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#aeab8eacedd21f2b77753070385c821a2">velocity_accuracy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get velocity accuracy in m/s.  <a href="#aeab8eacedd21f2b77753070385c821a2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a14082c6b42eb22acfe776785b9706750">heading</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get heading in degrees.  <a href="#a14082c6b42eb22acfe776785b9706750"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a81478ea53d08fb457829b6e129cef395">heading_accuracy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get heading accuracy in degrees.  <a href="#a81478ea53d08fb457829b6e129cef395"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#aac30f5f67a06c2d26c269e8164cefc2d">num_sats</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of satellites.  <a href="#aac30f5f67a06c2d26c269e8164cefc2d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">gps_fix_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#a332e9c3a2330285359cc4b460a6518df">fix</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether fix are received.  <a href="#a332e9c3a2330285359cc4b460a6518df"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__sim.html#aac6db316677674f1bc6c07d8b9ae184c">healthy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the measurements can be trusted.  <a href="#aac6db316677674f1bc6c07d8b9ae184c"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classSimulation.html" title="Simulated dynamics of a quadcopter in diag configuration.">Simulation</a> for GPS. </p>
@@ -171,12 +173,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a0d506add15fc6f3a3e59afa2ba099871"></a><!-- doxytag: member="Gps_sim::fix" ref="a0d506add15fc6f3a3e59afa2ba099871" args="(void) const " -->
+<a class="anchor" id="a332e9c3a2330285359cc4b460a6518df"></a><!-- doxytag: member="Gps_sim::fix" ref="a332e9c3a2330285359cc4b460a6518df" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const gps_fix_t &amp; <a class="el" href="classGps__sim.html#a0d506add15fc6f3a3e59afa2ba099871">Gps_sim::fix</a> </td>
+          <td class="memname">gps_fix_t <a class="el" href="classGps__sim.html#a332e9c3a2330285359cc4b460a6518df">Gps_sim::fix</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -189,16 +191,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Indicates whether fix are received. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#aeceece3f6a3df9b3772c3cc146e7f033">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a9925b04afe52bf7211cd631415606620">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="adca81e05bdb78b5220f0b5d88df7dca1"></a><!-- doxytag: member="Gps_sim::heading" ref="adca81e05bdb78b5220f0b5d88df7dca1" args="(void) const " -->
+<a class="anchor" id="a14082c6b42eb22acfe776785b9706750"></a><!-- doxytag: member="Gps_sim::heading" ref="a14082c6b42eb22acfe776785b9706750" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__sim.html#adca81e05bdb78b5220f0b5d88df7dca1">Gps_sim::heading</a> </td>
+          <td class="memname">float <a class="el" href="classGps__sim.html#a14082c6b42eb22acfe776785b9706750">Gps_sim::heading</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -211,16 +213,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get heading in degrees. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>heading </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a828a818f4707850a53dcc6c2c82a8cbe">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a833417f127535daf8b319bee46e6febb">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa156e7278294e81c186ad02c7cc8f943"></a><!-- doxytag: member="Gps_sim::heading_accuracy" ref="aa156e7278294e81c186ad02c7cc8f943" args="(void) const " -->
+<a class="anchor" id="a81478ea53d08fb457829b6e129cef395"></a><!-- doxytag: member="Gps_sim::heading_accuracy" ref="a81478ea53d08fb457829b6e129cef395" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__sim.html#aa156e7278294e81c186ad02c7cc8f943">Gps_sim::heading_accuracy</a> </td>
+          <td class="memname">float <a class="el" href="classGps__sim.html#a81478ea53d08fb457829b6e129cef395">Gps_sim::heading_accuracy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -233,16 +235,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get heading accuracy in degrees. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>accuracy </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#aa07958fdbf794195f07b87aade88c088">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a82cc78973ecd4b737d99ca4650500293">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a187a543a034baad5db61835db170c4a0"></a><!-- doxytag: member="Gps_sim::healthy" ref="a187a543a034baad5db61835db170c4a0" args="(void) const " -->
+<a class="anchor" id="aac6db316677674f1bc6c07d8b9ae184c"></a><!-- doxytag: member="Gps_sim::healthy" ref="aac6db316677674f1bc6c07d8b9ae184c" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const bool &amp; <a class="el" href="classGps__sim.html#a187a543a034baad5db61835db170c4a0">Gps_sim::healthy</a> </td>
+          <td class="memname">bool <a class="el" href="classGps__sim.html#aac6db316677674f1bc6c07d8b9ae184c">Gps_sim::healthy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -255,16 +257,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Indicates whether the measurements can be trusted. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#ae1c19ee151945184d4432471fac01aec">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a6253f14dbd270f3b24b677cdab6d1c49">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a85ee4e542a8ac860ad7845cc086d2774"></a><!-- doxytag: member="Gps_sim::horizontal_position_accuracy" ref="a85ee4e542a8ac860ad7845cc086d2774" args="(void) const " -->
+<a class="anchor" id="aab941a901c24b96070bc990450921d88"></a><!-- doxytag: member="Gps_sim::horizontal_position_accuracy" ref="aab941a901c24b96070bc990450921d88" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__sim.html#a85ee4e542a8ac860ad7845cc086d2774">Gps_sim::horizontal_position_accuracy</a> </td>
+          <td class="memname">float <a class="el" href="classGps__sim.html#aab941a901c24b96070bc990450921d88">Gps_sim::horizontal_position_accuracy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -277,16 +279,38 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get horizontal position accuracy in m. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>accuracy </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a615de69d1b16f9d04058eeca55fb17ad">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#af565be90e7e55181001a39682054b324">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a72e1353e778a5298fb8792e3b6dc0e0d"></a><!-- doxytag: member="Gps_sim::last_position_update_us" ref="a72e1353e778a5298fb8792e3b6dc0e0d" args="(void) const " -->
+<a class="anchor" id="a5a0f8cc60e1abe43405a1fa1659ac62a"></a><!-- doxytag: member="Gps_sim::init" ref="a5a0f8cc60e1abe43405a1fa1659ac62a" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__sim.html#a72e1353e778a5298fb8792e3b6dc0e0d">Gps_sim::last_position_update_us</a> </td>
+          <td class="memname">bool <a class="el" href="classGps__sim.html#a5a0f8cc60e1abe43405a1fa1659ac62a">Gps_sim::init</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Initializes the gps. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
+
+<p>Implements <a class="el" href="classGps.html#a30f1c825c1a198573556982c2ef2ab4c">Gps</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac5e559b53f97bcadff1b84a25c2f3968"></a><!-- doxytag: member="Gps_sim::last_position_update_us" ref="ac5e559b53f97bcadff1b84a25c2f3968" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classGps__sim.html#ac5e559b53f97bcadff1b84a25c2f3968">Gps_sim::last_position_update_us</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -299,16 +323,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get last position update time in microseconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Update time </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a0d017894efcf43ff9c79bd7892eceb87">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a26c405755338e7761cfb7fda26498aeb">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a984e3e800e3df262819b9658084912bc"></a><!-- doxytag: member="Gps_sim::last_update_us" ref="a984e3e800e3df262819b9658084912bc" args="(void) const " -->
+<a class="anchor" id="ab808dddd0d156dae82c6081dc211034e"></a><!-- doxytag: member="Gps_sim::last_update_us" ref="ab808dddd0d156dae82c6081dc211034e" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__sim.html#a984e3e800e3df262819b9658084912bc">Gps_sim::last_update_us</a> </td>
+          <td class="memname">float <a class="el" href="classGps__sim.html#ab808dddd0d156dae82c6081dc211034e">Gps_sim::last_update_us</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -321,16 +345,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get last update time in microseconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Update time </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#aaa309976e40e022cfe651c5524f75e73">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a6bd2da1a614b642e86f64f08e5e793a7">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3c775f684a4b5677dfc10ff292b80722"></a><!-- doxytag: member="Gps_sim::last_velocity_update_us" ref="a3c775f684a4b5677dfc10ff292b80722" args="(void) const " -->
+<a class="anchor" id="af59b06895d39422309e1c1ab57f6ae7f"></a><!-- doxytag: member="Gps_sim::last_velocity_update_us" ref="af59b06895d39422309e1c1ab57f6ae7f" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__sim.html#a3c775f684a4b5677dfc10ff292b80722">Gps_sim::last_velocity_update_us</a> </td>
+          <td class="memname">float <a class="el" href="classGps__sim.html#af59b06895d39422309e1c1ab57f6ae7f">Gps_sim::last_velocity_update_us</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -343,16 +367,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get last velocity update time in microseconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Update time </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a501521465843fb62231c0f20df178cd6">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a0d21e79e013389d93bc6b192ffdb6fc2">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7b96a3dba5d11961e9e2700e0aba2ac8"></a><!-- doxytag: member="Gps_sim::num_sats" ref="a7b96a3dba5d11961e9e2700e0aba2ac8" args="(void) const " -->
+<a class="anchor" id="aac30f5f67a06c2d26c269e8164cefc2d"></a><!-- doxytag: member="Gps_sim::num_sats" ref="aac30f5f67a06c2d26c269e8164cefc2d" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const uint8_t &amp; <a class="el" href="classGps__sim.html#a7b96a3dba5d11961e9e2700e0aba2ac8">Gps_sim::num_sats</a> </td>
+          <td class="memname">uint8_t <a class="el" href="classGps__sim.html#aac30f5f67a06c2d26c269e8164cefc2d">Gps_sim::num_sats</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -365,16 +389,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get the number of satellites. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a42a06a672e4cd2de5acf06ec8c9b1257">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a822845dd9115f020731d70b53586f18e">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a11f67d1be8a3a48f4078d336cf1cf1b1"></a><!-- doxytag: member="Gps_sim::position_gf" ref="a11f67d1be8a3a48f4078d336cf1cf1b1" args="(void) const " -->
+<a class="anchor" id="abb928470a925ec14ab126485fd4eff24"></a><!-- doxytag: member="Gps_sim::position_gf" ref="abb928470a925ec14ab126485fd4eff24" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="structglobal__position__t.html">global_position_t</a> &amp; <a class="el" href="classGps__sim.html#a11f67d1be8a3a48f4078d336cf1cf1b1">Gps_sim::position_gf</a> </td>
+          <td class="memname"><a class="el" href="structglobal__position__t.html">global_position_t</a> <a class="el" href="classGps__sim.html#abb928470a925ec14ab126485fd4eff24">Gps_sim::position_gf</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -387,7 +411,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>Get position in global frame. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>position </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#ac4585c4d7a6a95a27ef34bfea266bb09">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a3b136ce3a3b20774501a8e41098d4a6f">Gps</a>.</p>
 
 </div>
 </div>
@@ -422,12 +446,12 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a466b3909810081551fe0f62c05e8be27"></a><!-- doxytag: member="Gps_sim::velocity_accuracy" ref="a466b3909810081551fe0f62c05e8be27" args="(void) const " -->
+<a class="anchor" id="aeab8eacedd21f2b77753070385c821a2"></a><!-- doxytag: member="Gps_sim::velocity_accuracy" ref="aeab8eacedd21f2b77753070385c821a2" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__sim.html#a466b3909810081551fe0f62c05e8be27">Gps_sim::velocity_accuracy</a> </td>
+          <td class="memname">float <a class="el" href="classGps__sim.html#aeab8eacedd21f2b77753070385c821a2">Gps_sim::velocity_accuracy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -440,16 +464,16 @@ Here is the call graph for this function:</div>
 <p>Get velocity accuracy in m/s. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>velocity accuracy </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#abb7b6dc8a646cddc23ffe941d191c8c7">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#ab6a1ca8a6c01164ffab3fb98bb69435b">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a74eebaf8e8638575363eb8ea568e624c"></a><!-- doxytag: member="Gps_sim::velocity_lf" ref="a74eebaf8e8638575363eb8ea568e624c" args="(void) const " -->
+<a class="anchor" id="a2275541d19cd9551f5dc868496d7066a"></a><!-- doxytag: member="Gps_sim::velocity_lf" ref="a2275541d19cd9551f5dc868496d7066a" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const std::array&lt; float, 3 &gt; &amp; <a class="el" href="classGps__sim.html#a74eebaf8e8638575363eb8ea568e624c">Gps_sim::velocity_lf</a> </td>
+          <td class="memname">std::array&lt; float, 3 &gt; <a class="el" href="classGps__sim.html#a2275541d19cd9551f5dc868496d7066a">Gps_sim::velocity_lf</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -462,16 +486,16 @@ Here is the call graph for this function:</div>
 <p>Get velocity in local frame in m/s. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>3D velocity </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a80db5544bac0cb37a68aa42dcb4158b3">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a885eefcd896cea4d02d8ffdd7a5c9da0">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa64d91b4eafb42b7a8fa1740571b6d99"></a><!-- doxytag: member="Gps_sim::vertical_position_accuracy" ref="aa64d91b4eafb42b7a8fa1740571b6d99" args="(void) const " -->
+<a class="anchor" id="a9c82a0097d3bde5bc813de2758602cbd"></a><!-- doxytag: member="Gps_sim::vertical_position_accuracy" ref="a9c82a0097d3bde5bc813de2758602cbd" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__sim.html#aa64d91b4eafb42b7a8fa1740571b6d99">Gps_sim::vertical_position_accuracy</a> </td>
+          <td class="memname">float <a class="el" href="classGps__sim.html#a9c82a0097d3bde5bc813de2758602cbd">Gps_sim::vertical_position_accuracy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -484,7 +508,7 @@ Here is the call graph for this function:</div>
 <p>Get vertical position accuracy in m. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>accuracy </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#afdd5e768022daa8759f07f4f063cc6f9">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#ad23c9fcb2031882092069d06e5fcb14d">Gps</a>.</p>
 
 </div>
 </div>
@@ -510,7 +534,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 11 2016 14:03:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 13 2016 08:41:59 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

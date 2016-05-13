@@ -38,7 +38,7 @@ var searchData=
   ['mavlink_5fstream_5fconfig',['mavlink_stream_config',['../structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036',1,'Mavlink_communication::conf_t']]],
   ['mavlink_5ftelemetry_5fadd_5fdata_5flogging_5fparameters',['mavlink_telemetry_add_data_logging_parameters',['../classState.html#a1b0077b766933ac429fdb1c2a6c9d5a6',1,'State']]],
   ['mavlink_5ftelemetry_5fadd_5fonboard_5fparameters',['mavlink_telemetry_add_onboard_parameters',['../classManual__control.html#aa8fcc0d79c1350e5dfcc3a674949a82d',1,'Manual_control']]],
-  ['mavlink_5fwaypoint_5fhandler',['Mavlink_waypoint_handler',['../classMavlink__waypoint__handler.html',1,'Mavlink_waypoint_handler'],['../classMavlink__waypoint__handler.html#a5e3ced73a844cec5ecef909dfe15e6ec',1,'Mavlink_waypoint_handler::Mavlink_waypoint_handler()']]],
+  ['mavlink_5fwaypoint_5fhandler',['Mavlink_waypoint_handler',['../classMavlink__waypoint__handler.html',1,'Mavlink_waypoint_handler'],['../classMavlink__waypoint__handler.html#a282ebac433d0071b0f90862593979225',1,'Mavlink_waypoint_handler::Mavlink_waypoint_handler()']]],
   ['mavlink_5fwaypoint_5fhandler_5fswarm',['Mavlink_waypoint_handler_swarm',['../classMavlink__waypoint__handler__swarm.html',1,'']]],
   ['mavrimini',['Mavrimini',['../classMavrimini.html',1,'Mavrimini'],['../classMavrimini.html#a09691e19c19e12dbaf16fa06bbfdc70d',1,'Mavrimini::Mavrimini()']]],
   ['mavrimini_5fconf_5ft',['mavrimini_conf_t',['../structmavrimini__conf__t.html',1,'']]],

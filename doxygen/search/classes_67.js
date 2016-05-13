@@ -11,6 +11,7 @@ var searchData=
   ['gpio_5fstm32',['Gpio_stm32',['../classGpio__stm32.html',1,'']]],
   ['gpio_5fstm32_5fconf_5ft',['gpio_stm32_conf_t',['../structgpio__stm32__conf__t.html',1,'']]],
   ['gps',['Gps',['../classGps.html',1,'']]],
+  ['gps_5fmocap',['Gps_mocap',['../classGps__mocap.html',1,'']]],
   ['gps_5fsim',['Gps_sim',['../classGps__sim.html',1,'']]],
   ['gps_5ft',['gps_t',['../structgps__t.html',1,'']]],
   ['gps_5fublox',['Gps_ublox',['../classGps__ublox.html',1,'']]],

@@ -1,7 +1,7 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="521,623,737,934"/>
+<area shape="rect" id="node2" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="521,615,737,943"/>
 <area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="280,272,392,392"/>
-<area shape="rect" id="node13" href="$classNavigation.html" title="The navigation structure." alt="" coords="87,606,249,951"/>
+<area shape="rect" id="node13" href="$classNavigation.html" title="The navigation structure." alt="" coords="97,632,239,925"/>
 <area shape="rect" id="node6" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="277,6,395,143"/>
 <area shape="rect" id="node8" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="761,684,895,873"/>
 <area shape="rect" id="node11" href="$structMavlink__waypoint__handler_1_1waypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="919,649,1204,908"/>

@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="219,32,336,61"/>
+<area shape="rect" id="node5" href="$classGps__mocap.html#a04ca5bd4ae82f5374a55064f767c85a7" title="Method used to update internal state when a message is received." alt="" coords="457,5,604,35"/>
+<area shape="rect" id="node7" href="$classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="385,59,676,88"/>
+</map>

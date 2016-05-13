@@ -110,34 +110,36 @@ Collaboration diagram for Gps_ublox:</div>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a43880f1402723a1b1874ff1e3b0bd9d8">Gps_ublox</a> (<a class="el" href="classSerial.html">Serial</a> &amp;serial)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a43880f1402723a1b1874ff1e3b0bd9d8"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#ad4e2aaeb5458bb2aeb031eac77d0d9cb">init</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the gps.  <a href="#ad4e2aaeb5458bb2aeb031eac77d0d9cb"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#ac56256107fbd58173f4233f268eace2a">update</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function  Reads new values from sensor.  <a href="#ac56256107fbd58173f4233f268eace2a"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a67e3ccfad265bcc1f8adf5c47636d44b">last_update_us</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last update time in microseconds.  <a href="#a67e3ccfad265bcc1f8adf5c47636d44b"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#aaa35794c8838ce39d61520170ce94bfb">last_position_update_us</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last position update time in microseconds.  <a href="#aaa35794c8838ce39d61520170ce94bfb"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a8f8e540b5b30373e5d67dd86357e0bd6">last_velocity_update_us</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last velocity update time in microseconds.  <a href="#a8f8e540b5b30373e5d67dd86357e0bd6"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structglobal__position__t.html">global_position_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#adea5c20b088b3df79eb079f4979c0830">position_gf</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get position in global frame.  <a href="#adea5c20b088b3df79eb079f4979c0830"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a512cae752e08b5c60f293c029bbb17aa">horizontal_position_accuracy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get horizontal position accuracy in m.  <a href="#a512cae752e08b5c60f293c029bbb17aa"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#ab16864210129e8e4381b5e883295acc9">vertical_position_accuracy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get vertical position accuracy in m.  <a href="#ab16864210129e8e4381b5e883295acc9"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const std::array&lt; float, 3 &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#ac9d64136ed447291b301e21f13a9304a">velocity_lf</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get velocity in global frame in m/s.  <a href="#ac9d64136ed447291b301e21f13a9304a"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a752651f0e03776f667f555af80071150">velocity_accuracy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get velocity accuracy in m/s.  <a href="#a752651f0e03776f667f555af80071150"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a05642d8db171ef1367eb6c262696e58e">heading</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get heading in degrees.  <a href="#a05642d8db171ef1367eb6c262696e58e"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a713c26d9c39d7cf75df535b3160d9351">heading_accuracy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get heading accuracy in degrees.  <a href="#a713c26d9c39d7cf75df535b3160d9351"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const uint8_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#ace5be96acffd782b75f2fb47e298bc8d">num_sats</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of satellites.  <a href="#ace5be96acffd782b75f2fb47e298bc8d"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const gps_fix_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a46da87b230a17c89c24bf0010d3e5156">fix</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether fix are received.  <a href="#a46da87b230a17c89c24bf0010d3e5156"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const bool &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#add94e86e4207210e1280d9a7ee692c2e">healthy</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the measurements can be trusted.  <a href="#add94e86e4207210e1280d9a7ee692c2e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a2ab8d3cbefca58eaadc546c9cff9951a">last_update_us</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last update time in microseconds.  <a href="#a2ab8d3cbefca58eaadc546c9cff9951a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a9f2ad5a4024b4b55c58c0fc1ef0c1b4f">last_position_update_us</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last position update time in microseconds.  <a href="#a9f2ad5a4024b4b55c58c0fc1ef0c1b4f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#abe3a3b32063170355e59e8d5b3182fa9">last_velocity_update_us</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get last velocity update time in microseconds.  <a href="#abe3a3b32063170355e59e8d5b3182fa9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structglobal__position__t.html">global_position_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a03a615e1090549329a11095f5bacfadd">position_gf</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get position in global frame.  <a href="#a03a615e1090549329a11095f5bacfadd"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a06c0d58120d27a7d07d5340df84889e0">horizontal_position_accuracy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get horizontal position accuracy in m.  <a href="#a06c0d58120d27a7d07d5340df84889e0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a5f153c5721d5a2f421319d1ba370937d">vertical_position_accuracy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get vertical position accuracy in m.  <a href="#a5f153c5721d5a2f421319d1ba370937d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::array&lt; float, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#acca984954f781b16f3bfa16aed7191b2">velocity_lf</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get velocity in global frame in m/s.  <a href="#acca984954f781b16f3bfa16aed7191b2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a67cdcafea59a97fdf39cf2a4f645a992">velocity_accuracy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get velocity accuracy in m/s.  <a href="#a67cdcafea59a97fdf39cf2a4f645a992"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#aa748d29ce10b257803fd78200e9d8b8e">heading</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get heading in degrees.  <a href="#aa748d29ce10b257803fd78200e9d8b8e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a3f8ca34c39ecb3f19604e5f03d026c0f">heading_accuracy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get heading accuracy in degrees.  <a href="#a3f8ca34c39ecb3f19604e5f03d026c0f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#af364cae5c2979d869f01f8e4e7c67438">num_sats</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of satellites.  <a href="#af364cae5c2979d869f01f8e4e7c67438"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">gps_fix_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#a2540e33d4cd0a6c525a5f11c9f43c1b3">fix</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether fix are received.  <a href="#a2540e33d4cd0a6c525a5f11c9f43c1b3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#acaefaba418b0cef1b01cbe70fa87a115">healthy</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the measurements can be trusted.  <a href="#acaefaba418b0cef1b01cbe70fa87a115"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__ublox.html#aa06c870ac330623efb14f2da09a0cfaa">configure</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Start configuration.  <a href="#aa06c870ac330623efb14f2da09a0cfaa"></a><br/></td></tr>
 </table>
@@ -192,12 +194,12 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a46da87b230a17c89c24bf0010d3e5156"></a><!-- doxytag: member="Gps_ublox::fix" ref="a46da87b230a17c89c24bf0010d3e5156" args="(void) const " -->
+<a class="anchor" id="a2540e33d4cd0a6c525a5f11c9f43c1b3"></a><!-- doxytag: member="Gps_ublox::fix" ref="a2540e33d4cd0a6c525a5f11c9f43c1b3" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const gps_fix_t &amp; <a class="el" href="classGps__ublox.html#a46da87b230a17c89c24bf0010d3e5156">Gps_ublox::fix</a> </td>
+          <td class="memname">gps_fix_t <a class="el" href="classGps__ublox.html#a2540e33d4cd0a6c525a5f11c9f43c1b3">Gps_ublox::fix</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -210,16 +212,16 @@ Public Member Functions</h2></td></tr>
 <p>Indicates whether fix are received. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#aeceece3f6a3df9b3772c3cc146e7f033">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a9925b04afe52bf7211cd631415606620">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a05642d8db171ef1367eb6c262696e58e"></a><!-- doxytag: member="Gps_ublox::heading" ref="a05642d8db171ef1367eb6c262696e58e" args="(void) const " -->
+<a class="anchor" id="aa748d29ce10b257803fd78200e9d8b8e"></a><!-- doxytag: member="Gps_ublox::heading" ref="aa748d29ce10b257803fd78200e9d8b8e" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__ublox.html#a05642d8db171ef1367eb6c262696e58e">Gps_ublox::heading</a> </td>
+          <td class="memname">float <a class="el" href="classGps__ublox.html#aa748d29ce10b257803fd78200e9d8b8e">Gps_ublox::heading</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -232,16 +234,16 @@ Public Member Functions</h2></td></tr>
 <p>Get heading in degrees. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>heading </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a828a818f4707850a53dcc6c2c82a8cbe">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a833417f127535daf8b319bee46e6febb">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a713c26d9c39d7cf75df535b3160d9351"></a><!-- doxytag: member="Gps_ublox::heading_accuracy" ref="a713c26d9c39d7cf75df535b3160d9351" args="(void) const " -->
+<a class="anchor" id="a3f8ca34c39ecb3f19604e5f03d026c0f"></a><!-- doxytag: member="Gps_ublox::heading_accuracy" ref="a3f8ca34c39ecb3f19604e5f03d026c0f" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__ublox.html#a713c26d9c39d7cf75df535b3160d9351">Gps_ublox::heading_accuracy</a> </td>
+          <td class="memname">float <a class="el" href="classGps__ublox.html#a3f8ca34c39ecb3f19604e5f03d026c0f">Gps_ublox::heading_accuracy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -254,16 +256,16 @@ Public Member Functions</h2></td></tr>
 <p>Get heading accuracy in degrees. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>accuracy </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#aa07958fdbf794195f07b87aade88c088">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a82cc78973ecd4b737d99ca4650500293">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="add94e86e4207210e1280d9a7ee692c2e"></a><!-- doxytag: member="Gps_ublox::healthy" ref="add94e86e4207210e1280d9a7ee692c2e" args="(void) const " -->
+<a class="anchor" id="acaefaba418b0cef1b01cbe70fa87a115"></a><!-- doxytag: member="Gps_ublox::healthy" ref="acaefaba418b0cef1b01cbe70fa87a115" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const bool &amp; <a class="el" href="classGps__ublox.html#add94e86e4207210e1280d9a7ee692c2e">Gps_ublox::healthy</a> </td>
+          <td class="memname">bool <a class="el" href="classGps__ublox.html#acaefaba418b0cef1b01cbe70fa87a115">Gps_ublox::healthy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -276,16 +278,16 @@ Public Member Functions</h2></td></tr>
 <p>Indicates whether the measurements can be trusted. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#ae1c19ee151945184d4432471fac01aec">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a6253f14dbd270f3b24b677cdab6d1c49">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a512cae752e08b5c60f293c029bbb17aa"></a><!-- doxytag: member="Gps_ublox::horizontal_position_accuracy" ref="a512cae752e08b5c60f293c029bbb17aa" args="(void) const " -->
+<a class="anchor" id="a06c0d58120d27a7d07d5340df84889e0"></a><!-- doxytag: member="Gps_ublox::horizontal_position_accuracy" ref="a06c0d58120d27a7d07d5340df84889e0" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__ublox.html#a512cae752e08b5c60f293c029bbb17aa">Gps_ublox::horizontal_position_accuracy</a> </td>
+          <td class="memname">float <a class="el" href="classGps__ublox.html#a06c0d58120d27a7d07d5340df84889e0">Gps_ublox::horizontal_position_accuracy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -298,16 +300,38 @@ Public Member Functions</h2></td></tr>
 <p>Get horizontal position accuracy in m. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>accuracy </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a615de69d1b16f9d04058eeca55fb17ad">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#af565be90e7e55181001a39682054b324">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aaa35794c8838ce39d61520170ce94bfb"></a><!-- doxytag: member="Gps_ublox::last_position_update_us" ref="aaa35794c8838ce39d61520170ce94bfb" args="(void) const " -->
+<a class="anchor" id="ad4e2aaeb5458bb2aeb031eac77d0d9cb"></a><!-- doxytag: member="Gps_ublox::init" ref="ad4e2aaeb5458bb2aeb031eac77d0d9cb" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__ublox.html#aaa35794c8838ce39d61520170ce94bfb">Gps_ublox::last_position_update_us</a> </td>
+          <td class="memname">bool <a class="el" href="classGps__ublox.html#ad4e2aaeb5458bb2aeb031eac77d0d9cb">Gps_ublox::init</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Initializes the gps. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
+
+<p>Implements <a class="el" href="classGps.html#a30f1c825c1a198573556982c2ef2ab4c">Gps</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9f2ad5a4024b4b55c58c0fc1ef0c1b4f"></a><!-- doxytag: member="Gps_ublox::last_position_update_us" ref="a9f2ad5a4024b4b55c58c0fc1ef0c1b4f" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classGps__ublox.html#a9f2ad5a4024b4b55c58c0fc1ef0c1b4f">Gps_ublox::last_position_update_us</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -320,16 +344,16 @@ Public Member Functions</h2></td></tr>
 <p>Get last position update time in microseconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Update time </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a0d017894efcf43ff9c79bd7892eceb87">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a26c405755338e7761cfb7fda26498aeb">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a67e3ccfad265bcc1f8adf5c47636d44b"></a><!-- doxytag: member="Gps_ublox::last_update_us" ref="a67e3ccfad265bcc1f8adf5c47636d44b" args="(void) const " -->
+<a class="anchor" id="a2ab8d3cbefca58eaadc546c9cff9951a"></a><!-- doxytag: member="Gps_ublox::last_update_us" ref="a2ab8d3cbefca58eaadc546c9cff9951a" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__ublox.html#a67e3ccfad265bcc1f8adf5c47636d44b">Gps_ublox::last_update_us</a> </td>
+          <td class="memname">float <a class="el" href="classGps__ublox.html#a2ab8d3cbefca58eaadc546c9cff9951a">Gps_ublox::last_update_us</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -342,16 +366,16 @@ Public Member Functions</h2></td></tr>
 <p>Get last update time in microseconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Update time </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#aaa309976e40e022cfe651c5524f75e73">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a6bd2da1a614b642e86f64f08e5e793a7">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a8f8e540b5b30373e5d67dd86357e0bd6"></a><!-- doxytag: member="Gps_ublox::last_velocity_update_us" ref="a8f8e540b5b30373e5d67dd86357e0bd6" args="(void) const " -->
+<a class="anchor" id="abe3a3b32063170355e59e8d5b3182fa9"></a><!-- doxytag: member="Gps_ublox::last_velocity_update_us" ref="abe3a3b32063170355e59e8d5b3182fa9" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__ublox.html#a8f8e540b5b30373e5d67dd86357e0bd6">Gps_ublox::last_velocity_update_us</a> </td>
+          <td class="memname">float <a class="el" href="classGps__ublox.html#abe3a3b32063170355e59e8d5b3182fa9">Gps_ublox::last_velocity_update_us</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -364,16 +388,16 @@ Public Member Functions</h2></td></tr>
 <p>Get last velocity update time in microseconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Update time </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a501521465843fb62231c0f20df178cd6">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a0d21e79e013389d93bc6b192ffdb6fc2">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ace5be96acffd782b75f2fb47e298bc8d"></a><!-- doxytag: member="Gps_ublox::num_sats" ref="ace5be96acffd782b75f2fb47e298bc8d" args="(void) const " -->
+<a class="anchor" id="af364cae5c2979d869f01f8e4e7c67438"></a><!-- doxytag: member="Gps_ublox::num_sats" ref="af364cae5c2979d869f01f8e4e7c67438" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const uint8_t &amp; <a class="el" href="classGps__ublox.html#ace5be96acffd782b75f2fb47e298bc8d">Gps_ublox::num_sats</a> </td>
+          <td class="memname">uint8_t <a class="el" href="classGps__ublox.html#af364cae5c2979d869f01f8e4e7c67438">Gps_ublox::num_sats</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -386,16 +410,16 @@ Public Member Functions</h2></td></tr>
 <p>Get the number of satellites. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a42a06a672e4cd2de5acf06ec8c9b1257">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a822845dd9115f020731d70b53586f18e">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="adea5c20b088b3df79eb079f4979c0830"></a><!-- doxytag: member="Gps_ublox::position_gf" ref="adea5c20b088b3df79eb079f4979c0830" args="(void) const " -->
+<a class="anchor" id="a03a615e1090549329a11095f5bacfadd"></a><!-- doxytag: member="Gps_ublox::position_gf" ref="a03a615e1090549329a11095f5bacfadd" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="structglobal__position__t.html">global_position_t</a> &amp; <a class="el" href="classGps__ublox.html#adea5c20b088b3df79eb079f4979c0830">Gps_ublox::position_gf</a> </td>
+          <td class="memname"><a class="el" href="structglobal__position__t.html">global_position_t</a> <a class="el" href="classGps__ublox.html#a03a615e1090549329a11095f5bacfadd">Gps_ublox::position_gf</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -408,7 +432,7 @@ Public Member Functions</h2></td></tr>
 <p>Get position in global frame. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>position </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#ac4585c4d7a6a95a27ef34bfea266bb09">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a3b136ce3a3b20774501a8e41098d4a6f">Gps</a>.</p>
 
 </div>
 </div>
@@ -434,12 +458,12 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a752651f0e03776f667f555af80071150"></a><!-- doxytag: member="Gps_ublox::velocity_accuracy" ref="a752651f0e03776f667f555af80071150" args="(void) const " -->
+<a class="anchor" id="a67cdcafea59a97fdf39cf2a4f645a992"></a><!-- doxytag: member="Gps_ublox::velocity_accuracy" ref="a67cdcafea59a97fdf39cf2a4f645a992" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__ublox.html#a752651f0e03776f667f555af80071150">Gps_ublox::velocity_accuracy</a> </td>
+          <td class="memname">float <a class="el" href="classGps__ublox.html#a67cdcafea59a97fdf39cf2a4f645a992">Gps_ublox::velocity_accuracy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -452,16 +476,16 @@ Public Member Functions</h2></td></tr>
 <p>Get velocity accuracy in m/s. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>velocity accuracy </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#abb7b6dc8a646cddc23ffe941d191c8c7">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#ab6a1ca8a6c01164ffab3fb98bb69435b">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac9d64136ed447291b301e21f13a9304a"></a><!-- doxytag: member="Gps_ublox::velocity_lf" ref="ac9d64136ed447291b301e21f13a9304a" args="(void) const " -->
+<a class="anchor" id="acca984954f781b16f3bfa16aed7191b2"></a><!-- doxytag: member="Gps_ublox::velocity_lf" ref="acca984954f781b16f3bfa16aed7191b2" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const std::array&lt; float, 3 &gt; &amp; <a class="el" href="classGps__ublox.html#ac9d64136ed447291b301e21f13a9304a">Gps_ublox::velocity_lf</a> </td>
+          <td class="memname">std::array&lt; float, 3 &gt; <a class="el" href="classGps__ublox.html#acca984954f781b16f3bfa16aed7191b2">Gps_ublox::velocity_lf</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -474,16 +498,16 @@ Public Member Functions</h2></td></tr>
 <p>Get velocity in global frame in m/s. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>3D velocity </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#a80db5544bac0cb37a68aa42dcb4158b3">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#a885eefcd896cea4d02d8ffdd7a5c9da0">Gps</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab16864210129e8e4381b5e883295acc9"></a><!-- doxytag: member="Gps_ublox::vertical_position_accuracy" ref="ab16864210129e8e4381b5e883295acc9" args="(void) const " -->
+<a class="anchor" id="a5f153c5721d5a2f421319d1ba370937d"></a><!-- doxytag: member="Gps_ublox::vertical_position_accuracy" ref="a5f153c5721d5a2f421319d1ba370937d" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const float &amp; <a class="el" href="classGps__ublox.html#ab16864210129e8e4381b5e883295acc9">Gps_ublox::vertical_position_accuracy</a> </td>
+          <td class="memname">float <a class="el" href="classGps__ublox.html#a5f153c5721d5a2f421319d1ba370937d">Gps_ublox::vertical_position_accuracy</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -496,7 +520,7 @@ Public Member Functions</h2></td></tr>
 <p>Get vertical position accuracy in m. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>accuracy </dd></dl>
 
-<p>Implements <a class="el" href="classGps.html#afdd5e768022daa8759f07f4f063cc6f9">Gps</a>.</p>
+<p>Implements <a class="el" href="classGps.html#ad23c9fcb2031882092069d06e5fcb14d">Gps</a>.</p>
 
 </div>
 </div>
@@ -522,7 +546,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 11 2016 14:03:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 13 2016 08:41:59 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,4 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classGps__sim.html" title="Simulation for GPS." alt="" coords="5,312,216,571"/>
-<area shape="rect" id="node5" href="$classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="240,312,451,571"/>
+<area shape="rect" id="node3" href="$classGps__mocap.html" title="Class to expose data received from motion capture system as GPS data." alt="" coords="5,312,216,571"/>
+<area shape="rect" id="node5" href="$classGps__sim.html" title="Simulation for GPS." alt="" coords="240,312,451,571"/>
+<area shape="rect" id="node7" href="$classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="475,312,685,571"/>
 </map>

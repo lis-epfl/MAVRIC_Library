@@ -17,7 +17,7 @@
 <area shape="rect" id="node13" href="$classAdc.html#a9733298b7e9cde8e5b91b64a1ca2b586" title="Get the voltage in volts." alt="" coords="568,191,661,220"/>
 <area shape="rect" id="node19" href="$classState.html#ae26f0aab78aa060c68533bf3a05476a9" title="returns whether in guided mode" alt="" coords="557,269,672,299"/>
 <area shape="rect" id="node23" href="$classPosition__estimation.html#a358ae802e65eede79495c339689813c8" title="Returns if altitude estimation is healthy." alt="" coords="763,296,997,325"/>
-<area shape="rect" id="node25" href="$classGps.html#ae1c19ee151945184d4432471fac01aec" title="Indicates whether the measurements can be trusted." alt="" coords="832,349,928,379"/>
+<area shape="rect" id="node25" href="$classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="832,349,928,379"/>
 <area shape="rect" id="node29" href="$classState.html#a1b9ecd8f5193b68277d954d90500c738" title="returns whether in stabilize mode" alt="" coords="552,376,677,405"/>
 <area shape="rect" id="node34" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="557,483,672,512"/>
 </map>

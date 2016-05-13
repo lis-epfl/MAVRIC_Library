@@ -1,13 +1,13 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="5,529,136,615"/>
-<area shape="rect" id="node4" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="160,417,376,727"/>
+<area shape="rect" id="node2" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="5,537,136,623"/>
+<area shape="rect" id="node4" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="160,416,376,744"/>
 <area shape="rect" id="node6" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="212,220,324,340"/>
 <area shape="rect" id="node8" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="209,6,327,143"/>
-<area shape="rect" id="node10" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="400,521,539,623"/>
+<area shape="rect" id="node10" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="400,529,539,631"/>
 <area shape="rect" id="node12" href="$structquat__t.html" title="Unit quaternion." alt="" coords="515,229,573,331"/>
-<area shape="rect" id="node16" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="563,486,680,658"/>
-<area shape="rect" id="node14" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="704,521,845,623"/>
-<area shape="rect" id="node19" href="$structpid__controller__t.html" title="PID controller." alt="" coords="869,451,997,693"/>
+<area shape="rect" id="node16" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="563,494,680,666"/>
+<area shape="rect" id="node14" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="704,529,845,631"/>
+<area shape="rect" id="node19" href="$structpid__controller__t.html" title="PID controller." alt="" coords="869,459,997,701"/>
 <area shape="rect" id="node21" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="817,220,921,340"/>
 <area shape="rect" id="node23" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="945,211,1049,349"/>
 </map>

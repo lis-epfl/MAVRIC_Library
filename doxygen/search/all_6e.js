@@ -22,7 +22,7 @@ var searchData=
   ['num_5fch',['num_ch',['../structubx__nav__sv__info__t.html#a59fc3d45ef9667a0b7c8ebcc93d6c9f5',1,'ubx_nav_sv_info_t']]],
   ['num_5fchannel',['num_channel',['../structubx__nav__dgps__t.html#ac35f5bdef1d1edb9a19f870dfaea93d2',1,'ubx_nav_dgps_t']]],
   ['num_5ffile_5fopened',['num_file_opened',['../structfat__fs__mounting__t.html#a15d4ee7f7cb176bd2a5422adffb34a98',1,'fat_fs_mounting_t']]],
-  ['num_5fsats',['num_sats',['../structgps__t.html#a1a0590caa447cc0c5e8537dac9262516',1,'gps_t::num_sats()'],['../classGps.html#a42a06a672e4cd2de5acf06ec8c9b1257',1,'Gps::num_sats()'],['../classGps__ublox.html#ace5be96acffd782b75f2fb47e298bc8d',1,'Gps_ublox::num_sats()'],['../classGps__sim.html#a7b96a3dba5d11961e9e2700e0aba2ac8',1,'Gps_sim::num_sats()']]],
+  ['num_5fsats',['num_sats',['../structgps__t.html#a1a0590caa447cc0c5e8537dac9262516',1,'gps_t::num_sats()'],['../classGps.html#a822845dd9115f020731d70b53586f18e',1,'Gps::num_sats()'],['../classGps__mocap.html#a4ebaf0c404834c1b541007d7bb296181',1,'Gps_mocap::num_sats()'],['../classGps__ublox.html#af364cae5c2979d869f01f8e4e7c67438',1,'Gps_ublox::num_sats()'],['../classGps__sim.html#aac30f5f67a06c2d26c269e8164cefc2d',1,'Gps_sim::num_sats()']]],
   ['num_5fskipped_5fmsg',['num_skipped_msg',['../structgps__t.html#ad2f47900286cd68bd953d54adc595237',1,'gps_t']]],
   ['nvram_5fdata_5ft',['nvram_data_t',['../structnvram__data__t.html',1,'']]]
 ];

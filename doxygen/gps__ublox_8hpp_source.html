@@ -139,72 +139,75 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00065"></a>00065     <a class="code" href="classGps__ublox.html#a43880f1402723a1b1874ff1e3b0bd9d8" title="Constructor.">Gps_ublox</a>(<a class="code" href="classSerial.html">Serial</a>&amp; serial);
 <a name="l00066"></a>00066 
 <a name="l00067"></a>00067 
-<a name="l00074"></a>00074     <span class="keywordtype">bool</span> <a class="code" href="classGps__ublox.html#ac56256107fbd58173f4233f268eace2a" title="Main update function  Reads new values from sensor.">update</a>(<span class="keywordtype">void</span>);
+<a name="l00073"></a>00073     <span class="keywordtype">bool</span> <a class="code" href="classGps__ublox.html#ad4e2aaeb5458bb2aeb031eac77d0d9cb" title="Initializes the gps.">init</a>(<span class="keywordtype">void</span>);
+<a name="l00074"></a>00074 
 <a name="l00075"></a>00075 
-<a name="l00076"></a>00076 
-<a name="l00082"></a>00082     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classGps__ublox.html#a67e3ccfad265bcc1f8adf5c47636d44b" title="Get last update time in microseconds.">last_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00082"></a>00082     <span class="keywordtype">bool</span> <a class="code" href="classGps__ublox.html#ac56256107fbd58173f4233f268eace2a" title="Main update function  Reads new values from sensor.">update</a>(<span class="keywordtype">void</span>);
 <a name="l00083"></a>00083 
 <a name="l00084"></a>00084 
-<a name="l00090"></a>00090     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classGps__ublox.html#aaa35794c8838ce39d61520170ce94bfb" title="Get last position update time in microseconds.">last_position_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00090"></a>00090     <span class="keywordtype">float</span> <a class="code" href="classGps__ublox.html#a2ab8d3cbefca58eaadc546c9cff9951a" title="Get last update time in microseconds.">last_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00091"></a>00091 
 <a name="l00092"></a>00092 
-<a name="l00098"></a>00098     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classGps__ublox.html#a8f8e540b5b30373e5d67dd86357e0bd6" title="Get last velocity update time in microseconds.">last_velocity_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00098"></a>00098     <span class="keywordtype">float</span> <a class="code" href="classGps__ublox.html#a9f2ad5a4024b4b55c58c0fc1ef0c1b4f" title="Get last position update time in microseconds.">last_position_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00099"></a>00099 
 <a name="l00100"></a>00100 
-<a name="l00106"></a>00106     <span class="keyword">const</span> <a class="code" href="structglobal__position__t.html" title="Global position structure.">global_position_t</a>&amp; <a class="code" href="classGps__ublox.html#adea5c20b088b3df79eb079f4979c0830" title="Get position in global frame.">position_gf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00106"></a>00106     <span class="keywordtype">float</span> <a class="code" href="classGps__ublox.html#abe3a3b32063170355e59e8d5b3182fa9" title="Get last velocity update time in microseconds.">last_velocity_update_us</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00107"></a>00107 
 <a name="l00108"></a>00108 
-<a name="l00114"></a>00114     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classGps__ublox.html#a512cae752e08b5c60f293c029bbb17aa" title="Get horizontal position accuracy in m.">horizontal_position_accuracy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00114"></a>00114     <a class="code" href="structglobal__position__t.html" title="Global position structure.">global_position_t</a> <a class="code" href="classGps__ublox.html#a03a615e1090549329a11095f5bacfadd" title="Get position in global frame.">position_gf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00115"></a>00115 
 <a name="l00116"></a>00116 
-<a name="l00122"></a>00122     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classGps__ublox.html#ab16864210129e8e4381b5e883295acc9" title="Get vertical position accuracy in m.">vertical_position_accuracy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00122"></a>00122     <span class="keywordtype">float</span> <a class="code" href="classGps__ublox.html#a06c0d58120d27a7d07d5340df84889e0" title="Get horizontal position accuracy in m.">horizontal_position_accuracy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00123"></a>00123 
 <a name="l00124"></a>00124 
-<a name="l00130"></a>00130     <span class="keyword">const</span> std::array&lt;float, 3&gt;&amp; <a class="code" href="classGps__ublox.html#ac9d64136ed447291b301e21f13a9304a" title="Get velocity in global frame in m/s.">velocity_lf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00130"></a>00130     <span class="keywordtype">float</span> <a class="code" href="classGps__ublox.html#a5f153c5721d5a2f421319d1ba370937d" title="Get vertical position accuracy in m.">vertical_position_accuracy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00131"></a>00131 
 <a name="l00132"></a>00132 
-<a name="l00138"></a>00138     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classGps__ublox.html#a752651f0e03776f667f555af80071150" title="Get velocity accuracy in m/s.">velocity_accuracy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00138"></a>00138     std::array&lt;float, 3&gt; <a class="code" href="classGps__ublox.html#acca984954f781b16f3bfa16aed7191b2" title="Get velocity in global frame in m/s.">velocity_lf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00139"></a>00139 
 <a name="l00140"></a>00140 
-<a name="l00146"></a>00146     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classGps__ublox.html#a05642d8db171ef1367eb6c262696e58e" title="Get heading in degrees.">heading</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00146"></a>00146     <span class="keywordtype">float</span> <a class="code" href="classGps__ublox.html#a67cdcafea59a97fdf39cf2a4f645a992" title="Get velocity accuracy in m/s.">velocity_accuracy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00147"></a>00147 
 <a name="l00148"></a>00148 
-<a name="l00154"></a>00154     <span class="keyword">const</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classGps__ublox.html#a713c26d9c39d7cf75df535b3160d9351" title="Get heading accuracy in degrees.">heading_accuracy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00154"></a>00154     <span class="keywordtype">float</span> <a class="code" href="classGps__ublox.html#aa748d29ce10b257803fd78200e9d8b8e" title="Get heading in degrees.">heading</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00155"></a>00155 
 <a name="l00156"></a>00156 
-<a name="l00162"></a>00162     <span class="keyword">const</span> uint8_t&amp; <a class="code" href="classGps__ublox.html#ace5be96acffd782b75f2fb47e298bc8d" title="Get the number of satellites.">num_sats</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00162"></a>00162     <span class="keywordtype">float</span> <a class="code" href="classGps__ublox.html#a3f8ca34c39ecb3f19604e5f03d026c0f" title="Get heading accuracy in degrees.">heading_accuracy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00163"></a>00163 
 <a name="l00164"></a>00164 
-<a name="l00170"></a>00170     <span class="keyword">const</span> gps_fix_t&amp; <a class="code" href="classGps__ublox.html#a46da87b230a17c89c24bf0010d3e5156" title="Indicates whether fix are received.">fix</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00170"></a>00170     uint8_t <a class="code" href="classGps__ublox.html#af364cae5c2979d869f01f8e4e7c67438" title="Get the number of satellites.">num_sats</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00171"></a>00171 
 <a name="l00172"></a>00172 
-<a name="l00178"></a>00178     <span class="keyword">const</span> <span class="keywordtype">bool</span>&amp; <a class="code" href="classGps__ublox.html#add94e86e4207210e1280d9a7ee692c2e" title="Indicates whether the measurements can be trusted.">healthy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00178"></a>00178     gps_fix_t <a class="code" href="classGps__ublox.html#a2540e33d4cd0a6c525a5f11c9f43c1b3" title="Indicates whether fix are received.">fix</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00179"></a>00179 
 <a name="l00180"></a>00180 
-<a name="l00187"></a>00187     <span class="keywordtype">void</span> <a class="code" href="classGps__ublox.html#aa06c870ac330623efb14f2da09a0cfaa" title="Start configuration.">configure</a>(<span class="keywordtype">void</span>);
+<a name="l00186"></a>00186     <span class="keywordtype">bool</span> <a class="code" href="classGps__ublox.html#acaefaba418b0cef1b01cbe70fa87a115" title="Indicates whether the measurements can be trusted.">healthy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00187"></a>00187 
 <a name="l00188"></a>00188 
-<a name="l00189"></a>00189 
-<a name="l00190"></a>00190 <span class="keyword">private</span>:
-<a name="l00191"></a>00191     <a class="code" href="classSerial.html">Serial</a>&amp;             serial_;                            
-<a name="l00192"></a>00192 
-<a name="l00193"></a>00193     <span class="keywordtype">float</span>               last_update_us_;                    
-<a name="l00194"></a>00194     <span class="keywordtype">float</span>               last_position_update_us_;           
-<a name="l00195"></a>00195     <span class="keywordtype">float</span>               last_velocity_update_us_;           
-<a name="l00196"></a>00196     <a class="code" href="structglobal__position__t.html" title="Global position structure.">global_position_t</a>   position_gf_;                       
-<a name="l00197"></a>00197     <span class="keywordtype">float</span>               horizontal_position_accuracy_;      
-<a name="l00198"></a>00198     <span class="keywordtype">float</span>               vertical_position_accuracy_;        
-<a name="l00199"></a>00199     std::array&lt;float, 3&gt; velocity_lf_;                      
-<a name="l00200"></a>00200     <span class="keywordtype">float</span>               velocity_accuracy_;                 
-<a name="l00201"></a>00201     <span class="keywordtype">float</span>               heading_;                           
-<a name="l00202"></a>00202     <span class="keywordtype">float</span>               heading_accuracy_;                  
-<a name="l00203"></a>00203     uint8_t             num_sats_;                          
-<a name="l00204"></a>00204     gps_fix_t           fix_;                               
-<a name="l00205"></a>00205     <span class="keywordtype">bool</span>                healthy_;                           
-<a name="l00206"></a>00206 };
-<a name="l00207"></a>00207 
-<a name="l00208"></a>00208 
-<a name="l00209"></a>00209 
-<a name="l00210"></a>00210 <span class="preprocessor">#endif </span><span class="comment">/* GPS_UBLOX_HPP_ */</span>
+<a name="l00195"></a>00195     <span class="keywordtype">void</span> <a class="code" href="classGps__ublox.html#aa06c870ac330623efb14f2da09a0cfaa" title="Start configuration.">configure</a>(<span class="keywordtype">void</span>);
+<a name="l00196"></a>00196 
+<a name="l00197"></a>00197 
+<a name="l00198"></a>00198 <span class="keyword">private</span>:
+<a name="l00199"></a>00199     <a class="code" href="classSerial.html">Serial</a>&amp;             serial_;                            
+<a name="l00200"></a>00200 
+<a name="l00201"></a>00201     <span class="keywordtype">float</span>               last_update_us_;                    
+<a name="l00202"></a>00202     <span class="keywordtype">float</span>               last_position_update_us_;           
+<a name="l00203"></a>00203     <span class="keywordtype">float</span>               last_velocity_update_us_;           
+<a name="l00204"></a>00204     <a class="code" href="structglobal__position__t.html" title="Global position structure.">global_position_t</a>   position_gf_;                       
+<a name="l00205"></a>00205     <span class="keywordtype">float</span>               horizontal_position_accuracy_;      
+<a name="l00206"></a>00206     <span class="keywordtype">float</span>               vertical_position_accuracy_;        
+<a name="l00207"></a>00207     std::array&lt;float, 3&gt; velocity_lf_;                      
+<a name="l00208"></a>00208     <span class="keywordtype">float</span>               velocity_accuracy_;                 
+<a name="l00209"></a>00209     <span class="keywordtype">float</span>               heading_;                           
+<a name="l00210"></a>00210     <span class="keywordtype">float</span>               heading_accuracy_;                  
+<a name="l00211"></a>00211     uint8_t             num_sats_;                          
+<a name="l00212"></a>00212     gps_fix_t           fix_;                               
+<a name="l00213"></a>00213     <span class="keywordtype">bool</span>                healthy_;                           
+<a name="l00214"></a>00214 };
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216 
+<a name="l00217"></a>00217 
+<a name="l00218"></a>00218 <span class="preprocessor">#endif </span><span class="comment">/* GPS_UBLOX_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -223,7 +226,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 11 2016 14:03:44 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 13 2016 08:41:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

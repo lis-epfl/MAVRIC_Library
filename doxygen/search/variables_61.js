@@ -50,6 +50,7 @@ var searchData=
   ['audio_5fbuffer',['audio_buffer',['../structaudio__t.html#ae55dc6809cb30b6a360ef600454332c4',1,'audio_t']]],
   ['audio_5fstream_5fin',['audio_stream_in',['../structaudio__t.html#a9581ec843b7b478bd52a2a1274ec9567',1,'audio_t']]],
   ['auto_5flanding_5fbehavior',['auto_landing_behavior',['../classNavigation.html#acb97f030e08eb2b0a370a1b46f3823fd',1,'Navigation']]],
+  ['auto_5ftake_5foff_5faltitude',['auto_take_off_altitude',['../structMavlink__waypoint__handler_1_1conf__t.html#acd0b796f8b2a69276f2bc596d1961d54',1,'Mavlink_waypoint_handler::conf_t']]],
   ['autocontinue',['autocontinue',['../structMavlink__waypoint__handler_1_1waypoint__struct__t.html#a7f051ed7c909c0bc7dd9747b72f1104f',1,'Mavlink_waypoint_handler::waypoint_struct_t']]],
   ['automatic',['automatic',['../structspi__buffer__t.html#ab6d23cf4c92a75954f6f8d7690cb78d3',1,'spi_buffer_t']]],
   ['autopilot_5fname',['autopilot_name',['../structState_1_1conf__t.html#a7c210bb9356c06d7cfec0b6aa73699f4',1,'State::conf_t::autopilot_name()'],['../classState.html#a7dc79d2606db040d9871416720193c0a',1,'State::autopilot_name()']]],
