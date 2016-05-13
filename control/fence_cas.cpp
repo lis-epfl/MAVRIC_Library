@@ -167,7 +167,13 @@ bool Fence_CAS::update(void)
 {
 	// Initializaion of variables
 
+
 //	bool detected=false;									// Flag to reset the ROLL command
+
+	float dist[waypoint_handler->number_of_fence_points];	// Table of distance to each fence
+	static float old_distAC[MAX_WAYPOINTS];					// Table of the old distance to each fencepoint (used for small angles)
+	bool detected=false;									// Flag to reset the ROLL command
+
 	for (int k=0;k<3;k++)									// Reset the repulsion command
 	{
 		this->repulsion[k]=0.0;
@@ -196,6 +202,7 @@ bool Fence_CAS::update(void)
 	{
 		S[i]= C[i] + Vnorm[i] * (this->r_pz/*protection zone*/ +SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + this->tahead * Vval /*d_ahead*/);
 	}
+
 	/*FOR EACH FENCE*/
 	for(int n=0;n<MAX_OUTFENCE+1;n++)
 	{
@@ -315,9 +322,8 @@ bool Fence_CAS::update(void)
 
 		print_util_dbg_print("\n");
 	}
+
 	/*END FOR EACH FENCE*/
-
-
 	// Clip the repulsion
 	if(this->repulsion[1]>max_ang)
 	{
@@ -327,13 +333,6 @@ bool Fence_CAS::update(void)
 	{
 		this->repulsion[1]=-max_ang;
 	}
-
-//	May be deleted
-//	if(detected==false)	// Reset the roll is nothing is detected
-//	{
-//		controls->rpy[ROLL] = 0.0;
-//	}
-
 	return true;
 }
 float Fence_CAS::interpolate(float r, int type) // type=x, 0: linear, 1: cos, 2:cos2
