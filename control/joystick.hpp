@@ -48,6 +48,7 @@ extern "C"
 {
 #include "control/stabilisation.h"
 #include "control/control_command.h"
+#include "sensing/ahrs.h"
 }
 
 

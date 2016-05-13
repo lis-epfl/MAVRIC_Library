@@ -47,6 +47,7 @@
 #include "communication/mavlink_message_handler.hpp"
 #include "control/joystick.hpp"
 
+extern float dbg_alex;
 
 /**
  * \brief   Initialisation of the joystick telemetry module

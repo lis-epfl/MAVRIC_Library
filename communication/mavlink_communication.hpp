@@ -164,6 +164,8 @@ public:
      * \return  Task status return
      */
     static bool update(Mavlink_communication* mavlink_communication);  
+    static bool update_send(Mavlink_communication* mavlink_communication);
+    static bool update_receive(Mavlink_communication* mavlink_communication);
 
 private:
 

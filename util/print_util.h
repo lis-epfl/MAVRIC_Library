@@ -56,7 +56,6 @@ extern "C"
 #define MAX_DIGITS 10
 #define MAX_DIGITS_LONG 20
 
-
 /**
  * \brief                   Init debug stream
  *

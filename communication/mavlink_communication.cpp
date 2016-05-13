@@ -240,3 +240,23 @@ bool Mavlink_communication::update(Mavlink_communication* mavlink_communication)
 
     return true;
 }
+
+bool Mavlink_communication::update_send(Mavlink_communication* mavlink_communication)
+{
+    // Send messages
+    mavlink_communication->scheduler_.update();
+
+    return true;
+}
+
+bool Mavlink_communication::update_receive(Mavlink_communication* mavlink_communication)
+{
+    // Receive new message
+    Mavlink_stream::msg_received_t rec;
+    while (mavlink_communication->mavlink_stream_.receive(&rec))
+    {
+            mavlink_communication->message_handler_.receive(&rec);
+    }
+
+    return true;
+}
