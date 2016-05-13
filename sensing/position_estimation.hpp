@@ -77,7 +77,7 @@ public:
         global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
         float gravity;              ///<    value of the Gravity for position estimation correction
         bool fence_set;
-        
+
         float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
         float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
 
@@ -118,10 +118,10 @@ public:
 
     /**
      * \brief   Returns fence violation state
-     * 
+     *
      * \details temporary solution to make fence private
      *          uses state->out_of_fence_1 and state->out_of_fence_2
-     * 
+     *
      * \return  fence violation state   IN_FENCE if inside of fence,
                                         OUTSIDE_FENCE1 if outside of inner fence
                                         OUTSIDE_FENCE2 if outside outer fence (and inner fence)
@@ -206,9 +206,9 @@ public:
     float kp_alt_baro;                      ///< Gain to correct the Z position estimation from the barometer
     float kp_vel_baro;                      ///< Gain to correct the Z velocity estimation from the barometer
     float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
-    
-private:
     float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
+
+private:
     float kp_alt_sonar;                     ///< Gain to correct the Z position estimation from the sonar
     float kp_vel_sonar;                     ///< Gain to correct the Z velocity estimation from the sonar
 
