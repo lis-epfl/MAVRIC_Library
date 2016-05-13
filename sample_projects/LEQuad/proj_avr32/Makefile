@@ -5,7 +5,7 @@
 ################################################################################
 
 # Binaries will be generated with this name
-PROJ_NAME=LEQuad_megafly
+PROJ_NAME=LEQuadAV
 
 # ------------------------------------------------------------------------------
 # PROJECT FOLDER
@@ -14,10 +14,10 @@ PROJ_NAME=LEQuad_megafly
 MAVRIC_SRC=../../../../src
 
 # Sources files for project folder (*.c and *.cpp)
-SRCS += main_avr32.cpp
-SRCS += central_data.cpp
-SRCS += mavlink_telemetry.cpp
-SRCS += tasks.cpp
+SRCS += ../src/main_avr32.cpp
+SRCS += ../src/central_data.cpp
+SRCS += ../src/mavlink_telemetry.cpp
+SRCS += ../src/tasks.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
@@ -41,16 +41,16 @@ LIB_INC += $(addprefix -I${MAVRIC_LIB}, ${LIB_MEGAFLY_INC})
 # ------------------------------------------------------------------------------
 # PREPROCESSOR OPTIONS
 # ------------------------------------------------------------------------------
-PREPROC_OPT  = -DBOARD=USER_BOARD 
-PREPROC_OPT += -DDSP_OPTIMIZATION=DSP_OPTI_SPEED 
+PREPROC_OPT  = -DBOARD=USER_BOARD
+PREPROC_OPT += -DDSP_OPTIMIZATION=DSP_OPTI_SPEED
 PREPROC_OPT += -DDSP_ADPCM
-PREPROC_OPT += -DDSP_RESAMPLING 
-PREPROC_OPT += -DDSP_FILTERS 
-PREPROC_OPT += -DDSP_OPERATORS 
+PREPROC_OPT += -DDSP_RESAMPLING
+PREPROC_OPT += -DDSP_FILTERS
+PREPROC_OPT += -DDSP_OPERATORS
 PREPROC_OPT += -DDSP_SIGNAL_GENERATION
-PREPROC_OPT += -DDSP_TRANSFORMS 
-PREPROC_OPT += -DDSP_VECTORS 
-PREPROC_OPT += -DDSP_WINDOWING 
+PREPROC_OPT += -DDSP_TRANSFORMS
+PREPROC_OPT += -DDSP_VECTORS
+PREPROC_OPT += -DDSP_WINDOWING
 PREPROC_OPT += -DUDD_ENABLE
 
 # ------------------------------------------------------------------------------
@@ -68,8 +68,8 @@ ASFLAGS += ${SRCS_INC}
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
 CC = avr32-gcc
-CFLAGS += -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -Wall 
-CFLAGS += -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes 
+CFLAGS += -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -Wall
+CFLAGS += -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes
 CFLAGS += -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MMD -MP
 # CFLAGS += -ffunction-sections
 CFLAGS += ${PREPROC_OPT}
@@ -84,10 +84,10 @@ CFLAGS += ${SRCS_INC}
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
 CXX = avr32-g++
-# CXXFLAGS  = -O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section 
-CXXFLAGS += -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section 
+# CXXFLAGS  = -O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section
+CXXFLAGS += -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section
 CXXFLAGS += -g2 -Wall -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MMD -MP
-# CXXFLAGS += -D_DEFAULT_SOURCE 
+# CXXFLAGS += -D_DEFAULT_SOURCE
 # CXXFLAGS += -ffunction-sections
 CXXFLAGS += ${PREPROC_OPT}
 
@@ -142,11 +142,11 @@ NO_COLOR=\033[0m
 OK_COLOR=\033[32;01m
 ERROR_COLOR=\033[31;01m
 WARN_COLOR=\033[33;01m
- 
+
 OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
- 
+
 AWK_CMD = awk '{ printf "%-60s %-10s\n",$$1, $$2; }'
 PRINT_ERROR = printf "$@ $(ERROR_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n" && false
 PRINT_WARNING = printf "$@ $(WARN_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n"
@@ -166,7 +166,7 @@ proj: $(PROJ_NAME).elf
 # Linking
 ${PROJ_NAME}.elf: ${OBJS}
 	@echo Linking...
-	@$(CXX) $(LDFLAGS) $^ -o $@  
+	@$(CXX) $(LDFLAGS) $^ -o $@
 	@$(OBJCOPY) -O ihex ${OBJCOPYFLAGS} $(PROJ_NAME).elf $(PROJ_NAME).hex
 	@$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
 	@$(BUILD_CMD)
@@ -176,7 +176,7 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.S
 	@mkdir -p $(dir $@)
 	@$(AS) $(ASFLAGS) -c $< -o $@
 	@$(BUILD_CMD)
-	
+
 # C files in Library
 ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.c
 	@mkdir -p $(dir $@)
@@ -210,9 +210,9 @@ ${BUILD_DIR}/%.o: ${MAVRIC_SRC}/%.cpp
 # Flash
 flash: ${PROJ_NAME}.elf
 	@dfu-programmer at32uc3c1512 erase
-	@dfu-programmer at32uc3c1512 get 
-	@dfu-programmer at32uc3c1512 flash ${PROJ_NAME}.hex --suppress-bootloader-mem 
-	@dfu-programmer at32uc3c1512 reset 
+	@dfu-programmer at32uc3c1512 get
+	@dfu-programmer at32uc3c1512 flash ${PROJ_NAME}.hex --suppress-bootloader-mem
+	@dfu-programmer at32uc3c1512 reset
 
 .PHONY: clean rebuild
 clean:

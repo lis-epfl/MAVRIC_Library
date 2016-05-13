@@ -50,7 +50,7 @@ extern "C"
 }
 
 
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const position_estimation_t* pos_est, torque_command_t* torque, thrust_command_t* thrust)
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const Position_estimation* pos_est, torque_command_t* torque, thrust_command_t* thrust)
 {
     bool init_success = true;
 
@@ -81,7 +81,7 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
     return init_success;
 }
 
-void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation)
+void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* position_estimation)
 {
     aero_attitude_t attitude_yaw_inverse;
     quat_t q_rot;
@@ -101,7 +101,7 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
     pos_error[YAW] = input->rpy[YAW];
 
     // run PID update on all velocity controllers
-    stabilisation_run(&stabilisation_copter->stabiliser_stack.position_stabiliser, stabilisation_copter->ahrs->dt, pos_error);
+    stabilisation_run(&stabilisation_copter->stabiliser_stack.position_stabiliser, stabilisation_copter->ahrs->dt_s, pos_error);
 
     float pid_output_global[3];
 
@@ -179,7 +179,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             rpyt_errors[YAW] = input.rpy[YAW];
 
             // run PID update on all velocity controllers
-            stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
+            stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
 
             //velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisation_param.controls->thrust);
             stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_copter->thrust_hover_point;
@@ -195,7 +195,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             input.rpy[ROLL] = rpy_local.v[Y];
             input.rpy[PITCH] = -rpy_local.v[X];
 
-            if ((!stabilisation_copter->pos_est->gps->healthy()) || (stabilisation_copter->pos_est->state->out_of_fence_2))
+            if ((!stabilisation_copter->pos_est->healthy()) || (stabilisation_copter->pos_est->get_fence_violation_state() == Position_estimation::OUTSIDE_FENCE2))
             {
                 input.rpy[ROLL] = 0.0f;
                 input.rpy[PITCH] = 0.0f;
@@ -223,7 +223,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             rpyt_errors[3] = input.thrust;      // no feedback for thrust at this level
 
             // run PID update on all attitude_filter controllers
-            stabilisation_run(&stabilisation_copter->stabiliser_stack.attitude_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
+            stabilisation_run(&stabilisation_copter->stabiliser_stack.attitude_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
 
             // use output of attitude_filter controller to set rate setpoints for rate controller
             input = stabilisation_copter->stabiliser_stack.attitude_stabiliser.output;
@@ -231,7 +231,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
         // -- no break here  - we want to run the lower level modes as well! --
 
         case RATE_COMMAND_MODE: // this level is always run
-            // get rate measurements from AHRS (filtered angular rates)
+            // get rate measurements from ahrs_t (filtered angular rates)
             for (i = 0; i < 3; i++)
             {
                 rpyt_errors[i] = input.rpy[i] - stabilisation_copter->ahrs->angular_speed[i];
@@ -239,7 +239,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 
             // run PID update on all rate controllers
-            stabilisation_run(&stabilisation_copter->stabiliser_stack.rate_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
+            stabilisation_run(&stabilisation_copter->stabiliser_stack.rate_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
     }
 
     stabilisation_copter->torque_command->xyz[0] = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[ROLL];
@@ -253,8 +253,9 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
 
 	//Input
 	//stabilisation_copter.controls.tvel[X]
-	//stabilisation_copter.controls.rpy[ROLL]
+	//stabilisatoin_copter.controls.tvel[Y] = 0.0f;
 	//stabilisation_copter.controls.tvel[Z]
+	//stabilisation_copter.controls.rpy[ROLL]
 
     float rpyt_errors[4];
     control_command_t input;
@@ -273,6 +274,7 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
     {
         case VELOCITY_COMMAND_MODE:
 
+        //Transform input velocity (semi-local velocity) to global velocity
             attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
             attitude_yaw_inverse.rpy[0] = 0.0f;
             attitude_yaw_inverse.rpy[1] = 0.0f;
@@ -290,6 +292,7 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
             input.tvel[Y] = input_global.v[Y];
             input.tvel[Z] = input_global.v[Z];
 
+            //Compute errors on global velocity
             rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
             rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
             rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
@@ -298,6 +301,7 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
             {
                 float rel_heading_coordinated;
                 if ((maths_f_abs(stabilisation_copter->pos_est->vel_bf[X]) <= 0.2f) && (maths_f_abs(stabilisation_copter->pos_est->vel_bf[Y]) <= 0.2f))
+                //if (semilocal_vel[X] <= 0.3) //0.3m/s
                 {
                     rel_heading_coordinated = 0.0f;
                 }
@@ -312,31 +316,37 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
 
             rpyt_errors[YAW] = input.rpy[YAW];
 
+         //run PID on global velocity
             // run PID update on all velocity controllers
-            stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
+            stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
 
             //velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisation_param.controls->thrust);
             stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_copter->thrust_hover_point;
             stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
             input = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output;
 
+         //Convert global velocity output from PID to semi-local velocity
             qtmp = quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
             //quat_t rpy_local = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
 
             quat_t rpy_local;
             quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
 
+         //Transform to attitude commands
             input.rpy[ROLL] = rpy_local.v[Y];
             input.rpy[PITCH] = -rpy_local.v[X];
 
-            if ((!stabilisation_copter->pos_est->gps->healthy()) || (stabilisation_copter->pos_est->state->out_of_fence_2))
+            if ((!stabilisation_copter->pos_est->healthy()) || (stabilisation_copter->pos_est->get_fence_violation_state() == Position_estimation::OUTSIDE_FENCE2))
             {
                 input.rpy[ROLL] = 0.0f;
                 input.rpy[PITCH] = 0.0f;
             }
 
-            //added to have the roll
-            input.rpy[ROLL] = stabilisation_copter->controls->rpy[ROLL];
+            //ALEX changes overwrite the roll command
+            //if(stabilisation_copter->controls->rpy[ROLL] < 2.0f *3.145f/18.0f)
+            	input.rpy[ROLL] = stabilisation_copter->controls->rpy[ROLL];
+            //else
+            //	input.rpy[ROLL] = 0.0f;
 
         //input.thrust = stabilisation_copter->controls->tvel[Z];
 
@@ -360,7 +370,7 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
             rpyt_errors[3] = input.thrust;      // no feedback for thrust at this level
 
             // run PID update on all attitude_filter controllers
-            stabilisation_run(&stabilisation_copter->stabiliser_stack.attitude_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
+            stabilisation_run(&stabilisation_copter->stabiliser_stack.attitude_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
 
             // use output of attitude_filter controller to set rate setpoints for rate controller
             input = stabilisation_copter->stabiliser_stack.attitude_stabiliser.output;
@@ -376,7 +386,7 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
             rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 
             // run PID update on all rate controllers
-            stabilisation_run(&stabilisation_copter->stabiliser_stack.rate_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
+            stabilisation_run(&stabilisation_copter->stabiliser_stack.rate_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
     }
 
     stabilisation_copter->torque_command->xyz[0] = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[ROLL];

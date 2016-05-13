@@ -5,7 +5,7 @@
 ################################################################################
 
 # Binaries will be generated with this name
-PROJ_NAME=LEQuad_mavrinux
+PROJ_NAME=LEQuadLI
 
 # ------------------------------------------------------------------------------
 # PROJECT FOLDER
@@ -95,11 +95,11 @@ NO_COLOR=\033[0m
 OK_COLOR=\033[32;01m
 ERROR_COLOR=\033[31;01m
 WARN_COLOR=\033[33;01m
- 
+
 OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
- 
+
 AWK_CMD = awk '{ printf "%-60s %-10s\n",$$1, $$2; }'
 PRINT_ERROR = printf "$@ $(ERROR_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n" && false
 PRINT_WARNING = printf "$@ $(WARN_STRING)\n" | $(AWK_CMD) && printf "$(CMD)\n$$LOG\n"
@@ -122,9 +122,11 @@ proj: $(PROJ_NAME).elf
 # Linking
 ${PROJ_NAME}.elf: ${OBJS}
 	@echo Linking...
-	@$(CXX) $^ -o $@ $(LDFLAGS)  
+	@$(CXX) $^ -o $@ $(LDFLAGS)
 	@$(BUILD_CMD)
-	
+
+# versions: ${BUILD_DIR}/%.o
+
 # C files in Library
 ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.c
 	@mkdir -p $(dir $@)

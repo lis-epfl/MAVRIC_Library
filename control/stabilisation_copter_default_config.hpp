@@ -73,8 +73,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].differentiator.clip      = 0.14f;
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].output           = 0.0f;
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].error            = 0.0f;
-    conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].last_update          = 0.0f;
-    conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].dt               = 1;
+    conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].last_update_s          = 0.0f;
+    conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].dt_s               = 1;
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].soft_zone_width      = 0.0f;
     // -----------------------------------------------------------------
     // ------ PITCH PID ------------------------------------------------
@@ -93,8 +93,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].differentiator.clip     = 0.14f;
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].output          = 0.0f;
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].error           = 0.0f;
-    conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].last_update         = 0.0f;
-    conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].dt              = 1;
+    conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].last_update_s         = 0.0f;
+    conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].dt_s              = 1;
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].soft_zone_width         = 0.0f;
     // -----------------------------------------------------------------
     // ------ YAW PID --------------------------------------------------
@@ -113,8 +113,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].differentiator.clip       = 0.0f;
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].output            = 0.0f;
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].error             = 0.0f;
-    conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].last_update           = 0.0f;
-    conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].dt                = 1;
+    conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].last_update_s           = 0.0f;
+    conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].dt_s                = 1;
     conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].soft_zone_width       = 0.0f;
     // ---------------------------------------------------------------------
     // ------ THRUST PID ---------------------------------------------------
@@ -134,8 +134,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.rate_stabiliser.thrust_controller.differentiator.clip         = 0.0f;
     conf.stabiliser_stack.rate_stabiliser.thrust_controller.output                      = 0.0f;
     conf.stabiliser_stack.rate_stabiliser.thrust_controller.error                       = 0.0f;
-    conf.stabiliser_stack.rate_stabiliser.thrust_controller.last_update                 = 0.0f;
-    conf.stabiliser_stack.rate_stabiliser.thrust_controller.dt                          = 1,
+    conf.stabiliser_stack.rate_stabiliser.thrust_controller.last_update_s                 = 0.0f;
+    conf.stabiliser_stack.rate_stabiliser.thrust_controller.dt_s                          = 1,
                                                             conf.stabiliser_stack.rate_stabiliser.thrust_controller.soft_zone_width              = 0.0f;
     // ---------------------------------------------------------------------
     // ------ OUTPUT -------------------------------------------------------
@@ -173,8 +173,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].differentiator.clip  = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].output           = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].error            = 0.0f;
-    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].last_update      = 0.0f;
-    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].dt           = 1;
+    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].last_update_s      = 0.0f;
+    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].dt_s           = 1;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].soft_zone_width      = 0.0f;
     // -----------------------------------------------------------------
     // ------ PITCH PID ------------------------------------------------
@@ -193,8 +193,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].differentiator.clip     = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].output          = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].error           = 0.0f;
-    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].last_update         = 0.0f;
-    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].dt          = 1;
+    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].last_update_s         = 0.0f;
+    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].dt_s          = 1;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].soft_zone_width     = 0.0f;
     // -----------------------------------------------------------------
     // ------ YAW PID --------------------------------------------------
@@ -213,8 +213,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].differentiator.clip   = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].output            = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].error             = 0.0f;
-    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].last_update       = 0.0f;
-    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].dt            = 1;
+    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].last_update_s       = 0.0f;
+    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].dt_s            = 1;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].soft_zone_width       = 0.0f;
     // ---------------------------------------------------------------------
     // ------ THRUST PID ---------------------------------------------------
@@ -234,8 +234,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.attitude_stabiliser.thrust_controller.differentiator.clip         = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.thrust_controller.output                  = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.thrust_controller.error                   = 0.0f;
-    conf.stabiliser_stack.attitude_stabiliser.thrust_controller.last_update             = 0.0f;
-    conf.stabiliser_stack.attitude_stabiliser.thrust_controller.dt                      = 1;
+    conf.stabiliser_stack.attitude_stabiliser.thrust_controller.last_update_s             = 0.0f;
+    conf.stabiliser_stack.attitude_stabiliser.thrust_controller.dt_s                      = 1;
     conf.stabiliser_stack.attitude_stabiliser.thrust_controller.soft_zone_width         = 0.0f;
     // ---------------------------------------------------------------------
     // ------ OUTPUT -------------------------------------------------------
@@ -262,7 +262,7 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     // -----------------------------------------------------------------
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].p_gain           = 0.15f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].clip_min         = -0.5f;
-    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].clip_max         = 0.5f;
+    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].clip_max         = 0.5f; //if 0.5 => 45° because it acts on the norm of upvector
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator       = {};
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator.gain      = 0.0125f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator.clip_pre  = 1.0f;
@@ -274,8 +274,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].differentiator.clip  = 1.0f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].output           = 0.0f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].error            = 0.0f;
-    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].last_update      = 0.0f;
-    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].dt           = 1;
+    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].last_update_s      = 0.0f;
+    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].dt_s           = 1;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].soft_zone_width      = 0.2f;
     // -----------------------------------------------------------------
     // ------ PITCH PID ------------------------------------------------
@@ -294,8 +294,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].differentiator.clip     = 1.0f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].output          = 0.0f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].error           = 0.0f;
-    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].last_update         = 0.0f;
-    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].dt          = 1;
+    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].last_update_s         = 0.0f;
+    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].dt_s          = 1;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].soft_zone_width     = 0.2f;
     // -----------------------------------------------------------------
     // ------ YAW PID --------------------------------------------------
@@ -314,8 +314,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].differentiator.clip   = 0.0f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].output            = 0.0f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].error             = 0.0f;
-    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].last_update       = 0.0f;
-    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].dt            = 1;
+    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].last_update_s       = 0.0f;
+    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].dt_s            = 1;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].soft_zone_width       = 0.0f;
     // ---------------------------------------------------------------------
     // ------ THRUST PID ---------------------------------------------------
@@ -335,8 +335,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.velocity_stabiliser.thrust_controller.differentiator.clip         = 0.04f;
     conf.stabiliser_stack.velocity_stabiliser.thrust_controller.output                  = 0.0f;
     conf.stabiliser_stack.velocity_stabiliser.thrust_controller.error                   = 0.0f;
-    conf.stabiliser_stack.velocity_stabiliser.thrust_controller.last_update             = 0.0f;
-    conf.stabiliser_stack.velocity_stabiliser.thrust_controller.dt                      = 1;
+    conf.stabiliser_stack.velocity_stabiliser.thrust_controller.last_update_s             = 0.0f;
+    conf.stabiliser_stack.velocity_stabiliser.thrust_controller.dt_s                      = 1;
     conf.stabiliser_stack.velocity_stabiliser.thrust_controller.soft_zone_width         = 0.2f;
     // ---------------------------------------------------------------------
     // ------ OUTPUT -------------------------------------------------------
@@ -376,8 +376,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].differentiator.clip  = 0.005f;
     conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].output           = 0.0f;
     conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].error            = 0.0f;
-    conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].last_update      = 0.0f;
-    conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].dt           = 1;
+    conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].last_update_s      = 0.0f;
+    conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].dt_s           = 1;
     conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].soft_zone_width      = 0.2f;
     // -----------------------------------------------------------------
     // ------ PITCH PID ------------------------------------------------
@@ -396,8 +396,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].differentiator.clip     = 0.005f;
     conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].output          = 0.0f;
     conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].error           = 0.0f;
-    conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].last_update         = 0.0f;
-    conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].dt          = 1;
+    conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].last_update_s         = 0.0f;
+    conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].dt_s          = 1;
     conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].soft_zone_width     = 0.2f;
     // -----------------------------------------------------------------
     // ------ YAW PID --------------------------------------------------
@@ -416,8 +416,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].differentiator.clip   = 0.0f;
     conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].output            = 0.0f;
     conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].error             = 0.0f;
-    conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].last_update       = 0.0f;
-    conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].dt            = 1;
+    conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].last_update_s       = 0.0f;
+    conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].dt_s            = 1;
     conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].soft_zone_width       = 0.0f;
     // ---------------------------------------------------------------------
     // ------ THRUST PID ---------------------------------------------------
@@ -437,8 +437,8 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.position_stabiliser.thrust_controller.differentiator.clip         = 0.01f;
     conf.stabiliser_stack.position_stabiliser.thrust_controller.output                  = 0.0f;
     conf.stabiliser_stack.position_stabiliser.thrust_controller.error                   = 0.0f;
-    conf.stabiliser_stack.position_stabiliser.thrust_controller.last_update             = 0.0f;
-    conf.stabiliser_stack.position_stabiliser.thrust_controller.dt                      = 1;
+    conf.stabiliser_stack.position_stabiliser.thrust_controller.last_update_s             = 0.0f;
+    conf.stabiliser_stack.position_stabiliser.thrust_controller.dt_s                      = 1;
     conf.stabiliser_stack.position_stabiliser.thrust_controller.soft_zone_width         = 0.2f;
     // ---------------------------------------------------------------------
     // ------ OUTPUT -------------------------------------------------------

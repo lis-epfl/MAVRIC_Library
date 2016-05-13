@@ -159,7 +159,7 @@ static inline sonar_sim_conf_t sonar_sim_default_config()
     sonar_sim_conf_t conf = {};
 
     // Correct range between 20cm and 7m, - safety
-    conf.min_distance = 0.22f;
+    conf.min_distance = 0.20f;
     conf.max_distance = 5.0f;
 
     // Default orientation is looking downwards (NED)

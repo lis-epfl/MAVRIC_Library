@@ -30,17 +30,17 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file toggle_logging_telemetry.cpp
+ * \file data_logging_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *
  * \brief This module takes care of sending periodic telemetric messages for
- * the toggle_logging module
+ * the data_logging module
  *
  ******************************************************************************/
 
-#include "communication/toggle_logging_telemetry.hpp"
+#include "communication/data_logging_telemetry.hpp"
 
 extern "C"
 {
@@ -49,41 +49,50 @@ extern "C"
 }
 
 /**
- * \brief   Toggle the toggle_logging
+ * \brief   Toggle the data_logging
  *
- * \param   toggle_logging          The pointer to the data logging structure
+ * \param   data_logging          The pointer to the data logging structure
  * \param   packet                  The pointer to the decoded MAVLink message long
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t toggle_logging_telemetry_toggle_logging(toggle_logging_t* toggle_logging, mavlink_command_long_t* packet);
+static mav_result_t data_logging_telemetry_data_logging(Data_logging* data_logging, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t toggle_logging_telemetry_toggle_logging(toggle_logging_t* toggle_logging, mavlink_command_long_t* packet)
+static mav_result_t data_logging_telemetry_data_logging(Data_logging* data_logging, mavlink_command_long_t* packet)
 {
-    mav_result_t result = MAV_RESULT_TEMPORARILY_REJECTED;
+    mav_result_t result;
 
-    if (!mav_modes_is_armed(toggle_logging->state->mav_mode))
+    if (packet->param1 == 1)
     {
-        if (packet->param1 == 1)
+        if (data_logging->start())
         {
             print_util_dbg_print("Start logging from command message\r\n");
+            result = MAV_RESULT_ACCEPTED;
         }
         else
         {
-            print_util_dbg_print("Stop logging from command message\r\n");
+            result = MAV_RESULT_TEMPORARILY_REJECTED;
         }
-
-        result = MAV_RESULT_ACCEPTED;
-
-        toggle_logging->log_data = packet->param1;
+    }
+    else if (packet->param1 == 0)
+    {
+        if (data_logging->stop())
+        {
+            print_util_dbg_print("Stop logging from command message\r\n");
+            result = MAV_RESULT_ACCEPTED;
+        }
+        else
+        {
+            result = MAV_RESULT_TEMPORARILY_REJECTED;
+        }
     }
     else
     {
-        result = MAV_RESULT_TEMPORARILY_REJECTED;
+        result = MAV_RESULT_UNSUPPORTED;
     }
 
     return result;
@@ -93,20 +102,20 @@ static mav_result_t toggle_logging_telemetry_toggle_logging(toggle_logging_t* to
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool toggle_logging_telemetry_init(toggle_logging_t* toggle_logging, mavlink_message_handler_t* message_handler)
+bool data_logging_telemetry_init(Data_logging* data_logging, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
-    // Add callbacks for toggle_logging commands requests
-    mavlink_message_handler_cmd_callback_t callbackcmd;
+    // Add callbacks for data_logging commands requests
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
 
     callbackcmd.command_id = MAV_CMD_DO_SET_PARAMETER; // 180
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (mavlink_cmd_callback_function_t)    &toggle_logging_telemetry_toggle_logging;
-    callbackcmd.module_struct =                                 toggle_logging;
-    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)            &data_logging_telemetry_data_logging;
+    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) data_logging;
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;
 }

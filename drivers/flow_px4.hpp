@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2016, MAV'RIC Development Team
+ * Copyright (c) 2009-2015, MAV'RIC Development Team
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,58 +30,82 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file toggle_logging.hpp
+ * \file flow.hpp
  *
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *
- * \brief Toggle the logging of data
+ * \brief Driver for optic flow sensors
  *
  ******************************************************************************/
 
-#ifndef TOGGLE_LOGGING_HPP_
-#define TOGGLE_LOGGING_HPP_
+#ifndef FLOW_PX4_HPP_
+#define FLOW_PX4_HPP_
 
-#include "communication/state.hpp"
-
-extern "C"
-{
-#include <stdbool.h>
+#include "drivers/flow.hpp"
+#include "communication/mavlink_stream.hpp"
 #include <stdint.h>
-}
+#include "hal/common/serial.hpp"
+
+const float filter_constant = (1./250.)/((1./100.) + (1./500.) );
 
 /**
- * \brief   Configuration for the module data logging
+ * \brief   Array of 2-D optic flow vectors
  */
-typedef struct
+typedef union
 {
-    uint32_t max_data_logging_count;            ///< Maximum number of parameters
-    uint16_t max_logs;                          ///< The max number of logged files with the same name on the SD card
-    bool debug;                                 ///< Indicates if debug messages should be printed for each param change
-    uint32_t log_data;                          ///< The initial state of writing a file
-} toggle_logging_conf_t;
+    struct
+    {
+        int16_t x[125];     ///< Horizontal component
+        int16_t y[125];     ///< Vertical component
+    };
+    uint8_t data[500];      ///< Raw access to data
+} flow_px4_data_t;
+
 
 /**
- * \brief   The fat_fs mounting structure
+ * \brief   State of encapsulated data transfer
  */
-typedef struct
+typedef enum
 {
-    toggle_logging_conf_t toggle_logging_conf;  ///< The data logging configuration structure
+    FLOW_NO_HANDSHAKE       = 0,    ///< No handshake received
+    FLOW_HANDSHAKE_DATA     = 1,    ///< Normal data will be received
+    FLOW_HANDSHAKE_METADATA = 2,    ///< Metadata will be received
+} flow_px4_handshake_state_t;
 
-    uint32_t log_data;                          ///< A flag to stop/start writing to file
-
-    const State* state;                         ///< The pointer to the state structure
-} toggle_logging_t;
 
 /**
- * \brief   Initialise the toggle logging system file
- *
- * \param   toggle_logging          The pointer to the toggle telemetry structure
- * \param   toggle_logging_conf     The pointer to the configuration structure
- * \param   state                   The pointer to the state structure
- *
- * \return  True if the init succeed, false otherwise
+ * \brief   Driver for PX4Flow
  */
-bool toggle_logging_init(toggle_logging_t* toggle_logging, toggle_logging_conf_t toggle_logging_conf, const State* state);
+class  Flow_px4: public Flow
+{
+public:
+    /**
+    * \brief    Init function
+    * \param    uart    Pointer to serial peripheral
+    * \return   Success
+    */
+    Flow_px4(Serial& uart);
 
-#endif /* fat_fs_mounting_TELEMETRY_HPP_ */
+    /**
+    * \brief    Update function
+    * \return   Success
+    */
+    bool update(void);
+
+private:
+    Serial&             uart_;               ///< Serial device
+    Mavlink_stream      mavlink_stream_;     ///< Mavlink interface using streams
+
+    flow_px4_data_t of_tmp_;        ///< Temporary optic flow vectors
+    flow_px4_data_t of_loc_tmp_;    ///< Temporary location of optic flow vectors
+    uint16_t    packet_count_;  ///< Number of encapsulated data packets expected
+    uint32_t    byte_count_;    ///< Total size of data to receive (in bytes)
+
+    flow_px4_handshake_state_t  handshake_state;    ///< Indicates the current reception state for encapsulated data
+};
+
+
+
+
+#endif /* FLOW_PX4_HPP_ */

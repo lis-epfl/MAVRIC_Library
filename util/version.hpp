@@ -30,44 +30,55 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_communication_default_config.h
+ * \file versions.hpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief Default configuration for the mavlink communication module
+ * \brief   Code version
  *
  ******************************************************************************/
 
 
-#ifndef MAVLINK_COMMUNICATION_DEFAULT_CONFIG_H_
-#define MAVLINK_COMMUNICATION_DEFAULT_CONFIG_H_
+#ifndef VERSIONS_HPP_
+#define VERSIONS_HPP_
 
-#include "communication/mavlink_communication.hpp"
-
-static inline mavlink_communication_conf_t mavlink_communication_default_config()
+namespace version
 {
-    mavlink_communication_conf_t conf                  = {};
 
-    conf.scheduler_config                              = {};
-    conf.scheduler_config.max_task_count               = 30;
-    conf.scheduler_config.schedule_strategy            = FIXED_PRIORITY;
-    conf.scheduler_config.debug                        = false;
-    conf.mavlink_stream_config                         = {};
-    conf.mavlink_stream_config.sysid                   = 1;
-    conf.mavlink_stream_config.compid                  = 50;
-    conf.mavlink_stream_config.debug                   = false,
-                               conf.message_handler_config                        = {};
-    conf.message_handler_config.max_msg_callback_count = 20;
-    conf.message_handler_config.max_cmd_callback_count = 20;
-    conf.message_handler_config.debug                  = false;
-    conf.onboard_parameters_config                     = {};
-    conf.onboard_parameters_config.max_param_count     = MAX_ONBOARD_PARAM_COUNT;
-    conf.onboard_parameters_config.debug               = false  ;
-    conf.max_msg_sending_count                         = 22;
+    // Version of MAVRIC Library
+    const uint32_t mavric =   (1 << 24)   // major
+                            + (5 << 16)   // minor
+                            + (0 << 8)    // patch
+                            + (0 << 0);   // release
 
-    return conf;
-};
+    // Git hash for MAVRIC Library
+    #ifdef MAVRIC_GIT_HASH
+        const uint8_t mavric_git_hash[8] = MAVRIC_GIT_HASH;
+    #else
+        const uint8_t mavric_git_hash[8] = "unknown";
+    #endif
 
+    // Version of project
+    #ifdef PROJECT_VERSION
+        const uint32_t project = PROJECT_VERSION;
+    #else
+        const uint32_t project = 0;
+    #endif
 
-#endif // MAVLINK_COMMUNICATION_DEFAULT_CONFIG_H_
+    // Git hash of project
+    #ifdef PROJECT_GIT_HASH
+        const uint8_t project_git_hash[8] = PROJECT_GIT_HASH;
+    #else
+        const uint8_t project_git_hash[8] = "unknown";
+    #endif
+
+    // Project name
+    #ifdef PROJECT_NAME
+        const uint8_t project_name[] = PROJECT_NAME;
+    #else
+        const uint8_t project_name[] = "unknown";
+    #endif
+}
+
+#endif /* VERSIONS_HPP_ */
