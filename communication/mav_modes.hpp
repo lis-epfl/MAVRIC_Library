@@ -49,6 +49,7 @@ extern "C"
 {
 #include <stdint.h>
 #include <stdbool.h>
+#include "util/print_util.h"
 }
 
 /**
@@ -118,20 +119,20 @@ typedef enum
     CUST_FENCE_2 = 256,                         ///< Fence 2 violation flag
     CUST_HEARTBEAT_LOST = 512,                  ///< Heartbeat loss flag
     CUST_REMOTE_LOST = 1024,                    ///< Remote lost flag
+
     CUST_GPS_BAD = 2048 ,                       ///< GPS loss flag
 	CUST_ATTITUDE_FAKE_FXWD = 4096, 			///< Alex symbiotic drone mode
 	CUST_VELOCITY_FAKE_FXWD = 8192, 			///< Alex symbiotic drone mode
-} mav_mode_custom_t;
-
-#define mav_mode_custom_uint32_t uint32_t
+} mav_mode_custom_list_t;
 
 #define mav_mode_t uint8_t
+#define mav_mode_custom_t uint32_t
 
 
 /**
  * \brief  Funtion to allow logic operations on enum in C++
  */
-inline mav_mode_custom_t operator |=(mav_mode_custom_t a, mav_mode_custom_t b)
+/*inline mav_mode_custom_t operator |=(mav_mode_custom_t a, mav_mode_custom_t b)
 {
     return static_cast<mav_mode_custom_t>(static_cast<int>(a) | static_cast<int>(b));
 }
@@ -144,7 +145,7 @@ inline mav_mode_custom_t operator&=(mav_mode_custom_t a, mav_mode_custom_t b)
 inline mav_mode_custom_t operator~(mav_mode_custom_t a)
 {
     return static_cast<mav_mode_custom_t>(~static_cast<int>(a));
-}
+}*/
 
 
 /*
@@ -205,6 +206,29 @@ static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
     }
 }
 
+/*
+ * \brief Returns whether MAV is in manual piloting mode
+ *
+ * \param mav_mode  correspond to the mode in which the MAV is
+ *
+ * \return true if MAV is in manual piloting mode, false otherwise
+ */
+static inline bool mav_modes_is_only_manual(const mav_mode_t mav_mode)
+{
+    if ((mav_mode & MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED &&
+    	(mav_mode & MAV_MODE_FLAG_STABILIZE_ENABLED) 	== !MAV_MODE_FLAG_STABILIZE_ENABLED &&
+		(mav_mode & MAV_MODE_FLAG_GUIDED_ENABLED) 		== !MAV_MODE_FLAG_GUIDED_ENABLED &&
+		(mav_mode & MAV_MODE_FLAG_AUTO_ENABLED) 		== !MAV_MODE_FLAG_AUTO_ENABLED &&
+		(mav_mode & MAV_MODE_FLAG_TEST_ENABLED) 		== !MAV_MODE_FLAG_TEST_ENABLED &&
+		(mav_mode & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) 	== !MAV_MODE_FLAG_CUSTOM_MODE_ENABLED)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 /*
  * \brief Returns whether MAV is in stabilise piloting mode
@@ -213,7 +237,7 @@ static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
  *
  * \return true if MAV is in stabilise piloting mode, false otherwise
  */
-static inline bool mav_modes_is_stabilise(const mav_mode_t mav_mode)
+static inline bool mav_modes_is_stabilize(const mav_mode_t mav_mode)
 {
     if ((mav_mode & MAV_MODE_FLAG_STABILIZE_ENABLED) == MAV_MODE_FLAG_STABILIZE_ENABLED)
     {

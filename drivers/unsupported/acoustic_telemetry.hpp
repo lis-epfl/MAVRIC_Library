@@ -54,7 +54,7 @@
  * \param   mavlink_stream      Pointer to mavlink stream structure
  * \param   msg                 Pointer to the message structure
  */
-void acoustic_telemetry_send(const audio_t* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void acoustic_telemetry_send(const audio_t* audio_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif

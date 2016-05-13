@@ -71,7 +71,7 @@ typedef struct
  */
 typedef struct
 {
-    float pos[3];               ///<    Current position x, y and z
+    float pos[3];               ///<    Current position x, y and z [m]
     float heading;              ///<    Current heading (equal to heading in global frame)
     global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
 } local_position_t;
@@ -142,6 +142,19 @@ quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero);
  * \return     Yaw angle in radians
  */
 float coord_conventions_get_yaw(quat_t qe);
+
+
+/**
+ * \brief           Changes the origin of the local position
+ *
+ * \details         THIS IS EVIL!!!
+ *
+ * \param position  pointer to position whose origin is changed
+ *
+ * \param origin    new origin
+ *
+ */
+void coord_conventions_change_origin(local_position_t* position, global_position_t origin);
 
 
 #ifdef __cplusplus

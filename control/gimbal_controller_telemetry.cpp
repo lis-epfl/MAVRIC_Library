@@ -60,6 +60,8 @@ void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t s
     gimbal_controller->attitude_command_desired_.rpy[1] = packet.angle[1];
     gimbal_controller->attitude_command_desired_.rpy[2] = packet.angle[2];
 
+    gimbal_controller->commTrig_ = time_keeper_get_us()/1000.0f;
+
     /*print_util_dbg_print("GIMBAL\r\n");
 	print_util_dbg_print("roll ");
 	print_util_dbg_putfloat(gimbal_controller->attitude_command_desired_.rpy[0],3);
@@ -71,19 +73,19 @@ void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t s
 }
 
 
-bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, mavlink_message_handler_t* message_handler)
+bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
     // Add callbacks for waypoint handler messages requests
-    mavlink_message_handler_msg_callback_t callback;
+    Mavlink_message_handler::msg_callback_t callback;
 
     callback.message_id     = MAVLINK_MSG_ID_GIMBAL_COMMAND; //185
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (mavlink_msg_callback_function_t) &gimbal_telemetry_parse_msg;
-    callback.module_struct  = (handling_module_struct_t)        gimbal_controller;
-    init_success &= mavlink_message_handler_add_msg_callback(message_handler, &callback);
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &gimbal_telemetry_parse_msg;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) gimbal_controller;
+    init_success &= message_handler->add_msg_callback(&callback);
 
     return init_success;
 }

@@ -30,41 +30,33 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file scheduler_default_config.h
+ * \file data_logging_telemetry.hpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *
- * \brief Default configuration for the scheduler
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the data_logging module
  *
  ******************************************************************************/
 
 
-#ifndef SCHEDULER_DEFAULT_CONFIG_H_
-#define SCHEDULER_DEFAULT_CONFIG_H_
+#ifndef DATA_LOGGING_TELEMETRY_HPP_
+#define DATA_LOGGING_TELEMETRY_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "runtime/scheduler.h"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "communication/data_logging.hpp"
 
 
-static inline scheduler_conf_t scheduler_default_config()
-{
-    scheduler_conf_t conf  = {};
+/**
+ * \brief   Initialize the call_back to start & stop logging
+ *
+ * \param   data_logging          The pointer to the data logging structure
+ * \param   message_handler         The pointer to the MAVLink message handler
+ *
+ * \return  True if the init succeed, false otherwise
+ */
+bool data_logging_telemetry_init(Data_logging* data_logging, Mavlink_message_handler* message_handler);
 
-    conf.max_task_count    = 15;
-    // conf.schedule_strategy = FIXED_PRIORITY;
-    conf.schedule_strategy = ROUND_ROBIN;
-    conf.debug             = true;
-
-    return conf;
-};
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // SCHEDULER_DEFAULT_CONFIG_H_
+#endif /* data_logging_TELEMETRY_HPP_ */

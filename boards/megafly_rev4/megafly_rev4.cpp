@@ -66,42 +66,42 @@ uint8_t serial2stream(stream_data_t data, uint8_t byte)
 }
 
 Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
-    dsm_receiver_pin(Gpio_avr32(config.dsm_receiver_pin_config)),
-    dsm_power_pin(Gpio_avr32(config.dsm_power_pin_config)),
-    uart0(Serial_avr32(config.uart0_config)),
-    uart1(Serial_avr32(config.uart1_config)),
-    uart3(Serial_avr32(config.uart3_config)),
-    uart_usb(Serial_usb_avr32(config.uart_usb_config)),
-    i2c0(I2c_avr32(config.i2c0_config)),
-    i2c1(I2c_avr32(config.i2c1_config)),
-    hmc5883l(Hmc5883l(i2c0)),
-    lsm330dlc(Lsm330dlc(i2c0)),
-    bmp085(Bmp085(i2c0)),
-    spektrum_satellite(Spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin)),
+    dsm_receiver_pin(config.dsm_receiver_pin_config),
+    dsm_power_pin(config.dsm_power_pin_config),
+    uart0(config.uart0_config),
+    uart1(config.uart1_config),
+    uart3(config.uart3_config),
+    uart_usb(config.uart_usb_config),
+    i2c0(config.i2c0_config),
+    i2c1(config.i2c1_config),
+    hmc5883l(i2c0),
+    lsm330dlc(i2c0),
+    bmp085(i2c0),
+    spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin),
     red_led(LED_AVR32_ID_2) ,
     green_led(LED_AVR32_ID_1),
-    imu(Imu(lsm330dlc, lsm330dlc, hmc5883l, config.imu_config)),
-    file_flash(File_flash_avr32("flash.bin")),
-    gps_ublox(Gps_ublox(uart3)),
-    sonar_i2cxl(Sonar_i2cxl(i2c1)),
-    adc_battery(Adc_avr32(analog_monitor, {ANALOG_RAIL_10})),
-            battery(Battery(adc_battery)),
-            pwm_0(0),
-            pwm_1(1),
-            pwm_2(2),
-            pwm_3(3),
-            pwm_4(4),
-            pwm_5(5),
-            pwm_6(6),
-            pwm_7(7),
-            servo_0(pwm_0, config.servo_config[0]),
-            servo_1(pwm_1, config.servo_config[1]),
-            servo_2(pwm_2, config.servo_config[2]),
-            servo_3(pwm_3, config.servo_config[3]),
-            servo_4(pwm_4, config.servo_config[4]),
-            servo_5(pwm_5, config.servo_config[5]),
-            servo_6(pwm_6, config.servo_config[6]),
-            servo_7(pwm_7, config.servo_config[7])
+    imu(lsm330dlc, lsm330dlc, hmc5883l, config.imu_config),
+    file_flash("flash.bin"),
+    gps_ublox(uart3),
+    sonar_i2cxl(i2c1),
+    adc_battery(analog_monitor, {ANALOG_RAIL_10}),
+    battery(adc_battery),
+    pwm_0(0),
+    pwm_1(1),
+    pwm_2(2),
+    pwm_3(3),
+    pwm_4(4),
+    pwm_5(5),
+    pwm_6(6),
+    pwm_7(7),
+    servo_0(pwm_0, config.servo_config[0]),
+    servo_1(pwm_1, config.servo_config[1]),
+    servo_2(pwm_2, config.servo_config[2]),
+    servo_3(pwm_3, config.servo_config[3]),
+    servo_4(pwm_4, config.servo_config[4]),
+    servo_5(pwm_5, config.servo_config[5]),
+    servo_6(pwm_6, config.servo_config[6]),
+    servo_7(pwm_7, config.servo_config[7])
 {}
 
 
@@ -215,44 +215,78 @@ bool Megafly_rev4::init(void)
     ret = pwm_0.init();
     print_util_dbg_init_msg("[PWM0]", ret);
     init_success &= ret;
-    servo_0.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_1.init();
     print_util_dbg_init_msg("[PWM1]", ret);
     init_success &= ret;
-    servo_1.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_2.init();
     print_util_dbg_init_msg("[PWM2]", ret);
     init_success &= ret;
-    servo_2.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_3.init();
     print_util_dbg_init_msg("[PWM3]", ret);
     init_success &= ret;
-    servo_3.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_4.init();
     print_util_dbg_init_msg("[PWM4]", ret);
     init_success &= ret;
-    servo_4.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_5.init();
     print_util_dbg_init_msg("[PWM5]", ret);
     init_success &= ret;
-    servo_5.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_6.init();
     print_util_dbg_init_msg("[PWM6]", ret);
     init_success &= ret;
-    servo_6.failsafe();
+
     time_keeper_delay_ms(50);
     ret = pwm_7.init();
     print_util_dbg_init_msg("[PWM7]", ret);
     init_success &= ret;
-    servo_7.failsafe();
+
+    //-----------------------------
+    // Calibrate ESCs => Remove the propellers!
+    //-----------------------------
+    //     servo_0.write(1);
+    //     servo_1.write(1);
+    //     servo_2.write(1);
+    //     servo_3.write(1);
+    //     servo_4.write(1);
+    //     servo_5.write(1);
+    //     servo_6.write(1);
+    //     servo_7.write(1);
+    //     time_keeper_delay_ms(3000);
+    //     servo_0.write(-1);
+    //     servo_1.write(-1);
+    //     servo_2.write(-1);
+    //     servo_3.write(-1);
+    //     servo_4.write(-1);
+    //     servo_5.write(-1);
+    //     servo_6.write(-1);
+    //     servo_7.write(-1);
+
+
+    // -------------------------------------------------------------------------
+    // Init Servos
+    // -------------------------------------------------------------------------
+
     time_keeper_delay_ms(50);
 
+    servo_0.failsafe();
+    servo_1.failsafe();
+    servo_2.failsafe();
+    servo_3.failsafe();
+    servo_4.failsafe();
+    servo_5.failsafe();
+    servo_6.failsafe();
+    servo_7.failsafe();
 
     Enable_global_interrupt();
 

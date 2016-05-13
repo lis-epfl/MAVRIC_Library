@@ -39,9 +39,9 @@
  * \details Incomplete implementation (TODO)
  *          - Implemented:
  *              * buffered, blocking writing
- *          - NOT implemented:
  *              * Read functions
  *              * Receive interrupt callback
+ *          - NOT implemented:
  *              * buffered input
  *
  ******************************************************************************/
@@ -64,6 +64,9 @@ Serial_usb_avr32::Serial_usb_avr32(serial_usb_avr32_conf_t config)
 {
     // Store config
     config_ = config;
+
+    // set interupt callback to null
+    irq_callback = NULL;
 }
 
 
@@ -72,6 +75,11 @@ bool Serial_usb_avr32::init(void)
     // Init usb hardware
     stdio_usb_init(NULL);
     stdio_usb_enable();
+    stdio_usb_vbus_event(true);
+
+    // Set handler to point at this object, if there are more than 1 usb
+    // this would need to change to an array pointing to all of the objects
+    handlers_ = this;
 
     return true;
 }
@@ -80,8 +88,7 @@ bool Serial_usb_avr32::init(void)
 
 uint32_t Serial_usb_avr32::readable(void)
 {
-    // Not implemented
-    return 0;
+    return rx_buffer_.readable();
 }
 
 
@@ -113,8 +120,9 @@ void Serial_usb_avr32::flush(void)
 
 bool Serial_usb_avr32::attach(serial_interrupt_callback_t func)
 {
-    // Not implemented
-    return false;
+    // Set callback function for data read
+    irq_callback = func;
+    return true;
 }
 
 
@@ -157,6 +165,68 @@ bool Serial_usb_avr32::write(const uint8_t* bytes, const uint32_t size)
 
 bool Serial_usb_avr32::read(uint8_t* bytes, const uint32_t size)
 {
-    // Not implemented
-    return false;
+    bool ret = false;
+
+    // Check if there is enough data to be read
+    if (rx_buffer_.readable() >= size)
+    {
+        ret = true;
+
+        // Read data
+        for (uint32_t i = 0; i < size; ++i)
+        {
+            ret &= rx_buffer_.get(bytes[i]);
+        }
+    }
+
+    return ret;
+}
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Serial_usb_avr32* Serial_usb_avr32::handlers_ = NULL;
+
+
+// Notify incoming usb data
+void usb_interupt_rx_notify()
+{
+    // Calls the static function which determines what to do with incoming data
+    Serial_usb_avr32::irq();
+}
+
+
+// Calls the handler for the desired usb class (only 1 usb atm)
+void Serial_usb_avr32::irq(void)
+{
+    // If the Serial_usb_avr32 object has been created
+    if (handlers_)
+    {
+        // Run interrupt function
+        handlers_->irq_handler();
+    } // Else do nothing, no serial connected
+}
+
+
+// Determines what to do with incoming data
+void Serial_usb_avr32::irq_handler(void)
+{
+    // Receive all data
+    while (udi_cdc_is_rx_ready())
+    {
+        // Retrieve single char
+        uint8_t c1 = 0;
+        stdio_usb_getchar_read_buf(NULL, (int*)&c1);
+
+        // Add to buffer to be read later
+        rx_buffer_.put_lossy(c1);
+    }
+
+    // Call callback function if attached
+    if (irq_callback != NULL)
+    {
+        irq_callback(this);
+    }
 }

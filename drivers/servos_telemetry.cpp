@@ -56,10 +56,10 @@ void servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0,
     servos_telemetry->servos[3] = servo_3;
 }
 
-void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    mavlink_msg_servo_output_raw_pack(mavlink_stream->sysid,
-                                      mavlink_stream->compid,
+    mavlink_msg_servo_output_raw_pack(mavlink_stream->sysid(),
+                                      mavlink_stream->compid(),
                                       msg,
                                       time_keeper_get_us(),
                                       0,

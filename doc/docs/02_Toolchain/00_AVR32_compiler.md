@@ -6,7 +6,7 @@ The avr32-gcc toolchain can be compiled from source. Alternatively, a pre-compil
 
 
 ## From source
-Follow the instructions in the repository [lis-epfl/avr32-toolchain](https://github.com/denravonska/avr32-toolchain) to compile the toolchain from source.
+Follow the instructions in the repository [lis-epfl/avr32-toolchain](https://github.com/lis-epfl/avr32-toolchain) to compile the toolchain from source.
 
 ## Pre-compiled toolchain
 

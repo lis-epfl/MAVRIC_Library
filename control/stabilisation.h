@@ -78,7 +78,7 @@ typedef struct
 {
     float rpy[3];                               ///< roll pitch yaw rates/angles
     float thrust;                               ///< thrust
-    float tvel[3];                              ///< target velocity in m/s
+    float tvel[3];                              ///< target velocity in m/s (semi-local frame)
     float theading;                             ///< absolute target heading
     control_mode_t control_mode;                ///< control mode
     yaw_mode_t     yaw_mode;                    ///< yaw mode

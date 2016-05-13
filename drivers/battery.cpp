@@ -84,7 +84,7 @@ Battery::Battery(Adc& adc, battery_conf_t config):
     config_(config),
     voltage_(get_full_voltage(config_.type)),
     level_(100.0f),
-    last_update_us_(time_keeper_get_us()),
+    last_update_us_(0.0f),
     is_low_(false)
 {}
 
@@ -104,7 +104,7 @@ bool Battery::update(void)
 
 
     // Update low level flag
-    if (voltage_ < get_low_voltage(config_.type))
+    if (level_ < config_.low_level_limit)
     {
         is_low_ = true;
     }

@@ -84,18 +84,13 @@ static void joystick_button_1(joystick_t* joystick, bool button_1)
         {
             if (mav_modes_is_armed(joystick->mav_mode_desired))
             {
-                print_util_dbg_print("Disarming from joystick\r\n");
                 joystick->mav_mode_desired &= ~MAV_MODE_FLAG_SAFETY_ARMED;
                 joystick->arm_action = ARM_ACTION_DISARMING;
             }
             else
             {
-                print_util_dbg_print("Arming from joystick\r\n");
-                if ((joystick->mav_mode_desired & 0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
-                {
-                    joystick->mav_mode_desired |= MAV_MODE_FLAG_SAFETY_ARMED;
-                    joystick->arm_action = ARM_ACTION_ARMING;
-                }
+                joystick->mav_mode_desired |= MAV_MODE_FLAG_SAFETY_ARMED;
+                joystick->arm_action = ARM_ACTION_ARMING;
             }
             joystick->buttons.button_mask |= 0x0001;
         }
@@ -143,6 +138,8 @@ bool joystick_init(joystick_t* joystick)
     joystick->mav_mode_desired = MAV_MODE_SAFE;
     joystick->arm_action = ARM_ACTION_NONE;
 
+    joystick->commTrigger = 0;
+
     return init_success;
 }
 
@@ -180,13 +177,11 @@ mav_mode_t joystick_get_mode(joystick_t* joystick, const mav_mode_t current_mode
     {
         new_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
         joystick->arm_action = ARM_ACTION_NONE;
-        print_util_dbg_print("Arming in new fct\r\n");
     }
     else if (joystick->arm_action == ARM_ACTION_DISARMING)
     {
         new_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
         joystick->arm_action = ARM_ACTION_NONE;
-        print_util_dbg_print("Disarming in new fct\r\n");
     }
 
     return new_mode;
@@ -203,11 +198,11 @@ void joystick_get_velocity_vector(const joystick_t* joystick, control_command_t*
 
 void joystick_get_velocity_vector_version2(const joystick_t* joystick, control_command_t* controls)
 {
-	//all joystick input are [-1;1]
-    controls->tvel[X] = joystick->channels.x * 5.0f; //max 5m/s in forward motion
-    controls->rpy[ROLL] = joystick->channels.y * 0.78f; //max [0.78rad = 30°]
-    controls->tvel[Z] = joystick->channels.z * 4.0f; //max 3m/s in vertical motion
-
+	//all joystick inputs are [-1;1]
+    controls->tvel[X] 	= joystick->channels.x;
+    controls->tvel[Y] 	= 0.0f;
+    controls->tvel[Z] 	= joystick->channels.z;
+    controls->rpy[ROLL] = joystick->channels.y;
     //controls->rpy[YAW] = joystick->channels.r;
 }
 
@@ -225,8 +220,6 @@ void joystick_button_mask(joystick_t* joystick, uint16_t buttons)
 {
     joystick_button_t button_local;
     button_local.button_mask = buttons;
-
-    //print_util_dbg_print_num(button_local.button_mask, 10);
 
     bool but;
     but = ((button_local.button_mask & 0x0001) == 0x0001);

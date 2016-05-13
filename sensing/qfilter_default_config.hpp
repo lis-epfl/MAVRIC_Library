@@ -30,33 +30,30 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_estimation_default_config.h
+ * \file qfilter_default_config.hpp
  *
  * \author MAV'RIC Team
+ * \author Felix Schill
  *
- * \brief Default configuration for position estimation
+ * \brief Default configuration for qfilter
  *
  ******************************************************************************/
 
 
-#ifndef POSITION_ESTIMATION_DEFAULT_CONFIG_H_
-#define POSITION_ESTIMATION_DEFAULT_CONFIG_H_
+#ifndef QFILTER_DEFAULT_CONFIG_H_
+#define QFILTER_DEFAULT_CONFIG_H_
 
-#include "sensing/position_estimation.hpp"
+#include "sensing/qfilter.hpp"
 
-static inline position_estimation_conf_t position_estimation_default_config()
+static inline qfilter_conf_t qfilter_default_config()
 {
-    position_estimation_conf_t conf = {};
-
-    conf.origin                     = {};
-    //default home location (EFPL Esplanade)
-    conf.origin.longitude           = 6.566044801857777f;
-    conf.origin.latitude            = 46.51852236174565f;
-    conf.origin.altitude            = 400.0f;
-    conf.gravity                    = 9.81f;
-    conf.fence_set                  = false;
+    qfilter_conf_t conf = {};
+    conf.kp             = 0.07f;
+    conf.ki             = 0.0f;
+    conf.kp_mag         = 0.1f;
+    conf.ki_mag         = 0.0f;
 
     return conf;
 };
 
-#endif // POSITION_ESTIMATION_DEFAULT_CONFIG_H_
+#endif /* QFILTER_DEFAULT_CONFIG_H_ */
