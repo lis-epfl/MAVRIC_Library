@@ -64,12 +64,13 @@
                     <span style="float: left; font-size: 10px; color: gray;">
                         Friday, May 13, 2016                    </span>
                     <span style="float: right; font-size: 10px; color: gray;">
-                        10:30 AM                    </span>
+                        2:12 PM                    </span>
         </div>
     
     <p>If you flash a new microcontroller for the very first time, follow these steps:
 N.B.: If at any time, a popup shows asking you whether you want to continue because the voltage is too low, answer yes.</p>
 <ul>
+<li>Plug in programmer to drone and computer</li>
 <li>Open Atmel Studio</li>
 <li>Go to &quot;Tools&quot;-&gt;&quot;Device Programming&quot;</li>
 <li>Select</li>
@@ -80,11 +81,16 @@ N.B.: If at any time, a popup shows asking you whether you want to continue beca
 <li>If it worked, you should get some tabs below</li>
 <li>Go to &quot;Memories&quot;</li>
 <li>Select &quot;Erase Chip&quot; and click on &quot;Erase now&quot;</li>
+<li>Select &quot;Erase UserPage&quot; and click on &quot;Erase now&quot;</li>
+<li>Under Flash, select MAVRIC/Utilities/Bootloader/BOOTLOADER_AT32UC3C1512.hex</li>
+<li>Under Flash, press &quot;Program&quot;</li>
+<li>If you get an error, disconnect the battery wires from the MAVRIC board and try again</li>
+<li>Under User Page, select MAVRIC/Utilities/Bootloader/USERPAGE_BOOT_SDA1.hex</li>
+<li>Under User Page, press &quot;Program&quot;</li>
 <li>Go to &quot;Fuses&quot;</li>
 <li>Insert as value for FGPFRLO and USERPAGE_WORD_0: 0xFFFFFFFF</li>
+<li>Set BOOTPROT to BOOTAREA_8KB</li>
 <li>Click on &quot;Program&quot;</li>
-<li>Go back to &quot;Memories&quot;</li>
-<li>Follow the instructions on how to flash your microcontroller</li>
 </ul>
 
         <nav>
