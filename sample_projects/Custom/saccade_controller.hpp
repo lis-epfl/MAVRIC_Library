@@ -155,6 +155,8 @@ public:
 
     uint64_t                    last_saccade_;
 
+    velocity_command_t          velocity_command_;
+
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
 
     Flow&                     flow_back_;                          ///< back optic flow camera output

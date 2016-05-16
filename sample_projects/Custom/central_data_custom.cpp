@@ -47,7 +47,7 @@ extern "C"
 }
 
 
-Central_data_custom::Central_data_custom(Imu& imu, Barometer& barometer, Gps& gps,
+Central_data_custom::Central_data_custom(Imu& imu, Barometer& barometer, Gps gps,
                           Sonar& sonar, Serial& serial_mavlink, Satellite& satellite,
                           Led& led, File& file_flash, Battery& battery,
                           Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3,
@@ -98,6 +98,10 @@ bool Central_data_custom::init(void)
     // Init saccade controller
     //--------------------------------------------------------------------------
     saccade_controller_.init();
+
+    // A METTRE ICI??
+    // gps_mocap.init();
+
 
     return init_success;
 }

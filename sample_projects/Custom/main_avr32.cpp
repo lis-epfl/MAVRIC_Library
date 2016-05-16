@@ -55,15 +55,19 @@
 // #include "hal/dummy/pwm_dummy.hpp"
 
 #include "drivers/flow_px4.hpp"
+#include "config/conf_imu.hpp"
+#include  "drivers/gps_mocap.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "lequad_dronedome.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
+
 #include "util/print_util.h"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"
 
-#include "config/conf_imu.hpp"
+
 }
 
 // #include "hal/common/dbg.hpp"
@@ -97,9 +101,12 @@ int main(void)
     // Board initialisation
     init_success &= board.init();
 
+
     // Create dummy GPS
-    Serial_dummy serial_dummy;
-    Gps_ublox gps_dummy(serial_dummy);
+    // Serial_dummy serial_dummy;
+    // Gps_ublox gps_dummy(serial_dummy);
+    // Gps_mocap gps_mocap;
+    // gps_mocap.configure();
 
     // Files
     fat_fs_mounting_t fat_fs_mounting;
@@ -117,9 +124,32 @@ int main(void)
     // Create central data using real sensors
     Central_data::conf_t cd_config = Central_data::default_config(MAVLINK_SYS_ID);
 
-    Central_data_custom cd = Central_data_custom(board.imu,
+    // Central_data_custom cd = Central_data_custom(board.imu,
+    //                                board.bmp085,
+    //                                gps_mocap,
+    //                                board.sonar_i2cxl,          // Warning:
+    //                                board.uart0,
+    //                                board.spektrum_satellite,
+    //                                board.green_led,
+    //                                board.file_flash,
+    //                                board.battery,
+    //                                board.servo_0,
+    //                                board.servo_1,
+    //                                board.servo_2,
+    //                                board.servo_3,
+    //                                board.servo_4,
+    //                                board.servo_5,
+    //                                board.servo_6,
+    //                                board.servo_7,
+    //                                file_log,
+    //                                file_stat,
+    //                                flow_front,   // flow left
+    //                                flow_rear,
+    //                                cd_config );  // flow right
+
+    LEQuad_dronedome cd = LEQuad_dronedome(board.imu,
                                    board.bmp085,
-                                   gps_dummy,
+                                   board.gps_ublox,
                                    board.sonar_i2cxl,          // Warning:
                                    board.uart0,
                                    board.spektrum_satellite,

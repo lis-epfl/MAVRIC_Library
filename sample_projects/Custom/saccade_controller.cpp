@@ -142,12 +142,12 @@ bool Saccade_controller::update()
     {
         if(flow_back_.of.x[i] != 0)
         {
-            derotated_flow_back_[i] = flow_back_.of.x[i] +last_derotation_yaw_velocity_*derotation_constant_*1000;
+            derotated_flow_back_[i] = flow_back_.of.x[i] +last_derotation_yaw_velocity_*derotation_constant_;
         }
 
         else if(flow_front_.of.x[i] != 0)
         {
-            derotated_flow_front_[i] = flow_front_.of.x[i] + last_derotation_yaw_velocity_*derotation_constant_*1000;
+            derotated_flow_front_[i] = flow_front_.of.x[i] + last_derotation_yaw_velocity_*derotation_constant_;
         }
 
         relative_nearness_[i] = 0.0f;
@@ -275,23 +275,42 @@ bool Saccade_controller::update()
 
         case PRESACCADE:
 
-            if(!is_time_initialized_)
-            {
-                begin_time = time_keeper_get_ms();
-                is_time_initialized_ = true;
-            }
 
             movement_direction = atan2(goal_lf[1],goal_lf[0]);
 
-            attitude_command_.rpy[0]  = 0;
-            attitude_command_.rpy[1]  = pitch_;
             attitude_command_.rpy[2]  = movement_direction;
             attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
 
-            if(time_keeper_get_ms()-begin_time < 500)
+            heading_error = maths_f_abs( maths_calc_smaller_angle(attitude_command_.rpy[2]-current_rpy.rpy[2]) );
+            if(heading_error<0.1)
             {
-                saccade_state_            = SACCADE;
+                velocity_command_.xyz[0] = goal_lf[0];
+                velocity_command_.xyz[1] = goal_lf[1];
+                velocity_command_.xyz[2] = 0;
+
+                if(time_keeper_get_ms()-begin_time < 1000)
+                {
+                    saccade_state_ = SACCADE;
+                }
             }
+            // if(!is_time_initialized_)
+            // {
+            //     begin_time = time_keeper_get_ms();
+            //     is_time_initialized_ = true;
+            // }
+
+            // movement_direction = atan2(goal_lf[1],goal_lf[0]);
+
+            // attitude_command_.rpy[0]  = 0;
+            // attitude_command_.rpy[1]  = pitch_;
+            // attitude_command_.rpy[2]  = movement_direction;
+            // attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+
+
+            // if(time_keeper_get_ms()-begin_time < 500)
+            // {
+            //     saccade_state_            = SACCADE;
+            // }
 
         break;
         // This is the case where we are performing a saccade
@@ -302,9 +321,10 @@ bool Saccade_controller::update()
 
             if ( heading_error < 0.1)
             {
-                attitude_command_.rpy[0]  = 0;
-                attitude_command_.rpy[1]  = pitch_;
-                attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                velocity_command_.xyz[0] = quick_trig_cos(movement_direction);
+                velocity_command_.xyz[1] = quick_trig_sin(movement_direction);
+                velocity_command_.xyz[2] = 0;
+                
                 last_saccade_             = time_keeper_get_ms();
                 saccade_state_            = INTERSACCADE;
             }
