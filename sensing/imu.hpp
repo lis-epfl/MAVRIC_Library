@@ -315,15 +315,6 @@ private:
      */
     bool is_calibration_ongoing(void) const;
 
-    /**
-     * \brief   Startup calibration
-     *
-     * \detail  Should not be used in flight
-     *          If the imu is not ready, this function waits for the gyroscopes
-     *          values to be stable, then perform gyro bias calibration
-     */
-    void do_startup_calibration(void);
-
 
     /**
      * \brief   Performs ongoing calibrations
