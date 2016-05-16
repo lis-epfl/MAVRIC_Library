@@ -71,7 +71,7 @@ Imu::Imu(Accelerometer& accelerometer, Gyroscope& gyroscope, Magnetometer& magne
     do_magnetometer_bias_calibration_(false),
     dt_s_(0.004f),
     last_update_us_(0.0f),
-    timestamp_gyro_stable(0.0f)
+    timestamp_gyro_stable_(0.0f)
 {}
 
 
@@ -365,7 +365,7 @@ void Imu::do_calibration(void)
          if (do_gyroscope_bias_calibration_ == false)
          {
              start_gyroscope_bias_calibration();
-             timestamp_gyro_stable = time_keeper_get_s();
+             timestamp_gyro_stable_ = time_keeper_get_s();
          }
 
          // Check if the gyroscope values are stable
@@ -376,12 +376,19 @@ void Imu::do_calibration(void)
 
          if (gyro_is_stable == false)
          {
+             // If calibration has been going for too long, restart it
+             if ((time_keeper_get_s() - timestamp_gyro_stable_) > config_.startup_calib_duration_s)
+             {
+                 stop_gyroscope_bias_calibration();
+                 start_gyroscope_bias_calibration();
+             }
+
              // Reset timestamp
-             timestamp_gyro_stable = time_keeper_get_s();
+             timestamp_gyro_stable_ = time_keeper_get_s();
          }
 
          // If gyros have been stable for long enough
-         if ((gyro_is_stable == true) && ((time_keeper_get_s() - timestamp_gyro_stable) > config_.startup_calib_duration_s))
+         if ((gyro_is_stable == true) && ((time_keeper_get_s() - timestamp_gyro_stable_) > config_.startup_calib_duration_s))
          {
              // Startup calibration is done
              do_startup_calibration_ = false;

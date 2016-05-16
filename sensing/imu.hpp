@@ -349,7 +349,7 @@ private:
 
     float dt_s_;                        ///< Time interval between two updates (in microseconds)
     float last_update_us_;              ///< Last update time in microseconds
-    float timestamp_gyro_stable;        ///< The time from which the gyroscope is not varying too much
+    float timestamp_gyro_stable_;       ///< The moment from which the gyroscope is not varying too much
 };
 
 
