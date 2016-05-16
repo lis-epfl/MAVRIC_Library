@@ -196,7 +196,7 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     stabiliser_t* rate_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.rate_stabiliser;
     // stabiliser_t* attitude_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.attitude_stabiliser;
     stabiliser_t* velocity_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.velocity_stabiliser;
-    //stabiliser_t* position_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.position_stabiliser;
+    // stabiliser_t* position_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.position_stabiliser;
 
     // System ID
     init_success &= onboard_parameters->add_parameter_uint32(&central_data->mavlink_communication.mavlink_stream().sysid_, "ID_SYSID");
@@ -247,33 +247,35 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.gain,   "YAW_R_KD");
 
     // Yaw attitude
-    //init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAW_A_KP"        );
-    //init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAW_A_P_CLMX"    );
-    //init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAW_A_P_CLMN"    );
-    //init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAW_A_I_CLIP"    );
-    //init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAW_A_KI"        );
-    //init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAW_A_D_CLIP"    );
-    //init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAW_A_KD"        );
+    // init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAW_A_KP"        );
+    // init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAW_A_P_CLMX"    );
+    // init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAW_A_P_CLMN"    );
+    // init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAW_A_I_CLIP"    );
+    // init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAW_A_KI"        );
+    // init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAW_A_D_CLIP"    );
+    // init_success &= onboard_parameters->add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAW_A_KD"        );
 
 
     // Roll velocity
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_V_KP"       );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_V_KI"       );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_V_I_CLIP"   );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_V_KD"       );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_V_KP"       );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip_pre,   "ROLL_V_I_CLPRE"  );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_V_KI"       );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_V_I_CLIP"   );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_V_KD"       );
 
 
     // Pitch velocity
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_V_KP"      );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_V_KI"      );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_V_I_CLIP"  );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_V_KD"      );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_V_KP"      );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip_pre,  "PITCH_V_I_CLPRE" );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_V_KI"      );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_V_I_CLIP"  );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_V_KD"      );
 
     // Thrust velocity
-    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain,              "THRV_KP");
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain,                  "THRV_KP"    );
     init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.clip_pre,     "THRV_I_PREG");
-    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain,     "THRV_KD");
-    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width,         "THRV_SOFT");
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain,     "THRV_KD"    );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width,         "THRV_SOFT"  );
 
     // Roll position
     //init_success &= onboard_parameters->add_parameter_float(&position_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_P_KP"   );
@@ -306,39 +308,32 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.bias[Y]                                 , "BIAS_MAG_Y");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.bias[Z]                                 , "BIAS_MAG_Z");
 
-    // Scale factor
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[X]                            , "SCALE_GYRO_X");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[Y]                            , "SCALE_GYRO_Y");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[Z]                            , "SCALE_GYRO_Z");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[X]                       , "SCALE_ACC_X");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[Y]                       , "SCALE_ACC_Y");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[Z]                       , "SCALE_ACC_Z");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[X]                        , "SCALE_MAG_X");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[Y]                        , "SCALE_MAG_Y");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[Z]                        , "SCALE_MAG_Z");
-
-    // Magnetic north
+    // North vector
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[X], "NORTH_MAG_X");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[Y], "NORTH_MAG_Y");
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[Z], "NORTH_MAG_Z");
 
+
     // Position estimation
-    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_alt_baro                              , "POS_KP_ALT_BARO");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_baro                              , "POS_KP_VELB");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[0]                            , "POS_KP_POS0");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[1]                            , "POS_KP_POS1");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[2]                            , "POS_KP_POS2");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_alt_baro,   "POS_KP_ALT_BARO" );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_baro,   "POS_KP_VELB"     );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[0], "POS_KP_POS0"     );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[1], "POS_KP_POS1"     );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[2], "POS_KP_POS2"     );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_gps[0], "POS_KP_VEL0"     );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_gps[1], "POS_KP_VEL1"     );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_gps[2], "POS_KP_VEL2"     );
 
     // Navigation
-    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.dist2vel_gain                             , "VEL_DIST2VEL");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.cruise_speed                                  , "VEL_CRUISESPEED");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.max_climb_rate                                , "VEL_CLIMBRATE");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.soft_zone_size                                , "VEL_SOFTZONE");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.hovering_controller.p_gain                    , "VEL_HOVER_PGAIN");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.hovering_controller.differentiator.gain       , "VEL_HOVER_DGAIN");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.wpt_nav_controller.p_gain                 , "VEL_WPT_PGAIN");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.wpt_nav_controller.differentiator.gain        , "VEL_WPT_DGAIN");
-
+    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.dist2vel_gain,                           "VEL_DIST2VEL"    );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.cruise_speed,                            "VEL_CRUISESPEED" );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.max_climb_rate,                          "VEL_CLIMBRATE"   );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.soft_zone_size,                          "VEL_SOFTZONE"    );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.hovering_controller.p_gain,              "VEL_HOVER_PGAIN" );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.hovering_controller.differentiator.gain, "VEL_HOVER_DGAIN" );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.wpt_nav_controller.p_gain,               "VEL_WPT_PGAIN"   );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.wpt_nav_controller.differentiator.gain,  "VEL_WPT_DGAIN"   );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.kp_yaw,  "VEL_YAW_KPGAIN"   );
     /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
     init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.control_source_, "CTRL_CTRL_SRC");
     init_success &= onboard_parameters->add_parameter_int32((int32_t*) &central_data->manual_control.mode_source_,     "COM_RC_IN_MODE");

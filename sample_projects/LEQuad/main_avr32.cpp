@@ -39,6 +39,7 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/central_data.hpp"
+
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
@@ -68,7 +69,7 @@ extern "C"
 int main(void)
 {
     bool init_success = true;
-    
+
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------

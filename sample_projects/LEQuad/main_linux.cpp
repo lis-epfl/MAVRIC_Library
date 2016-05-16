@@ -40,6 +40,7 @@
 
 #include "boards/mavrinux.hpp"
 #include "sample_projects/LEQuad/central_data.hpp"
+
 #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
 
