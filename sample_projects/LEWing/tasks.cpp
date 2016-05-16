@@ -79,39 +79,42 @@ bool tasks_run_stabilisation(Central_data* central_data)
             central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
             central_data->controls.yaw_mode = YAW_ABSOLUTE;
 
-            if (central_data->navigation.internal_state_ > Navigation::NAV_ON_GND)
-            {
-                stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
-                servos_mix_wing_update(&central_data->servo_mix);
-            }
+            stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
+            servos_mix_wing_update(&central_data->servo_mix);
         }
         else if (state.is_guided())
         {
-            central_data->manual_control.get_angle_command_wing(&central_data->controls);
+            // central_data->manual_control.get_angle_command_wing(&central_data->controls);
+            central_data-> controls.rpy[0] = 0.0f;
+            central_data-> controls.rpy[1] = 0.0f;
+            central_data-> controls.rpy[2] = 0.0f;
+            central_data-> controls.thrust = 1.0f;
 
             central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
-            
-            if (central_data->navigation.internal_state_ > Navigation::NAV_ON_GND)
-            {
-                stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
-                servos_mix_wing_update(&central_data->servo_mix);
-            }
+
+            stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
+            servos_mix_wing_update(&central_data->servo_mix);
         }
         else if (state.is_stabilize())
         {
-            central_data->manual_control.get_rate_command_wing(&central_data->controls);
+            // central_data->manual_control.get_rate_command_wing(&central_data->controls);
+            central_data-> controls.rpy[0] = 0.0f;
+            central_data-> controls.rpy[1] = 0.0f;
+            central_data-> controls.rpy[2] = 0.0f;
+            central_data-> controls.thrust = 1.0f;
 
             central_data->controls.control_mode = RATE_COMMAND_MODE;
 
-            if (central_data->navigation.internal_state_ > Navigation::NAV_ON_GND)
-            {
-                stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
-                servos_mix_wing_update(&central_data->servo_mix);
-            }
+            stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
+            servos_mix_wing_update(&central_data->servo_mix);
         }
         else if (state.is_manual())
         {
-            central_data->manual_control.get_control_command(&central_data->controls);
+            // central_data->manual_control.get_control_command(&central_data->controls);
+            central_data-> controls.rpy[0] = 0.0f;
+            central_data-> controls.rpy[1] = 0.0f;
+            central_data-> controls.rpy[2] = 0.0f;
+            central_data-> controls.thrust = 1.0f;
 
             servos_mix_wing_update(&central_data->servo_mix);
         }

@@ -62,8 +62,8 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     motor_speed_(0.0f),
     left_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f+0.0280f, -0.205f, 0.004f, 0.12f, 0.3f,1),//TODO: change these to the correct values
     right_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f+0.0280f, 0.205f, 0.004f, 0.12f, 0.3f,1),
-    left_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -0.190f, -0.410f, -0.046f, 0.014f, 0.1f,0),
-    right_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {-1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -0.190f, 0.410f, -0.046f, 0.014f, 0.1f,0),
+    left_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -1.50f, -0.410f, -0.046f, 0.014f, 0.2f,1),
+    right_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {-1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -1.50f, 0.410f, -0.046f, 0.014f, 0.2f,1),
     torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     rates_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     lin_forces_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
@@ -294,7 +294,7 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     quaternions_rotate_vector(quaternions_inverse(attitude_), wind_gf,wind_bf);
 
     //Compute the forces for the motor and each wing
-    wing_model_forces_t motor_forces = compute_motor_forces(wind_bf, 0.0*motor_command);//TODO remove
+    wing_model_forces_t motor_forces = compute_motor_forces(wind_bf, motor_command);//TODO remove
     //Sending the angular velocity to the flap to improve force approximation
     wing_model_forces_t left_flap_force = left_flap_.compute_forces(wind_bf,rates_bf_.data());
     wing_model_forces_t right_flap_force = right_flap_.compute_forces(wind_bf,rates_bf_.data());
@@ -302,21 +302,24 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     wing_model_forces_t right_drift_force = right_drift_.compute_forces(wind_bf,rates_bf_.data());
 
     //Get the torque around x axis (roll)
-    torques_bf_[ROLL] = motor_forces.torque[ROLL] +
+    // torques_bf_[ROLL] = motor_forces.torque[ROLL] +
+    torques_bf_[ROLL] =
 			left_flap_force.torque[ROLL] +
 			right_flap_force.torque[ROLL] +
 			left_drift_force.torque[ROLL] +
       right_drift_force.torque[ROLL];
 
     //Get the torque around y axis (pitch)
-    torques_bf_[PITCH] = motor_forces.torque[PITCH] +
+    // torques_bf_[PITCH] = motor_forces.torque[PITCH] +
+    torques_bf_[PITCH] =
 			 left_flap_force.torque[PITCH] +
 			 right_flap_force.torque[PITCH] +
        left_drift_force.torque[PITCH] +
        right_drift_force.torque[PITCH];
 
     //Get the torque around z axis (yaw)
-    torques_bf_[YAW] = motor_forces.torque[YAW] +
+    // torques_bf_[YAW] = motor_forces.torque[YAW] +
+    torques_bf_[YAW] =
 		       left_flap_force.torque[YAW] +
 		       right_flap_force.torque[YAW] +
            left_drift_force.torque[YAW] +

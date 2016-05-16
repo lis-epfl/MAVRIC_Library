@@ -208,6 +208,7 @@ public:
       */
      void set_speed(float v_x, float v_y, float v_z);
 
+
 private:
     Servo& servo_motor_;         ///< Reference to motor servo
     Servo& servo_flap_left_;     ///< Reference to left flap servo
@@ -228,8 +229,8 @@ private:
     std::array<float, 3> acc_bf_;           ///< 3D acceleration vector in body frame
     std::array<float, 3> vel_bf_;           ///< 3D velocity vector in body frame
     std::array<float, 3> vel_;              ///< 3D velocity vector in NED frame
-    quat_t attitude_;                       ///< Estimated attitude
 
+    quat_t attitude_;                       ///< Estimated attitude
     local_position_t local_position_;       ///< Simulated local position
     global_position_t global_position_;     ///< Simulated global position
 

@@ -139,20 +139,31 @@ int main(int argc, char** argv)
     while (1)
     {
       //Wait for initialization to finish
-      if(cd.state.mav_state_>=3 && !started)
-      {
-        started=true;
+      // if(cd.state.mav_state_>=3 && !started)
+      // {
+      //   started=true;
+      //   //Change position
+      //   board.dynamic_model.set_position(0.0f, 0.0f, -100.0f);
+      //   board.dynamic_model.set_speed(10.0f, 0.0f, 0.0f);
+      // }
+      // else if(started)
+      // {
+        // started=false;
         //Change position
-        board.dynamic_model.set_position(0.0f, 0.0f, -100.0f);
-        board.dynamic_model.set_speed(10.0f, 0.0f, 0.0f);
-      }
-      else if(cd.state.mav_state_<3 && started)
+        // board.dynamic_model.set_position(0.0f, 0.0f, 0.0f);
+        // board.dynamic_model.set_speed(0.0f, 0.0f, 0.0f);
+      // }
+      if (cd.state.is_armed() == false)
       {
-        started=false;
-        //Change position
-        board.dynamic_model.set_position(0.0f, 0.0f, 0.0f);
-        board.dynamic_model.set_speed(0.0f, 0.0f, 0.0f);
+          started = false;
       }
+
+      if (started==false && cd.state.is_armed())
+      {
+          started = true;
+          board.dynamic_model.set_position(0.0f, 0.0f, -1000.0f);
+      }
+
       cd.scheduler.update();
     }
 

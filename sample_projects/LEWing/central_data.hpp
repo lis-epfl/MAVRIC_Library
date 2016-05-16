@@ -121,21 +121,21 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data(   Imu& imu, 
-                    Barometer& barometer, 
-                    Gps& gps, 
-                    Sonar& sonar, 
-                    Serial& serial_mavlink, 
-                    Satellite& satellite, 
-                    Led& led, 
-                    File& file_flash, 
-                    Battery& battery, 
-                    Servo& servo_0, 
-                    Servo& servo_1, 
-                    Servo& servo_2, 
-                    Servo& servo_3, 
-                    Airspeed_analog& airspeed_analog, 
-                    File& file1, 
+    Central_data(   Imu& imu,
+                    Barometer& barometer,
+                    Gps& gps,
+                    Sonar& sonar,
+                    Serial& serial_mavlink,
+                    Satellite& satellite,
+                    Led& led,
+                    File& file_flash,
+                    Battery& battery,
+                    Servo& servo_0,
+                    Servo& servo_1,
+                    Servo& servo_2,
+                    Servo& servo_3,
+                    Airspeed_analog& airspeed_analog,
+                    File& file1,
                     File& file2,
                     const conf_t& config = default_config());
 
@@ -189,7 +189,7 @@ public:
     Navigation navigation;                                    ///< The structure to perform GPS navigation
     Mavlink_waypoint_handler waypoint_handler;
 
-    
+
     State_machine state_machine;                              ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
@@ -229,6 +229,10 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.stabilisation_wing_config = stabilisation_wing_default_config();
 
     conf.servos_mix_wing_config = servos_mix_wing_default_config();
+    // conf.servos_mix_wing_config.servo_right_dir = FLAP_NORMAL;
+    // conf.servos_mix_wing_config.servo_left_dir  = FLAP_NORMAL;
+    conf.servos_mix_wing_config.servo_right_dir = FLAP_INVERTED;
+    conf.servos_mix_wing_config.servo_left_dir  = FLAP_INVERTED;
 
     conf.manual_control_config = Manual_control::default_config();
 
