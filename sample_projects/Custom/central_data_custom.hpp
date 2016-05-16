@@ -44,13 +44,15 @@
 
 
 #include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/lequad_dronedome.hpp"
+
 #include "drivers/flow.hpp"
 #include "saccade_controller.hpp"
 
 /**
  * \brief The central data structure
  */
-class Central_data_custom: public Central_data
+class Central_data_custom: public LEQuad_dronedome
 {
 public:
     /**
