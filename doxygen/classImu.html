@@ -111,8 +111,8 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get X, Y and Z components of magnetic field (normalized)  <a href="#a44da2e3f7ec6d731fe6187ca1a59d75a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const std::array&lt; float, 3 &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classImu.html#a4c4e9d92bfac136f435fb85bfb8f7fbb">magnetic_north</a> (void) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get X, Y and Z components of magnetic north (in NED frame)  <a href="#a4c4e9d92bfac136f435fb85bfb8f7fbb"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classImu.html#ae7d0dd2732b6e735a123a551eb83227c">is_ready</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the readiness of the IMU.  <a href="#ae7d0dd2732b6e735a123a551eb83227c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classImu.html#a066f63054b730605afc31ee0c19daae1">is_ready</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the readiness of the IMU.  <a href="#a066f63054b730605afc31ee0c19daae1"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structimu__conf__t.html">imu_conf_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classImu.html#adc14809ab2886ccadeb35f9ede31a1fb">get_config</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Temporary method to get pointer to configuration.  <a href="#adc14809ab2886ccadeb35f9ede31a1fb"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classImu.html#abcebc61b38b6f1281970331a2ffab0ad">start_accelerometer_bias_calibration</a> (void)</td></tr>
@@ -235,12 +235,12 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="ae7d0dd2732b6e735a123a551eb83227c"></a><!-- doxytag: member="Imu::is_ready" ref="ae7d0dd2732b6e735a123a551eb83227c" args="(void) const " -->
+<a class="anchor" id="a066f63054b730605afc31ee0c19daae1"></a><!-- doxytag: member="Imu::is_ready" ref="a066f63054b730605afc31ee0c19daae1" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const bool <a class="el" href="classImu.html#ae7d0dd2732b6e735a123a551eb83227c">Imu::is_ready</a> </td>
+          <td class="memname">bool <a class="el" href="classImu.html#a066f63054b730605afc31ee0c19daae1">Imu::is_ready</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -256,8 +256,8 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classImu_ae7d0dd2732b6e735a123a551eb83227c_icgraph.png" border="0" usemap="#classImu_ae7d0dd2732b6e735a123a551eb83227c_icgraph" alt=""/></div>
-<map name="classImu_ae7d0dd2732b6e735a123a551eb83227c_icgraph" id="classImu_ae7d0dd2732b6e735a123a551eb83227c_icgraph">
+<div class="center"><img src="classImu_a066f63054b730605afc31ee0c19daae1_icgraph.png" border="0" usemap="#classImu_a066f63054b730605afc31ee0c19daae1_icgraph" alt=""/></div>
+<map name="classImu_a066f63054b730605afc31ee0c19daae1_icgraph" id="classImu_a066f63054b730605afc31ee0c19daae1_icgraph">
 <area shape="rect" id="node3" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="156,5,311,35"/><area shape="rect" id="node5" href="classAhrs__ekf.html#af35c5a2e2b038e9196a159a025b98514" title="Performs the EKF algorithm." alt="" coords="173,59,293,88"/></map>
 </div>
 </p>
@@ -547,7 +547,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 13 2016 12:35:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue May 17 2016 17:39:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

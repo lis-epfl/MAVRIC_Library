@@ -21,7 +21,7 @@ var searchData=
   ['is_5flow',['is_low',['../classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0',1,'Battery']]],
   ['is_5fmanual',['is_manual',['../classState.html#a081ab79c23acceca7cd0ac5d6530d0df',1,'State']]],
   ['is_5fopen',['is_open',['../classFile__fat__fs.html#adfffa32bd3ab907e8d603e524d8deadd',1,'File_fat_fs::is_open()'],['../classFile__flash__avr32.html#ac1853251843a89677d7abf36878f6723',1,'File_flash_avr32::is_open()'],['../classFile.html#aa99244d6f853aa094edc5c2e690afe5d',1,'File::is_open()'],['../classFile__dummy.html#af78a867c64106da1f9ece6c5a9154eb4',1,'File_dummy::is_open()'],['../classFile__linux.html#a681acd549d5862d822835f0ed008a458',1,'File_linux::is_open()']]],
-  ['is_5fready',['is_ready',['../classImu.html#ae7d0dd2732b6e735a123a551eb83227c',1,'Imu']]],
+  ['is_5fready',['is_ready',['../classImu.html#a066f63054b730605afc31ee0c19daae1',1,'Imu']]],
   ['is_5fstabilize',['is_stabilize',['../classState.html#a1b9ecd8f5193b68277d954d90500c738',1,'State']]],
   ['is_5ftest',['is_test',['../classState.html#aed990a94eea505fa04cb7c216292c95c',1,'State']]]
 ];

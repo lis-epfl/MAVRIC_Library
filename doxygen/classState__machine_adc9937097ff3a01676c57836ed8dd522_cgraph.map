@@ -10,7 +10,7 @@
 <area shape="rect" id="node32" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="277,480,400,509"/>
 <area shape="rect" id="node36" href="$classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="560,429,669,459"/>
 <area shape="rect" id="node38" href="$classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="516,536,713,565"/>
-<area shape="rect" id="node40" href="$classImu.html#ae7d0dd2732b6e735a123a551eb83227c" title="Get the readiness of the IMU." alt="" coords="288,584,389,613"/>
+<area shape="rect" id="node40" href="$classImu.html#a066f63054b730605afc31ee0c19daae1" title="Get the readiness of the IMU." alt="" coords="288,584,389,613"/>
 <area shape="rect" id="node43" href="$classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))" alt="" coords="241,637,436,667"/>
 <area shape="rect" id="node47" href="$classManual__control.html#a714ae93dfee6464520dc799e7d832fc5" title="Sets the internal state of the joystick." alt="" coords="220,691,457,720"/>
 <area shape="rect" id="node11" href="$classAdc.html#a7c7ee3f985b2b67990d61893faae8b32" title="Update function." alt="" coords="569,137,660,167"/>

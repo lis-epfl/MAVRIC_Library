@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classImu.html#ae7d0dd2732b6e735a123a551eb83227c" title="Get the readiness of the IMU." alt="" coords="176,5,277,35"/>
+<area shape="rect" id="node3" href="$classImu.html#a066f63054b730605afc31ee0c19daae1" title="Get the readiness of the IMU." alt="" coords="176,5,277,35"/>
 <area shape="rect" id="node5" href="$classImu.html#a1c9d0538ed5e4c159de6b7dc1d44b3b2" title="Get X, Y and Z components of angular velocity in rad/s." alt="" coords="188,59,265,88"/>
 <area shape="rect" id="node7" href="$classImu.html#a51e30d145a6b2970d0ff8d8c6a982329" title="Get X, Y and Z components of acceleration in g." alt="" coords="191,112,263,141"/>
 </map>
