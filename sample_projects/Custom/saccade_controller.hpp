@@ -49,8 +49,10 @@ extern "C"
 #include "util/coord_conventions.h"
 #include "util/quick_trig.h"
 #include "sensing/ahrs.h"
-
+#include "control/pid_controller.h"
+#include "sensing/altitude.h"
 }
+#include "sensing/position_estimation.hpp"
 
 #include "drivers/flow.hpp"
 
@@ -70,6 +72,7 @@ typedef struct
     float gain_;
     float threshold_;
     float goal_direction_;
+    pid_controller_conf_t pid_config;
 } saccade_controller_conf_t;
 
 
@@ -112,7 +115,8 @@ public:
      * \param   ahrs         Attitude and heading reference system
      * \param   config       Configuration structure
      */
-    Saccade_controller(Flow& flow_back, Flow& flow_front, const ahrs_t& ahrs, saccade_controller_conf_t config);
+    Saccade_controller(Flow& flow_back, Flow& flow_front, const ahrs_t& ahrs, const position_command_t& position_command, 
+                                        const altitude_t& altitude, saccade_controller_conf_t config);
 
 
     /**
@@ -157,7 +161,7 @@ public:
 
     pid_controller_t            altitude_pid_;
 
-    velocity_command_t          velocity_command_;
+
 
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
 
@@ -165,6 +169,13 @@ public:
     Flow&                     flow_front_;                         ///< Front optic flow camera output
 
     const ahrs_t&               ahrs_;                               ///< Attitude and heading reference system
+
+    const position_command_t&         position_command_;
+
+    const altitude_t           altitude_; 
+
+    velocity_command_t          velocity_command_;
+
 
     bool                        is_time_initialized_;               ///< Flag for time of presaccadic state
 
@@ -178,9 +189,24 @@ public:
 static inline saccade_controller_conf_t saccade_controller_default_config(void)
 {
 
-    pid_controller_conf_t conf;
 
     saccade_controller_conf_t conf;
+
+    conf.pid_config                         = {};
+    conf.pid_config.p_gain                  = 0.2f;
+    conf.pid_config.clip_min                = -1.0f;
+    conf.pid_config.clip_max                = 1.0f;
+    conf.pid_config.integrator              = {};
+    conf.pid_config.integrator.gain         = 0.5f;
+    conf.pid_config.integrator.accumulator  = 0.0f;
+    conf.pid_config.integrator.clip_pre     = 0.0001f;
+    conf.pid_config.integrator.clip         = 0.5f;
+    conf.pid_config.differentiator          = {};
+    conf.pid_config.differentiator.gain     = 0.4f;
+    conf.pid_config.differentiator.previous = 0.0f;
+    conf.pid_config.differentiator.clip     = 0.65f;
+    conf.pid_config.soft_zone_width         = 0.0f;
+
 
     conf.pitch_          = 0.0f;
     conf.gain_           = 1.0f;

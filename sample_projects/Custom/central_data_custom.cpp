@@ -59,7 +59,7 @@ Central_data_custom::Central_data_custom(Imu& imu, Barometer& barometer, Gps& gp
                  servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7, file1, file2, config),
     flow_1_(flow_1),
     flow_2_(flow_2),
-    saccade_controller_(flow_1_, flow_2_, ahrs, saccade_controller_default_config())
+    saccade_controller_(flow_1_, flow_2_, ahrs, command.position, altitude_,saccade_controller_default_config())
 {}
 
 

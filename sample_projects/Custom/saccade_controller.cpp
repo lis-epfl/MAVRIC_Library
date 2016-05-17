@@ -57,10 +57,15 @@ extern "C"
 Saccade_controller::Saccade_controller( Flow& flow_back,
                                         Flow& flow_front,
                                         const ahrs_t& ahrs,
+                                        const position_command_t& position_command, 
+                                        const altitude_t& altitude, 
                                         saccade_controller_conf_t config ):
   flow_back_(flow_back),
   flow_front_(flow_front),
-  ahrs_(ahrs)
+  ahrs_(ahrs),
+  position_command_(position_command),
+  altitude_(altitude)
+
 {
     // Init members
     gain_            = config.gain_;
@@ -111,6 +116,12 @@ Saccade_controller::Saccade_controller( Flow& flow_back,
     yaw_velocity_buffer_.put_lossy(0.0f);
 
     last_derotation_yaw_velocity_ = 0.0f;
+
+    velocity_command_.xyz[0] = 0;
+    velocity_command_.xyz[1] = 0;
+    velocity_command_.xyz[2] = 0;
+
+    pid_controller_init(&altitude_pid_,&config.pid_config);
 }
 
 
@@ -256,11 +267,9 @@ bool Saccade_controller::update()
 
     aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_.qe);
 
-    float altitude_error = 0.0f;
+    float altitude_error = position_command_.xyz[2] - (-altitude_.above_ground);
 
-    error = position_command_.xyz[2] - (-altitude_.above_ground);
-
-    velocity_command_.xyz[3] = velocity_command_.xyz[3] - pid_controller_update(&altitude_pid_, altitude_error);
+    velocity_command_.xyz[2] = pid_controller_update(&altitude_pid_, altitude_error);
 
     float heading_error = 0.0f;
 

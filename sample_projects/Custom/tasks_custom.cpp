@@ -66,45 +66,50 @@ bool tasks_run_stabilisation_quaternion(Central_data_custom* central_data)
     }
     else if (state.is_auto())
     {
+
         central_data->command.attitude = central_data->saccade_controller_.attitude_command_;
+        central_data->velocity_controller.velocity_command = &central_data->saccade_controller_.velocity_command_;
 
-        // 1m altitude command (Above goround level)
-        central_data->command.position.xyz[0] = 0.0f;
-        central_data->command.position.xyz[1] = 0.0f;
-        central_data->command.position.xyz[2] = -0.7f;
-        central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
-
+ 
         // Do control
-        central_data->altitude_controller_.update();
+        velocity_controller_copter_update(&central_data->velocity_controller);
         attitude_controller_update(&central_data->attitude_controller);
-
+ 
+        // Write output
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
+
+        
+
 
     }
+
+
     else if (state.is_manual() && state.is_guided())
     {
-        // manual_control_get_velocity_command(&central_data->manual_control, &central_data->command.velocity, 1.0f);
-        // velocity_controller_copter_update(&central_data->velocity_controller);
 
-        // get attitude command from remote
+        // Get command from remote
         central_data->manual_control.get_attitude_command(0.02f, &central_data->command.attitude, 1.0f);
 
-        // 1m altitude command (Above goround level)
-        central_data->command.position.xyz[0] = 0.0f;
-        central_data->command.position.xyz[1] = 0.0f;
-        central_data->command.position.xyz[2] = -0.7f;
-        central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
+        central_data->manual_control.get_velocity_command(&central_data->command.velocity, 1.0f);
 
+        // central_data->velocity_controller.velocity_command->xyz[3] = central_data->saccade_controller_.velocity_command_->xyz[3];
+  
         // Do control
-        central_data->altitude_controller_.update();
+        velocity_controller_copter_update(&central_data->velocity_controller);
         attitude_controller_update(&central_data->attitude_controller);
+  
+        // Write output
+          servos_mix_quadcopter_diag_update(&central_data->servo_mix);
+        
 
-        servos_mix_quadcopter_diag_update(&central_data->servo_mix);
+        //Change saccade state to presaccade and reset timer for first presaccade
 
         central_data->saccade_controller_.saccade_state_ = PRESACCADE;
 
         central_data->saccade_controller_.is_time_initialized_ = false;
     }
+
+
     else if (state.is_manual() && state.is_stabilize())
     {
 
@@ -117,16 +122,9 @@ bool tasks_run_stabilisation_quaternion(Central_data_custom* central_data)
 
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
 
-        // // get command from remote
-        // manual_control_get_rate_command(&central_data->manual_control, &central_data->command.rate, 3.0f);
-        // manual_control_get_thrust_command(&central_data->manual_control, &central_data->command.thrust);
 
-        // // Do control
-        // central_data->attitude_controller.mode = ATTITUDE_CONTROLLER_MODE_RATE_ONLY;
-        // attitude_controller_update(&central_data->attitude_controller);
 
-        // servos_mix_quadcopter_diag_update(&central_data->servo_mix);
-
+        //Change saccade state to presaccade and reset timer for first presaccade
         central_data->saccade_controller_.saccade_state_ = PRESACCADE;
 
         central_data->saccade_controller_.is_time_initialized_ = false;
