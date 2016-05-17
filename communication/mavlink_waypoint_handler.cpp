@@ -1608,7 +1608,7 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
             hold_waypoint_set_(false),
@@ -1629,7 +1629,8 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
             auto_landing_next_state_(0),
             last_mode_(state_.mav_mode()),
             ahrs_(ahrs_),
-            manual_control_(manual_control_)
+            manual_control_(manual_control_),
+            config_(config)
 {
     bool init_success = true;
 
@@ -1825,7 +1826,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     waypoint.x = 0.0f;
     waypoint.y = 0.0f;
-    waypoint.z = -10.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
 
     waypoint.param1 = 10; // Hold time in decimal seconds
     waypoint.param2 = 2; // Acceptance radius in meters

@@ -165,40 +165,39 @@ bool tasks_run_stabilisation_quaternion(Central_data* central_data)
     }
     else if (state.is_auto())
     {
-        // vector_field_waypoint_update(&central_data->vector_field_waypoint);
-        // velocity_controller_copter_update(&central_data->velocity_controller);
-        // attitude_controller_update(&central_data->attitude_controller);
-        // servos_mix_quadcopter_diag_update(&central_data->servo_mix);
+        // Get command from vector field
+        vector_field_waypoint_update(&central_data->vector_field_waypoint);
+
+        // Do control
+        velocity_controller_copter_update(&central_data->velocity_controller);
+        attitude_controller_update(&central_data->attitude_controller);
+
+        // Write output
+        servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else if (state.is_manual() && state.is_guided())
     {
-        // manual_control_get_velocity_command(&central_data->manual_control, &central_data->command.velocity, 1.0f);
-        // velocity_controller_copter_update(&central_data->velocity_controller);
-
-        // get attitude command from remote
+        // Get command from remote
         central_data->manual_control.get_attitude_command(0.02f, &central_data->command.attitude, 1.0f);
-
-        // Hardcode altitude command
-        central_data->command.position.xyz[0] = 0.0f;
-        central_data->command.position.xyz[1] = 0.0f;
-        central_data->command.position.xyz[2] = -5.0f;
-        central_data->command.position.mode   = POSITION_COMMAND_MODE_LOCAL;
+        central_data->manual_control.get_velocity_command(&central_data->command.velocity, 1.0f);
 
         // Do control
-        central_data->altitude_controller_.update();
+        velocity_controller_copter_update(&central_data->velocity_controller);
         attitude_controller_update(&central_data->attitude_controller);
 
+        // Write output
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else if (state.is_manual() && state.is_stabilize())
     {
-        // get command from remote
+        // Get command from remote
         central_data->manual_control.get_attitude_command(0.02f, &central_data->command.attitude, 1.0f);
         central_data->manual_control.get_thrust_command(&central_data->command.thrust);
 
         // Do control
         attitude_controller_update(&central_data->attitude_controller);
 
+        // Write output
         servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else
@@ -256,8 +255,8 @@ bool tasks_data_logging_update(Central_data* central_data)
 {
     bool run_success = true;
 
-    run_success &= central_data->data_logging.update();
-    run_success &= central_data->data_logging2.update();
+    run_success &= central_data->data_logging_continuous.update();
+    run_success &= central_data->data_logging_stat.update();
 
     return run_success;
 }

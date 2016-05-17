@@ -63,6 +63,11 @@ class Mavlink_waypoint_handler
 {
 public:
 
+    struct conf_t
+    {
+        float auto_take_off_altitude;                               ///< Altitude to which auto_take off flies; altitude over starting point (where auto_take off was started) should be > 0
+    };
+
     /**
      * \brief   The MAVLink waypoint structure
      */
@@ -101,7 +106,8 @@ public:
                            State& state,
                            const Manual_control& manual_control,
                            Mavlink_message_handler& message_handler,
-                           const Mavlink_stream& mavlink_stream);
+                           const Mavlink_stream& mavlink_stream,
+                           conf_t config = default_config());
 
 
     /**
@@ -134,6 +140,13 @@ public:
     void hold_init(local_position_t local_pos);
 
     inline uint16_t waypoint_count() const {return waypoint_count_;};
+
+    /**
+     * \brief   Default configuration
+     *
+     * \return  Config structure
+     */
+    static inline conf_t default_config();
 
     
     waypoint_local_struct_t waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
@@ -177,6 +190,7 @@ private:
     mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution    
     const ahrs_t& ahrs_;                                         ///< The pointer to the attitude estimation structure
     const Manual_control& manual_control_;                       ///< The pointer to the manual_control structure
+    conf_t config_;
 
     /**
      * \brief   Drives the stopping behavior
@@ -382,5 +396,21 @@ private:
      */
     static mav_result_t set_auto_landing(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 };
+
+
+Mavlink_waypoint_handler::conf_t Mavlink_waypoint_handler::default_config()
+{
+    conf_t conf                                                = {};
+
+    conf.auto_take_off_altitude                                = 10;
+
+    return conf;
+};
+
+
+
+
+
+
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

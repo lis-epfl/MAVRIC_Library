@@ -63,6 +63,8 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
     servo_3(pwm_3, servo_default_config_esc()),
   	servo_4(pwm_4, servo_default_config_esc()),
   	servo_5(pwm_5, servo_default_config_esc()),
+    servo_6(pwm_6, servo_default_config_esc()),
+    servo_7(pwm_7, servo_default_config_esc()),
     dynamic_model(servo_0, servo_1, servo_2, servo_3, config.dynamic_model_config),
     sim(dynamic_model),
     imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer(), config.imu_config),

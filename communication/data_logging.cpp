@@ -705,7 +705,7 @@ bool Data_logging::stop(void)
 
 
 template<>
-bool Data_logging::add_field(uint8_t* val, const char* param_name)
+bool Data_logging::add_field(const uint8_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -751,7 +751,7 @@ bool Data_logging::add_field(uint8_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(int8_t* val, const char* param_name)
+bool Data_logging::add_field(const int8_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -797,7 +797,7 @@ bool Data_logging::add_field(int8_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(uint16_t* val, const char* param_name)
+bool Data_logging::add_field(const uint16_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -843,7 +843,7 @@ bool Data_logging::add_field(uint16_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(int16_t* val, const char* param_name)
+bool Data_logging::add_field(const int16_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -889,7 +889,7 @@ bool Data_logging::add_field(int16_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(uint32_t* val, const char* param_name)
+bool Data_logging::add_field(const uint32_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -935,7 +935,7 @@ bool Data_logging::add_field(uint32_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(int32_t* val, const char* param_name)
+bool Data_logging::add_field(const int32_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -981,7 +981,7 @@ bool Data_logging::add_field(int32_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(uint64_t* val, const char* param_name)
+bool Data_logging::add_field(const uint64_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -1027,7 +1027,7 @@ bool Data_logging::add_field(uint64_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(int64_t* val, const char* param_name)
+bool Data_logging::add_field(const int64_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -1073,7 +1073,7 @@ bool Data_logging::add_field(int64_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(float* val, const char* param_name, uint32_t precision)
+bool Data_logging::add_field(const float* val, const char* param_name, uint32_t precision)
 {
     bool add_success = true;
 
@@ -1120,7 +1120,7 @@ bool Data_logging::add_field(float* val, const char* param_name, uint32_t precis
 
 
 template<>
-bool Data_logging::add_field(double* val, const char* param_name, uint32_t precision)
+bool Data_logging::add_field(const double* val, const char* param_name, uint32_t precision)
 {
     bool add_success = true;
 
@@ -1167,7 +1167,7 @@ bool Data_logging::add_field(double* val, const char* param_name, uint32_t preci
 
 
 template<>
-bool Data_logging::add_field(bool* val, const char* param_name)
+bool Data_logging::add_field(const bool* val, const char* param_name)
 {
     bool add_success = true;
 
