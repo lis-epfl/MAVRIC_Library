@@ -67,9 +67,9 @@ typedef enum
  */
 typedef enum
 {
-    VELOCITY_COMMAND_MODE_LOCAL         = 0,    ///< Local frame
-    VELOCITY_COMMAND_MODE_SEMI_LOCAL    = 1,    ///< Global frame rotated around vertical axis to match the X axis with the current heading of the UAV
-    VELOCITY_COMMAND_MODE_GLOBAL        = 2,    ///< Global frame
+    VELOCITY_COMMAND_MODE_BODY          = 0,    ///< Body frame
+    VELOCITY_COMMAND_MODE_SEMI_LOCAL    = 1,    ///< Lobal frame rotated around vertical axis to match the X axis with the current heading of the UAV
+    VELOCITY_COMMAND_MODE_LOCAL         = 2,    ///< Local NED frame
 } velocity_command_mode_t;
 
 

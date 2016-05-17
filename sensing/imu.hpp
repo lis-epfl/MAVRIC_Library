@@ -186,7 +186,7 @@ public:
      *
      * \return  True if the IMU is ready, false otherwise
      */
-    const bool is_ready(void) const;
+    bool is_ready(void) const;
 
     /**
      * \brief   Temporary method to get pointer to configuration
@@ -309,13 +309,11 @@ public:
 
 private:
     /**
-     * \brief   Startup calibration
+     * \brief   Tests if a calibration is ongoing
      *
-     * \detail  Should not be used in flight
-     *          If the imu is not ready, this function waits for the gyroscopes
-     *          values to be stable, then perform gyro bias calibration
+     * \return  boolean
      */
-    void do_startup_calibration(void);
+    bool is_calibration_ongoing(void) const;
 
 
     /**
@@ -342,6 +340,7 @@ private:
     float magnetic_inclination_;        ///< Angle between horizontal plane and magnetic north (magnetic dip)
     float magnetic_norm_;               ///< Norm of magnetic north
 
+    bool do_startup_calibration_;               ///< Flag indicating if calibration should be done
     bool do_accelerometer_bias_calibration_;    ///< Flag indicating if calibration should be done
     bool do_gyroscope_bias_calibration_;        ///< Flag indicating if calibration should be done
     bool do_magnetometer_bias_calibration_;     ///< Flag indicating if calibration should be done
@@ -350,7 +349,7 @@ private:
 
     float dt_s_;                        ///< Time interval between two updates (in microseconds)
     float last_update_us_;              ///< Last update time in microseconds
-    float timestamp_gyro_stable;        ///< The time from which the gyroscope is not varying too much
+    float startup_calibration_start_time_;       ///< The moment from which the gyroscope is not varying too much
 };
 
 
