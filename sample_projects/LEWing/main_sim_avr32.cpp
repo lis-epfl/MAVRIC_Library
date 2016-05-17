@@ -58,6 +58,9 @@ extern "C"
 #include "util/print_util.h"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"
+#include "hal/dummy/pwm_dummy.hpp"
+#include "hal/dummy/adc_dummy.hpp"
+#include "simulation/dynamic_model_fixed_wing.hpp"
 
 #include "sample_projects/LEWing/proj_avr32/config/conf_imu.hpp"
 }
@@ -116,13 +119,14 @@ int main(void)
     // Create simulation
     // -------------------------------------------------------------------------
     // Simulated servos
-    Pwm_dummy pwm[3];
+    Pwm_dummy pwm[4];
     Servo sim_servo_0(pwm[0], servo_default_config_esc());
     Servo sim_servo_1(pwm[1], servo_default_config_standard());
     Servo sim_servo_2(pwm[2], servo_default_config_standard());
+    Servo sim_servo_3(pwm[3], servo_default_config_standard());
 
     // Simulated dynamic model
-    Dynamic_model_wing sim_model    = Dynamic_model_wing(sim_servo_0, sim_servo_1, sim_servo_2);
+    Dynamic_model_fixed_wing sim_model    = Dynamic_model_fixed_wing(sim_servo_0, sim_servo_1, sim_servo_2);
     Simulation sim                       = Simulation(sim_model);
 
     // Simulated battery
@@ -137,7 +141,7 @@ int main(void)
                                      sim.gyroscope(),
                                      sim.magnetometer() );
 
-    Create central data with simulated sensors
+    //Create central data with simulated sensors
     Central_data cd = Central_data( MAVLINK_SYS_ID,
                                  sim_imu,
                                  sim.barometer(),

@@ -87,6 +87,7 @@ wing_model_forces_t Wing_model::compute_forces(float wind[3], float ang_rates[3]
 	float wind_wf[3];
 	quaternions_rotate_vector(quaternions_inverse(orientation_),wind_bf,wind_wf);
 	float aoa = atan2(-wind_wf[2], -wind_wf[0]); //Neglect the lateral wind
+	printf("Aoa: %f\n",aoa);
 	float speed_sq = SQR(wind_wf[0]) + SQR(wind_wf[2]); //Neglect the lateral wind
 	float cl = get_cl(aoa);
 	float cd = get_cd(aoa);
