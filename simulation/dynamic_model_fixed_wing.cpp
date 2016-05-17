@@ -45,7 +45,7 @@
 #include "hal/common/time_keeper.hpp"
 
 #include <iostream>
-#include <fstream>
+//#include <fstream>*/
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -60,17 +60,17 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     servo_flap_right_(servo_flap_right),
     config_(config),
     motor_speed_(0.0f),
-    left_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f+0.0280f, -0.205f, 0.004f, 0.12f, 0.3f,1),//TODO: change these to the correct values
-    right_flap_(0.0f,quat_t{1.0f, {0.0f, 0.0f, 0.0f}}, -0.035f+0.0280f, 0.205f, 0.004f, 0.12f, 0.3f,1),
-    left_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -1.50f, -0.410f, -0.046f, 0.014f, 0.2f,1),
-    right_drift_(0.0f,quat_t{1.0f/sqrt(2.0f), {-1.0f/sqrt(2.0f), 0.0f, 0.0f}}, -1.50f, 0.410f, -0.046f, 0.014f, 0.2f,1),
+    left_flap_(0.0f,quaternions_create(1.0f, 0.0f, 0.0f, 0.0f), -0.035f+0.0280f, -0.205f, 0.004f, 0.12f, 0.3f,1),//TODO: change these to the correct values
+    right_flap_(0.0f,quaternions_create(1.0f, 0.0f, 0.0f, 0.0f), -0.035f+0.0280f, 0.205f, 0.004f, 0.12f, 0.3f,1),
+    left_drift_(0.0f,quaternions_create(1.0f/sqrt(2.0f), 1.0f/sqrt(2.0f), 0.0f, 0.0f), -0.30f, -0.350f, -0.046f, 0.014f, 1.24f,0),
+    right_drift_(0.0f,quaternions_create(1.0f/sqrt(2.0f), -1.0f/sqrt(2.0f), 0.0f, 0.0f), -0.30f, 0.350f, -0.046f, 0.014f, 1.24f,0),
     torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     rates_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     lin_forces_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     acc_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     vel_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
     vel_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
-    attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
+    attitude_(quaternions_create(1.0f, 0.0f, 0.0f, 0.0f)),
     last_update_us_(time_keeper_get_us()),
     dt_s_(0.004f)
 {
@@ -195,7 +195,7 @@ bool Dynamic_model_fixed_wing::update(void)
     {
         local_position_.pos[i] = local_position_.pos[i] + vel_[i] * dt_s_;
     }
-    printf("%f, %f, %f\n",local_position_.pos[0],local_position_.pos[1],local_position_.pos[2]);//TODO: remove
+    //printf("%f, %f, %f\n",local_position_.pos[0],local_position_.pos[1],local_position_.pos[2]);//TODO: remove
 
     local_position_.heading = coord_conventions_get_yaw(attitude_);
 
@@ -279,7 +279,7 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     float motor_command = servo_motor_.read() - config_.rotor_rpm_offset;
     float flaps_angle_left = (servo_flap_left_.read() - config_.flap_offset)*config_.flap_max;
     float flaps_angle_right = (servo_flap_right_.read() - config_.flap_offset)*config_.flap_max;
-    printf("-> %f, %f, %f\n", motor_command, flaps_angle_left, flaps_angle_right);
+    //printf("-> %f, %f, %f\n", motor_command, flaps_angle_left, flaps_angle_right);
     left_flap_.set_flap_angle(flaps_angle_left);
     right_flap_.set_flap_angle(flaps_angle_right);
 
@@ -324,6 +324,12 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
 		       right_flap_force.torque[YAW] +
            left_drift_force.torque[YAW] +
            right_drift_force.torque[YAW];
+
+           printf("Yaw: %f, %f, %f, %f, %f\n", torques_bf_[YAW],
+           left_flap_force.torque[YAW],
+           right_flap_force.torque[YAW],
+           left_drift_force.torque[YAW],
+           right_drift_force.torque[YAW]);
 
     //Get the force in X axis
     lin_forces_bf_[X] = motor_forces.force[X] +

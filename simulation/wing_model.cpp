@@ -43,7 +43,7 @@
 
 #include "simulation/wing_model.hpp"
 #include <iostream>
-#include <fstream>
+//#include <fstream>*/
 
 extern "C"
 {
@@ -87,7 +87,6 @@ wing_model_forces_t Wing_model::compute_forces(float wind[3], float ang_rates[3]
 	float wind_wf[3];
 	quaternions_rotate_vector(quaternions_inverse(orientation_),wind_bf,wind_wf);
 	float aoa = atan2(-wind_wf[2], -wind_wf[0]); //Neglect the lateral wind
-	printf("Aoa: %f\n",aoa);
 	float speed_sq = SQR(wind_wf[0]) + SQR(wind_wf[2]); //Neglect the lateral wind
 	float cl = get_cl(aoa);
 	float cd = get_cd(aoa);
@@ -98,6 +97,7 @@ wing_model_forces_t Wing_model::compute_forces(float wind[3], float ang_rates[3]
 	float drag = cd*base;
 	float sinus = sin(aoa);
 	float cosinus = cos(aoa);
+	//printf("Drag: %f\n", drag);
 	wing_model_forces_t forces_wf;
 	forces_wf.torque[ROLL] = 0.0;
 	forces_wf.torque[PITCH] = cm*chord_*base; //Positive when plane lift its nose
@@ -175,7 +175,7 @@ float Wing_model::get_cd(float aoa)
 	}
 	else //Return the flat profile
 	{
-		coeff = 1.28f*sin(aoa);
+		coeff = 1.28f*sin(fabs(aoa));
 	}
 	return coeff;
 }

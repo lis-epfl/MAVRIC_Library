@@ -47,10 +47,10 @@
 #include "hal/avr32/file_flash_avr32.hpp"
 #include "hal/avr32/serial_usb_avr32.hpp"
 
-// #include "simulation/dynamic_model_quad_diag.hpp"
-// #include "simulation/simulation.hpp"
-// #include "hal/dummy/adc_dummy.hpp"
-// #include "hal/dummy/pwm_dummy.hpp"
+#include "simulation/dynamic_model_fixed_wing.hpp"
+#include "simulation/simulation.hpp"
+#include "hal/dummy/adc_dummy.hpp"
+#include "hal/dummy/pwm_dummy.hpp"
 
 extern "C"
 {
@@ -58,9 +58,6 @@ extern "C"
 #include "util/print_util.h"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"
-#include "hal/dummy/pwm_dummy.hpp"
-#include "hal/dummy/adc_dummy.hpp"
-#include "simulation/dynamic_model_fixed_wing.hpp"
 
 #include "sample_projects/LEWing/proj_avr32/config/conf_imu.hpp"
 }
@@ -96,7 +93,7 @@ int main(void)
     // Create central data
     // -------------------------------------------------------------------------
     // Create central data using real sensors
-    // Central_data::conf_t cd_config = Central_data::default_config(MAVLINK_SYS_ID);
+    Central_data::conf_t cd_config = Central_data::default_config(MAVLINK_SYS_ID);
     // Central_data cd = Central_data(board.imu,
     //                                board.bmp085,
     //                                board.gps_ublox,
@@ -126,24 +123,23 @@ int main(void)
     Servo sim_servo_3(pwm[3], servo_default_config_standard());
 
     // Simulated dynamic model
-    Dynamic_model_fixed_wing sim_model    = Dynamic_model_fixed_wing(sim_servo_0, sim_servo_1, sim_servo_2);
-    Simulation sim                       = Simulation(sim_model);
+    Dynamic_model_fixed_wing sim_model(sim_servo_0, sim_servo_1, sim_servo_2);
+    Simulation sim(sim_model);
 
     // Simulated battery
-    Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
-    Battery  sim_battery     = Battery(sim_adc_battery);
+    Adc_dummy    sim_adc_battery(11.1f);
+    Battery  sim_battery(sim_adc_battery);
 
-    Adc_dummy    sim_adc_airspeed = Adc_dummy(12.0f);
-    Airspeed_analog sim_airspeed_analog = Airspeed_analog(sim_adc_airspeed,airspeed_analog_default_config());
+    Adc_dummy    sim_adc_airspeed(12.0f);
+    Airspeed_analog sim_airspeed_analog(sim_adc_airspeed,airspeed_analog_default_config());
 
     // Simulated IMU
-    Imu      sim_imu         = Imu(  sim.accelerometer(),
+    Imu      sim_imu(  sim.accelerometer(),
                                      sim.gyroscope(),
                                      sim.magnetometer() );
 
     //Create central data with simulated sensors
-    Central_data cd = Central_data( MAVLINK_SYS_ID,
-                                 sim_imu,
+    Central_data cd(sim_imu,
                                  sim.barometer(),
                                  sim.gps(),
                                  sim.sonar(),
@@ -155,7 +151,11 @@ int main(void)
                                  sim_servo_0,
                                  sim_servo_1,
                                  sim_servo_2,
-                                 sim_servo_3 );
+                                 sim_servo_3,
+                                 sim_airspeed_analog,
+                                 file_log,
+                                 file_stat,
+                                 cd_config);
 
     // Init central data
     init_success &= cd.init();

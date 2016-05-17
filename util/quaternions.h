@@ -300,6 +300,21 @@ static inline quat_t quaternions_normalise(const quat_t q)
     return result;
 }
 
+/**
+ * \brief
+ *
+ * \param   q
+ * \return
+ */
+static inline quat_t quaternions_create(float w, float x, float y, float z)
+{
+  quat_t quaternion;
+  quaternion.s = w;
+  quaternion.v[0] = x;
+  quaternion.v[1] = y;
+  quaternion.v[2] = z;
+  return quaternion;
+}
 
 #ifdef __cplusplus
 }
