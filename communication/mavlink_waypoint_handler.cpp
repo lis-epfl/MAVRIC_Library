@@ -1200,7 +1200,18 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
             travel_time_ = time_keeper_get_ms() - start_wpt_time_;
 
             waypoint_list[current_waypoint_index_].current = 0;
-            if ((current_waypoint_.autocontinue == 1) && (waypoint_count_ > 1))
+            
+            if (current_waypoint_.command == MAV_CMD_NAV_LAND)
+            {
+                state_.nav_plan_active = false;
+                print_util_dbg_print("Stop & land\r\n");
+
+                //auto landing is not using the packet, 
+                //so we can declare a dummy one.
+                mavlink_command_long_t packet;
+                set_auto_landing(this, &packet);
+            }
+            else if ((current_waypoint_.autocontinue == 1) && (waypoint_count_ > 1))
             {
                 print_util_dbg_print("Autocontinue towards waypoint Nr");
 
