@@ -62,7 +62,7 @@ public:
      * \param   position_estimation For position and speed
      * \param   controls            For resetting the roll command
      */
-	Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* postion_estimation,control_command_t* controls );
+	Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estimation* postion_estimation,control_command_t* controls );
 	~Fence_CAS(void);
     /**
      * \brief   Main update function - compute the repulsion with the fences
@@ -142,8 +142,8 @@ private:
      */
 	float 	detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3]);
 
-	mavlink_waypoint_handler_t* 		waypoint_handler;			///< Waypoint handler (extract fencepoints)
-	const position_estimation_t*        pos_est;                    ///< Estimated position and speed (extract the velocity and the position)
+	Mavlink_waypoint_handler* 		waypoint_handler;			///< Waypoint handler (extract fencepoints)
+	const Position_estimation*        pos_est;                    ///< Estimated position and speed (extract the velocity and the position)
 	control_command_t* 					controls;					///< Control command (output the repulsion)
 	float 								repulsion[3];				///< Repulsion vector in semi-local frame (only act on ROLL, rep[1])
 };

@@ -197,6 +197,7 @@ public:
      * \return  Square distance from the fence origin [m^2]
      */
     float position_estimation_get_z_distance_from_fence_origin();
+    local_position_t* get_last_gps_pos(){return &last_gps_pos;};
 
     local_position_t get_fence_position();
 
@@ -207,6 +208,9 @@ public:
     float kp_vel_baro;                      ///< Gain to correct the Z velocity estimation from the barometer
     float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
     
+    //cystu Is private
+    local_position_t last_gps_pos;          ///< Coordinates of the last GPS position
+
 private:
     float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
     float kp_alt_sonar;                     ///< Gain to correct the Z position estimation from the sonar
@@ -222,7 +226,7 @@ private:
     float last_alt;                         ///< Value of the last altitude estimation
     float last_vel[3];                      ///< Last 3D velocity
 
-    local_position_t last_gps_pos;          ///< Coordinates of the last GPS position
+
 
     bool fence_set;                         ///< Indicates if fence is set
     local_position_t fence_position;        ///< Position of the fence

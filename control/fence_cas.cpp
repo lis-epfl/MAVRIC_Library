@@ -145,16 +145,16 @@ float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , flo
 // ------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 // ------------------------------------------------------------------------------
-Fence_CAS::Fence_CAS(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* postion_estimation, control_command_t* controls)
+Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estimation* postion_estimation, control_command_t* controls)
 :	a_max(1),
 	r_pz(1),
-	comfort(0.845),
+	comfort(0.5),
 	waypoint_handler(waypoint_handler),
 	pos_est(postion_estimation),
 	controls(controls),
 	tahead(2.0),
-	repulsion({0,0,0}),
-	coef_roll(0.01),
+//	repulsion({0,0,0}),
+	coef_roll(0.6),
 	maxsens(10.0)
 {
 
@@ -178,7 +178,9 @@ bool Fence_CAS::update(void)
 	{
 		this->repulsion[k]=0.0;
 	}
-	float C[3]={this->pos_est->last_gps_pos.pos[0],this->pos_est->last_gps_pos.pos[1],this->pos_est->last_gps_pos.pos[2]};	// Position of the Quad
+	//CYSTU PUT BACK C
+//	float C[3]={0,0,0};
+	float C[3]={pos_est->last_gps_pos.pos[0],pos_est->last_gps_pos.pos[1],pos_est->last_gps_pos.pos[2]};	// Position of the Quad
 	float S[3]={0,0,0};																										// Position of the heading
 
 	float I[3]={0,0,0};	// Detected point on fence segment
@@ -207,10 +209,10 @@ bool Fence_CAS::update(void)
 	for(int n=0;n<MAX_OUTFENCE+1;n++)
 	{
 		uint16_t nbFencePoints = *waypoint_handler->all_fence_points[n];
-		waypoint_struct_t* CurFence_list  = this->waypoint_handler->all_fences[n];
+		Mavlink_waypoint_handler::waypoint_struct_t* CurFence_list  = this->waypoint_handler->all_fences[n];
 		float* CurAngle_list = waypoint_handler->all_fence_angles[n];
-		print_util_dbg_print("N");print_util_dbg_putfloat(n,0);
-		print_util_dbg_print("\t ||nbFences||");print_util_dbg_putfloat(nbFencePoints,0);
+//		print_util_dbg_print("N");print_util_dbg_putfloat(n,0);
+//		print_util_dbg_print("\t ||nbFences||");print_util_dbg_putfloat(nbFencePoints,0);
 
 
 
@@ -288,8 +290,8 @@ bool Fence_CAS::update(void)
 					vectors_normalize(rep,rep);
 					rep[1]=(rep[1]>=0?-1:1) ;								// Extract repulsion direction in body frame
 					this->repulsion[1]+=- rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type)*1.3; // Add repulsion
-					print_util_dbg_print("\t ||Arep||");print_util_dbg_putfloat(i+1,0);
-					print_util_dbg_print("||");print_util_dbg_putfloat(-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type),4);
+//					print_util_dbg_print("\t ||Arep||");print_util_dbg_putfloat(i+1,0);
+//					print_util_dbg_print("||");print_util_dbg_putfloat(-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type),4);
 	//				detected=true;												// Enable detection flag
 				}
 			}
@@ -308,8 +310,8 @@ bool Fence_CAS::update(void)
 
 	// 			this->repulsion[0]+=0.0;
 				this->repulsion[1]+=-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type);
-				print_util_dbg_print("\t ||Frep||");print_util_dbg_putfloat(i,0);
-				print_util_dbg_print("||");print_util_dbg_putfloat(-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type),4);
+//				print_util_dbg_print("\t ||Frep||");print_util_dbg_putfloat(i,0);
+//				print_util_dbg_print("||");print_util_dbg_putfloat(-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type),4);
 	// 			this->repulsion[2]+=0.0;
 	//			detected=true;												// Enable detection flag
 			}
@@ -320,7 +322,7 @@ bool Fence_CAS::update(void)
 
 		}
 
-		print_util_dbg_print("\n");
+//		print_util_dbg_print("\n");
 	}
 
 	/*END FOR EACH FENCE*/

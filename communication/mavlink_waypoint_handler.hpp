@@ -136,11 +136,17 @@ public:
 
     inline uint16_t waypoint_count() const {return waypoint_count_;};
 
+    /**
+     * \brief   Compute angle between fence points
+     * \return  Angle formed with the two adjacent fencepoints in radians
+     */
+    void fencepoint_angle(waypoint_struct_t* fence_list, uint16_t number_of_fence_points,float* fence_angle_list );
+
+
     
     local_position_t waypoint_hold_coordinates;                 ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
 
-    waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
     waypoint_struct_t fence_list[MAX_WAYPOINTS];             	///< The array of all fencepoints (max MAX_WAYPOINTS)
     float fence_angle_list[MAX_WAYPOINTS];						///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
 
@@ -177,10 +183,10 @@ public:
 			outfence_4_angle_list, outfence_5_angle_list};
 
     int8_t current_waypoint_count;                              ///< The number of the current waypoint
+    uint16_t waypoint_count_;
+    uint16_t current_waypoint_index_;
 
 protected:
-    uint16_t waypoint_count_;                                     ///< The total number of waypoints
-    int8_t current_waypoint_index_;                              ///< The number of the current waypoint
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
     const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
@@ -414,21 +420,6 @@ private:
      */
     static mav_result_t set_auto_landing(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 };
-
-
-/**
- * \brief   Sends the travel time between the last two waypoints
- *
- * \param   waypoint_handler        The pointer to the waypoint handler structure
- * \param   mavlink_stream          The pointer to the MAVLink stream structure
- * \param   msg                     The pointer to the MAVLink message
- */
-void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-/**
- * \brief   Compute angle between fence points
- * \return  Angle formed with the two adjacent fencepoints in radians
- */
-void mavlink_waypoint_handler_fencepoint_angle(waypoint_struct_t* fence_list, uint16_t number_of_fence_points,float* fence_angle_list );
 
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

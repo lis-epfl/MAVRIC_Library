@@ -387,7 +387,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                         //cystu compute fencepoint angle
                         for(int n=0;n<MAX_OUTFENCE+1;n++)
                         {
-                        	mavlink_waypoint_handler_fencepoint_angle(waypoint_handler->all_fences[n], *waypoint_handler->all_fence_points[n],waypoint_handler->all_fence_angles[n]);
+                        	waypoint_handler->fencepoint_angle(waypoint_handler->all_fences[n], *waypoint_handler->all_fence_points[n],waypoint_handler->all_fence_angles[n]);
                         }
                     }
                     else
@@ -550,9 +550,6 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
             waypoint_handler->number_of_outfence_3_points = 0;
             waypoint_handler->number_of_outfence_4_points = 0;
             waypoint_handler->number_of_outfence_5_points = 0;
-            waypoint_handler->num_waypoint_onboard = 0;
-            waypoint_handler->state->nav_plan_active = false;
-            waypoint_handler->hold_waypoint_set = false;
 
             mavlink_message_t _msg;
             mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),
@@ -1283,16 +1280,16 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
 
             }
             //CYSTU
-            else if (waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count+1].command == MAV_CMD_NAV_FENCE) //40
+            else if (waypoint_list[current_waypoint_count+1].command == MAV_CMD_NAV_FENCE) //40
 			{
             	print_util_dbg_print("This waypoint is a fence point, use next waypoint\r\n");
-                if (waypoint_handler->current_waypoint_count == (waypoint_handler->number_of_waypoints - 1))
+                if (current_waypoint_count == (number_of_waypoints - 1))
                 {
-                    waypoint_handler->current_waypoint_count = 0;
+                    current_waypoint_count = 0;
                 }
                 else
                 {
-                    waypoint_handler->current_waypoint_count++;
+                    current_waypoint_count++;
                 }
 			}
             else
@@ -1460,19 +1457,17 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
             auto_landing_next_state_(0),
             last_mode_(state_.mav_mode()),
             ahrs_(ahrs_),
-            manual_control_(manual_control_)
+            manual_control_(manual_control_),
+			number_of_fence_points(0),
+			number_of_outfence_1_points(0),
+			number_of_outfence_2_points(0),
+			number_of_outfence_3_points(0),
+			number_of_outfence_4_points(0),
+			number_of_outfence_5_points(0)
 {
     bool init_success = true;
 
     // init waypoint navigation
-    waypoint_handler->number_of_waypoints = 0;
-    waypoint_handler->number_of_fence_points = 0;
-    waypoint_handler->number_of_outfence_1_points = 0;
-    waypoint_handler->number_of_outfence_2_points = 0;
-    waypoint_handler->number_of_outfence_3_points = 0;
-    waypoint_handler->number_of_outfence_4_points = 0;
-    waypoint_handler->number_of_outfence_5_points = 0;
-	waypoint_handler->num_waypoint_onboard = 0;
 
     navigation_.internal_state_ = Navigation::NAV_ON_GND;
     navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
@@ -1709,7 +1704,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
         //cystu compute fencepoint angle
         for(int n=0;n<MAX_OUTFENCE+1;n++)
         {
-        	mavlink_waypoint_handler_fencepoint_angle(waypoint_handler->all_fences[n],*waypoint_handler->all_fence_points[n],waypoint_handler->all_fence_angles[n]);
+        	fencepoint_angle(all_fences[n],*all_fence_points[n],all_fence_angles[n]);
         }
     }
 
@@ -1746,7 +1741,7 @@ void Mavlink_waypoint_handler::send_nav_time(const Mavlink_stream* mavlink_strea
                                      travel_time_);
 }
 
-void mavlink_waypoint_handler_fencepoint_angle(waypoint_struct_t* fence_list, uint16_t number_of_fence_points,float* fence_angle_list )
+void Mavlink_waypoint_handler::fencepoint_angle(waypoint_struct_t* fence_list, uint16_t number_of_fence_points,float* fence_angle_list )
 {
 	for (int i=0; i < number_of_fence_points; i++) //loop through all pair of fence points
 		{
