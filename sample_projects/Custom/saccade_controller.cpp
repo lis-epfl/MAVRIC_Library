@@ -256,6 +256,12 @@ bool Saccade_controller::update()
 
     aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_.qe);
 
+    float altitude_error = 0.0f;
+
+    error = position_command_.xyz[2] - (-altitude_.above_ground);
+
+    velocity_command_.xyz[3] = velocity_command_.xyz[3] - pid_controller_update(&altitude_pid_, altitude_error);
+
     float heading_error = 0.0f;
 
     //Noise for the goal direction

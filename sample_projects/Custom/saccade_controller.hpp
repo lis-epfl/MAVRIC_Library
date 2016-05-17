@@ -155,6 +155,8 @@ public:
 
     uint64_t                    last_saccade_;
 
+    pid_controller_t            altitude_pid_;
+
     velocity_command_t          velocity_command_;
 
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
@@ -175,6 +177,9 @@ public:
 
 static inline saccade_controller_conf_t saccade_controller_default_config(void)
 {
+
+    pid_controller_conf_t conf;
+
     saccade_controller_conf_t conf;
 
     conf.pitch_          = 0.0f;
