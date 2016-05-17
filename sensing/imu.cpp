@@ -65,13 +65,14 @@ Imu::Imu(Accelerometer& accelerometer, Gyroscope& gyroscope, Magnetometer& magne
     scaled_acc_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     scaled_gyro_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     scaled_mag_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    do_startup_calibration_(true),
     do_accelerometer_bias_calibration_(false),
     do_gyroscope_bias_calibration_(false),
     do_magnetometer_bias_calibration_(false),
-    is_ready_(false),
+    do_magnetic_north_calibration_(false),
     dt_s_(0.004f),
     last_update_us_(0.0f),
-    timestamp_gyro_stable(0.0f)
+    startup_calibration_start_time_(0.0f)
 {}
 
 
@@ -118,9 +119,6 @@ bool Imu::update(void)
         scaled_gyro_[i] = config_.lpf_gyro  * new_scaled_gyro[i] + (1.0f - config_.lpf_gyro) * scaled_gyro_[i];
         scaled_mag_[i]  = config_.lpf_mag   * new_scaled_mag[i]  + (1.0f - config_.lpf_mag) * scaled_mag_[i];
     }
-
-    // Do automatic gyroscope calibration at startup
-    do_startup_calibration();
 
     // Perform calibration of sensors
     do_calibration();
@@ -181,7 +179,6 @@ bool Imu::start_accelerometer_bias_calibration(void)
     if (success)
     {
         // Start calibration
-        is_ready_ = false;
         do_accelerometer_bias_calibration_      = true;
         config_.accelerometer.mean_values[X]    = scaled_acc_[X];
         config_.accelerometer.mean_values[Y]    = scaled_acc_[Y];
@@ -197,12 +194,12 @@ bool Imu::start_gyroscope_bias_calibration(void)
     // Success if not already doing magnetometer calibration
     // Since this calib needs the robot to remain still,
     //      whereas for the magneto calib we need to move the robot
-    bool success = !do_magnetometer_bias_calibration_;
+    bool success = true;
+    success &= !do_magnetometer_bias_calibration_;
 
     if (success)
     {
         // Start calibration
-        is_ready_ = false;
         do_gyroscope_bias_calibration_      = true;
         config_.gyroscope.mean_values[X]    = scaled_gyro_[X];
         config_.gyroscope.mean_values[Y]    = scaled_gyro_[Y];
@@ -225,7 +222,6 @@ bool Imu::start_magnetometer_bias_calibration(void)
     if (success)
     {
         // Start calibration
-        is_ready_ = false;
         do_magnetometer_bias_calibration_   = true;
         config_.magnetometer.max_values[X]  = -10000.0f;
         config_.magnetometer.max_values[Y]  = -10000.0f;
@@ -249,7 +245,6 @@ bool Imu::start_magnetic_north_calibration(void)
     if (success)
     {
         // Start calibration
-        is_ready_ = false;
         do_magnetic_north_calibration_      = true;
 
         // Compute amplitude of magnetic field
@@ -280,7 +275,6 @@ bool Imu::stop_accelerometer_bias_calibration(void)
     if (success)
     {
         // Stop calibration
-        is_ready_ = true;
         config_.accelerometer.bias[X] += config_.accelerometer.mean_values[X];
         config_.accelerometer.bias[Y] += config_.accelerometer.mean_values[Y];
         config_.accelerometer.bias[Z] += config_.accelerometer.mean_values[Z] - (-1.0f);
@@ -302,7 +296,6 @@ bool Imu::stop_gyroscope_bias_calibration(void)
     if (success)
     {
         // Stop calibration
-        is_ready_ = true;
         config_.gyroscope.bias[X] += config_.gyroscope.mean_values[X];
         config_.gyroscope.bias[Y] += config_.gyroscope.mean_values[Y];
         config_.gyroscope.bias[Z] += config_.gyroscope.mean_values[Z];
@@ -324,7 +317,6 @@ bool Imu::stop_magnetometer_bias_calibration(void)
     if (success)
     {
         // Stop calibration
-        is_ready_ = true;
         config_.magnetometer.bias[X] += 0.5f * (config_.magnetometer.max_values[X] + config_.magnetometer.min_values[X]);
         config_.magnetometer.bias[Y] += 0.5f * (config_.magnetometer.max_values[Y] + config_.magnetometer.min_values[Y]);
         config_.magnetometer.bias[Z] += 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
@@ -344,9 +336,6 @@ bool Imu::stop_magnetic_north_calibration(void)
     // Update biases
     if (success)
     {
-        // Stop calibration
-        is_ready_ = true;
-
         config_.magnetic_north[0] = magnetic_norm_ * quick_trig_cos(magnetic_inclination_);
         config_.magnetic_north[1] = 0.0f;
         config_.magnetic_north[2] = magnetic_norm_ * quick_trig_sin(magnetic_inclination_);
@@ -356,49 +345,51 @@ bool Imu::stop_magnetic_north_calibration(void)
 }
 
 
-const bool Imu::is_ready(void) const
+bool Imu::is_ready(void) const
 {
-    return is_ready_;
+    return !is_calibration_ongoing();
 }
 
 
-void Imu::do_startup_calibration(void)
+bool Imu::is_calibration_ongoing(void) const
 {
-    if (is_ready_ == false)
-    {
-        // Make sure calibration is ongoing
-        if (do_gyroscope_bias_calibration_ == false)
-        {
-            start_gyroscope_bias_calibration();
-            timestamp_gyro_stable = time_keeper_get_s();
-        }
-
-        // Check if the gyroscope values are stable
-        bool gyro_is_stable = (maths_f_abs(config_.gyroscope.mean_values[X] - scaled_gyro_[X]) < config_.startup_calib_gyro_threshold)
-                              && (maths_f_abs(config_.gyroscope.mean_values[Y] - scaled_gyro_[Y]) < config_.startup_calib_gyro_threshold)
-                              && (maths_f_abs(config_.gyroscope.mean_values[Z] - scaled_gyro_[Z]) < config_.startup_calib_gyro_threshold);
-
-
-        if (gyro_is_stable == false)
-        {
-            is_ready_ = false;
-            // Reset timestamp
-            timestamp_gyro_stable = time_keeper_get_s();
-        }
-
-        // If gyros have been stable for long enough
-        if ((gyro_is_stable == true) && ((time_keeper_get_s() - timestamp_gyro_stable) > config_.startup_calib_duration_s))
-        {
-            // Sartup calibration is done
-            is_ready_ = true;
-            stop_gyroscope_bias_calibration();
-        }
-    }
+    return do_startup_calibration_ | do_accelerometer_bias_calibration_ | do_gyroscope_bias_calibration_ | do_magnetometer_bias_calibration_ | do_magnetic_north_calibration_;
 }
 
 
 void Imu::do_calibration(void)
 {
+     // Perform startup calibration
+     if (do_startup_calibration_)
+     {
+         // Make sure calibration is ongoing
+         if (do_gyroscope_bias_calibration_ == false)
+         {
+             start_gyroscope_bias_calibration();
+             startup_calibration_start_time_ = time_keeper_get_s();
+         }
+
+         // Check if the gyroscope values are stable
+         bool gyro_is_stable = (maths_f_abs(config_.gyroscope.mean_values[X] - scaled_gyro_[X]) < config_.startup_calib_gyro_threshold)
+                               && (maths_f_abs(config_.gyroscope.mean_values[Y] - scaled_gyro_[Y]) < config_.startup_calib_gyro_threshold)
+                               && (maths_f_abs(config_.gyroscope.mean_values[Z] - scaled_gyro_[Z]) < config_.startup_calib_gyro_threshold);
+
+         if (gyro_is_stable == false)
+         {
+             // Reset timestamp
+             startup_calibration_start_time_ = time_keeper_get_s();
+         }
+
+         // If gyros have been stable for long enough
+         if ((gyro_is_stable == true) && ((time_keeper_get_s() - startup_calibration_start_time_) > config_.startup_calib_duration_s))
+         {
+             // Startup calibration is done
+             print_util_dbg_print("[IMU] Startup calib ok\n");
+             do_startup_calibration_ = false;
+             stop_gyroscope_bias_calibration();
+         }
+     }
+
     // Do accelero bias calibration
     if (do_accelerometer_bias_calibration_)
     {
