@@ -69,6 +69,7 @@ Imu::Imu(Accelerometer& accelerometer, Gyroscope& gyroscope, Magnetometer& magne
     do_accelerometer_bias_calibration_(false),
     do_gyroscope_bias_calibration_(false),
     do_magnetometer_bias_calibration_(false),
+    do_magnetic_north_calibration_(false),
     dt_s_(0.004f),
     last_update_us_(0.0f),
     startup_calibration_start_time_(0.0f)
@@ -373,16 +374,8 @@ void Imu::do_calibration(void)
                                && (maths_f_abs(config_.gyroscope.mean_values[Y] - scaled_gyro_[Y]) < config_.startup_calib_gyro_threshold)
                                && (maths_f_abs(config_.gyroscope.mean_values[Z] - scaled_gyro_[Z]) < config_.startup_calib_gyro_threshold);
 
-
          if (gyro_is_stable == false)
          {
-             // If calibration has been going for too long, restart it
-             if ((time_keeper_get_s() - startup_calibration_start_time_) > config_.startup_calib_duration_s)
-             {
-                 stop_gyroscope_bias_calibration();
-                 start_gyroscope_bias_calibration();
-             }
-
              // Reset timestamp
              startup_calibration_start_time_ = time_keeper_get_s();
          }
@@ -391,6 +384,7 @@ void Imu::do_calibration(void)
          if ((gyro_is_stable == true) && ((time_keeper_get_s() - startup_calibration_start_time_) > config_.startup_calib_duration_s))
          {
              // Startup calibration is done
+             print_util_dbg_print("[IMU] Startup calib ok\n");
              do_startup_calibration_ = false;
              stop_gyroscope_bias_calibration();
          }
