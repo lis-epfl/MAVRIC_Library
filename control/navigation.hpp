@@ -56,11 +56,6 @@ extern "C"
 #include "control/pid_controller.h"
 }
 
-typedef enum
-{
-    DIRECT_TO = 0,
-    DUBIN = 1,
-}navigation_type_t;
 
 /**
  * \brief   The MAV'RIC waypoint structure
@@ -71,7 +66,7 @@ typedef struct
     float radius;                                               ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
     float loiter_time;                                          ///< The loiter time at the waypoint
     dubin_t dubin;                                              ///< The Dubin structure
-}waypoint_local_struct_t;
+} waypoint_local_struct_t;
 
 /**
  * \brief The navigation structure
@@ -80,6 +75,12 @@ class Navigation
 {
 
 public:
+    enum class strategy_t
+    {
+        DIRECT_TO = 0,
+        DUBIN = 1,
+    };
+
     enum internal_state_t
     {
         NAV_ON_GND,
@@ -138,7 +139,7 @@ public:
 
         float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
 
-        navigation_type_t navigation_type;                  ///< The type of navigation strategy
+        strategy_t navigation_strategy;                  ///< The type of navigation strategy
     };
 
     /**
@@ -181,7 +182,7 @@ public:
     float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
     float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing
 
-    navigation_type_t navigation_type;                  ///< The type of navigation strategy
+    strategy_t navigation_strategy;                     ///< The type of navigation strategy
 
     waypoint_local_struct_t goal;                       ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
 
@@ -215,7 +216,7 @@ private:
 
     /**
     * \brief                       Computes the Dubin path
-    * 
+    *
     * \param   navigation          Pointer to navigation
     */
     void set_dubin_velocity(dubin_t* dubin);
@@ -275,13 +276,14 @@ Navigation::conf_t Navigation::default_config()
     conf.hovering_controller.dt_s                    = 1;
     conf.hovering_controller.soft_zone_width         = 0.0f;
 
-    conf.one_over_scaling                            = 0.1f;
+    conf.one_over_scaling                            = 0.3f;
     conf.safe_altitude                               = -30.0f;
     conf.minimal_radius                              = 45.0f;
     conf.heading_acceptance                          = PI/6.0f;
     conf.vertical_vel_gain                           = 1.0f;
     conf.takeoff_altitude                            = -10.0f;
-    conf.navigation_type                             = DIRECT_TO;
+    // conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
+    conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
     return conf;
 };
 

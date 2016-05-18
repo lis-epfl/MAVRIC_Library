@@ -196,24 +196,24 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
     switch(dubin_state)
     {
         case DUBIN_INIT:
-            dubin_circle(   dir_desired, 
-                            dubin->circle_center_1, 
-                            goal.radius, 
-                            position_estimation.local_position.pos, 
+            dubin_circle(   dir_desired,
+                            dubin->circle_center_1,
+                            goal.radius,
+                            position_estimation.local_position.pos,
                             cruise_speed,
                             one_over_scaling );
             break;
         case DUBIN_CIRCLE1:
-            dubin_circle(   dir_desired, 
-                            dubin->circle_center_1, 
-                            dubin->radius_1, 
-                            position_estimation.local_position.pos, 
+            dubin_circle(   dir_desired,
+                            dubin->circle_center_1,
+                            dubin->radius_1,
+                            position_estimation.local_position.pos,
                             cruise_speed,
                             one_over_scaling );
         break;
 
         case DUBIN_STRAIGHT:
-            dubin_line( dir_desired, 
+            dubin_line( dir_desired,
                         dubin->line_direction,
                         dubin->tangent_point_2,
                         position_estimation.local_position.pos,
@@ -222,10 +222,10 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
         break;
 
         case DUBIN_CIRCLE2:
-            dubin_circle(   dir_desired, 
-                            dubin->circle_center_2, 
-                            goal.radius, 
-                            position_estimation.local_position.pos, 
+            dubin_circle(   dir_desired,
+                            dubin->circle_center_2,
+                            goal.radius,
+                            position_estimation.local_position.pos,
                             cruise_speed,
                             one_over_scaling );
         break;
@@ -256,7 +256,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
 
     float rel_heading;
     rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - position_estimation.local_position.heading);
-    
+
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 }
 
@@ -269,14 +269,14 @@ void Navigation::run()
     dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(goal.waypoint.pos,
                               rel_pos,
                               position_estimation.local_position.pos);
-    
-    switch(navigation_type)
+
+    switch(navigation_strategy)
     {
-        case DIRECT_TO:
+        case Navigation::strategy_t::DIRECT_TO:
             set_speed_command(rel_pos);
         break;
 
-        case DUBIN:
+        case Navigation::strategy_t::DUBIN:
             if (state.autopilot_type == MAV_TYPE_QUADROTOR)
             {
                 if ( (internal_state_ == NAV_NAVIGATING) || (internal_state_ == NAV_HOLD_POSITION) )
@@ -349,7 +349,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     cruise_speed = nav_config.cruise_speed;
     max_climb_rate = nav_config.max_climb_rate;
 
-    navigation_type = nav_config.navigation_type;
+    navigation_strategy = nav_config.navigation_strategy;
     dubin_state = DUBIN_INIT;
 
     internal_state_ = NAV_ON_GND;
