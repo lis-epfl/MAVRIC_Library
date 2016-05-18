@@ -122,13 +122,6 @@ typedef enum
     CUST_GPS_BAD = 2048                         ///< GPS loss flag
 } mav_mode_custom_list_t;
 
-typedef enum 
-{
-    DUBIN_INIT = 0,
-    DUBIN_CIRCLE1 = 1, 
-    DUBIN_STRAIGHT = 2,
-    DUBIN_CIRCLE2 = 3,
-}dubin_state_t;
 
 #define mav_mode_t uint8_t
 #define mav_mode_custom_t uint32_t
