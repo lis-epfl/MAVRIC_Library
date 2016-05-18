@@ -91,50 +91,32 @@ int main(int argc, char** argv)
     mav_config.state_config.simulation_mode = HIL_ON;
 
     LEQuad mav = LEQuad(board.imu,
-                       board.sim.barometer(),
-                       board.sim.gps(),
-                       board.sim.sonar(),
-                       board.mavlink_serial,
-                       board.spektrum_satellite,
-                       board.led,
-                       board.file_flash,
-                       board.battery,
-                       board.servo_0,
-                       board.servo_1,
-                       board.servo_2,
-                       board.servo_3,
-                       board.servo_4,
-                       board.servo_5,
-                       board.servo_6,
-                       board.servo_7,
-                       file_log,
-                       file_stat,
-                       mav_config);
-
-    // Init MAV
-    init_success &= mav.init();
-
-
-    Onboard_parameters* onboard_parameters = &mav.mavlink_communication.onboard_parameters();
-
-    // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters->read_parameters_from_storage() == false)
-    {
-        onboard_parameters->write_parameters_to_storage();
-        init_success = false;
-    }
-
-    mav.state.mav_state_ = MAV_STATE_STANDBY;
+                        board.sim.barometer(),
+                        board.sim.gps(),
+                        board.sim.sonar(),
+                        board.mavlink_serial,
+                        board.spektrum_satellite,
+                        board.led,
+                        board.file_flash,
+                        board.battery,
+                        board.servo_0,
+                        board.servo_1,
+                        board.servo_2,
+                        board.servo_3,
+                        board.servo_4,
+                        board.servo_5,
+                        board.servo_6,
+                        board.servo_7,
+                        file_log,
+                        file_stat,
+                        mav_config);
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-    while (1)
-    {
-        mav.scheduler.update();
-    }
+    mav.loop();
 
     return 0;
 }

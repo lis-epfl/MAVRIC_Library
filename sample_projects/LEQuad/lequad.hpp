@@ -164,13 +164,6 @@ public:
                   File& file2,
                   const conf_t& config = default_config());
 
-    /**
-     * \brief   Initialisation
-
-     * \return  success
-     */
-    bool init(void);
-
     bool init_state(void);
     bool init_data_logging(void);
     bool init_gps(void);
@@ -191,6 +184,8 @@ public:
     };
 
     bool create_tasks(void);
+
+    void loop(void);
 
     /**
      * Public members

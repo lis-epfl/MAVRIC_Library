@@ -91,25 +91,25 @@ int main(void)
     // Create MAV using real sensors
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
     LEQuad mav = LEQuad(board.imu,
-                                   board.bmp085,
-                                   board.gps_ublox,
-                                   board.sonar_i2cxl,      // Warning:
-                                   board.uart0,
-                                   board.spektrum_satellite,
-                                   board.green_led,
-                                   board.file_flash,
-                                   board.battery,
-                                   board.servo_0,
-                                   board.servo_1,
-                                   board.servo_2,
-                                   board.servo_3,
-                                   board.servo_4,
-                                   board.servo_5,
-                                   board.servo_6,
-                                   board.servo_7,
-                                   file_log,
-                                   file_stat,
-                                   mav_config );
+                        board.bmp085,
+                        board.gps_ublox,
+                        board.sonar_i2cxl,      // Warning:
+                        board.uart0,
+                        board.spektrum_satellite,
+                        board.green_led,
+                        board.file_flash,
+                        board.battery,
+                        board.servo_0,
+                        board.servo_1,
+                        board.servo_2,
+                        board.servo_3,
+                        board.servo_4,
+                        board.servo_5,
+                        board.servo_6,
+                        board.servo_7,
+                        file_log,
+                        file_stat,
+                        mav_config );
 
     // -------------------------------------------------------------------------
     // Create simulation
@@ -157,20 +157,6 @@ int main(void)
     // Init MAV
     init_success &= mav.init();
 
-    Onboard_parameters* onboard_parameters = &mav.mavlink_communication.onboard_parameters();
-
-    print_util_dbg_print("onboard_parameters\r\n");
-    delay_ms(150);
-
-    // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters->read_parameters_from_storage() == false)
-    {
-        onboard_parameters->write_parameters_to_storage();
-        init_success = false;
-    }
-
-    mav.state.mav_state_ = MAV_STATE_STANDBY;
-
     if (init_success)
     {
         piezo_speaker_quick_startup();
@@ -188,10 +174,7 @@ int main(void)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-    while (1 == 1)
-    {
-        mav.scheduler.update();
-    }
+    mav.loop();
 
     return 0;
 }

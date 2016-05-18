@@ -63,7 +63,6 @@ int main(int argc, char** argv)
     // Board initialisation
     init_success &= board.init();
 
-
     // Create dummy files
     File_dummy dummy_file1;
     File_dummy dummy_file2;
@@ -95,71 +94,18 @@ int main(int argc, char** argv)
                                    dummy_file2,
                                    mav_config );
 
-    // Init MAV
-    init_success &= mav.init();
-
-
-    // -------------------------------------------------------------------------
-    // Create tasks and telemetry
-    // -------------------------------------------------------------------------
-
-    Onboard_parameters* onboard_parameters = &mav.mavlink_communication.onboard_parameters();
-
-    // // Try to read from flash, if unsuccessful, write to flash
-    // if (onboard_parameters->read_parameters_from_storage() == false)
-    // {
-    //     // onboard_parameters->write_parameters_to_storage();
-    //     init_success = false;
-    // }
-
-    mav.state.mav_state_ = MAV_STATE_STANDBY;
+    if (init_success)
+    {
+      board.green_led.off();
+      board.red_led.off();
+    }
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
-    // // -------------------------------------------------------------------------
-    // // Main loop
-    // // -------------------------------------------------------------------------
-
-    // // static uint8_t step = 0;
-    // // while(1)
-    // // {
-    // //  step += 1;
-
-    // //  if(step%2 == 0)
-    // //  {
-    // //      // board.red_led.toggle();
-    // //  }
-
-    // //  // gpio_toggle(GPIOA, GPIO2);
-    // //  // usart_send_blocking(UART4, step);
-    // //  // usart_send(UART4, step);
-    // //  // if( step == 80 )
-    // //  // {
-    // //  //  step = 1;
-    // //  //  usart_send(UART4, '\r');
-    // //  //  usart_send(UART4, '\n');
-    // //  // }
-    // //  // usart_enable_tx_interrupt(USART2);
-    // //  board.serial_1.write(&step);
-
-    // // }
-
-    if (init_success)
-    {
-        board.green_led.off();
-        board.red_led.off();
-    }
-
-    while (1 == 1)
-    {
-        //gpio_toggle(GPIOC, GPIO14);
-        // print_util_dbg_print("[HELLO].\r\n");
-
-         //time_keeper_delay_ms(100);
-
-        // board.red_led.toggle();
-        mav.scheduler.update();
-    }
+    // -------------------------------------------------------------------------
+    // Main loop
+    // -------------------------------------------------------------------------
+    mav.loop();
 
     return 0;
 }

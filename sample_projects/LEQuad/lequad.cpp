@@ -93,20 +93,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(mavlink_communication.sysid()),
     config_(config)
-{}
-
-
-bool LEQuad::init(void)
 {
-    bool ret = true;
-    print_util_dbg_sep('%');
-    time_keeper_delay_ms(50);
-    print_util_dbg_sep('-');
-    time_keeper_delay_ms(50);
-    print_util_dbg_print("[LEQUAD] ...\r\n");
-    time_keeper_delay_ms(50);
-    print_util_dbg_sep('-');
-
     // Init al modules
     init_state();
     init_data_logging();
@@ -122,22 +109,29 @@ bool LEQuad::init(void)
     init_manual_control();
 
     // create tasks // TODO move to separated inits
-    ret &= create_tasks();
+    create_tasks();
+}
 
-    // sort communication tasks
-    ret &= mavlink_communication.scheduler().sort_tasks();
 
-    // sort main tasks
-    ret &= scheduler.sort_tasks();
+void LEQuad::loop(void)
+{
+    // Sort tasks
+    scheduler.sort_tasks();
+    mavlink_communication.scheduler().sort_tasks();
 
-    print_util_dbg_sep('-');
-    time_keeper_delay_ms(50);
-    print_util_dbg_init_msg("[LEQUAD]", ret);
-    time_keeper_delay_ms(50);
-    print_util_dbg_sep('-');
-    time_keeper_delay_ms(50);
+    // Try to read from flash, if unsuccessful, write to flash
+    if (mavlink_communication.onboard_parameters().read_parameters_from_storage() == false)
+    {
+        mavlink_communication.onboard_parameters().write_parameters_to_storage();
+    }
 
-    return ret;
+    // Init mav state
+    state.mav_state_ = MAV_STATE_STANDBY;  // TODO check if this is necessary
+
+    while (1)
+    {
+        scheduler.update();
+    }
 }
 
 
@@ -596,8 +590,6 @@ bool LEQuad::create_tasks(void)
   init_success &= scheduler.add_task(10000,  (Scheduler_task::task_function_t)&task_data_logging_update,         (Scheduler_task::task_argument_t)&data_logging_continuous);
   init_success &= scheduler.add_task(10000,  (Scheduler_task::task_function_t)&task_data_logging_update,         (Scheduler_task::task_argument_t)&data_logging_stat);
   init_success &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_sonar_update,                (Scheduler_task::task_argument_t)&sonar,                 Scheduler_task::PRIORITY_HIGH);
-
-  init_success &= scheduler.sort_tasks();
 
   return init_success;
 }
