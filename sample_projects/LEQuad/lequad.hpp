@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#ifndef CENTRAL_DATA_H_
-#define CENTRAL_DATA_H_
+#ifndef LEQUAD_HPP_
+#define LEQUAD_HPP_
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -184,7 +184,13 @@ public:
     bool init_barometer(void);
     bool init_manual_control(void);
 
-    bool task_main(void);
+    bool main_task(void);
+    static inline bool main_task_func(LEQuad* mav)
+    {
+        return mav->main_task();
+    };
+
+    bool create_tasks(void);
 
     /**
      * Public members
@@ -290,4 +296,4 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     return conf;
 };
 
-#endif /* CENTRAL_DATA_H_ */
+#endif /* LEQUAD_HPP_ */

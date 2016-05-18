@@ -103,7 +103,7 @@ bool LEQuad::init(void)
     time_keeper_delay_ms(50);
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);
-    print_util_dbg_print("[CENTRAL_DATA] ...\r\n");
+    print_util_dbg_print("[LEQUAD] ...\r\n");
     time_keeper_delay_ms(50);
     print_util_dbg_sep('-');
 
@@ -121,6 +121,9 @@ bool LEQuad::init(void)
     init_barometer();
     init_manual_control();
 
+    // create tasks // TODO move to separated inits
+    ret &= create_tasks();
+
     // sort communication tasks
     ret &= mavlink_communication.scheduler().sort_tasks();
 
@@ -129,7 +132,7 @@ bool LEQuad::init(void)
 
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);
-    print_util_dbg_init_msg("[CENTRAL_DATA]", ret);
+    print_util_dbg_init_msg("[LEQUAD]", ret);
     time_keeper_delay_ms(50);
     print_util_dbg_sep('-');
     time_keeper_delay_ms(50);
@@ -542,4 +545,130 @@ bool LEQuad::init_manual_control(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_int32((int32_t*) &manual_control.mode_source_,    "COM_RC_IN_MODE");
 
     return ret;
+}
+
+// -------------------------------------------------------------------------
+// Main task
+// -------------------------------------------------------------------------
+bool LEQuad::main_task(void)
+{
+    // Update estimation
+    imu.update();
+    ahrs_ekf.update();
+    position_estimation.update();
+
+    // Do control
+    if (state.is_armed())
+    {
+        if (state.is_auto())
+        {
+            controls = controls_nav;
+            controls.control_mode = VELOCITY_COMMAND_MODE;
+
+            // if no waypoints are set, we do position hold therefore the yaw mode is absolute
+            if (((state.nav_plan_active && (navigation.internal_state_ == Navigation::NAV_NAVIGATING)) || (navigation.internal_state_ == Navigation::NAV_STOP_THERE))
+              || ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
+            {
+                controls.yaw_mode = YAW_RELATIVE;
+            }
+            else
+            {
+                controls.yaw_mode = YAW_ABSOLUTE;
+            }
+
+            //if (state.in_the_air || navigation.auto_takeoff)
+            if (true)//navigation.internal_state_ > NAV_ON_GND)
+            {
+                stabilisation_copter_cascade_stabilise(&stabilisation_copter);
+                servos_mix_quadcopter_diag_update(&servo_mix);
+            }
+        }
+        else if (state.is_guided())
+        {
+            controls = controls_nav;
+            controls.control_mode = VELOCITY_COMMAND_MODE;
+
+            if ( ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))  || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
+            {
+                controls.yaw_mode = YAW_RELATIVE;
+            }
+            else
+            {
+                controls.yaw_mode = YAW_ABSOLUTE;
+            }
+
+            //if (state.in_the_air || navigation.auto_takeoff)
+            if (true)//navigation.internal_state_ > NAV_ON_GND)
+            {
+                stabilisation_copter_cascade_stabilise(&stabilisation_copter);
+                servos_mix_quadcopter_diag_update(&servo_mix);
+            }
+        }
+        else if (state.is_stabilize())
+        {
+            manual_control.get_velocity_vector(&controls);
+
+            controls.control_mode = VELOCITY_COMMAND_MODE;
+            controls.yaw_mode = YAW_RELATIVE;
+
+            //if (state.in_the_air || navigation.auto_takeoff)
+            if (true)//navigation.internal_state_ > NAV_ON_GND)
+            {
+                stabilisation_copter_cascade_stabilise(&stabilisation_copter);
+                servos_mix_quadcopter_diag_update(&servo_mix);
+            }
+        }
+        else if (state.is_manual())
+        {
+            manual_control.get_control_command(&controls);
+
+            controls.control_mode = ATTITUDE_COMMAND_MODE;
+            controls.yaw_mode = YAW_RELATIVE;
+
+            stabilisation_copter_cascade_stabilise(&stabilisation_copter);
+            servos_mix_quadcopter_diag_update(&servo_mix);
+        }
+        else
+        {
+            servo_0.failsafe();
+            servo_1.failsafe();
+            servo_2.failsafe();
+            servo_3.failsafe();
+        }
+    }
+    else
+    {
+        servo_0.failsafe();
+        servo_1.failsafe();
+        servo_2.failsafe();
+        servo_3.failsafe();
+    }
+
+    return true;
+}
+
+
+// -------------------------------------------------------------------------
+// Create tasks
+// -------------------------------------------------------------------------
+bool LEQuad::create_tasks(void)
+{
+  bool init_success = true;
+
+  init_success &= scheduler.add_task(4000,     Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::Scheduler_task::PRIORITY_HIGHEST, (Scheduler_task::task_function_t)&LEQuad::main_task_func, (Scheduler_task::task_argument_t)this                         , 0);
+  init_success &= scheduler.add_task(500000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_LOW    , (Scheduler_task::task_function_t)&task_led_toggle                                , (Scheduler_task::task_argument_t)&led                   , 1);
+  init_success &= scheduler.add_task(15000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_RELATIVE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&task_barometer_update                      , (Scheduler_task::task_argument_t)&barometer                     , 2);
+  init_success &= scheduler.add_task(100000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&task_gps_update                            , (Scheduler_task::task_argument_t)&gps                     , 3);
+  init_success &= scheduler.add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&Navigation::update                               , (Scheduler_task::task_argument_t)&navigation            , 5);
+  init_success &= scheduler.add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH   , (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update                 , (Scheduler_task::task_argument_t)&waypoint_handler      , 6);
+  init_success &= scheduler.add_task(200000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL , (Scheduler_task::task_function_t)&State_machine::update                            , (Scheduler_task::task_argument_t)&state_machine         , 7);
+  init_success &= scheduler.add_task(4000,     Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL , (Scheduler_task::task_function_t)&Mavlink_communication::update                    , (Scheduler_task::task_argument_t)&mavlink_communication , 8);
+  init_success &= scheduler.add_task(20000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH , (Scheduler_task::task_function_t)&remote_update                                     , (Scheduler_task::task_argument_t)&manual_control.remote , 10);
+  init_success &= scheduler.add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL , (Scheduler_task::task_function_t)&task_data_logging_update                       , (Scheduler_task::task_argument_t)&data_logging_continuous                         , 11);
+  init_success &= scheduler.add_task(10000,    Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL , (Scheduler_task::task_function_t)&task_data_logging_update                       , (Scheduler_task::task_argument_t)&data_logging_stat                         , 12);
+  init_success &= scheduler.add_task(100000,   Scheduler_task::RUN_REGULAR, Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_HIGH    , (Scheduler_task::task_function_t)&task_sonar_update                         , (Scheduler_task::task_argument_t)&sonar                         , 13);
+
+  init_success &= scheduler.sort_tasks();
+
+  return init_success;
 }

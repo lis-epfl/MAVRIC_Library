@@ -16,7 +16,6 @@ MAVRIC_SRC=../
 # Sources files for project folder (*.c and *.cpp)
 SRCS += sample_projects/LEQuad/main_avr32.cpp
 SRCS += sample_projects/LEQuad/lequad.cpp
-SRCS += sample_projects/LEQuad/tasks.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY

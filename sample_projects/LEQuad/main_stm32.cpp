@@ -40,8 +40,6 @@
 
 #include "boards/mavrimini.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
 
 extern "C"
 {
@@ -74,8 +72,8 @@ int main(int argc, char** argv)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using simulated sensors
-    Central_data::conf_t cd_config = Central_data::default_config(sysid);
-    Central_data cd = Central_data(board.imu,
+    LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
+    LEQuad mav = LEQuad(board.imu,
                                    board.sim.barometer(),
                                    board.sim.gps(),
                                    board.sim.sonar(),
@@ -95,17 +93,17 @@ int main(int argc, char** argv)
                                    board.servo_7,
                                    dummy_file1,
                                    dummy_file2,
-                                   cd_config );
+                                   mav_config );
 
     // Init MAV
-    init_success &= cd.init();
+    init_success &= mav.init();
 
 
     // -------------------------------------------------------------------------
     // Create tasks and telemetry
     // -------------------------------------------------------------------------
 
-    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
+    Onboard_parameters* onboard_parameters = &mav.mavlink_communication.onboard_parameters();
 
     // // Try to read from flash, if unsuccessful, write to flash
     // if (onboard_parameters->read_parameters_from_storage() == false)
@@ -114,9 +112,7 @@ int main(int argc, char** argv)
     //     init_success = false;
     // }
 
-    cd.state.mav_state_ = MAV_STATE_STANDBY;
-
-    init_success &= tasks_create_tasks(&cd);
+    mav.state.mav_state_ = MAV_STATE_STANDBY;
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
@@ -162,7 +158,7 @@ int main(int argc, char** argv)
          //time_keeper_delay_ms(100);
 
         // board.red_led.toggle();
-        cd.scheduler.update();
+        mav.scheduler.update();
     }
 
     return 0;

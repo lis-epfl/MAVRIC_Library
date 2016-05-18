@@ -41,7 +41,6 @@
 #include "sample_projects/LEQuad/lequad.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
 
 // #include "hal/dummy/file_dummy.hpp"
 #include "hal/avr32/file_flash_avr32.hpp"
@@ -171,11 +170,6 @@ int main(void)
     }
 
     mav.state.mav_state_ = MAV_STATE_STANDBY;
-
-    init_success &= tasks_create_tasks(&mav);
-
-    print_util_dbg_print("tasks_create_tasks\r\n");
-    delay_ms(150);
 
     if (init_success)
     {

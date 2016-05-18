@@ -52,10 +52,6 @@
 #include "mavlink_message_handler.hpp"
 
 
-
-/* forward declarations for friend functions */
-class Central_data;
-class Data_logging;
 /**
  * \brief The MAV state
  */

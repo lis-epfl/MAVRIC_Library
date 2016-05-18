@@ -41,8 +41,6 @@
 #include "boards/mavrinux.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
 
-#include "sample_projects/LEQuad/tasks.hpp"
-
 extern "C"
 {
 #include "util/print_util.h"
@@ -127,8 +125,6 @@ int main(int argc, char** argv)
     }
 
     mav.state.mav_state_ = MAV_STATE_STANDBY;
-
-    init_success &= tasks_create_tasks(&mav);
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
