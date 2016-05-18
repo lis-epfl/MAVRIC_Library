@@ -8,6 +8,7 @@ var searchData=
   ['fence_5f2_5fz',['fence_2_z',['../structState_1_1conf__t.html#ab401ae8821d8a4108a9f5fbbcee74871',1,'State::conf_t::fence_2_z()'],['../classState.html#aaf21576c878c62405a7928b7ecb10a2d',1,'State::fence_2_z()']]],
   ['fifo_5ffill',['fifo_fill',['../structlsm__read__fifo__fill__t.html#a9f787be7c7d76a77cc3748f2e2e744f6',1,'lsm_read_fifo_fill_t']]],
   ['file_5fflash',['file_flash',['../classCentral__data.html#a78f2bba25e47b8e437db08eecb077670',1,'Central_data']]],
+  ['filter_5fgain',['filter_gain',['../structairspeed__analog__conf__t.html#a306b4fb409d629ef51f60b7e0e841608',1,'airspeed_analog_conf_t']]],
   ['first_5fconnection_5fset',['first_connection_set',['../structState_1_1conf__t.html#a11909c2a5436b087580b4f5679b66341',1,'State::conf_t::first_connection_set()'],['../classState.html#a4fefe2a757dabcea7202c49f9173dbc5',1,'State::first_connection_set()']]],
   ['fix_5fmode',['fix_mode',['../structubx__cfg__nav__settings__t.html#a685698a1e6da7241a7a5cbbd98bdd3b2',1,'ubx_cfg_nav_settings_t']]],
   ['fix_5fstatus',['fix_status',['../structubx__nav__status__t.html#aa4aeab19ce08d58e3b836066fbf63b35',1,'ubx_nav_status_t::fix_status()'],['../structubx__nav__solution__t.html#a3323adfc93d30f1362698ecc03288ccd',1,'ubx_nav_solution_t::fix_status()']]],

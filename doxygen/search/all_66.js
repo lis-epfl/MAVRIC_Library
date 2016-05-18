@@ -14,6 +14,7 @@ var searchData=
   ['file_5fflash',['file_flash',['../classCentral__data.html#a78f2bba25e47b8e437db08eecb077670',1,'Central_data']]],
   ['file_5fflash_5favr32',['File_flash_avr32',['../classFile__flash__avr32.html',1,'File_flash_avr32'],['../classFile__flash__avr32.html#a52e841a8840f50385751a4cf0a191789',1,'File_flash_avr32::File_flash_avr32()']]],
   ['file_5flinux',['File_linux',['../classFile__linux.html',1,'File_linux'],['../classFile__linux.html#a806a28b5f94d2a5f69c3e0a966cafb81',1,'File_linux::File_linux()']]],
+  ['filter_5fgain',['filter_gain',['../structairspeed__analog__conf__t.html#a306b4fb409d629ef51f60b7e0e841608',1,'airspeed_analog_conf_t']]],
   ['first_5fconnection_5fset',['first_connection_set',['../structState_1_1conf__t.html#a11909c2a5436b087580b4f5679b66341',1,'State::conf_t::first_connection_set()'],['../classState.html#a4fefe2a757dabcea7202c49f9173dbc5',1,'State::first_connection_set()']]],
   ['fix',['fix',['../classGps.html#a9925b04afe52bf7211cd631415606620',1,'Gps::fix()'],['../classGps__mocap.html#a74fa682f99a804f7d1882993aa11a28e',1,'Gps_mocap::fix()'],['../classGps__ublox.html#a2540e33d4cd0a6c525a5f11c9f43c1b3',1,'Gps_ublox::fix()'],['../classGps__sim.html#a332e9c3a2330285359cc4b460a6518df',1,'Gps_sim::fix()']]],
   ['fix_5fmode',['fix_mode',['../structubx__cfg__nav__settings__t.html#a685698a1e6da7241a7a5cbbd98bdd3b2',1,'ubx_cfg_nav_settings_t']]],

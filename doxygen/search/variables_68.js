@@ -5,6 +5,7 @@ var searchData=
   ['hdop',['hdop',['../structgps__t.html#ac4b5c6c3d8d655767447eb2aa3db2518',1,'gps_t']]],
   ['heading',['heading',['../structglobal__position__t.html#abe141f6b97703b3a9a3016aeb11c304c',1,'global_position_t::heading()'],['../structlocal__position__t.html#a69242f563451a594891002cfca4de72c',1,'local_position_t::heading()']]],
   ['heading_5f2d',['heading_2d',['../structubx__nav__vel__ned__t.html#a86200b9c9ab44118f0a0283bca4feff4',1,'ubx_nav_vel_ned_t']]],
+  ['heading_5facceptance',['heading_acceptance',['../structNavigation_1_1conf__t.html#a6529272342183fa3c40f08b0cf980b25',1,'Navigation::conf_t::heading_acceptance()'],['../classNavigation.html#ab9c5e05e9e722fa948ed8ddd0823c0c5',1,'Navigation::heading_acceptance()']]],
   ['heading_5faccuracy',['heading_accuracy',['../structubx__nav__vel__ned__t.html#aa11b82785885a8e79e58218ab5b20786',1,'ubx_nav_vel_ned_t::heading_accuracy()'],['../structgps__t.html#a04072a8af0b17a88a8a8fdede6ab5555',1,'gps_t::heading_accuracy()']]],
   ['healthy',['healthy',['../structgps__t.html#af408a6413ae85ca3e6e3e3f6ab5fe6d6',1,'gps_t']]],
   ['hold_5fwaypoint_5fset_5f',['hold_waypoint_set_',['../classMavlink__waypoint__handler.html#a133c84082db029768e132ecb54ba8515',1,'Mavlink_waypoint_handler']]],

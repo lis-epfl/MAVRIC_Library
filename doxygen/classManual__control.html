@@ -128,6 +128,12 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the attitude command.  <a href="#aecfe45d5c88670a64d775c9345db42b4"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a000d94be2eae9353d1ede1a21bf476f8">get_velocity_vector</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> *controls)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the velocity command.  <a href="#a000d94be2eae9353d1ede1a21bf476f8"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea">get_rate_command_wing</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> *controls)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the rate command for the wing.  <a href="#a4d7a55608a3acd4d6448ae080b11e6ea"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7">get_angle_command_wing</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> *controls)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the attitude command for the wing.  <a href="#a43b15d110f14516ef5b5b4dc9d568fa7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a181fd7347d5f4e9219ac8bbeb2025b23">get_velocity_vector_wing</a> (const float ki_yaw, <a class="el" href="structcontrol__command__t.html">control_command_t</a> *controls)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the velocity command for the wing.  <a href="#a181fd7347d5f4e9219ac8bbeb2025b23"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a57fbbf9cfad5c405ad822c9b83633357">get_thrust</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input and returns the thrust.  <a href="#a57fbbf9cfad5c405ad822c9b83633357"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a28d928918d8883341b5d3647b52aa9ca">get_torque_command</a> (<a class="el" href="structtorque__command__t.html">torque_command_t</a> *command, float scale) const </td></tr>
@@ -246,6 +252,31 @@ Here is the caller graph for this function:</div>
 <area shape="rect" id="node3" href="classManual__control.html#aa4e82c0d03995afa253aac4c50caa035" title="Set the control source (which control source has control (remote, joystick, none))" alt="" coords="257,5,484,35"/></map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="a43b15d110f14516ef5b5b4dc9d568fa7"></a><!-- doxytag: member="Manual_control::get_angle_command_wing" ref="a43b15d110f14516ef5b5b4dc9d568fa7" args="(control_command_t *controls)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7">Manual_control::get_angle_command_wing</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> *&#160;</td>
+          <td class="paramname"><em>controls</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Selects the source input for the attitude command for the wing. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">controls</td><td>The pointer to the command structure that will be executed </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -474,6 +505,31 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="a4d7a55608a3acd4d6448ae080b11e6ea"></a><!-- doxytag: member="Manual_control::get_rate_command_wing" ref="a4d7a55608a3acd4d6448ae080b11e6ea" args="(control_command_t *controls)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea">Manual_control::get_rate_command_wing</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> *&#160;</td>
+          <td class="paramname"><em>controls</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Selects the source input for the rate command for the wing. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">controls</td><td>The pointer to the command structure that will be executed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a04eb17506ddb846ef7b2783ef8026ba7"></a><!-- doxytag: member="Manual_control::get_signal_strength" ref="a04eb17506ddb846ef7b2783ef8026ba7" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -636,6 +692,42 @@ Here is the caller graph for this function:</div>
 <p>Selects the source input for the velocity command. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
+    <tr><td class="paramname">controls</td><td>The pointer to the command structure that will be executed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a181fd7347d5f4e9219ac8bbeb2025b23"></a><!-- doxytag: member="Manual_control::get_velocity_vector_wing" ref="a181fd7347d5f4e9219ac8bbeb2025b23" args="(const float ki_yaw, control_command_t *controls)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classManual__control.html#a181fd7347d5f4e9219ac8bbeb2025b23">Manual_control::get_velocity_vector_wing</a> </td>
+          <td>(</td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>ki_yaw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> *&#160;</td>
+          <td class="paramname"><em>controls</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Selects the source input for the velocity command for the wing. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ki_yaw</td><td>The yaw integrator gain </td></tr>
     <tr><td class="paramname">controls</td><td>The pointer to the command structure that will be executed </td></tr>
   </table>
   </dd>
@@ -833,7 +925,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 17 2016 17:47:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 18 2016 09:20:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

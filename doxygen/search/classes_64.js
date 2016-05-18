@@ -8,6 +8,7 @@ var searchData=
   ['derotation_5fmatrix_5ft',['derotation_matrix_t',['../structderotation__matrix__t.html',1,'']]],
   ['differentiator_5ft',['differentiator_t',['../structdifferentiator__t.html',1,'']]],
   ['dsm2_5fprotocol_5fproba_5ft',['dsm2_protocol_proba_t',['../structdsm2__protocol__proba__t.html',1,'']]],
+  ['dubin_5ft',['dubin_t',['../structdubin__t.html',1,'']]],
   ['dynamic_5fmodel',['Dynamic_model',['../classDynamic__model.html',1,'']]],
   ['dynamic_5fmodel_5fquad_5fdiag',['Dynamic_model_quad_diag',['../classDynamic__model__quad__diag.html',1,'']]],
   ['dynamic_5fmodel_5fquad_5fdiag_5fconf_5ft',['dynamic_model_quad_diag_conf_t',['../structdynamic__model__quad__diag__conf__t.html',1,'']]]

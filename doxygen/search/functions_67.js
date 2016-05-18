@@ -1,6 +1,8 @@
 var searchData=
 [
   ['get',['get',['../classBuffer__tpl.html#a05dbe8802c953c8116321ffa26b72e58',1,'Buffer_tpl']]],
+  ['get_5fairspeed',['get_airspeed',['../classAirspeed__analog.html#ac29ad00452a0785e8d0856fbbbb0bbd8',1,'Airspeed_analog']]],
+  ['get_5fangle_5fcommand_5fwing',['get_angle_command_wing',['../classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7',1,'Manual_control']]],
   ['get_5fattitude_5fcommand',['get_attitude_command',['../classManual__control.html#a420f4b792173cd64d323332c244054fe',1,'Manual_control']]],
   ['get_5fattitude_5fcommand_5fabsolute_5fyaw',['get_attitude_command_absolute_yaw',['../classManual__control.html#a0bd378d186d7b2bfe1a09af34eda439f',1,'Manual_control']]],
   ['get_5fattitude_5fcommand_5fvtol',['get_attitude_command_vtol',['../classManual__control.html#ad7b10226f0a5847a2265b422e1a9d12d',1,'Manual_control']]],
@@ -8,8 +10,10 @@ var searchData=
   ['get_5fcontrol_5fcommand',['get_control_command',['../classManual__control.html#aecfe45d5c88670a64d775c9345db42b4',1,'Manual_control']]],
   ['get_5ffence_5fviolation_5fstate',['get_fence_violation_state',['../classPosition__estimation.html#afc390dc784894a423625bae9deffba5c',1,'Position_estimation']]],
   ['get_5fid',['get_id',['../classScheduler__task.html#ade916ba9ca743cfa39cccb64b66f5929',1,'Scheduler_task']]],
+  ['get_5flast_5fairspeed',['get_last_airspeed',['../classAirspeed__analog.html#a3003842d71e4c1ac5707fd5782c8d40b',1,'Airspeed_analog']]],
   ['get_5fmode_5ffrom_5fsource',['get_mode_from_source',['../classManual__control.html#a6f599094c842aa31844bef96e31d286c',1,'Manual_control']]],
   ['get_5frate_5fcommand',['get_rate_command',['../classManual__control.html#a1b85adad9375f7eea177f226d7c50a26',1,'Manual_control']]],
+  ['get_5frate_5fcommand_5fwing',['get_rate_command_wing',['../classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea',1,'Manual_control']]],
   ['get_5fsignal_5fstrength',['get_signal_strength',['../classManual__control.html#a04eb17506ddb846ef7b2783ef8026ba7',1,'Manual_control']]],
   ['get_5fstream',['get_stream',['../classConsole.html#a580258fef02bc374fa8153ad2eb5d699',1,'Console']]],
   ['get_5ftask_5fby_5fid',['get_task_by_id',['../classScheduler.html#ac20f015b1a9877f65fb7c3db7b373bdc',1,'Scheduler']]],
@@ -19,6 +23,7 @@ var searchData=
   ['get_5ftorque_5fcommand',['get_torque_command',['../classManual__control.html#a28d928918d8883341b5d3647b52aa9ca',1,'Manual_control']]],
   ['get_5fvelocity_5fcommand',['get_velocity_command',['../classManual__control.html#abe507693f441a6738193a18604591f1a',1,'Manual_control']]],
   ['get_5fvelocity_5fvector',['get_velocity_vector',['../classManual__control.html#a000d94be2eae9353d1ede1a21bf476f8',1,'Manual_control']]],
+  ['get_5fvelocity_5fvector_5fwing',['get_velocity_vector_wing',['../classManual__control.html#a181fd7347d5f4e9219ac8bbeb2025b23',1,'Manual_control']]],
   ['gimbal_5fcontroller',['Gimbal_controller',['../classGimbal__controller.html#acf69eb62fa8982d266bd786baa1cdb94',1,'Gimbal_controller']]],
   ['gpio_5favr32',['Gpio_avr32',['../classGpio__avr32.html#a689b91eb93134537e395834e0a1c30b8',1,'Gpio_avr32']]],
   ['gpio_5fdummy',['Gpio_dummy',['../classGpio__dummy.html#ac984648b52487d40eaa93a0b8357215a',1,'Gpio_dummy']]],

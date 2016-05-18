@@ -1,4 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classCentral__data.html" title="The central data structure." alt="" coords="5,5,101,35"/>
-<area shape="rect" id="node3" href="$classLEQuad__dronedome.html" title="Central data for indoor use." alt="" coords="151,5,289,35"/>
+<area shape="rect" id="node1" href="$classBuffer__tpl.html" title="Circular buffer." alt="" coords="7,5,132,35"/>
 </map>

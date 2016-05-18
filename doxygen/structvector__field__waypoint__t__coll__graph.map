@@ -1,16 +1,18 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="5,615,221,943"/>
-<area shape="rect" id="node8" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|+ waypoint_hold_coordinates\l+ waypoint_list\l# waypoint_count_\l# current_waypoint_index_\l# hold_waypoint_set_\l# start_wpt_time_\l# mavlink_stream_\l# state_\l# navigation_\l# position_estimation_\l|+ Mavlink_waypoint_handler()\l+ init_homing_waypoint()\l+ nav_plan_init()\l+ hold_init()\l+ waypoint_count()\l+ update()\l+ default_config()\l}" alt="" coords="424,1089,619,1434"/>
-<area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="213,272,325,392"/>
-<area shape="rect" id="node16" href="$classNavigation.html" title="The navigation structure." alt="" coords="921,632,1063,925"/>
-<area shape="rect" id="node6" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="211,6,328,143"/>
-<area shape="rect" id="node11" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="455,684,588,873"/>
-<area shape="rect" id="node14" href="$structMavlink__waypoint__handler_1_1waypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="612,649,897,908"/>
-<area shape="rect" id="node19" href="$structquat__t.html" title="Unit quaternion." alt="" coords="883,281,941,383"/>
-<area shape="rect" id="node21" href="$structpid__controller__t.html" title="PID controller." alt="" coords="965,211,1093,453"/>
-<area shape="rect" id="node23" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="913,15,1017,135"/>
-<area shape="rect" id="node25" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="1041,6,1145,143"/>
-<area shape="rect" id="node27" href="$classState.html" title="The MAV state." alt="" coords="1087,537,1265,1021"/>
-<area shape="rect" id="node29" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1135,255,1217,409"/>
-<area shape="rect" id="node31" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="643,1210,784,1313"/>
+<area shape="rect" id="node2" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="5,897,221,1225"/>
+<area shape="rect" id="node8" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|+ waypoint_hold_coordinates\l+ waypoint_list\l# waypoint_count_\l# current_waypoint_index_\l# hold_waypoint_set_\l# start_wpt_time_\l# mavlink_stream_\l# state_\l# navigation_\l# position_estimation_\l|+ Mavlink_waypoint_handler()\l+ init_homing_waypoint()\l+ nav_plan_init()\l+ hold_init()\l+ waypoint_count()\l+ update()\l+ default_config()\l}" alt="" coords="439,1379,633,1725"/>
+<area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="80,255,192,375"/>
+<area shape="rect" id="node11" href="$structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="221,538,379,675"/>
+<area shape="rect" id="node6" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="77,6,195,143"/>
+<area shape="rect" id="node20" href="$classNavigation.html" title="The navigation structure." alt="" coords="936,915,1077,1208"/>
+<area shape="rect" id="node13" href="$structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="237,211,363,418"/>
+<area shape="rect" id="node16" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="469,967,603,1156"/>
+<area shape="rect" id="node18" href="$structMavlink__waypoint__handler_1_1waypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="627,932,912,1191"/>
+<area shape="rect" id="node23" href="$structquat__t.html" title="Unit quaternion." alt="" coords="897,555,956,658"/>
+<area shape="rect" id="node25" href="$structpid__controller__t.html" title="PID controller." alt="" coords="980,486,1108,727"/>
+<area shape="rect" id="node27" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="928,255,1032,375"/>
+<area shape="rect" id="node29" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="1056,246,1160,383"/>
+<area shape="rect" id="node31" href="$classState.html" title="The MAV state." alt="" coords="1101,811,1280,1312"/>
+<area shape="rect" id="node33" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1149,529,1232,684"/>
+<area shape="rect" id="node35" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="657,1501,799,1603"/>
 </map>

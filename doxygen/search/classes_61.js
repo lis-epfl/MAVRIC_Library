@@ -14,6 +14,8 @@ var searchData=
   ['ahrs_5fmadgwick_5fconf_5ft',['ahrs_madgwick_conf_t',['../structahrs__madgwick__conf__t.html',1,'']]],
   ['ahrs_5fmadgwick_5ft',['ahrs_madgwick_t',['../structahrs__madgwick__t.html',1,'']]],
   ['ahrs_5ft',['ahrs_t',['../structahrs__t.html',1,'']]],
+  ['airspeed_5fanalog',['Airspeed_analog',['../classAirspeed__analog.html',1,'']]],
+  ['airspeed_5fanalog_5fconf_5ft',['airspeed_analog_conf_t',['../structairspeed__analog__conf__t.html',1,'']]],
   ['airspeed_5fanalog_5ft',['airspeed_analog_t',['../structairspeed__analog__t.html',1,'']]],
   ['altitude_5fcontroller',['Altitude_controller',['../classAltitude__controller.html',1,'']]],
   ['altitude_5fcontroller_5fconf_5ft',['altitude_controller_conf_t',['../structaltitude__controller__conf__t.html',1,'']]],

@@ -89,18 +89,21 @@ This is the complete list of members for <a class="el" href="classManual__contro
   <tr bgcolor="#f0f0f0"><td><b>CONTROL_SOURCE_REMOTE</b> enum value (defined in <a class="el" href="classManual__control.html">Manual_control</a>)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d">control_source_t</a> enum name</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>default_config</b>() (defined in <a class="el" href="classManual__control.html">Manual_control</a>)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td><code> [inline, static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7">get_angle_command_wing</a>(control_command_t *controls)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a420f4b792173cd64d323332c244054fe">get_attitude_command</a>(const float k_yaw, attitude_command_t *command, float scale) const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a0bd378d186d7b2bfe1a09af34eda439f">get_attitude_command_absolute_yaw</a>(attitude_command_t *command, float scale) const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#ad7b10226f0a5847a2265b422e1a9d12d">get_attitude_command_vtol</a>(const float ki_yaw, attitude_command_t *command, float scale, float reference_pitch) const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#aecfe45d5c88670a64d775c9345db42b4">get_control_command</a>(control_command_t *controls)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a6f599094c842aa31844bef96e31d286c">get_mode_from_source</a>(mav_mode_t mode_current)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a1b85adad9375f7eea177f226d7c50a26">get_rate_command</a>(rate_command_t *command, float scale) const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea">get_rate_command_wing</a>(control_command_t *controls)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a04eb17506ddb846ef7b2783ef8026ba7">get_signal_strength</a>()</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a57fbbf9cfad5c405ad822c9b83633357">get_thrust</a>() const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a7ee7cc0ffb6874db132d0829154553e0">get_thrust_command</a>(thrust_command_t *command) const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a28d928918d8883341b5d3647b52aa9ca">get_torque_command</a>(torque_command_t *command, float scale) const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#abe507693f441a6738193a18604591f1a">get_velocity_command</a>(velocity_command_t *command, float scale) const </td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#a000d94be2eae9353d1ede1a21bf476f8">get_velocity_vector</a>(control_command_t *controls)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classManual__control.html#a181fd7347d5f4e9219ac8bbeb2025b23">get_velocity_vector_wing</a>(const float ki_yaw, control_command_t *controls)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#aa2103487ba9916640ba227ffbe3f2997">joystick</a></td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b">Manual_control</a>(Satellite *sat, conf_t config, remote_conf_t remote_config)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classManual__control.html#aa8fcc0d79c1350e5dfcc3a674949a82d">mavlink_telemetry_add_onboard_parameters</a>(Onboard_parameters *onboard_parameters, Central_data *central_data)</td><td><a class="el" href="classManual__control.html">Manual_control</a></td><td><code> [friend]</code></td></tr>
@@ -131,7 +134,7 @@ This is the complete list of members for <a class="el" href="classManual__contro
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 17 2016 17:47:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 18 2016 09:20:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

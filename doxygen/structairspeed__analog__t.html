@@ -85,7 +85,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="airspeed_analog_t" -->
-<p>Structure containing the analog airspeed sensor datas.  
+<p>Structure containing the analog airspeed sensor data.  
  <a href="structairspeed__analog__t.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="airspeed__analog_8h_source.html">airspeed_analog.h</a>&gt;</code></p>
@@ -101,27 +101,54 @@ Collaboration diagram for airspeed_analog_t:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab429f0109be8a3e981536e71b999b163"></a><!-- doxytag: member="airspeed_analog_t::analog_channel" ref="ab429f0109be8a3e981536e71b999b163" args="" -->
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#ab429f0109be8a3e981536e71b999b163">analog_channel</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">analog channel of the ADC <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a403bdc46358ebc73806c00e645a52a2a"></a><!-- doxytag: member="airspeed_analog_t::gain" ref="a403bdc46358ebc73806c00e645a52a2a" args="" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a403bdc46358ebc73806c00e645a52a2a">gain</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">gain factor for the ADC <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add16f84699bfaaccbff46c73a3125fd4"></a><!-- doxytag: member="airspeed_analog_t::pressure_offset" ref="add16f84699bfaaccbff46c73a3125fd4" args="" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#add16f84699bfaaccbff46c73a3125fd4">pressure_offset</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">offset of the pressure sensor <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7babb5164e6a9f270818732393921b89"></a><!-- doxytag: member="airspeed_analog_t::differential_pressure" ref="a7babb5164e6a9f270818732393921b89" args="" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a7babb5164e6a9f270818732393921b89">differential_pressure</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">true dynamical pressure (diff between pressure and offset) <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7e9796a78f9e004a7947c5917780c005"></a><!-- doxytag: member="airspeed_analog_t::airspeed" ref="a7e9796a78f9e004a7947c5917780c005" args="" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a7e9796a78f9e004a7947c5917780c005">airspeed</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">measure airspeed <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a26fdd36b9d0105b0bbbfd9222bb313ee"></a><!-- doxytag: member="airspeed_analog_t::analog_monitor" ref="a26fdd36b9d0105b0bbbfd9222bb313ee" args="" -->
 <a class="el" href="structanalog__monitor__t.html">analog_monitor_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a26fdd36b9d0105b0bbbfd9222bb313ee">analog_monitor</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">pointer to the structure of analog monitor module <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab429f0109be8a3e981536e71b999b163"></a><!-- doxytag: member="airspeed_analog_t::analog_channel" ref="ab429f0109be8a3e981536e71b999b163" args="" -->
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#ab429f0109be8a3e981536e71b999b163">analog_channel</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">analog channel of the ADC <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7c2ea3885ae02f58598ad49e974a5cf3"></a><!-- doxytag: member="airspeed_analog_t::voltage" ref="a7c2ea3885ae02f58598ad49e974a5cf3" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a7c2ea3885ae02f58598ad49e974a5cf3">voltage</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage read by the ADC. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add16f84699bfaaccbff46c73a3125fd4"></a><!-- doxytag: member="airspeed_analog_t::pressure_offset" ref="add16f84699bfaaccbff46c73a3125fd4" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#add16f84699bfaaccbff46c73a3125fd4">pressure_offset</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset of the pressure sensor. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7babb5164e6a9f270818732393921b89"></a><!-- doxytag: member="airspeed_analog_t::differential_pressure" ref="a7babb5164e6a9f270818732393921b89" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a7babb5164e6a9f270818732393921b89">differential_pressure</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">True differential pressure in Pa (raw sensor compensated with offset) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a43394e2494617611e9f7a4fb032f0772"></a><!-- doxytag: member="airspeed_analog_t::conversion_factor" ref="a43394e2494617611e9f7a4fb032f0772" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a43394e2494617611e9f7a4fb032f0772">conversion_factor</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Factor used for conversion between differential pressure P and square speed v^2. Is influenced by real sensitivity of the sensor and by air density ! <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97d298f922c4afcce0c403f87602168d"></a><!-- doxytag: member="airspeed_analog_t::correction_gain" ref="a97d298f922c4afcce0c403f87602168d" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a97d298f922c4afcce0c403f87602168d">correction_gain</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gain used to correct estimation. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1127f10b23438673e3838d2a28a3df2c"></a><!-- doxytag: member="airspeed_analog_t::correction_offset" ref="a1127f10b23438673e3838d2a28a3df2c" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a1127f10b23438673e3838d2a28a3df2c">correction_offset</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset used to correct estimation. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a551310dd9931259c75cdce610416fe09"></a><!-- doxytag: member="airspeed_analog_t::alpha" ref="a551310dd9931259c75cdce610416fe09" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a551310dd9931259c75cdce610416fe09">alpha</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Filter coefficient. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e622dcb3c634b942bfc94b11db5a0ee"></a><!-- doxytag: member="airspeed_analog_t::raw_airspeed" ref="a1e622dcb3c634b942bfc94b11db5a0ee" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a1e622dcb3c634b942bfc94b11db5a0ee">raw_airspeed</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Unfiltered and uncorrected airspeed. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add690fca926a13c83453249053623995"></a><!-- doxytag: member="airspeed_analog_t::scaled_airspeed" ref="add690fca926a13c83453249053623995" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#add690fca926a13c83453249053623995">scaled_airspeed</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Corrected airspeed, using fitted relation. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7e9796a78f9e004a7947c5917780c005"></a><!-- doxytag: member="airspeed_analog_t::airspeed" ref="a7e9796a78f9e004a7947c5917780c005" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a7e9796a78f9e004a7947c5917780c005">airspeed</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Filtered corrected airspeed. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af44d227bd6d4bc558b9ddbac0f4e7333"></a><!-- doxytag: member="airspeed_analog_t::last_airspeed" ref="af44d227bd6d4bc558b9ddbac0f4e7333" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#af44d227bd6d4bc558b9ddbac0f4e7333">last_airspeed</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Airspeed from previous loop. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0687116f1e16b5153431e166b53cc192"></a><!-- doxytag: member="airspeed_analog_t::calibrating" ref="a0687116f1e16b5153431e166b53cc192" args="" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a0687116f1e16b5153431e166b53cc192">calibrating</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the sensor is currently in calibration. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a136db697d80458a6e13d89b216804467"></a><!-- doxytag: member="airspeed_analog_t::calibration_gain" ref="a136db697d80458a6e13d89b216804467" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structairspeed__analog__t.html#a136db697d80458a6e13d89b216804467">calibration_gain</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gain used for the calibration of the offset (low-pass) <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Structure containing the analog airspeed sensor datas. </p>
+<div class="textblock"><p>Structure containing the analog airspeed sensor data. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/drivers/unsupported/<a class="el" href="airspeed__analog_8h_source.html">airspeed_analog.h</a></li>
 </ul>
@@ -143,7 +170,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 17 2016 17:47:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 18 2016 09:20:15 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

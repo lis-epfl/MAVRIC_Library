@@ -1,9 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="5,45,112,75"/>
-<area shape="rect" id="node3" href="$classAccelerometer__sim.html" title="Simulated accelerometers." alt="" coords="161,5,295,35"/>
-<area shape="rect" id="node5" href="$classLsm330dlc__acc.html" title="Intermediate interface class for the accelero inside LSM330DLC." alt="" coords="172,59,284,88"/>
-<area shape="rect" id="node7" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="344,112,429,141"/>
-<area shape="rect" id="node8" href="$classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="16,125,101,155"/>
-<area shape="rect" id="node10" href="$classGyroscope__sim.html" title="Simulated gyroscopes." alt="" coords="172,112,284,141"/>
-<area shape="rect" id="node12" href="$classLsm330dlc__gyr.html" title="Intermediate interface class for the gyro inside LSM330DLC." alt="" coords="173,165,283,195"/>
+<area shape="rect" id="node1" href="$structGps__mocap_1_1conf__t.html" title="Configuration structure." alt="" coords="5,5,141,35"/>
 </map>

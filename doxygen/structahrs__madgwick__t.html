@@ -88,34 +88,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Structure for the Madgwick attitude estimation filter.  
  <a href="structahrs__madgwick__t.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="ahrs__madgwick_8h_source.html">ahrs_madgwick.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="ahrs__madgwick_8hpp_source.html">ahrs_madgwick.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for ahrs_madgwick_t:</div>
 <div class="dyncontent">
 <div class="center"><img src="structahrs__madgwick__t__coll__graph.png" border="0" usemap="#ahrs__madgwick__t_coll__map" alt="Collaboration graph"/></div>
 <map name="ahrs__madgwick__t_coll__map" id="ahrs__madgwick__t_coll__map">
-<area shape="rect" id="node2" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="8,177,125,349"/><area shape="rect" id="node4" href="structquat__t.html" title="Unit quaternion." alt="" coords="37,6,96,109"/></map>
+<area shape="rect" id="node2" href="classAirspeed__analog.html" title="{Airspeed_analog\n||+ Airspeed_analog()\l+ start_calibration()\l+ stop_calibration()\l+ update()\l+ get_airspeed()\l+ get_last_airspeed()\l}" alt="" coords="5,219,149,391"/><area shape="rect" id="node4" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="173,219,291,391"/><area shape="rect" id="node6" href="structquat__t.html" title="Unit quaternion." alt="" coords="203,6,261,109"/><area shape="rect" id="node8" href="classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="315,176,445,435"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="structahrs__madgwick__t-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af08361b4839d6abea9a5335c21289897"></a><!-- doxytag: member="ahrs_madgwick_t::imu" ref="af08361b4839d6abea9a5335c21289897" args="" -->
-imu_t *&#160;</td><td class="memItemRight" valign="bottom"><b>imu</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade8a271920d5ef707b617f147868c37e"></a><!-- doxytag: member="ahrs_madgwick_t::imu" ref="ade8a271920d5ef707b617f147868c37e" args="" -->
+<a class="el" href="classImu.html">Imu</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>imu</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3cb4f685f9dacb996a075635be6c880a"></a><!-- doxytag: member="ahrs_madgwick_t::ahrs" ref="a3cb4f685f9dacb996a075635be6c880a" args="" -->
 <a class="el" href="structahrs__t.html">ahrs_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>ahrs</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8579d67d01baa4bc36f1ccc8556d19f9"></a><!-- doxytag: member="ahrs_madgwick_t::ref_b" ref="a8579d67d01baa4bc36f1ccc8556d19f9" args="[3]" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><b>ref_b</b> [3]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acbcb6f75d3f451ead0535f717df72283"></a><!-- doxytag: member="ahrs_madgwick_t::airspeed_analog" ref="acbcb6f75d3f451ead0535f717df72283" args="" -->
+<a class="el" href="classAirspeed__analog.html">Airspeed_analog</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>airspeed_analog</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad5538b2af4a3324447d087daf13d8b36"></a><!-- doxytag: member="ahrs_madgwick_t::beta" ref="ad5538b2af4a3324447d087daf13d8b36" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><b>beta</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4685d924a814e6a293c2303edb191911"></a><!-- doxytag: member="ahrs_madgwick_t::zeta" ref="a4685d924a814e6a293c2303edb191911" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><b>zeta</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aee3da09ace00b73e12857e53ecf267b1"></a><!-- doxytag: member="ahrs_madgwick_t::acceleration_correction" ref="aee3da09ace00b73e12857e53ecf267b1" args="" -->
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>acceleration_correction</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff8657f1ae9017c8972645a32b27ad54"></a><!-- doxytag: member="ahrs_madgwick_t::correction_speed" ref="aff8657f1ae9017c8972645a32b27ad54" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><b>correction_speed</b></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Structure for the Madgwick attitude estimation filter. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/sensing/<a class="el" href="ahrs__madgwick_8h_source.html">ahrs_madgwick.h</a></li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/sensing/<a class="el" href="ahrs__madgwick_8hpp_source.html">ahrs_madgwick.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -135,7 +139,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>zeta</b></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 17 2016 17:47:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 18 2016 09:20:15 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -130,6 +130,12 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a65f4881d33ae2c7860b0d6e10af6582d"></a><!-- doxytag: member="Navigation::conf_t::max_climb_rate" ref="a65f4881d33ae2c7860b0d6e10af6582d" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a65f4881d33ae2c7860b0d6e10af6582d">max_climb_rate</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Max climb rate in m/s. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a65c691550295fc4f2ae0dd4735e22588"></a><!-- doxytag: member="Navigation::conf_t::one_over_scaling" ref="a65c691550295fc4f2ae0dd4735e22588" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a65c691550295fc4f2ae0dd4735e22588">one_over_scaling</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Line vector field parameter. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a44e42aa044df282363a86d272075a9db"></a><!-- doxytag: member="Navigation::conf_t::vertical_vel_gain" ref="a44e42aa044df282363a86d272075a9db" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a44e42aa044df282363a86d272075a9db">vertical_vel_gain</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gain for the vertical velocity calculation. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a85e9cd8f6268f3b4c20e09ffc0a56f18"></a><!-- doxytag: member="Navigation::conf_t::soft_zone_size" ref="a85e9cd8f6268f3b4c20e09ffc0a56f18" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a85e9cd8f6268f3b4c20e09ffc0a56f18">soft_zone_size</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Soft zone of the velocity controller. <br/></td></tr>
@@ -142,12 +148,27 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adc1e8e91c84aafab8ae33823362b9565"></a><!-- doxytag: member="Navigation::conf_t::kp_yaw" ref="adc1e8e91c84aafab8ae33823362b9565" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#adc1e8e91c84aafab8ae33823362b9565">kp_yaw</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The yaw gain in velocity control mode. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a05ce93d2f5c263fb899e4e31e00ed895"></a><!-- doxytag: member="Navigation::conf_t::safe_altitude" ref="a05ce93d2f5c263fb899e4e31e00ed895" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a05ce93d2f5c263fb899e4e31e00ed895">safe_altitude</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The altitude at which the robot will fly in critical mode. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a888b4b48160b07dd966c92be4fb9fb0f"></a><!-- doxytag: member="Navigation::conf_t::minimal_radius" ref="a888b4b48160b07dd966c92be4fb9fb0f" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a888b4b48160b07dd966c92be4fb9fb0f">minimal_radius</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The minimal circle radius. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6529272342183fa3c40f08b0cf980b25"></a><!-- doxytag: member="Navigation::conf_t::heading_acceptance" ref="a6529272342183fa3c40f08b0cf980b25" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a6529272342183fa3c40f08b0cf980b25">heading_acceptance</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The heading acceptance to switch to next waypoint. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a882555b2baf7599d8597dcb8b3b10ab6"></a><!-- doxytag: member="Navigation::conf_t::hovering_controller" ref="a882555b2baf7599d8597dcb8b3b10ab6" args="" -->
 <a class="el" href="structpid__controller__t.html">pid_controller_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a882555b2baf7599d8597dcb8b3b10ab6">hovering_controller</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">hovering controller <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac9fcde552aa37b23a744e18db328e840"></a><!-- doxytag: member="Navigation::conf_t::wpt_nav_controller" ref="ac9fcde552aa37b23a744e18db328e840" args="" -->
 <a class="el" href="structpid__controller__t.html">pid_controller_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#ac9fcde552aa37b23a744e18db328e840">wpt_nav_controller</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">waypoint navigation controller <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d5671e91de492aded16ab94a0efbf93"></a><!-- doxytag: member="Navigation::conf_t::takeoff_altitude" ref="a0d5671e91de492aded16ab94a0efbf93" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a0d5671e91de492aded16ab94a0efbf93">takeoff_altitude</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Local altitude at which the take-off procedure should stop, for a fixed-wing. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a25f246b7356b3a298d0245e5e85ddddc"></a><!-- doxytag: member="Navigation::conf_t::navigation_strategy" ref="a25f246b7356b3a298d0245e5e85ddddc" args="" -->
+strategy_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNavigation_1_1conf__t.html#a25f246b7356b3a298d0245e5e85ddddc">navigation_strategy</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of navigation strategy. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The navigation configuration structure. </p>
@@ -172,7 +193,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="str
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 17 2016 17:47:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 18 2016 09:20:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
