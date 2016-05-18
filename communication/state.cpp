@@ -130,14 +130,6 @@ bool State::set_armed(bool arming)
             return false;
         }
 
-        // check if not in manual mode and stabilized or guided mode
-        // (not in velocity or position hold)
-        if(mav_mode_.is_manual() && (mav_mode_.is_stabilize() || mav_mode_.is_guided()))
-        {
-            print_util_dbg_print("[STATE]: prevented arming because in stabilise or guided mode\r\n");
-            return false;
-        }
-
         // check if battery not low
         if(battery_.is_low())
         {
