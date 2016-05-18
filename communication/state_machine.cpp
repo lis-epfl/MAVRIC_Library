@@ -347,7 +347,7 @@ bool State_machine::set_ctrl_mode(Mav_mode mode)
     bool success = true;
 
     // check if we can set/clear stabilize flag
-    if(is_set_stabilize_allowed(mode.is_stabilize()))
+    if(!is_set_stabilize_allowed(mode.is_stabilize()))
     {
         print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because position estimation is not healthy\r\n");
         success = false;
