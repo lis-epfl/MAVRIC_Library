@@ -154,9 +154,6 @@ int main(void)
     //                              file_stat,
     //                              mav_config );
 
-    // Init MAV
-    init_success &= mav.init();
-
     if (init_success)
     {
         piezo_speaker_quick_startup();
