@@ -859,7 +859,8 @@ void Mavlink_waypoint_handler::auto_landing_handler()
             case Navigation::DESCENT_TO_GND:
                 print_util_dbg_print("Auto-landing: disarming motors \r\n");
                 navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
-                //state_.mav_mode_custom = CUSTOM_BASE_MODE;
+                //Do not reset custom flag here, to be able to check after landing 
+                // in case something went wrong. Is reset while arming
                 hold_waypoint_set_ = false;
                 navigation_.internal_state_ = Navigation::NAV_ON_GND;
                 state_.set_armed(false);
