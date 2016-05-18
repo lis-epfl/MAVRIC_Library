@@ -280,7 +280,7 @@ State::conf_t State::default_config()
     conf.mav_state               = MAV_STATE_BOOT;
     conf.simulation_mode         = HIL_OFF;
     conf.autopilot_type          = MAV_TYPE_QUADROTOR;
-    conf.autopilot_name          = MAV_AUTOPILOT_GENERIC_MISSION_FULL;
+    conf.autopilot_name          = MAV_AUTOPILOT_GENERIC_MISSION_FULL; // TODO: add MAV_AUTOPILOT_MAVRIC to std mavlink and support waypoint commands in QGC for this autopilot type
     conf.sensor_present          = 0b1111110000100111;
     conf.sensor_enabled          = 0b1111110000100111;
     conf.sensor_health           = 0b1111110000100111;
@@ -302,7 +302,7 @@ State::conf_t State::wing_default_config()
     conf.mav_state               = MAV_STATE_BOOT;
     conf.simulation_mode         = HIL_OFF;
     conf.autopilot_type          = MAV_TYPE_FIXED_WING;
-    conf.autopilot_name          = MAV_AUTOPILOT_GENERIC_MISSION_FULL;
+    conf.autopilot_name          = MAV_AUTOPILOT_GENERIC_MISSION_FULL; // TODO: add MAV_AUTOPILOT_MAVRIC to std mavlink and support waypoint commands in QGC for this autopilot type
     conf.sensor_present          = 0b1111110000100111;
     conf.sensor_enabled          = 0b1111110000100111;
     conf.sensor_health           = 0b1111110000100111;
