@@ -93,7 +93,6 @@
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "sensing/ahrs.h"
 #include "sensing/altitude.h"
 #include "control/pid_controller.h"
