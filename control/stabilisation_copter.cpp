@@ -259,11 +259,11 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
 
     // Get up vector in body frame
     quat_t up = {0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
-    quat_t up_vec = quaternions_global_to_local(stabilisation_copter->ahrs->qe,
-                    up);
+    quat_t up_vec = quaternions_global_to_local(stabilisation_copter->ahrs->qe, up);
 
     // set the controller input
     input = *stabilisation_copter->controls;
+
     switch (stabilisation_copter->controls->control_mode)
     {
         case VELOCITY_COMMAND_MODE:
@@ -302,10 +302,19 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
                 }
 
                 float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
-                input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
+                //input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
+                input.rpy[YAW] = 0.5f * rel_heading_coordinated;
             }
 
             rpyt_errors[YAW] = input.rpy[YAW];
+
+            print_util_dbg_print("\r\n");
+            print_util_dbg_print(" err_yaw ");
+            print_util_dbg_putfloat(rpyt_errors[YAW],6);
+            print_util_dbg_print(" x_body ");
+            print_util_dbg_putfloat(stabilisation_copter->pos_est->vel_bf[X],6);
+            print_util_dbg_print(" y_body ");
+            print_util_dbg_putfloat(stabilisation_copter->pos_est->vel_bf[Y],6);
 
             // run PID update on all velocity controllers
             stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->ahrs->dt_s, rpyt_errors);
@@ -332,16 +341,20 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
 
             //input.thrust = stabilisation_copter->controls->tvel[Z];
 
-            //--- Alex
-            input.rpy[ROLL] = stabilisation_copter->controls->rpy[ROLL];
-            //---
+            //--- Alex (+= ou =, dépendant de si on veut contrer le vent ou pas)
+            //input.rpy[ROLL] += 0.0f; //stabilisation_copter->controls->rpy[ROLL];
+
 
         // -- no break here  - we want to run the lower level modes as well! --
 
         case ATTITUDE_COMMAND_MODE:
             // run absolute attitude_filter controller
-            rpyt_errors[0] = input.rpy[0] + up_vec.v[1];
-            rpyt_errors[1] = input.rpy[1] - up_vec.v[0];
+            rpyt_errors[ROLL] = input.rpy[ROLL] + up_vec.v[1];
+            print_util_dbg_print("\r\n");
+            print_util_dbg_print(" err_roll ");
+            print_util_dbg_putfloat(rpyt_errors[ROLL],6);
+
+            rpyt_errors[PITCH] = input.rpy[PITCH] - up_vec.v[0];
 
             if (stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE)
             {
@@ -360,6 +373,9 @@ void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* st
 
             // use output of attitude_filter controller to set rate setpoints for rate controller
             input = stabilisation_copter->stabiliser_stack.attitude_stabiliser.output;
+
+            //Alex put back the default gain
+            //stabilisation_copter->stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].p_gain = prev_p_gain;
 
         // -- no break here  - we want to run the lower level modes as well! --
 

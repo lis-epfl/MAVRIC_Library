@@ -513,7 +513,7 @@ float Position_estimation::position_estimation_get_xy_distance_from_fence_origin
 float Position_estimation::position_estimation_get_z_distance_from_fence_origin()
 {
 	float dist_z;
-	dist_z = local_position.pos[Z] - fence_position.pos[Z];
+	dist_z = local_position.pos[Z];
 
 	return dist_z;
 }

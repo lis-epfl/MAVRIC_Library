@@ -164,7 +164,7 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].clip_max         = 12.0f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator       = {};
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator.gain      = 0.0f;
-    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator.clip_pre  = 0.0f;
+    conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator.clip_pre  = 0.00f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator.accumulator   = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator.clip      = 0.0f;
     conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].differentiator       = {};
@@ -280,7 +280,7 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     // -----------------------------------------------------------------
     // ------ PITCH PID ------------------------------------------------
     // -----------------------------------------------------------------
-    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].p_gain          = 0.2f;
+    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].p_gain          = 0.3f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].clip_min        = -0.5f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].clip_max        = 0.5f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].integrator      = {};
