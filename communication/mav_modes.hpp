@@ -122,6 +122,7 @@ typedef enum
     CUST_GPS_BAD = 2048                         ///< GPS loss flag
 } mav_mode_custom_list_t;
 
+
 #define mav_mode_t uint8_t
 #define mav_mode_custom_t uint32_t
 

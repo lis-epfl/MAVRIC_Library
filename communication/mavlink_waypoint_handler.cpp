@@ -56,10 +56,11 @@ extern "C"
  *
  * \param   waypoint_handler        The pointer to the waypoint handler structure
  * \param   origin                  The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
+ * \param   dubin_state             The pointer to the Dubin state
  *
  * \return  The waypoint in local coordinate frame
  */
-static local_position_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint_, global_position_t origin);
+static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -595,7 +596,9 @@ mav_result_t Mavlink_waypoint_handler::continue_to_next_waypoint(Mavlink_waypoin
         print_util_dbg_print("\r\n");
         waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_index_].current = 1;
         waypoint_handler->current_waypoint_ = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_index_];
-        waypoint_handler->waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&waypoint_handler->current_waypoint_, waypoint_handler->position_estimation_.local_position.origin);
+        waypoint_handler->waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&waypoint_handler->current_waypoint_,
+                                                                                            waypoint_handler->position_estimation_.local_position.origin,
+                                                                                            &waypoint_handler->navigation_.dubin_state);
 
         mavlink_message_t msg;
         mavlink_msg_mission_current_pack(waypoint_handler->mavlink_stream_.sysid(),
@@ -665,32 +668,61 @@ bool Mavlink_waypoint_handler::take_off_handler()
         print_util_dbg_print_num((int32_t)(position_estimation_.local_position.heading * 180.0f / 3.14f), 10);
         print_util_dbg_print("\r\n");
 
-        waypoint_hold_coordinates = position_estimation_.local_position;
-        waypoint_hold_coordinates.pos[Z] = -config_.auto_take_off_altitude;     // change sign since NED!
+        waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
+        waypoint_hold_coordinates.waypoint.pos[Z] = navigation_.takeoff_altitude;
 
         aero_attitude_t aero_attitude;
         aero_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
-        waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
+        waypoint_hold_coordinates.waypoint.heading = aero_attitude.rpy[2];
 
-        navigation_.dist2wp_sqr = 100.0f; // same position, 10m above => dist_sqr = 100.0f
+        navigation_.dist2wp_sqr = waypoint_hold_coordinates.waypoint.pos[Z] * waypoint_hold_coordinates.waypoint.pos[Z];
 
         hold_waypoint_set_ = true;
     }
 
     if (mode_change())
     {
-        if (navigation_.dist2wp_sqr <= 16.0f)
+        switch(navigation_.navigation_strategy)
         {
-            result = true;
+            case Navigation::strategy_t::DIRECT_TO:
+               if (navigation_.dist2wp_sqr <= 16.0f)
+                {
+                    result = true;
+                }
 
-            print_util_dbg_print("Automatic take-off finished, dist2wp_sqr (10x):");
-            print_util_dbg_print_num(navigation_.dist2wp_sqr * 10.0f, 10);
-            print_util_dbg_print(".\r\n");
+                print_util_dbg_print("Automatic take-off finished, dist2wp_sqr (10x):");
+                print_util_dbg_print_num(navigation_.dist2wp_sqr * 10.0f, 10);
+                print_util_dbg_print(".\r\n");
 
-            // if a waypoint is defined, it will go towards the current one (waypoint_coordinates_)
-            // => reset its local position
-            waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&current_waypoint_, position_estimation_.local_position.origin);
-            waypoint_coordinates_.heading = position_estimation_.local_position.heading;
+                // if a waypoint is defined, it will go towards the current one (waypoint_coordinates_)
+                // => reset its local position
+                waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&current_waypoint_, position_estimation_.local_position.origin, &navigation_.dubin_state);
+                waypoint_coordinates_.waypoint.heading = position_estimation_.local_position.heading;
+            break;
+
+            case Navigation::strategy_t::DUBIN:
+                if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
+                {
+                    if (navigation_.dist2wp_sqr <= 16.0f)
+                    {
+                        result = true;
+                    }
+                }
+                else
+                {
+                    if (position_estimation_.local_position.pos[Z] <= navigation_.takeoff_altitude)
+                    {
+                        result = true;
+                    }
+                }
+            break;
+        }
+
+        if (result)
+        {
+            navigation_.dubin_state = DUBIN_INIT;
+
+            print_util_dbg_print("Automatic take-off finished.\r\n");
         }
     }
 
@@ -713,7 +745,6 @@ mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_ha
         }
         else if (packet->param2 == MAV_GOTO_HOLD_AT_SPECIFIED_POSITION)
         {
-            //navigation.stop_nav_there = true;
             waypoint_handler->navigation_.internal_state_ = Navigation::NAV_STOP_THERE;
 
             waypoint_struct_t waypoint;
@@ -724,14 +755,20 @@ mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_ha
             waypoint.y = packet->param6;
             waypoint.z = packet->param7;
 
-            local_position_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(&waypoint, waypoint_handler->position_estimation_.local_position.origin);
-            waypoint_handler->hold_init(waypoint_goal);
+            waypoint_local_struct_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(   &waypoint,
+                                                                                                waypoint_handler->position_estimation_.local_position.origin,
+                                                                                                &waypoint_handler->navigation_.dubin_state);
+            waypoint_handler->hold_init(waypoint_goal.waypoint);
 
             result = MAV_RESULT_ACCEPTED;
         }
     }
     else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
     {
+        if ( (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_THERE) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) )
+        {
+            waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
+        }
 
         if (mav_modes_is_auto(waypoint_handler->last_mode_))  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         {
@@ -741,7 +778,6 @@ mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_ha
         {
             waypoint_handler->navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
         }
-
 
         result = MAV_RESULT_ACCEPTED;
     }
@@ -810,23 +846,23 @@ void Mavlink_waypoint_handler::auto_landing_handler()
                 print_util_dbg_print("Cust: descent to small alt");
                 state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= CUST_DESCENT_TO_SMALL_ALTITUDE;
-                waypoint_hold_coordinates = position_estimation_.local_position;
-                waypoint_hold_coordinates.pos[Z] = -5.0f;
+                waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
+                waypoint_hold_coordinates.waypoint.pos[Z] = -5.0f;
                 break;
 
             case Navigation::DESCENT_TO_GND:
                 print_util_dbg_print("Cust: descent to gnd");
                 state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= CUST_DESCENT_TO_GND;
-                waypoint_hold_coordinates = position_estimation_.local_position;
-                waypoint_hold_coordinates.pos[Z] = 0.0f;
+                waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
+                waypoint_hold_coordinates.waypoint.pos[Z] = 0.0f;
                 navigation_.alt_lpf = position_estimation_.local_position.pos[2];
                 break;
         }
 
         for (uint8_t i = 0; i < 3; i++)
         {
-            rel_pos[i] = waypoint_hold_coordinates.pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = waypoint_hold_coordinates.waypoint.pos[i] - position_estimation_.local_position.pos[i];
         }
 
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
@@ -844,7 +880,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
 
     if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
     {
-        if ((navigation_.dist2wp_sqr < 3.0f) && (maths_f_abs(position_estimation_.local_position.pos[2] - waypoint_hold_coordinates.pos[2]) < 0.5f))
+        if ((navigation_.dist2wp_sqr < 3.0f) && (maths_f_abs(position_estimation_.local_position.pos[2] - waypoint_hold_coordinates.waypoint.pos[2]) < 0.5f))
         {
             next_state_ = true;
         }
@@ -922,6 +958,7 @@ void Mavlink_waypoint_handler::state_machine()
 
             if ((!mav_modes_is_guided(mode_local)) && (!mav_modes_is_auto(mode_local)))
             {
+                print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_TAKEOFF\r\n");
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
             }
             break;
@@ -933,7 +970,7 @@ void Mavlink_waypoint_handler::state_machine()
             }
             else if (mav_modes_is_guided(mode_local))
             {
-                print_util_dbg_print("Switching to Navigation::NAV_HOLD_POSITION from Navigation::NAV_MANUAL_CTRL\r\n");
+                print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
                 hold_init(position_estimation_.local_position);
                 navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
             }
@@ -950,19 +987,24 @@ void Mavlink_waypoint_handler::state_machine()
             }
             waypoint_navigation_handler(new_mode);
 
+            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
+            {
+                dubin_state_machine(&waypoint_coordinates_);
+            }
+
             navigation_.goal = waypoint_coordinates_;
 
             if (!mav_modes_is_auto(mode_local))
             {
                 if (mav_modes_is_guided(mode_local))
                 {
-                    print_util_dbg_print("Switching to Navigation::NAV_HOLD_POSITION from Navigation::NAV_NAVIGATING\r\n");
-                    waypoint_hold_coordinates = position_estimation_.local_position;
+                    print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_NAVIGATING\r\n");
+                    hold_init(position_estimation_.local_position);
                     navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
                 }
                 else
                 {
-                    print_util_dbg_print("Switching to Navigation::NAV_MANUAL_CTRL from Navigation::NAV_NAVIGATING\r\n");
+                    print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_NAVIGATING\r\n");
                     navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
                 }
             }
@@ -970,11 +1012,17 @@ void Mavlink_waypoint_handler::state_machine()
             break;
 
         case Navigation::NAV_HOLD_POSITION:
+            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
+            {
+                dubin_state_machine(&waypoint_hold_coordinates);
+            }
+
             navigation_.goal = waypoint_hold_coordinates;
 
             if (mav_modes_is_auto(mode_local))
             {
-                print_util_dbg_print("Switching to Navigation::NAV_NAVIGATING from Navigation::NAV_HOLD_POSITION\r\n");
+                print_util_dbg_print("Switching to NAV_NAVIGATING from NAV_HOLD_POSITION\r\n");
+                navigation_.dubin_state = DUBIN_INIT;
                 navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
             }
             else if (!mav_modes_is_guided(mode_local))
@@ -985,6 +1033,10 @@ void Mavlink_waypoint_handler::state_machine()
             break;
 
         case Navigation::NAV_STOP_ON_POSITION:
+            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
+            {
+                dubin_state_machine(&waypoint_hold_coordinates);
+            }
             navigation_.goal = waypoint_hold_coordinates;
 
             if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
@@ -995,6 +1047,10 @@ void Mavlink_waypoint_handler::state_machine()
 
         case Navigation::NAV_STOP_THERE:
             stopping_handler();
+            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
+            {
+                dubin_state_machine(&waypoint_hold_coordinates);
+            }
 
             navigation_.goal = waypoint_hold_coordinates;
 
@@ -1006,6 +1062,11 @@ void Mavlink_waypoint_handler::state_machine()
 
         case Navigation::NAV_LANDING:
             auto_landing_handler();
+
+            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
+            {
+                dubin_state_machine(&waypoint_hold_coordinates);
+            }
 
             navigation_.goal = waypoint_hold_coordinates;
 
@@ -1022,14 +1083,13 @@ void Mavlink_waypoint_handler::stopping_handler()
     float dist2wp_sqr;
     float rel_pos[3];
 
-    rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - position_estimation_.local_position.pos[X]);
-    rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - position_estimation_.local_position.pos[Y]);
-    rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - position_estimation_.local_position.pos[Z]);
+    rel_pos[X] = (float)(waypoint_hold_coordinates.waypoint.pos[X] - position_estimation_.local_position.pos[X]);
+    rel_pos[Y] = (float)(waypoint_hold_coordinates.waypoint.pos[Y] - position_estimation_.local_position.pos[Y]);
+    rel_pos[Z] = (float)(waypoint_hold_coordinates.waypoint.pos[Z] - position_estimation_.local_position.pos[Z]);
 
     dist2wp_sqr = vectors_norm_sqr(rel_pos);
     if (dist2wp_sqr < 25.0f)
     {
-        //navigation_.stop_nav = true;
         navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
     }
 }
@@ -1059,7 +1119,7 @@ void Mavlink_waypoint_handler::critical_handler()
 
         aero_attitude_t aero_attitude;
         aero_attitude = coord_conventions_quat_to_aero(navigation_.qe);
-        waypoint_critical_coordinates_.heading = aero_attitude.rpy[2];
+        waypoint_critical_coordinates_.waypoint.heading = aero_attitude.rpy[2];
 
         switch (navigation_.critical_behavior)
         {
@@ -1067,9 +1127,9 @@ void Mavlink_waypoint_handler::critical_handler()
                 print_util_dbg_print("Climbing to safe alt...\r\n");
                 state_.mav_mode_custom |= CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 
-                waypoint_critical_coordinates_.pos[X] = position_estimation_.local_position.pos[X];
-                waypoint_critical_coordinates_.pos[Y] = position_estimation_.local_position.pos[Y];
-                waypoint_critical_coordinates_.pos[Z] = -30.0f;
+                waypoint_critical_coordinates_.waypoint.pos[X] = position_estimation_.local_position.pos[X];
+                waypoint_critical_coordinates_.waypoint.pos[Y] = position_estimation_.local_position.pos[Y];
+                waypoint_critical_coordinates_.waypoint.pos[Z] = -30.0f;
 
                 break;
 
@@ -1077,34 +1137,37 @@ void Mavlink_waypoint_handler::critical_handler()
                 state_.mav_mode_custom &= ~CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
                 state_.mav_mode_custom |= CUST_CRITICAL_FLY_TO_HOME_WP;
 
-                waypoint_critical_coordinates_.pos[X] = 0.0f;
-                waypoint_critical_coordinates_.pos[Y] = 0.0f;
-                waypoint_critical_coordinates_.pos[Z] = -30.0f;
+                waypoint_critical_coordinates_.waypoint.pos[X] = 0.0f;
+                waypoint_critical_coordinates_.waypoint.pos[Y] = 0.0f;
+                waypoint_critical_coordinates_.waypoint.pos[Z] = -30.0f;
                 break;
 
             case Navigation::HOME_LAND:
                 state_.mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
                 state_.mav_mode_custom |= CUST_CRITICAL_LAND;
-                waypoint_critical_coordinates_.pos[X] = 0.0f;
-                waypoint_critical_coordinates_.pos[Y] = 0.0f;
-                waypoint_critical_coordinates_.pos[Z] = 5.0f;
+
+                waypoint_critical_coordinates_.waypoint.pos[X] = 0.0f;
+                waypoint_critical_coordinates_.waypoint.pos[Y] = 0.0f;
+                waypoint_critical_coordinates_.waypoint.pos[Z] = 5.0f;
                 navigation_.alt_lpf = position_estimation_.local_position.pos[2];
                 break;
 
             case Navigation::CRITICAL_LAND:
                 print_util_dbg_print("Critical land...\r\n");
+
                 state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= CUST_CRITICAL_LAND;
-                waypoint_critical_coordinates_.pos[X] = position_estimation_.local_position.pos[X];
-                waypoint_critical_coordinates_.pos[Y] = position_estimation_.local_position.pos[Y];
-                waypoint_critical_coordinates_.pos[Z] = 5.0f;
+
+                waypoint_critical_coordinates_.waypoint.pos[X] = position_estimation_.local_position.pos[X];
+                waypoint_critical_coordinates_.waypoint.pos[Y] = position_estimation_.local_position.pos[Y];
+                waypoint_critical_coordinates_.waypoint.pos[Z] = 5.0f;
                 navigation_.alt_lpf = position_estimation_.local_position.pos[2];
                 break;
         }
 
         for (uint8_t i = 0; i < 3; i++)
         {
-            rel_pos[i] = waypoint_critical_coordinates_.pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = waypoint_critical_coordinates_.waypoint.pos[i] - position_estimation_.local_position.pos[i];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
     }
@@ -1173,37 +1236,54 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
 {
     if (!reset_hold_wpt)
     {
+        if (state_.nav_plan_active)
+        {
+            navigation_.dubin_state = DUBIN_INIT;
+        }
         hold_waypoint_set_ = false;
     }
 
     if (state_.nav_plan_active)
     {
         float rel_pos[3];
+        uint16_t i;
 
-        for (uint8_t i = 0; i < 3; i++)
+        for (i = 0; i < 3; i++)
         {
-            rel_pos[i] = waypoint_coordinates_.pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = waypoint_coordinates_.waypoint.pos[i] - position_estimation_.local_position.pos[i];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
-        if (navigation_.dist2wp_sqr < (current_waypoint_.param2 * current_waypoint_.param2))
+        float margin = 0.0f;
+        if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
         {
-            print_util_dbg_print("Waypoint Nr");
-            print_util_dbg_print_num(current_waypoint_index_, 10);
-            print_util_dbg_print(" reached, distance:");
-            print_util_dbg_print_num(sqrt(navigation_.dist2wp_sqr), 10);
-            print_util_dbg_print(" less than :");
-            print_util_dbg_print_num(current_waypoint_.param2, 10);
-            print_util_dbg_print(".\r\n");
+            margin = 36.0f;
+        }
 
-            mavlink_message_t msg;
-            mavlink_msg_mission_item_reached_pack(mavlink_stream_.sysid(),
-                                                  mavlink_stream_.compid(),
-                                                  &msg,
-                                                  current_waypoint_index_);
-            mavlink_stream_.send(&msg);
+        if (navigation_.dist2wp_sqr < (current_waypoint_.param2 * current_waypoint_.param2 + margin) ||
+               (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
+        {
+            if (waypoint_list[current_waypoint_index_].current > 0)
+            {
+                print_util_dbg_print("Waypoint Nr");
+                print_util_dbg_print_num(current_waypoint_index_, 10);
+                print_util_dbg_print(" reached, distance:");
+                print_util_dbg_print_num(sqrt(navigation_.dist2wp_sqr), 10);
+                print_util_dbg_print(" less than :");
+                print_util_dbg_print_num(current_waypoint_.param2, 10);
+                print_util_dbg_print(".\r\n");
 
-            travel_time_ = time_keeper_get_ms() - start_wpt_time_;
+                mavlink_message_t msg;
+                mavlink_msg_mission_item_reached_pack(mavlink_stream_.sysid(),
+                                                      mavlink_stream_.compid(),
+                                                      &msg,
+                                                      current_waypoint_index_);
+                mavlink_stream_.send(&msg);
+
+                travel_time_ = time_keeper_get_ms() - start_wpt_time_;
+
+                next_waypoint_.current = 0;
+            }
 
             waypoint_list[current_waypoint_index_].current = 0;
             
@@ -1219,32 +1299,68 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
             }
             else if ((current_waypoint_.autocontinue == 1) && (waypoint_count_ > 1))
             {
-                print_util_dbg_print("Autocontinue towards waypoint Nr");
-
-                start_wpt_time_ = time_keeper_get_ms();
-
-                if (current_waypoint_index_ == (waypoint_count_ - 1))
+                if (next_waypoint_.current == 0)
                 {
-                    current_waypoint_index_ = 0;
+                    if (current_waypoint_index_ == (waypoint_count_ - 1))
+                    {
+                        current_waypoint_index_ = 0;
+                    }
+                    else
+                    {
+                        current_waypoint_index_++;
+                    }
+                    next_waypoint_ = waypoint_list[current_waypoint_index_];
+
+                    next_waypoint_.current = 1;
+                    dubin_state_t dubin_state;
+                    waypoint_next_ = waypoint_handler_set_waypoint_from_frame(   &next_waypoint_,
+                                                                                position_estimation_.local_position.origin,
+                                                                                &dubin_state);
                 }
-                else
+
+                for (i=0;i<3;i++)
                 {
-                    current_waypoint_index_++;
+                    rel_pos[i] = waypoint_next_.waypoint.pos[i]-waypoint_coordinates_.waypoint.pos[i];
                 }
-                print_util_dbg_print_num(current_waypoint_index_, 10);
-                print_util_dbg_print("\r\n");
-                waypoint_list[current_waypoint_index_].current = 1;
-                current_waypoint_ = waypoint_list[current_waypoint_index_];
 
-                waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&current_waypoint_, position_estimation_.local_position.origin);
+                float rel_pos_norm[3];
 
-                mavlink_message_t msg;
-                mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
-                                                 mavlink_stream_.compid(),
-                                                 &msg,
-                                                 current_waypoint_index_);
-                mavlink_stream_.send(&msg);
+                vectors_normalize(rel_pos, rel_pos_norm);
 
+                float outter_pt[3];
+                outter_pt[X] = waypoint_next_.waypoint.pos[X]+rel_pos_norm[Y]*waypoint_next_.radius;
+                outter_pt[Y] = waypoint_next_.waypoint.pos[Y]-rel_pos_norm[X]*waypoint_next_.radius;
+                outter_pt[Z] = 0.0f;
+
+                for (i=0;i<3;i++)
+                {
+                    rel_pos[i] = outter_pt[i]-position_estimation_.local_position.pos[i];
+                }
+
+                // float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
+                float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(position_estimation_.vel[Y], position_estimation_.vel[X]));
+
+                if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) || (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) )
+                {
+                    print_util_dbg_print("Autocontinue towards waypoint Nr");
+                    print_util_dbg_print_num(current_waypoint_index_,10);
+                    print_util_dbg_print("\r\n");
+
+                    start_wpt_time_ = time_keeper_get_ms();
+
+                    waypoint_list[current_waypoint_index_].current = 1;
+                    next_waypoint_.current = 0;
+                    current_waypoint_ = waypoint_list[current_waypoint_index_];
+                    waypoint_coordinates_ = waypoint_next_;
+                    navigation_.dubin_state = DUBIN_INIT;
+
+                    mavlink_message_t msg;
+                    mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
+                                                     mavlink_stream_.compid(),
+                                                     &msg,
+                                                     current_waypoint_index_);
+                    mavlink_stream_.send(&msg);
+                }
             }
             else
             {
@@ -1257,8 +1373,8 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
     {
         if (!hold_waypoint_set_)
         {
+            hold_init(position_estimation_.local_position);
             hold_waypoint_set_ = true;
-            waypoint_coordinates_ = position_estimation_.local_position;
         }
     }
 }
@@ -1294,9 +1410,10 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
     }
 }
 
-static local_position_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint_, global_position_t origin)
+static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state)
 {
     global_position_t waypoint_global;
+    waypoint_local_struct_t wpt;
     local_position_t waypoint_coor;
     global_position_t origin_relative_alt;
 
@@ -1305,15 +1422,15 @@ static local_position_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoin
         waypoint_coor.pos[i] = 0.0f;
     }
     waypoint_coor.origin = origin;
-    waypoint_coor.heading = maths_deg_to_rad(current_waypoint_->param4);
+    waypoint_coor.heading = maths_deg_to_rad(current_waypoint->param4);
 
-    switch (current_waypoint_->frame)
+    switch (current_waypoint->frame)
     {
         case MAV_FRAME_GLOBAL:
-            waypoint_global.latitude    = current_waypoint_->x;
-            waypoint_global.longitude   = current_waypoint_->y;
-            waypoint_global.altitude    = current_waypoint_->z;
-            waypoint_global.heading     = maths_deg_to_rad(current_waypoint_->param4);
+            waypoint_global.latitude    = current_waypoint->x;
+            waypoint_global.longitude   = current_waypoint->y;
+            waypoint_global.altitude    = current_waypoint->z;
+            waypoint_global.heading     = maths_deg_to_rad(current_waypoint->param4);
             waypoint_coor = coord_conventions_global_to_local_position(waypoint_global, origin);
 
             print_util_dbg_print("waypoint_global: lat (x1e7):");
@@ -1338,10 +1455,10 @@ static local_position_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoin
             break;
 
         case MAV_FRAME_LOCAL_NED:
-            waypoint_coor.pos[X] = current_waypoint_->x;
-            waypoint_coor.pos[Y] = current_waypoint_->y;
-            waypoint_coor.pos[Z] = current_waypoint_->z;
-            waypoint_coor.heading = maths_deg_to_rad(current_waypoint_->param4);
+            waypoint_coor.pos[X] = current_waypoint->x;
+            waypoint_coor.pos[Y] = current_waypoint->y;
+            waypoint_coor.pos[Z] = current_waypoint->z;
+            waypoint_coor.heading = maths_deg_to_rad(current_waypoint->param4);
             waypoint_coor.origin = coord_conventions_local_to_global_position(waypoint_coor);
             break;
 
@@ -1350,16 +1467,16 @@ static local_position_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoin
             //mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
             break;
         case MAV_FRAME_GLOBAL_RELATIVE_ALT:
-            waypoint_global.latitude = current_waypoint_->x;
-            waypoint_global.longitude = current_waypoint_->y;
-            waypoint_global.altitude = current_waypoint_->z;
-            waypoint_global.heading     = maths_deg_to_rad(current_waypoint_->param4);
+            waypoint_global.latitude = current_waypoint->x;
+            waypoint_global.longitude = current_waypoint->y;
+            waypoint_global.altitude = current_waypoint->z;
+            waypoint_global.heading     = maths_deg_to_rad(current_waypoint->param4);
 
             origin_relative_alt = origin;
             origin_relative_alt.altitude = 0.0f;
             waypoint_coor = coord_conventions_global_to_local_position(waypoint_global, origin_relative_alt);
 
-            waypoint_coor.heading = maths_deg_to_rad(current_waypoint_->param4);
+            waypoint_coor.heading = maths_deg_to_rad(current_waypoint->param4);
 
             print_util_dbg_print("LocalOrigin: lat (x1e7):");
             print_util_dbg_print_num(origin_relative_alt.latitude * 10000000, 10);
@@ -1383,7 +1500,130 @@ static local_position_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoin
 
     }
 
-    return waypoint_coor;
+    wpt.waypoint = waypoint_coor;
+    // WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
+    wpt.radius = current_waypoint->param2;
+    wpt.loiter_time = current_waypoint->param1;
+
+    *dubin_state = DUBIN_INIT;
+
+    return wpt;
+}
+
+void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* waypoint_next_)
+{
+    float rel_pos[3];
+
+    rel_pos[Z] = 0.0f;
+
+    float dir_init_bf[3], dir_init[3], init_radius;
+
+    float scalar_product, heading_diff;
+
+    quat_t q_rot;
+    aero_attitude_t attitude_yaw;
+
+    switch(navigation_.dubin_state)
+    {
+        case DUBIN_INIT:
+            print_util_dbg_print("DUBIN_INIT\r\n");
+            if (state_.nav_plan_active)
+            {
+                init_radius = maths_f_abs(navigation_.goal.radius);
+            }
+            else
+            {
+                init_radius = navigation_.minimal_radius;
+            }
+
+            dir_init_bf[X] = init_radius;
+            dir_init_bf[Y] = 0.0f;
+            dir_init_bf[Z] = 0.0f;
+
+            attitude_yaw = coord_conventions_quat_to_aero(navigation_.qe);
+            attitude_yaw.rpy[ROLL] = 0.0f;
+            attitude_yaw.rpy[PITCH] = 0.0f;
+            attitude_yaw.rpy[YAW] = attitude_yaw.rpy[2];
+            q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+
+            quaternions_rotate_vector(q_rot, dir_init_bf, dir_init);
+
+            for (uint8_t i = 0; i < 2; ++i)
+            {
+                rel_pos[i] = waypoint_next_->waypoint.pos[i]- position_estimation_.local_position.pos[i];
+            }
+            rel_pos[Z] = 0.0f;
+
+            float dir_final[3];
+            float pos_goal[3];
+            float rel_pos_norm[3];
+
+            if (vectors_norm_sqr(rel_pos) > 0.1f)
+            {
+                vectors_normalize(rel_pos,rel_pos_norm);
+
+                dir_final[X] = -rel_pos_norm[Y]*waypoint_next_->radius;
+                dir_final[Y] = rel_pos_norm[X]*waypoint_next_->radius;
+                dir_final[Z] = 0.0f;
+
+                for (uint8_t i = 0; i < 2; ++i)
+                {
+                    pos_goal[i] = waypoint_next_->waypoint.pos[i] + rel_pos_norm[i]*maths_f_abs(waypoint_next_->radius);
+                }
+                pos_goal[Z] = 0.0f;
+
+                waypoint_next_->dubin = dubin_2d(    position_estimation_.local_position.pos,
+                                                    pos_goal,
+                                                    dir_init,
+                                                    dir_final,
+                                                    maths_sign(waypoint_next_->radius));
+
+                navigation_.dubin_state = DUBIN_CIRCLE1;
+            }
+            else
+            {
+                dir_final[X] = -dir_init[Y];
+                dir_final[Y] = dir_init[X];
+                dir_final[Z] = 0.0f;
+
+                for (uint8_t i = 0; i < 2; ++i)
+                {
+                    waypoint_next_->dubin.circle_center_2[i] = position_estimation_.local_position.pos[i];
+                }
+                waypoint_next_->dubin.circle_center_2[Z] = 0.0f;
+
+                navigation_.dubin_state = DUBIN_CIRCLE2;
+            }
+
+            break;
+        case DUBIN_CIRCLE1:
+            for (uint8_t i = 0; i < 2; ++i)
+            {
+                rel_pos[i] = waypoint_next_->dubin.tangent_point_2[i] - position_estimation_.local_position.pos[i];
+            }
+            // heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
+            heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(position_estimation_.vel[Y], position_estimation_.vel[X]));
+
+            if (maths_f_abs(heading_diff) < navigation_.heading_acceptance)
+            {
+                navigation_.dubin_state = DUBIN_STRAIGHT;
+            }
+            break;
+        case DUBIN_STRAIGHT:
+            for (uint8_t i = 0; i < 2; ++i)
+            {
+                rel_pos[i] = waypoint_next_->dubin.tangent_point_2[i] - position_estimation_.local_position.pos[i];
+            }
+
+            scalar_product = rel_pos[X] * waypoint_next_->dubin.line_direction[X] + rel_pos[Y] * waypoint_next_->dubin.line_direction[Y];
+            if (scalar_product < 0.0f)
+            {
+                navigation_.dubin_state = DUBIN_CIRCLE2;
+            }
+
+        case DUBIN_CIRCLE2:
+        break;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -1416,9 +1656,9 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
 {
     bool init_success = true;
 
-    navigation_.internal_state_ = Navigation::NAV_ON_GND;
-    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-    navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
+    // init waypoint navigation
+
+    next_waypoint_.current = 0;
 
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
@@ -1633,7 +1873,9 @@ void Mavlink_waypoint_handler::nav_plan_init()
             {
                 current_waypoint_index_ = i;
                 current_waypoint_ = waypoint_list[current_waypoint_index_];
-                waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&current_waypoint_, position_estimation_.local_position.origin);
+                waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(   &current_waypoint_,
+                                                                                    position_estimation_.local_position.origin,
+                                                                                    &navigation_.dubin_state);
 
                 print_util_dbg_print("Waypoint Nr");
                 print_util_dbg_print_num(i, 10);
@@ -1643,7 +1885,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
 
                 for (uint8_t j = 0; j < 3; j++)
                 {
-                    rel_pos[j] = waypoint_coordinates_.pos[j] - position_estimation_.local_position.pos[j];
+                    rel_pos[j] = waypoint_coordinates_.waypoint.pos[j] - position_estimation_.local_position.pos[j];
                 }
                 navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
             }
@@ -1655,21 +1897,84 @@ void Mavlink_waypoint_handler::hold_init(local_position_t local_pos)
 {
     hold_waypoint_set_ = true;
 
-    waypoint_hold_coordinates = local_pos;
+    switch(navigation_.navigation_strategy)
+    {
+        case Navigation::strategy_t::DIRECT_TO:
+            waypoint_hold_coordinates.waypoint = local_pos;
+            print_util_dbg_print("Position hold at: (");
+            print_util_dbg_print_num(waypoint_hold_coordinates.waypoint.pos[X], 10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_hold_coordinates.waypoint.pos[Y], 10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_hold_coordinates.waypoint.pos[Z], 10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.waypoint.heading * 180.0f / 3.14f), 10);
+            print_util_dbg_print(")\r\n");
+        break;
 
-    //waypoint_hold_coordinates.heading = coord_conventions_get_yaw(ahrs_->qe);
-    //waypoint_hold_coordinates.heading = local_pos.heading;
+        case Navigation::strategy_t::DUBIN:
+            switch (navigation_.dubin_state)
+            {
+                case DUBIN_INIT:
+                case DUBIN_CIRCLE1:
+                    // Staying on the waypoint
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        waypoint_hold_coordinates.dubin.circle_center_2[i] = navigation_.goal.dubin.circle_center_1[i];
+                    }
+                    waypoint_hold_coordinates.radius = navigation_.goal.dubin.radius_1;
 
-    print_util_dbg_print("Position hold at: (");
-    print_util_dbg_print_num(waypoint_hold_coordinates.pos[X], 10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_hold_coordinates.pos[Y], 10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_hold_coordinates.pos[Z], 10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.heading * 180.0f / 3.14f), 10);
-    print_util_dbg_print(")\r\n");
+                    navigation_.dubin_state = DUBIN_CIRCLE2;
 
+                    print_util_dbg_print("DUBINCIRCLE1: Position hold at: (");
+                    print_util_dbg_print_num(waypoint_hold_coordinates.dubin.circle_center_2[X],10);
+                    print_util_dbg_print(", ");
+                    print_util_dbg_print_num(waypoint_hold_coordinates.dubin.circle_center_2[Y],10);
+                    print_util_dbg_print(", ");
+                    print_util_dbg_print_num(waypoint_hold_coordinates.dubin.circle_center_2[Z],10);
+                    print_util_dbg_print(", ");
+                    print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.waypoint.heading*180.0f/3.14f),10);
+                    print_util_dbg_print(")\r\n");
+                break;
+
+                case DUBIN_STRAIGHT:
+                    navigation_.dubin_state = DUBIN_INIT;
+                    waypoint_hold_coordinates.waypoint = local_pos;
+
+                    waypoint_hold_coordinates.loiter_time = 0.0f;
+                    waypoint_hold_coordinates.radius = 30.0f;
+
+                    print_util_dbg_print("DUBINSTRAIGHT: Position hold at: (");
+                    print_util_dbg_print_num(waypoint_hold_coordinates.waypoint.pos[X],10);
+                    print_util_dbg_print(", ");
+                    print_util_dbg_print_num(waypoint_hold_coordinates.waypoint.pos[Y],10);
+                    print_util_dbg_print(", ");
+                    print_util_dbg_print_num(waypoint_hold_coordinates.waypoint.pos[Z],10);
+                    print_util_dbg_print(", ");
+                    print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.waypoint.heading*180.0f/3.14f),10);
+                    print_util_dbg_print(")\r\n");
+                break;
+
+                case DUBIN_CIRCLE2:
+                    // Staying on the waypoint
+                    if (state_.nav_plan_active)
+                    {
+                        waypoint_hold_coordinates = navigation_.goal;
+                    }
+
+                    print_util_dbg_print("DUBIN_CIRCLE2: Position hold at: (");
+                    print_util_dbg_print_num(waypoint_hold_coordinates.waypoint.pos[X],10);
+                    print_util_dbg_print(", ");
+                    print_util_dbg_print_num(waypoint_hold_coordinates.waypoint.pos[Y],10);
+                    print_util_dbg_print(", ");
+                    print_util_dbg_print_num(waypoint_hold_coordinates.waypoint.pos[Z],10);
+                    print_util_dbg_print(", ");
+                    print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.waypoint.heading*180.0f/3.14f),10);
+                    print_util_dbg_print(")\r\n");
+                break;
+            }
+        break;
+    }
 }
 
 void Mavlink_waypoint_handler::send_nav_time(const Mavlink_stream* mavlink_stream_, mavlink_message_t* msg)

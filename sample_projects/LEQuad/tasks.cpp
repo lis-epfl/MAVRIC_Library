@@ -42,7 +42,7 @@
 #include "sample_projects/LEQuad/tasks.hpp"
 #include "sample_projects/LEQuad/central_data.hpp"
 #include "communication/data_logging.hpp"
-
+#include "hal/common/time_keeper.hpp"
 
 void tasks_run_imu_update(Central_data* central_data)
 {
@@ -87,7 +87,7 @@ bool tasks_run_stabilisation(Central_data* central_data)
             central_data->controls = central_data->controls_nav;
             central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 
-            if ((central_data->state.mav_state_ == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))
+            if ( ((central_data->state.mav_state_ == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))  || (central_data->navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
             {
                 central_data->controls.yaw_mode = YAW_RELATIVE;
             }
