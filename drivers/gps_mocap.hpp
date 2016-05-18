@@ -30,49 +30,72 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_sim.hpp
+ * \file gps_mocap.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief Simulation for GPS
+ * \brief Expose data received from motion capture system as GPS data
  *
  ******************************************************************************/
 
 
-#ifndef GPS_SIM_HPP_
-#define GPS_SIM_HPP_
+#ifndef GPS_MOCAP_HPP_
+#define GPS_MOCAP_HPP_
 
+
+#include <array>
 
 #include "drivers/gps.hpp"
-#include "simulation/dynamic_model.hpp"
+#include "communication/mavlink_message_handler.hpp"
+
+extern "C"
+{
+#include "util/coord_conventions.h"
+}
+
 
 /**
- * \brief Simulation for GPS
+ * \brief Class to expose data received from motion capture system as GPS data
+ *
+ * \detail The mocap data is received via mavlink messages of type ATT_POS_MOCAP
  */
-class Gps_sim: public Gps
+class Gps_mocap: public Gps
 {
 public:
     /**
-     * \brief   Constructor
-     *
-     * \param   dynamic_model   Reference to dynamic model
+     * \brief   Configuration structure
      */
-    Gps_sim(Dynamic_model& dynamic_model);
+    typedef struct
+    {
+        global_position_t origin;
+        float horizontal_position_accuracy;
+        float vertical_position_accuracy;
+        float velocity_accuracy;
+        float heading_accuracy;
+    } conf_t;
+
+    /**
+     * \brief Constructor
+     */
+    Gps_mocap(Mavlink_message_handler& message_handler, conf_t config = default_config() );
 
 
     /**
-     * \brief   Initializes the gps
-     * 
-     * \return  Success
+     * \brief  Initializes callback to mavlink messages
+     *
+     * \return Success
      */
     bool init(void);
 
 
     /**
-     * \brief   Configure the GPS
+     * \brief   Method used to update internal state when a message is received
+     *
+     * \param   sysid         ID of the system
+     * \param   msg           Pointer to the incoming message
      */
-    void configure(void);
+    void callback(uint32_t sysid, mavlink_message_t* msg);
 
 
     /**
@@ -82,6 +105,12 @@ public:
      * \return  Success
      */
     bool update(void);
+
+
+    /**
+     * \brief   Configure the GPS
+     */
+    void configure(void);
 
 
     /**
@@ -187,23 +216,50 @@ public:
      */
     bool healthy(void) const;
 
-private:
-    Dynamic_model&      dynamic_model_;                     ///< Reference to dynamic model
+    /**
+     * \brief   Default configuration structure
+     *
+     * \return  config
+     */
+    static inline conf_t default_config();
 
-    float               last_update_us_;                    ///< Last update time in microseconds
-    float               last_position_update_us_;           ///< Last time position was updated in microseconds
-    float               last_velocity_update_us_;           ///< Last time velocity was updated in microseconds
-    global_position_t   global_position_;                   ///< Global position
-    float               horizontal_position_accuracy_;      ///< Accuracy of position on horizontal plane in m
-    float               vertical_position_accuracy_;        ///< Accuracy of position on vertical axis in m
-    std::array<float, 3> velocity_lf_;                      ///< 3D Velocity in local frame in m/s
-    float               velocity_accuracy_;                 ///< Accuracy of velocity in m/s
-    float               heading_;                           ///< Heading in degrees
-    float               heading_accuracy_;                  ///< Accuracy of heading in degrees
-    uint8_t             num_sats_;                          ///< Number of visible satelites
-    gps_fix_t           fix_;                               ///< Indicates whether a fix was acquired
-    bool                healthy_;                           ///< Indicates whether the measurements can be trusted
+private:
+    Mavlink_message_handler& message_handler_;         ///< Reference to message handler for callbacks
+    conf_t config_;                                    ///< Configuration
+
+    local_position_t local_position_;                  ///< Local position
+    std::array<float, 3> velocity_lf_;                 ///< Velocity in local frame
+    float heading_;                                    ///< Current heading
+    bool is_init_;                                     ///< Flag to prevent adding message callbacks several times
+    bool is_healthy_;                                  ///< Flag indicating if the gps is connected
+
+    float last_update_us_;                             ///< Last time the gps values were updated
 };
 
 
-#endif /* GPS_SIM_HPP_ */
+/**
+ * \brief   Default configuration structure
+ *
+ * \return  config
+ */
+inline Gps_mocap::conf_t Gps_mocap::default_config()
+{
+    conf_t conf = {};
+
+    // EPFL esplanade
+    conf.origin.latitude  = 46.51852236174565f;
+    conf.origin.longitude = 6.566044801857777f;
+    conf.origin.altitude  = 400.0f;
+    conf.origin.heading   = 0.0f;
+
+    // Accuracy
+    conf.horizontal_position_accuracy = 0.001f;
+    conf.vertical_position_accuracy   = 0.001f;
+    conf.velocity_accuracy            = 0.01f;
+    conf.heading_accuracy             = 0.1f;
+
+    return conf;
+};
+
+
+#endif /* GPS_MOCAP_HPP_ */

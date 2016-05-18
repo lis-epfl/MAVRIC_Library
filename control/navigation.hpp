@@ -158,14 +158,14 @@ public:
     internal_state_t internal_state_;                   ///< The internal state of the navigation module
     critical_behavior_enum critical_behavior;           ///< The critical behavior enum
     auto_landing_behavior_t auto_landing_behavior;      ///< The autolanding behavior enum
-    
+
+    float kp_yaw;                                       ///< The yaw gain in velocity control mode
 
     const quat_t& qe;                                   ///< The pointer to the attitude quaternion structure
 
 private:
     float dt;                                           ///< The time interval between two navigation updates
     uint32_t last_update;                               ///< The time of the last navigation update in ms
-    float kp_yaw;                                       ///< The yaw gain in velocity control mode
     uint32_t loop_count;                                ///< A counter for sending MAVLink messages at a lower rate than the function
     control_command_t& controls_nav;                    ///< The pointer to the navigation control structure
     const Position_estimation& position_estimation;     ///< The pointer to the position estimation structure in central_data

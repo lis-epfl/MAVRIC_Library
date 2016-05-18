@@ -667,7 +667,7 @@ bool Mavlink_waypoint_handler::take_off_handler()
         print_util_dbg_print("\r\n");
 
         waypoint_hold_coordinates = position_estimation_.local_position;
-        waypoint_hold_coordinates.pos[Z] = -10.0;
+        waypoint_hold_coordinates.pos[Z] = -config_.auto_take_off_altitude;     // change sign since NED!
 
         aero_attitude_t aero_attitude;
         aero_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
@@ -1375,7 +1375,7 @@ static local_position_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoin
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
             hold_waypoint_set_(false),
@@ -1396,7 +1396,8 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
             auto_landing_next_state_(0),
             last_mode_(state_.mav_mode()),
             ahrs_(ahrs_),
-            manual_control_(manual_control_)
+            manual_control_(manual_control_),
+            config_(config)
 {
     bool init_success = true;
 
@@ -1592,7 +1593,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     waypoint.x = 0.0f;
     waypoint.y = 0.0f;
-    waypoint.z = -10.0f;
+    waypoint.z = -config_.auto_take_off_altitude;
 
     waypoint.param1 = 10; // Hold time in decimal seconds
     waypoint.param2 = 2; // Acceptance radius in meters
