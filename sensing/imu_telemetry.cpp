@@ -98,14 +98,6 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
             print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start gyroscope calibration\r\n");
         }
     }
-    else
-    {
-        if (imu->stop_gyroscope_bias_calibration())
-        {
-            print_util_dbg_print("[IMU CALIB] Stop gyroscope calibration\r\n");
-        }
-    }
-
 
     // Magnetometer bias calibration
     if (packet->param2 == 1)
@@ -120,14 +112,6 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
             print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start magnetometer calibration\r\n");
         }
     }
-    else
-    {
-        if (imu->stop_magnetometer_bias_calibration())
-        {
-            print_util_dbg_print("[IMU CALIB] Stop magnetometer calibration\r\n");
-        }
-    }
-
 
     // Barometer calibration
     if (packet->param3 == 1)
@@ -144,7 +128,6 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
         print_util_dbg_print("[IMU CALIB] [ERROR] Barometer calibration unsupported\r\n");
     }
 
-
     // Accelerometer bias calibration
     if (packet->param5 == 1)
     {
@@ -156,13 +139,6 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
         else
         {
             print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start accelerometer calibration\r\n");
-        }
-    }
-    else
-    {
-        if (imu->stop_accelerometer_bias_calibration())
-        {
-            print_util_dbg_print("[IMU CALIB] Stop accelerometer calibration\r\n");
         }
     }
 
@@ -177,13 +153,6 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
         else
         {
             print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start magnetic north calibration\r\n");
-        }
-    }
-    else
-    {
-        if (imu->stop_magnetic_north_calibration())
-        {
-            print_util_dbg_print("[IMU CALIB] Stop magnetic north calibration\r\n");
         }
     }
 
