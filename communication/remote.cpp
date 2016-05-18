@@ -554,4 +554,5 @@ void remote_get_velocity_command(const remote_t* remote, velocity_command_t* com
     command->xyz[X] = - 10.0f * scale * remote_get_pitch(remote);
     command->xyz[Y] =   10.0f * scale * remote_get_roll(remote);
     command->xyz[Z] = - 1.5f  * scale * remote_get_throttle(remote);
+	command->mode = VELOCITY_COMMAND_MODE_SEMI_LOCAL;
 }

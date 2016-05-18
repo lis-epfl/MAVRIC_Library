@@ -281,6 +281,7 @@ void joystick_get_velocity_command(const joystick_t* joystick, velocity_command_
     command->xyz[X] = -10.0f * scale * joystick_get_pitch(joystick);
     command->xyz[Y] =  10.0f * scale * joystick_get_roll(joystick);
     command->xyz[Z] = -1.5f  * scale * joystick_get_throttle(joystick);
+    command->mode = VELOCITY_COMMAND_MODE_SEMI_LOCAL;
 }
 
 
