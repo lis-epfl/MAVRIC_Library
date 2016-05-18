@@ -686,6 +686,11 @@ bool Mavlink_waypoint_handler::take_off_handler()
             print_util_dbg_print("Automatic take-off finished, dist2wp_sqr (10x):");
             print_util_dbg_print_num(navigation_.dist2wp_sqr * 10.0f, 10);
             print_util_dbg_print(".\r\n");
+
+            // if a waypoint is defined, it will go towards the current one (waypoint_coordinates_)
+            // => reset its local position
+            waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&current_waypoint_, position_estimation_.local_position.origin);
+            waypoint_coordinates_.heading = position_estimation_.local_position.heading;
         }
     }
 
