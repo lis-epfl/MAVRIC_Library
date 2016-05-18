@@ -93,7 +93,6 @@
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "sensing/ahrs.h"
 #include "sensing/altitude.h"
 #include "control/pid_controller.h"
@@ -122,6 +121,7 @@ public:
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
         Navigation::conf_t navigation_config;
+	Mavlink_waypoint_handler::conf_t waypoint_handler_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
         Position_estimation::conf_t position_estimation_config;
@@ -255,6 +255,8 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
 
     conf.navigation_config = Navigation::default_config();
 
+    conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
+
     conf.qfilter_config = qfilter_default_config();
 
     conf.ahrs_ekf_config = Ahrs_ekf::default_config();
@@ -274,10 +276,10 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.velocity_controller_copter_config = velocity_controller_copter_default_config();
 
     /* Mavlink communication config */
-    Mavlink_communication::conf_t mavlink_communication_config = Mavlink_communication::default_config(sysid);
-    mavlink_communication_config.message_handler_config.debug = true;
+    Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);
+    mavlink_communication_config.message_handler_config.debug    = false;
     mavlink_communication_config.onboard_parameters_config.debug = true;
-    mavlink_communication_config.mavlink_stream_config.debug = true;
+    mavlink_communication_config.mavlink_stream_config.debug     = false;
     conf.mavlink_communication_config = mavlink_communication_config;
 
     return conf;

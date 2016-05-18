@@ -30,88 +30,74 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs_madgwick.h
+ * \file lequad_dronedome.hpp
  *
  * \author MAV'RIC Team
- * \author SOH Madgwick
- * \author Julien Lecoeur
  *
- * \brief Implementation of Madgwick's AHRS algorithms.
- *
- * See: http://www.x-io.co.uk/node/8#open_source_ahrs_and_imu_algorithms
- *
- * Date         Author          Notes
- * 29/09/2011   SOH Madgwick    Initial release
- * 02/10/2011   SOH Madgwick    Optimised for reduced CPU load
- * 19/02/2012   SOH Madgwick    Magnetometer measurement is normalised
- * 04/02/2014   Julien Lecoeur  Adapt to MAVRIC
+ * \brief Place where the central data is stored and initialized
  *
  ******************************************************************************/
 
 
-/**
- *   Disclaimer: this WIP
- */
+#ifndef LEQUAD_DRONEDOME_HPP_
+#define LEQUAD_DRONEDOME_HPP_
 
-
-#ifndef AHRS_MADGWICK_H_
-#define AHRS_MADGWICK_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#include "sensing/ahrs.h"
-#include "imu.h"
-
+#include "sample_projects/LEQuad/central_data.hpp"
+#include "drivers/gps_mocap.hpp"
 
 /**
- * \brief   Configuration for ahrs _madgwick
+ * \brief Central data for indoor use
  */
-typedef struct
+class LEQuad_dronedome: public Central_data
 {
-    float   beta;       // 2 * proportional gain (Kp)
-    float   zeta;           // Gain for gyro drift compensation
-} ahrs_madgwick_conf_t;
+public:
+    /**
+     * \brief   Constructor
+     */
+    LEQuad_dronedome( Imu& imu,
+                      Barometer& barometer,
+                      Gps& gps,
+                      Sonar& sonar,
+                      Serial& serial_mavlink,
+                      Satellite& satellite,
+                      Led& led,
+                      File& file_flash,
+                      Battery& battery,
+                      Servo& servo_0,
+                      Servo& servo_1,
+                      Servo& servo_2,
+                      Servo& servo_3,
+                      Servo& servo_4,
+                      Servo& servo_5,
+                      Servo& servo_6,
+                      Servo& servo_7,
+                      File& file1,
+                      File& file2,
+                      Central_data::conf_t config = Central_data::default_config() ):
+          Central_data(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
+                     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
+                     file1, file2, config),
+          gps_mocap_(mavlink_communication.message_handler())
+      {};
+
+      /**
+       * \brief   Initialisation
+       * \return [description]
+       */
+      bool init(void)
+      {
+          bool success = Central_data::init();
+
+          bool ret = gps_mocap_.init();
+          print_util_dbg_init_msg("[GPS_MOCAP]", ret);
+          success &= ret;
+
+          return success;
+      }
+
+private:
+    Gps_mocap gps_mocap_;
+};
 
 
-/**
- * \brief   Structure for the Madgwick attitude estimation filter
- */
-typedef struct
-{
-    imu_t*  imu;            // Pointer to IMU sensors
-    ahrs_t* ahrs;           // Estimated attitude
-    float   ref_b[3];       // Reference direction of magnetic flux in earth frame (x component)
-    float   beta;           // 2 * proportional gain (Kp)
-    float   zeta;           // Gain for gyro drift compensation
-} ahrs_madgwick_t;
-
-
-/**
- * \brief   Init function
- *
- * \param   ahrs_madgwick   Pointer to data structure
- * \param   config          Pointer to config structure
- * \param   ahrs            Pointer to AHRS structure
- * \param   imu             Pointer to IMU structure
- *
- * \return  True if success, false if not
- */
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
-
-
-/**
- * \brief   Main update function
- *
- * \param   ahrs_madgwick   Pointer to data structure
- */
-void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* AHRS_MADGWICK_H_ */
+#endif /* LEQUAD_DRONEDOME_HPP_ */

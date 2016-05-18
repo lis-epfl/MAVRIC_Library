@@ -157,6 +157,19 @@ float pid_controller_update(pid_controller_t* controller, float error);
 float pid_controller_update_dt(pid_controller_t* controller, float error, float dt);
 
 
+/**
+ * \brief               Update the PID controller for a given time step
+ *
+ * \param   controller  Pointer to the PID controller structure
+ * \param   error       Error in the controlled variable
+ * \param   feedforward Feed-forward
+ * \param   dt          Timestep
+ *
+ * \return              The controller output
+ */
+float pid_controller_update_feedforward_dt(pid_controller_t* controller, float error, float feedforward, float dt);
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -39,6 +39,7 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/central_data.hpp"
+
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
@@ -68,7 +69,7 @@ extern "C"
 int main(void)
 {
     bool init_success = true;
-    
+
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
@@ -171,13 +172,7 @@ int main(void)
         init_success = false;
     }
 
-    print_util_dbg_print("creating new log files\r\n");
-    delay_ms(150);
-
     init_success &= mavlink_telemetry_init(&cd);
-
-    print_util_dbg_print("mavlink_telemetry_init\r\n");
-    delay_ms(150);
 
     cd.state.mav_state_ = MAV_STATE_STANDBY;
 

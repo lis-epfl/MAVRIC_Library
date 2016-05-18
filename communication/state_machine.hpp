@@ -124,7 +124,8 @@ private:
      *                                                                                                                                                                                                                                                                                                   
      * \details checks if it is possible to set/clear the MAV_MODE_FLAG_STABILIZE of state_.mav_mode_
      *          The following checks are performed:
-     *          - position_estimation.healthy to set stabilize
+     *          - imu is ready to set stabilize
+     *          - ahrs is ready to set stabilize
      *
      * \param   stabilize      true to set stabilize flag, false to clear flag
      *

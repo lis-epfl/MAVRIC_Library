@@ -185,7 +185,11 @@ bool State_machine::update(State_machine* state_machine)
 
     state_machine->state_.connection_status();
 
-    state_machine->set_ctrl_mode(mode_new);
+    // try changing the control mode, if not allowed, reset flags of mode_new
+    if(!state_machine->set_ctrl_mode(mode_new))
+    {
+        mode_new.set_ctrl_mode(mode_current.ctrl_mode());
+    }
 
     // try arming/disarming, if not allowed, reset flag in mode_new
     if(!state_machine->state_.set_armed(mode_new.is_armed()))
@@ -299,7 +303,7 @@ bool State_machine::update(State_machine* state_machine)
 
         case MAV_STATE_EMERGENCY:
             // Recovery is not possible -> switch off motors
-            mode_new.set_armed_flag(false);
+            state_machine->state_.mav_mode().set_armed_flag(false);
 
             if (!state_machine->state_.battery_.is_low())
             {
@@ -327,16 +331,13 @@ bool State_machine::update(State_machine* state_machine)
             break;
     }
 
-    // Check simulation mode
-    mode_new.set_hil_flag(state_machine->state_.mav_mode().is_hil());
 
     // Finally, write new modes and states
-    state_machine->state_.mav_mode_       = mode_new;
     state_machine->state_.mav_state_       = state_new;
     state_machine->state_.mav_mode_custom = mode_custom_new;
 
     // overwrite internal state of joystick
-    state_machine->manual_control_.set_mode_of_source(mode_new);
+    state_machine->manual_control_.set_mode_of_source(state_machine->state_.mav_mode_);
 
     return true;
 }
@@ -349,7 +350,7 @@ bool State_machine::set_ctrl_mode(Mav_mode mode)
     // check if we can set/clear stabilize flag
     if(!is_set_stabilize_allowed(mode.is_stabilize()))
     {
-        print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because position estimation is not healthy\r\n");
+        print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because imu or ahrs not ready\r\n");
         success = false;
     }
 
@@ -393,11 +394,11 @@ bool State_machine::is_set_stabilize_allowed(bool stabilize)
     // if already in desired state, skip tests and return true
     if(state_.is_stabilize() != stabilize)
     {
-        // if we change to stabilize, test if position estimation is healthy
+        // if we change to stabilize, test if imu is healthy and ahrs is ready
         if(success & stabilize)
         {
             // if position_estimation is not healthy, abort
-            success &= position_estimation_.healthy();
+            success &= (imu_.is_ready() && ahrs_.internal_state == AHRS_READY);
         }
     }
     return success;

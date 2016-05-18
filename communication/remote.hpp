@@ -310,11 +310,35 @@ void remote_get_control_command(remote_t* remote, control_command_t* controls);
 /**
  * \brief   Sets the velocity command vector from the remote
  *
- * \param   remote  The pointer to the remote structure
+ * \param   remote              The pointer to the remote structure
  * \param   controls            The pointer to the controls structure
  */
 void remote_get_velocity_vector(remote_t* remote, control_command_t* controls);
 
+/**
+ * \brief   Sets the rate command from the remote (rpy and thrust values)
+ * 
+ * \param   remote              The pointer to the remote structure
+ * \param   controls            The pointer to the controls structure
+ */
+ void remote_get_rate_command_wing(remote_t* remote, control_command_t* controls);
+
+/**
+ * \brief   Sets the attitude (angles) command from the remote for the wing
+ *
+ * \param   remote              The pointer to the remote structure
+ * \param   controls            The pointer to the controls structure
+ */
+void remote_get_angle_command_wing(remote_t* remote, control_command_t* controls);
+
+/**
+ * \brief   Sets the velocity command vector from the remote for the wing
+ *
+ * \param   remote              The pointer to the remote structure
+ * \param   ki_yaw              The yaw integrator gain
+ * \param   controls            The pointer to the controls structure
+ */
+void remote_get_velocity_wing(remote_t* remote, const float ki_yaw, control_command_t* controls);
 
 /**
  * \brief   Compute torque command from the remote
