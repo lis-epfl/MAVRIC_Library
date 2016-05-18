@@ -765,7 +765,7 @@ mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_ha
         {
             waypoint_handler->navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
         }
-        else if (waypoint_handler->last_mode_.is_guided())  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        else if (waypoint_handler->last_mode_.ctrl_mode() == Mav_mode::POSITION_HOLD)  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         {
             waypoint_handler->navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
         }
@@ -917,7 +917,7 @@ void Mavlink_waypoint_handler::state_machine()
 
             if (thrust > -0.7f)
             {
-                if (mode_local.is_guided() || mode_local.is_auto())
+                if (!mode_local.is_manual())
                 {
                     hold_waypoint_set_ = false;
                     navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
@@ -940,13 +940,13 @@ void Mavlink_waypoint_handler::state_machine()
                 {
                     navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
                 }
-                else if (mode_local.is_guided())
+                else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
                 {
                     navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
                 }
             }
 
-            if (!mode_local.is_guided() && !mode_local.is_auto())
+            if (mode_local.is_manual())
             {
                 print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_TAKEOFF\r\n");
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
@@ -958,7 +958,7 @@ void Mavlink_waypoint_handler::state_machine()
             {
                 navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
             }
-            else if (mode_local.is_guided())
+            else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
             {
                 print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
                 hold_init(position_estimation_.local_position);
@@ -986,16 +986,16 @@ void Mavlink_waypoint_handler::state_machine()
 
             if (!mode_local.is_auto())
             {
-                if (mode_local.is_guided())
+                if (mode_local.is_manual())
+                {
+                    print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_NAVIGATING\r\n");
+                    navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
+                }
+                else
                 {
                     print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_NAVIGATING\r\n");
                     hold_init(position_estimation_.local_position);
                     navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
-                }
-                else
-                {
-                    print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_NAVIGATING\r\n");
-                    navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
                 }
             }
 
@@ -1015,7 +1015,7 @@ void Mavlink_waypoint_handler::state_machine()
                 navigation_.dubin_state = DUBIN_INIT;
                 navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
             }
-            else if (!mode_local.is_guided())
+            else if (mode_local.is_manual())
             {
                 print_util_dbg_print("Switching to Navigation::NAV_MANUAL_CTRL from Navigation::NAV_HOLD_POSITION\r\n");
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
@@ -1029,7 +1029,7 @@ void Mavlink_waypoint_handler::state_machine()
             }
             navigation_.goal = waypoint_hold_coordinates;
 
-            if ( !mode_local.is_auto() && !mode_local.is_guided())
+            if ( mode_local.is_manual())
             {
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
             }
@@ -1044,7 +1044,7 @@ void Mavlink_waypoint_handler::state_machine()
 
             navigation_.goal = waypoint_hold_coordinates;
 
-            if (!mode_local.is_auto() && !mode_local.is_guided())
+            if (mode_local.is_manual())
             {
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
             }
@@ -1060,7 +1060,7 @@ void Mavlink_waypoint_handler::state_machine()
 
             navigation_.goal = waypoint_hold_coordinates;
 
-            if ( !mode_local.is_auto() && !mode_local.is_guided())
+            if (mode_local.is_manual())
             {
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
             }
@@ -1788,7 +1788,7 @@ bool Mavlink_waypoint_handler::update(Mavlink_waypoint_handler* waypoint_handler
 
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mode_local.is_stabilize())
+            if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
             {
                 if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_LANDING))
                 {

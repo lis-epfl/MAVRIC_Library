@@ -44,6 +44,7 @@
 #include "communication/data_logging.hpp"
 #include "hal/common/time_keeper.hpp"
 
+
 void tasks_run_imu_update(Central_data* central_data)
 {
     central_data->imu.update();
@@ -58,82 +59,72 @@ bool tasks_run_stabilisation(Central_data* central_data)
 
     const State& state = central_data->state;
 
+    bool failsafe = false;
+
     if (state.is_armed())
     {
-        if (state.is_auto())
+        switch(state.mav_mode().ctrl_mode())
         {
-            central_data->controls = central_data->controls_nav;
-            central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
+            case Mav_mode::GPS_NAV:
+                central_data->controls = central_data->controls_nav;
+                central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 
-            // if no waypoints are set, we do position hold therefore the yaw mode is absolute
-            if (((central_data->state.nav_plan_active && (central_data->navigation.internal_state_ == Navigation::NAV_NAVIGATING)) || (central_data->navigation.internal_state_ == Navigation::NAV_STOP_THERE)) || ((central_data->state.mav_state_ == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
-            {
+                // if no waypoints are set, we do position hold therefore the yaw mode is absolute
+                if (((central_data->state.nav_plan_active && (central_data->navigation.internal_state_ == Navigation::NAV_NAVIGATING)) || (central_data->navigation.internal_state_ == Navigation::NAV_STOP_THERE)) || ((central_data->state.mav_state_ == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
+                {
+                    central_data->controls.yaw_mode = YAW_RELATIVE;
+                }
+                else
+                {
+                    central_data->controls.yaw_mode = YAW_ABSOLUTE;
+                }
+                break;
+        
+            case Mav_mode::POSITION_HOLD:
+                central_data->controls = central_data->controls_nav;
+                central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
+
+                if ( ((central_data->state.mav_state_ == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))  || (central_data->navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
+                {
+                    central_data->controls.yaw_mode = YAW_RELATIVE;
+                }
+                else
+                {
+                    central_data->controls.yaw_mode = YAW_ABSOLUTE;
+                }
+                break;
+
+            case Mav_mode::VELOCITY:
+                central_data->manual_control.get_velocity_vector(&central_data->controls);
+                central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
                 central_data->controls.yaw_mode = YAW_RELATIVE;
-            }
-            else
-            {
-                central_data->controls.yaw_mode = YAW_ABSOLUTE;
-            }
+                break;
 
-            //if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
-            if (true)//central_data->navigation.internal_state_ > NAV_ON_GND)
-            {
-                stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
-                servos_mix_quadcopter_diag_update(&central_data->servo_mix);
-            }
-        }
-        else if (state.is_guided())
-        {
-            central_data->controls = central_data->controls_nav;
-            central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
-
-            if ( ((central_data->state.mav_state_ == MAV_STATE_CRITICAL) && (central_data->navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))  || (central_data->navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
-            {
+            case Mav_mode::ATTITUDE:
+                central_data->manual_control.get_control_command(&central_data->controls);
+                central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
                 central_data->controls.yaw_mode = YAW_RELATIVE;
-            }
-            else
-            {
-                central_data->controls.yaw_mode = YAW_ABSOLUTE;
-            }
+                break;
 
-            //if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
-            if (true)//central_data->navigation.internal_state_ > NAV_ON_GND)
-            {
-                stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
-                servos_mix_quadcopter_diag_update(&central_data->servo_mix);
-            }
+            //case Mav_mode::RATE:
+            //    central_data->manual_control.get_rate_command(&central_data->controls);
+            //    central_data->controls.control_mode = RATE_COMMAND_MODE;
+            //    break;
+
+            default:
+                failsafe = true;    // undefined behaviour -> failsafe
         }
-        else if (state.is_stabilize())
-        {
-            central_data->manual_control.get_velocity_vector(&central_data->controls);
+    }
+    else    // !state.is_armed()
+    {
+        failsafe = true;    // undefined behaviour -> failsafe
+    }
 
-            central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
-            central_data->controls.yaw_mode = YAW_RELATIVE;
-
-            //if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
-            if (true)//central_data->navigation.internal_state_ > NAV_ON_GND)
-            {
-                stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
-                servos_mix_quadcopter_diag_update(&central_data->servo_mix);
-            }
-        }
-        else if (state.is_manual())
-        {
-            central_data->manual_control.get_control_command(&central_data->controls);
-
-            central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
-            central_data->controls.yaw_mode = YAW_RELATIVE;
-
-            stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
-            servos_mix_quadcopter_diag_update(&central_data->servo_mix);
-        }
-        else
-        {
-            central_data->servo_0.failsafe();
-            central_data->servo_1.failsafe();
-            central_data->servo_2.failsafe();
-            central_data->servo_3.failsafe();
-        }
+    // if behaviour defined, execute controller and mix; otherwise: set servos to failsafe
+    if(!failsafe)
+    {
+        stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+        servos_mix_quadcopter_diag_update(&central_data->servo_mix);
     }
     else
     {

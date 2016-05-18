@@ -392,7 +392,7 @@ bool Navigation::update(Navigation* navigation)
 
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mode_local.is_stabilize())
+            if (mode_local.is_guided())
             {
                 if ((navigation->internal_state_ == NAV_NAVIGATING) || (navigation->internal_state_ == NAV_LANDING))
                 {
