@@ -228,7 +228,6 @@ public:
      */
     static inline conf_t wing_default_config();
 
-    friend bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, Central_data* central_data);
     friend bool state_telemetry_set_mode(State* state, mav_mode_t mav_mode);
     friend mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_command_long_t* packet);
 
@@ -236,6 +235,7 @@ public:
 // All this should be private
 
     mav_state_t mav_state_;                              ///< The value of the MAV state
+    mav_mode_t mav_mode_;                               ///< The value of the MAV mode
     mav_mode_custom_t mav_mode_custom;                  ///< The value of the custom_mode
 
     uint8_t autopilot_type;                             ///< The type of the autopilot (MAV_TYPE enum in common.h)
@@ -267,7 +267,6 @@ public:
     Battery& battery_;                                  ///< Pointer to battery structure
 
 private:
-    mav_mode_t mav_mode_;                               ///< The value of the MAV mode
     Mavlink_stream&   mavlink_stream_;                  ///< Mavlink communication, used to inform ground station of state and capabilities of drone
 };
 

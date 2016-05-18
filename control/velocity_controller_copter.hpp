@@ -95,7 +95,7 @@ typedef struct
  * \param   attitude_command    Pointer to attitude command (output)
  * \param   thrust_command      Pointer to thrust command (output)
  */
-void velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const Position_estimation* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command);
+bool velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const Position_estimation* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command);
 
 
 /**
@@ -103,7 +103,7 @@ void velocity_controller_copter_init(velocity_controller_copter_t* controller, v
  *
  * \param   controller      Pointer to data structure
  */
-void velocity_controller_copter_update(velocity_controller_copter_t* controller);
+bool velocity_controller_copter_update(velocity_controller_copter_t* controller);
 
 
 #endif /* VELOCITY_CONTROLLER_COPTER_H_ */

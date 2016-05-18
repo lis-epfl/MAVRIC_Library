@@ -203,8 +203,8 @@ private:
     uint32_t last_update;                               ///< The time of the last navigation update in ms
     uint32_t loop_count;                                ///< A counter for sending MAVLink messages at a lower rate than the function
     control_command_t& controls_nav;                    ///< The pointer to the navigation control structure
-    const Position_estimation& position_estimation;     ///< The pointer to the position estimation structure in central_data
-    State& state;                                       ///< The pointer to the state structure in central_data
+    const Position_estimation& position_estimation;     ///< The pointer to the position estimation structure
+    State& state;                                       ///< The pointer to the state structure
     const Mavlink_stream& mavlink_stream;               ///< The pointer to the MAVLink stream structure
 
     /**

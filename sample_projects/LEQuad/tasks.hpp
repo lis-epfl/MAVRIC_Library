@@ -42,7 +42,7 @@
 #ifndef TASKS_H_
 #define TASKS_H_
 
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/lequad.hpp"
 #include "hal/common/led.hpp"
 
 /**
@@ -50,13 +50,13 @@
  *
  * \return  The initialization status, succeed == true
  */
-bool tasks_create_tasks(Central_data* central_data);
+bool tasks_create_tasks(LEQuad* mav);
 
 
 /**
  * \brief            Updates the IMU
  */
-void tasks_run_imu_update(Central_data* central_data);
+void tasks_run_imu_update(LEQuad* mav);
 
 
 /**
@@ -74,30 +74,30 @@ void tasks_rc_user_channels(uint8_t* chan_switch, signal_quality_t* rc_check, in
 /**
  * \brief            Run the main stabilisation loop
  */
-bool tasks_run_stabilisation(Central_data* central_data);
+bool tasks_run_stabilisation(LEQuad* mav);
 
 
 /**
  * \brief            Run GPS update
  */
-bool tasks_run_gps_update(Central_data* central_data);
+bool tasks_run_gps_update(LEQuad* mav);
 
 
 /**
  * \brief            Run the navigation task
  */
-bool tasks_run_navigation_update(Central_data* central_data);
+bool tasks_run_navigation_update(LEQuad* mav);
 
 
 /**
  * \brief            Run the barometer task
  */
-bool tasks_run_barometer_update(Central_data* central_data);
+bool tasks_run_barometer_update(LEQuad* mav);
 
 /**
  * \brief            Run the sonar task
  */
-bool sonar_update(Central_data* central_data);
+bool sonar_update(LEQuad* mav);
 
 /**
  * \brief            Run the LED toggle task
@@ -107,6 +107,6 @@ bool tasks_led_toggle(Led* led);
 /**
  * \brief            Run the data_logging task
  */
-bool tasks_data_logging_update(Central_data* central_data);
+bool tasks_data_logging_update(LEQuad* mav);
 
 #endif /* TASKS_H_ */

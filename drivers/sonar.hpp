@@ -117,4 +117,12 @@ public:
     virtual const bool& healthy(void) const = 0;
 };
 
+/**
+ * \brief  Glue method for scheduler
+ */
+static inline bool task_sonar_update(Sonar* sonar)
+{
+    return sonar->update();
+};
+
 #endif /* SONAR_HPP_ */

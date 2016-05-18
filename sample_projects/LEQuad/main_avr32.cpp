@@ -38,10 +38,9 @@
  *
  ******************************************************************************/
 
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/lequad.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
 
 // #include "hal/dummy/file_dummy.hpp"
@@ -88,11 +87,11 @@ int main(void)
     File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
 
     // -------------------------------------------------------------------------
-    // Create central data
+    // Create MAV
     // -------------------------------------------------------------------------
-    // Create central data using real sensors
-    Central_data::conf_t cd_config = Central_data::default_config(MAVLINK_SYS_ID);
-    Central_data cd = Central_data(board.imu,
+    // Create MAV using real sensors
+    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    LEQuad mav = LEQuad(board.imu,
                                    board.bmp085,
                                    board.gps_ublox,
                                    board.sonar_i2cxl,      // Warning:
@@ -111,7 +110,7 @@ int main(void)
                                    board.servo_7,
                                    file_log,
                                    file_stat,
-                                   cd_config );
+                                   mav_config );
 
     // -------------------------------------------------------------------------
     // Create simulation
@@ -137,8 +136,8 @@ int main(void)
     //                                  sim.magnetometer() );
 
     // // set the flag to simulation
-    // cd_config.state_config.simulation_mode = HIL_ON;
-    // Central_data cd = Central_data( MAVLINK_SYS_ID,
+    // mav_config.state_config.simulation_mode = HIL_ON;
+    // LEQuad mav = LEQuad( MAVLINK_SYS_ID,
     //                              sim_imu,
     //                              sim.barometer(),
     //                              sim.gps(),
@@ -154,13 +153,12 @@ int main(void)
     //                              sim_servo_3 ,
     //                              file_log,
     //                              file_stat,
-    //                              cd_config );
+    //                              mav_config );
 
-    // Init central data
-    init_success &= cd.init();
+    // Init MAV
+    init_success &= mav.init();
 
-    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
-    init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
+    Onboard_parameters* onboard_parameters = &mav.mavlink_communication.onboard_parameters();
 
     print_util_dbg_print("onboard_parameters\r\n");
     delay_ms(150);
@@ -172,11 +170,9 @@ int main(void)
         init_success = false;
     }
 
-    init_success &= mavlink_telemetry_init(&cd);
+    mav.state.mav_state_ = MAV_STATE_STANDBY;
 
-    cd.state.mav_state_ = MAV_STATE_STANDBY;
-
-    init_success &= tasks_create_tasks(&cd);
+    init_success &= tasks_create_tasks(&mav);
 
     print_util_dbg_print("tasks_create_tasks\r\n");
     delay_ms(150);
@@ -200,7 +196,7 @@ int main(void)
     // -------------------------------------------------------------------------
     while (1 == 1)
     {
-        cd.scheduler.update();
+        mav.scheduler.update();
     }
 
     return 0;

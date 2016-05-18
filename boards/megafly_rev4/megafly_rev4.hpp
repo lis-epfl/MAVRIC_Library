@@ -72,12 +72,12 @@ extern "C"
 
 // Preprocessor definitions
 
-/* 
+/*
  * Should the ESC be calibrated?
  * 0 for false (normal flight)
  * 1 for true (calibration)
  * !!!IMPORTANT!!!
- * IF CALIBRATING, TAKE OFF PROPS 
+ * IF CALIBRATING, TAKE OFF PROPS
  */
 #define CALIBRATE_ESC 0
 
@@ -181,8 +181,6 @@ private:
      * \brief   Initialize the hardware related elements (communication lines, sensors devices, etc)
      *
      * \detail  Legacy function: TODO move to init() method
-     *
-     * \param   central_data        The pointer to the structure where all central data is stored
      *
      * \return  The initialization status of each module, succeed == true
      */

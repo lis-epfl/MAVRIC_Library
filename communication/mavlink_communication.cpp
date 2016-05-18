@@ -209,9 +209,19 @@ Mavlink_message_handler& Mavlink_communication::message_handler()
     return message_handler_;
 }
 
+Mavlink_message_handler* Mavlink_communication::p_message_handler()
+{
+    return &message_handler_;
+}
+
 Mavlink_stream& Mavlink_communication::mavlink_stream()
 {
     return mavlink_stream_;
+}
+
+Mavlink_stream* Mavlink_communication::p_mavlink_stream()
+{
+    return &mavlink_stream_;
 }
 
 Onboard_parameters& Mavlink_communication::onboard_parameters()
@@ -219,6 +229,10 @@ Onboard_parameters& Mavlink_communication::onboard_parameters()
     return onboard_parameters_;
 }
 
+Onboard_parameters* Mavlink_communication::p_onboard_parameters()
+{
+    return &onboard_parameters_;
+}
 
 uint32_t Mavlink_communication::sysid()
 {

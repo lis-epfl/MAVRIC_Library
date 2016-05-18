@@ -30,11 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file central_data.h
+ * \file lequad.h
  *
  * \author MAV'RIC Team
  *
- * \brief Place where the central data is stored and initialized
+ * \brief MAV class
  *
  ******************************************************************************/
 
@@ -44,9 +44,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
-
-
 
 
 #include "communication/data_logging.hpp"
@@ -105,13 +102,13 @@ extern "C"
 
 
 /**
- * \brief The central data structure
+ * \brief MAV class
  */
-class Central_data
+class LEQuad
 {
 public:
     /**
-     * \brief   Configuration of the module central data module
+     * \brief   Configuration structure
      */
      struct conf_t
     {
@@ -121,7 +118,7 @@ public:
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
         Navigation::conf_t navigation_config;
-	Mavlink_waypoint_handler::conf_t waypoint_handler_config;
+	      Mavlink_waypoint_handler::conf_t waypoint_handler_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
         Position_estimation::conf_t position_estimation_config;
@@ -146,7 +143,7 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data( Imu& imu,
+    LEQuad( Imu& imu,
                   Barometer& barometer,
                   Gps& gps,
                   Sonar& sonar,
@@ -169,10 +166,25 @@ public:
 
     /**
      * \brief   Initialisation
-     * \return [description]
+
+     * \return  success
      */
     bool init(void);
 
+    bool init_state(void);
+    bool init_data_logging(void);
+    bool init_gps(void);
+    bool init_imu(void);
+    bool init_attitude_estimation(void);
+    bool init_position_estimation(void);
+    bool init_stabilisers(void);
+    bool init_navigation(void);
+    bool init_hud(void);
+    bool init_servos(void);
+    bool init_barometer(void);
+    bool init_manual_control(void);
+
+    bool task_main(void);
 
     /**
      * Public members
@@ -195,7 +207,7 @@ public:
     Servo&          servo_6;            ///< Reference to servos structure
     Servo&          servo_7;            ///< Reference to servos structure
 
-    Manual_control manual_control;                            ///< The joystick parsing structure
+    Manual_control manual_control;                              ///< The joystick parsing structure
 
     State state;                                                ///< The structure with all state information
 
@@ -203,8 +215,6 @@ public:
     Mavlink_communication mavlink_communication;
 
     servos_mix_quadcotper_diag_t servo_mix;
-
-    qfilter_t attitude_filter;                                  ///< The qfilter structure
 
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
@@ -218,7 +228,7 @@ public:
     Navigation navigation;                                      ///< The structure to perform GPS navigation
     Mavlink_waypoint_handler waypoint_handler;
 
-    State_machine state_machine;                              ///< The structure for the state machine
+    State_machine state_machine;                                ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;
@@ -227,22 +237,17 @@ public:
     Data_logging    data_logging_stat;
 
     command_t                       command;
-    attitude_controller_t           attitude_controller;
-    velocity_controller_copter_t    velocity_controller;
-    vector_field_waypoint_t         vector_field_waypoint;
+    // attitude_controller_t           attitude_controller;
+    // velocity_controller_copter_t    velocity_controller;
+    // vector_field_waypoint_t         vector_field_waypoint;
 
-    altitude_t                      altitude_;
-    Altitude_estimation             altitude_estimation_;
-    Altitude_controller             altitude_controller_;
-
-private:
-    uint8_t sysid_;                 ///< System ID
-
+protected:
+    uint8_t sysid_;    ///< System ID
     conf_t config_;    ///< Configuration
 };
 
 
-Central_data::conf_t Central_data::default_config(uint8_t sysid)
+LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 {
     conf_t conf                                                = {};
 

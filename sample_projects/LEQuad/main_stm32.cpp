@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 #include "boards/mavrimini.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/lequad.hpp"
 #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
 
@@ -71,9 +71,9 @@ int main(int argc, char** argv)
     File_dummy dummy_file2;
 
     // -------------------------------------------------------------------------
-    // Create central data
+    // Create MAV
     // -------------------------------------------------------------------------
-    // Create central data using simulated sensors
+    // Create MAV using simulated sensors
     Central_data::conf_t cd_config = Central_data::default_config(sysid);
     Central_data cd = Central_data(board.imu,
                                    board.sim.barometer(),
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
                                    dummy_file2,
                                    cd_config );
 
-    // Init central data
+    // Init MAV
     init_success &= cd.init();
 
 
@@ -106,7 +106,6 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
 
     Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
-    init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
 
     // // Try to read from flash, if unsuccessful, write to flash
     // if (onboard_parameters->read_parameters_from_storage() == false)
@@ -114,8 +113,6 @@ int main(int argc, char** argv)
     //     // onboard_parameters->write_parameters_to_storage();
     //     init_success = false;
     // }
-
-    init_success &= mavlink_telemetry_init(&cd);
 
     cd.state.mav_state_ = MAV_STATE_STANDBY;
 

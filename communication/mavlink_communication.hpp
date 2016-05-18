@@ -140,22 +140,25 @@ public:
      * \brief   Returns scheduler
      */
     Scheduler& scheduler();
-    
+
     /*
      * \brief   Returns message_handler
      */
     Mavlink_message_handler& message_handler();
+    Mavlink_message_handler* p_message_handler();
 
     /*
      * \brief   Returns mavlink_stream
      */
     Mavlink_stream& mavlink_stream();
+    Mavlink_stream* p_mavlink_stream();
 
     /*
      * \brief   Returns onboard_parameters struct
      */
     Onboard_parameters& onboard_parameters();
-  
+    Onboard_parameters* p_onboard_parameters();
+
     /**
      * \brief   Run task scheduler update if the buffer is empty
      *
@@ -163,7 +166,7 @@ public:
      *
      * \return  Task status return
      */
-    static bool update(Mavlink_communication* mavlink_communication);  
+    static bool update(Mavlink_communication* mavlink_communication);
 
 private:
 
@@ -176,7 +179,7 @@ private:
         send_msg_function_t function;                                   ///<    Pointer to the function to be executed
         handling_telemetry_module_struct_t      module_struct;          ///<    Pointer to module data structure to be given as argument to the function
     };
-    
+
     Scheduler                   scheduler_;                      ///<    Task set for scheduling of down messages
     Mavlink_stream              mavlink_stream_;                 ///<    Mavlink interface using streams
     Mavlink_message_handler     message_handler_;                ///<    Message handler

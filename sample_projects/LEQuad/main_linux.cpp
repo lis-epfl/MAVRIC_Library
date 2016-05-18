@@ -39,9 +39,8 @@
  ******************************************************************************/
 
 #include "boards/mavrinux.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/lequad.hpp"
 
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
 #include "sample_projects/LEQuad/tasks.hpp"
 
 extern "C"
@@ -85,41 +84,40 @@ int main(int argc, char** argv)
     board.sim.update();
 
     // -------------------------------------------------------------------------
-    // Create central data
+    // Create MAV
     // -------------------------------------------------------------------------
-    // Create central data using simulated sensors
-    Central_data::conf_t cd_config = Central_data::default_config(sysid);
-    cd_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
-    cd_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
-    cd_config.state_config.simulation_mode = HIL_ON;
+    // Create MAV using simulated sensors
+    LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
+    mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
+    mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
+    mav_config.state_config.simulation_mode = HIL_ON;
 
-    Central_data cd = Central_data(board.imu,
-                                   board.sim.barometer(),
-                                   board.sim.gps(),
-                                   board.sim.sonar(),
-                                   board.mavlink_serial,
-                                   board.spektrum_satellite,
-                                   board.led,
-                                   board.file_flash,
-                                   board.battery,
-                                   board.servo_0,
-                                   board.servo_1,
-                                   board.servo_2,
-                                   board.servo_3,
-                                   board.servo_4,
-                                   board.servo_5,
-                                   board.servo_6,
-                                   board.servo_7,
-                                   file_log,
-                                   file_stat,
-                                   cd_config);
+    LEQuad mav = LEQuad(board.imu,
+                       board.sim.barometer(),
+                       board.sim.gps(),
+                       board.sim.sonar(),
+                       board.mavlink_serial,
+                       board.spektrum_satellite,
+                       board.led,
+                       board.file_flash,
+                       board.battery,
+                       board.servo_0,
+                       board.servo_1,
+                       board.servo_2,
+                       board.servo_3,
+                       board.servo_4,
+                       board.servo_5,
+                       board.servo_6,
+                       board.servo_7,
+                       file_log,
+                       file_stat,
+                       mav_config);
 
-    // Init central data
-    init_success &= cd.init();
+    // Init MAV
+    init_success &= mav.init();
 
 
-    Onboard_parameters* onboard_parameters = &cd.mavlink_communication.onboard_parameters();
-    init_success &= mavlink_telemetry_add_onboard_parameters(onboard_parameters, &cd);
+    Onboard_parameters* onboard_parameters = &mav.mavlink_communication.onboard_parameters();
 
     // Try to read from flash, if unsuccessful, write to flash
     if (onboard_parameters->read_parameters_from_storage() == false)
@@ -128,11 +126,9 @@ int main(int argc, char** argv)
         init_success = false;
     }
 
-    init_success &= mavlink_telemetry_init(&cd);
+    mav.state.mav_state_ = MAV_STATE_STANDBY;
 
-    cd.state.mav_state_ = MAV_STATE_STANDBY;
-
-    init_success &= tasks_create_tasks(&cd);
+    init_success &= tasks_create_tasks(&mav);
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
@@ -141,7 +137,7 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     while (1)
     {
-        cd.scheduler.update();
+        mav.scheduler.update();
     }
 
     return 0;
