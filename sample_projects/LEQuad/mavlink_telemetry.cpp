@@ -156,7 +156,7 @@ bool mavlink_telemetry_init_communication_module(Central_data* central_data)
 {
     bool init_success = true;
     Mavlink_message_handler* message_handler = &central_data->mavlink_communication.message_handler();
-    init_success &= state_telemetry_init(&central_data->state,
+    init_success &= state_telemetry_init(&central_data->state_machine,
                                          message_handler);
 
     init_success &= imu_telemetry_init(&central_data->imu,
