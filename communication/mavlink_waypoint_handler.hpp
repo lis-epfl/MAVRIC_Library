@@ -148,9 +148,9 @@ public:
      */
     static inline conf_t default_config();
 
-    
+
     waypoint_local_struct_t waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-    
+
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
 protected:
@@ -159,7 +159,7 @@ protected:
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
     const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
-    
+
     State& state_;                                               ///< The pointer to the state structure
     Navigation& navigation_;                                     ///< The pointer to the navigation structure
     Position_estimation& position_estimation_;                   ///< The pointer to the position estimation structure
@@ -187,54 +187,11 @@ private:
     bool critical_next_state_;                                   ///< Flag to change critical state in its dedicated state machine
     bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
 
-    mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution    
+    mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution
     const ahrs_t& ahrs_;                                         ///< The pointer to the attitude estimation structure
     const Manual_control& manual_control_;                       ///< The pointer to the manual_control structure
     conf_t config_;
 
-    /**
-     * \brief   Drives the stopping behavior
-     *
-     */
-    void stopping_handler();
-
-    /**
-     * \brief   State machine to drive the navigation module
-     *
-     */
-    void state_machine();
-
-    /**
-     * \brief   Computes the state machine for the Dubin navigation type
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
-     * \param   waypoint_next_           The next waypoint structure
-     */
-    void dubin_state_machine(waypoint_local_struct_t* waypoint_next_);
-
-    /**
-     * \brief   Drives the critical navigation behavior
-     *
-     */
-    void critical_handler();
-
-    /**
-     * \brief   Drives the GPS navigation procedure
-     *
-     */
-    void waypoint_navigation_handler(bool reset_hold_wpt);
-
-    /**
-     * \brief   Drives the automatic takeoff procedure
-     *
-     */
-    bool take_off_handler();
-
-    /**
-     * \brief   Drives the auto-landing navigation behavior
-     *
-     */
-    void auto_landing_handler();
 
     /**
      * \brief   Check if the nav mode is equal to the state mav mode
@@ -319,16 +276,6 @@ private:
     static void set_current_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
 
     /**
-     * \brief   Set the current waypoint to new_current
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler
-     * \param   packet                  The pointer to the decoded MAVLink message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
-
-    /**
      * \brief   Clears the waypoint list
      *
      * \param   waypoint_handler        The pointer to the waypoint handler structure
@@ -345,56 +292,6 @@ private:
      * \param   msg                     The received MAVLink message structure with the new home position
      */
     static void set_home(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
-
-    /**
-     * \brief   Set the next waypoint as current waypoint
-     *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t continue_to_next_waypoint(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
-
-    /**
-     * \brief   Sends back whether the MAV is currently stopped at a waypoint or not
-     *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t is_arrived(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
-
-    /**
-     * \brief   Start/Stop the navigation
-     *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
-
-    /**
-     * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
-     *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet              The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_auto_takeoff(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
-
-    /**
-     * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
-     *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_auto_landing(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 };
 
 
