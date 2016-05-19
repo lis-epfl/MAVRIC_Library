@@ -125,6 +125,10 @@ void LEQuad::loop(void)
         mavlink_communication.onboard_parameters().write_parameters_to_storage();
     }
 
+    // Create log files
+    ret &= data_logging_continuous.create_new_log_file("Log_file", true, mavlink_communication.sysid());
+    ret &= data_logging_stat.create_new_log_file("Log_Stat", false, mavlink_communication.sysid());
+    
     // Init mav state
     state.mav_state_ = MAV_STATE_STANDBY;  // TODO check if this is necessary
 
@@ -181,10 +185,6 @@ bool LEQuad::init_communication(void)
 bool LEQuad::init_data_logging(void)
 {
     bool ret = true;
-
-    // Module
-    ret &= data_logging_continuous.create_new_log_file("Log_file", true, mavlink_communication.sysid());
-    ret &= data_logging_stat.create_new_log_file("Log_Stat", false, mavlink_communication.sysid());
 
     // UP telemetry
     ret &= data_logging_telemetry_init(&data_logging_continuous, mavlink_communication.p_message_handler());
