@@ -141,6 +141,18 @@ protected:
 
     State& state_;                                               ///< The pointer to the state structure
 
+    /**
+     * \brief Gets the current waypoint index
+     *
+     * \details Finds the current waypoint index by cycling though the
+     * waypoint array and returning the first index that has the current
+     * field as 1. Returns -1 if there is no current waypoint
+     *
+     * \return The index of the current waypoint. -1 if no current waypoint
+     * found
+     */
+    int Mavlink_waypoint_handler::current_waypoint_index() const;
+
 private:
 
     bool waypoint_sending_;                                      ///< Flag to tell whether waypoint are being sent

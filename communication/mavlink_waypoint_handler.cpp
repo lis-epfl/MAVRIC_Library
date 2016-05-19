@@ -605,7 +605,18 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
 const waypoint_struct_t Mavlink_waypoint_handler::current_waypoint() const
 {
-    return waypoint_list_[current_waypoint_index()];
+    // Get current waypoint index
+    int wpt_index = current_waypoint_index();
+
+    if (wpt_index >= 0)
+    {
+        return waypoint_list_[];
+    }
+    else // TODO: Return an error structure
+    {
+        // For now, return last waypoint structure
+        return waypoint_list_[waypoint_count_];
+    }
 }
 
 int Mavlink_waypoint_handler::current_waypoint_index() const
