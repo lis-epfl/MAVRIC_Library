@@ -493,17 +493,6 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
 }
 
 
-    wpt.waypoint = waypoint_coor;
-    // WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
-    wpt.radius = current_waypoint->param2;
-    wpt.loiter_time = current_waypoint->param1;
-
-    *dubin_state = DUBIN_INIT;
-
-    return wpt;
-}
-
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
