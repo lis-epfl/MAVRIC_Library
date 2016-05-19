@@ -165,25 +165,25 @@ public:
                   const conf_t& config = default_config());
 
     bool init_state(void);
+    bool init_communication(void);
     bool init_data_logging(void);
     bool init_gps(void);
     bool init_imu(void);
+    bool init_barometer(void);
+    bool init_sonar(void);
     bool init_attitude_estimation(void);
     bool init_position_estimation(void);
     bool init_stabilisers(void);
     bool init_navigation(void);
     bool init_hud(void);
     bool init_servos(void);
-    bool init_barometer(void);
-    bool init_manual_control(void);
+    bool init_ground_control(void);
 
     bool main_task(void);
     static inline bool main_task_func(LEQuad* mav)
     {
         return mav->main_task();
     };
-
-    bool create_tasks(void);
 
     void loop(void);
 

@@ -46,6 +46,7 @@
 
 #include "drivers/barometer_telemetry.hpp"
 #include "drivers/gps_telemetry.hpp"
+#include "drivers/sonar_telemetry.hpp"
 
 #include "sensing/imu_telemetry.hpp"
 #include "sensing/ahrs_telemetry.hpp"
@@ -96,20 +97,19 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
 {
     // Init al modules
     init_state();
+    init_communication();
     init_data_logging();
     init_gps();
     init_imu();
+    init_barometer();
+    init_sonar();
     init_attitude_estimation();
     init_position_estimation();
     init_stabilisers();
     init_navigation();
     init_hud();
     init_servos();
-    init_barometer();
-    init_manual_control();
-
-    // create tasks // TODO move to separated inits
-    create_tasks();
+    init_ground_control();
 }
 
 
@@ -153,6 +153,23 @@ bool LEQuad::init_state(void)
     ret &= data_logging_stat.add_field((uint32_t*)&state.mav_state_, "mav_state");
     ret &= data_logging_stat.add_field(&state.mav_mode_,             "mav_mode");
 
+    // Task
+    ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);
+    ret &= scheduler.add_task(500000, (Scheduler_task::task_function_t)&task_led_toggle,       (Scheduler_task::task_argument_t)&led, Scheduler_task::PRIORITY_LOW);
+
+    return ret;
+}
+
+
+// -------------------------------------------------------------------------
+// Communication
+// -------------------------------------------------------------------------
+bool LEQuad::init_communication(void)
+{
+    bool ret = true;
+
+    // Task
+    ret &= scheduler.add_task(4000,  (Scheduler_task::task_function_t)&Mavlink_communication::update,    (Scheduler_task::task_argument_t)&mavlink_communication);
 
     return ret;
 }
@@ -173,6 +190,10 @@ bool LEQuad::init_data_logging(void)
     ret &= data_logging_telemetry_init(&data_logging_continuous, mavlink_communication.p_message_handler());
     ret &= data_logging_telemetry_init(&data_logging_stat, mavlink_communication.p_message_handler());
 
+    // Task
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_continuous);
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_stat);
+
     return ret;
 }
 
@@ -189,6 +210,9 @@ bool LEQuad::init_gps(void)
 
     // DOWN telemetry
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, (Mavlink_communication::send_msg_function_t)&gps_telemetry_send_raw, &gps);
+
+    // Task
+    ret &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_gps_update, (Scheduler_task::task_argument_t)&gps, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -220,6 +244,41 @@ bool LEQuad::init_imu(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[X],     "NORTH_MAG_X");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[Y],     "NORTH_MAG_Y");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[Z],     "NORTH_MAG_Z");
+
+    return ret;
+}
+
+
+// -------------------------------------------------------------------------
+// Barometer
+// -------------------------------------------------------------------------
+bool LEQuad::init_barometer(void)
+{
+    bool ret = true;
+
+    // DOWN telemetry
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_PRESSURE, 500000, (Mavlink_communication::send_msg_function_t)&barometer_telemetry_send, &barometer);
+
+    // Task
+    ret &= scheduler.add_task(15000, (Scheduler_task::task_function_t)&task_barometer_update, (Scheduler_task::task_argument_t)&barometer, Scheduler_task::PRIORITY_HIGH);
+
+    return ret;
+}
+
+
+// -------------------------------------------------------------------------
+// Sonar
+// -------------------------------------------------------------------------
+bool LEQuad::init_sonar(void)
+{
+    bool ret = true;
+
+    // DOWN telemetry
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_DISTANCE_SENSOR, 200000, (Mavlink_communication::send_msg_function_t)&sonar_telemetry_send, &sonar);
+
+
+    // Task
+    ret &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_sonar_update, (Scheduler_task::task_argument_t)&sonar, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -348,32 +407,11 @@ bool LEQuad::init_stabilisers(void)
     ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain,      "THRV_KD");
     ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width,          "THRV_SOFT");
 
+    // Task
+    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&LEQuad::main_task_func, (Scheduler_task::task_argument_t)this, Scheduler_task::PRIORITY_HIGHEST);
+
     return ret;
 }
-
-  // // Attitude controller
-  // ret &= attitude_controller_init(&attitude_controller,
-  //                                 config_.attitude_controller_config,
-  //                                 &ahrs,
-  //                                 &command.attitude,
-  //                                 &command.rate,
-  //                                 &command.torque);
-  //
-  // // Velocity controller
-  // ret &= velocity_controller_copter_init(&velocity_controller,
-  //                                        config_.velocity_controller_copter_config,
-  //                                        &ahrs,
-  //                                        &position_estimation,
-  //                                        &command.velocity,
-  //                                        &command.attitude,
-  //                                        &command.thrust);
-  //
-  // // Vector field
-  // ret &= vector_field_waypoint_init(&vector_field_waypoint,
-  //                                   {},
-  //                                   &waypoint_handler,
-  //                                   &position_estimation,
-  //                                   &command.velocity);
 
 
 // -------------------------------------------------------------------------
@@ -393,6 +431,10 @@ bool LEQuad::init_navigation(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.differentiator.gain,  "NAV_WPT_DGAIN"   );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"   );
+
+    // Task
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update, (Scheduler_task::task_argument_t)&waypoint_handler, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -436,23 +478,11 @@ bool LEQuad::init_servos(void)
     return ret;
 }
 
-// -------------------------------------------------------------------------
-// Barometer
-// -------------------------------------------------------------------------
-bool LEQuad::init_barometer(void)
-{
-    bool ret = true;
-
-    // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_PRESSURE, 500000, (Mavlink_communication::send_msg_function_t)&barometer_telemetry_send, &barometer);
-
-    return ret;
-}
 
 // -------------------------------------------------------------------------
 // Manual control
 // -------------------------------------------------------------------------
-bool LEQuad::init_manual_control(void)
+bool LEQuad::init_ground_control(void)
 {
     bool ret = true;
 
@@ -466,6 +496,9 @@ bool LEQuad::init_manual_control(void)
     /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
     ret &= mavlink_communication.onboard_parameters().add_parameter_int32((int32_t*) &manual_control.control_source_, "CTRL_CTRL_SRC");
     ret &= mavlink_communication.onboard_parameters().add_parameter_int32((int32_t*) &manual_control.mode_source_,    "COM_RC_IN_MODE");
+
+    // Task
+    ret &= scheduler.add_task(20000, (Scheduler_task::task_function_t)&remote_update, (Scheduler_task::task_argument_t)&manual_control.remote, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -571,25 +604,26 @@ bool LEQuad::main_task(void)
 }
 
 
-// -------------------------------------------------------------------------
-// Create tasks
-// -------------------------------------------------------------------------
-bool LEQuad::create_tasks(void)
-{
-  bool init_success = true;
-
-  init_success &= scheduler.add_task(4000,   (Scheduler_task::task_function_t)&LEQuad::main_task_func,           (Scheduler_task::task_argument_t)this,                   Scheduler_task::PRIORITY_HIGHEST);
-  init_success &= scheduler.add_task(500000, (Scheduler_task::task_function_t)&task_led_toggle,                  (Scheduler_task::task_argument_t)&led,                   Scheduler_task::PRIORITY_LOW);
-  init_success &= scheduler.add_task(15000,  (Scheduler_task::task_function_t)&task_barometer_update,            (Scheduler_task::task_argument_t)&barometer,             Scheduler_task::PRIORITY_HIGH);
-  init_success &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_gps_update,                  (Scheduler_task::task_argument_t)&gps,                   Scheduler_task::PRIORITY_HIGH);
-  init_success &= scheduler.add_task(10000,  (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,            Scheduler_task::PRIORITY_HIGH);
-  init_success &= scheduler.add_task(10000,  (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update, (Scheduler_task::task_argument_t)&waypoint_handler,      Scheduler_task::PRIORITY_HIGH);
-  init_success &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update,            (Scheduler_task::task_argument_t)&state_machine);
-  init_success &= scheduler.add_task(4000,   (Scheduler_task::task_function_t)&Mavlink_communication::update,    (Scheduler_task::task_argument_t)&mavlink_communication);
-  init_success &= scheduler.add_task(20000,  (Scheduler_task::task_function_t)&remote_update,                    (Scheduler_task::task_argument_t)&manual_control.remote, Scheduler_task::PRIORITY_HIGH);
-  init_success &= scheduler.add_task(10000,  (Scheduler_task::task_function_t)&task_data_logging_update,         (Scheduler_task::task_argument_t)&data_logging_continuous);
-  init_success &= scheduler.add_task(10000,  (Scheduler_task::task_function_t)&task_data_logging_update,         (Scheduler_task::task_argument_t)&data_logging_stat);
-  init_success &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_sonar_update,                (Scheduler_task::task_argument_t)&sonar,                 Scheduler_task::PRIORITY_HIGH);
-
-  return init_success;
-}
+  // // Attitude controller
+  // ret &= attitude_controller_init(&attitude_controller,
+  //                                 config_.attitude_controller_config,
+  //                                 &ahrs,
+  //                                 &command.attitude,
+  //                                 &command.rate,
+  //                                 &command.torque);
+  //
+  // // Velocity controller
+  // ret &= velocity_controller_copter_init(&velocity_controller,
+  //                                        config_.velocity_controller_copter_config,
+  //                                        &ahrs,
+  //                                        &position_estimation,
+  //                                        &command.velocity,
+  //                                        &command.attitude,
+  //                                        &command.thrust);
+  //
+  // // Vector field
+  // ret &= vector_field_waypoint_init(&vector_field_waypoint,
+  //                                   {},
+  //                                   &waypoint_handler,
+  //                                   &position_estimation,
+  //                                   &command.velocity);
