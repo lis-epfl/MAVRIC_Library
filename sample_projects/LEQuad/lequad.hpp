@@ -79,9 +79,7 @@
 
 #include "simulation/simulation.hpp"
 
-
 #include "sensing/ahrs_ekf.hpp"
-//#include "sensing/ahrs_ekf_default_config.hpp"
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/position_estimation.hpp"
