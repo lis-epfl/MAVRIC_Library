@@ -470,9 +470,9 @@ bool LEQuad::init_servos(void)
                                           &servo_0, &servo_1, &servo_2, &servo_3);
 
     // DOWN telemetry
-    servos_telemetry_init(&servos_telemetry,
-                          &servo_0, &servo_1, &servo_2, &servo_3,
-                          &servo_4, &servo_5, &servo_6, &servo_7);
+    ret &= servos_telemetry_init(&servos_telemetry,
+                                 &servo_0, &servo_1, &servo_2, &servo_3,
+                                 &servo_4, &servo_5, &servo_6, &servo_7);
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SERVO_OUTPUT_RAW, 1000000, (Mavlink_communication::send_msg_function_t)&servos_telemetry_mavlink_send, &servos_telemetry);
 
     return ret;
