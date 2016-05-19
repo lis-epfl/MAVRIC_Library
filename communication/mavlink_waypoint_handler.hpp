@@ -121,9 +121,18 @@ public:
      */
     static inline conf_t default_config();
 
+    /**
+     * \brief Gets the current waypoint
+     *
+     * \details Returns a copy of the waypoint instead of a reference as
+     * the waypoint could be removed/overwritten by the GCS.
+     *
+     * \return Copy of the current waypoint
+     */
+    const waypoint_struct_t current_waypoint() const;
 
 protected:
-    waypoint_struct_t waypoint_list[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
+    waypoint_struct_t waypoint_list_[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
     uint16_t waypoint_count_;                                    ///< The total number of waypoints
     int8_t current_waypoint_index_;                              ///< The number of the current waypoint

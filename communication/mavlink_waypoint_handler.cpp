@@ -121,17 +121,17 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
                                               msg->sysid,
                                               msg->compid,
                                               packet.seq,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].frame,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].command,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].current,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].autocontinue,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].param1,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].param2,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].param3,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].param4,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].x,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].y,
-                                              waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num_].z);
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].frame,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].command,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].current,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].autocontinue,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].param1,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].param2,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].param3,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].param4,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].x,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].y,
+                                              waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].z);
                 waypoint_handler->mavlink_stream_.send(&_msg);
 
                 print_util_dbg_print("Sending waypoint ");
@@ -313,7 +313,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                     print_util_dbg_print_num(waypoint_handler->waypoint_count_ - waypoint_handler->waypoint_onboard_count_, 10);
                     print_util_dbg_print("\r\n");
 
-                    waypoint_handler->waypoint_list[waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_] = new_waypoint;
+                    waypoint_handler->waypoint_list_[waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_] = new_waypoint;
                     waypoint_handler->waypoint_request_number_++;
 
                     if ((waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_) == waypoint_handler->waypoint_count_)
@@ -399,10 +399,10 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
         {
             for (int32_t i = 0; i < waypoint_handler->waypoint_count_; i++)
             {
-                waypoint_handler->waypoint_list[i].current = 0;
+                waypoint_handler->waypoint_list_[i].current = 0;
             }
 
-            waypoint_handler->waypoint_list[packet.seq].current = 1;
+            waypoint_handler->waypoint_list_[packet.seq].current = 1;
 
             mavlink_message_t _msg;
             mavlink_msg_mission_current_pack(sysid,
@@ -435,7 +435,7 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
 }
 
 
-void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::clear_waypoint_list_(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_mission_clear_all_t packet;
 
@@ -557,7 +557,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(State& state_, Mavlink_messag
     callback.message_id     = MAVLINK_MSG_ID_MISSION_CLEAR_ALL; // 45
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &clear_waypoint_list;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &clear_waypoint_list_;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler.add_msg_callback(&callback);
 
@@ -601,5 +601,10 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
     waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
 
-    waypoint_list[0] = waypoint;
+    waypoint_list_[0] = waypoint;
+}
+
+const waypoint_struct_t Mavlink_waypoint_handler::current_waypoint() const
+{
+    return waypoint_list_[current_waypoint_index_];
 }
