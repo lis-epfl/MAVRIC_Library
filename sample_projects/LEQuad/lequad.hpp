@@ -164,32 +164,35 @@ public:
                   File& file2,
                   const conf_t& config = default_config());
 
-    bool init_state(void);
-    bool init_communication(void);
-    bool init_data_logging(void);
-    bool init_gps(void);
-    bool init_imu(void);
-    bool init_barometer(void);
-    bool init_sonar(void);
-    bool init_attitude_estimation(void);
-    bool init_position_estimation(void);
-    bool init_stabilisers(void);
-    bool init_navigation(void);
-    bool init_hud(void);
-    bool init_servos(void);
-    bool init_ground_control(void);
+    /**
+     *  \brief    Main update function (infinite loop)
+     *  \details  Performs last operations before flight, then loops on scheduler updates
+     */
+    void loop(void);
 
-    bool main_task(void);
+protected:
+
+    virtual bool init_state(void);
+    virtual bool init_communication(void);
+    virtual bool init_data_logging(void);
+    virtual bool init_gps(void);
+    virtual bool init_imu(void);
+    virtual bool init_barometer(void);
+    virtual bool init_sonar(void);
+    virtual bool init_attitude_estimation(void);
+    virtual bool init_position_estimation(void);
+    virtual bool init_stabilisers(void);
+    virtual bool init_navigation(void);
+    virtual bool init_hud(void);
+    virtual bool init_servos(void);
+    virtual bool init_ground_control(void);
+
+    virtual bool main_task(void);
     static inline bool main_task_func(LEQuad* mav)
     {
         return mav->main_task();
     };
 
-    void loop(void);
-
-    /**
-     * Public members
-     */
     Imu&            imu;                ///< Reference to IMU
     Barometer&      barometer;          ///< Reference to barometer
     Gps&            gps;                ///< Reference to GPS
@@ -242,7 +245,6 @@ public:
     // velocity_controller_copter_t    velocity_controller;
     // vector_field_waypoint_t         vector_field_waypoint;
 
-protected:
     uint8_t sysid_;    ///< System ID
     conf_t config_;    ///< Configuration
 };
