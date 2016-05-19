@@ -500,7 +500,6 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
 
 Mavlink_waypoint_handler::Mavlink_waypoint_handler(State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
-            current_waypoint_index_(0),
             hold_waypoint_set_(false),
             start_wpt_time_(time_keeper_get_ms()),
             mavlink_stream_(mavlink_stream_),
@@ -606,5 +605,20 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
 const waypoint_struct_t Mavlink_waypoint_handler::current_waypoint() const
 {
-    return waypoint_list_[current_waypoint_index_];
+    return waypoint_list_[current_waypoint_index()];
+}
+
+int Mavlink_waypoint_handler::current_waypoint_index() const
+{
+    // Cycle through each waypoint_struct_t until you find the current one
+    for (int i = 0; i < waypoint_count_; i++)
+    {
+        if (waypoint_list_[i].current == 1)
+        {
+            return i;
+        }
+    }
+
+    // Return this is no waypoints found
+    return -1;
 }

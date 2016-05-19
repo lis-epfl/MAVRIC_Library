@@ -135,7 +135,6 @@ protected:
     waypoint_struct_t waypoint_list_[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
     uint16_t waypoint_count_;                                    ///< The total number of waypoints
-    int8_t current_waypoint_index_;                              ///< The number of the current waypoint
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
     const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
