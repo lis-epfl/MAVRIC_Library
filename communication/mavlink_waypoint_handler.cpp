@@ -476,11 +476,6 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 }
 
 
-bool Mavlink_waypoint_handler::mode_change()
-{
-    return mav_modes_are_equal_autonomous_modes(state_.mav_mode(), last_mode_);
-}
-
 void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
 {
     if (waypoint_sending_ || waypoint_receiving_)

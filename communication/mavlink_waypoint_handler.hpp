@@ -194,13 +194,6 @@ private:
 
 
     /**
-     * \brief   Check if the nav mode is equal to the state mav mode
-     *
-     * \return  True if the flag STABILISE, GUIDED and ARMED are equal, false otherwise
-     */
-    bool mode_change();
-
-    /**
      * \brief   Control if time is over timeout and change sending/receiving flags to false
      *
      * \return  The task status
