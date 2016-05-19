@@ -123,11 +123,13 @@ public:
      *
      * \param   controls        The pointer to the command structure that will be executed
      */
-    void get_rate_command_wing(control_command_t* controls);**
- * \brief   Get the input from the joystick (Symbiotic project)
- *
- * \param   controls        The pointer to the command structure that will be executed
- */
+    void get_rate_command_wing(control_command_t* controls);
+
+    /**
+     * \brief   Get the input from the joystick (Symbiotic project)
+     *
+   	 * \param   controls        The pointer to the command structure that will be executed
+   	 */
     void manual_control_get_from_joystick_symbiotic(control_command_t* controls);
 
 /**
