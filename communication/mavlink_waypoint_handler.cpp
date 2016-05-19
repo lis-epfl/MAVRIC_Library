@@ -1278,11 +1278,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
         float margin = 0.0f;
-        if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
-        {
-            margin = 36.0f;
-        }
-        else if (current_waypoint_.command == MAV_CMD_NAV_LAND)
+        if (current_waypoint_.command == MAV_CMD_NAV_LAND)
         //we need to add that since Landing waypoint doesn't have the param2
         //=> the param2 = 0 => never passing next condition
         {
