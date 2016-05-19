@@ -615,7 +615,7 @@ const waypoint_struct_t Mavlink_waypoint_handler::current_waypoint() const
     else // TODO: Return an error structure
     {
         // For now, return last waypoint structure
-        return waypoint_list_[waypoint_count_];
+        return waypoint_list_[waypoint_count_-1];
     }
 }
 
