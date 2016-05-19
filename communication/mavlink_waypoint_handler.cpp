@@ -608,6 +608,9 @@ const waypoint_struct_t Mavlink_waypoint_handler::current_waypoint() const
     // Get current waypoint index
     int wpt_index = current_waypoint_index();
 
+    // If the current waypoint index is the last waypoint, do nothing
+    if (wpt_index == waypoint_count_-1)
+
     if (wpt_index >= 0)
     {
         return waypoint_list_[];
@@ -632,4 +635,22 @@ int Mavlink_waypoint_handler::current_waypoint_index() const
 
     // Return this is no waypoints found
     return -1;
+}
+
+void Mavlink_waypoint_handler::advance_to_next_waypoint()
+{
+    // Get current index
+    int wpt_index = current_waypoint_index();
+
+    // If the current waypoint index is the last waypoint, do nothing
+    if (wpt_index == (waypoint_count_-1))
+    {
+        return;
+    }
+    else // Update current in both waypoints
+    {
+        waypoint_list_[wpt_index].current = 0;
+        waypoint_list_[wpt_index+1].current = 1;
+        return;
+    }
 }

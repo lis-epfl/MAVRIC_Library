@@ -131,6 +131,12 @@ public:
      */
     const waypoint_struct_t current_waypoint() const;
 
+    /**
+     * \brief Sets the next waypoint as the current one. Should be called when
+     * the current waypoint has been reached.
+     */
+    void advance_to_next_waypoint();
+
 protected:
     waypoint_struct_t waypoint_list_[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
