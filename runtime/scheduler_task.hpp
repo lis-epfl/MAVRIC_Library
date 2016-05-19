@@ -162,7 +162,7 @@ public:
      */
     bool is_due();
 
-    int32_t            task_id;                ///<    Unique task identifier
+    int32_t             task_id;                ///<    Unique task identifier
     run_mode_t          run_mode;               ///<    Run mode
     timing_mode_t       timing_mode;            ///<    Timing mode
     priority_t          priority;               ///<    Priority
