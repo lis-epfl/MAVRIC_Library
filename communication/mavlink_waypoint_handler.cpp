@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
  * \brief The MAVLink waypoint handler
  *
@@ -497,15 +498,13 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
             hold_waypoint_set_(false),
             start_wpt_time_(time_keeper_get_ms()),
             mavlink_stream_(mavlink_stream_),
             state_(state_),
-            navigation_(navigation_),
-            position_estimation_(position_estimation_),
             waypoint_sending_(false),
             waypoint_receiving_(false),
             sending_waypoint_num_(0),
@@ -513,19 +512,9 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
             waypoint_onboard_count_(0),
             start_timeout_(time_keeper_get_ms()),
             timeout_max_waypoint_(10000),
-            travel_time_(0),
-            critical_next_state_(false),
-            auto_landing_next_state_(0),
-            last_mode_(state_.mav_mode()),
-            ahrs_(ahrs_),
-            manual_control_(manual_control_),
             config_(config)
 {
     bool init_success = true;
-
-    // init waypoint navigation
-
-    next_waypoint_.current = 0;
 
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
@@ -580,6 +569,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
     init_success &= message_handler.add_msg_callback(&callback);
 
     init_homing_waypoint();
+    nav_plan_init();
 
     if(!init_success)
     {

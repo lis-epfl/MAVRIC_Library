@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
  * \brief The MAVLink waypoint handler
  *
@@ -90,40 +91,18 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   position_estimation     The pointer to the position estimator structure
-     * \param   navigation              The pointer to the navigation structure
-     * \param   ahrs                    The pointer to the attitude estimation structure
-     * \param   state                   The pointer to the state structure
-     * \param   manual_control          The pointer to the manual control structure
-     * \param   mavlink_communication   The pointer to the MAVLink communication structure
-     * \param   mavlink_stream          The pointer to the MAVLink stream structure
+     * \param   state                   The reference to the state structure
+     * \param   message_handler         The reference to the message handler
+     * \param   mavlink_stream          The reference to the MAVLink stream structure
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mavlink_waypoint_handler(Position_estimation& position_estimation,
-                           Navigation& navigation,
-                           const ahrs_t& ahrs,
+    Mavlink_waypoint_handler(
                            State& state,
-                           const Manual_control& manual_control,
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream,
                            conf_t config = default_config());
 
-
-    /**
-     * \brief   The waypoint handler tasks, gives a goal for the navigation module
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
-     */
-    static bool update(Mavlink_waypoint_handler* waypoint_handler);
-
-    /**
-     * \brief   Initialize a home waypoint at (0,0,0) at start up
-     *
-     * \details Is called by the constructor
-     *
-     */
-    void init_homing_waypoint();
 
     /**
      * \brief   Initialize a first waypoint if a flight plan is set
@@ -132,12 +111,6 @@ public:
      */
     void nav_plan_init();
 
-    /**
-     * \brief   Initialise the position hold mode
-     *
-     * \param   local_pos               The position where the position will be held
-     */
-    void hold_init(local_position_t local_pos);
 
     inline uint16_t waypoint_count() const {return waypoint_count_;};
 
@@ -161,17 +134,8 @@ protected:
     const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
 
     State& state_;                                               ///< The pointer to the state structure
-    Navigation& navigation_;                                     ///< The pointer to the navigation structure
-    Position_estimation& position_estimation_;                   ///< The pointer to the position estimation structure
 
 private:
-
-    waypoint_local_struct_t waypoint_coordinates_;               ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-    waypoint_local_struct_t waypoint_critical_coordinates_;      ///< The coordinates of the waypoint in critical state
-    waypoint_local_struct_t waypoint_next_;                       ///< The coordinates of the next waypoint
-
-    waypoint_struct_t current_waypoint_;                         ///< The structure of the current waypoint
-    waypoint_struct_t next_waypoint_;                            ///< The structure of the next waypoint
 
     bool waypoint_sending_;                                      ///< Flag to tell whether waypoint are being sent
     bool waypoint_receiving_;                                    ///< Flag to tell whether waypoint are being received or not
@@ -182,14 +146,7 @@ private:
 
     uint32_t start_timeout_;                                     ///< The start time for the waypoint timeout
     uint32_t timeout_max_waypoint_;                              ///< The max waiting time for communication
-    uint32_t travel_time_;                                       ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
-    bool critical_next_state_;                                   ///< Flag to change critical state in its dedicated state machine
-    bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
-
-    mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution
-    const ahrs_t& ahrs_;                                         ///< The pointer to the attitude estimation structure
-    const Manual_control& manual_control_;                       ///< The pointer to the manual_control structure
     conf_t config_;
 
 
@@ -199,15 +156,6 @@ private:
      * \return  The task status
      */
     void control_time_out_waypoint_msg();
-
-    /**
-     * \brief   Sends the travel time between the last two waypoints
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
-     * \param   mavlink_stream          The pointer to the MAVLink stream structure
-     * \param   msg                     The pointer to the MAVLink message
-     */
-    void send_nav_time(const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
     /************************************************
@@ -276,6 +224,14 @@ private:
      * \param   msg                     The received MAVLink message structure with the clear command
      */
     static void clear_waypoint_list(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+
+    /**
+     * \brief   Initialize a home waypoint at (0,0,0) at start up
+     *
+     * \details Is called by the constructor
+     *
+     */
+    void init_homing_waypoint();
 };
 
 
