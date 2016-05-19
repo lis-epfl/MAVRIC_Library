@@ -805,22 +805,6 @@ mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler
 {
     mav_result_t result;
 
-    print_util_dbg_print("Auto-landing msg (x100):");
-    print_util_dbg_print_num(packet->param1*100,10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(packet->param2*100,10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(packet->param3*100,10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(packet->param4*100,10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(packet->param5*100,10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(packet->param6*100,10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(packet->param7*100,10);
-    print_util_dbg_print("\r\n");
-
     if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_HOLD_POSITION)
         || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_THERE))
     {
