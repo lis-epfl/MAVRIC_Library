@@ -689,15 +689,6 @@ bool Mavlink_waypoint_handler::take_off_handler()
                 {
                     result = true;
                 }
-
-                print_util_dbg_print("Automatic take-off finished, dist2wp_sqr (10x):");
-                print_util_dbg_print_num(navigation_.dist2wp_sqr * 10.0f, 10);
-                print_util_dbg_print(".\r\n");
-
-                // if a waypoint is defined, it will go towards the current one (waypoint_coordinates_)
-                // => reset its local position
-                waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&current_waypoint_, position_estimation_.local_position.origin, &navigation_.dubin_state);
-                waypoint_coordinates_.waypoint.heading = position_estimation_.local_position.heading;
             break;
 
             case Navigation::strategy_t::DUBIN:
@@ -1259,6 +1250,12 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
         {
             margin = 36.0f;
         }
+        else if (current_waypoint_.command == MAV_CMD_NAV_LAND)
+        //we need to add that since Landing waypoint doesn't have the param2
+        //=> the param2 = 0 => never passing next condition
+        {
+            margin = 16.0f;
+        }
 
         if (navigation_.dist2wp_sqr < (current_waypoint_.param2 * current_waypoint_.param2 + margin) ||
                (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
@@ -1289,15 +1286,14 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
             
             if (current_waypoint_.command == MAV_CMD_NAV_LAND)
             {
-                state_.nav_plan_active = false;
                 print_util_dbg_print("Stop & land\r\n");
 
                 //auto landing is not using the packet, 
                 //so we can declare a dummy one.
-                mavlink_command_long_t packet;
-                set_auto_landing(this, &packet);
+                mavlink_command_long_t dummy_packet;
+                set_auto_landing(this, &dummy_packet);
             }
-            else if ((current_waypoint_.autocontinue == 1) && (waypoint_count_ > 1))
+            if ((current_waypoint_.autocontinue == 1) && (waypoint_count_ > 1))
             {
                 if (next_waypoint_.current == 0)
                 {
@@ -1922,6 +1918,7 @@ void Mavlink_waypoint_handler::hold_init(local_position_t local_pos)
                     {
                         waypoint_hold_coordinates.dubin.circle_center_2[i] = navigation_.goal.dubin.circle_center_1[i];
                     }
+
                     waypoint_hold_coordinates.radius = navigation_.goal.dubin.radius_1;
 
                     navigation_.dubin_state = DUBIN_CIRCLE2;
