@@ -79,14 +79,14 @@ bool Scheduler::add_task(uint32_t repeat_period,
               Scheduler_task::priority_t priority,
               Scheduler_task::timing_mode_t timing_mode,
               Scheduler_task::run_mode_t run_mode,
-              uint32_t task_id)
+              int32_t task_id)
 {
     bool task_successfully_added = false;
 
     // Check if the scheduler is not full
     if (task_count_ < max_task_count_)
     {
-        if (task_id == 0)
+        if (task_id == -1)
         {
            task_id = task_count_;
         }

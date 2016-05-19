@@ -2,7 +2,7 @@
 #include "hal/common/time_keeper.hpp"
 
 
-Scheduler_task::Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, uint32_t task_id) :
+Scheduler_task::Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, int32_t task_id) :
         task_id(task_id),
         run_mode(run_mode),
         timing_mode(timing_mode),
@@ -49,7 +49,7 @@ void Scheduler_task::change_period(uint32_t repeat_period)
 }
 
 
-uint32_t Scheduler_task::get_id()
+int32_t Scheduler_task::get_id()
 {
     return task_id;
 }
