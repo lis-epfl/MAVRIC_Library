@@ -1,41 +1,41 @@
 /*******************************************************************************
- * Copyright (c) 2009-2016, MAV'RIC Development Team
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
+ * 
+ * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
  * and/or other materials provided with the distribution.
- *
+ * 
  * 3. Neither the name of the copyright holder nor the names of its contributors
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
 /*******************************************************************************
  * \file airspedd_analog.h
- *
+ * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
- *
- * \brief This file is the driver for the DIYdrones airspeed sensor V20
+ * \author Julien Lecoeur, Simon Pyroth
+ *   
+ * \brief This file is the driver for the DIYdrones airspeed sensor V20 
  * (old analog version)
  *
  ******************************************************************************/
@@ -45,23 +45,51 @@
 #define AIRSPEED_ANALOG_H_
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif
 
 #include <stdint.h>
-#include "hal/analog_monitor.h"
+#include "analog_monitor.h"
+#include "scheduler.h"
+
+
 
 /**
- * \brief Structure containing the analog airspeed sensor datas
-*/
-typedef struct
+ * \brief  Configuration for the airspeed sensor
+ */
+typedef struct 
 {
-    uint8_t analog_channel;                 ///< analog channel of the ADC
-    float gain;                             ///< gain factor for the ADC
-    float pressure_offset;                  ///< offset of the pressure sensor
-    float differential_pressure;            ///< true dynamical pressure (diff between pressure and offset)
-    float airspeed;                         ///< measure airspeed
-    analog_monitor_t* analog_monitor;       ///< pointer to the structure of analog monitor module
+	analog_rails_t analog_rail;		///< Analog rail on which the sensor is connected
+	float pressure_offset;			///< Default airspeed offset
+	float calibration_gain;			///< Gain used for the calibration of the offset (low-pass)
+	float conversion_factor;		///< Factor used for conversion between differential pressure P and square speed v^2. Should be around 2/rho_air. This parameter is the one to tune the sensor !
+	float correction_gain;			///< Gain obtained by the fitted relation, if needed (Airspeed_measured = gain * Airspeed_true + offset)
+	float correction_offset;		///< Offset obtained by the fitted relation, if needed
+	float filter_gain;				///< Gain for the low-pass filter
+} airspeed_analog_conf_t;
+
+/**
+ * \brief Structure containing the analog airspeed sensor data
+*/
+typedef struct {
+	analog_monitor_t* analog_monitor;		///< pointer to the structure of analog monitor module
+	uint8_t analog_channel;					///< analog channel of the ADC
+	float voltage;							///< Voltage read by the ADC
+	
+	float pressure_offset;					///< Offset of the pressure sensor
+	float differential_pressure;			///< True differential pressure in Pa (raw sensor compensated with offset)
+	float conversion_factor;				///< Factor used for conversion between differential pressure P and square speed v^2. Is influenced by real sensitivity of the sensor and by air density !
+	float correction_gain;					///< Gain used to correct estimation
+	float correction_offset;				///< Offset used to correct estimation
+	float alpha;							///< Filter coefficient
+	
+	float raw_airspeed;						///< Unfiltered and uncorrected airspeed
+	float scaled_airspeed;					///< Corrected airspeed, using fitted relation
+	float airspeed;							///< Filtered corrected airspeed
+	float last_airspeed;					///< Airspeed from previous loop
+	
+	bool calibrating;						///< True if the sensor is currently in calibration
+	float calibration_gain;					///< Gain used for the calibration of the offset (low-pass)
 } airspeed_analog_t;
 
 /**
@@ -72,23 +100,32 @@ typedef struct
  * \param analog_channel set which channel of the ADC is map to the airspeed sensor
  *
 */
-void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel);
+bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, const airspeed_analog_conf_t* config);
 
 /**
- * \brief Calibrates the airspeed sensor
- *
+ * \brief Calibrates the airspeed sensor offset at 0 speed. It will continue calibrating until it is asked to stop.
+ * 
  * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
  *
 */
-void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog);
+void airspeed_analog_start_calibration(airspeed_analog_t* airspeed_analog);
+
+/**
+ * \brief Stop the calibration procedure and keep the last offset.
+ * 
+ * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+ *
+*/
+void airspeed_analog_stop_calibration(airspeed_analog_t* airspeed_analog);
 
 /**
  * \brief Updates the values in the airspeed structure
  *
  * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
  *
+ * \return	The result of the task execution
 */
-void airspeed_analog_update(airspeed_analog_t* airspeed_analog);
+task_return_t airspeed_analog_update(airspeed_analog_t* airspeed_analog);
 
 #ifdef __cplusplus
 }

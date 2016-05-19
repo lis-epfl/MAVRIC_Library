@@ -48,13 +48,25 @@
 #include "communication/mavlink_communication.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
-
+#include "control/dubin.hpp"
 extern "C"
 {
 #include "control/stabilisation.h"
 #include "util/quaternions.h"
 #include "control/pid_controller.h"
 }
+
+
+/**
+ * \brief   The MAV'RIC waypoint structure
+ */
+typedef struct
+{
+    local_position_t waypoint;                                  ///< The local coordinates of the waypoint
+    float radius;                                               ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
+    float loiter_time;                                          ///< The loiter time at the waypoint
+    dubin_t dubin;                                              ///< The Dubin structure
+} waypoint_local_struct_t;
 
 /**
  * \brief The navigation structure
@@ -63,6 +75,12 @@ class Navigation
 {
 
 public:
+    enum class strategy_t
+    {
+        DIRECT_TO = 0,
+        DUBIN = 1,
+    };
+
     enum internal_state_t
     {
         NAV_ON_GND,
@@ -103,6 +121,8 @@ public:
         float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
         float cruise_speed;                                 ///< The cruise speed in m/s
         float max_climb_rate;                               ///< Max climb rate in m/s
+        float one_over_scaling;                             ///< Line vector field parameter
+        float vertical_vel_gain;                            ///< Gain for the vertical velocity calculation
 
         float soft_zone_size;                               ///< Soft zone of the velocity controller
 
@@ -110,8 +130,16 @@ public:
         float LPF_gain;                                     ///< The value of the low-pass filter gain
         float kp_yaw;                                       ///< The yaw gain in velocity control mode
 
+        float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
+        float minimal_radius;                               ///< The minimal circle radius
+        float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
+
         pid_controller_t hovering_controller;               ///< hovering controller
         pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
+
+        float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
+
+        strategy_t navigation_strategy;                  ///< The type of navigation strategy
     };
 
     /**
@@ -140,21 +168,29 @@ public:
      */
     static inline conf_t default_config();
 
-
-    /**
+	/**
      * \brief   give back the semilocal vel
      *
      * \return -
      */
-    void position_estimation_get_semilocal_velocity(float semilocal_vel[3]);
+    void position_estimation_get_semilocal_velocity(float semilocal_vel[3]);	dubin_state_t dubin_state;                          ///< The internal Dubin state    
 
-    float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
+	float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
     pid_controller_t hovering_controller;               ///< hovering controller
     pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
     float cruise_speed;                                 ///< The cruise speed in m/s
     float max_climb_rate;                               ///< Max climb rate in m/s
     float soft_zone_size;                               ///< Soft zone of the velocity controller
-    local_position_t goal;                              ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
+    float one_over_scaling;                             ///< Line vector field parameter
+    float vertical_vel_gain;                            ///< Gain for the vertical velocity calculation
+    float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
+    float minimal_radius;                               ///< The minimal circle radius
+    float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
+    float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing
+
+    strategy_t navigation_strategy;                     ///< The type of navigation strategy
+
+    waypoint_local_struct_t goal;                       ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
 
     float alt_lpf;                                      ///< The low-pass filtered altitude for auto-landing
     float LPF_gain;                                     ///< The value of the low-pass filter gain
@@ -184,6 +220,12 @@ private:
      */
     void set_speed_command(float rel_pos[]);
 
+    /**
+    * \brief                       Computes the Dubin path
+    *
+    * \param   navigation          Pointer to navigation
+    */
+    void set_dubin_velocity(dubin_t* dubin);
 
     /**
      * \brief                       Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -240,6 +282,14 @@ Navigation::conf_t Navigation::default_config()
     conf.hovering_controller.dt_s                    = 1;
     conf.hovering_controller.soft_zone_width         = 0.0f;
 
+    conf.one_over_scaling                            = 0.3f;
+    conf.safe_altitude                               = -30.0f;
+    conf.minimal_radius                              = 45.0f;
+    conf.heading_acceptance                          = PI/6.0f;
+    conf.vertical_vel_gain                           = 1.0f;
+    conf.takeoff_altitude                            = -10.0f;
+    // conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
+    conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
     return conf;
 };
 

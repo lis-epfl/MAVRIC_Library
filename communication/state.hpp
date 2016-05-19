@@ -216,11 +216,18 @@ public:
 
 
     /**
-     * \brief   Default configuration
+     * \brief   Default configuration for quadrotor
      *
      * \return  Config structure
      */
     static inline conf_t default_config();
+
+    /**
+     * \brief   Default configuration for wing
+     *
+     * \return  Config structure
+     */
+    static inline conf_t wing_default_config();
 
     friend bool mavlink_telemetry_add_data_logging_parameters(Data_logging* data_logging, Central_data* central_data);
     friend bool state_telemetry_set_mode(State* state, mav_mode_t mav_mode);
@@ -274,7 +281,7 @@ State::conf_t State::default_config()
     conf.mav_state               = MAV_STATE_BOOT;
     conf.simulation_mode         = HIL_OFF;
     conf.autopilot_type          = MAV_TYPE_QUADROTOR;
-    conf.autopilot_name          = MAV_AUTOPILOT_MAVRIC;
+    conf.autopilot_name          = MAV_AUTOPILOT_GENERIC_MISSION_FULL; // TODO: add MAV_AUTOPILOT_MAVRIC to std mavlink and support waypoint commands in QGC for this autopilot type
     conf.sensor_present          = 0b1111110000100111;
     conf.sensor_enabled          = 0b1111110000100111;
     conf.sensor_health           = 0b1111110000100111;
@@ -283,6 +290,28 @@ State::conf_t State::default_config()
     conf.fence_1_z               = 75.0f;
     conf.fence_2_xy              = 125.0f;
     conf.fence_2_z               = 100.0f;
+
+    return conf;
+}
+
+
+State::conf_t State::wing_default_config()
+{
+    conf_t conf            = {};
+
+    conf.mav_mode                = MAV_MODE_SAFE;
+    conf.mav_state               = MAV_STATE_BOOT;
+    conf.simulation_mode         = HIL_OFF;
+    conf.autopilot_type          = MAV_TYPE_FIXED_WING;
+    conf.autopilot_name          = MAV_AUTOPILOT_GENERIC_MISSION_FULL; // TODO: add MAV_AUTOPILOT_MAVRIC to std mavlink and support waypoint commands in QGC for this autopilot type
+    conf.sensor_present          = 0b1111110000100111;
+    conf.sensor_enabled          = 0b1111110000100111;
+    conf.sensor_health           = 0b1111110000100111;
+    conf.max_lost_connection     = 60.0f;
+    conf.fence_1_xy              = 500.0f;
+    conf.fence_1_z               = 150.0f;
+    conf.fence_2_xy              = 600.0f;
+    conf.fence_2_z               = 200.0f;
 
     return conf;
 }

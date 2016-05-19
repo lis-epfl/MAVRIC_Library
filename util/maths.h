@@ -409,6 +409,19 @@ static inline float maths_interpolate(float x, float x1, float x2, float y1, flo
 }
 
 
+static inline int8_t maths_sign(float x)
+{
+    if (x >= 0.0f)
+    {
+        return 1.0f;
+    }
+    else
+    {
+        return -1.0f;
+    }
+}
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -295,7 +295,7 @@ void Dynamic_model_quad_diag::forces_from_servos(void)
 
     // torque around x axis (roll)
     torques_bf_[ROLL] = ((rotor_lifts[1]  + rotor_lifts[3])
-                         - (rotor_lifts[0]  + rotor_lifts[2])) * mpos_y;;
+                         - (rotor_lifts[0]  + rotor_lifts[2])) * mpos_y;
 
     // torque around y axis (pitch)
     torques_bf_[PITCH] = ((rotor_lifts[1]  + rotor_lifts[0])

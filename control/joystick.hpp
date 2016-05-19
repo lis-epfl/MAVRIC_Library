@@ -207,6 +207,12 @@ mav_mode_t joystick_get_mode(joystick_t* joystick, const mav_mode_t current_mode
 void joystick_get_velocity_vector(const joystick_t* joystick, control_command_t* controls);
 
 /**
+ * \brief   Parse joystick to rate command for the wing
+ *
+ * \param   joystick        The pointer to the joystick structure
+ * \param   controls        The pointer to the control structure
+ */
+void joystick_get_rate_command_wing(joystick_t* joystick, control_command_t* controls);/**
  * \brief   Parse joystick to velocity vector command - version 2 - used for symbiotic drone project
  *
  * \param   joystick        The pointer to the joystick structure
@@ -277,6 +283,23 @@ void joystick_get_attitude_command(const joystick_t* joystick, const float ki_ya
  * \param   command         Velocity command (output)
  */
 void joystick_get_velocity_command(const joystick_t* joystick, velocity_command_t* command, float scale);
+
+/**
+ * \brief   Compute attitude (angle) command from the joystick for the wing
+ *
+ * \param   joystick        Joystick structure (input)
+ * \param   command         Velocity command (output)
+ */
+void joystick_get_angle_command_wing(joystick_t* joystick, control_command_t* controls);
+
+/**
+ * \brief   Compute velocity command from the joystick for the wing
+ *
+ * \param   joystick        Joystick structure (input)
+ * \param   ki_yaw          The yaw integrator gain
+ * \param   command         Velocity command (output)
+ */
+void joystick_get_velocity_wing(const joystick_t* joystick, const float ki_yaw, control_command_t* controls);
 
 
 /**

@@ -125,6 +125,7 @@ typedef enum
 	CUST_VELOCITY_FAKE_FXWD = 8192, 			///< Alex symbiotic drone mode
 } mav_mode_custom_list_t;
 
+
 #define mav_mode_t uint8_t
 #define mav_mode_custom_t uint32_t
 
