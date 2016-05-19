@@ -133,12 +133,12 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
  */
 void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisation_copter);
 
-/**
- * \brief                           Main Controller for controlling and stabilizing the quad
- *
- * \param   stabilisation_copter    The stabilisation structure
- * \param   central_data		    The central data class
- */
-void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* stabilisation_copter);
+///**
+// * \brief                           Main Controller for controlling and stabilizing the quad
+// *
+// * \param   stabilisation_copter    The stabilisation structure
+// * \param   central_data		    The central data class
+// */
+//void stabilisation_copter_cascade_stabilise_symbiotic(stabilisation_copter_t* stabilisation_copter);
 
 #endif /* STABILISATION_COPTER_H_ */

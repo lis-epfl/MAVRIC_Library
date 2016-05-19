@@ -660,7 +660,7 @@ bool Mavlink_waypoint_handler::take_off_handler()
         print_util_dbg_print(", ");
         print_util_dbg_print_num(position_estimation_.local_position.pos[Y], 10);
         print_util_dbg_print(", ");
-        print_util_dbg_print_num(-10.0f, 10);
+        print_util_dbg_print_num(-config_.auto_take_off_altitude, 10);
         print_util_dbg_print("), with heading of: ");
         print_util_dbg_print_num((int32_t)(position_estimation_.local_position.heading * 180.0f / 3.14f), 10);
         print_util_dbg_print("\r\n");
@@ -672,14 +672,14 @@ bool Mavlink_waypoint_handler::take_off_handler()
         aero_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
         waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
 
-        navigation_.dist2wp_sqr = 100.0f; // same position, 10m above => dist_sqr = 100.0f
+        navigation_.dist2wp_sqr = config_.auto_take_off_altitude*config_.auto_take_off_altitude; // same position, 10m above => dist_sqr = 100.0f
 
         hold_waypoint_set_ = true;
     }
 
     if (mode_change())
     {
-        if (navigation_.dist2wp_sqr <= 16.0f)
+        if (navigation_.dist2wp_sqr <= config_.auto_take_off_altitude*config_.auto_take_off_altitude/16.0f) //16.0f before
         {
             result = true;
 
@@ -806,7 +806,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
                 state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= CUST_DESCENT_TO_SMALL_ALTITUDE;
                 waypoint_hold_coordinates = position_estimation_.local_position;
-                waypoint_hold_coordinates.pos[Z] = -5.0f;
+                waypoint_hold_coordinates.pos[Z] = -config_.auto_take_off_altitude/2; //-5.0f;
                 break;
 
             case Navigation::DESCENT_TO_GND:
