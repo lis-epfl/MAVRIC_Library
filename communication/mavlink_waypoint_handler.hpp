@@ -283,15 +283,6 @@ private:
      * \param   msg                     The received MAVLink message structure with the clear command
      */
     static void clear_waypoint_list(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
-
-    /**
-     * \brief   Set a new home position, origin of the local frame
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler
-     * \param   sysid                   The system ID
-     * \param   msg                     The received MAVLink message structure with the new home position
-     */
-    static void set_home(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
 };
 
 

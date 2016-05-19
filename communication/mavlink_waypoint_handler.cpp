@@ -476,47 +476,6 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 }
 
 
-void Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
-{
-    mavlink_set_gps_global_origin_t packet;
-
-    if (!waypoint_handler->state_.is_armed())
-    {
-        mavlink_msg_set_gps_global_origin_decode(msg, &packet);
-
-        // Check if this message is for this system and subsystem
-        // Due to possible bug from QGroundControl, no check of target_component and compid
-        if ((uint8_t)packet.target_system == (uint8_t)sysid)
-        {
-            print_util_dbg_print("Set new home location.\r\n");
-            waypoint_handler->position_estimation_.local_position.origin.latitude = (double) packet.latitude / 10000000.0f;
-            waypoint_handler->position_estimation_.local_position.origin.longitude = (double) packet.longitude / 10000000.0f;
-            waypoint_handler->position_estimation_.local_position.origin.altitude = (float) packet.altitude / 1000.0f;
-
-            print_util_dbg_print("New Home location: (");
-            print_util_dbg_print_num(waypoint_handler->position_estimation_.local_position.origin.latitude * 10000000.0f, 10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_handler->position_estimation_.local_position.origin.longitude * 10000000.0f, 10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_handler->position_estimation_.local_position.origin.altitude * 1000.0f, 10);
-            print_util_dbg_print(")\r\n");
-
-
-            waypoint_handler->position_estimation_.set_new_fence_origin();
-
-            mavlink_message_t _msg;
-            mavlink_msg_gps_global_origin_pack(waypoint_handler->mavlink_stream_.sysid(),
-                                               waypoint_handler->mavlink_stream_.compid(),
-                                               &_msg,
-                                               waypoint_handler->position_estimation_.local_position.origin.latitude * 10000000.0f,
-                                               waypoint_handler->position_estimation_.local_position.origin.longitude * 10000000.0f,
-                                               waypoint_handler->position_estimation_.local_position.origin.altitude * 1000.0f);
-            waypoint_handler->mavlink_stream_.send(&_msg);
-        }
-    }
-}
-
-
 bool Mavlink_waypoint_handler::mode_change()
 {
     return mav_modes_are_equal_autonomous_modes(state_.mav_mode(), last_mode_);
@@ -732,13 +691,6 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &receive_ack_msg;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
-
-    callback.message_id     = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN; // 48
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_home;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler.add_msg_callback(&callback);
 
