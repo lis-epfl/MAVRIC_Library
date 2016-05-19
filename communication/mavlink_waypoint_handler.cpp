@@ -713,6 +713,11 @@ bool Mavlink_waypoint_handler::take_off_handler()
         {
             navigation_.dubin_state = DUBIN_INIT;
 
+            if (!state_.nav_plan_active)
+            {
+                waypoint_coordinates_ = waypoint_hold_coordinates;
+            }
+
             print_util_dbg_print("Automatic take-off finished.\r\n");
         }
     }
@@ -800,6 +805,21 @@ mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler
 {
     mav_result_t result;
 
+    print_util_dbg_print("Auto-landing msg (x100):");
+    print_util_dbg_print_num(packet->param1*100,10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(packet->param2*100,10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(packet->param3*100,10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(packet->param4*100,10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(packet->param5*100,10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(packet->param6*100,10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(packet->param7*100,10);
+    print_util_dbg_print("\r\n");
 
     if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_HOLD_POSITION)
         || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_THERE))
@@ -810,6 +830,19 @@ mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler
         waypoint_handler->auto_landing_next_state_ = false;
 
         waypoint_handler->navigation_.internal_state_ = Navigation::NAV_LANDING;
+
+        if (packet->param1 == 1)
+        {
+            waypoint_handler->waypoint_hold_coordinates.waypoint.pos[X] = packet->param5;
+            waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Y] = packet->param6;
+            waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Z] = -5.0f;
+            waypoint_handler->waypoint_hold_coordinates.waypoint.heading = waypoint_handler->position_estimation_.local_position.heading;
+        }
+        else
+        {
+            waypoint_handler->waypoint_hold_coordinates.waypoint = waypoint_handler->position_estimation_.local_position;
+            waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Z] = -5.0f;
+        }
 
         print_util_dbg_print("Auto-landing procedure initialised.\r\n");
     }
@@ -837,8 +870,6 @@ void Mavlink_waypoint_handler::auto_landing_handler()
                 print_util_dbg_print("Cust: descent to small alt");
                 state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= CUST_DESCENT_TO_SMALL_ALTITUDE;
-                waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
-                waypoint_hold_coordinates.waypoint.pos[Z] = -5.0f;
                 break;
 
             case Navigation::DESCENT_TO_GND:
@@ -1232,6 +1263,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
             navigation_.dubin_state = DUBIN_INIT;
         }
         hold_waypoint_set_ = false;
+        print_util_dbg_print("resetting hold wpt navigation_hanlder\r\n");
     }
 
     if (state_.nav_plan_active)
@@ -1291,6 +1323,10 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
                 //auto landing is not using the packet, 
                 //so we can declare a dummy one.
                 mavlink_command_long_t dummy_packet;
+                dummy_packet.param1 = 1;
+                dummy_packet.param5 = waypoint_coordinates_.waypoint.pos[X];
+                dummy_packet.param6 = waypoint_coordinates_.waypoint.pos[Y];
+                dummy_packet.param7 = waypoint_coordinates_.waypoint.pos[Z];
                 set_auto_landing(this, &dummy_packet);
             }
             if ((current_waypoint_.autocontinue == 1) && (waypoint_count_ > 1))
