@@ -215,21 +215,21 @@ bool I2c_stm32::init(void)
             i2c_reset(i2c_);
 
             /* Setup GPIO pins for I2C transmit. */
+            //BUG with gpio settings => need to config 2 pins (sda & clk) at once
+            //is fine here because port is the same, otherwise would fail...
             gpio_mode_setup(config_.sda_config.port, 
                             GPIO_MODE_AF,
                             GPIO_PUPD_PULLUP,
-                            config_.sda_config.pin);
-            gpio_set_output_options(config_.sda_config.port, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, config_.sda_config.pin);
-            // gpio_set_af(config_.sda_config.port, config_.sda_config.alt_fct, config_.sda_config.pin);
-            gpio_set_af(config_.sda_config.port, GPIO_STM32_AF_4, config_.sda_config.pin);
+                            config_.sda_config.pin | config_.clk_config.pin);
+            gpio_set_output_options(config_.sda_config.port, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, config_.sda_config.pin | config_.clk_config.pin);
+            gpio_set_af(config_.sda_config.port, config_.sda_config.alt_fct, config_.sda_config.pin| config_.clk_config.pin);
             
-            gpio_mode_setup(config_.sda_config.port, 
-                            GPIO_MODE_AF,
-                            GPIO_PUPD_PULLUP,
-                            config_.clk_config.pin);
-            gpio_set_output_options(config_.clk_config.port, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, config_.clk_config.pin);
-            // gpio_set_af(config_.clk_config.port, config_.clk_config.alt_fct, config_.clk_config.pin);
-            gpio_set_af(config_.clk_config.port, GPIO_STM32_AF_4, config_.clk_config.pin);
+            // gpio_mode_setup(config_.clk_config.port, 
+            //                 GPIO_MODE_AF,
+            //                 GPIO_PUPD_PULLUP,
+            //                 config_.clk_config.pin);
+            // gpio_set_output_options(config_.clk_config.port, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, config_.clk_config.pin);
+            // // gpio_set_af(config_.clk_config.port, config_.clk_config.alt_fct, config_.clk_config.pin);
             break;
         case STM32_I2C2:
             // rcc_periph_clock_enable(RCC_I2C1);
