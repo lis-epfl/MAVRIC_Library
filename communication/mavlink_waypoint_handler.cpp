@@ -51,16 +51,6 @@ extern "C"
 #include "util/constants.h"
 }
 
-/**
- * \brief   Set the waypoint depending on the reference frame defined in the current_waypoint_ structure
- *
- * \param   waypoint_handler        The pointer to the waypoint handler structure
- * \param   origin                  The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
- * \param   dubin_state             The pointer to the Dubin state
- *
- * \return  The waypoint in local coordinate frame
- */
-static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -502,95 +492,6 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
     }
 }
 
-static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state)
-{
-    global_position_t waypoint_global;
-    waypoint_local_struct_t wpt;
-    local_position_t waypoint_coor;
-    global_position_t origin_relative_alt;
-
-    for (uint8_t i = 0; i < 3; i++)
-    {
-        waypoint_coor.pos[i] = 0.0f;
-    }
-    waypoint_coor.origin = origin;
-    waypoint_coor.heading = maths_deg_to_rad(current_waypoint->param4);
-
-    switch (current_waypoint->frame)
-    {
-        case MAV_FRAME_GLOBAL:
-            waypoint_global.latitude    = current_waypoint->x;
-            waypoint_global.longitude   = current_waypoint->y;
-            waypoint_global.altitude    = current_waypoint->z;
-            waypoint_global.heading     = maths_deg_to_rad(current_waypoint->param4);
-            waypoint_coor = coord_conventions_global_to_local_position(waypoint_global, origin);
-
-            print_util_dbg_print("waypoint_global: lat (x1e7):");
-            print_util_dbg_print_num(waypoint_global.latitude * 10000000, 10);
-            print_util_dbg_print(" long (x1e7):");
-            print_util_dbg_print_num(waypoint_global.longitude * 10000000, 10);
-            print_util_dbg_print(" alt (x1000):");
-            print_util_dbg_print_num(waypoint_global.altitude * 1000, 10);
-            print_util_dbg_print(" waypoint_coor: x (x100):");
-            print_util_dbg_print_num(waypoint_coor.pos[X] * 100, 10);
-            print_util_dbg_print(", y (x100):");
-            print_util_dbg_print_num(waypoint_coor.pos[Y] * 100, 10);
-            print_util_dbg_print(", z (x100):");
-            print_util_dbg_print_num(waypoint_coor.pos[Z] * 100, 10);
-            print_util_dbg_print(" localOrigin lat (x1e7):");
-            print_util_dbg_print_num(origin.latitude * 10000000, 10);
-            print_util_dbg_print(" long (x1e7):");
-            print_util_dbg_print_num(origin.longitude * 10000000, 10);
-            print_util_dbg_print(" alt (x1000):");
-            print_util_dbg_print_num(origin.altitude * 1000, 10);
-            print_util_dbg_print("\r\n");
-            break;
-
-        case MAV_FRAME_LOCAL_NED:
-            waypoint_coor.pos[X] = current_waypoint->x;
-            waypoint_coor.pos[Y] = current_waypoint->y;
-            waypoint_coor.pos[Z] = current_waypoint->z;
-            waypoint_coor.heading = maths_deg_to_rad(current_waypoint->param4);
-            waypoint_coor.origin = coord_conventions_local_to_global_position(waypoint_coor);
-            break;
-
-        case MAV_FRAME_MISSION:
-            // Problem here: rec is not defined here
-            //mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
-            break;
-        case MAV_FRAME_GLOBAL_RELATIVE_ALT:
-            waypoint_global.latitude = current_waypoint->x;
-            waypoint_global.longitude = current_waypoint->y;
-            waypoint_global.altitude = current_waypoint->z;
-            waypoint_global.heading     = maths_deg_to_rad(current_waypoint->param4);
-
-            origin_relative_alt = origin;
-            origin_relative_alt.altitude = 0.0f;
-            waypoint_coor = coord_conventions_global_to_local_position(waypoint_global, origin_relative_alt);
-
-            waypoint_coor.heading = maths_deg_to_rad(current_waypoint->param4);
-
-            print_util_dbg_print("LocalOrigin: lat (x1e7):");
-            print_util_dbg_print_num(origin_relative_alt.latitude * 10000000, 10);
-            print_util_dbg_print(" long (x1e7):");
-            print_util_dbg_print_num(origin_relative_alt.longitude * 10000000, 10);
-            print_util_dbg_print(" global alt (x1000):");
-            print_util_dbg_print_num(origin.altitude * 1000, 10);
-            print_util_dbg_print(" waypoint_coor: x (x100):");
-            print_util_dbg_print_num(waypoint_coor.pos[X] * 100, 10);
-            print_util_dbg_print(", y (x100):");
-            print_util_dbg_print_num(waypoint_coor.pos[Y] * 100, 10);
-            print_util_dbg_print(", z (x100):");
-            print_util_dbg_print_num(waypoint_coor.pos[Z] * 100, 10);
-            print_util_dbg_print("\r\n");
-
-            break;
-        case MAV_FRAME_LOCAL_ENU:
-            // Problem here: rec is not defined here
-            //mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
-            break;
-
-    }
 
     wpt.waypoint = waypoint_coor;
     // WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
