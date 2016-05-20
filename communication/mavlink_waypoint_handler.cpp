@@ -1279,7 +1279,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
                 print_util_dbg_print(" reached, distance:");
                 print_util_dbg_print_num(sqrt(navigation_.dist2wp_sqr), 10);
                 print_util_dbg_print(" less than :");
-                print_util_dbg_print_num(current_waypoint_.param2, 10);
+                print_util_dbg_print_num(SQR(current_waypoint_.param2), 10);
                 print_util_dbg_print(".\r\n");
 
                 mavlink_message_t msg;
@@ -1352,7 +1352,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
                 // float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
                 float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(position_estimation_.vel[Y], position_estimation_.vel[X]));
 
-                if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) || (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) )
+                if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) || (current_waypoint_.command == MAV_CMD_NAV_LAND) ||(navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) )
                 {
                     print_util_dbg_print("Autocontinue towards waypoint Nr");
                     print_util_dbg_print_num(current_waypoint_index_,10);
