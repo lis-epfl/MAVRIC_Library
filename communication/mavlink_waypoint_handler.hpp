@@ -163,8 +163,8 @@ public:
      *
      * \return  The waypoint in local coordinate frame
      */
-    static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state);
-    
+    static waypoint_local_struct_t convert_to_waypoint_local_struct(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state);
+
 protected:
     waypoint_struct_t waypoint_list_[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 

@@ -781,7 +781,7 @@ local_position_t Mavlink_waypoint_handler::convert_waypoint_to_local_position(wa
     return wpt_local_pos;
 }
 
-static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state)
+static waypoint_local_struct_t Mavlink_waypoint_handler::convert_to_waypoint_local_struct(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state)
 {
     global_position_t waypoint_global;
     waypoint_local_struct_t wpt;
