@@ -88,6 +88,7 @@ aero_attitude_t coord_conventions_quat_to_aero(quat_t qe)
 }
 
 
+
 quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero)
 {
     quat_t quat;
@@ -110,6 +111,28 @@ quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero)
     return quat;
 }
 
+quat_t coord_conventions_quaternion_from_rpy(float rpy [3])
+{
+        quat_t quat;
+
+    // intermediate values
+    float cr, cp, cy, sr, sp, sy;
+    cr = quick_trig_cos(rpy[0] / 2);
+    cp = quick_trig_cos(rpy[1] / 2);
+    cy = quick_trig_cos(rpy[2] / 2);
+    sr = quick_trig_sin(rpy[0] / 2);
+    sp = quick_trig_sin(rpy[1] / 2);
+    sy = quick_trig_sin(rpy[2] / 2);
+
+
+    quat.s      = (cr * cp * cy) + (sr * sp * sy);
+    quat.v[0]   = (sr * cp * cy) - (cr * sp * sy);
+    quat.v[1]   = (cr * sp * cy) + (sr * cp * sy);
+    quat.v[2]   = (cr * cp * sy) - (sr * sp * cy);
+
+    return quat;
+
+}
 
 float coord_conventions_get_yaw(quat_t qe)
 {
