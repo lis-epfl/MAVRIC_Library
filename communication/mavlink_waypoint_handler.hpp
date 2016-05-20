@@ -154,6 +154,17 @@ public:
      */
     void advance_to_next_waypoint();
 
+    /**
+     * \brief   Set the waypoint depending on the reference frame defined in the current_waypoint_ structure
+     *
+     * \param   waypoint_handler        The pointer to the waypoint handler structure
+     * \param   origin                  The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
+     * \param   dubin_state             The pointer to the Dubin state
+     *
+     * \return  The waypoint in local coordinate frame
+     */
+    static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state);
+    
 protected:
     waypoint_struct_t waypoint_list_[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
