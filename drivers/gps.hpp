@@ -59,7 +59,7 @@ typedef enum
     FIX_3D = 3,
     DGPS = 4,
     RTK = 5,
-}gps_fix_t;
+} gps_fix_t;
 
 /**
  * \brief Abstract class for GPS
@@ -193,5 +193,13 @@ public:
     virtual bool healthy(void) const = 0;
 };
 
+
+/**
+ * \brief  Glue method for scheduler
+ */
+static inline bool task_gps_update(Gps* gps)
+{
+    return gps->update();
+};
 
 #endif /* GPS_HPP_ */

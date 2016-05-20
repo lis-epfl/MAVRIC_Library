@@ -92,16 +92,22 @@ public:
      * \brief                   Register a new task to the task set, in the first available slot
      *
      * \param repeat_period     Repeat period (us)
-     * \param run_mode          Run mode
-     * \param timing_mode       Timing mode
-     * \param priority          Priority
      * \param call_function     Function pointer to be called
      * \param function_argument Argument to be passed to the function
-     * \param task_id           Unique task identifier
+     * \param priority          Priority
+     * \param task_id           Unique task identifier, if -1 the ID will be automatically chosen
+     * \param timing_mode       Timing mode
+     * \param run_mode          Run mode
      *
      * \return                  True if the task was successfully added, False if not
      */
-    bool add_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, uint32_t task_id);
+    bool add_task(uint32_t repeat_period,
+                  Scheduler_task::task_function_t call_function,
+                  Scheduler_task::task_argument_t function_argument,
+                  Scheduler_task::priority_t priority       = Scheduler_task::PRIORITY_NORMAL,
+                  Scheduler_task::timing_mode_t timing_mode = Scheduler_task::PERIODIC_ABSOLUTE,
+                  Scheduler_task::run_mode_t run_mode       = Scheduler_task::RUN_REGULAR,
+                  int32_t task_id                           = -1);
 
 
     /**
