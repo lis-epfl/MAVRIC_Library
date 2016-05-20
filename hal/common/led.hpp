@@ -68,4 +68,13 @@ public:
 };
 
 
+/**
+ *  \brief Glue for scheduler
+ */
+static inline bool task_led_toggle(Led* led)
+{
+    led->toggle();
+    return true;
+}
+
 #endif /* LED_HPP_ */
