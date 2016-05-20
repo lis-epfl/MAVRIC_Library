@@ -120,6 +120,16 @@ public:
     const waypoint_struct_t current_waypoint() const;
 
     /**
+     * \brief Gets the next waypoint if available
+     *
+     * \details Returns a copy of the waypoint instead of a reference as
+     * the waypoint could be removed/overwritten by the GCS
+     *
+     * \return Copy of the next waypoint
+     */
+    const waypoint_struct_t next_waypoint() const;
+
+    /**
      * \brief Gets the current waypoints position in the local frame
      *
      * \param origin The local position origin
