@@ -652,3 +652,104 @@ void Mavlink_waypoint_handler::advance_to_next_waypoint()
         return;
     }
 }
+
+local_position_t Mavlink_waypoint_handler::curent_waypoint_local_position(global_position_t origin) const
+{
+    // Get the current waypoint
+    waypoint_struct_t wpt = current_waypoint();
+
+    return convert_waypoint_to_local_position(&wpt, origin);
+}
+
+local_position_t Mavlink_waypoint_handler::convert_waypoint_to_local_position(waypoint_struct_t* wpt, global_position_t origin) const
+{
+    // Get the local position from this waypoint
+    global_position_t waypoint_global;
+    local_position_t wpt_local_pos;
+    global_position_t origin_relative_alt;
+
+    for (uint8_t i = 0; i < 3; i++)
+    {
+        wpt_local_pos.pos[i] = 0.0f;
+    }
+    wpt_local_pos.origin = origin;
+    wpt_local_pos.heading = maths_deg_to_rad(wpt->param4);
+
+    switch (wpt->frame)
+    {
+        case MAV_FRAME_GLOBAL:
+            waypoint_global.latitude    = wpt->x;
+            waypoint_global.longitude   = wpt->y;
+            waypoint_global.altitude    = wpt->z;
+            waypoint_global.heading     = maths_deg_to_rad(wpt->param4);
+            wpt_local_pos = coord_conventions_global_to_local_position(waypoint_global, origin);
+
+            print_util_dbg_print("waypoint_global: lat (x1e7):");
+            print_util_dbg_print_num(waypoint_global.latitude * 10000000, 10);
+            print_util_dbg_print(" long (x1e7):");
+            print_util_dbg_print_num(waypoint_global.longitude * 10000000, 10);
+            print_util_dbg_print(" alt (x1000):");
+            print_util_dbg_print_num(waypoint_global.altitude * 1000, 10);
+            print_util_dbg_print(" waypoint_coor: x (x100):");
+            print_util_dbg_print_num(wpt_local_pos.pos[X] * 100, 10);
+            print_util_dbg_print(", y (x100):");
+            print_util_dbg_print_num(wpt_local_pos.pos[Y] * 100, 10);
+            print_util_dbg_print(", z (x100):");
+            print_util_dbg_print_num(wpt_local_pos.pos[Z] * 100, 10);
+            print_util_dbg_print(" localOrigin lat (x1e7):");
+            print_util_dbg_print_num(origin.latitude * 10000000, 10);
+            print_util_dbg_print(" long (x1e7):");
+            print_util_dbg_print_num(origin.longitude * 10000000, 10);
+            print_util_dbg_print(" alt (x1000):");
+            print_util_dbg_print_num(origin.altitude * 1000, 10);
+            print_util_dbg_print("\r\n");
+            break;
+
+        case MAV_FRAME_LOCAL_NED:
+            wpt_local_pos.pos[X] = wpt->x;
+            wpt_local_pos.pos[Y] = wpt->y;
+            wpt_local_pos.pos[Z] = wpt->z;
+            wpt_local_pos.heading = maths_deg_to_rad(wpt->param4);
+            wpt_local_pos.origin = coord_conventions_local_to_global_position(wpt_local_pos);
+            break;
+
+        case MAV_FRAME_MISSION:
+            // Problem here: rec is not defined here
+            //mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+            break;
+        case MAV_FRAME_GLOBAL_RELATIVE_ALT:
+            waypoint_global.latitude = wpt->x;
+            waypoint_global.longitude = wpt->y;
+            waypoint_global.altitude = wpt->z;
+            waypoint_global.heading     = maths_deg_to_rad(wpt->param4);
+
+            origin_relative_alt = origin;
+            origin_relative_alt.altitude = 0.0f;
+            wpt_local_pos = coord_conventions_global_to_local_position(waypoint_global, origin_relative_alt);
+
+            wpt_local_pos.heading = maths_deg_to_rad(wpt->param4);
+
+            print_util_dbg_print("LocalOrigin: lat (x1e7):");
+            print_util_dbg_print_num(origin_relative_alt.latitude * 10000000, 10);
+            print_util_dbg_print(" long (x1e7):");
+            print_util_dbg_print_num(origin_relative_alt.longitude * 10000000, 10);
+            print_util_dbg_print(" global alt (x1000):");
+            print_util_dbg_print_num(origin.altitude * 1000, 10);
+            print_util_dbg_print(" waypoint_coor: x (x100):");
+            print_util_dbg_print_num(wpt_local_pos.pos[X] * 100, 10);
+            print_util_dbg_print(", y (x100):");
+            print_util_dbg_print_num(wpt_local_pos.pos[Y] * 100, 10);
+            print_util_dbg_print(", z (x100):");
+            print_util_dbg_print_num(wpt_local_pos.pos[Z] * 100, 10);
+            print_util_dbg_print("\r\n");
+
+            break;
+        case MAV_FRAME_LOCAL_ENU:
+            // Problem here: rec is not defined here
+            //mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+            break;
+
+    }
+
+    return wpt_local_pos;
+}

@@ -120,6 +120,25 @@ public:
     const waypoint_struct_t current_waypoint() const;
 
     /**
+     * \brief Gets the current waypoints position in the local frame
+     *
+     * \param origin The local position origin
+     *
+     * \return The current waypoint local position
+     */
+    local_position_t curent_waypoint_local_position(global_position_t origin) const;
+
+    /**
+     * \brief Converts an inputted waypoint to the local frame
+     *
+     * \param wpt The waypoint desired to be in the local frame
+     * \param origin The local position origin
+     *
+     * \return The waypoint local position
+     */
+    local_position_t convert_waypoint_to_local_position(waypoint_struct_t* wpt, global_position_t origin) const;
+
+    /**
      * \brief Sets the next waypoint as the current one. Should be called when
      * the current waypoint has been reached.
      */
