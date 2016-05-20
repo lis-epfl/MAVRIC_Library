@@ -116,9 +116,10 @@ public:
 	float	maxsens;	///< Maximal detection distance, 		typically 10
 	float	a_max; 		///< Maximal deceleration [m/s^2], 		typically 1
 	float	r_pz; 		///< Radius of Protection Zone, 		typically 1
-	float	comfort; 	///< [0,1] Intensity of the reaction, 	typically 0.845
+	float	comfort; 	///< [0,1] Intensity of the reaction, 	typically 0.5
 	float	tahead; 	///< [0,10] Intensity of the reaction, 	typically 2
-	float	coef_roll; 	///< [0,1] Intensity of the reaction, 	typically 0.01
+	float	coef_roll; 	///< [0,1] Intensity of the reaction, 	typically 1
+	float	maxradius; 	///< [0,100] MAximal radius of curvature, 	typically 3
 
 
 

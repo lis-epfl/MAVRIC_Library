@@ -1669,6 +1669,58 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
 
     waypoint_list[0] = waypoint;
+
+    waypoint_count_ ++;
+
+    waypoint_onboard_count_ = waypoint_count_;
+    //CYSTU
+    //1
+    waypoint.autocontinue = 0;
+    waypoint.current = 0;
+    waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+    waypoint.command = MAV_CMD_NAV_FENCE; //40
+
+    waypoint.x = 46.5188720f;
+    waypoint.y = 6.5656400f;
+    waypoint.z = 0.0f;
+
+    waypoint.param1 = 0; // Hold time in decimal seconds
+    waypoint.param2 = 0; // Acceptance radius in meters
+    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
+
+    waypoint_list[1] = waypoint;
+
+    //2
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+    waypoint.x = 46.5188923f;
+    waypoint.y = 6.5663373f;
+    waypoint_list[2] = waypoint;
+
+    //3
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+    waypoint.x = 46.5185195f;
+    waypoint.y = 6.5667987f;
+    waypoint_list[3] = waypoint;
+
+    //4
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+    waypoint.x = 46.5177959f;
+    waypoint.y = 6.5661764f;
+
+    waypoint_list[4] = waypoint;
+
+    //5
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+    waypoint.x = 46.5183035f;
+    waypoint.y = 6.5653718f;
+
+    waypoint_list[5] = waypoint;
+
 }
 
 
@@ -1767,28 +1819,21 @@ void Mavlink_waypoint_handler::fencepoint_angle(waypoint_struct_t* fence_list, u
 			{
 				k=i+2;
 			}
-			fence_list[i];
-			float ij[3]=	{fence_list[j].x-fence_list[i].x,
-					fence_list[j].y-fence_list[i].y,
-					fence_list[j].z-fence_list[i].z};
-			float jk[3]=	{fence_list[j].x-fence_list[k].x,
-					fence_list[j].y-fence_list[k].y,
-					fence_list[j].z-fence_list[k].z};
-			float angle = atan2((ij[1]*jk[0]-ij[0]*jk[1]),(ij[1]*jk[1]+ij[0]*jk[0]));
+			float ij[3]=   {fence_list[j].x-fence_list[i].x,
+							fence_list[j].y-fence_list[i].y,
+							fence_list[j].z-fence_list[i].z};
+
+			float jk[3]=   {fence_list[j].x-fence_list[k].x,
+							fence_list[j].y-fence_list[k].y,
+							fence_list[j].z-fence_list[k].z};
+
+			float angle = atan2(ij[1],ij[0]) - atan2(jk[1],jk[0]);
 			if(angle<0)
 			{
 				angle += 2*PI;
 			}
 
-
 			fence_angle_list[j]=angle;
-//
-//			print_util_dbg_print("|fencepoint|");print_util_dbg_putfloat(j+1,0);print_util_dbg_print("||");
-//			print_util_dbg_putfloat(fence_list[j].x,2);print_util_dbg_print("||");
-//			print_util_dbg_putfloat(waypoint_handler->fence_list[j].y,2);print_util_dbg_print("||");
-//			print_util_dbg_putfloat(angle,5);print_util_dbg_print("||");
-//			print_util_dbg_putfloat(angle*MATH_RAD_TO_DEG,5);print_util_dbg_print("\n");
-
 		}
 }
 

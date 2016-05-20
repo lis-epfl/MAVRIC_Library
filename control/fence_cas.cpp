@@ -155,7 +155,8 @@ Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estima
 	tahead(2.0),
 //	repulsion({0,0,0}),
 	coef_roll(0.6),
-	maxsens(10.0)
+	maxsens(10.0),
+	maxradius(15.0)
 {
 
 }
@@ -178,8 +179,6 @@ bool Fence_CAS::update(void)
 	{
 		this->repulsion[k]=0.0;
 	}
-	//CYSTU PUT BACK C
-//	float C[3]={0,0,0};
 	float C[3]={pos_est->last_gps_pos.pos[0],pos_est->last_gps_pos.pos[1],pos_est->last_gps_pos.pos[2]};	// Position of the Quad
 	float S[3]={0,0,0};																										// Position of the heading
 
@@ -243,62 +242,9 @@ bool Fence_CAS::update(void)
 			A[2]=C[2];
 			B[2]=C[2];
 
-			/*Fencepoint repulsion*/
-			float angle_rep_radius = this->maxsens;
-			if(CurAngle_list[i]>PI/2.0) // Check if the angle is smaller than pi/2
-			{
-				;
-			}
-			else	// The angle is smaller than pi/2
-			{
-				float cos = quick_trig_cos(CurAngle_list[i]/2.0)*(1 - CurAngle_list[i]/PI)*2;
-				angle_rep_radius = 4*cos*cos*cos*this->maxsens; // The smaller the angle, the bigger the repulsion radius
-				float D[3]={0,0,0}; // D is the precedent point (current A, next B, precedent D)
-				if(i==0)
-				{
-					global_position_t Dgpoint = {CurFence_list[nbFencePoints-1].y, CurFence_list[nbFencePoints-1].x,(float)CurFence_list[nbFencePoints-1].z, 0.0f};
-					local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
-					D[0]=Dlpoint.pos[0];D[1]=Dlpoint.pos[1];D[2]=Dlpoint.pos[2];
-				}
-				else
-				{
-					global_position_t Dgpoint = {CurFence_list[i-1].y, CurFence_list[i-1].x,(float)CurFence_list[i-1].z, 0.0f};
-					local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
-					D[0]=Dlpoint.pos[0];D[1]=Dlpoint.pos[1];D[2]=Dlpoint.pos[2];
-				}
-				float fence2[3]={D[0]-A[0],D[1]-A[1],D[2]-A[2]};	// Compute vector AD
-				float fence1[3]={B[0]-A[0],B[1]-A[1],B[2]-A[2]};	// Compute vector AB
-				// Clip the repulsion radius with the length of the adjacent segments
-				if(vectors_norm(fence1)<angle_rep_radius)
-				{
-					angle_rep_radius = vectors_norm(fence1);
-				}
-				if(vectors_norm(fence2)<angle_rep_radius)
-				{
-					angle_rep_radius = vectors_norm(fence2);
-				}
-			}
-
-			float distAC = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
-			if((distAC >= -(angle_rep_radius))&&(distAC < angle_rep_radius))
-			{
-				if((old_distAC[i]>=distAC)) // If the drone is heading toward the fencepoint
-				{
-					float ratio=(angle_rep_radius-distAC)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
-					float rep[3]={A[0]-S[0],A[1]-S[1],0.0};					// Repulsion local frame
-					gftobftransform(C, S, rep);								// Repulsion body frame
-					vectors_normalize(rep,rep);
-					rep[1]=(rep[1]>=0?-1:1) ;								// Extract repulsion direction in body frame
-					this->repulsion[1]+=- rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type)*1.3; // Add repulsion
-//					print_util_dbg_print("\t ||Arep||");print_util_dbg_putfloat(i+1,0);
-//					print_util_dbg_print("||");print_util_dbg_putfloat(-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type),4);
-	//				detected=true;												// Enable detection flag
-				}
-			}
-			old_distAC[i]=distAC;											// Store old distance to fencepoint
-
 			/*Fence repulsion*/
-			dist[i] = detect_seg(A,B,C,S,V,I,J);							// Compute distance to the fence
+			dist[i] = detect_seg(A,B,C,S,V,I,J);
+			float fencerep = 0.0;// Compute distance to the fence
 			if((dist[i] >= -(this->maxsens))&&(dist[i] < this->maxsens))
 			{
 				float rep[3]={A[1]-B[1],B[0]-A[0],0.0};						// Repulsion local frame
@@ -309,9 +255,11 @@ bool Fence_CAS::update(void)
 				float ratio = dist[i]/this->maxsens;						// Compute ratio for interpolation
 
 	// 			this->repulsion[0]+=0.0;
-				this->repulsion[1]+=-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type);
-//				print_util_dbg_print("\t ||Frep||");print_util_dbg_putfloat(i,0);
-//				print_util_dbg_print("||");print_util_dbg_putfloat(-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type),4);
+				fencerep +=-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type);
+				this->repulsion[1]+=fencerep;
+//				print_util_dbg_print("||Frep||");print_util_dbg_putfloat(i,0);
+//				print_util_dbg_print("||");print_util_dbg_putfloat(fencerep,4);
+//				print_util_dbg_print("||\n");
 	// 			this->repulsion[2]+=0.0;
 	//			detected=true;												// Enable detection flag
 			}
@@ -319,6 +267,131 @@ bool Fence_CAS::update(void)
 			{
 
 			}
+			/*END Fence repulsion*/
+
+			/*Fencepoint repulsion*/
+			/*Min radius method*/
+
+			float AB[3]={B[0]-A[0],B[1]-A[1],B[2]-A[2]};
+			float pAB[3]={-AB[1],AB[0],AB[2]};
+			vectors_normalize(AB,AB);
+			vectors_normalize(pAB,pAB);
+			float M[3]={0,0,0};
+			for(int k=0;k<3;k++)
+			{
+				M[k] = A[k] + (this->maxradius+this->maxsens)*(AB[k]/quick_trig_tan(CurAngle_list[i]/2.0) + pAB[k]);
+			}
+
+			float MS[3] = {S[0]-M[0],S[1]-M[1],S[2]-M[2]};
+			float distMC=detect_seg(M,M,C,C,V,I,J);
+
+			float MA[3] = {A[0]-M[0],A[1]-M[1],A[2]-M[2]};
+			float distMA=vectors_norm(MA);
+
+			print_util_dbg_print("||ID||");print_util_dbg_putfloat(i+1,0);print_util_dbg_print("\n");
+			print_util_dbg_print("||A||");print_util_dbg_putfloat(A[0],5);print_util_dbg_putfloat(A[1],5);print_util_dbg_print("\n");
+			print_util_dbg_print("||M||");print_util_dbg_putfloat(M[0],5);print_util_dbg_putfloat(M[1],5);print_util_dbg_print("\n");
+//			print_util_dbg_print("||MA||");print_util_dbg_putfloat(MA[0],5);print_util_dbg_putfloat(MA[1],5);print_util_dbg_print("\n");
+//			print_util_dbg_print("||MA||");print_util_dbg_putfloat(distMA,5);print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i]*180/PI,5);print_util_dbg_print("\n");
+			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
+//			float SA[3] = {A[0]-S[0],A[1]-S[1],A[2]-S[2]};
+//			float distAS = vectors_norm(SA);
+			this->maxradius = 30;
+//			print_util_dbg_print("||MS||");print_util_dbg_putfloat(distMS,5);print_util_dbg_print("||SA||");print_util_dbg_putfloat(distAS,5);print_util_dbg_print("\n");
+			if((distAS <= (distMA))&&(distMC >= this->maxradius))
+			{
+				if((old_distAC[i]>=distAS)) // If the drone is heading toward the fencepoint
+				{
+					float ratio=(distMC-this->maxradius)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
+//					float ratio=(distMA)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
+					float rep[3]={A[0]-S[0],A[1]-S[1],0.0};					// Repulsion local frame
+					gftobftransform(C, S, MA);								// Repulsion body frame
+					vectors_normalize(MA,MA);
+					MA[1]=(MA[1]>=0?-1:1) ;								// Extract repulsion direction in body frame
+					this->repulsion[1]+=- MA[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type)*3; // Add repulsion
+//					print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
+//					print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i]*180/PI,5);
+//					print_util_dbg_print("||");print_util_dbg_putfloat(-MA[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type)*2,5);
+//					print_util_dbg_print("\n");
+					detected=true;
+				}
+			}
+//			if(distAS <= this->maxsens)
+//			{
+//				this->repulsion[1]*=10; // Add repulsion
+//				print_util_dbg_putfloat(distAS,5);print_util_dbg_print("<");print_util_dbg_putfloat(this->maxsens,5);
+//				print_util_dbg_print("||TOO NEAR ||\n");
+//			}
+
+			old_distAC[i]=distAS;
+
+			/*END Min radius method*/
+
+			/*Custom methd*/
+//			float angle_rep_radius = this->maxsens;
+//			if(CurAngle_list[i]>PI/2.0) // Check if the angle is smaller than pi/2
+//			{
+//				;
+//			}
+//			else	// The angle is smaller than pi/2
+//			{
+//				float cos = quick_trig_cos(CurAngle_list[i]/2.0)*(1 - CurAngle_list[i]/PI)*2;
+//				angle_rep_radius = 4*cos*cos*cos*this->maxsens; // The smaller the angle, the bigger the repulsion radius CUSTOM
+//				angle_rep_radius = 2*this->maxsens/(quick_trig_sin(CurAngle_list[i]/2.0));// The smaller the angle, the bigger the repulsion radius DIAGONAL
+//				float D[3]={0,0,0}; // D is the precedent point (current A, next B, precedent D)
+//				if(i==0)
+//				{
+//					global_position_t Dgpoint = {CurFence_list[nbFencePoints-1].y, CurFence_list[nbFencePoints-1].x,(float)CurFence_list[nbFencePoints-1].z, 0.0f};
+//					local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
+//					D[0]=Dlpoint.pos[0];D[1]=Dlpoint.pos[1];D[2]=Dlpoint.pos[2];
+//				}
+//				else
+//				{
+//					global_position_t Dgpoint = {CurFence_list[i-1].y, CurFence_list[i-1].x,(float)CurFence_list[i-1].z, 0.0f};
+//					local_position_t Dlpoint = coord_conventions_global_to_local_position(Dgpoint,this->pos_est->local_position.origin);
+//					D[0]=Dlpoint.pos[0];D[1]=Dlpoint.pos[1];D[2]=Dlpoint.pos[2];
+//				}
+//				float fence2[3]={D[0]-A[0],D[1]-A[1],D[2]-A[2]};	// Compute vector AD
+//				float fence1[3]={B[0]-A[0],B[1]-A[1],B[2]-A[2]};	// Compute vector AB
+//				// Clip the repulsion radius with the length of the adjacent segments
+//				if(vectors_norm(fence1)<angle_rep_radius)
+//				{
+//					angle_rep_radius = vectors_norm(fence1);
+//				}
+//				if(vectors_norm(fence2)<angle_rep_radius)
+//				{
+//					angle_rep_radius = vectors_norm(fence2);
+//				}
+//			}
+//
+//			float distAC = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
+//			if((distAC >= -(angle_rep_radius))&&(distAC < angle_rep_radius))
+//			{
+//				if((old_distAC[i]>=distAC)) // If the drone is heading toward the fencepoint
+//				{
+//					float ratio=(angle_rep_radius-distAC)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
+//					float rep[3]={A[0]-S[0],A[1]-S[1],0.0};					// Repulsion local frame
+//					gftobftransform(C, S, rep);								// Repulsion body frame
+//					vectors_normalize(rep,rep);
+//					rep[1]=(rep[1]>=0?-1:1) ;								// Extract repulsion direction in body frame
+//					this->repulsion[1]+=- rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type)*1.3; // Add repulsion
+////					print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
+////					print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i],5);
+////					print_util_dbg_print("||");print_util_dbg_putfloat(-rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type),5);
+////					print_util_dbg_print("\n");
+//	//				detected=true;												// Enable detection flag
+//				}
+//			}
+//			old_distAC[i]=distAC;
+//			// Store old distance to fencepoint
+			/*END Custom method*/
+
+//			if(detected==false)
+//			{
+//				this->repulsion[1]+=fencerep;
+//			}
+
+
 
 		}
 
