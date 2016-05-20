@@ -86,7 +86,7 @@ Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const S
     init_success &= scheduler.add_task(100000,
                                        (Scheduler_task::task_function_t)&send_all_scheduled_parameters,
                                        (Scheduler_task::task_argument_t)this,
-                                       Scheduler_task::PRIORITY_NORMAL,
+                                       Scheduler_task::PRIORITY_HIGH,
                                        Scheduler_task::PERIODIC_RELATIVE,
                                        Scheduler_task::RUN_REGULAR,
                                        MAVLINK_MSG_ID_PARAM_VALUE);

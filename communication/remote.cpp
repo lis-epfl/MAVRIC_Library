@@ -456,6 +456,7 @@ void remote_get_control_command(remote_t* remote, control_command_t* controls)
     controls->rpy[ROLL]     = remote_get_roll(remote);
     controls->rpy[PITCH]    = remote_get_pitch(remote);
     controls->rpy[YAW]      = remote_get_yaw(remote);
+    controls->theading      = remote_get_yaw(remote);
     controls->thrust        = remote_get_throttle(remote);
 }
 

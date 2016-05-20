@@ -91,19 +91,33 @@ void servos_mix_ywing_update(servos_mix_ywing_t* mix)
         servos[0] = mix->max_thrust;
     }
 
+    // // Top flap
+    // servos[1] = mix->flap_top_dir * (mix->torque_command->xyz[ROLL]
+    //                                  - mix->torque_command->xyz[YAW]);
+    //
+    // // Right flap
+    // servos[2]  = mix->flap_right_dir * (mix->torque_command->xyz[ROLL]
+    //                                     + 0.86f * mix->torque_command->xyz[PITCH]
+    //                                     + 0.50f * mix->torque_command->xyz[YAW]);
+    //
+    // // Left flap
+    // servos[3]  = mix->flap_left_dir * (mix->torque_command->xyz[ROLL]
+    //                                    - 0.86f * mix->torque_command->xyz[PITCH]
+    //                                    + 0.50f * mix->torque_command->xyz[YAW]);
+
     // Top flap
-    servos[1] = mix->flap_top_dir * (mix->torque_command->xyz[ROLL]
-                                     - mix->torque_command->xyz[YAW]);
+    servos[1] = mix->flap_top_dir * (- mix->torque_command->xyz[YAW]
+                                     - mix->torque_command->xyz[ROLL]);
 
     // Right flap
-    servos[2]  = mix->flap_right_dir * (mix->torque_command->xyz[ROLL]
+    servos[2]  = mix->flap_right_dir * (- 1.00f * mix->torque_command->xyz[YAW]
                                         + 0.86f * mix->torque_command->xyz[PITCH]
-                                        + 0.50f * mix->torque_command->xyz[YAW]);
+                                        + 0.50f * mix->torque_command->xyz[ROLL]);
 
     // Left flap
-    servos[3]  = mix->flap_left_dir * (mix->torque_command->xyz[ROLL]
+    servos[3]  = mix->flap_left_dir * (- 1.00f * mix->torque_command->xyz[YAW]
                                        - 0.86f * mix->torque_command->xyz[PITCH]
-                                       + 0.50f * mix->torque_command->xyz[YAW]);
+                                       + 0.50f * mix->torque_command->xyz[ROLL]);
 
     // Clip values
     for (int32_t i = 1; i < 4; i++)
