@@ -608,10 +608,8 @@ const waypoint_struct_t Mavlink_waypoint_handler::current_waypoint() const
     // Get current waypoint index
     int wpt_index = current_waypoint_index();
 
-    // If the current waypoint index is the last waypoint, do nothing
-    if (wpt_index == waypoint_count_-1)
-
-    if (wpt_index >= 0)
+    // If it is a good index
+    if (wpt_index >= 0 && wpt_index < waypoint_count_)
     {
         return waypoint_list_[];
     }
