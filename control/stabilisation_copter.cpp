@@ -215,9 +215,8 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             {
                 rpyt_errors[2] = maths_calc_smaller_angle(input.theading - stabilisation_copter->pos_est->local_position.heading);
             }
-            else
+            else // relative yaw
             {
-                // relative yaw
                 rpyt_errors[2] = input.rpy[2];
             }
 
