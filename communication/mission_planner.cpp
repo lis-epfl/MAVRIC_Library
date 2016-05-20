@@ -179,7 +179,7 @@ mav_result_t Mavlink_waypoint_handler::continue_to_next_waypoint(Mavlink_waypoin
         print_util_dbg_print("\r\n");
         waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_index_].current = 1;
         waypoint_handler->current_waypoint_ = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_index_];
-        waypoint_handler->waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&waypoint_handler->current_waypoint_,
+        waypoint_handler->waypoint_coordinates_ = waypoint_handler.convert_to_waypoint_local_struct(&waypoint_handler->current_waypoint_,
                                                                                             waypoint_handler->position_estimation_.local_position.origin,
                                                                                             &waypoint_handler->navigation_.dubin_state);
 
@@ -329,7 +329,7 @@ mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_ha
             waypoint.y = packet->param6;
             waypoint.z = packet->param7;
 
-            waypoint_local_struct_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(   &waypoint,
+            waypoint_local_struct_t waypoint_goal = waypoint_handler.convert_to_waypoint_local_struct(   &waypoint,
                                                                                                 waypoint_handler->position_estimation_.local_position.origin,
                                                                                                 &waypoint_handler->navigation_.dubin_state);
             waypoint_handler->hold_init(waypoint_goal.waypoint);
@@ -876,7 +876,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
 
                     next_waypoint_.current = 1;
                     dubin_state_t dubin_state;
-                    waypoint_next_ = waypoint_handler_set_waypoint_from_frame(   &next_waypoint_,
+                    waypoint_next_ = waypoint_handler_.convert_to_waypoint_local_struct(   &next_waypoint_,
                                                                                 position_estimation_.local_position.origin,
                                                                                 &dubin_state);
                 }
@@ -1238,7 +1238,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
             {
                 current_waypoint_index_ = i;
                 current_waypoint_ = waypoint_list[current_waypoint_index_];
-                waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(   &current_waypoint_,
+                waypoint_coordinates_ = waypoint_handler_.convert_to_waypoint_local_struct(   &current_waypoint_,
                                                                                     position_estimation_.local_position.origin,
                                                                                     &navigation_.dubin_state);
 
