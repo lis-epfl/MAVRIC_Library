@@ -115,8 +115,7 @@ public:
      * \param   ahrs         Attitude and heading reference system
      * \param   config       Configuration structure
      */
-    Saccade_controller(Flow& flow_back, Flow& flow_front, const ahrs_t& ahrs, const position_command_t& position_command, 
-                                        const altitude_t& altitude, saccade_controller_conf_t config);
+    Saccade_controller(Flow& flow_back, Flow& flow_front, const ahrs_t& ahrs, const altitude_t& altitude, Position_estimation& position_estimation,saccade_controller_conf_t config);
 
 
     /**
@@ -144,8 +143,8 @@ public:
     float                       threshold_;                         ///< Threshold for importance of CAN
     float                       goal_direction_;                    ///< Goal direction for drone
     float                       azimuth_ [2 * N_points];            ///< Table of azimuthal angles
-    float                       derotated_flow_front_ [N_points];  ///< Table of Relative nearness
-    float                       derotated_flow_back_ [N_points];  ///< Table of Relative nearness
+    float                       derotated_flow_front_ [N_points];   ///< Table of Relative nearness
+    float                       derotated_flow_back_ [N_points];    ///< Table of Relative nearness
     float                       relative_nearness_ [2 * N_points];  ///< Table of Relative nearness
     float                       inv_sin_azimuth_ [2 * N_points];
     float                       cos_azimuth_[2 * N_points];
@@ -156,26 +155,27 @@ public:
     float                       weighted_function_;
     float                       derotation_constant_;
     float                       last_derotation_yaw_velocity_;
+    float                       movement_total_;
 
     uint64_t                    last_saccade_;
 
     pid_controller_t            altitude_pid_;
 
 
-
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
 
-    Flow&                     flow_back_;                          ///< back optic flow camera output
-    Flow&                     flow_front_;                         ///< Front optic flow camera output
+    Flow&                       flow_back_;                          ///< back optic flow camera output
+    Flow&                       flow_front_;                         ///< Front optic flow camera output
 
     const ahrs_t&               ahrs_;                               ///< Attitude and heading reference system
 
-    const position_command_t&         position_command_;
+    float                       altitude_value_;
 
-    const altitude_t           altitude_; 
+    const altitude_t            altitude_; 
 
     velocity_command_t          velocity_command_;
 
+    Position_estimation&        position_estimation_;
 
     bool                        is_time_initialized_;               ///< Flag for time of presaccadic state
 
@@ -194,15 +194,15 @@ static inline saccade_controller_conf_t saccade_controller_default_config(void)
 
     conf.pid_config                         = {};
     conf.pid_config.p_gain                  = 0.2f;
-    conf.pid_config.clip_min                = -1.0f;
-    conf.pid_config.clip_max                = 1.0f;
+    conf.pid_config.clip_min                = -0.5f;
+    conf.pid_config.clip_max                = 0.5f;
     conf.pid_config.integrator              = {};
-    conf.pid_config.integrator.gain         = 0.5f;
+    conf.pid_config.integrator.gain         = 0.0f;
     conf.pid_config.integrator.accumulator  = 0.0f;
     conf.pid_config.integrator.clip_pre     = 0.0001f;
     conf.pid_config.integrator.clip         = 0.5f;
     conf.pid_config.differentiator          = {};
-    conf.pid_config.differentiator.gain     = 0.4f;
+    conf.pid_config.differentiator.gain     = 0.0f;
     conf.pid_config.differentiator.previous = 0.0f;
     conf.pid_config.differentiator.clip     = 0.65f;
     conf.pid_config.soft_zone_width         = 0.0f;

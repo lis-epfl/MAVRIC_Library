@@ -59,7 +59,7 @@ Central_data_custom::Central_data_custom(Imu& imu, Barometer& barometer, Gps& gp
                  servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7, file1, file2, config),
     flow_1_(flow_1),
     flow_2_(flow_2),
-    saccade_controller_(flow_1_, flow_2_, ahrs, command.position, altitude_,saccade_controller_default_config())
+    saccade_controller_(flow_1_, flow_2_, ahrs, altitude_,position_estimation,saccade_controller_default_config())
 {}
 
 
@@ -83,6 +83,7 @@ bool Central_data_custom::init(void)
     my_servos_mix_quadcopter_diag_default_config.max_thrust                         = 1.0f;
 
 
+
     servos_mix_quadcotper_diag_init(&servo_mix,
                                           my_servos_mix_quadcopter_diag_default_config,
                                           &command.torque,
@@ -91,6 +92,70 @@ bool Central_data_custom::init(void)
                                           &servo_1,
                                           &servo_2,
                                           &servo_3);
+
+    velocity_controller_copter_conf_t my_velocity_controller_copter_default_config;
+
+
+    my_velocity_controller_copter_default_config.thrust_hover_point                    = -0.1f;
+    // -----------------------------------------------------------------
+    // ------ X PID -------------------------------------------------
+    // -----------------------------------------------------------------
+    my_velocity_controller_copter_default_config.pid_config[X]                         = {};
+    my_velocity_controller_copter_default_config.pid_config[X].p_gain                  = 0.2f;
+    my_velocity_controller_copter_default_config.pid_config[X].clip_min                = -0.5f;
+    my_velocity_controller_copter_default_config.pid_config[X].clip_max                = 0.5f;
+    my_velocity_controller_copter_default_config.pid_config[X].integrator              = {};
+    my_velocity_controller_copter_default_config.pid_config[X].integrator.gain         = 0.1f;
+    my_velocity_controller_copter_default_config.pid_config[X].integrator.clip_pre     = 1.0f;
+    my_velocity_controller_copter_default_config.pid_config[X].integrator.accumulator  = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[X].integrator.clip         = 0.1f;
+    my_velocity_controller_copter_default_config.pid_config[X].differentiator          = {};
+    my_velocity_controller_copter_default_config.pid_config[X].differentiator.gain     = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[X].differentiator.previous = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[X].differentiator.clip     = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[X].soft_zone_width         = 0.2f;
+    // -----------------------------------------------------------------
+    // ------ Y PID ------------------------------------------------
+    // -----------------------------------------------------------------
+    my_velocity_controller_copter_default_config.pid_config[Y]                         = {};
+    my_velocity_controller_copter_default_config.pid_config[Y].p_gain                  = 0.2f;
+    my_velocity_controller_copter_default_config.pid_config[Y].clip_min                = -0.5f;
+    my_velocity_controller_copter_default_config.pid_config[Y].clip_max                = 0.5f;
+    my_velocity_controller_copter_default_config.pid_config[Y].integrator              = {};
+    my_velocity_controller_copter_default_config.pid_config[Y].integrator.gain         = 0.1f;
+    my_velocity_controller_copter_default_config.pid_config[Y].integrator.clip_pre     = 1.0f;
+    my_velocity_controller_copter_default_config.pid_config[Y].integrator.accumulator  = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[Y].integrator.clip         = 0.1f;
+    my_velocity_controller_copter_default_config.pid_config[Y].differentiator          = {};
+    my_velocity_controller_copter_default_config.pid_config[Y].differentiator.gain     = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[Y].differentiator.previous = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[Y].differentiator.clip     = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[Y].soft_zone_width         = 0.2f;
+    // ---------------------------------------------------------------------
+    // ------ Z PID ---------------------------------------------------
+    // ---------------------------------------------------------------------
+    my_velocity_controller_copter_default_config.pid_config[Z]                         = {};
+    my_velocity_controller_copter_default_config.pid_config[Z].p_gain                  = 0.20f;
+    my_velocity_controller_copter_default_config.pid_config[Z].clip_min                = -0.9f;
+    my_velocity_controller_copter_default_config.pid_config[Z].clip_max                = 0.65f;
+    my_velocity_controller_copter_default_config.pid_config[Z].integrator              = {};
+    my_velocity_controller_copter_default_config.pid_config[Z].integrator.gain         = 0.002f;
+    my_velocity_controller_copter_default_config.pid_config[Z].integrator.clip_pre     = 1.0f;
+    my_velocity_controller_copter_default_config.pid_config[Z].integrator.accumulator  = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[Z].integrator.clip         = 0.2f;
+    my_velocity_controller_copter_default_config.pid_config[Z].differentiator          = {};
+    my_velocity_controller_copter_default_config.pid_config[Z].differentiator.gain     = 0.04f;
+    my_velocity_controller_copter_default_config.pid_config[Z].differentiator.previous = 0.0f;
+    my_velocity_controller_copter_default_config.pid_config[Z].differentiator.clip     = 0.04f;
+    my_velocity_controller_copter_default_config.pid_config[Z].soft_zone_width         = 0.2f;
+
+    velocity_controller_copter_init(&velocity_controller,
+                                    my_velocity_controller_copter_default_config,
+                                    &ahrs,
+                                    &position_estimation,
+                                    &command.velocity,
+                                    &command.attitude,
+                                    &command.thrust);
 
     time_keeper_delay_ms(50);
 

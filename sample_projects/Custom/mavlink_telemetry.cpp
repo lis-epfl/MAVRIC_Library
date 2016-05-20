@@ -222,15 +222,15 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.bias[Z]                                 , "BIAS_MAG_Z");
 
     // Scale factor
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[X]                            , "SCALE_GYRO_X");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[Y]                            , "SCALE_GYRO_Y");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[Z]                            , "SCALE_GYRO_Z");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[X]                       , "SCALE_ACC_X");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[Y]                       , "SCALE_ACC_Y");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[Z]                       , "SCALE_ACC_Z");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[X]                        , "SCALE_MAG_X");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[Y]                        , "SCALE_MAG_Y");
-    init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[Z]                        , "SCALE_MAG_Z");
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[X]                            , "SCALE_GYRO_X");
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[Y]                            , "SCALE_GYRO_Y");
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->gyroscope.scale_factor[Z]                            , "SCALE_GYRO_Z");
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[X]                       , "SCALE_ACC_X");
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[Y]                       , "SCALE_ACC_Y");
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->accelerometer.scale_factor[Z]                       , "SCALE_ACC_Z");
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[X]                        , "SCALE_MAG_X");
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[Y]                        , "SCALE_MAG_Y");
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetometer.scale_factor[Z]                        , "SCALE_MAG_Z");
 
     // Magnetic north
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[X], "NORTH_MAG_X");
@@ -238,11 +238,14 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&central_data->imu.get_config()->magnetic_north[Z], "NORTH_MAG_Z");
 
     // Position estimation
-    // init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_alt_baro                              , "POS_KP_ALT_BARO");
-    // init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_baro                              , "POS_KP_VELB");
-    // init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[0]                            , "POS_KP_POS0");
-    // init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[1]                            , "POS_KP_POS1");
-    // init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[2]                            , "POS_KP_POS2");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_alt_baro                              , "POS_KP_ALT_BARO");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_baro                              , "POS_KP_VELB");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[0]                            , "POS_KP_POS0");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[1]                            , "POS_KP_POS1");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_pos_gps[2]                            , "POS_KP_POS2");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_gps[0]                            , "POS_KP_VEL0"     );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_gps[1]                            , "POS_KP_VEL1"     );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->position_estimation.kp_vel_gps[2]                            , "POS_KP_VEL2"     );
 
     // Navigation
     // init_success &= onboard_parameters->add_parameter_float(&central_data->navigation.dist2vel_gain                             , "VEL_DIST2VEL");
@@ -266,7 +269,7 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&central_data->saccade_controller_.goal_direction_,  "GL_DIRECTION"  );
     init_success &= onboard_parameters->add_parameter_float(&central_data->saccade_controller_.pitch_,           "PITCH_CONTROL" );
     init_success &= onboard_parameters->add_parameter_float(&central_data->saccade_controller_.intersaccade_time_,  "INTSAC_TIME" );
-    // init_success &= onboard_parameters->add_parameter_float(&central_data->saccade_controller_.weighted_function_,  "WT_FCT" );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->saccade_controller_.altitude_value_,  "ALTI_VAL" );
 
     // Attitude PID controller gains
     init_success &= onboard_parameters->add_parameter_float(&central_data->attitude_controller.rate_pid[ROLL].p_gain,             "ROLL_ATT_R_KP");
@@ -294,11 +297,26 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
     init_success &= onboard_parameters->add_parameter_float(&central_data->attitude_controller.angle_pid[YAW].differentiator.gain,  "YAW_ATT_A_KD");
 
 
+    // Velocity PID controller gains
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.pid[ROLL].p_gain,    "VEL_KP_X"        );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.pid[ROLL].differentiator.gain,   "VEL_KD_X"       );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.pid[ROLL].integrator.gain,   "VEL_KI_X"       );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.pid[PITCH].p_gain,     "VEL_KP_Y"         );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.pid[PITCH].differentiator.gain,     "VEL_KD_Y"        );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.pid[PITCH].integrator.gain,   "VEL_KI_Y"       );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.pid[YAW].p_gain,    "VEL_KP_Z"       );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.pid[YAW].differentiator.gain,      "VEL_KD_Z"         );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.pid[YAW].integrator.gain,   "VEL_KI_Z"       );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->velocity_controller.thrust_hover_point,      "VEL_HVPT"         );
+
+
+
+
     // Altitude PID controller gains
-    init_success &= onboard_parameters->add_parameter_float(&central_data->altitude_controller_.pid_.p_gain,              "ALT_PID_KP" );
-    init_success &= onboard_parameters->add_parameter_float(&central_data->altitude_controller_.pid_.integrator.gain,     "ALT_PID_KI" );
-    init_success &= onboard_parameters->add_parameter_float(&central_data->altitude_controller_.pid_.differentiator.gain, "ALT_PID_KD" );
-    init_success &= onboard_parameters->add_parameter_float(&central_data->altitude_controller_.hover_point_,             "HOVERPT_ALT");
+    init_success &= onboard_parameters->add_parameter_float(&central_data->saccade_controller_.altitude_pid_.p_gain,              "ALT_PID_KP" );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->saccade_controller_.altitude_pid_.clip_min,     "ALT_PID_MIN" );
+    init_success &= onboard_parameters->add_parameter_float(&central_data->saccade_controller_.altitude_pid_.clip_max, "ALT_PID_MAX" );
+    // init_success &= onboard_parameters->add_parameter_float(&central_data->saccade_controller_.altitude_pid_.
 
     return init_success;
 }
@@ -430,7 +448,7 @@ bool mavlink_telemetry_init(Central_data_custom* central_data)
     init_success &= mavlink_communication->add_msg_send(  500000,    Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&barometer_telemetry_send,                                      &central_data->barometer,               MAVLINK_MSG_ID_SCALED_PRESSURE);  // ID 29
     init_success &= mavlink_communication->add_msg_send(  200000,    Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude,                                  &central_data->ahrs,                    MAVLINK_MSG_ID_ATTITUDE);    // ID 30
     init_success &= mavlink_communication->add_msg_send(  500000,    Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude_quaternion,                       &central_data->ahrs,                    MAVLINK_MSG_ID_ATTITUDE_QUATERNION); // ID 31
-    //init_success &= mavlink_communication->add_msg_send(  500000,    Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_position,                   &central_data->position_estimation,     MAVLINK_MSG_ID_LOCAL_POSITION_NED); // ID 32
+    init_success &= mavlink_communication->add_msg_send(  500000,    Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_position,                   &central_data->position_estimation,     MAVLINK_MSG_ID_LOCAL_POSITION_NED); // ID 32
     //init_success &= mavlink_communication->add_msg_send(  250000,    Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_global_position,            &central_data->position_estimation,     MAVLINK_MSG_ID_GLOBAL_POSITION_INT); // ID 33
     init_success &= mavlink_communication->add_msg_send(  500000,    Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&remote_telemetry_send_scaled,                                  &central_data->manual_control.remote,   MAVLINK_MSG_ID_RC_CHANNELS_SCALED); // ID 34
     init_success &= mavlink_communication->add_msg_send(  250000,    Scheduler_task::RUN_REGULAR,    Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&remote_telemetry_send_raw,                                   &central_data->manual_control.remote,   MAVLINK_MSG_ID_RC_CHANNELS_RAW);  // ID 35

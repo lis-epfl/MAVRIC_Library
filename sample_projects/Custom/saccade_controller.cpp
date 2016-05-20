@@ -57,14 +57,14 @@ extern "C"
 Saccade_controller::Saccade_controller( Flow& flow_back,
                                         Flow& flow_front,
                                         const ahrs_t& ahrs,
-                                        const position_command_t& position_command, 
                                         const altitude_t& altitude, 
+                                        Position_estimation& position_estimation,
                                         saccade_controller_conf_t config ):
   flow_back_(flow_back),
   flow_front_(flow_front),
   ahrs_(ahrs),
-  position_command_(position_command),
-  altitude_(altitude)
+  altitude_(altitude),
+  position_estimation_(position_estimation)
 
 {
     // Init members
@@ -122,6 +122,9 @@ Saccade_controller::Saccade_controller( Flow& flow_back,
     velocity_command_.xyz[2] = 0;
 
     pid_controller_init(&altitude_pid_,&config.pid_config);
+
+    altitude_value_ = -0.7;
+    movement_total_ = 0;
 }
 
 
@@ -267,7 +270,8 @@ bool Saccade_controller::update()
 
     aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_.qe);
 
-    float altitude_error = position_command_.xyz[2] - (-altitude_.above_ground);
+    float altitude_error = altitude_value_ - (position_estimation_.local_position.pos[2]);
+    // float altitude_error = 0;
 
     velocity_command_.xyz[2] = pid_controller_update(&altitude_pid_, altitude_error);
 
@@ -301,7 +305,6 @@ bool Saccade_controller::update()
             {
                 velocity_command_.xyz[0] = goal_lf[0];
                 velocity_command_.xyz[1] = goal_lf[1];
-                velocity_command_.xyz[2] = 0;
 
                 if(time_keeper_get_ms()-begin_time < 1000)
                 {
@@ -336,9 +339,8 @@ bool Saccade_controller::update()
 
             if ( heading_error < 0.1)
             {
-                velocity_command_.xyz[0] = quick_trig_cos(movement_direction);
-                velocity_command_.xyz[1] = quick_trig_sin(movement_direction);
-                velocity_command_.xyz[2] = 0;
+                velocity_command_.xyz[0] = 0.2;
+                // velocity_command_.xyz[1] = 0.2 * quick_trig_sin(movement_direction);
                 
                 last_saccade_             = time_keeper_get_ms();
                 saccade_state_            = INTERSACCADE;
@@ -357,9 +359,13 @@ bool Saccade_controller::update()
                 movement_direction_y = weighted_function_ * cad_y_unit + (1-weighted_function_) * (goal_bf[1]  + noise);
                 movement_direction = atan2(movement_direction_y,movement_direction_x);
 
+                velocity_command_.xyz[0] = 0;
+                velocity_command_.xyz[1] = 0;
+
+                // movement_total_ +=movement_direction;
                 attitude_command_.rpy[0]  = 0;
                 attitude_command_.rpy[1]  = 0;
-                attitude_command_.rpy[2]  +=movement_direction;
+                attitude_command_.rpy[2]  +=movement_direction_;
                 attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
 
                 saccade_state_            = SACCADE;

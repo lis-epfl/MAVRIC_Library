@@ -68,7 +68,8 @@ bool tasks_run_stabilisation_quaternion(Central_data_custom* central_data)
     {
 
         central_data->command.attitude = central_data->saccade_controller_.attitude_command_;
-        central_data->velocity_controller.velocity_command = &central_data->saccade_controller_.velocity_command_;
+        central_data->command.velocity = central_data->saccade_controller_.velocity_command_;
+        // central_data->velocity_controller.velocity_command = &central_data->saccade_controller_.velocity_command_;
 
  
         // Do control
@@ -92,14 +93,21 @@ bool tasks_run_stabilisation_quaternion(Central_data_custom* central_data)
 
         central_data->manual_control.get_velocity_command(&central_data->command.velocity, 1.0f);
 
-        // central_data->velocity_controller.velocity_command->xyz[3] = central_data->saccade_controller_.velocity_command_->xyz[3];
-  
-        // Do control
+
+
+        // central_data->command.velocity.xyz[2] = central_data->saccade_controller_.velocity_command_.xyz[2];
+        // central_data->command.velocity = central_data->saccade_controller_.velocity_command_;
         velocity_controller_copter_update(&central_data->velocity_controller);
+        // float thrust = central_data->velocity_controller.thrust_command->thrust;
+
+        
+
+        // central_data->command.thrust.thrust = thrust;
+        
         attitude_controller_update(&central_data->attitude_controller);
   
         // Write output
-          servos_mix_quadcopter_diag_update(&central_data->servo_mix);
+        servos_mix_quadcopter_diag_update(&central_data->servo_mix);
         
 
         //Change saccade state to presaccade and reset timer for first presaccade
