@@ -67,7 +67,7 @@ typedef struct
     float       max_thrust;         ///< Maximum thrust
     float       min_deflection;     ///< Minimum deflection for flaps
     float       max_deflection;     ///< Maximum deflection for flaps
-} servo_mix_ywing_conf_t;
+} servos_mix_ywing_conf_t;
 
 
 /**
@@ -88,7 +88,7 @@ typedef struct
     Servo*                  flap_top;       ///< Pointer to the servos structure for top flap
     Servo*                  flap_right;     ///< Pointer to the servos structure for right flap
     Servo*                  flap_left;      ///< Pointer to the servos structure for left flap
-} servo_mix_ywing_t;
+} servos_mix_ywing_t;
 
 
 /**
@@ -105,8 +105,8 @@ typedef struct
  *
  * \return  True if the init succeed, false otherwise
  */
-bool servo_mix_ywing_init(servo_mix_ywing_t* mix,
-                          const servo_mix_ywing_conf_t* config,
+bool servos_mix_ywing_init(servos_mix_ywing_t* mix,
+                          const servos_mix_ywing_conf_t* config,
                           const torque_command_t* torque_command,
                           const thrust_command_t* thrust_command,
                           Servo* servo_motor,
@@ -120,7 +120,7 @@ bool servo_mix_ywing_init(servo_mix_ywing_t* mix,
  *
  * \param mix       Pointer to the servos mix structure
  */
-void servos_mix_ywing_update(servo_mix_ywing_t* mix);
+void servos_mix_ywing_update(servos_mix_ywing_t* mix);
 
 
 #ifdef __cplusplus

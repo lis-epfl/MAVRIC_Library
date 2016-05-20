@@ -67,6 +67,7 @@ LIB_SRCS += control/pid_controller.c
 LIB_SRCS += control/servos_mix_quadcopter_cross.cpp
 LIB_SRCS += control/servos_mix_quadcopter_diag.cpp
 LIB_SRCS += control/servos_mix_wing.c
+LIB_SRCS += control/servos_mix_ywing.cpp
 LIB_SRCS += control/stabilisation.c
 LIB_SRCS += control/stabilisation_copter.cpp
 LIB_SRCS += control/stabilisation_wing.cpp

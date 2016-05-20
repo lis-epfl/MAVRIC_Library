@@ -47,7 +47,7 @@ extern "C"
 #include "util/print_util.h"
 }
 
-bool servo_mix_ywing_init(servo_mix_ywing_t* mix, const servo_mix_ywing_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, Servo* motor, Servo* flap_top, Servo* flap_right, Servo* flap_left)
+bool servos_mix_ywing_init(servos_mix_ywing_t* mix, const servos_mix_ywing_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, Servo* motor, Servo* flap_top, Servo* flap_right, Servo* flap_left)
 {
     bool init_success = true;
 
@@ -74,7 +74,7 @@ bool servo_mix_ywing_init(servo_mix_ywing_t* mix, const servo_mix_ywing_conf_t* 
 }
 
 
-void servos_mix_ywing_update(servo_mix_ywing_t* mix)
+void servos_mix_ywing_update(servos_mix_ywing_t* mix)
 {
     float servos[4];
 

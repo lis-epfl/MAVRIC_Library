@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_ywing_default_config.h
+ * \file servos_mix_ywing_default_config.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,31 +40,26 @@
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef SERVOS_MIX_YWING_DEFAULT_CONFIG_HPP_
+#define SERVOS_MIX_YWING_DEFAULT_CONFIG_HPP_
 
 
-#include "servos_mix_ywing.h"
+#include "servos_mix_ywing.hpp"
 
 
-servo_mix_ywing_conf_t servo_mix_ywing_default_config =
+static inline servos_mix_ywing_conf_t servos_mix_ywing_default_config(void)
 {
-    .flap_top_dir   = FLAP_INVERTED,
-    .flap_right_dir = FLAP_INVERTED,
-    .flap_left_dir  = FLAP_INVERTED,
-    .min_thrust     = -0.9f,
-    .max_thrust     = 1.0f,
-    .min_deflection = -1.0f,
-    .max_deflection = 1.0f,
+    servos_mix_ywing_conf_t conf = {};
+
+    conf.flap_top_dir   = FLAP_INVERTED;
+    conf.flap_right_dir = FLAP_INVERTED;
+    conf.flap_left_dir  = FLAP_INVERTED;
+    conf.min_thrust     = -0.9f;
+    conf.max_thrust     = 1.0f;
+    conf.min_deflection = -1.0f;
+    conf.max_deflection = 1.0f;
+
+    return conf;
 };
 
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
+#endif // SERVOS_MIX_YWING_DEFAULT_CONFIG_HPP_
