@@ -30,17 +30,17 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_waypoint_handler.c
+ * \file mission_planner.cpp
  *
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
  * \brief The MAVLink waypoint handler
  *
  ******************************************************************************/
 
 
-#include "communication/mavlink_waypoint_handler.hpp"
+#include "communication/mission_planner.hpp"
 #include <cstdlib>
 #include "hal/common/time_keeper.hpp"
 
@@ -58,7 +58,7 @@ extern "C"
 //------------------------------------------------------------------------------
 
 
-mav_result_t Mavlink_waypoint_handler::set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result;
     uint16_t new_current = 0;
@@ -100,7 +100,7 @@ mav_result_t Mavlink_waypoint_handler::set_current_waypoint_from_parameter(Mavli
 }
 
 
-void Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mission_planner::set_home(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_set_gps_global_origin_t packet;
 
@@ -140,7 +140,7 @@ void Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoint_handl
     }
 }
 
-mav_result_t Mavlink_waypoint_handler::continue_to_next_waypoint(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::continue_to_next_waypoint(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result;
     bool force_next = false;
@@ -212,7 +212,7 @@ mav_result_t Mavlink_waypoint_handler::continue_to_next_waypoint(Mavlink_waypoin
     return result;
 }
 
-mav_result_t Mavlink_waypoint_handler::is_arrived(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::is_arrived(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
@@ -235,7 +235,7 @@ mav_result_t Mavlink_waypoint_handler::is_arrived(Mavlink_waypoint_handler* wayp
     return result;
 }
 
-bool Mavlink_waypoint_handler::take_off_handler()
+bool Mission_planner::take_off_handler()
 {
     bool result = false;
 
@@ -303,7 +303,7 @@ bool Mavlink_waypoint_handler::take_off_handler()
     return result;
 }
 
-mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
 
@@ -359,7 +359,7 @@ mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_ha
     return result;
 }
 
-mav_result_t Mavlink_waypoint_handler::set_auto_takeoff(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::set_auto_takeoff(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
@@ -379,7 +379,7 @@ mav_result_t Mavlink_waypoint_handler::set_auto_takeoff(Mavlink_waypoint_handler
     return result;
 }
 
-mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::set_auto_landing(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
@@ -404,7 +404,7 @@ mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler
     return result;
 }
 
-void Mavlink_waypoint_handler::auto_landing_handler()
+void Mission_planner::auto_landing_handler()
 {
     float rel_pos[3];
 
@@ -484,7 +484,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
     }
 }
 
-void Mavlink_waypoint_handler::state_machine()
+void Mission_planner::state_machine()
 {
     mav_mode_t mode_local = state_.mav_mode();
 
@@ -651,7 +651,7 @@ void Mavlink_waypoint_handler::state_machine()
     }
 }
 
-void Mavlink_waypoint_handler::stopping_handler()
+void Mission_planner::stopping_handler()
 {
     float dist2wp_sqr;
     float rel_pos[3];
@@ -667,7 +667,7 @@ void Mavlink_waypoint_handler::stopping_handler()
     }
 }
 
-void Mavlink_waypoint_handler::critical_handler()
+void Mission_planner::critical_handler()
 {
     float rel_pos[3];
     bool next_state_ = false;
@@ -805,7 +805,7 @@ void Mavlink_waypoint_handler::critical_handler()
     }
 }
 
-void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
+void Mission_planner::waypoint_navigation_handler(bool reset_hold_wpt)
 {
     if (!reset_hold_wpt)
     {
@@ -942,7 +942,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
     }
 }
 
-bool Mavlink_waypoint_handler::mode_change()
+bool Mission_planner::mode_change()
 {
     return mav_modes_are_equal_autonomous_modes(state_.mav_mode(), last_mode_);
 }
@@ -950,7 +950,7 @@ bool Mavlink_waypoint_handler::mode_change()
 
 
 
-void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* waypoint_next_)
+void Mission_planner::dubin_state_machine(waypoint_local_struct_t* waypoint_next_)
 {
     float rel_pos[3];
 
@@ -1070,7 +1070,7 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
+Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
             hold_waypoint_set_(false),
@@ -1171,7 +1171,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
 }
 
 
-bool Mavlink_waypoint_handler::update(Mavlink_waypoint_handler* waypoint_handler)
+bool Mission_planner::update(Mavlink_waypoint_handler* waypoint_handler)
 {
     mav_mode_t mode_local = waypoint_handler->state_.mav_mode();
 
@@ -1224,7 +1224,7 @@ bool Mavlink_waypoint_handler::update(Mavlink_waypoint_handler* waypoint_handler
 }
 
 
-void Mavlink_waypoint_handler::nav_plan_init()
+void Mission_planner::nav_plan_init()
 {
     float rel_pos[3];
 
@@ -1258,7 +1258,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
     }
 }
 
-void Mavlink_waypoint_handler::hold_init(local_position_t local_pos)
+void Mission_planner::hold_init(local_position_t local_pos)
 {
     hold_waypoint_set_ = true;
 
@@ -1342,7 +1342,7 @@ void Mavlink_waypoint_handler::hold_init(local_position_t local_pos)
     }
 }
 
-void Mavlink_waypoint_handler::send_nav_time(const Mavlink_stream* mavlink_stream_, mavlink_message_t* msg)
+void Mission_planner::send_nav_time(const Mavlink_stream* mavlink_stream_, mavlink_message_t* msg)
 {
     mavlink_msg_named_value_int_pack(mavlink_stream_->sysid(),
                                      mavlink_stream_->compid(),

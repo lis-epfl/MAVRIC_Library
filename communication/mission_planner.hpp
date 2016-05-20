@@ -30,18 +30,18 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_waypoint_handler.h
+ * \file mission_planner.hpp
  *
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
  * \brief The MAVLink waypoint handler
  *
  ******************************************************************************/
 
 
-#ifndef MAVLINK_WAYPOINT_HANDLER__
-#define MAVLINK_WAYPOINT_HANDLER__
+#ifndef MISSION_PLANNER__
+#define MISSION_PLANNER__
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
@@ -53,13 +53,11 @@
 #include "control/navigation.hpp"
 #include "control/dubin.hpp"
 
-#define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
-
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mavlink_waypoint_handler
+class Mission_planner
 {
 public:
 
@@ -81,14 +79,14 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mavlink_waypoint_handler(Position_estimation& position_estimation,
-                           Navigation& navigation,
-                           const ahrs_t& ahrs,
-                           State& state,
-                           const Manual_control& manual_control,
-                           Mavlink_message_handler& message_handler,
-                           const Mavlink_stream& mavlink_stream,
-                           conf_t config = default_config());
+    Mission_planner(    Position_estimation& position_estimation,
+                        Navigation& navigation,
+                        const ahrs_t& ahrs,
+                        State& state,
+                        const Manual_control& manual_control,
+                        Mavlink_message_handler& message_handler,
+                        const Mavlink_stream& mavlink_stream,
+                        conf_t config = default_config());
 
 
     /**
@@ -288,7 +286,7 @@ private:
 };
 
 
-Mavlink_waypoint_handler::conf_t Mavlink_waypoint_handler::default_config()
+Mission_planner::conf_t Mavlink_waypoint_handler::default_config()
 {
     conf_t conf                                                = {};
 
@@ -301,4 +299,4 @@ Mavlink_waypoint_handler::conf_t Mavlink_waypoint_handler::default_config()
 
 
 
-#endif // MAVLINK_WAYPOINT_HANDLER__
+#endif // MISSION_PLANNER__
