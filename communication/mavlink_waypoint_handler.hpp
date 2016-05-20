@@ -46,13 +46,8 @@
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
-#include "sensing/position_estimation.hpp"
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
-#include "sensing/qfilter.hpp"
-#include "control/manual_control.hpp"
-#include "control/navigation.hpp"
-#include "control/dubin.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
@@ -103,13 +98,6 @@ public:
                            const Mavlink_stream& mavlink_stream,
                            conf_t config = default_config());
 
-
-    /**
-     * \brief   Initialize a first waypoint if a flight plan is set
-     *
-     * \details Is called by the constructor
-     */
-    void nav_plan_init();
 
 
     inline uint16_t waypoint_count() const {return waypoint_count_;};
