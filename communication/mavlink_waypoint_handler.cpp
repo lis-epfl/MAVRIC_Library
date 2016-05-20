@@ -665,9 +665,11 @@ void Mavlink_waypoint_handler::advance_to_next_waypoint()
     // Get current index
     int wpt_index = current_waypoint_index();
 
-    // If the current waypoint index is the last waypoint, do nothing
+    // If the current waypoint index is the last waypoint, go to first waypoint
     if (wpt_index == (waypoint_count_-1))
     {
+        waypoint_list_[wpt_index].current = 0;
+        waypoint_list_[0].current = 1;
         return;
     }
     else // Update current in both waypoints
