@@ -1,5 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classFlow.html" title="Interface for Optic Flow sensors." alt="" coords="5,32,56,61"/>
-<area shape="rect" id="node3" href="$classFlow__px4.html" title="Driver for PX4Flow." alt="" coords="105,5,183,35"/>
-<area shape="rect" id="node5" href="$classFlow__sim.html" title="Interface for Optic Flow sensors." alt="" coords="105,59,183,88"/>
+<area shape="rect" id="node1" href="$unionflow__px4__data__t.html" title="Array of 2&#45;D optic flow vectors." alt="" coords="5,5,123,35"/>
 </map>

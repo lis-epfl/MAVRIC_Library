@@ -141,7 +141,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00068"></a>00068 };
 <a name="l00069"></a>00069 
 <a name="l00070"></a>00070 
-<a name="l00071"></a>00071 <span class="preprocessor">#endif </span><span class="comment">/* LED_HPP_ */</span>
+<a name="l00074"></a>00074 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> task_led_toggle(<a class="code" href="classLed.html">Led</a>* led)
+<a name="l00075"></a>00075 {
+<a name="l00076"></a>00076     led-&gt;<a class="code" href="classLed.html#abbd7d3886b09f62466969cc20c6daccc" title="Toggle led.">toggle</a>();
+<a name="l00077"></a>00077     <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00078"></a>00078 }
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080 <span class="preprocessor">#endif </span><span class="comment">/* LED_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -160,7 +166,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 18 2016 13:00:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 20 2016 07:31:11 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

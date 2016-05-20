@@ -110,8 +110,8 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#af47e13539e1251b50208e115b6241c37">Scheduler</a> (const <a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a> config=<a class="el" href="classScheduler.html#aea90ed6b44b49a090eb1253bfa05d5ff">default_config</a>())</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#af47e13539e1251b50208e115b6241c37"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#abb4f50e76b70e1c9b3ff76a60a86521c">add_task</a> (uint32_t repeat_period, <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a> run_mode, <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a> timing_mode, <a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a> priority, <a class="el" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057">Scheduler_task::task_function_t</a> call_function, <a class="el" href="classScheduler__task.html#a28462679852aacf669176cd93005842a">Scheduler_task::task_argument_t</a> function_argument, uint32_t task_id)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a new task to the task set, in the first available slot.  <a href="#abb4f50e76b70e1c9b3ff76a60a86521c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb">add_task</a> (uint32_t repeat_period, <a class="el" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057">Scheduler_task::task_function_t</a> call_function, <a class="el" href="classScheduler__task.html#a28462679852aacf669176cd93005842a">Scheduler_task::task_argument_t</a> function_argument, <a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a> priority=<a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0">Scheduler_task::PRIORITY_NORMAL</a>, <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a> timing_mode=<a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedacd2e70e6f117b093e8697efc9d6e66ec">Scheduler_task::PERIODIC_ABSOLUTE</a>, <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a> run_mode=<a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046">Scheduler_task::RUN_REGULAR</a>, int32_t task_id=-1)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a new task to the task set, in the first available slot.  <a href="#acfc1ac23c05eebd7f7bac3bdc015e1fb"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#ac27499ab15c6247c7a208ce5e132021e">sort_tasks</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort tasks by decreasing priority, then by increasing repeat period.  <a href="#ac27499ab15c6247c7a208ce5e132021e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a3e8021b7bfb2a5a9645edba08b6a51fc">update</a> ()</td></tr>
@@ -190,33 +190,15 @@ static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a clas
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="abb4f50e76b70e1c9b3ff76a60a86521c"></a><!-- doxytag: member="Scheduler::add_task" ref="abb4f50e76b70e1c9b3ff76a60a86521c" args="(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, uint32_t task_id)" -->
+<a class="anchor" id="acfc1ac23c05eebd7f7bac3bdc015e1fb"></a><!-- doxytag: member="Scheduler::add_task" ref="acfc1ac23c05eebd7f7bac3bdc015e1fb" args="(uint32_t repeat_period, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, Scheduler_task::priority_t priority=Scheduler_task::PRIORITY_NORMAL, Scheduler_task::timing_mode_t timing_mode=Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::run_mode_t run_mode=Scheduler_task::RUN_REGULAR, int32_t task_id=&#45;1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classScheduler.html#abb4f50e76b70e1c9b3ff76a60a86521c">Scheduler::add_task</a> </td>
+          <td class="memname">bool <a class="el" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb">Scheduler::add_task</a> </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>repeat_period</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a>&#160;</td>
-          <td class="paramname"><em>run_mode</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a>&#160;</td>
-          <td class="paramname"><em>timing_mode</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a>&#160;</td>
-          <td class="paramname"><em>priority</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -233,8 +215,26 @@ static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a clas
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>task_id</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a>&#160;</td>
+          <td class="paramname"><em>priority</em> = <code><a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0">Scheduler_task::PRIORITY_NORMAL</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a>&#160;</td>
+          <td class="paramname"><em>timing_mode</em> = <code><a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedacd2e70e6f117b093e8697efc9d6e66ec">Scheduler_task::PERIODIC_ABSOLUTE</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a>&#160;</td>
+          <td class="paramname"><em>run_mode</em> = <code><a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046">Scheduler_task::RUN_REGULAR</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>task_id</em> = <code>-1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -249,12 +249,12 @@ static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a clas
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">repeat_period</td><td>Repeat period (us) </td></tr>
-    <tr><td class="paramname">run_mode</td><td>Run mode </td></tr>
-    <tr><td class="paramname">timing_mode</td><td>Timing mode </td></tr>
-    <tr><td class="paramname">priority</td><td>Priority </td></tr>
     <tr><td class="paramname">call_function</td><td>Function pointer to be called </td></tr>
     <tr><td class="paramname">function_argument</td><td>Argument to be passed to the function </td></tr>
-    <tr><td class="paramname">task_id</td><td>Unique task identifier</td></tr>
+    <tr><td class="paramname">priority</td><td>Priority </td></tr>
+    <tr><td class="paramname">task_id</td><td>Unique task identifier, if -1 the ID will be automatically chosen </td></tr>
+    <tr><td class="paramname">timing_mode</td><td>Timing mode </td></tr>
+    <tr><td class="paramname">run_mode</td><td>Run mode</td></tr>
   </table>
   </dd>
 </dl>
@@ -263,9 +263,9 @@ static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a clas
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classScheduler_abb4f50e76b70e1c9b3ff76a60a86521c_icgraph.png" border="0" usemap="#classScheduler_abb4f50e76b70e1c9b3ff76a60a86521c_icgraph" alt=""/></div>
-<map name="classScheduler_abb4f50e76b70e1c9b3ff76a60a86521c_icgraph" id="classScheduler_abb4f50e76b70e1c9b3ff76a60a86521c_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#a4e14ff90bd294cd9fdf847a944e5d1b0" title="Adding new message to the MAVLink scheduler." alt="" coords="201,5,460,35"/><area shape="rect" id="node5" href="classOnboard__parameters.html#a601e8ce683683f2dd9a70c9abdbc4cb6" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="195,59,467,88"/></map>
+<div class="center"><img src="classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_icgraph.png" border="0" usemap="#classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_icgraph" alt=""/></div>
+<map name="classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_icgraph" id="classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_icgraph">
+<area shape="rect" id="node3" href="classMavlink__communication.html#aa42f2579b6792230c41a2e5a9d5afd13" title="Adding new message to the MAVLink scheduler." alt="" coords="201,5,460,35"/><area shape="rect" id="node5" href="classOnboard__parameters.html#a601e8ce683683f2dd9a70c9abdbc4cb6" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="195,59,467,88"/></map>
 </div>
 </p>
 
@@ -360,6 +360,15 @@ Here is the caller graph for this function:</div>
 <p>Sort tasks by decreasing priority, then by increasing repeat period. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the task was successfully sorted, False if not </dd></dl>
 
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classScheduler_ac27499ab15c6247c7a208ce5e132021e_icgraph.png" border="0" usemap="#classScheduler_ac27499ab15c6247c7a208ce5e132021e_icgraph" alt=""/></div>
+<map name="classScheduler_ac27499ab15c6247c7a208ce5e132021e_icgraph" id="classScheduler_ac27499ab15c6247c7a208ce5e132021e_icgraph">
+<area shape="rect" id="node3" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="203,5,304,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="a692bc156fd166f13c410cff5c769d239"></a><!-- doxytag: member="Scheduler::suspend_all_tasks" ref="a692bc156fd166f13c410cff5c769d239" args="(uint32_t delay)" -->
@@ -428,7 +437,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classScheduler_a3e8021b7bfb2a5a9645edba08b6a51fc_icgraph.png" border="0" usemap="#classScheduler_a3e8021b7bfb2a5a9645edba08b6a51fc_icgraph" alt=""/></div>
 <map name="classScheduler_a3e8021b7bfb2a5a9645edba08b6a51fc_icgraph" id="classScheduler_a3e8021b7bfb2a5a9645edba08b6a51fc_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="183,5,391,35"/></map>
+<area shape="rect" id="node3" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="183,5,391,35"/><area shape="rect" id="node5" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="236,59,337,88"/></map>
 </div>
 </p>
 
@@ -456,7 +465,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 18 2016 13:00:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 20 2016 07:31:12 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

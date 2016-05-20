@@ -141,7 +141,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00059"></a>00059     FIX_3D = 3,
 <a name="l00060"></a>00060     DGPS = 4,
 <a name="l00061"></a>00061     RTK = 5,
-<a name="l00062"></a>00062 }gps_fix_t;
+<a name="l00062"></a>00062 } gps_fix_t;
 <a name="l00063"></a>00063 
 <a name="l00067"></a><a class="code" href="classGps.html">00067</a> <span class="keyword">class </span><a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>
 <a name="l00068"></a>00068 {
@@ -194,7 +194,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00194"></a>00194 };
 <a name="l00195"></a>00195 
 <a name="l00196"></a>00196 
-<a name="l00197"></a>00197 <span class="preprocessor">#endif </span><span class="comment">/* GPS_HPP_ */</span>
+<a name="l00200"></a>00200 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> task_gps_update(<a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>* gps)
+<a name="l00201"></a>00201 {
+<a name="l00202"></a>00202     <span class="keywordflow">return</span> gps-&gt;<a class="code" href="classGps.html#a3a2a1a55d4267a58c7e96bae21888e08" title="Main update function  Reads new values from sensor.">update</a>();
+<a name="l00203"></a>00203 };
+<a name="l00204"></a>00204 
+<a name="l00205"></a>00205 <span class="preprocessor">#endif </span><span class="comment">/* GPS_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -213,7 +218,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 18 2016 13:00:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 20 2016 07:31:11 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

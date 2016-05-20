@@ -83,8 +83,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#friends">Friends</a>  </div>
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">Manual_control Class Reference</div>  </div>
 </div><!--header-->
@@ -176,10 +175,12 @@ Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa2103487ba9916640ba227ffbe3f2997"></a><!-- doxytag: member="Manual_control::joystick" ref="aa2103487ba9916640ba227ffbe3f2997" args="" -->
 <a class="el" href="structjoystick__t.html">joystick_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#aa2103487ba9916640ba227ffbe3f2997">joystick</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer to the joystick structure. <br/></td></tr>
-<tr><td colspan="2"><h2><a name="friends"></a>
-Friends</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#aa8fcc0d79c1350e5dfcc3a674949a82d">mavlink_telemetry_add_onboard_parameters</a> (<a class="el" href="classOnboard__parameters.html">Onboard_parameters</a> *onboard_parameters, <a class="el" href="classCentral__data.html">Central_data</a> *central_data)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Add all onboard parameters to the parameter list.  <a href="#aa8fcc0d79c1350e5dfcc3a674949a82d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4513d787b46d35308ecfbc8b58778dc"></a><!-- doxytag: member="Manual_control::mode_source_" ref="ab4513d787b46d35308ecfbc8b58778dc" args="" -->
+<a class="el" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87">mode_source_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#ab4513d787b46d35308ecfbc8b58778dc">mode_source_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The source mode. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aecee2adbc3aacb491be533976fa5f4e0"></a><!-- doxytag: member="Manual_control::control_source_" ref="aecee2adbc3aacb491be533976fa5f4e0" args="" -->
+<a class="el" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d">control_source_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0">control_source_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to tell whether the remote is active or not. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The manual control structure. </p>
@@ -866,43 +867,6 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<hr/><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" id="aa8fcc0d79c1350e5dfcc3a674949a82d"></a><!-- doxytag: member="Manual_control::mavlink_telemetry_add_onboard_parameters" ref="aa8fcc0d79c1350e5dfcc3a674949a82d" args="(Onboard_parameters *onboard_parameters, Central_data *central_data)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classManual__control.html#aa8fcc0d79c1350e5dfcc3a674949a82d">mavlink_telemetry_add_onboard_parameters</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classOnboard__parameters.html">Onboard_parameters</a> *&#160;</td>
-          <td class="paramname"><em>onboard_parameters</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classCentral__data.html">Central_data</a> *&#160;</td>
-          <td class="paramname"><em>central_data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [friend]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Add all onboard parameters to the parameter list. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">onboard_parameters</td><td>The pointer to the onboard parameters structure</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The initialization status of the module, succeed == true </dd></dl>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="manual__control_8hpp_source.html">manual_control.hpp</a></li>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/control/manual_control.cpp</li>
@@ -925,7 +889,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 18 2016 13:00:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 20 2016 07:31:12 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

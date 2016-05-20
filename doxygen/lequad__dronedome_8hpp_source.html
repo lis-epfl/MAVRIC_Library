@@ -116,7 +116,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00034"></a>00034 <span class="comment"> *</span>
 <a name="l00035"></a>00035 <span class="comment"> * \author MAV&#39;RIC Team</span>
 <a name="l00036"></a>00036 <span class="comment"> *</span>
-<a name="l00037"></a>00037 <span class="comment"> * \brief Place where the central data is stored and initialized</span>
+<a name="l00037"></a>00037 <span class="comment"> * \brief MAV class for indoor use</span>
 <a name="l00038"></a>00038 <span class="comment"> *</span>
 <a name="l00039"></a>00039 <span class="comment"> ******************************************************************************/</span>
 <a name="l00040"></a>00040 
@@ -124,33 +124,33 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00042"></a>00042 <span class="preprocessor">#ifndef LEQUAD_DRONEDOME_HPP_</span>
 <a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define LEQUAD_DRONEDOME_HPP_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
-<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;sample_projects/LEQuad/central_data.hpp&quot;</span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;sample_projects/LEQuad/lequad.hpp&quot;</span>
 <a name="l00046"></a>00046 <span class="preprocessor">#include &quot;drivers/gps_mocap.hpp&quot;</span>
 <a name="l00047"></a>00047 
-<a name="l00051"></a><a class="code" href="classLEQuad__dronedome.html">00051</a> <span class="keyword">class </span><a class="code" href="classLEQuad__dronedome.html" title="Central data for indoor use.">LEQuad_dronedome</a>: <span class="keyword">public</span> <a class="code" href="classCentral__data.html" title="The central data structure.">Central_data</a>
+<a name="l00051"></a><a class="code" href="classLEQuad__dronedome.html">00051</a> <span class="keyword">class </span><a class="code" href="classLEQuad__dronedome.html" title="Central data for indoor use.">LEQuad_dronedome</a>: <span class="keyword">public</span> <a class="code" href="classLEQuad.html" title="MAV class.">LEQuad</a>
 <a name="l00052"></a>00052 {
 <a name="l00053"></a>00053 <span class="keyword">public</span>:
-<a name="l00057"></a><a class="code" href="classLEQuad__dronedome.html#affefe5c8d3387bdc161141fb8634a3fd">00057</a>     <a class="code" href="classLEQuad__dronedome.html#affefe5c8d3387bdc161141fb8634a3fd" title="Constructor.">LEQuad_dronedome</a>( <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; <a class="code" href="classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac" title="Reference to IMU.">imu</a>,
-<a name="l00058"></a>00058                       <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp; <a class="code" href="classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e" title="Reference to barometer.">barometer</a>,
-<a name="l00059"></a>00059                       <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp; <a class="code" href="classCentral__data.html#a0a3bd477594522fa2d54dea8c3a48b8d" title="Reference to GPS.">gps</a>,
-<a name="l00060"></a>00060                       <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp; <a class="code" href="classCentral__data.html#af74940d5c4c05df5df2229989f492c8d" title="Reference to sonar.">sonar</a>,
-<a name="l00061"></a>00061                       <a class="code" href="classSerial.html">Serial</a>&amp; <a class="code" href="classCentral__data.html#a498f555a2dc8d5f205d1230b1e6057e2" title="Reference to telemetry serial.">serial_mavlink</a>,
-<a name="l00062"></a>00062                       <a class="code" href="classSatellite.html">Satellite</a>&amp; <a class="code" href="classCentral__data.html#a6bf25d7614b15d82cbf5e473c4e3851f" title="Reference to remote control satellite.">satellite</a>,
-<a name="l00063"></a>00063                       <a class="code" href="classLed.html">Led</a>&amp; <a class="code" href="classCentral__data.html#ad8249c334277847c69106384dc3f00bd" title="Reference to the leds.">led</a>,
-<a name="l00064"></a>00064                       <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; <a class="code" href="classCentral__data.html#a78f2bba25e47b8e437db08eecb077670" title="Reference to flash storage.">file_flash</a>,
-<a name="l00065"></a>00065                       <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp; <a class="code" href="classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1" title="Reference to battery.">battery</a>,
-<a name="l00066"></a>00066                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#a1f2a4cc194bb87c8d41ba55893e1edc5" title="Reference to servos structure.">servo_0</a>,
-<a name="l00067"></a>00067                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#ae7188d3fd58b96a261aff7634f2d215d" title="Reference to servos structure.">servo_1</a>,
-<a name="l00068"></a>00068                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#aeabf8973f44313c8fcdc273ef5bece59" title="Reference to servos structure.">servo_2</a>,
-<a name="l00069"></a>00069                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#ae2008469434596b9be24a37733e4d5f7" title="Reference to servos structure.">servo_3</a>,
-<a name="l00070"></a>00070                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#ae4b3bd2bf7dfdf0b47df3250042be057" title="Reference to servos structure.">servo_4</a>,
-<a name="l00071"></a>00071                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#a189c6ad264442cad5f44f1ba8233765b" title="Reference to servos structure.">servo_5</a>,
-<a name="l00072"></a>00072                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#a3d999ecc735dcf4775f00719dd720bed" title="Reference to servos structure.">servo_6</a>,
-<a name="l00073"></a>00073                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classCentral__data.html#a69a093cca25c56afa9fa7a1af4149484" title="Reference to servos structure.">servo_7</a>,
+<a name="l00057"></a><a class="code" href="classLEQuad__dronedome.html#ab3f76a746327f749741411915d0209a1">00057</a>     <a class="code" href="classLEQuad__dronedome.html#ab3f76a746327f749741411915d0209a1" title="Constructor.">LEQuad_dronedome</a>( <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; <a class="code" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2" title="Reference to IMU.">imu</a>,
+<a name="l00058"></a>00058                       <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp; <a class="code" href="classLEQuad.html#abd0a931d4efb860cf55498856440ca1a" title="Reference to barometer.">barometer</a>,
+<a name="l00059"></a>00059                       <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp; <a class="code" href="classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704" title="Reference to GPS.">gps</a>,
+<a name="l00060"></a>00060                       <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp; <a class="code" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d" title="Reference to sonar.">sonar</a>,
+<a name="l00061"></a>00061                       <a class="code" href="classSerial.html">Serial</a>&amp; <a class="code" href="classLEQuad.html#ac681527770ee9dc7f2a98594204b3a42" title="Reference to telemetry serial.">serial_mavlink</a>,
+<a name="l00062"></a>00062                       <a class="code" href="classSatellite.html">Satellite</a>&amp; <a class="code" href="classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535" title="Reference to remote control satellite.">satellite</a>,
+<a name="l00063"></a>00063                       <a class="code" href="classLed.html">Led</a>&amp; <a class="code" href="classLEQuad.html#adf2a261c2296249877f55a67e1db4772" title="Reference to the leds.">led</a>,
+<a name="l00064"></a>00064                       <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; <a class="code" href="classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5" title="Reference to flash storage.">file_flash</a>,
+<a name="l00065"></a>00065                       <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp; <a class="code" href="classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885" title="Reference to battery.">battery</a>,
+<a name="l00066"></a>00066                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#ac1d44059cbf259a74ee7bfe64a5973df" title="Reference to servos structure.">servo_0</a>,
+<a name="l00067"></a>00067                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a7db47f6468c433cc7b03641ed2424b49" title="Reference to servos structure.">servo_1</a>,
+<a name="l00068"></a>00068                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a84b1a445d42ae6aaf4b7e6d4b9684463" title="Reference to servos structure.">servo_2</a>,
+<a name="l00069"></a>00069                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#abd9225ecba6bb2976e573db8acb1b291" title="Reference to servos structure.">servo_3</a>,
+<a name="l00070"></a>00070                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a7604f86734976330548d3ba2c9353060" title="Reference to servos structure.">servo_4</a>,
+<a name="l00071"></a>00071                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a4b64c62b5914e8115b32fa5999dec1b4" title="Reference to servos structure.">servo_5</a>,
+<a name="l00072"></a>00072                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#aad0d8adce0b4eca5f8c9131cad516eb7" title="Reference to servos structure.">servo_6</a>,
+<a name="l00073"></a>00073                       <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a16c282996f4e2266d3f60c06996e00d3" title="Reference to servos structure.">servo_7</a>,
 <a name="l00074"></a>00074                       <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file1,
 <a name="l00075"></a>00075                       <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file2,
-<a name="l00076"></a>00076                       <a class="code" href="structCentral__data_1_1conf__t.html" title="Configuration of the module central data module.">Central_data::conf_t</a> config = <a class="code" href="classCentral__data.html#ae085498f8120c097faead909bbab38f9" title="Default configuration.">Central_data::default_config</a>() ):
-<a name="l00077"></a>00077           <a class="code" href="classCentral__data.html" title="The central data structure.">Central_data</a>(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
+<a name="l00076"></a>00076                       <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">LEQuad::conf_t</a> config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">LEQuad::default_config</a>() ):
+<a name="l00077"></a>00077           <a class="code" href="classLEQuad.html" title="MAV class.">LEQuad</a>(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
 <a name="l00078"></a>00078                      battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
 <a name="l00079"></a>00079                      file1, file2, config),
 <a name="l00080"></a>00080           gps_mocap_(mavlink_communication.message_handler())
@@ -158,7 +158,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00082"></a>00082 
 <a name="l00087"></a><a class="code" href="classLEQuad__dronedome.html#a504b377044000add985f94e1139fd411">00087</a>       <span class="keywordtype">bool</span> <a class="code" href="classLEQuad__dronedome.html#a504b377044000add985f94e1139fd411" title="Initialisation.">init</a>(<span class="keywordtype">void</span>)
 <a name="l00088"></a>00088       {
-<a name="l00089"></a>00089           <span class="keywordtype">bool</span> success = <a class="code" href="classLEQuad__dronedome.html#a504b377044000add985f94e1139fd411" title="Initialisation.">Central_data::init</a>();
+<a name="l00089"></a>00089           <span class="keywordtype">bool</span> success = <a class="code" href="classLEQuad__dronedome.html#a504b377044000add985f94e1139fd411" title="Initialisation.">LEQuad::init</a>();
 <a name="l00090"></a>00090 
 <a name="l00091"></a>00091           <span class="keywordtype">bool</span> ret = gps_mocap_.<a class="code" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages.">init</a>();
 <a name="l00092"></a>00092           print_util_dbg_init_msg(<span class="stringliteral">&quot;[GPS_MOCAP]&quot;</span>, ret);
@@ -191,7 +191,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 18 2016 13:00:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 20 2016 07:31:12 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

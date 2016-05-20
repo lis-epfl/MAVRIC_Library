@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classManual__control.html" title="The manual control structure." alt="" coords="352,806,557,1082"/>
+<area shape="rect" id="node2" href="$classManual__control.html" title="The manual control structure." alt="" coords="352,789,557,1099"/>
 <area shape="rect" id="node4" href="$structjoystick__t.html" title="The structure for the joystick." alt="" coords="152,437,299,574"/>
 <area shape="rect" id="node6" href="$structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="5,93,141,230"/>
 <area shape="rect" id="node8" href="$unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="165,32,285,291"/>

@@ -107,8 +107,8 @@ typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__communication.html#afd98f83687a03493ef1cf2fb3e3e3a34">Mavlink_communication</a> (<a class="el" href="classSerial.html">Serial</a> &amp;serial, <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="classFile.html">File</a> &amp;file_storage, const <a class="el" href="structMavlink__communication_1_1conf__t.html">conf_t</a> &amp;config=<a class="el" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c">default_config</a>())</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialisation of the module MAVLink communication.  <a href="#afd98f83687a03493ef1cf2fb3e3e3a34"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__communication.html#a4e14ff90bd294cd9fdf847a944e5d1b0">add_msg_send</a> (uint32_t repeat_period, <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a> run_mode, <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a> timing_mode, <a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a> priority, <a class="el" href="classMavlink__communication.html#a70f8714fa6e388b7c6480e484af8d0e0">send_msg_function_t</a> function, <a class="el" href="classMavlink__communication.html#acf53cd972106c98a9b10c0d40e9e8647">handling_telemetry_module_struct_t</a> module_structure, uint32_t task_id)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adding new message to the MAVLink scheduler.  <a href="#a4e14ff90bd294cd9fdf847a944e5d1b0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__communication.html#aa42f2579b6792230c41a2e5a9d5afd13">add_msg_send</a> (uint32_t task_id, uint32_t repeat_period, <a class="el" href="classMavlink__communication.html#a70f8714fa6e388b7c6480e484af8d0e0">send_msg_function_t</a> function, <a class="el" href="classMavlink__communication.html#acf53cd972106c98a9b10c0d40e9e8647">handling_telemetry_module_struct_t</a> module_structure, <a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a> priority=<a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0">Scheduler_task::PRIORITY_NORMAL</a>, <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a> timing_mode=<a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedaadb371d200cf0f8641705df34dd8dd15">Scheduler_task::PERIODIC_RELATIVE</a>, <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a> run_mode=<a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046">Scheduler_task::RUN_REGULAR</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Adding new message to the MAVLink scheduler.  <a href="#aa42f2579b6792230c41a2e5a9d5afd13"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__communication.html#a304c01fa583d512d30d9ad41530fdc3d">suspend_downstream</a> (uint32_t delay)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Suspending sending of messages.  <a href="#a304c01fa583d512d30d9ad41530fdc3d"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04">sysid</a> ()</td></tr>
@@ -117,10 +117,16 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="classScheduler.html">Scheduler</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>scheduler</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afe12175df0d5c4c9f6646a25152b7342"></a><!-- doxytag: member="Mavlink_communication::message_handler" ref="afe12175df0d5c4c9f6646a25152b7342" args="()" -->
 <a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>message_handler</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1ae80117d7f775939aef428f5f9dfac5"></a><!-- doxytag: member="Mavlink_communication::p_message_handler" ref="a1ae80117d7f775939aef428f5f9dfac5" args="()" -->
+<a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>p_message_handler</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a619924607578774087b1a2facaeaf934"></a><!-- doxytag: member="Mavlink_communication::mavlink_stream" ref="a619924607578774087b1a2facaeaf934" args="()" -->
 <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mavlink_stream</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a14a44be7e4045accb8712cca2fb256"></a><!-- doxytag: member="Mavlink_communication::p_mavlink_stream" ref="a2a14a44be7e4045accb8712cca2fb256" args="()" -->
+<a class="el" href="classMavlink__stream.html">Mavlink_stream</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>p_mavlink_stream</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac6ecf9fe94e11e4c906140349056ac8c"></a><!-- doxytag: member="Mavlink_communication::onboard_parameters" ref="ac6ecf9fe94e11e4c906140349056ac8c" args="()" -->
 <a class="el" href="classOnboard__parameters.html">Onboard_parameters</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>onboard_parameters</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae382575921c983f922f50f1f9856424"></a><!-- doxytag: member="Mavlink_communication::p_onboard_parameters" ref="aae382575921c983f922f50f1f9856424" args="()" -->
+<a class="el" href="classOnboard__parameters.html">Onboard_parameters</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>p_onboard_parameters</b> ()</td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structMavlink__communication_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c">default_config</a> (uint8_t <a class="el" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04">sysid</a>=1)</td></tr>
@@ -207,38 +213,26 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a4e14ff90bd294cd9fdf847a944e5d1b0"></a><!-- doxytag: member="Mavlink_communication::add_msg_send" ref="a4e14ff90bd294cd9fdf847a944e5d1b0" args="(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)" -->
+<a class="anchor" id="aa42f2579b6792230c41a2e5a9d5afd13"></a><!-- doxytag: member="Mavlink_communication::add_msg_send" ref="aa42f2579b6792230c41a2e5a9d5afd13" args="(uint32_t task_id, uint32_t repeat_period, send_msg_function_t function, handling_telemetry_module_struct_t module_structure, Scheduler_task::priority_t priority=Scheduler_task::PRIORITY_NORMAL, Scheduler_task::timing_mode_t timing_mode=Scheduler_task::PERIODIC_RELATIVE, Scheduler_task::run_mode_t run_mode=Scheduler_task::RUN_REGULAR)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classMavlink__communication.html#a4e14ff90bd294cd9fdf847a944e5d1b0">Mavlink_communication::add_msg_send</a> </td>
+          <td class="memname">bool <a class="el" href="classMavlink__communication.html#aa42f2579b6792230c41a2e5a9d5afd13">Mavlink_communication::add_msg_send</a> </td>
           <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>task_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>repeat_period</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a>&#160;</td>
-          <td class="paramname"><em>run_mode</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a>&#160;</td>
-          <td class="paramname"><em>timing_mode</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a>&#160;</td>
-          <td class="paramname"><em>priority</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classMavlink__communication.html#a70f8714fa6e388b7c6480e484af8d0e0">Mavlink_communication::send_msg_function_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classMavlink__communication.html#a70f8714fa6e388b7c6480e484af8d0e0">send_msg_function_t</a>&#160;</td>
           <td class="paramname"><em>function</em>, </td>
         </tr>
         <tr>
@@ -250,8 +244,20 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>task_id</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a>&#160;</td>
+          <td class="paramname"><em>priority</em> = <code><a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0">Scheduler_task::PRIORITY_NORMAL</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a>&#160;</td>
+          <td class="paramname"><em>timing_mode</em> = <code><a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedaadb371d200cf0f8641705df34dd8dd15">Scheduler_task::PERIODIC_RELATIVE</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a>&#160;</td>
+          <td class="paramname"><em>run_mode</em> = <code><a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046">Scheduler_task::RUN_REGULAR</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -280,9 +286,9 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMavlink__communication_a4e14ff90bd294cd9fdf847a944e5d1b0_cgraph.png" border="0" usemap="#classMavlink__communication_a4e14ff90bd294cd9fdf847a944e5d1b0_cgraph" alt=""/></div>
-<map name="classMavlink__communication_a4e14ff90bd294cd9fdf847a944e5d1b0_cgraph" id="classMavlink__communication_a4e14ff90bd294cd9fdf847a944e5d1b0_cgraph">
-<area shape="rect" id="node3" href="classScheduler.html#abb4f50e76b70e1c9b3ff76a60a86521c" title="Register a new task to the task set, in the first available slot." alt="" coords="312,5,453,35"/></map>
+<div class="center"><img src="classMavlink__communication_aa42f2579b6792230c41a2e5a9d5afd13_cgraph.png" border="0" usemap="#classMavlink__communication_aa42f2579b6792230c41a2e5a9d5afd13_cgraph" alt=""/></div>
+<map name="classMavlink__communication_aa42f2579b6792230c41a2e5a9d5afd13_cgraph" id="classMavlink__communication_aa42f2579b6792230c41a2e5a9d5afd13_cgraph">
+<area shape="rect" id="node3" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb" title="Register a new task to the task set, in the first available slot." alt="" coords="312,5,453,35"/></map>
 </div>
 </p>
 
@@ -388,7 +394,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__communication_a20bbab22191fe73f3fecd79b27aa9c04_icgraph.png" border="0" usemap="#classMavlink__communication_a20bbab22191fe73f3fecd79b27aa9c04_icgraph" alt=""/></div>
 <map name="classMavlink__communication_a20bbab22191fe73f3fecd79b27aa9c04_icgraph" id="classMavlink__communication_a20bbab22191fe73f3fecd79b27aa9c04_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c" title="Default configuration." alt="" coords="256,5,507,35"/></map>
+<area shape="rect" id="node3" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c" title="Default configuration." alt="" coords="256,5,507,35"/><area shape="rect" id="node5" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="331,59,432,88"/></map>
 </div>
 </p>
 
@@ -451,7 +457,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 18 2016 13:00:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 20 2016 07:31:12 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

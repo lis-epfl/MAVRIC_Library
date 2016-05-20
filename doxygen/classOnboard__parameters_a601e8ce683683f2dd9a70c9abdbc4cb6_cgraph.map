@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classScheduler.html#abb4f50e76b70e1c9b3ff76a60a86521c" title="Register a new task to the task set, in the first available slot." alt="" coords="401,5,543,35"/>
+<area shape="rect" id="node3" href="$classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb" title="Register a new task to the task set, in the first available slot." alt="" coords="401,5,543,35"/>
 <area shape="rect" id="node5" href="$classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="327,59,617,88"/>
 <area shape="rect" id="node7" href="$classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="327,112,617,141"/>
 </map>

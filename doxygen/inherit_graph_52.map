@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structdsm2__protocol__proba__t.html" title="Structure containing the radio protocol probabilities." alt="" coords="5,5,163,35"/>
+<area shape="rect" id="node1" href="$classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model." alt="" coords="7,5,121,35"/>
+<area shape="rect" id="node3" href="$classDynamic__model__quad__diag.html" title="Simulated dynamics of a quadcopter in diag configuration." alt="" coords="172,5,353,35"/>
 </map>

@@ -15,6 +15,6 @@ var searchData=
   ['hour',['hour',['../structubx__nav__timeutc__t.html#a2c68e9306f2e066a5982aa0f3eb63893',1,'ubx_nav_timeutc_t::hour()'],['../structdate__time__t.html#ab9ee4c9f9a31aac8fea020d567697120',1,'date_time_t::hour()']]],
   ['hover_5fpoint',['hover_point',['../structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b',1,'altitude_controller_conf_t']]],
   ['hovering_5fcontroller',['hovering_controller',['../structNavigation_1_1conf__t.html#a882555b2baf7599d8597dcb8b3b10ab6',1,'Navigation::conf_t::hovering_controller()'],['../classNavigation.html#aa06ed70f97081dd8ab999eb61138964a',1,'Navigation::hovering_controller()']]],
-  ['hud_5fstructure',['hud_structure',['../classCentral__data.html#ac6293592dec12f4f428f6ade761adfee',1,'Central_data']]],
+  ['hud_5fstructure',['hud_structure',['../classLEQuad.html#aadacb5969b594ed73687ae6c3c781b82',1,'LEQuad']]],
   ['hw_5fversion',['hw_version',['../structubx__mon__ver__t.html#ab88ba534ab797ea8978d1575f82adb13',1,'ubx_mon_ver_t']]]
 ];

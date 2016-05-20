@@ -1,12 +1,12 @@
 var searchData=
 [
   ['b_5f',['B_',['../classKalman.html#acf8e90cf222702a93cc079769813c7c0',1,'Kalman']]],
-  ['barometer',['Barometer',['../classBarometer.html',1,'Barometer'],['../classCentral__data.html#a91fdc32c1f2faf61ca6da43e8ab7b66e',1,'Central_data::barometer()'],['../classSimulation.html#a368aa6c86a02f49a56f83df509c6d9e7',1,'Simulation::barometer()']]],
+  ['barometer',['Barometer',['../classBarometer.html',1,'Barometer'],['../classLEQuad.html#abd0a931d4efb860cf55498856440ca1a',1,'LEQuad::barometer()'],['../classSimulation.html#a368aa6c86a02f49a56f83df509c6d9e7',1,'Simulation::barometer()']]],
   ['barometer_5fsim',['Barometer_sim',['../classBarometer__sim.html',1,'Barometer_sim'],['../classBarometer__sim.html#a8cb0b945413cb2c0be355240648dd56a',1,'Barometer_sim::Barometer_sim()']]],
   ['base_5fhealth',['base_health',['../structubx__nav__dgps__t.html#ae32b24ce493c04451063f95f7c8e5c0d',1,'ubx_nav_dgps_t']]],
   ['base_5fid',['base_id',['../structubx__nav__dgps__t.html#a943b371eb1753d81aeaf082310b2a407',1,'ubx_nav_dgps_t']]],
   ['base_5ftow',['base_tow',['../structubx__cfg__fxn__t.html#ad67f012b730f61443ffba40bda2c5755',1,'ubx_cfg_fxn_t']]],
-  ['battery',['Battery',['../classBattery.html',1,'Battery'],['../classBattery.html#ad655b142d6c2cd21fd7a2f8f13a8ff77',1,'Battery::Battery()'],['../classCentral__data.html#aa991a05a072777f4fa6c41dbffd9f1e1',1,'Central_data::battery()']]],
+  ['battery',['Battery',['../classBattery.html',1,'Battery'],['../classBattery.html#ad655b142d6c2cd21fd7a2f8f13a8ff77',1,'Battery::Battery()'],['../classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885',1,'LEQuad::battery()']]],
   ['battery_5f',['battery_',['../classState.html#aa8af6eff2f240cae87d455db9023e079',1,'State']]],
   ['battery_5fconf_5ft',['battery_conf_t',['../structbattery__conf__t.html',1,'']]],
   ['baud_5frate',['baud_rate',['../structubx__cfg__prt__t.html#a0403d8ad0dae4dcf8e693c98f159c196',1,'ubx_cfg_prt_t']]],

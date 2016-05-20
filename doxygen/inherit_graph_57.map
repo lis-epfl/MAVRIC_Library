@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structfat__fs__mounting__t.html" title="The fat_fs mounting structure." alt="" coords="7,5,132,35"/>
+<area shape="rect" id="node1" href="$classFlow.html" title="Interface for Optic Flow sensors." alt="" coords="5,32,56,61"/>
+<area shape="rect" id="node3" href="$classFlow__px4.html" title="Driver for PX4Flow." alt="" coords="105,5,183,35"/>
+<area shape="rect" id="node5" href="$classFlow__sim.html" title="Interface for Optic Flow sensors." alt="" coords="105,59,183,88"/>
 </map>

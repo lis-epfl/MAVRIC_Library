@@ -32,7 +32,7 @@ var searchData=
   ['position',['position',['../structcommand__t.html#a3314e8bdc60f5b2db1d3ad937be9eb55',1,'command_t']]],
   ['position_5faccuracy_5f3d',['position_accuracy_3d',['../structubx__nav__solution__t.html#aa8f22e1a1fd97eed7f372aa1cc87c3a0',1,'ubx_nav_solution_t']]],
   ['position_5fdop',['position_DOP',['../structubx__nav__solution__t.html#a8dd557cf38af7e62ab98872113628ccc',1,'ubx_nav_solution_t']]],
-  ['position_5festimation',['position_estimation',['../structaudio__t.html#a6dabcabfa84a0d67b955157ec618ea93',1,'audio_t::position_estimation()'],['../classCentral__data.html#a622352cfa900297e78d4bf91565978d9',1,'Central_data::position_estimation()']]],
+  ['position_5festimation',['position_estimation',['../structaudio__t.html#a6dabcabfa84a0d67b955157ec618ea93',1,'audio_t::position_estimation()'],['../classLEQuad.html#af64cf6fcf6709d160a5525decb0ae56e',1,'LEQuad::position_estimation()']]],
   ['position_5festimation_5f',['position_estimation_',['../classMavlink__waypoint__handler.html#ae6a76751b3f1b046b5c2179bdb4f5874',1,'Mavlink_waypoint_handler::position_estimation_()'],['../classState__machine.html#a1a5c1a18f7601718283f09509932f2cf',1,'State_machine::position_estimation_()']]],
   ['position_5fstabiliser',['position_stabiliser',['../structstabiliser__stack__copter__t.html#a9fdaa5f61fa9de3b1547408a90bb2333',1,'stabiliser_stack_copter_t::position_stabiliser()'],['../structstabiliser__stack__wing__t.html#ae87d69d905946039c49b23a15070cc07',1,'stabiliser_stack_wing_t::position_stabiliser()']]],
   ['power_5fconsumption',['power_consumption',['../structubx__cfg__usb__t.html#af8045f8e0389a15823c614798b5836e6',1,'ubx_cfg_usb_t']]],

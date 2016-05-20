@@ -147,6 +147,9 @@ Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacaa15cd7016181bf7c4a056cfd85008"></a><!-- doxytag: member="State::mav_state_" ref="aacaa15cd7016181bf7c4a056cfd85008" args="" -->
 mav_state_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aacaa15cd7016181bf7c4a056cfd85008">mav_state_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The value of the MAV state. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2cb7e65d1212e9bddaa9f33bc12750c5"></a><!-- doxytag: member="State::mav_mode_" ref="a2cb7e65d1212e9bddaa9f33bc12750c5" args="" -->
+mav_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a2cb7e65d1212e9bddaa9f33bc12750c5">mav_mode_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The value of the MAV mode. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a73fb170a4e632ac69134b3c8810129"></a><!-- doxytag: member="State::mav_mode_custom" ref="a7a73fb170a4e632ac69134b3c8810129" args="" -->
 mav_mode_custom_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a7a73fb170a4e632ac69134b3c8810129">mav_mode_custom</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The value of the custom_mode. <br/></td></tr>
@@ -214,8 +217,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abf215f6a2b080c5da71b952292d35db2"></a><!-- doxytag: member="State::State_machine" ref="abf215f6a2b080c5da71b952292d35db2" args="" -->
 class&#160;</td><td class="memItemRight" valign="bottom"><b>State_machine</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a1b0077b766933ac429fdb1c2a6c9d5a6">mavlink_telemetry_add_data_logging_parameters</a> (<a class="el" href="classData__logging.html">Data_logging</a> *data_logging, <a class="el" href="classCentral__data.html">Central_data</a> *central_data)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Add onboard logging parameters.  <a href="#a1b0077b766933ac429fdb1c2a6c9d5a6"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a14cbfb43a63cbf6cd4f0fa30c72023bb">state_telemetry_set_mode</a> (<a class="el" href="classState.html">State</a> *state, mav_mode_t <a class="el" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">mav_mode</a>)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set state-&gt;mav_mode.  <a href="#a14cbfb43a63cbf6cd4f0fa30c72023bb"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">mav_result_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a4664b4ca5c776f7a5db625292bd8b91c">state_telemetry_send_autopilot_capabilities</a> (<a class="el" href="classState.html">State</a> *state, mavlink_command_long_t *packet)</td></tr>
@@ -599,42 +600,6 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" id="a1b0077b766933ac429fdb1c2a6c9d5a6"></a><!-- doxytag: member="State::mavlink_telemetry_add_data_logging_parameters" ref="a1b0077b766933ac429fdb1c2a6c9d5a6" args="(Data_logging *data_logging, Central_data *central_data)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classState.html#a1b0077b766933ac429fdb1c2a6c9d5a6">mavlink_telemetry_add_data_logging_parameters</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classData__logging.html">Data_logging</a> *&#160;</td>
-          <td class="paramname"><em>data_logging</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classCentral__data.html">Central_data</a> *&#160;</td>
-          <td class="paramname"><em>central_data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [friend]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Add onboard logging parameters. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data_logging</td><td>The pointer to the data logging structure</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The initialization status of the module, succeed == true </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="a4664b4ca5c776f7a5db625292bd8b91c"></a><!-- doxytag: member="State::state_telemetry_send_autopilot_capabilities" ref="a4664b4ca5c776f7a5db625292bd8b91c" args="(State *state, mavlink_command_long_t *packet)" -->
 <div class="memitem">
 <div class="memproto">
@@ -736,7 +701,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 18 2016 13:00:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 20 2016 07:31:12 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

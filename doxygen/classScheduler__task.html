@@ -128,8 +128,8 @@ typedef bool(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype of a task function. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3a5e2240d54cfae609cb868f1886ec5d"></a><!-- doxytag: member="Scheduler_task::Scheduler_task" ref="a3a5e2240d54cfae609cb868f1886ec5d" args="(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, uint32_t task_id)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Scheduler_task</b> (uint32_t <a class="el" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed">repeat_period</a>, <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a> <a class="el" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e">run_mode</a>, <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a> <a class="el" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9">timing_mode</a>, <a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a> <a class="el" href="classScheduler__task.html#a18d367aa93373dff25f6715dd8698c5f">priority</a>, <a class="el" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057">Scheduler_task::task_function_t</a> call_function, <a class="el" href="classScheduler__task.html#a28462679852aacf669176cd93005842a">Scheduler_task::task_argument_t</a> function_argument, uint32_t <a class="el" href="classScheduler__task.html#a88995f82015d449794a5101cf80f046b">task_id</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad73165a275b61207e31e2ef9d04d1caa"></a><!-- doxytag: member="Scheduler_task::Scheduler_task" ref="ad73165a275b61207e31e2ef9d04d1caa" args="(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, int32_t task_id)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>Scheduler_task</b> (uint32_t <a class="el" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed">repeat_period</a>, <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a> <a class="el" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e">run_mode</a>, <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a> <a class="el" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9">timing_mode</a>, <a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a> <a class="el" href="classScheduler__task.html#a18d367aa93373dff25f6715dd8698c5f">priority</a>, <a class="el" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057">Scheduler_task::task_function_t</a> call_function, <a class="el" href="classScheduler__task.html#a28462679852aacf669176cd93005842a">Scheduler_task::task_argument_t</a> function_argument, int32_t <a class="el" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7">task_id</a>)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler__task.html#a81635f94d0854c6a604a83fcf697efef">set_run_mode</a> (<a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">run_mode_t</a> mode)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Modifies the run mode of an existing task.  <a href="#a81635f94d0854c6a604a83fcf697efef"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adc0e604f86fd585d32b94bb845d0eb8c"></a><!-- doxytag: member="Scheduler_task::run_now" ref="adc0e604f86fd585d32b94bb845d0eb8c" args="()" -->
@@ -139,16 +139,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Suspends a task.  <a href="#a70f6839a9a39df993c5afeb7bc7f0451"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5">change_period</a> (uint32_t <a class="el" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed">repeat_period</a>)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Modifies the period of execution of an existing task.  <a href="#a449429f9de097c6b16d13b2c32cb02b5"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler__task.html#ade916ba9ca743cfa39cccb64b66f5929">get_id</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ID of the task.  <a href="#ade916ba9ca743cfa39cccb64b66f5929"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler__task.html#ad61e4f6787ec2333183eab8bc8137cb9">get_id</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ID of the task.  <a href="#ad61e4f6787ec2333183eab8bc8137cb9"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler__task.html#a2633590be51e2cfc5ac68ccadc954d39">execute</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes tasks and updates statistics.  <a href="#a2633590be51e2cfc5ac68ccadc954d39"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler__task.html#a318a64cf7c3c47422164ccc3d9e5f931">is_due</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the task is due.  <a href="#a318a64cf7c3c47422164ccc3d9e5f931"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a88995f82015d449794a5101cf80f046b"></a><!-- doxytag: member="Scheduler_task::task_id" ref="a88995f82015d449794a5101cf80f046b" args="" -->
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler__task.html#a88995f82015d449794a5101cf80f046b">task_id</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac07cc83bbbad8a5afe7a62cfe89ef3a7"></a><!-- doxytag: member="Scheduler_task::task_id" ref="ac07cc83bbbad8a5afe7a62cfe89ef3a7" args="" -->
+int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7">task_id</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique task identifier. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa03e0fa095d4da7a75a0ed3a0bfcd20e"></a><!-- doxytag: member="Scheduler_task::run_mode" ref="aa03e0fa095d4da7a75a0ed3a0bfcd20e" args="" -->
 <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">run_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e">run_mode</a></td></tr>
@@ -344,12 +344,12 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 
 </div>
 </div>
-<a class="anchor" id="ade916ba9ca743cfa39cccb64b66f5929"></a><!-- doxytag: member="Scheduler_task::get_id" ref="ade916ba9ca743cfa39cccb64b66f5929" args="()" -->
+<a class="anchor" id="ad61e4f6787ec2333183eab8bc8137cb9"></a><!-- doxytag: member="Scheduler_task::get_id" ref="ad61e4f6787ec2333183eab8bc8137cb9" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t <a class="el" href="classScheduler__task.html#ade916ba9ca743cfa39cccb64b66f5929">Scheduler_task::get_id</a> </td>
+          <td class="memname">int32_t <a class="el" href="classScheduler__task.html#ad61e4f6787ec2333183eab8bc8137cb9">Scheduler_task::get_id</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -463,7 +463,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 18 2016 13:00:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 20 2016 07:31:12 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

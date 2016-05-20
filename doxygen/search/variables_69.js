@@ -4,7 +4,7 @@ var searchData=
   ['i_5f',['I_',['../classKalman.html#a3868e595a4a857bc9aab5c62c537fd54',1,'Kalman']]],
   ['idle_5ftimeout',['idle_timeout',['../structgps__t.html#a647299d8c4202a580ad3123b4039ce9a',1,'gps_t']]],
   ['idle_5ftimer',['idle_timer',['../structgps__t.html#aa9688b58a0154e3e4d293dfdf09d1424',1,'gps_t']]],
-  ['imu',['imu',['../structstabilisation__wing__t.html#acb3cc27502cb7ccc4efdc10399827152',1,'stabilisation_wing_t::imu()'],['../classCentral__data.html#ac6f07d9bc6bccc86deabbf4614e83eac',1,'Central_data::imu()'],['../structqfilter__t.html#a2cf64aec409b092ce9b1b3e7d6bced66',1,'qfilter_t::imu()']]],
+  ['imu',['imu',['../structstabilisation__wing__t.html#acb3cc27502cb7ccc4efdc10399827152',1,'stabilisation_wing_t::imu()'],['../classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2',1,'LEQuad::imu()'],['../structqfilter__t.html#a2cf64aec409b092ce9b1b3e7d6bced66',1,'qfilter_t::imu()']]],
   ['imu_5f',['imu_',['../classState__machine.html#a02adec4dd6e2b86ce915cd8c09b07788',1,'State_machine']]],
   ['in_5fproto_5fmask',['in_proto_mask',['../structubx__cfg__prt__t.html#ac2a34cdc2f56fb050be705242fa6fef5',1,'ubx_cfg_prt_t']]],
   ['in_5fthe_5fair',['in_the_air',['../classState.html#a47abf5b5e97a58291a32b888815214e6',1,'State']]],

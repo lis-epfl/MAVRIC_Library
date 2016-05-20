@@ -157,89 +157,98 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00093"></a>00093 
 <a name="l00104"></a>00104     <a class="code" href="classMavlink__communication.html#afd98f83687a03493ef1cf2fb3e3e3a34" title="Initialisation of the module MAVLink communication.">Mavlink_communication</a>(<a class="code" href="classSerial.html">Serial</a>&amp; serial, <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; state, <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file_storage, <span class="keyword">const</span> <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">conf_t</a>&amp; config = <a class="code" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c" title="Default configuration.">default_config</a>());
 <a name="l00105"></a>00105 
-<a name="l00119"></a>00119     <span class="keywordtype">bool</span> <a class="code" href="classMavlink__communication.html#a4e14ff90bd294cd9fdf847a944e5d1b0" title="Adding new message to the MAVLink scheduler.">add_msg_send</a>(uint32_t repeat_period, <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">Scheduler_task::run_mode_t</a> run_mode, <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed" title="Task timing mode.">Scheduler_task::timing_mode_t</a> timing_mode, <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569" title="Task priority.">Scheduler_task::priority_t</a> priority, <a class="code" href="classMavlink__communication.html#a70f8714fa6e388b7c6480e484af8d0e0" title="Prototype of callback functions for MAVLink messages.">send_msg_function_t</a> <span class="keyword">function</span>, <a class="code" href="classMavlink__communication.html#acf53cd972106c98a9b10c0d40e9e8647" title="Pointer a module&#39;s data structure.">handling_telemetry_module_struct_t</a> module_structure, uint32_t task_id);
-<a name="l00120"></a>00120 
-<a name="l00121"></a>00121 
-<a name="l00122"></a>00122 
-<a name="l00128"></a>00128     <span class="keywordtype">void</span> <a class="code" href="classMavlink__communication.html#a304c01fa583d512d30d9ad41530fdc3d" title="Suspending sending of messages.">suspend_downstream</a>(uint32_t delay);
-<a name="l00129"></a>00129 
-<a name="l00130"></a>00130 
-<a name="l00137"></a>00137      uint32_t <a class="code" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream.">sysid</a>();
-<a name="l00138"></a>00138 
-<a name="l00139"></a>00139     <span class="comment">/*</span>
-<a name="l00140"></a>00140 <span class="comment">     * \brief   Returns scheduler</span>
-<a name="l00141"></a>00141 <span class="comment">     */</span>
-<a name="l00142"></a>00142     <a class="code" href="classScheduler.html" title="Scheduler.">Scheduler</a>&amp; scheduler();
-<a name="l00143"></a>00143     
-<a name="l00144"></a>00144     <span class="comment">/*</span>
-<a name="l00145"></a>00145 <span class="comment">     * \brief   Returns message_handler</span>
-<a name="l00146"></a>00146 <span class="comment">     */</span>
-<a name="l00147"></a>00147     <a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>&amp; message_handler();
-<a name="l00148"></a>00148 
-<a name="l00149"></a>00149     <span class="comment">/*</span>
-<a name="l00150"></a>00150 <span class="comment">     * \brief   Returns mavlink_stream</span>
-<a name="l00151"></a>00151 <span class="comment">     */</span>
-<a name="l00152"></a>00152     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream();
-<a name="l00153"></a>00153 
-<a name="l00154"></a>00154     <span class="comment">/*</span>
-<a name="l00155"></a>00155 <span class="comment">     * \brief   Returns onboard_parameters struct</span>
-<a name="l00156"></a>00156 <span class="comment">     */</span>
-<a name="l00157"></a>00157     <a class="code" href="classOnboard__parameters.html">Onboard_parameters</a>&amp; onboard_parameters();
-<a name="l00158"></a>00158   
-<a name="l00166"></a>00166     <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty.">update</a>(<a class="code" href="classMavlink__communication.html">Mavlink_communication</a>* mavlink_communication);  
+<a name="l00119"></a>00119     <span class="keywordtype">bool</span> <a class="code" href="classMavlink__communication.html#aa42f2579b6792230c41a2e5a9d5afd13" title="Adding new message to the MAVLink scheduler.">add_msg_send</a>(uint32_t task_id,
+<a name="l00120"></a>00120                       uint32_t repeat_period,
+<a name="l00121"></a>00121                       <a class="code" href="classMavlink__communication.html#a70f8714fa6e388b7c6480e484af8d0e0" title="Prototype of callback functions for MAVLink messages.">send_msg_function_t</a> <span class="keyword">function</span>,
+<a name="l00122"></a>00122                       <a class="code" href="classMavlink__communication.html#acf53cd972106c98a9b10c0d40e9e8647" title="Pointer a module&#39;s data structure.">handling_telemetry_module_struct_t</a> module_structure,
+<a name="l00123"></a>00123                       <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569" title="Task priority.">Scheduler_task::priority_t</a> priority       = <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0" title="Normal priority.">Scheduler_task::PRIORITY_NORMAL</a>,
+<a name="l00124"></a>00124                       <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed" title="Task timing mode.">Scheduler_task::timing_mode_t</a> timing_mode = <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedaadb371d200cf0f8641705df34dd8dd15" title="The task will be executed with constant period relative to the last execution.">Scheduler_task::PERIODIC_RELATIVE</a>,
+<a name="l00125"></a>00125                       <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">Scheduler_task::run_mode_t</a> run_mode       = <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046" title="The task will be executed periodically.">Scheduler_task::RUN_REGULAR</a>);
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128 
+<a name="l00134"></a>00134     <span class="keywordtype">void</span> <a class="code" href="classMavlink__communication.html#a304c01fa583d512d30d9ad41530fdc3d" title="Suspending sending of messages.">suspend_downstream</a>(uint32_t delay);
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136 
+<a name="l00143"></a>00143      uint32_t <a class="code" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream.">sysid</a>();
+<a name="l00144"></a>00144 
+<a name="l00145"></a>00145     <span class="comment">/*</span>
+<a name="l00146"></a>00146 <span class="comment">     * \brief   Returns scheduler</span>
+<a name="l00147"></a>00147 <span class="comment">     */</span>
+<a name="l00148"></a>00148     <a class="code" href="classScheduler.html" title="Scheduler.">Scheduler</a>&amp; scheduler();
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150     <span class="comment">/*</span>
+<a name="l00151"></a>00151 <span class="comment">     * \brief   Returns message_handler</span>
+<a name="l00152"></a>00152 <span class="comment">     */</span>
+<a name="l00153"></a>00153     <a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>&amp; message_handler();
+<a name="l00154"></a>00154     <a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>* p_message_handler();
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156     <span class="comment">/*</span>
+<a name="l00157"></a>00157 <span class="comment">     * \brief   Returns mavlink_stream</span>
+<a name="l00158"></a>00158 <span class="comment">     */</span>
+<a name="l00159"></a>00159     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream();
+<a name="l00160"></a>00160     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>* p_mavlink_stream();
+<a name="l00161"></a>00161 
+<a name="l00162"></a>00162     <span class="comment">/*</span>
+<a name="l00163"></a>00163 <span class="comment">     * \brief   Returns onboard_parameters struct</span>
+<a name="l00164"></a>00164 <span class="comment">     */</span>
+<a name="l00165"></a>00165     <a class="code" href="classOnboard__parameters.html">Onboard_parameters</a>&amp; onboard_parameters();
+<a name="l00166"></a>00166     <a class="code" href="classOnboard__parameters.html">Onboard_parameters</a>* p_onboard_parameters();
 <a name="l00167"></a>00167 
-<a name="l00168"></a>00168 <span class="keyword">private</span>:
-<a name="l00169"></a>00169 
-<a name="l00173"></a>00173     <span class="keyword">struct </span>send_msg_handler_t
-<a name="l00174"></a>00174     {
-<a name="l00175"></a>00175         <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>* mavlink_stream;                                 
-<a name="l00176"></a>00176         <a class="code" href="classMavlink__communication.html#a70f8714fa6e388b7c6480e484af8d0e0" title="Prototype of callback functions for MAVLink messages.">send_msg_function_t</a> <span class="keyword">function</span>;                                   
-<a name="l00177"></a>00177         <a class="code" href="classMavlink__communication.html#acf53cd972106c98a9b10c0d40e9e8647" title="Pointer a module&#39;s data structure.">handling_telemetry_module_struct_t</a>      module_struct;          
-<a name="l00178"></a>00178     };
-<a name="l00179"></a>00179     
-<a name="l00180"></a>00180     <a class="code" href="classScheduler.html" title="Scheduler.">Scheduler</a>                   scheduler_;                      
-<a name="l00181"></a>00181     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>              mavlink_stream_;                 
-<a name="l00182"></a>00182     <a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>     message_handler_;                
-<a name="l00183"></a>00183     <a class="code" href="classOnboard__parameters.html">Onboard_parameters</a>          onboard_parameters_;             
-<a name="l00184"></a>00184     uint32_t                    msg_sending_count_;                                     
-<a name="l00185"></a>00185     uint32_t                    max_msg_sending_count_;                                 
-<a name="l00186"></a>00186     send_msg_handler_t*         msg_send_list_;                      
-<a name="l00187"></a>00187 
+<a name="l00175"></a>00175     <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty.">update</a>(<a class="code" href="classMavlink__communication.html">Mavlink_communication</a>* mavlink_communication);
+<a name="l00176"></a>00176 
+<a name="l00177"></a>00177 <span class="keyword">private</span>:
+<a name="l00178"></a>00178 
+<a name="l00182"></a>00182     <span class="keyword">struct </span>send_msg_handler_t
+<a name="l00183"></a>00183     {
+<a name="l00184"></a>00184         <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>* mavlink_stream;                                 
+<a name="l00185"></a>00185         <a class="code" href="classMavlink__communication.html#a70f8714fa6e388b7c6480e484af8d0e0" title="Prototype of callback functions for MAVLink messages.">send_msg_function_t</a> <span class="keyword">function</span>;                                   
+<a name="l00186"></a>00186         <a class="code" href="classMavlink__communication.html#acf53cd972106c98a9b10c0d40e9e8647" title="Pointer a module&#39;s data structure.">handling_telemetry_module_struct_t</a>      module_struct;          
+<a name="l00187"></a>00187     };
 <a name="l00188"></a>00188 
-<a name="l00196"></a>00196     <span class="keyword">static</span> <span class="keywordtype">bool</span> send_message(send_msg_handler_t* msg_send);
+<a name="l00189"></a>00189     <a class="code" href="classScheduler.html" title="Scheduler.">Scheduler</a>                   scheduler_;                      
+<a name="l00190"></a>00190     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>              mavlink_stream_;                 
+<a name="l00191"></a>00191     <a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>     message_handler_;                
+<a name="l00192"></a>00192     <a class="code" href="classOnboard__parameters.html">Onboard_parameters</a>          onboard_parameters_;             
+<a name="l00193"></a>00193     uint32_t                    msg_sending_count_;                                     
+<a name="l00194"></a>00194     uint32_t                    max_msg_sending_count_;                                 
+<a name="l00195"></a>00195     send_msg_handler_t*         msg_send_list_;                      
+<a name="l00196"></a>00196 
 <a name="l00197"></a>00197 
-<a name="l00205"></a>00205     <span class="keyword">static</span> <span class="keywordtype">void</span> toggle_telemetry_stream(<a class="code" href="classScheduler.html" title="Scheduler.">Scheduler</a>* scheduler, uint32_t <a class="code" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream.">sysid</a>, mavlink_message_t* msg);
+<a name="l00205"></a>00205     <span class="keyword">static</span> <span class="keywordtype">bool</span> send_message(send_msg_handler_t* msg_send);
 <a name="l00206"></a>00206 
-<a name="l00207"></a>00207 
-<a name="l00208"></a>00208 };
-<a name="l00209"></a>00209 
-<a name="l00210"></a>00210 
-<a name="l00211"></a><a class="code" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c">00211</a> <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">Mavlink_communication::conf_t</a> <a class="code" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c" title="Default configuration.">Mavlink_communication::default_config</a>(uint8_t sysid)
-<a name="l00212"></a>00212 {
-<a name="l00213"></a>00213     <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">conf_t</a> conf                                        = {};
-<a name="l00214"></a>00214 
-<a name="l00215"></a>00215     conf.scheduler_config                              = {};
-<a name="l00216"></a>00216     conf.scheduler_config.<a class="code" href="structScheduler_1_1conf__t.html#af48ff9fd2f8d8bc373ff2b2cdda02f00" title="Maximum number of tasks.">max_task_count</a>               = 30;
-<a name="l00217"></a>00217     conf.scheduler_config.<a class="code" href="structScheduler_1_1conf__t.html#add0e17c51dba8ff62c3d9afbf8622d9e" title="Schedule strategy.">schedule_strategy</a>            = <a class="code" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93a182d5726549fd24825e5d9b4c1f3a20d" title="Fixed priority scheduling.">Scheduler::FIXED_PRIORITY</a>;
-<a name="l00218"></a>00218     conf.scheduler_config.<a class="code" href="structScheduler_1_1conf__t.html#af4db3b0909a6097bb46542bf76c09359" title="Indicates whether the scheduler should print debug messages.">debug</a>                        = <span class="keyword">false</span>;
-<a name="l00219"></a>00219     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>                         = {};
-<a name="l00220"></a>00220     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>.<a class="code" href="structMavlink__stream_1_1conf__t.html#aec1e69848bfbccbdc1d2e28ab77f6ed6" title="System ID.">sysid</a>                   = <a class="code" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream.">sysid</a>;
-<a name="l00221"></a>00221     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>.<a class="code" href="structMavlink__stream_1_1conf__t.html#a768eb28a8ef6dfe7b6207bbc29b9ed5a" title="System Component ID.">compid</a>                  = 50;
-<a name="l00222"></a>00222     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>.<a class="code" href="structMavlink__stream_1_1conf__t.html#acf2c7a3d64b1a7e58b8bfc1e5256fbed" title="Debug flag.">debug</a>                   = <span class="keyword">false</span>,
-<a name="l00223"></a>00223     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>                        = {};
-<a name="l00224"></a>00224     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>.<a class="code" href="structMavlink__message__handler_1_1conf__t.html#a895b1eb9c777ca7c2189e214e1e4bc8e" title="Maximum number of message callbacks.">max_msg_callback_count</a> = 20;
-<a name="l00225"></a>00225     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>.<a class="code" href="structMavlink__message__handler_1_1conf__t.html#af86df30f18dc98a14cf548dd1103dc1f" title="Maximum number of command callbacks.">max_cmd_callback_count</a> = 20;
-<a name="l00226"></a>00226     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>.<a class="code" href="structMavlink__message__handler_1_1conf__t.html#a1edac2c7fcdf5491869ba13778db10f5" title="Indicates whether debug message are written for every incoming message.">debug</a>                  = <span class="keyword">false</span>;
-<a name="l00227"></a>00227     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#ade390a33759f7cd8166485b97fd5ce0c" title="Configuration for the module onboard parameters.">onboard_parameters_config</a>                     = {};
-<a name="l00228"></a>00228     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#ade390a33759f7cd8166485b97fd5ce0c" title="Configuration for the module onboard parameters.">onboard_parameters_config</a>.<a class="code" href="structOnboard__parameters_1_1conf__t.html#a692f09e47c58b90f5423d851386ab6ab" title="Maximum number of parameters.">max_param_count</a>     = MAX_ONBOARD_PARAM_COUNT;
-<a name="l00229"></a>00229     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#ade390a33759f7cd8166485b97fd5ce0c" title="Configuration for the module onboard parameters.">onboard_parameters_config</a>.<a class="code" href="structOnboard__parameters_1_1conf__t.html#a6a378df9b1df1e20a930ef041e21062b" title="Indicates if debug messages should be printed for each param change.">debug</a>               = false  ;
-<a name="l00230"></a>00230     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a80a6e98e9b4d22521b030f9108691f2d" title="Configuration for the sending message handler.">max_msg_sending_count</a>                         = 22;
-<a name="l00231"></a>00231 
-<a name="l00232"></a>00232     <span class="keywordflow">return</span> conf;
-<a name="l00233"></a>00233 };
-<a name="l00234"></a>00234 
-<a name="l00235"></a>00235 
-<a name="l00236"></a>00236 <span class="preprocessor">#endif </span><span class="comment">/* MAVLINK_COMMUNICATION_H_ */</span>
+<a name="l00214"></a>00214     <span class="keyword">static</span> <span class="keywordtype">void</span> toggle_telemetry_stream(<a class="code" href="classScheduler.html" title="Scheduler.">Scheduler</a>* scheduler, uint32_t <a class="code" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream.">sysid</a>, mavlink_message_t* msg);
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216 
+<a name="l00217"></a>00217 };
+<a name="l00218"></a>00218 
+<a name="l00219"></a>00219 
+<a name="l00220"></a><a class="code" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c">00220</a> <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">Mavlink_communication::conf_t</a> <a class="code" href="classMavlink__communication.html#afb4c1c7922b2f75e0919df3396908e3c" title="Default configuration.">Mavlink_communication::default_config</a>(uint8_t sysid)
+<a name="l00221"></a>00221 {
+<a name="l00222"></a>00222     <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">conf_t</a> conf                                        = {};
+<a name="l00223"></a>00223 
+<a name="l00224"></a>00224     conf.scheduler_config                              = {};
+<a name="l00225"></a>00225     conf.scheduler_config.<a class="code" href="structScheduler_1_1conf__t.html#af48ff9fd2f8d8bc373ff2b2cdda02f00" title="Maximum number of tasks.">max_task_count</a>               = 30;
+<a name="l00226"></a>00226     conf.scheduler_config.<a class="code" href="structScheduler_1_1conf__t.html#add0e17c51dba8ff62c3d9afbf8622d9e" title="Schedule strategy.">schedule_strategy</a>            = <a class="code" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93a182d5726549fd24825e5d9b4c1f3a20d" title="Fixed priority scheduling.">Scheduler::FIXED_PRIORITY</a>;
+<a name="l00227"></a>00227     conf.scheduler_config.<a class="code" href="structScheduler_1_1conf__t.html#af4db3b0909a6097bb46542bf76c09359" title="Indicates whether the scheduler should print debug messages.">debug</a>                        = <span class="keyword">false</span>;
+<a name="l00228"></a>00228     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>                         = {};
+<a name="l00229"></a>00229     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>.<a class="code" href="structMavlink__stream_1_1conf__t.html#aec1e69848bfbccbdc1d2e28ab77f6ed6" title="System ID.">sysid</a>                   = <a class="code" href="classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream.">sysid</a>;
+<a name="l00230"></a>00230     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>.<a class="code" href="structMavlink__stream_1_1conf__t.html#a768eb28a8ef6dfe7b6207bbc29b9ed5a" title="System Component ID.">compid</a>                  = 50;
+<a name="l00231"></a>00231     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>.<a class="code" href="structMavlink__stream_1_1conf__t.html#acf2c7a3d64b1a7e58b8bfc1e5256fbed" title="Debug flag.">debug</a>                   = <span class="keyword">false</span>,
+<a name="l00232"></a>00232     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>                        = {};
+<a name="l00233"></a>00233     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>.<a class="code" href="structMavlink__message__handler_1_1conf__t.html#a895b1eb9c777ca7c2189e214e1e4bc8e" title="Maximum number of message callbacks.">max_msg_callback_count</a> = 20;
+<a name="l00234"></a>00234     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>.<a class="code" href="structMavlink__message__handler_1_1conf__t.html#af86df30f18dc98a14cf548dd1103dc1f" title="Maximum number of command callbacks.">max_cmd_callback_count</a> = 20;
+<a name="l00235"></a>00235     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>.<a class="code" href="structMavlink__message__handler_1_1conf__t.html#a1edac2c7fcdf5491869ba13778db10f5" title="Indicates whether debug message are written for every incoming message.">debug</a>                  = <span class="keyword">false</span>;
+<a name="l00236"></a>00236     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#ade390a33759f7cd8166485b97fd5ce0c" title="Configuration for the module onboard parameters.">onboard_parameters_config</a>                     = {};
+<a name="l00237"></a>00237     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#ade390a33759f7cd8166485b97fd5ce0c" title="Configuration for the module onboard parameters.">onboard_parameters_config</a>.<a class="code" href="structOnboard__parameters_1_1conf__t.html#a692f09e47c58b90f5423d851386ab6ab" title="Maximum number of parameters.">max_param_count</a>     = MAX_ONBOARD_PARAM_COUNT;
+<a name="l00238"></a>00238     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#ade390a33759f7cd8166485b97fd5ce0c" title="Configuration for the module onboard parameters.">onboard_parameters_config</a>.<a class="code" href="structOnboard__parameters_1_1conf__t.html#a6a378df9b1df1e20a930ef041e21062b" title="Indicates if debug messages should be printed for each param change.">debug</a>               = false  ;
+<a name="l00239"></a>00239     conf.<a class="code" href="structMavlink__communication_1_1conf__t.html#a80a6e98e9b4d22521b030f9108691f2d" title="Configuration for the sending message handler.">max_msg_sending_count</a>                         = 22;
+<a name="l00240"></a>00240 
+<a name="l00241"></a>00241     <span class="keywordflow">return</span> conf;
+<a name="l00242"></a>00242 };
+<a name="l00243"></a>00243 
+<a name="l00244"></a>00244 
+<a name="l00245"></a>00245 <span class="preprocessor">#endif </span><span class="comment">/* MAVLINK_COMMUNICATION_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -258,7 +267,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 18 2016 13:00:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri May 20 2016 07:31:11 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
