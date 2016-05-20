@@ -73,13 +73,24 @@ Scheduler::Scheduler(const Scheduler::conf_t config) :
 }
 
 
-bool Scheduler::add_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, uint32_t task_id)
+bool Scheduler::add_task(uint32_t repeat_period,
+              Scheduler_task::task_function_t call_function,
+              Scheduler_task::task_argument_t function_argument,
+              Scheduler_task::priority_t priority,
+              Scheduler_task::timing_mode_t timing_mode,
+              Scheduler_task::run_mode_t run_mode,
+              int32_t task_id)
 {
     bool task_successfully_added = false;
 
     // Check if the scheduler is not full
     if (task_count_ < max_task_count_)
     {
+        if (task_id == -1)
+        {
+           task_id = task_count_;
+        }
+
         // Check if there is already a task with this ID
         bool id_is_unique = true;
         for (uint32_t i = 0; i < task_count_; ++i)
@@ -195,7 +206,7 @@ int32_t Scheduler::update()
         i = (i+1)%task_count_;
 
     } while(i != current_schedule_slot_);
-    
+
     return realtime_violation;
 }
 

@@ -60,8 +60,6 @@ class Onboard_parameters;
  */
 class Manual_control
 {
-friend bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
-
 public:
     /**
      * \brief   The source mode enum
@@ -253,7 +251,7 @@ public:
      *
      * \return   mode_source         which control source can change the mode (remote, joystick, groundstation)
      */
-    inline mode_source_t mode_source() const {return mode_source_;};    
+    inline mode_source_t mode_source() const {return mode_source_;};
 
     /**
      * \brief   Set the control source (which control source has control (remote, joystick, none))
@@ -273,15 +271,11 @@ public:
     static inline conf_t default_config();
 
 
-
     remote_t                remote;             ///< The pointer to the remote structure
     joystick_t              joystick;           ///< The pointer to the joystick structure
-private:
     mode_source_t           mode_source_;        ///< The source mode
     control_source_t        control_source_;     ///< Flag to tell whether the remote is active or not
-
-
-} ;
+};
 
 Manual_control::conf_t Manual_control::default_config()
 {

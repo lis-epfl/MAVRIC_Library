@@ -116,9 +116,9 @@ public:
 
     /**
      * \brief   Start logging data
-     * 
+     *
      * \detail  Will succeed only if the MAV is disarmed
-     * 
+     *
      * \return  Success
      */
     bool start(void);
@@ -126,9 +126,9 @@ public:
 
     /**
      * \brief   Stop logging data
-     * 
+     *
      * \detail  Will succeed only if the MAV is disarmed
-     * 
+     *
      * \return  Success
      */
     bool stop(void);
@@ -142,7 +142,7 @@ public:
      * \param   param_name              Name of the parameter
      *
      * \tparam  T                       Type of parameter to add
-     * 
+     *
      * \return  True if the parameter was added, false otherwise
      */
     template<typename T>
@@ -158,7 +158,7 @@ public:
      * \param   precision               The number of digit after the zero
      *
      * \tparam  T                       Type of parameter to add (float or double)
-     * 
+     *
      * \return  True if the parameter was added, false otherwise
      */
     template<typename T>
@@ -250,7 +250,7 @@ private:
     bool checksum_control(void);
 
     data_logging_conf_t config_;                ///< configuration of the data_logging module
-    
+
     bool debug_;                                 ///< Indicates if debug messages should be printed for each param change
     uint32_t data_logging_count_;               ///< Number of data logging parameter effectively in the array
     data_logging_entry_t* data_log_;            ///< Data logging array, needs memory allocation
@@ -291,5 +291,11 @@ static inline data_logging_conf_t data_logging_default_config()
 
     return conf;
 };
+
+
+static inline bool task_data_logging_update(Data_logging* data_logging)
+{
+    return data_logging->update();
+}
 
 #endif /* DATA_LOGGING_H__ */
