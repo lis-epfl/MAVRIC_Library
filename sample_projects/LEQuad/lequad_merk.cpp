@@ -47,17 +47,19 @@ LEQuad_merk::LEQuad_merk(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar,
                          Satellite& satellite, Led& led, File& file_flash, Battery& battery,
                          Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4,
                          Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2,
-                         Flow& flow1, Flow& flow2, const conf_t& config):
+                         Flow& flow_front, Flow& flow_back, const conf_t& config):
+    flow_front_(flow_front), flow_back_(flow_back),
     LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
            battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
            file1, file2, config.lequad_config),
     gps_mocap_(mavlink_communication.message_handler()),
-    saccade_controller_(flow1, flow2, ahrs, position_estimation)
+    saccade_controller_(flow_front, flow_back, ahrs, position_estimation)
 {
     // Init gps_mocap
     gps_mocap_.init();
 
     init_saccade();
+    init_camera();
 }
 
 // -------------------------------------------------------------------------
@@ -85,6 +87,99 @@ bool LEQuad_merk::init_saccade(void)
 
     // Task
     ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&task_saccade_controller_update, (Scheduler_task::task_argument_t)&saccade_controller_);
+
+    return ret;
+}
+
+// -------------------------------------------------------------------------
+// Cameras
+// -------------------------------------------------------------------------
+
+void flow_telemetry_send(const LEQuad_merk* LQm, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void flow_telemetry_send(const LEQuad_merk* LQm, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+
+    static uint8_t step = 0;
+    step = (step + 1) % 3;
+    static const uint32_t N_points = 75;
+    float of[60];
+    char name[7];
+
+    switch (step)
+    {
+      case 0:
+          strcpy(name, "OF_0");
+          for (uint32_t i = 0; i < 60; i++)
+          {
+              // left 0 to 59
+              of[i] = LQm->flow_front_.of.x[i];
+          }
+      break;
+
+      case 1:
+          strcpy(name, "OF_1");
+          for (uint32_t i = 0; i < N_points - 60; i++)
+          {
+              // left 60 to 78
+              of[i] = LQm->flow_front_.of.x[i + 60];
+          }
+          for (uint32_t i = 0; i < 120-N_points ; i++)
+          {
+              // right 0 to 40
+              of[i + N_points - 60] = LQm->flow_back_.of.x[i];
+          }
+      break;
+
+      case 2:
+          strcpy(name, "OF_2");
+          for (uint32_t i = 0; i < 2 * N_points - 120 ; i++)
+          {
+              // right 41 to 78
+              of[i] = LQm->flow_back_.of.x[i + 120 - N_points];
+          }
+
+          for (uint32_t i = 0; i < 2; i++)
+          {
+
+              of[i + 2 * N_points - 120] = 0.0f;//ahrs.angular_speed[2];
+          }
+
+          for (uint32_t i = 0; i < 180 - 2 * N_points-2; i++)
+          {
+
+              of[i + 2 * N_points - 120 + 1] = 0.0f;
+          }
+      break;
+    }
+
+        mavlink_msg_big_debug_vect_pack(  mavlink_stream->sysid(),
+                                      mavlink_stream->compid(),
+                                      msg,
+                                                  name,
+                                      time_keeper_get_us(),
+                                      of );
+}
+
+bool tasks_flow(LEQuad_merk* LQm);
+bool tasks_flow(LEQuad_merk* LQm)
+{
+    bool success = true;
+
+    success &= LQm->flow_front_.update();
+    success &= LQm->flow_back_.update();
+
+    return success;
+}
+
+bool LEQuad_merk::init_camera(void)
+{
+    bool ret = true;
+
+
+    // Task
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_OPTICAL_FLOW, 10000,(Mavlink_communication::send_msg_function_t)&flow_telemetry_send, this);
+    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&tasks_flow,   (Scheduler_task::task_argument_t)this);
+    
 
     return ret;
 }

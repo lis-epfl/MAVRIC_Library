@@ -74,9 +74,24 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
+
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
     board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
+    
+
+    // Modify board configuration for PX4flow
+    board_config.uart3_config.serial_device         = AVR32_SERIAL_3;
+    board_config.uart3_config.mode                  = AVR32_SERIAL_IN_OUT;
+    board_config.uart3_config.options.baudrate      = 115200;
+    board_config.uart3_config.options.charlength    = 8;
+    board_config.uart3_config.options.paritytype    = USART_NO_PARITY;
+    board_config.uart3_config.options.stopbits      = USART_1_STOPBIT;
+    board_config.uart3_config.options.channelmode   = USART_NORMAL_CHMODE;
+    board_config.uart3_config.rx_pin_map            = {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
+    board_config.uart3_config.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
+
     Megafly_rev4 board = Megafly_rev4(board_config);
+
 
     // Board initialisation
     init_success &= board.init();
@@ -93,8 +108,10 @@ int main(void)
     // Cameras
     // -------------------------------------------------------------------------
     Serial_dummy serial_dummy;
-    Flow_px4 camera_front(serial_dummy);
-    Flow_px4 camera_back(serial_dummy);
+    Flow_px4 camera_front(board.uart3);
+    Flow_px4 camera_back(board.uart4);
+    // Flow_px4 camera_front(serial_dummy);
+    // Flow_px4 camera_back(serial_dummy);
 
     // -------------------------------------------------------------------------
     // Create MAV

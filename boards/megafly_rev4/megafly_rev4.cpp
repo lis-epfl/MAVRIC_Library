@@ -71,6 +71,7 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
     uart0(config.uart0_config),
     uart1(config.uart1_config),
     uart3(config.uart3_config),
+    uart4(config.uart4_config),
     uart_usb(config.uart_usb_config),
     i2c0(config.i2c0_config),
     i2c1(config.i2c1_config),
@@ -189,6 +190,14 @@ bool Megafly_rev4::init(void)
     // -------------------------------------------------------------------------
     ret = uart3.init();
     print_util_dbg_init_msg("[UART3]", ret);
+    init_success &= ret;
+    time_keeper_delay_ms(50);
+
+    // -------------------------------------------------------------------------
+    // Init UART4
+    // -------------------------------------------------------------------------
+    ret = uart4.init();
+    print_util_dbg_init_msg("[UART4]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
 

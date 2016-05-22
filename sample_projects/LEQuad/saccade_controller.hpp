@@ -115,7 +115,7 @@ public:
      * \param   ahrs         Attitude and heading reference system
      * \param   config       Configuration structure
      */
-    Saccade_controller(Flow& flow_back, Flow& flow_front, const ahrs_t& ahrs,
+    Saccade_controller(Flow& flow_front, Flow& flow_back, const ahrs_t& ahrs,
                        Position_estimation& position_estimation,
                        saccade_controller_conf_t config = saccade_controller_default_config());
 
@@ -157,7 +157,6 @@ public:
     float                       weighted_function_;
     float                       derotation_constant_;
     float                       last_derotation_yaw_velocity_;
-    float                       movement_total_;
 
     uint64_t                    last_saccade_;
 
@@ -166,8 +165,8 @@ public:
 
     attitude_command_t          attitude_command_;                   ///< Attitude command given by the necessary saccade
 
-    Flow&                       flow_back_;                          ///< back optic flow camera output
     Flow&                       flow_front_;                         ///< Front optic flow camera output
+    Flow&                       flow_back_;                          ///< back optic flow camera output
 
     const ahrs_t&               ahrs_;                               ///< Attitude and heading reference system
 

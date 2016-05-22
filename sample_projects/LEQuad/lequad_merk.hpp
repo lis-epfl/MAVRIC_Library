@@ -92,13 +92,17 @@ public:
             Servo& servo_7,
             File& file1,
             File& file2,
-            Flow& flow1,
-            Flow& flow2,
+            Flow& flow_front,
+            Flow& flow_back,
             const conf_t& config = default_config());
+
+    Flow& flow_front_;
+    Flow& flow_back_;
 
 protected:
     virtual bool main_task(void);
     virtual bool init_saccade(void);
+    virtual bool init_camera(void);
 
     Gps_mocap gps_mocap_;
     Saccade_controller saccade_controller_;

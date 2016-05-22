@@ -54,13 +54,13 @@ extern "C"
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Saccade_controller::Saccade_controller( Flow& flow_back,
-                                        Flow& flow_front,
+Saccade_controller::Saccade_controller( Flow& flow_front,
+                                        Flow& flow_back,
                                         const ahrs_t& ahrs,
                                         Position_estimation& position_estimation,
                                         saccade_controller_conf_t config ):
-  flow_back_(flow_back),
   flow_front_(flow_front),
+  flow_back_(flow_back),
   ahrs_(ahrs),
   position_estimation_(position_estimation)
 
@@ -122,7 +122,6 @@ Saccade_controller::Saccade_controller( Flow& flow_back,
     pid_controller_init(&altitude_pid_,&config.pid_config);
 
     altitude_value_ = -0.7;
-    movement_total_ = 0;
 }
 
 
@@ -296,13 +295,12 @@ bool Saccade_controller::update()
             movement_direction = atan2(goal_lf[1],goal_lf[0]);
 
             attitude_command_.rpy[2]  = movement_direction;
-            attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+            // attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
 
             heading_error = maths_f_abs( maths_calc_smaller_angle(attitude_command_.rpy[2]-current_rpy.rpy[2]) );
             if(heading_error<0.1)
             {
-                velocity_command_.xyz[0] = goal_lf[0];
-                velocity_command_.xyz[1] = goal_lf[1];
+               velocity_command_.xyz[0] = 0.1;
 
                 if(time_keeper_get_ms()-begin_time < 1000)
                 {
@@ -337,7 +335,7 @@ bool Saccade_controller::update()
 
             if ( heading_error < 0.1)
             {
-                velocity_command_.xyz[0] = 0.2;
+                velocity_command_.xyz[0] = 0.1;
                 // velocity_command_.xyz[1] = 0.2 * quick_trig_sin(movement_direction);
 
                 last_saccade_             = time_keeper_get_ms();
@@ -364,7 +362,7 @@ bool Saccade_controller::update()
                 attitude_command_.rpy[0]  = 0;
                 attitude_command_.rpy[1]  = 0;
                 attitude_command_.rpy[2]  += movement_direction;
-                attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
+                // attitude_command_.quat    = coord_conventions_quaternion_from_rpy(attitude_command_.rpy);
 
                 saccade_state_            = SACCADE;
             }
