@@ -31,7 +31,7 @@
 <area shape="rect" id="node59" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="2919,744,3052,829"/>
 <area shape="rect" id="node63" href="$structstabiliser__stack__copter__t.html" title="Structure containing the stacked controller." alt="" coords="2324,709,2511,864"/>
 <area shape="rect" id="node65" href="$structLEQuad_1_1conf__t.html" title="Configuration structure." alt="" coords="3949,1199,4168,1457"/>
-<area shape="rect" id="node67" href="$structMavlink__waypoint__handler_1_1conf__t.html" title="{Mavlink_waypoint_handler::conf_t\n|+ auto_take_off_altitude\l|}" alt="" coords="4341,744,4560,829"/>
+<area shape="rect" id="node67" href="$structMavlink__waypoint__handler_1_1conf__t.html" title="{Mavlink_waypoint_handler::conf_t\n||}" alt="" coords="4341,744,4560,829"/>
 <area shape="rect" id="node69" href="$structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication." alt="" coords="4735,709,4940,864"/>
 <area shape="rect" id="node71" href="$structScheduler_1_1conf__t.html" title="Scheduler configuration." alt="" coords="4607,288,4745,408"/>
 <area shape="rect" id="node73" href="$structremote__conf__t.html" title="The configuration structure of the remote." alt="" coords="4964,735,5071,838"/>

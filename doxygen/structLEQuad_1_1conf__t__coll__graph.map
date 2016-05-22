@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structMavlink__waypoint__handler_1_1conf__t.html" title="{Mavlink_waypoint_handler::conf_t\n|+ auto_take_off_altitude\l|}" alt="" coords="5,1479,224,1564"/>
+<area shape="rect" id="node2" href="$structMavlink__waypoint__handler_1_1conf__t.html" title="{Mavlink_waypoint_handler::conf_t\n||}" alt="" coords="5,1479,224,1564"/>
 <area shape="rect" id="node4" href="$structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication." alt="" coords="560,1444,765,1599"/>
 <area shape="rect" id="node6" href="$structScheduler_1_1conf__t.html" title="Scheduler configuration." alt="" coords="164,1041,303,1161"/>
 <area shape="rect" id="node8" href="$structMavlink__message__handler_1_1conf__t.html" title="Structure used to hold parameters during initialisation." alt="" coords="327,1041,545,1161"/>
