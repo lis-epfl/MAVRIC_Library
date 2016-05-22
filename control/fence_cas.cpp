@@ -216,7 +216,6 @@ bool Fence_CAS::update(void)
 
 
 		float dist[nbFencePoints];				// Table of distance to each fence
-		static float old_distAC[MAX_WAYPOINTS];	// Table of the old distance to each fencepoint (used for small angles)
 
 
 		for (int i=0; i < nbFencePoints; i++) 	// loop through all pair of fence points
@@ -265,53 +264,70 @@ bool Fence_CAS::update(void)
 			}
 			else
 			{
-
+				;
 			}
 			/*END Fence repulsion*/
 
 			/*Fencepoint repulsion*/
 			/*Min radius method*/
 
-			float AB[3]={B[0]-A[0],B[1]-A[1],B[2]-A[2]};
-			float pAB[3]={-AB[1],AB[0],AB[2]};
+			float AB[3]={B[0]-A[0],B[1]-A[1],0.0};
+			float pAB[3]={-AB[1],AB[0],0.0};
 			vectors_normalize(AB,AB);
 			vectors_normalize(pAB,pAB);
 			float M[3]={0,0,0};
+			this->maxradius = 20;
+
 			for(int k=0;k<3;k++)
 			{
 				M[k] = A[k] + (this->maxradius+this->maxsens)*(AB[k]/quick_trig_tan(CurAngle_list[i]/2.0) + pAB[k]);
 			}
 
-			float MS[3] = {S[0]-M[0],S[1]-M[1],S[2]-M[2]};
-			float distMC=detect_seg(M,M,C,C,V,I,J);
+			float MS[3] = {S[0]-M[0],S[1]-M[1],0.0};
+			float distMC=detect_seg(M,M,C,S,V,I,J);
+			distMC = vectors_norm(MS);
 
-			float MA[3] = {A[0]-M[0],A[1]-M[1],A[2]-M[2]};
+
+			float MA[3] = {A[0]-M[0],A[1]-M[1],0.0};
 			float distMA=vectors_norm(MA);
 
-			print_util_dbg_print("||ID||");print_util_dbg_putfloat(i+1,0);print_util_dbg_print("\n");
-			print_util_dbg_print("||A||");print_util_dbg_putfloat(A[0],5);print_util_dbg_putfloat(A[1],5);print_util_dbg_print("\n");
-			print_util_dbg_print("||M||");print_util_dbg_putfloat(M[0],5);print_util_dbg_putfloat(M[1],5);print_util_dbg_print("\n");
+//			print_util_dbg_print("||ID||");print_util_dbg_putfloat(i+1,0);print_util_dbg_print("\n");
+//			print_util_dbg_print("||A||");print_util_dbg_putfloat(A[0],5);print_util_dbg_putfloat(A[1],5);print_util_dbg_print("\n");
+//			print_util_dbg_print("||M||");print_util_dbg_putfloat(M[0],5);print_util_dbg_putfloat(M[1],5);print_util_dbg_print("\n");
 //			print_util_dbg_print("||MA||");print_util_dbg_putfloat(MA[0],5);print_util_dbg_putfloat(MA[1],5);print_util_dbg_print("\n");
 //			print_util_dbg_print("||MA||");print_util_dbg_putfloat(distMA,5);print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i]*180/PI,5);print_util_dbg_print("\n");
 			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
 //			float SA[3] = {A[0]-S[0],A[1]-S[1],A[2]-S[2]};
 //			float distAS = vectors_norm(SA);
-			this->maxradius = 30;
-//			print_util_dbg_print("||MS||");print_util_dbg_putfloat(distMS,5);print_util_dbg_print("||SA||");print_util_dbg_putfloat(distAS,5);print_util_dbg_print("\n");
-			if((distAS <= (distMA))&&(distMC >= this->maxradius))
+//			this->maxradius = 30;
+//			print_util_dbg_print("||MS||");print_util_dbg_putfloat(distMC,5);print_util_dbg_print("||SA||");print_util_dbg_putfloat(distAS,5);print_util_dbg_print("\n");
+//			((distAC >= -(angle_rep_radius))&&(distAC < angle_rep_radius))
+			if((distAS >=- (distMA))&&(distAS <= (distMA))) //&&(distMC >= this->maxradius))
 			{
-				if((old_distAC[i]>=distAS)) // If the drone is heading toward the fencepoint
+//				print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
+//				print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i]*180/PI,5);
+//				print_util_dbg_print("|OLD|");print_util_dbg_putfloat(old_distAC[i],10);
+//				print_util_dbg_print("|distAS|");print_util_dbg_putfloat(distAS,10);
+//				print_util_dbg_print("\n");
+				if((old_distAC[i]>distAS)) // If the drone is heading toward the fencepoint
 				{
-					float ratio=(distMC-this->maxradius)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
+					float ratio=(distMA - distAS)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
 //					float ratio=(distMA)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
-					float rep[3]={A[0]-S[0],A[1]-S[1],0.0};					// Repulsion local frame
-					gftobftransform(C, S, MA);								// Repulsion body frame
-					vectors_normalize(MA,MA);
-					MA[1]=(MA[1]>=0?-1:1) ;								// Extract repulsion direction in body frame
-					this->repulsion[1]+=- MA[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type)*3; // Add repulsion
+					float rep[3]={S[0]-A[0],S[1]-A[1],0.0};					// Repulsion local frame
+					gftobftransform(C, S, rep);								// Repulsion body frame
+					vectors_normalize(rep,rep);
+					MA[1]=(rep[1]>=0?1:-1) ;// Extract repulsion direction in body frame
+					float pointrep = -rep[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type)*1.2; // Add repulsion
+					this->repulsion[1] += pointrep;
+					if ( CurAngle_list[i]<= PI/2.0)
+					{
+//						pointrep-= pointrep*2; // Add repulsion
+//						this->repulsion[1]*= 3;
+					}
+//					this->repulsion[1]+= pointrep;
 //					print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
 //					print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i]*180/PI,5);
-//					print_util_dbg_print("||");print_util_dbg_putfloat(-MA[1]*this->coef_roll*max_ang*interpolate(ratio,interp_type)*2,5);
+//					print_util_dbg_print("||");print_util_dbg_putfloat(pointrep,5);
 //					print_util_dbg_print("\n");
 					detected=true;
 				}
@@ -322,12 +338,13 @@ bool Fence_CAS::update(void)
 //				print_util_dbg_putfloat(distAS,5);print_util_dbg_print("<");print_util_dbg_putfloat(this->maxsens,5);
 //				print_util_dbg_print("||TOO NEAR ||\n");
 //			}
-
-			old_distAC[i]=distAS;
-
+			if(n==0) //only for innerfence
+			{
+				old_distAC[i]=distAS;
+			}
 			/*END Min radius method*/
 
-			/*Custom methd*/
+			/*Custom method*/
 //			float angle_rep_radius = this->maxsens;
 //			if(CurAngle_list[i]>PI/2.0) // Check if the angle is smaller than pi/2
 //			{
@@ -336,7 +353,7 @@ bool Fence_CAS::update(void)
 //			else	// The angle is smaller than pi/2
 //			{
 //				float cos = quick_trig_cos(CurAngle_list[i]/2.0)*(1 - CurAngle_list[i]/PI)*2;
-//				angle_rep_radius = 4*cos*cos*cos*this->maxsens; // The smaller the angle, the bigger the repulsion radius CUSTOM
+////				angle_rep_radius = 4*cos*cos*cos*this->maxsens; // The smaller the angle, the bigger the repulsion radius CUSTOM
 //				angle_rep_radius = 2*this->maxsens/(quick_trig_sin(CurAngle_list[i]/2.0));// The smaller the angle, the bigger the repulsion radius DIAGONAL
 //				float D[3]={0,0,0}; // D is the precedent point (current A, next B, precedent D)
 //				if(i==0)
@@ -399,6 +416,8 @@ bool Fence_CAS::update(void)
 	}
 
 	/*END FOR EACH FENCE*/
+//	print_util_dbg_print("||");print_util_dbg_putfloat(this->repulsion[1],5);
+//	print_util_dbg_print("\n");
 	// Clip the repulsion
 	if(this->repulsion[1]>max_ang)
 	{
