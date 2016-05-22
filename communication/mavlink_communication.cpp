@@ -166,7 +166,13 @@ void Mavlink_communication::suspend_downstream(uint32_t delay)
 }
 
 
-bool Mavlink_communication::add_msg_send(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Mavlink_communication::send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
+bool Mavlink_communication::add_msg_send(uint32_t task_id,
+                  uint32_t repeat_period,
+                  send_msg_function_t function,
+                  handling_telemetry_module_struct_t module_structure,
+                  Scheduler_task::priority_t priority,
+                  Scheduler_task::timing_mode_t timing_mode,
+                  Scheduler_task::run_mode_t run_mode)
 {
     bool add_success = true;
 
@@ -181,12 +187,12 @@ bool Mavlink_communication::add_msg_send(uint32_t repeat_period, Scheduler_task:
         add_success &= true;
 
         add_success &= scheduler_.add_task(repeat_period,
-                                          run_mode,
-                                          timing_mode,
-                                          priority,
-                                          (Scheduler_task::task_function_t)&send_message,
-                                          (Scheduler_task::task_argument_t)new_msg_send,
-                                          task_id);
+                                           (Scheduler_task::task_function_t)&send_message,
+                                           (Scheduler_task::task_argument_t)new_msg_send,
+                                           priority,
+                                           timing_mode,
+                                           run_mode,
+                                           task_id);
     }
     else
     {
@@ -209,9 +215,19 @@ Mavlink_message_handler& Mavlink_communication::message_handler()
     return message_handler_;
 }
 
+Mavlink_message_handler* Mavlink_communication::p_message_handler()
+{
+    return &message_handler_;
+}
+
 Mavlink_stream& Mavlink_communication::mavlink_stream()
 {
     return mavlink_stream_;
+}
+
+Mavlink_stream* Mavlink_communication::p_mavlink_stream()
+{
+    return &mavlink_stream_;
 }
 
 Onboard_parameters& Mavlink_communication::onboard_parameters()
@@ -219,6 +235,10 @@ Onboard_parameters& Mavlink_communication::onboard_parameters()
     return onboard_parameters_;
 }
 
+Onboard_parameters* Mavlink_communication::p_onboard_parameters()
+{
+    return &onboard_parameters_;
+}
 
 uint32_t Mavlink_communication::sysid()
 {

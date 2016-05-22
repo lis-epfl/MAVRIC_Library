@@ -72,8 +72,10 @@ typedef struct
 * \param servo_5                    The fifth servo
 * \param servo_6                    The sixth servo
 * \param servo_7                    The seventh servo
+*
+* \return                           true
 */
-void servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0, Servo* servo_1, Servo* servo_2, Servo* servo_3, Servo* servo_4, Servo* servo_5, Servo* servo_6, Servo* servo_7);
+bool servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0, Servo* servo_1, Servo* servo_2, Servo* servo_3, Servo* servo_4, Servo* servo_5, Servo* servo_6, Servo* servo_7);
 
 /**
  * \brief   Sends the MAVLink message for the servos
