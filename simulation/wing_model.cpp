@@ -42,8 +42,12 @@
 
 
 #include "simulation/wing_model.hpp"
+
+//#define ALLOW_PRINTF
+
+#ifdef ALLOW_PRINTF
 #include <iostream>
-//#include <fstream>*/
+#endif
 
 extern "C"
 {
@@ -97,7 +101,6 @@ wing_model_forces_t Wing_model::compute_forces(float wind[3], float ang_rates[3]
 	float drag = cd*base;
 	float sinus = sin(aoa);
 	float cosinus = cos(aoa);
-	//printf("Drag: %f\n", drag);
 	wing_model_forces_t forces_wf;
 	forces_wf.torque[ROLL] = 0.0;
 	forces_wf.torque[PITCH] = cm*chord_*base; //Positive when plane lift its nose
@@ -106,6 +109,11 @@ wing_model_forces_t Wing_model::compute_forces(float wind[3], float ang_rates[3]
 	forces_wf.force[Y] = 0.0;
 	forces_wf.force[Z] = -lift*cosinus-drag*sinus;
 	wing_model_forces_t forces_bf = forces_wing_to_bf(forces_wf);
+	#ifdef ALLOW_PRINTF
+		printf("Drag: %f, Lift: %f, AOA: %f\n",drag, lift, aoa);
+		printf("WF: Torque: %f, Fx: %f, Fz: %f\n",forces_wf.torque[PITCH], forces_wf.force[X], forces_wf.force[Z]);
+		printf("BF: Torques: %f, %f, %f\nForces: %f, %f, %f\n",forces_bf.torque[ROLL], forces_bf.torque[PITCH], forces_bf.torque[YAW], forces_bf.force[X], forces_bf.force[Y], forces_bf.force[Z] );//TODO: REMOVE
+	#endif
 	return forces_bf;
 }
 
@@ -121,6 +129,10 @@ void Wing_model::set_flap_angle(float angle){
 float Wing_model::get_cl(float aoa)
 {
 	float coeff=0.0f;
+	float angle=0.0f;
+	float angle2=0.0f;
+	float angle3=0.0f;
+	float angle4=0.0f;
 	if(type_ == 1) // Type 1 = zagi 12
 	{
 		aoa = (aoa+flap_angle_*0.15f)*57.2957f;//57.29 = 180/pi -> Take flap angle into account and transform it in degrees
@@ -144,7 +156,17 @@ float Wing_model::get_cl(float aoa)
 	}
 	else //Return the flat profile
 	{
-		coeff = 2.0f*PI*aoa;
+		//coeff = 2.0f*PI*aoa;
+		angle = fabs(aoa*57.2957f);
+		angle2 = angle*angle;
+		angle3 = angle2*angle;
+		angle4 = angle3*angle;
+		coeff = -0.000000092f*angle4+0.000019403f*angle3-0.001668105f*angle2+0.060127605f*angle;
+		if(aoa<0)
+		{
+			coeff = -coeff;
+		}
+
 	}
 	return coeff;
 }
@@ -152,6 +174,9 @@ float Wing_model::get_cl(float aoa)
 float Wing_model::get_cd(float aoa)
 {
 	float coeff = 0.0f;
+	float angle=0.0f;
+	float angle2=0.0f;
+	float angle3=0.0f;
 	if(type_ == 1) // Type 1 = zagi 12
 	{
 		aoa = (aoa+flap_angle_*0.15f)*57.2957f;//*180/pi -> Take flap angle into account and transform it in degrees
@@ -175,13 +200,21 @@ float Wing_model::get_cd(float aoa)
 	}
 	else //Return the flat profile
 	{
-		coeff = 1.28f*sin(fabs(aoa));
+		//coeff = 1.28f*sin(fabs(aoa));
+		angle = fabs(aoa*57.2957f);
+		angle2 = angle*angle;
+		angle3 = angle2*angle;
+		coeff = -0.000002950f*angle3+0.000474150f*angle2-0.002426600f*angle+0.153067920f;
 	}
 	return coeff;
 }
 
 float Wing_model::get_cm(float aoa)
 {
+	float angle=0.0f;
+	float angle2=0.0f;
+	float angle3=0.0f;
+	float h=0.0f;
 	float coeff = 0.0f;
 	float coeff1 = 0.0f;
 	float coeff2 = 0.0f;
@@ -242,7 +275,12 @@ float Wing_model::get_cm(float aoa)
 	}
 	else //Return the flat profile
 	{
-		coeff = 0.25f*(get_cl(aoa)*cos(aoa)+get_cd(aoa)*sin(aoa));
+		//coeff = 2.0f*0.25f*(get_cl(aoa)*cos(aoa)+get_cd(aoa)*sin(aoa));
+		angle = fabs(aoa*57.2957f);
+		angle2 = angle*angle;
+		angle3 = angle2*angle;
+		h = 0.000000765f*angle3-0.000133996f*angle2+0.009433786f*angle+0.181632486f;
+		coeff = (get_cl(aoa)*cos(aoa)+get_cd(aoa)*sin(aoa))*(0.1556f*h-0.2878f/*h-1.1382f*/); //entre 1.138 et 1.1385
 	}
 	return coeff;
 }

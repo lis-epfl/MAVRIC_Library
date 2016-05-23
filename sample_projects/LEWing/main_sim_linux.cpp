@@ -161,7 +161,8 @@ int main(int argc, char** argv)
       if (started==false && cd.state.is_armed())
       {
           started = true;
-          board.dynamic_model.set_position(0.0f, 0.0f, -1000.0f);
+          board.dynamic_model.set_position(0.0f, 0.0f, -100000.0f);
+          board.dynamic_model.set_speed(10.0f, 0.0f, 0.0f);
       }
 
       cd.scheduler.update();

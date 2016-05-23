@@ -39,6 +39,7 @@
  ******************************************************************************/
 
 #include "simulation/dynamic_model_fixed_wing.hpp"
+#include "simulation/wing_model.hpp"
 #include "drivers/servo.hpp"
 #include "hal/dummy/pwm_dummy.hpp"
 #include "util/coord_conventions.h"
@@ -59,10 +60,39 @@ int main(int argc, char** argv)
     // Create log file
 
     logfile.open("log.csv");
-    logfile << "t,x,y,z,vx,vy,vz,roll,pitch,yaw" << std::endl;
+    //logfile << "t,x,y,z,vx,vy,vz,roll,pitch,yaw" << std::endl;
+    logfile << "rate" << std::endl;
+    Wing_model left_drift(0.0f,quaternions_create(1.0f/sqrt(2.0f), 1.0f/sqrt(2.0f), 0.0f, 0.0f), -0.1780f, -0.30f, -0.04f, 0.015f, 0.14f,0);
+    Wing_model right_drift(0.0f,quaternions_create(1.0f/sqrt(2.0f), 1.0f/sqrt(2.0f), 0.0f, 0.0f), -0.1780f, 0.30f, -0.04f, 0.015f, 0.14f,0);
+    wing_model_forces_t left_force;
+    wing_model_forces_t right_force;
+    Wing_model left_flap(0.0f,quaternions_create(1.0f, 0.0f, 0.0f, 0.0f), -0.035f+0.0280f, -0.205f, 0.004f, 0.12f, 0.3f,1);
+    Wing_model right_flap(0.0f,quaternions_create(1.0f, 0.0f, 0.0f, 0.0f), -0.035f+0.0280f, 0.205f, 0.004f, 0.12f, 0.3f,1);
+    wing_model_forces_t left_flap_force;
+    wing_model_forces_t right_flap_force;
+    float wind[3]={0.0f, 0.0f, 0.0f}, rates[3]={0.0f, 0.0f, -10.0f};
+    float angle = 10.0f;
+    /*for(int i=-90; i<=90; i++)
+    {
+    wind[0] = -cos(-10.0f/180.0f*PI);
+    wind[1] = sin(-10.0f/180.0f*PI);
+     printf("%f, %f\n", wind[0], wind[2]);*/
+    while(1)
+    {
+      wind[0] = -cos(angle/180.0f*PI)*10.0f;
+      wind[1] = sin(angle/180.0f*PI)*10.0f;
+      left_force = left_drift.compute_forces(wind, rates);
+      right_force = right_drift.compute_forces(wind, rates);
+      left_flap_force = left_flap.compute_forces(wind, rates);
+      right_flap_force = right_flap.compute_forces(wind, rates);
+      rates[2]+=left_force.torque[YAW]+right_force.torque[YAW]+left_flap_force.torque[YAW]+right_flap_force.torque[YAW];
+      angle+=rates[2]*0.18f/PI;
+      logfile << angle << std::endl;
+      //logfile << i << ", " << left_force.torque[YAW]+right_force.torque[YAW]+left_flap_force.torque[YAW]+right_flap_force.torque[YAW] << std::endl;
+    }
     // logfile.close();
 
-    Pwm_dummy pwm;
+    /*Pwm_dummy pwm;
     servo_conf_t config;
     config.trim = 0.0f;
     config.min = -1.0f;
@@ -80,7 +110,6 @@ int main(int argc, char** argv)
 
     servo_motor.write(-1.0f);
     //servo_motor.write(-0.4f);
-
 
     local_position_t position;
     std::array<float, 3> velocity;
@@ -119,6 +148,6 @@ int main(int argc, char** argv)
         while(time_keeper_get_s() - t < 0.004f){}
         t = time_keeper_get_s();
         model.update();
-    }
+    }*/
     return 0;
 }
