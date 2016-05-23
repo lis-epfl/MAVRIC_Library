@@ -117,7 +117,7 @@ public:
      *
      * \return Copy of the current waypoint
      */
-    const waypoint_struct_t current_waypoint() const;
+    const waypoint_struct_t* current_waypoint() const;
 
     /**
      * \brief Gets the next waypoint if available
@@ -127,7 +127,7 @@ public:
      *
      * \return Copy of the next waypoint
      */
-    const waypoint_struct_t next_waypoint() const;
+    const waypoint_struct_t* next_waypoint() const;
 
     /**
      * \brief Gets the current waypoints position in the local frame

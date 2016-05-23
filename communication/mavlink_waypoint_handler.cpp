@@ -603,7 +603,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint_list_[0] = waypoint;
 }
 
-const waypoint_struct_t Mavlink_waypoint_handler::current_waypoint() const
+const waypoint_struct_t* Mavlink_waypoint_handler::current_waypoint() const
 {
     // Get current waypoint index
     int wpt_index = current_waypoint_index();
@@ -611,16 +611,16 @@ const waypoint_struct_t Mavlink_waypoint_handler::current_waypoint() const
     // If it is a good index
     if (wpt_index >= 0 && wpt_index < waypoint_count_)
     {
-        return waypoint_list_[];
+        return &waypoint_list_[wpt_index];
     }
     else // TODO: Return an error structure
     {
         // For now, return last waypoint structure
-        return waypoint_list_[waypoint_count_-1];
+        return &waypoint_list_[waypoint_count_-1];
     }
 }
 
-const waypoint_struct_t Mavlink_waypoint_handler::next_waypoint() const
+const waypoint_struct_t* Mavlink_waypoint_handler::next_waypoint() const
 {
     // Get current waypoint index
     int wpt_index = current_waypoint_index();
@@ -631,17 +631,17 @@ const waypoint_struct_t Mavlink_waypoint_handler::next_waypoint() const
         // Check if the next waypoint exists
         if ((wpt_index + 1) != waypoint_count_)
         {
-            return waypoint_list_[wpt_index + 1];
+            return &waypoint_list_[wpt_index + 1];
         }
         else // No next waypoint, set to first
         {
-            return waypoint_list_[0];
+            return &waypoint_list_[0];
         }
     }
     else // TODO: Return an error structure
     {
         // For now, set to last waypoint structure
-        return waypoint_list_[waypoint_count_-1];
+        return &waypoint_list_[waypoint_count_-1];
     }
 }
 
