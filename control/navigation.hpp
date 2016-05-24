@@ -278,11 +278,26 @@ Navigation::conf_t Navigation::default_config()
 
     conf.one_over_scaling                            = 0.3f;
     conf.safe_altitude                               = -30.0f;
-    conf.minimal_radius                              = 45.0f;
+    conf.minimal_radius                              = 5.0f;
     conf.heading_acceptance                          = PI/6.0f;
     conf.vertical_vel_gain                           = 1.0f;
     conf.takeoff_altitude                            = -10.0f;
     // conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
+    conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
+    return conf;
+};
+
+Navigation::conf_t Navigation::default_config()
+{
+    conf_t conf = default_config();
+
+    conf.cruise_speed                                = 12.0f;
+    conf.max_climb_rate                              = 6.0f;
+    
+    conf.safe_altitude                               = -60.0f;
+    conf.minimal_radius                              = 45.0f;
+    // conf.heading_acceptance                          = PI/6.0f;  //TODO should this be adapted for the wing
+    conf.takeoff_altitude                            = -60.0f;
     conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
     return conf;
 };
