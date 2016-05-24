@@ -174,7 +174,7 @@ bool Fence_CAS::update(void)
 	{
 		this->repulsion[k]=0.0;
 	}
-	float C[3]={pos_est->last_gps_pos.pos[0],pos_est->last_gps_pos.pos[1],pos_est->last_gps_pos.pos[2]};	// Position of the Quad
+	float C[3]={pos_est->local_position.pos[0],pos_est->local_position.pos[1],pos_est->local_position.pos[2]};	// Position of the Quad
 	float S[3]={0,0,0};																										// Position of the heading
 
 	float I[3]={0,0,0};	// Detected point on fence segment
@@ -193,6 +193,7 @@ bool Fence_CAS::update(void)
 	float dmin=2*this->r_pz; 					// Safe zone around the drone ,can be adjusted
 	float max_ang= 0.25*PI*(1-this->comfort);	// Adjusts the maximal angle in function of the comfort
 	max_ang = 0.25*PI;
+	this->coef_roll=3.0;
 	int interp_type = 2;						// Define the interpolation type of the repulsion
 
 	for(int i =0; i<3;i++)
@@ -208,6 +209,8 @@ bool Fence_CAS::update(void)
 		float* CurAngle_list = waypoint_handler->all_fence_angles[n];
 
 		float dist[nbFencePoints];				// Table of distance to each fence
+		float fencerep = 0.0;// Repulsion from fences
+		float pointrep = 0.0;// Repulsion from angles
 
 
 		for (int i=0; i < nbFencePoints; i++) 	// loop through all pair of fence points
@@ -257,22 +260,21 @@ bool Fence_CAS::update(void)
 			float distMA=vectors_norm(MA);
 
 			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
-			if((distAS <= (distMA))&&(distMC >= this->maxradius))
+			if((distAS <= (distMA))&&(distMC >= this->maxradius)&&(angle_detected==false))
 			{
 				float aratio=(distMC - this->maxradius)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
 				float rep[3]={MS[0],MS[1],0.0};					// Repulsion local frame
 				gftobftransform(C, S, rep);								// Repulsion body frame
 				vectors_normalize(rep,rep);
 				rep[1]=(rep[1]>=0?-1:1) ;// Extract repulsion direction in body frame
-				float pointrep = -rep[1]*this->coef_roll*max_ang*interpolate(aratio,interp_type)*1.4; // Add repulsion
-				this->repulsion[1] += pointrep;
+				pointrep += -rep[1]*this->coef_roll*max_ang*interpolate(aratio,interp_type); // Add repulsion
 				angle_detected=true;
-//				print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
+				print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
 //				print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i]*180/PI,5);
-//				print_util_dbg_print("||");print_util_dbg_putfloat(pointrep,5);
+				print_util_dbg_print("||");print_util_dbg_putfloat(pointrep,5);
 //				print_util_dbg_print("||");print_util_dbg_putfloat(this->repulsion[1],5);
-//				print_util_dbg_print("|ratio|");print_util_dbg_putfloat(interpolate(aratio,interp_type),5);
-//				print_util_dbg_print("|ratio|");print_util_dbg_putfloat(old_distAC[i],15);
+//				print_util_dbg_print("|interp|");print_util_dbg_putfloat(interpolate(aratio,interp_type),5);
+//				print_util_dbg_print("|oldAC|");print_util_dbg_putfloat(old_distAC[i],15);
 //				print_util_dbg_print("\n");
 			}
 			else
@@ -283,7 +285,7 @@ bool Fence_CAS::update(void)
 
 			/*Fence repulsion*/
 			dist[i] = detect_seg(A,B,C,S,V,I,J);
-			float fencerep = 0.0;// Compute distance to the fence
+
 			if((dist[i] < this->maxsens)&&(angle_detected==false))
 			{
 				float rep[3]={A[1]-B[1],B[0]-A[0],0.0};						// Repulsion local frame
@@ -293,18 +295,28 @@ bool Fence_CAS::update(void)
 
 				float fratio = dist[i]/this->maxsens;						// Compute ratio for interpolation
 				fencerep +=-rep[1]*this->coef_roll*max_ang*interpolate(fratio,interp_type);
-				this->repulsion[1]+=fencerep;
-//				print_util_dbg_print("||Frep||");print_util_dbg_putfloat(i+1,0);
-//				print_util_dbg_print("||");print_util_dbg_putfloat(fencerep,5);
+
+				print_util_dbg_print("||Frep||");print_util_dbg_putfloat(i+1,0);
+				print_util_dbg_print("||");print_util_dbg_putfloat(fencerep,5);
 //				print_util_dbg_print("||");print_util_dbg_putfloat(this->repulsion[1],5);
 //				print_util_dbg_print("|ratio|");print_util_dbg_putfloat(interpolate(fratio,interp_type),5);
-//				print_util_dbg_print("\n");
+				print_util_dbg_print("\n");
 			}
 			else
 			{
 				;
 			}
 			/*END Fence repulsion*/
+		}
+		if(angle_detected==true)
+		{
+			print_util_dbg_print("\n");
+			angle_detected=false;
+			this->repulsion[1] += pointrep;
+		}
+		else
+		{
+			this->repulsion[1] += fencerep;
 		}
 	}
 
