@@ -54,6 +54,8 @@
 
 #include "control/manual_control_telemetry.hpp"
 
+#include "runtime/scheduler_telemetry.hpp"
+
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
@@ -95,7 +97,10 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     sysid_(mavlink_communication.sysid()),
     config_(config)
 {
-    // Init al modules
+    // Init main task first
+    init_main_task();
+
+    // Init all modules
     init_state();
     init_communication();
     init_data_logging();
@@ -138,6 +143,21 @@ void LEQuad::loop(void)
     }
 }
 
+// -------------------------------------------------------------------------
+// Main task
+// -------------------------------------------------------------------------
+bool LEQuad::init_main_task(void)
+{
+    bool ret = true;
+
+    // Task
+    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&LEQuad::main_task_func, (Scheduler_task::task_argument_t)this, Scheduler_task::PRIORITY_HIGHEST);
+
+    // DOWN link
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats, &scheduler);
+
+    return ret;
+}
 
 // -------------------------------------------------------------------------
 // State
@@ -406,9 +426,6 @@ bool LEQuad::init_stabilisers(void)
     ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.clip_pre,      "THRV_I_PREG");
     ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain,      "THRV_KD");
     ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width,          "THRV_SOFT");
-
-    // Task
-    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&LEQuad::main_task_func, (Scheduler_task::task_argument_t)this, Scheduler_task::PRIORITY_HIGHEST);
 
     return ret;
 }
