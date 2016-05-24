@@ -168,7 +168,7 @@ bool Fence_CAS::update(void)
 {
 	// Initializaion of variables
 	static float old_distAC[MAX_WAYPOINTS];					// Table of the old distance to each fencepoint (used for small angles)
-	bool detected=false;									// Flag to reset the ROLL command
+	bool angle_detected=false;									// Flag to reset the ROLL command
 
 	for (int k=0;k<3;k++)									// Reset the repulsion command
 	{
@@ -257,7 +257,7 @@ bool Fence_CAS::update(void)
 			float distMA=vectors_norm(MA);
 
 			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
-			if((distAS >=- (distMA))&&(distAS <= (distMA))&&(distMC >= this->maxradius))
+			if((distAS <= (distMA))&&(distMC >= this->maxradius))
 			{
 
 				float aratio=(distMA - distAS)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
@@ -267,7 +267,7 @@ bool Fence_CAS::update(void)
 				rep[1]=(rep[1]>=0?-1:1) ;// Extract repulsion direction in body frame
 				float pointrep = -rep[1]*this->coef_roll*max_ang*interpolate(aratio,interp_type)*1.4; // Add repulsion
 				this->repulsion[1] += pointrep;
-				detected=true;
+				angle_detected=true;
 //				print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
 //				print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i]*180/PI,5);
 //				print_util_dbg_print("||");print_util_dbg_putfloat(pointrep,5);
@@ -286,7 +286,7 @@ bool Fence_CAS::update(void)
 			/*Fence repulsion*/
 			dist[i] = detect_seg(A,B,C,S,V,I,J);
 			float fencerep = 0.0;// Compute distance to the fence
-			if((dist[i] >= -(this->maxsens))&&(dist[i] < this->maxsens)&&(detected==false))
+			if((dist[i] < this->maxsens)&&(angle_detected==false))
 			{
 				float rep[3]={A[1]-B[1],B[0]-A[0],0.0};						// Repulsion local frame
 				gftobftransform(C, S, rep);									// Repulsion body frame
