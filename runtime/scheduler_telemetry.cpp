@@ -123,3 +123,35 @@ void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink
     stab_task->delay_max = 0;
     stab_task->execution_time_max = 0;
 }
+
+void scheduler_telemetry_send_rt_stats_all(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    float data[60];
+
+    uint32_t n_tasks = scheduler->task_count();
+    if (n_tasks > 10)
+    {
+        n_tasks = 10;
+    }
+
+    for (uint32_t i = 0; i < n_tasks; ++i)
+    {
+        // Get i-th task
+        Scheduler_task* task = scheduler->get_task_by_index(i);
+
+        // Save real time statistics in data array
+        data[6*i + 0] = task->execution_time_avg;
+        data[6*i + 1] = task->execution_time_var;
+        data[6*i + 2] = task->execution_time_max;
+        data[6*i + 3] = task->delay_avg;
+        data[6*i + 4] = task->delay_var;
+        data[6*i + 5] = task->delay_max;
+    }
+
+    mavlink_msg_big_debug_vect_pack(mavlink_stream->sysid(),
+                                    mavlink_stream->compid(),
+                                    msg,
+                                    "RTstat",
+                                    time_keeper_get_us(),
+                                    data);
+}
