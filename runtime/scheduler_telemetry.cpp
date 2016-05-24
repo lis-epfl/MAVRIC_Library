@@ -50,13 +50,15 @@ extern "C"
 
 void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
+    // static int id = 0
+    // id ++;
     Scheduler_task* stab_task = scheduler->get_task_by_id(0);
 
     mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
                                        mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
-                                       "stabAvgDelay",
+                                       "DelayAvg",
                                        stab_task->delay_avg);
     mavlink_stream->send(msg);
 
@@ -64,15 +66,15 @@ void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink
                                        mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
-                                       "stabDelayVar",
-                                       maths_fast_sqrt(stab_task->delay_var_squared));
+                                       "DelayVar",
+                                       maths_fast_sqrt(stab_task->delay_var));
     mavlink_stream->send(msg);
 
     mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
                                        mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
-                                       "stabMaxDelay",
+                                       "DelayMax",
                                        stab_task->delay_max);
     mavlink_stream->send(msg);
 
@@ -80,7 +82,7 @@ void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink
                                        mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
-                                       "stabRTvio",
+                                       "RTViol",
                                        stab_task->rt_violations);
     mavlink_stream->send(msg);
 
@@ -88,10 +90,36 @@ void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink
                                        mavlink_stream->compid(),
                                        msg,
                                        time_keeper_get_ms(),
-                                       "stabExTime",
+                                       "ExTime",
                                        stab_task->execution_time);
     mavlink_stream->send(msg);
 
+    mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
+                                       mavlink_stream->compid(),
+                                       msg,
+                                       time_keeper_get_ms(),
+                                       "ExTimeAvg",
+                                       stab_task->execution_time_avg);
+    mavlink_stream->send(msg);
+
+    mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
+                                       mavlink_stream->compid(),
+                                       msg,
+                                       time_keeper_get_ms(),
+                                       "ExTimeVar",
+                                       stab_task->execution_time_var);
+    mavlink_stream->send(msg);
+
+    mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
+                                       mavlink_stream->compid(),
+                                       msg,
+                                       time_keeper_get_ms(),
+                                       "ExTimeMax",
+                                       stab_task->execution_time_max);
+    mavlink_stream->send(msg);
+
+
     stab_task->rt_violations = 0;
     stab_task->delay_max = 0;
+    stab_task->execution_time_max = 0;
 }
