@@ -259,8 +259,7 @@ bool Fence_CAS::update(void)
 			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
 			if((distAS <= (distMA))&&(distMC >= this->maxradius))
 			{
-
-				float aratio=(distMA - distAS)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
+				float aratio=(distMC - this->maxradius)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
 				float rep[3]={MS[0],MS[1],0.0};					// Repulsion local frame
 				gftobftransform(C, S, rep);								// Repulsion body frame
 				vectors_normalize(rep,rep);
@@ -275,7 +274,6 @@ bool Fence_CAS::update(void)
 //				print_util_dbg_print("|ratio|");print_util_dbg_putfloat(interpolate(aratio,interp_type),5);
 //				print_util_dbg_print("|ratio|");print_util_dbg_putfloat(old_distAC[i],15);
 //				print_util_dbg_print("\n");
-
 			}
 			else
 			{
