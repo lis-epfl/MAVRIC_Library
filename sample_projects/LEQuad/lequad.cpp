@@ -155,6 +155,7 @@ bool LEQuad::init_main_task(void)
 
     // DOWN link
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats, &scheduler);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats_all, &scheduler);
 
     return ret;
 }
