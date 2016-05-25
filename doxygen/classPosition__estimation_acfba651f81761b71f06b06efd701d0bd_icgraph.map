@@ -1,5 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="519,25,673,54"/>
-<area shape="rect" id="node5" href="$classState__machine.html#acebe98d8028a28f00cf2c8d4bdd5b421" title="tries to change state.mav_mode to guided/unguided" alt="" coords="245,25,464,54"/>
-<area shape="rect" id="node8" href="$classState__machine.html#a0571b5f753aea38c4f6dd5f0cfecc909" title="tries to change state.mav_mode to stabilize/not stabilize" alt="" coords="240,78,469,108"/>
+<area shape="rect" id="node3" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="241,5,396,35"/>
 </map>

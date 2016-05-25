@@ -4,7 +4,7 @@ var searchData=
   ['s_5f',['S_',['../classKalman.html#a8b1e7443e5709e17a6f66361ed38634e',1,'Kalman']]],
   ['safe_5faltitude',['safe_altitude',['../structNavigation_1_1conf__t.html#a05ce93d2f5c263fb899e4e31e00ed895',1,'Navigation::conf_t::safe_altitude()'],['../classNavigation.html#ad2942176c021acabe09276663c4d9f77',1,'Navigation::safe_altitude()']]],
   ['safety_5fchannel',['safety_channel',['../structremote__mode__conf__t.html#a566558933cf2fb56cafbaaf1e0b6a9d8',1,'remote_mode_conf_t::safety_channel()'],['../structremote__mode__t.html#ab12fa91de9f84e52436ba5fe19adba49',1,'remote_mode_t::safety_channel()']]],
-  ['safety_5fmode',['safety_mode',['../structremote__mode__conf__t.html#ae7dec77e2007f2d1b6024d530f77a227',1,'remote_mode_conf_t::safety_mode()'],['../structremote__mode__t.html#a91cbeb2219e014ad982f91cf0a2f81ae',1,'remote_mode_t::safety_mode()']]],
+  ['safety_5fmode',['safety_mode',['../structremote__mode__conf__t.html#ac3f5a3ba94fe4c17697b5143ee56c691',1,'remote_mode_conf_t::safety_mode()'],['../structremote__mode__t.html#a221cd6c04d39074cfbf70fc1b4b347d1',1,'remote_mode_t::safety_mode()']]],
   ['sample_5fdiv',['sample_div',['../structgyro__config.html#afe4047b72932b3d4bb0fe5c3a7c93174',1,'gyro_config']]],
   ['sat',['sat',['../structremote__t.html#a83018fff73dc7a6d721e72afdf7b06c0',1,'remote_t']]],
   ['satellite',['satellite',['../classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535',1,'LEQuad']]],

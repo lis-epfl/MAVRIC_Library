@@ -98,7 +98,7 @@ Collaboration diagram for Manual_control:</div>
 <div class="dyncontent">
 <div class="center"><img src="classManual__control__coll__graph.png" border="0" usemap="#Manual__control_coll__map" alt="Collaboration graph"/></div>
 <map name="Manual__control_coll__map" id="Manual__control_coll__map">
-<area shape="rect" id="node2" href="structjoystick__t.html" title="The structure for the joystick." alt="" coords="152,437,299,574"/><area shape="rect" id="node4" href="structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="5,93,141,230"/><area shape="rect" id="node6" href="unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="165,32,285,291"/><area shape="rect" id="node8" href="structremote__t.html" title="The configuration structure of the remote." alt="" coords="351,385,503,626"/><area shape="rect" id="node10" href="structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="309,6,544,317"/><area shape="rect" id="node12" href="classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="568,84,677,239"/></map>
+<area shape="rect" id="node2" href="structjoystick__t.html" title="The structure for the joystick." alt="" coords="133,487,280,625"/><area shape="rect" id="node4" href="classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="377,5,559,264"/><area shape="rect" id="node12" href="structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="437,401,672,711"/><area shape="rect" id="node6" href="structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="5,66,141,203"/><area shape="rect" id="node8" href="unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="165,5,285,264"/><area shape="rect" id="node10" href="structremote__t.html" title="The configuration structure of the remote." alt="" coords="283,779,435,1021"/><area shape="rect" id="node15" href="classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="304,479,413,633"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classManual__control-members.html">List of all members.</a></p>
@@ -149,10 +149,10 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)  <a href="#ad7b10226f0a5847a2265b422e1a9d12d"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#abe507693f441a6738193a18604591f1a">get_velocity_command</a> (<a class="el" href="structvelocity__command__t.html">velocity_command_t</a> *command, float scale) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute velocity command from the manual input.  <a href="#abe507693f441a6738193a18604591f1a"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">mav_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a6f599094c842aa31844bef96e31d286c">get_mode_from_source</a> (mav_mode_t mode_current)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of the mode from the desired source input.  <a href="#a6f599094c842aa31844bef96e31d286c"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a714ae93dfee6464520dc799e7d832fc5">set_mode_of_source</a> (mav_mode_t mode_current)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the internal state of the joystick.  <a href="#a714ae93dfee6464520dc799e7d832fc5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMav__mode.html">Mav_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7">get_mode_from_source</a> (<a class="el" href="classMav__mode.html">Mav_mode</a> mode_current)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of the mode from the desired source input.  <a href="#ab5e3264560be63f99dd0c4d2828f34c7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a74ff138d9eefaef201e42ca4e9130747">set_mode_of_source</a> (<a class="el" href="classMav__mode.html">Mav_mode</a> mode_current)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the internal state of the joystick.  <a href="#a74ff138d9eefaef201e42ca4e9130747"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">signal_quality_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a04eb17506ddb846ef7b2783ef8026ba7">get_signal_strength</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the quality of the strength of the remote receiver.  <a href="#a04eb17506ddb846ef7b2783ef8026ba7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a62a53dd52299a4fc43389a9ab0a1ddfa">set_mode_source</a> (<a class="el" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87">mode_source_t</a> <a class="el" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091">mode_source</a>)</td></tr>
@@ -435,14 +435,14 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a6f599094c842aa31844bef96e31d286c"></a><!-- doxytag: member="Manual_control::get_mode_from_source" ref="a6f599094c842aa31844bef96e31d286c" args="(mav_mode_t mode_current)" -->
+<a class="anchor" id="ab5e3264560be63f99dd0c4d2828f34c7"></a><!-- doxytag: member="Manual_control::get_mode_from_source" ref="ab5e3264560be63f99dd0c4d2828f34c7" args="(Mav_mode mode_current)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">mav_mode_t <a class="el" href="classManual__control.html#a6f599094c842aa31844bef96e31d286c">Manual_control::get_mode_from_source</a> </td>
+          <td class="memname"><a class="el" href="classMav__mode.html">Mav_mode</a> <a class="el" href="classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7">Manual_control::get_mode_from_source</a> </td>
           <td>(</td>
-          <td class="paramtype">mav_mode_t&#160;</td>
+          <td class="paramtype"><a class="el" href="classMav__mode.html">Mav_mode</a>&#160;</td>
           <td class="paramname"><em>mode_current</em></td><td>)</td>
           <td></td>
         </tr>
@@ -462,8 +462,8 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classManual__control_a6f599094c842aa31844bef96e31d286c_icgraph.png" border="0" usemap="#classManual__control_a6f599094c842aa31844bef96e31d286c_icgraph" alt=""/></div>
-<map name="classManual__control_a6f599094c842aa31844bef96e31d286c_icgraph" id="classManual__control_a6f599094c842aa31844bef96e31d286c_icgraph">
+<div class="center"><img src="classManual__control_ab5e3264560be63f99dd0c4d2828f34c7_icgraph.png" border="0" usemap="#classManual__control_ab5e3264560be63f99dd0c4d2828f34c7_icgraph" alt=""/></div>
+<map name="classManual__control_ab5e3264560be63f99dd0c4d2828f34c7_icgraph" id="classManual__control_ab5e3264560be63f99dd0c4d2828f34c7_icgraph">
 <area shape="rect" id="node3" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="311,5,465,35"/></map>
 </div>
 </p>
@@ -798,14 +798,14 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a714ae93dfee6464520dc799e7d832fc5"></a><!-- doxytag: member="Manual_control::set_mode_of_source" ref="a714ae93dfee6464520dc799e7d832fc5" args="(mav_mode_t mode_current)" -->
+<a class="anchor" id="a74ff138d9eefaef201e42ca4e9130747"></a><!-- doxytag: member="Manual_control::set_mode_of_source" ref="a74ff138d9eefaef201e42ca4e9130747" args="(Mav_mode mode_current)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#a714ae93dfee6464520dc799e7d832fc5">Manual_control::set_mode_of_source</a> </td>
+          <td class="memname">void <a class="el" href="classManual__control.html#a74ff138d9eefaef201e42ca4e9130747">Manual_control::set_mode_of_source</a> </td>
           <td>(</td>
-          <td class="paramtype">mav_mode_t&#160;</td>
+          <td class="paramtype"><a class="el" href="classMav__mode.html">Mav_mode</a>&#160;</td>
           <td class="paramname"><em>mode_current</em></td><td>)</td>
           <td></td>
         </tr>
@@ -825,8 +825,8 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classManual__control_a714ae93dfee6464520dc799e7d832fc5_icgraph.png" border="0" usemap="#classManual__control_a714ae93dfee6464520dc799e7d832fc5_icgraph" alt=""/></div>
-<map name="classManual__control_a714ae93dfee6464520dc799e7d832fc5_icgraph" id="classManual__control_a714ae93dfee6464520dc799e7d832fc5_icgraph">
+<div class="center"><img src="classManual__control_a74ff138d9eefaef201e42ca4e9130747_icgraph.png" border="0" usemap="#classManual__control_a74ff138d9eefaef201e42ca4e9130747_icgraph" alt=""/></div>
+<map name="classManual__control_a74ff138d9eefaef201e42ca4e9130747_icgraph" id="classManual__control_a74ff138d9eefaef201e42ca4e9130747_icgraph">
 <area shape="rect" id="node3" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="295,5,449,35"/></map>
 </div>
 </p>
@@ -889,7 +889,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 25 2016 21:22:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 25 2016 21:39:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

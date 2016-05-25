@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState.html#a5bd439b7d249b36977ab846ca0581d7e" title="returns mav_mode (copy)" alt="" coords="312,5,437,35"/>
+<area shape="rect" id="node3" href="$classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="312,5,437,35"/>
+<area shape="rect" id="node5" href="$classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="313,59,436,88"/>
 </map>

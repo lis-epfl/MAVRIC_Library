@@ -12,7 +12,7 @@ var searchData=
   ['get_5ffence_5fviolation_5fstate',['get_fence_violation_state',['../classPosition__estimation.html#afc390dc784894a423625bae9deffba5c',1,'Position_estimation']]],
   ['get_5fid',['get_id',['../classScheduler__task.html#ad61e4f6787ec2333183eab8bc8137cb9',1,'Scheduler_task']]],
   ['get_5flast_5fairspeed',['get_last_airspeed',['../classAirspeed__analog.html#a3003842d71e4c1ac5707fd5782c8d40b',1,'Airspeed_analog']]],
-  ['get_5fmode_5ffrom_5fsource',['get_mode_from_source',['../classManual__control.html#a6f599094c842aa31844bef96e31d286c',1,'Manual_control']]],
+  ['get_5fmode_5ffrom_5fsource',['get_mode_from_source',['../classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7',1,'Manual_control']]],
   ['get_5frate_5fcommand',['get_rate_command',['../classManual__control.html#a1b85adad9375f7eea177f226d7c50a26',1,'Manual_control']]],
   ['get_5frate_5fcommand_5fwing',['get_rate_command_wing',['../classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea',1,'Manual_control']]],
   ['get_5fsignal_5fstrength',['get_signal_strength',['../classManual__control.html#a04eb17506ddb846ef7b2783ef8026ba7',1,'Manual_control']]],

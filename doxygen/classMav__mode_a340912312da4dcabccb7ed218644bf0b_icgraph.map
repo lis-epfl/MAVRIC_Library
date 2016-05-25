@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classState.html#ae26f0aab78aa060c68533bf3a05476a9" title="returns whether in guided mode" alt="" coords="211,5,325,35"/>
+<area shape="rect" id="node5" href="$classNavigation.html#ade9f978504febc6325012ae8bf5ff19f" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode." alt="" coords="203,59,333,88"/>
+</map>

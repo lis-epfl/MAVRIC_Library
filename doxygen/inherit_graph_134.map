@@ -1,3 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structPwm__stm32_1_1config__t.html" title="STM32_PWM configuration structure." alt="" coords="5,5,155,35"/>
+<area shape="rect" id="node1" href="$classPwm.html" title="Pwm" alt="" coords="7,59,57,88"/>
+<area shape="rect" id="node3" href="$classPwm__avr32.html" title="Pwm_avr32" alt="" coords="113,5,204,35"/>
+<area shape="rect" id="node5" href="$classPwm__dummy.html" title="Pwm_dummy" alt="" coords="108,59,209,88"/>
+<area shape="rect" id="node7" href="$classPwm__stm32.html" title="Pwm_stm32" alt="" coords="112,112,205,141"/>
 </map>

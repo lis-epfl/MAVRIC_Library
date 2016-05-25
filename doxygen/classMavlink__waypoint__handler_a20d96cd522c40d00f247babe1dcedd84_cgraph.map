@@ -1,4 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState.html#a5bd439b7d249b36977ab846ca0581d7e" title="returns mav_mode (copy)" alt="" coords="584,5,709,35"/>
-<area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="277,31,536,60"/>
+<area shape="rect" id="node3" href="$classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="584,5,709,35"/>
+<area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="277,57,536,87"/>
+<area shape="rect" id="node10" href="$classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a" title="returns the ctrl_mode (defined by manual, stabilize, guided and auto flag)" alt="" coords="332,111,481,140"/>
+<area shape="rect" id="node8" href="$classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="585,59,708,88"/>
 </map>

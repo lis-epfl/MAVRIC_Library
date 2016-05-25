@@ -23,6 +23,7 @@ var searchData=
   ['operator_2d',['operator-',['../classMat.html#aecaa88c52954963983bdcefbd983751b',1,'Mat::operator-(const Mat &amp;m) const '],['../classMat.html#a0f1c50ee31c9b4faf83763cac7a132eb',1,'Mat::operator-(const T value) const '],['../classMat.html#a4b5e05ae590fa89797809ddd7cf103aa',1,'Mat::operator-()']]],
   ['operator_2d_3d',['operator-=',['../classMat.html#a6a7766c24d79fa9e0e42961ca65c6e5f',1,'Mat::operator-=(const Mat &amp;m)'],['../classMat.html#a0e6e0bd2a385cf666e28a80697765851',1,'Mat::operator-=(const T value)']]],
   ['operator_3c_3c',['operator<<',['../classConsole.html#a7045dbf455db7e4cf41c7ecafdc9cc31',1,'Console::operator&lt;&lt;(const T &amp;data)'],['../classConsole.html#a1661d1665b7f5bdfea455e8963d589ad',1,'Console::operator&lt;&lt;(ConsoleManipulator manip)']]],
+  ['operator_3d_3d',['operator==',['../classMav__mode.html#aa8b26743cc47a43ed8dcf2343a476c24',1,'Mav_mode']]],
   ['operator_5b_5d',['operator[]',['../classMat.html#a66bf4fdc472a4df84877deec04410b2b',1,'Mat']]],
   ['operator_7e',['operator~',['../classMat.html#aaf5a22307d22016a23bee37ad93a2952',1,'Mat']]],
   ['orientation',['orientation',['../structcurvace__t.html#a5ecffdd9f761ddb86eaa81512911f9b3',1,'curvace_t']]],

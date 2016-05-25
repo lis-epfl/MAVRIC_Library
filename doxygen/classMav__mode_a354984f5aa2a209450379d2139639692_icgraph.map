@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="179,32,437,61"/>
+<area shape="rect" id="node9" href="$classState.html#ac8b8b3ab65fc3cbd51f0ab3183fee949" title="returns whether in hil mode" alt="" coords="263,85,353,115"/>
+<area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a282ebac433d0071b0f90862593979225" title="Initialize the waypoint handler." alt="" coords="485,5,821,35"/>
+<area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="543,59,764,88"/>
+</map>

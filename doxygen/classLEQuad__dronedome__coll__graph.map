@@ -4,7 +4,7 @@
 <area shape="rect" id="node22" href="$structhud__telemetry__structure__t.html" title="The HUD structure to send the MAVLink HUD message." alt="" coords="1765,1259,1939,1397"/>
 <area shape="rect" id="node38" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|+ waypoint_hold_coordinates\l+ waypoint_list\l# waypoint_count_\l# current_waypoint_index_\l# hold_waypoint_set_\l# start_wpt_time_\l# mavlink_stream_\l# state_\l# navigation_\l# position_estimation_\l|+ Mavlink_waypoint_handler()\l+ init_homing_waypoint()\l+ nav_plan_init()\l+ hold_init()\l+ waypoint_count()\l+ update()\l+ default_config()\l}" alt="" coords="533,1155,728,1501"/>
 <area shape="rect" id="node54" href="$structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module." alt="" coords="2364,1225,2508,1431"/>
-<area shape="rect" id="node111" href="$classState__machine.html" title="Defines the state machine structure." alt="" coords="1417,1225,1572,1431"/>
+<area shape="rect" id="node111" href="$classState__machine.html" title="Defines the state machine structure." alt="" coords="1419,1233,1571,1423"/>
 <area shape="rect" id="node6" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="915,23,1027,143"/>
 <area shape="rect" id="node41" href="$structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="425,279,583,417"/>
 <area shape="rect" id="node8" href="$classManual__control.html" title="The manual control structure." alt="" coords="1503,631,1708,942"/>

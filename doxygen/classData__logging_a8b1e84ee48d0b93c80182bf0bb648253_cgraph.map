@@ -1,3 +1,4 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="184,5,299,35"/>
+<area shape="rect" id="node5" href="$classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="347,5,493,35"/>
 </map>

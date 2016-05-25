@@ -56,7 +56,7 @@ var searchData=
   ['cruise_5fspeed',['cruise_speed',['../structNavigation_1_1conf__t.html#a01172d43057f0f538443d1d7586a6498',1,'Navigation::conf_t::cruise_speed()'],['../classNavigation.html#a5a6baa2474b63a2e301c0bf070f89c2e',1,'Navigation::cruise_speed()']]],
   ['csd',['csd',['../structsd__spi__t.html#a8b32a506ae26d49fb930d35ff47b50b2',1,'sd_spi_t']]],
   ['current',['current',['../structMavlink__waypoint__handler_1_1waypoint__struct__t.html#a884292d6cf56951768066901a851b049',1,'Mavlink_waypoint_handler::waypoint_struct_t']]],
-  ['current_5fdesired_5fmode',['current_desired_mode',['../structremote__mode__t.html#a7d9aa978284193695181a10b85936b07',1,'remote_mode_t']]],
+  ['current_5fdesired_5fmode',['current_desired_mode',['../structremote__mode__t.html#ae63fe5580418f11bc213b721307a4860',1,'remote_mode_t']]],
   ['current_5fwaypoint_5findex_5f',['current_waypoint_index_',['../classMavlink__waypoint__handler.html#af281c84c7d1a51dd845caa2d9e48a7a2',1,'Mavlink_waypoint_handler']]],
   ['custom_5fswitch_5fchannel',['custom_switch_channel',['../structremote__mode__conf__t.html#a656f7e86e312e32b20d899ede42d68e6',1,'remote_mode_conf_t::custom_switch_channel()'],['../structremote__mode__t.html#acfe93cab2052e37871292b7aeb3c8468',1,'remote_mode_t::custom_switch_channel()']]]
 ];

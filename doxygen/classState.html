@@ -98,7 +98,7 @@ Collaboration diagram for State:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState__coll__graph.png" border="0" usemap="#State_coll__map" alt="Collaboration graph"/></div>
 <map name="State_coll__map" id="State_coll__map">
-<area shape="rect" id="node2" href="classBattery.html" title="Battery voltage monitor." alt="" coords="53,5,136,160"/></map>
+<area shape="rect" id="node2" href="classBattery.html" title="Battery voltage monitor." alt="" coords="5,57,88,212"/><area shape="rect" id="node4" href="classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="112,5,293,264"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classState-members.html">List of all members.</a></p>
@@ -134,8 +134,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in custom mode  <a href="#af161943f8f505072c634ede35620e384"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aed990a94eea505fa04cb7c216292c95c">is_test</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether in test mode  <a href="#aed990a94eea505fa04cb7c216292c95c"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">mav_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">mav_mode</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns mav_mode (copy)  <a href="#a5bd439b7d249b36977ab846ca0581d7e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMav__mode.html">Mav_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a9bf37e3784367761637c2c5a7c2b1b16">mav_mode</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">returns mav_mode (copy)  <a href="#a9bf37e3784367761637c2c5a7c2b1b16"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structState_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#acdcf5e3dd67db48259373cdf7e66e082">default_config</a> ()</td></tr>
@@ -147,11 +147,11 @@ Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacaa15cd7016181bf7c4a056cfd85008"></a><!-- doxytag: member="State::mav_state_" ref="aacaa15cd7016181bf7c4a056cfd85008" args="" -->
 mav_state_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aacaa15cd7016181bf7c4a056cfd85008">mav_state_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The value of the MAV state. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2cb7e65d1212e9bddaa9f33bc12750c5"></a><!-- doxytag: member="State::mav_mode_" ref="a2cb7e65d1212e9bddaa9f33bc12750c5" args="" -->
-mav_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a2cb7e65d1212e9bddaa9f33bc12750c5">mav_mode_</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa672801a9b348573320bf97462b3efc2"></a><!-- doxytag: member="State::mav_mode_" ref="aa672801a9b348573320bf97462b3efc2" args="" -->
+<a class="el" href="classMav__mode.html">Mav_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aa672801a9b348573320bf97462b3efc2">mav_mode_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The value of the MAV mode. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a73fb170a4e632ac69134b3c8810129"></a><!-- doxytag: member="State::mav_mode_custom" ref="a7a73fb170a4e632ac69134b3c8810129" args="" -->
-mav_mode_custom_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a7a73fb170a4e632ac69134b3c8810129">mav_mode_custom</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab7f1f1a827b959448326885b7717a8dd"></a><!-- doxytag: member="State::mav_mode_custom" ref="ab7f1f1a827b959448326885b7717a8dd" args="" -->
+Mav_mode::custom_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#ab7f1f1a827b959448326885b7717a8dd">mav_mode_custom</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The value of the custom_mode. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a57dd147ce2074c80265f9fed83b22ace"></a><!-- doxytag: member="State::autopilot_type" ref="a57dd147ce2074c80265f9fed83b22ace" args="" -->
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a57dd147ce2074c80265f9fed83b22ace">autopilot_type</a></td></tr>
@@ -217,8 +217,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abf215f6a2b080c5da71b952292d35db2"></a><!-- doxytag: member="State::State_machine" ref="abf215f6a2b080c5da71b952292d35db2" args="" -->
 class&#160;</td><td class="memItemRight" valign="bottom"><b>State_machine</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a14cbfb43a63cbf6cd4f0fa30c72023bb">state_telemetry_set_mode</a> (<a class="el" href="classState.html">State</a> *state, mav_mode_t <a class="el" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">mav_mode</a>)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set state-&gt;mav_mode.  <a href="#a14cbfb43a63cbf6cd4f0fa30c72023bb"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af08b686cbd52663ddf362b24f664ac88"></a><!-- doxytag: member="State::state_telemetry_set_mode" ref="af08b686cbd52663ddf362b24f664ac88" args="(State *state, Mav_mode mav_mode)" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>state_telemetry_set_mode</b> (<a class="el" href="classState.html">State</a> *state, <a class="el" href="classMav__mode.html">Mav_mode</a> <a class="el" href="classState.html#a9bf37e3784367761637c2c5a7c2b1b16">mav_mode</a>)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">mav_result_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a4664b4ca5c776f7a5db625292bd8b91c">state_telemetry_send_autopilot_capabilities</a> (<a class="el" href="classState.html">State</a> *state, mavlink_command_long_t *packet)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback to the command 520 MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES.  <a href="#a4664b4ca5c776f7a5db625292bd8b91c"></a><br/></td></tr>
 </table>
@@ -266,6 +266,15 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>State_machine</b></t
   </dd>
 </dl>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_ad1a7b3d20f3299c0fe55986dc1a5c185_cgraph.png" border="0" usemap="#classState_ad1a7b3d20f3299c0fe55986dc1a5c185_cgraph" alt=""/></div>
+<map name="classState_ad1a7b3d20f3299c0fe55986dc1a5c185_cgraph" id="classState_ad1a7b3d20f3299c0fe55986dc1a5c185_cgraph">
+<area shape="rect" id="node3" href="classMav__mode.html#a816c0f15bb40dad471a3263365d06338" title="set HIL flag (Hardware in the loop)" alt="" coords="159,5,319,35"/><area shape="rect" id="node5" href="classMav__mode.html#a4b5399cd7da6c1decbc0c1ee2501aa2d" title="set armed flag" alt="" coords="148,59,329,88"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
@@ -307,6 +316,15 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>State_machine</b></t
 <dl class="return"><dt><b>Returns:</b></dt><dd>armed </dd></dl>
 
 <p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_aed82df84db5ad27e500e51d212ba051d_cgraph.png" border="0" usemap="#classState_aed82df84db5ad27e500e51d212ba051d_cgraph" alt=""/></div>
+<map name="classState_aed82df84db5ad27e500e51d212ba051d_cgraph" id="classState_aed82df84db5ad27e500e51d212ba051d_cgraph">
+<area shape="rect" id="node3" href="classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="168,5,315,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState_aed82df84db5ad27e500e51d212ba051d_icgraph.png" border="0" usemap="#classState_aed82df84db5ad27e500e51d212ba051d_icgraph" alt=""/></div>
@@ -334,6 +352,15 @@ Here is the caller graph for this function:</div>
 <p>returns whether in auto mode </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>auto </dd></dl>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_af426e69418fcda56e04b37ad489d9969_cgraph.png" border="0" usemap="#classState_af426e69418fcda56e04b37ad489d9969_cgraph" alt=""/></div>
+<map name="classState_af426e69418fcda56e04b37ad489d9969_cgraph" id="classState_af426e69418fcda56e04b37ad489d9969_cgraph">
+<area shape="rect" id="node3" href="classMav__mode.html#a4cfa294420a4f7c293ff1675dea8eb00" title="returns whether in auto mode (MAV_MODE_FLAG_AUTO_ENABLED set)" alt="" coords="157,5,293,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="af161943f8f505072c634ede35620e384"></a><!-- doxytag: member="State::is_custom" ref="af161943f8f505072c634ede35620e384" args="() const " -->
@@ -352,6 +379,15 @@ Here is the caller graph for this function:</div>
 
 <p>returns whether in custom mode </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>custom </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_af161943f8f505072c634ede35620e384_cgraph.png" border="0" usemap="#classState_af161943f8f505072c634ede35620e384_cgraph" alt=""/></div>
+<map name="classState_af161943f8f505072c634ede35620e384_cgraph" id="classState_af161943f8f505072c634ede35620e384_cgraph">
+<area shape="rect" id="node3" href="classMav__mode.html#aed9190a89e6f40af1b86c6ac8128aef1" title="returns whether custom mode enabled (MAV_MODE_FLAG_CUSTOM_MODE_ENABLED set)" alt="" coords="176,5,331,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -373,11 +409,11 @@ Here is the caller graph for this function:</div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>guided </dd></dl>
 
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classState_ae26f0aab78aa060c68533bf3a05476a9_icgraph.png" border="0" usemap="#classState_ae26f0aab78aa060c68533bf3a05476a9_icgraph" alt=""/></div>
-<map name="classState_ae26f0aab78aa060c68533bf3a05476a9_icgraph" id="classState_ae26f0aab78aa060c68533bf3a05476a9_icgraph">
-<area shape="rect" id="node3" href="classState__machine.html#acebe98d8028a28f00cf2c8d4bdd5b421" title="tries to change state.mav_mode to guided/unguided" alt="" coords="171,5,389,35"/><area shape="rect" id="node5" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="439,5,593,35"/></map>
+<div class="center"><img src="classState_ae26f0aab78aa060c68533bf3a05476a9_cgraph.png" border="0" usemap="#classState_ae26f0aab78aa060c68533bf3a05476a9_cgraph" alt=""/></div>
+<map name="classState_ae26f0aab78aa060c68533bf3a05476a9_cgraph" id="classState_ae26f0aab78aa060c68533bf3a05476a9_cgraph">
+<area shape="rect" id="node3" href="classMav__mode.html#a340912312da4dcabccb7ed218644bf0b" title="returns whether in guided mode (MAV_MODE_FLAG_GUIDED_ENABLED set)" alt="" coords="171,5,320,35"/></map>
 </div>
 </p>
 
@@ -400,6 +436,15 @@ Here is the caller graph for this function:</div>
 <p>returns whether in hil mode </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>hil </dd></dl>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_ac8b8b3ab65fc3cbd51f0ab3183fee949_cgraph.png" border="0" usemap="#classState_ac8b8b3ab65fc3cbd51f0ab3183fee949_cgraph" alt=""/></div>
+<map name="classState_ac8b8b3ab65fc3cbd51f0ab3183fee949_cgraph" id="classState_ac8b8b3ab65fc3cbd51f0ab3183fee949_cgraph">
+<area shape="rect" id="node3" href="classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="145,5,268,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="a081ab79c23acceca7cd0ac5d6530d0df"></a><!-- doxytag: member="State::is_manual" ref="a081ab79c23acceca7cd0ac5d6530d0df" args="() const " -->
@@ -418,6 +463,15 @@ Here is the caller graph for this function:</div>
 
 <p>returns whether in manual mode </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>manual </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_a081ab79c23acceca7cd0ac5d6530d0df_cgraph.png" border="0" usemap="#classState_a081ab79c23acceca7cd0ac5d6530d0df_cgraph" alt=""/></div>
+<map name="classState_a081ab79c23acceca7cd0ac5d6530d0df_cgraph" id="classState_a081ab79c23acceca7cd0ac5d6530d0df_cgraph">
+<area shape="rect" id="node3" href="classMav__mode.html#a3c4235b6649dcabb00a41d8aa3cf16a4" title="returns whether in manual mode (MAV_MODE_FLAG_MANUAL_INPUT_ENABLED set)" alt="" coords="175,5,327,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -439,11 +493,11 @@ Here is the caller graph for this function:</div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>stabilize </dd></dl>
 
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classState_a1b9ecd8f5193b68277d954d90500c738_icgraph.png" border="0" usemap="#classState_a1b9ecd8f5193b68277d954d90500c738_icgraph" alt=""/></div>
-<map name="classState_a1b9ecd8f5193b68277d954d90500c738_icgraph" id="classState_a1b9ecd8f5193b68277d954d90500c738_icgraph">
-<area shape="rect" id="node3" href="classState__machine.html#a0571b5f753aea38c4f6dd5f0cfecc909" title="tries to change state.mav_mode to stabilize/not stabilize" alt="" coords="181,5,411,35"/><area shape="rect" id="node5" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="460,5,615,35"/></map>
+<div class="center"><img src="classState_a1b9ecd8f5193b68277d954d90500c738_cgraph.png" border="0" usemap="#classState_a1b9ecd8f5193b68277d954d90500c738_cgraph" alt=""/></div>
+<map name="classState_a1b9ecd8f5193b68277d954d90500c738_cgraph" id="classState_a1b9ecd8f5193b68277d954d90500c738_cgraph">
+<area shape="rect" id="node3" href="classMav__mode.html#a2be7935c9d7d5164615cb88f5e273da1" title="returns whether in stabilize mode (MAV_MODE_FLAG_STABILIZE_ENABLED set)" alt="" coords="183,5,340,35"/></map>
 </div>
 </p>
 
@@ -466,14 +520,23 @@ Here is the caller graph for this function:</div>
 <p>returns whether in test mode </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>test </dd></dl>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classState_aed990a94eea505fa04cb7c216292c95c_cgraph.png" border="0" usemap="#classState_aed990a94eea505fa04cb7c216292c95c_cgraph" alt=""/></div>
+<map name="classState_aed990a94eea505fa04cb7c216292c95c_cgraph" id="classState_aed990a94eea505fa04cb7c216292c95c_cgraph">
+<area shape="rect" id="node3" href="classMav__mode.html#aed8a731c0554f5b34c33f7f6bbb767ef" title="returns whether in test mode (MAV_MODE_FLAG_TEST_ENABLED set)" alt="" coords="155,5,288,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
-<a class="anchor" id="a5bd439b7d249b36977ab846ca0581d7e"></a><!-- doxytag: member="State::mav_mode" ref="a5bd439b7d249b36977ab846ca0581d7e" args="() const " -->
+<a class="anchor" id="a9bf37e3784367761637c2c5a7c2b1b16"></a><!-- doxytag: member="State::mav_mode" ref="a9bf37e3784367761637c2c5a7c2b1b16" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">mav_mode_t <a class="el" href="classState.html#a5bd439b7d249b36977ab846ca0581d7e">State::mav_mode</a> </td>
+          <td class="memname"><a class="el" href="classMav__mode.html">Mav_mode</a> <a class="el" href="classState.html#a9bf37e3784367761637c2c5a7c2b1b16">State::mav_mode</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const<code> [inline]</code></td>
@@ -488,8 +551,8 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classState_a5bd439b7d249b36977ab846ca0581d7e_icgraph.png" border="0" usemap="#classState_a5bd439b7d249b36977ab846ca0581d7e_icgraph" alt=""/></div>
-<map name="classState_a5bd439b7d249b36977ab846ca0581d7e_icgraph" id="classState_a5bd439b7d249b36977ab846ca0581d7e_icgraph">
+<div class="center"><img src="classState_a9bf37e3784367761637c2c5a7c2b1b16_icgraph.png" border="0" usemap="#classState_a9bf37e3784367761637c2c5a7c2b1b16_icgraph" alt=""/></div>
+<map name="classState_a9bf37e3784367761637c2c5a7c2b1b16_icgraph" id="classState_a9bf37e3784367761637c2c5a7c2b1b16_icgraph">
 <area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="543,5,764,35"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="179,57,437,87"/><area shape="rect" id="node10" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="231,111,385,140"/><area shape="rect" id="node12" href="classNavigation.html#ade9f978504febc6325012ae8bf5ff19f" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode." alt="" coords="243,164,373,193"/><area shape="rect" id="node7" href="classMavlink__waypoint__handler.html#a282ebac433d0071b0f90862593979225" title="Initialize the waypoint handler." alt="" coords="485,59,821,88"/></map>
 </div>
 </p>
@@ -531,7 +594,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState_a41daea810832a042add30c2c4bdbaa13_cgraph.png" border="0" usemap="#classState_a41daea810832a042add30c2c4bdbaa13_cgraph" alt=""/></div>
 <map name="classState_a41daea810832a042add30c2c4bdbaa13_cgraph" id="classState_a41daea810832a042add30c2c4bdbaa13_cgraph">
-<area shape="rect" id="node3" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="219,5,333,35"/><area shape="rect" id="node5" href="classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="221,59,331,88"/><area shape="rect" id="node7" href="classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="177,112,375,141"/></map>
+<area shape="rect" id="node3" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="219,5,333,35"/><area shape="rect" id="node7" href="classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="221,59,331,88"/><area shape="rect" id="node9" href="classMav__mode.html#a4b5399cd7da6c1decbc0c1ee2501aa2d" title="set armed flag" alt="" coords="185,112,367,141"/><area shape="rect" id="node11" href="classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="177,165,375,195"/><area shape="rect" id="node5" href="classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="424,5,571,35"/></map>
 </div>
 </p>
 
@@ -637,48 +700,6 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a14cbfb43a63cbf6cd4f0fa30c72023bb"></a><!-- doxytag: member="State::state_telemetry_set_mode" ref="a14cbfb43a63cbf6cd4f0fa30c72023bb" args="(State *state, mav_mode_t mav_mode)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classState.html#a14cbfb43a63cbf6cd4f0fa30c72023bb">state_telemetry_set_mode</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classState.html">State</a> *&#160;</td>
-          <td class="paramname"><em>state</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">mav_mode_t&#160;</td>
-          <td class="paramname"><em>mav_mode</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [friend]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Set state-&gt;mav_mode. </p>
-<p>performs the following checks before changing</p>
-<ul>
-<li>if arming is refused by state, reject new mode</li>
-<li>if in calibration state, reject new mode the HIL flag is ignored</li>
-</ul>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">state</td><td>The pointer to the state structure </td></tr>
-    <tr><td class="paramname">mav_mode</td><td>Desired mav_mode</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>success true if mode was accepted, false if refused </dd></dl>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/communication/<a class="el" href="state_8hpp_source.html">state.hpp</a></li>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/communication/state.cpp</li>
@@ -701,7 +722,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 25 2016 21:22:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 25 2016 21:39:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

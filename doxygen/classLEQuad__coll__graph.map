@@ -1,9 +1,9 @@
 <map id="G" name="G">
 <area shape="rect" id="node2" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="847,623,1063,951"/>
-<area shape="rect" id="node20" href="$structhud__telemetry__structure__t.html" title="The HUD structure to send the MAVLink HUD message." alt="" coords="1073,1259,1247,1397"/>
+<area shape="rect" id="node20" href="$structhud__telemetry__structure__t.html" title="The HUD structure to send the MAVLink HUD message." alt="" coords="1075,1259,1248,1397"/>
 <area shape="rect" id="node36" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|+ waypoint_hold_coordinates\l+ waypoint_list\l# waypoint_count_\l# current_waypoint_index_\l# hold_waypoint_set_\l# start_wpt_time_\l# mavlink_stream_\l# state_\l# navigation_\l# position_estimation_\l|+ Mavlink_waypoint_handler()\l+ init_homing_waypoint()\l+ nav_plan_init()\l+ hold_init()\l+ waypoint_count()\l+ update()\l+ default_config()\l}" alt="" coords="389,1155,584,1501"/>
 <area shape="rect" id="node52" href="$structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module." alt="" coords="2111,1225,2255,1431"/>
-<area shape="rect" id="node111" href="$classState__machine.html" title="Defines the state machine structure." alt="" coords="1412,1225,1567,1431"/>
+<area shape="rect" id="node111" href="$classState__machine.html" title="Defines the state machine structure." alt="" coords="1413,1233,1565,1423"/>
 <area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="543,23,655,143"/>
 <area shape="rect" id="node39" href="$structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="116,279,273,417"/>
 <area shape="rect" id="node6" href="$classManual__control.html" title="The manual control structure." alt="" coords="1201,631,1407,942"/>

@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classState.html#a1b9ecd8f5193b68277d954d90500c738" title="returns whether in stabilize mode" alt="" coords="313,5,439,35"/>
-<area shape="rect" id="node5" href="$classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd" title="Returns if position estimation is healthy." alt="" coords="283,59,469,88"/>
-<area shape="rect" id="node7" href="$classPosition__estimation.html#a358ae802e65eede79495c339689813c8" title="Returns if altitude estimation is healthy." alt="" coords="517,32,752,61"/>
-<area shape="rect" id="node9" href="$classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="587,85,683,115"/>
-</map>

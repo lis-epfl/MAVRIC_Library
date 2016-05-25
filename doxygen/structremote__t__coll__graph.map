@@ -1,4 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="5,6,240,317"/>
-<area shape="rect" id="node4" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="264,84,373,239"/>
+<area shape="rect" id="node2" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="5,401,240,711"/>
+<area shape="rect" id="node4" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="32,5,213,264"/>
+<area shape="rect" id="node6" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="264,479,373,633"/>
 </map>

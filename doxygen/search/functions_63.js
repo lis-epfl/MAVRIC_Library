@@ -17,5 +17,6 @@ var searchData=
   ['console',['Console',['../classConsole.html#a17ca5bcb69c15274ddfcaa4d7b6f8057',1,'Console']]],
   ['control_5fsource',['control_source',['../classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0',1,'Manual_control']]],
   ['create_5fnew_5flog_5ffile',['create_new_log_file',['../classData__logging.html#a6a31693af23d1281dd30ad8a54582358',1,'Data_logging']]],
+  ['ctrl_5fmode',['ctrl_mode',['../classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a',1,'Mav_mode']]],
   ['cylinder',['Cylinder',['../classraytracing_1_1Cylinder.html#a0d9540b848c9340baf3ed1dbbfc2855b',1,'raytracing::Cylinder']]]
 ];

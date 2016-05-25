@@ -201,7 +201,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00131"></a>00131 {
 <a name="l00132"></a><a class="code" href="structjoystick__t.html#a1fb9188dc836a688fa85b2045e1fa596">00132</a>     <a class="code" href="unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons.">joystick_button_t</a> <a class="code" href="structjoystick__t.html#a1fb9188dc836a688fa85b2045e1fa596" title="The bit mask of the button pressed.">buttons</a>;          
 <a name="l00133"></a><a class="code" href="structjoystick__t.html#aeb394234a57a84de0d6c824e93def123">00133</a>     <a class="code" href="structjoystick__channels__t.html" title="Joystick Channels.">joystick_channels_t</a> <a class="code" href="structjoystick__t.html#aeb394234a57a84de0d6c824e93def123" title="Channels of the joystick.">channels</a>;       
-<a name="l00134"></a><a class="code" href="structjoystick__t.html#a722b0c68c6114c9e2539808e27bcf196">00134</a>     mav_mode_t <a class="code" href="structjoystick__t.html#a722b0c68c6114c9e2539808e27bcf196" title="The mav mode indicated by the remote.">mav_mode_desired</a>;        
+<a name="l00134"></a><a class="code" href="structjoystick__t.html#a18a08174abcaf082b23be9f182c9804b">00134</a>     <a class="code" href="classMav__mode.html">Mav_mode</a> <a class="code" href="structjoystick__t.html#a18a08174abcaf082b23be9f182c9804b" title="The mav mode indicated by the remote.">mav_mode_desired</a>;          
 <a name="l00135"></a>00135     arm_action_t arm_action;
 <a name="l00136"></a>00136 } <a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>;
 <a name="l00137"></a>00137 
@@ -221,7 +221,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00186"></a>00186 <span class="keywordtype">float</span> joystick_get_yaw(<span class="keyword">const</span> <a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>* joystick);
 <a name="l00187"></a>00187 
 <a name="l00188"></a>00188 
-<a name="l00196"></a>00196 mav_mode_t joystick_get_mode(<a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>* joystick, <span class="keyword">const</span> mav_mode_t current_mode);
+<a name="l00196"></a>00196 <a class="code" href="classMav__mode.html">Mav_mode</a> joystick_get_mode(<a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>* joystick, <span class="keyword">const</span> <a class="code" href="classMav__mode.html">Mav_mode</a> current_mode);
 <a name="l00197"></a>00197 
 <a name="l00198"></a>00198 
 <a name="l00205"></a>00205 <span class="keywordtype">void</span> joystick_get_velocity_vector(<span class="keyword">const</span> <a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>* joystick, <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
@@ -231,7 +231,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00221"></a>00221 <span class="keywordtype">void</span> joystick_get_control_command(<span class="keyword">const</span> <a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>* joystick, <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
 <a name="l00222"></a>00222 
 <a name="l00223"></a>00223 
-<a name="l00230"></a>00230 <span class="keywordtype">void</span> joystick_button_mask(<a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>* joystick, uint16_t buttons);
+<a name="l00230"></a>00230 <span class="keywordtype">void</span> joystick_button_update(<a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>* joystick, uint16_t buttons);
 <a name="l00231"></a>00231 
 <a name="l00232"></a>00232 
 <a name="l00239"></a>00239 <span class="keywordtype">void</span> joystick_get_torque_command(<span class="keyword">const</span> <a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>* joystick, <a class="code" href="structtorque__command__t.html" title="Torque command structure.">torque_command_t</a>* command, <span class="keywordtype">float</span> scale);
@@ -277,7 +277,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 25 2016 21:22:07 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 25 2016 21:39:07 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
