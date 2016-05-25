@@ -5,9 +5,9 @@ php:
   - '7.0'
 
 before_install:
-  - sudo add-apt-repository --yes --force-yes ppa:ubuntu-toolchain-r/test
-  - sudo add-apt-repository --yes --force-yes ppa:ondrej/php5-oldstable
-  - sudo add-apt-repository --yes --force-yes ppa:terry.guo/gcc-arm-embedded
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo add-apt-repository -y ppa:ondrej/php5-oldstable
+  - sudo add-apt-repository -y ppa:terry.guo/gcc-arm-embedded
   - sudo apt-get --yes --force-yes update -qq 
 
 install:
