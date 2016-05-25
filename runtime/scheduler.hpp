@@ -115,7 +115,7 @@ public:
      *
      * \return               True if the task was successfully sorted, False if not
      */
-    bool sort_tasks();
+    bool sort_tasks(void);
 
 
     /**
@@ -123,7 +123,7 @@ public:
      *
      * \return               Number of realtime violations
      */
-    int32_t update();
+    int32_t update(void);
 
 
     /**
@@ -158,7 +158,13 @@ public:
      * \brief       Run all tasks immediately
      *
      */
-    void run_all_tasks_now();
+    void run_all_tasks_now(void);
+
+
+    /**
+     * \brief       Return the number of tasks
+     */
+    uint32_t task_count(void) const;
 
 
     /**
@@ -166,7 +172,7 @@ public:
      *
      * \return      default_config
      */
-    static Scheduler::conf_t default_config();
+    static Scheduler::conf_t default_config(void);
 
 
 private:
