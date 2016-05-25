@@ -219,7 +219,7 @@ public:
      *
      * \return  The value of the mode
      */
-    mav_mode_t get_mode_from_source(mav_mode_t mode_current);
+    Mav_mode get_mode_from_source(Mav_mode mode_current);
 
 
     /**
@@ -230,7 +230,7 @@ public:
      * \param   mode_current            The current mode of the MAV
      *
      */
-    void set_mode_of_source(mav_mode_t mode_current);
+    void set_mode_of_source(Mav_mode mode_current);
 
     /**
      * \brief   Returns the quality of the strength of the remote receiver
