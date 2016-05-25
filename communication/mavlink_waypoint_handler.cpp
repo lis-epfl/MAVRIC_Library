@@ -655,6 +655,7 @@ mav_result_t Mavlink_waypoint_handler::is_arrived(Mavlink_waypoint_handler* wayp
 bool Mavlink_waypoint_handler::take_off_handler()
 {
     bool result = false;
+    float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
 
     if (!hold_waypoint_set_)
     {
@@ -663,7 +664,7 @@ bool Mavlink_waypoint_handler::take_off_handler()
         print_util_dbg_print(", ");
         print_util_dbg_print_num(position_estimation_.local_position.pos[Y], 10);
         print_util_dbg_print(", ");
-        print_util_dbg_print_num(-10.0f, 10);
+        print_util_dbg_print_num(navigation_.takeoff_altitude, 10);
         print_util_dbg_print("), with heading of: ");
         print_util_dbg_print_num((int32_t)(position_estimation_.local_position.heading * 180.0f / 3.14f), 10);
         print_util_dbg_print("\r\n");
@@ -685,7 +686,7 @@ bool Mavlink_waypoint_handler::take_off_handler()
         switch(navigation_.navigation_strategy)
         {
             case Navigation::strategy_t::DIRECT_TO:
-               if (navigation_.dist2wp_sqr <= 16.0f)
+               if (navigation_.dist2wp_sqr <= waypoint_radius)
                 {
                     result = true;
                 }
@@ -694,7 +695,7 @@ bool Mavlink_waypoint_handler::take_off_handler()
             case Navigation::strategy_t::DUBIN:
                 if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
                 {
-                    if (navigation_.dist2wp_sqr <= 16.0f)
+                    if (navigation_.dist2wp_sqr <= waypoint_radius)
                     {
                         result = true;
                     }
@@ -838,7 +839,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
                 state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
                 waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
-                waypoint_hold_coordinates.waypoint.pos[Z] = -5.0f;
+                waypoint_hold_coordinates.waypoint.pos[Z] = navigation_.takeoff_altitude/2.0f;
                 break;
 
             case Navigation::DESCENT_TO_GND:
@@ -1827,7 +1828,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     waypoint.x = 0.0f;
     waypoint.y = 0.0f;
-    waypoint.z = -config_.auto_take_off_altitude;
+    waypoint.z = navigation_.takeoff_altitude;
 
     waypoint.param1 = 10; // Hold time in decimal seconds
     waypoint.param2 = 2; // Acceptance radius in meters

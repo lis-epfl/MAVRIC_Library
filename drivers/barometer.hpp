@@ -144,4 +144,12 @@ protected:
 
 };
 
+/**
+ * \brief  Glue method for scheduler
+ */
+static inline bool task_barometer_update(Barometer* barometer)
+{
+    return barometer->update();
+};
+
 #endif /* BAROMETER_HPP_ */
