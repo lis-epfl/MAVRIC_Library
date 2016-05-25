@@ -40,7 +40,7 @@ var searchData=
   ['sonar',['sonar',['../classSimulation.html#aaa6af22e24b433fa4de1a2fe28946c2b',1,'Simulation']]],
   ['sonar_5fi2cxl',['Sonar_i2cxl',['../classSonar__i2cxl.html#a3f4f6a528824adf73084eec85ff3e158',1,'Sonar_i2cxl']]],
   ['sonar_5fsim',['Sonar_sim',['../classSonar__sim.html#a582c16be06fcc3a4e1f1aa425ae14478',1,'Sonar_sim']]],
-  ['sort_5ftasks',['sort_tasks',['../classScheduler.html#ac27499ab15c6247c7a208ce5e132021e',1,'Scheduler']]],
+  ['sort_5ftasks',['sort_tasks',['../classScheduler.html#a65d37b2e1af43239d990163e98428a74',1,'Scheduler']]],
   ['spektrum_5fsatellite',['Spektrum_satellite',['../classSpektrum__satellite.html#a19081fd14e2561dff2977aa7ab102c48',1,'Spektrum_satellite']]],
   ['sphere',['Sphere',['../classraytracing_1_1Sphere.html#a316fea1890e003a25c2c6bb30fc28801',1,'raytracing::Sphere']]],
   ['spi_5favr32',['Spi_avr32',['../classSpi__avr32.html#a9feb1fb0cdee80042a3d75cf59e649e1',1,'Spi_avr32']]],

@@ -13,5 +13,8 @@ var searchData=
   ['engine_5fnav_5fsetting',['engine_nav_setting',['../structgps__t.html#a6f3d05db0625f121ee267c502db4cdd5',1,'gps_t']]],
   ['erase_5fgroup_5fsize',['erase_group_size',['../structsd__spi__t.html#a43e1b4534aa5af64389d99d254566211',1,'sd_spi_t']]],
   ['error',['error',['../structpid__controller__t.html#a8ed90ee7713408394747f92385718212',1,'pid_controller_t']]],
-  ['execution_5ftime',['execution_time',['../classScheduler__task.html#ab508718b7cbebfd0fee85c28f3053585',1,'Scheduler_task']]]
+  ['execution_5ftime',['execution_time',['../classScheduler__task.html#ae3aa1ab7017ce5fc34daa575b3cb981d',1,'Scheduler_task']]],
+  ['execution_5ftime_5favg',['execution_time_avg',['../classScheduler__task.html#ac3989dd6ba81591cf3bcf53e8c3c2859',1,'Scheduler_task']]],
+  ['execution_5ftime_5fmax',['execution_time_max',['../classScheduler__task.html#af3d081a1808a323f7306e6a0e6e73f07',1,'Scheduler_task']]],
+  ['execution_5ftime_5fvar',['execution_time_var',['../classScheduler__task.html#acd6d06e40b1c62a3df131b24fa758747',1,'Scheduler_task']]]
 ];

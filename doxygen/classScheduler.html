@@ -108,27 +108,30 @@ Public Types</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Scheduling strategy.  <a href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#af47e13539e1251b50208e115b6241c37">Scheduler</a> (const <a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a> config=<a class="el" href="classScheduler.html#aea90ed6b44b49a090eb1253bfa05d5ff">default_config</a>())</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#af47e13539e1251b50208e115b6241c37">Scheduler</a> (const <a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a> config=<a class="el" href="classScheduler.html#a14bff08b808d78e8a1db43266bc26695">default_config</a>())</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#af47e13539e1251b50208e115b6241c37"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb">add_task</a> (uint32_t repeat_period, <a class="el" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057">Scheduler_task::task_function_t</a> call_function, <a class="el" href="classScheduler__task.html#a28462679852aacf669176cd93005842a">Scheduler_task::task_argument_t</a> function_argument, <a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a> priority=<a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0">Scheduler_task::PRIORITY_NORMAL</a>, <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a> timing_mode=<a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedacd2e70e6f117b093e8697efc9d6e66ec">Scheduler_task::PERIODIC_ABSOLUTE</a>, <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a> run_mode=<a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046">Scheduler_task::RUN_REGULAR</a>, int32_t task_id=-1)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a new task to the task set, in the first available slot.  <a href="#acfc1ac23c05eebd7f7bac3bdc015e1fb"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#ac27499ab15c6247c7a208ce5e132021e">sort_tasks</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort tasks by decreasing priority, then by increasing repeat period.  <a href="#ac27499ab15c6247c7a208ce5e132021e"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a3e8021b7bfb2a5a9645edba08b6a51fc">update</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Run update (check for tasks ready for execution and execute them)  <a href="#a3e8021b7bfb2a5a9645edba08b6a51fc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a65d37b2e1af43239d990163e98428a74">sort_tasks</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort tasks by decreasing priority, then by increasing repeat period.  <a href="#a65d37b2e1af43239d990163e98428a74"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#ad1af97cfd75325ea9d88e4ab2f12e790">update</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Run update (check for tasks ready for execution and execute them)  <a href="#ad1af97cfd75325ea9d88e4ab2f12e790"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#ac20f015b1a9877f65fb7c3db7b373bdc">get_task_by_id</a> (uint16_t task_id) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a task according to its idea.  <a href="#ac20f015b1a9877f65fb7c3db7b373bdc"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a905bb3b1e829437ca931025f814b3b19">get_task_by_index</a> (uint16_t task_index) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a task according to its index.  <a href="#a905bb3b1e829437ca931025f814b3b19"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a692bc156fd166f13c410cff5c769d239">suspend_all_tasks</a> (uint32_t delay)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Suspends all tasks.  <a href="#a692bc156fd166f13c410cff5c769d239"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e8fd63a449342efe4311bbe3851ee08"></a><!-- doxytag: member="Scheduler::run_all_tasks_now" ref="a1e8fd63a449342efe4311bbe3851ee08" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a1e8fd63a449342efe4311bbe3851ee08">run_all_tasks_now</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42bdc07e8914f6309be98e38e216c1bd"></a><!-- doxytag: member="Scheduler::run_all_tasks_now" ref="a42bdc07e8914f6309be98e38e216c1bd" args="(void)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd">run_all_tasks_now</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Run all tasks immediately. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5705b008e73898fb55cc4312f37bb4e1"></a><!-- doxytag: member="Scheduler::task_count" ref="a5705b008e73898fb55cc4312f37bb4e1" args="(void) const " -->
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a5705b008e73898fb55cc4312f37bb4e1">task_count</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of tasks. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#aea90ed6b44b49a090eb1253bfa05d5ff">default_config</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and returns default config for schedulers.  <a href="#aea90ed6b44b49a090eb1253bfa05d5ff"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a14bff08b808d78e8a1db43266bc26695">default_config</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and returns default config for schedulers.  <a href="#a14bff08b808d78e8a1db43266bc26695"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a342480159f74c755d5287cb3c112f95c"></a><!-- doxytag: member="Scheduler::TIMEBASE" ref="a342480159f74c755d5287cb3c112f95c" args="" -->
@@ -172,7 +175,7 @@ static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a clas
           <td class="memname"><a class="el" href="classScheduler.html#af47e13539e1251b50208e115b6241c37">Scheduler::Scheduler</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a>&#160;</td>
-          <td class="paramname"><em>config</em> = <code><a class="el" href="classScheduler.html#aea90ed6b44b49a090eb1253bfa05d5ff">default_config</a>()</code></td><td>)</td>
+          <td class="paramname"><em>config</em> = <code><a class="el" href="classScheduler.html#a14bff08b808d78e8a1db43266bc26695">default_config</a>()</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -271,12 +274,12 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="aea90ed6b44b49a090eb1253bfa05d5ff"></a><!-- doxytag: member="Scheduler::default_config" ref="aea90ed6b44b49a090eb1253bfa05d5ff" args="()" -->
+<a class="anchor" id="a14bff08b808d78e8a1db43266bc26695"></a><!-- doxytag: member="Scheduler::default_config" ref="a14bff08b808d78e8a1db43266bc26695" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a> <a class="el" href="classScheduler.html#aea90ed6b44b49a090eb1253bfa05d5ff">Scheduler::default_config</a> </td>
+          <td class="memname"><a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a> <a class="el" href="classScheduler.html#a14bff08b808d78e8a1db43266bc26695">Scheduler::default_config</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -343,13 +346,14 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="ac27499ab15c6247c7a208ce5e132021e"></a><!-- doxytag: member="Scheduler::sort_tasks" ref="ac27499ab15c6247c7a208ce5e132021e" args="()" -->
+<a class="anchor" id="a65d37b2e1af43239d990163e98428a74"></a><!-- doxytag: member="Scheduler::sort_tasks" ref="a65d37b2e1af43239d990163e98428a74" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classScheduler.html#ac27499ab15c6247c7a208ce5e132021e">Scheduler::sort_tasks</a> </td>
+          <td class="memname">bool <a class="el" href="classScheduler.html#a65d37b2e1af43239d990163e98428a74">Scheduler::sort_tasks</a> </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -363,8 +367,8 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classScheduler_ac27499ab15c6247c7a208ce5e132021e_icgraph.png" border="0" usemap="#classScheduler_ac27499ab15c6247c7a208ce5e132021e_icgraph" alt=""/></div>
-<map name="classScheduler_ac27499ab15c6247c7a208ce5e132021e_icgraph" id="classScheduler_ac27499ab15c6247c7a208ce5e132021e_icgraph">
+<div class="center"><img src="classScheduler_a65d37b2e1af43239d990163e98428a74_icgraph.png" border="0" usemap="#classScheduler_a65d37b2e1af43239d990163e98428a74_icgraph" alt=""/></div>
+<map name="classScheduler_a65d37b2e1af43239d990163e98428a74_icgraph" id="classScheduler_a65d37b2e1af43239d990163e98428a74_icgraph">
 <area shape="rect" id="node3" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="203,5,304,35"/></map>
 </div>
 </p>
@@ -414,12 +418,12 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a3e8021b7bfb2a5a9645edba08b6a51fc"></a><!-- doxytag: member="Scheduler::update" ref="a3e8021b7bfb2a5a9645edba08b6a51fc" args="()" -->
+<a class="anchor" id="ad1af97cfd75325ea9d88e4ab2f12e790"></a><!-- doxytag: member="Scheduler::update" ref="ad1af97cfd75325ea9d88e4ab2f12e790" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int32_t <a class="el" href="classScheduler.html#a3e8021b7bfb2a5a9645edba08b6a51fc">Scheduler::update</a> </td>
+          <td class="memname">int32_t <a class="el" href="classScheduler.html#ad1af97cfd75325ea9d88e4ab2f12e790">Scheduler::update</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -435,8 +439,8 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classScheduler_a3e8021b7bfb2a5a9645edba08b6a51fc_icgraph.png" border="0" usemap="#classScheduler_a3e8021b7bfb2a5a9645edba08b6a51fc_icgraph" alt=""/></div>
-<map name="classScheduler_a3e8021b7bfb2a5a9645edba08b6a51fc_icgraph" id="classScheduler_a3e8021b7bfb2a5a9645edba08b6a51fc_icgraph">
+<div class="center"><img src="classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_icgraph.png" border="0" usemap="#classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_icgraph" alt=""/></div>
+<map name="classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_icgraph" id="classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_icgraph">
 <area shape="rect" id="node3" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="183,5,391,35"/><area shape="rect" id="node5" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="236,59,337,88"/></map>
 </div>
 </p>
@@ -465,7 +469,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 22 2016 15:13:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 25 2016 21:22:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

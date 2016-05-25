@@ -151,7 +151,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00080"></a>00080     };
 <a name="l00081"></a>00081 
 <a name="l00082"></a>00082 
-<a name="l00088"></a>00088     <a class="code" href="classScheduler.html#af47e13539e1251b50208e115b6241c37" title="Constructor.">Scheduler</a>(<span class="keyword">const</span> <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a> config = <a class="code" href="classScheduler.html#aea90ed6b44b49a090eb1253bfa05d5ff" title="Creates and returns default config for schedulers.">default_config</a>());
+<a name="l00088"></a>00088     <a class="code" href="classScheduler.html#af47e13539e1251b50208e115b6241c37" title="Constructor.">Scheduler</a>(<span class="keyword">const</span> <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a> config = <a class="code" href="classScheduler.html#a14bff08b808d78e8a1db43266bc26695" title="Creates and returns default config for schedulers.">default_config</a>());
 <a name="l00089"></a>00089 
 <a name="l00090"></a>00090 
 <a name="l00104"></a>00104     <span class="keywordtype">bool</span> <a class="code" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb" title="Register a new task to the task set, in the first available slot.">add_task</a>(uint32_t repeat_period,
@@ -163,10 +163,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00110"></a>00110                   int32_t task_id                           = -1);
 <a name="l00111"></a>00111 
 <a name="l00112"></a>00112 
-<a name="l00118"></a>00118     <span class="keywordtype">bool</span> <a class="code" href="classScheduler.html#ac27499ab15c6247c7a208ce5e132021e" title="Sort tasks by decreasing priority, then by increasing repeat period.">sort_tasks</a>();
+<a name="l00118"></a>00118     <span class="keywordtype">bool</span> <a class="code" href="classScheduler.html#a65d37b2e1af43239d990163e98428a74" title="Sort tasks by decreasing priority, then by increasing repeat period.">sort_tasks</a>(<span class="keywordtype">void</span>);
 <a name="l00119"></a>00119 
 <a name="l00120"></a>00120 
-<a name="l00126"></a>00126     int32_t <a class="code" href="classScheduler.html#a3e8021b7bfb2a5a9645edba08b6a51fc" title="Run update (check for tasks ready for execution and execute them)">update</a>();
+<a name="l00126"></a>00126     int32_t <a class="code" href="classScheduler.html#ad1af97cfd75325ea9d88e4ab2f12e790" title="Run update (check for tasks ready for execution and execute them)">update</a>(<span class="keywordtype">void</span>);
 <a name="l00127"></a>00127 
 <a name="l00128"></a>00128 
 <a name="l00136"></a>00136     <a class="code" href="classScheduler__task.html" title="Task entry.">Scheduler_task</a>* <a class="code" href="classScheduler.html#ac20f015b1a9877f65fb7c3db7b373bdc" title="Find a task according to its idea.">get_task_by_id</a>(uint16_t task_id) <span class="keyword">const</span>;
@@ -178,22 +178,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00154"></a>00154     <span class="keywordtype">void</span> <a class="code" href="classScheduler.html#a692bc156fd166f13c410cff5c769d239" title="Suspends all tasks.">suspend_all_tasks</a>(uint32_t delay);
 <a name="l00155"></a>00155 
 <a name="l00156"></a>00156 
-<a name="l00161"></a>00161     <span class="keywordtype">void</span> <a class="code" href="classScheduler.html#a1e8fd63a449342efe4311bbe3851ee08" title="Run all tasks immediately.">run_all_tasks_now</a>();
+<a name="l00161"></a>00161     <span class="keywordtype">void</span> <a class="code" href="classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd" title="Run all tasks immediately.">run_all_tasks_now</a>(<span class="keywordtype">void</span>);
 <a name="l00162"></a>00162 
 <a name="l00163"></a>00163 
-<a name="l00169"></a>00169     <span class="keyword">static</span> <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a> <a class="code" href="classScheduler.html#aea90ed6b44b49a090eb1253bfa05d5ff" title="Creates and returns default config for schedulers.">default_config</a>();
-<a name="l00170"></a>00170 
-<a name="l00171"></a>00171 
-<a name="l00172"></a>00172 <span class="keyword">private</span>:
-<a name="l00173"></a>00173     <a class="code" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93" title="Scheduling strategy.">strategy_t</a> schedule_strategy_;               
-<a name="l00174"></a>00174     <span class="keywordtype">bool</span> debug_;                                 
-<a name="l00175"></a>00175     uint32_t task_count_;                        
-<a name="l00176"></a>00176     uint32_t max_task_count_;                    
-<a name="l00177"></a>00177     uint32_t current_schedule_slot_;             
-<a name="l00178"></a>00178     <a class="code" href="classScheduler__task.html" title="Task entry.">Scheduler_task</a>* tasks_;                      
-<a name="l00179"></a>00179 };
-<a name="l00180"></a>00180 
-<a name="l00181"></a>00181 <span class="preprocessor">#endif </span><span class="comment">/* SCHEDULER_HPP_ */</span>
+<a name="l00167"></a>00167     uint32_t <a class="code" href="classScheduler.html#a5705b008e73898fb55cc4312f37bb4e1" title="Return the number of tasks.">task_count</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 
+<a name="l00175"></a>00175     <span class="keyword">static</span> <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a> <a class="code" href="classScheduler.html#a14bff08b808d78e8a1db43266bc26695" title="Creates and returns default config for schedulers.">default_config</a>(<span class="keywordtype">void</span>);
+<a name="l00176"></a>00176 
+<a name="l00177"></a>00177 
+<a name="l00178"></a>00178 <span class="keyword">private</span>:
+<a name="l00179"></a>00179     <a class="code" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93" title="Scheduling strategy.">strategy_t</a> schedule_strategy_;               
+<a name="l00180"></a>00180     <span class="keywordtype">bool</span> debug_;                                 
+<a name="l00181"></a>00181     uint32_t task_count_;                        
+<a name="l00182"></a>00182     uint32_t max_task_count_;                    
+<a name="l00183"></a>00183     uint32_t current_schedule_slot_;             
+<a name="l00184"></a>00184     <a class="code" href="classScheduler__task.html" title="Task entry.">Scheduler_task</a>* tasks_;                      
+<a name="l00185"></a>00185 };
+<a name="l00186"></a>00186 
+<a name="l00187"></a>00187 <span class="preprocessor">#endif </span><span class="comment">/* SCHEDULER_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -212,7 +215,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 22 2016 15:13:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 25 2016 21:22:07 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

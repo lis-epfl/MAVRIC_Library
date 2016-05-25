@@ -1,10 +1,10 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classScheduler.html#ac27499ab15c6247c7a208ce5e132021e" title="Sort tasks by decreasing priority, then by increasing repeat period." alt="" coords="245,59,395,88"/>
+<area shape="rect" id="node3" href="$classScheduler.html#a65d37b2e1af43239d990163e98428a74" title="Sort tasks by decreasing priority, then by increasing repeat period." alt="" coords="245,59,395,88"/>
 <area shape="rect" id="node5" href="$classOnboard__parameters.html#aa7bfe2d22b1ebe61d7ba328415cc7709" title="Read onboard parameters from the file storage." alt="" coords="155,112,485,141"/>
 <area shape="rect" id="node13" href="$classOnboard__parameters.html#a54c5735dc62ffeed8b41238d03296c99" title="Write onboard parameters to the file storage." alt="" coords="161,165,479,195"/>
 <area shape="rect" id="node20" href="$classData__logging.html#a6a31693af23d1281dd30ad8a54582358" title="Initialise the data logging module." alt="" coords="209,219,431,248"/>
 <area shape="rect" id="node22" href="$classMavlink__communication.html#a20bbab22191fe73f3fecd79b27aa9c04" title="Returns sysid of the underlying mavlink_stream." alt="" coords="220,272,420,301"/>
-<area shape="rect" id="node26" href="$classScheduler.html#a3e8021b7bfb2a5a9645edba08b6a51fc" title="Run update (check for tasks ready for execution and execute them)" alt="" coords="257,325,383,355"/>
+<area shape="rect" id="node26" href="$classScheduler.html#ad1af97cfd75325ea9d88e4ab2f12e790" title="Run update (check for tasks ready for execution and execute them)" alt="" coords="257,325,383,355"/>
 <area shape="rect" id="node7" href="$classFile.html#a230c72c26d75daa2da7e1876b3cf2888" title="Get the file length." alt="" coords="568,5,653,35"/>
 <area shape="rect" id="node9" href="$classFile.html#a08f1d2f6938eaedb287ad8e9da16c130" title="Seek to a given offset within the file." alt="" coords="572,112,649,141"/>
 <area shape="rect" id="node11" href="$classFile.html#ab6655a4cff6737e360d6c91498c1ca22" title="Read from the file." alt="" coords="573,59,648,88"/>

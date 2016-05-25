@@ -14,6 +14,7 @@ var searchData=
   ['tangent_5fpoint_5f1',['tangent_point_1',['../structdubin__t.html#aef18e674aecaa7ad1514ac349d56a712',1,'dubin_t']]],
   ['tangent_5fpoint_5f2',['tangent_point_2',['../structdubin__t.html#a15eea8cab190e582c1376e040e0aaa1f',1,'dubin_t']]],
   ['task_5fargument_5ft',['task_argument_t',['../classScheduler__task.html#a28462679852aacf669176cd93005842a',1,'Scheduler_task']]],
+  ['task_5fcount',['task_count',['../classScheduler.html#a5705b008e73898fb55cc4312f37bb4e1',1,'Scheduler']]],
   ['task_5ffunction_5ft',['task_function_t',['../classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057',1,'Scheduler_task']]],
   ['task_5fid',['task_id',['../classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7',1,'Scheduler_task']]],
   ['telemetry_5fdown_5fstream',['telemetry_down_stream',['../structaudio__t.html#a76cc0afbf7732f7471c0d82418534e31',1,'audio_t']]],

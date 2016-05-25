@@ -20,7 +20,7 @@
 <area shape="rect" id="node27" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="2164,701,2300,873"/>
 <area shape="rect" id="node29" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="2023,701,2140,873"/>
 <area shape="rect" id="node32" href="$classGps.html" title="Abstract class for GPS." alt="" coords="3440,1199,3651,1457"/>
-<area shape="rect" id="node34" href="$classScheduler.html" title="Scheduler." alt="" coords="3675,1216,3824,1440"/>
+<area shape="rect" id="node34" href="$classScheduler.html" title="Scheduler." alt="" coords="3675,1207,3824,1449"/>
 <area shape="rect" id="node36" href="$classLed.html" title="{Led\n||+ on()\l+ off()\l+ toggle()\l}" alt="" coords="3848,1268,3925,1388"/>
 <area shape="rect" id="node47" href="$classNavigation.html" title="The navigation structure." alt="" coords="5,640,147,933"/>
 <area shape="rect" id="node45" href="$structMavlink__waypoint__handler_1_1waypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="171,657,456,916"/>
