@@ -388,6 +388,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                         for(int n=0;n<MAX_OUTFENCE+1;n++)
                         {
                         	waypoint_handler->fencepoint_angle(waypoint_handler->all_fences[n], *waypoint_handler->all_fence_points[n],waypoint_handler->all_fence_angles[n]);
+                        	//mpoints
                         }
                     }
                     else
@@ -1720,6 +1721,8 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint.y = 6.5653718f;
 
     waypoint_list[5] = waypoint;
+
+
 
 }
 

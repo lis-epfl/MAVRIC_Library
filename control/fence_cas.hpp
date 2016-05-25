@@ -120,7 +120,7 @@ public:
 	float	tahead; 	///< [0,10] Intensity of the reaction, 	typically 2
 	float	coef_roll; 	///< [0,1] Intensity of the reaction, 	typically 1
 	float	maxradius; 	///< [0,100] MAximal radius of curvature, 	typically 3
-
+	int count;
 
 
 

@@ -147,7 +147,7 @@ float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , flo
 // ------------------------------------------------------------------------------
 Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estimation* postion_estimation, control_command_t* controls)
 :	a_max(1),
-	r_pz(1),
+	r_pz(0.5),
 	comfort(0.5),
 	waypoint_handler(waypoint_handler),
 	pos_est(postion_estimation),
@@ -156,7 +156,8 @@ Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estima
 //	repulsion({0,0,0}),
 	coef_roll(0.6),
 	maxsens(10.0),
-	maxradius(15.0)
+	maxradius(15.0),
+	count(0)
 {
 
 }
@@ -193,7 +194,8 @@ bool Fence_CAS::update(void)
 	float dmin=2*this->r_pz; 					// Safe zone around the drone ,can be adjusted
 	float max_ang= 0.25*PI*(1-this->comfort);	// Adjusts the maximal angle in function of the comfort
 	max_ang = 0.25*PI;
-	this->coef_roll=3.0;
+	this->coef_roll=1.0f;
+	this->tahead=0.0f;
 	int interp_type = 2;						// Define the interpolation type of the repulsion
 
 	for(int i =0; i<3;i++)
@@ -201,6 +203,14 @@ bool Fence_CAS::update(void)
 		S[i]= C[i] + Vnorm[i] * (this->r_pz/*protection zone*/ +SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + this->tahead * Vval /*d_ahead*/);
 	}
 
+	this->count++;
+	if(this->count==100)
+	{
+		print_util_dbg_print("");print_util_dbg_putfloat(C[1],5);
+		print_util_dbg_print(",");print_util_dbg_putfloat(C[0],5);
+		print_util_dbg_print("\n");
+		this->count=0;
+	}
 	/*FOR EACH FENCE*/
 	for(int n=0;n<MAX_OUTFENCE+1;n++)
 	{
@@ -208,9 +218,9 @@ bool Fence_CAS::update(void)
 		Mavlink_waypoint_handler::waypoint_struct_t* CurFence_list  = this->waypoint_handler->all_fences[n];
 		float* CurAngle_list = waypoint_handler->all_fence_angles[n];
 
-		float dist[nbFencePoints];				// Table of distance to each fence
-		float fencerep = 0.0;// Repulsion from fences
-		float pointrep = 0.0;// Repulsion from angles
+		float dist[nbFencePoints];	// Table of distance to each fence
+		float fencerep = 0.0f;		// Repulsion from fences
+		float pointrep = 0.0f;		// Repulsion from angles
 
 
 		for (int i=0; i < nbFencePoints; i++) 	// loop through all pair of fence points
@@ -233,6 +243,7 @@ bool Fence_CAS::update(void)
 
 			float A[3]={Alpoint.pos[0],Alpoint.pos[1],Alpoint.pos[2]};
 			float B[3]={Blpoint.pos[0],Blpoint.pos[1],Blpoint.pos[2]};
+
 			// Only 2D detection:
 			A[2]=C[2];
 			B[2]=C[2];
@@ -248,6 +259,8 @@ bool Fence_CAS::update(void)
 			float M[3]={0,0,0};
 			this->maxradius = 5; //inner angle circle radius
 
+			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
+
 			for(int k=0;k<3;k++)
 			{
 				M[k] = A[k] + (this->maxradius+this->maxsens)*(AB[k]/quick_trig_tan(CurAngle_list[i]/2.0) + pAB[k]);
@@ -259,20 +272,22 @@ bool Fence_CAS::update(void)
 			float MA[3] = {A[0]-M[0],A[1]-M[1],0.0};
 			float distMA=vectors_norm(MA);
 
-			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
+
 			if((distAS <= (distMA))&&(distMC >= this->maxradius)&&(angle_detected==false))
 			{
 				float aratio=(distMC - this->maxradius)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
 				float rep[3]={MS[0],MS[1],0.0};					// Repulsion local frame
 				gftobftransform(C, S, rep);								// Repulsion body frame
-				vectors_normalize(rep,rep);
+
+//				vectors_normalize(rep,rep);
 				rep[1]=(rep[1]>=0?-1:1) ;// Extract repulsion direction in body frame
 				pointrep += -rep[1]*this->coef_roll*max_ang*interpolate(aratio,interp_type); // Add repulsion
 				angle_detected=true;
-				print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
+//				print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
 //				print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i]*180/PI,5);
-				print_util_dbg_print("||");print_util_dbg_putfloat(pointrep,5);
-//				print_util_dbg_print("||");print_util_dbg_putfloat(this->repulsion[1],5);
+//				print_util_dbg_print("|rep|");print_util_dbg_putfloat(pointrep,5);
+//				print_util_dbg_print("|interpval|");print_util_dbg_putfloat(interpolate(aratio,interp_type),5);
+
 //				print_util_dbg_print("|interp|");print_util_dbg_putfloat(interpolate(aratio,interp_type),5);
 //				print_util_dbg_print("|oldAC|");print_util_dbg_putfloat(old_distAC[i],15);
 //				print_util_dbg_print("\n");
@@ -290,17 +305,17 @@ bool Fence_CAS::update(void)
 			{
 				float rep[3]={A[1]-B[1],B[0]-A[0],0.0};						// Repulsion local frame
 				gftobftransform(C, S, rep);									// Repulsion body frame
-				vectors_normalize(rep,rep);
+//				vectors_normalize(rep,rep);
 				rep[1]=(rep[1]>=0?1:-1); 									// Extract repulsion direction in body frame, 1 = clockwise / -1 = counterclockwise
 
 				float fratio = dist[i]/this->maxsens;						// Compute ratio for interpolation
 				fencerep +=-rep[1]*this->coef_roll*max_ang*interpolate(fratio,interp_type);
 
-				print_util_dbg_print("||Frep||");print_util_dbg_putfloat(i+1,0);
-				print_util_dbg_print("||");print_util_dbg_putfloat(fencerep,5);
+//				print_util_dbg_print("||Frep||");print_util_dbg_putfloat(i+1,0);
+//				print_util_dbg_print("||");print_util_dbg_putfloat(fencerep,5);
 //				print_util_dbg_print("||");print_util_dbg_putfloat(this->repulsion[1],5);
 //				print_util_dbg_print("|ratio|");print_util_dbg_putfloat(interpolate(fratio,interp_type),5);
-				print_util_dbg_print("\n");
+//				print_util_dbg_print("\n");
 			}
 			else
 			{
@@ -310,7 +325,6 @@ bool Fence_CAS::update(void)
 		}
 		if(angle_detected==true)
 		{
-			print_util_dbg_print("\n");
 			angle_detected=false;
 			this->repulsion[1] += pointrep;
 		}
