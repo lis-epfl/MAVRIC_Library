@@ -137,15 +137,18 @@ void scheduler_telemetry_send_rt_stats_all(const Scheduler* scheduler, const Mav
     for (uint32_t i = 0; i < n_tasks; ++i)
     {
         // Get i-th task
-        Scheduler_task* task = scheduler->get_task_by_index(i);
+        Scheduler_task* task = scheduler->get_task_by_id(i);
 
-        // Save real time statistics in data array
-        data[6*i + 0] = task->execution_time_avg;
-        data[6*i + 1] = task->execution_time_var;
-        data[6*i + 2] = task->execution_time_max;
-        data[6*i + 3] = task->delay_avg;
-        data[6*i + 4] = task->delay_var;
-        data[6*i + 5] = task->delay_max;
+        if (task != NULL)
+        {
+            // Save real time statistics in data array
+            data[6*i + 0] = task->execution_time_avg;
+            data[6*i + 1] = task->execution_time_var;
+            data[6*i + 2] = task->execution_time_max;
+            data[6*i + 3] = task->delay_avg;
+            data[6*i + 4] = task->delay_var;
+            data[6*i + 5] = task->delay_max;
+        }
     }
 
     mavlink_msg_big_debug_vect_pack(mavlink_stream->sysid(),
