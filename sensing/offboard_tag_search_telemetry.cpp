@@ -108,7 +108,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
     {
        drone_height = offboard_tag_search.position_estimation().local_position.pos[2];
     }
-    
+
     // Get tag location in m
     float dist_to_edge_of_fov_x = -drone_height * tan(offboard_tag_search.camera_x_fov() / 2); // Distance from center to x edge in m
     float dist_to_edge_of_fov_y = -drone_height * tan(offboard_tag_search.camera_y_fov() / 2); // Distance from center to y edge in m
@@ -136,40 +136,47 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
             pixel_width = width / resolution
             pixel_width = 2 * drone_height * tan(fov/2) / resolution
         */
-        float pixel_width = 2 * (-drone_height) * tan(offboard_tag_search.camera_x_fov()) / (offboard_tag_search.camera_x_resolution()); // drone_height negated as +z is down
-        float pixel_height = 2 * (-drone_height) * tan(offboard_tag_search.camera_y_fov()) / (offboard_tag_search.camera_y_resolution()); // drone_height negated as +z is down
+        float pixel_width = 2 * (-drone_height) * tan(offboard_tag_search.camera_x_fov() / 2) / (offboard_tag_search.camera_x_resolution()); // drone_height negated as +z is down
+        float pixel_height = 2 * (-drone_height) * tan(offboard_tag_search.camera_y_fov() / 2) / (offboard_tag_search.camera_y_resolution()); // drone_height negated as +z is down
 
         // Get drone offset
         // Forward corresponds to param4 as the picamera code outputs (right,down)
         picture_forward_offset = -packet->param4 * pixel_width; // Negative, because in vision positive is towards the bottom of the picture
         picture_right_offset = packet->param3 * pixel_height;
     }
-    
-    
+
+
     // Rotate offset to align with drone
-    quat_t q_rot, q_offset;
+    quat_t q_rot;
+    float v_offset[3], v_new_dir[3];
     q_rot.s = cos(offboard_tag_search.camera_rotation()/2); // Based off how camera is mounted
-    q_rot.v[0] = 0;
-    q_rot.v[1] = 0;
-    q_rot.v[2] = 1*sin(offboard_tag_search.camera_rotation()/2);
-    q_offset.s = 0;
-    q_offset.v[0] = picture_forward_offset;
-    q_offset.v[1] = picture_right_offset;
-    q_offset.v[2] = 0;
-    quat_t q_new_dir = quaternions_rotate(q_offset, q_rot);
+    q_rot.v[0] = 0.0f;
+    q_rot.v[1] = 0.0f;
+    q_rot.v[2] = -1.0f*sin(offboard_tag_search.camera_rotation()/2); // Negative to rotate CW
+    v_offset[0] = picture_forward_offset;
+    v_offset[1] = picture_right_offset;
+    v_offset[2] = 0.0f;
+    v_new_dir[0] = 0.0f;
+    v_new_dir[1] = 0.0f;
+    v_new_dir[2] = 0.0f;
+    quaternions_rotate_vector(q_rot, v_offset, v_new_dir);
 
     // Convert to local coordinates due to yaw not facing north
     float yaw = coord_conventions_get_yaw(offboard_tag_search.ahrs().qe);
     quat_t q_yaw_rot;
+    float v_new_local_dir[3];
     q_yaw_rot.s = cos(yaw/2);
-    q_yaw_rot.v[0] = 0;
-    q_yaw_rot.v[1] = 0;
-    q_yaw_rot.v[2] = -1*sin(yaw/2); // Negative to rotate CCW
-    quat_t q_new_local_dir = quaternions_rotate(q_new_dir, q_yaw_rot);
+    q_yaw_rot.v[0] = 0.0f;
+    q_yaw_rot.v[1] = 0.0f;
+    q_yaw_rot.v[2] = 1.0f*sin(yaw/2);
+    v_new_local_dir[0] = 0.0f;
+    v_new_local_dir[1] = 0.0f;
+    v_new_local_dir[2] = 0.0f;
+    quaternions_rotate_vector(q_yaw_rot, v_new_dir, v_new_local_dir);
 
     // Determine how far the drone is from the tag in north and east coordinates
-    float drone_x_offset = q_new_local_dir.v[0];
-    float drone_y_offset = q_new_local_dir.v[1];
+    float drone_x_offset = v_new_local_dir[0];
+    float drone_y_offset = v_new_local_dir[1];
 
     // Get local tag position from drone position and offset
     float tag_x_pos = offboard_tag_search.position_estimation().local_position.pos[0] + drone_x_offset;
