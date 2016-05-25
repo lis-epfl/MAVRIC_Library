@@ -762,11 +762,11 @@ mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_ha
             waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
         }
 
-        if (mav_modes_is_auto(waypoint_handler->last_mode_))  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        if (waypoint_handler->last_mode_.is_auto())  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         {
             waypoint_handler->navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
         }
-        else if (mav_modes_is_guided(waypoint_handler->last_mode_))  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        else if (waypoint_handler->last_mode_.ctrl_mode() == Mav_mode::POSITION_HOLD)  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         {
             waypoint_handler->navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
         }
@@ -836,16 +836,16 @@ void Mavlink_waypoint_handler::auto_landing_handler()
         {
             case Navigation::DESCENT_TO_SMALL_ALTITUDE:
                 print_util_dbg_print("Cust: descent to small alt");
-                state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
-                state_.mav_mode_custom |= CUST_DESCENT_TO_SMALL_ALTITUDE;
+                state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+                state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
                 waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
                 waypoint_hold_coordinates.waypoint.pos[Z] = navigation_.takeoff_altitude/2.0f;
                 break;
 
             case Navigation::DESCENT_TO_GND:
                 print_util_dbg_print("Cust: descent to gnd");
-                state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
-                state_.mav_mode_custom |= CUST_DESCENT_TO_GND;
+                state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+                state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
                 waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
                 waypoint_hold_coordinates.waypoint.pos[Z] = 0.0f;
                 navigation_.alt_lpf = position_estimation_.local_position.pos[2];
@@ -904,7 +904,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
 
 void Mavlink_waypoint_handler::state_machine()
 {
-    mav_mode_t mode_local = state_.mav_mode();
+    Mav_mode mode_local = state_.mav_mode();
 
     float thrust;
 
@@ -918,7 +918,7 @@ void Mavlink_waypoint_handler::state_machine()
 
             if (thrust > -0.7f)
             {
-                if (mav_modes_is_guided(mode_local) || mav_modes_is_auto(mode_local))
+                if (!mode_local.is_manual())
                 {
                     hold_waypoint_set_ = false;
                     navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
@@ -937,17 +937,17 @@ void Mavlink_waypoint_handler::state_machine()
 
             if (takeoff_result)
             {
-                if (mav_modes_is_auto(mode_local))
+                if (mode_local.is_auto())
                 {
                     navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
                 }
-                else if (mav_modes_is_guided(mode_local))
+                else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
                 {
                     navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
                 }
             }
 
-            if ((!mav_modes_is_guided(mode_local)) && (!mav_modes_is_auto(mode_local)))
+            if (mode_local.is_manual())
             {
                 print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_TAKEOFF\r\n");
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
@@ -955,11 +955,11 @@ void Mavlink_waypoint_handler::state_machine()
             break;
 
         case Navigation::NAV_MANUAL_CTRL:
-            if (mav_modes_is_auto(mode_local))
+            if (mode_local.is_auto())
             {
                 navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
             }
-            else if (mav_modes_is_guided(mode_local))
+            else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
             {
                 print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
                 hold_init(position_estimation_.local_position);
@@ -972,7 +972,7 @@ void Mavlink_waypoint_handler::state_machine()
             break;
 
         case Navigation::NAV_NAVIGATING:
-            if (!mav_modes_is_auto(last_mode_))
+            if (!last_mode_.is_auto())
             {
                 new_mode = mode_change();
             }
@@ -985,18 +985,18 @@ void Mavlink_waypoint_handler::state_machine()
 
             navigation_.goal = waypoint_coordinates_;
 
-            if (!mav_modes_is_auto(mode_local))
+            if (!mode_local.is_auto())
             {
-                if (mav_modes_is_guided(mode_local))
+                if (mode_local.is_manual())
+                {
+                    print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_NAVIGATING\r\n");
+                    navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
+                }
+                else
                 {
                     print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_NAVIGATING\r\n");
                     hold_init(position_estimation_.local_position);
                     navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
-                }
-                else
-                {
-                    print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_NAVIGATING\r\n");
-                    navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
                 }
             }
 
@@ -1010,13 +1010,13 @@ void Mavlink_waypoint_handler::state_machine()
 
             navigation_.goal = waypoint_hold_coordinates;
 
-            if (mav_modes_is_auto(mode_local))
+            if (mode_local.is_auto())
             {
                 print_util_dbg_print("Switching to NAV_NAVIGATING from NAV_HOLD_POSITION\r\n");
                 navigation_.dubin_state = DUBIN_INIT;
                 navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
             }
-            else if (!mav_modes_is_guided(mode_local))
+            else if (mode_local.is_manual())
             {
                 print_util_dbg_print("Switching to Navigation::NAV_MANUAL_CTRL from Navigation::NAV_HOLD_POSITION\r\n");
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
@@ -1030,7 +1030,7 @@ void Mavlink_waypoint_handler::state_machine()
             }
             navigation_.goal = waypoint_hold_coordinates;
 
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
+            if ( mode_local.is_manual())
             {
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
             }
@@ -1045,7 +1045,7 @@ void Mavlink_waypoint_handler::state_machine()
 
             navigation_.goal = waypoint_hold_coordinates;
 
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
+            if (mode_local.is_manual())
             {
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
             }
@@ -1061,7 +1061,7 @@ void Mavlink_waypoint_handler::state_machine()
 
             navigation_.goal = waypoint_hold_coordinates;
 
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
+            if (mode_local.is_manual())
             {
                 navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
             }
@@ -1116,7 +1116,7 @@ void Mavlink_waypoint_handler::critical_handler()
         {
             case Navigation::CLIMB_TO_SAFE_ALT:
                 print_util_dbg_print("Climbing to safe alt...\r\n");
-                state_.mav_mode_custom |= CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 
                 waypoint_critical_coordinates_.waypoint.pos[X] = position_estimation_.local_position.pos[X];
                 waypoint_critical_coordinates_.waypoint.pos[Y] = position_estimation_.local_position.pos[Y];
@@ -1125,8 +1125,8 @@ void Mavlink_waypoint_handler::critical_handler()
                 break;
 
             case Navigation::FLY_TO_HOME_WP:
-                state_.mav_mode_custom &= ~CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
-                state_.mav_mode_custom |= CUST_CRITICAL_FLY_TO_HOME_WP;
+                state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
 
                 waypoint_critical_coordinates_.waypoint.pos[X] = 0.0f;
                 waypoint_critical_coordinates_.waypoint.pos[Y] = 0.0f;
@@ -1134,8 +1134,8 @@ void Mavlink_waypoint_handler::critical_handler()
                 break;
 
             case Navigation::HOME_LAND:
-                state_.mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
-                state_.mav_mode_custom |= CUST_CRITICAL_LAND;
+                state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
+                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
                 waypoint_critical_coordinates_.waypoint.pos[X] = 0.0f;
                 waypoint_critical_coordinates_.waypoint.pos[Y] = 0.0f;
@@ -1145,9 +1145,8 @@ void Mavlink_waypoint_handler::critical_handler()
 
             case Navigation::CRITICAL_LAND:
                 print_util_dbg_print("Critical land...\r\n");
-
-                state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
-                state_.mav_mode_custom |= CUST_CRITICAL_LAND;
+                state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
                 waypoint_critical_coordinates_.waypoint.pos[X] = position_estimation_.local_position.pos[X];
                 waypoint_critical_coordinates_.waypoint.pos[Y] = position_estimation_.local_position.pos[Y];
@@ -1201,7 +1200,7 @@ void Mavlink_waypoint_handler::critical_handler()
                     state_.out_of_fence_1 = false;
                     navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
                     state_.mav_state_ = MAV_STATE_ACTIVE;
-                    state_.mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
+                    state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
                 }
                 else
                 {
@@ -1362,7 +1361,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
 
 bool Mavlink_waypoint_handler::mode_change()
 {
-    return mav_modes_are_equal_autonomous_modes(state_.mav_mode(), last_mode_);
+    return state_.mav_mode().ctrl_mode() == last_mode_.ctrl_mode();
 }
 
 void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
@@ -1763,7 +1762,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
 
 bool Mavlink_waypoint_handler::update(Mavlink_waypoint_handler* waypoint_handler)
 {
-    mav_mode_t mode_local = waypoint_handler->state_.mav_mode();
+    Mav_mode mode_local = waypoint_handler->state_.mav_mode();
 
 
     switch (waypoint_handler->state_.mav_state_)
@@ -1790,7 +1789,7 @@ bool Mavlink_waypoint_handler::update(Mavlink_waypoint_handler* waypoint_handler
 
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mav_modes_is_stabilize(mode_local))
+            if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
             {
                 if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_LANDING))
                 {
@@ -1845,7 +1844,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
     float rel_pos[3];
 
     if ((waypoint_count_ > 0)
-            && (position_estimation_.init_gps_position || mav_modes_is_hil(state_.mav_mode()))
+            && (position_estimation_.init_gps_position || state_.mav_mode().is_hil())
             && (waypoint_receiving_ == false))
     {
         for (uint8_t i = 0; i < waypoint_count_; i++)
