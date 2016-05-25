@@ -208,6 +208,8 @@ bool Fence_CAS::update(void)
 	{
 		print_util_dbg_print("");print_util_dbg_putfloat(C[1],5);
 		print_util_dbg_print(",");print_util_dbg_putfloat(C[0],5);
+		print_util_dbg_print(",");print_util_dbg_putfloat(S[1],5);
+		print_util_dbg_print(",");print_util_dbg_putfloat(S[0],5);
 		print_util_dbg_print("\n");
 		this->count=0;
 	}
@@ -257,6 +259,7 @@ bool Fence_CAS::update(void)
 			vectors_normalize(AB,AB);
 			vectors_normalize(pAB,pAB);
 			float M[3]={0,0,0};
+			float Am[3]={0,0,0};
 			this->maxradius = 5; //inner angle circle radius
 
 			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
@@ -266,6 +269,13 @@ bool Fence_CAS::update(void)
 				M[k] = A[k] + (this->maxradius+this->maxsens)*(AB[k]/quick_trig_tan(CurAngle_list[i]/2.0) + pAB[k]);
 			}
 
+			for(int k=0;k<3;k++)
+			{
+				Am[k] = A[k] + (this->maxradius+this->maxsens)*(AB[k]/quick_trig_tan(CurAngle_list[i]/2.0));
+			}
+			float AAm[3] = {A[0]-Am[0],A[1]-Am[1],0.0};
+			float distAAm=vectors_norm(AAm);
+
 			float MS[3] = {S[0]-M[0],S[1]-M[1],0.0};
 			float distMC=detect_seg(M,M,C,S,V,I,J);
 
@@ -273,7 +283,7 @@ bool Fence_CAS::update(void)
 			float distMA=vectors_norm(MA);
 
 
-			if((distAS <= (distMA))&&(distMC >= this->maxradius)&&(angle_detected==false))
+			if((distAS <= (distAAm))&&(distMC >= this->maxradius)&&(angle_detected==false))
 			{
 				float aratio=(distMC - this->maxradius)/this->maxsens;	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
 				float rep[3]={MS[0],MS[1],0.0};					// Repulsion local frame
