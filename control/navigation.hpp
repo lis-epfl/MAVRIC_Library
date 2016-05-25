@@ -168,6 +168,13 @@ public:
      */
     static inline conf_t default_config();
 
+    /**
+     * \brief   default configuration for navigation for the wing
+     *
+     * \return default config
+     */
+    static inline conf_t wing_default_config();
+
     dubin_state_t dubin_state;                          ///< The internal Dubin state
     float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
     pid_controller_t hovering_controller;               ///< hovering controller
@@ -287,7 +294,7 @@ Navigation::conf_t Navigation::default_config()
     return conf;
 };
 
-Navigation::conf_t Navigation::default_config()
+Navigation::conf_t Navigation::wing_default_config()
 {
     conf_t conf = default_config();
 
