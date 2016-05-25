@@ -279,7 +279,7 @@ void Navigation::run()
         case Navigation::strategy_t::DUBIN:
             if (state.autopilot_type == MAV_TYPE_QUADROTOR)
             {
-                if ( (internal_state_ == NAV_NAVIGATING) || (internal_state_ == NAV_HOLD_POSITION) )
+                if (internal_state_ == NAV_NAVIGATING)
                 {
                     set_dubin_velocity( &goal.dubin);
                 }
