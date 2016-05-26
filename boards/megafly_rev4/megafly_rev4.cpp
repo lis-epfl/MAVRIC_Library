@@ -144,6 +144,7 @@ bool Megafly_rev4::init(void)
     // -------------------------------------------------------------------------
     // Init stream for USB debug stream TODO: remove
     p_uart3 = &uart3;
+    //p_uart_usb = &uart_usb;
     dbg_stream_.get = NULL;
     dbg_stream_.put = &serial2stream;
     dbg_stream_.flush = NULL;
