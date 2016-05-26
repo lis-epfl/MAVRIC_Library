@@ -230,15 +230,15 @@ public:
  */
     mav_mode_t get_mode_from_source(mav_mode_t mode_current);
 
-/**
- * \brief   Returns the value of the mode from the remote
- *
- * \param   manual_control          The pointer to the manual_control structure
- * \param   mode_current            The current mode of the MAV
- *
- * \return  The value of the mode
- */
-mav_mode_t manual_control_get_mode_from_remote(mav_mode_t mode_current);
+	/**
+	 * \brief   Returns the value of the mode from the remote
+	 *
+	 * \param   manual_control          The pointer to the manual_control structure
+	 * \param   mode_current            The current mode of the MAV
+	 *
+	 * \return  The value of the mode
+	 */
+	mav_mode_t manual_control_get_mode_from_remote(mav_mode_t mode_current);
 
     /**
      * \brief   Sets the internal state of the joystick

@@ -467,6 +467,16 @@ void remote_get_velocity_vector(remote_t* remote, control_command_t* controls)
     controls->tvel[Y]   = 10.0f * remote_get_roll(remote);
     controls->tvel[Z]   = - 1.5f * remote_get_throttle(remote);
     controls->rpy[YAW]  = remote_get_yaw(remote);
+
+    /*print_util_dbg_print("vel cmd\r\n");
+    print_util_dbg_print("rVx ");
+    print_util_dbg_putfloat(controls->tvel[X],3);
+    print_util_dbg_print("  rVy ");
+	print_util_dbg_putfloat(controls->tvel[Y],3);
+	print_util_dbg_print("  rVz ");
+	print_util_dbg_putfloat(controls->tvel[Z],3);
+	print_util_dbg_print("  rYaw ");
+	print_util_dbg_putfloat(controls->rpy[YAW],3);*/
 }
 
 void remote_get_rate_command_wing(remote_t* remote, control_command_t* controls)

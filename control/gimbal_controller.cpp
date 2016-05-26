@@ -127,7 +127,7 @@ bool Gimbal_controller::update(Gimbal_controller *gimbal_controller)
 	att_mimick_plane.rpy[2] = 0.0f;
 
 	//apply the angle correction only if the quad as a given forward velocity
-	if(semilocal_vel[0] < 0.4f) //0.4m/s
+	if(semilocal_vel[0] < 0.3f) //0.4m/s
 		att_mimick_plane.rpy[1] = 0.0f;
 
 	/*print_util_dbg_print("semilocal_vel\r\n");
@@ -145,7 +145,7 @@ bool Gimbal_controller::update(Gimbal_controller *gimbal_controller)
     //Clip the desired value and set them as commands value (no controller here)
     for (int i = 0; i < 3; i++)
     {
-    	gimbal_controller->attitude_command_desired_.rpy[i] = att_mimick_plane.rpy[i] + att_user_head.rpy[i];
+    	gimbal_controller->attitude_command_desired_.rpy[i] = att_mimick_plane.rpy[i]*0.6f + att_user_head.rpy[i];
 
         if (gimbal_controller->attitude_command_desired_.rpy[i] < gimbal_controller->attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i])
         	gimbal_controller->attitude_output_.rpy[i] = gimbal_controller->attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i];
