@@ -155,7 +155,7 @@ bool LEQuad::init_main_task(void)
 
     // DOWN link
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats, &scheduler);
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats_all, &scheduler);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  50000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats_all, &scheduler);
 
     return ret;
 }
@@ -212,8 +212,8 @@ bool LEQuad::init_data_logging(void)
     ret &= data_logging_telemetry_init(&data_logging_stat, mavlink_communication.p_message_handler());
 
     // Task
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_continuous);
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_stat);
+    // ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_continuous);
+    // ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_stat);
 
     return ret;
 }
