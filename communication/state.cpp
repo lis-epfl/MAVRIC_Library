@@ -141,6 +141,9 @@ bool State::set_armed(bool arming)
         print_util_dbg_print("[STATE]: arming\r\n");
         mav_mode_.set_armed_flag(true);
 
+        //resetting custom flag
+        mav_mode_custom = Mav_mode::CUSTOM_BASE_MODE;
+
         // switch state to active
         switch_to_active_mode(&mav_state_);
     }

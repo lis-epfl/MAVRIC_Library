@@ -260,6 +260,13 @@ private:
     void send_nav_time(const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
+    /**
+     * \brief   Initialise the position hold mode in Dubin navigation
+     *
+     * \param   local_pos               The position where the position will be held
+     */
+    void dubin_hold_init(local_position_t local_pos);
+
     /************************************************
      *      static member functions (callbacks)     *
      ************************************************/
