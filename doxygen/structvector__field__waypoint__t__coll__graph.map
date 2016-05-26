@@ -4,16 +4,16 @@
 <area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="80,255,192,375"/>
 <area shape="rect" id="node11" href="$structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="221,546,379,683"/>
 <area shape="rect" id="node6" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="77,6,195,143"/>
-<area shape="rect" id="node20" href="$classNavigation.html" title="The navigation structure." alt="" coords="936,931,1077,1224"/>
+<area shape="rect" id="node20" href="$classNavigation.html" title="The navigation structure." alt="" coords="936,922,1093,1233"/>
 <area shape="rect" id="node13" href="$structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="237,211,363,418"/>
 <area shape="rect" id="node16" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="469,983,603,1172"/>
 <area shape="rect" id="node18" href="$structMavlink__waypoint__handler_1_1waypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="627,948,912,1207"/>
-<area shape="rect" id="node23" href="$structquat__t.html" title="Unit quaternion." alt="" coords="887,563,945,666"/>
-<area shape="rect" id="node25" href="$structpid__controller__t.html" title="PID controller." alt="" coords="969,494,1097,735"/>
-<area shape="rect" id="node27" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="917,255,1021,375"/>
-<area shape="rect" id="node29" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="1045,246,1149,383"/>
-<area shape="rect" id="node31" href="$classState.html" title="The MAV state." alt="" coords="1101,827,1280,1328"/>
-<area shape="rect" id="node33" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1139,537,1221,692"/>
-<area shape="rect" id="node35" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="1245,485,1427,744"/>
+<area shape="rect" id="node23" href="$structquat__t.html" title="Unit quaternion." alt="" coords="899,563,957,666"/>
+<area shape="rect" id="node25" href="$structpid__controller__t.html" title="PID controller." alt="" coords="981,494,1109,735"/>
+<area shape="rect" id="node27" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="929,255,1033,375"/>
+<area shape="rect" id="node29" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="1057,246,1161,383"/>
+<area shape="rect" id="node31" href="$classState.html" title="The MAV state." alt="" coords="1117,827,1296,1328"/>
+<area shape="rect" id="node33" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1153,537,1236,692"/>
+<area shape="rect" id="node35" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="1260,485,1441,744"/>
 <area shape="rect" id="node37" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="657,1517,799,1619"/>
 </map>
