@@ -495,6 +495,13 @@ dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], cons
     if (!init)
     {
         print_util_dbg_print("No possible solutions...\r\n");
+        for (i = 0; i < 3; ++i)
+        {
+            out.circle_center_1[i] = wp1[i];
+            out.circle_center_2[i] = wp1[i];
+            out.tangent_point_1[i] = wp1[i] - r1[i];
+            out.tangent_point_2[i] = wp1[i] - sense_2*r1[i];
+        }
     }
 
     return out;
