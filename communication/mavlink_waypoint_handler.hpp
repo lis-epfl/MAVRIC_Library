@@ -187,7 +187,7 @@ private:
     bool critical_next_state_;                                   ///< Flag to change critical state in its dedicated state machine
     bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
 
-    mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution    
+    Mav_mode last_mode_;                                         ///< The mode of the MAV to have a memory of its evolution
     const ahrs_t& ahrs_;                                         ///< The pointer to the attitude estimation structure
     const Manual_control& manual_control_;                       ///< The pointer to the manual_control structure
     conf_t config_;
@@ -259,6 +259,13 @@ private:
      */
     void send_nav_time(const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
+
+    /**
+     * \brief   Initialise the position hold mode in Dubin navigation
+     *
+     * \param   local_pos               The position where the position will be held
+     */
+    void dubin_hold_init(local_position_t local_pos);
 
     /************************************************
      *      static member functions (callbacks)     *

@@ -67,10 +67,10 @@ public:
      */
     struct conf_t
     {
-        mav_mode_t mav_mode;                                ///< The value of the MAV mode
+        Mav_mode mav_mode;                                  ///< The value of the MAV mode (HIL and armed flags are ignored)
         mav_state_t mav_state;                              ///< The value of the MAV state
 
-        mav_mode_custom_t mav_mode_custom;                  ///< The value of the custom_mode
+        Mav_mode::custom_mode_t mav_mode_custom;            ///< The value of the custom_mode
 
         int32_t simulation_mode;                            ///< The value of the simulation_mode (0: real, 1: simulation)
         uint8_t autopilot_type;                             ///< The type of the autopilot (MAV_TYPE enum in common.h)
@@ -144,7 +144,7 @@ public:
      *
      * \return                  armed
      */
-    inline bool is_armed() const {return ((mav_mode_ & MAV_MODE_FLAG_SAFETY_ARMED) == MAV_MODE_FLAG_SAFETY_ARMED);};
+    inline bool is_armed() const {return mav_mode_.is_armed();};
 
 
     /**
@@ -152,7 +152,7 @@ public:
     *
     * \return                  manual
     */
-    inline bool is_manual() const {return ((mav_mode_ & MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED);};
+    inline bool is_manual() const {return mav_mode_.is_manual();};
 
 
     /**
@@ -160,7 +160,7 @@ public:
     *
     * \return                  hil
     */
-    inline bool is_hil() const {return ((mav_mode_ & MAV_MODE_FLAG_HIL_ENABLED) == MAV_MODE_FLAG_HIL_ENABLED);};
+    inline bool is_hil() const {return mav_mode_.is_hil();};
 
 
     /**
@@ -168,7 +168,7 @@ public:
     *
     * \return                  stabilize
     */
-    inline bool is_stabilize() const {return ((mav_mode_ & MAV_MODE_FLAG_STABILIZE_ENABLED) == MAV_MODE_FLAG_STABILIZE_ENABLED);};
+    inline bool is_stabilize() const {return mav_mode_.is_stabilize();};
 
 
     /**
@@ -176,7 +176,7 @@ public:
      *
      * \return                  guided
      */
-    inline bool is_guided() const {return ((mav_mode_ & MAV_MODE_FLAG_GUIDED_ENABLED) == MAV_MODE_FLAG_GUIDED_ENABLED);};
+    inline bool is_guided() const {return mav_mode_.is_guided();};
 
 
     /**
@@ -184,14 +184,14 @@ public:
      *
      * \return                  auto
      */
-    inline bool is_auto() const {return ((mav_mode_ & MAV_MODE_FLAG_AUTO_ENABLED) == MAV_MODE_FLAG_AUTO_ENABLED);};
+    inline bool is_auto() const {return mav_mode_.is_auto();};
 
     /**
      * \brief                   returns whether in custom mode
      *
      * \return                  custom
      */
-    inline bool is_custom() const {return ((mav_mode_ & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) == MAV_MODE_FLAG_CUSTOM_MODE_ENABLED);};
+    inline bool is_custom() const {return mav_mode_.is_custom();};
 
 
     /**
@@ -199,7 +199,7 @@ public:
      *
      * \return                  test
      */
-    inline bool is_test() const {return ((mav_mode_ & MAV_MODE_FLAG_TEST_ENABLED) == MAV_MODE_FLAG_TEST_ENABLED);};
+    inline bool is_test() const {return mav_mode_.is_test();};
 
 
     /**
@@ -207,7 +207,7 @@ public:
      *
      * \return                  mav_mode
      */
-    inline mav_mode_t mav_mode() const {return mav_mode_;};
+    inline Mav_mode mav_mode() const {return mav_mode_;};
 
 
     /**
@@ -224,15 +224,17 @@ public:
      */
     static inline conf_t wing_default_config();
 
-    friend bool state_telemetry_set_mode(State* state, mav_mode_t mav_mode);
+    friend bool state_telemetry_set_mode(State* state, Mav_mode mav_mode);
+
     friend mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_command_long_t* packet);
 
 // TODO:
 // All this should be private
 
-    mav_state_t mav_state_;                              ///< The value of the MAV state
-    mav_mode_t mav_mode_;                               ///< The value of the MAV mode
-    mav_mode_custom_t mav_mode_custom;                  ///< The value of the custom_mode
+    mav_state_t mav_state_;                             ///< The value of the MAV state
+    Mav_mode mav_mode_;                                 ///< The value of the MAV mode
+    Mav_mode::custom_mode_t mav_mode_custom;            ///< The value of the custom_mode
+
 
     uint8_t autopilot_type;                             ///< The type of the autopilot (MAV_TYPE enum in common.h)
     uint8_t autopilot_name;                             ///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
@@ -271,9 +273,9 @@ State::conf_t State::default_config()
 {
     conf_t conf                  = {};
 
-    conf.mav_mode                = MAV_MODE_SAFE;
+    conf.mav_mode                = Mav_mode::ATTITUDE;
     conf.mav_state               = MAV_STATE_BOOT;
-    conf.simulation_mode         = HIL_OFF;
+    conf.simulation_mode         = false;
     conf.autopilot_type          = MAV_TYPE_QUADROTOR;
     conf.autopilot_name          = MAV_AUTOPILOT_GENERIC_MISSION_FULL; // TODO: add MAV_AUTOPILOT_MAVRIC to std mavlink and support waypoint commands in QGC for this autopilot type
     conf.sensor_present          = 0b1111110000100111;
@@ -293,9 +295,9 @@ State::conf_t State::wing_default_config()
 {
     conf_t conf            = {};
 
-    conf.mav_mode                = MAV_MODE_SAFE;
+    conf.mav_mode                = Mav_mode::ATTITUDE;
     conf.mav_state               = MAV_STATE_BOOT;
-    conf.simulation_mode         = HIL_OFF;
+    conf.simulation_mode         = false;
     conf.autopilot_type          = MAV_TYPE_FIXED_WING;
     conf.autopilot_name          = MAV_AUTOPILOT_GENERIC_MISSION_FULL; // TODO: add MAV_AUTOPILOT_MAVRIC to std mavlink and support waypoint commands in QGC for this autopilot type
     conf.sensor_present          = 0b1111110000100111;

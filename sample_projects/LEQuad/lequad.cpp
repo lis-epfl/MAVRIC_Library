@@ -168,15 +168,15 @@ bool LEQuad::init_state(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= state_telemetry_init(&state, mavlink_communication.p_message_handler());
+    ret &= state_telemetry_init(&state_machine, mavlink_communication.p_message_handler());
 
     // DOWN telemetry
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_HEARTBEAT,  1000000, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_heartbeat, &state);
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SYS_STATUS, 1000000, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_status,    &state);
 
     // Data logging
-    ret &= data_logging_stat.add_field((uint32_t*)&state.mav_state_, "mav_state");
-    ret &= data_logging_stat.add_field(&state.mav_mode_,             "mav_mode");
+    ret &= data_logging_stat.add_field((uint32_t*)&state.mav_state_,   "mav_state");
+    ret &= data_logging_stat.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
 
     // Task
     ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);
@@ -533,84 +533,74 @@ bool LEQuad::main_task(void)
     ahrs_ekf.update();
     position_estimation.update();
 
+    bool failsafe = false;
+
     // Do control
     if (state.is_armed())
     {
-        if (state.is_auto())
+        switch (state.mav_mode().ctrl_mode())
         {
-            controls = controls_nav;
-            controls.control_mode = VELOCITY_COMMAND_MODE;
+            case Mav_mode::GPS_NAV:
+                controls = controls_nav;
+                controls.control_mode = VELOCITY_COMMAND_MODE;
 
-            // if no waypoints are set, we do position hold therefore the yaw mode is absolute
-            if (((state.nav_plan_active && (navigation.internal_state_ == Navigation::NAV_NAVIGATING)) || (navigation.internal_state_ == Navigation::NAV_STOP_THERE))
-              || ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
-            {
+                // if no waypoints are set, we do position hold therefore the yaw mode is absolute
+                if ((((state.nav_plan_active || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN)) && (navigation.internal_state_ == Navigation::NAV_NAVIGATING)) || (navigation.internal_state_ == Navigation::NAV_STOP_THERE))
+              	   || ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
+            	{
+                    controls.yaw_mode = YAW_RELATIVE;
+                }
+                else
+                {
+                    controls.yaw_mode = YAW_ABSOLUTE;
+                }
+                break;
+        
+            case Mav_mode::POSITION_HOLD:
+                controls = controls_nav;
+                controls.control_mode = VELOCITY_COMMAND_MODE;
+
+                if ( ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))  || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
+                {
+                    controls.yaw_mode = YAW_RELATIVE;
+                }
+                else
+                {
+                    controls.yaw_mode = YAW_ABSOLUTE;
+                }
+                break;
+
+            case Mav_mode::VELOCITY:
+                manual_control.get_velocity_vector(&controls);
+                controls.control_mode = VELOCITY_COMMAND_MODE;
                 controls.yaw_mode = YAW_RELATIVE;
-            }
-            else
-            {
-                controls.yaw_mode = YAW_ABSOLUTE;
-            }
+                break;
 
-            //if (state.in_the_air || navigation.auto_takeoff)
-            if (true)//navigation.internal_state_ > NAV_ON_GND)
-            {
-                stabilisation_copter_cascade_stabilise(&stabilisation_copter);
-                servos_mix_quadcopter_diag_update(&servo_mix);
-            }
-        }
-        else if (state.is_guided())
-        {
-            controls = controls_nav;
-            controls.control_mode = VELOCITY_COMMAND_MODE;
-
-            if ( ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))  || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
-            {
+            case Mav_mode::ATTITUDE:
+                manual_control.get_control_command(&controls);
+                controls.control_mode = ATTITUDE_COMMAND_MODE;
                 controls.yaw_mode = YAW_RELATIVE;
-            }
-            else
-            {
-                controls.yaw_mode = YAW_ABSOLUTE;
-            }
+                break;
 
-            //if (state.in_the_air || navigation.auto_takeoff)
-            if (true)//navigation.internal_state_ > NAV_ON_GND)
-            {
-                stabilisation_copter_cascade_stabilise(&stabilisation_copter);
-                servos_mix_quadcopter_diag_update(&servo_mix);
-            }
+            //case Mav_mode::RATE:
+            //    manual_control.get_rate_command(&controls);
+            //    controls.control_mode = RATE_COMMAND_MODE;
+            //    break;
+
+            default:
+                failsafe = true;    // undefined behaviour -> failsafe
         }
-        else if (state.is_stabilize())
-        {
-            manual_control.get_velocity_vector(&controls);
+    }
+    else    // !state.is_armed()
+    {
+        failsafe = true;    // undefined behaviour -> failsafe
+    }
 
-            controls.control_mode = VELOCITY_COMMAND_MODE;
-            controls.yaw_mode = YAW_RELATIVE;
-
-            //if (state.in_the_air || navigation.auto_takeoff)
-            if (true)//navigation.internal_state_ > NAV_ON_GND)
-            {
-                stabilisation_copter_cascade_stabilise(&stabilisation_copter);
-                servos_mix_quadcopter_diag_update(&servo_mix);
-            }
-        }
-        else if (state.is_manual())
-        {
-            manual_control.get_control_command(&controls);
-
-            controls.control_mode = ATTITUDE_COMMAND_MODE;
-            controls.yaw_mode = YAW_RELATIVE;
-
-            stabilisation_copter_cascade_stabilise(&stabilisation_copter);
-            servos_mix_quadcopter_diag_update(&servo_mix);
-        }
-        else
-        {
-            servo_0.failsafe();
-            servo_1.failsafe();
-            servo_2.failsafe();
-            servo_3.failsafe();
-        }
+    // if behaviour defined, execute controller and mix; otherwise: set servos to failsafe
+    if(!failsafe)
+    {
+        stabilisation_copter_cascade_stabilise(&stabilisation_copter);
+        servos_mix_quadcopter_diag_update(&servo_mix);
     }
     else
     {
