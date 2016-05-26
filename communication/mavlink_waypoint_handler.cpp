@@ -888,7 +888,6 @@ void Mavlink_waypoint_handler::auto_landing_handler()
                 print_util_dbg_print("Cust: descent to gnd");
                 state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
-                waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
                 waypoint_hold_coordinates.waypoint.pos[Z] = 0.0f;
                 navigation_.alt_lpf = position_estimation_.local_position.pos[2];
                 break;
