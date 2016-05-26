@@ -717,6 +717,7 @@ bool Mavlink_waypoint_handler::take_off_handler()
             if (!state_.nav_plan_active)
             {
                 waypoint_coordinates_ = waypoint_hold_coordinates;
+                waypoint_coordinates_.radius = 0.0f;
             }
 
             print_util_dbg_print("Automatic take-off finished.\r\n");
@@ -1287,7 +1288,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
         float margin = 0.0f;
-        if (current_waypoint_.command == MAV_CMD_NAV_LAND)
+        if ((current_waypoint_.command == MAV_CMD_NAV_LAND) || (current_waypoint_.param2 == 0.0f))
         //we need to add that since Landing waypoint doesn't have the param2
         //=> the param2 = 0 => never passing next condition
         {
@@ -1377,7 +1378,10 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
                 // float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
                 float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(position_estimation_.vel[Y], position_estimation_.vel[X]));
 
-                if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) || (current_waypoint_.command == MAV_CMD_NAV_LAND) ||(navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) )
+                if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) ||
+                    (current_waypoint_.command == MAV_CMD_NAV_LAND) ||
+                    (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) ||
+                    (current_waypoint_.param2 == 0.0f) )
                 {
                     print_util_dbg_print("Autocontinue towards waypoint Nr");
                     print_util_dbg_print_num(current_waypoint_index_,10);
@@ -1411,6 +1415,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
         if (!hold_waypoint_set_)
         {
             hold_init(position_estimation_.local_position);
+            waypoint_coordinates_ = waypoint_hold_coordinates;
             hold_waypoint_set_ = true;
         }
     }
@@ -1564,7 +1569,7 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
     {
         case DUBIN_INIT:
             print_util_dbg_print("DUBIN_INIT\r\n");
-            if (state_.nav_plan_active)
+            if (state_.nav_plan_active && (navigation_.goal.radius >= navigation_.minimal_radius))
             {
                 init_radius = maths_f_abs(navigation_.goal.radius);
             }
@@ -1599,13 +1604,23 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
             {
                 vectors_normalize(rel_pos,rel_pos_norm);
 
-                dir_final[X] = -rel_pos_norm[Y]*waypoint_next_->radius;
-                dir_final[Y] = rel_pos_norm[X]*waypoint_next_->radius;
+                float end_radius;
+                if (waypoint_next_->radius < navigation_.minimal_radius)
+                {
+                    end_radius = navigation_.minimal_radius;
+                }
+                else
+                {
+                    end_radius = waypoint_next_->radius;
+                }
+
+                dir_final[X] = -rel_pos_norm[Y]*end_radius;
+                dir_final[Y] = rel_pos_norm[X]*end_radius;
                 dir_final[Z] = 0.0f;
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    pos_goal[i] = waypoint_next_->waypoint.pos[i] + rel_pos_norm[i]*maths_f_abs(waypoint_next_->radius);
+                    pos_goal[i] = waypoint_next_->waypoint.pos[i] + rel_pos_norm[i]*maths_f_abs(end_radius);
                 }
                 pos_goal[Z] = 0.0f;
 
@@ -1613,7 +1628,7 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
                                                     pos_goal,
                                                     dir_init,
                                                     dir_final,
-                                                    maths_sign(waypoint_next_->radius));
+                                                    maths_sign(end_radius));
 
                 navigation_.dubin_state = DUBIN_CIRCLE1;
             }
@@ -1890,10 +1905,10 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint.y = 0.0f;
     waypoint.z = navigation_.takeoff_altitude;
 
-    waypoint.param1 = 10; // Hold time in decimal seconds
-    waypoint.param2 = 2; // Acceptance radius in meters
-    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-    waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
+    waypoint.param1 = 10.0f; // Hold time in decimal seconds
+    waypoint.param2 = 0.0f; // Acceptance radius in meters
+    waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = 0.0f; // Desired yaw angle at MISSION (rotary wing)
 
     waypoint_list[0] = waypoint;
 }
