@@ -1109,7 +1109,7 @@ void Mavlink_waypoint_handler::critical_handler()
         }
     }
 
-    if (!(critical_next_state_))
+    if (!critical_next_state_)
     {
         critical_next_state_ = true;
 
@@ -1810,7 +1810,7 @@ bool Mavlink_waypoint_handler::update(Mavlink_waypoint_handler* waypoint_handler
 
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
+            if (mode_local.is_guided())
             {
                 if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_LANDING))
                 {
