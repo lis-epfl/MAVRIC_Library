@@ -47,6 +47,10 @@
 #include "util/coord_conventions.h"
 #include "sensing/ahrs.h"
 #include "sensing/position_estimation.hpp"
+#include "sensing/offboard_tag_search_telemetry.hpp"
+#include "communication/mavlink_communication.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 class Mavlink_waypoint_handler_tag;
 
@@ -119,10 +123,11 @@ public:
      *
      * \param position_estimation   Central_data's position_estimation
      * \param ahrs                  Central_data's ahrs
-     * \param waypoint_handler      Central_data'a waypoint_handler
+     * \param waypoint_handler      Central_data's waypoint_handler
+     * \param mavlink_communication Central_data's mavlink_communication
      * \param config                The offboard camera configuration
      */
-    Offboard_Tag_Search(Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
+    Offboard_Tag_Search(Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
 
 
     /**
@@ -164,6 +169,8 @@ public:
 
     // Getters and setters
     const bool& is_camera_running() const;
+    bool has_camera_state_changed() const;
+    void camera_state_has_changed(bool isChanged);
     int camera_id() const;
     const int16_t& picture_count() const;
     float allowable_horizontal_tag_offset_sqr() const;
@@ -177,20 +184,30 @@ public:
     local_position_t& tag_location();
     land_on_tag_behavior_t land_on_tag_behavior() const;
     void land_on_tag_behavior(land_on_tag_behavior_t land_on_tag_behavior);
-    Position_estimation& position_estimation();
     const ahrs_t& ahrs() const;
+    Mavlink_communication& mavlink_communication();
+    const Position_estimation& position_estimation() const;
     Mavlink_waypoint_handler_tag& waypoint_handler();
+    const int offboard_threads() const;
+    const local_position_t position_at_photo(int index) const;
+    void set_position_at_photo(int index);
 protected:
     Offboard_Tag_Search();
 
-    offboard_tag_search_conf_t conf_;                   ///< The configuration of the offboard tag search object
-    bool is_camera_running_;                            ///< States whether the camera should be running
-    float last_update_us_;                              ///< Last update time in microseconds
-    int16_t picture_count_;                             ///< The count of the pictures received
-    local_position_t tag_location_;                     ///< The location of the tag in the local frame
-    land_on_tag_behavior_t land_on_tag_behavior_;       ///< The land on tag behavior enum
+    static const int offboard_threads_ = 1;                 ///< The number of threads that can be running on the offboard computer
+    local_position_t position_at_photo_[offboard_threads_]; ///< The local position when the photo was taken
+
+    offboard_tag_search_conf_t conf_;                       ///< The configuration of the offboard tag search object
+    bool is_camera_running_;                                ///< States whether the camera should be running
+    bool has_camera_state_changed_;                         ///< Boolean flag stating if the state has changed and should be send to the camera
+    float last_update_us_;                                  ///< Last update time in microseconds
+    int16_t picture_count_;                                 ///< The count of the pictures received
+    local_position_t tag_location_;                         ///< The location of the tag in the local frame
+    land_on_tag_behavior_t land_on_tag_behavior_;           ///< The land on tag behavior enum
+
     Position_estimation& position_estimation_;
     const ahrs_t& ahrs_;
+    Mavlink_communication& mavlink_communication_;
     Mavlink_waypoint_handler_tag& waypoint_handler_;
 
 };

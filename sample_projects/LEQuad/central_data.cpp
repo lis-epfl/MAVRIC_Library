@@ -83,7 +83,7 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     data_logging_stat(file2, state, config.data_logging_stat_config),
     altitude_estimation_(sonar, barometer, ahrs, altitude_),
     altitude_controller_(command.position, altitude_, command.thrust),
-    offboard_tag_search(position_estimation, ahrs, waypoint_handler, offboard_tag_search_conf),
+    offboard_tag_search(position_estimation, ahrs, waypoint_handler, raspi_mavlink_communication, offboard_tag_search_conf),
     sysid_(mavlink_communication.sysid()),
     config_(config)
 {}

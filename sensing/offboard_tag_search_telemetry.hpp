@@ -46,8 +46,9 @@
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "sensing/offboard_tag_search.hpp"
 #include "communication/mavlink_waypoint_handler_tag.hpp"
+
+class Offboard_Tag_Search;
 /**
  * \brief   Initialise the offboard camera telemetry module
  *
@@ -68,6 +69,16 @@ void offboard_tag_search_goal_location_telemetry_send(Offboard_Tag_Search* offbo
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void offboard_tag_search_telemetry_send_start_stop(const Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void offboard_tag_search_telemetry_send_start_stop(Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+
+/**
+ * \brief   Function to send the MAVLink take photo, records the current position estimation
+ *
+ * \param   index                   The index of the thread that should take the photo
+ * \param   state                   The pointer to the state structure
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
+ */
+void offboard_tag_search_telemetry_send_take_new_photo(int index, Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* OFFBOARD_TAG_SEARCH_TELEMETRY_H_ */
