@@ -47,7 +47,10 @@
 #include "util/coord_conventions.h"
 #include "sensing/ahrs.h"
 #include "sensing/position_estimation.hpp"
+#include "sensing/offboard_tag_search_telemetry.hpp"
 #include "communication/mavlink_communication.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 class Mavlink_waypoint_handler_tag;
 
@@ -166,6 +169,8 @@ public:
 
     // Getters and setters
     const bool& is_camera_running() const;
+    bool has_camera_state_changed() const;
+    void camera_state_has_changed(bool isChanged);
     int camera_id() const;
     const int16_t& picture_count() const;
     float allowable_horizontal_tag_offset_sqr() const;
@@ -194,6 +199,7 @@ protected:
 
     offboard_tag_search_conf_t conf_;                       ///< The configuration of the offboard tag search object
     bool is_camera_running_;                                ///< States whether the camera should be running
+    bool has_camera_state_changed_;                         ///< Boolean flag stating if the state has changed and should be send to the camera
     float last_update_us_;                                  ///< Last update time in microseconds
     int16_t picture_count_;                                 ///< The count of the pictures received
     local_position_t tag_location_;                         ///< The location of the tag in the local frame

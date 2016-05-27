@@ -58,10 +58,10 @@ extern "C"
 }
 
 
-static Serial_usb_avr32* p_uart_usb;
+static Serial* p_uart_debug;
 uint8_t serial2stream(stream_data_t data, uint8_t byte)
 {
-    p_uart_usb->write(&byte);
+    p_uart_debug->write(&byte);
     return 0;
 }
 
@@ -128,9 +128,19 @@ bool Megafly_rev4::init(void)
     ret = uart_usb.init();
     init_success &= ret;
 
+
+    // -------------------------------------------------------------------------
+    // Init UART3
+    // -------------------------------------------------------------------------
+    ret = uart3.init();
+    print_util_dbg_init_msg("[UART3]", ret);
+    init_success &= ret;
+    time_keeper_delay_ms(50);
+
+
     // -------------------------------------------------------------------------
     // Init stream for USB debug stream TODO: remove
-    p_uart_usb = &uart_usb;
+    p_uart_debug = &uart3;
     dbg_stream_.get = NULL;
     dbg_stream_.put = &serial2stream;
     dbg_stream_.flush = NULL;
@@ -182,13 +192,7 @@ bool Megafly_rev4::init(void)
     time_keeper_delay_ms(50);
 
 
-    // -------------------------------------------------------------------------
-    // Init UART3
-    // -------------------------------------------------------------------------
-    ret = uart3.init();
-    print_util_dbg_init_msg("[UART3]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
+
 
 
     // -------------------------------------------------------------------------

@@ -54,6 +54,8 @@
 #include "control/navigation.hpp"
 #include "sensing/offboard_tag_search.hpp"
 
+class Offboard_Tag_Search;
+
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */

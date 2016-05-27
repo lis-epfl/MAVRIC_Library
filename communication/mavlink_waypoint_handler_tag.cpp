@@ -41,6 +41,7 @@
 
 
 #include "communication/mavlink_waypoint_handler_tag.hpp"
+#include "sensing/offboard_tag_search.hpp"
 #include <cstdlib>
 #include "hal/common/time_keeper.hpp"
 

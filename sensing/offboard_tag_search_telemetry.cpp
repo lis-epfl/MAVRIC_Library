@@ -43,6 +43,7 @@
 
 //#include "communication/state_telemetry.hpp"
 #include "sensing/offboard_tag_search_telemetry.hpp"
+#include "sensing/offboard_tag_search.hpp"
 
 #include <cstdlib>
 
@@ -198,7 +199,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
         // Update recorded time
         offboard_tag_search.update_last_update_us();
     }
-    
+
     // Send message to take new photo
     mavlink_message_t msg;
     offboard_tag_search_telemetry_send_take_new_photo(thread_index, &offboard_tag_search, &(offboard_tag_search.mavlink_communication().mavlink_stream()), &msg);
@@ -278,34 +279,40 @@ void offboard_tag_search_telemetry_send_take_new_photo(int index, Offboard_Tag_S
 
 void offboard_tag_search_telemetry_send_start_stop(Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    int is_camera_running = -1;
-    // Switch boolean to int as mavlink sends ints/flaots
-    switch(camera->is_camera_running())
+    // Only send message if the change is new
+    if (camera->has_camera_state_changed())
     {
-        case true: // Send 1 message per thread to take photo and start
-            is_camera_running = 1;
-            // Send thread message
-            for (int i = 0; i < camera->offboard_threads(); i++)
-            {
-                offboard_tag_search_telemetry_send_take_new_photo(i, camera, mavlink_stream, msg);
-            }
-            break;
-        case false: // Send message to stop
-            is_camera_running = 0;
-            mavlink_msg_command_long_pack(  mavlink_stream->sysid(),        // system_id
-                                            mavlink_stream->compid(),       // component_id
-                                            msg,                            // mavlink_msg
-                                            0,                              // target_system
-                                            0,                              // target_component
-                                            MAV_CMD_DO_CONTROL_VIDEO,       // command
-                                            0,                              // confirmation
-                                            camera->camera_id(),            // param1
-                                            camera->is_camera_running(),    // param2
-                                            0,                              // param3
-                                            0,                              // param4
-                                            0,                              // param5
-                                            0,                              // param6
-                                            0);                             // param7
-            break;
+        camera->camera_state_has_changed(false);
+
+        int is_camera_running = -1;
+        // Switch boolean to int as mavlink sends ints/flaots
+        switch(camera->is_camera_running())
+        {
+            case true: // Send 1 message per thread to take photo and start
+                is_camera_running = 1;
+                // Send thread message
+                for (int i = 0; i < camera->offboard_threads(); i++)
+                {
+                    offboard_tag_search_telemetry_send_take_new_photo(i, camera, mavlink_stream, msg);
+                }
+                break;
+            case false: // Send message to stop
+                is_camera_running = 0;
+                mavlink_msg_command_long_pack(  mavlink_stream->sysid(),        // system_id
+                                                mavlink_stream->compid(),       // component_id
+                                                msg,                            // mavlink_msg
+                                                0,                              // target_system
+                                                0,                              // target_component
+                                                MAV_CMD_DO_CONTROL_VIDEO,       // command
+                                                0,                              // confirmation
+                                                camera->camera_id(),            // param1
+                                                camera->is_camera_running(),    // param2
+                                                0,                              // param3
+                                                0,                              // param4
+                                                0,                              // param5
+                                                0,                              // param6
+                                                0);                             // param7
+                break;
+        }
     }
 }

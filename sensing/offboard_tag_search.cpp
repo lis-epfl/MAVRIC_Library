@@ -57,6 +57,7 @@ extern "C"
 Offboard_Tag_Search::Offboard_Tag_Search(Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config):
     conf_(config),
     is_camera_running_(config.initial_camera_state),
+    has_camera_state_changed_(true),
     last_update_us_(time_keeper_get_us()),
     position_estimation_(position_estimation),
     ahrs_(ahrs),
@@ -81,8 +82,12 @@ Offboard_Tag_Search::Offboard_Tag_Search(Position_estimation& position_estimatio
 bool Offboard_Tag_Search::update(const Scheduler* scheduler, bool camera_state)
 {
     bool success = true;
-    
+
     // Switch camera on and off
+    if (camera_state != is_camera_running_)
+    {
+        has_camera_state_changed_ = true;
+    }
     is_camera_running_ = camera_state;
 
     // Update timing
@@ -90,9 +95,13 @@ bool Offboard_Tag_Search::update(const Scheduler* scheduler, bool camera_state)
     //dt_s_           = (float)(t - last_update_us_) / 1000000.0f;
     last_update_us_ = t;
 
-    // Send the message now
-    Scheduler_task* camera_send_message_task = scheduler->get_task_by_id(MAVLINK_MSG_ID_COMMAND_LONG);
-    camera_send_message_task->run_now();
+    // Send the message now if needed
+    if (has_camera_state_changed_)
+    {
+        mavlink_message_t msg;
+        offboard_tag_search_telemetry_send_start_stop(this, &(mavlink_communication().mavlink_stream()), &msg);
+        mavlink_communication().mavlink_stream().send(&msg);
+    }
 
     return success;
 }
@@ -137,6 +146,16 @@ const float& Offboard_Tag_Search::last_update_us(void) const
 const bool& Offboard_Tag_Search::is_camera_running() const
 {
     return is_camera_running_;
+}
+
+bool Offboard_Tag_Search::has_camera_state_changed() const
+{
+    return has_camera_state_changed_;
+}
+
+void Offboard_Tag_Search::camera_state_has_changed(bool isChanged)
+{
+    has_camera_state_changed_ = isChanged;
 }
 
 int Offboard_Tag_Search::camera_id() const

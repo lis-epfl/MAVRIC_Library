@@ -60,7 +60,7 @@
 #include "sensing/position_estimation.hpp"
 #include "sensing/position_estimation_telemetry.hpp"
 #include "sensing/offboard_tag_search_telemetry.hpp"
- 
+
 #include "drivers/barometer_telemetry.hpp"
 #include "drivers/gps_telemetry.hpp"
 
@@ -415,7 +415,7 @@ bool mavlink_telemetry_init(Central_data* central_data)
 
     Mavlink_communication& mavlink_communication = central_data->mavlink_communication;
     Mavlink_communication& raspi_mavlink_communication = central_data->raspi_mavlink_communication;
-    
+
     stabiliser_t* stabiliser_show = &central_data->stabilisation_copter.stabiliser_stack.rate_stabiliser;
 
     init_success &= mavlink_communication.add_msg_send(1000000,  Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_heartbeat,                                &central_data->state,                   MAVLINK_MSG_ID_HEARTBEAT);   // ID 0
@@ -448,8 +448,8 @@ bool mavlink_telemetry_init(Central_data* central_data)
     init_success &= mavlink_communication.add_msg_send(100000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&altitude_estimation_telemetry_send,                            &central_data->altitude_estimation_,    MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV           );// ID 64
 
     init_success &= mavlink_communication.add_msg_send(250000,   Scheduler_task::RUN_REGULAR,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_goal_location_telemetry_send,                  &central_data->offboard_tag_search,                           MAVLINK_MSG_ID_DEBUG_VECT           );// ID 250
-    init_success &= raspi_mavlink_communication.add_msg_send(1000000,   Scheduler_task::RUN_ONCE,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_telemetry_send_start_stop,                 &central_data->offboard_tag_search,         MAVLINK_MSG_ID_COMMAND_LONG           );// ID 76
-    
+    //init_success &= raspi_mavlink_communication.add_msg_send(1000000,   Scheduler_task::RUN_ONCE,  Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::PRIORITY_NORMAL, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_telemetry_send_start_stop,                 &central_data->offboard_tag_search,         MAVLINK_MSG_ID_COMMAND_LONG           );// ID 76
+
     init_success &= central_data->mavlink_communication.scheduler().sort_tasks();
 
     print_util_dbg_init_msg("[TELEMETRY]", init_success);
