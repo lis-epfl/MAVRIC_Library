@@ -125,6 +125,7 @@ public:
 
 
 
+
 private:
     /**
      * \brief Detect the point of intersection of two segment and return the smallest distance between them

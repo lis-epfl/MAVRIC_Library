@@ -168,7 +168,7 @@ Fence_CAS::~Fence_CAS(void)
 }
 bool Fence_CAS::update(void)
 {
-	// Initializaion of variables
+	// Initialization of variables
 	bool angle_detected=false;									// Flag to reset the ROLL command
 	static int RepFence[MAX_OUTFENCE];
 	for (int k=0;k<3;k++)									// Reset the repulsion command
@@ -198,8 +198,11 @@ bool Fence_CAS::update(void)
 //	this->coef_roll=1.0f;
 //	this->tahead=0.0f; //
 	//link the variables;
-	this->tahead = 3* this->comfort;
-
+//	this->tahead = 3* this->comfort;
+	if(this->count==20)
+	{
+		print_util_dbg_print("20 repulsions - new set of parameters\n");
+	}
 
 
 	int interp_type = 2;						// Define the interpolation type of the repulsion
@@ -208,6 +211,7 @@ bool Fence_CAS::update(void)
 	{
 		S[i]= C[i] + Vnorm[i] * (this->r_pz/*protection zone*/ +SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + this->tahead * Vval /*d_ahead*/);
 	}
+	static float oldrep;
 
 	/*FOR EACH FENCE*/
 	for(int n=0;n<MAX_OUTFENCE+1;n++)
@@ -217,9 +221,8 @@ bool Fence_CAS::update(void)
 		float* CurAngle_list = waypoint_handler->all_fence_angles[n];
 
 		float dist[nbFencePoints];	// Table of distance to each fence
-		float fencerep = 0.0f;		// Repulsion from fences
-		float pointrep = 0.0f;		// Repulsion from angles
-
+		float fencerep=0.0f;		// Repulsion from fences
+		float pointrep=0.0f;		// Repulsion from angles
 
 		for (int i=0; i < nbFencePoints; i++) 	// loop through all pair of fence points
 		{
@@ -364,6 +367,12 @@ bool Fence_CAS::update(void)
 	{
 		this->repulsion[1]=-this->max_vel_y;
 	}
+	if(oldrep!=this->repulsion[1] && this->repulsion[1]==0)
+	{
+		this->count++;
+	}
+
+	oldrep = this->repulsion[1];
 	// MATLAB LOG
 //	this->count++;
 //	if(this->count==100)
