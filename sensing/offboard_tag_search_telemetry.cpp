@@ -66,6 +66,7 @@ extern "C"
  * \param   msg                 The received MAVLink message structure
  */
 static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard_Tag_Search& offboard_tag_search, mavlink_command_long_t* packet);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -83,7 +84,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
     /*
      * The incoming packet is of this format:
      * param1: camera number
-     * param2: camera status
+     * param2: thread index
      * param3: tag horizontal location in pixels, positive is right
      * param4: tag vertical location in pixels, positive is down
      * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000 for unknown
@@ -106,7 +107,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
     }
     else // Get drone height from the local position, drone height tells you the pixel dimensions on the ground, +z is down
     {
-       drone_height = offboard_tag_search.position_estimation().local_position.pos[2];
+       drone_height = offboard_tag_search.position_at_photo(packet->param2).pos[2];
     }
 
     // Get tag location in m
@@ -179,8 +180,8 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
     float drone_y_offset = v_new_local_dir[1];
 
     // Get local tag position from drone position and offset
-    float tag_x_pos = offboard_tag_search.position_estimation().local_position.pos[0] + drone_x_offset;
-    float tag_y_pos = offboard_tag_search.position_estimation().local_position.pos[1] + drone_y_offset;
+    float tag_x_pos = offboard_tag_search.position_at_photo(packet->param2).pos[0] + drone_x_offset;
+    float tag_y_pos = offboard_tag_search.position_at_photo(packet->param2).pos[1] + drone_y_offset;
 
     // Set hold position
     offboard_tag_search.tag_location().pos[0] = tag_x_pos;
@@ -189,6 +190,11 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
 
     // Update recorded time
     offboard_tag_search.update_last_update_us();
+
+    // Send message to take new photo
+    mavlink_message_t msg;
+    offboard_tag_search_telemetry_send_take_new_photo(packet->param2, &offboard_tag_search, &(offboard_tag_search.mavlink_communication().mavlink_stream()), &msg);
+    offboard_tag_search.mavlink_communication().mavlink_stream().send(&msg);
 
     result = MAV_RESULT_ACCEPTED;
     return result;
@@ -240,31 +246,58 @@ void offboard_tag_search_goal_location_telemetry_send(Offboard_Tag_Search* offbo
                                 offboard_tag_search->picture_count());
 }
 
-void offboard_tag_search_telemetry_send_start_stop(const Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void offboard_tag_search_telemetry_send_take_new_photo(int index, Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    // Send message
+    mavlink_msg_command_long_pack(  mavlink_stream->sysid(),        // system_id
+                                    mavlink_stream->compid(),       // component_id
+                                    msg,                            // mavlink_msg
+                                    0,                              // target_system
+                                    0,                              // target_component
+                                    MAV_CMD_DO_CONTROL_VIDEO,       // command
+                                    0,                              // confirmation
+                                    camera->camera_id(),            // param1
+                                    camera->is_camera_running(),    // param2
+                                    index,                          // param3
+                                    0,                              // param4
+                                    0,                              // param5
+                                    0,                              // param6
+                                    0);                             // param7
+
+    // Record position
+    camera->set_position_at_photo(index);
+}
+
+void offboard_tag_search_telemetry_send_start_stop(Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     int is_camera_running = -1;
     // Switch boolean to int as mavlink sends ints/flaots
     switch(camera->is_camera_running())
     {
-        case true:
+        case true: // Send 1 message per thread to take photo and start
             is_camera_running = 1;
+            // Send thread message
+            for (int i = 0; i < camera->offboard_threads(); i++)
+            {
+                offboard_tag_search_telemetry_send_take_new_photo(i, camera, mavlink_stream, msg);
+            }
             break;
-        case false:
+        case false: // Send message to stop
             is_camera_running = 0;
+            mavlink_msg_command_long_pack(  mavlink_stream->sysid(),        // system_id
+                                            mavlink_stream->compid(),       // component_id
+                                            msg,                            // mavlink_msg
+                                            0,                              // target_system
+                                            0,                              // target_component
+                                            MAV_CMD_DO_CONTROL_VIDEO,       // command
+                                            0,                              // confirmation
+                                            camera->camera_id(),            // param1
+                                            camera->is_camera_running(),    // param2
+                                            0,                              // param3
+                                            0,                              // param4
+                                            0,                              // param5
+                                            0,                              // param6
+                                            0);                             // param7
             break;
     }
-    mavlink_msg_command_long_pack(  mavlink_stream->sysid(),      // system_id
-                                    mavlink_stream->compid(),     // component_id
-                                    msg,                        // mavlink_msg
-                                    0,      // target_system
-                                    0,      // target_component
-                                    MAV_CMD_DO_CONTROL_VIDEO,   // command
-                                    0,     // confirmation
-                                    camera->camera_id(),    // param1
-                                    camera->is_camera_running(),          // param2
-                                    0,                          // param3
-                                    0,                          // param4
-                                    0,                          // param5
-                                    0,                          // param6
-                                    0);                         // param7
 }
