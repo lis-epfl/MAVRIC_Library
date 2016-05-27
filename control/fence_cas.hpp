@@ -85,12 +85,12 @@ public:
      */
 	float 	get_repulsion(int axis);
     /**
-     * \brief   Returns the maximal angle per update
+     * \brief   Returns the maximal y speed per update
      *
      * \return  maximal angle per update
      *
      */
-	float 	get_max_angle(void);
+	float 	get_max_vel_y(void);
     /**
      * \brief   Transform Global frame to body frame coordinates
      *
@@ -115,12 +115,13 @@ public:
 
 	float	maxsens;	///< Maximal detection distance, 		typically 10
 	float	a_max; 		///< Maximal deceleration [m/s^2], 		typically 1
-	float	r_pz; 		///< Radius of Protection Zone, 		typically 1
+	float	r_pz; 		///< Radius of Protection Zone, 		typically 0.5
 	float	comfort; 	///< [0,1] Intensity of the reaction, 	typically 0.5
-	float	tahead; 	///< [0,10] Intensity of the reaction, 	typically 2
+	float	tahead; 	///< [0,3] Intensity of the reaction, 	typically = 3*comfort
 	float	coef_roll; 	///< [0,1] Intensity of the reaction, 	typically 1
-	float	maxradius; 	///< [0,100] MAximal radius of curvature, 	typically 3
-	int count;
+	float	maxradius; 	///< [0,100] Maximal radius of curvature, 	typically 5
+	float	max_vel_y;  ///< [0,2] Maximal speed in y direction, 	typically 1
+	int 	count;
 
 
 
