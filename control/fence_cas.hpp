@@ -47,9 +47,11 @@
 #include "sensing/position_estimation.hpp"
 
 
+
 extern "C"
 {
-#include "control/control_command.h"
+//#include "control/control_command.h"
+#include "sensing/ahrs.h"
 }
 
 class Fence_CAS
@@ -62,7 +64,7 @@ public:
      * \param   position_estimation For position and speed
      * \param   controls            For resetting the roll command
      */
-	Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estimation* postion_estimation,control_command_t* controls );
+	Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estimation* postion_estimation,ahrs_t* ahrs );
 	~Fence_CAS(void);
     /**
      * \brief   Main update function - compute the repulsion with the fences
@@ -122,6 +124,7 @@ public:
 	float	maxradius; 	///< [0,100] Maximal radius of curvature, 	typically 5
 	float	max_vel_y;  ///< [0,2] Maximal speed in y direction, 	typically 1
 	int 	count;
+	float accumulator;
 
 
 
@@ -147,7 +150,8 @@ private:
 
 	Mavlink_waypoint_handler* 		waypoint_handler;			///< Waypoint handler (extract fencepoints)
 	const Position_estimation*        pos_est;                    ///< Estimated position and speed (extract the velocity and the position)
-	control_command_t* 					controls;					///< Control command (output the repulsion)
+	control_command_t* 					controls;					///< Control command (output the repulsion)ahrs_t* ahrs
+	ahrs_t* ahrs ;
 	float 								repulsion[3];				///< Repulsion vector in semi-local frame (only act on ROLL, rep[1])
 };
 
