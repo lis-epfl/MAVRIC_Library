@@ -138,7 +138,11 @@ bool joystick_init(joystick_t* joystick)
     joystick->mav_mode_desired = MAV_MODE_SAFE;
     joystick->arm_action = ARM_ACTION_NONE;
 
+    //Alex --
     joystick->commTrigger = 0;
+    joystick->updateFenceCenter = false;
+    joystick->isFenceEnabled = false;
+    //--
 
     return init_success;
 }

@@ -94,11 +94,18 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
         //--- Alex for test frequency purpose
         //print_util_dbg_putfloat((float) packet.r,10);
         //        print_util_dbg_print("\r\n");
-
         dbg_alex = (float) packet.r;
        	joystick->commTrigger = time_keeper_get_us()/1000.0f;
-        //--- Alex end
 
+       	//fence management
+       	if(joystick->channels.r > 5.0f && joystick->channels.r < 15.0f) //10
+			joystick->isFenceEnabled = true;
+       	if(joystick->channels.r > 15.0f && joystick->channels.r < 25.0f) //20
+			joystick->isFenceEnabled = false;
+       	if(joystick->channels.r > 25.0f && joystick->channels.r < 35.0f) //30 - update only X & Y, keep Z
+       		joystick->updateFenceCenter = true;
+
+        //--- Alex end
         joystick_button_mask(joystick, packet.buttons);
     }
 

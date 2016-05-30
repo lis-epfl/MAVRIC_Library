@@ -134,7 +134,10 @@ typedef struct
     joystick_channels_t channels;       ///< Channels of the joystick
     mav_mode_t mav_mode_desired;        ///< The mav mode indicated by the remote
     arm_action_t arm_action;
+
     float commTrigger;					///< Alex added, to test communication robustness
+    bool isFenceEnabled;				///< Alex added
+    bool updateFenceCenter;				///< Alex added
 } joystick_t;
 
 

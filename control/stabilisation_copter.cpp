@@ -164,7 +164,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             if (stabilisation_copter->controls->yaw_mode == YAW_COORDINATED)
             {
                 float rel_heading_coordinated;
-                if ((maths_f_abs(stabilisation_copter->pos_est->vel_bf[X]) < 0.001f) && (maths_f_abs(stabilisation_copter->pos_est->vel_bf[Y]) < 0.001f))
+                if ((maths_f_abs(stabilisation_copter->pos_est->vel_bf[X]) < 0.1f) && (maths_f_abs(stabilisation_copter->pos_est->vel_bf[Y]) < 0.1f))
                 {
                     rel_heading_coordinated = 0.0f;
                 }
