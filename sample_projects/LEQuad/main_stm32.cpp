@@ -38,135 +38,135 @@
  *
  ******************************************************************************/
 
-#include "boards/mavrimini.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
+// #include "boards/mavrimini.hpp"
+// #include "sample_projects/LEQuad/central_data.hpp"
+// #include "sample_projects/LEQuad/mavlink_telemetry.hpp"
+// #include "sample_projects/LEQuad/tasks.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-}
+// extern "C"
+// {
+// #include "util/print_util.h"
+// }
 
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
+// #include <libopencm3/stm32/rcc.h>
+// #include <libopencm3/stm32/gpio.h>
 
-int main(int argc, char** argv)
-{
-    uint8_t sysid = 0;
-    bool init_success = true;
+// int main(int argc, char** argv)
+// {
+//     uint8_t sysid = 0;
+//     bool init_success = true;
 
-    // -------------------------------------------------------------------------
-    // Create board
-    // -------------------------------------------------------------------------
-    mavrimini_conf_t board_config = mavrimini_default_config();
-    Mavrimini board(board_config);
+//     // -------------------------------------------------------------------------
+//     // Create board
+//     // -------------------------------------------------------------------------
+//     mavrimini_conf_t board_config = mavrimini_default_config();
+//     Mavrimini board(board_config);
 
-    // Board initialisation
-    init_success &= board.init();
-
-
-    // Create dummy files
-    File_dummy dummy_file1;
-    File_dummy dummy_file2;
-
-    // -------------------------------------------------------------------------
-    // Create central data
-    // -------------------------------------------------------------------------
-    // Create central data using simulated sensors
-    central_data_conf_t cd_config = central_data_default_config();
-
-    Central_data cd = Central_data(sysid,
-                                   board.imu,
-                                   board.sim.barometer(),
-                                   board.sim.gps(),
-                                   board.sim.sonar(),
-                                   board.serial_1,
-                                   // board.serial_2,
-                                   board.spektrum_satellite,
-                                   board.green_led,
-                                   board.file_flash,
-                                   board.battery,
-                                   board.servo_0,
-                                   board.servo_1,
-                                   board.servo_2,
-                                   board.servo_3,
-                                   dummy_file1,
-                                   dummy_file2,
-                                   cd_config );
-
-    // Init central data
-    init_success &= cd.init();
+//     // Board initialisation
+//     init_success &= board.init();
 
 
-    // -------------------------------------------------------------------------
-    // Create tasks and telemetry
-    // -------------------------------------------------------------------------
+//     // Create dummy files
+//     File_dummy dummy_file1;
+//     File_dummy dummy_file2;
 
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
+//     // -------------------------------------------------------------------------
+//     // Create central data
+//     // -------------------------------------------------------------------------
+//     // Create central data using simulated sensors
+//     central_data_conf_t cd_config = central_data_default_config();
 
-    // // Try to read from flash, if unsuccessful, write to flash
-    // if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
-    // {
-    //     // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-    //     init_success = false;
-    // }
+//     Central_data cd = Central_data(sysid,
+//                                    board.imu,
+//                                    board.sim.barometer(),
+//                                    board.sim.gps(),
+//                                    board.sim.sonar(),
+//                                    board.serial_1,
+//                                    // board.serial_2,
+//                                    board.spektrum_satellite,
+//                                    board.green_led,
+//                                    board.file_flash,
+//                                    board.battery,
+//                                    board.servo_0,
+//                                    board.servo_1,
+//                                    board.servo_2,
+//                                    board.servo_3,
+//                                    dummy_file1,
+//                                    dummy_file2,
+//                                    cd_config );
 
-    init_success &= mavlink_telemetry_init(&cd);
+//     // Init central data
+//     init_success &= cd.init();
 
-    cd.state.mav_state = MAV_STATE_STANDBY;
 
-    init_success &= tasks_create_tasks(&cd);
+//     // -------------------------------------------------------------------------
+//     // Create tasks and telemetry
+//     // -------------------------------------------------------------------------
 
-    print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
+//     init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
 
-    // // -------------------------------------------------------------------------
-    // // Main loop
-    // // -------------------------------------------------------------------------
+//     // // Try to read from flash, if unsuccessful, write to flash
+//     // if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
+//     // {
+//     //     // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
+//     //     init_success = false;
+//     // }
 
-    // // static uint8_t step = 0;
-    // // while(1)
-    // // {
-    // //  step += 1;
+//     init_success &= mavlink_telemetry_init(&cd);
 
-    // //  if(step%2 == 0)
-    // //  {
-    // //      // board.red_led.toggle();
-    // //  }
+//     cd.state.mav_state = MAV_STATE_STANDBY;
 
-    // //  // gpio_toggle(GPIOA, GPIO2);
-    // //  // usart_send_blocking(UART4, step);
-    // //  // usart_send(UART4, step);
-    // //  // if( step == 80 )
-    // //  // {
-    // //  //  step = 1;
-    // //  //  usart_send(UART4, '\r');
-    // //  //  usart_send(UART4, '\n');
-    // //  // }
-    // //  // usart_enable_tx_interrupt(USART2);
-    // //  board.serial_1.write(&step);
+//     init_success &= tasks_create_tasks(&cd);
 
-    // // }
+//     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
-    if (init_success)
-    {
-        board.green_led.off();
-        board.red_led.off();
-    }
+//     // // -------------------------------------------------------------------------
+//     // // Main loop
+//     // // -------------------------------------------------------------------------
 
-    while (1 == 1)
-    {
-        //gpio_toggle(GPIOC, GPIO14);
-        // print_util_dbg_print("[HELLO].\r\n");
+//     // // static uint8_t step = 0;
+//     // // while(1)
+//     // // {
+//     // //  step += 1;
 
-         //time_keeper_delay_ms(100);
+//     // //  if(step%2 == 0)
+//     // //  {
+//     // //      // board.red_led.toggle();
+//     // //  }
 
-        // board.red_led.toggle();
-        scheduler_update(&cd.scheduler);
-    }
+//     // //  // gpio_toggle(GPIOA, GPIO2);
+//     // //  // usart_send_blocking(UART4, step);
+//     // //  // usart_send(UART4, step);
+//     // //  // if( step == 80 )
+//     // //  // {
+//     // //  //  step = 1;
+//     // //  //  usart_send(UART4, '\r');
+//     // //  //  usart_send(UART4, '\n');
+//     // //  // }
+//     // //  // usart_enable_tx_interrupt(USART2);
+//     // //  board.serial_1.write(&step);
 
-    return 0;
-}
+//     // // }
+
+//     if (init_success)
+//     {
+//         board.green_led.off();
+//         board.red_led.off();
+//     }
+
+//     while (1 == 1)
+//     {
+//         //gpio_toggle(GPIOC, GPIO14);
+//         // print_util_dbg_print("[HELLO].\r\n");
+
+//          //time_keeper_delay_ms(100);
+
+//         // board.red_led.toggle();
+//         scheduler_update(&cd.scheduler);
+//     }
+
+//     return 0;
+// }
 
 
 
@@ -269,87 +269,117 @@ int main(int argc, char** argv)
 
 
 
-// #include <libopencm3/stm32/rcc.h>
-// #include <libopencm3/stm32/gpio.h>
-// #include <libopencm3/stm32/usart.h>
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/i2c.h>
 
-// static void clock_setup(void)
-// {
-//  // rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
-//  rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
+#include "hal/stm32/i2c_stm32.hpp"
 
-//  /* Enable GPIOD clock for LED & USARTs. */
-//  rcc_periph_clock_enable(RCC_GPIOC);
-//  rcc_periph_clock_enable(RCC_GPIOA);
-//  rcc_periph_clock_enable(RCC_GPIOD);
+#include "drivers/mpu_6050.hpp"
+#include "hal/common/time_keeper.hpp"
 
-//  /* Enable clocks for USART2. */
-//  rcc_periph_clock_enable(RCC_UART4);
-// }
+static void clock_setup_mini(void)
+{
+ rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
+ }
 
-// static void usart_setup(void)
-// {
-//  /* Setup UART4 parameters. */
-//  // usart_set_baudrate(UART4, 38400);
-//  usart_set_baudrate(UART4, 57600);
-//  usart_set_databits(UART4, 8);
-//  usart_set_stopbits(UART4, USART_STOPBITS_1);
-//  usart_set_mode(UART4, USART_MODE_TX);
-//  usart_set_parity(UART4, USART_PARITY_NONE);
-//  usart_set_flow_control(UART4, USART_FLOWCONTROL_NONE);
+static void clock_setup(void)
+{
+ rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
+}
 
-//  /* Finally enable the USART. */
-//  usart_enable(UART4);
-// }
+static void gpio_setup_mini(void)
+{
+ /* Setup GPIO pin GPIO14 on GPIO port D for LED. */
+ rcc_periph_clock_enable(RCC_GPIOC);
+ gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14|GPIO15);
+}
 
-// static void gpio_setup(void)
-// {
-//  /* Setup GPIO pin GPIO14 on GPIO port D for LED. */
-//  // gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
-//  gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
+static void gpio_setup(void)
+{
+ /* Setup GPIO pin GPIO14 on GPIO port D for LED. */
+ rcc_periph_clock_enable(RCC_GPIOD);
+ gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12|GPIO14|GPIO15);
+}
 
-//  /* Setup GPIO pins for UART4 transmit. */
-//  gpio_mode_setup(GPIOA, GPIO_MODE_AF,
-//                  GPIO_PUPD_NONE,
-//                  // GPIO_PUPD_PULLUP,
-//                  GPIO0);
-//  // gpio_set_output_options(GPIOA,
-//  //                      // GPIO_OTYPE_OD,
-//  //                      GPIO_OTYPE_PP,
-//  //                      GPIO_OSPEED_25MHZ,
-//  //                      // GPIO_OSPEED_100MHZ,
-//  //                      GPIO2);
 
-//  /* Setup UART4 TX pin as alternate function. */
-//  gpio_set_af(GPIOA, GPIO_AF8, GPIO0);
-// }
+int main(void)
+{
+ 
+ if (mini)
+ {
+     clock_setup_mini();
+     gpio_setup_mini();
+ }
+ else
+ {
+    clock_setup();
+    gpio_setup();
+ }
 
-// int main(void)
-// {
-//  int i, j = 0, c = 0;
+ time_keeper_init();
+  
 
-//  clock_setup();
-//  gpio_setup();
-//  usart_setup();
+ if(mini)
+    gpio_clear(GPIOC, GPIO15);
+else
+    gpio_clear(GPIOD, GPIO15);
+ 
+i2c_stm32_conf_t i2c_conf = i2c_stm32_default_config();
+I2c_stm32 i2c(i2c_conf);
+Mpu_6050 mpu(i2c);
 
-//  /* Blink the LED (PD12) on the board with every transmitted byte. */
-//  while (1) {
-//      // gpio_toggle(GPIOD, GPIO14);  /* LED on/off */
-//      gpio_toggle(GPIOC, GPIO14); /* LED on/off */
-//      usart_send_blocking(UART4, c + '0'); /* UART4: Send byte. */
-//      c = (c == 9) ? 0 : c + 1;   /* Increment c. */
-//      if ((j++ % 80) == 0)
-//      {       /* Newline after line full. */
-//          usart_send_blocking(UART4, '\r');
-//          usart_send_blocking(UART4, '\n');
-//      }
-//      for (i = 0; i < 3000000; i++) { /* Wait a bit. */
-//          __asm__("NOP");
-//      }
-//  }
+// i2c_setup();
+i2c.init();
 
-//  return 0;
-// }
+ 
+for(int j=0; j<4; j++)
+{
+    if(mini)
+        gpio_toggle(GPIOC, GPIO14);
+    else
+        gpio_toggle(GPIOD, GPIO14);
+    
+    time_keeper_delay_ms(500);
+}
+
+if(!(mpu.init()))
+{
+    if (mini)
+        gpio_set(GPIOC, GPIO15);
+    else 
+        gpio_set(GPIOD, GPIO15);
+}
+
+while (1) 
+{
+     if (mini)
+        gpio_toggle(GPIOC, GPIO14);  /* LED on/off */
+     else
+        gpio_toggle(GPIOD, GPIO14); /* LED on/off */
+     // 
+    mpu.update_acc(); 
+    
+    if (mpu.acc_X() > 0.0f)
+    {
+        if (mini)
+            gpio_set(GPIOC, GPIO15);
+        else 
+            gpio_set(GPIOD, GPIO12);
+    }
+    else
+    {
+        if (mini)
+            gpio_clear(GPIOC, GPIO15);
+        else 
+            gpio_clear(GPIOD, GPIO12);
+    }
+
+    time_keeper_delay_ms(500);
+ }
+
+ return 0;
+}
 
 
 
@@ -365,7 +395,7 @@ int main(int argc, char** argv)
 
 // static void clock_setup(void)
 // {
-//  /* Enable GPIOD clock for LED & USARTs. */
+//  /* Enable GPIOC clock for LED & USARTs. */
 //  rcc_periph_clock_enable(RCC_GPIOC);
 //  rcc_periph_clock_enable(RCC_GPIOA);
 
