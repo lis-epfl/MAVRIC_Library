@@ -149,7 +149,7 @@ private:
 	float 	detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3]);
 
 	Mavlink_waypoint_handler* 		waypoint_handler;			///< Waypoint handler (extract fencepoints)
-	const Position_estimation*        pos_est;                    ///< Estimated position and speed (extract the velocity and the position)
+	Position_estimation*        pos_est;                    ///< Estimated position and speed (extract the velocity and the position)
 	control_command_t* 					controls;					///< Control command (output the repulsion)ahrs_t* ahrs
 	ahrs_t* ahrs ;
 	float 								repulsion[3];				///< Repulsion vector in semi-local frame (only act on ROLL, rep[1])

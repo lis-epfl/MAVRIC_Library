@@ -126,6 +126,9 @@ float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , flo
 	// finally do the division to get sc and tc
 	sc = (abs(sN) < SMALL_NUM ? 0.0 : sN / sD);
 	tc = (abs(tN) < SMALL_NUM ? 0.0 : tN / tD);
+//	int sign = (abs(sN) < -SMALL_NUM ? -1 : 1);
+//	sign *= (abs(tN) < -SMALL_NUM ? -1 : 1);
+
 	float dp[3]={0,0,0}; 	// dp = distance vector between I and J, dp = J-I
 
 	for (int i=0; i<3;i++)
@@ -156,8 +159,8 @@ Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estima
 //	repulsion({0,0,0}),
 	coef_roll(1),
 	maxsens(10.0),
-	maxradius(5.0),
-	count(33),
+	maxradius(10.0),
+	count(0),
 	max_vel_y(0.0),
 	accumulator(0.0)
 {
@@ -171,6 +174,7 @@ bool Fence_CAS::update(void)
 {
 	// Initialization of variables
 	bool angle_detected=false;									// Flag to reset the ROLL command
+	int nbdetection=10;
 	static bool print_change=true;
 	for (int k=0;k<3;k++)									// Reset the repulsion command
 	{
@@ -201,52 +205,86 @@ bool Fence_CAS::update(void)
 	//link the variables;
 //	this->tahead = 3* this->comfort;
 	this->accumulator += ahrs->linear_acc[0]*ahrs->linear_acc[0]+ahrs->linear_acc[1]*ahrs->linear_acc[1]+ahrs->linear_acc[2]*ahrs->linear_acc[2];
-	if((this->count%3)==0 && print_change)
+	print_change=false; // dont use the auto changing param mode
+	this->max_vel_y = 1.7;
+	this->tahead =1.3;
+	if((this->count%nbdetection)==0 && print_change)
 	{
 		static float parameterstab[]= {
-////				0.0,0.0,
-////				0.0,0.5,
-////				0.0,1.0,
-////				0.0,1.5,
-////				0.0,2.0,
-////				0.0,2.5,
-////				0.0,3.0,
-				0.5,0.0,
 				0.5,0.5,
-				0.5,1.0,
+				0.5,0.7,
+				0.5,0.9,
+				0.5,1.1,
+				0.5,1.3,
 				0.5,1.5,
-				0.5,2.0,
+				0.5,1.7,
+				0.5,1.9,
+				0.5,2.1,
+				0.5,2.3,
 				0.5,2.5,
-				0.5,3.0,
-				1.0,0.0,
-				1.0,0.5,
-				1.0,1.0,
-				1.0,1.5,
-				1.0,2.0,
-				1.0,2.5,
-				1.0,3.0,
-				1.5,0.0,
+				0.7,0.5,
+				0.7,0.7,
+				0.7,0.9,
+				0.7,1.1,
+				0.7,1.3,
+				0.7,1.5,
+				0.7,1.7,
+				0.7,1.9,
+				0.7,2.1,
+				0.7,2.3,
+				0.7,2.5,
+				0.9,0.5,
+				0.9,0.7,
+				0.9,0.9,
+				0.9,1.1,
+				0.9,1.3,
+				0.9,1.5,
+				0.9,1.7,
+				0.9,1.9,
+				0.9,2.1,
+				0.9,2.3,
+				0.9,2.5,
+				1.1,0.5,
+				1.1,0.7,
+				1.1,0.9,
+				1.1,1.1,
+				1.1,1.3,
+				1.1,1.5,
+				1.1,1.7,
+				1.1,1.9,
+				1.1,2.1,
+				1.1,2.3,
+				1.1,2.5,
+				1.3,0.5,
+				1.3,0.7,
+				1.3,0.9,
+				1.3,1.1,
+				1.3,1.3,
+				1.3,1.5,
+				1.3,1.7,
+				1.3,1.9,
+				1.3,2.1,
+				1.3,2.3,
+				1.3,2.5,
 				1.5,0.5,
-				1.5,1.0,
+				1.5,0.7,
+				1.5,0.9,
+				1.5,1.1,
+				1.5,1.3,
 				1.5,1.5,
-				1.5,2.0,
-				1.5,2.5,
-				1.5,3.0,
-				2.0,0.0,
-				2.0,0.5,
-				2.0,1.0,
-				2.0,1.5,
-				2.0,2.0,
-				2.0,2.5,
-				2.0,3.0
+				1.5,1.7,
+				1.5,1.9,
+				1.5,2.1,
+				1.5,2.3,
+				1.5,2.5
 		};
 		print_util_dbg_print("New set of parameters:");
-		this->max_vel_y = parameterstab[(this->count/3)*2];
-		this->tahead = parameterstab[(this->count/3)*2+1];
+		this->max_vel_y = parameterstab[(this->count/nbdetection)*2];
+		this->tahead = parameterstab[(this->count/nbdetection)*2+1];
 		this->accumulator = 0.0f;
 		print_util_dbg_print("\t Max_vel_y=");print_util_dbg_putfloat(this->max_vel_y,5);
 		print_util_dbg_print("\t tahead=");print_util_dbg_putfloat(this->tahead,5);
-		print_util_dbg_print("\t count=");print_util_dbg_putfloat(this->count,5);
+		print_util_dbg_print("\t count=");print_util_dbg_putfloat(this->count,0);
 		print_util_dbg_print("\n");
 		print_change=false;
 
@@ -296,15 +334,18 @@ bool Fence_CAS::update(void)
 			// Only 2D detection:
 			A[2]=C[2];
 			B[2]=C[2];
-			/*END INIT*/
-
-			/*Fencepoint repulsion*/
-			/*Min radius method*/
 
 			float AB[3]={B[0]-A[0],B[1]-A[1],0.0};
 			float pAB[3]={-AB[1],AB[0],0.0};
 			vectors_normalize(AB,AB);
 			vectors_normalize(pAB,pAB);
+
+			/*END INIT*/
+
+			/*Fencepoint repulsion*/
+			/*Min radius method*/
+
+
 			float M[3]={0,0,0};
 			float Am[3]={0,0,0};
 //			this->maxradius = 5; //inner angle circle radius
@@ -329,7 +370,7 @@ bool Fence_CAS::update(void)
 //			float MA[3] = {A[0]-M[0],A[1]-M[1],0.0};
 //			float distMA=vectors_norm(MA);
 
-			if((distAS <= (distAAm))&&(distMC >= this->maxradius)&&(angle_detected==false))
+			if((distAS <= (distAAm))&&(distMC >= this->maxradius)&&(angle_detected==false)&&n==0)
 			{
 				float aratio=1-((distMC - this->maxradius)/this->maxsens);	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
 				float rep[3]={MS[0],MS[1],0.0};					// Repulsion local frame
@@ -354,6 +395,23 @@ bool Fence_CAS::update(void)
 
 			/*Fence repulsion*/
 			dist[i] = detect_seg(A,B,C,S,V,I,J);
+			float IC[3]={I[0]-C[0],I[1]-C[1],0.0};
+			gftobftransform(A,B,IC);
+			IC[1]=(IC[1]>=0?1:-1);
+
+			if(IC[1]==-1 && n==0) //out of fence
+			{
+				/*Only for sim*/
+				pos_est->local_position.pos[0]=0.0;pos_est->local_position.pos[1]=0.0;pos_est->local_position.pos[2]=0.0;
+			}
+			if(n==0) //for the first fence
+			{
+				dist[i]*= IC[1];
+			}
+//			else
+//			{
+//				dist[i]*= -IC[1];
+//			}
 
 			if((dist[i] < this->maxsens)&&(angle_detected==false))
 			{
@@ -444,11 +502,11 @@ float Fence_CAS::interpolate(float r, int type) // type=x, 0: linear, 1: cos, 2:
 		}
 		else if (r>1.0)
 		{
-			return 1;
+			return 0;
 		}
 		else
 		{
-			return 0;
+			return 1;
 		}
 	}
 	else if(type==1) // Cos interpolation
@@ -459,11 +517,11 @@ float Fence_CAS::interpolate(float r, int type) // type=x, 0: linear, 1: cos, 2:
 		}
 		else if (r>1.0)
 		{
-			return 1;
+			return 0;
 		}
 		else
 		{
-			return 0;
+			return 1;
 		}
 	}
 	if(type==2) // Other cos interpolation
@@ -474,11 +532,11 @@ float Fence_CAS::interpolate(float r, int type) // type=x, 0: linear, 1: cos, 2:
 		}
 		else if (r>1.0)
 		{
-			return 1;
+			return 0;
 		}
 		else
 		{
-			return 0;
+			return 1;
 		}
 	}
 	return 0.0;
