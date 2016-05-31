@@ -46,6 +46,7 @@
 #include "sample_projects/LEQuad/saccade_controller.hpp"
 #include "drivers/gps_mocap.hpp"
 #include "drivers/flow.hpp"
+ #include "saccade_telemetry.hpp"
 /**
  * \brief MAV class
  */
@@ -96,6 +97,8 @@ public:
             Flow& flow_back,
             const conf_t& config = default_config());
 
+    
+    Saccade_controller saccade_controller_;
     Flow& flow_front_;
     Flow& flow_back_;
 
@@ -105,7 +108,6 @@ protected:
     virtual bool init_camera(void);
 
     Gps_mocap gps_mocap_;
-    Saccade_controller saccade_controller_;
 };
 
 

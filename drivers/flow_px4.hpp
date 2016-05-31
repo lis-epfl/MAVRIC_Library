@@ -47,7 +47,7 @@
 #include <stdint.h>
 #include "hal/common/serial.hpp"
 
-const float filter_constant = (1./250.)/((1./100.) + (1./500.) );
+const float filter_constant = (1./100.)/((1./50.) + (1./200.) );
 
 /**
  * \brief   Array of 2-D optic flow vectors
@@ -56,10 +56,10 @@ typedef union
 {
     struct
     {
-        int16_t x[125];     ///< Horizontal component
-        int16_t y[125];     ///< Vertical component
+        int16_t x[70];     ///< Horizontal component
+        int16_t y[70];     ///< Vertical component
     };
-    uint8_t data[500];      ///< Raw access to data
+    uint8_t data[280];      ///< Raw access to data
 } flow_px4_data_t;
 
 

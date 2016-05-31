@@ -125,7 +125,8 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
     float rpyt_errors[4];
     control_command_t input;
     int32_t i;
-    quat_t qtmp, q_rot;
+    // quat_t qtmp;
+    quat_t q_rot;
     aero_attitude_t attitude_yaw_inverse;
 
     // Get up vector in body frame
@@ -144,21 +145,19 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             attitude_yaw_inverse.rpy[1] = 0.0f;
             attitude_yaw_inverse.rpy[2] = attitude_yaw_inverse.rpy[2];
 
-            //qtmp=quaternions_create_from_vector(input.tvel);
-            //quat_t input_global = quaternions_local_to_global(stabilisation_copter->ahrs->qe, qtmp);
-
             q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
 
-            quat_t input_global;
-            quaternions_rotate_vector(q_rot, input.tvel, input_global.v);
+            // quat_t input_global;
+            float vel_local[3];
+            quaternions_rotate_vector(quaternions_inverse(q_rot), stabilisation_copter->pos_est->vel, vel_local);
 
-            input.tvel[X] = input_global.v[X];
-            input.tvel[Y] = input_global.v[Y];
-            input.tvel[Z] = input_global.v[Z];
+            // input.tvel[X] = input_global.v[X];
+            // input.tvel[Y] = input_global.v[Y];
+            // input.tvel[Z] = input_global.v[Z];
 
-            rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
-            rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
-            rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
+            rpyt_errors[X] = input.tvel[X] - vel_local[X];
+            rpyt_errors[Y] = input.tvel[Y] - vel_local[Y];
+            rpyt_errors[3] = -(input.tvel[Z] - vel_local[Z]);
 
             if (stabilisation_copter->controls->yaw_mode == YAW_COORDINATED)
             {
@@ -186,14 +185,18 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
             input = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output;
 
-            qtmp = quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
+            // qtmp = quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
             //quat_t rpy_local = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
 
-            quat_t rpy_local;
-            quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
+            // quat_t rpy_local;
+            // quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
 
-            input.rpy[ROLL] = rpy_local.v[Y];
-            input.rpy[PITCH] = -rpy_local.v[X];
+            // input.rpy[ROLL] = rpy_local.v[Y];
+            // input.rpy[PITCH] = -rpy_local.v[X];
+
+            input.rpy[ROLL] = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy[Y];
+            input.rpy[PITCH] = -stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy[X];
+
 
             if ((!stabilisation_copter->pos_est->healthy()) || (stabilisation_copter->pos_est->get_fence_violation_state() == Position_estimation::OUTSIDE_FENCE2))
             {

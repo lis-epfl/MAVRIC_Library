@@ -214,6 +214,7 @@ protected:
     State state;                                                ///< The structure with all state information
 
     Scheduler scheduler;
+    
     Mavlink_communication mavlink_communication;
 
     servos_mix_quadcotper_diag_t servo_mix;

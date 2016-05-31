@@ -60,6 +60,12 @@ Flow_px4::Flow_px4(Serial& uart):
     last_update_us  = time_keeper_get_us();
     handshake_state = FLOW_NO_HANDSHAKE;
     of_count        = 0;
+
+    for (int i = 0; i < of_count; ++i)
+    {
+        of.x[i] = 0.0f;
+        of.y[i] = 0.0f;
+    }
 }
 
 
@@ -107,17 +113,17 @@ bool Flow_px4::update(void)
 
                 // Get number of of vectors
                 of_count        = handshake_msg.width;
-                if (of_count > 125)
+                if (of_count > 70)
                 {
-                    of_count = 125;
+                    of_count = 70;
                 }
 
                 // Get total payload size
                 packet_count_       = handshake_msg.packets;
                 byte_count_       = handshake_msg.size;
-                if (byte_count_ > 500)
+                if (byte_count_ > 280)
                 {
-                    byte_count_ = 500;
+                    byte_count_ = 280;
                 }
                 break;
 
@@ -175,10 +181,12 @@ bool Flow_px4::update(void)
                             // swap bytes and filter for high frequency noise
                             for (int i = 0; i < of_count; ++i)
                             {
-                                of.x[i] = filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.x[i])) +
-                                          (1.0f - filter_constant) * of.x[i];
-                                of.y[i] = filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.y[i])) +
-                                          (1.0f - filter_constant) * of.y[i];
+                                of.x[i] = 0.001f*endian_rev16s(of_tmp_.x[i]);
+                                // filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.x[i])) +
+                                          // (1.0f - filter_constant) * of.x[i];
+                                of.y[i] = 0.001f*endian_rev16s(of_tmp_.y[i]);
+                                // filter_constant * 0.001f * (float)(endian_rev16s(of_tmp_.y[i])) +
+                                          // (1.0f - filter_constant) * of.y[i];
                             }
 
                             // Update time

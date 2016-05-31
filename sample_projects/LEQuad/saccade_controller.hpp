@@ -138,7 +138,7 @@ public:
 
     //Definition of the number of points used for the optic flow on each camera
     // static const uint32_t N_points = 125;
-    static const uint32_t N_points = 75;
+    static const uint32_t N_points = 70;
 
     float                       pitch_;                             ///< Pitch command for forward motion
     float                       gain_;                              ///< Gain for importance of CAN
@@ -157,6 +157,9 @@ public:
     float                       weighted_function_;
     float                       derotation_constant_;
     float                       last_derotation_yaw_velocity_;
+    float                       velocity_value_;
+    float                       movement_direction_;
+    float                       can_cad_filter_;
 
     uint64_t                    last_saccade_;
 
@@ -199,7 +202,7 @@ static inline saccade_controller_conf_t saccade_controller_default_config(void)
     conf.pid_config.integrator.gain         = 0.0f;
     conf.pid_config.integrator.accumulator  = 0.0f;
     conf.pid_config.integrator.clip_pre     = 0.0001f;
-    conf.pid_config.integrator.clip         = 0.5f;
+    conf.pid_config.integrator.clip         = 0.1f;
     conf.pid_config.differentiator          = {};
     conf.pid_config.differentiator.gain     = 0.0f;
     conf.pid_config.differentiator.previous = 0.0f;

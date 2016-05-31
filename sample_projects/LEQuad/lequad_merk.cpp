@@ -43,17 +43,18 @@
 #include "sample_projects/LEQuad/lequad.hpp"
 
 
+
 LEQuad_merk::LEQuad_merk(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink,
                          Satellite& satellite, Led& led, File& file_flash, Battery& battery,
                          Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4,
                          Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2,
                          Flow& flow_front, Flow& flow_back, const conf_t& config):
-    flow_front_(flow_front), flow_back_(flow_back),
     LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
            battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
            file1, file2, config.lequad_config),
-    gps_mocap_(mavlink_communication.message_handler()),
-    saccade_controller_(flow_front, flow_back, ahrs, position_estimation)
+    saccade_controller_(flow_front, flow_back, ahrs, position_estimation),
+    flow_front_(flow_front), flow_back_(flow_back),
+    gps_mocap_(mavlink_communication.message_handler())
 {
     // Init gps_mocap
     gps_mocap_.init();
@@ -79,15 +80,19 @@ bool LEQuad_merk::init_saccade(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.pitch_,              "PITCH_CONTROL" );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.intersaccade_time_,  "INTSAC_TIME" );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.altitude_value_,     "ALTI_VAL" );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.velocity_value_,  "INTSAC_VEL" );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.altitude_pid_.p_gain,    "ALT_PID_KP" );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.altitude_pid_.clip_min,  "ALT_PID_MIN" );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.altitude_pid_.clip_max,  "ALT_PID_MAX" );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.can_cad_filter_,  "FILTER" );
+
     // ret &= onboard_parameters->add_parameter_float(&saccade_controller_.altitude_pid_.
 
 
     // Task
     ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&task_saccade_controller_update, (Scheduler_task::task_argument_t)&saccade_controller_);
 
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_DEBUG_VECT, 100000,(Mavlink_communication::send_msg_function_t)&saccade_telemetry_send_vector, &saccade_controller_);    
     return ret;
 }
 
@@ -101,7 +106,7 @@ void flow_telemetry_send(const LEQuad_merk* LQm, const Mavlink_stream* mavlink_s
 
     static uint8_t step = 0;
     step = (step + 1) % 3;
-    static const uint32_t N_points = 75;
+    static const uint32_t N_points = 70;
     float of[60];
     char name[7];
 
@@ -138,16 +143,16 @@ void flow_telemetry_send(const LEQuad_merk* LQm, const Mavlink_stream* mavlink_s
               of[i] = LQm->flow_back_.of.x[i + 120 - N_points];
           }
 
-          for (uint32_t i = 0; i < 2; i++)
+          // for (uint32_t i = 0; i < 2; i++)
+          // {
+
+          //     of[i + 2 * N_points - 120] = 0.0f;//ahrs.angular_speed[2];
+          // }
+
+          for (uint32_t i = 0; i < 180 - 2 * N_points; i++)
           {
 
-              of[i + 2 * N_points - 120] = 0.0f;//ahrs.angular_speed[2];
-          }
-
-          for (uint32_t i = 0; i < 180 - 2 * N_points-2; i++)
-          {
-
-              of[i + 2 * N_points - 120 + 1] = 0.0f;
+              of[i + 2 * N_points - 120] = 0.0f;
           }
       break;
     }
@@ -177,7 +182,7 @@ bool LEQuad_merk::init_camera(void)
 
 
     // Task
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_OPTICAL_FLOW, 10000,(Mavlink_communication::send_msg_function_t)&flow_telemetry_send, this);
+    // ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_OPTICAL_FLOW, 10000,(Mavlink_communication::send_msg_function_t)&flow_telemetry_send, this);
     ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&tasks_flow,   (Scheduler_task::task_argument_t)this);
     
 
@@ -203,8 +208,8 @@ bool LEQuad_merk::main_task(void)
             // Copy paste control from saccade controller
             controls.rpy[X]   = 0.0f;
             controls.rpy[Y]   = 0.0f;
-            controls.rpy[Z]   = 0.0f;
-            controls.thrust   = -0.26f;
+            // controls.rpy[Z]   = 0.0f;
+            controls.thrust   = -0.25f;
             controls.tvel[X]  = saccade_controller_.velocity_command_.xyz[X];
             controls.tvel[Y]  = saccade_controller_.velocity_command_.xyz[Y];
             controls.tvel[Z]  = saccade_controller_.velocity_command_.xyz[Z];
@@ -230,6 +235,10 @@ bool LEQuad_merk::main_task(void)
 
             stabilisation_copter_cascade_stabilise(&stabilisation_copter);
             servos_mix_quadcopter_diag_update(&servo_mix);
+
+            saccade_controller_.saccade_state_ = PRESACCADE;
+
+            saccade_controller_.is_time_initialized_ = false;
         }
         else if (state.is_stabilize())
         {
@@ -240,6 +249,11 @@ bool LEQuad_merk::main_task(void)
 
             stabilisation_copter_cascade_stabilise(&stabilisation_copter);
             servos_mix_quadcopter_diag_update(&servo_mix);
+
+            saccade_controller_.saccade_state_ = PRESACCADE;
+
+            saccade_controller_.is_time_initialized_ = false;
+
         }
         else if (state.is_manual())
         {
@@ -250,6 +264,10 @@ bool LEQuad_merk::main_task(void)
 
             stabilisation_copter_cascade_stabilise(&stabilisation_copter);
             servos_mix_quadcopter_diag_update(&servo_mix);
+
+            saccade_controller_.saccade_state_ = PRESACCADE;
+
+            saccade_controller_.is_time_initialized_ = false;
         }
         else
         {
