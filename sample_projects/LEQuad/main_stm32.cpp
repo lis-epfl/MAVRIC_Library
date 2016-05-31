@@ -305,6 +305,9 @@ static void gpio_setup(void)
 
 int main(void)
 {
+    bool mini = true;
+ // bool mini = false;
+
  
  if (mini)
  {
