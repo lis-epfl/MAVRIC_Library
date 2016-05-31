@@ -49,7 +49,6 @@ extern "C"
 #include <libopencm3/stm32/gpio.h>
 }
 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -85,7 +84,10 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
     {
          if(--timeout == 0)
         {
-            gpio_set(GPIOD, GPIO15);
+            if(mini)
+                gpio_set(GPIOC, GPIO15);
+            else
+                gpio_set(GPIOD, GPIO15);
             return false;
         } 
     }
@@ -107,7 +109,10 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
         {
              if(--timeout == 0)
             {
-                gpio_set(GPIOD, GPIO15);
+                // if(mini)
+                //     gpio_set(GPIOC, GPIO15);
+                // else
+                //     gpio_set(GPIOD, GPIO15);
                 return false;
             } 
         }
@@ -122,7 +127,10 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
         {
              if(--timeout == 0)
             {
-                gpio_set(GPIOD, GPIO15);
+                if(mini)
+                    gpio_set(GPIOC, GPIO15);
+                else
+                    gpio_set(GPIOD, GPIO15);
                 return false;
             } 
         }
@@ -142,7 +150,10 @@ bool I2c_stm32::stop(void)
     {
         if(--timeout == 0)
         {
-            gpio_set(GPIOD, GPIO15);
+            if(mini)
+                gpio_set(GPIOC, GPIO15);
+            else
+                gpio_set(GPIOD, GPIO15);
             return false;
         }     
     }
@@ -163,7 +174,11 @@ uint8_t I2c_stm32::read_ack(void)
     while(!(check_event(0x00030040)))
     {
         if(--timeout == 0)
-            gpio_set(GPIOD, GPIO15);
+        {    if(mini)
+                gpio_set(GPIOC, GPIO15);
+            else
+                gpio_set(GPIOD, GPIO15);
+        }
     }
 
     //read data
@@ -183,7 +198,11 @@ uint8_t I2c_stm32::read_nack(void)
     while(!(check_event(0x00030040)))
     {
         if(--timeout == 0)
-            gpio_set(GPIOD, GPIO15);
+        {    if(mini)
+                gpio_set(GPIOC, GPIO15);
+            else
+                gpio_set(GPIOD, GPIO15);
+        }
     }
 
     //read data
@@ -212,17 +231,15 @@ bool I2c_stm32::init(void)
             rcc_periph_clock_enable(config_.rcc_sda_port_config);
             rcc_periph_clock_enable(config_.rcc_clk_port_config);
             
-            i2c_reset(i2c_);
-
             /* Setup GPIO pins for I2C transmit. */
             //BUG with gpio settings => need to config 2 pins (sda & clk) at once
             //is fine here because port is the same, otherwise would fail...
+            gpio_set_af(config_.sda_config.port, config_.sda_config.alt_fct, config_.sda_config.pin| config_.clk_config.pin);
+            gpio_set_output_options(config_.sda_config.port, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, config_.sda_config.pin | config_.clk_config.pin);
             gpio_mode_setup(config_.sda_config.port, 
                             GPIO_MODE_AF,
                             GPIO_PUPD_PULLUP,
                             config_.sda_config.pin | config_.clk_config.pin);
-            gpio_set_output_options(config_.sda_config.port, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, config_.sda_config.pin | config_.clk_config.pin);
-            gpio_set_af(config_.sda_config.port, config_.sda_config.alt_fct, config_.sda_config.pin| config_.clk_config.pin);
             
             // gpio_mode_setup(config_.clk_config.port, 
             //                 GPIO_MODE_AF,
@@ -232,17 +249,20 @@ bool I2c_stm32::init(void)
             // // gpio_set_af(config_.clk_config.port, config_.clk_config.alt_fct, config_.clk_config.pin);
             break;
         case STM32_I2C2:
-            // rcc_periph_clock_enable(RCC_I2C1);
-            // rcc_periph_clock_enable(RCC_GPIOB);
+            rcc_periph_clock_enable(config_.rcc_i2c_config);
+            rcc_periph_clock_enable(config_.rcc_sda_port_config);
+            // rcc_periph_clock_enable(config_.rcc_clk_port_config);
             
-            // i2c_reset(i2c_);
-
-            // /* Setup GPIO pins for I2C transmit. */
-            // gpio_mode_setup(GPIOB, GPIO_MODE_AF,
-            //              GPIO_PUPD_PULLUP,
-            //              GPIO6|GPIO7);
-            // gpio_set_output_options(GPIOB, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, GPIO6| GPIO7);
-            // gpio_set_af(GPIOB, GPIO_AF4, GPIO6| GPIO7);
+            /* Setup GPIO pins for I2C transmit. */
+            //BUG with gpio settings => need to config 2 pins (sda & clk) at once
+            //is fine here because port is the same, otherwise would fail...
+            gpio_set_af(config_.sda_config.port, config_.sda_config.alt_fct, config_.sda_config.pin| config_.clk_config.pin);
+            gpio_set_output_options(config_.sda_config.port, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, config_.sda_config.pin | config_.clk_config.pin);
+            gpio_mode_setup(config_.sda_config.port, 
+                            GPIO_MODE_AF,
+                            GPIO_PUPD_PULLUP,
+                            config_.sda_config.pin | config_.clk_config.pin);
+            
             break;
         case STM32_I2C3:
             // rcc_periph_clock_enable(RCC_I2C1);
@@ -260,31 +280,50 @@ bool I2c_stm32::init(void)
         
     }
     
+    i2c_peripheral_disable(i2c_);
+
     //clear freq
     I2C_CR2(i2c_) &= (uint16_t)~((uint16_t)(0x003F));
     //set freq
     I2C_CR2(i2c_) |= (uint16_t)(42);
 
-    i2c_peripheral_disable(i2c_);
+    i2c_peripheral_disable(i2c_); //TODO shouldn't be necessary
 
-    //set maximum rise time
-    I2C_TRISE(i2c_) = 8 + 1;
-    //configure speed in fast mode
-    uint16_t result = (uint16_t)(42000000/(400000*3));
-    
-    if ( (result & 0x0FFF) == 0)
+    uint16_t result = 0;
+    // if (clk_speed <= 100000)
     {
-        //set min value allowed
-        result |= (uint16_t)0x0001;
-    }
+        //set maximum rise time
+        I2C_TRISE(i2c_) = 42 + 1;
 
+        //configure speed in fast mode
+        result = (uint16_t)(42000000/(100000<<1));
+        
+        if (result < 0x04)
+        {
+            result = 0x04;
+        }
+    }
+    // else
+    {
+        //set maximum rise time
+        I2C_TRISE(i2c_) = 12 + 1;
+
+        //configure speed in fast mode
+        result = (uint16_t)(42000000 / (400000 * 3));
+        if ( (result & 0x0FFF) == 0)
+        {
+            //set min value allowed
+            result |= (uint16_t)0x0001;
+        }        
+    }
+    
     //set max rise time
-    uint16_t freqrange = (uint16_t)(42000000 /1000000);
-    uint16_t tmp = (uint16_t)(((freqrange *(uint16_t)300) / (uint16_t) 1000) + (uint16_t)1);
-    i2c_set_trise(i2c_, tmp);
+    // uint16_t freqrange = (uint16_t)(42000000 /1000000);
+    // uint16_t tmp = (uint16_t)(((freqrange *(uint16_t)300) / (uint16_t) 1000) + (uint16_t)1);
+    // i2c_set_trise(i2c_, tmp);
 
     //set speed value to fast mode
-    I2C_CCR(i2c_) |= (uint16_t)(result | 0x8000);
+    I2C_CCR(i2c_) = (uint16_t)(result );
 
     //enable I2C1
     i2c_peripheral_enable(i2c_);
@@ -292,7 +331,7 @@ bool I2c_stm32::init(void)
     //configure I2C_CR1(i2c_)
     //clear ACK, SMBTYPE and SMBUS
     // I2C_CR1(i2c_) &= ~(I2C_CR1_ACK | I2C_CR1_SMBTYPE | I2C_CR1_SMBUS);
-    I2C1_CR1 &= 0xFBF5;
+    I2C_CR1(i2c_) &= 0xFBF5;
     // set i2c mode & no ack
     I2C_CR1(i2c_) |= uint16_t(0x0000|0x0000);
 
@@ -314,7 +353,7 @@ bool I2c_stm32::probe(uint32_t address)
     // status = twim_probe(twim_, address);
     // return status_code_to_bool(status);
     
-    if(!start(address, true, true))
+    if(!start(address, true, false))
         return false;
     else
     {
@@ -341,6 +380,9 @@ bool I2c_stm32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
         {
             if(--timeout == 0)
             {
+                if(mini)
+                gpio_set(GPIOC, GPIO15);
+            else
                 gpio_set(GPIOD, GPIO15);
                 return false;
             }    
