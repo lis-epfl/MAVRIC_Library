@@ -52,7 +52,7 @@ extern "C"
 
 
 /**
- * \brief   Enumerate the 2 possible I2C
+ * \brief   Enumerate the 3 possible I2C
  */
 typedef enum
 {
@@ -67,13 +67,14 @@ typedef enum
  */
 typedef struct
 {
-    i2c_stm32_devices_t i2c_device_config;
-    bool                tenbit_config;
-    gpio_stm32_conf_t   sda_config;           ///< port number
-    gpio_stm32_conf_t   clk_config;           ///< port number
-    rcc_periph_clken    rcc_i2c_config;
-    rcc_periph_clken    rcc_sda_port_config;
-    rcc_periph_clken    rcc_clk_port_config;
+    i2c_stm32_devices_t i2c_device_config;      ///< I2C device number
+    bool                tenbit_config;          ///< using 7 or 10 bits addressing
+    gpio_stm32_conf_t   sda_config;             ///< sda port settings
+    gpio_stm32_conf_t   clk_config;             ///< clk port settings
+    rcc_periph_clken    rcc_i2c_config;         ///< corresponding i2c for rcc
+    rcc_periph_clken    rcc_sda_port_config;    ///< corresponding port for rcc
+    rcc_periph_clken    rcc_clk_port_config;    ///< corresponding port for rcc
+    uint32_t            clk_speed;              ///< i2c clk speed
 } i2c_stm32_conf_t;
 
 /**
@@ -161,9 +162,6 @@ private:
 
 };
 
-bool mini = true;
- // bool mini = false;
-
 static inline  i2c_stm32_conf_t i2c_stm32_default_config()
 {
     // i2c_stm32_conf_t conf = {};
@@ -177,6 +175,7 @@ static inline  i2c_stm32_conf_t i2c_stm32_default_config()
     // conf.clk_config.port    = GPIO_STM32_PORT_B;
     // conf.clk_config.pin     = GPIO_STM32_PIN_6;
     // conf.clk_config.alt_fct = GPIO_STM32_AF_4;
+    // conf.clk_speed          = 400000;
     // conf.tenbit_config      = false;
     
     i2c_stm32_conf_t conf = {};
@@ -190,6 +189,7 @@ static inline  i2c_stm32_conf_t i2c_stm32_default_config()
     conf.clk_config.port    = GPIO_STM32_PORT_B;
     conf.clk_config.pin     = GPIO_STM32_PIN_10;
     conf.clk_config.alt_fct = GPIO_STM32_AF_4;
+    conf.clk_speed          = 400000;
     conf.tenbit_config      = false;
     return conf;
 }
