@@ -88,6 +88,18 @@ bool Mpu_6050::init(void)
 
     //wakeup MPU
     success &= wake_up_MPU6050(MPU_6050_ADDRESS);
+
+    //config accel
+    uint8_t temp, reg, test[2];
+
+    reg = 0x1C;
+    success &= i2c_.write(&reg, 1, MPU_6050_ADDRESS);
+    success &= i2c_.read(&temp, 1, MPU_6050_ADDRESS);
+
+    temp = (temp & 0xE7) | ((uint8_t)0x02<<3);
+
+    test[0] = reg; test[1] = temp;
+    success &= i2c_.write(test, 2, MPU_6050_ADDRESS);
     
     return success;
 }
