@@ -244,7 +244,12 @@ private:
     float                temperature_;      ///< Temperature
     float                last_update_us_;   ///< Last udate time in microseconds
 
-    void wake_up_MPU6050(const uint8_t address);
+    /**
+     * \brief   wake-up the MPU 6050
+     *
+     * \return  true if succeed
+     */
+     bool wake_up_MPU6050(const uint8_t address);
 };
 
 #endif /* MPU_6050_H */

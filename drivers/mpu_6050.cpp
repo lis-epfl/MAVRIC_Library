@@ -68,30 +68,27 @@ Mpu_6050::Mpu_6050(I2c& i2c):
 
 bool Mpu_6050::init(void)
 {
-    bool success = false;
+    bool success = true;
 
     //check if device connected
     if (!i2c_.probe(MPU_6050_ADDRESS))
     {
-     gpio_set(GPIOD, GPIO15);
-     return success;
+     return false;
     }
 
     //who I am ?
     uint8_t data;
-    i2c_.write(&WHO_ARE_YOU_COMMAND, 1, MPU_6050_ADDRESS);
-    i2c_.read(&data, 1, MPU_6050_ADDRESS);
+    success &= i2c_.write(&WHO_ARE_YOU_COMMAND, 1, MPU_6050_ADDRESS);
+    success &= i2c_.read(&data, 1, MPU_6050_ADDRESS);
     
     if (data != I_AM_MPU_6050)
     {
-     gpio_set(GPIOD, GPIO15);
-     return success;
+     return false;
     }
 
     //wakeup MPU
-    wake_up_MPU6050(MPU_6050_ADDRESS);
+    success &= wake_up_MPU6050(MPU_6050_ADDRESS);
     
-    success = true;
     return success;
 }
 
@@ -102,12 +99,10 @@ bool Mpu_6050::update_acc(void)
 
     uint8_t accel_buffer[6] = {0, 0, 0, 0, 0, 0};
 
-    // // Read data from accelero sensor
-    i2c_.write(&MPU_6050_GET_ACC, 1, MPU_6050_ADDRESS);
-    i2c_.read(accel_buffer, 6, MPU_6050_ADDRESS);
-    // success &= i2c_.write(&LSM_ACC_DATA_BEGIN, 1, LSM330_ACC_SLAVE_ADDRESS);
-    // success &= i2c_.read((uint8_t*)accel_buffer, 7, LSM330_ACC_SLAVE_ADDRESS);
-
+    // Read data from accelero sensor
+    success &= i2c_.write(&MPU_6050_GET_ACC, 1, MPU_6050_ADDRESS);
+    success &= i2c_.read(accel_buffer, 6, MPU_6050_ADDRESS);
+    
     acc_data_[0] = (float)((int16_t)(accel_buffer[0] << 8 | accel_buffer[1]));
     acc_data_[1] = (float)((int16_t)(accel_buffer[2] << 8 | accel_buffer[3]));
     acc_data_[2] = (float)((int16_t)(accel_buffer[4] << 8 | accel_buffer[5]));
@@ -125,12 +120,10 @@ bool Mpu_6050::update_gyr(void)
 
     uint8_t gyro_buffer[6] = {0, 0, 0, 0, 0, 0};
 
-    // // Read data from gyro sensor
-    i2c_.write(&MPU_6050_GET_GYROS, 1, MPU_6050_ADDRESS);
-    i2c_.read(gyro_buffer, 6, MPU_6050_ADDRESS);
-    // success &= i2c_.write(&LSM_GYRO_DATA_BEGIN, 1, LSM330_GYRO_SLAVE_ADDRESS);
-    // success &= i2c_.read((uint8_t*)gyro_buffer, 8, LSM330_GYRO_SLAVE_ADDRESS);
-
+    // Read data from gyro sensor
+    success &= i2c_.write(&MPU_6050_GET_GYROS, 1, MPU_6050_ADDRESS);
+    success &= i2c_.read(gyro_buffer, 6, MPU_6050_ADDRESS);
+    
     // sensor temperature
     // temperature_  = (float)((int16_t)gyro_buffer[0]);
     
@@ -209,9 +202,13 @@ const float& Mpu_6050::temperature(void) const
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mpu_6050::wake_up_MPU6050(const uint8_t address)
+bool Mpu_6050::wake_up_MPU6050(const uint8_t address)
 {
+    bool success = true;
+
     uint8_t buffer[2] = {0x6B, 0x00};
 
-    i2c_.write(buffer, 2, address);
+    success &= i2c_.write(buffer, 2, address);
+
+    return success;
 }
