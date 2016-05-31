@@ -49,6 +49,9 @@ extern "C"
 #include <libopencm3/stm32/gpio.h>
 }
 
+
+const uint32_t FLAG_MASK      = 0x00FFFFFF;
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -63,7 +66,7 @@ bool I2c_stm32::check_event(uint32_t i2c_event)
     flag2 = flag2 << 16;
 
     //get the last event
-    lastevent = (flag1 | flag2) & (0x00FFFFFF);
+    lastevent = (flag1 | flag2) & (FLAG_MASK);
 
     if ( (lastevent & i2c_event) == i2c_event)
     {
@@ -77,6 +80,7 @@ bool I2c_stm32::check_event(uint32_t i2c_event)
 
 bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
 {
+    
     i2c_send_start(i2c_);
     //wait till not received
     uint16_t timeout = 20000;
@@ -84,10 +88,10 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
     {
          if(--timeout == 0)
         {
-            if(mini)
-                gpio_set(GPIOC, GPIO15);
-            else
-                gpio_set(GPIOD, GPIO15);
+            // if(mini)
+            //     gpio_set(GPIOC, GPIO15);
+            // else
+            //     gpio_set(GPIOD, GPIO15);
             return false;
         } 
     }
@@ -97,6 +101,7 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
     {
         I2C_CR1(i2c_) |= I2C_CR1_ACK;
     }
+
     
     //send write/read bit
     if (direction_is_transmit)
@@ -127,10 +132,10 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
         {
              if(--timeout == 0)
             {
-                if(mini)
-                    gpio_set(GPIOC, GPIO15);
-                else
-                    gpio_set(GPIOD, GPIO15);
+                // if(mini)
+                //     gpio_set(GPIOC, GPIO15);
+                // else
+                //     gpio_set(GPIOD, GPIO15);
                 return false;
             } 
         }
@@ -150,10 +155,10 @@ bool I2c_stm32::stop(void)
     {
         if(--timeout == 0)
         {
-            if(mini)
-                gpio_set(GPIOC, GPIO15);
-            else
-                gpio_set(GPIOD, GPIO15);
+            // if(mini)
+            //     gpio_set(GPIOC, GPIO15);
+            // else
+            //     gpio_set(GPIOD, GPIO15);
             return false;
         }     
     }
@@ -166,7 +171,7 @@ bool I2c_stm32::stop(void)
 
 uint8_t I2c_stm32::read_ack(void)
 {
-    //disable ACK
+    //enable ACK
     I2C_CR1(i2c_) |= I2C_CR1_ACK;
 
     //wait till received
@@ -174,10 +179,12 @@ uint8_t I2c_stm32::read_ack(void)
     while(!(check_event(0x00030040)))
     {
         if(--timeout == 0)
-        {    if(mini)
-                gpio_set(GPIOC, GPIO15);
-            else
-                gpio_set(GPIOD, GPIO15);
+        {    
+            // if(mini)
+            //     gpio_set(GPIOC, GPIO15);
+            // else
+            //     gpio_set(GPIOD, GPIO15);
+            return 0;
         }
     }
 
@@ -198,10 +205,12 @@ uint8_t I2c_stm32::read_nack(void)
     while(!(check_event(0x00030040)))
     {
         if(--timeout == 0)
-        {    if(mini)
-                gpio_set(GPIOC, GPIO15);
-            else
-                gpio_set(GPIOD, GPIO15);
+        {    
+            // if(mini)
+            //     gpio_set(GPIOC, GPIO15);
+            // else
+            //     gpio_set(GPIOD, GPIO15);
+            return 0;
         }
     }
 
@@ -229,7 +238,7 @@ bool I2c_stm32::init(void)
         case STM32_I2C1:
             rcc_periph_clock_enable(config_.rcc_i2c_config);
             rcc_periph_clock_enable(config_.rcc_sda_port_config);
-            rcc_periph_clock_enable(config_.rcc_clk_port_config);
+            // rcc_periph_clock_enable(config_.rcc_clk_port_config);
             
             /* Setup GPIO pins for I2C transmit. */
             //BUG with gpio settings => need to config 2 pins (sda & clk) at once
@@ -353,8 +362,11 @@ bool I2c_stm32::probe(uint32_t address)
     // status = twim_probe(twim_, address);
     // return status_code_to_bool(status);
     
-    if(!start(address, true, false))
+    if(!start(address, true, true))
+    {
+        // stop();
         return false;
+    }
     else
     {
         // stop();
@@ -370,7 +382,7 @@ bool I2c_stm32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
     // return status_code_to_bool(status);
 
     //start
-    start(address, true, false);
+    start(address, true, true);
 
     for (uint32_t i = 0; i < nbytes; ++i)
     {
@@ -380,10 +392,10 @@ bool I2c_stm32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
         {
             if(--timeout == 0)
             {
-                if(mini)
-                gpio_set(GPIOC, GPIO15);
-            else
-                gpio_set(GPIOD, GPIO15);
+                // if(mini)
+                //     gpio_set(GPIOC, GPIO15);
+                // else
+                    // gpio_set(GPIOD, GPIO15);
                 return false;
             }    
         }
@@ -415,8 +427,6 @@ bool I2c_stm32::read(uint8_t* buffer, uint32_t nbytes, uint32_t address)
         else
             buffer[i] = read_ack();
     }
-
-    // stop();
 
     return true;
 }
