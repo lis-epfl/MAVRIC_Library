@@ -49,15 +49,12 @@ LEQuad_symbiotic::LEQuad_symbiotic(
     Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4,
     Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):
 
-#if defined DroneDome
-	LEQuad_dronedome(
-#elif
 	LEQuad(
-#endif
 	imu, barometer, gps, sonar, serial_mavlink, satellite, led, file_flash,
     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
     file1, file2, config.lequad_config
-	)
+	),
+	gimbal_controller(navigation, servo_5, servo_6, config.gimbal_controller_config)
 {
 	init_gimbal();
 }
@@ -132,7 +129,7 @@ bool LEQuad_symbiotic::main_task(void)
                 break;
 
             case Mav_mode::ATTITUDE:
-
+            {
             	//Alex----
 				//Control source is forced to be taken from the remote
 				Manual_control::control_source_t chosen_control_source = manual_control.control_source();
@@ -148,139 +145,139 @@ bool LEQuad_symbiotic::main_task(void)
                 //----
                 break;
 
-            case Mav_mode::CUSTOM:
-            	manual_control.manual_control_get_from_joystick_symbiotic(&controls);
-
-				float max_vel_z = 6.0f; //[m/s]
-				float max_vel_y = 6.0f; //[m/s]
-
-				// fence avoidance
-				bool compute_repulsion = false;
-				float xy_dist;
-				float z_dist;
-				float norm_ctrl_vel_xy_sqr;
-				float z_min, z_max, xy_max, dist_to_limit;
-				float origin2quad[3];
-				float quadOrientation[3];
-				float out[3];
-
-				bool in_drone_dome = true;
-				if(in_drone_dome) //ideal speed 0.5 to 0.7 m/s
-				{
-					//center point (0,0,2.0)
-					z_min = -0.75f;//[m]
-					z_max = -3.5f;//[m]
-					xy_max = 3.0f; //radius [m]
-					dist_to_limit = 0.5f; //[m]
-					compute_repulsion = true;
-				}
-				else if(manual_control.joystick.isFenceEnabled)
-				{
-					z_min = 6.0f;//[m]  //underground
-					z_max = -23.0f;//[m]
-					xy_max = 18.0f; //radius [m]
-					dist_to_limit = 3.0f; //[m]
-					compute_repulsion = true;
-				}
-
-				if(compute_repulsion)
-				{
-					xy_dist = position_estimation.position_estimation_get_xy_distance_from_fence_origin();
-					z_dist = position_estimation.position_estimation_get_z_distance_from_fence_origin();
-					norm_ctrl_vel_xy_sqr = SQR(controls.tvel[X]) + SQR(controls.tvel[Y]);
-
-					//Vertical fence
-					float ratioXZ_vel = 1.0f;
-					if(z_dist < (z_max + dist_to_limit)) //if too high => tvel_z_added is positif
-					{
-						float tvel_z_added = -SQR(z_dist - (z_max+dist_to_limit)) / dist_to_limit * max_vel_z;
-
-						//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
-						//					tvel_z_added = sign(tvel_z_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXZ_vel - central_data->controls.tvel[Z];
-
-						controls.tvel[Z] += tvel_z_added;
-						//if(z_dist < z_max)
-						//		central_data->controls.tvel[Z] = max_vel_z;
-					}
-					if(z_dist > (z_min - dist_to_limit)) //if too low => tvel_z_added is negatif
-					{
-						float tvel_z_added = -SQR(z_dist - (z_min-dist_to_limit)) / dist_to_limit * max_vel_z;
-
-						//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
-						//					tvel_z_added = sign(tvel_z_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXZ_vel - central_data->controls.tvel[Z];
-
-						controls.tvel[Z] += tvel_z_added;
-
-						//if(z_dist > z_min)
-						//		central_data->controls.tvel[Z] = -max_vel_z;
-					}
-
-					//Lateral fence
-					origin2quad[0] = position_estimation.local_position.pos[X] - position_estimation.get_fence_position().pos[X];
-					origin2quad[1] = position_estimation.local_position.pos[Y] - position_estimation.get_fence_position().pos[Y];
-					origin2quad[2] = 0.0f;
-
-					quadOrientation[0] = position_estimation.vel[0];
-					quadOrientation[1] = position_estimation.vel[1];
-					quadOrientation[2] = 0.0f;
-
-					CROSS(origin2quad,quadOrientation,out);
-
-					float tvel_y_added;
-					float ratioXY_vel = 1.0f; //should be between 0.0f and 1.0f
-					if(xy_dist > (xy_max - dist_to_limit))
-					{
-						//compute repulsion velocity y
-						tvel_y_added = sign(out[2])*SQR(xy_dist - (xy_max-dist_to_limit)) / dist_to_limit * max_vel_y;
-
-						//troncate repulsion velocity y to the norm of the total speed
-						if(maths_f_abs(tvel_y_added + controls.tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
-							tvel_y_added = sign(tvel_y_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - controls.tvel[Y];
-
-						controls.tvel[Y] += tvel_y_added;
-
-						//do this to ensure that whatever input in tvel[Y] we have the tvel[Y] output not bigger than the norm
-						if(controls.tvel[Y] > 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
-							controls.tvel[Y] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
-						else if(controls.tvel[Y] < 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
-							controls.tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
-
-						print_util_dbg_print("tvel_y_added \r\n");
-						print_util_dbg_putfloat(tvel_y_added,3);
-						print_util_dbg_print("\r\n");
-
-						//reduce the speed on tvel[X] in order to keep the norm of the speed constant
-						controls.tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(controls.tvel[Y]));
-					}
-				}
-
-				print_util_dbg_print("vel cmd\r\n");
-				print_util_dbg_print("Vx ");
-				print_util_dbg_putfloat(controls.tvel[X],3);
-				print_util_dbg_print("  Vy ");
-				print_util_dbg_putfloat(controls.tvel[Y],3);
-				print_util_dbg_print("  Vz ");
-				print_util_dbg_putfloat(controls.tvel[Z],3);
-				print_util_dbg_print("  Yaw ");
-				print_util_dbg_putfloat(controls.rpy[YAW],3);
-				print_util_dbg_print("\r\n");
-
-				controls.control_mode = VELOCITY_COMMAND_MODE;
-
-				//YAW_COORDINATED to have the yaw in the axis of the velocity speed
-				controls.yaw_mode = YAW_COORDINATED;
-
-
-
-            	break;
-
             //case Mav_mode::RATE:
             //    manual_control.get_rate_command(&controls);
             //    controls.control_mode = RATE_COMMAND_MODE;
             //    break;
-
+            }
             default:
                 failsafe = true;    // undefined behaviour -> failsafe
+
+        }
+        if(state.is_custom())
+        {
+        	failsafe = false;
+
+        	manual_control.manual_control_get_from_joystick_symbiotic(&controls);
+
+			float max_vel_z = 6.0f; //[m/s]
+			float max_vel_y = 6.0f; //[m/s]
+
+			// fence avoidance
+			bool compute_repulsion = false;
+			float xy_dist;
+			float z_dist;
+			float norm_ctrl_vel_xy_sqr;
+			float z_min, z_max, xy_max, dist_to_limit;
+			float origin2quad[3];
+			float quadOrientation[3];
+			float out[3];
+
+			bool in_drone_dome = true;
+			if(in_drone_dome) //ideal speed 0.5 to 0.7 m/s
+			{
+				//center point (0,0,2.0)
+				z_min = -0.75f;//[m]
+				z_max = -3.5f;//[m]
+				xy_max = 3.0f; //radius [m]
+				dist_to_limit = 0.5f; //[m]
+				compute_repulsion = true;
+			}
+			else if(manual_control.joystick.isFenceEnabled)
+			{
+				z_min = 6.0f;//[m]  //underground
+				z_max = -23.0f;//[m]
+				xy_max = 18.0f; //radius [m]
+				dist_to_limit = 3.0f; //[m]
+				compute_repulsion = true;
+			}
+
+			if(compute_repulsion)
+			{
+				xy_dist = position_estimation.position_estimation_get_xy_distance_from_fence_origin();
+				z_dist = position_estimation.position_estimation_get_z_distance_from_fence_origin();
+				norm_ctrl_vel_xy_sqr = SQR(controls.tvel[X]) + SQR(controls.tvel[Y]);
+
+				//Vertical fence
+				//float ratioXZ_vel = 1.0f;
+				if(z_dist < (z_max + dist_to_limit)) //if too high => tvel_z_added is positif
+				{
+					float tvel_z_added = -SQR(z_dist - (z_max+dist_to_limit)) / dist_to_limit * max_vel_z;
+
+					//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
+					//					tvel_z_added = sign(tvel_z_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXZ_vel - central_data->controls.tvel[Z];
+
+					controls.tvel[Z] += tvel_z_added;
+					//if(z_dist < z_max)
+					//		central_data->controls.tvel[Z] = max_vel_z;
+				}
+				if(z_dist > (z_min - dist_to_limit)) //if too low => tvel_z_added is negatif
+				{
+					float tvel_z_added = -SQR(z_dist - (z_min-dist_to_limit)) / dist_to_limit * max_vel_z;
+
+					//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
+					//					tvel_z_added = sign(tvel_z_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXZ_vel - central_data->controls.tvel[Z];
+
+					controls.tvel[Z] += tvel_z_added;
+
+					//if(z_dist > z_min)
+					//		central_data->controls.tvel[Z] = -max_vel_z;
+				}
+
+				//Lateral fence
+				origin2quad[0] = position_estimation.local_position.pos[X] - position_estimation.get_fence_position().pos[X];
+				origin2quad[1] = position_estimation.local_position.pos[Y] - position_estimation.get_fence_position().pos[Y];
+				origin2quad[2] = 0.0f;
+
+				quadOrientation[0] = position_estimation.vel[0];
+				quadOrientation[1] = position_estimation.vel[1];
+				quadOrientation[2] = 0.0f;
+
+				CROSS(origin2quad,quadOrientation,out);
+
+				float tvel_y_added;
+				float ratioXY_vel = 1.0f; //should be between 0.0f and 1.0f
+				if(xy_dist > (xy_max - dist_to_limit))
+				{
+					//compute repulsion velocity y
+					tvel_y_added = sign(out[2])*SQR(xy_dist - (xy_max-dist_to_limit)) / dist_to_limit * max_vel_y;
+
+					//troncate repulsion velocity y to the norm of the total speed
+					if(maths_f_abs(tvel_y_added + controls.tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
+						tvel_y_added = sign(tvel_y_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - controls.tvel[Y];
+
+					controls.tvel[Y] += tvel_y_added;
+
+					//do this to ensure that whatever input in tvel[Y] we have the tvel[Y] output not bigger than the norm
+					if(controls.tvel[Y] > 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
+						controls.tvel[Y] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
+					else if(controls.tvel[Y] < 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
+						controls.tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
+
+					print_util_dbg_print("tvel_y_added \r\n");
+					print_util_dbg_putfloat(tvel_y_added,3);
+					print_util_dbg_print("\r\n");
+
+					//reduce the speed on tvel[X] in order to keep the norm of the speed constant
+					controls.tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(controls.tvel[Y]));
+				}
+			}
+
+			print_util_dbg_print("vel cmd\r\n");
+			print_util_dbg_print("Vx ");
+			print_util_dbg_putfloat(controls.tvel[X],3);
+			print_util_dbg_print("  Vy ");
+			print_util_dbg_putfloat(controls.tvel[Y],3);
+			print_util_dbg_print("  Vz ");
+			print_util_dbg_putfloat(controls.tvel[Z],3);
+			print_util_dbg_print("  Yaw ");
+			print_util_dbg_putfloat(controls.rpy[YAW],3);
+			print_util_dbg_print("\r\n");
+
+			controls.control_mode = VELOCITY_COMMAND_MODE;
+
+			//YAW_COORDINATED to have the yaw in the axis of the velocity speed
+			controls.yaw_mode = YAW_COORDINATED;
         }
     }
     else    // !state.is_armed()
@@ -308,7 +305,7 @@ bool LEQuad_symbiotic::main_task(void)
 // -------------------------------------------------------------------------
 // GIMBAL
 // -------------------------------------------------------------------------
-bool LEQuad::init_gimbal(void)
+bool LEQuad_symbiotic::init_gimbal(void)
 {
     bool ret = true;
 
@@ -316,26 +313,18 @@ bool LEQuad::init_gimbal(void)
     ret &= gimbal_controller_telemetry_init(&gimbal_controller, mavlink_communication.p_message_handler());
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, (Mavlink_communication::send_msg_function_t)&gps_telemetry_send_raw, &gps);
 
     // Task
-    ret &= scheduler.add_task(50000, (Scheduler_task::task_function_t)&Gimbal_controller::update, (Scheduler_task::task_argument_t)&gimbal_controller, Scheduler_task::PRIORITY_NORMAL);
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Gimbal_controller::update, (Scheduler_task::task_argument_t)&gimbal_controller, Scheduler_task::PRIORITY_NORMAL);
 
     // Data logging
-    //ret &= data_logging_stat.add_field((uint32_t*)&state.mav_state_,   "mav_state");
-
-    //init_success &= data_logging->add_field((uint32_t*)&central_data->state.mav_state_, "mav_state_");
-    //init_success &= data_logging->add_field(&central_data->state.mav_mode_, "mav_mode");
-
-        //--Alex
-        //init_success &= data_logging->add_field(&central_data->controls.rpy[0], "in_roll", 3);
-        //init_success &= data_logging->add_field(&central_data->controls.rpy[1], "in_pitch", 3);
-        //init_success &= data_logging->add_field(&central_data->gimbal_controller.roll_body_, "out_roll", 3);
-        //init_success &= data_logging->add_field(&central_data->gimbal_controller.fake_pitch_, "out_f_pitch", 3);
-        //init_success &= data_logging->add_field(&central_data->gimbal_controller.vel_x_semilocal_, "vel_x_sl", 3);
-        //init_success &= data_logging->add_field(&central_data->manual_control.joystick.commTrigger, "p_joy_ms", 3);
-        //init_success &= data_logging->add_field(&central_data->gimbal_controller.commTrig_, "p_gim_ms", 3);
-        //--
+    //ret &= data_logging_continuous.add_field(&controls.rpy[0], "in_roll", 3);
+    //ret &= data_logging_continuous.add_field(&controls.rpy[1], "in_pitch", 3);
+    //ret &= data_logging_continuous.add_field(&gimbal_controller.roll_body_, "out_roll", 3);
+    //ret &= data_logging_continuous.add_field(&gimbal_controller.fake_pitch_, "out_f_pitch", 3);
+    //ret &= data_logging_continuous.add_field(&gimbal_controller.vel_x_semilocal_, "vel_x_sl", 3);
+    //ret &= data_logging_continuous.add_field(&manual_control.joystick.commTrigger, "p_joy_ms", 3);
+    //ret &= data_logging_continuous.add_field(&gimbal_controller.commTrig_, "p_gim_ms", 3);
 
     return ret;
 }

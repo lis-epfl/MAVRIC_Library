@@ -48,16 +48,12 @@
 #include "control/gimbal_controller.hpp"
 #include "control/gimbal_controller_telemetry.hpp"
 
-#define DroneDome
-
 /**
  * \brief MAV class
  */
-#if defined DroneDome
-class LEQuad_symbiotic: public LEQuad_dronedome
-#elif
+typedef LEQuad Base_class;
+
 class LEQuad_symbiotic: public LEQuad
-#endif
 {
 public:
     /**
