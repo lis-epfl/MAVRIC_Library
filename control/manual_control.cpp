@@ -323,9 +323,9 @@ Mav_mode Manual_control::get_mode_from_source(Mav_mode mode_current)
     return new_mode;
 }
 
-mav_mode_t Manual_control::manual_control_get_mode_from_remote(mav_mode_t mode_current)
+Mav_mode Manual_control::manual_control_get_mode_from_remote(Mav_mode mode_current)
 {
-    mav_mode_t new_mode = mode_current;
+	Mav_mode new_mode = mode_current;
 
 	if (remote_check(&remote) != SIGNAL_LOST)
 	{

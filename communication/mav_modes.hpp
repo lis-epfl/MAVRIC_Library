@@ -96,7 +96,8 @@ typedef enum
         ATTITUDE =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED,
         VELOCITY =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
         POSITION_HOLD = MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
-        GPS_NAV =       MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED
+        GPS_NAV =       MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED,
+		CUSTOM = 		MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_CUSTOM_MODE_ENABLED
     };
 
     /* describes which flags are used for ctrl_mode */
@@ -165,29 +166,31 @@ typedef enum
      *
      * \return    MAV_MODE_FLAG_AUTO_ENABLED
      */
-    inline bool is_auto() const {return is_flag_set(MAV_MODE_FLAG_AUTO_ENABLED);};/*
- * \brief Returns whether MAV is in manual piloting mode
- *
- * \param mav_mode  correspond to the mode in which the MAV is
- *
- * \return true if MAV is in manual piloting mode, false otherwise
- */
-static inline bool mav_modes_is_only_manual(const mav_mode_t mav_mode)
-{
-    if ((mav_mode & MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED &&
-    	(mav_mode & MAV_MODE_FLAG_STABILIZE_ENABLED) 	== !MAV_MODE_FLAG_STABILIZE_ENABLED &&
-		(mav_mode & MAV_MODE_FLAG_GUIDED_ENABLED) 		== !MAV_MODE_FLAG_GUIDED_ENABLED &&
-		(mav_mode & MAV_MODE_FLAG_AUTO_ENABLED) 		== !MAV_MODE_FLAG_AUTO_ENABLED &&
-		(mav_mode & MAV_MODE_FLAG_TEST_ENABLED) 		== !MAV_MODE_FLAG_TEST_ENABLED &&
-		(mav_mode & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) 	== !MAV_MODE_FLAG_CUSTOM_MODE_ENABLED)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
+    inline bool is_auto() const {return is_flag_set(MAV_MODE_FLAG_AUTO_ENABLED);};
+
+    /*
+	 * \brief Returns whether MAV is in manual piloting mode
+	 *
+	 * \param mav_mode  correspond to the mode in which the MAV is
+	 *
+	 * \return true if MAV is in manual piloting mode, false otherwise
+	 */
+	static inline bool is_only_manual(const Mav_mode mav_mode)
+	{
+		if ((mav_mode.bits() & MAV_MODE_FLAG_MANUAL_INPUT_ENABLED) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED &&
+			(mav_mode.bits() & MAV_MODE_FLAG_STABILIZE_ENABLED) 	== !MAV_MODE_FLAG_STABILIZE_ENABLED &&
+			(mav_mode.bits() & MAV_MODE_FLAG_GUIDED_ENABLED) 		== !MAV_MODE_FLAG_GUIDED_ENABLED &&
+			(mav_mode.bits() & MAV_MODE_FLAG_AUTO_ENABLED) 		== !MAV_MODE_FLAG_AUTO_ENABLED &&
+			(mav_mode.bits() & MAV_MODE_FLAG_TEST_ENABLED) 		== !MAV_MODE_FLAG_TEST_ENABLED &&
+			(mav_mode.bits() & MAV_MODE_FLAG_CUSTOM_MODE_ENABLED) 	== !MAV_MODE_FLAG_CUSTOM_MODE_ENABLED)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
     /**
      * \brief     returns whether in test mode (MAV_MODE_FLAG_TEST_ENABLED set)
@@ -315,6 +318,7 @@ private:
      */
      inline bool equal(Mav_mode mav_mode) const {return bits_ == mav_mode.bits_;};
 
+public:
     /**
      * \brief   set mode to corresponding bits
  *

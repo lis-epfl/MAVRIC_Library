@@ -11,12 +11,12 @@ PROJ_NAME=LEQuadAV
 # PROJECT FOLDER
 # ------------------------------------------------------------------------------
 # Project source folder
-MAVRIC_SRC=../../../../src
 MAVRIC_SRC=../
 
 # Sources files for project folder (*.c and *.cpp)
-SRCS += sample_projects/LEQuad/main_avr32.cpp
+SRCS += sample_projects/LEQuad/main_avr32_symbiotic.cpp
 SRCS += sample_projects/LEQuad/lequad.cpp
+SRCS += sample_projects/LEQuad/lequad_symbiotic.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY

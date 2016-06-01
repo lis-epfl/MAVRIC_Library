@@ -43,7 +43,6 @@
 #ifndef STABILISATION_TELEMETRY_H_
 #define STABILISATION_TELEMETRY_H_
 
-#include "../../src/central_data.hpp"
 #include "control/stabilisation_copter.hpp"
 #include "communication/mavlink_stream.hpp"
 
@@ -105,6 +104,6 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void sensors_set_telemetry_send(Central_data *central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+//void sensors_set_telemetry_send( *central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* STABILISATION_TELEMETRY_H_ */

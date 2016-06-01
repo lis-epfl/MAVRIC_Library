@@ -172,7 +172,8 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
     mavlink_stream->send(msg);
 }
 
-void  sensors_set_telemetry_send(Central_data *central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+//Alex
+/*void  sensors_set_telemetry_send(Central_data *central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
 
 	float semilocal_vel[3];
@@ -184,7 +185,7 @@ void  sensors_set_telemetry_send(Central_data *central_data, const Mavlink_strea
 	//navigation.qe is the body attitude in quaternion
 	aero_attitude = coord_conventions_quat_to_aero(central_data->navigation.qe);
 
-	/*mavlink_msg_angle_rate_velocity_sensors_pack(mavlink_stream->sysid,
+	mavlink_msg_angle_rate_velocity_sensors_pack(mavlink_stream->sysid,
             mavlink_stream->compid,
             msg,
             time_keeper_get_ms(),
@@ -193,7 +194,7 @@ void  sensors_set_telemetry_send(Central_data *central_data, const Mavlink_strea
 			semilocal_vel[X],
 			semilocal_vel[Y],
 			semilocal_vel[Z],
-			0.0f);*/
+			0.0f);
 
 	mavlink_msg_highres_imu_pack(mavlink_stream->sysid(),
 			mavlink_stream->compid(),
@@ -213,4 +214,4 @@ void  sensors_set_telemetry_send(Central_data *central_data, const Mavlink_strea
 			central_data->gimbal_controller.attitude_output_.rpy[2], //[°]
 			0.0f, //float
 			0); //uint16_t
-}
+}*/

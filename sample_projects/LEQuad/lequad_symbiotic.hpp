@@ -30,74 +30,96 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file lequad_dronedome.hpp
+ * \file lequad_symbiotic.hpp
  *
  * \author MAV'RIC Team
  *
- * \brief MAV class for indoor use
+ * \brief MAV class
  *
  ******************************************************************************/
 
 
-#ifndef LEQUAD_DRONEDOME_HPP_
-#define LEQUAD_DRONEDOME_HPP_
+#ifndef LEQUAD_SYMBIOTIC_HPP_
+#define LEQUAD_SYMBIOTIC_HPP_
 
+#include "sample_projects/LEQuad/lequad_dronedome.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
-#include "drivers/gps_mocap.hpp"
+
+#include "control/gimbal_controller.hpp"
+#include "control/gimbal_controller_telemetry.hpp"
+
+#define DroneDome
 
 /**
- * \brief Central data for indoor use
+ * \brief MAV class
  */
-class LEQuad_dronedome: public LEQuad
+#if defined DroneDome
+class LEQuad_symbiotic: public LEQuad_dronedome
+#elif
+class LEQuad_symbiotic: public LEQuad
+#endif
 {
 public:
     /**
+     * \brief   Configuration structure
+     */
+     struct conf_t
+    {
+        LEQuad::conf_t lequad_config;
+        Gimbal_controller::conf_t gimbal_controller_config;
+    };
+
+    /**
+     * \brief   Default configuration
+     *
+     * \param   sysid       System id (default value = 1)
+     *
+     * \return  Config structure
+     */
+    static inline conf_t default_config(uint8_t sysid = 1);
+
+    /**
      * \brief   Constructor
      */
-    LEQuad_dronedome( Imu& imu,
-                      Barometer& barometer,
-                      Gps& gps,
-                      Sonar& sonar,
-                      Serial& serial_mavlink,
-                      Satellite& satellite,
-                      Led& led,
-                      File& file_flash,
-                      Battery& battery,
-                      Servo& servo_0,
-                      Servo& servo_1,
-                      Servo& servo_2,
-                      Servo& servo_3,
-                      Servo& servo_4,
-                      Servo& servo_5,
-                      Servo& servo_6,
-                      Servo& servo_7,
-                      File& file1,
-                      File& file2,
-                      LEQuad::conf_t config = LEQuad::default_config() ):
-          LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
-                     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
-                     file1, file2, config),
-          gps_mocap_(mavlink_communication.message_handler())
-      {};
+    LEQuad_symbiotic(
+    		Imu& imu,
+            Barometer& barometer,
+            Gps& gps,
+            Sonar& sonar,
+            Serial& serial_mavlink,
+            Satellite& satellite,
+            Led& led,
+            File& file_flash,
+            Battery& battery,
+            Servo& servo_0,
+            Servo& servo_1,
+            Servo& servo_2,
+            Servo& servo_3,
+            Servo& servo_4,
+            Servo& servo_5,
+            Servo& servo_6,
+            Servo& servo_7,
+            File& file1,
+            File& file2,
+            const conf_t& config = default_config());
 
-      /**
-       * \brief   Initialisation
-       * \return [description]
-       */
-      bool init(void)
-      {
-          bool success; // = LEQuad::init();
+protected:
 
-          bool ret = gps_mocap_.init();
-          print_util_dbg_init_msg("[GPS_MOCAP]", ret);
-          success &= ret;
+    Gimbal_controller				gimbal_controller;			///< The class gimbal control
 
-          return success;
-      }
-
-private:
-    Gps_mocap gps_mocap_;
+    virtual bool main_task(void);
+    virtual bool init_gimbal(void);
 };
 
 
-#endif /* LEQUAD_DRONEDOME_HPP_ */
+LEQuad_symbiotic::conf_t LEQuad_symbiotic::default_config(uint8_t sysid)
+{
+    conf_t conf                                                = {};
+
+    conf.lequad_config = LEQuad::default_config();
+    conf.gimbal_controller_config = Gimbal_controller::default_config();
+
+    return conf;
+};
+
+#endif /* LEQUAD_SYMBIOTIC_HPP_ */

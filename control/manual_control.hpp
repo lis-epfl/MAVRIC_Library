@@ -236,7 +236,7 @@ public:
 	 *
 	 * \return  The value of the mode
 	 */
-	mav_mode_t manual_control_get_mode_from_remote(mav_mode_t mode_current);
+	Mav_mode manual_control_get_mode_from_remote(Mav_mode mode_current);
 
     /**
      * \brief   Sets the internal state of the joystick
