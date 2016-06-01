@@ -2,7 +2,7 @@
 #include "hal/common/time_keeper.hpp"
 
 
-Scheduler_task::Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, uint32_t task_id) :
+Scheduler_task::Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, int32_t task_id) :
         task_id(task_id),
         run_mode(run_mode),
         timing_mode(timing_mode),
@@ -10,9 +10,13 @@ Scheduler_task::Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_
         repeat_period(repeat_period),
         next_run(0),
         execution_time(0),
-        delay_max(0),
+        execution_time_avg(0),
+        execution_time_var(0),
+        execution_time_max(0),
+        delay(0),
         delay_avg(0),
-        delay_var_squared(0),
+        delay_var(0),
+        delay_max(0),
         call_function(call_function),
         function_argument(function_argument)
 {}
@@ -49,7 +53,7 @@ void Scheduler_task::change_period(uint32_t repeat_period)
 }
 
 
-uint32_t Scheduler_task::get_id()
+int32_t Scheduler_task::get_id()
 {
     return task_id;
 }
@@ -65,7 +69,7 @@ bool Scheduler_task::execute()
         next_run = task_start_time;
     }
 
-    uint32_t delay = task_start_time - next_run;
+    delay = task_start_time - next_run;
 
     // Execute task
     bool success = call_function(function_argument);
@@ -102,14 +106,22 @@ bool Scheduler_task::execute()
         is_violation = true;
     }
 
-    // Compute real-time statistics
-    delay_avg = (7 * delay_avg + delay) / 8;
+    // Compute real-time statistics on execution time
+    execution_time     = time_keeper_get_us() - task_start_time;
+    execution_time_avg = (7.0f * execution_time_avg + execution_time) / 8.0f;
+    execution_time_var = (15.0f * execution_time_var + (execution_time - execution_time_avg) * (execution_time - execution_time_avg)) / 16.0f;
+    if (execution_time > execution_time_max)
+    {
+        execution_time_max = execution_time;
+    }
+
+    // Compute real-time statistics on delay
+    delay_avg = (7.0f * delay_avg + delay) / 8.0f;
+    delay_var = (15.0f * delay_var + (delay - delay_avg) * (delay - delay_avg)) / 16.0f;
     if (delay > delay_max)
     {
         delay_max = delay;
     }
-    delay_var_squared = (15 * delay_var_squared + (delay - delay_avg) * (delay - delay_avg)) / 16;
-    execution_time = (7 * execution_time + (time_keeper_get_us() - task_start_time)) / 8;
 
     return !is_violation;
 }

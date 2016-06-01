@@ -50,75 +50,6 @@ extern "C"
 }
 
 //------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-/**
- * \brief               Arming/Disarming the motors when button 1 is pressed
- *
- * \param   joystick    The pointer to the joystick structure
- * \param   button_1    The button 1 value (true if pressed)
- */
-static void joystick_button_1(joystick_t* joystick, bool button_1);
-
-
-/**
- * \brief               Do operations when a button is pressed
- *
- * \param   joystick    The pointer to the joystick structure
- * \param   button      The value of the button pressed (true if pressed)
- * \param   mode_flag   The flag mode to be set
- */
-static void joystick_button(joystick_t* joystick, bool button, mav_flag_mask_t mode_flag);
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-static void joystick_button_1(joystick_t* joystick, bool button_1)
-{
-    if (button_1)
-    {
-        if ((joystick->buttons.button_mask & 0x0001) != 0x0001)
-        {
-            if (mav_modes_is_armed(joystick->mav_mode_desired))
-            {
-                joystick->mav_mode_desired &= ~MAV_MODE_FLAG_SAFETY_ARMED;
-                joystick->arm_action = ARM_ACTION_DISARMING;
-            }
-            else
-            {
-                joystick->mav_mode_desired |= MAV_MODE_FLAG_SAFETY_ARMED;
-                joystick->arm_action = ARM_ACTION_ARMING;
-            }
-            joystick->buttons.button_mask |= 0x0001;
-        }
-    }
-    else
-    {
-        if (!button_1)
-        {
-            if ((joystick->buttons.button_mask & 0x0001) == 0x0001)
-            {
-                joystick->buttons.button_mask &= ~0x0001;
-            }
-        }
-    }
-}
-
-
-static void joystick_button(joystick_t* joystick, bool button, mav_flag_mask_t mode_flag)
-{
-    if (button)
-    {
-        joystick->mav_mode_desired &= 0b10100011;
-        joystick->mav_mode_desired += mode_flag;
-    }
-}
-
-
-//------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
@@ -135,7 +66,7 @@ bool joystick_init(joystick_t* joystick)
     //joystick buttons init
     joystick->buttons.button_mask = 0;
 
-    joystick->mav_mode_desired = MAV_MODE_SAFE;
+    joystick->mav_mode_desired = Mav_mode(0);
     joystick->arm_action = ARM_ACTION_NONE;
 
     //Alex --
@@ -172,22 +103,27 @@ float joystick_get_yaw(const joystick_t* joystick)
     return joystick->channels.r;
 }
 
-mav_mode_t joystick_get_mode(joystick_t* joystick, const mav_mode_t current_mode)
+Mav_mode joystick_get_mode(joystick_t* joystick, const Mav_mode current_mode)
 {
-    mav_mode_t new_mode = current_mode;
-    new_mode = (current_mode & 0b10100000) + (joystick->mav_mode_desired & 0b01011111);
+    // new mode equals desired_mode, execept for HIL which is taken from current_mode
+    Mav_mode new_mode = joystick->mav_mode_desired;
+    new_mode.set_hil_flag(current_mode.is_hil());
 
+    // set armed flag depending on arm_action
     if (joystick->arm_action == ARM_ACTION_ARMING)
     {
-        new_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
+        new_mode.set_armed_flag(true);
         joystick->arm_action = ARM_ACTION_NONE;
     }
     else if (joystick->arm_action == ARM_ACTION_DISARMING)
     {
-        new_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+        new_mode.set_armed_flag(false);
         joystick->arm_action = ARM_ACTION_NONE;
     }
-
+    else
+    {
+        new_mode.set_armed_flag(current_mode.is_armed());
+    }
     return new_mode;
 }
 
@@ -246,27 +182,41 @@ void joystick_get_velocity_wing(const joystick_t* joystick, const float ki_yaw, 
     controls->thrust        = joystick->channels.z;
 }
 
-
-void joystick_button_mask(joystick_t* joystick, uint16_t buttons)
+void joystick_button_update(joystick_t* joystick, uint16_t buttons)
 {
-    joystick_button_t button_local;
-    button_local.button_mask = buttons;
+    // check if ARMING button pressed and not pressed at last update
+    if((buttons & 0x0001) == 0x0001 && (joystick->buttons.button_mask & 0x0001) != 0x0001)
+    {
+        if (joystick->mav_mode_desired.is_armed())
+        {
+            joystick->mav_mode_desired.set_armed_flag(false);
+            joystick->arm_action = ARM_ACTION_DISARMING;
+        }
+        else
+        {
+            joystick->mav_mode_desired.set_armed_flag(true);
+            joystick->arm_action = ARM_ACTION_ARMING;
+        }
+    }
 
-    bool but;
-    but = ((button_local.button_mask & 0x0001) == 0x0001);
-    joystick_button_1(joystick, but);
-
-    but = ((button_local.button_mask & 0x0002) == 0x0002);
-    joystick_button(joystick, but, (mav_flag_mask_t)(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED));  // MAV_MODE_POSITION_HOLD
-
-    but = ((button_local.button_mask & 0x0010) == 0x0010);
-    joystick_button(joystick, but, (mav_flag_mask_t)(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED));                                // MAV_MODE_VELOCITY_CONTROL
-
-    but = ((button_local.button_mask & 0x0020) == 0x0020);
-    joystick_button(joystick, but, (mav_flag_mask_t)(MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED));             // MAV_MODE_GPS_NAVIGATION
-
-    but = ((button_local.button_mask & 0x0004) == 0x0004);
-    joystick_button(joystick, but, (mav_flag_mask_t)(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED));                                                                  // MAV_MODE_ATTITUDE_CONTROL
+    // set ctrl mode according to buttons (precedence for ctrl mode if several buttons are pressed: 
+    // ATTIUDE -> VELOCITY -> POSITION_HOLD -> GPS_NAV
+    if((buttons & 0x0004) == 0x0004)        // check if ATTITUDE button pressed
+    {
+        joystick->mav_mode_desired.set_ctrl_mode(Mav_mode::ATTITUDE);
+    }
+    else if((buttons & 0x0010) == 0x0010)   // check if VELOCITY button pressed
+    {
+        joystick->mav_mode_desired.set_ctrl_mode(Mav_mode::VELOCITY);
+    }
+    else if((buttons & 0x0002) == 0x0002)   // check if POSITION_HOLD button pressed
+    {
+        joystick->mav_mode_desired.set_ctrl_mode(Mav_mode::POSITION_HOLD);
+    }
+    else if((buttons & 0x0020) == 0x0020)   // check if GPS_NAV button pressed
+    {
+        joystick->mav_mode_desired.set_ctrl_mode(Mav_mode::GPS_NAV);
+    }
 
     joystick->buttons.button_mask = buttons;
 }

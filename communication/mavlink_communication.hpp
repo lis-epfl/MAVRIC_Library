@@ -116,7 +116,13 @@ public:
      *
      * \return  True if the message was correctly added, false otherwise
      */
-    bool add_msg_send(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
+    bool add_msg_send(uint32_t task_id,
+                      uint32_t repeat_period,
+                      send_msg_function_t function,
+                      handling_telemetry_module_struct_t module_structure,
+                      Scheduler_task::priority_t priority       = Scheduler_task::PRIORITY_NORMAL,
+                      Scheduler_task::timing_mode_t timing_mode = Scheduler_task::PERIODIC_RELATIVE,
+                      Scheduler_task::run_mode_t run_mode       = Scheduler_task::RUN_REGULAR);
 
 
 
@@ -145,16 +151,19 @@ public:
      * \brief   Returns message_handler
      */
     Mavlink_message_handler& message_handler();
+    Mavlink_message_handler* p_message_handler();
 
     /*
      * \brief   Returns mavlink_stream
      */
     Mavlink_stream& mavlink_stream();
+    Mavlink_stream* p_mavlink_stream();
 
     /*
      * \brief   Returns onboard_parameters struct
      */
     Onboard_parameters& onboard_parameters();
+    Onboard_parameters* p_onboard_parameters();
   
     /**
      * \brief   Run task scheduler update if the buffer is empty

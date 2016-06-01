@@ -49,16 +49,6 @@ extern "C"
 }
 
 //------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
@@ -70,19 +60,12 @@ State::State(Mavlink_stream& mavlink_stream, Battery& battery, State::conf_t con
     autopilot_type = config.autopilot_type;
     autopilot_name = config.autopilot_name;
 
-    mav_state_ = config.mav_state;
     mav_mode_ = config.mav_mode;
+    mav_mode_.set_hil_flag(config.simulation_mode);
+    mav_mode_.set_armed_flag(false);
 
+    mav_state_ = config.mav_state;
     mav_mode_custom = config.mav_mode_custom;
-
-    if (config.simulation_mode == HIL_ON)
-    {
-        mav_mode_ |= MAV_MODE_FLAG_HIL_ENABLED;
-    }
-    else
-    {
-        mav_mode_ &= ~MAV_MODE_FLAG_HIL_ENABLED;
-    }
 
     sensor_present = config.sensor_present;
     sensor_enabled = config.sensor_enabled;
@@ -147,14 +130,6 @@ bool State::set_armed(bool arming)
             return false;
         }
 
-        // check if not in manual mode and stabilized or guided mode
-        // (not in velocity or position hold)
-        if(mav_modes_is_manual(mav_mode_) && (mav_modes_is_stabilize(mav_mode_) || mav_modes_is_guided(mav_mode_)))
-        {
-            print_util_dbg_print("[STATE]: prevented arming because in stabilise or guided mode\r\n");
-            return false;
-        }
-
         // check if battery not low
         if(battery_.is_low())
         {
@@ -164,7 +139,10 @@ bool State::set_armed(bool arming)
 
         // set armed flag
         print_util_dbg_print("[STATE]: arming\r\n");
-        mav_mode_ |= MAV_MODE_FLAG_SAFETY_ARMED;
+        mav_mode_.set_armed_flag(true);
+
+        //resetting custom flag
+        mav_mode_custom = Mav_mode::CUSTOM_BASE_MODE;
 
         // switch state to active
         switch_to_active_mode(&mav_state_);
@@ -172,7 +150,7 @@ bool State::set_armed(bool arming)
     else
     {
         // clear armed flag
-        mav_mode_ &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+        mav_mode_.set_armed_flag(false);
         print_util_dbg_print("[STATE]: disarming\r\n");
 
         // set state to standby

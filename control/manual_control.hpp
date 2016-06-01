@@ -60,8 +60,6 @@ class Onboard_parameters;
  */
 class Manual_control
 {
-friend bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
-
 public:
     /**
  * \brief   The source mode enum
@@ -228,7 +226,7 @@ public:
  *
  * \return  The value of the mode
  */
-    mav_mode_t get_mode_from_source(mav_mode_t mode_current);
+    Mav_mode get_mode_from_source(Mav_mode mode_current);
 
 	/**
 	 * \brief   Returns the value of the mode from the remote
@@ -248,7 +246,7 @@ public:
      * \param   mode_current            The current mode of the MAV
      *
      */
-    void set_mode_of_source(mav_mode_t mode_current);
+    void set_mode_of_source(Mav_mode mode_current);
 
 /**
  * \brief   Returns the quality of the strength of the remote receiver
@@ -289,14 +287,10 @@ public:
     static inline conf_t default_config();
 
 
-
     remote_t                remote;             ///< The pointer to the remote structure
     joystick_t              joystick;           ///< The pointer to the joystick structure
-private:
     mode_source_t           mode_source_;        ///< The source mode
     control_source_t        control_source_;     ///< Flag to tell whether the remote is active or not
-
-
 } ;
 
 Manual_control::conf_t Manual_control::default_config()

@@ -168,13 +168,19 @@ public:
      */
     static inline conf_t default_config();
 
-	/**
+/**
+     * \brief   default configuration for navigation of a wing robot
+     *
+     * \return default config
+     */
+    static inline conf_t default_wing_config();
+
+    dubin_state_t dubin_state;/**
      * \brief   give back the semilocal vel
      *
      * \return -
      */
-    void position_estimation_get_semilocal_velocity(float semilocal_vel[3]);	dubin_state_t dubin_state;                          ///< The internal Dubin state    
-
+    	
 	float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
     pid_controller_t hovering_controller;               ///< hovering controller
     pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
@@ -208,9 +214,9 @@ private:
     float dt;                                           ///< The time interval between two navigation updates
     uint32_t last_update;                               ///< The time of the last navigation update in ms
     uint32_t loop_count;                                ///< A counter for sending MAVLink messages at a lower rate than the function
-    control_command_t& controls_nav;                    ///< The pointer to the navigation control structure
-    const Position_estimation& position_estimation;     ///< The pointer to the position estimation structure in central_data
-    State& state;                                       ///< The pointer to the state structure in central_data
+    control_command_t& controls_nav;                    ///< Reference to the navigation control structure
+    const Position_estimation& position_estimation;     ///< The pointer to the position estimation structure
+    State& state;                                       ///< The pointer to the state structure
     const Mavlink_stream& mavlink_stream;               ///< The pointer to the MAVLink stream structure
 
     /**
@@ -284,12 +290,27 @@ Navigation::conf_t Navigation::default_config()
 
     conf.one_over_scaling                            = 0.3f;
     conf.safe_altitude                               = -30.0f;
-    conf.minimal_radius                              = 45.0f;
+    conf.minimal_radius                              = 5.0f;
     conf.heading_acceptance                          = PI/6.0f;
     conf.vertical_vel_gain                           = 1.0f;
     conf.takeoff_altitude                            = -10.0f;
-    conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
-    //conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
+    //conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
+    conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
+    return conf;
+};
+
+Navigation::conf_t Navigation::default_wing_config()
+{
+    conf_t conf = default_config();
+
+    conf.cruise_speed                                = 12.0f;
+    conf.max_climb_rate                              = 6.0f;
+    
+    conf.safe_altitude                               = -60.0f;
+    conf.minimal_radius                              = 45.0f;
+    // conf.heading_acceptance                          = PI/6.0f;  //TODO should this be adapted for the wing
+    conf.takeoff_altitude                            = -60.0f;
+    conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
     return conf;
 };
 

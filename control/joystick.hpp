@@ -132,7 +132,7 @@ typedef struct
 {
     joystick_button_t buttons;          ///< The bit mask of the button pressed
     joystick_channels_t channels;       ///< Channels of the joystick
-    mav_mode_t mav_mode_desired;        ///< The mav mode indicated by the remote
+    Mav_mode mav_mode_desired;          ///< The mav mode indicated by the remote
     arm_action_t arm_action;
 
     float commTrigger;					///< Alex added, to test communication robustness
@@ -198,7 +198,7 @@ float joystick_get_yaw(const joystick_t* joystick);
  *
  * \return  The value of the current desired mode
  */
-mav_mode_t joystick_get_mode(joystick_t* joystick, const mav_mode_t current_mode);
+Mav_mode joystick_get_mode(joystick_t* joystick, const Mav_mode current_mode);
 
 
 /**
@@ -239,7 +239,7 @@ void joystick_get_control_command(const joystick_t* joystick, control_command_t*
  * \param   joystick    The pointer to the joystick structure
  * \param   buttons     The bit mask of the buttons
  */
-void joystick_button_mask(joystick_t* joystick, uint16_t buttons);
+void joystick_button_update(joystick_t* joystick, uint16_t buttons);
 
 
 /**

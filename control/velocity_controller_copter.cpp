@@ -115,7 +115,7 @@ static void get_velocity_command_from_semilocal_to_local(const velocity_controll
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const Position_estimation* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
+bool velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const Position_estimation* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
 {
     // Init dependencies
     controller->velocity_command    = velocity_command;
@@ -131,10 +131,12 @@ void velocity_controller_copter_init(velocity_controller_copter_t* controller, v
     pid_controller_init(&controller->pid[X], &config.pid_config[X]);
     pid_controller_init(&controller->pid[Y], &config.pid_config[Y]);
     pid_controller_init(&controller->pid[Z], &config.pid_config[Z]);
+
+    return true;
 }
 
 
-void velocity_controller_copter_update(velocity_controller_copter_t* controller)
+bool velocity_controller_copter_update(velocity_controller_copter_t* controller)
 {
     float velocity_command_local[3];
     float errors[3];
@@ -197,4 +199,6 @@ void velocity_controller_copter_update(velocity_controller_copter_t* controller)
 
     // Map PID output to thrust
     controller->thrust_command->thrust  = controller->thrust_hover_point - thrust_vector[Z];
+
+    return true;
 }

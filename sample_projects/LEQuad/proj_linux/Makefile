@@ -10,18 +10,9 @@ PROJ_NAME=LEQuadLI
 # ------------------------------------------------------------------------------
 # PROJECT FOLDER
 # ------------------------------------------------------------------------------
-
-
 # Project source files (*.c and *.cpp)
-LIB_SRCS += ../src/main_linux.cpp
-LIB_SRCS += ../src/central_data.cpp
-LIB_SRCS += ../src/tasks.cpp
-LIB_SRCS += ../src/mavlink_telemetry.cpp
-
-#LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
-#LIB_SRCS += sample_projects/LEQuad/central_data.cpp
-#LIB_SRCS += sample_projects/LEQuad/tasks.cpp
-#LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
+LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
+LIB_SRCS += sample_projects/LEQuad/lequad.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
@@ -34,18 +25,17 @@ LIB_INC += -I$(MAVRIC_LIB)
 
 # add library source files
 include ${MAVRIC_LIB}rules_common.mk
-#	include ${MAVRIC_LIB}rules_libs.mk
+#include ${MAVRIC_LIB}rules_libs.mk
 include ${MAVRIC_LIB}rules_dummy.mk
 include ${MAVRIC_LIB}rules_linux.mk
 
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CC = gcc
+# CC = gcc
 OBJCOPY = objcopy
 
 CFLAGS += -g -O2 -Wall -std=gnu99 -MMD -MP
-
 
 # Include files from MAVRIC library and source folder
 CFLAGS += -I.
@@ -54,11 +44,10 @@ CFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CXX = g++
+# CXX = g++
 OBJCOPY = objcopy
 
 CXXFLAGS += -g -O2 -Wall -std=c++11 -MMD -MP
-
 
 # Include files from MAVRIC library and source folder
 CXXFLAGS += -I.
@@ -144,8 +133,6 @@ clean:
 	@rm -f $(OBJS) $(DEPS)
 	@rm -rf build/
 	@$(PRINT_OK)
-	@rm -rf LEQuad_mavrinux.*
-	@rm -rf *.bin
 
 rebuild: clean proj
 

@@ -90,7 +90,7 @@ void Navigation::set_speed_command(float rel_pos[])
     float dir_desired_sg[3];
     float rel_heading;
 
-    mav_mode_t mode = state.mav_mode();
+    Mav_mode mode = state.mav_mode();
 
     norm_rel_dist = sqrt(dist2wp_sqr);
 
@@ -114,7 +114,7 @@ void Navigation::set_speed_command(float rel_pos[])
     dir_desired_sg[Y] /= norm_rel_dist;
     dir_desired_sg[Z] /= norm_rel_dist;
 
-    if ((mav_modes_is_auto(mode) && ((state.nav_plan_active && (internal_state_ == NAV_NAVIGATING)) || (internal_state_ == NAV_STOP_THERE))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
+    if ((mode.is_auto() && ((state.nav_plan_active && (internal_state_ == NAV_NAVIGATING)) || (internal_state_ == NAV_STOP_THERE))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
     {
 
         if (((maths_f_abs(rel_pos[X]) <= 1.0f) && (maths_f_abs(rel_pos[Y]) <= 1.0f)) || ((maths_f_abs(rel_pos[X]) <= 5.0f) && (maths_f_abs(rel_pos[Y]) <= 5.0f) && (maths_f_abs(rel_pos[Z]) >= 3.0f)))
@@ -279,7 +279,7 @@ void Navigation::run()
         case Navigation::strategy_t::DUBIN:
             if (state.autopilot_type == MAV_TYPE_QUADROTOR)
             {
-                if ( (internal_state_ == NAV_NAVIGATING) || (internal_state_ == NAV_HOLD_POSITION) )
+                if (internal_state_ == NAV_NAVIGATING)
                 {
                     set_dubin_velocity( &goal.dubin);
                 }
@@ -368,7 +368,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
 
 bool Navigation::update(Navigation* navigation)
 {
-    mav_mode_t mode_local = navigation->state.mav_mode();
+    Mav_mode mode_local = navigation->state.mav_mode();
 
     uint32_t t = time_keeper_get_us();
 
@@ -392,7 +392,7 @@ bool Navigation::update(Navigation* navigation)
 
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mav_modes_is_stabilize(mode_local))
+            if (mode_local.is_guided())
             {
                 if ((navigation->internal_state_ == NAV_NAVIGATING) || (navigation->internal_state_ == NAV_LANDING))
                 {

@@ -46,7 +46,7 @@
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/state.hpp"
+#include "communication/state_machine.hpp"
 
 /**
  * \brief   Initialise the state telemetry module
@@ -57,7 +57,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool state_telemetry_init(State* state, Mavlink_message_handler* message_handler);
+bool state_telemetry_init(State_machine* state_machine, Mavlink_message_handler* message_handler);
 
 /**
  * \brief   Function to send the MAVLink heartbeat message
