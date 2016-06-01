@@ -164,7 +164,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             if (stabilisation_copter->controls->yaw_mode == YAW_COORDINATED)
             {
                 float rel_heading_coordinated;
-                if ((maths_f_abs(stabilisation_copter->pos_est->vel_bf[X]) < 0.1f) && (maths_f_abs(stabilisation_copter->pos_est->vel_bf[Y]) < 0.1f))
+                if ((maths_f_abs(stabilisation_copter->pos_est->vel_bf[X]) < 0.2f) && (maths_f_abs(stabilisation_copter->pos_est->vel_bf[Y]) < 0.2f))
                 {
                     rel_heading_coordinated = 0.0f;
                 }
@@ -174,7 +174,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
                 }
 
                 float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
-                w = 0.4f;
+                w = 1.0f;
                 input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
             }
 
