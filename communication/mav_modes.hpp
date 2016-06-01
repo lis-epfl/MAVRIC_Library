@@ -97,10 +97,11 @@ typedef enum
         VELOCITY =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
         POSITION_HOLD = MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
         GPS_NAV =       MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED,
+		COSTUM = 		MAV_MODE_FLAG_CUSTOM_MODE_ENABLED
     };
 
     /* describes which flags are used for ctrl_mode */
-    static const bitmask_t CTRL_MODE_BITFIELD = 0b01011100;
+    static const bitmask_t CTRL_MODE_BITFIELD = 0b01011101; //before 0b01011100
 
     Mav_mode() : bits_(0){};
 
@@ -282,6 +283,7 @@ typedef enum
      * \details affects only manual, stabilize, guided and auto flag
      */
     inline void set_ctrl_mode(ctrl_mode_t ctrl_mode) {bits_ = (bits_ & ~CTRL_MODE_BITFIELD) + (ctrl_mode & CTRL_MODE_BITFIELD);};
+    inline void set_ctrl_mode_symbiotic(ctrl_mode_t ctrl_mode) {bits_ = ctrl_mode;};
 
     /**
      * \brief   operator overload for ==  (calls this.equal(mav_mode) )

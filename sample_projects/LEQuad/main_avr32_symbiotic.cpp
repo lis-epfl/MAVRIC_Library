@@ -91,7 +91,7 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
     LEQuad_symbiotic::conf_t mav_config = LEQuad_symbiotic::default_config(MAVLINK_SYS_ID);
-    /*Alex*/ LEQuad_symbiotic mav = LEQuad_symbiotic(board.imu,
+    LEQuad_symbiotic mav = LEQuad_symbiotic(board.imu,
                         board.bmp085,
                         board.gps_ublox,
                         board.sonar_i2cxl,      // Warning:

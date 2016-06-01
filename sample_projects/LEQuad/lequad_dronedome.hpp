@@ -78,7 +78,9 @@ public:
                      battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
                      file1, file2, config),
           gps_mocap_(mavlink_communication.message_handler())
-      {};
+      {
+    		init();
+      };
 
       /**
        * \brief   Initialisation
@@ -86,7 +88,7 @@ public:
        */
       bool init(void)
       {
-          bool success; // = LEQuad::init();
+          bool success = true; //= LEQuad::init_gps();
 
           bool ret = gps_mocap_.init();
           print_util_dbg_init_msg("[GPS_MOCAP]", ret);
