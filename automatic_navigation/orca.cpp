@@ -716,7 +716,7 @@ void orca_compute_new_velocity(orca_t *orca, float const optimal_velocity[], flo
             
             orca->loop_count_collisions++;
             orca->loop_count_collisions %= 1000;
-            if ( (orca->loop_count_collisions == 0)&&(mav_modes_is_hil(orca->state->mav_mode())) ) 
+            if ( (orca->loop_count_collisions == 0) && orca->state->mav_mode().is_hil() ) 
             {
                 print_util_dbg_print("Collision! ");
                 print_util_dbg_print("Distance with neighbor ");
@@ -779,7 +779,7 @@ void orca_compute_new_velocity(orca_t *orca, float const optimal_velocity[], flo
         orca_diff[i] = optimal_velocity[i] - new_velocity[i];
     }
     
-    if ( (orca->loop_count_orca == 0)&&mav_modes_is_hil(orca->state->mav_mode()) ) 
+    if ( (orca->loop_count_orca == 0) && orca->state->mav_mode().is_hil() ) 
     {
         print_util_dbg_print("Orca diffvel:");
         print_util_dbg_print_vector(orca_diff,2);

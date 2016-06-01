@@ -14,10 +14,8 @@ PROJ_NAME=LEQuadAV
 MAVRIC_SRC=../
 
 # Sources files for project folder (*.c and *.cpp)
-SRCS += main_avr32.cpp
-SRCS += central_data.cpp
-SRCS += mavlink_telemetry.cpp
-SRCS += tasks.cpp
+SRCS += sample_projects/LEQuad/main_avr32.cpp
+SRCS += sample_projects/LEQuad/lequad.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY

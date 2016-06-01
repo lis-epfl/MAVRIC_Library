@@ -140,7 +140,7 @@ static void flocking_calculate_migration(flocking_t *flocking, float u_migration
     uint8_t i;
     float q[3], p[3];
     
-    local_position_t goal = flocking->navigation->goal;
+    local_position_t goal = flocking->navigation->goal.waypoint;
     
     for (i = 0; i < 3; i++)
     {

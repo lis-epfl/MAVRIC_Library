@@ -108,7 +108,7 @@ public:
     };
 
 
-    Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, uint32_t task_id);
+    Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, int32_t task_id);
 
     /**
      * \brief               Modifies the run mode of an existing task
@@ -146,7 +146,7 @@ public:
      *
      * \return          task_id
      */
-    uint32_t get_id();
+    int32_t get_id();
 
     /**
      * \brief           Executes tasks and updates statistics
@@ -162,16 +162,21 @@ public:
      */
     bool is_due();
 
-    uint32_t            task_id;                ///<    Unique task identifier
+    int32_t             task_id;                ///<    Unique task identifier
     run_mode_t          run_mode;               ///<    Run mode
     timing_mode_t       timing_mode;            ///<    Timing mode
     priority_t          priority;               ///<    Priority
     uint32_t            repeat_period;          ///<    Period between two calls (us)
     uint32_t            next_run;               ///<    Next execution time
-    uint32_t            execution_time;         ///<    Execution time
-    uint32_t            delay_max;              ///<    Maximum delay between expected execution and actual execution
-    uint32_t            delay_avg;              ///<    Average delay between expected execution and actual execution
-    uint32_t            delay_var_squared;      ///<    Standard deviation of the delay
+
+    float               execution_time;         ///<    Execution time
+    float               execution_time_avg;     ///<    Average execution time
+    float               execution_time_var;     ///<    Variance of execution time
+    float               execution_time_max;     ///<    Maximum execution time
+    float               delay;                  ///<    Delay between expected execution and actual execution
+    float               delay_avg;              ///<    Average delay
+    float               delay_var;              ///<    Variance of delay
+    float               delay_max;              ///<    Maximum delay
     uint32_t            rt_violations;          ///<    Number of Real-time violations, this is incremented each time an execution is skipped
 
 private:

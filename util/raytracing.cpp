@@ -40,14 +40,14 @@
  ******************************************************************************/
 
 #include "util/raytracing.hpp"
+extern "C"
+{
+  #include "util/maths.h"
+}
 
 namespace raytracing
 {
 
-extern "C"
-{
-#include "util/maths.h"
-}
 
 float norm(Vector3f& vector)
 {
@@ -217,11 +217,10 @@ bool World::intersect(const Ray& ray, Intersection& intersection, Object* object
 {
     bool success = false;
     Intersection inter_tmp;
-    uint32_t object_count = objects_.size();
 
     intersection.set_distance(1000.0f);
 
-    for (uint32_t i = 0; i < object_count; i++)
+    for (uint32_t i = 0; i < object_count_; i++)
     {
         if (objects_[i]->intersect(ray, inter_tmp))
         {

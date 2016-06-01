@@ -77,7 +77,7 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
         joystick->channels.r = packet.r / 1000.0f;
         joystick->channels.z = packet.z / 1000.0f;
 
-        joystick_button_mask(joystick, packet.buttons);
+        joystick_button_update(joystick, packet.buttons);
     }
 }
 

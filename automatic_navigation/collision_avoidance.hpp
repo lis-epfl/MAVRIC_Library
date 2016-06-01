@@ -43,19 +43,17 @@
 #ifndef COLLISION_AVOIDANCE_H__
 #define COLLISION_AVOIDANCE_H__
 
-
+#include "communication/mavlink_message_handler.hpp"
 #include "communication/neighbor_selection.hpp"
+#include "communication/state.hpp"
+
 #include "automatic_navigation/navigation.hpp"
 #include "automatic_navigation/orca.hpp"
 #include "automatic_navigation/human.hpp"
 #include "automatic_navigation/pfm.hpp"
 #include "automatic_navigation/flocking.hpp"
 
-#include "communication/state.hpp"
 #include "sensing/position_estimation.hpp"
-
-
-#include "communication/mavlink_message_handler.hpp"
 
 extern "C"
 {

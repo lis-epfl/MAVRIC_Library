@@ -213,7 +213,7 @@ void human_compute_new_velocity(human_t *human, float new_velocity[])
     float H, dist2goal;
     float v_nom = human->neighbors->config_.cruise_speed, velocity_norm;
     
-    local_position_t goal = human->navigation->goal;
+    local_position_t goal = human->navigation->goal.waypoint;
     
     for (i = 0; i < 3; i++)
     {

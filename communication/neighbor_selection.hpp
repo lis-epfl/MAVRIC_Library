@@ -120,7 +120,7 @@ public:
      */
     Neighbors(Position_estimation& position_estimation, State& state, const Mavlink_stream& mavlink_stream, const conf_t& config = default_config());
 
-    bool update(void);
+    static bool update(Neighbors* neighbors);
 
     const float& near_miss_dist_sqr(void) const;
     const float& collision_dist_sqr(void) const;
@@ -156,15 +156,6 @@ private:
 } ;
 
 /**
- * \brief   Decode the message and parse to the neighbor array
- *
- * \param   neighbors           The pointer to the neighbors struct
- * \param   sysid               The system ID
- * \param   msg                 The pointer to the MAVLink message
- */
-void neighbor_selection_read_message_from_neighbors(Neighbors* neighbors, uint32_t sysid, mavlink_message_t* msg);
-
-/**
  * \brief   Initialize the neighbor selection telemetery module
  *
  * \param   neighbors           The pointer to the neighbor struct
@@ -172,8 +163,16 @@ void neighbor_selection_read_message_from_neighbors(Neighbors* neighbors, uint32
  *
  * \return  True if the init succeed, false otherwise
  */
-bool neighbor_selection_telemetry_init(Neighbors* neighbors, Mavlink_message_handler* message_handler);
+bool neighbors_telemetry_init(Neighbors* neighbors, Mavlink_message_handler* message_handler);
 
+/**
+ * \brief   Decode the message and parse to the neighbor array
+ *
+ * \param   neighbors           The pointer to the neighbors struct
+ * \param   sysid               The system ID
+ * \param   msg                 The pointer to the MAVLink message
+ */
+void neighbors_read_message_from_neighbors(Neighbors* neighbors, uint32_t sysid, mavlink_message_t* msg);
 
 Neighbors::conf_t Neighbors::default_config(void)
 {

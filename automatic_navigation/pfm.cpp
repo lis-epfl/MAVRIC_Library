@@ -79,7 +79,7 @@ static void pfm_calculate_attractive_force(pfm_t *pfm, float attractive_force[])
     float goal_position[3], current_position[3], diff_current_goal[3];
     float dist;
     
-    local_position_t goal = pfm->navigation->goal;
+    local_position_t goal = pfm->navigation->goal.waypoint;
     
     for(i = 0; i < 3; i++)
     {

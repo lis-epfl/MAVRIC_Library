@@ -172,15 +172,6 @@ bool collision_avoidance_init(collision_avoidance_t* collision_avoidance, collis
     collision_avoidance->strategy = config.strategy;
 
     collision_avoidance->controls_nav = controls_nav;
-    
-    //Init neighbor selection
-    /*init_success &= neighbor_selection_init(  &collision_avoidance->neighbors, 
-                                                position_estimation,
-                                                state,
-                                                gps,
-                                                barometer,
-                                                &mavlink_communication->message_handler,
-                                                &mavlink_communication->mavlink_stream);*/
 
     // Init ORCA
     init_success &= orca_init(  &collision_avoidance->orca,
@@ -248,14 +239,14 @@ bool collision_avoidance_update(collision_avoidance_t* collision_avoidance)
 {
     float new_velocity[3];
 
-    mav_mode_t mode_local = collision_avoidance->state->mav_mode();
+    Mav_mode mode_local = collision_avoidance->state->mav_mode();
     
     if((collision_avoidance->state->mav_state_ == MAV_STATE_ACTIVE) && 
         ((collision_avoidance->navigation->internal_state_ > Navigation::NAV_TAKEOFF) && (collision_avoidance->navigation->internal_state_ < Navigation::NAV_STOP_ON_POSITION))
-        && (mav_modes_is_auto(mode_local) || mav_modes_is_guided(mode_local) )
+        && (mode_local.is_auto() || mode_local.is_guided() )
         )
     {
-        collision_avoidance->state->mav_mode_custom |= CUST_COLLISION_AVOIDANCE;
+        collision_avoidance->state->mav_mode_custom |= Mav_mode::CUST_COLLISION_AVOIDANCE;
         switch(collision_avoidance->strategy)
         {
             case ORCA:
@@ -283,7 +274,7 @@ bool collision_avoidance_update(collision_avoidance_t* collision_avoidance)
     }
     else
     {
-        collision_avoidance->state->mav_mode_custom &= ~CUST_COLLISION_AVOIDANCE;
+        collision_avoidance->state->mav_mode_custom &= ~Mav_mode::CUST_COLLISION_AVOIDANCE;
     }
     
     return true;

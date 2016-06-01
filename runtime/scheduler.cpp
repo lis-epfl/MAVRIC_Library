@@ -73,13 +73,24 @@ Scheduler::Scheduler(const Scheduler::conf_t config) :
 }
 
 
-bool Scheduler::add_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, uint32_t task_id)
+bool Scheduler::add_task(uint32_t repeat_period,
+              Scheduler_task::task_function_t call_function,
+              Scheduler_task::task_argument_t function_argument,
+              Scheduler_task::priority_t priority,
+              Scheduler_task::timing_mode_t timing_mode,
+              Scheduler_task::run_mode_t run_mode,
+              int32_t task_id)
 {
     bool task_successfully_added = false;
 
     // Check if the scheduler is not full
     if (task_count_ < max_task_count_)
     {
+        if (task_id == -1)
+        {
+           task_id = task_count_;
+        }
+
         // Check if there is already a task with this ID
         bool id_is_unique = true;
         for (uint32_t i = 0; i < task_count_; ++i)
@@ -113,7 +124,7 @@ bool Scheduler::add_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_
 }
 
 
-bool Scheduler::sort_tasks()
+bool Scheduler::sort_tasks(void)
 {
     bool sorted = false;
 
@@ -159,7 +170,7 @@ bool Scheduler::sort_tasks()
 }
 
 
-int32_t Scheduler::update()
+int32_t Scheduler::update(void)
 {
     int32_t realtime_violation = 0;
 
@@ -195,7 +206,7 @@ int32_t Scheduler::update()
         i = (i+1)%task_count_;
 
     } while(i != current_schedule_slot_);
-    
+
     return realtime_violation;
 }
 
@@ -235,7 +246,7 @@ void Scheduler::suspend_all_tasks(uint32_t delay)
 }
 
 
-void Scheduler::run_all_tasks_now()
+void Scheduler::run_all_tasks_now(void)
 {
     for(uint32_t i = 0; i < task_count_; i++)
     {
@@ -243,12 +254,16 @@ void Scheduler::run_all_tasks_now()
     }
 }
 
+uint32_t Scheduler::task_count(void) const
+{
+    return task_count_;
+}
 
 /*************************************************************************
  *                 static member functions                               *
  ************************************************************************/
 
-Scheduler::conf_t Scheduler::default_config()
+Scheduler::conf_t Scheduler::default_config(void)
 {
     Scheduler::conf_t conf  = {};
 

@@ -96,7 +96,7 @@ Neighbors::Neighbors(Position_estimation& position_estimation, State& state, con
     }
 }
 
-bool neighbor_selection_telemetry_init(Neighbors* neighbors, Mavlink_message_handler* message_handler)
+bool neighbors_telemetry_init(Neighbors* neighbors, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
     
@@ -106,7 +106,7 @@ bool neighbor_selection_telemetry_init(Neighbors* neighbors, Mavlink_message_han
     callback.message_id     = MAVLINK_MSG_ID_GLOBAL_POSITION_INT; // 33
     callback.sysid_filter   = MAV_SYS_ID_ALL;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)        &neighbor_selection_read_message_from_neighbors;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)        &neighbors_read_message_from_neighbors;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)   neighbors;
     init_success &= message_handler->add_msg_callback(&callback);
 
@@ -115,16 +115,16 @@ bool neighbor_selection_telemetry_init(Neighbors* neighbors, Mavlink_message_han
     return init_success;
 }
 
-bool Neighbors::update(void)
+bool Neighbors::update(Neighbors* neighbors)
 {
-    extrapolate_or_delete_position();
-    collision_log_smallest_distance();
-    compute_communication_frequency();
+    neighbors->extrapolate_or_delete_position();
+    neighbors->collision_log_smallest_distance();
+    neighbors->compute_communication_frequency();
 
     return true;
 }
 
-void neighbor_selection_read_message_from_neighbors(Neighbors* neighbors, uint32_t sysid, mavlink_message_t* msg)
+void neighbors_read_message_from_neighbors(Neighbors* neighbors, uint32_t sysid, mavlink_message_t* msg)
 {
     
      

@@ -53,10 +53,13 @@ extern "C"
 
 typedef enum
 {
-    NO_GPS = 0,                            ///< No GPS
-    NO_FIX = 1,                            ///< No GPS fix
-    GPS_OK = 2,                            ///< GPS ok
-}gps_fix_t;
+    NO_GPS = 0,
+    NO_FIX = 1,
+    FIX_2D = 2,
+    FIX_3D = 3,
+    DGPS = 4,
+    RTK = 5,
+} gps_fix_t;
 
 /**
  * \brief Abstract class for GPS
@@ -72,9 +75,16 @@ public:
      */
     virtual bool update(void) = 0;
 
+    /**
+     * \brief   Initializes the gps
+     *
+     * \return  Success
+     */
+    virtual bool init(void) = 0;
+
 
     /**
-     * \brief   Configure the GPS
+     * \brief   (re)Configure the GPS
      */
     virtual void configure(void) = 0;
 
@@ -84,7 +94,7 @@ public:
      *
      * \return  Update time
      */
-    virtual const float& last_update_us(void) const = 0;
+    virtual float last_update_us(void) const = 0;
 
 
     /**
@@ -92,7 +102,7 @@ public:
      *
      * \return  Update time
      */
-    virtual const float& last_position_update_us(void) const = 0;
+    virtual float last_position_update_us(void) const = 0;
 
 
     /**
@@ -100,7 +110,7 @@ public:
      *
      * \return  Update time
      */
-    virtual const float& last_velocity_update_us(void) const = 0;
+    virtual float last_velocity_update_us(void) const = 0;
 
 
     /**
@@ -108,7 +118,7 @@ public:
      *
      * \return  position
      */
-    virtual const global_position_t& position_gf(void) const = 0;
+    virtual global_position_t position_gf(void) const = 0;
 
 
     /**
@@ -116,7 +126,7 @@ public:
      *
      * \return  accuracy
      */
-    virtual const float& horizontal_position_accuracy(void) const = 0;
+    virtual float horizontal_position_accuracy(void) const = 0;
 
 
     /**
@@ -124,7 +134,7 @@ public:
      *
      * \return  accuracy
      */
-    virtual const float& vertical_position_accuracy(void) const = 0;
+    virtual float vertical_position_accuracy(void) const = 0;
 
 
     /**
@@ -132,7 +142,7 @@ public:
      *
      * \return  3D velocity
      */
-    virtual const std::array<float, 3>& velocity_lf(void) const = 0;
+    virtual std::array<float, 3> velocity_lf(void) const = 0;
 
 
     /**
@@ -140,7 +150,7 @@ public:
      *
      * \return  velocity accuracy
      */
-    virtual const float& velocity_accuracy(void) const = 0;
+    virtual float velocity_accuracy(void) const = 0;
 
 
     /**
@@ -148,7 +158,7 @@ public:
      *
      * \return  heading
      */
-    virtual const float& heading(void) const = 0;
+    virtual float heading(void) const = 0;
 
 
     /**
@@ -156,7 +166,7 @@ public:
      *
      * \return  accuracy
      */
-    virtual const float& heading_accuracy(void) const = 0;
+    virtual float heading_accuracy(void) const = 0;
 
 
     /**
@@ -164,7 +174,7 @@ public:
      *
      * \return  Value
      */
-    virtual const uint8_t& num_sats(void) const = 0;
+    virtual uint8_t num_sats(void) const = 0;
 
 
     /**
@@ -172,7 +182,7 @@ public:
      *
      * \return  Value
      */
-    virtual const gps_fix_t& fix(void) const = 0;
+    virtual gps_fix_t fix(void) const = 0;
 
 
     /**
@@ -180,8 +190,16 @@ public:
      *
      * \return  Value
      */
-    virtual const bool& healthy(void) const = 0;
+    virtual bool healthy(void) const = 0;
 };
 
+
+/**
+ * \brief  Glue method for scheduler
+ */
+static inline bool task_gps_update(Gps* gps)
+{
+    return gps->update();
+};
 
 #endif /* GPS_HPP_ */
