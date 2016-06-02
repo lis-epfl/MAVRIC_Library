@@ -58,7 +58,7 @@ extern "C"
  * \param collision_avoidance   The pointer to the collision avoidance structure
  * \param packet                The pointer to the structure of the MAVLink command message long
  */
-static mav_result_t collision_avoidance_set_parameters(collision_avoidance_t* collision_avoidance, mavlink_command_long_t* packet);
+static mav_result_t collision_avoidance_set_parameters(Collision_avoidance* collision_avoidance, mavlink_command_long_t* packet);
 
 /**
  * \brief Sets the strategy of the collision avoidance
@@ -66,13 +66,13 @@ static mav_result_t collision_avoidance_set_parameters(collision_avoidance_t* co
  * \param collision_avoidance   The pointer to the collision avoidance structure
  * \param packet                The pointer to the structure of the MAVLink command message long
  */
-static mav_result_t collision_avoidance_set_strategy(collision_avoidance_t* collision_avoidance, mavlink_command_long_t* packet);
+static mav_result_t collision_avoidance_set_strategy(Collision_avoidance* collision_avoidance, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t collision_avoidance_set_parameters(collision_avoidance_t* collision_avoidance, mavlink_command_long_t* packet)
+static mav_result_t collision_avoidance_set_parameters(Collision_avoidance* collision_avoidance, mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
 
@@ -80,19 +80,19 @@ static mav_result_t collision_avoidance_set_parameters(collision_avoidance_t* co
 
     switch(collision_avoidance->strategy)
     {
-        case ORCA:
+        case Collision_avoidance::ORCA:
             result = orca_set_parameters_value(&collision_avoidance->orca,packet);
             break;
 
-        case HUMAN:
+        case Collision_avoidance::HUMAN:
             result = human_set_parameters_value(&collision_avoidance->human,packet);
             break;
 
-        case POTENTIAL_FIELD:
+        case Collision_avoidance::POTENTIAL_FIELD:
             result = pfm_set_parameters_value(&collision_avoidance->pfm,packet);
             break;
 
-        case FLOCKING:
+        case Collision_avoidance::FLOCKING:
             result = flocking_set_parameters_value(&collision_avoidance->flocking,packet);
             break;
 
@@ -103,13 +103,13 @@ static mav_result_t collision_avoidance_set_parameters(collision_avoidance_t* co
     if (result == MAV_RESULT_ACCEPTED)
     {
         uint8_t i;
-        collision_avoidance->neighbors->collision_log_.count_near_miss = 0;
-        collision_avoidance->neighbors->collision_log_.count_collision = 0;
-        for (i = 0; i < collision_avoidance->neighbors->config_.max_num_neighbors; i++)
+        collision_avoidance->neighbors_.collision_log_.count_near_miss = 0;
+        collision_avoidance->neighbors_.collision_log_.count_collision = 0;
+        for (i = 0; i < collision_avoidance->neighbors_.config_.max_num_neighbors; i++)
         {
-            collision_avoidance->neighbors->collision_log_.near_miss_flag[i] = false;
-            collision_avoidance->neighbors->collision_log_.collision_flag[i] = false;
-            collision_avoidance->neighbors->collision_log_.transition_flag[i] = false;
+            collision_avoidance->neighbors_.collision_log_.near_miss_flag[i] = false;
+            collision_avoidance->neighbors_.collision_log_.collision_flag[i] = false;
+            collision_avoidance->neighbors_.collision_log_.transition_flag[i] = false;
         }
 
         print_util_dbg_print("New collision avoidance parameters set.\r\n");
@@ -118,7 +118,7 @@ static mav_result_t collision_avoidance_set_parameters(collision_avoidance_t* co
     return result;
 }
 
-static mav_result_t collision_avoidance_set_strategy(collision_avoidance_t* collision_avoidance, mavlink_command_long_t* packet)
+static mav_result_t collision_avoidance_set_strategy(Collision_avoidance* collision_avoidance, mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
     
@@ -126,22 +126,22 @@ static mav_result_t collision_avoidance_set_strategy(collision_avoidance_t* coll
     switch(strategy_num)
     {
         case 1:
-            collision_avoidance->strategy = ORCA;
+            collision_avoidance->strategy = Collision_avoidance::ORCA;
             result = MAV_RESULT_ACCEPTED;
             break;
             
         case 2:
-            collision_avoidance->strategy = HUMAN;
+            collision_avoidance->strategy = Collision_avoidance::HUMAN;
             result = MAV_RESULT_ACCEPTED;
             break;
             
         case 3:
-            collision_avoidance->strategy = POTENTIAL_FIELD;
+            collision_avoidance->strategy = Collision_avoidance::POTENTIAL_FIELD;
             result = MAV_RESULT_ACCEPTED;
             break;
             
         case 4:
-            collision_avoidance->strategy = FLOCKING;
+            collision_avoidance->strategy = Collision_avoidance::FLOCKING;
             result = MAV_RESULT_ACCEPTED;
             break;
     }
@@ -160,56 +160,59 @@ static mav_result_t collision_avoidance_set_strategy(collision_avoidance_t* coll
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-
-bool collision_avoidance_init(collision_avoidance_t* collision_avoidance, collision_avoidance_conf_t config, Neighbors* neighbors, State* state, Navigation* navigation, Position_estimation* position_estimation, const ahrs_t* ahrs, control_command_t* controls_nav)
+Collision_avoidance::Collision_avoidance(Neighbors& neighbors, State& state, Navigation& navigation, Position_estimation& position_estimation, const ahrs_t* ahrs, control_command_t* controls_nav, conf_t col_config):
+    neighbors_(neighbors),
+    navigation_(navigation),
+    state_(state)
 {
     bool init_success = true;
 
-    collision_avoidance->neighbors = neighbors;
-    collision_avoidance->state = state;
-    collision_avoidance->navigation = navigation;
-    
-    collision_avoidance->strategy = config.strategy;
-
-    collision_avoidance->controls_nav = controls_nav;
+    controls_nav_ = controls_nav;
 
     // Init ORCA
-    init_success &= orca_init(  &collision_avoidance->orca,
-                                    config.orca_config,
-                                    collision_avoidance->neighbors,
-                                    position_estimation,
-                                    ahrs,
-                                    state);
-    
-    init_success &= human_init(   &collision_avoidance->human,
-                                    config.human_config,
-                                    collision_avoidance->neighbors,
-                                    position_estimation,
-                                    ahrs,
-                                    navigation);
-    
-    
-    init_success &= pfm_init(&collision_avoidance->pfm,
-                                config.pfm_config,
-                                collision_avoidance->neighbors,
-                                position_estimation,
+    init_success &= orca_init(  &orca,
+                                col_config.orca_config,
+                                &neighbors,
+                                &position_estimation,
                                 ahrs,
-                                navigation);
+                                &state);
+    
+    init_success &= human_init( &human,
+                                col_config.human_config,
+                                &neighbors,
+                                &position_estimation,
+                                ahrs,
+                                &navigation);
     
     
-    init_success &= flocking_init(  &collision_avoidance->flocking,
-                                    config.flocking_config,
-                                    collision_avoidance->neighbors,
-                                    position_estimation,
+    init_success &= pfm_init(   &pfm,
+                                col_config.pfm_config,
+                                &neighbors,
+                                &position_estimation,
+                                ahrs,
+                                &navigation);
+    
+    
+    init_success &= flocking_init(  &flocking,
+                                    col_config.flocking_config,
+                                    &neighbors,
+                                    &position_estimation,
                                     ahrs,
-                                    navigation);
+                                    &navigation);
     
-    print_util_dbg_print("[COLLISION_AVOIDANCE] Initialised.\r\n");
+    strategy = col_config.strategy;
 
-    return init_success;
+    if (init_success)
+    {
+        print_util_dbg_print("[COLLISION_AVOIDANCE] Initialised.\r\n");
+    }
+    else
+    {
+        print_util_dbg_print("[COLLISION_AVOIDANCE] Initialised error.\r\n");
+    }
 }
 
-bool collision_avoidance_telemetry_init(collision_avoidance_t* collision_avoidance, Mavlink_message_handler* message_handler)
+bool collision_avoidance_telemetry_init(Collision_avoidance* collision_avoidance, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
     
@@ -235,22 +238,27 @@ bool collision_avoidance_telemetry_init(collision_avoidance_t* collision_avoidan
     return init_success;
 }
 
-bool collision_avoidance_update(collision_avoidance_t* collision_avoidance)
+bool Collision_avoidance::update(Collision_avoidance* collision_avoidance)
 {
+    bool run_success = true;
+
     float new_velocity[3];
 
-    Mav_mode mode_local = collision_avoidance->state->mav_mode();
+    Mav_mode mode_local = collision_avoidance->state_.mav_mode();
     
-    if((collision_avoidance->state->mav_state_ == MAV_STATE_ACTIVE) && 
-        ((collision_avoidance->navigation->internal_state_ > Navigation::NAV_TAKEOFF) && (collision_avoidance->navigation->internal_state_ < Navigation::NAV_STOP_ON_POSITION))
-        && (mode_local.is_auto() || mode_local.is_guided() )
+    run_success &= collision_avoidance->navigation_.update(&collision_avoidance->navigation_);
+
+    if( mode_local.is_custom() &&
+        ( (collision_avoidance->state_.mav_state_ == MAV_STATE_ACTIVE) && 
+            ((collision_avoidance->navigation_.internal_state_ > Navigation::NAV_TAKEOFF) && (collision_avoidance->navigation_.internal_state_ < Navigation::NAV_STOP_ON_POSITION))
+            && (mode_local.is_auto() || mode_local.is_guided()) )
         )
     {
-        collision_avoidance->state->mav_mode_custom |= Mav_mode::CUST_COLLISION_AVOIDANCE;
+        collision_avoidance->state_.mav_mode_custom |= Mav_mode::CUST_COLLISION_AVOIDANCE;
         switch(collision_avoidance->strategy)
         {
             case ORCA:
-                orca_compute_new_velocity(&collision_avoidance->orca, collision_avoidance->controls_nav->tvel, new_velocity);
+                orca_compute_new_velocity(&collision_avoidance->orca, collision_avoidance->controls_nav_->tvel, new_velocity);
                 break;
 
             case HUMAN:
@@ -262,20 +270,20 @@ bool collision_avoidance_update(collision_avoidance_t* collision_avoidance)
                 break;
 
             case FLOCKING:
-                flocking_compute_new_velocity(&collision_avoidance->flocking,collision_avoidance->controls_nav->tvel, new_velocity);
+                flocking_compute_new_velocity(&collision_avoidance->flocking,collision_avoidance->controls_nav_->tvel, new_velocity);
                 break;
             default:
                 break;
         }
         
-        collision_avoidance->controls_nav->tvel[X] = new_velocity[X];
-        collision_avoidance->controls_nav->tvel[Y] = new_velocity[Y];
-        collision_avoidance->controls_nav->tvel[Z] = new_velocity[Z];
+        collision_avoidance->controls_nav_->tvel[X] = new_velocity[X];
+        collision_avoidance->controls_nav_->tvel[Y] = new_velocity[Y];
+        collision_avoidance->controls_nav_->tvel[Z] = new_velocity[Z];
     }
     else
     {
-        collision_avoidance->state->mav_mode_custom &= ~Mav_mode::CUST_COLLISION_AVOIDANCE;
+        collision_avoidance->state_.mav_mode_custom &= ~Mav_mode::CUST_COLLISION_AVOIDANCE;
     }
     
-    return true;
+    return run_success;
 }

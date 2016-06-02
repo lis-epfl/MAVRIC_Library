@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file lequad_dronedome.hpp
+ * \file lequad_collision_avoidance.hpp
  *
  * \author MAV'RIC Team
  *
@@ -51,63 +51,33 @@
 class LEQuad_collision_avoidance: public LEQuad
 {
 public:
-    /**
-     * \brief   Constructor
-     */
-    LEQuad_collision_avoidance( Imu& imu,
-                      Barometer& barometer,
-                      Gps& gps,
-                      Sonar& sonar,
-                      Serial& serial_mavlink,
-                      Satellite& satellite,
-                      Led& led,
-                      File& file_flash,
-                      Battery& battery,
-                      Servo& servo_0,
-                      Servo& servo_1,
-                      Servo& servo_2,
-                      Servo& servo_3,
-                      Servo& servo_4,
-                      Servo& servo_5,
-                      Servo& servo_6,
-                      Servo& servo_7,
-                      File& file1,
-                      File& file2,
-                      LEQuad::conf_t config = LEQuad::default_config() ):
-          LEQuad(imu, barometer, gps, sonar, serial_mavlink, satellite, led, file_flash,
-                     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
-                     file1, file2, config)
-      {};
+  /**
+   * \brief   Constructor
+   */
+  LEQuad_collision_avoidance( Imu& imu,
+                    Barometer& barometer,
+                    Gps& gps,
+                    Sonar& sonar,
+                    Serial& serial_mavlink,
+                    Satellite& satellite,
+                    Led& led,
+                    File& file_flash,
+                    Battery& battery,
+                    Servo& servo_0,
+                    Servo& servo_1,
+                    Servo& servo_2,
+                    Servo& servo_3,
+                    Servo& servo_4,
+                    Servo& servo_5,
+                    Servo& servo_6,
+                    Servo& servo_7,
+                    File& file1,
+                    File& file2,
+                    LEQuad::conf_t config = LEQuad::default_config() );
 
-      /**
-       * \brief   Initialisation
-       * \return [description]
-       */
-      bool init(void)
-      {
-        bool success = LEQuad::is_success();
+  virtual bool init_navigation(void);
 
-        collision_avoidance_conf_t collision_avoidance_config = collision_avoidance_default_config();
-
-        success &= collision_avoidance_init(  &collision_avoidance,
-                                          collision_avoidance_config,
-                                          &neighbors,
-                                          &state,
-                                          &navigation,
-                                          &position_estimation,
-                                          &ahrs,
-                                          &controls_nav);
-
-        success &= collision_avoidance_telemetry_init(&collision_avoidance,
-                                                  mavlink_communication.p_message_handler());
-
-        print_util_dbg_init_msg("[COllISION AVOIDANCE]", success);
-
-        return success;
-      }
-
-private:
-    collision_avoidance_t collision_avoidance;
+  Collision_avoidance collision_avoidance;
 };
 
 

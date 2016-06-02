@@ -59,67 +59,89 @@ extern "C"
 {
 #include <stdbool.h>
 #include <stdint.h>
+#include "control/stabilisation.h"
 #include "sensing/ahrs.h"
 }
 
-/**
- * \brief   Enum of the possible collision avoidance strategies
- */
-typedef enum
+
+class Collision_avoidance
 {
-    ORCA,                           ///< The ORCA collision avoidance strategy
-    HUMAN,                          ///< The human-like collision avoidance strategy
-    POTENTIAL_FIELD,                ///< The potential field collision avoidance strategy
-    FLOCKING                        ///< The flocking collision avoidance strategy
-}collision_avoidance_strategy_t;
+
+public:
+
+
+    /**
+     * \brief   Enum of the possible collision avoidance strategies
+     */
+    typedef enum
+    {
+        ORCA,                           ///< The ORCA collision avoidance strategy
+        HUMAN,                          ///< The human-like collision avoidance strategy
+        POTENTIAL_FIELD,                ///< The potential field collision avoidance strategy
+        FLOCKING                        ///< The flocking collision avoidance strategy
+    }strategy_t;
 
 /**
  * \brief   Structure of the collision avoidance module
  */
-typedef struct 
-{
-    Neighbors* neighbors;                           ///< The neighbors structure
+    Neighbors& neighbors_;                           ///< The neighbors structure
 
-    collision_avoidance_strategy_t strategy;        ///< The collision avoidance strategy
+    strategy_t strategy;                             ///< The collision avoidance strategy
 
     orca_t orca;                                    ///< The ORCA structure
     human_t human;                                ///< The human-like structure
     pfm_t pfm;                                      ///< The potential field structure
     flocking_t flocking;                          ///< The flocking structure
 
-    Navigation* navigation;                         ///< The pointer to the navigation structure
-    State* state;                                   ///< The pointer to the state structure
-    control_command_t* controls_nav;                ///< The pointer to the control nav structure
-}collision_avoidance_t;
+    Navigation& navigation_;                         ///< The pointer to the navigation structure
+    State& state_;                                   ///< The pointer to the state structure
+    control_command_t* controls_nav_;                ///< The pointer to the control nav structure
 
-/**
- * \brief   Config structure of the collision avoidance module
- */
-typedef struct
-{
-    collision_avoidance_strategy_t strategy;        ///< The collision avoidance strategy
-    
-    orca_conf_t orca_config;                        ///< The pointer to the config structure for the ORCA strategy
-    human_conf_t human_config;                    ///< The pointer to the config structure for the human-like strategy
-    pfm_conf_t pfm_config;                          ///< The pointer to the config structure for the potential field strategy
-    flocking_conf_t flocking_config;              ///< The pointer to the config structure for the flocking strategy
-}collision_avoidance_conf_t;
+    /**
+     * \brief   Config structure of the collision avoidance module
+     */
+    typedef struct
+    {
+        strategy_t strategy;        ///< The collision avoidance strategy
+        
+        orca_conf_t orca_config;                        ///< The pointer to the config structure for the ORCA strategy
+        human_conf_t human_config;                    ///< The pointer to the config structure for the human-like strategy
+        pfm_conf_t pfm_config;                          ///< The pointer to the config structure for the potential field strategy
+        flocking_conf_t flocking_config;              ///< The pointer to the config structure for the flocking strategy
+    }conf_t;
 
-/**
- * \brief   Initialise the collision avoidance module
- *
- * \param   collision_avoidance         The pointer to the collision avoidance structure
- * \param   collision_avoidance_config  The pointer to the collision avoidance config structure
- * \param   state                           The pointer to the state structure
- * \param   navigation                      The pointer to the navigation structure
- * \param   position_estimation         The pointer to the position estimation structure
- * \param   gps                             The pointer to the gps structure
- * \param   barometer                       The pointer to the pressure structure
- * \param   ahrs                            The pointer to the ahrs structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool collision_avoidance_init(collision_avoidance_t* collision_avoidance, collision_avoidance_conf_t config, Neighbors* neighbors, State* state, Navigation* navigation, Position_estimation* position_estimation, const ahrs_t *ahrs, control_command_t* controls_nav);
+    /**
+     * \brief   Initialise the collision avoidance module
+     *
+     * \param   collision_avoidance         The pointer to the collision avoidance structure
+     * \param   collision_avoidance_config  The pointer to the collision avoidance config structure
+     * \param   state                           The pointer to the state structure
+     * \param   navigation                      The pointer to the navigation structure
+     * \param   position_estimation         The pointer to the position estimation structure
+     * \param   gps                             The pointer to the gps structure
+     * \param   barometer                       The pointer to the pressure structure
+     * \param   ahrs                            The pointer to the ahrs structure
+     *
+     * \return  True if the init succeed, false otherwise
+     */
+    Collision_avoidance(Neighbors& neighbors, State& state, Navigation& navigation, Position_estimation& position_estimation, const ahrs_t* ahrs, control_command_t* controls_nav, conf_t col_config = default_config());
+
+    /**
+     * \brief   The task to perform collision avoidance
+     *
+     * \param   collision_avoidance         The pointer to the collision avoidance structure
+     *
+     * \return  The result of the task execution
+     */
+    static bool update(Collision_avoidance* collision_avoidance);
+
+    /**
+     * \brief   default configuration for navigation
+     *
+     * \return default config
+     */
+    static inline conf_t default_config();
+};
 
 /**
  * \brief   Initialize the MAVLink communication module for the collision avoidance
@@ -129,21 +151,13 @@ bool collision_avoidance_init(collision_avoidance_t* collision_avoidance, collis
  *
  * \return  True if the init succeed, false otherwise
  */
-bool collision_avoidance_telemetry_init(collision_avoidance_t* collision_avoidance, Mavlink_message_handler* message_handler);
-
-/**
- * \brief   The task to perform collision avoidance
- *
- * \param   collision_avoidance         The pointer to the collision avoidance structure
- *
- * \return  The result of the task execution
- */
-bool collision_avoidance_update(collision_avoidance_t* collision_avoidance);
+bool collision_avoidance_telemetry_init(Collision_avoidance* collision_avoidance, Mavlink_message_handler* message_handler);
 
 
-static inline collision_avoidance_conf_t collision_avoidance_default_config(void)
+
+Collision_avoidance::conf_t Collision_avoidance::default_config()
 {
-    collision_avoidance_conf_t conf;
+    conf_t conf;
 
     conf.orca_config = orca_default_config();
     conf.human_config = human_default_config();
