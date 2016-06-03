@@ -131,8 +131,6 @@ public:
 	float	maxradius; 	///< [0,100] Maximal radius of curvature, 	typically 5
 	float	max_vel_y;  ///< [0,2] Maximal speed in y direction, 	typically 1
 	int 	count;
-	int 	setsofparam;
-	float 	accumulator;
 
 
 

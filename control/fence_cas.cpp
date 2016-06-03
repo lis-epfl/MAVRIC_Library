@@ -156,14 +156,10 @@ Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estima
 	pos_est(postion_estimation),
 	ahrs(ahrs),
 	tahead(1.0),
-//	repulsion({0,0,0}),
 	coef_roll(1),
 	maxsens(10.0),
 	maxradius(10.0),
-	count(0), //steps of setsofparams*nbdetection
-	setsofparam(11),
-	max_vel_y(0.0),
-	accumulator(0.0)
+	count(0) //steps of
 {
 
 }
@@ -199,254 +195,6 @@ bool Fence_CAS::update(void)
 	float Vval = vectors_norm(V);
 
 	float dmin=2*this->r_pz; 					// Safe zone around the drone ,can be adjusted
-//	this->max_vel_y= 0.3*PI*(1-this->comfort);	// Adjusts the maximal angle in function of the comfort
-	//hardcoded values
-//	max_vel_y = 0.25*PI;
-//	this->coef_roll=1.0f;
-//	this->tahead=0.0f; //
-	//link the variables;
-//	this->tahead = 3* this->comfort;
-	static float oldacc[3]={0,0,0};
-	for (int k=0;k<3;k++)
-	{
-		this->accumulator += (ahrs->linear_acc[k]-oldacc[k])*(ahrs->linear_acc[k]-oldacc[k]);
-	}
-	for (int k=0;k<3;k++)
-	{
-		oldacc[k] = ahrs->linear_acc[k];
-	}
-
-//	print_change=false; // dont use the auto changing param mode
-//	this->max_vel_y = 1.7;
-//	this->tahead =1.3;
-	if((this->count%nbdetection)==0 && print_change)
-	{
-		static float parameterstab[]= {
-//				0.1,0.1,//untested
-//				0.1,0.3,
-//				0.1,0.5,
-//				0.1,0.7,
-//				0.1,0.9,
-//				0.1,1.2,
-//				0.1,1.4,
-//				0.1,1.6,
-//				0.1,1.8,
-//				0.1,2.0,//untested
-//				0.3,0.1,//48
-//				0.3,0.3,
-//				0.3,0.5,
-//				0.3,0.7,
-//				0.3,0.9,
-//				0.3,1.2,
-//				0.3,1.4,
-//				0.3,1.6,//48
-//				0.3,1.8,//49
-//				0.3,2.0,
-//				0.5,0.1,
-//				0.5,0.3,
-//				0.5,0.5,
-//				0.5,0.7,
-//				0.5,0.9,
-//				0.5,1.2,
-//				0.5,1.4,//49
-//				0.5,1.6,//50
-//				0.5,1.8,
-//				0.5,2.0,
-//				0.7,0.1,
-//				0.7,0.3,
-//				0.7,0.5,
-//				0.7,0.7,
-//				0.7,0.9,
-//				0.7,1.2,//50
-//				0.7,1.4,//51
-//				0.7,1.6,
-//				0.7,1.8,
-//				0.7,2.0,
-//				0.9,0.1,
-//				0.9,0.3,
-//				0.9,0.5,
-//				0.9,0.7,
-//				0.9,0.9,//51
-//				0.9,1.2,//52
-//				0.9,1.4,
-//				0.9,1.6,
-//				0.9,1.8,
-//				0.9,2.0,
-//				1.2,0.1,
-//				1.2,0.3,
-//				1.2,0.5,
-//				1.2,0.7,//52
-//				1.2,0.9,//53
-//				1.2,1.2,
-//				1.2,1.4,
-//				1.2,1.6,
-//				1.2,1.8,
-//				1.2,2.0,
-//				1.4,0.1,
-//				1.4,0.3,
-//				1.4,0.5,//53
-//				1.4,0.7,//54
-//				1.4,0.9,
-//				1.4,1.2,
-//				1.4,1.4,
-//				1.4,1.6,
-//				1.4,1.8,
-//				1.4,2.0,
-//				1.6,0.1,
-//				1.6,0.3,//54
-//				1.6,0.5,//55
-//				1.6,0.7,
-//				1.6,0.9,
-//				1.6,1.2,
-//				1.6,1.4,
-//				1.6,1.6,
-//				1.6,1.8,
-//				1.6,2.0,
-//				1.8,0.1,//55
-//				1.8,0.3,//56
-//				1.8,0.5,
-//				1.8,0.7,
-//				1.8,0.9,
-//				1.8,1.2,
-//				1.8,1.4,
-//				1.8,1.6,
-//				1.8,1.8,
-//				1.8,2.0,//56
-//				2.0,0.1,//57
-//				2.0,0.3,
-//				2.0,0.5,
-//				2.0,0.7,
-//				2.0,0.9,
-//				2.0,1.2,
-//				2.0,1.4,
-//				2.0,1.6,
-//				2.0,1.8,
-//				2.0,2.0,//57 //end logs
-				///////////////////////7
-//				0.3,0.1,//29
-//				0.3,0.2,
-//				0.3,0.3,
-//				0.3,0.4,
-//				0.3,0.5,
-//				0.3,0.6,
-//				0.3,0.7,
-//				0.3,0.8,
-//				0.3,0.9,
-//				0.3,1.0,//29-
-//				0.3,1.1,
-//				0.3,1.2,//-33
-//				0.3,1.3,
-//				0.3,1.4,
-//				0.3,1.5,
-//				0.3,1.6,
-//				0.3,1.7,
-//				0.3,1.8,
-//				0.3,1.9,
-//				0.3,2.0,
-//				0.4,0.1,//33
-//				0.4,0.2,
-//				0.4,0.3,//34
-//				0.4,0.4,
-//				0.4,0.5,
-//				0.4,0.6,
-//				0.4,0.7,
-//				0.4,0.8,
-//				0.4,0.9,
-//				0.4,1.0,
-//				0.4,1.1,
-//				0.4,1.2,//34
-//				0.4,1.3,
-//				0.4,1.4,//35
-//				0.4,1.5,
-//				0.4,1.6,
-//				0.4,1.7,
-//				0.4,1.8,
-//				0.4,1.9,
-//				0.4,2.0,
-//				0.5,0.1,
-//				0.5,0.2,
-//				0.5,0.3,
-//				0.5,0.4,
-//				0.5,0.5,
-//				0.5,0.6,//35
-//				0.5,0.7,
-//				0.5,0.8,
-//				0.5,0.9,
-//				0.5,1.0,
-//				0.5,1.1,//37
-//				0.5,1.2,
-//				0.5,1.3,//38
-//				0.5,1.4,
-//				0.5,1.5,
-//				0.5,1.6,
-//				0.5,1.7,
-//				0.5,1.8,
-//				0.5,1.9,
-//				0.5,2.0,//38
-//				0.6,0.1,//39
-//				0.6,0.2,
-//				0.6,0.3,
-//				0.6,0.4,
-//				0.6,0.5,
-//				0.6,0.6,
-//				0.6,0.7,
-//				0.6,0.8,
-//				0.6,0.9,
-//				0.6,1.0,
-//				0.6,1.1,
-//				0.6,1.2,
-//				0.6,1.3,
-//				0.6,1.4,//39
-//				0.6,1.5,
-//				0.6,1.6,//40
-//				0.6,1.7,
-//				0.6,1.8,
-//				0.6,1.9,
-//				0.6,2.0,
-//				0.7,0.1,
-//				0.7,0.2,
-//				0.7,0.3,
-//				0.7,0.4,
-//				0.7,0.5,
-//				0.7,0.6,
-//				0.7,0.7,
-//				0.7,0.8,
-//				0.7,0.9,
-//				0.7,1.0,
-//				0.7,1.1,//40
-
-		};
-		print_util_dbg_print("New set of parameters:");
-		if((this->max_vel_y == 2.0)&&(this->tahead == 2.0))
-		{
-
-		}
-		else
-		{
-		this->max_vel_y = parameterstab[(this->count/nbdetection)*2];
-		this->tahead = parameterstab[(this->count/nbdetection)*2+1];
-		}
-		repcount++;
-		if(repcount>=this->setsofparam)
-		{
-			//something to kill the sim.
-			this->controls->thrust = 0.0f;
-		}
-		print_util_dbg_print(",");print_util_dbg_putfloat(this->tahead,5);
-		print_util_dbg_print("");print_util_dbg_putfloat(this->max_vel_y,5);
-
-		print_util_dbg_print(",");print_util_dbg_putfloat(this->accumulator,5);
-		print_util_dbg_print("\n");
-		this->accumulator = 0.0f;
-//		print_util_dbg_print("\t Max_vel_y=");print_util_dbg_putfloat(this->max_vel_y,5);
-//		print_util_dbg_print("\t tahead=");print_util_dbg_putfloat(this->tahead,5);
-//		print_util_dbg_print("\t count=");print_util_dbg_putfloat(this->count,0);
-//		print_util_dbg_print("\n");
-		print_change=false;
-
-	}
-
-
 	int interp_type = 2;						// Define the interpolation type of the repulsion
 
 	for(int i =0; i<3;i++)
@@ -504,8 +252,6 @@ bool Fence_CAS::update(void)
 
 			float M[3]={0,0,0};
 			float Am[3]={0,0,0};
-//			this->maxradius = 5; //inner angle circle radius
-
 			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
 
 			for(int k=0;k<3;k++)
@@ -523,9 +269,6 @@ bool Fence_CAS::update(void)
 			float MS[3] = {S[0]-M[0],S[1]-M[1],0.0};
 			float distMC=detect_seg(M,M,C,S,V,I,J);
 
-//			float MA[3] = {A[0]-M[0],A[1]-M[1],0.0};
-//			float distMA=vectors_norm(MA);
-
 			if((distAS <= (distAAm))&&(distMC >= this->maxradius)&&(angle_detected==false)&&n==0)
 			{
 				float aratio=1-((distMC - this->maxradius)/this->maxsens);	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
@@ -534,14 +277,6 @@ bool Fence_CAS::update(void)
 				rep[1]=(rep[1]>=0?-1:1) ;// Extract repulsion direction in body frame
 				pointrep += -rep[1]*this->coef_roll*this->max_vel_y*interpolate(aratio,interp_type); // Add repulsion
 				angle_detected=true;
-//				print_util_dbg_print("||Arep||");print_util_dbg_putfloat(i+1,0);
-//				print_util_dbg_print("||angle||");print_util_dbg_putfloat(CurAngle_list[i]*180/PI,5);
-//				print_util_dbg_print("|rep|");print_util_dbg_putfloat(pointrep,5);
-//				print_util_dbg_print("|interpval|");print_util_dbg_putfloat(aratio,5);
-//				print_util_dbg_print("|interp|");print_util_dbg_putfloat(interpolate(aratio,interp_type),5);
-//				print_util_dbg_print("|oldAC|");print_util_dbg_putfloat(old_distAC[i],15);
-//				print_util_dbg_print("\t");
-//				print_util_dbg_print("\n");
 			}
 			else
 			{
@@ -555,19 +290,16 @@ bool Fence_CAS::update(void)
 			gftobftransform(A,B,IC);
 			IC[1]=(IC[1]>=0?1:-1);
 
-			if(IC[1]==-1 && n==0) //out of fence
-			{
-				/*Only for sim*/
-//				pos_est->local_position.pos[0]=0.0;pos_est->local_position.pos[1]=0.0;pos_est->local_position.pos[2]=0.0;
-			}
+
 			if(n==0) //for the first fence
 			{
+
+				if(IC[1]==-1) //out of fence
+				{
+					;
+				}
 				dist[i]*= IC[1];
 			}
-//			else
-//			{
-//				dist[i]*= -IC[1];
-//			}
 
 			if((dist[i] < this->maxsens)&&(angle_detected==false))
 			{
@@ -577,15 +309,6 @@ bool Fence_CAS::update(void)
 
 				float fratio = dist[i]/this->maxsens;						// Compute ratio for interpolation
 				fencerep +=-rep[1]*this->coef_roll*this->max_vel_y*interpolate(fratio,interp_type);
-
-//				print_util_dbg_print("||Frep||");print_util_dbg_putfloat(i+1,0);
-//				print_util_dbg_print("|rep|");print_util_dbg_putfloat(fencerep,5);
-//				print_util_dbg_print("||");print_util_dbg_putfloat(this->repulsion[1],5);
-//				print_util_dbg_print("|interpval|");print_util_dbg_putfloat(fratio,5);
-//				print_util_dbg_print("|interp|");print_util_dbg_putfloat(interpolate(fratio,interp_type),5);
-//				print_util_dbg_print("|ratio|");print_util_dbg_putfloat(interpolate(fratio,interp_type),5);
-//				print_util_dbg_print("\n");
-//				print_util_dbg_print("\t");
 			}
 			else
 			{
@@ -593,28 +316,17 @@ bool Fence_CAS::update(void)
 			}
 		}
 
-
 		/*END Fence repulsion*/
-		//check amplitude and get bigger one
+		//check which repulsion has been detected. Angle repulsion wins
 		if(angle_detected==true)
 		{
 			angle_detected=false;
 			this->repulsion[1] += pointrep;
-//			print_util_dbg_print("||Arep||");
-//			print_util_dbg_print("|rep|");print_util_dbg_putfloat(pointrep,5);
 		}
 		else
 		{
 			this->repulsion[1] += fencerep;
-//			print_util_dbg_print("||Frep||");
-//			print_util_dbg_print("|rep|");print_util_dbg_putfloat(fencerep,5);
 		}
-		if(n==0)
-		{
-//			print_util_dbg_print("||final||");print_util_dbg_putfloat(this->repulsion[1],5);
-//			print_util_dbg_print("\n");
-		}
-//		print_util_dbg_print("\n");
 	}
 	/*END FOR EACH FENCE*/
 	// Clip the repulsion
@@ -626,13 +338,6 @@ bool Fence_CAS::update(void)
 	{
 		this->repulsion[1]=-this->max_vel_y;
 	}
-	if(oldrep!=this->repulsion[1] && this->repulsion[1]==0)
-	{
-		this->count++;
-		print_change=true;
-	}
-
-	oldrep = this->repulsion[1];
 	// MATLAB LOG
 //	this->count++;
 //	if(this->count==100)
@@ -746,10 +451,6 @@ bool Fence_CAS::clip_repulsion(control_command_t* command_t)
 		 command_t->tvel[Y] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
 	 else if(command_t->tvel[Y] < 0.0f && SQR(command_t->tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
 		 command_t->tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
-
-//	 print_util_dbg_print("tvel_y_added \r\n");
-//	 print_util_dbg_putfloat(tvel_y_added,3);
-//	 print_util_dbg_print("\r\n");
 
 	 //reduce the speed on tvel[X] in order to keep the norm of the speed constant
 	 command_t->tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(command_t->tvel[Y]));
