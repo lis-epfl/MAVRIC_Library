@@ -179,8 +179,8 @@ bool LEQuad::init_state(void)
     ret &= data_logging_stat.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
 
     // Task
-    ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);
-    ret &= scheduler.add_task(500000, (Scheduler_task::task_function_t)&task_led_toggle,       (Scheduler_task::task_argument_t)&led, Scheduler_task::PRIORITY_LOW);
+    ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine, Scheduler_task::PRIORITY_LOW);
+    ret &= scheduler.add_task(500000, (Scheduler_task::task_function_t)&task_led_toggle,       (Scheduler_task::task_argument_t)&led, Scheduler_task::PRIORITY_LOWEST);
 
     return ret;
 }
@@ -194,7 +194,7 @@ bool LEQuad::init_communication(void)
     bool ret = true;
 
     // Task
-    ret &= scheduler.add_task(4000,  (Scheduler_task::task_function_t)&Mavlink_communication::update,    (Scheduler_task::task_argument_t)&mavlink_communication);
+    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&Mavlink_communication::update, (Scheduler_task::task_argument_t)&mavlink_communication, Scheduler_task::PRIORITY_LOW);
 
     return ret;
 }
@@ -451,10 +451,11 @@ bool LEQuad::init_navigation(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.differentiator.gain,  "NAV_WPT_DGAIN"   );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.one_over_scaling,                        "NAV_ATTRACTIVNS"  );
 
     // Task
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update, (Scheduler_task::task_argument_t)&waypoint_handler, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_NORMAL);
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update, (Scheduler_task::task_argument_t)&waypoint_handler, Scheduler_task::PRIORITY_LOW);
 
     return ret;
 }
@@ -518,7 +519,7 @@ bool LEQuad::init_ground_control(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_int32((int32_t*) &manual_control.mode_source_,    "COM_RC_IN_MODE");
 
     // Task
-    ret &= scheduler.add_task(20000, (Scheduler_task::task_function_t)&remote_update, (Scheduler_task::task_argument_t)&manual_control.remote, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(20000, (Scheduler_task::task_function_t)&remote_update, (Scheduler_task::task_argument_t)&manual_control.remote, Scheduler_task::PRIORITY_NORMAL);
 
     return ret;
 }
@@ -555,7 +556,7 @@ bool LEQuad::main_task(void)
                     controls.yaw_mode = YAW_ABSOLUTE;
                 }
                 break;
-        
+
             case Mav_mode::POSITION_HOLD:
                 controls = controls_nav;
                 controls.control_mode = VELOCITY_COMMAND_MODE;
