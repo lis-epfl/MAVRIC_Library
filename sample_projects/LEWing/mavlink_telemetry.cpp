@@ -251,17 +251,17 @@ bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parame
 
 
     // Roll velocity PID
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLLVPID_KP"       );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLLVPID_KI"       );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLLVPID_I_CLIP"   );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLLVPID_KD"       );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLLVPID_KP"       );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLLVPID_KI"       );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLLVPID_I_CLIP"   );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLLVPID_KD"       );
 
 
     // Pitch velocity PID
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCHVPID_KP"      );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCHVPID_KI"      );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCHVPID_I_CLIP"  );
-    //init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCHVPID_KD"      );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCHVPID_KP"      );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCHVPID_KI"      );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCHVPID_I_CLIP"  );
+    init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCHVPID_KD"      );
 
     // Thrust velocity PID
     init_success &= onboard_parameters->add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain,              "THRVPID_KP");

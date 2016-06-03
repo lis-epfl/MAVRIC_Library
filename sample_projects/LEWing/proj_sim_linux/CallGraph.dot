@@ -1,0 +1,22 @@
+digraph "callgraph" {
+graph[rankdir=TB,nodesep=0.1, ranksep=0.5]
+  F189c448 [label="Dynamic_model_fixed_wing::\n update"];
+  F1995028 [label="Dynamic_model_fixed_wing::\n forces_from_servos"];
+  F1995038 [label="Dynamic_model_fixed_wing::\n compute_motor_forces"];
+  F19b01a8 [label="Wing_model::\n set_flap_angle"];
+  F19b00a8 [label="Wing_model::\n compute_forces"];
+  F1a1f1c8 [label="Wing_model::\n get_cl"];
+  F1a1f708 [label="Wing_model::\n get_cd"];
+  F1a1fe08 [label="Wing_model::\n get_cm"];
+  F1a20848 [label="Wing_model::\n forces_wing_to_bf"];
+  F189c448 -> F1995028;
+  F1995028 -> F19b00a8;
+  F1995028 -> F1995038;
+  F1995028 -> F19b01a8;
+  F19b00a8 -> F1a1f1c8;
+  F19b00a8 -> F1a1f708;
+  F19b00a8 -> F1a1fe08;
+  F19b00a8 -> F1a20848;
+  F1a1fe08 -> F1a1f1c8;
+  F1a1fe08 -> F1a1f708;
+}

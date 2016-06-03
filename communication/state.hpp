@@ -309,9 +309,9 @@ State::conf_t State::wing_default_config()
     conf.sensor_health           = 0b1111110000100111;
     conf.max_lost_connection     = 60.0f;
     conf.fence_1_xy              = 500.0f;
-    conf.fence_1_z               = 150.0f;
+    conf.fence_1_z               = 1500.0f;
     conf.fence_2_xy              = 600.0f;
-    conf.fence_2_z               = 200.0f;
+    conf.fence_2_z               = 2000.0f;
 
     return conf;
 }

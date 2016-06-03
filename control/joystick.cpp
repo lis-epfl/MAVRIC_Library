@@ -49,6 +49,8 @@ extern "C"
 #include "util/quick_trig.h"
 }
 
+#include <iostream>
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
@@ -144,6 +146,7 @@ bool joystick_init(joystick_t* joystick)
 
 float joystick_get_throttle(const joystick_t* joystick)
 {
+//  printf("Throttle asked\n");
     return joystick->channels.z;
 }
 
@@ -212,6 +215,7 @@ void joystick_get_rate_command_wing(joystick_t* joystick, control_command_t* con
 
 void joystick_get_angle_command_wing(joystick_t* joystick, control_command_t* controls)
 {
+  printf("Thrust: %f\n", joystick_get_throttle(joystick));
     controls->rpy[ROLL] = asinf(joystick_get_roll(joystick));
     controls->rpy[PITCH] = asinf(joystick_get_pitch(joystick));
     controls->rpy[YAW] = asinf(joystick_get_yaw(joystick));

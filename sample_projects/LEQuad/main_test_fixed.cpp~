@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 
     logfile.open("log.csv");
     logfile << "t,x,y,z,vx,vy,vz,roll,pitch,yaw" << std::endl;
-    /*logfile << "rate" << std::endl;
+    //logfile << "rate" << std::endl;
     Wing_model left_drift(0.0f,quaternions_create(1.0f/sqrt(2.0f), 1.0f/sqrt(2.0f), 0.0f, 0.0f), -0.1780f, -0.30f, -0.04f, 0.015f, 0.14f,0);
     Wing_model right_drift(0.0f,quaternions_create(1.0f/sqrt(2.0f), 1.0f/sqrt(2.0f), 0.0f, 0.0f), -0.1780f, 0.30f, -0.04f, 0.015f, 0.14f,0);
     wing_model_forces_t left_force;
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     wing_model_forces_t right_flap_force;
     float wind[3]={0.0f, 0.0f, 0.0f}, rates[3]={0.0f, 0.0f, -10.0f};
     float angle = 10.0f;
-    for(int i=-90; i<=90; i++)
+    /*for(int i=-90; i<=90; i++)
     {
     wind[0] = -cos(-10.0f/180.0f*PI);
     wind[1] = sin(-10.0f/180.0f*PI);
@@ -148,6 +148,6 @@ int main(int argc, char** argv)
         while(time_keeper_get_s() - t < 0.004f){}
         t = time_keeper_get_s();
         model.update();
-    }
+    }*/
     return 0;
 }

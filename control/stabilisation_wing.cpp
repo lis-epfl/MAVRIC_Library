@@ -2,39 +2,39 @@
  * Copyright (c) 2009-2016, MAV'RIC Development Team
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * 1. Redistributions of source code must retain the above copyright notice, 
+ * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. Neither the name of the copyright holder nor the names of its contributors
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
- 
+
 /*******************************************************************************
  * \file stabilisation_wing.cpp
  *
  * \author MAV'RIC Team
  * \author Simon Pyroth
- *   
+ *
  * \brief This file handles the stabilization of the platform
  *
  ******************************************************************************/
@@ -48,6 +48,7 @@ extern "C"
 #include "util/constants.h"
 }
 
+#include <iostream>
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -70,7 +71,7 @@ float heading_from_velocity_vector(float *input_vel);
 float heading_from_velocity_vector(float *input_vel)
 {
     float heading_global = atan2(input_vel[Y], input_vel[X]);
-    
+
     return heading_global;
 }
 
@@ -82,7 +83,7 @@ float heading_from_velocity_vector(float *input_vel)
 bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const stabilisation_wing_conf_t stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const Position_estimation* pos_est, const Airspeed_analog* airspeed_analog, const Navigation* navigation, const Gps* gps)
 {
     bool init_success = true;
-    
+
     //init dependencies
     stabilisation_wing->stabiliser_stack = stabiliser_conf.stabiliser_stack;
     stabilisation_wing->controls = controls;
@@ -102,11 +103,11 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const sta
     stabilisation_wing->take_off_pitch = stabiliser_conf.take_off_pitch;
     stabilisation_wing->landing_pitch = stabiliser_conf.landing_pitch;
     stabilisation_wing->landing_max_roll = stabiliser_conf.landing_max_roll;
-    
+
     //init controller
     controls->control_mode = ATTITUDE_COMMAND_MODE;
     controls->yaw_mode = YAW_RELATIVE;
-    
+
     controls->rpy[ROLL] = 0.0f;
     controls->rpy[PITCH] = 0.0f;
     controls->rpy[YAW] = 0.0f;
@@ -117,7 +118,7 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const sta
     controls->thrust = -1.0f;
 
     print_util_dbg_print("[STABILISATION wing] initalised.\r\n");
-    
+
     return init_success;
 }
 
@@ -143,12 +144,12 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 
     // set the controller input
     input= *stabilisation_wing->controls;
-    switch (stabilisation_wing->controls->control_mode) 
+    switch (stabilisation_wing->controls->control_mode)
     {
     case VELOCITY_COMMAND_MODE:
         // Get current attitude
         attitude_yaw = coord_conventions_quat_to_aero(stabilisation_wing->ahrs->qe);
-    
+
         /////////////
         // HEADING //
         /////////////
@@ -159,47 +160,52 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         {
             nav_heading = maths_calc_smaller_angle(input.rpy[YAW] - attitude_yaw.rpy[YAW]);
         }
-        
+
         // Compute current heading
         gps_speed_global[X] = stabilisation_wing->gps->velocity_lf()[0];
         gps_speed_global[Y] = stabilisation_wing->gps->velocity_lf()[1];
         gps_speed_global[Z] = stabilisation_wing->pos_est->vel[Z];
-        
+
         // Transform global to semi-local
         attitude_yaw.rpy[0] = 0.0f;
         attitude_yaw.rpy[1] = 0.0f;
         attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
         q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
         quaternions_rotate_vector(q_rot, gps_speed_global, gps_speed_semi_local);
-        
-        current_heading = heading_from_velocity_vector(gps_speed_semi_local);
-        
+
+        current_heading = heading_from_velocity_vector(gps_speed_semi_local);//-attitude_yaw.rpy[2];//gps_speed_global);//
+
         // Compute heading error
         heading_error = maths_calc_smaller_angle(nav_heading - current_heading);
-        
-        
+        printf("Current heading: %f\n", current_heading*180.0f/PI);
+
         ///////////////
         // PID INPUT //
         ///////////////
         // Vector field normalize vector in plane x-y to cruise_speed value ==> airspeed should be done only on the x-y composants
         airspeed_desired = sqrtf(input.tvel[X]*input.tvel[X] + input.tvel[Y]*input.tvel[Y]);
-        
+
+
+        stabilisation_wing->airspeed_analog->update();
         // Compute errors
         rpyt_errors[0] = heading_error;                                                             // Heading
         rpyt_errors[1] = input.tvel[Z] - gps_speed_global[Z];                                       // Vertical speed
         rpyt_errors[2] = 0.0f;
         rpyt_errors[3] = airspeed_desired - stabilisation_wing->airspeed_analog->get_airspeed();    // Airspeed
-        
+
+        printf("Errors: %f, %f, %f\n", rpyt_errors[0], rpyt_errors[1], rpyt_errors[3]);
+
         // Compute the feedforward
         feedforward[0] = 0.0f;
         feedforward[1] = 0.0f;
         feedforward[2] = 0.0f;
         feedforward[3] = (airspeed_desired - 13.0f)/8.0f + 0.2f;
-        
+
         // run PID update on all velocity controllers
         stabilisation_run_feedforward(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->ahrs->dt_s, rpyt_errors, feedforward);
-        
-        
+        //stabilisation_run(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->ahrs->dt_s, rpyt_errors);
+        printf("Gains: %f, %f, %f\n",stabilisation_wing->stabiliser_stack.velocity_stabiliser.rpy_controller[0].p_gain,stabilisation_wing->stabiliser_stack.velocity_stabiliser.rpy_controller[1].p_gain,stabilisation_wing->stabiliser_stack.velocity_stabiliser.rpy_controller[2].p_gain);
+
         ////////////////
         // PID OUTPUT //
         ////////////////
@@ -215,13 +221,15 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         {
             input_roll_angle = clipping_factor * atanf( (1.0f/clipping_factor) * (stabilisation_wing->airspeed_analog->get_airspeed() * input_turn_rate / 9.81f) );
         }
-        
+
         // Set input for next layer
         input = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output;
         input.rpy[0] = input_roll_angle;
         input.rpy[1] = - stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[1];
         input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
-        
+
+        printf("Attitude commands: %f, %f, %f, %f\n", input.rpy[0], input.rpy[1], input.rpy[2], input.thrust);
+
         // Overwrite the commands during different key phases (take-off and landing)
         if(stabilisation_wing->navigation->internal_state_ == Navigation::NAV_TAKEOFF)
         {
@@ -244,9 +252,9 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
             input.rpy[1] = stabilisation_wing->landing_pitch;
             input.thrust = -1.0f;
         }
-        
-    // -- no break here  - we want to run the lower level modes as well! -- 
-    
+
+    // -- no break here  - we want to run the lower level modes as well! --
+
     case ATTITUDE_COMMAND_MODE:
         // Add "a priori on the pitch" to fly horizontally and to compensate for roll angle
         attitude = coord_conventions_quat_to_aero(stabilisation_wing->ahrs->qe);
@@ -255,21 +263,21 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         {
             input.rpy[1] += stabilisation_wing->pitch_angle_apriori_gain * maths_f_abs(input.rpy[0]*input.rpy[0]*input.rpy[0]);
         }
-        
+
         // run absolute attitude_filter controller
         rpyt_errors[0]= sinf(input.rpy[0]) + up_vec.v[1];                               // Roll
         rpyt_errors[1]= sinf(input.rpy[1]) - up_vec.v[0];                               // Pitch
         rpyt_errors[2]= 0.0f;                                                           // Yaw
         rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
-        
+
         // run PID update on all attitude_filter controllers
         stabilisation_run(&stabilisation_wing->stabiliser_stack.attitude_stabiliser, stabilisation_wing->ahrs->dt_s, rpyt_errors);
-        
-        // use output of attitude_filter controller to set rate setpoints for rate controller 
+
+        // use output of attitude_filter controller to set rate setpoints for rate controller
         input = stabilisation_wing->stabiliser_stack.attitude_stabiliser.output;
-    
-    // -- no break here  - we want to run the lower level modes as well! -- 
-    
+
+    // -- no break here  - we want to run the lower level modes as well! --
+
     case RATE_COMMAND_MODE: // this level is always run
         // get rate measurements from IMU (filtered angular rates)
         for (i=0; i<3; i++)
@@ -277,7 +285,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
             rpyt_errors[i]= input.rpy[i]- stabilisation_wing->ahrs->angular_speed[i];
         }
         rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
-        
+
         // run PID update on all rate controllers
         stabilisation_run(&stabilisation_wing->stabiliser_stack.rate_stabiliser, stabilisation_wing->ahrs->dt_s, rpyt_errors);
     }
@@ -286,5 +294,3 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
     stabilisation_wing->torque_command->xyz[1] = stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[PITCH];
     stabilisation_wing->thrust_command->thrust = stabilisation_wing->stabiliser_stack.rate_stabiliser.output.thrust;
 }
-
-

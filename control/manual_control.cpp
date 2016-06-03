@@ -120,6 +120,7 @@ void Manual_control::get_rate_command_wing(control_command_t* controls)
             break;
         case CONTROL_SOURCE_JOYSTICK:
             joystick_get_rate_command_wing(&joystick, controls);
+            break;
         case CONTROL_SOURCE_NONE:
             controls->rpy[ROLL] = 0.0f;
             controls->rpy[PITCH] = 0.0f;
@@ -138,6 +139,7 @@ void Manual_control::get_angle_command_wing(control_command_t* controls)
             break;
         case CONTROL_SOURCE_JOYSTICK:
             joystick_get_angle_command_wing(&joystick, controls);
+            break;
         case CONTROL_SOURCE_NONE:
             controls->rpy[ROLL] = 0.0f;
             controls->rpy[PITCH] = 0.0f;

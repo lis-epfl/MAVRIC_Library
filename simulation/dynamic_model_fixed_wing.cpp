@@ -44,10 +44,12 @@
 #include "simulation/dynamic_model_fixed_wing.hpp"
 #include "hal/common/time_keeper.hpp"
 
-//#define ALLOW_PRINTF
+#define ALLOW_PRINTF
 
 #ifdef ALLOW_PRINTF
 #include <iostream>
+#include <fstream>
+//std::ofstream logfile;
 #endif
 
 
@@ -64,8 +66,8 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     servo_flap_right_(servo_flap_right),
     config_(config),
     motor_speed_(0.0f),
-    left_flap_(0.0f,quaternions_create(1.0f, 0.0f, 0.0f, 0.0f), -0.035f+0.0280f, -0.15f, 0.1f, 0.12f, 0.3f,1),//TODO: change these to the correct values
-    right_flap_(0.0f,quaternions_create(1.0f, 0.0f, 0.0f, 0.0f), -0.035f+0.0280f, 0.15f, 0.1f, 0.12f, 0.3f,1),
+    left_flap_(0.0f,quaternions_create(1.0f, 0.0f, 0.0f, 0.0f), -0.035f+0.0280f, -0.15f, 0.0f, 0.12f, 0.3f,1),
+    right_flap_(0.0f,quaternions_create(1.0f, 0.0f, 0.0f, 0.0f), -0.035f+0.0280f, 0.15f, 0.0f, 0.12f, 0.3f,1),
     left_drift_(0.0f,quaternions_create(1.0f/sqrt(2.0f), 1.0f/sqrt(2.0f), 0.0f, 0.0f), -0.1780f, -0.40f, -0.02f, 0.015f, 0.2f,0),
     right_drift_(0.0f,quaternions_create(1.0f/sqrt(2.0f), 1.0f/sqrt(2.0f), 0.0f, 0.0f), -0.1780f, 0.40f, -0.02f, 0.015f, 0.2f,0),
     torques_bf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
@@ -88,6 +90,8 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     local_position_.origin.altitude         = config_.home_coordinates[2];
     local_position_.origin.heading          = 0.0f;
 
+/*    logfile.open("log.csv");
+    logfile << "Rate,Torque" << std::endl;*/
     // Init global position
     global_position_ = coord_conventions_local_to_global_position(local_position_);
 }
@@ -115,24 +119,16 @@ bool Dynamic_model_fixed_wing::update(void)
         dt_s_ = 0.1f;
     }
 
-    /*//TODO: rmove this after testing
-    float q0 = attitude_.s;
-    float q1 = attitude_.v[0];
-    float q2 = attitude_.v[1];
-    float q3 = attitude_.v[2];
-    float pitch = asin(2*(q0*q2-q3*q1));
-    float roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
-    float gain = 0.01f;
-    left_flap_.set_flap_angle(-19.15f/180.0f*PI-roll*gain);//Set these in degrees!!
-    right_flap_.set_flap_angle(-19.15f/180.0f*PI+roll*gain);*/
-
     // compute torques and forces based on servo commands and positions of the flaps
     forces_from_servos();
 
     // integrate torques to get simulated gyro rates (with some damping)
-    rates_bf_[0] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[0] + dt_s_ * torques_bf_[0] / config_.roll_momentum, 10.0f);
-    rates_bf_[1] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[1] + dt_s_ * torques_bf_[1] / config_.pitch_momentum, 10.0f);
-    rates_bf_[2] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[2] + dt_s_ * torques_bf_[2] / config_.yaw_momentum, 10.0f);
+    rates_bf_[ROLL] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[ROLL] + dt_s_ * torques_bf_[ROLL] / config_.roll_momentum, 10.0f);
+    rates_bf_[PITCH] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[PITCH] + dt_s_ * torques_bf_[PITCH] / config_.pitch_momentum, 10.0f);
+    rates_bf_[YAW] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[YAW] + dt_s_ * torques_bf_[YAW] / config_.yaw_momentum, 10.0f);
+
+    //printf("Yaw Rate: %f\t Yaw Torque: %f\n", (1.0f - 0.1f * dt_s_) * rates_bf_[YAW], dt_s_ * torques_bf_[YAW] / config_.yaw_momentum);
+//    logfile << (1.0f - 0.1f * dt_s_) * rates_bf_[YAW] << "," << dt_s_ * torques_bf_[YAW] / config_.yaw_momentum << std::endl;
 
     qtmp1.s = 0.0f;
     for (i = 0; i < 3; i++)
@@ -250,9 +246,15 @@ const quat_t& Dynamic_model_fixed_wing::attitude(void) const
     return attitude_;
 }
 
-const float Dynamic_model_fixed_wing::x_speed_bf(void) const
+const float Dynamic_model_fixed_wing::x_speed_pitot(void) const
 {
-  return vel_bf_[X];
+  float speed[3];
+  speed[X] = vel_[X]-config_.wind_x;
+  speed[Y] = vel_[Y]-config_.wind_y;
+  speed[Z] = vel_[Z];
+  float speed_bf[3];
+  quaternions_rotate_vector(quaternions_inverse(attitude_),speed,speed_bf);
+  return speed_bf[X];
 }
 
 void Dynamic_model_fixed_wing::set_position(float x_pos, float y_pos, float z_pos)
@@ -261,6 +263,7 @@ void Dynamic_model_fixed_wing::set_position(float x_pos, float y_pos, float z_po
   local_position_.pos[1]  = y_pos;
   local_position_.pos[2]  = z_pos;
   // Set global position accordingly
+  rates_bf_[2] = 5.0f;
   global_position_ = coord_conventions_local_to_global_position(local_position_);
 }
 
@@ -280,11 +283,12 @@ void Dynamic_model_fixed_wing::set_speed(float v_x, float v_y, float v_z)
 void Dynamic_model_fixed_wing::forces_from_servos(void)
 {
     // Get the servos commands and set the flap angles
-    float motor_command = servo_motor_.read() - config_.rotor_rpm_offset;
-    float flaps_angle_left = (servo_flap_left_.read() - config_.flap_offset)*config_.flap_max;
-    float flaps_angle_right = (servo_flap_right_.read() - config_.flap_offset)*config_.flap_max;
-    left_flap_.set_flap_angle(flaps_angle_left);
-    right_flap_.set_flap_angle(flaps_angle_right);
+    float motor_command = 1.0f*(servo_motor_.read() - config_.rotor_rpm_offset);
+    float flaps_angle_left = 1.0f*(servo_flap_left_.read() - config_.flap_offset)*config_.flap_max;
+    float flaps_angle_right = 1.0f*(servo_flap_right_.read() - config_.flap_offset)*config_.flap_max;
+    left_flap_.set_flap_angle(flaps_angle_left/*-19.0f/180.0f*PI*/);
+    right_flap_.set_flap_angle(flaps_angle_right/*-19.f/180.0f*PI*/);
+    //printf("Motor: %f Flaps: %f, %f\n", motor_command, flaps_angle_left, flaps_angle_right);
 
     //Get the wind in the bf
     //Take into account the speed of the plane to get the relative wind
@@ -303,6 +307,7 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     wing_model_forces_t right_flap_force = right_flap_.compute_forces(wind_bf,rates_bf_.data());
     wing_model_forces_t left_drift_force = left_drift_.compute_forces(wind_bf,rates_bf_.data());
     wing_model_forces_t right_drift_force = right_drift_.compute_forces(wind_bf,rates_bf_.data());
+
     //Get the torque around x axis (roll)
     torques_bf_[ROLL] = motor_forces.torque[ROLL] +
 			left_flap_force.torque[ROLL] +
@@ -362,7 +367,7 @@ wing_model_forces_t Dynamic_model_fixed_wing::compute_motor_forces(float wind_bf
   float sqr_lat_airspeed = SQR(wind_bf[1]) + SQR(wind_bf[2]);
   float ldb = lift_drag_base(motor_speed_, sqr_lat_airspeed, -wind_bf[0]);
   wing_model_forces_t motor_forces;
-  motor_forces.force[0] = ldb * config_.rotor_cl;
+  motor_forces.force[0] = 1.0f*ldb * config_.rotor_cl;
   motor_forces.force[1] = 0.0f;
   motor_forces.force[2] = 0.0f;
   motor_forces.torque[ROLL] = (10.0f * ldb * config_.rotor_cd + rotor_inertia) * config_.rotor_diameter;

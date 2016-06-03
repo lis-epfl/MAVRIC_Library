@@ -275,12 +275,11 @@ float Wing_model::get_cm(float aoa)
 	}
 	else //Return the flat profile
 	{
-		//coeff = 2.0f*0.25f*(get_cl(aoa)*cos(aoa)+get_cd(aoa)*sin(aoa));
 		angle = fabs(aoa*57.2957f);
 		angle2 = angle*angle;
 		angle3 = angle2*angle;
 		h = 0.000000765f*angle3-0.000133996f*angle2+0.009433786f*angle+0.181632486f;
-		coeff = (get_cl(aoa)*cos(aoa)+get_cd(aoa)*sin(aoa))*(0.1556f*h-0.2878f/*h-1.1382f*/); //entre 1.138 et 1.1385
+		coeff = (get_cl(aoa)*cos(aoa)+get_cd(aoa)*sin(aoa))*(0.146f*h-0.073f);
 	}
 	return coeff;
 }

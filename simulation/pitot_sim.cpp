@@ -50,7 +50,7 @@ extern "C"
 
 Pitot_sim::Pitot_sim(Dynamic_model& dynamic_model):
     dynamic_model_(dynamic_model),
-    speed(0.0f)
+    speed_(0.0f)
 {}
 
 
@@ -67,8 +67,8 @@ bool Pitot_sim::update(void)
     // Update dynamic model
     success &= dynamic_model_.update();
 
-    // Get angular velocity
-    speed_ = dynamic_model_.x_speed_bf();
+    // Get velocity
+    speed_ = dynamic_model_.x_speed_pitot();
 
     return success;
 }
