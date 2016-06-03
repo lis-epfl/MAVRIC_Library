@@ -148,7 +148,7 @@ float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , flo
 // ------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 // ------------------------------------------------------------------------------
-Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estimation* postion_estimation,ahrs_t* ahrs )
+Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estimation* postion_estimation,ahrs_t* ahrs)
 :	a_max(1),
 	r_pz(0.5),
 	comfort(0.5),
@@ -160,7 +160,8 @@ Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estima
 	coef_roll(1),
 	maxsens(10.0),
 	maxradius(10.0),
-	count(0),
+	count(0), //steps of setsofparams*nbdetection
+	setsofparam(11),
 	max_vel_y(0.0),
 	accumulator(0.0)
 {
@@ -174,7 +175,8 @@ bool Fence_CAS::update(void)
 {
 	// Initialization of variables
 	bool angle_detected=false;									// Flag to reset the ROLL command
-	int nbdetection=10;
+	int nbdetection=15;
+	static int repcount=0;
 	static bool print_change=true;
 	for (int k=0;k<3;k++)									// Reset the repulsion command
 	{
@@ -204,88 +206,242 @@ bool Fence_CAS::update(void)
 //	this->tahead=0.0f; //
 	//link the variables;
 //	this->tahead = 3* this->comfort;
-	this->accumulator += ahrs->linear_acc[0]*ahrs->linear_acc[0]+ahrs->linear_acc[1]*ahrs->linear_acc[1]+ahrs->linear_acc[2]*ahrs->linear_acc[2];
-	print_change=false; // dont use the auto changing param mode
-	this->max_vel_y = 1.7;
-	this->tahead =1.3;
+	static float oldacc[3]={0,0,0};
+	for (int k=0;k<3;k++)
+	{
+		this->accumulator += (ahrs->linear_acc[k]-oldacc[k])*(ahrs->linear_acc[k]-oldacc[k]);
+	}
+	for (int k=0;k<3;k++)
+	{
+		oldacc[k] = ahrs->linear_acc[k];
+	}
+
+//	print_change=false; // dont use the auto changing param mode
+//	this->max_vel_y = 1.7;
+//	this->tahead =1.3;
 	if((this->count%nbdetection)==0 && print_change)
 	{
 		static float parameterstab[]= {
-				0.5,0.5,
-				0.5,0.7,
-				0.5,0.9,
-				0.5,1.1,
-				0.5,1.3,
-				0.5,1.5,
-				0.5,1.7,
-				0.5,1.9,
-				0.5,2.1,
-				0.5,2.3,
-				0.5,2.5,
-				0.7,0.5,
-				0.7,0.7,
-				0.7,0.9,
-				0.7,1.1,
-				0.7,1.3,
-				0.7,1.5,
-				0.7,1.7,
-				0.7,1.9,
-				0.7,2.1,
-				0.7,2.3,
-				0.7,2.5,
-				0.9,0.5,
-				0.9,0.7,
-				0.9,0.9,
-				0.9,1.1,
-				0.9,1.3,
-				0.9,1.5,
-				0.9,1.7,
-				0.9,1.9,
-				0.9,2.1,
-				0.9,2.3,
-				0.9,2.5,
-				1.1,0.5,
-				1.1,0.7,
-				1.1,0.9,
-				1.1,1.1,
-				1.1,1.3,
-				1.1,1.5,
-				1.1,1.7,
-				1.1,1.9,
-				1.1,2.1,
-				1.1,2.3,
-				1.1,2.5,
-				1.3,0.5,
-				1.3,0.7,
-				1.3,0.9,
-				1.3,1.1,
-				1.3,1.3,
-				1.3,1.5,
-				1.3,1.7,
-				1.3,1.9,
-				1.3,2.1,
-				1.3,2.3,
-				1.3,2.5,
-				1.5,0.5,
-				1.5,0.7,
-				1.5,0.9,
-				1.5,1.1,
-				1.5,1.3,
-				1.5,1.5,
-				1.5,1.7,
-				1.5,1.9,
-				1.5,2.1,
-				1.5,2.3,
-				1.5,2.5
+//				0.1,0.1,//untested
+//				0.1,0.3,
+//				0.1,0.5,
+//				0.1,0.7,
+//				0.1,0.9,
+//				0.1,1.2,
+//				0.1,1.4,
+//				0.1,1.6,
+//				0.1,1.8,
+//				0.1,2.0,//untested
+//				0.3,0.1,//48
+//				0.3,0.3,
+//				0.3,0.5,
+//				0.3,0.7,
+//				0.3,0.9,
+//				0.3,1.2,
+//				0.3,1.4,
+//				0.3,1.6,//48
+//				0.3,1.8,//49
+//				0.3,2.0,
+//				0.5,0.1,
+//				0.5,0.3,
+//				0.5,0.5,
+//				0.5,0.7,
+//				0.5,0.9,
+//				0.5,1.2,
+//				0.5,1.4,//49
+//				0.5,1.6,//50
+//				0.5,1.8,
+//				0.5,2.0,
+//				0.7,0.1,
+//				0.7,0.3,
+//				0.7,0.5,
+//				0.7,0.7,
+//				0.7,0.9,
+//				0.7,1.2,//50
+//				0.7,1.4,//51
+//				0.7,1.6,
+//				0.7,1.8,
+//				0.7,2.0,
+//				0.9,0.1,
+//				0.9,0.3,
+//				0.9,0.5,
+//				0.9,0.7,
+//				0.9,0.9,//51
+//				0.9,1.2,//52
+//				0.9,1.4,
+//				0.9,1.6,
+//				0.9,1.8,
+//				0.9,2.0,
+//				1.2,0.1,
+//				1.2,0.3,
+//				1.2,0.5,
+//				1.2,0.7,//52
+//				1.2,0.9,//53
+//				1.2,1.2,
+//				1.2,1.4,
+//				1.2,1.6,
+//				1.2,1.8,
+//				1.2,2.0,
+//				1.4,0.1,
+//				1.4,0.3,
+//				1.4,0.5,//53
+//				1.4,0.7,//54
+//				1.4,0.9,
+//				1.4,1.2,
+//				1.4,1.4,
+//				1.4,1.6,
+//				1.4,1.8,
+//				1.4,2.0,
+//				1.6,0.1,
+//				1.6,0.3,//54
+//				1.6,0.5,//55
+//				1.6,0.7,
+//				1.6,0.9,
+//				1.6,1.2,
+//				1.6,1.4,
+//				1.6,1.6,
+//				1.6,1.8,
+//				1.6,2.0,
+//				1.8,0.1,//55
+//				1.8,0.3,//56
+//				1.8,0.5,
+//				1.8,0.7,
+//				1.8,0.9,
+//				1.8,1.2,
+//				1.8,1.4,
+//				1.8,1.6,
+//				1.8,1.8,
+//				1.8,2.0,//56
+//				2.0,0.1,//57
+//				2.0,0.3,
+//				2.0,0.5,
+//				2.0,0.7,
+//				2.0,0.9,
+//				2.0,1.2,
+//				2.0,1.4,
+//				2.0,1.6,
+//				2.0,1.8,
+//				2.0,2.0,//57 //end logs
+				///////////////////////7
+//				0.3,0.1,//29
+//				0.3,0.2,
+//				0.3,0.3,
+//				0.3,0.4,
+//				0.3,0.5,
+//				0.3,0.6,
+//				0.3,0.7,
+//				0.3,0.8,
+//				0.3,0.9,
+//				0.3,1.0,//29-
+//				0.3,1.1,
+//				0.3,1.2,//-33
+//				0.3,1.3,
+//				0.3,1.4,
+//				0.3,1.5,
+//				0.3,1.6,
+//				0.3,1.7,
+//				0.3,1.8,
+//				0.3,1.9,
+//				0.3,2.0,
+//				0.4,0.1,//33
+//				0.4,0.2,
+//				0.4,0.3,//34
+//				0.4,0.4,
+//				0.4,0.5,
+//				0.4,0.6,
+//				0.4,0.7,
+//				0.4,0.8,
+//				0.4,0.9,
+//				0.4,1.0,
+//				0.4,1.1,
+//				0.4,1.2,//34
+//				0.4,1.3,
+//				0.4,1.4,//35
+//				0.4,1.5,
+//				0.4,1.6,
+//				0.4,1.7,
+//				0.4,1.8,
+//				0.4,1.9,
+//				0.4,2.0,
+//				0.5,0.1,
+//				0.5,0.2,
+//				0.5,0.3,
+//				0.5,0.4,
+//				0.5,0.5,
+//				0.5,0.6,//35
+//				0.5,0.7,
+//				0.5,0.8,
+//				0.5,0.9,
+//				0.5,1.0,
+//				0.5,1.1,//37
+//				0.5,1.2,
+//				0.5,1.3,//38
+//				0.5,1.4,
+//				0.5,1.5,
+//				0.5,1.6,
+//				0.5,1.7,
+//				0.5,1.8,
+//				0.5,1.9,
+//				0.5,2.0,//38
+//				0.6,0.1,//39
+//				0.6,0.2,
+//				0.6,0.3,
+//				0.6,0.4,
+//				0.6,0.5,
+//				0.6,0.6,
+//				0.6,0.7,
+//				0.6,0.8,
+//				0.6,0.9,
+//				0.6,1.0,
+//				0.6,1.1,
+//				0.6,1.2,
+//				0.6,1.3,
+//				0.6,1.4,//39
+//				0.6,1.5,
+//				0.6,1.6,//40
+//				0.6,1.7,
+//				0.6,1.8,
+//				0.6,1.9,
+//				0.6,2.0,
+//				0.7,0.1,
+//				0.7,0.2,
+//				0.7,0.3,
+//				0.7,0.4,
+//				0.7,0.5,
+//				0.7,0.6,
+//				0.7,0.7,
+//				0.7,0.8,
+//				0.7,0.9,
+//				0.7,1.0,
+//				0.7,1.1,//40
+
 		};
 		print_util_dbg_print("New set of parameters:");
+		if((this->max_vel_y == 2.0)&&(this->tahead == 2.0))
+		{
+
+		}
+		else
+		{
 		this->max_vel_y = parameterstab[(this->count/nbdetection)*2];
 		this->tahead = parameterstab[(this->count/nbdetection)*2+1];
-		this->accumulator = 0.0f;
-		print_util_dbg_print("\t Max_vel_y=");print_util_dbg_putfloat(this->max_vel_y,5);
-		print_util_dbg_print("\t tahead=");print_util_dbg_putfloat(this->tahead,5);
-		print_util_dbg_print("\t count=");print_util_dbg_putfloat(this->count,0);
+		}
+		repcount++;
+		if(repcount>=this->setsofparam)
+		{
+			//something to kill the sim.
+			this->controls->thrust = 0.0f;
+		}
+		print_util_dbg_print(",");print_util_dbg_putfloat(this->tahead,5);
+		print_util_dbg_print("");print_util_dbg_putfloat(this->max_vel_y,5);
+
+		print_util_dbg_print(",");print_util_dbg_putfloat(this->accumulator,5);
 		print_util_dbg_print("\n");
+		this->accumulator = 0.0f;
+//		print_util_dbg_print("\t Max_vel_y=");print_util_dbg_putfloat(this->max_vel_y,5);
+//		print_util_dbg_print("\t tahead=");print_util_dbg_putfloat(this->tahead,5);
+//		print_util_dbg_print("\t count=");print_util_dbg_putfloat(this->count,0);
+//		print_util_dbg_print("\n");
 		print_change=false;
 
 	}
@@ -402,7 +558,7 @@ bool Fence_CAS::update(void)
 			if(IC[1]==-1 && n==0) //out of fence
 			{
 				/*Only for sim*/
-				pos_est->local_position.pos[0]=0.0;pos_est->local_position.pos[1]=0.0;pos_est->local_position.pos[2]=0.0;
+//				pos_est->local_position.pos[0]=0.0;pos_est->local_position.pos[1]=0.0;pos_est->local_position.pos[2]=0.0;
 			}
 			if(n==0) //for the first fence
 			{
@@ -572,6 +728,32 @@ void Fence_CAS::get_disconfort(void)
 void Fence_CAS::set_disconfort(void)
 {
 	// add a fence to the cas
+}
+bool Fence_CAS::clip_repulsion(control_command_t* command_t)
+{
+	//compute repulsion velocity y
+	 float ratioXY_vel=1.0;
+ 	 float tvel_y_added = this->repulsion[1];
+	 float norm_ctrl_vel_xy_sqr = command_t->tvel[Y]*command_t->tvel[Y]+command_t->tvel[X]*command_t->tvel[X];
+	 //troncate repulsion velocity y to the norm of the total speed
+	 if(maths_f_abs(tvel_y_added + command_t->tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
+			tvel_y_added = sign(tvel_y_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - command_t->tvel[Y];
+
+	 command_t->tvel[Y] += tvel_y_added;
+
+
+	 if(command_t->tvel[Y] > 0.0f && SQR(command_t->tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
+		 command_t->tvel[Y] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
+	 else if(command_t->tvel[Y] < 0.0f && SQR(command_t->tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
+		 command_t->tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
+
+//	 print_util_dbg_print("tvel_y_added \r\n");
+//	 print_util_dbg_putfloat(tvel_y_added,3);
+//	 print_util_dbg_print("\r\n");
+
+	 //reduce the speed on tvel[X] in order to keep the norm of the speed constant
+	 command_t->tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(command_t->tvel[Y]));
+	 return true;
 }
 float Fence_CAS::get_repulsion(int axis)
 {

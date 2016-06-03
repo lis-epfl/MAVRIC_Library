@@ -47,10 +47,9 @@
 #include "sensing/position_estimation.hpp"
 
 
-
 extern "C"
 {
-//#include "control/control_command.h"
+#include "control/stabilisation.h"
 #include "sensing/ahrs.h"
 }
 
@@ -86,6 +85,14 @@ public:
      * \return  repulsion value
      */
 	float 	get_repulsion(int axis);
+    /**
+     * \brief   clip the repulsion in function of actual velocity norm
+     *
+     * \param pointer on control_command_t to know the actual velocity norm
+     *
+     * \return true
+     */
+	bool 	clip_repulsion(control_command_t* command_t);
     /**
      * \brief   Returns the maximal y speed per update
      *
@@ -124,7 +131,8 @@ public:
 	float	maxradius; 	///< [0,100] Maximal radius of curvature, 	typically 5
 	float	max_vel_y;  ///< [0,2] Maximal speed in y direction, 	typically 1
 	int 	count;
-	float accumulator;
+	int 	setsofparam;
+	float 	accumulator;
 
 
 
