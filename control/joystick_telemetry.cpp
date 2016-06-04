@@ -46,8 +46,6 @@
 //#include "util/print_util.h"
 //#include "util/constants.h"
 
-#include <iostream>
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
@@ -68,7 +66,6 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
 
 static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, mavlink_message_t* msg)
 {
-  printf("Hello!\n");
     mavlink_manual_control_t packet;
     mavlink_msg_manual_control_decode(msg, &packet);
 
@@ -101,7 +98,6 @@ bool joystick_telemetry_init(joystick_t* joystick, Mavlink_message_handler* mess
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &joystick_telemetry_parse_msg;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) joystick;
     init_success &= message_handler->add_msg_callback(&callback);
-    printf("---->%x<----\n", callback.function);
     return init_success;
 }
 

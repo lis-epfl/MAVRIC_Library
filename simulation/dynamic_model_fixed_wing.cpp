@@ -44,14 +44,6 @@
 #include "simulation/dynamic_model_fixed_wing.hpp"
 #include "hal/common/time_keeper.hpp"
 
-#define ALLOW_PRINTF
-
-#ifdef ALLOW_PRINTF
-#include <iostream>
-#include <fstream>
-//std::ofstream logfile;
-#endif
-
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -90,8 +82,6 @@ Dynamic_model_fixed_wing::Dynamic_model_fixed_wing(Servo& servo_motor,
     local_position_.origin.altitude         = config_.home_coordinates[2];
     local_position_.origin.heading          = 0.0f;
 
-/*    logfile.open("log.csv");
-    logfile << "Rate,Torque" << std::endl;*/
     // Init global position
     global_position_ = coord_conventions_local_to_global_position(local_position_);
 }
@@ -127,9 +117,6 @@ bool Dynamic_model_fixed_wing::update(void)
     rates_bf_[PITCH] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[PITCH] + dt_s_ * torques_bf_[PITCH] / config_.pitch_momentum, 10.0f);
     rates_bf_[YAW] = maths_clip((1.0f - 0.1f * dt_s_) * rates_bf_[YAW] + dt_s_ * torques_bf_[YAW] / config_.yaw_momentum, 10.0f);
 
-    //printf("Yaw Rate: %f\t Yaw Torque: %f\n", (1.0f - 0.1f * dt_s_) * rates_bf_[YAW], dt_s_ * torques_bf_[YAW] / config_.yaw_momentum);
-//    logfile << (1.0f - 0.1f * dt_s_) * rates_bf_[YAW] << "," << dt_s_ * torques_bf_[YAW] / config_.yaw_momentum << std::endl;
-
     qtmp1.s = 0.0f;
     for (i = 0; i < 3; i++)
     {
@@ -153,9 +140,6 @@ bool Dynamic_model_fixed_wing::update(void)
     // check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
     if (local_position_.pos[Z] > 0)
     {
-      #ifdef ALLOW_PRINTF
-        printf("Touched the ground\n");//TODO: REMOVE
-      #endif
         //Stop falling
         vel_[Z] = 0.0f;
         local_position_.pos[Z] = 0.0f;
@@ -263,7 +247,7 @@ void Dynamic_model_fixed_wing::set_position(float x_pos, float y_pos, float z_po
   local_position_.pos[1]  = y_pos;
   local_position_.pos[2]  = z_pos;
   // Set global position accordingly
-  rates_bf_[2] = 5.0f;
+  //rates_bf_[2] = 5.0f;
   global_position_ = coord_conventions_local_to_global_position(local_position_);
 }
 
@@ -288,7 +272,6 @@ void Dynamic_model_fixed_wing::forces_from_servos(void)
     float flaps_angle_right = 1.0f*(servo_flap_right_.read() - config_.flap_offset)*config_.flap_max;
     left_flap_.set_flap_angle(flaps_angle_left/*-19.0f/180.0f*PI*/);
     right_flap_.set_flap_angle(flaps_angle_right/*-19.f/180.0f*PI*/);
-    //printf("Motor: %f Flaps: %f, %f\n", motor_command, flaps_angle_left, flaps_angle_right);
 
     //Get the wind in the bf
     //Take into account the speed of the plane to get the relative wind

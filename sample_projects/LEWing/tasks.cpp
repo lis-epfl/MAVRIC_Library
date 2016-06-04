@@ -45,9 +45,6 @@
 #include "control/servos_mix_wing.hpp"
 #include "hal/common/time_keeper.hpp"
 
-#include <iostream>
-
-
 void tasks_run_imu_update(Central_data* central_data)
 {
     central_data->imu.update();
@@ -88,43 +85,40 @@ bool tasks_run_stabilisation(Central_data* central_data)
             servos_mix_wing_update(&central_data->servo_mix);
         }
         //else if (state.is_guided())
+        // else if (state.is_manual())
+        // {
+        //     // central_data->manual_control.get_angle_command_wing(&central_data->controls);
+        //     central_data-> controls.rpy[0] = 0.0f;
+        //     central_data-> controls.rpy[1] = 0.0f;
+        //     central_data-> controls.rpy[2] = 0.0f;
+        //     central_data-> controls.tvel[0] = 8.0f;
+        //     central_data-> controls.tvel[1] = 0.0f;
+        //     central_data-> controls.tvel[2] = 0.0f;
+        //     //central_data-> controls.thrust = -0.9f;
+        //
+        //     central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
+        //     central_data->controls.yaw_mode = YAW_ABSOLUTE;
+        //
+        //     stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
+        //     servos_mix_wing_update(&central_data->servo_mix);
+        // }
         else if (state.is_manual())
+        // else if (state.is_stabilize())
         {
-          printf("Guided\n");
-            // central_data->manual_control.get_angle_command_wing(&central_data->controls);
-            central_data-> controls.rpy[0] = 0.0f;
-            central_data-> controls.rpy[1] = 0.0f;
-            central_data-> controls.rpy[2] = 0.0f;
-            central_data-> controls.tvel[0] = 8.0f;
-            central_data-> controls.tvel[1] = 0.0f;
-            central_data-> controls.tvel[2] = 0.0f;
+            central_data->manual_control.get_angle_command_wing(&central_data->controls);
+            //central_data-> controls.rpy[0] = -0.5f;
+            // central_data-> controls.rpy[1] = 0.0f;
+            // central_data-> controls.rpy[2] = 0.0f;
+            // central_data-> controls.thrust = 1.0f;
             //central_data-> controls.thrust = -0.9f;
 
-            central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
-            central_data->controls.yaw_mode = YAW_ABSOLUTE;
+            central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
 
             stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
             servos_mix_wing_update(&central_data->servo_mix);
         }
         // else if (state.is_manual())
-        // // else if (state.is_stabilize())
         // {
-        //     //printf("Attitude\n");
-        //     central_data->manual_control.get_angle_command_wing(&central_data->controls);
-        //     //central_data-> controls.rpy[0] = -0.5f;
-        //     // central_data-> controls.rpy[1] = 0.0f;
-        //     // central_data-> controls.rpy[2] = 0.0f;
-        //     // central_data-> controls.thrust = 1.0f;
-        //     //central_data-> controls.thrust = -0.9f;
-        //
-        //     central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
-        //
-        //     stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
-        //     servos_mix_wing_update(&central_data->servo_mix);
-        // }
-        // else if (state.is_manual())
-        // {
-        //     printf("Rate\n");
         //     // central_data->manual_control.get_rate_command_wing(&central_data->controls);
         //     central_data-> controls.rpy[0] = 0.0f;
         //     central_data-> controls.rpy[1] = 0.0f;
@@ -135,7 +129,6 @@ bool tasks_run_stabilisation(Central_data* central_data)
         //
         //     stabilisation_wing_cascade_stabilise(&central_data->stabilisation_wing);
         //     servos_mix_wing_update(&central_data->servo_mix);
-        //     // printf("Manual\n");
         //     // // central_data->manual_control.get_control_command(&central_data->controls);
         //     // central_data-> controls.rpy[0] = 0.0f;
         //     // central_data-> controls.rpy[1] = 0.0f;
@@ -146,7 +139,6 @@ bool tasks_run_stabilisation(Central_data* central_data)
         // }
         else
         {
-          printf("Failsafe1\n");
             central_data->servo_0.failsafe();
             central_data->servo_1.failsafe();
             central_data->servo_2.failsafe();
@@ -155,7 +147,6 @@ bool tasks_run_stabilisation(Central_data* central_data)
     }
     else
     {
-      printf("Failsafe2\n");
         central_data->servo_0.failsafe();
         central_data->servo_1.failsafe();
         central_data->servo_2.failsafe();

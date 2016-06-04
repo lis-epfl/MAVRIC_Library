@@ -43,12 +43,6 @@
 
 #include "simulation/wing_model.hpp"
 
-//#define ALLOW_PRINTF
-
-#ifdef ALLOW_PRINTF
-#include <iostream>
-#endif
-
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
@@ -109,11 +103,6 @@ wing_model_forces_t Wing_model::compute_forces(float wind[3], float ang_rates[3]
 	forces_wf.force[Y] = 0.0;
 	forces_wf.force[Z] = -lift*cosinus-drag*sinus;
 	wing_model_forces_t forces_bf = forces_wing_to_bf(forces_wf);
-	#ifdef ALLOW_PRINTF
-		printf("Drag: %f, Lift: %f, AOA: %f\n",drag, lift, aoa);
-		printf("WF: Torque: %f, Fx: %f, Fz: %f\n",forces_wf.torque[PITCH], forces_wf.force[X], forces_wf.force[Z]);
-		printf("BF: Torques: %f, %f, %f\nForces: %f, %f, %f\n",forces_bf.torque[ROLL], forces_bf.torque[PITCH], forces_bf.torque[YAW], forces_bf.force[X], forces_bf.force[Y], forces_bf.force[Z] );//TODO: REMOVE
-	#endif
 	return forces_bf;
 }
 
