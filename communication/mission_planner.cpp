@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink waypoint handler
+ * \brief The mission planner
  *
  ******************************************************************************/
 
