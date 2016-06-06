@@ -129,6 +129,15 @@ protected:
     Navigation& navigation_;                                     ///< The reference to the navigation structure
     Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
 
+    Mission_planner_handler& on_ground_handler_;                ///< The handler for the on ground state
+    Mission_planner_handler& takeoff_handler_;                  ///< The handler for the takeoff state
+    Mission_planner_handler& landing_handler_;                  ///< The handler for the landing state
+    Mission_planner_handler& hold_position_handler_;            ///< The handler for the hold position state
+    Mission_planner_handler& stop_on_position_handler_;         ///< The handler for the stop on position state
+    Mission_planner_handler& stop_there_handler_;               ///< The handler for the stop there state
+    Mission_planner_handler& navigating_handler_;               ///< The handler for the navigating state
+    Mission_planner_handler& manual_control_handler_;           ///< The handler for the manual control state
+
 private:
 
     waypoint_local_struct_t waypoint_coordinates_;               ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)

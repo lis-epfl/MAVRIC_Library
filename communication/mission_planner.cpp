@@ -305,157 +305,35 @@ void Mission_planner::state_machine()
     switch (navigation_.internal_state_)
     {
         case Navigation::NAV_ON_GND:
-            thrust = manual_control_.get_thrust();
-
-            if (thrust > -0.7f)
-            {
-                if (mav_modes_is_guided(mode_local) || mav_modes_is_auto(mode_local))
-                {
-                    hold_waypoint_set_ = false;
-                    navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
-                }
-                else
-                {
-                    navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-                }
-            }
+            on_ground_handler_.handle(this);
             break;
 
         case Navigation::NAV_TAKEOFF:
-            takeoff_result = take_off_handler();
-
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if (takeoff_result)
-            {
-                if (mav_modes_is_auto(mode_local))
-                {
-                    navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
-                }
-                else if (mav_modes_is_guided(mode_local))
-                {
-                    navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
-                }
-            }
-
-            if ((!mav_modes_is_guided(mode_local)) && (!mav_modes_is_auto(mode_local)))
-            {
-                print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_TAKEOFF\r\n");
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
+            takeoff_handler_.handle(this);
             break;
 
         case Navigation::NAV_MANUAL_CTRL:
-            if (mav_modes_is_auto(mode_local))
-            {
-                navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
-            }
-            else if (mav_modes_is_guided(mode_local))
-            {
-                print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
-                hold_init(position_estimation_.local_position);
-                navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
-            }
-
-            navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-            critical_next_state_ = false;
-            navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
+            manual_control_handler_.handle(this);
             break;
 
         case Navigation::NAV_NAVIGATING:
-            if (!mav_modes_is_auto(last_mode_))
-            {
-                new_mode = mode_change();
-            }
-            waypoint_navigation_handler(new_mode);
-
-            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
-            {
-                dubin_state_machine(&waypoint_coordinates_);
-            }
-
-            navigation_.goal = waypoint_coordinates_;
-
-            if (!mav_modes_is_auto(mode_local))
-            {
-                if (mav_modes_is_guided(mode_local))
-                {
-                    print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_NAVIGATING\r\n");
-                    hold_init(position_estimation_.local_position);
-                    navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
-                }
-                else
-                {
-                    print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_NAVIGATING\r\n");
-                    navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-                }
-            }
-
+            navigating_handler_.handle(this);
             break;
 
         case Navigation::NAV_HOLD_POSITION:
-            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
-            {
-                dubin_state_machine(&waypoint_hold_coordinates);
-            }
-
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if (mav_modes_is_auto(mode_local))
-            {
-                print_util_dbg_print("Switching to NAV_NAVIGATING from NAV_HOLD_POSITION\r\n");
-                navigation_.dubin_state = DUBIN_INIT;
-                navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
-            }
-            else if (!mav_modes_is_guided(mode_local))
-            {
-                print_util_dbg_print("Switching to Navigation::NAV_MANUAL_CTRL from Navigation::NAV_HOLD_POSITION\r\n");
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
+            hold_position_handler_.handle(this);
             break;
 
         case Navigation::NAV_STOP_ON_POSITION:
-            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
-            {
-                dubin_state_machine(&waypoint_hold_coordinates);
-            }
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
-            {
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
+            stop_on_position_handler_.handle(this);
             break;
 
         case Navigation::NAV_STOP_THERE:
-            stopping_handler();
-            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
-            {
-                dubin_state_machine(&waypoint_hold_coordinates);
-            }
-
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
-            {
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
+            stop_there_handler_.handle(this);
             break;
 
         case Navigation::NAV_LANDING:
-            auto_landing_handler();
-
-            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
-            {
-                dubin_state_machine(&waypoint_hold_coordinates);
-            }
-
-            navigation_.goal = waypoint_hold_coordinates;
-
-            if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
-            {
-                navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-            }
+            landing_handler_.handle(this);
             break;
     }
 }
