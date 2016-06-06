@@ -72,7 +72,7 @@ public:
                                         Navigation& navigation_,
                                         const ahrs_t& ahrs,
                                         State& state_,
-                                        Mavlink_message_handler& message_handler)
+                                        Mavlink_message_handler& message_handler);
 
 
     /**

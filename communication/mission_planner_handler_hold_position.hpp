@@ -66,7 +66,7 @@ public:
      * \param   state                   The reference to the state structure
      */
      Mission_planner_handler_hold_position( Navigation& navigation_,
-                                            State& state_)
+                                            State& state_);
 
 
     /**

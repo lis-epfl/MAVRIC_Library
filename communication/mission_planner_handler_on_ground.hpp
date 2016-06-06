@@ -66,7 +66,7 @@ public:
      */
      Mission_planner_handler_on_ground( Navigation& navigation_,
                                         State& state_,
-                                        const Manual_control& manual_control_)
+                                        const Manual_control& manual_control_);
 
 
     /**

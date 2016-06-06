@@ -70,7 +70,7 @@ public:
      Mission_planner_handler_landing(   Position_estimation& position_estimation,
                                         Navigation& navigation_,
                                         State& state_,
-                                        Mavlink_message_handler& message_handler)
+                                        Mavlink_message_handler& message_handler);
 
 
     /**

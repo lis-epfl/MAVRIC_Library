@@ -66,7 +66,7 @@ public:
      */
      Mission_planner_handler_stop_there(    Position_estimation& position_estimation_,
                                             Navigation& navigation_,
-                                            State& state_)
+                                            State& state_);
 
 
     /**

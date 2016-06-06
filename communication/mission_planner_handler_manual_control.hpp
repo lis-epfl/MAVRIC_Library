@@ -67,7 +67,7 @@ public:
      */
      Mission_planner_handler_manual_control(    Position_estimation& position_estimation,
                                                 Navigation& navigation_,
-                                                State& state_)
+                                                State& state_);
 
 
     /**
