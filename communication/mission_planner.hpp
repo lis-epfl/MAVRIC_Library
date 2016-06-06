@@ -148,7 +148,7 @@ private:
     const Manual_control& manual_control_;                       ///< The reference to the manual_control structure
     conf_t config_;
 
-    
+
 
     /**
      * \brief   State machine to drive the navigation module
@@ -175,12 +175,6 @@ private:
      *
      */
     void waypoint_navigation_handler(bool reset_hold_wpt);
-
-    /**
-     * \brief   Drives the auto-landing navigation behavior
-     *
-     */
-    void auto_landing_handler();
 
     /**
      * \brief   Check if the nav mode is equal to the state mav mode
@@ -253,16 +247,6 @@ private:
      * \return  The MAV_RESULT of the command
      */
     static mav_result_t start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
-
-    /**
-     * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
-     *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_auto_landing(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 };
 
 
