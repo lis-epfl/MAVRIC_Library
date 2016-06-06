@@ -30,54 +30,59 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_manual_control.cpp
+ * \file mission_planner_handler_hold_position.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the manual control state
+ * \brief The MAVLink mission planner handler for the hold position state
  *
  ******************************************************************************/
 
 
-#include "communication/mission_planner_handler_manual_control.hpp"
+#ifndef MISSION_PLANNER_HANDLER_HOLD_POSITION__
+#define MISSION_PLANNER_HANDLER_HOLD_POSITION__
 
-extern "C"
+#include "communication/mission_planner_handler.hpp"
+#include "communication/state.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "control/manual_control.hpp"
+#include "control/navigation.hpp"
+#include "sensing/position_estimation.hpp"
+
+/*
+ * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ */
+
+class Mission_planner_handler_hold_position : public Mission_planner_handler
 {
+public:
 
-}
+
+    /**
+     * \brief   Initialize the hold position mission planner handler
+     *
+     * \param   navigation              The reference to the navigation structure
+     * \param   state                   The reference to the state structure
+     */
+     Mission_planner_handler_hold_position( Navigation& navigation_,
+                                            State& state_)
 
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+    /**
+     * \brief   The handler for the hold position state.
+     */
+    virtual void handle();
 
-Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( Position_estimation& position_estimation_,
-                                                                                Navigation& navigation_,
-                                                                                State& state_):
-            position_estimation_(position_estimation_),
-            state_(state_),
-            navigation_(navigation_)
-{
+protected:
+    Navigation& navigation_;                                     ///< The reference to the navigation structure
+    State& state_;                                               ///< The reference to the state structure
+};
 
-}
 
-Mission_planner_handler_manual_control::handle()
-{
-    mav_mode_t mode_local = state_.mav_mode();
 
-    if (mav_modes_is_auto(mode_local))
-    {
-        navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
-    }
-    else if (mav_modes_is_guided(mode_local))
-    {
-        print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
-        hold_init(position_estimation_.local_position);
-        navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
-    }
 
-    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-    critical_next_state_ = false;
-    navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
-}
+
+
+
+#endif // MISSION_PLANNER_HANDLER_HOLD_POSITION__

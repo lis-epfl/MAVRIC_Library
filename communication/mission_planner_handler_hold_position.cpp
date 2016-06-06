@@ -30,17 +30,17 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_manual_control.cpp
+ * \file mission_planner_handler_hold_position.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the manual control state
+ * \brief The MAVLink mission planner handler for the hold position state
  *
  ******************************************************************************/
 
 
-#include "communication/mission_planner_handler_manual_control.hpp"
+#include "communication/mission_planner_handler_hold_position.hpp"
 
 extern "C"
 {
@@ -52,32 +52,34 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( Position_estimation& position_estimation_,
-                                                                                Navigation& navigation_,
+Mission_planner_handler_hold_position::Mission_planner_handler_hold_position(   Navigation& navigation_,
                                                                                 State& state_):
-            position_estimation_(position_estimation_),
-            state_(state_),
+            state_(state_)
             navigation_(navigation_)
 {
 
 }
 
-Mission_planner_handler_manual_control::handle()
+Mission_planner_handler_hold_position::handle()
 {
     mav_mode_t mode_local = state_.mav_mode();
 
-    if (mav_modes_is_auto(mode_local))
+    if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
-    }
-    else if (mav_modes_is_guided(mode_local))
-    {
-        print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
-        hold_init(position_estimation_.local_position);
-        navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
+        dubin_state_machine(&waypoint_hold_coordinates);
     }
 
-    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-    critical_next_state_ = false;
-    navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
+    navigation_.goal = waypoint_hold_coordinates;
+
+    if (mav_modes_is_auto(mode_local))
+    {
+        print_util_dbg_print("Switching to NAV_NAVIGATING from NAV_HOLD_POSITION\r\n");
+        navigation_.dubin_state = DUBIN_INIT;
+        navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
+    }
+    else if (!mav_modes_is_guided(mode_local))
+    {
+        print_util_dbg_print("Switching to Navigation::NAV_MANUAL_CTRL from Navigation::NAV_HOLD_POSITION\r\n");
+        navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
+    }
 }
