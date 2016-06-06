@@ -367,18 +367,6 @@ void remote_mode_update(remote_t* remote)
                 new_desired_mode = remote_mode->mode_switch_down;
             }
 
-            // Apply custom flag
-            if (remote_mode->use_custom_switch == true)
-            {
-                new_desired_mode.set_custom_flag(remote->channels[remote_mode->custom_switch_channel] > 0.0f);
-            }
-
-            // Apply test flag
-            if (remote_mode->use_test_switch == true)
-            {
-                new_desired_mode.set_test_flag(remote->channels[remote_mode->test_switch_channel] > 0.0f);
-            }
-
             // Allow only disarm in normal mode
             if (!flag_armed)
             {
@@ -389,6 +377,18 @@ void remote_mode_update(remote_t* remote)
                 // Keep current armed flag
                 new_desired_mode.set_armed_flag(remote_mode->current_desired_mode.is_armed());
             }
+        }
+
+        // Apply custom flag
+        if (remote_mode->use_custom_switch == true)
+        {
+            new_desired_mode.set_custom_flag(remote->channels[remote_mode->custom_switch_channel] > 0.0f);
+        }
+
+        // Apply test flag
+        if (remote_mode->use_test_switch == true)
+        {
+            new_desired_mode.set_test_flag(remote->channels[remote_mode->test_switch_channel] > 0.0f);
         }
 
         // Store desired mode
