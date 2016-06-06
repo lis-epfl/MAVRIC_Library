@@ -953,6 +953,10 @@ void Mavlink_waypoint_handler::state_machine()
     bool takeoff_result = false;
     bool new_mode = true;
 
+    //print_util_dbg_print("Navigation.internal_state_ ");
+    //print_util_dbg_putfloat(navigation_.internal_state_,3);
+    //print_util_dbg_print("\r\n");
+
     switch (navigation_.internal_state_)
     {
         case Navigation::NAV_ON_GND:
@@ -960,6 +964,8 @@ void Mavlink_waypoint_handler::state_machine()
 
             if (thrust > -0.7f)
             {
+            	//print_util_dbg_print("Thrust case");
+
                 if (!mode_local.is_manual())
                 {
                     hold_waypoint_set_ = false;
@@ -973,6 +979,7 @@ void Mavlink_waypoint_handler::state_machine()
             break;
 
         case Navigation::NAV_TAKEOFF:
+
             takeoff_result = take_off_handler();
 
             navigation_.goal = waypoint_hold_coordinates;

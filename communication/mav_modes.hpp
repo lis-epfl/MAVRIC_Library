@@ -283,7 +283,6 @@ typedef enum
      * \details affects only manual, stabilize, guided and auto flag
      */
     inline void set_ctrl_mode(ctrl_mode_t ctrl_mode) {bits_ = (bits_ & ~CTRL_MODE_BITFIELD) + (ctrl_mode & CTRL_MODE_BITFIELD);};
-    inline void set_ctrl_mode_symbiotic(ctrl_mode_t ctrl_mode) {bits_ = ctrl_mode;};
 
     /**
      * \brief   operator overload for ==  (calls this.equal(mav_mode) )
@@ -319,7 +318,6 @@ private:
      */
      inline bool equal(Mav_mode mav_mode) const {return bits_ == mav_mode.bits_;};
 
-public:
     /**
      * \brief   set mode to corresponding bits
  *

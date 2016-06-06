@@ -53,7 +53,7 @@
  */
 
 
-typedef LEQuad_dronedome Base_class;
+typedef LEQuad Base_class;
 
 
 class LEQuad_symbiotic: public Base_class
@@ -118,7 +118,7 @@ LEQuad_symbiotic::conf_t LEQuad_symbiotic::default_config(uint8_t sysid)
     conf.lequad_config = LEQuad::default_config(sysid);
     conf.gimbal_controller_config = Gimbal_controller::default_config();
 
-    conf.lequad_config.navigation_config.takeoff_altitude = -2.0f;
+    conf.lequad_config.navigation_config.takeoff_altitude = -10.0f;
 
     return conf;
 };

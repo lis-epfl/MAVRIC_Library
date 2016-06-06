@@ -375,6 +375,10 @@ bool Navigation::update(Navigation* navigation)
     navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
     navigation->last_update = t;
 
+    //print_util_dbg_print("navigation->state.mav_state_ ");
+    //print_util_dbg_putfloat(navigation->state.mav_state_,3);
+    //print_util_dbg_print("\r\n");
+
     switch (navigation->state.mav_state_)
     {
         case MAV_STATE_STANDBY:

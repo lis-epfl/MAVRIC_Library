@@ -88,7 +88,7 @@ bool LEQuad_symbiotic::main_task(void)
 		state.mav_mode_.set_ctrl_mode(Mav_mode::ATTITUDE);
 		manual_control.set_mode_source(Manual_control::MODE_SOURCE_REMOTE);
 	}
-	else
+	else if(manual_control.control_source() == Manual_control::CONTROL_SOURCE_JOYSTICK)
 		manual_control.set_mode_source(Manual_control::MODE_SOURCE_GND_STATION);
     //---
 
@@ -114,6 +114,7 @@ bool LEQuad_symbiotic::main_task(void)
                 break;
 
             case Mav_mode::POSITION_HOLD:
+            	print_util_dbg_print("position_hold");
                 controls = controls_nav;
                 controls.control_mode = VELOCITY_COMMAND_MODE;
 
@@ -159,7 +160,7 @@ bool LEQuad_symbiotic::main_task(void)
 			{
             	manual_control.manual_control_get_from_joystick_symbiotic(&controls);
 
-				float max_vel_z = 6.0f; //[m/s]
+				float max_vel_z = 4.0f; //[m/s]
 				float max_vel_y = 6.0f; //[m/s]
 
 				// fence avoidance
@@ -172,57 +173,30 @@ bool LEQuad_symbiotic::main_task(void)
 				float quadOrientation[3];
 				float out[3];
 
-				bool in_drone_dome = true;
-				if(in_drone_dome) //ideal speed 0.5 to 0.7 m/s
+				bool in_drone_dome_fence = false;
+				bool outside_fence = true;
+
+				if(in_drone_dome_fence) //ideal speed 0.5 to 0.7 m/s
 				{
-					//center point (0,0,2.0)
+					//center point (0,0,-2.0)
 					z_min = -0.75f;//[m]
 					z_max = -3.5f;//[m]
-					xy_max = 3.0f; //radius [m]
-					dist_to_limit = 0.5f; //[m]
+					xy_max = 2.75f; //radius [m]
+					dist_to_limit = 0.75f; //[m]
 					compute_repulsion = true;
 				}
-				else if(manual_control.joystick.isFenceEnabled)
+				else if(outside_fence)
 				{
-					z_min = 6.0f;//[m]  //underground
-					z_max = -23.0f;//[m]
-					xy_max = 18.0f; //radius [m]
+					//center point (0,0,-10.0)
+					z_min = -7.0f;//[m]
+					z_max = -18.0f;//[m]
+					xy_max = 13.0f; //radius [m]
 					dist_to_limit = 3.0f; //[m]
 					compute_repulsion = true;
 				}
 
 				if(compute_repulsion)
 				{
-					xy_dist = position_estimation.position_estimation_get_xy_distance_from_fence_origin();
-					z_dist = position_estimation.position_estimation_get_z_distance_from_fence_origin();
-					norm_ctrl_vel_xy_sqr = SQR(controls.tvel[X]) + SQR(controls.tvel[Y]);
-
-					//Vertical fence
-					//float ratioXZ_vel = 1.0f;
-					if(z_dist < (z_max + dist_to_limit)) //if too high => tvel_z_added is positif
-					{
-						float tvel_z_added = SQR(z_dist - (z_max+dist_to_limit)) / dist_to_limit * max_vel_z;
-
-						//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
-						//					tvel_z_added = sign(tvel_z_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXZ_vel - central_data->controls.tvel[Z];
-
-						controls.tvel[Z] += tvel_z_added;
-						//if(z_dist < z_max)
-						//		central_data->controls.tvel[Z] = max_vel_z;
-					}
-					if(z_dist > (z_min - dist_to_limit)) //if too low => tvel_z_added is negatif
-					{
-						float tvel_z_added = -SQR(z_dist - (z_min-dist_to_limit)) / dist_to_limit * max_vel_z;
-
-						//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
-						//					tvel_z_added = sign(tvel_z_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXZ_vel - central_data->controls.tvel[Z];
-
-						controls.tvel[Z] += tvel_z_added;
-
-						//if(z_dist > z_min)
-						//		central_data->controls.tvel[Z] = -max_vel_z;
-					}
-
 					//Lateral fence
 					origin2quad[0] = position_estimation.local_position.pos[X] - position_estimation.get_fence_position().pos[X];
 					origin2quad[1] = position_estimation.local_position.pos[Y] - position_estimation.get_fence_position().pos[Y];
@@ -234,12 +208,69 @@ bool LEQuad_symbiotic::main_task(void)
 
 					CROSS(origin2quad,quadOrientation,out);
 
+					float decrease_factor_Y = 1.0f;
+					if(SCP(origin2quad,quadOrientation) < 0.0f) //the drone as a velocity toward the center => decrease the avoidance speed
+						decrease_factor_Y = 0.0f;
+
+					print_util_dbg_print("Y then Z\r\n");
+					print_util_dbg_putfloat(decrease_factor_Y,3);
+					print_util_dbg_print("\r\n");
+
+					origin2quad[0] = 0.0f;
+					origin2quad[1] = 0.0f;
+					origin2quad[2] = position_estimation.local_position.pos[Z] - (z_min + z_max)/2;
+					quadOrientation[0] = 0.0f;
+					quadOrientation[1] = 0.0f;
+					quadOrientation[2] = position_estimation.vel[2];
+
+					float decrease_factor_Z = 1.0f;
+					if(SCP(origin2quad,quadOrientation) < 0.0f) //the drone as a velocity toward the center => decrease the avoidance speed
+						decrease_factor_Z = 0.0f;
+
+					print_util_dbg_putfloat(decrease_factor_Z,3);
+					print_util_dbg_print("\r\n");
+
+
+					xy_dist = position_estimation.position_estimation_get_xy_distance_from_fence_origin();
+					z_dist = position_estimation.position_estimation_get_z_distance_from_fence_origin();
+					norm_ctrl_vel_xy_sqr = SQR(controls.tvel[X]) + SQR(controls.tvel[Y]);
+
+					//Vertical fence
+					//float ratioXZ_vel = 1.0f;
+					if(z_dist < (z_max + dist_to_limit)) //if too high => tvel_z_added is positif
+					{
+						float tvel_z_added = maths_f_abs(z_dist - (z_max+dist_to_limit)) / dist_to_limit * max_vel_z;
+						tvel_z_added = tvel_z_added*decrease_factor_Z;
+
+						//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
+						//					tvel_z_added = sign(tvel_z_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXZ_vel - central_data->controls.tvel[Z];
+
+						controls.tvel[Z] += tvel_z_added;
+						//if(z_dist < z_max)
+						//		central_data->controls.tvel[Z] = max_vel_z;
+					}
+					if(z_dist > (z_min - dist_to_limit)) //if too low => tvel_z_added is negatif
+					{
+						float tvel_z_added = -maths_f_abs(z_dist - (z_min-dist_to_limit)) / dist_to_limit * max_vel_z;
+						tvel_z_added = tvel_z_added*decrease_factor_Z;
+
+						//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
+						//					tvel_z_added = sign(tvel_z_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXZ_vel - central_data->controls.tvel[Z];
+
+						controls.tvel[Z] += tvel_z_added;
+
+						//if(z_dist > z_min)
+						//		central_data->controls.tvel[Z] = -max_vel_z;
+					}
+
+
 					float tvel_y_added;
-					float ratioXY_vel = 1.0f; //should be between 0.0f and 1.0f
+					float ratioXY_vel = 0.7f; //should be between 0.0f and 1.0f
 					if(xy_dist > (xy_max - dist_to_limit))
 					{
 						//compute repulsion velocity y
-						tvel_y_added = sign(out[2])*SQR(xy_dist - (xy_max-dist_to_limit)) / dist_to_limit * max_vel_y;
+						tvel_y_added = sign(out[2])*maths_f_abs(xy_dist - (xy_max-dist_to_limit)) / dist_to_limit * max_vel_y;
+						tvel_y_added = tvel_y_added*decrease_factor_Y;
 
 						//troncate repulsion velocity y to the norm of the total speed
 						if(maths_f_abs(tvel_y_added + controls.tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
@@ -253,9 +284,9 @@ bool LEQuad_symbiotic::main_task(void)
 						else if(controls.tvel[Y] < 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
 							controls.tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
 
-						print_util_dbg_print("tvel_y_added \r\n");
-						print_util_dbg_putfloat(tvel_y_added,3);
-						print_util_dbg_print("\r\n");
+						//print_util_dbg_print("tvel_y_added \r\n");
+						//print_util_dbg_putfloat(tvel_y_added,3);
+						//print_util_dbg_print("\r\n");
 
 						//reduce the speed on tvel[X] in order to keep the norm of the speed constant
 						controls.tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(controls.tvel[Y]));
