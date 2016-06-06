@@ -71,8 +71,11 @@ public:
 
     /**
      * \brief   The handler for the hold position state.
+     *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
      */
-    virtual void handle();
+    virtual void handle(Mission_planner& mission_planner);
 
 protected:
     Navigation& navigation_;                                     ///< The reference to the navigation structure

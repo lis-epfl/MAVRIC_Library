@@ -60,7 +60,7 @@ Mission_planner_handler_hold_position::Mission_planner_handler_hold_position(   
 
 }
 
-Mission_planner_handler_hold_position::handle()
+Mission_planner_handler_hold_position::handle(Mission_planner& mission_planner)
 {
     mav_mode_t mode_local = state_.mav_mode();
 

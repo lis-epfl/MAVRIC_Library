@@ -183,7 +183,7 @@ Mission_planner_handler_landing::Mission_planner_handler_landing(   Position_est
     init_success &= message_handler.add_cmd_callback(&callbackcmd);
 }
 
-Mission_planner_handler_landing::handle()
+Mission_planner_handler_landing::handle(Mission_planner& mission_planner)
 {
     mav_mode_t mode_local = state_.mav_mode();
 

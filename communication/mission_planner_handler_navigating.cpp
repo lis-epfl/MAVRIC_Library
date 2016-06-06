@@ -204,10 +204,10 @@ Mission_planner_handler_navigating::Mission_planner_handler_navigating( Position
             navigation_(navigation_),
             mavlink_stream_(mavlink_stream)
 {
-    
+
 }
 
-Mission_planner_handler_navigating::handle()
+Mission_planner_handler_navigating::handle(Mission_planner& mission_planner)
 {
     mav_mode_t mode_local = state_.mav_mode();
     bool new_mode = true;

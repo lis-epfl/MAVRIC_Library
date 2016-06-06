@@ -72,8 +72,11 @@ public:
 
     /**
      * \brief   The handler for the manual control state.
+     *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
      */
-    virtual void handle();
+    virtual void handle(Mission_planner& mission_planner);
 
 protected:
     Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure

@@ -60,37 +60,15 @@
 class Mission_planner_handler
 {
 public:
-
-
-    /**
-     * \brief   Initialize the waypoint handler
-     *
-     * \param   position_estimation     The pointer to the position estimator structure
-     * \param   navigation              The pointer to the navigation structure
-     * \param   ahrs                    The pointer to the attitude estimation structure
-     * \param   state                   The pointer to the state structure
-     * \param   manual_control          The pointer to the manual control structure
-     * \param   mavlink_communication   The pointer to the MAVLink communication structure
-     * \param   mavlink_stream          The pointer to the MAVLink stream structure
-     *
-     * \return  True if the init succeed, false otherwise
-     */
-    Mission_planner_handler(    Position_estimation& position_estimation,
-                        Navigation& navigation,
-                        const ahrs_t& ahrs,
-                        State& state,
-                        const Manual_control& manual_control,
-                        Mavlink_message_handler& message_handler,
-                        const Mavlink_stream& mavlink_stream,
-                        conf_t config = default_config());
-
-
     /**
      * \brief   The handler for the mission planner. This is called by the state
      * machine in Mission_planner. It should check which subprocess (e.g. land,
      * emergency land, land on tag, etc.) if necessary and handler the request.
+     *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
      */
-    virtual void handle() = 0;
+    virtual void handle(Mission_planner& mission_planner) = 0;
 };
 
 
