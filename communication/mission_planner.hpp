@@ -171,12 +171,6 @@ private:
     void critical_handler();
 
     /**
-     * \brief   Drives the GPS navigation procedure
-     *
-     */
-    void waypoint_navigation_handler(bool reset_hold_wpt);
-
-    /**
      * \brief   Check if the nav mode is equal to the state mav mode
      *
      * \return  True if the flag STABILISE, GUIDED and ARMED are equal, false otherwise
