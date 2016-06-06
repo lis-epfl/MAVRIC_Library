@@ -30,17 +30,17 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_on_ground.cpp
+ * \file mission_planner_handler_manual_control.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the on ground state
+ * \brief The MAVLink mission planner handler for the manual control state
  *
  ******************************************************************************/
 
 
-#include "communication/mission_planner_handler_on_ground.hpp"
+#include "communication/mission_planner_handler_manual_control.hpp"
 
 extern "C"
 {
@@ -52,12 +52,12 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   Navigation& navigation_,
-                                                                        State& state_,
-                                                                        const Manual_control& manual_control_):
+Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( Position_estimation& position_estimation_,
+                                                                                Navigation& navigation_,
+                                                                                State& state_):
+            position_estimation_(position_estimation_),
             state_(state_),
-            navigation_(navigation_),
-            manual_control_(manual_control_)
+            navigation_(navigation_)
 {
 
 }
@@ -65,18 +65,19 @@ Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   Navigati
 Mission_planner_handler_on_ground::handle()
 {
     mav_mode_t mode_local = state_.mav_mode();
-    float thrust = manual_control_.get_thrust();
 
-    if (thrust > -0.7f)
+    if (mav_modes_is_auto(mode_local))
     {
-        if (mav_modes_is_guided(mode_local) || mav_modes_is_auto(mode_local))
-        {
-            hold_waypoint_set_ = false;
-            navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
-        }
-        else
-        {
-            navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
-        }
+        navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
     }
+    else if (mav_modes_is_guided(mode_local))
+    {
+        print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
+        hold_init(position_estimation_.local_position);
+        navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
+    }
+
+    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+    critical_next_state_ = false;
+    navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
 }

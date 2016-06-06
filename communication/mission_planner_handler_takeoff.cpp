@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "communication/mission_planner_handler_on_ground.hpp"
+#include "communication/mission_planner_handler_takeoff.hpp"
 
 extern "C"
 {
@@ -150,7 +150,9 @@ Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Position_est
                                                                     const ahrs_t& ahrs_,
                                                                     State& state_,
                                                                     Mavlink_message_handler& message_handler):
+            position_estimation_(position_estimation_),
             state_(state_),
+            ahrs_(ahrs_),
             navigation_(navigation_),
             manual_control_(manual_control_)
 {
@@ -190,5 +192,4 @@ Mission_planner_handler_on_ground::handle()
         print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_TAKEOFF\r\n");
         navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
     }
-    break;
 }
