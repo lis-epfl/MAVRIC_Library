@@ -148,11 +148,7 @@ private:
     const Manual_control& manual_control_;                       ///< The reference to the manual_control structure
     conf_t config_;
 
-    /**
-     * \brief   Drives the stopping behavior
-     *
-     */
-    void stopping_handler();
+    
 
     /**
      * \brief   State machine to drive the navigation module

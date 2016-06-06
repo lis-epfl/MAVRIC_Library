@@ -564,21 +564,6 @@ void Mission_planner::state_machine()
     }
 }
 
-void Mission_planner::stopping_handler()
-{
-    float dist2wp_sqr;
-    float rel_pos[3];
-
-    rel_pos[X] = (float)(waypoint_hold_coordinates.waypoint.pos[X] - position_estimation_.local_position.pos[X]);
-    rel_pos[Y] = (float)(waypoint_hold_coordinates.waypoint.pos[Y] - position_estimation_.local_position.pos[Y]);
-    rel_pos[Z] = (float)(waypoint_hold_coordinates.waypoint.pos[Z] - position_estimation_.local_position.pos[Z]);
-
-    dist2wp_sqr = vectors_norm_sqr(rel_pos);
-    if (dist2wp_sqr < 25.0f)
-    {
-        navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
-    }
-}
 
 void Mission_planner::critical_handler()
 {
