@@ -86,6 +86,8 @@ protected:
     Navigation& navigation_;                                     ///< The reference to the navigation structure
     State& state_;                                               ///< The reference to the state structure
 
+    bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
+
     /**
      * \brief   Drives the auto-landing navigation behavior
      *

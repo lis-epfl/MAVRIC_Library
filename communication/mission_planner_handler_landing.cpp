@@ -169,7 +169,8 @@ Mission_planner_handler_landing::Mission_planner_handler_landing(   Position_est
             position_estimation_(position_estimation_),
             state_(state_),
             navigation_(navigation_),
-            manual_control_(manual_control_)
+            manual_control_(manual_control_),
+            auto_landing_next_state_(false)
 {
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;

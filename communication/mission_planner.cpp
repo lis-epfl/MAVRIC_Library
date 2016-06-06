@@ -566,7 +566,6 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navi
             timeout_max_waypoint_(10000),
             travel_time_(0),
             critical_next_state_(false),
-            auto_landing_next_state_(0),
             last_mode_(state_.mav_mode()),
             ahrs_(ahrs_),
             manual_control_(manual_control_),

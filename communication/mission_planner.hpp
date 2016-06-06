@@ -150,7 +150,6 @@ private:
     uint32_t travel_time_;                                       ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
     bool critical_next_state_;                                   ///< Flag to change critical state in its dedicated state machine
-    bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
 
     mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution
     const ahrs_t& ahrs_;                                         ///< The reference to the attitude estimation structure
