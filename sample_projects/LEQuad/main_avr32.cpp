@@ -39,6 +39,7 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/lequad.hpp"
+#include "sample_projects/LEQuad/hexhog.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
@@ -72,7 +73,34 @@ int main(void)
     // Create board
     // -------------------------------------------------------------------------
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
-    board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
+
+    // Rotate board
+    imu_conf_t imu_config = board_config.imu_config;
+    uint32_t x_axis = 1;
+    float x_sign  = -1.0f;
+    uint32_t y_axis = 0;
+    float y_sign  = 1.0f;
+    uint32_t z_axis = 2;
+    float z_sign  = 1.0f;
+    board_config.imu_config.accelerometer.sign[0] = x_sign * imu_config.accelerometer.sign[x_axis];
+    board_config.imu_config.accelerometer.sign[1] = y_sign * imu_config.accelerometer.sign[y_axis];
+    board_config.imu_config.accelerometer.sign[2] = z_sign * imu_config.accelerometer.sign[z_axis];
+    board_config.imu_config.accelerometer.axis[0] = imu_config.accelerometer.axis[x_axis];
+    board_config.imu_config.accelerometer.axis[1] = imu_config.accelerometer.axis[y_axis];
+    board_config.imu_config.accelerometer.axis[2] = imu_config.accelerometer.axis[z_axis];
+    board_config.imu_config.gyroscope.sign[0] = x_sign * imu_config.gyroscope.sign[x_axis];
+    board_config.imu_config.gyroscope.sign[1] = y_sign * imu_config.gyroscope.sign[y_axis];
+    board_config.imu_config.gyroscope.sign[2] = z_sign * imu_config.gyroscope.sign[z_axis];
+    board_config.imu_config.gyroscope.axis[0] = imu_config.gyroscope.axis[x_axis];
+    board_config.imu_config.gyroscope.axis[1] = imu_config.gyroscope.axis[y_axis];
+    board_config.imu_config.gyroscope.axis[2] = imu_config.gyroscope.axis[z_axis];
+    board_config.imu_config.magnetometer.sign[0] = x_sign * imu_config.magnetometer.sign[x_axis];
+    board_config.imu_config.magnetometer.sign[1] = y_sign * imu_config.magnetometer.sign[y_axis];
+    board_config.imu_config.magnetometer.sign[2] = z_sign * imu_config.magnetometer.sign[z_axis];
+    board_config.imu_config.magnetometer.axis[0] = imu_config.magnetometer.axis[x_axis];
+    board_config.imu_config.magnetometer.axis[1] = imu_config.magnetometer.axis[y_axis];
+    board_config.imu_config.magnetometer.axis[2] = imu_config.magnetometer.axis[z_axis];
+
     Megafly_rev4 board = Megafly_rev4(board_config);
 
     // Board initialisation
@@ -89,8 +117,10 @@ int main(void)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad(board.imu,
+    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    // LEQuad mav = LEQuad(board.imu,
+    Hexhog::conf_t mav_config = Hexhog::default_config(MAVLINK_SYS_ID);
+    Hexhog mav = Hexhog(board.imu,
                         board.bmp085,
                         board.gps_ublox,
                         board.sonar_i2cxl,      // Warning:
