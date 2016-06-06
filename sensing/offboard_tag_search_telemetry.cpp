@@ -76,37 +76,36 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
 {
     mav_result_t result;
 
-    // Increment counter
-    offboard_tag_search.increment_picture_count();
-
-    // Set waypoint enum to tag found
-    offboard_tag_search.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND);
-
-    /*
-     * The incoming packet is of this format:
-     * param1: camera number
-     * param2: thread index
-     * param3: tag horizontal location in pixels, positive is right, -1000 for unknown
-     * param4: tag vertical location in pixels, positive is down, -1000 for unknown
-     * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000 for unknown
-     * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1000 for unknown
-     * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1000 for unknown as positive is up
-     */
-
-    /*
-     * Set the x and y hold position to be equal to the tag location
-     */
-
-    // Get drone height, drone height tells you the pixel dimensions when projected on the ground, positive z is down
-    float drone_height = 0.0f;
     int thread_index = packet->param2;
 
     // If a tag had actually been detected
-    if (packet->param3 < -999.0f &&     // Use range due to float errors
-        packet->param3 > -1001.0f &&    // Use range due to float errors
-        packet->param4 < -999.0f &&     // Use range due to float errors
-        packet->param4 > -1001.0f)      // Use range due to float errors
+    if ((packet->param3 > -999.0f || packet->param3 < -1001.0f) ||    // Use range due to float errors
+        (packet->param4 > -999.0f || packet->param4 < -1001.0f))      // Use range due to float errors
     {
+        // Increment counter
+        offboard_tag_search.increment_picture_count();
+
+        // Set waypoint enum to tag found
+        offboard_tag_search.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND);
+
+        /*
+         * The incoming packet is of this format:
+         * param1: camera number
+         * param2: thread index
+         * param3: tag horizontal location in pixels, positive is right, -1000 for unknown
+         * param4: tag vertical location in pixels, positive is down, -1000 for unknown
+         * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000 for unknown
+         * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1000 for unknown
+         * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1000 for unknown as positive is up
+         */
+
+        /*
+         * Set the x and y hold position to be equal to the tag location
+         */
+
+        // Get drone height, drone height tells you the pixel dimensions when projected on the ground, positive z is down
+        float drone_height = 0.0f;
+
         // Get drone height from packet if available and reasonable
         if ((packet->param7 > 0.0f) &&                                          // Packet outputs + as up, must be greater than 0
             (packet->param7 < offboard_tag_search.max_acc_drone_height_from_camera_mm()))   // Don't allow too high estimations as accuracy decreases with altitude
