@@ -48,6 +48,7 @@
 
 #include "hal/stm32/gpio_stm32.hpp"
 #include "hal/stm32/serial_stm32.hpp"
+#include "hal/stm32/i2c_stm32.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
@@ -77,6 +78,8 @@ typedef struct
     gpio_stm32_conf_t       red_led_gpio_config;
     serial_stm32_conf_t     serial_1_config;
     serial_stm32_conf_t     serial_2_config;
+    i2c_stm32_conf_t        i2c_0_config;
+    i2c_stm32_conf_t        i2c_1_config;
     imu_conf_t              imu_config;
     servo_conf_t            servo_config[8];
 } mavrimini_conf_t;
@@ -124,6 +127,8 @@ public:
     File_dummy          file_flash;
     Serial_stm32        serial_1;
     Serial_stm32        serial_2;
+    I2c_stm32           i2c_0;
+    I2c_stm32           i2c_1;
     Spektrum_satellite  spektrum_satellite;
     Adc_dummy           adc_battery;
     Battery             battery;
@@ -226,6 +231,39 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.serial_2_config.tx_pin         = GPIO_STM32_PIN_2;
     conf.serial_2_config.tx_af          = GPIO_STM32_AF_7;
 
+    // -------------------------------------------------------------------------
+    // I2C config
+    // -------------------------------------------------------------------------
+    conf.i2c_0_config                       = i2c_stm32_default_config();
+    conf.i2c_0_config.i2c_device_config     = STM32_I2C1;
+    conf.i2c_0_config.rcc_i2c_config        = RCC_I2C1;
+    conf.i2c_0_config.rcc_sda_port_config   = RCC_GPIOB;
+    conf.i2c_0_config.sda_config.port       = GPIO_STM32_PORT_B;
+    conf.i2c_0_config.sda_config.pin        = GPIO_STM32_PIN_7;
+    conf.i2c_0_config.sda_config.alt_fct    = GPIO_STM32_AF_4;
+    conf.i2c_0_config.rcc_clk_port_config   = RCC_GPIOB;
+    conf.i2c_0_config.clk_config.port       = GPIO_STM32_PORT_B;
+    conf.i2c_0_config.clk_config.pin        = GPIO_STM32_PIN_6;
+    conf.i2c_0_config.clk_config.alt_fct    = GPIO_STM32_AF_4;
+    conf.i2c_0_config.clk_speed             = 400000;
+    conf.i2c_0_config.tenbit_config         = false;
+
+    // -------------------------------------------------------------------------
+    // I2C config
+    // -------------------------------------------------------------------------
+    conf.i2c_1_config                       = i2c_stm32_default_config();
+    conf.i2c_1_config.i2c_device_config     = STM32_I2C2;
+    conf.i2c_1_config.rcc_i2c_config        = RCC_I2C2;
+    conf.i2c_1_config.rcc_sda_port_config   = RCC_GPIOB;
+    conf.i2c_1_config.sda_config.port       = GPIO_STM32_PORT_B;
+    conf.i2c_1_config.sda_config.pin        = GPIO_STM32_PIN_11;
+    conf.i2c_1_config.sda_config.alt_fct    = GPIO_STM32_AF_4;
+    conf.i2c_1_config.rcc_clk_port_config   = RCC_GPIOB;
+    conf.i2c_1_config.clk_config.port       = GPIO_STM32_PORT_B;
+    conf.i2c_1_config.clk_config.pin        = GPIO_STM32_PIN_10;
+    conf.i2c_1_config.clk_config.alt_fct    = GPIO_STM32_AF_4;
+    conf.i2c_1_config.clk_speed             = 400000;
+    conf.i2c_1_config.tenbit_config         = false;
     
 
     // -------------------------------------------------------------------------

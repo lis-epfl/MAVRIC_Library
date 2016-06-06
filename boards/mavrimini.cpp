@@ -82,6 +82,8 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     file_flash(),
     serial_1(config.serial_1_config),
     serial_2(config.serial_2_config),
+    i2c_0(config.i2c_0_config),
+    i2c_1(config.i2c_1_config),
     spektrum_satellite(serial_2, dsm_receiver_gpio, dsm_power_gpio),
     adc_battery(12.3f),
     battery(adc_battery),
@@ -130,6 +132,17 @@ bool Mavrimini::init(void)
     ret = serial_2.init();
     init_success &= ret;
 
+    // -------------------------------------------------------------------------
+    // Init I2C_0
+    // -------------------------------------------------------------------------
+    ret = i2c_0.init();
+    init_success &= ret;
+
+    // -------------------------------------------------------------------------
+    // Init I2C_1
+    // -------------------------------------------------------------------------
+    ret = i2c_1.init();
+    init_success &= ret;
 
     // -------------------------------------------------------------------------
     // Init stream for USB debug stream TODO: remove
