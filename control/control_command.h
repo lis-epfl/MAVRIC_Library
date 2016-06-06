@@ -157,7 +157,7 @@ typedef struct
 {
     control_command_mode_t  mode;       ///< Control command mode
     thrust_command_t        thrust;     ///< Thrust command
-    thrust3D_command_t      thrust3D;   ///< Thrust command
+    thrust3D_command_t      thrust3D;   ///< 3D Thrust command
     torque_command_t        torque;     ///< Torque command
     rate_command_t          rate;       ///< Rate command
     attitude_command_t      attitude;   ///< Attitude command
