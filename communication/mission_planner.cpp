@@ -235,73 +235,6 @@ mav_result_t Mission_planner::is_arrived(Mavlink_waypoint_handler* waypoint_hand
     return result;
 }
 
-bool Mission_planner::take_off_handler()
-{
-    bool result = false;
-
-    if (!hold_waypoint_set_)
-    {
-        print_util_dbg_print("Automatic take-off, will hold position at: (");
-        print_util_dbg_print_num(position_estimation_.local_position.pos[X], 10);
-        print_util_dbg_print(", ");
-        print_util_dbg_print_num(position_estimation_.local_position.pos[Y], 10);
-        print_util_dbg_print(", ");
-        print_util_dbg_print_num(-10.0f, 10);
-        print_util_dbg_print("), with heading of: ");
-        print_util_dbg_print_num((int32_t)(position_estimation_.local_position.heading * 180.0f / 3.14f), 10);
-        print_util_dbg_print("\r\n");
-
-        waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
-        waypoint_hold_coordinates.waypoint.pos[Z] = navigation_.takeoff_altitude;
-
-        aero_attitude_t aero_attitude;
-        aero_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
-        waypoint_hold_coordinates.waypoint.heading = aero_attitude.rpy[2];
-
-        navigation_.dist2wp_sqr = waypoint_hold_coordinates.waypoint.pos[Z] * waypoint_hold_coordinates.waypoint.pos[Z];
-
-        hold_waypoint_set_ = true;
-    }
-
-    if (mode_change())
-    {
-        switch(navigation_.navigation_strategy)
-        {
-            case Navigation::strategy_t::DIRECT_TO:
-               if (navigation_.dist2wp_sqr <= 16.0f)
-                {
-                    result = true;
-                }
-            break;
-
-            case Navigation::strategy_t::DUBIN:
-                if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
-                {
-                    if (navigation_.dist2wp_sqr <= 16.0f)
-                    {
-                        result = true;
-                    }
-                }
-                else
-                {
-                    if (position_estimation_.local_position.pos[Z] <= navigation_.takeoff_altitude)
-                    {
-                        result = true;
-                    }
-                }
-            break;
-        }
-
-        if (result)
-        {
-            navigation_.dubin_state = DUBIN_INIT;
-
-            print_util_dbg_print("Automatic take-off finished.\r\n");
-        }
-    }
-
-    return result;
-}
 
 mav_result_t Mission_planner::start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
 {
@@ -354,26 +287,6 @@ mav_result_t Mission_planner::start_stop_navigation(Mavlink_waypoint_handler* wa
         }
 
         result = MAV_RESULT_ACCEPTED;
-    }
-
-    return result;
-}
-
-mav_result_t Mission_planner::set_auto_takeoff(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
-{
-    mav_result_t result;
-
-    if (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_ON_GND)
-    {
-        print_util_dbg_print("Starting automatic take-off from button\r\n");
-        waypoint_handler->navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
-        waypoint_handler->hold_waypoint_set_ = false;
-
-        result = MAV_RESULT_ACCEPTED;
-    }
-    else
-    {
-        result = MAV_RESULT_DENIED;
     }
 
     return result;
@@ -1127,14 +1040,6 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navi
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_landing;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
-
-    callbackcmd.command_id = MAV_CMD_NAV_TAKEOFF; // 22
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_takeoff;
-    callbackcmd.module_struct =                                 this;
     init_success &= message_handler.add_cmd_callback(&callbackcmd);
 
     callbackcmd.command_id = MAV_CMD_MISSION_START; // 300

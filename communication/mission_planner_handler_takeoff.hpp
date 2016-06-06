@@ -30,21 +30,22 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_on_ground.hpp
+ * \file mission_planner_handler_takeoff.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the on ground state
+ * \brief The MAVLink mission planner handler for the takeoff state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_ON_GROUND__
-#define MISSION_PLANNER_HANDLER_ON_GROUND__
+#ifndef MISSION_PLANNER_HANDLER_TAKEOFF__
+#define MISSION_PLANNER_HANDLER_TAKEOFF__
 
 #include "communication/mission_planner_handler.hpp"
 #include "communication/state.hpp"
+#include "communication/mavlink_message_handler.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 
@@ -52,33 +53,53 @@
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mission_planner_handler_on_ground : public Mission_planner_handler
+class Mission_planner_handler_takeoff : public Mission_planner_handler
 {
 public:
 
 
     /**
-     * \brief   Initialize the on ground mission planner handler
+     * \brief   Initialize the takeoff mission planner handler
      *
-     * \param   navigation              The pointer to the navigation structure
-     * \param   state                   The pointer to the state structure
-     * \param   manual_control          The pointer to the manual control structure
+     * \param   position_estimation     The pointer to the position estimator structure
+     * \param   navigation              The reference to the navigation structure
+     * \param   ahrs                    The pointer to the attitude estimation structure
+     * \param   state                   The reference to the state structure
+     * \param   message_handler         The reference to the mavlink message handler
      */
-     Mission_planner_handler_on_ground( Navigation& navigation_,
+     Mission_planner_handler_takeoff(   Position_estimation& position_estimation,
+                                        Navigation& navigation_,
+                                        const ahrs_t& ahrs,
                                         State& state_,
-                                        const Manual_control& manual_control_)
+                                        Mavlink_message_handler& message_handler)
 
 
     /**
-     * \brief   The handler for the on ground state. Checks if the trust is
-     * within a certain threshold and changes the state accordingly.
+     * \brief   The handler for the takeoff state.
      */
     virtual void handle();
 
 protected:
-    Navigation& navigation_;                                    ///< The reference to the navigation structure
-    State& state_;                                              ///< The reference to the state structure
-    const Manual_control& manual_control_;                      ///< The reference to the manual control class
+    Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
+    Navigation& navigation_;                                     ///< The reference to the navigation structure
+    const ahrs_t& ahrs_;                                         ///< The reference to the attitude estimation structure
+    State& state_;                                               ///< The reference to the state structure
+
+    /**
+     * \brief   Drives the automatic takeoff procedure
+     *
+     */
+    bool take_off_handler();
+
+    /**
+     * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
+     *
+     * \param   takeoff_handler     The pointer to the object of the Mission planner takeoff handler
+     * \param   packet              The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t set_auto_takeoff(Mission_planner_handler_takeoff* takeoff_handler, mavlink_command_long_t* packet);
 };
 
 
@@ -87,4 +108,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_ON_GROUND__
+#endif // MISSION_PLANNER_HANDLER_TAKEOFF__

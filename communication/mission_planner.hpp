@@ -123,11 +123,11 @@ public:
 protected:
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
-    const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
+    const Mavlink_stream& mavlink_stream_;                       ///< The reference to MAVLink stream
 
-    State& state_;                                               ///< The pointer to the state structure
-    Navigation& navigation_;                                     ///< The pointer to the navigation structure
-    Position_estimation& position_estimation_;                   ///< The pointer to the position estimation structure
+    State& state_;                                               ///< The reference to the state structure
+    Navigation& navigation_;                                     ///< The reference to the navigation structure
+    Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
 
 private:
 
@@ -144,8 +144,8 @@ private:
     bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
 
     mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution
-    const ahrs_t& ahrs_;                                         ///< The pointer to the attitude estimation structure
-    const Manual_control& manual_control_;                       ///< The pointer to the manual_control structure
+    const ahrs_t& ahrs_;                                         ///< The reference to the attitude estimation structure
+    const Manual_control& manual_control_;                       ///< The reference to the manual_control structure
     conf_t config_;
 
     /**
@@ -179,12 +179,6 @@ private:
      *
      */
     void waypoint_navigation_handler(bool reset_hold_wpt);
-
-    /**
-     * \brief   Drives the automatic takeoff procedure
-     *
-     */
-    bool take_off_handler();
 
     /**
      * \brief   Drives the auto-landing navigation behavior
@@ -263,16 +257,6 @@ private:
      * \return  The MAV_RESULT of the command
      */
     static mav_result_t start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
-
-    /**
-     * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
-     *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet              The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_auto_takeoff(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 
     /**
      * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
