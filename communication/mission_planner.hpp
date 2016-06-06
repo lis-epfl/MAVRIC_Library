@@ -240,16 +240,6 @@ private:
      * \return  The MAV_RESULT of the command
      */
     static mav_result_t is_arrived(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
-
-    /**
-     * \brief   Start/Stop the navigation
-     *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 };
 
 

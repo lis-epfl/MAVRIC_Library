@@ -66,11 +66,13 @@ public:
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      * \param   mavlink_stream          The reference to the MAVLink stream structure
+     * \param   message_handler         The reference to the mavlink message handler
      */
      Mission_planner_handler_navigating(    Position_estimation& position_estimation,
                                             Navigation& navigation_,
                                             State& state_,
-                                            const Mavlink_stream& mavlink_stream)
+                                            const Mavlink_stream& mavlink_stream,
+                                            Mavlink_message_handler& message_handler);
 
 
     /**
@@ -92,6 +94,16 @@ protected:
      *
      */
     void waypoint_navigating_handler(bool reset_hold_wpt);
+
+    /**
+     * \brief   Start/Stop the navigation
+     *
+     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
+     * \param   packet                  The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 };
 
 

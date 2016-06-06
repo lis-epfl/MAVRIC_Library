@@ -191,6 +191,64 @@ void Mission_planner::waypoint_navigating_handler(bool reset_hold_wpt)
 }
 
 
+
+mav_result_t Mission_planner::start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+{
+    mav_result_t result = MAV_RESULT_UNSUPPORTED;
+
+    if (packet->param1 == MAV_GOTO_DO_HOLD)
+    {
+        if (packet->param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION)
+        {
+            waypoint_handler->hold_init(waypoint_handler->position_estimation_.local_position);
+
+            waypoint_handler->navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
+
+            result = MAV_RESULT_ACCEPTED;
+        }
+        else if (packet->param2 == MAV_GOTO_HOLD_AT_SPECIFIED_POSITION)
+        {
+            waypoint_handler->navigation_.internal_state_ = Navigation::NAV_STOP_THERE;
+
+            waypoint_struct_t waypoint;
+
+            waypoint.frame = packet->param3;
+            waypoint.param4 = packet->param4;
+            waypoint.x = packet->param5;
+            waypoint.y = packet->param6;
+            waypoint.z = packet->param7;
+
+            waypoint_local_struct_t waypoint_goal = waypoint_handler.convert_to_waypoint_local_struct(   &waypoint,
+                                                                                                waypoint_handler->position_estimation_.local_position.origin,
+                                                                                                &waypoint_handler->navigation_.dubin_state);
+            waypoint_handler->hold_init(waypoint_goal.waypoint);
+
+            result = MAV_RESULT_ACCEPTED;
+        }
+    }
+    else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
+    {
+        if ( (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_THERE) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) )
+        {
+            waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
+        }
+
+        if (mav_modes_is_auto(waypoint_handler->last_mode_))  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        {
+            waypoint_handler->navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
+        }
+        else if (mav_modes_is_guided(waypoint_handler->last_mode_))  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        {
+            waypoint_handler->navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
+        }
+
+        result = MAV_RESULT_ACCEPTED;
+    }
+
+    return result;
+}
+
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -198,13 +256,23 @@ void Mission_planner::waypoint_navigating_handler(bool reset_hold_wpt)
 Mission_planner_handler_navigating::Mission_planner_handler_navigating( Position_estimation& position_estimation_,
                                                                         Navigation& navigation_,
                                                                         State& state_,
-                                                                        const Mavlink_stream& mavlink_stream):
+                                                                        const Mavlink_stream& mavlink_stream,
+                                                                        Mavlink_message_handler& message_handler):
             position_estimation_(position_estimation_),
             state_(state_),
             navigation_(navigation_),
             mavlink_stream_(mavlink_stream)
 {
+    // Add callbacks for waypoint handler commands requests
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
 
+    callbackcmd.command_id = MAV_CMD_OVERRIDE_GOTO; // 252
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &start_stop_navigation;
+    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler.add_cmd_callback(&callbackcmd);
 }
 
 Mission_planner_handler_navigating::handle(Mission_planner& mission_planner)
