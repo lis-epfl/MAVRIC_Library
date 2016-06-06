@@ -53,7 +53,7 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool Mission_planner_handler_takeoff::take_off_handler()
+bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_planner)
 {
     bool result = false;
 
@@ -69,14 +69,14 @@ bool Mission_planner_handler_takeoff::take_off_handler()
         print_util_dbg_print_num((int32_t)(position_estimation_.local_position.heading * 180.0f / 3.14f), 10);
         print_util_dbg_print("\r\n");
 
-        waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
-        waypoint_hold_coordinates.waypoint.pos[Z] = navigation_.takeoff_altitude;
+        mission_planner.waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
+        mission_planner.waypoint_hold_coordinates.waypoint.pos[Z] = navigation_.takeoff_altitude;
 
         aero_attitude_t aero_attitude;
         aero_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
-        waypoint_hold_coordinates.waypoint.heading = aero_attitude.rpy[2];
+        mission_planner.waypoint_hold_coordinates.waypoint.heading = aero_attitude.rpy[2];
 
-        navigation_.dist2wp_sqr = waypoint_hold_coordinates.waypoint.pos[Z] * waypoint_hold_coordinates.waypoint.pos[Z];
+        navigation_.dist2wp_sqr = mission_planner.waypoint_hold_coordinates.waypoint.pos[Z] * mission_planner.waypoint_hold_coordinates.waypoint.pos[Z];
 
         hold_waypoint_set_ = true;
     }
@@ -173,7 +173,7 @@ Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
     mav_mode_t mode_local = state_.mav_mode();
 
     takeoff_result = take_off_handler();
-    navigation_.goal = waypoint_hold_coordinates;
+    navigation_.goal = mission_planner.waypoint_hold_coordinates;
 
     if (takeoff_result)
     {

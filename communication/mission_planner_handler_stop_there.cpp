@@ -52,14 +52,14 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_planner_handler_stop_there::stopping_handler()
+void Mission_planner_handler_stop_there::stopping_handler(Mission_planner& mission_planner)
 {
     float dist2wp_sqr;
     float rel_pos[3];
 
-    rel_pos[X] = (float)(waypoint_hold_coordinates.waypoint.pos[X] - position_estimation_.local_position.pos[X]);
-    rel_pos[Y] = (float)(waypoint_hold_coordinates.waypoint.pos[Y] - position_estimation_.local_position.pos[Y]);
-    rel_pos[Z] = (float)(waypoint_hold_coordinates.waypoint.pos[Z] - position_estimation_.local_position.pos[Z]);
+    rel_pos[X] = (float)(mission_planner.waypoint_hold_coordinates.waypoint.pos[X] - position_estimation_.local_position.pos[X]);
+    rel_pos[Y] = (float)(mission_planner.waypoint_hold_coordinates.waypoint.pos[Y] - position_estimation_.local_position.pos[Y]);
+    rel_pos[Z] = (float)(mission_planner.waypoint_hold_coordinates.waypoint.pos[Z] - position_estimation_.local_position.pos[Z]);
 
     dist2wp_sqr = vectors_norm_sqr(rel_pos);
     if (dist2wp_sqr < 25.0f)
@@ -90,10 +90,10 @@ Mission_planner_handler_stop_on_position::handle(Mission_planner& mission_planne
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        dubin_state_machine(&waypoint_hold_coordinates);
+        dubin_state_machine(&(mission_planner.waypoint_hold_coordinates));
     }
 
-    navigation_.goal = waypoint_hold_coordinates;
+    navigation_.goal = mission_planner.waypoint_hold_coordinates;
 
     if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
     {

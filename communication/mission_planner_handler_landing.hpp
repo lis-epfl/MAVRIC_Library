@@ -91,8 +91,10 @@ protected:
     /**
      * \brief   Drives the auto-landing navigation behavior
      *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
      */
-    void auto_landing_handler();
+    void auto_landing_handler(Mission_planner& mission_planner);
 
     /**
      * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long

@@ -92,8 +92,10 @@ protected:
     /**
      * \brief   Drives the automatic takeoff procedure
      *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
      */
-    bool take_off_handler();
+    bool take_off_handler(Mission_planner& mission_planner.);
 
     /**
      * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF

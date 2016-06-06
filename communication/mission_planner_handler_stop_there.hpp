@@ -85,8 +85,10 @@ protected:
     /**
      * \brief   Drives the stopping behavior
      *
+     * \param   mission_planner     The reference to the mission planner that is
+     * handling the request.
      */
-    void stopping_handler();
+    void stopping_handler(Mission_planner& mission_planner);
 };
 
 

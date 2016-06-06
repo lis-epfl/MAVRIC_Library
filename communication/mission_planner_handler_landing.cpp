@@ -53,7 +53,7 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_planner_handler_landing::auto_landing_handler()
+void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& mission_planner)
 {
     float rel_pos[3];
 
@@ -69,23 +69,23 @@ void Mission_planner_handler_landing::auto_landing_handler()
                 print_util_dbg_print("Cust: descent to small alt");
                 state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= CUST_DESCENT_TO_SMALL_ALTITUDE;
-                waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
-                waypoint_hold_coordinates.waypoint.pos[Z] = -5.0f;
+                mission_planner.waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
+                mission_planner.waypoint_hold_coordinates.waypoint.pos[Z] = -5.0f;
                 break;
 
             case Navigation::DESCENT_TO_GND:
                 print_util_dbg_print("Cust: descent to gnd");
                 state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= CUST_DESCENT_TO_GND;
-                waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
-                waypoint_hold_coordinates.waypoint.pos[Z] = 0.0f;
+                mission_planner.waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
+                mission_planner.waypoint_hold_coordinates.waypoint.pos[Z] = 0.0f;
                 navigation_.alt_lpf = position_estimation_.local_position.pos[2];
                 break;
         }
 
         for (uint8_t i = 0; i < 3; i++)
         {
-            rel_pos[i] = waypoint_hold_coordinates.waypoint.pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = mission_planner.waypoint_hold_coordinates.waypoint.pos[i] - position_estimation_.local_position.pos[i];
         }
 
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
@@ -103,7 +103,7 @@ void Mission_planner_handler_landing::auto_landing_handler()
 
     if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
     {
-        if ((navigation_.dist2wp_sqr < 3.0f) && (maths_f_abs(position_estimation_.local_position.pos[2] - waypoint_hold_coordinates.waypoint.pos[2]) < 0.5f))
+        if ((navigation_.dist2wp_sqr < 3.0f) && (maths_f_abs(position_estimation_.local_position.pos[2] - mission_planner.waypoint_hold_coordinates.waypoint.pos[2]) < 0.5f))
         {
             next_state_ = true;
         }
@@ -192,10 +192,10 @@ Mission_planner_handler_landing::handle(Mission_planner& mission_planner)
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        dubin_state_machine(&waypoint_hold_coordinates);
+        dubin_state_machine(&(mission_planner.waypoint_hold_coordinates));
     }
 
-    navigation_.goal = waypoint_hold_coordinates;
+    navigation_.goal = mission_planner.waypoint_hold_coordinates;
 
     if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
     {

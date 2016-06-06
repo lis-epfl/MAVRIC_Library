@@ -66,10 +66,10 @@ Mission_planner_handler_hold_position::handle(Mission_planner& mission_planner)
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        dubin_state_machine(&waypoint_hold_coordinates);
+        dubin_state_machine(&(mission_planner.waypoint_hold_coordinates));
     }
 
-    navigation_.goal = waypoint_hold_coordinates;
+    navigation_.goal = mission_planner.waypoint_hold_coordinates;
 
     if (mav_modes_is_auto(mode_local))
     {
