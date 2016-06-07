@@ -71,7 +71,6 @@ public:
     {
         uint8_t frame;                                              ///< The reference frame of the waypoint
         uint16_t command;                                           ///< The MAV_CMD_NAV id of the waypoint
-        uint8_t current;                                            ///< Flag to tell whether the waypoint is the current one or not
         uint8_t autocontinue;                                       ///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
         float param1;                                               ///< Parameter depending on the MAV_CMD_NAV id
         float param2;                                               ///< Parameter depending on the MAV_CMD_NAV id
@@ -169,23 +168,11 @@ protected:
     waypoint_struct_t waypoint_list_[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
     uint16_t waypoint_count_;                                    ///< The total number of waypoints
-    bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
+    uint16_t current_waypoint_index_;                            ///< The current waypoint index
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
+
     const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
-
     State& state_;                                               ///< The pointer to the state structure
-
-    /**
-     * \brief Gets the current waypoint index
-     *
-     * \details Finds the current waypoint index by cycling though the
-     * waypoint array and returning the first index that has the current
-     * field as 1. Returns -1 if there is no current waypoint
-     *
-     * \return The index of the current waypoint. -1 if no current waypoint
-     * found
-     */
-    int Mavlink_waypoint_handler::current_waypoint_index() const;
 
 private:
 

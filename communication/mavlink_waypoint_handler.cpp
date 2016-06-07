@@ -397,12 +397,7 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
     {
         if (packet.seq < waypoint_handler->waypoint_count_)
         {
-            for (int32_t i = 0; i < waypoint_handler->waypoint_count_; i++)
-            {
-                waypoint_handler->waypoint_list_[i].current = 0;
-            }
-
-            waypoint_handler->waypoint_list_[packet.seq].current = 1;
+            current_waypoint_index_ = packet.seq;
 
             mavlink_message_t _msg;
             mavlink_msg_mission_current_pack(sysid,
@@ -500,6 +495,7 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
 
 Mavlink_waypoint_handler::Mavlink_waypoint_handler(State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
+            current_waypoint_index_(0),
             hold_waypoint_set_(false),
             start_wpt_time_(time_keeper_get_ms()),
             mavlink_stream_(mavlink_stream_),
@@ -582,12 +578,11 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint_struct_t waypoint;
 
     waypoint_count_ = 1;
-
     waypoint_onboard_count_ = waypoint_count_;
+    current_waypoint_index_ = 0;
 
     //Set home waypoint
     waypoint.autocontinue = 0;
-    waypoint.current = 1;
     waypoint.frame = MAV_FRAME_LOCAL_NED;
     waypoint.command = MAV_CMD_NAV_WAYPOINT;
 
@@ -605,13 +600,10 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
 const waypoint_struct_t* Mavlink_waypoint_handler::current_waypoint() const
 {
-    // Get current waypoint index
-    int wpt_index = current_waypoint_index();
-
     // If it is a good index
-    if (wpt_index >= 0 && wpt_index < waypoint_count_)
+    if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
     {
-        return &waypoint_list_[wpt_index];
+        return &waypoint_list_[current_waypoint_index_];
     }
     else // TODO: Return an error structure
     {
@@ -622,16 +614,13 @@ const waypoint_struct_t* Mavlink_waypoint_handler::current_waypoint() const
 
 const waypoint_struct_t* Mavlink_waypoint_handler::next_waypoint() const
 {
-    // Get current waypoint index
-    int wpt_index = current_waypoint_index();
-
     // If it is a good index
-    if (wpt_index >= 0 && wpt_index < waypoint_count_)
+    if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
     {
         // Check if the next waypoint exists
-        if ((wpt_index + 1) != waypoint_count_)
+        if ((current_waypoint_index_ + 1) != waypoint_count_)
         {
-            return &waypoint_list_[wpt_index + 1];
+            return &waypoint_list_[current_waypoint_index_ + 1];
         }
         else // No next waypoint, set to first
         {
@@ -645,38 +634,16 @@ const waypoint_struct_t* Mavlink_waypoint_handler::next_waypoint() const
     }
 }
 
-int Mavlink_waypoint_handler::current_waypoint_index() const
-{
-    // Cycle through each waypoint_struct_t until you find the current one
-    for (int i = 0; i < waypoint_count_; i++)
-    {
-        if (waypoint_list_[i].current == 1)
-        {
-            return i;
-        }
-    }
-
-    // Return this is no waypoints found
-    return -1;
-}
-
 void Mavlink_waypoint_handler::advance_to_next_waypoint()
 {
-    // Get current index
-    int wpt_index = current_waypoint_index();
-
     // If the current waypoint index is the last waypoint, go to first waypoint
-    if (wpt_index == (waypoint_count_-1))
+    if (current_waypoint_index_ == (waypoint_count_-1))
     {
-        waypoint_list_[wpt_index].current = 0;
-        waypoint_list_[0].current = 1;
-        return;
+        current_waypoint_index_ = 0;
     }
     else // Update current in both waypoints
     {
-        waypoint_list_[wpt_index].current = 0;
-        waypoint_list_[wpt_index+1].current = 1;
-        return;
+        current_waypoint_index_++;
     }
 }
 
