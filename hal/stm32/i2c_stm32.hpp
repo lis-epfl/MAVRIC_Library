@@ -151,18 +151,49 @@ private:
     i2c_stm32_devices_t     i2c_;           ///< I2C device
     uint16_t                i2c_timeout_;   ///< I2C timeout
 
-    //TODO Add comments
+    /**
+     * @brief   Check if an i2c event occured
+     *
+     * @param   i2c_event   Type of I2C event
+     *
+     * @return  True        event occured
+     * @return  False       event didn't occur
+     */
     bool check_event(uint32_t i2c_event);
 
+    /**
+     * @brief   Start I2C communication
+     *
+     * @param   address                 Slave adress
+     * @param   direction_is_transmit   Write (true) Read (false)
+     * @param   ack                     Using Acknowledgment or not
+     *
+     * @return  starting communication succeed or not
+     */
     bool start(uint8_t address, bool direction_is_transmit, bool ack);
 
+    /**
+     * @brief   Test if a chip answers for a given I2C address
+     *
+     * @param   address     Slave adress
+     *
+     * @return  stopping communication succeed or not
+     */
     bool stop(void);
 
+    /**
+     * @brief   Read a byte and Acknowledge its reception
+     *
+     * @return  byte read
+     */
     uint8_t read_ack(void);
 
+    /**
+     * @brief   Read a byte without acknowledge its reception
+     *
+     * @return  byte read
+     */
     uint8_t read_nack(void);
-
-
 };
 
 static inline  i2c_stm32_conf_t i2c_stm32_default_config()
