@@ -549,7 +549,7 @@ bool LEQuad::main_task(void)
 				{
 					controls.rpy[ROLL] = 0.0f;
 					controls.rpy[PITCH] = 0.0f;
-					controls.thrust = -1.0f;
+					controls.thrust = -0.7f;
 					controls.control_mode = ATTITUDE_COMMAND_MODE;
 				}
 
