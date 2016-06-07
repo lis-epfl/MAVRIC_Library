@@ -161,7 +161,6 @@ bool Fence_CAS::update(void)
 	float Vval = vectors_norm(V);
 
 	float dmin=2*this->r_pz; 					// Safe zone around the drone ,can be adjusted
-
 	int interp_type = 2;						// Define the interpolation type of the repulsion
 
 	for(int i =0; i<3;i++)
@@ -217,7 +216,6 @@ bool Fence_CAS::update(void)
 
 			float M[3]={0,0,0};
 			float Am[3]={0,0,0};
-
 			float distAS = detect_seg(A,A,C,S,V,I,J);	// Compute distance from drone to fencepoint.
 
 			for(int k=0;k<3;k++)
@@ -234,7 +232,6 @@ bool Fence_CAS::update(void)
 
 			float MS[3] = {S[0]-M[0],S[1]-M[1],0.0};
 			float distMC=detect_seg(M,M,C,S,V,I,J);
-
 
 			if((distAS <= (distAAm))&&(distMC >= this->maxradius)&&(angle_detected==false)&&n==0)
 			{
@@ -262,6 +259,11 @@ bool Fence_CAS::update(void)
 
 			if(n==0) //for the first fence
 			{
+
+				if(IC[1]==-1) //out of fence
+				{
+					;
+				}
 				dist[i]*= IC[1];
 				if(IC[1]==-1) //out of fence
 				{
@@ -283,9 +285,8 @@ bool Fence_CAS::update(void)
 			}
 		}
 
-
 		/*END Fence repulsion*/
-		//check amplitude and get bigger one
+		//check which repulsion has been detected. Angle repulsion wins
 		if(angle_detected==true)
 		{
 			angle_detected=false;
