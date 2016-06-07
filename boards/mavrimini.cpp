@@ -85,6 +85,7 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     i2c_1(config.i2c_1_config),
     i2c_2(config.i2c_2_config),
     spektrum_satellite(serial_2, dsm_receiver_gpio, dsm_power_gpio),
+    sonar_i2cxl(i2c_2),
     adc_battery(12.3f),
     battery(adc_battery),
     adc_airspeed(12.0f),
@@ -186,6 +187,8 @@ bool Mavrimini::init(void)
     // -------------------------------------------------------------------------
     // Init Servos
     // -------------------------------------------------------------------------
+#if CALIBRATE_ESC == 0
+    // Do not calibrate esc
     ret = pwm_0.init();
     print_util_dbg_init_msg("[PWM0]", ret);
     init_success &= ret;
@@ -225,6 +228,67 @@ bool Mavrimini::init(void)
     init_success &= ret;
     servo_7.failsafe();
     p_dbg_serial->flush();
+#elif CALIBRATE_ESC == 1 // Calibrate the esc
+
+    ret = pwm_0.init();
+    print_util_dbg_init_msg("[PWM0]", ret);
+    init_success &= ret;
+    ret = pwm_1.init();
+    print_util_dbg_init_msg("[PWM1]", ret);
+    init_success &= ret;
+    ret = pwm_2.init();
+    print_util_dbg_init_msg("[PWM2]", ret);
+    init_success &= ret;
+    ret = pwm_3.init();
+    print_util_dbg_init_msg("[PWM3]", ret);
+    init_success &= ret;
+    ret = pwm_4.init();
+    print_util_dbg_init_msg("[PWM4]", ret);
+    init_success &= ret;
+    ret = pwm_5.init();
+    print_util_dbg_init_msg("[PWM5]", ret);
+    init_success &= ret;
+    ret = pwm_6.init();
+    print_util_dbg_init_msg("[PWM6]", ret);
+    init_success &= ret;
+    ret = pwm_7.init();
+    print_util_dbg_init_msg("[PWM7]", ret);
+    init_success &= ret;
+
+    servo_0.set_servo_max();
+    servo_1.set_servo_max();
+    servo_2.set_servo_max();
+    servo_3.set_servo_max();
+    servo_4.set_servo_max();
+    servo_5.set_servo_max();
+    servo_6.set_servo_max();
+    servo_7.set_servo_max();
+
+    time_keeper_delay_ms(3000);
+
+    servo_0.failsafe();
+    servo_1.failsafe();
+    servo_2.failsafe();
+    servo_3.failsafe();
+    servo_4.failsafe();
+    servo_5.failsafe();
+    servo_6.failsafe();
+    servo_7.failsafe();
+
+    time_keeper_delay_ms(50);
+
+#else
+
+    print_util_dbg_init_msg("[PWM0]", false);
+    print_util_dbg_init_msg("[PWM1]", false);
+    print_util_dbg_init_msg("[PWM2]", false);
+    print_util_dbg_init_msg("[PWM3]", false);
+    print_util_dbg_init_msg("[PWM4]", false);
+    print_util_dbg_init_msg("[PWM5]", false);
+    print_util_dbg_init_msg("[PWM6]", false);
+    print_util_dbg_init_msg("[PWM7]", false);
+
+#endif
 
 
     // -------------------------------------------------------------------------
@@ -234,6 +298,16 @@ bool Mavrimini::init(void)
     print_util_dbg_init_msg("[SAT]", ret);
     init_success &= ret;
     p_dbg_serial->flush();
+
+    // -------------------------------------------------------------------------
+    // Init sonar
+    // -------------------------------------------------------------------------
+    ret = sonar_i2cxl.init();
+    print_util_dbg_init_msg("[SONAR]", ret);
+    //TODO uncomment this when working
+    // init_success &= ret;
+    p_dbg_serial->flush();
+    time_keeper_delay_ms(50);
 
 
     print_util_dbg_sep('-');
