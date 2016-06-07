@@ -53,7 +53,7 @@ LEQuad_symbiotic::LEQuad_symbiotic(
     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
     file1, file2, config.lequad_config
 	),
-	gimbal_controller(navigation, servo_5, servo_6, config.gimbal_controller_config)
+	gimbal_controller(navigation, servo_5, servo_4, config.gimbal_controller_config)
 {
 	init_gimbal();
 };
@@ -64,7 +64,7 @@ LEQuad_symbiotic::LEQuad_symbiotic(
 bool LEQuad_symbiotic::main_task(void)
 {
 	//--Alex
-	gimbal_controller.get_fake_pitch(&stabilisation_copter);
+	//gimbal_controller.get_fake_pitch(&stabilisation_copter);
 	//--
 
     // Update estimation
@@ -106,7 +106,9 @@ bool LEQuad_symbiotic::main_task(void)
 				{
 					controls.rpy[ROLL] = 0.0f;
 					controls.rpy[PITCH] = 0.0f;
-					controls.thrust = 0.0f;
+					controls.rpy[YAW] = 0.0f;
+					controls.thrust = -0.7f;
+					controls.yaw_mode = YAW_RELATIVE;
 					controls.control_mode = ATTITUDE_COMMAND_MODE;
 				}
 
@@ -170,7 +172,7 @@ bool LEQuad_symbiotic::main_task(void)
             	manual_control.manual_control_get_from_joystick_symbiotic(&controls);
 
 				float max_vel_z = 4.0f; //[m/s]
-				float max_vel_y = 6.0f; //[m/s]
+				float max_vel_y = 4.0f; //[m/s]
 
 				// fence avoidance
 				bool compute_repulsion = false;
@@ -197,10 +199,10 @@ bool LEQuad_symbiotic::main_task(void)
 				else if(outside_fence)
 				{
 					//center point (0,0,-10.0)
-					z_min = -7.0f;//[m]
-					z_max = -18.0f;//[m]
-					xy_max = 13.0f; //radius [m]
-					dist_to_limit = 3.0f; //[m]
+					z_min = -5.0f;//[m]
+					z_max = -20.0f;//[m]
+					xy_max = 15.0f; //radius [m]
+					dist_to_limit = 5.0f; //[m]
 					compute_repulsion = true;
 				}
 
@@ -219,7 +221,7 @@ bool LEQuad_symbiotic::main_task(void)
 
 					float decrease_factor_Y = 1.0f;
 					if(SCP(origin2quad,quadOrientation) < 0.0f) //the drone as a velocity toward the center => decrease the avoidance speed
-						decrease_factor_Y = 0.0f;
+						decrease_factor_Y = 0.2f;
 
 					print_util_dbg_print("Y then Z\r\n");
 					print_util_dbg_putfloat(decrease_factor_Y,3);
@@ -234,7 +236,7 @@ bool LEQuad_symbiotic::main_task(void)
 
 					float decrease_factor_Z = 1.0f;
 					if(SCP(origin2quad,quadOrientation) < 0.0f) //the drone as a velocity toward the center => decrease the avoidance speed
-						decrease_factor_Z = 0.0f;
+						decrease_factor_Z = 0.3f;
 
 					print_util_dbg_putfloat(decrease_factor_Z,3);
 					print_util_dbg_print("\r\n");
@@ -248,7 +250,7 @@ bool LEQuad_symbiotic::main_task(void)
 					//float ratioXZ_vel = 1.0f;
 					if(z_dist < (z_max + dist_to_limit)) //if too high => tvel_z_added is positif
 					{
-						float tvel_z_added = maths_f_abs(z_dist - (z_max+dist_to_limit)) / dist_to_limit * max_vel_z;
+						float tvel_z_added = SQR(z_dist - (z_max+dist_to_limit)) / dist_to_limit * max_vel_z;
 						tvel_z_added = tvel_z_added*decrease_factor_Z;
 
 						//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
@@ -274,11 +276,11 @@ bool LEQuad_symbiotic::main_task(void)
 
 
 					float tvel_y_added;
-					float ratioXY_vel = 0.7f; //should be between 0.0f and 1.0f
+					float ratioXY_vel = 0.6f; //should be between 0.0f and 1.0f
 					if(xy_dist > (xy_max - dist_to_limit))
 					{
 						//compute repulsion velocity y
-						tvel_y_added = sign(out[2])*maths_f_abs(xy_dist - (xy_max-dist_to_limit)) / dist_to_limit * max_vel_y;
+						tvel_y_added = sign(out[2])*SQR(xy_dist - (xy_max-dist_to_limit)) / dist_to_limit * max_vel_y;
 						tvel_y_added = tvel_y_added*decrease_factor_Y;
 
 						//troncate repulsion velocity y to the norm of the total speed
