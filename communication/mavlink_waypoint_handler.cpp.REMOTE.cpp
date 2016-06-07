@@ -39,13 +39,6 @@
  *
  ******************************************************************************/
 
-#define MAV_CMD_NAV_FENCE 40 /*Tell the program that this waypoint is a fence point*/
-#define	MAV_CMD_NAV_OUTFENCE_1 41 /*Tell the program that this waypoint is a outfence point*/
-#define	MAV_CMD_NAV_OUTFENCE_2 42 /*Tell the program that this waypoint is a outfence point*/
-#define	MAV_CMD_NAV_OUTFENCE_3 43 /*Tell the program that this waypoint is a outfence point*/
-#define	MAV_CMD_NAV_OUTFENCE_4 44 /*Tell the program that this waypoint is a outfence point*/
-#define	MAV_CMD_NAV_OUTFENCE_5 45 /*Tell the program that this waypoint is a outfence point*/
-
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include <cstdlib>
@@ -1594,18 +1587,6 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
     init_homing_waypoint();
     nav_plan_init();
 
-    all_fence_points = {&number_of_fence_points,
-        		&number_of_outfence_1_points, &number_of_outfence_2_points,
-    			&number_of_outfence_3_points, &number_of_outfence_4_points,
-    			&number_of_outfence_5_points};			///< Table with the total number of waypoints for a outfence
-
-	all_fences = {fence_list, outfence_1_list,
-			outfence_2_list, outfence_3_list, outfence_4_list, outfence_5_list};
-
-	all_fence_angles = {fence_angle_list,
-			outfence_1_angle_list, outfence_2_angle_list, outfence_3_angle_list,
-			outfence_4_angle_list, outfence_5_angle_list};
-
     if(!init_success)
     {
         print_util_dbg_print("[MAVLINK_WAYPOINT_HANDLER] constructor: ERROR\r\n");
@@ -1710,6 +1691,46 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
 
     waypoint_list[1] = waypoint;
+
+    float step = 0.001;
+    //2
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+//    waypoint.x = 46.5188923f;
+//    waypoint.y = 6.5663373f;
+    waypoint.x += 0.0;
+    waypoint.y += step;
+    waypoint_list[2] = waypoint;
+
+    //3
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+//    waypoint.x = 46.5185195f;
+//    waypoint.y = 6.5667987f;
+    waypoint.x -= step/2.0;
+    waypoint.y += 0.0;
+    waypoint_list[3] = waypoint;
+
+    //4
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+//    waypoint.x = 46.5177959f;
+//    waypoint.y = 6.5661764f;
+    waypoint.x += 0.0;
+    waypoint.y -= step;
+
+    waypoint_list[4] = waypoint;
+
+//    //5
+//    waypoint_count_ ++;
+//    waypoint_onboard_count_ = waypoint_count_;
+////    waypoint.x = 46.5183035f;
+////    waypoint.y = 6.5653718f;
+//
+//    waypoint_list[5] = waypoint;
+
+
+
 }
 
 
@@ -1808,15 +1829,15 @@ void Mavlink_waypoint_handler::fencepoint_angle(waypoint_struct_t* fence_list, u
 			{
 				k=i+2;
 			}
-			double ij[3]=   {fence_list[j].x-fence_list[i].x,
+			float ij[3]=   {fence_list[j].x-fence_list[i].x,
 							fence_list[j].y-fence_list[i].y,
 							fence_list[j].z-fence_list[i].z};
 
-			double jk[3]=   {fence_list[j].x-fence_list[k].x,
+			float jk[3]=   {fence_list[j].x-fence_list[k].x,
 							fence_list[j].y-fence_list[k].y,
 							fence_list[j].z-fence_list[k].z};
 
-			float angle = atan2((float) ij[1],(float) ij[0]) - atan2((float) jk[1],(float) jk[0]);
+			float angle = atan2(ij[1],ij[0]) - atan2(jk[1],jk[0]);
 			if(angle<0)
 			{
 				angle += 2*PI;

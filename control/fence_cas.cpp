@@ -95,8 +95,8 @@ float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , flo
 		}
 	}
 	// finally do the division to get sc and tc
-	sc = (abs(sN) < SMALL_NUM ? 0.0 : sN / sD);
-	tc = (abs(tN) < SMALL_NUM ? 0.0 : tN / tD);
+	sc = (maths_f_abs(sN) < SMALL_NUM ? 0.0 : sN / sD);
+	tc = (maths_f_abs(tN) < SMALL_NUM ? 0.0 : tN / tD);
 
 	float dp[3]={0,0,0}; 	// dp = distance vector between I and J, dp = J-I
 

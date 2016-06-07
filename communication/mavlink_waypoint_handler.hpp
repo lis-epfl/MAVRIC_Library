@@ -170,17 +170,11 @@ public:
     uint16_t number_of_outfence_4_points;						///< The total number of waypoints
     uint16_t number_of_outfence_5_points;						///< The total number of waypoints
 
-    uint16_t* all_fence_points[MAX_OUTFENCE+1] = {&number_of_fence_points,
-    		&number_of_outfence_1_points, &number_of_outfence_2_points,
-			&number_of_outfence_3_points, &number_of_outfence_4_points,
-			&number_of_outfence_5_points};			///< Table with the total number of waypoints for a outfence
+    uint16_t* all_fence_points[MAX_OUTFENCE+1];			///< Table with the total number of waypoints for a outfence
 
-    waypoint_struct_t* all_fences[MAX_OUTFENCE+1] = {fence_list, outfence_1_list,
-    		outfence_2_list, outfence_3_list, outfence_4_list, outfence_5_list};
+    waypoint_struct_t* all_fences[MAX_OUTFENCE+1];
 
-    float* all_fence_angles[MAX_OUTFENCE+1] = {fence_angle_list,
-    		outfence_1_angle_list, outfence_2_angle_list, outfence_3_angle_list,
-			outfence_4_angle_list, outfence_5_angle_list};
+    float* all_fence_angles[MAX_OUTFENCE+1];
 
     int8_t current_waypoint_count;                              ///< The number of the current waypoint
     uint16_t waypoint_count_;
