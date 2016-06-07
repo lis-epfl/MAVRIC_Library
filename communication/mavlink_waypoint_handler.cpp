@@ -1594,15 +1594,15 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
     init_homing_waypoint();
     nav_plan_init();
 
-    all_fence_points = {&number_of_fence_points,
+    uint16_t*  all_fence_points[] = {&number_of_fence_points,
         		&number_of_outfence_1_points, &number_of_outfence_2_points,
     			&number_of_outfence_3_points, &number_of_outfence_4_points,
     			&number_of_outfence_5_points};			///< Table with the total number of waypoints for a outfence
 
-	all_fences = {fence_list, outfence_1_list,
+    waypoint_struct_t*  all_fences[] = {fence_list, outfence_1_list,
 			outfence_2_list, outfence_3_list, outfence_4_list, outfence_5_list};
 
-	all_fence_angles = {fence_angle_list,
+	float* all_fence_angles[] = {fence_angle_list,
 			outfence_1_angle_list, outfence_2_angle_list, outfence_3_angle_list,
 			outfence_4_angle_list, outfence_5_angle_list};
 
