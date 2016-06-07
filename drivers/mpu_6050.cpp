@@ -135,6 +135,24 @@ bool Mpu_6050::update_acc(void)
     return success;
 }
 
+bool Mpu_6050::update_test(void)
+{
+    bool success = true;
+
+    success &= update_acc();
+
+    if (acc_data_[0] > 0)
+    {
+        gpio_set(GPIOC, GPIO14);
+    }
+    else
+    {
+        gpio_clear(GPIOC, GPIO14);
+    }
+
+    return success;
+}
+
 
 bool Mpu_6050::update_gyr(void)
 {
