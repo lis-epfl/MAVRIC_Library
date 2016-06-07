@@ -238,9 +238,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
         new_waypoint.z = packet.z; // altitude
 
         new_waypoint.autocontinue = packet.autocontinue;
-        new_waypoint.frame = packet.frame;
-
-        new_waypoint.current = packet.current;
+        new_waypoint.frame = packet.frame
 
         new_waypoint.param1 = packet.param1;
         new_waypoint.param2 = packet.param2;
