@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar_i2cxl.h
+ * \file mpu_6050.hpp
  *
  * \author MAV'RIC Team
  * \author Gregoire Heitz
@@ -246,6 +246,8 @@ private:
 
     /**
      * \brief   wake-up the MPU 6050
+     *
+     * \ param  sensor address
      *
      * \return  true if succeed
      */

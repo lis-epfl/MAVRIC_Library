@@ -30,22 +30,19 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar_i2cxl.c
+ * \file mpu_6050.cpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Gregoire HEITZ
  *
  * \brief This file is the driver for the integrated 3axis gyroscope and
- * accelerometer LSM330DLC
+ * accelerometer MPU_6050
  *
  ******************************************************************************/
 
 
 #include "drivers/mpu_6050.hpp"
 #include "hal/common/time_keeper.hpp"
-
-//TODO remove
-#include <libopencm3/stm32/gpio.h>
 
 
 const uint8_t MPU_6050_ADDRESS      = 0xD0;

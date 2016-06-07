@@ -50,6 +50,7 @@ extern "C"
 
 
 const uint32_t FLAG_MASK      = 0x00FFFFFF;
+const uint32_t DATA_RECEIVED  = 0x00030040;
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -82,7 +83,7 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
     
     i2c_send_start(i2c_);
     //wait till not received
-    uint16_t timeout = 20000;
+    uint16_t timeout = i2c_timeout_;
     while(!(I2C_SR1(i2c_) & I2C_SR1_SB))
     {
          if(--timeout == 0)
@@ -104,7 +105,7 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
         I2C_DR(i2c_) = address & ~((uint16_t)0x0001);
 
         //wait till finished
-        timeout = 20000;
+        timeout = i2c_timeout_;
         while(!(I2C_SR1(i2c_) & I2C_SR1_ADDR))
         {
              if(--timeout == 0)
@@ -118,8 +119,8 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
         I2C_DR(i2c_) = address | ((uint16_t)0x0001);
 
         //wait till received
-        timeout = 20000;
-        while(!(check_event(0x00030040)))
+        timeout = i2c_timeout_;
+        while(!(check_event(DATA_RECEIVED)))
         {
              if(--timeout == 0)
             {
@@ -137,7 +138,7 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
 bool I2c_stm32::stop(void)
 {
     //wait till not busy anymore
-    uint16_t timeout = 20000;
+    uint16_t timeout = i2c_timeout_;
     while( (!(I2C_SR1(i2c_) & I2C_SR1_TxE)) || (!(I2C_SR1(i2c_) & I2C_SR1_BTF)) )
     {
         if(--timeout == 0)
@@ -158,8 +159,8 @@ uint8_t I2c_stm32::read_ack(void)
     I2C_CR1(i2c_) |= I2C_CR1_ACK;
 
     //wait till received
-    uint16_t timeout = 20000;
-    while(!(check_event(0x00030040)))
+    uint16_t timeout = i2c_timeout_;
+    while(!(check_event(DATA_RECEIVED)))
     {
         if(--timeout == 0)
         {    
@@ -180,8 +181,8 @@ uint8_t I2c_stm32::read_nack(void)
     I2C_CR1(i2c_) |= I2C_CR1_STOP;
 
     //wait till received
-    uint16_t timeout = 20000;
-    while(!(check_event(0x00030040)))
+    uint16_t timeout = i2c_timeout_;
+    while(!(check_event(DATA_RECEIVED)))
     {
         if(--timeout == 0)
         {    
@@ -199,8 +200,9 @@ uint8_t I2c_stm32::read_nack(void)
 
 I2c_stm32::I2c_stm32(i2c_stm32_conf_t config)
 {
-    config_ = config;
-    i2c_ = config.i2c_device_config;
+    config_         = config;
+    i2c_            = config.i2c_device_config;
+    i2c_timeout_    = config.timeout;
 }
 
 
@@ -319,7 +321,7 @@ bool I2c_stm32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
     for (uint32_t i = 0; i < nbytes; ++i)
     {
         //wait till not busy anymore
-        uint16_t timeout = 20000;
+        uint16_t timeout = i2c_timeout_;
         while(!(I2C_SR1(i2c_) & I2C_SR1_TxE))
         {
             if(--timeout == 0)
