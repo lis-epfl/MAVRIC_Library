@@ -83,7 +83,7 @@ bool LEQuad_symbiotic::main_task(void)
 	//print_util_dbg_print("\r\n");
 
 	//if the mode is manual set the current mode to manual
-	if(remote_check(&manual_control.remote) != SIGNAL_LOST && (((int) mode_remote.bits() == 80) || ((int) mode_remote.bits() == 208)))
+	if(manual_control.control_source() != Manual_control::CONTROL_SOURCE_JOYSTICK && remote_check(&manual_control.remote) != SIGNAL_LOST && (((int) mode_remote.bits() == 80) || ((int) mode_remote.bits() == 208)))
 	{
 		state.mav_mode_.set_ctrl_mode(Mav_mode::ATTITUDE);
 		manual_control.set_mode_source(Manual_control::MODE_SOURCE_REMOTE);
@@ -104,12 +104,18 @@ bool LEQuad_symbiotic::main_task(void)
                 //if still on ground, don't move and wait on takeoff
 				if(navigation.internal_state_ == Navigation::NAV_ON_GND)
 				{
-					controls.rpy[ROLL] = 0.0f;
+					/*controls.rpy[ROLL] = 0.0f;
 					controls.rpy[PITCH] = 0.0f;
 					controls.rpy[YAW] = 0.0f;
 					controls.thrust = -0.7f;
 					controls.yaw_mode = YAW_RELATIVE;
-					controls.control_mode = ATTITUDE_COMMAND_MODE;
+					controls.control_mode = ATTITUDE_COMMAND_MODE;*/
+					controls.rpy[ROLL] = 0.0f;
+					controls.rpy[PITCH] = 0.0f;
+					controls.rpy[YAW] = 0.0f;
+					controls.thrust = -1.0f;
+					controls.yaw_mode = YAW_RELATIVE;
+					controls.control_mode = RATE_COMMAND_MODE;
 				}
 
                 // if no waypoints are set, we do position hold therefore the yaw mode is absolute
