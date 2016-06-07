@@ -1691,46 +1691,6 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
 
     waypoint_list[1] = waypoint;
-
-    float step = 0.001;
-    //2
-    waypoint_count_ ++;
-    waypoint_onboard_count_ = waypoint_count_;
-//    waypoint.x = 46.5188923f;
-//    waypoint.y = 6.5663373f;
-    waypoint.x += 0.0;
-    waypoint.y += step;
-    waypoint_list[2] = waypoint;
-
-    //3
-    waypoint_count_ ++;
-    waypoint_onboard_count_ = waypoint_count_;
-//    waypoint.x = 46.5185195f;
-//    waypoint.y = 6.5667987f;
-    waypoint.x -= step/2.0;
-    waypoint.y += 0.0;
-    waypoint_list[3] = waypoint;
-
-    //4
-    waypoint_count_ ++;
-    waypoint_onboard_count_ = waypoint_count_;
-//    waypoint.x = 46.5177959f;
-//    waypoint.y = 6.5661764f;
-    waypoint.x += 0.0;
-    waypoint.y -= step;
-
-    waypoint_list[4] = waypoint;
-
-//    //5
-//    waypoint_count_ ++;
-//    waypoint_onboard_count_ = waypoint_count_;
-////    waypoint.x = 46.5183035f;
-////    waypoint.y = 6.5653718f;
-//
-//    waypoint_list[5] = waypoint;
-
-
-
 }
 
 
