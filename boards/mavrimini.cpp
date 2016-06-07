@@ -85,7 +85,6 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     i2c_0(config.i2c_0_config),
     i2c_1(config.i2c_1_config),
     spektrum_satellite(serial_2, dsm_receiver_gpio, dsm_power_gpio),
-    mpu_6050(i2c_1),
     adc_battery(12.3f),
     battery(adc_battery),
     adc_airspeed(12.0f),
@@ -233,14 +232,6 @@ bool Mavrimini::init(void)
     // -------------------------------------------------------------------------
     ret = spektrum_satellite.init();
     print_util_dbg_init_msg("[SAT]", ret);
-    init_success &= ret;
-    p_dbg_serial->flush();
-
-    // -------------------------------------------------------------------------
-    // Init IMU MPU_6050
-    // -------------------------------------------------------------------------
-    ret = mpu_6050.init();
-    print_util_dbg_init_msg("[MPU_6050]", ret);
     init_success &= ret;
     p_dbg_serial->flush();
 
