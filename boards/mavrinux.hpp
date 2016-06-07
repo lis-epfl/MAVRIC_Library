@@ -61,6 +61,7 @@
 #include "hal/dummy/pwm_dummy.hpp"
 #include "drivers/servo.hpp"
 #include "hal/dummy/led_dummy.hpp"
+#include "drivers/airspeed_analog.hpp"
 
 extern "C"
 {
@@ -76,6 +77,7 @@ typedef struct
     imu_conf_t              imu_config;
     serial_udp_conf_t       serial_udp_config;
     std::string             flash_filename;
+    dynamic_model_quad_diag_conf_t dynamic_model_config;
 } mavrinux_conf_t;
 
 
@@ -119,18 +121,25 @@ public:
     Pwm_dummy   pwm_3;
     Pwm_dummy   pwm_4;
     Pwm_dummy   pwm_5;
+    Pwm_dummy   pwm_6;
+    Pwm_dummy   pwm_7;
     Servo       servo_0;
     Servo       servo_1;
     Servo       servo_2;
     Servo       servo_3;
     Servo		servo_4;
 	Servo		servo_5;
+    Servo       servo_6;
+    Servo       servo_7;
     Dynamic_model_quad_diag dynamic_model;
     Simulation              sim;
     Imu                     imu;
 
     Adc_dummy           adc_battery;
     Battery             battery;
+
+    Adc_dummy           adc_airspeed;
+    Airspeed_analog     airspeed_analog;
 
     Gpio_dummy          dsm_receiver_pin;
     Gpio_dummy          dsm_power_pin;
@@ -163,16 +172,20 @@ static inline mavrinux_conf_t mavrinux_default_config()
     // -------------------------------------------------------------------------
     conf.imu_config = imu_default_config();
 
-
     // -------------------------------------------------------------------------
     // UDP config
     // -------------------------------------------------------------------------
     conf.serial_udp_config  = serial_udp_default_config();
-
+    
     // -------------------------------------------------------------------------
     // Flash config
     // -------------------------------------------------------------------------
     conf.flash_filename = "flash000.bin";
+
+    // -------------------------------------------------------------------------
+    // Simulation dynamic model config
+    // -------------------------------------------------------------------------
+    conf.dynamic_model_config = dynamic_model_quad_diag_default_config();
 
     return conf;
 }

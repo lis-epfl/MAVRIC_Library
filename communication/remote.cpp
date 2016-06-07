@@ -62,24 +62,17 @@ extern "C"
  *
  * \return  The value of the ARMED flag
  */
-static mode_flag_armed_t get_armed_flag(remote_t* remote);
+static bool get_armed_flag(remote_t* remote);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mode_flag_armed_t get_armed_flag(remote_t* remote)
+static bool get_armed_flag(remote_t* remote)
 {
     remote_mode_t* remote_mode = &remote->mode;
-    mode_flag_armed_t armed;
-    if (mav_modes_is_armed(remote_mode->current_desired_mode))
-    {
-        armed = ARMED_ON;
-    }
-    else
-    {
-        armed = ARMED_OFF;
-    }
+    bool armed;
+    armed = remote_mode->current_desired_mode.is_armed();
 
     // Get armed flag
     if (remote_get_throttle(remote) < -0.95f &&
@@ -88,8 +81,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
             remote_get_roll(remote) > 0.9f)
     {
         // Left stick bottom left corner, right stick bottom right corner => arm
-        print_util_dbg_print("Arming!\r\n");
-        armed = ARMED_ON;
+        armed = true;
         remote_mode->arm_action = ARM_ACTION_ARMING;
     }
     else if (remote_get_throttle(remote) < -0.95f &&
@@ -98,8 +90,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
              remote_get_roll(remote) < -0.9f)
     {
         // Left stick bottom right corner, right stick bottom left corner => disarm
-        print_util_dbg_print("Disarming!\r\n");
-        armed = ARMED_OFF;
+        armed = false;
         remote_mode->arm_action = ARM_ACTION_DISARMING;
     }
     else
@@ -307,8 +298,8 @@ void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t confi
 
     // Init state to safety state, disarmed
     remote_mode->current_desired_mode       = remote_mode->safety_mode;
-    remote_mode->arm_action                     = ARM_ACTION_NONE;
-    remote_mode->current_desired_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+    remote_mode->arm_action                 = ARM_ACTION_NONE;
+    remote_mode->current_desired_mode.set_armed_flag(false);
 }
 
 
@@ -340,10 +331,10 @@ void remote_mode_update(remote_t* remote)
     if (do_update == true)
     {
         // Fallback to safety
-        mav_mode_t new_desired_mode = remote_mode->safety_mode;
+        Mav_mode new_desired_mode = remote_mode->safety_mode;
 
         // Get armed flag from stick combinaison
-        mode_flag_armed_t flag_armed = get_armed_flag(remote);
+        bool flag_armed = get_armed_flag(remote);
 
         if (remote->channels[remote_mode->safety_channel] > 0)
         {
@@ -351,14 +342,7 @@ void remote_mode_update(remote_t* remote)
             new_desired_mode = remote_mode->safety_mode;
 
             // Allow arm and disarm in safety mode
-            if (flag_armed == ARMED_ON)
-            {
-                new_desired_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
-            }
-            else
-            {
-                new_desired_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
-            }
+            new_desired_mode.set_armed_flag(flag_armed);
 
         }
         else
@@ -386,42 +370,24 @@ void remote_mode_update(remote_t* remote)
             // Apply custom flag
             if (remote_mode->use_custom_switch == true)
             {
-                if (remote->channels[remote_mode->custom_switch_channel] > 0.0f)
-                {
-                    // Custom channel at 100% => CUSTOM_ON;
-                    new_desired_mode |= MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
-                }
-                else
-                {
-                    // Custom channel at -100% => CUSTOM_OFF;
-                    new_desired_mode &= ~MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
-                }
+                new_desired_mode.set_custom_flag(remote->channels[remote_mode->custom_switch_channel] > 0.0f);
             }
 
             // Apply test flag
             if (remote_mode->use_test_switch == true)
             {
-                if (remote->channels[remote_mode->test_switch_channel] > 0.0f)
-                {
-                    // Test channel at 100% => TEST_ON
-                    new_desired_mode |= MAV_MODE_FLAG_TEST_ENABLED;
-                }
-                else
-                {
-                    // Test channel at -100% => TEST_OFF;
-                    new_desired_mode &= ~MAV_MODE_FLAG_TEST_ENABLED;
-                }
+                new_desired_mode.set_test_flag(remote->channels[remote_mode->test_switch_channel] > 0.0f);
             }
 
             // Allow only disarm in normal mode
-            if (flag_armed == ARMED_OFF)
+            if (!flag_armed)
             {
-                new_desired_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+                new_desired_mode.set_armed_flag(false);
             }
             else
             {
                 // Keep current armed flag
-                new_desired_mode |= (remote_mode->current_desired_mode & MAV_MODE_FLAG_SAFETY_ARMED);
+                new_desired_mode.set_armed_flag(remote_mode->current_desired_mode.is_armed());
             }
         }
 
@@ -431,23 +397,23 @@ void remote_mode_update(remote_t* remote)
 }
 
 
-mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t current_mode)
+Mav_mode remote_mode_get(remote_t* remote, Mav_mode current_mode)
 {
-    mav_mode_t new_mode = current_mode;
-    new_mode = (current_mode & 0b10100000) + (remote->mode.current_desired_mode & 0b01011111);
+    Mav_mode new_mode = remote->mode.current_desired_mode;
+    // copy armed and hil flag from current mode
+    new_mode.set_armed_flag(current_mode.is_armed());
+    new_mode.set_hil_flag(current_mode.is_hil());
 
     if (remote->mode.arm_action == ARM_ACTION_ARMING)
     {
-        new_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
+        new_mode.set_armed_flag(true);
 
         remote->mode.arm_action = ARM_ACTION_NONE;
-        print_util_dbg_print("Arming in new fct\r\n");
     }
     else if (remote->mode.arm_action == ARM_ACTION_DISARMING)
     {
-        new_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+        new_mode.set_armed_flag(false);
         remote->mode.arm_action = ARM_ACTION_NONE;
-        print_util_dbg_print("Disarming in new fct\r\n");
     }
 
     return new_mode;
@@ -473,6 +439,43 @@ void remote_get_velocity_vector(remote_t* remote, control_command_t* controls)
     controls->rpy[YAW]  = remote_get_yaw(remote);
 }
 
+void remote_get_rate_command_wing(remote_t* remote, control_command_t* controls)
+{
+    remote_update(remote);
+
+    /*  We want to obtain same results as with full manual control.
+        So, we want the output of the regulator to go from -1 to +1 on each axis
+        (if scaling is applied on manual mode by the remote, it will also be applied on the rate, so the remote scaling doesn't matter)
+        Assuming the regulators are only P, if the current rate is 0, we have at the output of the regulator: u = Kp*r = Kp * scaler * remoteInput
+        ==> we want u = remoteInput to have the same behavior
+        ==> scaler = 1/Kp
+    */
+
+    controls->rpy[ROLL] = 15.4f * remote_get_roll(remote);
+    controls->rpy[PITCH] = 18.2f * remote_get_pitch(remote);
+    controls->rpy[YAW] = remote_get_yaw(remote);
+    controls->thrust = remote_get_throttle(remote);
+}
+
+void remote_get_angle_command_wing(remote_t* remote, control_command_t* controls)
+{
+    remote_update(remote);
+
+    controls->rpy[ROLL] = asinf(remote_get_roll(remote));
+    controls->rpy[PITCH] = asinf(remote_get_pitch(remote));
+    controls->rpy[YAW] = asinf(remote_get_yaw(remote));
+    controls->thrust = remote_get_throttle(remote);
+}
+
+void remote_get_velocity_wing(remote_t* remote, const float ki_yaw, control_command_t* controls)
+{
+    remote_update(remote);
+
+    controls->tvel[X] = 10.0f * (1.0f + remote_get_throttle(remote));
+    controls->tvel[Y] = 0.0f;
+    controls->tvel[Z] = -6.0f * remote_get_pitch(remote);
+    controls->rpy[YAW] += ki_yaw * 0.2f * remote_get_roll(remote); // Turn rate
+}
 
 void remote_get_torque_command(const remote_t* remote, torque_command_t* command, float scale)
 {
@@ -558,4 +561,5 @@ void remote_get_velocity_command(const remote_t* remote, velocity_command_t* com
     command->xyz[X] = - 10.0f * scale * remote_get_pitch(remote);
     command->xyz[Y] =   10.0f * scale * remote_get_roll(remote);
     command->xyz[Z] = - 1.5f  * scale * remote_get_throttle(remote);
+    command->mode = VELOCITY_COMMAND_MODE_SEMI_LOCAL;
 }

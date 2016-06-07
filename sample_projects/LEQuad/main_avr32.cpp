@@ -38,15 +38,15 @@
  *
  ******************************************************************************/
 
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/lequad.hpp"
+
 #include "boards/megafly_rev4/megafly_rev4.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
 
 // #include "hal/dummy/file_dummy.hpp"
 #include "hal/avr32/file_flash_avr32.hpp"
 #include "hal/avr32/serial_usb_avr32.hpp"
 
+// //uncomment to go in simulation
 // #include "simulation/dynamic_model_quad_diag.hpp"
 // #include "simulation/simulation.hpp"
 // #include "hal/dummy/adc_dummy.hpp"
@@ -67,7 +67,7 @@ extern "C"
 int main(void)
 {
     bool init_success = true;
-    
+
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
@@ -78,10 +78,43 @@ int main(void)
     // Board initialisation
     init_success &= board.init();
 
+    fat_fs_mounting_t fat_fs_mounting;
+
+    fat_fs_mounting_init(&fat_fs_mounting);
+
+    File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
+    File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
+
+    // -------------------------------------------------------------------------
+    // Create MAV
+    // -------------------------------------------------------------------------
+    // Create MAV using real sensors
+    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    LEQuad mav = LEQuad(board.imu,
+                        board.bmp085,
+                        board.gps_ublox,
+                        board.sonar_i2cxl,      // Warning:
+                        board.uart0,
+                        board.spektrum_satellite,
+                        board.green_led,
+                        board.file_flash,
+                        board.battery,
+                        board.servo_0,
+                        board.servo_1,
+                        board.servo_2,
+                        board.servo_3,
+                        board.servo_4,
+                        board.servo_5,
+                        board.servo_6,
+                        board.servo_7,
+                        file_log,
+                        file_stat,
+                        mav_config );
+
     // -------------------------------------------------------------------------
     // Create simulation
     // -------------------------------------------------------------------------
-    // Simulated servos
+    // // Simulated servos
     // Pwm_dummy pwm[4];
     // Servo sim_servo_0(pwm[0], servo_default_config_esc());
     // Servo sim_servo_1(pwm[1], servo_default_config_esc());
@@ -101,43 +134,9 @@ int main(void)
     //                                  sim.gyroscope(),
     //                                  sim.magnetometer() );
 
-    fat_fs_mounting_t fat_fs_mounting;
-
-    fat_fs_mounting_init(&fat_fs_mounting);
-
-    File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
-    File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
-
-    // -------------------------------------------------------------------------
-    // Create central data
-    // -------------------------------------------------------------------------
-    // Create central data using real sensors
-    central_data_conf_t cd_config = central_data_default_config();
-
-    Central_data cd = Central_data(MAVLINK_SYS_ID,
-                                   board.imu,
-                                   board.bmp085,
-                                   board.gps_ublox,
-                                   // sim.gps(),
-                                   board.sonar_i2cxl,      // Warning:
-                                   // sim.sonar(),             // this is simulated
-                                   board.uart0,
-                                   board.spektrum_satellite,
-                                   board.green_led,
-                                   board.file_flash,
-                                   board.battery,
-                                   // sim_battery,
-                                   board.servo_0,
-                                   board.servo_1,
-                                   board.servo_2,
-                                   board.servo_3,
-                                   file_log,
-                                   file_stat,
-                                   cd_config );
-
-
-    // Create central data with simulated sensors
-    // Central_data cd = Central_data( MAVLINK_SYS_ID,
+    // // set the flag to simulation
+    // mav_config.state_config.simulation_mode = HIL_ON;
+    // LEQuad mav = LEQuad( MAVLINK_SYS_ID,
     //                              sim_imu,
     //                              sim.barometer(),
     //                              sim.gps(),
@@ -147,40 +146,13 @@ int main(void)
     //                              board.green_led,
     //                              board.file_flash,
     //                              sim_battery,
-    //                              board.servo_0,
-    //                              board.servo_1,
-    //                              board.servo_2,
-    //                              board.servo_3 );
-
-    // Init central data
-    init_success &= cd.init();
-
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
-
-    print_util_dbg_print("onboard_parameters\r\n");
-    delay_ms(150);
-
-    // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
-    {
-        onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-        init_success = false;
-    }
-
-    print_util_dbg_print("creating new log files\r\n");
-    delay_ms(150);
-
-    init_success &= mavlink_telemetry_init(&cd);
-
-    print_util_dbg_print("mavlink_telemetry_init\r\n");
-    delay_ms(150);
-
-    cd.state.mav_state = MAV_STATE_STANDBY;
-
-    init_success &= tasks_create_tasks(&cd);
-
-    print_util_dbg_print("tasks_create_tasks\r\n");
-    delay_ms(150);
+    //                              sim_servo_0,
+    //                              sim_servo_1,
+    //                              sim_servo_2,
+    //                              sim_servo_3 ,
+    //                              file_log,
+    //                              file_stat,
+    //                              mav_config );
 
     if (init_success)
     {
@@ -199,10 +171,7 @@ int main(void)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-    while (1 == 1)
-    {
-        scheduler_update(&cd.scheduler);
-    }
+    mav.loop();
 
     return 0;
 }

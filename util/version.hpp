@@ -30,38 +30,55 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_telemetry.h
+ * \file versions.hpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *
- * \brief Definition of the messages sent by the autopilot to the ground station
+ * \brief   Code version
  *
  ******************************************************************************/
 
 
-#ifndef MAVLINK_TELEMETRY_H_
-#define MAVLINK_TELEMETRY_H_
+#ifndef VERSIONS_HPP_
+#define VERSIONS_HPP_
 
-#include "sample_projects/LEQuad/central_data.hpp"
-#include "communication/onboard_parameters.hpp"
-#include "communication/mavlink_stream.hpp"
+namespace version
+{
 
+    // Version of MAVRIC Library
+    const uint32_t mavric =   (1 << 24)   // major
+                            + (5 << 16)   // minor
+                            + (0 << 8)    // patch
+                            + (0 << 0);   // release
 
-/**
- * \brief     Initialise all the mavlink streams and call the onboard parameters register
- *
- * \return  The initialization status of the module, suceed == true
- */
-bool mavlink_telemetry_init(Central_data* central_data);
+    // Git hash for MAVRIC Library
+    #ifdef MAVRIC_GIT_HASH
+        const uint8_t mavric_git_hash[8] = MAVRIC_GIT_HASH;
+    #else
+        const uint8_t mavric_git_hash[8] = "unknown";
+    #endif
 
-/**
- * \brief   Add all onboard parameters to the parameter list
- *
- * \param   onboard_parameters      The pointer to the onboard parameters structure
- *
- * \return  The initialization status of the module, succeed == true
- */
-bool mavlink_telemetry_add_onboard_parameters(onboard_parameters_t* onboard_parameters, Central_data* central_data);
+    // Version of project
+    #ifdef PROJECT_VERSION
+        const uint32_t project = PROJECT_VERSION;
+    #else
+        const uint32_t project = 0;
+    #endif
 
+    // Git hash of project
+    #ifdef PROJECT_GIT_HASH
+        const uint8_t project_git_hash[8] = PROJECT_GIT_HASH;
+    #else
+        const uint8_t project_git_hash[8] = "unknown";
+    #endif
 
-#endif /* MAVLINK_DOWN_TELEMETRY_H_ */
+    // Project name
+    #ifdef PROJECT_NAME
+        const uint8_t project_name[] = PROJECT_NAME;
+    #else
+        const uint8_t project_name[] = "unknown";
+    #endif
+}
+
+#endif /* VERSIONS_HPP_ */

@@ -98,14 +98,6 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
             print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start gyroscope calibration\r\n");
         }
     }
-    else
-    {
-        if (imu->stop_gyroscope_bias_calibration())
-        {
-            print_util_dbg_print("[IMU CALIB] Stop gyroscope calibration\r\n");
-        }
-    }
-
 
     // Magnetometer bias calibration
     if (packet->param2 == 1)
@@ -120,14 +112,6 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
             print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start magnetometer calibration\r\n");
         }
     }
-    else
-    {
-        if (imu->stop_magnetometer_bias_calibration())
-        {
-            print_util_dbg_print("[IMU CALIB] Stop magnetometer calibration\r\n");
-        }
-    }
-
 
     // Barometer calibration
     if (packet->param3 == 1)
@@ -144,7 +128,6 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
         print_util_dbg_print("[IMU CALIB] [ERROR] Barometer calibration unsupported\r\n");
     }
 
-
     // Accelerometer bias calibration
     if (packet->param5 == 1)
     {
@@ -158,14 +141,44 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
             print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start accelerometer calibration\r\n");
         }
     }
-    else
+
+    // Magnetic north calibration
+    if (packet->param6 == 1)
+    {
+        success &= imu->start_magnetic_north_calibration();
+        if (success)
+        {
+            print_util_dbg_print("[IMU CALIB] Start magnetic north calibration\r\n");
+        }
+        else
+        {
+            print_util_dbg_print("[IMU CALIB] [ERROR] Failed to start magnetic north calibration\r\n");
+        }
+    }
+
+    // Stop all calibrations
+    if (packet->param7 == 1)
     {
         if (imu->stop_accelerometer_bias_calibration())
         {
             print_util_dbg_print("[IMU CALIB] Stop accelerometer calibration\r\n");
         }
-    }
 
+        if (imu->stop_gyroscope_bias_calibration())
+        {
+            print_util_dbg_print("[IMU CALIB] Stop gyroscope calibration\r\n");
+        }
+
+        if (imu->stop_magnetometer_bias_calibration())
+        {
+            print_util_dbg_print("[IMU CALIB] Stop magnetometer calibration\r\n");
+        }
+
+        if (imu->stop_magnetic_north_calibration())
+        {
+            print_util_dbg_print("[IMU CALIB] Stop magnetic north calibration\r\n");
+        }
+    }
 
     // Result code
     if (success)
@@ -184,32 +197,32 @@ static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_lo
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool imu_telemetry_init(Imu* imu, mavlink_message_handler_t* message_handler)
+bool imu_telemetry_init(Imu* imu, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
     // Add callbacks for waypoint handler commands requests
-    mavlink_message_handler_cmd_callback_t callbackcmd;
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
 
     callbackcmd.command_id = MAV_CMD_PREFLIGHT_CALIBRATION; // 241
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (mavlink_cmd_callback_function_t)    &imu_telemetry_start_calibration;
-    callbackcmd.module_struct =                                 imu;
-    init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)            &imu_telemetry_start_calibration;
+    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) imu;
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
 
     return init_success;
 }
 
-void imu_telemetry_send_scaled(const Imu* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void imu_telemetry_send_scaled(const Imu* imu, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     std::array<float, 3> acc  = imu->acc();
     std::array<float, 3> gyro = imu->gyro();
     std::array<float, 3> mag  = imu->mag();
 
-    mavlink_msg_scaled_imu_pack(mavlink_stream->sysid,
-                                mavlink_stream->compid,
+    mavlink_msg_scaled_imu_pack(mavlink_stream->sysid(),
+                                mavlink_stream->compid(),
                                 msg,
                                 time_keeper_get_ms(),
                                 1000 * acc[X],

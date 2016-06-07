@@ -79,8 +79,8 @@ typedef struct
     // quat_t north_vec;                    ///< The quaternion of the north vector
 
     ahrs_state_t internal_state;        ///< Leveling state of the ahrs
-    uint32_t     last_update;           ///< The time of the last IMU update in ms
-    float        dt;                    ///< The time interval between two IMU updates
+    float        last_update_s;            ///< The time of the last IMU update in ms
+    float        dt_s;                  ///< The time interval between two IMU updates
 } ahrs_t;
 
 
@@ -95,6 +95,16 @@ typedef struct
  * \return  True if the init succeed, false otherwise
  */
 bool ahrs_init(ahrs_t* ahrs);
+
+
+/**
+ * \brief   Returns an initialized ahrs_t
+ *
+ * \detail  Used to initialize ahrs in initalizer list
+ *
+ * \return  Initialized ahrs_t
+ */
+ahrs_t ahrs_initialized(void);
 
 
 #ifdef __cplusplus

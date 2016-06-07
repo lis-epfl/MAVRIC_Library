@@ -69,13 +69,13 @@ extern "C"
  */
 typedef struct
 {
-    std::array<float, 3> bias;          ///< The biais of the sensor
-    std::array<float, 3> scale_factor;  ///< The scale factors of the sensor
-    std::array<float, 3>    sign;       ///< The orientation of the sensor (+1 or -1)
-    std::array<uint8_t, 3> axis;        ///< The axis number (X,Y,Z) referring to the sensor datasheet
-    std::array<float, 3> max_values;    ///< Used only during calibration: max scaled value
-    std::array<float, 3> min_values;    ///< Used only during calibration: min scaled value
-    std::array<float, 3> mean_values;   ///< Used only during calibration: mean scaled value
+    std::array<float, 3>    bias;         ///< The biais of the sensor
+    std::array<float, 3>    scale_factor; ///< The scale factors of the sensor
+    std::array<float, 3>    sign;         ///< The orientation of the sensor (+1 or -1)
+    std::array<uint8_t, 3>  axis;         ///< The axis number (X,Y,Z) referring to the sensor datasheet
+    std::array<float, 3>    max_values;   ///< Used only during calibration: max scaled value
+    std::array<float, 3>    min_values;   ///< Used only during calibration: min scaled value
+    std::array<float, 3>    mean_values;  ///< Used only during calibration: mean scaled value
 } imu_sensor_config_t;
 
 
@@ -87,6 +87,7 @@ typedef struct
     imu_sensor_config_t accelerometer;  ///< The gyroscope configuration structure
     imu_sensor_config_t gyroscope;      ///< The accelerometer configuration structure
     imu_sensor_config_t magnetometer;   ///< The compass configuration structure
+    std::array<float, 3> magnetic_north;///< X, Y and Z components of magnetic north vector (includes magnetic inclination)
     float lpf_acc;                      ///< Low pass filter gain for accelerometer
     float lpf_gyro;                     ///< Low pass filter gain for accelerometer
     float lpf_mag;                      ///< Low pass filter gain for accelerometer
@@ -173,11 +174,19 @@ public:
     const std::array<float, 3>& mag(void) const;
 
     /**
+     * \brief   Get X, Y and Z components of magnetic north (in NED frame)
+     *
+     * \return  Value
+     */
+    const std::array<float, 3>& magnetic_north(void) const;
+
+
+    /**
      * \brief   Get the readiness of the IMU
      *
      * \return  True if the IMU is ready, false otherwise
      */
-    const bool is_ready(void) const;
+    bool is_ready(void) const;
 
     /**
      * \brief   Temporary method to get pointer to configuration
@@ -243,6 +252,21 @@ public:
 
 
     /**
+     * \brief   Start calibration of magnetic field inclination
+     *
+     * \detail  Should not be used in flight
+     *          Keep the platform perfectly stable during the calibration phase. It does not have to
+     *          be perfectly leveled, but should not undergo parasitic accelerations.
+     *
+     *          WARNING:
+     *          Incompatible with magnetometer bias calibration
+     *
+     * \return  Success if not already started and no incompatible calibration ongoing
+     */
+    bool start_magnetic_north_calibration(void);
+
+
+    /**
      * \brief   Stop accelerometer bias calibration
      *
      * \detail  Should not be used in flight
@@ -273,16 +297,23 @@ public:
     bool stop_magnetometer_bias_calibration(void);
 
 
+    /**
+     * \brief   Stop calibration of magnetic inclination
+     *
+     * \detail  Should not be used in flight
+     *
+     * \return  Success if not already stopped
+     */
+    bool stop_magnetic_north_calibration(void);
+
 
 private:
     /**
-     * \brief   Startup calibration
+     * \brief   Tests if a calibration is ongoing
      *
-     * \detail  Should not be used in flight
-     *          If the imu is not ready, this function waits for the gyroscopes
-     *          values to be stable, then perform gyro bias calibration
+     * \return  boolean
      */
-    void do_startup_calibration(void);
+    bool is_calibration_ongoing(void) const;
 
 
     /**
@@ -306,15 +337,19 @@ private:
     std::array<float, 3> scaled_acc_;   ///< Scaled acceleration
     std::array<float, 3> scaled_gyro_;  ///< Scaled angular velocity
     std::array<float, 3> scaled_mag_;   ///< Scaled magnetic field
+    float magnetic_inclination_;        ///< Angle between horizontal plane and magnetic north (magnetic dip)
+    float magnetic_norm_;               ///< Norm of magnetic north
 
+    bool do_startup_calibration_;               ///< Flag indicating if calibration should be done
     bool do_accelerometer_bias_calibration_;    ///< Flag indicating if calibration should be done
     bool do_gyroscope_bias_calibration_;        ///< Flag indicating if calibration should be done
     bool do_magnetometer_bias_calibration_;     ///< Flag indicating if calibration should be done
+    bool do_magnetic_north_calibration_;        ///< Flag indicating if calibration should be done
     bool is_ready_;                             ///< Flag indicating the readiness of the IMU
 
     float dt_s_;                        ///< Time interval between two updates (in microseconds)
     float last_update_us_;              ///< Last update time in microseconds
-    float timestamp_gyro_stable;        ///< The time from which the gyroscope is not varying too much
+    float startup_calibration_start_time_;       ///< The moment from which the gyroscope is not varying too much
 };
 
 
@@ -417,6 +452,11 @@ static inline imu_conf_t imu_default_config()
     conf.magnetometer.mean_values[0] = 0.0f;
     conf.magnetometer.mean_values[1] = 0.0f;
     conf.magnetometer.mean_values[2] = 0.0f;
+
+    // Magnetic north (default value in Lausanne: 62° inclination)
+    conf.magnetic_north[0] = 0.46947156f;   // cos(62°)
+    conf.magnetic_north[1] = 0.0f;
+    conf.magnetic_north[2] = 0.88294759f;   // sin(62°)
 
     // Low pass filter
     conf.lpf_acc    = 0.1f;

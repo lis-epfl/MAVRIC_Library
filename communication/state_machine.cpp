@@ -55,58 +55,149 @@ extern "C"
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
+
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
+void State_machine::set_custom_mode(Mav_mode::custom_mode_t *current_custom_mode, mav_state_t *current_state)
+{
+    Mav_mode::custom_mode_t mode_custom_new = *current_custom_mode;
+    mav_state_t state_new = *current_state;
+
+    //check battery level
+    if (state_.battery_.is_low())
+    {
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
+        {
+            print_util_dbg_print("Battery low! Performing critical landing.\r\n");
+            state_new = MAV_STATE_CRITICAL;
+        }
+        mode_custom_new |= Mav_mode::CUST_BATTERY_LOW;
+    }
+    else
+    {
+        mode_custom_new &= ~Mav_mode::CUST_BATTERY_LOW;
+    }
+
+    // check connection with GND station
+    if (state_.connection_lost)
+    {
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
+        {
+            print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
+            state_new = MAV_STATE_CRITICAL;
+        }
+
+        mode_custom_new |= Mav_mode::CUST_HEARTBEAT_LOST;
+    }
+    else
+    {
+        mode_custom_new &= ~Mav_mode::CUST_HEARTBEAT_LOST;
+    }
+
+    // check whether out_of_fence_1
+    if (state_.out_of_fence_1)
+    {
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
+        {
+            print_util_dbg_print("Out of fence 1!\r\n");
+            state_new = MAV_STATE_CRITICAL;
+        }
+        mode_custom_new |= Mav_mode::CUST_FENCE_1;
+    }
+    else
+    {
+        mode_custom_new &= ~Mav_mode::CUST_FENCE_1;
+    }
+
+    // check whether out_of_fence_2
+    if (state_.out_of_fence_2)
+    {
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
+        {
+            print_util_dbg_print("Out of fence 2!\r\n");
+            state_new = MAV_STATE_CRITICAL;
+        }
+        mode_custom_new |= Mav_mode::CUST_FENCE_2;
+    }
+    else
+    {
+        mode_custom_new &= ~Mav_mode::CUST_FENCE_2;
+    }
+
+    // check GPS status
+    if (!position_estimation_.healthy())
+    {
+        if (state_.mav_state_ == MAV_STATE_ACTIVE)
+        {
+            print_util_dbg_print("GPS bad!\r\n");
+            state_new = MAV_STATE_CRITICAL;
+        }
+        mode_custom_new |= Mav_mode::CUST_GPS_BAD;
+    }
+    else
+    {
+        mode_custom_new &= ~Mav_mode::CUST_GPS_BAD;
+    }
+
+    *current_custom_mode = mode_custom_new;
+    *current_state = state_new;
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_machine_init(state_machine_t* state_machine,
-                        State* state,
-                        const Gps* gps,
-                        const Imu* imu,
-                        manual_control_t* manual_control)
+State_machine::State_machine(State& state,
+                            const Position_estimation& position_estimation,
+                            const Imu& imu,
+                            const ahrs_t& ahrs,
+                            Manual_control& manual_control) :
+    state_(state),
+    position_estimation_(position_estimation),
+    imu_(imu),
+    ahrs_(ahrs),
+    manual_control_(manual_control)
+{}
+
+bool State_machine::update(State_machine* state_machine)
 {
-    bool init_success = true;
-
-    state_machine->state            = state;
-    state_machine->gps              = gps;
-    state_machine->imu              = imu;
-    state_machine->manual_control   = manual_control;
-
-    return init_success;
-}
-
-
-bool state_machine_update(state_machine_t* state_machine)
-{
-    mav_mode_t mode_current, mode_new;
-    mav_state_t state_current, state_new;
-    mav_mode_custom_t mode_custom_new;
-
+    Mav_mode mode_new;
     signal_quality_t rc_check;
 
-    // Get current state
-    state_current = state_machine->state->mav_state;
+    // Get current mode and state
+    const Mav_mode mode_current = state_machine->state_.mav_mode();
+    const mav_state_t state_current = state_machine->state_.mav_state_;
 
     // By default, set new state equal to current state
-    state_new = state_current;
+    mav_state_t state_new = state_current;
+    Mav_mode::custom_mode_t mode_custom_new = state_machine->state_.mav_mode_custom;
 
-    // Get current mode
-    mode_current = state_machine->state->mav_mode;
-
-    mode_custom_new = state_machine->state->mav_mode_custom;
 
     // Get remote signal strength
-    rc_check = manual_control_get_signal_strength(state_machine->manual_control);
+    rc_check = state_machine->manual_control_.get_signal_strength();
 
-    mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
+    mode_new = state_machine->manual_control_.get_mode_from_source(mode_current);
 
-    state_machine->state->battery_.update();
+    state_machine->state_.battery_.update();
 
-    state_machine->state->connection_status();
+    state_machine->state_.connection_status();
+
+    // try changing the control mode, if not allowed, reset flags of mode_new
+    if(!state_machine->set_ctrl_mode(mode_new))
+    {
+        mode_new.set_ctrl_mode(mode_current.ctrl_mode());
+    }
+
+    // try arming/disarming, if not allowed, reset flag in mode_new
+    if(!state_machine->state_.set_armed(mode_new.is_armed()))
+    {
+        mode_new.set_armed_flag(!mode_new.is_armed()); // toggle armed flag
+    }
+
+
 
     // Change state according to signal strength
     switch (state_current)
@@ -118,7 +209,7 @@ bool state_machine_update(state_machine_t* state_machine)
             break;
 
         case MAV_STATE_CALIBRATING:
-            if (state_machine->imu->is_ready())
+            if (state_machine->imu_.is_ready() && (state_machine->ahrs_.internal_state == AHRS_READY))
             {
                 state_new = MAV_STATE_STANDBY;
             }
@@ -126,18 +217,18 @@ bool state_machine_update(state_machine_t* state_machine)
 
         case MAV_STATE_STANDBY:
             //disable out of fence checks
-            state_machine->state->out_of_fence_1 = false;
-            state_machine->state->out_of_fence_2 = false;
+            state_machine->state_.out_of_fence_1 = false;
+            state_machine->state_.out_of_fence_2 = false;
 
-            mode_custom_new = CUSTOM_BASE_MODE;
-
-            if (mav_modes_is_armed(mode_new))
+            if (mode_new.is_armed())
             {
                 print_util_dbg_print("Switching from state_machine.\r\n");
-                state_machine->state->switch_to_active_mode(&state_new);
+                state_machine->state_.switch_to_active_mode(&state_new);
+
+                mode_custom_new = Mav_mode::CUSTOM_BASE_MODE;
             }
 
-            if (!state_machine->imu->is_ready())
+            if (!state_machine->imu_.is_ready() || !(state_machine->ahrs_.internal_state == AHRS_READY))
             {
                 state_new = MAV_STATE_CALIBRATING;
             }
@@ -145,19 +236,20 @@ bool state_machine_update(state_machine_t* state_machine)
             break;
 
         case MAV_STATE_ACTIVE:
-            if ((state_machine->manual_control->mode_source == MODE_SOURCE_REMOTE) || (state_machine->manual_control->mode_source == MODE_SOURCE_JOYSTICK))
+            if ((state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) || (state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_JOYSTICK))
             {
                 // check connection with remote
-                if ((state_machine->manual_control->mode_source == MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
+                if ((state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
                 {
+                    print_util_dbg_print("Remote control signal lost! Returning to home and land.\r\n");
                     state_new = MAV_STATE_CRITICAL;
-                    mode_custom_new |= CUST_REMOTE_LOST;
+                    mode_custom_new |= Mav_mode::CUST_REMOTE_LOST;
                 }
                 else
                 {
-                    mode_custom_new &= ~CUST_REMOTE_LOST;
+                    mode_custom_new &= ~Mav_mode::CUST_REMOTE_LOST;
 
-                    if (!mav_modes_is_armed(mode_new))
+                    if (!mode_new.is_armed())
                     {
                         state_new = MAV_STATE_STANDBY;
                         print_util_dbg_print("Switching off motors from state_machine!\r\n");
@@ -165,65 +257,7 @@ bool state_machine_update(state_machine_t* state_machine)
                 }
             }
 
-            // check battery level
-            if (state_machine->state->battery_.is_low())
-            {
-                print_util_dbg_print("Battery low! Performing critical landing.\r\n");
-                state_new = MAV_STATE_CRITICAL;
-                mode_custom_new |= CUST_BATTERY_LOW;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_BATTERY_LOW;
-            }
-
-            // check connection with GND station
-            if (state_machine->state->connection_lost)
-            {
-                print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
-                state_new = MAV_STATE_CRITICAL;
-                mode_custom_new |= CUST_HEARTBEAT_LOST;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_HEARTBEAT_LOST;
-            }
-
-            // check whether out_of_fence_1
-            if (state_machine->state->out_of_fence_1)
-            {
-                print_util_dbg_print("Out of fence 1!\r\n");
-                state_new = MAV_STATE_CRITICAL;
-                mode_custom_new |= CUST_FENCE_1;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_FENCE_1;
-            }
-
-            // check whether out_of_fence_2
-            if (state_machine->state->out_of_fence_2)
-            {
-                print_util_dbg_print("Out of fence 2!\r\n");
-                state_new = MAV_STATE_CRITICAL;
-                mode_custom_new |= CUST_FENCE_2;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_FENCE_2;
-            }
-
-            // check GPS status
-            if (state_machine->gps->healthy() == false)
-            {
-                print_util_dbg_print("GPS bad!\r\n");
-                state_new = MAV_STATE_CRITICAL;
-                mode_custom_new |= CUST_GPS_BAD;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_GPS_BAD;
-            }
+            state_machine->set_custom_mode(&mode_custom_new, &state_new);
 
             break;
 
@@ -231,15 +265,15 @@ bool state_machine_update(state_machine_t* state_machine)
             switch (rc_check)
             {
                 case SIGNAL_GOOD:
-                    if (!state_machine->state->battery_.is_low() &&
-                            !state_machine->state->connection_lost &&
-                            !state_machine->state->out_of_fence_1 &&
-                            !state_machine->state->out_of_fence_2 &&
-                            state_machine->gps->healthy())
+                    if (!state_machine->state_.battery_.is_low() &&
+                            !state_machine->state_.connection_lost &&
+                            !state_machine->state_.out_of_fence_1 &&
+                            !state_machine->state_.out_of_fence_2 &&
+                            state_machine->position_estimation_.healthy())
                     {
                         state_new = MAV_STATE_ACTIVE;
                         // Reset all custom flags except collision avoidance flag
-                        mode_custom_new &= static_cast<mav_mode_custom_t>(0xFFFFF820);
+                        mode_custom_new &= static_cast<Mav_mode::custom_mode_t>(0xFFFFF820);
                     }
                     break;
 
@@ -249,7 +283,7 @@ bool state_machine_update(state_machine_t* state_machine)
 
                 case SIGNAL_LOST:
                     // If in manual mode, do emergency landing (cut off motors)
-                    if (mav_modes_is_manual(mode_current) && (!mav_modes_is_stabilise(mode_current)))
+                    if (mode_current.is_manual())
                     {
                         print_util_dbg_print("Switch to Emergency mode!\r\n");
                         state_new = MAV_STATE_EMERGENCY;
@@ -259,57 +293,9 @@ bool state_machine_update(state_machine_t* state_machine)
                     break;
             }
 
-            //check battery level
-            if (state_machine->state->battery_.is_low())
-            {
-                mode_custom_new |= CUST_BATTERY_LOW;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_BATTERY_LOW;
-            }
+            state_machine->set_custom_mode(&mode_custom_new, &state_new);
 
-            // check connection with GND station
-            if (state_machine->state->connection_lost)
-            {
-                mode_custom_new |= CUST_HEARTBEAT_LOST;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_HEARTBEAT_LOST;
-            }
-
-            // check whether out_of_fence_1
-            if (state_machine->state->out_of_fence_1)
-            {
-                mode_custom_new |= CUST_FENCE_1;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_FENCE_1;
-            }
-
-            // check whether out_of_fence_2
-            if (state_machine->state->out_of_fence_2)
-            {
-                mode_custom_new |= CUST_FENCE_2;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_FENCE_2;
-            }
-
-            // check GPS status
-            if (!state_machine->gps->healthy())
-            {
-                mode_custom_new |= CUST_GPS_BAD;
-            }
-            else
-            {
-                mode_custom_new &= ~CUST_GPS_BAD;
-            }
-
-            if (!mav_modes_is_armed(mode_new))
+            if (!mode_new.is_armed())
             {
                 state_new = MAV_STATE_STANDBY;
             }
@@ -317,12 +303,12 @@ bool state_machine_update(state_machine_t* state_machine)
 
         case MAV_STATE_EMERGENCY:
             // Recovery is not possible -> switch off motors
-            mode_new &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+            state_machine->state_.mav_mode().set_armed_flag(false);
 
-            if (!state_machine->state->battery_.is_low())
+            if (!state_machine->state_.battery_.is_low())
             {
                 // To get out of this state, if we are in the wrong use_mode_from_remote
-                if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)
+                if (state_machine->manual_control_.mode_source() != Manual_control::MODE_SOURCE_REMOTE)
                 {
                     state_new = MAV_STATE_STANDBY;
                 }
@@ -346,47 +332,74 @@ bool state_machine_update(state_machine_t* state_machine)
     }
 
 
-    // Check simulation mode
-    if (state_machine->state->simulation_mode == true)
-    {
-        mode_new |= MAV_MODE_FLAG_HIL_ENABLED;
-    }
-    else
-    {
-        mode_new &= ~MAV_MODE_FLAG_HIL_ENABLED;
-    }
-
-
-    // Check if we need to switch between simulation and reality
-    // if ( mode_current.HIL != mode_new.HIL )
-    // {
-    //  if ( mode_new.HIL == HIL_ON )
-    //  {
-    //      // reality -> simulation
-    //      simulation_switch_from_reality_to_simulation( state_machine->sim_model );
-
-    //      state_new = MAV_STATE_STANDBY;
-    //      mode_new = MAV_MODE_MANUAL_DISARMED;
-    //      mode_new.HIL = HIL_ON;
-    //  }
-    //  else
-    //  {
-    //      // simulation -> reality
-    //      simulation_switch_from_simulation_to_reality( state_machine->sim_model );
-
-    //      state_new = MAV_STATE_STANDBY;
-    //      mode_new = MAV_MODE_SAFE;
-
-    //      // For safety, switch off the motors
-    //      print_util_dbg_print("Switching off motors!\n");
-    //  }
-    // }
-
-
     // Finally, write new modes and states
-    state_machine->state->mav_mode = mode_new;
-    state_machine->state->mav_state = state_new;
-    state_machine->state->mav_mode_custom = mode_custom_new;
+    state_machine->state_.mav_state_       = state_new;
+    state_machine->state_.mav_mode_custom = mode_custom_new;
+
+    // overwrite internal state of joystick
+    state_machine->manual_control_.set_mode_of_source(state_machine->state_.mav_mode_);
 
     return true;
+}
+
+
+bool State_machine::set_ctrl_mode(Mav_mode mode)
+{
+    bool success = true;
+
+    // check if we can set/clear stabilize flag
+    if(!is_set_stabilize_allowed(mode.is_stabilize()))
+    {
+        print_util_dbg_print("[STATE_MACHINE]: prevented passing to stabilize because imu or ahrs not ready\r\n");
+        success = false;
+    }
+
+    // check if we can set/clear guided flag
+    if(!is_set_guided_allowed(mode.is_guided()))
+    {
+        print_util_dbg_print("[STATE_MACHINE]: prevented passing to guided because position estimation is not healthy\r\n");
+        success = false;
+    }
+
+    if(success)
+    {
+        state_.mav_mode_.set_ctrl_mode(static_cast<Mav_mode::ctrl_mode_t>(mode.bits()));
+    }
+
+    return success;
+}
+
+
+bool State_machine::is_set_guided_allowed(bool guided)
+{
+    bool success = true;
+
+    // if already in desired state, skip tests and return true
+    if(state_.is_guided() != guided)
+    {
+        // if we change to guided, test if position estimation is healthy
+        if(success & guided)
+        {
+            // if position_estimation is not healthy, abort
+            success &= position_estimation_.healthy();
+        }
+    }
+    return success;
+}
+
+bool State_machine::is_set_stabilize_allowed(bool stabilize)
+{
+    bool success = true;
+
+    // if already in desired state, skip tests and return true
+    if(state_.is_stabilize() != stabilize)
+    {
+        // if we change to stabilize, test if imu is healthy and ahrs is ready
+        if(success & stabilize)
+        {
+            // if position_estimation is not healthy, abort
+            success &= (imu_.is_ready() && ahrs_.internal_state == AHRS_READY);
+        }
+    }
+    return success;
 }

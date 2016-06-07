@@ -39,9 +39,7 @@
  ******************************************************************************/
 
 #include "boards/mavrimini.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
+#include "sample_projects/LEQuad/lequad.hpp"
 
 extern "C"
 {
@@ -65,19 +63,16 @@ int main(int argc, char** argv)
     // Board initialisation
     init_success &= board.init();
 
-
     // Create dummy files
     File_dummy dummy_file1;
     File_dummy dummy_file2;
 
     // -------------------------------------------------------------------------
-    // Create central data
+    // Create MAV
     // -------------------------------------------------------------------------
-    // Create central data using simulated sensors
-    central_data_conf_t cd_config = central_data_default_config();
-
-    Central_data cd = Central_data(sysid,
-                                   board.imu,
+    // Create MAV using simulated sensors
+    LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
+    LEQuad mav = LEQuad(board.imu,
                                    board.sim.barometer(),
                                    board.sim.gps(),
                                    board.sim.sonar(),
@@ -91,79 +86,26 @@ int main(int argc, char** argv)
                                    board.servo_1,
                                    board.servo_2,
                                    board.servo_3,
+                                   board.servo_4,
+                                   board.servo_5,
+                                   board.servo_6,
+                                   board.servo_7,
                                    dummy_file1,
                                    dummy_file2,
-                                   cd_config );
-
-    // Init central data
-    init_success &= cd.init();
-
-
-    // -------------------------------------------------------------------------
-    // Create tasks and telemetry
-    // -------------------------------------------------------------------------
-
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
-
-    // // Try to read from flash, if unsuccessful, write to flash
-    // if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
-    // {
-    //     // onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-    //     init_success = false;
-    // }
-
-    init_success &= mavlink_telemetry_init(&cd);
-
-    cd.state.mav_state = MAV_STATE_STANDBY;
-
-    init_success &= tasks_create_tasks(&cd);
-
-    print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
-
-    // // -------------------------------------------------------------------------
-    // // Main loop
-    // // -------------------------------------------------------------------------
-
-    // // static uint8_t step = 0;
-    // // while(1)
-    // // {
-    // //  step += 1;
-
-    // //  if(step%2 == 0)
-    // //  {
-    // //      // board.red_led.toggle();
-    // //  }
-
-    // //  // gpio_toggle(GPIOA, GPIO2);
-    // //  // usart_send_blocking(UART4, step);
-    // //  // usart_send(UART4, step);
-    // //  // if( step == 80 )
-    // //  // {
-    // //  //  step = 1;
-    // //  //  usart_send(UART4, '\r');
-    // //  //  usart_send(UART4, '\n');
-    // //  // }
-    // //  // usart_enable_tx_interrupt(USART2);
-    // //  board.serial_1.write(&step);
-
-    // // }
+                                   mav_config );
 
     if (init_success)
     {
-        board.green_led.off();
-        board.red_led.off();
+      board.green_led.off();
+      board.red_led.off();
     }
 
-    while (1 == 1)
-    {
-        //gpio_toggle(GPIOC, GPIO14);
-        // print_util_dbg_print("[HELLO].\r\n");
+    print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
-         //time_keeper_delay_ms(100);
-
-        // board.red_led.toggle();
-        scheduler_update(&cd.scheduler);
-    }
+    // -------------------------------------------------------------------------
+    // Main loop
+    // -------------------------------------------------------------------------
+    mav.loop();
 
     return 0;
 }

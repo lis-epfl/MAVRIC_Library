@@ -67,7 +67,7 @@ void Data_logging::add_header_name(void)
     bool init = true;
 
     uint16_t i;
-    
+
     init &= console_.write("time");
     put_r_or_n(0);
 
@@ -534,8 +534,8 @@ Data_logging::Data_logging(File& file, State& state, data_logging_conf_t config)
     state_(state)
 {
     data_log_ = (data_logging_entry_t*)malloc(sizeof(data_logging_entry_t[config_.max_data_logging_count]));
-    
-    //in case malloc failed 
+
+    //in case malloc failed
     if (data_log_ == NULL)
     {
         config_.max_data_logging_count = 0;
@@ -609,7 +609,7 @@ bool Data_logging::update(void)
                 add_header_name();
             }
 
-            if (!mav_modes_is_armed(state_.mav_mode))
+            if (!state_.is_armed())
             {
                 time_ms = time_keeper_get_ms();
                 if ((time_ms - logging_time_) > 5000)
@@ -680,7 +680,7 @@ bool Data_logging::start(void)
 {
     bool success = false;
 
-    if (!mav_modes_is_armed(state_.mav_mode))
+    if (!state_.is_armed())
     {
         log_data_ = true;
         success   = true;
@@ -694,7 +694,7 @@ bool Data_logging::stop(void)
 {
     bool success = false;
 
-    if (!mav_modes_is_armed(state_.mav_mode))
+    if (!state_.is_armed())
     {
         log_data_ = false;
         success   = true;
@@ -705,11 +705,11 @@ bool Data_logging::stop(void)
 
 
 template<>
-bool Data_logging::add_field(uint8_t* val, const char* param_name)
+bool Data_logging::add_field(const uint8_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -751,11 +751,11 @@ bool Data_logging::add_field(uint8_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(int8_t* val, const char* param_name)
+bool Data_logging::add_field(const int8_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -797,11 +797,11 @@ bool Data_logging::add_field(int8_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(uint16_t* val, const char* param_name)
+bool Data_logging::add_field(const uint16_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -843,11 +843,11 @@ bool Data_logging::add_field(uint16_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(int16_t* val, const char* param_name)
+bool Data_logging::add_field(const int16_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -889,11 +889,11 @@ bool Data_logging::add_field(int16_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(uint32_t* val, const char* param_name)
+bool Data_logging::add_field(const uint32_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -935,11 +935,11 @@ bool Data_logging::add_field(uint32_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(int32_t* val, const char* param_name)
+bool Data_logging::add_field(const int32_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -981,11 +981,11 @@ bool Data_logging::add_field(int32_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(uint64_t* val, const char* param_name)
+bool Data_logging::add_field(const uint64_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1027,11 +1027,11 @@ bool Data_logging::add_field(uint64_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(int64_t* val, const char* param_name)
+bool Data_logging::add_field(const int64_t* val, const char* param_name)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1073,11 +1073,11 @@ bool Data_logging::add_field(int64_t* val, const char* param_name)
 
 
 template<>
-bool Data_logging::add_field(float* val, const char* param_name, uint32_t precision)
+bool Data_logging::add_field(const float* val, const char* param_name, uint32_t precision)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1120,11 +1120,11 @@ bool Data_logging::add_field(float* val, const char* param_name, uint32_t precis
 
 
 template<>
-bool Data_logging::add_field(double* val, const char* param_name, uint32_t precision)
+bool Data_logging::add_field(const double* val, const char* param_name, uint32_t precision)
 {
     bool add_success = true;
 
-    if ((val == NULL))
+    if (val == NULL)
     {
         print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 
@@ -1167,7 +1167,7 @@ bool Data_logging::add_field(double* val, const char* param_name, uint32_t preci
 
 
 template<>
-bool Data_logging::add_field(bool* val, const char* param_name)
+bool Data_logging::add_field(const bool* val, const char* param_name)
 {
     bool add_success = true;
 

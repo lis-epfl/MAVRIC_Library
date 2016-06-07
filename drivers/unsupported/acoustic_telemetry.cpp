@@ -47,11 +47,11 @@ extern "C"
 #include "hal/common/time_keeper.hpp"
 }
 
-void acoustic_telemetry_send(const audio_t* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void acoustic_telemetry_send(const audio_t* audio_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     //TODO: create a mavlink message
-    mavlink_msg_debug_vect_pack(mavlink_stream->sysid,
-                                mavlink_stream->compid,
+    mavlink_msg_debug_vect_pack(mavlink_stream->sysid(),
+                                mavlink_stream->compid(),
                                 msg,
                                 "Audio",
                                 time_keeper_get_us(),

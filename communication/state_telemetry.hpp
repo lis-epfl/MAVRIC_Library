@@ -46,7 +46,7 @@
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/state.hpp"
+#include "communication/state_machine.hpp"
 
 /**
  * \brief   Initialise the state telemetry module
@@ -57,7 +57,7 @@
  *
  * \return  True if the init succeed, false otherwise
  */
-bool state_telemetry_init(State* state, mavlink_message_handler_t* message_handler);
+bool state_telemetry_init(State_machine* state_machine, Mavlink_message_handler* message_handler);
 
 /**
  * \brief   Function to send the MAVLink heartbeat message
@@ -66,7 +66,7 @@ bool state_telemetry_init(State* state, mavlink_message_handler_t* message_handl
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void state_telemetry_send_heartbeat(const State* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void state_telemetry_send_heartbeat(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
@@ -76,6 +76,6 @@ void state_telemetry_send_heartbeat(const State* state, const mavlink_stream_t* 
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void state_telemetry_send_status(const State* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void state_telemetry_send_status(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* STATE_TELEMETRY_H_ */

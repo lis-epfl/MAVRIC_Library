@@ -66,7 +66,7 @@ typedef struct
     pid_controller_t             pid[3];                    ///< PID controller for velocity along X, Y and Z in global frame
     float                        thrust_hover_point;        ///< Amount of thrust required to hover (between -1 and 1)
     const ahrs_t*                ahrs;                      ///< Pointer to attitude estimation (input)
-    const position_estimation_t* pos_est;                   ///< Speed and position estimation (input)
+    const Position_estimation*   pos_est;                   ///< Speed and position estimation (input)
     const velocity_command_t*    velocity_command;          ///< Pointer to velocity command (input)
     attitude_command_t*          attitude_command;          ///< Pointer to attitude command (output)
     thrust_command_t*            thrust_command;            ///< Pointer to thrust command (output)
@@ -95,7 +95,7 @@ typedef struct
  * \param   attitude_command    Pointer to attitude command (output)
  * \param   thrust_command      Pointer to thrust command (output)
  */
-void velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const position_estimation_t* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command);
+bool velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const Position_estimation* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command);
 
 
 /**
@@ -103,7 +103,7 @@ void velocity_controller_copter_init(velocity_controller_copter_t* controller, v
  *
  * \param   controller      Pointer to data structure
  */
-void velocity_controller_copter_update(velocity_controller_copter_t* controller);
+bool velocity_controller_copter_update(velocity_controller_copter_t* controller);
 
 
 #endif /* VELOCITY_CONTROLLER_COPTER_H_ */

@@ -39,9 +39,7 @@
  ******************************************************************************/
 
 #include "boards/mavrinux.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
-#include "sample_projects/LEQuad/mavlink_telemetry.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
+#include "sample_projects/LEQuad/lequad.hpp"
 
 extern "C"
 {
@@ -53,7 +51,7 @@ int main(int argc, char** argv)
 {
     uint8_t sysid = 0;
     bool init_success = true;
-    
+
     // -------------------------------------------------------------------------
     // Get command line parameters
     // -------------------------------------------------------------------------
@@ -84,59 +82,41 @@ int main(int argc, char** argv)
     board.sim.update();
 
     // -------------------------------------------------------------------------
-    // Create central data
+    // Create MAV
     // -------------------------------------------------------------------------
-    // Create central data using simulated sensors
+    // Create MAV using simulated sensors
+    LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
+    mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
+    mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
+    mav_config.state_config.simulation_mode = true;
 
-    central_data_conf_t cd_config = central_data_default_config();
-    cd_config.manual_control_config.mode_source = MODE_SOURCE_GND_STATION;
-    cd_config.manual_control_config.control_source = CONTROL_SOURCE_NONE;
-
-    Central_data cd = Central_data(sysid,
-                                   board.imu,
-                                   board.sim.barometer(),
-                                   board.sim.gps(),
-                                   board.sim.sonar(),
-                                   board.mavlink_serial,
-                                   board.spektrum_satellite,
-                                   board.led,
-                                   board.file_flash,
-                                   board.battery,
-                                   board.servo_0,
-                                   board.servo_1,
-                                   board.servo_2,
-                                   board.servo_3,
-                                   file_log,
-                                   file_stat,
-                                   cd_config);
-
-    // Init central data
-    init_success &= cd.init();
-
-    init_success &= mavlink_telemetry_add_onboard_parameters(&cd.mavlink_communication.onboard_parameters, &cd);
-
-    // Try to read from flash, if unsuccessful, write to flash
-    if (onboard_parameters_read_parameters_from_storage(&cd.mavlink_communication.onboard_parameters) == false)
-    {
-        onboard_parameters_write_parameters_to_storage(&cd.mavlink_communication.onboard_parameters);
-        init_success = false;
-    }
-
-    init_success &= mavlink_telemetry_init(&cd);
-
-    cd.state.mav_state = MAV_STATE_STANDBY;
-
-    init_success &= tasks_create_tasks(&cd);
+    LEQuad mav = LEQuad(board.imu,
+                        board.sim.barometer(),
+                        board.sim.gps(),
+                        board.sim.sonar(),
+                        board.mavlink_serial,
+                        board.spektrum_satellite,
+                        board.led,
+                        board.file_flash,
+                        board.battery,
+                        board.servo_0,
+                        board.servo_1,
+                        board.servo_2,
+                        board.servo_3,
+                        board.servo_4,
+                        board.servo_5,
+                        board.servo_6,
+                        board.servo_7,
+                        file_log,
+                        file_stat,
+                        mav_config);
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-    while (1 == 1)
-    {
-        scheduler_update(&cd.scheduler);
-    }
+    mav.loop();
 
     return 0;
 }

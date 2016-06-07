@@ -57,32 +57,32 @@ extern "C"
 //------------------------------------------------------------------------------
 
 /**
- * \brief Converts velocity command from local to global frame
+ * \brief Converts velocity command from body frame to local frame
  *
  * \param controller    Pointer to data structure
- * \param command[3]    Velocity command in global frame (output)
+ * \param command[3]    Velocity command in local frame (output)
  */
-static void get_velocity_command_from_local_to_global(const velocity_controller_copter_t* controller, float command[3]);
+static void get_velocity_command_from_body_to_local(const velocity_controller_copter_t* controller, float command[3]);
 
 
 /**
- * \brief Converts velocity command from semi-local frame to global frame
+ * \brief Converts velocity command from semi-local frame to local frame
  *
  * \details Semi local frame is global rotated around the vertical axis to match
  * the X axis with the current heading of the UAV
  *
  * \param controller    Pointer to data structure
- * \param command[3]    Velocity command in global frame (output)
+ * \param command[3]    Velocity command in local frame (output)
  *
  */
-static void get_velocity_command_from_semilocal_to_global(const velocity_controller_copter_t* controller, float command[3]);
+static void get_velocity_command_from_semilocal_to_local(const velocity_controller_copter_t* controller, float command[3]);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void get_velocity_command_from_local_to_global(const velocity_controller_copter_t* controller, float command[3])
+static void get_velocity_command_from_body_to_local(const velocity_controller_copter_t* controller, float command[3])
 {
     quaternions_rotate_vector(quaternions_inverse(controller->ahrs->qe),
                               controller->velocity_command->xyz,
@@ -90,7 +90,7 @@ static void get_velocity_command_from_local_to_global(const velocity_controller_
 }
 
 
-static void get_velocity_command_from_semilocal_to_global(const velocity_controller_copter_t* controller, float command[3])
+static void get_velocity_command_from_semilocal_to_local(const velocity_controller_copter_t* controller, float command[3])
 {
     aero_attitude_t semilocal_frame_rotation;
     quat_t q_semilocal;
@@ -101,12 +101,11 @@ static void get_velocity_command_from_semilocal_to_global(const velocity_control
     semilocal_frame_rotation.rpy[PITCH] = 0.0f;
     semilocal_frame_rotation.rpy[YAW]   = heading;
 
-    // Get rotation quaternion from semilocal frame to global frame
+    // Get rotation quaternion from semilocal frame to local frame
     q_semilocal = coord_conventions_quaternion_from_aero(semilocal_frame_rotation);
 
-    // Rotate command from semilocal to global
-    quaternions_rotate_vector(quaternions_inverse(q_semilocal),     // TODO: Check why this is not "quaternions_inverse( q_semilocal )" here
-                              // quaternions_rotate_vector(     q_semilocal,
+    // Rotate command from semilocal to local
+    quaternions_rotate_vector(q_semilocal,
                               controller->velocity_command->xyz,
                               command);
 }
@@ -116,7 +115,7 @@ static void get_velocity_command_from_semilocal_to_global(const velocity_control
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const position_estimation_t* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
+bool velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const Position_estimation* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
 {
     // Init dependencies
     controller->velocity_command    = velocity_command;
@@ -132,76 +131,65 @@ void velocity_controller_copter_init(velocity_controller_copter_t* controller, v
     pid_controller_init(&controller->pid[X], &config.pid_config[X]);
     pid_controller_init(&controller->pid[Y], &config.pid_config[Y]);
     pid_controller_init(&controller->pid[Z], &config.pid_config[Z]);
+
+    return true;
 }
 
 
-void velocity_controller_copter_update(velocity_controller_copter_t* controller)
+bool velocity_controller_copter_update(velocity_controller_copter_t* controller)
 {
-    float velocity_command_global[3];
+    float velocity_command_local[3];
     float errors[3];
     float thrust_vector[3];
-    // float thrust_norm;
-    // float thrust_dir[3];
 
     // Get the command velocity in global frame
     switch (controller->velocity_command->mode)
     {
-        case VELOCITY_COMMAND_MODE_LOCAL:
-            get_velocity_command_from_local_to_global(controller,
-                    velocity_command_global);
+        case VELOCITY_COMMAND_MODE_BODY:
+            get_velocity_command_from_body_to_local(controller,
+                    velocity_command_local);
             break;
 
         case VELOCITY_COMMAND_MODE_SEMI_LOCAL:
-            get_velocity_command_from_semilocal_to_global(controller,
-                    velocity_command_global);
+            get_velocity_command_from_semilocal_to_local(controller,
+                    velocity_command_local);
             break;
 
-        case VELOCITY_COMMAND_MODE_GLOBAL:
-            velocity_command_global[X] = controller->velocity_command->xyz[X];
-            velocity_command_global[Y] = controller->velocity_command->xyz[Y];
-            velocity_command_global[Z] = controller->velocity_command->xyz[Z];
+        case VELOCITY_COMMAND_MODE_LOCAL:
+            velocity_command_local[X] = controller->velocity_command->xyz[X];
+            velocity_command_local[Y] = controller->velocity_command->xyz[Y];
+            velocity_command_local[Z] = controller->velocity_command->xyz[Z];
             break;
 
         default:
-            velocity_command_global[X] = 0.0f;
-            velocity_command_global[Y] = 0.0f;
-            velocity_command_global[Z] = 0.0f;
+            velocity_command_local[X] = 0.0f;
+            velocity_command_local[Y] = 0.0f;
+            velocity_command_local[Z] = 0.0f;
             break;
     }
 
-    // Compute errors
-    errors[X] = velocity_command_global[X] - controller->pos_est->vel[X];
-    errors[Y] = velocity_command_global[Y] - controller->pos_est->vel[Y];
-    errors[Z] = velocity_command_global[Z] - controller->pos_est->vel[Z];       // WARNING: it was multiplied by (-1) in stabilisation_copter.c
+    // Compute errors in local NED frame
+    errors[X] = velocity_command_local[X] - controller->pos_est->vel[X];
+    errors[Y] = velocity_command_local[Y] - controller->pos_est->vel[Y];
+    errors[Z] = velocity_command_local[Z] - controller->pos_est->vel[Z];       // WARNING: it was multiplied by (-1) in stabilisation_copter.c
 
-    // Update PID
-    thrust_vector[X] = pid_controller_update_dt(&controller->pid[X], errors[X], controller->ahrs->dt);              // should be multiplied by mass
-    thrust_vector[Y] = pid_controller_update_dt(&controller->pid[Y], errors[Y], controller->ahrs->dt);              // should be multiplied by mass
-    // thrust_vector[Z] = - GRAVITY + pid_controller_update_dt( &controller->pid[Z], errors[Z], controller->ahrs->dt ); // should be multiplied by mass
-    thrust_vector[Z] = pid_controller_update_dt(&controller->pid[Z], errors[Z], controller->ahrs->dt);  // should be multiplied by mass
+    // Update PID in local frame
+    thrust_vector[X] = pid_controller_update_dt(&controller->pid[X], errors[X], controller->ahrs->dt_s);                // should be multiplied by mass
+    thrust_vector[Y] = pid_controller_update_dt(&controller->pid[Y], errors[Y], controller->ahrs->dt_s);                // should be multiplied by mass
+    thrust_vector[Z] = pid_controller_update_dt(&controller->pid[Z], errors[Z], controller->ahrs->dt_s);                // should be multiplied by mass
 
-
-    aero_attitude_t attitude_yaw_inverse = coord_conventions_quat_to_aero(controller->ahrs->qe);
+    // Rotate thrust vector to next semi_local frame
+    aero_attitude_t attitude_yaw_inverse;
     attitude_yaw_inverse.rpy[0] = 0.0f;
     attitude_yaw_inverse.rpy[1] = 0.0f;
-    attitude_yaw_inverse.rpy[2] = -attitude_yaw_inverse.rpy[2];
-
+    attitude_yaw_inverse.rpy[2] = -controller->attitude_command->rpy[YAW];
     quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
     quaternions_rotate_vector(q_rot, thrust_vector, thrust_vector);
-
-    // Compute the norm of the thrust that should be applied
-    // thrust_norm = vectors_norm(thrust_vector);
-
-    // Compute the direction in which thrust should be apply
-    // thrust_dir[X] = thrust_vector[X] / thrust_norm;
-    // thrust_dir[Y] = thrust_vector[Y] / thrust_norm;
-    // thrust_dir[Z] = thrust_vector[Z] / thrust_norm;
 
     // Map thrust dir to attitude
     controller->attitude_command->rpy[ROLL]  = maths_clip(thrust_vector[Y], 1);
     controller->attitude_command->rpy[PITCH] = - maths_clip(thrust_vector[X], 1);
-    //controller->attitude_command->rpy[YAW]   = 0.0f;
-    controller->attitude_command->rpy[YAW]   = 1.7f;
+    // controller->attitude_command->rpy[YAW]   = UNTOUCHED;
 
     aero_attitude_t attitude;
     attitude.rpy[ROLL]  = controller->attitude_command->rpy[ROLL];
@@ -210,17 +198,7 @@ void velocity_controller_copter_update(velocity_controller_copter_t* controller)
     controller->attitude_command->quat = coord_conventions_quaternion_from_aero(attitude);
 
     // Map PID output to thrust
-    // float max_thrust = 30.0f;            // 10 Newton max thrust
-    // controller->thrust_command->thrust   = maths_clip(thrust_norm/max_thrust, 1.0f) * 2.0f - 1;
-    // controller->thrust_command->thrust   = maths_clip(thrust_norm, 1.0f) * 2.0f - 1;
-    // controller->thrust_command->thrust   = - 1.0 + 2 * thrust_norm/max_thrust;
-
-    // // Map PID output to attitude
-    // controller->attitude_command->mode        = ATTITUDE_COMMAND_MODE_RPY;
-    // controller->attitude_command->rpy[ROLL]  = maths_clip(thrust_vector[Y], 1);
-    // controller->attitude_command->rpy[PITCH] = - maths_clip(thrust_vector[X], 1);
-    // controller->attitude_command->rpy[YAW]   = 0.0f;
-
-    // Map PID output to thrust
     controller->thrust_command->thrust  = controller->thrust_hover_point - thrust_vector[Z];
+
+    return true;
 }

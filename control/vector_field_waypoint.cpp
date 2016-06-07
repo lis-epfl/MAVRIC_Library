@@ -64,7 +64,7 @@ extern "C"
  *
  * \return              waypoint in NED coordinates
  */
-static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* waypoint, const global_position_t* origin);
+static Mavlink_waypoint_handler::waypoint_struct_t convert_waypoint_to_local_ned(const Mavlink_waypoint_handler::waypoint_struct_t* waypoint, const global_position_t* origin);
 
 
 /**
@@ -141,13 +141,13 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* waypoint_in, const global_position_t* origin)
+static Mavlink_waypoint_handler::waypoint_struct_t convert_waypoint_to_local_ned(const Mavlink_waypoint_handler::waypoint_struct_t* waypoint_in, const global_position_t* origin)
 {
     global_position_t waypoint_global;
     local_position_t waypoint_local;
 
     // Init new waypoint
-    waypoint_struct_t waypoint = *waypoint_in;
+    Mavlink_waypoint_handler::waypoint_struct_t waypoint = *waypoint_in;
     waypoint.command    = waypoint_in->command;
     waypoint.param1     = waypoint_in->param1;
     waypoint.param2     = waypoint_in->param2;
@@ -439,22 +439,24 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* pos_est, velocity_command_t* velocity_command)
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* pos_est, velocity_command_t* velocity_command)
 {
     // Init dependencies
     vector_field->waypoint_handler  = waypoint_handler;
     vector_field->pos_est           = pos_est;
     vector_field->velocity_command  = velocity_command;
+
+    return true;
 }
 
 
-void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
+bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 {
     float tmp_vector[3];
     float pos_obj[3];
 
     // Re-init velocity command
-    vector_field->velocity_command->mode    = VELOCITY_COMMAND_MODE_GLOBAL;
+    vector_field->velocity_command->mode    = VELOCITY_COMMAND_MODE_LOCAL;
     vector_field->velocity_command->xyz[X]  = 0.0f;
     vector_field->velocity_command->xyz[Y]  = 0.0f;
     vector_field->velocity_command->xyz[Z]  = 0.0f;
@@ -470,10 +472,10 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
     vector_field->velocity_command->xyz[Z] += tmp_vector[Z];
 
     // Go through waypoint list
-    for (uint16_t i = 0; i < vector_field->waypoint_handler->number_of_waypoints; ++i)
+    for (uint16_t i = 0; i < vector_field->waypoint_handler->waypoint_count(); ++i)
     {
         // Get waypoint in NED coordinates
-        waypoint_struct_t waypoint = convert_waypoint_to_local_ned(&vector_field->waypoint_handler->waypoint_list[i],
+        Mavlink_waypoint_handler::waypoint_struct_t waypoint = convert_waypoint_to_local_ned(&vector_field->waypoint_handler->waypoint_list[i],
                                      &vector_field->pos_est->local_position.origin);
 
         // Get object position
@@ -543,4 +545,6 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
         vector_field->velocity_command->xyz[Y] = 5.0f * vector_field->velocity_command->xyz[Y] / vel_norm;
         vector_field->velocity_command->xyz[Z] = 5.0f * vector_field->velocity_command->xyz[Z] / vel_norm;
     }
+
+    return true;
 }

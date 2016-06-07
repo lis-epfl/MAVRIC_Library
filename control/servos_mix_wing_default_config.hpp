@@ -30,33 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs_madgwick_default_config.h
+ * \file servos_mix_wing_default_config.hpp
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Simon Pyroth
  *   
- * \brief Default config for Madgwick's AHRS algorithms.
+ * \brief Default configuration for the servo_mix for the MAVRIC wing
  *
  ******************************************************************************/
 
 
-#ifndef AHRS_MADGWICK_DEFAULT_CONFIG_H_
-#define AHRS_MADGWICK_DEFAULT_CONFIG_H_
+#ifndef SERVOS_MIX_WING_DEFAULT_CONFIG_H_
+#define SERVOS_MIX_WING_DEFAULT_CONFIG_H_
 
 
+#include "control/servos_mix_wing.hpp"
 
-#include "sensing/ahrs_madgwick.h"
-
-
-static inline ahrs_madgwick_conf_t ahrs_madgwick_default_config()
+extern "C"
 {
-    ahrs_madgwick_conf_t conf = {};
+	#include "util/constants.h"
+}
 
-    conf.beta = 0.06f;
-    conf.zeta = 0.01f;
+static inline servos_mix_wing_conf_t servos_mix_wing_default_config()
+{
+	servos_mix_wing_conf_t conf;
 
-    return conf;
+	conf.servo_right = 2;
+	conf.servo_left = 1;
+	conf.motor = 0;
+	
+	conf.servo_right_dir = FLAP_INVERTED;
+	conf.servo_left_dir = FLAP_NORMAL;
+	
+	conf.min_amplitude = -1.0f;
+	conf.max_amplitude = 1.0f;
+	conf.min_thrust = -0.9f;
+	conf.max_thrust = 1.0f;
+	
+	conf.trim_roll = 0.252273f;
+	conf.trim_pitch = 0.0090908f;
+
+	return conf;
 };
 
-
-#endif /* AHRS_MADGWICK_DEFAULT_CONFIG_H_ */
+#endif // SERVOS_MIX_WING_DEFAULT_CONFIG_H_
