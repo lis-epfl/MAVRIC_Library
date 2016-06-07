@@ -197,11 +197,6 @@ private:
     bool waypoint_sending_;                                      ///< Flag to tell whether waypoint are being sent
     bool waypoint_receiving_;                                    ///< Flag to tell whether waypoint are being received or not
 
-//<<<<<<< HEAD
-//    uint16_t num_waypoint_onboard;
-//    uint32_t start_timeout;                                     ///< The start time for the waypoint timeout
-//    uint32_t timeout_max_waypoint;                              ///< The max waiting time for communication
-//=======
     int32_t sending_waypoint_num_;                               ///< The ID number of the sending waypoint
     int32_t waypoint_request_number_;                            ///< The ID number of the requested waypoint
     uint16_t waypoint_onboard_count_;                            ///< The number of waypoint onboard
@@ -209,7 +204,6 @@ private:
     uint32_t start_timeout_;                                     ///< The start time for the waypoint timeout
     uint32_t timeout_max_waypoint_;                              ///< The max waiting time for communication
     uint32_t travel_time_;                                       ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
-//>>>>>>> alex_dev
 
     bool critical_next_state_;                                   ///< Flag to change critical state in its dedicated state machine
     bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine

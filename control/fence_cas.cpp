@@ -367,26 +367,29 @@ void Fence_CAS::gftobftransform(float C[3], float S[3], float rep[3])
 	rep[1]=temp1;
 	rep[2]=0.0;
 }
-bool Fence_CAS::clip_repulsion(control_command_t* command_t)
+bool Fence_CAS::clip_repulsion(control_command_t command_t)
 {
 	//compute repulsion velocity y
-	 float ratioXY_vel=1.0;
+	 float ratioXY_vel=0.7;
  	 float tvel_y_added = this->repulsion[1];
-	 float norm_ctrl_vel_xy_sqr = command_t->tvel[Y]*command_t->tvel[Y]+command_t->tvel[X]*command_t->tvel[X];
+	 float norm_ctrl_vel_xy_sqr = command_t.tvel[Y]*command_t.tvel[Y]+command_t.tvel[X]*command_t.tvel[X];
 	 //troncate repulsion velocity y to the norm of the total speed
-	 if(maths_f_abs(tvel_y_added + command_t->tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
-			tvel_y_added = sign(tvel_y_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - command_t->tvel[Y];
+	 if(maths_f_abs(tvel_y_added + command_t.tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
+			tvel_y_added = sign(tvel_y_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - command_t.tvel[Y];
 
-	 command_t->tvel[Y] += tvel_y_added;
+	 command_t.tvel[Y] += tvel_y_added;
 
-
-	 if(command_t->tvel[Y] > 0.0f && SQR(command_t->tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
-		 command_t->tvel[Y] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
-	 else if(command_t->tvel[Y] < 0.0f && SQR(command_t->tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
-		 command_t->tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
+	 /*if(command_t.tvel[Y] > 0.0f && SQR(command_t.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
+		 command_t.tvel[Y] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
+	 else if(command_t.tvel[Y] < 0.0f && SQR(command_t.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
+		 command_t.tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);*/
 
 	 //reduce the speed on tvel[X] in order to keep the norm of the speed constant
-	 command_t->tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(command_t->tvel[Y]));
+	 command_t.tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(command_t.tvel[Y]));
+
+	 this->repulsion[1] = command_t.tvel[Y];
+	 this->repulsion[0] = command_t.tvel[X];
+
 	 return true;
 }
 float Fence_CAS::get_repulsion(int axis)

@@ -173,6 +173,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
                 }
 
                 float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
+                w = 0.4;
                 input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
             }
 

@@ -59,7 +59,7 @@ public:
      *
      * \return true
      */
-	bool 	clip_repulsion(control_command_t* command_t);
+	bool 	clip_repulsion(control_command_t command_t);
     /**
      * \brief   Returns the maximal y speed per update
      *
