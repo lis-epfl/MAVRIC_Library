@@ -33,6 +33,7 @@
  * \file i2c_stm32.cpp
  *
  * \author MAV'RIC Team
+ * \author Gregoire HEITZ
  *
  * \brief I2C peripheral driver for STM32
  *
@@ -208,7 +209,7 @@ I2c_stm32::I2c_stm32(i2c_stm32_conf_t config)
 
 bool I2c_stm32::init(void)
 {
-    bool init_success = false;
+    bool init_success = true;
 
     // Enable RCC peripheral clock
     rcc_periph_clock_enable(config_.rcc_i2c_config);
@@ -284,39 +285,27 @@ bool I2c_stm32::init(void)
     //enable I2C1
     i2c_peripheral_enable(I2C1);
 
-    init_success = true;
-
     return init_success;   
 }
 
 
 bool I2c_stm32::probe(uint32_t address)
 {
-    // status_code_t status;
-    // status = twim_probe(twim_, address);
-    // return status_code_to_bool(status);
+    bool success = true;
+
+    success &= start(address, true, true);
+    success &= stop();
     
-    if(!start(address, true, true))
-    {
-        stop();
-        return false;
-    }
-    else
-    {
-        stop();
-        return true;
-    }
+    return success;
 }
 
 
 bool I2c_stm32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
 {
-    // status_code_t status;
-    // status = twim_write(twim_, buffer, nbytes, address, config_.tenbit);
-    // return status_code_to_bool(status);
+    bool success = true;
 
     //start
-    start(address, true, true);
+    success &= start(address, true, true);
 
     for (uint32_t i = 0; i < nbytes; ++i)
     {
@@ -334,29 +323,31 @@ bool I2c_stm32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
         I2C_DR(i2c_) = buffer[i];
     }
 
-    stop();
+    success &= stop();
     
-    return true;
+    return success;
 }
 
 
 bool I2c_stm32::read(uint8_t* buffer, uint32_t nbytes, uint32_t address)
 {
-    // status_code_t status;
-    // status = twim_read(twim_, buffer, nbytes, address, config_.tenbit);
-    // return status_code_to_bool(status);
+    bool success = true;
 
     //Start
-    start(address, false, true);
+    success &= start(address, false, true);
 
      //read loop
     for (uint32_t i = 0; i < nbytes; ++i)
     {
         if(i == nbytes-1)
+        {
             buffer[i] = read_nack();
+        }
         else
+        {
             buffer[i] = read_ack();
+        }
     }
 
-    return true;
+    return success;
 }

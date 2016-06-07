@@ -82,8 +82,8 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     file_flash(),
     serial_1(config.serial_1_config),
     serial_2(config.serial_2_config),
-    i2c_0(config.i2c_0_config),
     i2c_1(config.i2c_1_config),
+    i2c_2(config.i2c_2_config),
     spektrum_satellite(serial_2, dsm_receiver_gpio, dsm_power_gpio),
     adc_battery(12.3f),
     battery(adc_battery),
@@ -168,18 +168,18 @@ bool Mavrimini::init(void)
 
 
     // -------------------------------------------------------------------------
-    // Init I2C_0
-    // -------------------------------------------------------------------------
-    ret = i2c_0.init();
-    print_util_dbg_init_msg("[I2C_0]", ret);
-    p_dbg_serial->flush();
-    init_success &= ret;
-
-    // -------------------------------------------------------------------------
     // Init I2C_1
     // -------------------------------------------------------------------------
     ret = i2c_1.init();
     print_util_dbg_init_msg("[I2C_1]", ret);
+    p_dbg_serial->flush();
+    init_success &= ret;
+
+    // -------------------------------------------------------------------------
+    // Init I2C_2
+    // -------------------------------------------------------------------------
+    ret = i2c_2.init();
+    print_util_dbg_init_msg("[I2C_2]", ret);
     p_dbg_serial->flush();
     init_success &= ret;
 
