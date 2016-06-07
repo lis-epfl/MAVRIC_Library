@@ -86,6 +86,8 @@
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
 
+#include "drivers/mpu_6050.hpp"
+
 extern "C"
 {
 #include "sensing/ahrs.h"
@@ -160,6 +162,7 @@ public:
                   Servo& servo_7,
                   File& file1,
                   File& file2,
+                  Mpu_6050& mpu_6050,
                   const conf_t& config = default_config());
 
     /**
@@ -209,6 +212,7 @@ protected:
     Servo&          servo_5;            ///< Reference to servos structure
     Servo&          servo_6;            ///< Reference to servos structure
     Servo&          servo_7;            ///< Reference to servos structure
+    Mpu_6050&       mpu_6050;
 
     Manual_control manual_control;                              ///< The joystick parsing structure
 
