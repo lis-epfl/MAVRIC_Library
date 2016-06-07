@@ -64,7 +64,7 @@ extern "C"
 
 
 
-LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, Mpu_6050& mpu_6050, const conf_t& config):
+LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -82,7 +82,6 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     servo_5(servo_5),
     servo_6(servo_6),
     servo_7(servo_7),
-    mpu_6050(mpu_6050),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
     state(mavlink_communication.mavlink_stream(), battery, config.state_config),
     scheduler(Scheduler::default_config()),
@@ -266,8 +265,6 @@ bool LEQuad::init_imu(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[X],     "NORTH_MAG_X");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[Y],     "NORTH_MAG_Y");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[Z],     "NORTH_MAG_Z");
-
-    ret &= scheduler.add_task(500000, (Scheduler_task::task_function_t)&task_mpu_6050_update,       (Scheduler_task::task_argument_t)&mpu_6050, Scheduler_task::PRIORITY_LOW);
 
     return ret;
 }

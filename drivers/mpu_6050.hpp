@@ -123,8 +123,6 @@ public:
     bool update_acc(void);
     bool update_gyr(void);
 
-    bool update_test(void);
-
 
     /**
      * \brief   Get last update time in microseconds
@@ -254,14 +252,6 @@ private:
      * \return  true if succeed
      */
      bool wake_up_MPU6050(const uint8_t address);
-};
-
-/**
- * \brief  Glue method for scheduler
- */
-static inline bool task_mpu_6050_update(Mpu_6050* mpu_6050)
-{
-    return mpu_6050->update_test();
 };
 
 #endif /* MPU_6050_H */

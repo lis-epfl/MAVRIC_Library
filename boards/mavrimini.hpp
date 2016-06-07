@@ -63,8 +63,6 @@
 #include "hal/dummy/gpio_dummy.hpp"
 #include "hal/common/led_gpio.hpp"
 
-#include "drivers/mpu_6050.hpp"
-
 extern "C"
 {
 #include "util/streams.h"
@@ -135,7 +133,6 @@ public:
     I2c_stm32           i2c_1;
     I2c_stm32           i2c_2;
     Spektrum_satellite  spektrum_satellite;
-    Mpu_6050            mpu_6050;
     Adc_dummy           adc_battery;
     Battery             battery;
     Adc_dummy           adc_airspeed;

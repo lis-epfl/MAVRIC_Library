@@ -92,7 +92,6 @@ int main(int argc, char** argv)
                                    board.servo_7,
                                    dummy_file1,
                                    dummy_file2,
-                                   board.mpu_6050,
                                    mav_config );
 
     if (init_success)
