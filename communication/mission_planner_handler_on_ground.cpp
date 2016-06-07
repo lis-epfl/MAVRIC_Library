@@ -71,7 +71,7 @@ Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
     {
         if (mav_modes_is_guided(mode_local) || mav_modes_is_auto(mode_local))
         {
-            hold_waypoint_set_ = false;
+            mission_planner.set_hold_waypoint_set(false);
             navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
         }
         else

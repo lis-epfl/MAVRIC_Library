@@ -124,7 +124,7 @@ void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& miss
                 print_util_dbg_print("Auto-landing: disarming motors \r\n");
                 navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
                 //state_.mav_mode_custom = CUSTOM_BASE_MODE;
-                hold_waypoint_set_ = false;
+                mission_planner.set_hold_waypoint_set(false);
                 navigation_.internal_state_ = Navigation::NAV_ON_GND;
                 state_.set_armed(false);
                 state_.mav_state_ = MAV_STATE_STANDBY;

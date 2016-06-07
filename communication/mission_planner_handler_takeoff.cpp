@@ -57,7 +57,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
 {
     bool result = false;
 
-    if (!hold_waypoint_set_)
+    if (!mission_planner.hold_waypoint_set())
     {
         print_util_dbg_print("Automatic take-off, will hold position at: (");
         print_util_dbg_print_num(position_estimation_.local_position.pos[X], 10);
@@ -78,7 +78,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
 
         navigation_.dist2wp_sqr = mission_planner.waypoint_hold_coordinates.waypoint.pos[Z] * mission_planner.waypoint_hold_coordinates.waypoint.pos[Z];
 
-        hold_waypoint_set_ = true;
+        mission_planner.set_hold_waypoint_set(true);
     }
 
     if (mode_change())
@@ -129,7 +129,7 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
     {
         print_util_dbg_print("Starting automatic take-off from button\r\n");
         takeoff_handler->navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
-        takeoff_handler->hold_waypoint_set_ = false;
+        takeoff_handler->mission_planner.set_hold_waypoint_set(false);
 
         result = MAV_RESULT_ACCEPTED;
     }

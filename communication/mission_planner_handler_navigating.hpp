@@ -92,8 +92,10 @@ protected:
     /**
      * \brief   Drives the GPS navigation procedure
      *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
      */
-    void waypoint_navigating_handler(bool reset_hold_wpt);
+    void waypoint_navigating_handler(Mission_planner& mission_planner, bool reset_hold_wpt);
 
     /**
      * \brief   Start/Stop the navigation

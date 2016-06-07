@@ -120,6 +120,9 @@ public:
 
     waypoint_local_struct_t waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
 
+    void set_hold_waypoint_set(bool hold_waypoint_set);
+    bool hold_waypoint_set();
+
 protected:
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint

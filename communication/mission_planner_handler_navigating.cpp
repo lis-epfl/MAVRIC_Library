@@ -53,7 +53,7 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_planner::waypoint_navigating_handler(bool reset_hold_wpt)
+void Mission_planner::waypoint_navigating_handler(Mission_planner& mission_planner, bool reset_hold_wpt)
 {
     if (!reset_hold_wpt)
     {
@@ -61,7 +61,7 @@ void Mission_planner::waypoint_navigating_handler(bool reset_hold_wpt)
         {
             navigation_.dubin_state = DUBIN_INIT;
         }
-        hold_waypoint_set_ = false;
+        mission_planner.set_hold_waypoint_set(false);
     }
 
     if (state_.nav_plan_active)
@@ -182,10 +182,10 @@ void Mission_planner::waypoint_navigating_handler(bool reset_hold_wpt)
     }
     else
     {
-        if (!hold_waypoint_set_)
+        if (!mission_planner.hold_waypoint_set())
         {
             hold_init(position_estimation_.local_position);
-            hold_waypoint_set_ = true;
+            mission_planner.set_hold_waypoint_set(true);
         }
     }
 }

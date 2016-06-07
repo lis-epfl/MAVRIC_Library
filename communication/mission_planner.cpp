@@ -720,3 +720,13 @@ void Mission_planner::send_nav_time(const Mavlink_stream* mavlink_stream_, mavli
                                      "travel_time_",
                                      travel_time_);
 }
+
+void Mission_planner::set_hold_waypoint_set(bool hold_waypoint_set)
+{
+    hold_waypoint_set_ = hold_waypoint_set;
+}
+
+bool Mission_planner::hold_waypoint_set()
+{
+    return hold_waypoint_set_;
+}
