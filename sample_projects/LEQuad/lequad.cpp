@@ -86,6 +86,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     state(mavlink_communication.mavlink_stream(), battery, config.state_config),
     scheduler(Scheduler::default_config()),
     mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
+    neighbors(position_estimation, state, mavlink_communication.mavlink_stream(), config.neighbors_config),
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
@@ -97,24 +98,26 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     sysid_(mavlink_communication.sysid()),
     config_(config)
 {
+    init_success = true;
     // Init main task first
-    init_main_task();
+    init_success &= init_main_task();
 
     // Init all modules
-    init_state();
-    init_communication();
-    init_data_logging();
-    init_gps();
-    init_imu();
-    init_barometer();
-    init_sonar();
-    init_attitude_estimation();
-    init_position_estimation();
-    init_stabilisers();
-    init_navigation();
-    init_hud();
-    init_servos();
-    init_ground_control();
+    init_success &= init_state();
+    init_success &= init_communication();
+    init_success &= init_data_logging();
+    init_success &= init_gps();
+    init_success &= init_imu();
+    init_success &= init_barometer();
+    init_success &= init_sonar();
+    init_success &= init_attitude_estimation();
+    init_success &= init_position_estimation();
+    init_success &= init_stabilisers();
+    init_success &= init_navigation();
+    init_success &= init_neighbors();
+    init_success &= init_hud();
+    init_success &= init_servos();
+    init_success &= init_ground_control();
 }
 
 
@@ -141,6 +144,11 @@ void LEQuad::loop(void)
     {
         scheduler.update();
     }
+}
+
+bool LEQuad::is_success(void)
+{
+    return init_success;
 }
 
 // -------------------------------------------------------------------------
@@ -459,6 +467,19 @@ bool LEQuad::init_navigation(void)
     return ret;
 }
 
+
+
+bool LEQuad::init_neighbors(void)
+{
+    bool ret = true;
+
+    ret &= neighbors_telemetry_init(   &neighbors,
+                                       mavlink_communication.p_message_handler());
+
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Neighbors::update,               (Scheduler_task::task_argument_t)&neighbors,       Scheduler_task::PRIORITY_LOW);
+
+    return ret;
+}
 
 // -------------------------------------------------------------------------
 // HUD

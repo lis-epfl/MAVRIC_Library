@@ -45,6 +45,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "automatic_navigation/navigation.hpp"
+#include "automatic_navigation/vector_field_waypoint.hpp"
 
 #include "communication/data_logging.hpp"
 #include "communication/hud_telemetry.hpp"
@@ -52,6 +54,7 @@
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
+#include "communication/neighbor_selection.hpp"
 #include "communication/onboard_parameters.hpp"
 #include "communication/state.hpp"
 #include "communication/state_machine.hpp"
@@ -60,14 +63,12 @@
 #include "control/altitude_controller.hpp"
 #include "control/attitude_controller_default_config.hpp"
 #include "control/manual_control.hpp"
-#include "control/navigation.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
 #include "control/stabilisation_copter.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/velocity_controller_copter_default_config.hpp"
-#include "control/vector_field_waypoint.hpp"
 
 #include "drivers/battery.hpp"
 #include "drivers/gps.hpp"
@@ -115,6 +116,7 @@ public:
         data_logging_conf_t data_logging_stat_config;
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
+        Neighbors::conf_t neighbors_config;
         Navigation::conf_t navigation_config;
         Mavlink_waypoint_handler::conf_t waypoint_handler_config;
         qfilter_conf_t qfilter_config;
@@ -182,6 +184,7 @@ protected:
     virtual bool init_position_estimation(void);
     virtual bool init_stabilisers(void);
     virtual bool init_navigation(void);
+    virtual bool init_neighbors(void);
     virtual bool init_hud(void);
     virtual bool init_servos(void);
     virtual bool init_ground_control(void);
@@ -217,6 +220,8 @@ protected:
     Scheduler scheduler;
     Mavlink_communication mavlink_communication;
 
+    Neighbors neighbors;
+
     servos_mix_quadcotper_diag_t servo_mix;
 
     ahrs_t ahrs;                                                ///< The attitude estimation structure
@@ -246,6 +251,11 @@ protected:
 
     uint8_t sysid_;    ///< System ID
     conf_t config_;    ///< Configuration
+
+    bool is_success(void);
+
+  private:
+    bool init_success;
 };
 
 
@@ -261,7 +271,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.scheduler_config = Scheduler::default_config();
 
     conf.navigation_config = Navigation::default_config();
-
+    
     conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
 
     conf.qfilter_config = qfilter_default_config();
@@ -271,6 +281,8 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.position_estimation_config = Position_estimation::default_config();
 
     conf.stabilisation_copter_config = stabilisation_copter_default_config();
+
+    conf.neighbors_config = Neighbors::default_config();
 
     conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
 

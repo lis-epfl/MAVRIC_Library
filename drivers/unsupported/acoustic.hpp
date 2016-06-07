@@ -48,7 +48,7 @@
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "control/stabilisation_copter.hpp"
-#include "control/navigation.hpp"
+#include "automatic_navigation/navigation.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/remote.hpp"
 

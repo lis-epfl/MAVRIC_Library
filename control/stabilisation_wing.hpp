@@ -43,7 +43,7 @@
 #ifndef STABILISATION_WING_H_
 #define STABILISATION_WING_H_
 
-#include "control/navigation.hpp"
+#include "automatic_navigation/navigation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/position_estimation.hpp"
 #include "drivers/airspeed_analog.hpp"

@@ -50,7 +50,7 @@
 #include "communication/state.hpp"
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
-#include "control/navigation.hpp"
+#include "automatic_navigation/navigation.hpp"
 #include "control/dubin.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list

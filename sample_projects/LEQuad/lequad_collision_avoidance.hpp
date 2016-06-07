@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file lequad_dronedome.hpp
+ * \file lequad_collision_avoidance.hpp
  *
  * \author MAV'RIC Team
  *
@@ -39,64 +39,46 @@
  ******************************************************************************/
 
 
-#ifndef LEQUAD_DRONEDOME_HPP_
-#define LEQUAD_DRONEDOME_HPP_
+#ifndef LEQUAD_COLLISION_AVOIDANCE_HPP_
+#define LEQUAD_COLLISION_AVOIDANCE_HPP_
 
 #include "sample_projects/LEQuad/lequad.hpp"
-#include "drivers/gps_mocap.hpp"
+#include "automatic_navigation/collision_avoidance.hpp"
 
 /**
  * \brief Central data for indoor use
  */
-class LEQuad_dronedome: public LEQuad
+class LEQuad_collision_avoidance: public LEQuad
 {
 public:
-    /**
-     * \brief   Constructor
-     */
-    LEQuad_dronedome( Imu& imu,
-                      Barometer& barometer,
-                      Gps& gps,
-                      Sonar& sonar,
-                      Serial& serial_mavlink,
-                      Satellite& satellite,
-                      Led& led,
-                      File& file_flash,
-                      Battery& battery,
-                      Servo& servo_0,
-                      Servo& servo_1,
-                      Servo& servo_2,
-                      Servo& servo_3,
-                      Servo& servo_4,
-                      Servo& servo_5,
-                      Servo& servo_6,
-                      Servo& servo_7,
-                      File& file1,
-                      File& file2,
-                      LEQuad::conf_t config = LEQuad::default_config() ):
-          LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
-                     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
-                     file1, file2, config),
-          gps_mocap_(mavlink_communication.message_handler())
-      {};
+  /**
+   * \brief   Constructor
+   */
+  LEQuad_collision_avoidance( Imu& imu,
+                    Barometer& barometer,
+                    Gps& gps,
+                    Sonar& sonar,
+                    Serial& serial_mavlink,
+                    Satellite& satellite,
+                    Led& led,
+                    File& file_flash,
+                    Battery& battery,
+                    Servo& servo_0,
+                    Servo& servo_1,
+                    Servo& servo_2,
+                    Servo& servo_3,
+                    Servo& servo_4,
+                    Servo& servo_5,
+                    Servo& servo_6,
+                    Servo& servo_7,
+                    File& file1,
+                    File& file2,
+                    LEQuad::conf_t config = LEQuad::default_config() );
 
-      /**
-       * \brief   Initialisation
-       * \return [description]
-       */
-      bool init(void)
-      {
-        bool success = LEQuad::is_success();
+  virtual bool init_navigation(void);
 
-        success &= gps_mocap_.init();
-        print_util_dbg_init_msg("[GPS_MOCAP]", success);
-
-        return success;
-      }
-
-private:
-    Gps_mocap gps_mocap_;
+  Collision_avoidance collision_avoidance;
 };
 
 
-#endif /* LEQUAD_DRONEDOME_HPP_ */
+#endif /* LEQUAD_COLLISION_AVOIDANCE_HPP_ */
