@@ -139,6 +139,7 @@ int main(void)
                         board.servo_7,
                         file_log,
                         file_stat,
+                        board.i2c1,
                         mav_config );
 
     // -------------------------------------------------------------------------

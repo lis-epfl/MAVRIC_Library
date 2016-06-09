@@ -48,6 +48,9 @@
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "control/servos_mix_6dof.hpp"
 
+#include "drivers/px4flow_i2c.hpp"
+#include "hal/common/time_keeper.hpp"
+
 /**
  * \brief MAV class
  */
@@ -95,21 +98,61 @@ public:
             Servo& servo_7,
             File& file1,
             File& file2,
+            I2c& flow_i2c,
             const conf_t& config = default_config()):
         LEQuad(imu, barometer, gps, sonar, serial_mavlink, satellite, led, file_flash, battery,
               servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
               file1, file2, config.lequad_config),
         servos_mix_(command.torque, command.thrust3D,
                     std::array<Servo*, 6>{{&servo_0, &servo_1, &servo_2, &servo_3, &servo_4, &servo_5}},
-                    config.servos_mix_config)
-    {};
+                    config.servos_mix_config),
+        bottom_flow_(flow_i2c, Px4flow_i2c::default_config())
+    {
+        init_flow();
+    };
 
 
 protected:
+    bool init_flow(void);
+
     virtual bool main_task(void);
+
+
     Servos_mix_6dof<6> servos_mix_;
+
+    Px4flow_i2c bottom_flow_;
 };
 
+
+void flow_telemetry_send(const Px4flow_i2c* flow, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+  mavlink_msg_optical_flow_pack( mavlink_stream->sysid(),
+                                 mavlink_stream->compid(),
+                                 msg,
+                                 time_keeper_get_us(),
+                                 0,       // uint8_t sensor_id,
+                                 10.0f * flow->flow_x(),
+                                 10.0f * flow->flow_y(),
+                                 flow->velocity_x(),
+                                 flow->velocity_y(),
+                                 flow->flow_quality(),
+                                 flow->ground_distance());
+}
+
+
+bool Hexhog::init_flow(void)
+{
+    bool ret = true;
+
+    // DOWN telemetry
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_OPTICAL_FLOW,  100000, (Mavlink_communication::send_msg_function_t)&flow_telemetry_send, &bottom_flow_);
+
+    // Task
+    ret &= scheduler.add_task(20000, (Scheduler_task::task_function_t)&Px4flow_i2c::update_task, (Scheduler_task::task_argument_t)&bottom_flow_);
+    // ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Px4flow_i2c::update_task, (Scheduler_task::task_argument_t)&bottom_flow_);
+
+    return ret;
+}
 
 bool Hexhog::main_task(void)
 {
