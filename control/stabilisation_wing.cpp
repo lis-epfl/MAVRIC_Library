@@ -48,7 +48,6 @@ extern "C"
 #include "util/constants.h"
 }
 
-#include <iostream>
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -162,9 +161,10 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         }
 
         // Compute current heading
-        gps_speed_global[X] = stabilisation_wing->gps->velocity_lf()[0];
-        gps_speed_global[Y] = stabilisation_wing->gps->velocity_lf()[1];
-        gps_speed_global[Z] = stabilisation_wing->pos_est->vel[Z];
+        gps_speed_global[X] = stabilisation_wing->gps->velocity_lf()[X];
+        gps_speed_global[Y] = stabilisation_wing->gps->velocity_lf()[Y];
+        gps_speed_global[Z] = stabilisation_wing->gps->velocity_lf()[Z];
+        //gps_speed_global[Z] = stabilisation_wing->pos_est->vel[Z];
 
         // Transform global to semi-local
         attitude_yaw.rpy[0] = 0.0f;
@@ -173,11 +173,10 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
         quaternions_rotate_vector(q_rot, gps_speed_global, gps_speed_semi_local);
 
-        current_heading = heading_from_velocity_vector(gps_speed_semi_local);//-attitude_yaw.rpy[2];//gps_speed_global);//
+        current_heading = -attitude_yaw.rpy[2];// heading_from_velocity_vector(gps_speed_global);//gps_speed_semi_local);//-attitude_yaw.rpy[2];//gps_speed_global);//
 
         // Compute heading error
         heading_error = maths_calc_smaller_angle(nav_heading - current_heading);
-        printf("Current heading: %f\n", current_heading*180.0f/PI);
 
         ///////////////
         // PID INPUT //
@@ -186,14 +185,12 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         airspeed_desired = sqrtf(input.tvel[X]*input.tvel[X] + input.tvel[Y]*input.tvel[Y]);
 
 
-        stabilisation_wing->airspeed_analog->update();
+        //stabilisation_wing->airspeed_analog->update();
         // Compute errors
         rpyt_errors[0] = heading_error;                                                             // Heading
         rpyt_errors[1] = input.tvel[Z] - gps_speed_global[Z];                                       // Vertical speed
         rpyt_errors[2] = 0.0f;
-        rpyt_errors[3] = airspeed_desired - stabilisation_wing->airspeed_analog->get_airspeed();    // Airspeed
-
-        printf("Errors: %f, %f, %f\n", rpyt_errors[0], rpyt_errors[1], rpyt_errors[3]);
+        rpyt_errors[3] = airspeed_desired - stabilisation_wing->pos_est->vel_bf[X];//TODO verify this//stabilisation_wing->airspeed_analog->get_airspeed();    // Airspeed
 
         // Compute the feedforward
         feedforward[0] = 0.0f;
@@ -204,7 +201,6 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         // run PID update on all velocity controllers
         stabilisation_run_feedforward(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->ahrs->dt_s, rpyt_errors, feedforward);
         //stabilisation_run(&stabilisation_wing->stabiliser_stack.velocity_stabiliser, stabilisation_wing->ahrs->dt_s, rpyt_errors);
-        printf("Gains: %f, %f, %f\n",stabilisation_wing->stabiliser_stack.velocity_stabiliser.rpy_controller[0].p_gain,stabilisation_wing->stabiliser_stack.velocity_stabiliser.rpy_controller[1].p_gain,stabilisation_wing->stabiliser_stack.velocity_stabiliser.rpy_controller[2].p_gain);
 
         ////////////////
         // PID OUTPUT //
@@ -219,7 +215,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         }
         else
         {
-            input_roll_angle = clipping_factor * atanf( (1.0f/clipping_factor) * (stabilisation_wing->airspeed_analog->get_airspeed() * input_turn_rate / 9.81f) );
+            input_roll_angle = clipping_factor * atanf( (1.0f/clipping_factor) * (stabilisation_wing->pos_est->vel_bf[X] * input_turn_rate / 9.81f) );//TODO verify this: stabilisation_wing->pos_est->vel_bf[X] =?= stabilisation_wing->airspeed_analog->get_airspeed()
         }
 
         // Set input for next layer
@@ -227,8 +223,6 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         input.rpy[0] = input_roll_angle;
         input.rpy[1] = - stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.rpy[1];
         input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
-
-        printf("Attitude commands: %f, %f, %f, %f\n", input.rpy[0], input.rpy[1], input.rpy[2], input.thrust);
 
         // Overwrite the commands during different key phases (take-off and landing)
         if(stabilisation_wing->navigation->internal_state_ == Navigation::NAV_TAKEOFF)

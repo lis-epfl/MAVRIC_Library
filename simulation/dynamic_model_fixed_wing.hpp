@@ -278,8 +278,8 @@ static inline dynamic_model_fixed_wing_conf_t dynamic_model_fixed_wing_default_c
     conf.rotor_cd               = 0.03f;                ///< Coefficient of drag of rotor blade
     conf.rotor_cl               = 1.0f;                 ///< Coefficient of lift of rotor blade
     conf.rotor_diameter         = 0.14f;                ///< Mean "effective" rotor diameter
-    conf.rotor_foil_area        = 0.18f * 0.015f;       ///< Area of the propeller blades in m^2
-    conf.rotor_pitch            = 0.15f;                ///< Rotor pitch in m/revolution (7x6" roughly 0.15m)
+    conf.rotor_foil_area        = 0.15f * 0.015f;       ///< Area of the propeller blades in m^2
+    conf.rotor_pitch            = 0.125f;                ///< Rotor pitch in m/revolution (7x6" roughly 0.15m)
     conf.total_mass             = 0.4f;                ///< Vehicle mass in kg
     conf.roll_momentum          = 49769.5f/(1000.0f*1000.0f);///< Angular momentum constants (in kg/m^2)
     conf.pitch_momentum         = 11685.9f/(1000.0f*1000.0f);///< Angular momentum constants (in kg/m^2)

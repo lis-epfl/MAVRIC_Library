@@ -50,8 +50,6 @@ extern "C"
 #include <stdbool.h>
 }
 
-#include <iostream>
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -196,7 +194,6 @@ Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream,
 bool Mavlink_message_handler::add_msg_callback(msg_callback_t* msg_callback)
 {
     bool add_callback_success = true;
-    printf("Callback creation. -> %x, %d\r\n",msg_callback->function, msg_callback->message_id);
     if (msg_callback == NULL)
     {
         print_util_dbg_print("[MESSAGE HANDLER] Error: null pointer.\r\n");
