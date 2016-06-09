@@ -84,8 +84,6 @@
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/position_estimation.hpp"
-#include "sensing/posvel.hpp"
-#include "sensing/posvel_kf.hpp"
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
 
@@ -231,9 +229,6 @@ protected:
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
-
-    posvel_t posvel_;
-    Posvel_kf posvel_kf_;
 
     Navigation navigation;                                      ///< The structure to perform GPS navigation
     Mavlink_waypoint_handler waypoint_handler;

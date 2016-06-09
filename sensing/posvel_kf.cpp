@@ -54,6 +54,7 @@
 Posvel_kf::Posvel_kf(const Gps& gps,
                      const Barometer& barometer,
                      const Sonar& sonar,
+                     const Px4flow_i2c& flow,
                      const ahrs_t& ahrs,
                      posvel_t& posvel,
                      const conf_t config):
@@ -67,7 +68,7 @@ Posvel_kf::Posvel_kf(const Gps& gps,
                     0, 0, 0, 0, 0,         1,         0,         0,
                     0, 0, 0, 0, 0,         0,         1,         0,
                     0, 0, 0, 0, 0,         0,         0,         1},                                // F
-                  Mat<8,8>({0.01f, true}),                                                          // Q  TODO: FIX
+                  Mat<8,8>(Mat<8,8>(0.01f) + Mat<8,8>(0.1f,true)),                                                          // Q  TODO: FIX
                   { 1, 0, 0, 0, 0, 0, 0, 0,
                     0, 1, 0, 0, 0, 0, 0, 0,
                     0, 0, 1, 0, 0, 0, 0, 0 },                                                       // H1
@@ -85,6 +86,7 @@ Posvel_kf::Posvel_kf(const Gps& gps,
     gps_(gps),
     barometer_(barometer),
     sonar_(sonar),
+    flow_(flow),
     ahrs_(ahrs),
     posvel_(posvel),
     config_(config),
@@ -98,8 +100,15 @@ Posvel_kf::Posvel_kf(const Gps& gps,
     R_baro_({10.0f}),
     H_sonar_({0, 0, 1, -1, 0, 0, 0, 0}),
     R_sonar_({0.01f}),
+    H_flow_({0, 0, 0,  0, 1, 0, 0, 0,
+             0, 0, 0,  0, 0, 1, 0, 0,
+             0, 0, 1, -1, 0, 0, 0, 0}),
+    R_flow_({ 0.1f, 0,    0,
+              0,    0.1f, 0,
+              0,    0,    0.01f}),
     last_accel_update_s_(0.0f),
     last_sonar_update_s_(0.0f),
+    last_flow_update_s_(0.0f),
     last_baro_update_s_(0.0f),
     last_gps_pos_update_s_(0.0f),
     last_gps_vel_update_s_(0.0f)
@@ -187,10 +196,29 @@ bool Posvel_kf::update(void)
        }
     }
 
+    //if (flow.healthy())
+    {
+        if (last_flow_update_s_ < flow_.last_update_s())
+        {
+            // run kalman update on velocity
+            float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
+            float vel_lf[3];
+            quaternions_rotate_vector(quaternions_inverse(ahrs_.qe), vel_bf, vel_lf);
+            // Kalman<8,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
+            Kalman<8,3,3>::update(Mat<3,1>({vel_bf[0], vel_bf[1], flow_.ground_distance()}),
+                                  H_flow_,
+                                  R_flow_);
+
+            // Update timing
+            last_flow_update_s_ = flow_.last_update_s();
+        }
+
+    }
+
     // Write output
     posvel_.pos[0] = x_[0];
     posvel_.pos[1] = x_[1];
-    posvel_.pos[2] = x_[2];
+    posvel_.pos[2] = x_[2] - x_[3];
     posvel_.vel[0] = x_[4];
     posvel_.vel[1] = x_[5];
     posvel_.vel[2] = x_[6];

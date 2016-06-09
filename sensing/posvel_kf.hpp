@@ -47,6 +47,7 @@
 #include "drivers/gps.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
+#include "drivers/px4flow_i2c.hpp"
 #include "sensing/ahrs.h"
 #include "sensing/posvel.hpp"
 
@@ -125,6 +126,7 @@ public:
     Posvel_kf(const Gps& gps,
               const Barometer& barometer,
               const Sonar& sonar,
+              const Px4flow_i2c& flow,
               const ahrs_t& ahrs,
               posvel_t& posvel,
               const conf_t config = default_config() );
@@ -153,8 +155,9 @@ private:
     const Gps&          gps_;             ///< Gps (input)
     const Barometer&    barometer_;       ///< Barometer (input)
     const Sonar&        sonar_;           ///< Sonar, must be downward facing (input)
+    const Px4flow_i2c&  flow_;            ///< Optical flow sensor (input)
     const ahrs_t&       ahrs_;            ///< Attitude and acceleration (input)
-    posvel_t&           posvel_;        ///< Estimated altitude (output)
+    posvel_t&           posvel_;          ///< Estimated altitude (output)
 
     conf_t config_;                      ///< Configuration
 
@@ -164,9 +167,12 @@ private:
     Mat<1,1> R_baro_;
     Mat<1,8> H_sonar_;
     Mat<1,1> R_sonar_;
+    Mat<3,8> H_flow_;
+    Mat<3,3> R_flow_;
 
     float last_accel_update_s_;          ///< Last time we updated the estimate using accelerometer
     float last_sonar_update_s_;          ///< Last time we updated the estimate using sonar
+    float last_flow_update_s_;           ///< Last time we updated the estimate using optical flow
     float last_baro_update_s_;           ///< Last time we updated the estimate using barometer
     float last_gps_pos_update_s_;        ///< Last time we updated the estimate using gps position
     float last_gps_vel_update_s_;        ///< Last time we updated the estimate using gps velocity
