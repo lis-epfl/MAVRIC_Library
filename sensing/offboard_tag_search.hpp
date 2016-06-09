@@ -190,13 +190,15 @@ public:
     Mavlink_waypoint_handler_tag& waypoint_handler();
     const int offboard_threads() const;
     const local_position_t position_at_photo(int index) const;
+    const ahrs_t ahrs_at_photo(int index) const;
     void set_position_at_photo(int index);
 protected:
     Offboard_Tag_Search();
 
     static const int offboard_threads_ = 1;                 ///< The number of threads that can be running on the offboard computer
     local_position_t position_at_photo_[offboard_threads_]; ///< The local position when the photo was taken
-
+    ahrs_t ahrs_at_photo_[offboard_threads_];               ///< The ahrs vector when the photo was taken
+    
     offboard_tag_search_conf_t conf_;                       ///< The configuration of the offboard tag search object
     bool is_camera_running_;                                ///< States whether the camera should be running
     bool has_camera_state_changed_;                         ///< Boolean flag stating if the state has changed and should be send to the camera
