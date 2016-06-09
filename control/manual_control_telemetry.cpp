@@ -146,7 +146,7 @@ void manual_control_telemetry_send(const Manual_control* manual_control, const M
                                                 manual_control->remote.channels[5] * 10000.0f,
                                                 manual_control->remote.channels[6] * 10000.0f,
                                                 manual_control->remote.channels[7] * 10000.0f,
-                                                manual_control->remote.mode.current_desired_mode);
+                                                manual_control->remote.mode.current_desired_mode.bits());
             mavlink_stream->send(msg);
             mavlink_msg_rc_channels_scaled_pack(mavlink_stream->sysid(),
                                                 mavlink_stream->compid(),

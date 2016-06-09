@@ -39,11 +39,13 @@
  ******************************************************************************/
 
 #include "boards/mavrinux.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "drivers/airspeed_analog.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
+
 }
 
 
@@ -61,11 +63,15 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
     servo_3(pwm_3, servo_default_config_esc()),
   	servo_4(pwm_4, servo_default_config_esc()),
   	servo_5(pwm_5, servo_default_config_esc()),
+    servo_6(pwm_6, servo_default_config_esc()),
+    servo_7(pwm_7, servo_default_config_esc()),
     dynamic_model(servo_0, servo_1, servo_2, servo_3, config.dynamic_model_config),
     sim(dynamic_model),
     imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer(), config.imu_config),
     adc_battery(12.34f),
     battery(adc_battery),
+    adc_airspeed(12.0f),
+    airspeed_analog(adc_airspeed,airspeed_analog_default_config()),
     spektrum_satellite(dsm_serial, dsm_receiver_pin, dsm_power_pin),
     led(),
     mavlink_serial(config.serial_udp_config),

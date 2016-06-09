@@ -106,10 +106,10 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
         print_util_dbg_print("internal_state = NAV_LAND_ON_TAG\r\n");
 
         // Set hold position point and set tag location
-        waypoint_handler->waypoint_hold_coordinates.pos[0] = waypoint_handler->position_estimation_.local_position.pos[0];
-        waypoint_handler->waypoint_hold_coordinates.pos[1] = waypoint_handler->position_estimation_.local_position.pos[1];
+        waypoint_handler->waypoint_hold_coordinates.waypoint.pos[0] = waypoint_handler->position_estimation_.local_position.pos[0];
+        waypoint_handler->waypoint_hold_coordinates.waypoint.pos[1] = waypoint_handler->position_estimation_.local_position.pos[1];
         waypoint_handler->tag_search_altitude_ = -10.0f;
-        waypoint_handler->waypoint_hold_coordinates.pos[2] = waypoint_handler->tag_search_altitude_;
+        waypoint_handler->waypoint_hold_coordinates.waypoint.pos[2] = waypoint_handler->tag_search_altitude_;
         waypoint_handler->offboard_tag_search_.tag_location().pos[0] = 0.0f;
         waypoint_handler->offboard_tag_search_.tag_location().pos[1] = 0.0f;
         waypoint_handler->offboard_tag_search_.tag_location().pos[2] = 0.0f;
@@ -154,19 +154,19 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
         float horizontal_distance_to_tag_sqr = (cur_pos[0] - tag_pos[0]) * (cur_pos[0] - tag_pos[0]) + (cur_pos[1] - tag_pos[1]) * (cur_pos[1] - tag_pos[1]);
 
         // Set hold location to tag location
-        waypoint_hold_coordinates.pos[0] = offboard_tag_search_.tag_location().pos[0];
-        waypoint_hold_coordinates.pos[1] = offboard_tag_search_.tag_location().pos[1];
+        waypoint_hold_coordinates.waypoint.pos[0] = offboard_tag_search_.tag_location().pos[0];
+        waypoint_hold_coordinates.waypoint.pos[1] = offboard_tag_search_.tag_location().pos[1];
 
         // If we are not above tag
         if (horizontal_distance_to_tag_sqr > offboard_tag_search_.allowable_horizontal_tag_offset_sqr())
         {
             // Stay at tag search altitude
-            waypoint_hold_coordinates.pos[2] = tag_search_altitude_;
+            waypoint_hold_coordinates.waypoint.pos[2] = tag_search_altitude_;
 
         }
         else // Descend to ground
         {
-            waypoint_hold_coordinates.pos[2] = 0.0f;
+            waypoint_hold_coordinates.waypoint.pos[2] = 0.0f;
 
             // Set tag search altitude to current height, so it will reposition itself at this altitude if it drifts away
             tag_search_altitude_ = navigation_.alt_lpf;
@@ -221,7 +221,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
 
 void Mavlink_waypoint_handler_tag::state_machine()
 {
-    mav_mode_t mode_local = state_.mav_mode();
+    Mav_mode mode_local = state_.mav_mode();
 
     // Check if it is land on tag state
     if (navigation_.internal_state_ == Navigation::NAV_LAND_ON_TAG)
@@ -239,7 +239,7 @@ void Mavlink_waypoint_handler_tag::state_machine()
         print_util_dbg_print("\r\n");
         */
 
-        if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
+        if ((!mode_local.is_auto()) && (!mode_local.is_guided()))
         {
             navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
         }

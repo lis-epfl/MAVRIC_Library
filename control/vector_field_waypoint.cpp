@@ -439,22 +439,24 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* pos_est, velocity_command_t* velocity_command)
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* pos_est, velocity_command_t* velocity_command)
 {
     // Init dependencies
     vector_field->waypoint_handler  = waypoint_handler;
     vector_field->pos_est           = pos_est;
     vector_field->velocity_command  = velocity_command;
+
+    return true;
 }
 
 
-void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
+bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 {
     float tmp_vector[3];
     float pos_obj[3];
 
     // Re-init velocity command
-    vector_field->velocity_command->mode    = VELOCITY_COMMAND_MODE_GLOBAL;
+    vector_field->velocity_command->mode    = VELOCITY_COMMAND_MODE_LOCAL;
     vector_field->velocity_command->xyz[X]  = 0.0f;
     vector_field->velocity_command->xyz[Y]  = 0.0f;
     vector_field->velocity_command->xyz[Z]  = 0.0f;
@@ -543,4 +545,6 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
         vector_field->velocity_command->xyz[Y] = 5.0f * vector_field->velocity_command->xyz[Y] / vel_norm;
         vector_field->velocity_command->xyz[Z] = 5.0f * vector_field->velocity_command->xyz[Z] / vel_norm;
     }
+
+    return true;
 }

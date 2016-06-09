@@ -30,23 +30,20 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file central_data.h
+ * \file lequad.hpp
  *
  * \author MAV'RIC Team
  *
- * \brief Place where the central data is stored and initialized
+ * \brief MAV class
  *
  ******************************************************************************/
 
 
-#ifndef CENTRAL_DATA_H_
-#define CENTRAL_DATA_H_
+#ifndef LEQUAD_HPP_
+#define LEQUAD_HPP_
 
 #include <stdbool.h>
 #include <stdint.h>
-
-
-
 
 
 #include "communication/data_logging.hpp"
@@ -82,9 +79,7 @@
 
 #include "simulation/simulation.hpp"
 
-
 #include "sensing/ahrs_ekf.hpp"
-//#include "sensing/ahrs_ekf_default_config.hpp"
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/position_estimation.hpp"
@@ -94,7 +89,6 @@
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "sensing/ahrs.h"
 #include "sensing/altitude.h"
 #include "control/pid_controller.h"
@@ -107,13 +101,13 @@ extern "C"
 
 
 /**
- * \brief The central data structure
+ * \brief MAV class
  */
-class Central_data
+class LEQuad
 {
 public:
     /**
-     * \brief   Configuration of the module central data module
+     * \brief   Configuration structure
      */
      struct conf_t
     {
@@ -123,6 +117,7 @@ public:
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
         Navigation::conf_t navigation_config;
+        Mavlink_waypoint_handler::conf_t waypoint_handler_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
         Position_estimation::conf_t position_estimation_config;
@@ -147,7 +142,7 @@ public:
     /**
      * \brief   Constructor
      */
-    Central_data( Imu& imu,
+    LEQuad( Imu& imu,
                   Barometer& barometer,
                   Gps& gps,
                   Sonar& sonar,
@@ -161,21 +156,46 @@ public:
                   Servo& servo_1,
                   Servo& servo_2,
                   Servo& servo_3,
+                  Servo& servo_4,
+                  Servo& servo_5,
+                  Servo& servo_6,
+                  Servo& servo_7,
                   File& file1,
                   File& file2,
                   offboard_tag_search_conf_t& offboard_tag_search_conf,
                   const conf_t& config = default_config());
 
     /**
-     * \brief   Initialisation
-     * \return [description]
+     *  \brief    Main update function (infinite loop)
+     *  \details  Performs last operations before flight, then loops on scheduler updates
      */
-    bool init(void);
+    void loop(void);
 
+protected:
 
-    /**
-     * Public members
-     */
+    virtual bool init_main_task(void);
+    virtual bool init_state(void);
+    virtual bool init_communication(void);
+    virtual bool init_data_logging(void);
+    virtual bool init_gps(void);
+    virtual bool init_imu(void);
+    virtual bool init_barometer(void);
+    virtual bool init_sonar(void);
+    virtual bool init_attitude_estimation(void);
+    virtual bool init_position_estimation(void);
+    virtual bool init_stabilisers(void);
+    virtual bool init_navigation(void);
+    virtual bool init_hud(void);
+    virtual bool init_servos(void);
+    virtual bool init_ground_control(void);
+    virtual bool init_offboard_tag_search(void);
+
+    virtual bool main_task(void);
+    static inline bool main_task_func(LEQuad* mav)
+    {
+        return mav->main_task();
+    };
+
     Imu&            imu;                ///< Reference to IMU
     Barometer&      barometer;          ///< Reference to barometer
     Gps&            gps;                ///< Reference to GPS
@@ -190,8 +210,12 @@ public:
     Servo&          servo_1;            ///< Reference to servos structure
     Servo&          servo_2;            ///< Reference to servos structure
     Servo&          servo_3;            ///< Reference to servos structure
+    Servo&          servo_4;            ///< Reference to servos structure
+    Servo&          servo_5;            ///< Reference to servos structure
+    Servo&          servo_6;            ///< Reference to servos structure
+    Servo&          servo_7;            ///< Reference to servos structure
 
-    Manual_control manual_control;                            ///< The joystick parsing structure
+    Manual_control manual_control;                              ///< The joystick parsing structure
 
     State state;                                                ///< The structure with all state information
 
@@ -200,8 +224,6 @@ public:
     Mavlink_communication raspi_mavlink_communication;
 
     servos_mix_quadcotper_diag_t servo_mix;
-
-    qfilter_t attitude_filter;                                  ///< The qfilter structure
 
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
@@ -216,7 +238,7 @@ public:
 
     Mavlink_waypoint_handler_tag waypoint_handler;
 
-    State_machine state_machine;                              ///< The structure for the state machine
+    State_machine state_machine;                                ///< The structure for the state machine
 
     hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
     servos_telemetry_t servos_telemetry;
@@ -225,24 +247,16 @@ public:
     Data_logging    data_logging_stat;
 
     command_t                       command;
-    attitude_controller_t           attitude_controller;
-    velocity_controller_copter_t    velocity_controller;
-    vector_field_waypoint_t         vector_field_waypoint;
-
-    altitude_t                      altitude_;
-    Altitude_estimation             altitude_estimation_;
-    Altitude_controller             altitude_controller_;
 
     Offboard_Tag_Search offboard_tag_search;                          ///< The offboard camera control class reference
 
 private:
-    uint8_t sysid_;                 ///< System ID
-
+    uint8_t sysid_;    ///< System ID
     conf_t config_;    ///< Configuration
 };
 
 
-Central_data::conf_t Central_data::default_config(uint8_t sysid)
+LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 {
     conf_t conf                                                = {};
 
@@ -254,6 +268,8 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.scheduler_config = Scheduler::default_config();
 
     conf.navigation_config = Navigation::default_config();
+
+    conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
 
     conf.qfilter_config = qfilter_default_config();
 
@@ -274,13 +290,13 @@ Central_data::conf_t Central_data::default_config(uint8_t sysid)
     conf.velocity_controller_copter_config = velocity_controller_copter_default_config();
 
     /* Mavlink communication config */
-    Mavlink_communication::conf_t mavlink_communication_config = Mavlink_communication::default_config(sysid);
-    mavlink_communication_config.message_handler_config.debug = true;
+    Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);
+    mavlink_communication_config.message_handler_config.debug    = false;
     mavlink_communication_config.onboard_parameters_config.debug = true;
-    mavlink_communication_config.mavlink_stream_config.debug = true;
+    mavlink_communication_config.mavlink_stream_config.debug     = false;
     conf.mavlink_communication_config = mavlink_communication_config;
 
     return conf;
 };
 
-#endif /* CENTRAL_DATA_H_ */
+#endif /* LEQUAD_HPP_ */

@@ -30,83 +30,74 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file tasks.h
+ * \file lequad_dronedome.hpp
  *
  * \author MAV'RIC Team
  *
- * \brief Definition of the tasks executed on the autopilot
+ * \brief MAV class for indoor use
  *
  ******************************************************************************/
 
 
-#ifndef TASKS_H_
-#define TASKS_H_
+#ifndef LEQUAD_DRONEDOME_HPP_
+#define LEQUAD_DRONEDOME_HPP_
 
-#include "sample_projects/LEQuad/central_data.hpp"
-#include "hal/common/led.hpp"
-
-/**
- * \brief           Initialises all the tasks
- *
- * \return  The initialization status, succeed == true
- */
-bool tasks_create_tasks(Central_data* central_data);
-
+#include "sample_projects/LEQuad/lequad.hpp"
+#include "drivers/gps_mocap.hpp"
 
 /**
- * \brief            Updates the IMU
+ * \brief Central data for indoor use
  */
-void tasks_run_imu_update(Central_data* central_data);
+class LEQuad_dronedome: public LEQuad
+{
+public:
+    /**
+     * \brief   Constructor
+     */
+    LEQuad_dronedome( Imu& imu,
+                      Barometer& barometer,
+                      Gps& gps,
+                      Sonar& sonar,
+                      Serial& serial_mavlink,
+                      Satellite& satellite,
+                      Led& led,
+                      File& file_flash,
+                      Battery& battery,
+                      Servo& servo_0,
+                      Servo& servo_1,
+                      Servo& servo_2,
+                      Servo& servo_3,
+                      Servo& servo_4,
+                      Servo& servo_5,
+                      Servo& servo_6,
+                      Servo& servo_7,
+                      File& file1,
+                      File& file2,
+                      LEQuad::conf_t config = LEQuad::default_config() ):
+          LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
+                     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
+                     file1, file2, config),
+          gps_mocap_(mavlink_communication.message_handler())
+      {};
+
+      /**
+       * \brief   Initialisation
+       * \return [description]
+       */
+      bool init(void)
+      {
+          bool success = LEQuad::init();
+
+          bool ret = gps_mocap_.init();
+          print_util_dbg_init_msg("[GPS_MOCAP]", ret);
+          success &= ret;
+
+          return success;
+      }
+
+private:
+    Gps_mocap gps_mocap_;
+};
 
 
-/**
- * \brief               This function does bullshit
- * \details             1) Switch on/off the motor
- *                      2) Check the receivers
- *
- * \param   chan_switch The pointer to set the switch mode
- * \param   rc_check    The pointer to the state of the remote
- * \param   motorstate  The pointer to the motor state
- */
-void tasks_rc_user_channels(uint8_t* chan_switch, signal_quality_t* rc_check, int8_t* motor_state);
-
-
-/**
- * \brief            Run the main stabilisation loop
- */
-bool tasks_run_stabilisation(Central_data* central_data);
-
-
-/**
- * \brief            Run GPS update
- */
-bool tasks_run_gps_update(Central_data* central_data);
-
-
-/**
- * \brief            Run the navigation task
- */
-bool tasks_run_navigation_update(Central_data* central_data);
-
-
-/**
- * \brief            Run the barometer task
- */
-bool tasks_run_barometer_update(Central_data* central_data);
-
-/**
- * \brief            Run the sonar task
- */
-bool sonar_update(Central_data* central_data);
-
-/**
- * \brief            Run the LED toggle task
- */
-bool tasks_led_toggle(Led* led);
-
-/**
- * \brief            Run the data_logging task
- */
-bool tasks_data_logging_update(Central_data* central_data);
-
-#endif /* TASKS_H_ */
+#endif /* LEQUAD_DRONEDOME_HPP_ */

@@ -45,6 +45,7 @@
 #include "drivers/spektrum_satellite.hpp"
 #include "drivers/battery.hpp"
 #include "drivers/servo.hpp"
+#include "drivers/airspeed_analog.hpp"
 
 #include "hal/stm32/gpio_stm32.hpp"
 #include "hal/stm32/serial_stm32.hpp"
@@ -129,6 +130,8 @@ public:
     Spektrum_satellite  spektrum_satellite;
     Adc_dummy           adc_battery;
     Battery             battery;
+    Adc_dummy           adc_airspeed;
+    Airspeed_analog     airspeed_analog;
     Pwm_stm32           pwm_0;
     Pwm_stm32           pwm_1;
     Pwm_stm32           pwm_2;
