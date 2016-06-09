@@ -41,8 +41,6 @@
 
 
 #include "sensing/offboard_tag_search.hpp"
-#include "sample_projects/LEQuad/tasks.hpp"
-#include "sample_projects/LEQuad/central_data.hpp"
 
 extern "C"
 {

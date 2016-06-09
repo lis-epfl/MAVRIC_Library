@@ -92,7 +92,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
-    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
+    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), offboard_tag_search, raspi_mavlink_communication),
     state_machine(state, position_estimation, imu, ahrs, manual_control),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
@@ -321,10 +321,10 @@ bool LEQuad::init_attitude_estimation(void)
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude_quaternion, &ahrs);
 
     // Data logging
-    ret &= data_logging_continuous->add_field(&ahrs.qe.v[0], "ahrs_v0", 3);
-    ret &= data_logging_continuous->add_field(&ahrs.qe.v[0], "ahrs_v1", 3);
-    ret &= data_logging_continuous->add_field(&ahrs.qe.v[0], "ahrs_v2", 3);
-    ret &= data_logging_continuous->add_field(&ahrs.qe.s, "ahrs_s", 3);
+    ret &= data_logging_continuous.add_field(&ahrs.qe.v[0], "ahrs_v0", 3);
+    ret &= data_logging_continuous.add_field(&ahrs.qe.v[0], "ahrs_v1", 3);
+    ret &= data_logging_continuous.add_field(&ahrs.qe.v[0], "ahrs_v2", 3);
+    ret &= data_logging_continuous.add_field(&ahrs.qe.s, "ahrs_s", 3);
 
     return ret;
 }
@@ -541,23 +541,23 @@ bool LEQuad::init_offboard_tag_search(void)
     bool ret = true;
 
     // UP telemetry
-    init_success &= offboard_tag_search_telemetry_init(&offboard_tag_search,
+    ret &= offboard_tag_search_telemetry_init(&offboard_tag_search,
                     &raspi_mavlink_communication.message_handler());
 
     // DOWN telemetry
-    init_success &= mavlink_communication.add_msg_send( MAVLINK_MSG_ID_DEBUG_VECT,
+    ret &= mavlink_communication.add_msg_send( MAVLINK_MSG_ID_DEBUG_VECT,
                                                         250000, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_goal_location_telemetry_send,
                                                         &offboard_tag_search);
 
     // Data logging
-    ret &= data_logging_continuous->add_field(&offboard_tag_search.tag_location().pos[0], "tag_x", 3);
-    ret &= data_logging_continuous->add_field(&offboard_tag_search.tag_location().pos[1], "tag_y", 3);
-    ret &= data_logging_continuous->add_field(&offboard_tag_search.tag_location().pos[2], "tag_z", 3);
-    ret &= data_logging_continuous->add_field(&offboard_tag_search.is_camera_running(), "camera_on");
-    ret &= data_logging_continuous->add_field(&offboard_tag_search.picture_count(), "pic_count");
+    ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location().pos[0], "tag_x", 3);
+    ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location().pos[1], "tag_y", 3);
+    ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location().pos[2], "tag_z", 3);
+    ret &= data_logging_continuous.add_field(&offboard_tag_search.is_camera_running(), "camera_on");
+    ret &= data_logging_continuous.add_field(&offboard_tag_search.picture_count(), "pic_count");
 
     // Task
-    ret &= scheduler->add_task(4000, (Scheduler_task::task_function_t)&Mavlink_communication::update, (Scheduler_task::task_argument_t)&raspi_mavlink_communication, Scheduler_task::PRIORITY_NORMAL);
+    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&Mavlink_communication::update, (Scheduler_task::task_argument_t)&raspi_mavlink_communication, Scheduler_task::PRIORITY_NORMAL);
 
     return ret;
 }
