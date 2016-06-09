@@ -89,7 +89,6 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
-    posvel_kf_(gps, barometer, sonar, ahrs, posvel_),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
     state_machine(state, position_estimation, imu, ahrs, manual_control),
@@ -352,13 +351,6 @@ bool LEQuad::init_position_estimation(void)
     ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.longitude, "origin_lon", 7);
     ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.altitude,  "origin_alt", 3);
 
-
-    // kalman position estimation
-    posvel_kf_.init();
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  500000, (Mavlink_communication::send_msg_function_t)&posvel_telemetry_send, &posvel_);
-    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&task_posvel_kf_update, (Scheduler_task::task_argument_t)&posvel_kf_);
-
-
     return ret;
 }
 
@@ -563,7 +555,7 @@ bool LEQuad::main_task(void)
                     controls.yaw_mode = YAW_ABSOLUTE;
                 }
                 break;
-        
+
             case Mav_mode::POSITION_HOLD:
                 controls = controls_nav;
                 controls.control_mode = VELOCITY_COMMAND_MODE;
