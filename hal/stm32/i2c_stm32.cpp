@@ -269,7 +269,7 @@ bool I2c_stm32::init(void)
     //set speed value to fast mode
     I2C_CCR(i2c_) = (uint16_t)(result );
 
-    //enable I2C1
+    //enable I2C device
     i2c_peripheral_enable(i2c_);
 
     //configure I2C_CR1(i2c_)
@@ -283,7 +283,7 @@ bool I2c_stm32::init(void)
     I2C_OAR1(i2c_) = (0x4000 | 0x0000); 
 
     //enable I2C1
-    i2c_peripheral_enable(I2C1);
+    i2c_peripheral_enable(i2c_);
 
     return init_success;   
 }
