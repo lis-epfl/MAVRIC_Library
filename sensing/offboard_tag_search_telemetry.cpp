@@ -163,14 +163,14 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
         q_rot.v[2] = -1.0f*sin(offboard_tag_search.camera_rotation()/2); // Negative to rotate CW
         v_offset[0] = picture_forward_offset;
         v_offset[1] = picture_right_offset;
-        v_offset[2] = 0.0f;
+        v_offset[2] = -drone_height; // Negative as the positive direction is down
         v_new_dir[0] = 0.0f;
         v_new_dir[1] = 0.0f;
         v_new_dir[2] = 0.0f;
         quaternions_rotate_vector(q_rot, v_offset, v_new_dir);
 
         // Convert to local coordinates due to yaw, pitch, roll
-        quat_t q_ahrs = offboard_tag_search.ahrs().qe;
+        quat_t q_ahrs = offboard_tag_search.ahrs_at_photo(thread_index).qe;
         float v_new_local_dir[3];
         quaternions_rotate_vector(q_ahrs, v_new_dir, v_new_local_dir);
 

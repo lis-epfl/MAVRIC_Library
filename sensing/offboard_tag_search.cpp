@@ -75,6 +75,20 @@ Offboard_Tag_Search::Offboard_Tag_Search(Position_estimation& position_estimatio
         position_at_photo_[i].pos[2] = 0.0f;
         position_at_photo_[i].heading = 0.0f;
         position_at_photo_[i].origin = position_estimation_.local_position.origin;
+
+        ahrs_at_photo_[i].qe.v[0] = 0.0f;
+        ahrs_at_photo_[i].qe.v[1] = 0.0f;
+        ahrs_at_photo_[i].qe.v[2] = 0.0f;
+        ahrs_at_photo_[i].qe.s = 0.0f;
+        ahrs_at_photo_[i].angular_speed[0] = 0.0f;
+        ahrs_at_photo_[i].angular_speed[1] = 0.0f;
+        ahrs_at_photo_[i].angular_speed[2] = 0.0f;
+        ahrs_at_photo_[i].linear_acc[0] = 0.0f;
+        ahrs_at_photo_[i].linear_acc[1] = 0.0f;
+        ahrs_at_photo_[i].linear_acc[2] = 0.0f;
+        ahrs_at_photo_[i].internal_state = ahrs_state_t::AHRS_READY;
+        ahrs_at_photo_[i].last_update_s = 0.0f;
+        ahrs_at_photo_[i].dt_s = 0.0f;
     }
 }
 
@@ -130,12 +144,31 @@ const local_position_t Offboard_Tag_Search::position_at_photo(int index) const
     return position_at_photo_[index];
 }
 
+const ahrs_t Offboard_Tag_Search::ahrs_at_photo(int index) const
+{
+    return ahrs_at_photo_[index];
+}
+
 void Offboard_Tag_Search::set_position_at_photo(int index)
 {
     position_at_photo_[index].pos[0] = position_estimation_.local_position.pos[0];
     position_at_photo_[index].pos[1] = position_estimation_.local_position.pos[1];
     position_at_photo_[index].pos[2] = position_estimation_.local_position.pos[2];
     position_at_photo_[index].heading = position_estimation_.local_position.heading;
+
+    ahrs_at_photo_[index].qe.v[0] = ahrs().qe.v[0];
+    ahrs_at_photo_[index].qe.v[1] = ahrs().qe.v[1];
+    ahrs_at_photo_[index].qe.v[2] = ahrs().qe.v[2];
+    ahrs_at_photo_[index].qe.s = ahrs().qe.s;
+    ahrs_at_photo_[index].angular_speed[0] = ahrs().angular_speed[0];
+    ahrs_at_photo_[index].angular_speed[1] = ahrs().angular_speed[1];
+    ahrs_at_photo_[index].angular_speed[2] = ahrs().angular_speed[2];
+    ahrs_at_photo_[index].linear_acc[0] = ahrs().linear_acc[0];
+    ahrs_at_photo_[index].linear_acc[1] = ahrs().linear_acc[1];
+    ahrs_at_photo_[index].linear_acc[2] = ahrs().linear_acc[2];
+    ahrs_at_photo_[index].internal_state = ahrs().internal_state;
+    ahrs_at_photo_[index].last_update_s = ahrs().last_update_s;
+    ahrs_at_photo_[index].dt_s = ahrs().dt_s;
 }
 
 const float& Offboard_Tag_Search::last_update_us(void) const
