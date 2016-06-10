@@ -299,13 +299,14 @@ bool Mavrimini::init(void)
     init_success &= ret;
     p_dbg_serial->flush();
 
+    time_keeper_delay_ms(50);
+
     // -------------------------------------------------------------------------
     // Init sonar
     // -------------------------------------------------------------------------
     ret = sonar_i2cxl.init();
     print_util_dbg_init_msg("[SONAR]", ret);
-    //TODO uncomment this when working
-    // init_success &= ret;
+    init_success &= ret;
     p_dbg_serial->flush();
     time_keeper_delay_ms(50);
 

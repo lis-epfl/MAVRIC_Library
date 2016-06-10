@@ -266,7 +266,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.i2c_1_config.clk_config.pin        = GPIO_STM32_PIN_6;
     conf.i2c_1_config.clk_config.alt_fct    = GPIO_STM32_AF_4;
     conf.i2c_1_config.clk_speed             = 400000;
-    conf.i2c_1_config.tenbit_config         = false;
+    conf.i2c_1_config.tenbit_config         = false; //currently only support 7bits addressing
 
     // -------------------------------------------------------------------------
     // I2C config
@@ -283,7 +283,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.i2c_2_config.clk_config.pin        = GPIO_STM32_PIN_10;
     conf.i2c_2_config.clk_config.alt_fct    = GPIO_STM32_AF_4;
     conf.i2c_2_config.clk_speed             = 100000;
-    conf.i2c_2_config.tenbit_config         = false;
+    conf.i2c_2_config.tenbit_config         = false; //currently only support 7bits addressing
     
     // -------------------------------------------------------------------------
     // PWM config

@@ -293,8 +293,10 @@ bool I2c_stm32::probe(uint32_t address)
 {
     bool success = true;
 
+    //if start succeed => device is connected
     success &= start(address, true, true);
-    success &= stop();
+    //TODO Pb with stop
+    // success &= stop();
     
     return success;
 }

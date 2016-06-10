@@ -99,7 +99,8 @@ bool I2c_avr32::init(void)
 bool I2c_avr32::probe(uint32_t address)
 {
     status_code_t status;
-    status = twim_probe(twim_, address);
+    //using 7bits addressing instead of 8bits R/W formating
+    status = twim_probe(twim_, address>>1);
     return status_code_to_bool(status);
 }
 
@@ -107,7 +108,8 @@ bool I2c_avr32::probe(uint32_t address)
 bool I2c_avr32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
 {
     status_code_t status;
-    status = twim_write(twim_, buffer, nbytes, address, config_.tenbit);
+    //using 7bits addressing instead of 8bits R/W formating
+    status = twim_write(twim_, buffer, nbytes, address>>1, config_.tenbit);
     return status_code_to_bool(status);
 }
 
@@ -115,7 +117,8 @@ bool I2c_avr32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
 bool I2c_avr32::read(uint8_t* buffer, uint32_t nbytes, uint32_t address)
 {
     status_code_t status;
-    status = twim_read(twim_, buffer, nbytes, address, config_.tenbit);
+    //using 7bits addressing instead of 8bits R/W formating
+    status = twim_read(twim_, buffer, nbytes, address>>1, config_.tenbit);
     return status_code_to_bool(status);
 }
 

@@ -69,7 +69,7 @@ typedef enum
 typedef struct
 {
     i2c_stm32_devices_t i2c_device_config;      ///< I2C device number
-    bool                tenbit_config;          ///< using 7 or 10 bits addressing
+    bool                tenbit_config;          ///< using 7 or 10 bits addressing currently only support 7bits addressing
     gpio_stm32_conf_t   sda_config;             ///< sda port settings
     gpio_stm32_conf_t   clk_config;             ///< clk port settings
     rcc_periph_clken    rcc_i2c_config;         ///< corresponding i2c for rcc
@@ -210,7 +210,7 @@ static inline  i2c_stm32_conf_t i2c_stm32_default_config()
     conf.clk_config.pin     = GPIO_STM32_PIN_10;
     conf.clk_config.alt_fct = GPIO_STM32_AF_4;
     conf.clk_speed          = 400000;
-    conf.tenbit_config      = false;
+    conf.tenbit_config      = false; //currently only support 7bits addressing
     conf.timeout            = 20000;
     return conf;
 }
