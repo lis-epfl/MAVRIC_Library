@@ -109,13 +109,12 @@ int main(void)
                         board.servo_7,
                         file_log,
                         file_stat,
-                        board.i2c1,
                         mav_config );
 
     // // -------------------------------------------------------------------------
     // // Create simulation
     // // -------------------------------------------------------------------------
-    
+
     // // // Simulated servos
     // Pwm_dummy pwm[8];
     // Servo sim_servo_0(pwm[0], servo_default_config_esc());
@@ -126,10 +125,10 @@ int main(void)
     // Servo sim_servo_5(pwm[5], servo_default_config_esc());
     // Servo sim_servo_6(pwm[6], servo_default_config_esc());
     // Servo sim_servo_7(pwm[7], servo_default_config_esc());
-    
+
     // // Create MAV using simulated sensors
     // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    
+
     // // Simulated dynamic model
     // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
     // Simulation sim                       = Simulation(sim_model);

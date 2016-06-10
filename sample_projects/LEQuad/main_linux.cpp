@@ -41,6 +41,8 @@
 #include "boards/mavrinux.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
 
+#include "hal/dummy/i2c_dummy.hpp"
+
 extern "C"
 {
 #include "util/print_util.h"
