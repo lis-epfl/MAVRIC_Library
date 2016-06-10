@@ -42,6 +42,8 @@
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "sample_projects/LEQuad/hexhog.hpp"
 
+#include "hal/dummy/i2c_dummy.hpp"
+
 extern "C"
 {
 #include "util/print_util.h"
@@ -74,6 +76,8 @@ int main(int argc, char** argv)
     // Create board
     Mavrinux board(board_config);
 
+    I2c_dummy i2c_dummy;
+
     File_linux file_log;
     File_linux file_stat;
 
@@ -97,7 +101,6 @@ int main(int argc, char** argv)
     mav_config.lequad_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
     mav_config.lequad_config.state_config.simulation_mode = true;
     Hexhog mav = Hexhog(board.imu,
-
                         board.sim.barometer(),
                         board.sim.gps(),
                         board.sim.sonar(),
@@ -116,6 +119,7 @@ int main(int argc, char** argv)
                         board.servo_7,
                         file_log,
                         file_stat,
+                        i2c_dummy,
                         mav_config);
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
