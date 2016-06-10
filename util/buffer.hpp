@@ -137,6 +137,14 @@ public:
     bool empty(void) const;
 
 
+    /**
+     * \brief     Get value of i-th element in buffer, but does not modify anything
+     *
+     * \return    success (false if does not exist)
+     */
+    bool get_element(uint32_t index, T& elem) const;
+
+
 private:
     T           buffer_[S + 1]; ///<    Array of bytes containing the data
     uint32_t    head_;          ///<    Head of the buffer (newest byte)
