@@ -68,7 +68,14 @@ Posvel_kf::Posvel_kf(const Gps& gps,
                     0, 0, 0, 0, 0,         1,         0,         0,
                     0, 0, 0, 0, 0,         0,         1,         0,
                     0, 0, 0, 0, 0,         0,         0,         1},                                // F
-                  Mat<8,8>(Mat<8,8>(0.01f) + Mat<8,8>(0.1f,true)),                                                          // Q  TODO: FIX
+                  { 0, 0, 0, 0, 0,     0,     0,     0,
+                    0, 0, 0, 0, 0,     0,     0,     0,
+                    0, 0, 0, 0, 0,     0,     0,     0,
+                    0, 0, 0, 0, 0,     0,     0,     0,
+                    0, 0, 0, 0, 0.05f, 0,     0,     0,
+                    0, 0, 0, 0, 0,     0.05f, 0,     0,
+                    0, 0, 0, 0, 0,     0,     0.05f, 0,
+                    0, 0, 0, 0, 0,     0,     0,     0.01f},                                                    // Q
                   { 1, 0, 0, 0, 0, 0, 0, 0,
                     0, 1, 0, 0, 0, 0, 0, 0,
                     0, 0, 1, 0, 0, 0, 0, 0 },                                                       // H1
@@ -97,15 +104,15 @@ Posvel_kf::Posvel_kf(const Gps& gps,
                 0,    5, 0,
                 0,    0,    5}),
     H_baro_({0, 0, 1, 0, 0, 0, 0, 1}),
-    R_baro_({10.0f}),
+    R_baro_({100.0f}),
     H_sonar_({0, 0, 1, -1, 0, 0, 0, 0}),
     R_sonar_({0.01f}),
     H_flow_({0, 0, 0,  0, 1, 0, 0, 0,
              0, 0, 0,  0, 0, 1, 0, 0,
              0, 0, 1, -1, 0, 0, 0, 0}),
-    R_flow_({ 0.1f, 0,    0,
-              0,    0.1f, 0,
-              0,    0,    0.01f}),
+    R_flow_({ 0.02f, 0,     0,
+              0,     0.02f, 0,
+              0,     0,     0.001f}),
     last_accel_update_s_(0.0f),
     last_sonar_update_s_(0.0f),
     last_flow_update_s_(0.0f),
@@ -130,10 +137,16 @@ bool Posvel_kf::update(void)
         {
             // run kalman prediciton using accelerometers
             predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
+            // predict({0.0f, 0.0f, 0.0f});
 
             // update timimg
             last_accel_update_s_ = ahrs_.last_update_s;
         }
+    }
+    else
+    {
+        // Reset covariance matrix
+        P_ = Mat<8,8>(100.0f, true);
     }
 
     // Correction from gps
@@ -169,16 +182,16 @@ bool Posvel_kf::update(void)
     // Correction from barometer
     // if (barometer_.healthy())
     // {
-       if (last_baro_update_s_ < barometer_.last_update_us()*1e6)
-       {
-          // run kalman Update
-          Kalman<8,3,3>::update(Mat<1,1>(config_.home.altitude - barometer_.altitude_gf()),
-                                H_baro_,
-                                R_baro_);
-
-          // Update timing
-          last_baro_update_s_ = barometer_.last_update_us()*1e6;
-       }
+      //  if (last_baro_update_s_ < barometer_.last_update_us()*1e6)
+      //  {
+      //     // run kalman Update
+      //     Kalman<8,3,3>::update(Mat<1,1>(config_.home.altitude - barometer_.altitude_gf()),
+      //                           H_baro_,
+      //                           R_baro_);
+       //
+      //     // Update timing
+      //     last_baro_update_s_ = barometer_.last_update_us()*1e6;
+      //  }
     // }
 
     // Correction from sonar
@@ -202,8 +215,8 @@ bool Posvel_kf::update(void)
         {
             // run kalman update on velocity
             float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
-            float vel_lf[3];
-            quaternions_rotate_vector(quaternions_inverse(ahrs_.qe), vel_bf, vel_lf);
+            // float vel_lf[3];
+            // quaternions_rotate_vector(quaternions_inverse(ahrs_.qe), vel_bf, vel_lf);
             // Kalman<8,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
             Kalman<8,3,3>::update(Mat<3,1>({vel_bf[0], vel_bf[1], flow_.ground_distance()}),
                                   H_flow_,
