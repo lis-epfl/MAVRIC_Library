@@ -41,6 +41,7 @@
 
 #include "drivers/px4flow_i2c.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/maths.h"
 
 Px4flow_i2c::Px4flow_i2c(I2c& i2c, conf_t config):
   flow_x_(0.0f),
@@ -52,7 +53,11 @@ Px4flow_i2c::Px4flow_i2c(I2c& i2c, conf_t config):
   last_update_s_(0.0f),
   i2c_(i2c),
   config_(config)
-{}
+{
+    // fill buffer
+    while(ground_distance_buffer_.put(0.0f))
+    {;}
+}
 
 bool Px4flow_i2c::update(void)
 {
@@ -72,7 +77,14 @@ bool Px4flow_i2c::update(void)
         velocity_x_ = 0.001f * (float)((int16_t)(rec[7] << 8 | rec[6]));
         velocity_y_ = 0.001f * (float)((int16_t)(rec[9] << 8 | rec[8]));
         flow_quality_ = (uint8_t)((int16_t)(rec[11] << 8 | rec[10]));
-        ground_distance_ = 0.001f * (float)((int16_t)(rec[21] << 8 | rec[20]));
+
+        ground_distance_buffer_.put_lossy(0.001f * (float)((int16_t)(rec[21] << 8 | rec[20])));
+
+        float gd[3] = {0.0f, 0.0f, 0.0f};
+        ground_distance_buffer_.get_element(0, gd[0]);
+        ground_distance_buffer_.get_element(1, gd[1]);
+        ground_distance_buffer_.get_element(2, gd[2]);
+        ground_distance_ = 0.2f * ground_distance_ + 0.8f * maths_median_filter_3x(gd[0], gd[1], gd[2]);
 
         last_update_s_ = time_keeper_get_s();
     }

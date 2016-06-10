@@ -44,6 +44,7 @@
 
 #include <stdint.h>
 #include "hal/common/i2c.hpp"
+#include "util/buffer.hpp"
 
 class  Px4flow_i2c
 {
@@ -88,6 +89,7 @@ private:
     float       velocity_x_;
     float       velocity_y_;
     float       ground_distance_;
+    Buffer_tpl<3,float> ground_distance_buffer_;
     float       last_update_s_;
 
     I2c&        i2c_;
