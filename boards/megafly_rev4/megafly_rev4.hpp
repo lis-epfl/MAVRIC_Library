@@ -61,6 +61,7 @@
 #include "drivers/servo.hpp"
 #include "hal/avr32/led_avr32.hpp"
 #include "sensing/offboard_tag_search.hpp"
+#include "drivers/airspeed_analog.hpp"
 
 extern "C"
 {
@@ -156,7 +157,9 @@ public:
     Sonar_i2cxl         sonar_i2cxl;
     analog_monitor_t    analog_monitor;
     Adc_avr32           adc_battery;
+    Adc_avr32           adc_airspeed;
     Battery             battery;
+    Airspeed_analog     airspeed_analog;
     Pwm_avr32           pwm_0;
     Pwm_avr32           pwm_1;
     Pwm_avr32           pwm_2;
@@ -182,8 +185,6 @@ private:
      * \brief   Initialize the hardware related elements (communication lines, sensors devices, etc)
      *
      * \detail  Legacy function: TODO move to init() method
-     *
-     * \param   central_data        The pointer to the structure where all central data is stored
      *
      * \return  The initialization status of each module, succeed == true
      */

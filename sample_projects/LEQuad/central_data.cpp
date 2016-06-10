@@ -64,10 +64,6 @@ Central_data::Central_data(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sona
     servo_1(servo_1),
     servo_2(servo_2),
     servo_3(servo_3),
-    servo_4(servo_4),
-    servo_5(servo_5),
-    servo_6(servo_6),
-    servo_7(servo_7),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
     state(mavlink_communication.mavlink_stream(), battery, config.state_config),
     scheduler(Scheduler::default_config()),
@@ -172,11 +168,7 @@ bool Central_data::init(void)
                           &servo_0,
                           &servo_1,
                           &servo_2,
-                          &servo_3,
-                          &servo_4,
-                          &servo_5,
-                          &servo_6,
-                          &servo_7);
+                          &servo_3);
 
     //--------------------------------------------------------------------------
     // Init attitude controller

@@ -176,7 +176,7 @@ void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlin
                                         remote->channels[5] * 10000.0f,
                                         remote->channels[6] * 10000.0f,
                                         remote->channels[7] * 10000.0f,
-                                        remote->mode.current_desired_mode);
+                                        remote->mode.current_desired_mode.bits());
     // remote->signal_quality   );
 
     mavlink_stream->send(msg);
@@ -194,5 +194,5 @@ void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlin
                                         remote->channels[13] * 10000.0f,
                                         INT16_MAX, // 14 channels max
                                         INT16_MAX,
-                                        remote->mode.current_desired_mode);
+                                        remote->mode.current_desired_mode.bits());
 }

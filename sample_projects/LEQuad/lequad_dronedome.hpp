@@ -34,7 +34,7 @@
  *
  * \author MAV'RIC Team
  *
- * \brief Place where the central data is stored and initialized
+ * \brief MAV class for indoor use
  *
  ******************************************************************************/
 
@@ -42,13 +42,13 @@
 #ifndef LEQUAD_DRONEDOME_HPP_
 #define LEQUAD_DRONEDOME_HPP_
 
-#include "sample_projects/LEQuad/central_data.hpp"
+#include "sample_projects/LEQuad/lequad.hpp"
 #include "drivers/gps_mocap.hpp"
 
 /**
  * \brief Central data for indoor use
  */
-class LEQuad_dronedome: public Central_data
+class LEQuad_dronedome: public LEQuad
 {
 public:
     /**
@@ -75,8 +75,8 @@ public:
                       File& file1,
                       File& file2,
                       offboard_tag_search_conf_t& offboard_tag_search_conf,
-                      Central_data::conf_t config = Central_data::default_config() ):
-          Central_data(imu, barometer, gps_mocap_, sonar, serial_mavlink, raspi_serial_mavlink, satellite, led, file_flash,
+                      LEQuad::conf_t config = LEQuad::default_config() ):
+          LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, raspi_serial_mavlink, satellite, led, file_flash,
                      battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
                      file1, file2, offboard_tag_search_conf, config),
           gps_mocap_(mavlink_communication.message_handler())
@@ -88,8 +88,7 @@ public:
        */
       bool init(void)
       {
-          bool success = Central_data::init();
-
+          bool success = true;
           bool ret = gps_mocap_.init();
           print_util_dbg_init_msg("[GPS_MOCAP]", ret);
           success &= ret;

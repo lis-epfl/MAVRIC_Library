@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file manual_control.h
+ * \file manual_control.hpp
  *
  * \author MAV'RIC Team
  *
@@ -60,8 +60,6 @@ class Onboard_parameters;
  */
 class Manual_control
 {
-friend bool mavlink_telemetry_add_onboard_parameters(Onboard_parameters* onboard_parameters, Central_data* central_data);
-
 public:
     /**
      * \brief   The source mode enum
@@ -116,6 +114,29 @@ public:
      * \param   controls        The pointer to the command structure that will be executed
      */
     void get_velocity_vector(control_command_t* controls);
+
+    /**
+     * \brief   Selects the source input for the rate command for the wing
+     *
+     * \param   controls        The pointer to the command structure that will be executed
+     */
+    void get_rate_command_wing(control_command_t* controls);
+
+
+    /**
+     * \brief   Selects the source input for the attitude command for the wing
+     *
+     * \param   controls        The pointer to the command structure that will be executed
+     */
+    void get_angle_command_wing(control_command_t* controls);
+
+    /**
+     * \brief   Selects the source input for the velocity command for the wing
+     *
+     * \param   ki_yaw          The yaw integrator gain
+     * \param   controls        The pointer to the command structure that will be executed
+     */
+    void get_velocity_vector_wing(const float ki_yaw, control_command_t* controls);
 
 
     /**
@@ -198,7 +219,7 @@ public:
      *
      * \return  The value of the mode
      */
-    mav_mode_t get_mode_from_source(mav_mode_t mode_current);
+    Mav_mode get_mode_from_source(Mav_mode mode_current);
 
 
     /**
@@ -209,7 +230,7 @@ public:
      * \param   mode_current            The current mode of the MAV
      *
      */
-    void set_mode_of_source(mav_mode_t mode_current);
+    void set_mode_of_source(Mav_mode mode_current);
 
     /**
      * \brief   Returns the quality of the strength of the remote receiver
@@ -230,7 +251,7 @@ public:
      *
      * \return   mode_source         which control source can change the mode (remote, joystick, groundstation)
      */
-    inline mode_source_t mode_source() const {return mode_source_;};    
+    inline mode_source_t mode_source() const {return mode_source_;};
 
     /**
      * \brief   Set the control source (which control source has control (remote, joystick, none))
@@ -250,16 +271,11 @@ public:
     static inline conf_t default_config();
 
 
-
     remote_t                remote;             ///< The pointer to the remote structure
     joystick_t              joystick;           ///< The pointer to the joystick structure
-private:
     mode_source_t           mode_source_;        ///< The source mode
     control_source_t        control_source_;     ///< Flag to tell whether the remote is active or not
-
-
-} ;
-
+};
 
 Manual_control::conf_t Manual_control::default_config()
 {

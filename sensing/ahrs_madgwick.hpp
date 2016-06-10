@@ -30,11 +30,12 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs_madgwick.h
+ * \file ahrs_madgwick.hpp
  *
  * \author MAV'RIC Team
  * \author SOH Madgwick
  * \author Julien Lecoeur
+ * \author Simon Pyroth
  *
  * \brief Implementation of Madgwick's AHRS algorithms.
  *
@@ -57,13 +58,13 @@
 #ifndef AHRS_MADGWICK_H_
 #define AHRS_MADGWICK_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "sensing/imu.hpp"
+#include "drivers/airspeed_analog.hpp"
 
-
+extern "C"
+{
 #include "sensing/ahrs.h"
-#include "imu.h"
+}
 
 
 /**
@@ -71,8 +72,10 @@ extern "C" {
  */
 typedef struct
 {
-    float   beta;       // 2 * proportional gain (Kp)
-    float   zeta;           // Gain for gyro drift compensation
+    float   beta;                       // 2 * proportional gain (Kp)
+    float   zeta;                       // Gyro drift bias gain
+    bool acceleration_correction;       // Enable the correction of the parasitic accelerations ?
+    float correction_speed;             // Airspeed from which the correction should start
 } ahrs_madgwick_conf_t;
 
 
@@ -81,11 +84,13 @@ typedef struct
  */
 typedef struct
 {
-    imu_t*  imu;            // Pointer to IMU sensors
-    ahrs_t* ahrs;           // Estimated attitude
-    float   ref_b[3];       // Reference direction of magnetic flux in earth frame (x component)
-    float   beta;           // 2 * proportional gain (Kp)
-    float   zeta;           // Gain for gyro drift compensation
+    Imu*    imu;                            // Pointer to IMU sensors
+    ahrs_t* ahrs;                           // Estimated attitude
+    Airspeed_analog* airspeed_analog;       // Pointer to the airspeed sensor
+    float   beta;                           // 2 * proportional gain (Kp)
+    float   zeta;                           // Gyro drift bias gain
+    uint32_t acceleration_correction;       // Enable the correction of the parasitic accelerations ?
+    float correction_speed;                 // Airspeed from which the correction should start
 } ahrs_madgwick_t;
 
 
@@ -93,13 +98,13 @@ typedef struct
  * \brief   Init function
  *
  * \param   ahrs_madgwick   Pointer to data structure
- * \param   config          Pointer to config structure
+ * \param   config          Config structure
  * \param   ahrs            Pointer to AHRS structure
  * \param   imu             Pointer to IMU structure
  *
  * \return  True if success, false if not
  */
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t config, Imu* imu, ahrs_t* ahrs, Airspeed_analog* airspeed_analog);
 
 
 /**
@@ -108,10 +113,5 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
  * \param   ahrs_madgwick   Pointer to data structure
  */
 void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick);
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* AHRS_MADGWICK_H_ */

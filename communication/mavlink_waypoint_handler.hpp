@@ -51,6 +51,7 @@
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
+#include "control/dubin.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
@@ -58,14 +59,13 @@
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-
 class Mavlink_waypoint_handler
 {
 public:
 
     struct conf_t
     {
-        float auto_take_off_altitude;                               ///< Altitude to which auto_take off flies; altitude over starting point (where auto_take off was started) should be > 0
+        ;
     };
 
     /**
@@ -148,24 +148,28 @@ public:
      */
     static inline conf_t default_config();
 
-    
-    local_position_t waypoint_hold_coordinates;                 ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-    waypoint_struct_t waypoint_list[MAX_WAYPOINTS];             ///< The array of all waypoints (max MAX_WAYPOINTS)
+
+    waypoint_local_struct_t waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+
+    waypoint_struct_t waypoint_list[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
 protected:
-    uint16_t waypoint_count_;                                     ///< The total number of waypoints
+    uint16_t waypoint_count_;                                    ///< The total number of waypoints
     int8_t current_waypoint_index_;                              ///< The number of the current waypoint
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
     const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
-    
+
     State& state_;                                               ///< The pointer to the state structure
     Navigation& navigation_;                                     ///< The pointer to the navigation structure
     Position_estimation& position_estimation_;                   ///< The pointer to the position estimation structure
 
+    waypoint_local_struct_t waypoint_coordinates_;               ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+    waypoint_local_struct_t waypoint_critical_coordinates_;      ///< The coordinates of the waypoint in critical state
+    waypoint_local_struct_t waypoint_next_;                       ///< The coordinates of the next waypoint
+
     waypoint_struct_t current_waypoint_;                         ///< The structure of the current waypoint
-    local_position_t waypoint_coordinates_;                      ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-    local_position_t waypoint_critical_coordinates_;             ///< The coordinates of the waypoint in critical state
+    waypoint_struct_t next_waypoint_;                            ///< The structure of the next waypoint
 
     bool waypoint_sending_;                                      ///< Flag to tell whether waypoint are being sent
     bool waypoint_receiving_;                                    ///< Flag to tell whether waypoint are being received or not
@@ -181,7 +185,7 @@ protected:
     bool critical_next_state_;                                   ///< Flag to change critical state in its dedicated state machine
     bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
 
-    mav_mode_t last_mode_;                                       ///< The mode of the MAV to have a memory of its evolution    
+    Mav_mode last_mode_;                                         ///< The mode of the MAV to have a memory of its evolution
     const ahrs_t& ahrs_;                                         ///< The pointer to the attitude estimation structure
     const Manual_control& manual_control_;                       ///< The pointer to the manual_control structure
     conf_t config_;
@@ -197,6 +201,14 @@ protected:
      *
      */
     virtual void state_machine();
+
+    /**
+     * \brief   Computes the state machine for the Dubin navigation type
+     *
+     * \param   waypoint_handler        The pointer to the waypoint handler structure
+     * \param   waypoint_next_           The next waypoint structure
+     */
+    void dubin_state_machine(waypoint_local_struct_t* waypoint_next_);
 
     /**
      * \brief   Drives the critical navigation behavior
@@ -245,6 +257,13 @@ protected:
      */
     void send_nav_time(const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
+
+    /**
+     * \brief   Initialise the position hold mode in Dubin navigation
+     *
+     * \param   local_pos               The position where the position will be held
+     */
+    void dubin_hold_init(local_position_t local_pos);
 
     /************************************************
      *      static member functions (callbacks)     *
@@ -387,8 +406,6 @@ protected:
 Mavlink_waypoint_handler::conf_t Mavlink_waypoint_handler::default_config()
 {
     conf_t conf                                                = {};
-
-    conf.auto_take_off_altitude                                = 10;
 
     return conf;
 };

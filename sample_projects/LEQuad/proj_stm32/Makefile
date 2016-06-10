@@ -12,9 +12,7 @@ PROJ_NAME=LEQuadST
 # ------------------------------------------------------------------------------
 # Project source files (*.c and *.cpp)
 LIB_SRCS += sample_projects/LEQuad/main_stm32.cpp
-LIB_SRCS += sample_projects/LEQuad/central_data.cpp
-LIB_SRCS += sample_projects/LEQuad/tasks.cpp
-LIB_SRCS += sample_projects/LEQuad/mavlink_telemetry.cpp
+LIB_SRCS += sample_projects/LEQuad/lequad.cpp
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY

@@ -52,11 +52,13 @@ LIB_SRCS += communication/state.cpp
 LIB_SRCS += communication/state_machine.cpp
 LIB_SRCS += communication/state_telemetry.cpp
 
+
 LIB_SRCS += control/adaptive_parameter.c
 LIB_SRCS += control/altitude_controller.cpp
 LIB_SRCS += control/attitude_controller.c
 LIB_SRCS += control/attitude_controller_p2.c
 LIB_SRCS += control/attitude_error_estimator.c
+LIB_SRCS += control/dubin.cpp
 LIB_SRCS += control/joystick.cpp
 LIB_SRCS += control/joystick_telemetry.cpp
 LIB_SRCS += control/manual_control.cpp
@@ -65,14 +67,17 @@ LIB_SRCS += control/navigation.cpp
 LIB_SRCS += control/pid_controller.c
 LIB_SRCS += control/servos_mix_quadcopter_cross.cpp
 LIB_SRCS += control/servos_mix_quadcopter_diag.cpp
+LIB_SRCS += control/servos_mix_wing.c
 LIB_SRCS += control/stabilisation.c
 LIB_SRCS += control/stabilisation_copter.cpp
+LIB_SRCS += control/stabilisation_wing.cpp
 LIB_SRCS += control/stabilisation_telemetry.cpp
 LIB_SRCS += control/vector_field_waypoint.cpp
 LIB_SRCS += control/velocity_controller_copter.cpp
 LIB_SRCS += control/gimbal_controller.cpp
 LIB_SRCS += control/gimbal_controller_telemetry.cpp
 
+LIB_SRCS += drivers/airspeed_analog.cpp
 LIB_SRCS += drivers/battery.cpp
 LIB_SRCS += drivers/barometer.cpp
 LIB_SRCS += drivers/barometer_telemetry.cpp
@@ -102,6 +107,7 @@ LIB_SRCS += runtime/scheduler_telemetry.cpp
 LIB_SRCS += sensing/ahrs.c
 LIB_SRCS += sensing/ahrs_ekf.cpp
 LIB_SRCS += sensing/ahrs_telemetry.cpp
+LIB_SRCS += sensing/ahrs_madgwick.cpp
 LIB_SRCS += sensing/altitude_estimation.cpp
 LIB_SRCS += sensing/imu.cpp
 LIB_SRCS += sensing/imu_telemetry.cpp
@@ -125,6 +131,5 @@ LIB_SRCS += util/coord_conventions.c
 LIB_SRCS += util/matrix.cpp
 LIB_SRCS += util/print_util.c
 LIB_SRCS += util/quick_trig.c
-
 LIB_SRCS += util/raytracing.cpp
 LIB_SRCS += util/string_util.cpp
