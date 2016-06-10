@@ -50,8 +50,9 @@ extern "C"
 }
 
 
-const uint32_t FLAG_MASK      = 0x00FFFFFF;
-const uint32_t DATA_RECEIVED  = 0x00030040;
+const uint32_t FLAG_MASK                = 0x00FFFFFF;
+const uint32_t DATA_RECEIVED            = 0x00030040;
+const uint32_t RECEIVER_MODE_SELECTED   = 0x00030002;
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -121,7 +122,7 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
 
         //wait till received
         timeout = i2c_timeout_;
-        while(!(check_event(DATA_RECEIVED)))
+        while(!(check_event(RECEIVER_MODE_SELECTED)))
         {
              if(--timeout == 0)
             {
@@ -341,7 +342,7 @@ bool I2c_stm32::read(uint8_t* buffer, uint32_t nbytes, uint32_t address)
      //read loop
     for (uint32_t i = 0; i < nbytes; ++i)
     {
-        if(i == nbytes-1)
+        if(i == (nbytes-1))
         {
             buffer[i] = read_nack();
         }
