@@ -108,9 +108,7 @@ void qfilter_update(qfilter_t* qf)
     float dt_s     = (float)(now_s - qf->ahrs->last_update_s);
 
     // Write to ahrs structure
-    qf->ahrs->dt_s          = dt_s;
     qf->ahrs->last_update_s = now_s;
-
 
     // up_bf = qe^-1 *(0,0,0,-1) * qe
     up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;

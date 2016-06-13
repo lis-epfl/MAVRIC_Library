@@ -57,7 +57,7 @@ extern "C"
 void Position_estimation::position_integration()
 {
     int32_t i;
-    float dt = ahrs.dt_s;
+    float dt = dt_s_;
 
     quat_t qvel_bf, qvel;
 
@@ -110,9 +110,7 @@ void Position_estimation::position_correction()
     float sonar_vel_error = 0.0f;
     float sonar_gain = 0.0f;
     float gps_dt = 0.0f;
-
-    //we use ahrs.dt since it is updated at the same frequency as position_estimation
-    float dt = ahrs.dt_s;
+    float dt = dt_s_;
 
     // // quat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
     // quat_t vel_correction = {};
@@ -343,6 +341,8 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         time_last_gps_posllh_msg(0),
         time_last_gps_velned_msg(0),
         time_last_barometer_msg(0),
+        dt_s_(0.0f),
+        last_update_s_(0.0f),
         init_gps_position(false),
         init_barometer(false),
         last_alt(0),
@@ -376,6 +376,11 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
 
 void Position_estimation::update()
 {
+    // Updat timing
+    float now      = time_keeper_get_s();
+    dt_s_          = now - last_update_s_;
+    last_update_s_ = now;
+
     if (ahrs.internal_state == AHRS_READY)
     {
         if (state.reset_position)

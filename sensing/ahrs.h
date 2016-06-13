@@ -75,12 +75,8 @@ typedef struct
     float   angular_speed[3];           ///< Gyro rates
     float   linear_acc[3];              ///< Acceleration WITHOUT gravity
 
-    // quat_t up_vec;                       ///< The quaternion of the up vector
-    // quat_t north_vec;                    ///< The quaternion of the north vector
-
     ahrs_state_t internal_state;        ///< Leveling state of the ahrs
-    float        last_update_s;            ///< The time of the last IMU update in ms
-    float        dt_s;                  ///< The time interval between two IMU updates
+    float        last_update_s;         ///< The time of the last IMU update in s
 } ahrs_t;
 
 

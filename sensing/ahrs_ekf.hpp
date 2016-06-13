@@ -138,6 +138,9 @@ private:
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
     Mat<7,7> Id_;                                       ///< The 7x7 identity matrix
 
+    float dt_s_;
+    float last_update_s_;
+
     conf_t config_;                                     ///< The config structure for the EKF module
 
     const Imu& imu_;                                    ///< The Reference to the IMU structure

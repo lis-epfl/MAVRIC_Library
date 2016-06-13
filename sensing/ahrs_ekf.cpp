@@ -93,8 +93,7 @@ void Ahrs_ekf::init_kalman(void)
 
 void Ahrs_ekf::predict_step(void)
 {
-    float dt = ahrs_.dt_s;
-
+    float dt    = dt_s_;
     float dt2_2 = dt * dt * 0.5f;
     float dt3_3 = dt * dt * dt / 3.0f;
 
@@ -384,6 +383,8 @@ void Ahrs_ekf::update_step_mag(void)
 
 Ahrs_ekf::Ahrs_ekf(const Imu& imu, ahrs_t& ahrs, const Ahrs_ekf::conf_t config):
     Id_(Mat<7,7>(1.0f,true)),
+    dt_s_(0.0f),
+    last_update_s_(0.0f),
     config_(config),
     imu_(imu),
     ahrs_(ahrs)
@@ -401,11 +402,8 @@ bool Ahrs_ekf::update(void)
     float now_s    = time_keeper_get_s();
 
     // Delta t in seconds
-    float dt_s     = now_s - ahrs_.last_update_s;
-
-    // Write to ahrs structure
-    ahrs_.dt_s          = dt_s;
-    ahrs_.last_update_s = now_s;
+    dt_s_          = now_s - last_update_s_;
+    last_update_s_ = now_s;
 
     // To enable changing of R with onboard parameters.
     R_acc_(0,0) = config_.R_acc;
@@ -449,6 +447,7 @@ bool Ahrs_ekf::update(void)
     }
 
     // Copy result into ahrs structure
+    ahrs_.last_update_s = last_update_s_;
 
     // Attitude
     ahrs_.qe.s = x_state_(3,0);
