@@ -39,6 +39,7 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/lequad.hpp"
+#include "sample_projects/LEQuad/lequad_dronedome.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
@@ -90,7 +91,7 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad(board.imu,
+    LEQuad mav = LEQuad_dronedome(board.imu,
                         board.bmp085,
                         board.gps_ublox,
                         board.sonar_i2cxl,      // Warning:

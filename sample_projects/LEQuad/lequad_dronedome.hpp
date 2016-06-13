@@ -44,6 +44,7 @@
 
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "drivers/gps_mocap.hpp"
+#include "sensing/ahrs_mocap.hpp"
 
 /**
  * \brief Central data for indoor use
@@ -77,8 +78,11 @@ public:
           LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
                      battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
                      file1, file2, config),
-          gps_mocap_(mavlink_communication.message_handler())
-      {};
+          gps_mocap_(mavlink_communication.message_handler()),
+          ahrs_mocap_(mavlink_communication.message_handler(), ahrs)
+      {
+          init();
+      };
 
       /**
        * \brief   Initialisation
@@ -86,7 +90,7 @@ public:
        */
       bool init(void)
       {
-          bool success = LEQuad::init();
+          bool success = true;
 
           bool ret = gps_mocap_.init();
           print_util_dbg_init_msg("[GPS_MOCAP]", ret);
@@ -97,6 +101,7 @@ public:
 
 private:
     Gps_mocap gps_mocap_;
+    Ahrs_mocap ahrs_mocap_;
 };
 
 
