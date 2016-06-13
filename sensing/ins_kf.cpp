@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file posvel_kf.cpp
+ * \file ins_kf.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "sensing/posvel_kf.hpp"
+#include "sensing/ins_kf.hpp"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -51,12 +51,11 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Posvel_kf::Posvel_kf(const Gps& gps,
+INS_kf::INS_kf(const Gps& gps,
                      const Barometer& barometer,
                      const Sonar& sonar,
                      const Px4flow_i2c& flow,
                      const ahrs_t& ahrs,
-                     posvel_t& posvel,
                      const conf_t config):
     Kalman<8,3,3>({0, 0, 0, 0, 0, 0, 0, 0},                                                         // x
                   Mat<8,8>(100, true),                                                              // P
@@ -75,10 +74,10 @@ Posvel_kf::Posvel_kf(const Gps& gps,
                     0, 0, 0, 0, 0.05f, 0,     0,     0,
                     0, 0, 0, 0, 0,     0.05f, 0,     0,
                     0, 0, 0, 0, 0,     0,     0.05f, 0,
-                    0, 0, 0, 0, 0,     0,     0,     0.01f},                                                    // Q
+                    0, 0, 0, 0, 0,     0,     0,     0.01f},                                        // Q
                   { 1, 0, 0, 0, 0, 0, 0, 0,
                     0, 1, 0, 0, 0, 0, 0, 0,
-                    0, 0, 1, 0, 0, 0, 0, 0 },                                                       // H1
+                    0, 0, 0, 1, 0, 0, 0, 0 },                                                       // H1
                   {SQR(config.sigma_gps_xy), 0,                        0,
                    0,                        SQR(config.sigma_gps_xy), 0,                           // R1
                    0,                        0,                        SQR(config.sigma_gps_z)},
@@ -95,7 +94,6 @@ Posvel_kf::Posvel_kf(const Gps& gps,
     sonar_(sonar),
     flow_(flow),
     ahrs_(ahrs),
-    posvel_(posvel),
     config_(config),
     H_gpsvel_({ 0, 0, 0, 0, 1, 0, 0, 0,
                 0, 0, 0, 0, 0, 1, 0, 0,
@@ -103,32 +101,138 @@ Posvel_kf::Posvel_kf(const Gps& gps,
     R_gpsvel_({ 5, 0,    0,
                 0,    5, 0,
                 0,    0,    5}),
-    H_baro_({0, 0, 1, 0, 0, 0, 0, 1}),
+    H_baro_({0, 0, 0, 1, 0, 0, 0, 1}),
     R_baro_({100.0f}),
-    H_sonar_({0, 0, 1, -1, 0, 0, 0, 0}),
+    H_sonar_({0, 0, -1, 0, 0, 0, 0, 0}),
     R_sonar_({0.01f}),
     H_flow_({0, 0, 0,  0, 1, 0, 0, 0,
              0, 0, 0,  0, 0, 1, 0, 0,
-             0, 0, 1, -1, 0, 0, 0, 0}),
-    R_flow_({ 0.02f, 0,     0,
-              0,     0.02f, 0,
-              0,     0,     0.001f}),
+             0, 0, -1, 0, 0, 0, 0, 0}),
+    R_flow_({ 0.005f, 0,       0,
+              0,       0.005f, 0,
+              0,       0,       0.0001f}),
     last_accel_update_s_(0.0f),
     last_sonar_update_s_(0.0f),
     last_flow_update_s_(0.0f),
     last_baro_update_s_(0.0f),
     last_gps_pos_update_s_(0.0f),
     last_gps_vel_update_s_(0.0f)
-{}
-
-
-bool Posvel_kf::init(void)
 {
-    return true;
+    float sigma_acc = 0.7f;
+    float dt  = config.dt;
+    float dt2  = SQR(dt);
+    float dt32 = 0.5f * dt * dt * dt;
+    float dt44 = 0.25f * SQR(dt2);
+
+    Q_ = SQR(sigma_acc) * Mat<8,8>({ dt44, 0,    0,    0, dt32, 0,    0,    0,
+                                     0,    dt44, 0,    0, 0,    dt32, 0,    0,
+                                     0,    0,    dt44, 0, 0,    0,    dt32, 0,
+                                     0,    0,    0,    0, 0,    0,    0,    0,
+                                     dt32, 0,    0,    0, dt2,  0,    0,    0,
+                                     0,    dt32, 0,    0, 0,    dt2,  0,    0,
+                                     0,    0,    dt32, 0, 0,    0,    dt2,  0,
+                                     0,    0,    0,    0, 0,    0,    0,    0});
+
+    // Add ground altitude noise
+    Q_(3, 3) = 0.01f;
+
+    // Add baro bias noise
+    Q_(7,7) = 0.01f;
+
 }
 
 
-bool Posvel_kf::update(void)
+float INS_kf::last_update_s(void) const
+{
+    float last_update_s = 0.0f;
+
+    last_update_s = maths_f_max(last_update_s, last_sonar_update_s_);
+    last_update_s = maths_f_max(last_update_s, last_flow_update_s_);
+    last_update_s = maths_f_max(last_update_s, last_baro_update_s_);
+    last_update_s = maths_f_max(last_update_s, last_gps_pos_update_s_);
+    last_update_s = maths_f_max(last_update_s, last_gps_vel_update_s_);
+
+    return last_update_s;
+}
+
+
+std::array<float,3> INS_kf::position_lf(void) const
+{
+    return std::array<float,3>{{x_[0], x_[1], x_[2]}};
+}
+
+
+std::array<float,3> INS_kf::velocity_lf(void) const
+{
+    return std::array<float,3>{{x_[4], x_[5], x_[6]}};
+}
+
+
+float INS_kf::absolute_altitude(void) const
+{
+    return x_[3];
+}
+
+
+bool INS_kf::is_healthy(INS::healthy_t type) const
+{
+    bool ret = false;
+
+    float now     = time_keeper_get_s();
+    float timeout = 1.0f;  // timeout after 1 second
+
+    switch(type)
+    {
+        case INS::healthy_t::XY_VELOCITY:
+            ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_vel_update_s_) < timeout) ) ||
+                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) );
+        break;
+
+        case INS::healthy_t::Z_VELOCITY:
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_vel_update_s_) < timeout) ) ||
+                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) ||
+                    ( sonar_.healthy()     && ( (now - last_sonar_update_s_)   < timeout) ) );
+        break;
+
+        case INS::healthy_t::XYZ_VELOCITY:
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_vel_update_s_) < timeout) ) ||
+                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) );
+        break;
+
+        case INS::healthy_t::XY_REL_POSITION:
+            ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_pos_update_s_) < timeout) ) ||
+                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) );
+        break;
+
+        case INS::healthy_t::Z_REL_POSITION:
+            ret = ( ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) ||
+                    ( sonar_.healthy()     && ( (now - last_sonar_update_s_)   < timeout) ) );
+        break;
+
+        case INS::healthy_t::XYZ_REL_POSITION:
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) ) ||
+                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) );
+        break;
+
+        case INS::healthy_t::XY_ABS_POSITION:
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) ) );
+        break;
+
+        case INS::healthy_t::Z_ABS_POSITION:
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) ) ||
+                  ( ( (now - last_baro_update_s_) < timeout   ) ) );
+        break;
+
+        case INS::healthy_t::XYZ_ABS_POSITION:
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) ));
+        break;
+    }
+
+    return ret;
+}
+
+
+bool INS_kf::update(void)
 {
     // Prediction
     if (ahrs_.internal_state == AHRS_READY)
@@ -181,18 +285,18 @@ bool Posvel_kf::update(void)
 
     // Correction from barometer
     // if (barometer_.healthy())
-    // {
-      //  if (last_baro_update_s_ < barometer_.last_update_us()*1e6)
-      //  {
-      //     // run kalman Update
-      //     Kalman<8,3,3>::update(Mat<1,1>(config_.home.altitude - barometer_.altitude_gf()),
-      //                           H_baro_,
-      //                           R_baro_);
-       //
-      //     // Update timing
-      //     last_baro_update_s_ = barometer_.last_update_us()*1e6;
-      //  }
-    // }
+    {
+       if (last_baro_update_s_ < barometer_.last_update_us()*1e6)
+       {
+          // run kalman Update
+          Kalman<8,3,3>::update(Mat<1,1>(config_.home.altitude - barometer_.altitude_gf()),
+                                H_baro_,
+                                R_baro_);
+
+          // Update timing
+          last_baro_update_s_ = barometer_.last_update_us()*1e6;
+       }
+    }
 
     // Correction from sonar
     if (sonar_.healthy())
@@ -225,16 +329,7 @@ bool Posvel_kf::update(void)
             // Update timing
             last_flow_update_s_ = flow_.last_update_s();
         }
-
     }
-
-    // Write output
-    posvel_.pos[0] = x_[0];
-    posvel_.pos[1] = x_[1];
-    posvel_.pos[2] = x_[2] - x_[3];
-    posvel_.vel[0] = x_[4];
-    posvel_.vel[1] = x_[5];
-    posvel_.vel[2] = x_[6];
 
     return true;
 }
