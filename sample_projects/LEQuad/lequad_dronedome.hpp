@@ -81,7 +81,7 @@ public:
           gps_mocap_(mavlink_communication.message_handler()),
           ahrs_mocap_(mavlink_communication.message_handler(), ahrs)
       {
-          init();
+          
       };
 
       /**
