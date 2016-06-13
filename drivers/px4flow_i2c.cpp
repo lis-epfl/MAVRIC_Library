@@ -59,6 +59,11 @@ Px4flow_i2c::Px4flow_i2c(I2c& i2c, conf_t config):
     {;}
 }
 
+bool Px4flow_i2c::healthy(void) const
+{
+    return (flow_quality_ > 50) && (ground_distance_ < 5.0f);
+}
+
 bool Px4flow_i2c::update(void)
 {
     bool res = true;

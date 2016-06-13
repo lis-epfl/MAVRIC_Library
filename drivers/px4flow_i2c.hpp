@@ -59,6 +59,13 @@ class  Px4flow_i2c
 public:
     Px4flow_i2c(I2c& i2c, conf_t config = default_config() );
 
+    /**
+     * \brief   Indicates whether the measurements can be trusted
+     *
+     * \return  Value
+     */
+    bool healthy(void) const;
+
     bool update(void);
 
     static bool update_task(Px4flow_i2c* flow)
