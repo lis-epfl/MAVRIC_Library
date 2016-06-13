@@ -41,10 +41,10 @@
  ******************************************************************************/
 
 #include "runtime/scheduler_telemetry.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/maths.h"
 }
 

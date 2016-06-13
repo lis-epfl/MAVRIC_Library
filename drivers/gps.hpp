@@ -45,11 +45,8 @@
 
 
 #include <array>
+#include "util/coord_conventions.hpp"
 
-extern "C"
-{
-#include "util/coord_conventions.h"
-}
 
 typedef enum
 {

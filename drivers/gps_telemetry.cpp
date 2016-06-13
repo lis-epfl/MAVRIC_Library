@@ -46,7 +46,7 @@ extern "C"
 {
 #include "hal/common/time_keeper.hpp"
 #include "util/maths.h"
-#include "util/constants.h"
+#include "util/constants.hpp"
 }
 
 //------------------------------------------------------------------------------

@@ -41,13 +41,13 @@
 
 
 #include "communication/remote.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
-#include "util/constants.h"
-#include "util/coord_conventions.h"
 #include "util/quick_trig.h"
 }
 

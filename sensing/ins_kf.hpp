@@ -154,6 +154,14 @@ public:
 
 
     /**
+     * \brief     Position of origin in global coordinates
+     *
+     * \return    origin
+     */
+    // virtual global_position_t origin(void) const = 0;
+
+
+    /**
      * \brief     Velocity in meters/seconds in NED frame
      *
      * \return    velocity
@@ -229,7 +237,6 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.home.longitude           = 6.566044801857777f;
     conf.home.latitude            = 46.51852236174565f;
     conf.home.altitude            = 400.0f;
-    conf.home.heading             = 0.0f;
 
     return conf;
 };

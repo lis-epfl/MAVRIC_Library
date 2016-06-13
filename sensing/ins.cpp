@@ -30,62 +30,26 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file hud_telemetry.c
+ * \file ins.cpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief This file sends the MAVLink HUD message
+ * \brief   Inertial Navigation System (estimates position and velocity)
  *
  ******************************************************************************/
 
 
-#include "communication/hud_telemetry.hpp"
-#include "communication/mavlink_communication.hpp"
-#include "util/coord_conventions.hpp"
+#include "sensing/ins.hpp"
 
-extern "C"
+global_position_t INS::origin_;
+
+INS::INS(global_position_t origin)
 {
-#include "util/print_util.h"
-}
+    INS::origin_ = origin;
+};
 
-bool hud_telemetry_init(hud_telemetry_t* hud, const INS* ins, const control_command_t* controls, const ahrs_t* ahrs)
+const global_position_t& INS::origin(void) const
 {
-    bool init_success = true;
-
-    hud->ahrs       = ahrs;
-    hud->controls   = controls;
-    hud->ins        = ins;
-
-    return init_success;
-}
-
-void hud_telemetry_send_message(const hud_telemetry_t* hud, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
-{
-    std::array<float,3> vel = hud->ins->velocity_lf();
-    float groundspeed       = sqrt(vel[0] * vel[0] + vel[1] * vel[1]);
-    float airspeed          = groundspeed;
-
-    aero_attitude_t aero_attitude;
-    aero_attitude = coord_conventions_quat_to_aero(hud->ahrs->qe);
-
-    int16_t heading;
-    if (aero_attitude.rpy[2] < 0)
-    {
-        heading = (int16_t)(360.0f + 180.0f * aero_attitude.rpy[2] / PI); //you want to normalize between 0 and 360°
-    }
-    else
-    {
-        heading = (int16_t)(180.0f * aero_attitude.rpy[2] / PI);
-    }
-
-    mavlink_msg_vfr_hud_pack(mavlink_stream->sysid(),
-                             mavlink_stream->sysid(),
-                             msg,
-                             airspeed,
-                             groundspeed,
-                             heading,
-                             (int32_t)((hud->controls->thrust + 1.0f) * 50),
-                             hud->ins->absolute_altitude(),
-                             -vel[2]);
+    return origin_;
 }

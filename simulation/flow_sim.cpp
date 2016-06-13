@@ -96,7 +96,7 @@ bool Flow_sim::update(void)
     {
         // Translate ray
         local_position_t pos_lf = dynamic_model_.position_lf();
-        ray_tmp.set_origin(Vector3f{pos_lf.pos[0], pos_lf.pos[1], pos_lf.pos[2]});
+        ray_tmp.set_origin(Vector3f{pos_lf[0], pos_lf[1], pos_lf[2]});
 
         // Rotate ray
         float orient_bf[3] = {rays_[i].direction()[0], rays_[i].direction()[1], rays_[i].direction()[2]};

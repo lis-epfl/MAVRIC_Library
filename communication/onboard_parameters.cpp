@@ -39,13 +39,13 @@
  *
  ******************************************************************************/
 
+#include <stdlib.h>
 
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_communication.hpp"
 extern "C"
 {
 #include "util/print_util.h"
-#include <stdlib.h>
 }
 
 //------------------------------------------------------------------------------

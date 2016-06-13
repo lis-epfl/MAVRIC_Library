@@ -44,12 +44,12 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/vectors.h"
 #include "util/maths.h"
-#include "util/constants.h"
 }
 
 typedef enum

@@ -39,11 +39,11 @@
  ******************************************************************************/
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 
 #include "libs/asf/common/services/clock/sysclk.h"
 #include "libs/asf/common/services/sleepmgr/sleepmgr.h"

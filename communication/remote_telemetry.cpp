@@ -42,11 +42,8 @@
 
 #include "communication/remote_telemetry.hpp"
 #include "drivers/satellite.hpp"
-
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-}
+
 
 
 //------------------------------------------------------------------------------

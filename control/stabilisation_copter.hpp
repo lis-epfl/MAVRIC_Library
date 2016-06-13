@@ -45,11 +45,11 @@
 #define STABILISATION_COPTER_H_
 
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "sensing/position_estimation.hpp"
+#include "control/stabilisation.hpp"
+#include "sensing/ins.hpp"
 
 extern "C"
 {
-#include "control/stabilisation.h"
 #include "control/control_command.h"
 }
 
@@ -87,7 +87,7 @@ typedef struct
     float last_update_s;                                        ///< Last update in seconds
     control_command_t* controls;                                ///< The pointer to the control structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
-    const Position_estimation* pos_est;                         ///< The pointer to the position estimation structure
+    const INS* ins;                                             ///< The pointer to the position estimation structure
     torque_command_t* torque_command;                           ///< The pointer to the torque command structure
     thrust_command_t* thrust_command;                           ///< The pointer to the thrust command structure
 } stabilisation_copter_t;
@@ -115,7 +115,7 @@ typedef struct
  *
  * \return  True if the init succeed, false otherwise
  */
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const Position_estimation* pos_est, torque_command_t* torque, thrust_command_t* thrust);
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const INS* ins, torque_command_t* torque, thrust_command_t* thrust);
 
 /**
  * \brief                           Main Controller for controlling and stabilizing the quad

@@ -49,11 +49,8 @@
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
 #include "hal/common/file.hpp"
-
-extern "C"
-{
 #include "runtime/scheduler.hpp"
-}
+
 
 #define MAX_ONBOARD_PARAM_COUNT 120 // should be < 122 to fit on user page on AT32UC3C1512
 
@@ -142,7 +139,7 @@ private:
         uint8_t param_id;                                           ///< Parameter ID
         bool  schedule_for_transmission;                            ///< Boolean to activate the transmission of the parameter
     };
-    
+
     bool debug_;                                             ///< Indicates if debug messages should be printed for each param change
     File& file_;                                             ///< File storage to keep parameters between flights
     const State& state_;                                     ///< Pointer to the state structure

@@ -47,11 +47,6 @@
 #include "communication/mavlink_stream.hpp"
 #include "drivers/servo.hpp"
 
-extern "C"
-{
-    // #include "servos.h"
-}
-
 /**
  * \brief The servo telemetry definition
  */

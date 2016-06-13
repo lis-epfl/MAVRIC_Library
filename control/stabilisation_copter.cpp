@@ -43,15 +43,15 @@
 
 #include "control/stabilisation_copter.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "util/constants.h"
 }
 
 
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const Position_estimation* pos_est, torque_command_t* torque, thrust_command_t* thrust)
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const INS* ins, torque_command_t* torque, thrust_command_t* thrust)
 {
     bool init_success = true;
 
@@ -60,7 +60,7 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
     stabilisation_copter->motor_layout = stabiliser_conf.motor_layout;
     stabilisation_copter->controls = controls;
     stabilisation_copter->ahrs = ahrs;
-    stabilisation_copter->pos_est = pos_est;
+    stabilisation_copter->ins = ins;
     stabilisation_copter->torque_command = torque;
     stabilisation_copter->thrust_command = thrust;
 
@@ -103,6 +103,9 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
     quat_t up_vec = quaternions_global_to_local(stabilisation_copter->ahrs->qe,
                     up);
 
+    // Get current velocity
+    std::array<float,3> vel = stabilisation_copter->ins->velocity_lf();
+
     // set the controller input
     input = *stabilisation_copter->controls;
     switch (stabilisation_copter->controls->control_mode)
@@ -126,23 +129,23 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             input.tvel[Y] = input_global.v[Y];
             input.tvel[Z] = input_global.v[Z];
 
-            rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
-            rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
-            rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
+            rpyt_errors[X] = input.tvel[X] - vel[X];
+            rpyt_errors[Y] = input.tvel[Y] - vel[Y];
+            rpyt_errors[3] = -(input.tvel[Z] - vel[Z]);
 
             if (stabilisation_copter->controls->yaw_mode == YAW_COORDINATED)
             {
                 float rel_heading_coordinated;
-                if ((maths_f_abs(stabilisation_copter->pos_est->vel_bf[X]) < 0.001f) && (maths_f_abs(stabilisation_copter->pos_est->vel_bf[Y]) < 0.001f))
+                if ((maths_f_abs(vel[X]) < 0.001f) && (maths_f_abs(vel[Y]) < 0.001f))
                 {
                     rel_heading_coordinated = 0.0f;
                 }
                 else
                 {
-                    rel_heading_coordinated = atan2(stabilisation_copter->pos_est->vel_bf[Y], stabilisation_copter->pos_est->vel_bf[X]);
+                    rel_heading_coordinated = atan2(vel[Y], vel[X]);
                 }
 
-                float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
+                float w = 0.5f * (maths_sigmoid(vectors_norm(vel.data()) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
                 input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
             }
 
@@ -165,7 +168,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             input.rpy[ROLL] = rpy_local.v[Y];
             input.rpy[PITCH] = -rpy_local.v[X];
 
-            if ((!stabilisation_copter->pos_est->healthy()) || (stabilisation_copter->pos_est->get_fence_violation_state() == Position_estimation::OUTSIDE_FENCE2))
+            if (stabilisation_copter->ins->is_healthy(INS::healthy_t::XYZ_VELOCITY) == false)
             {
                 input.rpy[ROLL] = 0.0f;
                 input.rpy[PITCH] = 0.0f;
@@ -182,7 +185,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 
             if (stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE)
             {
-                rpyt_errors[2] = maths_calc_smaller_angle(input.theading - stabilisation_copter->pos_est->local_position.heading);
+                rpyt_errors[2] = maths_calc_smaller_angle(input.theading - coord_conventions_get_yaw(stabilisation_copter->ahrs->qe));
             }
             else
             {

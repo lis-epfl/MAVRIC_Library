@@ -46,11 +46,8 @@
 
 #include <array>
 #include "sensing/imu.hpp"
+#include "util/coord_conventions.hpp"
 
-extern "C"
-{
-#include "util/coord_conventions.h"
-}
 
 /**
  * \brief   Abstract class for simulation's dynamic model
@@ -96,7 +93,7 @@ public:
      *
      * \return  Value
      */
-    virtual const local_position_t& position_lf(void) const = 0;
+    virtual const std::array<float, 3>& position_lf(void) const = 0;
 
 
     /**

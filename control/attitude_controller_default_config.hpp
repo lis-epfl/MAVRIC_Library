@@ -43,10 +43,7 @@
 #ifndef ATTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
 #define ATTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
 
-extern "C"
-{
-#include "control/attitude_controller.h"
-}
+#include "control/attitude_controller.hpp"
 
 static inline attitude_controller_conf_t attitude_controller_default_config()
 {

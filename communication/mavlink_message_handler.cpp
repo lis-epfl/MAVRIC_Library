@@ -41,13 +41,15 @@
  ******************************************************************************/
 
 
+ #include <stdlib.h>
+ #include <stdbool.h>
+
 #include "communication/mavlink_message_handler.hpp"
 #include "util/print_util.h"
+
 extern "C"
 {
 #include "hal/piezo_speaker.h"
-#include <stdlib.h>
-#include <stdbool.h>
 }
 
 
@@ -146,7 +148,7 @@ void Mavlink_message_handler::sort_latest_msg_callback()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream, const conf_t& config) : 
+Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream, const conf_t& config) :
         mavlink_stream_(mavlink_stream)
 {
     // Init debug mode

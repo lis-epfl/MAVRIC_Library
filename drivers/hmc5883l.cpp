@@ -44,11 +44,11 @@
 
 
 #include "drivers/hmc5883l.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 }
 
 

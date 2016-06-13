@@ -49,9 +49,9 @@
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
 #include "control/dubin.hpp"
+#include "control/stabilisation.hpp"
 extern "C"
 {
-#include "control/stabilisation.h"
 #include "util/quaternions.h"
 #include "control/pid_controller.h"
 }
@@ -62,10 +62,11 @@ extern "C"
  */
 typedef struct
 {
-    local_position_t waypoint;                                  ///< The local coordinates of the waypoint
-    float radius;                                               ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
-    float loiter_time;                                          ///< The loiter time at the waypoint
-    dubin_t dubin;                                              ///< The Dubin structure
+    local_position_t position;        ///< The local coordinates of the waypoint
+    float heading;                    ///< Desired heading
+    float radius;                     ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
+    float loiter_time;                ///< The loiter time at the waypoint
+    dubin_t dubin;                    ///< The Dubin structure
 } waypoint_local_struct_t;
 
 /**
@@ -147,12 +148,12 @@ public:
      *
      * \param   controls_nav            The pointer to the control structure
      * \param   qe                      The pointer to the attitude quaternion structure
-     * \param   position_estimation     The pointer to the position estimation structure
+     * \param   ins                     The pointer to the position estimation structure
      * \param   state                   The pointer to the state structure
      * \param   mavlink_stream          The pointer to the MAVLink_stream structure
      * \param   nav_config              The pointer to the config structure
      */
-    Navigation(control_command_t& controls_nav, const quat_t& qe, const Position_estimation& position_estimation, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config = default_config());
+    Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config = default_config());
 
     /**
      * \brief   Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -210,7 +211,7 @@ private:
     uint32_t last_update;                               ///< The time of the last navigation update in ms
     uint32_t loop_count;                                ///< A counter for sending MAVLink messages at a lower rate than the function
     control_command_t& controls_nav;                    ///< Reference to the navigation control structure
-    const Position_estimation& position_estimation;     ///< The pointer to the position estimation structure
+    const INS& ins;                                     ///< The pointer to the position estimation structure
     State& state;                                       ///< The pointer to the state structure
     const Mavlink_stream& mavlink_stream;               ///< The pointer to the MAVLink stream structure
 
@@ -300,7 +301,7 @@ Navigation::conf_t Navigation::default_wing_config()
 
     conf.cruise_speed                                = 12.0f;
     conf.max_climb_rate                              = 6.0f;
-    
+
     conf.safe_altitude                               = -60.0f;
     conf.minimal_radius                              = 45.0f;
     // conf.heading_acceptance                          = PI/6.0f;  //TODO should this be adapted for the wing

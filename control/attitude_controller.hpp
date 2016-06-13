@@ -51,11 +51,7 @@
 #ifndef ATTITUDE_CONTROLLER_H_
 #define ATTITUDE_CONTROLLER_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "control/attitude_error_estimator.h"
+#include "control/attitude_error_estimator.hpp"
 #include "control/control_command.h"
 #include "sensing/ahrs.h"
 #include "control/pid_controller.h"
@@ -122,9 +118,5 @@ bool attitude_controller_init(attitude_controller_t* controller, attitude_contro
  */
 bool attitude_controller_update(attitude_controller_t* controller);
 
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* ATTITUDE_CONTROLLER_H_ */

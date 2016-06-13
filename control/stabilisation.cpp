@@ -30,60 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.c
+ * \file stabilisation.c
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Felix Schill
  *
- * \brief This file implements data structure for attitude estimate
+ * \brief Executing the PID controllers for stabilization
  *
  ******************************************************************************/
 
 
-#include "sensing/ahrs.h"
+#include "control/stabilisation.hpp"
 #include "util/print_util.h"
-#include "util/constants.h"
+#include "util/constants.hpp"
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool ahrs_init(ahrs_t* ahrs)
+bool stabilisation_init(control_command_t* controls)
 {
     bool init_success = true;
 
-    // Init structure
-    ahrs->qe.s = 1.0f;
-    ahrs->qe.v[X] = 0.0f;
-    ahrs->qe.v[Y] = 0.0f;
-    ahrs->qe.v[Z] = 0.0f;
+    controls->control_mode = ATTITUDE_COMMAND_MODE;
+    controls->yaw_mode = YAW_RELATIVE;
 
-    ahrs->angular_speed[X] = 0.0f;
-    ahrs->angular_speed[Y] = 0.0f;
-    ahrs->angular_speed[Z] = 0.0f;
-
-    ahrs->linear_acc[X] = 0.0f;
-    ahrs->linear_acc[Y] = 0.0f;
-    ahrs->linear_acc[Z] = 0.0f;
-
-    ahrs->last_update_s = 0.0f;
-    
-    ahrs->internal_state = AHRS_INITIALISING;
+    controls->rpy[ROLL] = 0.0f;
+    controls->rpy[PITCH] = 0.0f;
+    controls->rpy[YAW] = 0.0f;
+    controls->tvel[X] = 0.0f;
+    controls->tvel[Y] = 0.0f;
+    controls->tvel[Z] = 0.0f;
+    controls->theading = 0.0f;
+    controls->thrust = -1.0f;
 
     return init_success;
 }
 
-ahrs_t ahrs_initialized()
+void stabilisation_run(stabiliser_t* stabiliser, float dt, float errors[])
 {
-    ahrs_t ahrs;
-    ahrs_init(&ahrs);
-    return ahrs;
+    for (int32_t i = 0; i < 3; i++)
+    {
+        stabiliser->output.rpy[i] = pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
+    }
+    stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
+}
+
+void stabilisation_run_feedforward(stabiliser_t *stabiliser, float dt, float errors[], float feedforward[])
+{
+    for (int32_t i = 0; i < 3; i++)
+    {
+        stabiliser->output.rpy[i] = pid_controller_update_feedforward_dt(&(stabiliser->rpy_controller[i]),  errors[i], feedforward[i], dt);
+    }
+    stabiliser->output.thrust = pid_controller_update_feedforward_dt(&(stabiliser->thrust_controller),  errors[3], feedforward[3], dt);
 }

@@ -41,19 +41,16 @@
 
 
 #include "simulation/gps_sim.hpp"
-
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-#include "util/constants.h"
-}
+#include "util/constants.hpp"
+
 
 Gps_sim::Gps_sim(Dynamic_model& dynamic_model):
     dynamic_model_(dynamic_model),
     last_update_us_(0.0f),
     last_position_update_us_(0.0f),
     last_velocity_update_us_(0.0f),
-    global_position_({0.0, 0.0, 0.0f, 0.0f}),
+    global_position_({0.0, 0.0, 0.0f}),
     horizontal_position_accuracy_(0.0f),
     vertical_position_accuracy_(0.0f),
     velocity_lf_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
@@ -86,12 +83,11 @@ bool Gps_sim::update(void)
     global_position_.longitude  = dynamic_model_.position_gf().longitude;
     global_position_.latitude   = dynamic_model_.position_gf().latitude;
     global_position_.altitude   = dynamic_model_.position_gf().altitude;
-    global_position_.heading    = dynamic_model_.position_gf().heading;
     horizontal_position_accuracy_   = 1.0f;
     vertical_position_accuracy_     = 3.0f;
     velocity_lf_        = dynamic_model_.velocity_lf();
     velocity_accuracy_  = 0.1f;
-    heading_            = dynamic_model_.position_gf().heading;
+    heading_            = coord_conventions_get_yaw(dynamic_model_.attitude());
     heading_accuracy_   = 5.0f;
     num_sats_   = 5;
     healthy_    = true;

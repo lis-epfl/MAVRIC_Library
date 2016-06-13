@@ -260,11 +260,11 @@ bool INS_kf::update(void)
         if (last_gps_pos_update_s_ < gps_.last_position_update_us()*1e6)
         {
             // Get local position from gps
-            local_position_t local_pos = coord_conventions_global_to_local_position(gps_.position_gf(),
-                                                                                    config_.home);
+            local_position_t local_pos;
+            coord_conventions_global_to_local_position(gps_.position_gf(), origin(), local_pos);
 
             // run kalman update using default matrices
-            Kalman<8,3,3>::update({local_pos.pos[0], local_pos.pos[1], local_pos.pos[2]});
+            Kalman<8,3,3>::update({local_pos[0], local_pos[1], local_pos[2]});
 
             // Update timing
             last_gps_pos_update_s_ = gps_.last_position_update_us()*1e6;

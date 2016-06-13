@@ -30,53 +30,90 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file constants.h
  *
  * \author MAV'RIC Team
- * \author Felix Schill
  *
- * \brief Executing the PID controllers for stabilization
+ * \brief Useful constants
  *
  ******************************************************************************/
 
 
-#include "control/stabilisation.h"
-#include "util/print_util.h"
-#include "util/constants.h"
+#ifndef MATH_UTIL_H_
+#define MATH_UTIL_H_
 
-bool stabilisation_init(control_command_t* controls)
+#include "util/coord_conventions.hpp"
+
+#define GRAVITY 9.81f           ///< The gravity constant
+
+
+/**
+ * \brief Enumerates the X, Y and Z orientations
+ * according to the autopilot placement on the MAV
+ */
+typedef enum
 {
-    bool init_success = true;
+    X = 0,
+    Y = 1,
+    Z = 2,
+} constants_orientation_t;
 
-    controls->control_mode = ATTITUDE_COMMAND_MODE;
-    controls->yaw_mode = YAW_RELATIVE;
 
-    controls->rpy[ROLL] = 0.0f;
-    controls->rpy[PITCH] = 0.0f;
-    controls->rpy[YAW] = 0.0f;
-    controls->tvel[X] = 0.0f;
-    controls->tvel[Y] = 0.0f;
-    controls->tvel[Z] = 0.0f;
-    controls->theading = 0.0f;
-    controls->thrust = -1.0f;
-
-    return init_success;
-}
-
-void stabilisation_run(stabiliser_t* stabiliser, float dt, float errors[])
+/**
+ * \brief Enumerates the Roll, Pitch and Yaw orientations
+ * according to the autopilot placement on the MAV
+ */
+typedef enum
 {
-    for (int32_t i = 0; i < 3; i++)
-    {
-        stabiliser->output.rpy[i] = pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-    }
-    stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
-}
+    ROLL    = 0,
+    PITCH   = 1,
+    YAW     = 2,
+} constants_roll_pitch_yaw_t;
 
-void stabilisation_run_feedforward(stabiliser_t *stabiliser, float dt, float errors[], float feedforward[])
+
+/**
+ * \brief Enumerates the up vector orientation
+ * according to the autopilot placement on the MAV
+ */
+typedef enum
 {
-    for (int32_t i = 0; i < 3; i++)
-    {
-        stabiliser->output.rpy[i] = pid_controller_update_feedforward_dt(&(stabiliser->rpy_controller[i]),  errors[i], feedforward[i], dt);
-    }
-    stabiliser->output.thrust = pid_controller_update_feedforward_dt(&(stabiliser->thrust_controller),  errors[3], feedforward[3], dt);
-}
+    UPVECTOR_X = 0,
+    UPVECTOR_Y = 0,
+    UPVECTOR_Z = -1,
+} constants_upvector_t;
+
+
+/**
+ * \brief Enumerates ON/OFF switches
+ */
+typedef enum
+{
+    OFF = 0,
+    ON  = 1,
+} constants_on_off_t;
+
+
+/**
+ * \brief Enumerate the turn direction of a motor
+ */
+typedef enum
+{
+    CCW =  1,                    ///< Counter Clock wise
+    CW  = -1                     ///< Clock wise
+} rot_dir_t;
+
+
+/**
+ * \brief Enumerate the turn direction of a flap
+ */
+typedef enum
+{
+    FLAP_NORMAL     = 1,    ///< Positive roll or positive pitch or positive yaw
+    FLAP_INVERTED   = -1    ///< Negative roll or negative pitch or negative yaw
+} flap_dir_t;
+
+
+constexpr global_position_t ORIGIN_EPFL = {6.566044801857777f, 46.51852236174565f, 400.0f};
+
+
+#endif /* MATH_UTIL_H_ */

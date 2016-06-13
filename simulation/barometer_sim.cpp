@@ -41,12 +41,9 @@
 
 
 #include "simulation/barometer_sim.hpp"
-
-extern "C"
-{
-#include "util/constants.h"
+#include "util/constants.hpp"
 #include "hal/common/time_keeper.hpp"
-}
+
 
 
 Barometer_sim::Barometer_sim(Dynamic_model& dynamic_model):
