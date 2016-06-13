@@ -51,8 +51,8 @@
 #include "drivers/px4flow_i2c.hpp"
 #include "hal/common/time_keeper.hpp"
 
-#include "sensing/posvel.hpp"
-#include "sensing/posvel_kf.hpp"
+#include "sensing/ins.hpp"
+#include "sensing/ins_kf.hpp"
 
 
 /**
@@ -111,16 +111,16 @@ public:
                     std::array<Servo*, 6>{{&servo_0, &servo_1, &servo_2, &servo_3, &servo_4, &servo_5}},
                     config.servos_mix_config),
         bottom_flow_(flow_i2c, Px4flow_i2c::default_config()),
-        posvel_kf_(gps, barometer, sonar, bottom_flow_, ahrs, posvel_)
+        ins_kf_(gps, barometer, sonar, bottom_flow_, ahrs)
     {
         init_flow();
-        init_posvel();
+        init_ins();
     };
 
 
 protected:
     bool init_flow(void);
-    bool init_posvel(void);
+    bool init_ins(void);
 
     virtual bool main_task(void);
 
@@ -129,8 +129,7 @@ protected:
 
     Px4flow_i2c bottom_flow_;
 
-    posvel_t posvel_;
-    Posvel_kf posvel_kf_;
+    INS_kf ins_kf_;
 };
 
 
@@ -165,18 +164,15 @@ bool Hexhog::init_flow(void)
 }
 
 
-bool Hexhog::init_posvel(void)
+bool Hexhog::init_ins(void)
 {
     bool ret = true;
 
-    // Init module
-    posvel_kf_.init();
-
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, (Mavlink_communication::send_msg_function_t)&posvel_telemetry_send, &posvel_);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, (Mavlink_communication::send_msg_function_t)&ins_telemetry_send, &ins_kf_);
 
     // Task
-    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&task_posvel_kf_update, (Scheduler_task::task_argument_t)&posvel_kf_);
+    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&task_ins_kf_update, (Scheduler_task::task_argument_t)&ins_kf_);
 
     return ret;
 }
