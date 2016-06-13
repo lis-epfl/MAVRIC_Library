@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_kf.hpp
+ * \file ins_kf.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef POSVEL_KF_HPP_
-#define POSVEL_KF_HPP_
+#ifndef INS_KF_HPP_
+#define INS_KF_HPP_
 
 
 #include "drivers/gps.hpp"
@@ -49,7 +49,7 @@
 #include "drivers/sonar.hpp"
 #include "drivers/px4flow_i2c.hpp"
 #include "sensing/ahrs.h"
-#include "sensing/posvel.hpp"
+#include "sensing/ins.hpp"
 
 #include "util/kalman.hpp"
 
@@ -64,7 +64,7 @@ extern "C"
  *
  * \details
  * - state vector X (n=8): X = [ x_ned, y_ned, z_ned,
-                                 z_ground_ned,
+                                 z_ground_abs,
                                  vx, vy, vz,
                                  bias_baro ]
 
@@ -88,25 +88,23 @@ extern "C"
                      [ 0,        0,       dt,        ]
                      [ 0,        0,        0         ]
 
-   - measurement 1 (gps) : z1 = [ x_ned, y_ned, z_ned ]
+   - measurement 1 (gps) : z1 = [ x_ned, y_ned, z_abs ]
                            H1 = [ 1, 0, 0, 0, 0, 0, 0, 0 ]
                                 [ 0, 1, 0, 0, 0, 0, 0, 0 ]
-                                [ 0, 0, 1, 0, 0, 0, 0, 0 ]
+                                [ 0, 0, 0, 1, 0, 0, 0, 0 ]
 
    - measurement 2 (gps) : z2 = [ vx, vy, vz ]
                            H2 = [ 0, 0, 0, 0, 1, 0, 0, 0 ]
                                 [ 0, 0, 0, 0, 0, 1, 0, 0 ]
                                 [ 0, 0, 0, 0, 0, 0, 1, 0 ]
 
-   - measurement 3 (baro): z3 = [ z_ned + bias_baro ]
-                           H3 = [ 0, 0, 1, 0, 0, 0, 0, 1 ]
+   - measurement 3 (baro): z3 = [ z_abs + bias_baro ]
+                           H3 = [ 0, 0, 0, 1, 0, 0, 0, 1 ]
 
-   - measurement 4 (sonar): z4 = [ z_ned - z_ground_ned ]
-                            H4 = [ 0, 0, 1, -1, 0, 0, 0, 0 ]
-
-
+   - measurement 4 (sonar): z4 = [ -z_ned ]
+                            H4 = [ 0, 0, -1, 0, 0, 0, 0, 0 ]
  */
-class Posvel_kf: public Kalman<8,3,3>
+class INS_kf: public Kalman<8,3,3>, public INS
 {
 public:
     /**
@@ -123,20 +121,13 @@ public:
     /**
      * \brief Constructor
      */
-    Posvel_kf(const Gps& gps,
+    INS_kf(const Gps& gps,
               const Barometer& barometer,
               const Sonar& sonar,
               const Px4flow_i2c& flow,
               const ahrs_t& ahrs,
-              posvel_t& posvel,
               const conf_t config = default_config() );
 
-    /**
-     * \brief   Initialization
-     *
-     * \return  Success
-     */
-    bool init(void);
 
     /**
      * \brief   Main update function
@@ -145,10 +136,53 @@ public:
      */
     bool update(void);
 
+
+    /**
+     * \brief     Last update in seconds
+     *
+     * \return    time
+     */
+    float last_update_s(void) const;
+
+
+    /**
+     * \brief     3D Position in meters (NED frame)
+     *
+     * \return    position
+     */
+    std::array<float,3> position_lf(void) const;
+
+
+    /**
+     * \brief     Velocity in meters/seconds in NED frame
+     *
+     * \return    velocity
+     */
+    std::array<float,3> velocity_lf(void) const;
+
+
+    /**
+     * \brief     Absolute altitude above sea level in meters (>=0)
+     *
+     * \return    altitude
+     */
+    float absolute_altitude(void) const;
+
+
+    /**
+     * \brief   Indicates which estimate can be trusted
+     *
+     * \param   type    Type of estimate
+     *
+     * \return  boolean
+     */
+    bool is_healthy(INS::healthy_t type) const;
+
+
     /**
      * \brief   Default configuration structure
      */
-    static inline Posvel_kf::conf_t default_config(void);
+    static inline INS_kf::conf_t default_config(void);
 
 
 private:
@@ -157,9 +191,12 @@ private:
     const Sonar&        sonar_;           ///< Sonar, must be downward facing (input)
     const Px4flow_i2c&  flow_;            ///< Optical flow sensor (input)
     const ahrs_t&       ahrs_;            ///< Attitude and acceleration (input)
-    posvel_t&           posvel_;          ///< Estimated altitude (output)
 
     conf_t config_;                      ///< Configuration
+
+    std::array<float,3> pos_;
+    std::array<float,3> vel_;
+    float absolute_altitude_;
 
     Mat<3,8> H_gpsvel_;
     Mat<3,3> R_gpsvel_;
@@ -179,9 +216,9 @@ private:
 };
 
 
-Posvel_kf::conf_t Posvel_kf::default_config(void)
+INS_kf::conf_t INS_kf::default_config(void)
 {
-    Posvel_kf::conf_t conf = {};
+    INS_kf::conf_t conf = {};
 
     conf.dt = 0.004f;
 
@@ -197,9 +234,9 @@ Posvel_kf::conf_t Posvel_kf::default_config(void)
     return conf;
 };
 
-static inline bool task_posvel_kf_update(Posvel_kf* posvel_kf)
+static inline bool task_ins_kf_update(INS_kf* ins_kf)
 {
-    return posvel_kf->update();
+    return ins_kf->update();
 }
 
-#endif /* POSVEL_KF_HPP_ */
+#endif /* INS_KF_HPP_ */

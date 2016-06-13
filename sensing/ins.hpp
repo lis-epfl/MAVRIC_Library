@@ -30,30 +30,99 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file posvel.hpp
+ * \file ins.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief   Position and velocity estimate
+ * \brief   Inertial Navigation System (estimates position and velocity)
  *
  ******************************************************************************/
 
 
-#ifndef POSVEL_HPP_
-#define POSVEL_HPP_
+#ifndef INS_HPP_
+#define INS_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "hal/common/time_keeper.hpp"
 
-struct posvel_t
+class INS
 {
-    float pos[3];
-    float vel[3];
+public:
+    /**
+     * \brief   Main update function
+     *
+     * \return  Success
+     */
+    virtual bool update(void) = 0;
+
+
+    /**
+     * \brief     Last update in seconds
+     *
+     * \return    time
+     */
+    virtual float last_update_s(void) const = 0;
+
+
+    /**
+     * \brief     3D Position in meters (NED frame)
+     *
+     * \return    position
+     */
+    virtual std::array<float,3> position_lf(void) const = 0;
+
+
+    /**
+     * \brief     Velocity in meters/seconds in NED frame
+     *
+     * \return    velocity
+     */
+    virtual std::array<float,3> velocity_lf(void) const = 0;
+
+
+    /**
+     * \brief     Absolute altitude above sea level in meters (>=0)
+     *
+     * \return    altitude
+     */
+    virtual float absolute_altitude(void) const = 0;
+
+
+    /**
+     * \brief     Enumeration of potential healthy estimates
+     */
+    enum healthy_t
+    {
+        XY_VELOCITY,
+        Z_VELOCITY,
+        XYZ_VELOCITY,
+        XY_REL_POSITION,
+        Z_REL_POSITION,
+        XYZ_REL_POSITION,
+        XY_ABS_POSITION,
+        Z_ABS_POSITION,
+        XYZ_ABS_POSITION
+    };
+
+
+    /**
+    * \brief   Indicates which estimate can be trusted
+    *
+    * \param   type    Type of estimate
+    *
+    * \return  boolean
+    */
+    virtual bool is_healthy(INS::healthy_t type) const = 0;
 };
 
-// void posvel_telemetry_send(const posvel_t* posvel, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
-static inline void posvel_telemetry_send(const posvel_t* posvel, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+
+/**
+ * \brief Telemetry
+ *
+ * TODO: move to separate file
+ */
+static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     float cov[45];
     mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
@@ -62,16 +131,16 @@ static inline void posvel_telemetry_send(const posvel_t* posvel, const Mavlink_s
                                             time_keeper_get_ms(),
                                             time_keeper_get_ms(),
                                             0,
-                                            posvel->pos[0],
-                                            posvel->pos[1],
-                                            posvel->pos[2],
-                                            posvel->vel[0],
-                                            posvel->vel[1],
-                                            posvel->vel[2],
+                                            ins->position_lf()[0],
+                                            ins->position_lf()[1],
+                                            ins->position_lf()[2],
+                                            ins->velocity_lf()[0],
+                                            ins->velocity_lf()[1],
+                                            ins->velocity_lf()[2],
                                             0.0f,
                                             0.0f,
-                                            0.0f,
+                                            ins->absolute_altitude(),
                                             cov);
 }
 
-#endif /* POSVEL_HPP_ */
+#endif /* INS_HPP_ */
