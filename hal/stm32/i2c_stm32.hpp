@@ -209,7 +209,7 @@ static inline  i2c_stm32_conf_t i2c_stm32_default_config()
     conf.clk_config.port    = GPIO_STM32_PORT_B;
     conf.clk_config.pin     = GPIO_STM32_PIN_10;
     conf.clk_config.alt_fct = GPIO_STM32_AF_4;
-    conf.clk_speed          = 400000;
+    conf.clk_speed          = 100000;
     conf.tenbit_config      = false; //currently only support 7bits addressing
     conf.timeout            = 20000;
     return conf;
