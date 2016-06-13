@@ -45,11 +45,11 @@
 #include <string>
 #include "hal/common/time_keeper.hpp"
 #include <stdbool.h>
-#include <stdlib.h>
 #include <math.h>
 
 extern "C"
 {
+#include <stdlib.h>
 #include "util/print_util.h"
 }
 

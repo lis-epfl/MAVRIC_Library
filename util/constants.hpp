@@ -113,7 +113,7 @@ typedef enum
 } flap_dir_t;
 
 
-constexpr global_position_t ORIGIN_EPFL = {6.566044801857777f, 46.51852236174565f, 400.0f};
+const global_position_t ORIGIN_EPFL = {6.566044801857777f, 46.51852236174565f, 400.0f};
 
 
 #endif /* MATH_UTIL_H_ */
