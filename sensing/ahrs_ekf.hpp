@@ -134,6 +134,9 @@ protected:
     Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
 
+    float dt_s_;
+    float last_update_s_;
+
     conf_t config_;                                     ///< The config structure for the EKF module
 
     const Imu& imu_;                                    ///< The Reference to the IMU structure

@@ -79,6 +79,8 @@ typedef struct
     pid_controller_t            rate_pid[3];                ///< Angular rate PID controller for roll, pitch and yaw
     pid_controller_t            angle_pid[3];               ///< Attitude PID controller for roll, pitch and yaw
     attitude_controller_mode_t  mode;                       ///< Control mode: Angle (default), or rate
+    float                       dt_s;                       ///< The time interval between two updates
+    float                       last_update_s;              ///< The time of the last update in s
     const ahrs_t*               ahrs;                       ///< Pointer to attitude estimation (input)
     const attitude_command_t*   attitude_command;           ///< Pointer to attitude command (input)
     rate_command_t*             rate_command;               ///< Pointer to rate command (input/output)
