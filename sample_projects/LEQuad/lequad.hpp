@@ -63,6 +63,7 @@
 #include "control/navigation.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
+#include "control/stabilisation.hpp"
 #include "control/stabilisation_copter.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
 #include "control/velocity_controller_copter.hpp"
@@ -86,15 +87,14 @@
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
 
+#include "util/coord_conventions.hpp"
+
 extern "C"
 {
 #include "sensing/ahrs.h"
 #include "sensing/altitude.h"
 #include "control/pid_controller.h"
 #include "util/print_util.h"
-#include "util/coord_conventions.h"
-#include "control/stabilisation.h"
-#include "control/attitude_controller.h"
 }
 
 
@@ -222,19 +222,19 @@ protected:
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
 
+    Position_estimation position_estimation;                    ///< The position estimaton structure
+
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
 
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
-
-    Position_estimation position_estimation;                    ///< The position estimaton structure
 
     Navigation navigation;                                      ///< The structure to perform GPS navigation
     Mavlink_waypoint_handler waypoint_handler;
 
     State_machine state_machine;                                ///< The structure for the state machine
 
-    hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
+    hud_telemetry_t hud;                                        ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
     Data_logging    data_logging_continuous;

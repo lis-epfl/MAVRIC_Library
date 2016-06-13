@@ -43,12 +43,20 @@
 #ifndef INS_HPP_
 #define INS_HPP_
 
+#include <array>
 #include "communication/mavlink_stream.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
 
 class INS
 {
 public:
+    /**
+      * \brief Constructor
+      */
+    INS(global_position_t origin = ORIGIN_EPFL);
+
     /**
      * \brief   Main update function
      *
@@ -70,7 +78,7 @@ public:
      *
      * \return    position
      */
-    virtual std::array<float,3> position_lf(void) const = 0;
+    virtual local_position_t position_lf(void) const = 0;
 
 
     /**
@@ -114,6 +122,17 @@ public:
     * \return  boolean
     */
     virtual bool is_healthy(INS::healthy_t type) const = 0;
+
+
+    /**
+     * \brief     Position of origin in global coordinates
+     *
+     * \return    origin
+     */
+    const global_position_t& origin(void) const;
+
+private:
+    static global_position_t origin_;
 };
 
 

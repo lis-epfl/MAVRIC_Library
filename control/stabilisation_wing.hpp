@@ -44,13 +44,13 @@
 #define STABILISATION_WING_H_
 
 #include "control/navigation.hpp"
+#include "control/stabilisation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/position_estimation.hpp"
 #include "drivers/airspeed_analog.hpp"
 
 extern "C"
 {
-#include "control/stabilisation.h"
 #include "control/control_command.h"
 }
 

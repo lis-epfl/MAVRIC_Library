@@ -45,11 +45,7 @@
 
 #include "control/stabilisation_copter.hpp"
 #include "communication/mavlink_stream.hpp"
-
-extern "C"
-{
-#include "control/stabilisation.h"
-}
+#include "control/stabilisation.hpp"
 
 
 /**

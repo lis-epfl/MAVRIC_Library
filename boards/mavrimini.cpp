@@ -43,11 +43,11 @@
 
 
 #include "boards/mavrimini.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 }
 
 
@@ -73,7 +73,7 @@ static void clock_setup(void)
 
 
 Mavrimini::Mavrimini(mavrimini_conf_t config):
-    dsm_receiver_gpio(config.dsm_receiver_gpio_config), 
+    dsm_receiver_gpio(config.dsm_receiver_gpio_config),
     dsm_power_gpio(config.dsm_power_gpio_config),
     green_led_gpio(config.green_led_gpio_config),
     red_led_gpio(config.red_led_gpio_config),

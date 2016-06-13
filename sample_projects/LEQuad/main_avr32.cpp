@@ -52,10 +52,10 @@
 // #include "simulation/simulation.hpp"
 // #include "hal/dummy/adc_dummy.hpp"
 // #include "hal/dummy/pwm_dummy.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"

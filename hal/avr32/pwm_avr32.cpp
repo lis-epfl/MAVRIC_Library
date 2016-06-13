@@ -43,14 +43,15 @@
  *
  ******************************************************************************/
 
+#include <math.h>
+
 #include "hal/avr32/pwm_avr32.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "libs/asf/avr32/drivers/gpio/gpio.h"
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
-#include <math.h>
 }
 
 //------------------------------------------------------------------------------

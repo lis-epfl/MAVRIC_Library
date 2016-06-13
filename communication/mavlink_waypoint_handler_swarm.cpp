@@ -42,12 +42,12 @@
 #include "communication/mavlink_waypoint_handler_swarm.hpp"
 #include <cstdlib>
 #include "hal/common/time_keeper.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
 #include "util/maths.h"
-#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------
@@ -106,27 +106,25 @@ void Mavlink_waypoint_handler_swarm::set_circle_scenario(mavlink_command_long_t*
     waypoint_count_ = 2;
     current_waypoint_index_ = -1;
 
-    waypoint_transfo.origin = position_estimation_.local_position.origin;
-
     // Start waypoint
     uint32_t sysid = mavlink_stream_.sysid();
-    waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (sysid - 1));
-    waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (sysid - 1));
-    waypoint_transfo.pos[Z] = altitude;
-    waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
+    waypoint_transfo[X] = circle_radius * cos(angle_step * (sysid - 1));
+    waypoint_transfo[Y] = circle_radius * sin(angle_step * (sysid - 1));
+    waypoint_transfo[Z] = altitude;
+    coord_conventions_local_to_global_position(waypoint_transfo, ins_.origin(), waypoint_global);
 
     print_util_dbg_print("Circle departure(x100): (");
-    print_util_dbg_print_num(waypoint_transfo.pos[X] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[X] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Y] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Y] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
     print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
     waypoint.x = waypoint_global.latitude;
     waypoint.y = waypoint_global.longitude;
-    waypoint.z = -altitude; // Positive Z axis is pointing downwards, so the altitude is negative is the local frame
+    waypoint.z = - altitude; // Positive Z axis is pointing downwards, so the altitude is negative is the local frame
 
     waypoint.autocontinue = packet->param5;
     waypoint.current = (packet->param5 == 1);
@@ -141,17 +139,17 @@ void Mavlink_waypoint_handler_swarm::set_circle_scenario(mavlink_command_long_t*
     waypoint_list[0] = waypoint;
 
     // End waypoint
-    waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (sysid - 1) + PI);
-    waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (sysid - 1) + PI);
-    waypoint_transfo.pos[Z] = altitude;
-    waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
+    waypoint_transfo[X] = circle_radius * cos(angle_step * (sysid - 1) + PI);
+    waypoint_transfo[Y] = circle_radius * sin(angle_step * (sysid - 1) + PI);
+    waypoint_transfo[Z] = altitude;
+    coord_conventions_local_to_global_position(waypoint_transfo, ins_.origin(), waypoint_global);
 
     print_util_dbg_print("Circle destination(x100): (");
-    print_util_dbg_print_num(waypoint_transfo.pos[X] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[X] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Y] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Y] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
     print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
@@ -208,8 +206,6 @@ void Mavlink_waypoint_handler_swarm::set_circle_uniform_scenario(mavlink_command
     waypoint_count_ = 0;
     current_waypoint_index_ = -1;
 
-    waypoint_transfo.origin = position_estimation_.local_position.origin;
-
     for (i = 0; i < 10; ++i)
     {
         waypoint_count_++;
@@ -217,17 +213,17 @@ void Mavlink_waypoint_handler_swarm::set_circle_uniform_scenario(mavlink_command
         x = 2.0f * PI * rand();
 
         // Start waypoint
-        waypoint_transfo.pos[X] = circle_radius * cos(x);
-        waypoint_transfo.pos[Y] = circle_radius * sin(x);
-        waypoint_transfo.pos[Z] = altitude;
-        waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
+        waypoint_transfo[X] = circle_radius * cos(x);
+        waypoint_transfo[Y] = circle_radius * sin(x);
+        waypoint_transfo[Z] = altitude;
+        coord_conventions_local_to_global_position(waypoint_transfo, ins_.origin(), waypoint_global);
 
         print_util_dbg_print("Circle uniform departure(x100): (");
-        print_util_dbg_print_num(waypoint_transfo.pos[X] * 100.0f, 10);
+        print_util_dbg_print_num(waypoint_transfo[X] * 100.0f, 10);
         print_util_dbg_print(", ");
-        print_util_dbg_print_num(waypoint_transfo.pos[Y] * 100.0f, 10);
+        print_util_dbg_print_num(waypoint_transfo[Y] * 100.0f, 10);
         print_util_dbg_print(", ");
-        print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
+        print_util_dbg_print_num(waypoint_transfo[Z] * 100.0f, 10);
         print_util_dbg_print("). For system:");
         print_util_dbg_print_num(mavlink_stream_.sysid(), 10);
         print_util_dbg_print(".\r\n");
@@ -250,7 +246,7 @@ void Mavlink_waypoint_handler_swarm::set_circle_uniform_scenario(mavlink_command
         waypoint.param1 = 2.0f; // Hold time in decimal seconds
         waypoint.param2 = 4.0f; // Acceptance radius in meters
         waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-        waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + atan2(waypoint_transfo.pos[Y], waypoint_transfo.pos[X]))); // Desired yaw angle at MISSION (rotary wing)
+        waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + atan2(waypoint_transfo[Y], waypoint_transfo[X]))); // Desired yaw angle at MISSION (rotary wing)
 
         waypoint_list[i] = waypoint;
     }
@@ -290,30 +286,28 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
     waypoint_count_ = 2;
     current_waypoint_index_ = -1;
 
-    waypoint_transfo.origin = position_estimation_.local_position.origin;
-
     // Start waypoint
     uint32_t sysid = mavlink_stream_.sysid();
     if (sysid <= (num_of_vhc / 2.0f))
     {
-        waypoint_transfo.pos[X] = lateral_dist;
-        waypoint_transfo.pos[Y] = dist / 2.0f * (sysid - 1);
+        waypoint_transfo[X] = lateral_dist;
+        waypoint_transfo[Y] = dist / 2.0f * (sysid - 1);
     }
     else
     {
-        waypoint_transfo.pos[X] = - lateral_dist;
-        waypoint_transfo.pos[Y] = dist / 2.0f * (sysid - 1 - (num_of_vhc / 2.0f));
+        waypoint_transfo[X] = - lateral_dist;
+        waypoint_transfo[Y] = dist / 2.0f * (sysid - 1 - (num_of_vhc / 2.0f));
     }
 
-    waypoint_transfo.pos[Z] = altitude;
-    waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
+    waypoint_transfo[Z] = altitude;
+    coord_conventions_local_to_global_position(waypoint_transfo, ins_.origin(), waypoint_global);
 
     print_util_dbg_print("Stream departure(x100): (");
-    print_util_dbg_print_num(waypoint_transfo.pos[X] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[X] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Y] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Y] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
     print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
@@ -343,24 +337,24 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
     // End waypoint
     if (sysid <= (num_of_vhc / 2.0f))
     {
-        waypoint_transfo.pos[X] = -lateral_dist;
-        waypoint_transfo.pos[Y] = dist / 2.0f * (sysid - 1);
+        waypoint_transfo[X] = -lateral_dist;
+        waypoint_transfo[Y] = dist / 2.0f * (sysid - 1);
     }
     else
     {
-        waypoint_transfo.pos[X] = lateral_dist;
-        waypoint_transfo.pos[Y] = dist / 2.0f * (sysid - 1 - (num_of_vhc / 2.0f));
+        waypoint_transfo[X] = lateral_dist;
+        waypoint_transfo[Y] = dist / 2.0f * (sysid - 1 - (num_of_vhc / 2.0f));
     }
 
-    waypoint_transfo.pos[Z] = altitude;
-    waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
+    waypoint_transfo[Z] = altitude;
+    coord_conventions_local_to_global_position(waypoint_transfo, ins_.origin(), waypoint_global);
 
     print_util_dbg_print("Stream departure(x100): (");
-    print_util_dbg_print_num(waypoint_transfo.pos[X] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[X] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Y] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Y] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
     print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
@@ -424,46 +418,44 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
     waypoint_count_ = 2;
     current_waypoint_index_ = -1;
 
-    waypoint_transfo.origin = position_estimation_.local_position.origin;
-
     // Start waypoint
     uint32_t sysid = mavlink_stream_.sysid();
     if ((float)((sysid - 1) % num_of_vhc) <= (num_of_vhc / 2.0f - 1.0f))
     {
         if ((float)(sysid % num_of_vhc) == (num_of_vhc / 2.0f)) //higher ID
         {
-            waypoint_transfo.pos[X] = lateral_dist;
-            waypoint_transfo.pos[Y] = 0.0f;
+            waypoint_transfo[X] = lateral_dist;
+            waypoint_transfo[Y] = 0.0f;
         }
         else
         {
-            waypoint_transfo.pos[X] = lateral_dist + dist * cos(angle_step * ((sysid - 1) % 10));
-            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((sysid - 1) % 10));
+            waypoint_transfo[X] = lateral_dist + dist * cos(angle_step * ((sysid - 1) % 10));
+            waypoint_transfo[Y] = dist * sin(angle_step * ((sysid - 1) % 10));
         }
     }
     else
     {
         if (maths_f_abs(sysid % num_of_vhc - (num_of_vhc / 2.0f)) == (num_of_vhc / 2.0f))
         {
-            waypoint_transfo.pos[X] = - lateral_dist;
-            waypoint_transfo.pos[Y] = 0.0f;
+            waypoint_transfo[X] = - lateral_dist;
+            waypoint_transfo[Y] = 0.0f;
         }
         else
         {
-            waypoint_transfo.pos[X] = - lateral_dist - dist * cos(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
-            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
+            waypoint_transfo[X] = - lateral_dist - dist * cos(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
+            waypoint_transfo[Y] = dist * sin(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
         }
     }
 
-    waypoint_transfo.pos[Z] = altitude;
-    waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
+    waypoint_transfo[Z] = altitude;
+    coord_conventions_local_to_global_position(waypoint_transfo, ins_.origin(), waypoint_global);
 
     print_util_dbg_print("Swarm departure(x100): (");
-    print_util_dbg_print_num(waypoint_transfo.pos[X] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[X] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Y] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Y] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
     print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");
@@ -495,38 +487,38 @@ void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* 
     {
         if ((float)(sysid % num_of_vhc) == (num_of_vhc / 2.0f)) //higher ID
         {
-            waypoint_transfo.pos[X] = - lateral_dist;
-            waypoint_transfo.pos[Y] = 0.0f;
+            waypoint_transfo[X] = - lateral_dist;
+            waypoint_transfo[Y] = 0.0f;
         }
         else
         {
-            waypoint_transfo.pos[X] = - lateral_dist + dist * cos(angle_step * ((sysid - 1) % 10));
-            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((sysid - 1) % 10));
+            waypoint_transfo[X] = - lateral_dist + dist * cos(angle_step * ((sysid - 1) % 10));
+            waypoint_transfo[Y] = dist * sin(angle_step * ((sysid - 1) % 10));
         }
     }
     else
     {
         if (maths_f_abs(sysid % num_of_vhc - (num_of_vhc / 2.0f)) == (num_of_vhc / 2.0f))
         {
-            waypoint_transfo.pos[X] = lateral_dist;
-            waypoint_transfo.pos[Y] = 0.0f;
+            waypoint_transfo[X] = lateral_dist;
+            waypoint_transfo[Y] = 0.0f;
         }
         else
         {
-            waypoint_transfo.pos[X] = lateral_dist - dist * cos(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
-            waypoint_transfo.pos[Y] = dist * sin(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
+            waypoint_transfo[X] = lateral_dist - dist * cos(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
+            waypoint_transfo[Y] = dist * sin(angle_step * ((sysid - 1) % 10 - floor(num_of_vhc / 2)));
         }
     }
 
-    waypoint_transfo.pos[Z] = altitude;
-    waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
+    waypoint_transfo[Z] = altitude;
+    coord_conventions_local_to_global_position(waypoint_transfo, ins_.origin(), waypoint_global);
 
     print_util_dbg_print("Swarm departure(x100): (");
-    print_util_dbg_print_num(waypoint_transfo.pos[X] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[X] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Y] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Y] * 100.0f, 10);
     print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_transfo.pos[Z] * 100.0f, 10);
+    print_util_dbg_print_num(waypoint_transfo[Z] * 100.0f, 10);
     print_util_dbg_print("). For system:");
     print_util_dbg_print_num(sysid, 10);
     print_util_dbg_print(".\r\n");

@@ -46,11 +46,8 @@
 #include "communication/remote.hpp"
 #include "control/joystick.hpp"
 #include "communication/state.hpp"
+#include "control/stabilisation.hpp"
 
-extern "C"
-{
-#include "control/stabilisation.h"
-}
 
 /* forward declaration for friend function */
 class Onboard_parameters;

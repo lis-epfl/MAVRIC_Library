@@ -57,7 +57,7 @@ extern "C"
 #include "sensing/ahrs.h"
 #include "util/streams.h"
 #include "buffer.h"
-#include "control/stabilisation.h"
+#include "control/stabilisation.hpp"
 }
 
 #define STORE_SIZE          4       ///< number of azimuth/elevation values stored for reliability test

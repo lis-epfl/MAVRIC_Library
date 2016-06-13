@@ -41,11 +41,8 @@
 
 
 #include "simulation/simulation.hpp"
-
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-}
+
 
 
 Simulation::Simulation(Dynamic_model& dynamic_model, simulation_conf_t config):

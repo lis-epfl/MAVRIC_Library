@@ -49,11 +49,11 @@ extern "C" {
 #endif
 
 #include "drivers/servo.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "control/control_command.h"
-#include "util/constants.h"
 #include "drivers/unsupported/daler_dc_motor_ctrl.h"
 }
 

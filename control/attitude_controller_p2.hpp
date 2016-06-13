@@ -57,11 +57,7 @@
 #ifndef ATTITUDE_CONTROLLER_P2_H_
 #define ATTITUDE_CONTROLLER_P2_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "control/attitude_error_estimator.h"
+#include "control/attitude_error_estimator.hpp"
 #include "control/control_command.h"
 #include "sensing/ahrs.h"
 
@@ -112,9 +108,5 @@ bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const att
  */
 bool attitude_controller_p2_update(attitude_controller_p2_t* controller);
 
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* ATTITUDE_CONTROLLER_P2_H_ */

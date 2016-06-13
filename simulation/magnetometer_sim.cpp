@@ -41,11 +41,7 @@
 
 
 #include "simulation/magnetometer_sim.hpp"
-
-extern "C"
-{
-#include "util/constants.h"
-}
+#include "util/constants.hpp"
 
 
 Magnetometer_sim::Magnetometer_sim(Dynamic_model& dynamic_model):

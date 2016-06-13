@@ -41,13 +41,11 @@
  ******************************************************************************/
 
 
+ #include <stdlib.h>
+
 #include "communication/mavlink_communication.hpp"
 #include "util/print_util.h"
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-#include <stdlib.h>
-}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION

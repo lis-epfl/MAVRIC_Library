@@ -42,11 +42,11 @@
 
 #include "control/stabilisation_wing.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "util/constants.h"
 }
 
 
@@ -170,9 +170,9 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         }
 
         // Compute current heading
-        gps_speed_global[X] = stabilisation_wing->gps->velocity_lf()[0];
-        gps_speed_global[Y] = stabilisation_wing->gps->velocity_lf()[1];
-        gps_speed_global[Z] = stabilisation_wing->pos_est->vel[Z];
+        gps_speed_global[X] = stabilisation_wing->pos_est->velocity_lf()[0];
+        gps_speed_global[Y] = stabilisation_wing->pos_est->velocity_lf()[1];
+        gps_speed_global[Z] = stabilisation_wing->pos_est->velocity_lf()[Z];
 
         // Transform global to semi-local
         attitude_yaw.rpy[0] = 0.0f;

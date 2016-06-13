@@ -43,14 +43,14 @@
 #include "communication/data_logging.hpp"
 
 #include <string>
-
-extern "C"
-{
-#include "util/print_util.h"
 #include "hal/common/time_keeper.hpp"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
+
+extern "C"
+{
+#include "util/print_util.h"
 }
 
 //------------------------------------------------------------------------------

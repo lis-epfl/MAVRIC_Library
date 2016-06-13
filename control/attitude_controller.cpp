@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#include "control/attitude_controller.h"
-#include "util/constants.h"
+#include "control/attitude_controller.hpp"
+#include "util/constants.hpp"
 #include "hal/common/time_keeper.hpp"
 
 

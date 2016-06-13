@@ -45,10 +45,10 @@
 
 #include "communication/mav_modes.hpp"
 #include "drivers/satellite.hpp"
+#include "control/stabilisation.hpp"
 
 extern "C"
 {
-#include "control/stabilisation.h"
 #include "control/control_command.h"
 }
 
@@ -317,7 +317,7 @@ void remote_get_velocity_vector(remote_t* remote, control_command_t* controls);
 
 /**
  * \brief   Sets the rate command from the remote (rpy and thrust values)
- * 
+ *
  * \param   remote              The pointer to the remote structure
  * \param   controls            The pointer to the controls structure
  */

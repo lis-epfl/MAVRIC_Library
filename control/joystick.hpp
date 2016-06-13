@@ -43,10 +43,10 @@
 #define JOYSTICK_H_
 
 #include "communication/state.hpp"
+#include "control/stabilisation.hpp"
 
 extern "C"
 {
-#include "control/stabilisation.h"
 #include "control/control_command.h"
 }
 

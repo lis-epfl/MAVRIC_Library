@@ -44,11 +44,11 @@
 #include "communication/state_machine.hpp"
 #include "communication/state.hpp"
 #include "drivers/spektrum_satellite.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 }
 
 //------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ void State_machine::set_custom_mode(Mav_mode::custom_mode_t *current_custom_mode
     }
 
     // check GPS status
-    if (!position_estimation_.healthy())
+    if (!ins_.is_healthy(INS::healthy_t::XYZ_REL_POSITION))
     {
         if (state_.mav_state_ == MAV_STATE_ACTIVE)
         {
@@ -151,12 +151,12 @@ void State_machine::set_custom_mode(Mav_mode::custom_mode_t *current_custom_mode
 //------------------------------------------------------------------------------
 
 State_machine::State_machine(State& state,
-                            const Position_estimation& position_estimation,
+                            const INS& ins,
                             const Imu& imu,
                             const ahrs_t& ahrs,
                             Manual_control& manual_control) :
     state_(state),
-    position_estimation_(position_estimation),
+    ins_(ins),
     imu_(imu),
     ahrs_(ahrs),
     manual_control_(manual_control)
@@ -269,7 +269,7 @@ bool State_machine::update(State_machine* state_machine)
                             !state_machine->state_.connection_lost &&
                             !state_machine->state_.out_of_fence_1 &&
                             !state_machine->state_.out_of_fence_2 &&
-                            state_machine->position_estimation_.healthy())
+                            state_machine->ins_.is_healthy(INS::healthy_t::XYZ_REL_POSITION))
                     {
                         state_new = MAV_STATE_ACTIVE;
                         // Reset all custom flags except collision avoidance flag
@@ -383,7 +383,7 @@ bool State_machine::is_set_guided_allowed(bool guided)
         if(success & guided)
         {
             // if position_estimation is not healthy, abort
-            success &= position_estimation_.healthy();
+            success &= ins_.is_healthy(INS::healthy_t::XYZ_VELOCITY);
         }
     }
     return success;

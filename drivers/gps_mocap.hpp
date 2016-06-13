@@ -49,10 +49,7 @@
 #include "drivers/gps.hpp"
 #include "communication/mavlink_message_handler.hpp"
 
-extern "C"
-{
-#include "util/coord_conventions.h"
-}
+#include "util/coord_conventions.hpp"
 
 
 /**
@@ -250,7 +247,6 @@ inline Gps_mocap::conf_t Gps_mocap::default_config()
     conf.origin.latitude  = 46.51852236174565f;
     conf.origin.longitude = 6.566044801857777f;
     conf.origin.altitude  = 400.0f;
-    conf.origin.heading   = 0.0f;
 
     // Accuracy
     conf.horizontal_position_accuracy = 0.001f;

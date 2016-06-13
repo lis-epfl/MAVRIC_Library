@@ -30,95 +30,60 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file ahrs.c
  *
  * \author MAV'RIC Team
+ * \author Gregoire Heitz
  *
- * \brief Useful constants
+ * \brief This file implements data structure for attitude estimate
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#include "sensing/ahrs.h"
+#include "util/print_util.h"
+#include "util/constants.hpp"
 
-#ifdef __cplusplus
-extern "C"
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool ahrs_init(ahrs_t* ahrs)
 {
-#endif
+    bool init_success = true;
 
+    // Init structure
+    ahrs->qe.s = 1.0f;
+    ahrs->qe.v[X] = 0.0f;
+    ahrs->qe.v[Y] = 0.0f;
+    ahrs->qe.v[Z] = 0.0f;
 
-#define GRAVITY 9.81f           ///< The gravity constant
+    ahrs->angular_speed[X] = 0.0f;
+    ahrs->angular_speed[Y] = 0.0f;
+    ahrs->angular_speed[Z] = 0.0f;
 
+    ahrs->linear_acc[X] = 0.0f;
+    ahrs->linear_acc[Y] = 0.0f;
+    ahrs->linear_acc[Z] = 0.0f;
 
-/**
- * \brief Enumerates the X, Y and Z orientations
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    X = 0,
-    Y = 1,
-    Z = 2,
-} constants_orientation_t;
+    ahrs->last_update_s = 0.0f;
+    
+    ahrs->internal_state = AHRS_INITIALISING;
 
-
-/**
- * \brief Enumerates the Roll, Pitch and Yaw orientations
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    ROLL    = 0,
-    PITCH   = 1,
-    YAW     = 2,
-} constants_roll_pitch_yaw_t;
-
-
-/**
- * \brief Enumerates the up vector orientation
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    UPVECTOR_X = 0,
-    UPVECTOR_Y = 0,
-    UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-    OFF = 0,
-    ON  = 1,
-} constants_on_off_t;
-
-
-/**
- * \brief Enumerate the turn direction of a motor
- */
-typedef enum
-{
-    CCW =  1,                    ///< Counter Clock wise
-    CW  = -1                     ///< Clock wise
-} rot_dir_t;
-
-
-/**
- * \brief Enumerate the turn direction of a flap
- */
-typedef enum
-{
-    FLAP_NORMAL     = 1,    ///< Positive roll or positive pitch or positive yaw
-    FLAP_INVERTED   = -1    ///< Negative roll or negative pitch or negative yaw
-} flap_dir_t;
-
-
-#ifdef __cplusplus
+    return init_success;
 }
-#endif
 
-#endif /* MATH_UTIL_H_ */
+ahrs_t ahrs_initialized()
+{
+    ahrs_t ahrs;
+    ahrs_init(&ahrs);
+    return ahrs;
+}

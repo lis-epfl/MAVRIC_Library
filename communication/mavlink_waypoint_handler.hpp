@@ -90,7 +90,7 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   position_estimation     The pointer to the position estimator structure
+     * \param  ins                      The pointer to the position estimator structure
      * \param   navigation              The pointer to the navigation structure
      * \param   ahrs                    The pointer to the attitude estimation structure
      * \param   state                   The pointer to the state structure
@@ -100,7 +100,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mavlink_waypoint_handler(Position_estimation& position_estimation,
+    Mavlink_waypoint_handler(INS& ins,
                            Navigation& navigation,
                            const ahrs_t& ahrs,
                            State& state,
@@ -148,9 +148,9 @@ public:
      */
     static inline conf_t default_config();
 
-    
+
     waypoint_local_struct_t waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-    
+
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
 protected:
@@ -159,10 +159,10 @@ protected:
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
     const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
-    
+
     State& state_;                                               ///< The pointer to the state structure
     Navigation& navigation_;                                     ///< The pointer to the navigation structure
-    Position_estimation& position_estimation_;                   ///< The pointer to the position estimation structure
+    INS& ins_;                                                   ///< The pointer to the position estimation structure
 
 private:
 

@@ -40,16 +40,16 @@
  ******************************************************************************/
 
 
+ #include "hal/common/time_keeper.hpp"
 #include "sensing/qfilter.hpp"
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "util/coord_conventions.h"
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 #include <math.h>
 #include "util/maths.h"
-#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------

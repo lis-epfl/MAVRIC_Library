@@ -47,7 +47,7 @@
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins.hpp"
 #include "sensing/imu.hpp"
 
 extern "C"
@@ -72,7 +72,7 @@ public:
      * \return  True if the init succeed, false otherwise
      */
     State_machine(  State& state,
-                    const Position_estimation& position_estimation,
+                    const INS& ins,
                     const Imu& imu,
                     const ahrs_t& ahrs,
                     Manual_control& manual_control);
@@ -91,11 +91,11 @@ public:
      */
     bool set_ctrl_mode(Mav_mode mode);
 
-    State& state_;                                       ///< Pointer to the state structure
-    const Position_estimation& position_estimation_;      ///< Pointer to the gps structure
-    const Imu& imu_;                                     ///< Pointer to the imu structure
-    const ahrs_t& ahrs_;                                 ///< Pointer to the attitude estimation structure
-    Manual_control& manual_control_;                     ///< Pointer to the manual_control structure
+    State& state_;                                       ///< State structure
+    const INS& ins_;                                     ///< Position and velocity estimation
+    const Imu& imu_;                                     ///< Inertial measurement unit
+    const ahrs_t& ahrs_;                                 ///< Attitude estimation
+    Manual_control& manual_control_;                     ///< Manual_control
 
 private:
     /**
@@ -108,7 +108,7 @@ private:
 
     /**
      * \brief   checks if it is possible to set/clear guided flag
-     *                                                                                                                                                                                                                                                                                                   
+     *
      * \details checks if it is possible to set/clear the MAV_MODE_FLAG_GUIDED_ENABLED of state_.mav_mode_
      *          The following checks are performed:
      *          - position_estimation.healthy to set guided
@@ -121,7 +121,7 @@ private:
 
     /**
      * \brief   checks if it is possible to set/clear stabilize flag
-     *                                                                                                                                                                                                                                                                                                   
+     *
      * \details checks if it is possible to set/clear the MAV_MODE_FLAG_STABILIZE of state_.mav_mode_
      *          The following checks are performed:
      *          - imu is ready to set stabilize
