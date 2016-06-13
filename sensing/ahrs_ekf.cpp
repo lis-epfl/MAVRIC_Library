@@ -403,6 +403,12 @@ bool Ahrs_ekf::update(void)
     // Delta t in seconds
     float dt_s     = now_s - ahrs_.last_update_s;
 
+    // Read from ahrs structure
+    x_state_(3,0) = ahrs_.qe.s;
+    x_state_(4,0) = ahrs_.qe.v[0];
+    x_state_(5,0) = ahrs_.qe.v[1];
+    x_state_(6,0) = ahrs_.qe.v[2];
+
     // Write to ahrs structure
     ahrs_.dt_s          = dt_s;
     ahrs_.last_update_s = now_s;
