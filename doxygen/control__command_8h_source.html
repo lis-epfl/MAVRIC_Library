@@ -198,7 +198,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00143"></a>00143 
 <a name="l00147"></a><a class="code" href="structthrust3D__command__t.html">00147</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
 <a name="l00148"></a>00148 {
-<a name="l00149"></a>00149     <span class="keywordtype">float</span> thrust[3];
+<a name="l00149"></a>00149     <span class="keywordtype">float</span> xyz[3];
 <a name="l00150"></a>00150 } <a class="code" href="structthrust3D__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust3D_command_t</a>;
 <a name="l00151"></a>00151 
 <a name="l00152"></a>00152 
@@ -206,19 +206,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00157"></a>00157 {
 <a name="l00158"></a><a class="code" href="structcommand__t.html#ada6f9d9092f2528c3e5ef378a163216f">00158</a>     control_command_mode_t  <a class="code" href="structcommand__t.html#ada6f9d9092f2528c3e5ef378a163216f" title="Control command mode.">mode</a>;       
 <a name="l00159"></a><a class="code" href="structcommand__t.html#a1b483cec6dd356481774b13bd50ccac8">00159</a>     <a class="code" href="structthrust__command__t.html" title="Thrust command type.">thrust_command_t</a>        <a class="code" href="structcommand__t.html#a1b483cec6dd356481774b13bd50ccac8" title="Thrust command.">thrust</a>;     
-<a name="l00160"></a><a class="code" href="structcommand__t.html#ad37d49bf12c3a50ffd93545adf044185">00160</a>     <a class="code" href="structtorque__command__t.html" title="Torque command structure.">torque_command_t</a>        <a class="code" href="structcommand__t.html#ad37d49bf12c3a50ffd93545adf044185" title="Torque command.">torque</a>;     
-<a name="l00161"></a><a class="code" href="structcommand__t.html#abe03f9ba4c033a2c08b6a8238ae290dc">00161</a>     <a class="code" href="structrate__command__t.html" title="Rate command structure.">rate_command_t</a>          <a class="code" href="structcommand__t.html#abe03f9ba4c033a2c08b6a8238ae290dc" title="Rate command.">rate</a>;       
-<a name="l00162"></a><a class="code" href="structcommand__t.html#ac51293f44de7c017186dcaff83b3e336">00162</a>     <a class="code" href="structattitude__command__t.html" title="Attitude command structure.">attitude_command_t</a>      <a class="code" href="structcommand__t.html#ac51293f44de7c017186dcaff83b3e336" title="Attitude command.">attitude</a>;   
-<a name="l00163"></a><a class="code" href="structcommand__t.html#a3314e8bdc60f5b2db1d3ad937be9eb55">00163</a>     <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>      <a class="code" href="structcommand__t.html#a3314e8bdc60f5b2db1d3ad937be9eb55" title="Position command.">position</a>;   
-<a name="l00164"></a><a class="code" href="structcommand__t.html#afa35a9fcb7d7ff418fc77466429e17a4">00164</a>     <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>      <a class="code" href="structcommand__t.html#afa35a9fcb7d7ff418fc77466429e17a4" title="Velocity command.">velocity</a>;   
-<a name="l00165"></a>00165 } <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a>;
-<a name="l00166"></a>00166 
+<a name="l00160"></a><a class="code" href="structcommand__t.html#a4f9e95b45576cff2772025610ee2bd08">00160</a>     <a class="code" href="structthrust3D__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust3D_command_t</a>      <a class="code" href="structcommand__t.html#a4f9e95b45576cff2772025610ee2bd08" title="3D Thrust command">thrust3D</a>;   
+<a name="l00161"></a><a class="code" href="structcommand__t.html#ad37d49bf12c3a50ffd93545adf044185">00161</a>     <a class="code" href="structtorque__command__t.html" title="Torque command structure.">torque_command_t</a>        <a class="code" href="structcommand__t.html#ad37d49bf12c3a50ffd93545adf044185" title="Torque command.">torque</a>;     
+<a name="l00162"></a><a class="code" href="structcommand__t.html#abe03f9ba4c033a2c08b6a8238ae290dc">00162</a>     <a class="code" href="structrate__command__t.html" title="Rate command structure.">rate_command_t</a>          <a class="code" href="structcommand__t.html#abe03f9ba4c033a2c08b6a8238ae290dc" title="Rate command.">rate</a>;       
+<a name="l00163"></a><a class="code" href="structcommand__t.html#ac51293f44de7c017186dcaff83b3e336">00163</a>     <a class="code" href="structattitude__command__t.html" title="Attitude command structure.">attitude_command_t</a>      <a class="code" href="structcommand__t.html#ac51293f44de7c017186dcaff83b3e336" title="Attitude command.">attitude</a>;   
+<a name="l00164"></a><a class="code" href="structcommand__t.html#a3314e8bdc60f5b2db1d3ad937be9eb55">00164</a>     <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>      <a class="code" href="structcommand__t.html#a3314e8bdc60f5b2db1d3ad937be9eb55" title="Position command.">position</a>;   
+<a name="l00165"></a><a class="code" href="structcommand__t.html#afa35a9fcb7d7ff418fc77466429e17a4">00165</a>     <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>      <a class="code" href="structcommand__t.html#afa35a9fcb7d7ff418fc77466429e17a4" title="Velocity command.">velocity</a>;   
+<a name="l00166"></a>00166 } <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a>;
 <a name="l00167"></a>00167 
-<a name="l00168"></a>00168 <span class="preprocessor">#ifdef __cplusplus</span>
-<a name="l00169"></a>00169 <span class="preprocessor"></span>}
-<a name="l00170"></a>00170 <span class="preprocessor">#endif</span>
-<a name="l00171"></a>00171 <span class="preprocessor"></span>
-<a name="l00172"></a>00172 <span class="preprocessor">#endif</span>
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 <span class="preprocessor">#ifdef __cplusplus</span>
+<a name="l00170"></a>00170 <span class="preprocessor"></span>}
+<a name="l00171"></a>00171 <span class="preprocessor">#endif</span>
+<a name="l00172"></a>00172 <span class="preprocessor"></span>
+<a name="l00173"></a>00173 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -237,7 +238,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 7 2016 07:42:43 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jun 14 2016 12:39:48 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

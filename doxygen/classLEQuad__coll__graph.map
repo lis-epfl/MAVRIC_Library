@@ -26,7 +26,7 @@
 <area shape="rect" id="node48" href="$classState.html" title="The MAV state." alt="" coords="1447,536,1625,1037"/>
 <area shape="rect" id="node50" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="2363,271,2445,425"/>
 <area shape="rect" id="node54" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="2600,744,2731,829"/>
-<area shape="rect" id="node104" href="$structcommand__t.html" title="Global command structure." alt="" coords="2568,1233,2659,1423"/>
+<area shape="rect" id="node104" href="$structcommand__t.html" title="Global command structure." alt="" coords="2568,1225,2659,1431"/>
 <area shape="rect" id="node57" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="2395,744,2528,829"/>
 <area shape="rect" id="node61" href="$structstabiliser__stack__copter__t.html" title="Structure containing the stacked controller." alt="" coords="2105,709,2292,864"/>
 <area shape="rect" id="node63" href="$structLEQuad_1_1conf__t.html" title="Configuration structure." alt="" coords="4024,1199,4243,1457"/>

@@ -6,4 +6,5 @@
 <area shape="rect" id="node10" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="624,177,763,279"/>
 <area shape="rect" id="node12" href="$structquat__t.html" title="Unit quaternion." alt="" coords="664,6,723,109"/>
 <area shape="rect" id="node14" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="787,177,928,279"/>
+<area shape="rect" id="node16" href="$structthrust3D__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="952,185,1099,271"/>
 </map>
