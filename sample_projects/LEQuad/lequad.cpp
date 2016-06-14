@@ -322,8 +322,8 @@ bool LEQuad::init_attitude_estimation(void)
 
     // Data logging
     ret &= data_logging_continuous.add_field(&ahrs.qe.v[0], "ahrs_v0", 3);
-    ret &= data_logging_continuous.add_field(&ahrs.qe.v[0], "ahrs_v1", 3);
-    ret &= data_logging_continuous.add_field(&ahrs.qe.v[0], "ahrs_v2", 3);
+    ret &= data_logging_continuous.add_field(&ahrs.qe.v[1], "ahrs_v1", 3);
+    ret &= data_logging_continuous.add_field(&ahrs.qe.v[2], "ahrs_v2", 3);
     ret &= data_logging_continuous.add_field(&ahrs.qe.s, "ahrs_s", 3);
 
     return ret;
