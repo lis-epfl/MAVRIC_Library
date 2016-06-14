@@ -255,13 +255,13 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
     controls_nav.tvel[Z] = dir_desired_sg[Z];
 
     float rel_heading;
-    if ((SQR(goal.position[X] - ins_.position_lf()[X]) + SQR(goal.position[Y] - ins_.position_lf()[Y])) <= 25.0f)
+    if ((SQR(goal.position[X] - ins.position_lf()[X]) + SQR(goal.position[Y] - ins.position_lf()[Y])) <= 25.0f)
     {
         rel_heading = 0.0f;
     }
     else
     {
-        rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - coord_conventions_get_yaw(qe)));
+        rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - coord_conventions_get_yaw(qe));
     }
 
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
@@ -296,7 +296,7 @@ void Navigation::run()
                     {
                         set_speed_command(rel_pos);
                     }
-                    
+
                 }
                 else
                 {
