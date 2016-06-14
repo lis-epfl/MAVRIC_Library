@@ -76,6 +76,7 @@ LIB_SRCS += control/velocity_controller_copter.cpp
 LIB_SRCS += control/gimbal_controller.cpp
 LIB_SRCS += control/gimbal_controller_telemetry.cpp
 
+
 LIB_SRCS += drivers/airspeed_analog.cpp
 LIB_SRCS += drivers/battery.cpp
 LIB_SRCS += drivers/barometer.cpp
@@ -87,6 +88,7 @@ LIB_SRCS += drivers/gps_telemetry.cpp
 LIB_SRCS += drivers/gps_mocap.cpp
 LIB_SRCS += drivers/hmc5883l.cpp
 LIB_SRCS += drivers/lsm330dlc.cpp
+LIB_SRCS += drivers/mpu_6050.cpp
 LIB_SRCS += drivers/px4flow_i2c.cpp
 LIB_SRCS += drivers/servo.cpp
 LIB_SRCS += drivers/servos_telemetry.cpp
