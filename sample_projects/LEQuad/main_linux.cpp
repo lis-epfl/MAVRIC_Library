@@ -40,9 +40,6 @@
 
 #include "boards/mavrinux.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
-#include "sample_projects/LEQuad/hexhog.hpp"
-
-#include "hal/dummy/i2c_dummy.hpp"
 
 extern "C"
 {
@@ -76,8 +73,6 @@ int main(int argc, char** argv)
     // Create board
     Mavrinux board(board_config);
 
-    I2c_dummy i2c_dummy;
-
     File_linux file_log;
     File_linux file_stat;
 
@@ -90,17 +85,12 @@ int main(int argc, char** argv)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using simulated sensors
-    // LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
-    // mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
-    // mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
-    // mav_config.state_config.simulation_mode = true;
-    //
-    // LEQuad mav = LEQuad(board.imu,
-    Hexhog::conf_t mav_config = Hexhog::default_config(sysid);
-    mav_config.lequad_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
-    mav_config.lequad_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
-    mav_config.lequad_config.state_config.simulation_mode = true;
-    Hexhog mav = Hexhog(board.imu,
+    LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
+    mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
+    mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
+    mav_config.state_config.simulation_mode = true;
+
+    LEQuad mav = LEQuad(board.imu,
                         board.sim.barometer(),
                         board.sim.gps(),
                         board.sim.sonar(),
@@ -119,7 +109,6 @@ int main(int argc, char** argv)
                         board.servo_7,
                         file_log,
                         file_stat,
-                        i2c_dummy,
                         mav_config);
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
