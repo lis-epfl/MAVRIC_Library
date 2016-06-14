@@ -54,7 +54,7 @@
 extern "C"
 {
 #include "control/control_command.h"
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 #include "control/pid_controller.h"
 }
 

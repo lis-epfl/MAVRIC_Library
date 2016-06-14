@@ -48,7 +48,7 @@
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
 #include "drivers/px4flow_i2c.hpp"
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
 
 #include "util/kalman.hpp"
@@ -56,7 +56,7 @@
 extern "C"
 {
 #include "sensing/altitude.h"
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 }
 
 /**

@@ -41,9 +41,10 @@
  ******************************************************************************/
 
 
+#include <cstdlib>
+
 #include "runtime/scheduler.hpp"
 #include "hal/common/time_keeper.hpp"
-#include <stdlib.h>
 #include "util/print_util.h"
 
 Scheduler::Scheduler(const Scheduler::conf_t config) :

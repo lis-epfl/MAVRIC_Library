@@ -50,7 +50,7 @@ extern "C" {
 
 #include <stdint.h>
 #include "util/quaternions.h"
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 #include "drivers/optic_flow.h"
 #include "util/constants.hpp"
 

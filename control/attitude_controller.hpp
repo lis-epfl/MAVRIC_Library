@@ -53,7 +53,7 @@
 
 #include "control/attitude_error_estimator.hpp"
 #include "control/control_command.h"
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 #include "control/pid_controller.h"
 
 /**

@@ -41,7 +41,7 @@
  ******************************************************************************/
 
 
- #include <stdlib.h>
+ #include <cstdlib>
 
 #include "communication/mavlink_communication.hpp"
 #include "util/print_util.h"
