@@ -189,7 +189,7 @@ static inline sonar_i2cxl_conf_t sonar_i2cxl_default_config()
 {
     sonar_i2cxl_conf_t conf = {};
 
-    conf.i2c_address  = 0x70;
+    conf.i2c_address  = 0xE0;
 
     // Correct range between 20cm and 7m, - safety
     conf.min_distance = 0.22f;

@@ -79,7 +79,7 @@ bool Pwm_stm32::init(void)
 
     gpio_mode_setup(pwm_config_.gpio_config.port, GPIO_MODE_AF, GPIO_PUPD_NONE, pwm_config_.gpio_config.pin);
     gpio_set_af(pwm_config_.gpio_config.port, pwm_config_.gpio_config.alt_fct, pwm_config_.gpio_config.pin);
-    gpio_set_output_options(pwm_config_.gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ, pwm_config_.gpio_config.port);
+    gpio_set_output_options(pwm_config_.gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ, pwm_config_.gpio_config.pin);
   
     //WARNING Common to all channels of that TIMER
     //select prescaler
