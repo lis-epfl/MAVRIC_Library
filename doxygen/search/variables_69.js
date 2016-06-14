@@ -1,6 +1,7 @@
 var searchData=
 [
   ['i2c_5faddress',['i2c_address',['../structsonar__i2cxl__conf__t.html#aa3db96970957991cc51b5bf2c66d7eed',1,'sonar_i2cxl_conf_t']]],
+  ['i2c_5fdevice_5fconfig',['i2c_device_config',['../structi2c__stm32__conf__t.html#abca1288700f25bb2e5c3d33ca7608402',1,'i2c_stm32_conf_t']]],
   ['i_5f',['I_',['../classKalman.html#a3868e595a4a857bc9aab5c62c537fd54',1,'Kalman']]],
   ['idle_5ftimeout',['idle_timeout',['../structgps__t.html#a647299d8c4202a580ad3123b4039ce9a',1,'gps_t']]],
   ['idle_5ftimer',['idle_timer',['../structgps__t.html#aa9688b58a0154e3e4d293dfdf09d1424',1,'gps_t']]],

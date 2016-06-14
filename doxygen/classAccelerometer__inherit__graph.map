@@ -1,5 +1,7 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classAccelerometer__sim.html" title="Simulated accelerometers." alt="" coords="5,261,160,485"/>
 <area shape="rect" id="node5" href="$classLsm330dlc__acc.html" title="Intermediate interface class for the accelero inside LSM330DLC." alt="" coords="184,322,296,425"/>
-<area shape="rect" id="node7" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="175,534,305,845"/>
+<area shape="rect" id="node9" href="$classMpu__6050__acc.html" title="Intermediate interface class for the accelero inside MPU_6050." alt="" coords="329,322,439,425"/>
+<area shape="rect" id="node7" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="169,534,300,845"/>
+<area shape="rect" id="node11" href="$classMpu__6050.html" title="Driver for sensor MPU_6050 imu." alt="" coords="324,534,455,845"/>
 </map>

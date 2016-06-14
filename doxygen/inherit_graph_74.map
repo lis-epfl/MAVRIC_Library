@@ -1,5 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classI2c.html" title="I2c" alt="" coords="5,32,45,61"/>
+<area shape="rect" id="node1" href="$classI2c.html" title="I2c" alt="" coords="5,59,45,88"/>
 <area shape="rect" id="node3" href="$classI2c__avr32.html" title="I2C peripheral driver for AVR32." alt="" coords="100,5,177,35"/>
 <area shape="rect" id="node5" href="$classI2c__dummy.html" title="I2c_dummy" alt="" coords="93,59,184,88"/>
+<area shape="rect" id="node7" href="$classI2c__stm32.html" title="I2C peripheral driver for STM32." alt="" coords="97,112,180,141"/>
 </map>

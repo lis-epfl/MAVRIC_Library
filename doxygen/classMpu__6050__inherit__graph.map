@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classMpu__6050__acc.html" title="Intermediate interface class for the accelero inside MPU_6050." alt="" coords="21,262,131,365"/>
+<area shape="rect" id="node4" href="$classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="5,6,136,213"/>
+<area shape="rect" id="node6" href="$classMpu__6050__gyr.html" title="Intermediate interface class for the gyro inside MPU_6050." alt="" coords="165,262,272,365"/>
+<area shape="rect" id="node8" href="$classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="160,6,291,213"/>
+</map>

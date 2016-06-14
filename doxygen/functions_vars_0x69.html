@@ -125,6 +125,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>i2c_address
 : <a class="el" href="structsonar__i2cxl__conf__t.html#aa3db96970957991cc51b5bf2c66d7eed">sonar_i2cxl_conf_t</a>
 </li>
+<li>i2c_device_config
+: <a class="el" href="structi2c__stm32__conf__t.html#abca1288700f25bb2e5c3d33ca7608402">i2c_stm32_conf_t</a>
+</li>
 <li>I_
 : <a class="el" href="classKalman.html#a3868e595a4a857bc9aab5c62c537fd54">Kalman&lt; n, p, m, T &gt;</a>
 </li>
@@ -135,9 +138,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structgps__t.html#aa9688b58a0154e3e4d293dfdf09d1424">gps_t</a>
 </li>
 <li>imu
-: <a class="el" href="structstabilisation__wing__t.html#acb3cc27502cb7ccc4efdc10399827152">stabilisation_wing_t</a>
+: <a class="el" href="structqfilter__t.html#a2cf64aec409b092ce9b1b3e7d6bced66">qfilter_t</a>
+, <a class="el" href="structstabilisation__wing__t.html#acb3cc27502cb7ccc4efdc10399827152">stabilisation_wing_t</a>
 , <a class="el" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2">LEQuad</a>
-, <a class="el" href="structqfilter__t.html#a2cf64aec409b092ce9b1b3e7d6bced66">qfilter_t</a>
 </li>
 <li>imu_
 : <a class="el" href="classState__machine.html#a02adec4dd6e2b86ce915cd8c09b07788">State_machine</a>
@@ -173,8 +176,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structsd__spi__t.html#a4fcec872bef23282f9479756eb4e5b1b">sd_spi_t</a>
 </li>
 <li>integrator
-: <a class="el" href="structpid__controller__t.html#afec426f1733f04074b98327c0071f537">pid_controller_t</a>
-, <a class="el" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83">pid_controller_conf_t</a>
+: <a class="el" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83">pid_controller_conf_t</a>
+, <a class="el" href="structpid__controller__t.html#afec426f1733f04074b98327c0071f537">pid_controller_t</a>
 </li>
 <li>internal_state
 : <a class="el" href="structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0">ahrs_t</a>
@@ -190,13 +193,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>itow
 : <a class="el" href="structubx__nav__sv__info__t.html#a02a7186f7953c4256db55825de4232b8">ubx_nav_sv_info_t</a>
-, <a class="el" href="structubx__nav__status__t.html#aa4d4659af6bb196093380bb742793ef7">ubx_nav_status_t</a>
-, <a class="el" href="structubx__nav__dgps__t.html#a83d3cdb3776bd9a15b1be018fdc1f0fb">ubx_nav_dgps_t</a>
-, <a class="el" href="structubx__nav__vel__ned__t.html#acd66ba7feeedb37272e2c43338a980f4">ubx_nav_vel_ned_t</a>
-, <a class="el" href="structubx__nav__solution__t.html#a6609f5733f8c3f2423a5241757c80d6b">ubx_nav_solution_t</a>
-, <a class="el" href="structubx__nav__pos__llh__t.html#ae67928fcfc201826b69fc6d4263db8a9">ubx_nav_pos_llh_t</a>
-, <a class="el" href="structubx__nav__timeutc__t.html#ab30a57c51d2cbc7093630e05f0f3ded9">ubx_nav_timeutc_t</a>
 , <a class="el" href="structubx__tim__vrfy__t.html#adac78be51ab9b9d94e692f6049e83f67">ubx_tim_vrfy_t</a>
+, <a class="el" href="structubx__nav__pos__llh__t.html#ae67928fcfc201826b69fc6d4263db8a9">ubx_nav_pos_llh_t</a>
+, <a class="el" href="structubx__nav__dgps__t.html#a83d3cdb3776bd9a15b1be018fdc1f0fb">ubx_nav_dgps_t</a>
+, <a class="el" href="structubx__nav__solution__t.html#a6609f5733f8c3f2423a5241757c80d6b">ubx_nav_solution_t</a>
+, <a class="el" href="structubx__nav__vel__ned__t.html#acd66ba7feeedb37272e2c43338a980f4">ubx_nav_vel_ned_t</a>
+, <a class="el" href="structubx__nav__timeutc__t.html#ab30a57c51d2cbc7093630e05f0f3ded9">ubx_nav_timeutc_t</a>
+, <a class="el" href="structubx__nav__status__t.html#aa4d4659af6bb196093380bb742793ef7">ubx_nav_status_t</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -217,7 +220,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 14 2016 12:39:49 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jun 14 2016 12:53:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

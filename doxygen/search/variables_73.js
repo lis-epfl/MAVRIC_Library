@@ -18,6 +18,7 @@ var searchData=
   ['scan_5fmode2',['scan_mode2',['../structubx__cfg__sbas__t.html#a29f5f9a7b22e9235a4493663527f745f',1,'ubx_cfg_sbas_t']]],
   ['schedule_5fstrategy',['schedule_strategy',['../structScheduler_1_1conf__t.html#add0e17c51dba8ff62c3d9afbf8622d9e',1,'Scheduler::conf_t']]],
   ['sck_5fpin_5fmap',['sck_pin_map',['../structspi__avr32__conf__t.html#a162b9610a095d04d41f6edb98f1137ee',1,'spi_avr32_conf_t']]],
+  ['sda_5fconfig',['sda_config',['../structi2c__stm32__conf__t.html#acb3035edcfbff0db5ec4eee689b80edc',1,'i2c_stm32_conf_t']]],
   ['search_5fperiod',['search_period',['../structubx__cfg__pm__t.html#a0d2f0aaac99814b9818ef0006d5a827f',1,'ubx_cfg_pm_t::search_period()'],['../structubx__cfg__pm2__t.html#a6f411fd163a35cc9328c89cf0fa3c022',1,'ubx_cfg_pm2_t::search_period()']]],
   ['second',['second',['../structdate__time__t.html#a1f3cf19b769349610da15d7a4a0c68fc',1,'date_time_t']]],
   ['seconds',['seconds',['../structubx__nav__timeutc__t.html#afd14af6c03703f6362c4d9505fc185e9',1,'ubx_nav_timeutc_t']]],

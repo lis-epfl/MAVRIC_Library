@@ -4,5 +4,7 @@
 <area shape="rect" id="node9" href="$classHmc5883l.html#aed6816efef437df0e65a3f3b107c13b0" title="Main update function &#160;Reads new values from sensor." alt="" coords="147,112,275,141"/>
 <area shape="rect" id="node11" href="$classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9" title="Initialise the sensor." alt="" coords="156,165,265,195"/>
 <area shape="rect" id="node14" href="$classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6" title="Main update function." alt="" coords="131,219,291,248"/>
+<area shape="rect" id="node16" href="$classMpu__6050.html#acac68dd3f9ff860aa1c6b9e66e2eda88" title="Initialise the sensor." alt="" coords="157,272,264,301"/>
+<area shape="rect" id="node18" href="$classMpu__6050.html#ae23ffc947827a02f18f0f8c7dccc3a57" title="Main update function." alt="" coords="132,325,289,355"/>
 <area shape="rect" id="node7" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="339,112,464,141"/>
 </map>

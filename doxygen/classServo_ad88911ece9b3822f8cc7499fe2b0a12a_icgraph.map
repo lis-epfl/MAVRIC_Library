@@ -1,10 +1,10 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classServo.html#afc97bfc58e00c9c586d67f53ef4764ad" title="Sets the servos to a given value." alt="" coords="232,85,323,115"/>
-<area shape="rect" id="node13" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="224,164,331,193"/>
+<area shape="rect" id="node15" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="224,164,331,193"/>
 <area shape="rect" id="node5" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="385,112,527,141"/>
-<area shape="rect" id="node7" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="380,5,532,35"/>
-<area shape="rect" id="node11" href="$classServo.html#a91d7c835b5b0e44a9c57f34ea24affe5" title="Sets the minimum value to the servo." alt="" coords="381,59,531,88"/>
-<area shape="rect" id="node9" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="581,85,707,115"/>
-<area shape="rect" id="node15" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="405,216,507,245"/>
-<area shape="rect" id="node18" href="$classServo.html#a2a4eacedcd7b7f4728b84e07d4645e5a" title="Constructor." alt="" coords="407,269,505,299"/>
+<area shape="rect" id="node7" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="380,59,532,88"/>
+<area shape="rect" id="node13" href="$classServo.html#a91d7c835b5b0e44a9c57f34ea24affe5" title="Sets the minimum value to the servo." alt="" coords="381,5,531,35"/>
+<area shape="rect" id="node9" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="593,85,695,115"/>
+<area shape="rect" id="node11" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="581,164,707,193"/>
+<area shape="rect" id="node19" href="$classServo.html#a2a4eacedcd7b7f4728b84e07d4645e5a" title="Constructor." alt="" coords="407,267,505,296"/>
 </map>

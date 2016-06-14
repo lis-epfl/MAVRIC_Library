@@ -2,4 +2,6 @@
 <area shape="rect" id="node3" href="$classBmp085.html#a4f895185b71c8206e5017e3f5ba1c340" title="Main update function &#160;Reads new values from sensor." alt="" coords="149,5,267,35"/>
 <area shape="rect" id="node5" href="$classHmc5883l.html#aed6816efef437df0e65a3f3b107c13b0" title="Main update function &#160;Reads new values from sensor." alt="" coords="144,59,272,88"/>
 <area shape="rect" id="node7" href="$classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6" title="Main update function." alt="" coords="128,112,288,141"/>
+<area shape="rect" id="node9" href="$classMpu__6050.html#acac68dd3f9ff860aa1c6b9e66e2eda88" title="Initialise the sensor." alt="" coords="155,165,261,195"/>
+<area shape="rect" id="node11" href="$classMpu__6050.html#ae23ffc947827a02f18f0f8c7dccc3a57" title="Main update function." alt="" coords="129,219,287,248"/>
 </map>

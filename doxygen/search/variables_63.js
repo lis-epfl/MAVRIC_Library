@@ -24,6 +24,8 @@ var searchData=
   ['clip_5fmax',['clip_max',['../structpid__controller__conf__t.html#af0f1c1a65e4560eabbec2997dc925bcf',1,'pid_controller_conf_t::clip_max()'],['../structpid__controller__t.html#aa1ea119cbfe0d26b98348ae7bb019983',1,'pid_controller_t::clip_max()']]],
   ['clip_5fmin',['clip_min',['../structpid__controller__conf__t.html#a1161e6ecb1b8eb4beef490c9ab74461d',1,'pid_controller_conf_t::clip_min()'],['../structpid__controller__t.html#a3910c4413c29d4f2e8a66afa291bc52e',1,'pid_controller_t::clip_min()']]],
   ['clip_5fpre',['clip_pre',['../structintegrator__t.html#aa9a4c5f83a1f79f9d0fb65830f4709a7',1,'integrator_t']]],
+  ['clk_5fconfig',['clk_config',['../structi2c__stm32__conf__t.html#a015a330495aed9912011addd49545986',1,'i2c_stm32_conf_t']]],
+  ['clk_5fspeed',['clk_speed',['../structi2c__stm32__conf__t.html#a1b812f4324284919757c7c355dcacba1',1,'i2c_stm32_conf_t']]],
   ['clock',['clock',['../structsd__spi__t.html#a0045b83e9e6b535f40a5df160f76370c',1,'sd_spi_t']]],
   ['cno',['cno',['../structubx__nav__sv__info__t.html#aa3c2469444d6c598f162b38d85f0e499',1,'ubx_nav_sv_info_t']]],
   ['command',['command',['../structMavlink__waypoint__handler_1_1waypoint__struct__t.html#afe04842db06f817127634ba0d496f9e8',1,'Mavlink_waypoint_handler::waypoint_struct_t::command()'],['../structstabilisation__ywing__t.html#a1ae2af0b159efced318bb25c542fe050',1,'stabilisation_ywing_t::command()']]],

@@ -2,6 +2,8 @@
 <area shape="rect" id="node3" href="$classBmp085.html#a7f469d576f213a091425becded10d99e" title="Initialise the sensor." alt="" coords="144,5,237,35"/>
 <area shape="rect" id="node7" href="$classHmc5883l.html#acd6966f7b8e7f084c9c07a670658bab7" title="Initialise the sensor." alt="" coords="137,59,244,88"/>
 <area shape="rect" id="node10" href="$classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9" title="Initialise the sensor." alt="" coords="136,112,245,141"/>
-<area shape="rect" id="node13" href="$classSonar__i2cxl.html#a67e3c0e11d6784827f877aaff20ac6f5" title="Initialise the sensor." alt="" coords="133,165,248,195"/>
+<area shape="rect" id="node13" href="$classMpu__6050.html#acac68dd3f9ff860aa1c6b9e66e2eda88" title="Initialise the sensor." alt="" coords="137,165,244,195"/>
+<area shape="rect" id="node15" href="$classSonar__i2cxl.html#a67e3c0e11d6784827f877aaff20ac6f5" title="Initialise the sensor." alt="" coords="133,219,248,248"/>
 <area shape="rect" id="node5" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="296,85,421,115"/>
+<area shape="rect" id="node17" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="308,219,409,248"/>
 </map>
