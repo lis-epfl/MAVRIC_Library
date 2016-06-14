@@ -39,6 +39,7 @@
  ******************************************************************************/
 #include "sample_projects/LEQuad/lequad_dronedome.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
+#include "sample_projects/LEQuad/lequad_dronedome.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
@@ -89,7 +90,7 @@ int main(void)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create central data using real sensors
-    LEQuad::conf_t lq_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
     //lq_config.waypoint_handler_config.auto_take_off_altitude = 1.0f;
     LEQuad_dronedome mav = LEQuad_dronedome(board.imu,
     //Central_data cd = Central_data(board.imu,
@@ -113,8 +114,9 @@ int main(void)
                                    file_log,
                                    file_stat,
                                    board_config.offboard_tag_search_config,
-                                   lq_config );
+                                   mav_config );
     mav.init();
+
     // -------------------------------------------------------------------------
     // Create simulation
     // -------------------------------------------------------------------------
