@@ -92,7 +92,7 @@
 
 extern "C"
 {
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 #include "sensing/altitude.h"
 #include "control/pid_controller.h"
 #include "util/print_util.h"

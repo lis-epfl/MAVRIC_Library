@@ -39,7 +39,7 @@
  *
  ******************************************************************************/
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_communication.hpp"

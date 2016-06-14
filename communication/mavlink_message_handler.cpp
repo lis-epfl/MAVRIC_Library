@@ -41,7 +41,7 @@
  ******************************************************************************/
 
 
- #include <stdlib.h>
+ #include <cstdlib>
  #include <stdbool.h>
 
 #include "communication/mavlink_message_handler.hpp"

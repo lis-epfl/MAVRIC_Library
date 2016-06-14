@@ -44,7 +44,7 @@
 #define HUD_TELEMETRY_H__
 
 #include "sensing/ins.hpp"
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 #include "control/stabilisation.hpp"
 
 

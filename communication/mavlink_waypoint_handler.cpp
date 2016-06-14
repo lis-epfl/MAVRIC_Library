@@ -40,6 +40,7 @@
  ******************************************************************************/
 
 
+#include <cstdlib>
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "hal/common/time_keeper.hpp"
@@ -47,7 +48,6 @@
 
 extern "C"
 {
-#include <cstdlib>
 #include "util/print_util.h"
 #include "util/maths.h"
 }

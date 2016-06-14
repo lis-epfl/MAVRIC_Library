@@ -56,7 +56,7 @@
 
 #include "util/coord_conventions.hpp"
 #include "util/quaternions.h"
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 
 /**
  * \brief Quaternion attitude error estimator data structure

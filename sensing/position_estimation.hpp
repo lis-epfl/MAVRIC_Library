@@ -56,7 +56,7 @@
 extern "C"
 {
 #include <stdbool.h>
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 }
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)

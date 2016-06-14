@@ -54,7 +54,7 @@
 
 extern "C"
 {
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 #include "util/streams.h"
 #include "buffer.h"
 #include "control/stabilisation.hpp"

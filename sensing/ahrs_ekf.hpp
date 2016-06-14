@@ -56,7 +56,7 @@
 
 extern "C"
 {
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 }
 
 
