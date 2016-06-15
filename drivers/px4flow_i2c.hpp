@@ -108,7 +108,8 @@ Px4flow_i2c::conf_t Px4flow_i2c::default_config(void)
 {
     conf_t conf = {};
 
-    conf.i2c_address = 0x42;
+    // conf.i2c_address = 0x84;  // 0x42 << 1;
+    conf.i2c_address = 0x42;  // 0x42 << 1;
 
     return conf;
 }

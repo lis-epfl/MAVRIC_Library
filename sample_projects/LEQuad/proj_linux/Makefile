@@ -11,7 +11,8 @@ PROJ_NAME=LEQuadLI
 # PROJECT FOLDER
 # ------------------------------------------------------------------------------
 # Project source files (*.c and *.cpp)
-LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
+# LIB_SRCS += sample_projects/LEQuad/main_linux.cpp
+LIB_SRCS += sample_projects/LEQuad/main_linux_hexhog.cpp
 LIB_SRCS += sample_projects/LEQuad/lequad.cpp
 
 # ------------------------------------------------------------------------------

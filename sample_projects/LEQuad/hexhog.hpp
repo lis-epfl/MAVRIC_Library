@@ -115,12 +115,14 @@ public:
     {
         init_flow();
         init_ins();
+        init_controllers();
     };
 
 
 protected:
     bool init_flow(void);
     bool init_ins(void);
+    bool init_controllers(void);
 
     virtual bool main_task(void);
 
@@ -130,6 +132,9 @@ protected:
     Px4flow_i2c bottom_flow_;
 
     INS_kf ins_kf_;
+
+    velocity_controller_copter_t velocity_controller_;
+    attitude_controller_t attitude_controller_;
 };
 
 
@@ -177,12 +182,36 @@ bool Hexhog::init_ins(void)
     return ret;
 }
 
+
+bool Hexhog::init_controllers(void)
+{
+    bool ret = true;
+
+    attitude_controller_init(&attitude_controller_,
+                             attitude_controller_default_config(),
+                             &ahrs,
+                             &command.attitude,
+                             &command.rate,
+                             &command.torque);
+                             
+    velocity_controller_copter_init(&velocity_controller_,
+                                    velocity_controller_copter_default_config(),
+                                    &ahrs,
+                                    &ins_kf_,
+                                    &command.velocity,
+                                    &command.attitude,
+                                    &command.thrust);
+
+    return ret;
+}
+
+
 bool Hexhog::main_task(void)
 {
     // Update estimation
     imu.update();
     ahrs_ekf.update();
-    position_estimation.update();
+    ins_kf_.update();
 
     bool failsafe = false;
 
@@ -192,72 +221,26 @@ bool Hexhog::main_task(void)
         switch (state.mav_mode().ctrl_mode())
         {
             case Mav_mode::GPS_NAV:
-                controls = controls_nav;
-                controls.control_mode = VELOCITY_COMMAND_MODE;
-
-                // if no waypoints are set, we do position hold therefore the yaw mode is absolute
-                if ((((state.nav_plan_active || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN)) && (navigation.internal_state_ == Navigation::NAV_NAVIGATING)) || (navigation.internal_state_ == Navigation::NAV_STOP_THERE))
-              	   || ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
-            	{
-                    controls.yaw_mode = YAW_RELATIVE;
-                }
-                else
-                {
-                    controls.yaw_mode = YAW_ABSOLUTE;
-                }
-                break;
-
             case Mav_mode::POSITION_HOLD:
-                controls = controls_nav;
-                controls.control_mode = VELOCITY_COMMAND_MODE;
-
-                if ( ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))  || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
-                {
-                    controls.yaw_mode = YAW_RELATIVE;
-                }
-                else
-                {
-                    controls.yaw_mode = YAW_ABSOLUTE;
-                }
-                break;
-
             case Mav_mode::VELOCITY:
-                manual_control.get_velocity_vector(&controls);
-                controls.control_mode = VELOCITY_COMMAND_MODE;
-                controls.yaw_mode = YAW_RELATIVE;
-                break;
-
             case Mav_mode::ATTITUDE:
-                manual_control.get_control_command(&controls);
-                controls.control_mode = ATTITUDE_COMMAND_MODE;
-                controls.yaw_mode = YAW_RELATIVE;
+                manual_control.get_velocity_command(&command.velocity, 0.0f);
+                velocity_controller_copter_update(&velocity_controller_);
+                command.thrust3D.xyz[Z] = command.thrust.thrust;
+            break;
 
-                if (state.is_custom())
-                {
-                    command.thrust3D.xyz[Y] = controls.rpy[ROLL];
-                    controls.rpy[ROLL] = 0.0f;
-
-                    command.thrust3D.xyz[X] = -controls.rpy[PITCH];
-                    controls.rpy[PITCH] = 0.0f;
-                }
-                else
-                {
-                    command.thrust3D.xyz[Y] = 0.0f;
-                    command.thrust3D.xyz[X] = 0.0f;
-                }
-
-                break;
-
-            //case Mav_mode::RATE:
-            //    manual_control.get_rate_command(&controls);
-            //    controls.control_mode = RATE_COMMAND_MODE;
-            //    break;
+            case Mav_mode::RATE:
+                manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
+                manual_control.get_thrust_command(&command.thrust);
+                command.thrust3D.xyz[Z] = command.thrust.thrust;
+            break;
 
             default:
                 failsafe = true;    // undefined behaviour -> failsafe
+            break;
         }
     }
-    else    // !state.is_armed()
+    else
     {
         failsafe = true;    // undefined behaviour -> failsafe
     }
@@ -265,9 +248,22 @@ bool Hexhog::main_task(void)
     // if behaviour defined, execute controller and mix; otherwise: set servos to failsafe
     if(!failsafe)
     {
-        stabilisation_copter_cascade_stabilise(&stabilisation_copter);
-        // servos_mix_quadcopter_diag_update(&servo_mix);
-        command.thrust3D.xyz[Z] = command.thrust.thrust;
+        if (state.is_custom())
+        {
+            command.thrust3D.xyz[Y] = controls.rpy[ROLL];
+            controls.rpy[ROLL] = 0.0f;
+
+            command.thrust3D.xyz[X] = -controls.rpy[PITCH];
+            controls.rpy[PITCH] = 0.0f;
+        }
+        else
+        {
+            command.thrust3D.xyz[Y] = 0.0f;
+            command.thrust3D.xyz[X] = 0.0f;
+        }
+
+        attitude_controller_update(&attitude_controller_);
+
         servos_mix_.update();
     }
     else
@@ -290,6 +286,13 @@ Hexhog::conf_t Hexhog::default_config(uint8_t sysid)
 
     conf.lequad_config    = LEQuad::default_config();
 
+    // Change the modes set from remote switches
+    conf.lequad_config.remote_config.mode_config.safety_mode         = Mav_mode::RATE;
+    conf.lequad_config.remote_config.mode_config.mode_switch_up      = Mav_mode::ATTITUDE;
+    conf.lequad_config.remote_config.mode_config.mode_switch_middle  = Mav_mode::ATTITUDE;
+    conf.lequad_config.remote_config.mode_config.mode_switch_down    = Mav_mode::ATTITUDE;
+
+    // Define correct servo mix
     conf.servos_mix_config = Servos_mix_6dof<6>::default_config();
     float s60 = 0.866025f;
     conf.servos_mix_config.mix = Mat<6, 6>({  0.0f,  1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
