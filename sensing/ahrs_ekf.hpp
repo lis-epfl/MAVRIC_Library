@@ -62,7 +62,7 @@ extern "C"
 /**
  * \brief The AHRS EKF class
  */
-class Ahrs_ekf
+class Ahrs_ekf : public Kalman
 {
 public:
 
@@ -131,13 +131,8 @@ private:
     void update_step_mag(void);
 
 
-    Mat<7,1> x_state_;                                  ///< The state of extended Kalman filter
-    Mat<7,7> F_;                                        ///< The state transition matrix
-    Mat<7,7> P_;                                        ///< The state covariance matrix
-    Mat<7,7> Q_;                                        ///< The process noise covariance matrix
     Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
-    Mat<7,7> Id_;                                       ///< The 7x7 identity matrix
 
     conf_t config_;                                     ///< The config structure for the EKF module
 
