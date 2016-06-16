@@ -530,7 +530,7 @@ bool LEQuad::main_task(void)
 {
     // Update estimation
     imu.update();
-    ahrs_ekf.update();
+    ahrs_ekf.predict_and_update();
     position_estimation.update();
 
     bool failsafe = false;
@@ -555,7 +555,7 @@ bool LEQuad::main_task(void)
                     controls.yaw_mode = YAW_ABSOLUTE;
                 }
                 break;
-        
+
             case Mav_mode::POSITION_HOLD:
                 controls = controls_nav;
                 controls.control_mode = VELOCITY_COMMAND_MODE;

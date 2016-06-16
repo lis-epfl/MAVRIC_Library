@@ -213,6 +213,7 @@ void Ahrs_ekf::predict_step(void)
     Q_(6,5) = -x_kk1[6] * x_kk1[5] * dt3_3 * config_.sigma_w_sqr;
     Q_(6,6) = config_.sigma_r_sqr * dt + w_sqr * config_.sigma_r_sqr * dt3_3 + (x_kk1[3]*x_kk1[3]+x_kk1[4]*x_kk1[4]+x_kk1[5]*x_kk1[5])*config_.sigma_w_sqr*dt3_3;
 
+    /*
     // P_(k,k-1) = F_(k)*P_(k-1,k-1)*F_(k)' + Q_(k)
     P_ = (F_ % P_ % F_.transpose()) + Q_;
 
@@ -228,6 +229,9 @@ void Ahrs_ekf::predict_step(void)
     x_(4,0) = quat.v[0];
     x_(5,0) = quat.v[1];
     x_(6,0) = quat.v[2];
+    */
+
+    predict();
 }
 
 void Ahrs_ekf::update_step_acc(void)
@@ -279,6 +283,7 @@ void Ahrs_ekf::update_step_acc(void)
     float acc_norm_diff = maths_f_abs(1.0f-acc_norm);
     float noise = 1.0f - maths_center_window_4(config_.acc_multi_noise*acc_norm_diff);
 
+    /*
     // Innovation covariance S(k) = H(k) * P_(k,k-1) * H(k)' + R
     Mat<3,3> Sk_acc = (H_acc_k % P_ % H_acc_k.transpose()) + R_acc_ + Mat<3,3>(noise*config_.acc_norm_noise,true);
 
@@ -305,7 +310,21 @@ void Ahrs_ekf::update_step_acc(void)
 
     // Update covariance estimate
     P_ = (Id_ - (K_acc % H_acc_k)) % P_;
+    */
 
+    // Get parameters ready for updating
+    H_ = H_acc_k;
+    R_ = R_acc_ + Mat<3,3>(noise*config_.acc_norm_noise,true);
+    S_ = (H_ % P_ % H_.transpose()) + R_;
+
+    Mat<3,3> Sk_inv;
+    op::inverse(S_, Sk_inv);
+    K_ = P_ % (H_.transpose() % Sk_inv);
+
+    y_ = yk_acc;
+
+    // Update using class parameters
+    update(z_acc);
 }
 
 void Ahrs_ekf::update_step_mag(void)
@@ -345,9 +364,11 @@ void Ahrs_ekf::update_step_mag(void)
     H_mag_k(2,5) = -2.0f * x_kk1(3,0) * mag_global[0] - 4.0f * x_kk1(5,0) * mag_global[2];
     H_mag_k(2,6) = 2.0f * x_kk1(4,0) * mag_global[0];
 
+
     // Innovation y(k) = z(k) - h(x(k,k-1))
     Mat<3,1> yk_mag = z_mag - h_mag_xkk1;
 
+    /*
     // Innovation covariance S(k) = H(k) * P_(k,k-1) * H(k)' + R
     Mat<3,3> Sk_mag = (H_mag_k % P_ % H_mag_k.transpose()) + R_mag_;
 
@@ -375,7 +396,21 @@ void Ahrs_ekf::update_step_mag(void)
 
     // Update covariance estimate
     P_ = (Id_ - (K_mag % H_mag_k)) % P_;
+    */
 
+    // Get parameters ready for updating
+    H_ = H_mag_k;
+    R_ = R_mag_;
+    S_ = (H_ % P_ % H_.transpose()) + R_;
+
+    Mat<3,3> Sk_inv;
+    op::inverse(S_, Sk_inv);
+    K_ = P_ % (H_.transpose() % Sk_inv);
+
+    y_ = yk_mag;
+
+    // Update using class parameters
+    update(z_mag);
 }
 
 
@@ -394,7 +429,7 @@ Ahrs_ekf::Ahrs_ekf(const Imu& imu, ahrs_t& ahrs, const Ahrs_ekf::conf_t config):
     ahrs_.internal_state = AHRS_INITIALISING;
 }
 
-bool Ahrs_ekf::update(void)
+bool Ahrs_ekf::predict_and_update(void)
 {
     bool task_return = true;
 

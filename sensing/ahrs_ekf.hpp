@@ -52,6 +52,7 @@
 
 #include "util/matrix.hpp"
 #include "sensing/imu.hpp"
+#include "util/kalman.hpp"
 
 extern "C"
 {
@@ -62,7 +63,7 @@ extern "C"
 /**
  * \brief The AHRS EKF class
  */
-class Ahrs_ekf : public Kalman
+class Ahrs_ekf : public Kalman<7, 0, 3>
 {
 public:
 
@@ -95,7 +96,7 @@ public:
      *
      * \return  true if success
      */
-    bool update(void);
+    bool predict_and_update(void);
 
     /**
      * \brief   Performs the north vector calibration
@@ -108,7 +109,7 @@ public:
     static inline Ahrs_ekf::conf_t default_config();
 
 
-private:
+protected:
 
     /**
      * \brief   Initialize the state and matrix of the EKF
