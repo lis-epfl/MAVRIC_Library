@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
  * \brief Extended Kalman Filter attitude estimation, mixing accelerometer and magnetometer
  * x[0] : bias_x
