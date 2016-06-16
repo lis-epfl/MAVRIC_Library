@@ -82,12 +82,6 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
     if ((packet->param3 > -999.0f || packet->param3 < -1001.0f) ||    // Use range due to float errors
         (packet->param4 > -999.0f || packet->param4 < -1001.0f))      // Use range due to float errors
     {
-        // Increment counter
-        offboard_tag_search.increment_picture_count();
-
-        // Set waypoint enum to tag found
-        offboard_tag_search.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND);
-
         /*
          * The incoming packet is of this format:
          * param1: camera number
@@ -96,99 +90,134 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
          * param4: tag vertical location in pixels, positive is down, -1000 for unknown
          * param5: tag horizontal location in mm, divide by 1000 to make m, positive is right, -1000 for unknown
          * param6: tag vertical location in mm, divide by 1000 to make m, positive is down, -1000 for unknown
-         * param7: estimated drone height in mm, divide by 1000 to make m. positive is up, -1000 for unknown as positive is up
+         * param7: estimated drone-image plane distance in mm, divide by 1000 to make m. positive is up, -1000 for unknown as positive is up
          */
 
         /*
          * Set the x and y hold position to be equal to the tag location
          */
 
-        // Get drone height, drone height tells you the pixel dimensions when projected on the ground, positive z is down
-        float drone_height = 0.0f;
+        // Get drone_to_image_plane_dist, drone_to_image_plane_dist tells you the pixel dimensions when projected on the ground, positive z is down
+        float drone_to_image_plane_dist = 0.0f;
 
-        // Get drone height from packet if available and reasonable
+        // Get tag to drone distance from packet if available and reasonable
         if ((packet->param7 > 0.0f) &&                                          // Packet outputs + as up, must be greater than 0
             (packet->param7 < offboard_tag_search.max_acc_drone_height_from_camera_mm()))   // Don't allow too high estimations as accuracy decreases with altitude
         {
-           drone_height = -packet->param7 / 1000.0f;
+            drone_to_image_plane_dist = packet->param7 / 1000.0f;
         }
-        else // Get drone height from the local position, drone height tells you the pixel dimensions on the ground, +z is down
+        else // Get drone_to_image_plane_dist from the local position and rotate and extend to account for increased distance due to ahrs
         {
-           drone_height = offboard_tag_search.position_at_photo(thread_index).pos[2];
+            // Find vector facing down from the drone
+            float drone_height = offboard_tag_search.position_at_photo(thread_index).pos[2];
+            quat_t q_ahrs = offboard_tag_search.ahrs_at_photo(thread_index).qe;
+            float drone_height_vector[3], rotated_drone_height_vector[3];
+            drone_height_vector[0] = 0.0f;
+            drone_height_vector[1] = 0.0f;
+            drone_height_vector[2] = -drone_height;
+            rotated_drone_height_vector[0] = 0.0f;
+            rotated_drone_height_vector[1] = 0.0f;
+            rotated_drone_height_vector[2] = 0.0f;
+            quaternions_rotate_vector(q_ahrs, drone_height_vector, rotated_drone_height_vector);
+
+            // Check if acceptable rotation
+            if ((rotated_drone_height_vector[2] / -drone_height) < .707) // Handle cases for drones with high angles
+            {
+                drone_to_image_plane_dist = -1.0f; // Give it a negative number to signify error
+            }
+            else // Extend vector to ground
+            {
+                float extend_factor = -drone_height / rotated_drone_height_vector[2];
+                float extended_rotated_drone_height_vector[3];
+                for (int i = 0; i < 3; i++)
+                {
+                    extended_rotated_drone_height_vector[i] = extend_factor * rotated_drone_height_vector[i];
+                }
+                drone_to_image_plane_dist = extended_rotated_drone_height_vector[2];
+            }
         }
 
-        // Get tag location in m
-        float dist_to_edge_of_fov_x = -drone_height * tan(offboard_tag_search.camera_x_fov() / 2); // Distance from center to x edge in m
-        float dist_to_edge_of_fov_y = -drone_height * tan(offboard_tag_search.camera_y_fov() / 2); // Distance from center to y edge in m
-        float picture_forward_offset = 0.0f;
-        float picture_right_offset = 0.0f;
-        // Attempt to get tag distance using camera approximation
-        if ((packet->param7 > 0.0f) &&                                                          // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
-            (packet->param7 < offboard_tag_search.max_acc_drone_height_from_camera_mm()) &&     // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
-            (packet->param5 > -(dist_to_edge_of_fov_x)) &&                                      // Ensure that x distance to tag is within frame
-            (packet->param5 <  (dist_to_edge_of_fov_x)) &&                                      // Ensure that x distance to tag is within frame
-            (packet->param6 > -(dist_to_edge_of_fov_y)) &&                                      // Ensure that y distance to tag is within frame
-            (packet->param6 <  (dist_to_edge_of_fov_y)))                                        // Ensure that y distance to tag is within frame
+        if (drone_to_image_plane_dist > 0.0f) // Check if the drone to tag dist is healthy
         {
-            // Forward corresponds to param6 as the picamera code outputs (right,down)
-            picture_forward_offset = -packet->param6 / 1000.0f; // Negative, because in vision positive is towards the bottom of the picture
-            picture_right_offset = packet->param5 / 1000.0f;
+            // Get tag location in m
+            float dist_to_edge_of_fov_x = drone_to_image_plane_dist * tan(offboard_tag_search.camera_x_fov() / 2); // Distance from center to x edge in m
+            float dist_to_edge_of_fov_y = drone_to_image_plane_dist * tan(offboard_tag_search.camera_y_fov() / 2); // Distance from center to y edge in m
+            float picture_forward_offset = 0.0f;
+            float picture_right_offset = 0.0f;
+            // Attempt to get tag distance using camera approximation
+            if ((packet->param7 > 0.0f) &&                                                          // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
+                (packet->param7 < offboard_tag_search.max_acc_drone_height_from_camera_mm()) &&     // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
+                (packet->param5 > -(dist_to_edge_of_fov_x)) &&                                      // Ensure that x distance to tag is within frame
+                (packet->param5 <  (dist_to_edge_of_fov_x)) &&                                      // Ensure that x distance to tag is within frame
+                (packet->param6 > -(dist_to_edge_of_fov_y)) &&                                      // Ensure that y distance to tag is within frame
+                (packet->param6 <  (dist_to_edge_of_fov_y)))                                        // Ensure that y distance to tag is within frame
+            {
+                // Forward corresponds to param6 as the picamera code outputs (right,down)
+                picture_forward_offset = -packet->param6 / 1000.0f; // Negative, because in vision positive is towards the bottom of the picture
+                picture_right_offset = packet->param5 / 1000.0f;
+            }
+            else // Use pixels
+            {
+                // Find pixel dimensions
+                /*
+                    tan(fov/2) = (width / 2) / drone_to_image_plane_dist
+                    width = 2 * drone_to_image_plane_dist * tan(fov/2)
+
+                    pixel_width = width / resolution
+                    pixel_width = 2 * drone_to_image_plane_dist * tan(fov/2) / resolution
+                */
+                float pixel_width = 2 * (drone_to_image_plane_dist) * tan(offboard_tag_search.camera_x_fov() / 2) / (offboard_tag_search.camera_x_resolution());
+                float pixel_height = 2 * (drone_to_image_plane_dist) * tan(offboard_tag_search.camera_y_fov() / 2) / (offboard_tag_search.camera_y_resolution());
+
+                // Get drone offset
+                // Forward corresponds to param4 as the picamera code outputs (right,down)
+                picture_forward_offset = -packet->param4 * pixel_width; // Negative, because in vision positive is towards the bottom of the picture
+                picture_right_offset = packet->param3 * pixel_height;
+            }
+
+
+            // Rotate offset to align with drone
+            quat_t q_rot;
+            float v_offset[3], v_new_dir[3];
+            q_rot.s = cos(offboard_tag_search.camera_rotation()/2); // Based off how camera is mounted
+            q_rot.v[0] = 0.0f;
+            q_rot.v[1] = 0.0f;
+            q_rot.v[2] = -1.0f*sin(offboard_tag_search.camera_rotation()/2); // Negative to rotate CW
+            v_offset[0] = picture_forward_offset;
+            v_offset[1] = picture_right_offset;
+            v_offset[2] = drone_to_image_plane_dist;
+            v_new_dir[0] = 0.0f;
+            v_new_dir[1] = 0.0f;
+            v_new_dir[2] = 0.0f;
+            quaternions_rotate_vector(q_rot, v_offset, v_new_dir);
+
+            // Convert to local coordinates due to yaw, pitch, roll
+            quat_t q_ahrs = offboard_tag_search.ahrs_at_photo(thread_index).qe;
+            float v_new_local_dir[3];
+            quaternions_rotate_vector(q_ahrs, v_new_dir, v_new_local_dir);
+
+            // Determine how far the drone is from the tag in north and east coordinates
+            float drone_x_offset = v_new_local_dir[0];
+            float drone_y_offset = v_new_local_dir[1];
+
+            // Get local tag position from drone position and offset
+            float tag_x_pos = offboard_tag_search.position_at_photo(thread_index).pos[0] + drone_x_offset;
+            float tag_y_pos = offboard_tag_search.position_at_photo(thread_index).pos[1] + drone_y_offset;
+
+            // Set hold position
+            offboard_tag_search.tag_location().pos[0] = tag_x_pos;
+            offboard_tag_search.tag_location().pos[1] = tag_y_pos;
+            offboard_tag_search.tag_location().pos[2] = offboard_tag_search.waypoint_handler().tag_search_altitude();
+
+            // Update recorded time
+            offboard_tag_search.update_last_update_us();
+
+            // Increment counter
+            offboard_tag_search.increment_picture_count();
+
+            // Set waypoint enum to tag found
+            offboard_tag_search.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND);
         }
-        else // Use pixels
-        {
-            // Find pixel dimensions
-            /*
-                tan(fov/2) = (width / 2) / drone_height
-                width = 2 * drone_height * tan(fov/2)
-
-                pixel_width = width / resolution
-                pixel_width = 2 * drone_height * tan(fov/2) / resolution
-            */
-            float pixel_width = 2 * (-drone_height) * tan(offboard_tag_search.camera_x_fov() / 2) / (offboard_tag_search.camera_x_resolution()); // drone_height negated as +z is down
-            float pixel_height = 2 * (-drone_height) * tan(offboard_tag_search.camera_y_fov() / 2) / (offboard_tag_search.camera_y_resolution()); // drone_height negated as +z is down
-
-            // Get drone offset
-            // Forward corresponds to param4 as the picamera code outputs (right,down)
-            picture_forward_offset = -packet->param4 * pixel_width; // Negative, because in vision positive is towards the bottom of the picture
-            picture_right_offset = packet->param3 * pixel_height;
-        }
-
-
-        // Rotate offset to align with drone
-        quat_t q_rot;
-        float v_offset[3], v_new_dir[3];
-        q_rot.s = cos(offboard_tag_search.camera_rotation()/2); // Based off how camera is mounted
-        q_rot.v[0] = 0.0f;
-        q_rot.v[1] = 0.0f;
-        q_rot.v[2] = -1.0f*sin(offboard_tag_search.camera_rotation()/2); // Negative to rotate CW
-        v_offset[0] = picture_forward_offset;
-        v_offset[1] = picture_right_offset;
-        v_offset[2] = -drone_height; // Negative as the positive direction is down
-        v_new_dir[0] = 0.0f;
-        v_new_dir[1] = 0.0f;
-        v_new_dir[2] = 0.0f;
-        quaternions_rotate_vector(q_rot, v_offset, v_new_dir);
-
-        // Convert to local coordinates due to yaw, pitch, roll
-        quat_t q_ahrs = offboard_tag_search.ahrs_at_photo(thread_index).qe;
-        float v_new_local_dir[3];
-        quaternions_rotate_vector(q_ahrs, v_new_dir, v_new_local_dir);
-
-        // Determine how far the drone is from the tag in north and east coordinates
-        float drone_x_offset = v_new_local_dir[0];
-        float drone_y_offset = v_new_local_dir[1];
-
-        // Get local tag position from drone position and offset
-        float tag_x_pos = offboard_tag_search.position_at_photo(thread_index).pos[0] + drone_x_offset;
-        float tag_y_pos = offboard_tag_search.position_at_photo(thread_index).pos[1] + drone_y_offset;
-
-        // Set hold position
-        offboard_tag_search.tag_location().pos[0] = tag_x_pos;
-        offboard_tag_search.tag_location().pos[1] = tag_y_pos;
-        offboard_tag_search.tag_location().pos[2] = offboard_tag_search.waypoint_handler().tag_search_altitude();
-
-        // Update recorded time
-        offboard_tag_search.update_last_update_us();
     }
 
     // Send message to take new photo
@@ -198,7 +227,6 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
 
     result = MAV_RESULT_ACCEPTED;
     return result;
-
 }
 
 //------------------------------------------------------------------------------
