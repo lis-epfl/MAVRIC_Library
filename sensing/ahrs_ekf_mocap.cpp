@@ -78,7 +78,7 @@ void Ahrs_mocap::callback(Ahrs_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_me
 {
     ahrs_ekf_mocap->R_mocap_(0,0) = ahrs_ekf_mocap->config_.R_mocap;
     ahrs_ekf_mocap->R_mocap_(1,1) = ahrs_ekf_mocap->config_.R_mocap;
-    ahrs_ekf_mocap->R_mocap_(2,2) = ahahrs_ekf_mocaprs_mocap->config_.R_mocap;
+    ahrs_ekf_mocap->R_mocap_(2,2) = ahrs_ekf_mocap->config_.R_mocap;
     ahrs_ekf_mocap->R_mocap_(3,3) = ahrs_ekf_mocap->config_.R_mocap;
 
     mavlink_att_pos_mocap_t packet;
