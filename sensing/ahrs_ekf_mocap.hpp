@@ -107,7 +107,9 @@ protected:
 
     Mat<4,4> R_mocap_;                                  ///< The mocap measurement noise matrix
 
-    conf_t config_mocap_;                               ///< The config structure for the EKF mocap module
+    Ahrs_ekf_mocap::conf_t config_mocap_;                               ///< The config structure for the EKF mocap module
+
+    float last_update_us_;                                    ///< The last time the mocap was updated
 };
 
 Ahrs_ekf_mocap::conf_t Ahrs_ekf_mocap::default_config()

@@ -74,12 +74,9 @@ using namespace mat;
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Ahrs_mocap::callback(Ahrs_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg)
+void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg)
 {
-    ahrs_ekf_mocap->R_mocap_(0,0) = ahrs_ekf_mocap->config_.R_mocap;
-    ahrs_ekf_mocap->R_mocap_(1,1) = ahrs_ekf_mocap->config_.R_mocap;
-    ahrs_ekf_mocap->R_mocap_(2,2) = ahrs_ekf_mocap->config_.R_mocap;
-    ahrs_ekf_mocap->R_mocap_(3,3) = ahrs_ekf_mocap->config_.R_mocap;
+    ahrs_ekf_mocap->R_mocap_ = Mat<4, 4>(ahrs_ekf_mocap->config_mocap_.R_mocap, true);
 
     mavlink_att_pos_mocap_t packet;
     mavlink_msg_att_pos_mocap_decode(msg, &packet);
@@ -88,21 +85,21 @@ void Ahrs_mocap::callback(Ahrs_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_me
     float t = time_keeper_get_us();
 
     // Create matrices for the update
-    Mat<4, 1> z = Mat(0.0f);
+    Mat<4, 1> z = Mat<4, 1>(0.0f);
     z(0, 0) = packet.q[0];
     z(1, 0) = packet.q[1];
     z(2, 0) = packet.q[2];
     z(3, 0) = packet.q[3];
 
-    Mat<4, 7> H = Mat(0.0f);
+    Mat<4, 7> H = Mat<4, 7>(0.0f);
     H(0, 3) = 1.0f;
     H(1, 4) = 1.0f;
     H(2, 5) = 1.0f;
     H(3, 6) = 1.0f;
 
-    Mat<4, 4> S = Mat(0.0f);
-    Mat<7, 4> K = Mat(0.0f);
-    Mat<4, 1> y = Mat(0.0f);
+    Mat<4, 4> S = Mat<4, 4>(0.0f);
+    Mat<7, 4> K = Mat<7, 4>(0.0f);
+    Mat<4, 1> y = Mat<4, 1>(0.0f);
 
     // Run the ekf update function
     kf::update(ahrs_ekf_mocap->x_, ahrs_ekf_mocap->P_, z, H, ahrs_ekf_mocap->R_mocap_, S, K, y, ahrs_ekf_mocap->I_);
@@ -119,6 +116,8 @@ Ahrs_ekf_mocap::Ahrs_ekf_mocap(const Imu& imu, ahrs_t& ahrs, Mavlink_message_han
     Ahrs_ekf(imu, ahrs, config),
     config_mocap_(config_mocap)
 {
+    R_mocap_ = Mat<4, 4>(config_mocap_.R_mocap, true);
+
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
 
