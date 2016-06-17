@@ -74,12 +74,12 @@ using namespace mat;
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Ahrs_mocap::callback(Ahrs_mocap* ahrs_mocap, uint32_t sysid, mavlink_message_t* msg)
+void Ahrs_mocap::callback(Ahrs_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg)
 {
-    ahrs_mocap->R_mocap_(0,0) = ahrs_mocap->config_.R_mocap;
-    ahrs_mocap->R_mocap_(1,1) = ahrs_mocap->config_.R_mocap;
-    ahrs_mocap->R_mocap_(2,2) = ahrs_mocap->config_.R_mocap;
-    ahrs_mocap->R_mocap_(3,3) = ahrs_mocap->config_.R_mocap;
+    ahrs_ekf_mocap->R_mocap_(0,0) = ahrs_ekf_mocap->config_.R_mocap;
+    ahrs_ekf_mocap->R_mocap_(1,1) = ahrs_ekf_mocap->config_.R_mocap;
+    ahrs_ekf_mocap->R_mocap_(2,2) = ahahrs_ekf_mocaprs_mocap->config_.R_mocap;
+    ahrs_ekf_mocap->R_mocap_(3,3) = ahrs_ekf_mocap->config_.R_mocap;
 
     mavlink_att_pos_mocap_t packet;
     mavlink_msg_att_pos_mocap_decode(msg, &packet);
@@ -105,10 +105,10 @@ void Ahrs_mocap::callback(Ahrs_mocap* ahrs_mocap, uint32_t sysid, mavlink_messag
     Mat<4, 1> y = Mat(0.0f);
 
     // Run the ekf update function
-    kf::update(ahrs_mocap->x_, ahrs_mocap->P_, z, H, ahrs_mocap->R_mocap_, S, K, y, ahrs_mocap->I_);
+    kf::update(ahrs_ekf_mocap->x_, ahrs_ekf_mocap->P_, z, H, ahrs_ekf_mocap->R_mocap_, S, K, y, ahrs_ekf_mocap->I_);
 
     // Update timing
-    ahrs_mocap->last_update_us_ = t;
+    ahrs_ekf_mocap->last_update_us_ = t;
 }
 
 //------------------------------------------------------------------------------
