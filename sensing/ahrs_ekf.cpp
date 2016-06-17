@@ -245,20 +245,20 @@ void Ahrs_ekf::update_step_acc(void)
 
     // h_acc(x(k,k-1))
     Mat<3,1> h_acc_xkk1;
-    h_acc_xkk1(0,0) = -2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0)) * acc_z_global;
-    h_acc_xkk1(1,0) = -2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0)) * acc_z_global;
-    h_acc_xkk1(2,0) = -(1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0))) * acc_z_global;
+    h_acc_xkk1(0,0) = 2.0f*(x_kk1(3,0)*x_kk1(5,0) + x_kk1(4,0)*x_kk1(6,0)) * acc_z_global;
+    h_acc_xkk1(1,0) = 2.0f*(-x_kk1(3,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(6,0)) * acc_z_global;
+    h_acc_xkk1(2,0) = (1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0))) * acc_z_global;
 
     // H_acc(k) = jacobian(h_acc(x(k,k-1)))
     Mat<3,7> H_acc_k;
 
-    H_acc_k(0,3) = -2.0f * x_kk1(5,0) * acc_z_global;
+    H_acc_k(0,3) = 2.0f * x_kk1(5,0) * acc_z_global;
     H_acc_k(0,4) = 2.0f * x_kk1(6,0) * acc_z_global;
-    H_acc_k(0,5) = -2.0f * x_kk1(3,0) * acc_z_global;
+    H_acc_k(0,5) = 2.0f * x_kk1(3,0) * acc_z_global;
     H_acc_k(0,6) = 2.0f * x_kk1(4,0) * acc_z_global;
 
-    H_acc_k(1,3) = 2.0f * x_kk1(4,0) * acc_z_global;
-    H_acc_k(1,4) = 2.0f * x_kk1(3,0) * acc_z_global;
+    H_acc_k(1,3) = -2.0f * x_kk1(4,0) * acc_z_global;
+    H_acc_k(1,4) = -2.0f * x_kk1(3,0) * acc_z_global;
     H_acc_k(1,5) = 2.0f * x_kk1(6,0) * acc_z_global;
     H_acc_k(1,6) = 2.0f * x_kk1(5,0) * acc_z_global;
 
