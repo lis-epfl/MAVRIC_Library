@@ -213,7 +213,6 @@ void Ahrs_ekf::predict_step(void)
     Q_(6,5) = -x_kk1[6] * x_kk1[5] * dt3_3 * config_.sigma_w_sqr;
     Q_(6,6) = config_.sigma_r_sqr * dt + w_sqr * config_.sigma_r_sqr * dt3_3 + (x_kk1[3]*x_kk1[3]+x_kk1[4]*x_kk1[4]+x_kk1[5]*x_kk1[5])*config_.sigma_w_sqr*dt3_3;
 
-    /*
     // P_(k,k-1) = F_(k)*P_(k-1,k-1)*F_(k)' + Q_(k)
     P_ = (F_ % P_ % F_.transpose()) + Q_;
 
@@ -229,9 +228,6 @@ void Ahrs_ekf::predict_step(void)
     x_(4,0) = quat.v[0];
     x_(5,0) = quat.v[1];
     x_(6,0) = quat.v[2];
-    */
-
-    predict();
 }
 
 void Ahrs_ekf::update_step_acc(void)
@@ -340,7 +336,7 @@ void Ahrs_ekf::update_step_mag(void)
     h_mag_xkk1(1,0) = 2.0f*(x_kk1(4,0)*x_kk1(5,0) - x_kk1(3,0)*x_kk1(6,0))*mag_global[0] + 2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0))*mag_global[2];
     h_mag_xkk1(2,0) = 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global[0] + (1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0)))*mag_global[2];
     */
-    
+
     Mat<3,7> H_mag_k;
 
     H_mag_k(0,3) = -2.0f * x_kk1(5,0) * mag_global[2];
