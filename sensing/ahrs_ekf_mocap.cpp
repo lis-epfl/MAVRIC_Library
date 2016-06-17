@@ -125,7 +125,7 @@ Ahrs_ekf_mocap::Ahrs_ekf_mocap(const Imu& imu, ahrs_t& ahrs, Mavlink_message_han
     callback.message_id     = MAVLINK_MSG_ID_ATT_POS_MOCAP; // 69
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &Ahrs_mocap::callback;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &Ahrs_ekf_mocap::callback;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)        this;
 
     message_handler.add_msg_callback(&callback);
