@@ -309,7 +309,7 @@ void Ahrs_ekf::update_step_acc(void)
     x_(6,0) = quat.v[2];
 
     // Update covariance estimate
-    P_ = (Id_ - (K_acc % H_acc_k)) % P_;
+    P_ = (I_ - (K_acc % H_acc_k)) % P_;
     */
 
     update(z_acc, H_acc_k, R_acc_ + Mat<3,3>(noise*config_.acc_norm_noise,true));
@@ -384,7 +384,7 @@ void Ahrs_ekf::update_step_mag(void)
     x_(6,0) = quat.v[2];
 
     // Update covariance estimate
-    P_ = (Id_ - (K_mag % H_mag_k)) % P_;
+    P_ = (I_ - (K_mag % H_mag_k)) % P_;
     */
 
     update(z_mag, H_mag_k, R_mag_);
