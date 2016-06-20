@@ -2,6 +2,8 @@
 The Ahrs_ekf modules updates the ahrs structure using an extended kalman filter with updates from the accelerometer and magnetometer.
 
 ### Accelerometer Update Derivation
+We need to determine the measurement matrix (H) for the kalman filter. This is done by predicting what the measurement would be at any given attitude (h) and then obtaining the Jacobian matrix of that.
+
 The state vector given in the Ahrs_ekf module is given as:
 <!-- \vec{x} = \begin{bmatrix} b_x \\ b_y \\ b_z \\ q_0 \\ q_1 \\ q_2 \\ q_3 \end{bmatrix} -->
 ![State Vector](http://mathurl.com/ze3ktfw.png)
@@ -51,6 +53,8 @@ In order to obtain the measurement matrix in the kalman filter, we take the Jaco
 
 
 ### Magnetometer Update Derivation
+We need to determine the measurement matrix (H) for the kalman filter. This is done by predicting what the measurement would be at any given attitude (h) and then obtaining the Jacobian matrix of that.
+
 The state vector given in the Ahrs_ekf module is given as:
 <!-- \vec{x} = \begin{bmatrix} b_x \\ b_y \\ b_z \\ q_0 \\ q_1 \\ q_2 \\ q_3 \end{bmatrix} -->
 ![State Vector](http://mathurl.com/ze3ktfw.png)
