@@ -46,6 +46,7 @@ Our final rotated vector is:
 
 In order to obtain the measurement matrix in the kalman filter, we take the Jacobian of h with respect to the state vector.
 <!-- H = J_h(\vec{x}) = \begin{bmatrix} 0 && 0 && 0 && -2 g q_2 && +2 g q_3 && -2 g q_0 && +2 g q_1 \\ 0 && 0 && 0 && +2 g q_1 && +2 g q_0 && +2 g q_3 && +2 g q_2 \\ 0 && 0 && 0 && 0 && -4 g q_1 && -4 g q_2 && 0 \end{bmatrix} -->
+<!-- For some reason, the website limits the matrix to 5 columns -->
 ![Acceleration](http://mathurl.com/hdcrb6d.png)
 
 
@@ -92,5 +93,6 @@ Our final rotated vector is:
 
 In order to obtain the measurement matrix in the kalman filter, we take the Jacobian of h with respect to the state vector.
 <!-- H = J_h(\vec{x}) = \begin{bmatrix} 0 && 0 && 0 && 2 m_1 q_3 - 2 m_2 q_2 && 2 m_1 q_2 + 2 m_2 q_3 && -4 m_0 q_2 + 2 m_1 q_1 - 2 m_2 q_0 && -4 m_0 q_3 + 2 m_1 q_0 + 2m_2 q_1 \\ 0 && 0 && 0 && -2 m_0 q_3 + 2 m_2 q_1 && 2 m_0 q_2 -4 m_1 q_1 +2 m_2 q_0 && 2 m_0 q_1 + 2 m_2 q_3 && -2 m_0 q_0 - 4 m_1 q_3 + 2 m_2 q_2 \\ 0 && 0 && 0 && 2 m_0 q_2 - 2 m_1 q_1 && 2 m_0 q_3 - 2 m_1 q_0 - 4 m_2 q_1 && 2 m_0 q_0 + 2 m_1 q_3 -4 m_2 q_2 && 2 m_0 q_1 + 2 m_1 q_2 \end{bmatrix} -->
+<!-- For some reason, the website limits the matrix to 5 columns -->
 ![Acceleration](http://mathurl.com/zwop7ts.png)
 
