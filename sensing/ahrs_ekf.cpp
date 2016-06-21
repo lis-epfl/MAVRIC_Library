@@ -244,10 +244,11 @@ void Ahrs_ekf::update_step_acc(void)
     float acc_z_global = -1.0f;
 
     // h_acc(x(k,k-1))
+    // These equations come from rotating the gravity vector to the local frame
     Mat<3,1> h_acc_xkk1;
-    h_acc_xkk1(0,0) = -2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0)) * acc_z_global;
-    h_acc_xkk1(1,0) = -2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0)) * acc_z_global;
-    h_acc_xkk1(2,0) = -(1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0))) * acc_z_global;
+    h_acc_xkk1(0,0) = 2.0f*(-x_kk1(3,0)*x_kk1(5,0) + x_kk1(4,0)*x_kk1(6,0)) * acc_z_global;
+    h_acc_xkk1(1,0) = 2.0f*(x_kk1(3,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(6,0)) * acc_z_global;
+    h_acc_xkk1(2,0) = (1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0))) * acc_z_global;
 
     // H_acc(k) = jacobian(h_acc(x(k,k-1)))
     Mat<3,7> H_acc_k;
@@ -323,26 +324,26 @@ void Ahrs_ekf::update_step_mag(void)
 
     // h_mag(x(k,k-1))
     Mat<3,1> h_mag_xkk1;
-    h_mag_xkk1(0,0) = (1.0f - 2.0f*(x_kk1(5,0)*x_kk1(5,0) + x_kk1(6,0)*x_kk1(6,0)))*mag_global[0] + 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global[2];
-    h_mag_xkk1(1,0) = 2.0f*(x_kk1(4,0)*x_kk1(5,0) - x_kk1(3,0)*x_kk1(6,0))*mag_global[0] + 2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0))*mag_global[2];
-    h_mag_xkk1(2,0) = 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global[0] + (1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0)))*mag_global[2];
+    h_mag_xkk1(0,0) = (1.0f + 2.0f*(-x_kk1(5,0)*x_kk1(5,0) - x_kk1(6,0)*x_kk1(6,0)))* mag_global[0] +         2.0f*( x_kk1(3,0)*x_kk1(6,0) + x_kk1(4,0)*x_kk1(5,0)) * mag_global[1] +         2.0f*( x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0)) * mag_global[2];
+    h_mag_xkk1(1,0) =         2.0f*( x_kk1(4,0)*x_kk1(5,0) - x_kk1(3,0)*x_kk1(6,0)) * mag_global[0] + (1.0f + 2.0f*(-x_kk1(4,0)*x_kk1(4,0) - x_kk1(6,0)*x_kk1(6,0)))* mag_global[1] +         2.0f*( x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0)) * mag_global[2];
+    h_mag_xkk1(2,0) =         2.0f*( x_kk1(4,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(5,0)) * mag_global[0] +         2.0f*( x_kk1(5,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(4,0)) * mag_global[1] + (1.0f + 2.0f*(-x_kk1(4,0)*x_kk1(4,0) - x_kk1(5,0)*x_kk1(5,0)))* mag_global[2];
 
     Mat<3,7> H_mag_k;
 
-    H_mag_k(0,3) = -2.0f * x_kk1(5,0) * mag_global[2];
-    H_mag_k(0,4) = 2.0f * x_kk1(6,0) * mag_global[2];
-    H_mag_k(0,5) = -4.0f * x_kk1(5,0) * mag_global[0] - 2.0f * x_kk1(3,0) * mag_global[2];
-    H_mag_k(0,6) = -4.0f * x_kk1(6,0) * mag_global[0] + 2.0f * x_kk1(4,0) * mag_global[2];
+    H_mag_k(0,3) =                                  2.0f*x_kk1(6,0)*mag_global[1] - 2.0f*x_kk1(5,0)*mag_global[2];
+    H_mag_k(0,4) =                                  2.0f*x_kk1(5,0)*mag_global[1] + 2.0f*x_kk1(6,0)*mag_global[2];
+    H_mag_k(0,5) = -4.0f*x_kk1(5,0)*mag_global[0] + 2.0f*x_kk1(4,0)*mag_global[1] - 2.0f*x_kk1(3,0)*mag_global[2];
+    H_mag_k(0,6) = -4.0f*x_kk1(6,0)*mag_global[0] + 2.0f*x_kk1(3,0)*mag_global[1] + 2.0f*x_kk1(4,0)*mag_global[2];
 
-    H_mag_k(1,3) = -2.0f * x_kk1(6,0) * mag_global[0] + 2.0f * x_kk1(4,0) * mag_global[2];
-    H_mag_k(1,4) = 2.0f * x_kk1(5,0) * mag_global[0] + 2.0f * x_kk1(3,0) * mag_global[2];
-    H_mag_k(1,5) = 2.0f * x_kk1(4,0) * mag_global[0] + 2.0f * x_kk1(6,0) * mag_global[2];
-    H_mag_k(1,6) = -2.0f * x_kk1(3,0) * mag_global[0] + 2.0f * x_kk1(5,0) * mag_global[2];
+    H_mag_k(1,3) = -2.0f*x_kk1(6,0)*mag_global[0]                                 + 2.0f*x_kk1(4,0)*mag_global[2];
+    H_mag_k(1,4) =  2.0f*x_kk1(5,0)*mag_global[0] - 4.0f*x_kk1(4,0)*mag_global[1] + 2.0f*x_kk1(3,0)*mag_global[2];
+    H_mag_k(1,5) =  2.0f*x_kk1(4,0)*mag_global[0]                                 + 2.0f*x_kk1(6,0)*mag_global[2];
+    H_mag_k(1,6) = -2.0f*x_kk1(3,0)*mag_global[0] - 4.0f*x_kk1(6,0)*mag_global[1] + 2.0f*x_kk1(5,0)*mag_global[2];
 
-    H_mag_k(2,3) = -2.0f * x_kk1(5,0) * mag_global[0];
-    H_mag_k(2,4) = 2.0f * x_kk1(6,0) * mag_global[0] - 4.0f * x_kk1(4,0) * mag_global[2];
-    H_mag_k(2,5) = -2.0f * x_kk1(3,0) * mag_global[0] - 4.0f * x_kk1(5,0) * mag_global[2];
-    H_mag_k(2,6) = 2.0f * x_kk1(4,0) * mag_global[0];
+    H_mag_k(2,3) =  2.0f*x_kk1(5,0)*mag_global[0] - 2.0f*x_kk1(4,0)*mag_global[1];
+    H_mag_k(2,4) =  2.0f*x_kk1(6,0)*mag_global[0] - 2.0f*x_kk1(3,0)*mag_global[1] - 4.0f*x_kk1(4,0)*mag_global[2];
+    H_mag_k(2,5) =  2.0f*x_kk1(3,0)*mag_global[0] + 2.0f*x_kk1(6,0)*mag_global[1] - 4.0f*x_kk1(5,0)*mag_global[2];
+    H_mag_k(2,6) =  2.0f*x_kk1(4,0)*mag_global[0] + 2.0f*x_kk1(5,0)*mag_global[1];
 
     // Innovation y(k) = z(k) - h(x(k,k-1))
     Mat<3,1> yk_mag = z_mag - h_mag_xkk1;
