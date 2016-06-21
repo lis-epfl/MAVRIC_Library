@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
  * \brief Extended Kalman Filter attitude estimation, mixing accelerometer and magnetometer
  * x[0] : bias_x
@@ -51,6 +52,7 @@
 
 #include "util/matrix.hpp"
 #include "sensing/imu.hpp"
+#include "util/kalman.hpp"
 
 extern "C"
 {
@@ -61,7 +63,7 @@ extern "C"
 /**
  * \brief The AHRS EKF class
  */
-class Ahrs_ekf
+class Ahrs_ekf : public Kalman<7, 0, 3>
 {
 public:
 
@@ -106,8 +108,7 @@ public:
      */
     static inline Ahrs_ekf::conf_t default_config();
 
-
-private:
+protected:
 
     /**
      * \brief   Initialize the state and matrix of the EKF
@@ -130,13 +131,8 @@ private:
     void update_step_mag(void);
 
 
-    Mat<7,1> x_state_;                                  ///< The state of extended Kalman filter
-    Mat<7,7> F_;                                        ///< The state transition matrix
-    Mat<7,7> P_;                                        ///< The state covariance matrix
-    Mat<7,7> Q_;                                        ///< The process noise covariance matrix
     Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
-    Mat<7,7> Id_;                                       ///< The 7x7 identity matrix
 
     conf_t config_;                                     ///< The config structure for the EKF module
 
