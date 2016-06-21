@@ -79,7 +79,7 @@ public:
                      battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
                      file1, file2, config),
           gps_mocap_(mavlink_communication.message_handler()),
-          ahrs_ekf_mocap(mavlink_communication.message_handler(), ahrs_ekf)
+          ahrs_ekf_mocap_(mavlink_communication.message_handler(), ahrs_ekf)
       {
           bool success = true;
 
@@ -90,7 +90,7 @@ public:
 
 private:
     Gps_mocap gps_mocap_;
-    Ahrs_ekf_mocap ahrs_ekf_mocap;
+    Ahrs_ekf_mocap ahrs_ekf_mocap_;
 };
 
 
