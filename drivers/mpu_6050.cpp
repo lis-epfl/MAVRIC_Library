@@ -45,7 +45,8 @@
 #include "hal/common/time_keeper.hpp"
 
 
-const uint8_t MPU_6050_ADDRESS      = 0xD0;
+//using 7bits addressing instead of 8bits R/W format
+const uint8_t MPU_6050_ADDRESS      = 0x68;
 const uint8_t WHO_ARE_YOU_COMMAND   = 0x75;
 const uint8_t I_AM_MPU_6050         = 0x68;
 const uint8_t MPU_6050_GET_ACC      = 0x3B;
