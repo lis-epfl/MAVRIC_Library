@@ -81,12 +81,18 @@ public:
           gps_mocap_(mavlink_communication.message_handler()),
           ahrs_ekf_mocap_(mavlink_communication.message_handler(), ahrs_ekf)
       {
+      }
+
+      bool init()
+      {
           bool success = true;
 
           bool ret = gps_mocap_.init();
           print_util_dbg_init_msg("[GPS_MOCAP]", ret);
           success &= ret;
-      };
+
+          return success;
+      }
 
 private:
     Gps_mocap gps_mocap_;
