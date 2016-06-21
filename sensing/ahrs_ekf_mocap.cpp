@@ -112,11 +112,14 @@ void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, ma
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Ahrs_ekf_mocap::Ahrs_ekf_mocap(const Imu& imu, ahrs_t& ahrs, Mavlink_message_handler& message_handler, const Ahrs_ekf::conf_t config, const Ahrs_ekf_mocap::conf_t config_mocap):
+Ahrs_ekf_mocap::Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, Ahrs_ekf& ahrs_ekf, const conf_t config_):
     Ahrs_ekf(imu, ahrs, config),
+    x_(ahrs_ekf.x()),
+    P_(ahrs_ekf.P()),
+    I_(Mat<7,7>(1.0f, true)),
     config_mocap_(config_mocap)
 {
-    R_mocap_ = Mat<4, 4>(config_mocap_.R_mocap, true);
+    R_mocap_ = Mat<4, 4>(config_.R_mocap, true);
 
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;

@@ -52,7 +52,6 @@
 #ifndef __AHRS_EKF_MOCAP_HPP__
 #define __AHRS_EKF_MOCAP_HPP__
 
-#include "sensing/ahrs_ekf.hpp"
 #include "util/matrix.hpp"
 #include "util/kalman.hpp"
 
@@ -64,7 +63,7 @@ extern "C"
 /**
  * \brief The AHRS EKF class
  */
-class Ahrs_ekf_mocap : public Ahrs_ekf
+class Ahrs_ekf_mocap
 {
 public:
 
@@ -79,18 +78,16 @@ public:
     /**
      * \brief   AHRS EKF controller
      *
-     * \param   imu             IMU structure (input)
-     * \param   ahrs            Attitude estimation structure (output)
      * \param   message_handler The Mavlink message handler
-     * \param   config          Configuration structure
-     * \param   config_mocap    Configuration structure for the mocap
+     * \param   ahrs_ekf        The reference to the ahrs_ekf object
+     * \param   config          Configuration structure for the mocap
      */
-    Ahrs_ekf_mocap(const Imu& imu, ahrs_t& ahrs, Mavlink_message_handler& message_handler, const Ahrs_ekf::conf_t config = Ahrs_ekf::default_config(), const Ahrs_ekf_mocap::conf_t config_mocap = Ahrs_ekf_mocap::default_config());
+    Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, Ahrs_ekf& ahrs_ekf, const conf_t config_ = Ahrs_ekf_mocap::default_config());
 
     /**
      * \brief   Default configuration structure
      */
-    static inline Ahrs_ekf_mocap::conf_t default_config();
+    static inline conf_t default_config();
 
 
 protected:
@@ -104,12 +101,14 @@ protected:
      */
     static void callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg);
 
+    Mat<7,1>& x_;       ///< State
+    Mat<7,7>& P_;       ///< State covariance
+    const Mat<7,7> I_;  ///< Identity matrix
+    Mat<4,4> R_mocap_;  ///< The mocap measurement noise matrix
 
-    Mat<4,4> R_mocap_;                                  ///< The mocap measurement noise matrix
+    conf_t config_;                                     ///< The config structure for the EKF mocap module
 
-    Ahrs_ekf_mocap::conf_t config_mocap_;                               ///< The config structure for the EKF mocap module
-
-    float last_update_us_;                                    ///< The last time the mocap was updated
+    float last_update_us_;                              ///< The last time the mocap was updated
 };
 
 Ahrs_ekf_mocap::conf_t Ahrs_ekf_mocap::default_config()

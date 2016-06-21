@@ -484,3 +484,13 @@ bool Ahrs_ekf::predict_and_update(void)
 
     return task_return;
 }
+
+Mat<7,1>& Ahrs_ekf::x()
+{
+    return x_;
+}
+
+Mat<7,7>& Ahrs_ekf::P()
+{
+    return P_;
+}
