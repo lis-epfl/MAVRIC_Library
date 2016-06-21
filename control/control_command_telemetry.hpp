@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file control_command_telemetry.h
+ * \file control_command_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -39,16 +39,15 @@
  *
  ******************************************************************************/
 
-#ifndef CONTROL_COMMAND_TELEMETRY_H_
-#define CONTROL_COMMAND_TELEMETRY_H_
+#ifndef CONTROL_COMMAND_TELEMETRY_HPP_
+#define CONTROL_COMMAND_TELEMETRY_HPP_
 
-#include "mavlink_stream.h"
+#include "communication/mavlink_stream.hpp"
+
+extern "C"
+{
 #include "control/control_command.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+}
 
 /**
  * \brief   Function to send current control command
@@ -57,11 +56,7 @@ extern "C" {
  * \param   mavlink_stream      Pointer to the MAVLink stream structure
  * \param   msg                 Pointer to the MAVLink message
  */
-void control_command_telemetry_send(const command_t* command, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void control_command_telemetry_send(const command_t* command, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* CONTROL_COMMAND_TELEMETRY_H_ */
+#endif /* CONTROL_COMMAND_TELEMETRY_HPP_ */
