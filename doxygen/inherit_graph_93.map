@@ -1,5 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classMagnetometer.html" title="Abstract class for magnetometers." alt="" coords="7,32,111,61"/>
-<area shape="rect" id="node3" href="$classHmc5883l.html" title="Driver for HMC5883L magnetometer." alt="" coords="187,5,267,35"/>
-<area shape="rect" id="node5" href="$classMagnetometer__sim.html" title="Simulated magnetometers." alt="" coords="160,59,293,88"/>
+<area shape="rect" id="node1" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="5,5,117,35"/>
 </map>

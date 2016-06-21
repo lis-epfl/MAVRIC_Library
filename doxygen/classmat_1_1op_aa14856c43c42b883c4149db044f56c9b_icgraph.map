@@ -1,4 +1,7 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMat.html#a79925b14ac30ed956692f20c006fb998" title="Get transposed matrix." alt="" coords="184,5,293,35"/>
-<area shape="rect" id="node5" href="$classMat.html#aaf5a22307d22016a23bee37ad93a2952" title="Get transposed matrix." alt="" coords="185,59,292,88"/>
+<area shape="rect" id="node3" href="$classMat.html#a79925b14ac30ed956692f20c006fb998" title="Get transposed matrix." alt="" coords="184,32,293,61"/>
+<area shape="rect" id="node12" href="$classMat.html#aaf5a22307d22016a23bee37ad93a2952" title="Get transposed matrix." alt="" coords="185,85,292,115"/>
+<area shape="rect" id="node5" href="$classAhrs__ekf.html#a1082675156077a49347c08de17ecf680" title="Performs the update step with the accelerometer." alt="" coords="344,5,525,35"/>
+<area shape="rect" id="node9" href="$classAhrs__ekf.html#a7d50407800194659141e770b04b32c63" title="Performs the update step with the magnetometer." alt="" coords="343,59,527,88"/>
+<area shape="rect" id="node7" href="$classAhrs__ekf.html#af35c5a2e2b038e9196a159a025b98514" title="Performs the EKF algorithm." alt="" coords="577,32,697,61"/>
 </map>

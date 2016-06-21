@@ -2,7 +2,11 @@ var searchData=
 [
   ['r_5f',['R_',['../classKalman.html#aed56eb17f9b2e79632d02d1a8ba1e11f',1,'Kalman']]],
   ['r_5facc',['R_acc',['../structAhrs__ekf_1_1conf__t.html#ac8f6b0a369bbe3938e2fef1c27bf6923',1,'Ahrs_ekf::conf_t']]],
+  ['r_5facc_5f',['R_acc_',['../classAhrs__ekf.html#aa2a95f757b64e7ab2f174b30bf0efb60',1,'Ahrs_ekf']]],
   ['r_5fmag',['R_mag',['../structAhrs__ekf_1_1conf__t.html#a59eed74ea7158ec728b841224a976b37',1,'Ahrs_ekf::conf_t']]],
+  ['r_5fmag_5f',['R_mag_',['../classAhrs__ekf.html#a9e938afcc9a479378e43a951beb2ab39',1,'Ahrs_ekf']]],
+  ['r_5fmocap',['R_mocap',['../structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5',1,'Ahrs_ekf_mocap::conf_t']]],
+  ['r_5fmocap_5f',['R_mocap_',['../classAhrs__ekf__mocap.html#a6699c1dfcf24e77b31a8b423764dadfb',1,'Ahrs_ekf_mocap']]],
   ['radius',['radius',['../structwaypoint__local__struct__t.html#a0d5be3ee38dd5058bb87f9a5c77533ef',1,'waypoint_local_struct_t']]],
   ['radius_5f1',['radius_1',['../structdubin__t.html#a2e9f423fa3774c096274457aacb44a1e',1,'dubin_t']]],
   ['rail',['rail',['../structadc__avr32__conf__t.html#a44f8dc5f2edc74a7235cdc06a245ac09',1,'adc_avr32_conf_t']]],

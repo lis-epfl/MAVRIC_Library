@@ -83,10 +83,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a>, including all inherited members.<table>
+  <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#a5f6241d7aafb87775ca3a551002a803c">ahrs_</a></td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#a567f82bf68fc47184b925469682842df">Ahrs_ekf</a>(const Imu &amp;imu, ahrs_t &amp;ahrs, const Ahrs_ekf::conf_t config=default_config())</td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#acf8e90cf222702a93cc079769813c7c0">B_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#a4cec1cbd87e6f6b2798ce3a8d925d92a">calibrating_north_vector</a>(void)</td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#a4397f86d12af33aff0cf75f2bbf2e493">config_</a></td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#aa4bd8caad7860c437f48f32349d6beb3">default_config</a>()</td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [inline, static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a3e44fd095eced8ba2ee14037df601788">F_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#afd42db08fb3bd019b8ac9e3a9059b60a">H_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#ab3c17ebfb380e72ad068cd852f8ff14c">I_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#a6d9f583f20ab9ebe162b824810c52d71">imu_</a></td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#a34bf0aa2624445871420e136fe5ca6e8">init_kalman</a>(void)</td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a487a51afab65c564629e5a161a270d39">K_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a1b034e5779fbfa587292220238052478">Kalman</a>(void)</td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a4d30e9bdfd6a6c47e3d38ea73fee0f18">Kalman</a>(Mat&lt; n, 1 &gt; x, Mat&lt; n, n &gt; P, Mat&lt; n, n &gt; F, Mat&lt; n, n &gt; Q, Mat&lt; m, n &gt; H, Mat&lt; m, m &gt; R, Mat&lt; n, p &gt; B=Mat&lt; n, p &gt;())</td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a8176df8da9236e193a0221b7ea9bfbc0">P</a>(void) const</td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a8b90b9c36fe7a3260ebf7ce52e7e97a1">P_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a2bf20288d9e7050857ace6a70b173802">predict</a>(void)</td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a67a666af5ea72fe30283ad61613ffc8e">predict</a>(Mat&lt; p, 1, float &gt; u)</td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#ab55831ecb83b835af170ca26ad06645a">predict_step</a>(void)</td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#ad7996509ae2289351ac94025722df2e9">Q_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#aed56eb17f9b2e79632d02d1a8ba1e11f">R_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#aa2a95f757b64e7ab2f174b30bf0efb60">R_acc_</a></td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#a9e938afcc9a479378e43a951beb2ab39">R_mag_</a></td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a8b1e7443e5709e17a6f66361ed38634e">S_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#af35c5a2e2b038e9196a159a025b98514">update</a>(void)</td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a86e9babb7c8fad0c8d6a02751f51d491">Kalman&lt; 7, 0, 3 &gt;::update</a>(Mat&lt; m, 1, float &gt; z)</td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#af67a3d126b5f9a193e9bbe5c37ec4b9b">Kalman&lt; 7, 0, 3 &gt;::update</a>(Mat&lt; mm, 1, float &gt; z, Mat&lt; mm, n, float &gt; H, Mat&lt; mm, mm, float &gt; R)</td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#a1082675156077a49347c08de17ecf680">update_step_acc</a>(void)</td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAhrs__ekf.html#a7d50407800194659141e770b04b32c63">update_step_mag</a>(void)</td><td><a class="el" href="classAhrs__ekf.html">Ahrs_ekf</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#a872cea5f6226ea42225aa753df29b795">x</a>(void) const</td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#afa33a0c1903f6eaca6f6fe5f19ec96ec">x_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classKalman.html#aa9e2ea152bdde5a512d7957db6b55f0e">y_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 7, 0, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -105,7 +133,7 @@ This is the complete list of members for <a class="el" href="classAhrs__ekf.html
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 21 2016 13:27:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jun 21 2016 14:42:25 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,3 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structhud__telemetry__structure__t.html" title="The HUD structure to send the MAVLink HUD message." alt="" coords="5,5,179,35"/>
+<area shape="rect" id="node1" href="$structgyroscope__t.html" title="structure for the gyroscope&#39;s data" alt="" coords="5,5,99,35"/>
 </map>

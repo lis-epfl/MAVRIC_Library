@@ -2,11 +2,11 @@ var searchData=
 [
   ['i2c_5faddress',['i2c_address',['../structsonar__i2cxl__conf__t.html#aa3db96970957991cc51b5bf2c66d7eed',1,'sonar_i2cxl_conf_t']]],
   ['i2c_5fdevice_5fconfig',['i2c_device_config',['../structi2c__stm32__conf__t.html#abca1288700f25bb2e5c3d33ca7608402',1,'i2c_stm32_conf_t']]],
-  ['i_5f',['I_',['../classKalman.html#a3868e595a4a857bc9aab5c62c537fd54',1,'Kalman']]],
+  ['i_5f',['I_',['../classKalman.html#ab3c17ebfb380e72ad068cd852f8ff14c',1,'Kalman']]],
   ['idle_5ftimeout',['idle_timeout',['../structgps__t.html#a647299d8c4202a580ad3123b4039ce9a',1,'gps_t']]],
   ['idle_5ftimer',['idle_timer',['../structgps__t.html#aa9688b58a0154e3e4d293dfdf09d1424',1,'gps_t']]],
   ['imu',['imu',['../structstabilisation__wing__t.html#acb3cc27502cb7ccc4efdc10399827152',1,'stabilisation_wing_t::imu()'],['../classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2',1,'LEQuad::imu()'],['../structqfilter__t.html#a2cf64aec409b092ce9b1b3e7d6bced66',1,'qfilter_t::imu()']]],
-  ['imu_5f',['imu_',['../classState__machine.html#a02adec4dd6e2b86ce915cd8c09b07788',1,'State_machine']]],
+  ['imu_5f',['imu_',['../classState__machine.html#a02adec4dd6e2b86ce915cd8c09b07788',1,'State_machine::imu_()'],['../classAhrs__ekf.html#a6d9f583f20ab9ebe162b824810c52d71',1,'Ahrs_ekf::imu_()']]],
   ['in_5fproto_5fmask',['in_proto_mask',['../structubx__cfg__prt__t.html#ac2a34cdc2f56fb050be705242fa6fef5',1,'ubx_cfg_prt_t']]],
   ['in_5fthe_5fair',['in_the_air',['../classState.html#a47abf5b5e97a58291a32b888815214e6',1,'State']]],
   ['inf_5fmsg_5fmask1',['inf_msg_mask1',['../structubx__cfg__inf__t.html#acf0accc7f1b286786458ec804d0f1dcd',1,'ubx_cfg_inf_t']]],
@@ -22,5 +22,6 @@ var searchData=
   ['internal_5fstate_5f',['internal_state_',['../classNavigation.html#af1f6f101be169f793743fa3ee2bc2d47',1,'Navigation']]],
   ['interrupts',['interrupts',['../structgyro__config.html#ab1bc6a6a55ed2fac02fa92bfca1be58a',1,'gyro_config']]],
   ['interval',['interval',['../structubx__cfg__tp__t.html#ab3b08c602736f5e553e1437202b17ede',1,'ubx_cfg_tp_t']]],
+  ['is_5finit_5f',['is_init_',['../classAhrs__ekf__mocap.html#a3fad9de5c2b36fd7836e38f1bb00e88e',1,'Ahrs_ekf_mocap']]],
   ['itow',['itow',['../structubx__nav__pos__llh__t.html#ae67928fcfc201826b69fc6d4263db8a9',1,'ubx_nav_pos_llh_t::itow()'],['../structubx__nav__status__t.html#aa4d4659af6bb196093380bb742793ef7',1,'ubx_nav_status_t::itow()'],['../structubx__nav__solution__t.html#a6609f5733f8c3f2423a5241757c80d6b',1,'ubx_nav_solution_t::itow()'],['../structubx__nav__vel__ned__t.html#acd66ba7feeedb37272e2c43338a980f4',1,'ubx_nav_vel_ned_t::itow()'],['../structubx__nav__sv__info__t.html#a02a7186f7953c4256db55825de4232b8',1,'ubx_nav_sv_info_t::itow()'],['../structubx__nav__dgps__t.html#a83d3cdb3776bd9a15b1be018fdc1f0fb',1,'ubx_nav_dgps_t::itow()'],['../structubx__tim__vrfy__t.html#adac78be51ab9b9d94e692f6049e83f67',1,'ubx_tim_vrfy_t::itow()'],['../structubx__nav__timeutc__t.html#ab30a57c51d2cbc7093630e05f0f3ded9',1,'ubx_nav_timeutc_t::itow()']]]
 ];

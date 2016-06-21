@@ -138,7 +138,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classI2c__stm32.html#a938b27bcdac37d37d17fc6da3c4bfb00">I2c_stm32</a>
 </li>
 <li>I_
-: <a class="el" href="classKalman.html#a3868e595a4a857bc9aab5c62c537fd54">Kalman&lt; n, p, m, T &gt;</a>
+: <a class="el" href="classKalman.html#ab3c17ebfb380e72ad068cd852f8ff14c">Kalman&lt; n, p, m, T &gt;</a>
 </li>
 <li>idle_timeout
 : <a class="el" href="structgps__t.html#a647299d8c4202a580ad3123b4039ce9a">gps_t</a>
@@ -156,6 +156,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>imu_
 : <a class="el" href="classState__machine.html#a02adec4dd6e2b86ce915cd8c09b07788">State_machine</a>
+, <a class="el" href="classAhrs__ekf.html#a6d9f583f20ab9ebe162b824810c52d71">Ahrs_ekf</a>
 </li>
 <li>in_proto_mask
 : <a class="el" href="structubx__cfg__prt__t.html#ac2a34cdc2f56fb050be705242fa6fef5">ubx_cfg_prt_t</a>
@@ -188,23 +189,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structubx__cfg__nav__expert__settings__t.html#a71a18555a13e21e8ade6acb6db3de35b">ubx_cfg_nav_expert_settings_t</a>
 </li>
 <li>init()
-: <a class="el" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880">Gps_mocap</a>
+: <a class="el" href="classGps.html#a30f1c825c1a198573556982c2ef2ab4c">Gps</a>
+, <a class="el" href="classGpio__stm32.html#a600901251c5001bddc1eb57382bc2547">Gpio_stm32</a>
 , <a class="el" href="classI2c__stm32.html#a0c45daced5d94f615ad519515f38c346">I2c_stm32</a>
+, <a class="el" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880">Gps_mocap</a>
 , <a class="el" href="classPwm__stm32.html#a63106f42ef20f512965b96ddc8cb0b0f">Pwm_stm32</a>
-, <a class="el" href="classGps__ublox.html#ad4e2aaeb5458bb2aeb031eac77d0d9cb">Gps_ublox</a>
 , <a class="el" href="classSerial__stm32.html#a99c0c3150c2263da08c36cbc7b6ee756">Serial_stm32</a>
-, <a class="el" href="classLEQuad__dronedome.html#a504b377044000add985f94e1139fd411">LEQuad_dronedome</a>
-, <a class="el" href="classGyroscope.html#a147277e096b6481599bd6a44eaa3295a">Gyroscope</a>
+, <a class="el" href="classGps__ublox.html#ad4e2aaeb5458bb2aeb031eac77d0d9cb">Gps_ublox</a>
+, <a class="el" href="classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67">Ahrs_ekf_mocap</a>
 , <a class="el" href="classAltitude__estimation.html#a074cd11f32f798347d274bd64c2d90e7">Altitude_estimation</a>
+, <a class="el" href="classGyroscope.html#a147277e096b6481599bd6a44eaa3295a">Gyroscope</a>
 , <a class="el" href="classAccelerometer__sim.html#a7e03405e26592d05f3545e8a9ffb1e04">Accelerometer_sim</a>
-, <a class="el" href="classHmc5883l.html#acd6966f7b8e7f084c9c07a670658bab7">Hmc5883l</a>
 , <a class="el" href="classBarometer__sim.html#af778998af10812d8ae8bd8e688bdc7ff">Barometer_sim</a>
+, <a class="el" href="classHmc5883l.html#acd6966f7b8e7f084c9c07a670658bab7">Hmc5883l</a>
 , <a class="el" href="classGps__sim.html#a5a0f8cc60e1abe43405a1fa1659ac62a">Gps_sim</a>
-, <a class="el" href="classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9">Lsm330dlc</a>
 , <a class="el" href="classGyroscope__sim.html#a64f95e797f93332203959aa513881baf">Gyroscope_sim</a>
+, <a class="el" href="classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9">Lsm330dlc</a>
 , <a class="el" href="classMagnetometer__sim.html#a42f4dca7c718c67e5db5bed9b9b35336">Magnetometer_sim</a>
-, <a class="el" href="classMagnetometer.html#aca0d01b4a8d631408a1039c0e196560c">Magnetometer</a>
 , <a class="el" href="classSonar__sim.html#aff2db914dccb1d534cdeafb2c12d1f28">Sonar_sim</a>
+, <a class="el" href="classMagnetometer.html#aca0d01b4a8d631408a1039c0e196560c">Magnetometer</a>
 , <a class="el" href="classMpu__6050.html#acac68dd3f9ff860aa1c6b9e66e2eda88">Mpu_6050</a>
 , <a class="el" href="classSatellite.html#a64f51993b65fd562c92c22632ab0c0e3">Satellite</a>
 , <a class="el" href="classSonar.html#a72727fe23d33246943926394a79ccb56">Sonar</a>
@@ -215,36 +218,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classI2c__avr32.html#ac5af5cecbca469643dee62e0ea4cb4b1">I2c_avr32</a>
 , <a class="el" href="classPwm__avr32.html#a2a3bc0fe9a79554ad907537792d7dd07">Pwm_avr32</a>
 , <a class="el" href="classSerial__avr32.html#a26aaf3471a430d2052abf12d25677c10">Serial_avr32</a>
-, <a class="el" href="classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9">Mavrimini</a>
 , <a class="el" href="classSerial__usb__avr32.html#a83e009cb690b2ea152306e943126bb32">Serial_usb_avr32</a>
+, <a class="el" href="classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9">Mavrimini</a>
 , <a class="el" href="classSpi__avr32.html#add7b6dc22865a4368a69f3cb8e24c2b5">Spi_avr32</a>
-, <a class="el" href="classMavrinux.html#ac679516de4cb4dee5d62915914dc4d83">Mavrinux</a>
 , <a class="el" href="classAdc.html#a33293b0773751ff9915978a9d6a01dd2">Adc</a>
+, <a class="el" href="classMavrinux.html#ac679516de4cb4dee5d62915914dc4d83">Mavrinux</a>
 , <a class="el" href="classGpio.html#a96d2bc4210f864c99d01f049cd264d1d">Gpio</a>
-, <a class="el" href="classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257">Megafly_rev4</a>
 , <a class="el" href="classI2c.html#ac376ad73a2dc4305ff3d19b848d81fc3">I2c</a>
+, <a class="el" href="classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257">Megafly_rev4</a>
 , <a class="el" href="classPwm.html#a846bf0d1150ca17158768b2919e57730">Pwm</a>
-, <a class="el" href="classAltitude__controller.html#af34fe2b62e9f22dc672fd9e23b3f7a04">Altitude_controller</a>
 , <a class="el" href="classSerial.html#a7734b4318200f71aadee33824dc6a213">Serial</a>
+, <a class="el" href="classAltitude__controller.html#af34fe2b62e9f22dc672fd9e23b3f7a04">Altitude_controller</a>
 , <a class="el" href="classSpi.html#a2b814ba42cd72ddd114a96db7e508fd2">Spi</a>
-, <a class="el" href="classAccelerometer.html#a3aed64259f6e2bb1ec0f3cbbee1a686c">Accelerometer</a>
 , <a class="el" href="classAdc__dummy.html#ab68361cfeee7677f4dfef88010579754">Adc_dummy</a>
+, <a class="el" href="classAccelerometer.html#a3aed64259f6e2bb1ec0f3cbbee1a686c">Accelerometer</a>
 , <a class="el" href="classGpio__dummy.html#a9ef11c0e5e5f251503348ef7e3759d00">Gpio_dummy</a>
-, <a class="el" href="classBarometer.html#ab974654bfaace814da10856ca87526b3">Barometer</a>
-, <a class="el" href="classGpio__stm32.html#a600901251c5001bddc1eb57382bc2547">Gpio_stm32</a>
-, <a class="el" href="classSerial__udp.html#a028244600712d3aa49220c29dc8b40c4">Serial_udp</a>
-, <a class="el" href="classSerial__linux__io.html#ad41d739e68daeaa1b0d0aa5faec2c855">Serial_linux_io</a>
 , <a class="el" href="classI2c__dummy.html#aa7aaf9a86f0f20bdc6d71643dacd1a70">I2c_dummy</a>
+, <a class="el" href="classBarometer.html#ab974654bfaace814da10856ca87526b3">Barometer</a>
+, <a class="el" href="classSerial__udp.html#a028244600712d3aa49220c29dc8b40c4">Serial_udp</a>
 , <a class="el" href="classPwm__dummy.html#ac5c7ca8683a55254bfb0dab284ed5947">Pwm_dummy</a>
-, <a class="el" href="classBmp085.html#a7f469d576f213a091425becded10d99e">Bmp085</a>
 , <a class="el" href="classSerial__dummy.html#af848c912584d1d271d5b8827614e850c">Serial_dummy</a>
-, <a class="el" href="classGps.html#a30f1c825c1a198573556982c2ef2ab4c">Gps</a>
+, <a class="el" href="classBmp085.html#a7f469d576f213a091425becded10d99e">Bmp085</a>
+, <a class="el" href="classSerial__linux__io.html#ad41d739e68daeaa1b0d0aa5faec2c855">Serial_linux_io</a>
 </li>
 <li>init_done
 : <a class="el" href="structsd__spi__t.html#a4fcec872bef23282f9479756eb4e5b1b">sd_spi_t</a>
 </li>
 <li>init_homing_waypoint()
 : <a class="el" href="classMavlink__waypoint__handler.html#a6e65a0cfc44b105f003a62c4790348ab">Mavlink_waypoint_handler</a>
+</li>
+<li>init_kalman()
+: <a class="el" href="classAhrs__ekf.html#a34bf0aa2624445871420e136fe5ca6e8">Ahrs_ekf</a>
 </li>
 <li>integrator
 : <a class="el" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83">pid_controller_conf_t</a>
@@ -261,10 +265,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>intersect()
 : <a class="el" href="classraytracing_1_1Object.html#ae22336ed5e654882cbc3a78646a8a4c3">raytracing::Object</a>
+, <a class="el" href="classraytracing_1_1World.html#a96fa455ff421c041179c8f0f95d8f027">raytracing::World</a>
 , <a class="el" href="classraytracing_1_1Plane.html#ae4f1230ea35246a50ebc989021e2fe8e">raytracing::Plane</a>
 , <a class="el" href="classraytracing_1_1Sphere.html#a25f57ba3ec1730982ea8547190f08b9c">raytracing::Sphere</a>
 , <a class="el" href="classraytracing_1_1Cylinder.html#a37610a42815ccb173582685a9c1b1db4">raytracing::Cylinder</a>
-, <a class="el" href="classraytracing_1_1World.html#a96fa455ff421c041179c8f0f95d8f027">raytracing::World</a>
 </li>
 <li>Intersection()
 : <a class="el" href="classraytracing_1_1Intersection.html#a153a86346bbbdc8ccf5f15afe896faf6">raytracing::Intersection</a>
@@ -278,6 +282,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>inverse()
 : <a class="el" href="classmat_1_1op.html#aff774e25c1ebe4118dc8ba3f81dd795f">mat::op</a>
 , <a class="el" href="classMat.html#a546d0408c1b17f00a7176dcd3e6c10ed">Mat&lt; N, P, T &gt;</a>
+, <a class="el" href="classmat_1_1op.html#a2b5778a59c3dfb7d3167a348e55c7da2">mat::op</a>
 </li>
 <li>irq()
 : <a class="el" href="classSerial__usb__avr32.html#a3fbeee58fedefddb2bf19a3dcd24ec32">Serial_usb_avr32</a>
@@ -301,12 +306,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classScheduler__task.html#a318a64cf7c3c47422164ccc3d9e5f931">Scheduler_task</a>
 </li>
 <li>is_guided()
-: <a class="el" href="classState.html#ae26f0aab78aa060c68533bf3a05476a9">State</a>
-, <a class="el" href="classMav__mode.html#a340912312da4dcabccb7ed218644bf0b">Mav_mode</a>
+: <a class="el" href="classMav__mode.html#a340912312da4dcabccb7ed218644bf0b">Mav_mode</a>
+, <a class="el" href="classState.html#ae26f0aab78aa060c68533bf3a05476a9">State</a>
 </li>
 <li>is_hil()
-: <a class="el" href="classState.html#ac8b8b3ab65fc3cbd51f0ab3183fee949">State</a>
-, <a class="el" href="classMav__mode.html#a354984f5aa2a209450379d2139639692">Mav_mode</a>
+: <a class="el" href="classMav__mode.html#a354984f5aa2a209450379d2139639692">Mav_mode</a>
+, <a class="el" href="classState.html#ac8b8b3ab65fc3cbd51f0ab3183fee949">State</a>
+</li>
+<li>is_init_
+: <a class="el" href="classAhrs__ekf__mocap.html#a3fad9de5c2b36fd7836e38f1bb00e88e">Ahrs_ekf_mocap</a>
 </li>
 <li>is_low()
 : <a class="el" href="classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0">Battery</a>
@@ -316,10 +324,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classMav__mode.html#a3c4235b6649dcabb00a41d8aa3cf16a4">Mav_mode</a>
 </li>
 <li>is_open()
-: <a class="el" href="classFile.html#aa99244d6f853aa094edc5c2e690afe5d">File</a>
+: <a class="el" href="classFile__flash__avr32.html#ac1853251843a89677d7abf36878f6723">File_flash_avr32</a>
 , <a class="el" href="classFile__linux.html#a681acd549d5862d822835f0ed008a458">File_linux</a>
+, <a class="el" href="classFile.html#aa99244d6f853aa094edc5c2e690afe5d">File</a>
 , <a class="el" href="classFile__fat__fs.html#adfffa32bd3ab907e8d603e524d8deadd">File_fat_fs</a>
-, <a class="el" href="classFile__flash__avr32.html#ac1853251843a89677d7abf36878f6723">File_flash_avr32</a>
 , <a class="el" href="classFile__dummy.html#af78a867c64106da1f9ece6c5a9154eb4">File_dummy</a>
 </li>
 <li>is_ready()
@@ -334,14 +342,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classState.html#aed990a94eea505fa04cb7c216292c95c">State</a>
 </li>
 <li>itow
-: <a class="el" href="structubx__nav__vel__ned__t.html#acd66ba7feeedb37272e2c43338a980f4">ubx_nav_vel_ned_t</a>
-, <a class="el" href="structubx__nav__status__t.html#aa4d4659af6bb196093380bb742793ef7">ubx_nav_status_t</a>
+: <a class="el" href="structubx__nav__pos__llh__t.html#ae67928fcfc201826b69fc6d4263db8a9">ubx_nav_pos_llh_t</a>
 , <a class="el" href="structubx__nav__solution__t.html#a6609f5733f8c3f2423a5241757c80d6b">ubx_nav_solution_t</a>
-, <a class="el" href="structubx__nav__pos__llh__t.html#ae67928fcfc201826b69fc6d4263db8a9">ubx_nav_pos_llh_t</a>
+, <a class="el" href="structubx__nav__vel__ned__t.html#acd66ba7feeedb37272e2c43338a980f4">ubx_nav_vel_ned_t</a>
+, <a class="el" href="structubx__nav__timeutc__t.html#ab30a57c51d2cbc7093630e05f0f3ded9">ubx_nav_timeutc_t</a>
+, <a class="el" href="structubx__tim__vrfy__t.html#adac78be51ab9b9d94e692f6049e83f67">ubx_tim_vrfy_t</a>
+, <a class="el" href="structubx__nav__status__t.html#aa4d4659af6bb196093380bb742793ef7">ubx_nav_status_t</a>
 , <a class="el" href="structubx__nav__sv__info__t.html#a02a7186f7953c4256db55825de4232b8">ubx_nav_sv_info_t</a>
 , <a class="el" href="structubx__nav__dgps__t.html#a83d3cdb3776bd9a15b1be018fdc1f0fb">ubx_nav_dgps_t</a>
-, <a class="el" href="structubx__tim__vrfy__t.html#adac78be51ab9b9d94e692f6049e83f67">ubx_tim_vrfy_t</a>
-, <a class="el" href="structubx__nav__timeutc__t.html#ab30a57c51d2cbc7093630e05f0f3ded9">ubx_nav_timeutc_t</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -362,7 +370,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 21 2016 13:27:37 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jun 21 2016 14:42:26 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classAhrs__ekf.html#a1082675156077a49347c08de17ecf680" title="Performs the update step with the accelerometer." alt="" coords="165,5,347,35"/>
+<area shape="rect" id="node7" href="$classAhrs__ekf.html#a7d50407800194659141e770b04b32c63" title="Performs the update step with the magnetometer." alt="" coords="164,59,348,88"/>
+<area shape="rect" id="node5" href="$classAhrs__ekf.html#af35c5a2e2b038e9196a159a025b98514" title="Performs the EKF algorithm." alt="" coords="399,32,519,61"/>
+</map>

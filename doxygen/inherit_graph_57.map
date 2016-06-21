@@ -1,5 +1,7 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classFlow.html" title="Interface for Optic Flow sensors." alt="" coords="5,32,56,61"/>
-<area shape="rect" id="node3" href="$classFlow__px4.html" title="Driver for PX4Flow." alt="" coords="105,5,183,35"/>
-<area shape="rect" id="node5" href="$classFlow__sim.html" title="Interface for Optic Flow sensors." alt="" coords="105,59,183,88"/>
+<area shape="rect" id="node1" href="$classFile.html" title="Base class for file objects." alt="" coords="5,85,48,115"/>
+<area shape="rect" id="node3" href="$classFile__dummy.html" title="File objects on linux platforms." alt="" coords="108,5,201,35"/>
+<area shape="rect" id="node5" href="$classFile__fat__fs.html" title="File objects on linux platforms." alt="" coords="113,59,196,88"/>
+<area shape="rect" id="node7" href="$classFile__flash__avr32.html" title="File objects on linux platforms." alt="" coords="96,112,213,141"/>
+<area shape="rect" id="node9" href="$classFile__linux.html" title="File objects on linux platforms." alt="" coords="116,165,193,195"/>
 </map>

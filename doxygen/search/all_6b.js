@@ -3,6 +3,7 @@ var searchData=
   ['k_5f',['K_',['../classKalman.html#a487a51afab65c564629e5a161a270d39',1,'Kalman']]],
   ['kalman',['Kalman',['../classKalman.html',1,'Kalman&lt; n, p, m, T &gt;'],['../classKalman.html#a1b034e5779fbfa587292220238052478',1,'Kalman::Kalman(void)'],['../classKalman.html#a4d30e9bdfd6a6c47e3d38ea73fee0f18',1,'Kalman::Kalman(Mat&lt; n, 1 &gt; x, Mat&lt; n, n &gt; P, Mat&lt; n, n &gt; F, Mat&lt; n, n &gt; Q, Mat&lt; m, n &gt; H, Mat&lt; m, m &gt; R, Mat&lt; n, p &gt; B=Mat&lt; n, p &gt;())']]],
   ['kalman_3c_203_2c_201_2c_201_20_3e',['Kalman< 3, 1, 1 >',['../classKalman.html',1,'']]],
+  ['kalman_3c_207_2c_200_2c_203_20_3e',['Kalman< 7, 0, 3 >',['../classKalman.html',1,'']]],
   ['ki',['ki',['../structqfilter__conf__t.html#a82bfc358029dd22c778704c77bee76f0',1,'qfilter_conf_t::ki()'],['../structqfilter__t.html#a9ab0c422ee1a4586edac922e354d309a',1,'qfilter_t::ki()']]],
   ['ki_5fmag',['ki_mag',['../structqfilter__conf__t.html#a167d88dbc393037993d2e34865f7966c',1,'qfilter_conf_t::ki_mag()'],['../structqfilter__t.html#a1a6080ade09117269db439f6e31192e7',1,'qfilter_t::ki_mag()']]],
   ['kp',['kp',['../structqfilter__conf__t.html#a8260275a530ceb644d6a11a4fb22319c',1,'qfilter_conf_t::kp()'],['../structqfilter__t.html#ad6630f81781d3ebc0f9f59b52342c1dd',1,'qfilter_t::kp()']]],

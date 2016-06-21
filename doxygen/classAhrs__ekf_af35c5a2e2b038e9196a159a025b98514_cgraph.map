@@ -1,5 +1,12 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classImu.html#a066f63054b730605afc31ee0c19daae1" title="Get the readiness of the IMU." alt="" coords="176,5,277,35"/>
-<area shape="rect" id="node5" href="$classImu.html#a1c9d0538ed5e4c159de6b7dc1d44b3b2" title="Get X, Y and Z components of angular velocity in rad/s." alt="" coords="188,59,265,88"/>
-<area shape="rect" id="node7" href="$classImu.html#a51e30d145a6b2970d0ff8d8c6a982329" title="Get X, Y and Z components of acceleration in g." alt="" coords="191,112,263,141"/>
+<area shape="rect" id="node3" href="$classImu.html#a066f63054b730605afc31ee0c19daae1" title="Get the readiness of the IMU." alt="" coords="219,5,320,35"/>
+<area shape="rect" id="node5" href="$classAhrs__ekf.html#ab55831ecb83b835af170ca26ad06645a" title="Performs the prediction step of the EKF." alt="" coords="193,59,345,88"/>
+<area shape="rect" id="node7" href="$classAhrs__ekf.html#a1082675156077a49347c08de17ecf680" title="Performs the update step with the accelerometer." alt="" coords="179,165,360,195"/>
+<area shape="rect" id="node15" href="$classAhrs__ekf.html#a7d50407800194659141e770b04b32c63" title="Performs the update step with the magnetometer." alt="" coords="177,112,361,141"/>
+<area shape="rect" id="node19" href="$classAhrs__ekf.html#a34bf0aa2624445871420e136fe5ca6e8" title="Initialize the state and matrix of the EKF." alt="" coords="196,219,343,248"/>
+<area shape="rect" id="node21" href="$classImu.html#a1c9d0538ed5e4c159de6b7dc1d44b3b2" title="Get X, Y and Z components of angular velocity in rad/s." alt="" coords="231,272,308,301"/>
+<area shape="rect" id="node23" href="$classImu.html#a51e30d145a6b2970d0ff8d8c6a982329" title="Get X, Y and Z components of acceleration in g." alt="" coords="233,325,305,355"/>
+<area shape="rect" id="node9" href="$classMat.html#a79925b14ac30ed956692f20c006fb998" title="Get transposed matrix." alt="" coords="415,112,524,141"/>
+<area shape="rect" id="node13" href="$classmat_1_1op.html#a2b5778a59c3dfb7d3167a348e55c7da2" title="Matrix dot product." alt="" coords="412,165,527,195"/>
+<area shape="rect" id="node11" href="$classmat_1_1op.html#aa14856c43c42b883c4149db044f56c9b" title="Transpose a matrix." alt="" coords="576,112,707,141"/>
 </map>

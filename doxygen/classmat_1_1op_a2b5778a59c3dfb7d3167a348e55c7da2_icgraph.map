@@ -1,4 +1,7 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMat.html#a546d0408c1b17f00a7176dcd3e6c10ed" title="Get inversed matrix." alt="" coords="172,5,265,35"/>
-<area shape="rect" id="node5" href="$classMat.html#a44ec1c22b000eaf908df319d85eb211e" title="Get inversed matrix." alt="" coords="184,59,253,88"/>
+<area shape="rect" id="node3" href="$classAhrs__ekf.html#a1082675156077a49347c08de17ecf680" title="Performs the update step with the accelerometer." alt="" coords="173,5,355,35"/>
+<area shape="rect" id="node7" href="$classAhrs__ekf.html#a7d50407800194659141e770b04b32c63" title="Performs the update step with the magnetometer." alt="" coords="172,59,356,88"/>
+<area shape="rect" id="node10" href="$classMat.html#a546d0408c1b17f00a7176dcd3e6c10ed" title="Get inversed matrix." alt="" coords="217,112,311,141"/>
+<area shape="rect" id="node12" href="$classMat.html#a44ec1c22b000eaf908df319d85eb211e" title="Get inversed matrix." alt="" coords="229,165,299,195"/>
+<area shape="rect" id="node5" href="$classAhrs__ekf.html#af35c5a2e2b038e9196a159a025b98514" title="Performs the EKF algorithm." alt="" coords="407,32,527,61"/>
 </map>
