@@ -30,57 +30,95 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs_mocap.hpp
+ * \file ahrs_ekf_mocap.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief Records the ahrs quaternion from the motion capture system and updates
- * the ahrs vector accordingly.
+ * \brief Extended Kalman Filter attitude estimation, mixing accelerometer and magnetometer
+ * x[0] : bias_x
+ * x[1] : bias_y
+ * x[2] : bias_z
+ * x[3] : q0
+ * x[4] : q1
+ * x[5] : q2
+ * x[6] : q3
+ *
+ *
+ * Takes into account the motion capture ahrs quaternion
  *
  ******************************************************************************/
 
-#ifndef __AHRS_MOCAP_HPP__
-#define __AHRS_MOCAP_HPP__
+#ifndef __AHRS_EKF_MOCAP_HPP__
+#define __AHRS_EKF_MOCAP_HPP__
 
-#include "communication/mavlink_message_handler.hpp"
+#include "sensing/ahrs_ekf.hpp"
+#include "util/matrix.hpp"
+#include "communication/mavlink_communication.hpp"
 
 extern "C"
 {
-#include "sensing/ahrs.h"
 }
 
 
 /**
- * \brief The AHRS class for the motion capture system
+ * \brief The AHRS EKF class
  */
-class Ahrs_mocap
+class Ahrs_ekf_mocap
 {
 public:
 
+    /**
+     * \brief The AHRS EKF MOCAP config structure
+     */
+    struct conf_t
+    {
+        float R_mocap;                                  ///< The variance of the accelerometer
+    };
 
     /**
      * \brief   AHRS EKF controller
      *
-     * \param   message_handler The message handler to handle the incoming mocap message
-     * \param   ahrs            Attitude estimation structure (output)
+     * \param   message_handler The Mavlink message handler
+     * \param   ahrs_ekf        The reference to the ahrs_ekf object
+     * \param   config          Configuration structure for the mocap
      */
-    Ahrs_mocap(Mavlink_message_handler& message_handler, ahrs_t& ahrs);
+    Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, Ahrs_ekf& ahrs_ekf, const conf_t config_ = Ahrs_ekf_mocap::default_config());
+
+    /**
+     * \brief   Default configuration structure
+     */
+    static inline conf_t default_config();
 
 
-private:
-
-    float last_update_us_;                      ///< The time at last mocap ahrs update
-    ahrs_t& ahrs_;                              ///< The ahrs structure
+protected:
 
     /**
      * \brief   Method used to update internal state when a message is received
      *
-     * \param   ahrs_mocap      The ahrs_ekf_mocap object
+     * \param   ahrs_ekf_mocap  The ahrs_ekf_mocap object
      * \param   sysid           ID of the system
      * \param   msg             Pointer to the incoming message
      */
-    static void callback(Ahrs_mocap* ahrs_mocap, uint32_t sysid, mavlink_message_t* msg);
+    static void callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg);
+
+    Mat<7,1>& x_;       ///< State
+    Mat<7,7>& P_;       ///< State covariance
+    const Mat<7,7> I_;  ///< Identity matrix
+    Mat<4,4> R_mocap_;  ///< The mocap measurement noise matrix
+
+    conf_t config_;                                     ///< The config structure for the EKF mocap module
+
+    float last_update_us_;                              ///< The last time the mocap was updated
 };
 
-#endif // __AHRS_MOCAP_HPP__
+Ahrs_ekf_mocap::conf_t Ahrs_ekf_mocap::default_config()
+{
+    Ahrs_ekf_mocap::conf_t conf = {};
+
+    conf.R_mocap = 0.000001f;
+
+    return conf;
+};
+
+#endif // __AHRS_EKF_MOCAP_HPP__

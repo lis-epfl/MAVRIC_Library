@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
  * \brief Extended Kalman Filter attitude estimation, mixing accelerometer and magnetometer
  * x[0] : bias_x
@@ -51,6 +52,7 @@
 
 #include "util/matrix.hpp"
 #include "sensing/imu.hpp"
+#include "util/kalman.hpp"
 
 extern "C"
 {
@@ -61,7 +63,7 @@ extern "C"
 /**
  * \brief The AHRS EKF class
  */
-class Ahrs_ekf
+class Ahrs_ekf : public Kalman<7, 0, 3>
 {
 public:
 
@@ -94,7 +96,7 @@ public:
      *
      * \return  true if success
      */
-    bool update(void);
+    bool predict_and_update(void);
 
     /**
      * \brief   Performs the north vector calibration
@@ -106,8 +108,24 @@ public:
      */
     static inline Ahrs_ekf::conf_t default_config();
 
+    /**
+     * \brief   Gets the state vector. Used for additional kalman updates. Known
+     * submodules that call it:
+     *      - Ahrs_ekf_mocap
+     *
+     * \return  The state vector
+     */
+    Mat<7,1>& x();
 
-private:
+    /**
+     * \brief   Gets the state covariance. Used for additional kalman updates.
+     * Known submodules that call it:
+     *      - Ahrs_ekf_mocap
+     *
+     * \return  The state covariance
+     */
+    Mat<7,7>& P();
+protected:
 
     /**
      * \brief   Initialize the state and matrix of the EKF
@@ -130,13 +148,8 @@ private:
     void update_step_mag(void);
 
 
-    Mat<7,1> x_state_;                                  ///< The state of extended Kalman filter
-    Mat<7,7> F_;                                        ///< The state transition matrix
-    Mat<7,7> P_;                                        ///< The state covariance matrix
-    Mat<7,7> Q_;                                        ///< The process noise covariance matrix
     Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
-    Mat<7,7> Id_;                                       ///< The 7x7 identity matrix
 
     conf_t config_;                                     ///< The config structure for the EKF module
 
@@ -151,7 +164,7 @@ Ahrs_ekf::conf_t Ahrs_ekf::default_config()
     conf.sigma_w_sqr = 0.0000000001f;
     conf.sigma_r_sqr = 0.000001f;
     conf.R_acc = 0.004f;
-    conf.R_mag = 0.007f;
+    conf.R_mag = 0.040f;
     conf.acc_norm_noise = 0.05f;
     conf.acc_multi_noise = 4.0f;
 

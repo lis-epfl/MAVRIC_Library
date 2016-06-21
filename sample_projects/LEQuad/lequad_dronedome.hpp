@@ -44,7 +44,7 @@
 
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "drivers/gps_mocap.hpp"
-#include "sensing/ahrs_mocap.hpp"
+#include "sensing/ahrs_ekf_mocap.hpp"
 
 /**
  * \brief Central data for indoor use
@@ -81,16 +81,11 @@ public:
                      battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
                      file1, file2, offboard_tag_search_conf, config),
           gps_mocap_(mavlink_communication.message_handler()),
-          ahrs_mocap_(mavlink_communication.message_handler(), ahrs)
+          ahrs_ekf_mocap_(mavlink_communication.message_handler(), ahrs_ekf)
       {
+      }
 
-      };
-
-      /**
-       * \brief   Initialisation
-       * \return [description]
-       */
-      bool init(void)
+      bool init()
       {
           bool success = true;
 
@@ -103,7 +98,7 @@ public:
 
 private:
     Gps_mocap gps_mocap_;
-    Ahrs_mocap ahrs_mocap_;
+    Ahrs_ekf_mocap ahrs_ekf_mocap_;
 };
 
 

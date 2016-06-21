@@ -30,24 +30,40 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs_mocap.cpp
+ * \file ahrs_ekf_mocap.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief Records the ahrs quaternion from the motion capture system and updates
- * the ahrs vector accordingly.
+ * \brief Extended Kalman Filter attitude estimation, mixing accelerometer and magnetometer
+ * x[0] : bias_x
+ * x[1] : bias_y
+ * x[2] : bias_z
+ * x[3] : q0
+ * x[4] : q1
+ * x[5] : q2
+ * x[6] : q3
+ *
+ * Takes into account the motion capture ahrs quaternion
  *
  ******************************************************************************/
 
-#include "sensing/ahrs_mocap.hpp"
+#include "sensing/ahrs_ekf_mocap.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/kalman.hpp"
 
 extern "C"
 {
-
+#include "util/constants.h"
+#include "util/print_util.h"
+#include "util/maths.h"
+#include "util/vectors.h"
+#include "util/quaternions.h"
+#include "util/coord_conventions.h"
 }
 
+
+using namespace mat;
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -59,39 +75,59 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Ahrs_mocap::callback(Ahrs_mocap* ahrs_mocap, uint32_t sysid, mavlink_message_t* msg)
+void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg)
 {
+    ahrs_ekf_mocap->R_mocap_ = Mat<4, 4>(ahrs_ekf_mocap->config_.R_mocap, true);
+
     mavlink_att_pos_mocap_t packet;
     mavlink_msg_att_pos_mocap_decode(msg, &packet);
 
     // Get timing
     float t = time_keeper_get_us();
 
-    // Update ahrs quaternion
-    ahrs_mocap->ahrs_.qe.s = packet.q[0];
-    ahrs_mocap->ahrs_.qe.v[0] = packet.q[1];
-    ahrs_mocap->ahrs_.qe.v[1] = packet.q[2];
-    ahrs_mocap->ahrs_.qe.v[2] = packet.q[3];
+    // Create matrices for the update
+    Mat<4, 1> z = Mat<4, 1>(0.0f);
+    z(0, 0) = packet.q[0];
+    z(1, 0) = packet.q[1];
+    z(2, 0) = packet.q[2];
+    z(3, 0) = packet.q[3];
+
+    Mat<4, 7> H = Mat<4, 7>(0.0f);
+    H(0, 3) = 1.0f;
+    H(1, 4) = 1.0f;
+    H(2, 5) = 1.0f;
+    H(3, 6) = 1.0f;
+
+    Mat<4, 4> S = Mat<4, 4>(0.0f);
+    Mat<7, 4> K = Mat<7, 4>(0.0f);
+    Mat<4, 1> y = Mat<4, 1>(0.0f);
+
+    // Run the ekf update function
+    kf::update(ahrs_ekf_mocap->x_, ahrs_ekf_mocap->P_, z, H, ahrs_ekf_mocap->R_mocap_, S, K, y, ahrs_ekf_mocap->I_);
 
     // Update timing
-    ahrs_mocap->last_update_us_ = t;
+    ahrs_ekf_mocap->last_update_us_ = t;
 }
-
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Ahrs_mocap::Ahrs_mocap(Mavlink_message_handler& message_handler, ahrs_t& ahrs):
-    ahrs_(ahrs)
+Ahrs_ekf_mocap::Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, Ahrs_ekf& ahrs_ekf, const conf_t config_):
+    x_(ahrs_ekf.x()),
+    P_(ahrs_ekf.P()),
+    I_(Mat<7,7>(1.0f, true)),
+    config_(config_)
 {
+    R_mocap_ = Mat<4, 4>(config_.R_mocap, true);
+
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
 
     callback.message_id     = MAVLINK_MSG_ID_ATT_POS_MOCAP; // 69
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &Ahrs_mocap::callback;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &Ahrs_ekf_mocap::callback;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)        this;
 
     message_handler.add_msg_callback(&callback);

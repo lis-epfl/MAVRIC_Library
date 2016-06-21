@@ -37,7 +37,7 @@
  * \brief Main file
  *
  ******************************************************************************/
-#include "sample_projects/LEQuad/lequad_dronedome.hpp"
+
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "sample_projects/LEQuad/lequad_dronedome.hpp"
 
@@ -89,32 +89,30 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create MAV
     // -------------------------------------------------------------------------
-    // Create central data using real sensors
+    // Create MAV using real sensors
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    //lq_config.waypoint_handler_config.auto_take_off_altitude = 1.0f;
     LEQuad_dronedome mav = LEQuad_dronedome(board.imu,
-    //Central_data cd = Central_data(board.imu,
-                                   board.bmp085,
-                                   board.gps_ublox,
-                                   board.sonar_i2cxl,      // Warning:
-                                   board.uart0,
-                                   board.uart_usb,
-                                   board.spektrum_satellite,
-                                   board.green_led,
-                                   board.file_flash,
-                                   board.battery,
-                                   board.servo_0,
-                                   board.servo_1,
-                                   board.servo_2,
-                                   board.servo_3,
-                                   board.servo_4,
-                                   board.servo_5,
-                                   board.servo_6,
-                                   board.servo_7,
-                                   file_log,
-                                   file_stat,
-                                   board_config.offboard_tag_search_config,
-                                   mav_config );
+                        board.bmp085,
+                        board.gps_ublox,
+                        board.sonar_i2cxl,      // Warning:
+                        board.uart0,
+                        board.uart_usb,
+                        board.spektrum_satellite,
+                        board.green_led,
+                        board.file_flash,
+                        board.battery,
+                        board.servo_0,
+                        board.servo_1,
+                        board.servo_2,
+                        board.servo_3,
+                        board.servo_4,
+                        board.servo_5,
+                        board.servo_6,
+                        board.servo_7,
+                        file_log,
+                        file_stat,
+                        board_config.offboard_tag_search_config,
+                        mav_config );
     mav.init();
 
     // -------------------------------------------------------------------------
@@ -148,7 +146,6 @@ int main(void)
     //                              sim.gps(),
     //                              sim.sonar(),
     //                              board.uart0,                // mavlink serial
-    //                              board.uart_usb,
     //                              board.spektrum_satellite,
     //                              board.green_led,
     //                              board.file_flash,
@@ -159,7 +156,6 @@ int main(void)
     //                              sim_servo_3 ,
     //                              file_log,
     //                              file_stat,
-    //                              board.offboard_tag_search,
     //                              mav_config );
 
     if (init_success)
