@@ -52,8 +52,9 @@
 #ifndef __AHRS_EKF_MOCAP_HPP__
 #define __AHRS_EKF_MOCAP_HPP__
 
+#include "sensing/ahrs_ekf.hpp"
 #include "util/matrix.hpp"
-#include "util/kalman.hpp"
+#include "communication/mavlink_communication.hpp"
 
 extern "C"
 {

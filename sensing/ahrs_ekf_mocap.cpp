@@ -50,6 +50,7 @@
 
 #include "sensing/ahrs_ekf_mocap.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/kalman.hpp"
 
 extern "C"
 {
@@ -76,7 +77,7 @@ using namespace mat;
 
 void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg)
 {
-    ahrs_ekf_mocap->R_mocap_ = Mat<4, 4>(ahrs_ekf_mocap->config_mocap_.R_mocap, true);
+    ahrs_ekf_mocap->R_mocap_ = Mat<4, 4>(ahrs_ekf_mocap->config_.R_mocap, true);
 
     mavlink_att_pos_mocap_t packet;
     mavlink_msg_att_pos_mocap_decode(msg, &packet);
@@ -113,11 +114,10 @@ void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, ma
 //------------------------------------------------------------------------------
 
 Ahrs_ekf_mocap::Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, Ahrs_ekf& ahrs_ekf, const conf_t config_):
-    Ahrs_ekf(imu, ahrs, config),
     x_(ahrs_ekf.x()),
     P_(ahrs_ekf.P()),
     I_(Mat<7,7>(1.0f, true)),
-    config_mocap_(config_mocap)
+    config_(config_)
 {
     R_mocap_ = Mat<4, 4>(config_.R_mocap, true);
 
