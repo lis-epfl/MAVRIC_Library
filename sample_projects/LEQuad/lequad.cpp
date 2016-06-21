@@ -530,7 +530,7 @@ bool LEQuad::main_task(void)
 {
     // Update estimation
     imu.update();
-    ahrs_ekf.predict_and_update();
+    ahrs_ekf.update();
     position_estimation.update();
 
     bool failsafe = false;

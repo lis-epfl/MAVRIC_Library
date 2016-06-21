@@ -74,7 +74,6 @@ using namespace mat;
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
 void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg)
 {
     ahrs_ekf_mocap->R_mocap_ = Mat<4, 4>(ahrs_ekf_mocap->config_.R_mocap, true);
@@ -86,24 +85,13 @@ void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, ma
     float t = time_keeper_get_us();
 
     // Create matrices for the update
-    Mat<4, 1> z = Mat<4, 1>(0.0f);
-    z(0, 0) = packet.q[0];
-    z(1, 0) = packet.q[1];
-    z(2, 0) = packet.q[2];
-    z(3, 0) = packet.q[3];
-
-    Mat<4, 7> H = Mat<4, 7>(0.0f);
-    H(0, 3) = 1.0f;
-    H(1, 4) = 1.0f;
-    H(2, 5) = 1.0f;
-    H(3, 6) = 1.0f;
-
-    Mat<4, 4> S = Mat<4, 4>(0.0f);
-    Mat<7, 4> K = Mat<7, 4>(0.0f);
-    Mat<4, 1> y = Mat<4, 1>(0.0f);
+    ahrs_ekf_mocap->z_(0, 0) = packet.q[0];
+    ahrs_ekf_mocap->z_(1, 0) = packet.q[1];
+    ahrs_ekf_mocap->z_(2, 0) = packet.q[2];
+    ahrs_ekf_mocap->z_(3, 0) = packet.q[3];
 
     // Run the ekf update function
-    kf::update(ahrs_ekf_mocap->x_, ahrs_ekf_mocap->P_, z, H, ahrs_ekf_mocap->R_mocap_, S, K, y, ahrs_ekf_mocap->I_);
+    ahrs_ekf_mocap->ahrs_ekf_.Kalman<7,0,3>::update(ahrs_ekf_mocap->z_, ahrs_ekf_mocap->H_, ahrs_ekf_mocap->R_mocap_);
 
     // Update timing
     ahrs_ekf_mocap->last_update_us_ = t;
@@ -114,21 +102,37 @@ void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, ma
 //------------------------------------------------------------------------------
 
 Ahrs_ekf_mocap::Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, Ahrs_ekf& ahrs_ekf, const conf_t config_):
-    x_(ahrs_ekf.x()),
-    P_(ahrs_ekf.P()),
-    I_(Mat<7,7>(1.0f, true)),
+    ahrs_ekf_(ahrs_ekf),
+    message_handler_(message_handler),
+    is_init_(false),
     config_(config_)
 {
     R_mocap_ = Mat<4, 4>(config_.R_mocap, true);
 
-    // Add callbacks for waypoint handler messages requests
-    Mavlink_message_handler::msg_callback_t callback;
+    H_ = Mat<4, 7>(0.0f);
+    H_(0, 3) = 1.0f;
+    H_(1, 4) = 1.0f;
+    H_(2, 5) = 1.0f;
+    H_(3, 6) = 1.0f;
 
-    callback.message_id     = MAVLINK_MSG_ID_ATT_POS_MOCAP; // 69
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &Ahrs_ekf_mocap::callback;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)        this;
+    z_ = Mat<4, 1>(0.0f);
+}
 
-    message_handler.add_msg_callback(&callback);
+bool Ahrs_ekf_mocap::init()
+{
+    if (!is_init_)
+    {
+        // Add callbacks for waypoint handler messages requests
+        Mavlink_message_handler::msg_callback_t callback;
+
+        callback.message_id     = MAVLINK_MSG_ID_ATT_POS_MOCAP; // 69
+        callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
+        callback.compid_filter  = MAV_COMP_ID_ALL;
+        callback.function       = (Mavlink_message_handler::msg_callback_func_t) &Ahrs_ekf_mocap::callback;
+        callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)        this;
+
+        is_init_ = message_handler_.add_msg_callback(&callback);
+    }
+
+    return is_init_;
 }

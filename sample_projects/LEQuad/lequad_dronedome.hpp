@@ -91,6 +91,10 @@ public:
           print_util_dbg_init_msg("[GPS_MOCAP]", ret);
           success &= ret;
 
+          bool ret = ahrs_ekf_mocap_.init();
+          print_util_dbg_init_msg("[AHRS_EKF_MOCAP]", ret);
+          success &= ret;
+
           return success;
       }
 

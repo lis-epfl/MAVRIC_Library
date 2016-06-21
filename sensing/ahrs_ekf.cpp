@@ -393,7 +393,7 @@ Ahrs_ekf::Ahrs_ekf(const Imu& imu, ahrs_t& ahrs, const Ahrs_ekf::conf_t config):
     ahrs_.internal_state = AHRS_INITIALISING;
 }
 
-bool Ahrs_ekf::predict_and_update(void)
+bool Ahrs_ekf::update(void)
 {
     bool task_return = true;
 
@@ -470,14 +470,4 @@ bool Ahrs_ekf::predict_and_update(void)
     ahrs_.linear_acc[Z] = 9.81f * (imu_.acc()[Z] - up_bf[Z]);
 
     return task_return;
-}
-
-Mat<7,1>& Ahrs_ekf::x()
-{
-    return x_;
-}
-
-Mat<7,7>& Ahrs_ekf::P()
-{
-    return P_;
 }
