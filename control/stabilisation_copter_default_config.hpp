@@ -48,7 +48,7 @@
 static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 {
     stabilisation_copter_conf_t conf    = {};
-    conf.thrust_hover_point         = -0.26f;
+    conf.thrust_hover_point         = -0.25f;
     conf.motor_layout           = QUADCOPTER_MOTOR_LAYOUT_DIAG;
 
     conf.stabiliser_stack           = {};

@@ -61,7 +61,7 @@ Flow_px4::Flow_px4(Serial& uart):
     handshake_state = FLOW_NO_HANDSHAKE;
     of_count        = 0;
 
-    for (int i = 0; i < of_count; ++i)
+    for (int i = 0; i < 60; ++i)
     {
         of.x[i] = 0.0f;
         of.y[i] = 0.0f;
@@ -80,16 +80,28 @@ bool Flow_px4::update(void)
         mavlink_message_t* msg = &rec.msg;
 
         // declare messages
+        mavlink_big_debug_vect_t        big_debug_vect;
         mavlink_optical_flow_t          optical_flow_msg;
         mavlink_data_transmission_handshake_t   handshake_msg;
         mavlink_encapsulated_data_t     data_msg;
 
+
         switch (msg->msgid)
         {
+            case MAVLINK_MSG_ID_BIG_DEBUG_VECT:
+                // Decode message
+                mavlink_msg_big_debug_vect_decode(msg, &big_debug_vect);
+            
+                for (int i = 0; i < 60; ++i)
+                    {
+                                of.x[i] = big_debug_vect.data[i];
+                    }
+            break;
+            
             case MAVLINK_MSG_ID_OPTICAL_FLOW:
                 // Decode message
                 mavlink_msg_optical_flow_decode(msg, &optical_flow_msg);
-                break;
+            break;
 
             case MAVLINK_MSG_ID_DATA_TRANSMISSION_HANDSHAKE:
                 // Decode message

@@ -47,8 +47,6 @@
 #include <stdint.h>
 #include "hal/common/serial.hpp"
 
-const float filter_constant = (1./100.)/((1./50.) + (1./200.) );
-
 /**
  * \brief   Array of 2-D optic flow vectors
  */

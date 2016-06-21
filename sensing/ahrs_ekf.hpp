@@ -151,7 +151,7 @@ Ahrs_ekf::conf_t Ahrs_ekf::default_config()
     conf.sigma_w_sqr = 0.0000000001f;
     conf.sigma_r_sqr = 0.000001f;
     conf.R_acc = 0.004f;
-    conf.R_mag = 0.007f;
+    conf.R_mag = 0.020f;
     conf.acc_norm_noise = 0.05f;
     conf.acc_multi_noise = 4.0f;
 

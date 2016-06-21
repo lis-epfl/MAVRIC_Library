@@ -53,8 +53,8 @@
  */
 typedef struct
 {
-    float x[70];     ///< Horizontal component
-    float y[70];     ///< Vertical component
+    float x[60];     ///< Horizontal component
+    float y[60];     ///< Vertical component
 } flow_data_t;
 
 

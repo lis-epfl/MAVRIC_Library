@@ -116,7 +116,7 @@ public:
      * \param   config       Configuration structure
      */
     Saccade_controller(Flow& flow_front, Flow& flow_back, const ahrs_t& ahrs,
-                       Position_estimation& position_estimation,
+                       Position_estimation& position_estimation, State& state,
                        saccade_controller_conf_t config = saccade_controller_default_config());
 
 
@@ -138,15 +138,17 @@ public:
 
     //Definition of the number of points used for the optic flow on each camera
     // static const uint32_t N_points = 125;
-    static const uint32_t N_points = 70;
+    static const uint32_t N_points = 60;
 
     float                       pitch_;                             ///< Pitch command for forward motion
     float                       gain_;                              ///< Gain for importance of CAN
     float                       threshold_;                         ///< Threshold for importance of CAN
     float                       goal_direction_;                    ///< Goal direction for drone
     float                       azimuth_ [2 * N_points];            ///< Table of azimuthal angles
-    float                       derotated_flow_front_ [N_points];   ///< Table of Relative nearness
-    float                       derotated_flow_back_ [N_points];    ///< Table of Relative nearness
+    // float                       derotated_flow_front_ [N_points];   ///< Table of Relative nearness
+    // float                       derotated_flow_back_ [N_points];    ///< Table of Relative nearness
+    float                       flow_front_filtered_ [N_points];   ///< Table of Relative nearness
+    float                       flow_back_filtered_ [N_points];    ///< Table of Relative nearness
     float                       relative_nearness_ [2 * N_points];  ///< Table of Relative nearness
     float                       inv_sin_azimuth_ [2 * N_points];
     float                       cos_azimuth_[2 * N_points];
@@ -155,11 +157,12 @@ public:
     float                       cad_;
     float                       intersaccade_time_;
     float                       weighted_function_;
-    float                       derotation_constant_;
-    float                       last_derotation_yaw_velocity_;
+    // float                       derotation_constant_;
+    // float                       last_derotation_yaw_velocity_;
     float                       velocity_value_;
     float                       movement_direction_;
-    float                       can_cad_filter_;
+    float                       can_filter_;
+    float                       cad_filter_;
 
     uint64_t                    last_saccade_;
 
@@ -183,7 +186,11 @@ public:
 
     saccade_state_t             saccade_state_;                     ///< Saccade modes (intersaccade, saccade, presaccade)
 
-    Buffer_tpl<3,float>         yaw_velocity_buffer_;
+    // Buffer_tpl<3,float>         yaw_velocity_buffer_;
+
+    float                       goal_lf[3];
+
+    const State&                state_;                              ///< The structure with all state information
 };
 
 

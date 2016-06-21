@@ -52,7 +52,7 @@ LEQuad_merk::LEQuad_merk(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar,
     LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
            battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
            file1, file2, config.lequad_config),
-    saccade_controller_(flow_front, flow_back, ahrs, position_estimation),
+    saccade_controller_(flow_front, flow_back, ahrs, position_estimation, state),
     flow_front_(flow_front), flow_back_(flow_back),
     gps_mocap_(mavlink_communication.message_handler())
 {
@@ -84,7 +84,8 @@ bool LEQuad_merk::init_saccade(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.altitude_pid_.p_gain,    "ALT_PID_KP" );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.altitude_pid_.clip_min,  "ALT_PID_MIN" );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.altitude_pid_.clip_max,  "ALT_PID_MAX" );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.can_cad_filter_,  "FILTER" );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.cad_filter_,  "CAD_FILTER" );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&saccade_controller_.can_filter_,  "CAN_FILTER" );
 
     // ret &= onboard_parameters->add_parameter_float(&saccade_controller_.altitude_pid_.
 
@@ -105,11 +106,57 @@ void flow_telemetry_send(const LEQuad_merk* LQm, const Mavlink_stream* mavlink_s
 {
 
     static uint8_t step = 0;
-    step = (step + 1) % 3;
-    static const uint32_t N_points = 70;
+    step = (step + 1) % 2;
+    static const uint32_t N_points = 60;
     float of[60];
     char name[7];
 
+    // switch (step)
+    // {
+    //   case 0:
+    //       strcpy(name, "OF_0");
+    //       for (uint32_t i = 0; i < 60; i++)
+    //       {
+    //           // left 0 to 59
+    //           of[i] = LQm->flow_front_.of.x[i];
+    //       }
+    //   break;
+
+    //   case 1:
+    //       strcpy(name, "OF_1");
+    //       for (uint32_t i = 0; i < N_points - 60; i++)
+    //       {
+    //           // left 60 to 78
+    //           of[i] = LQm->flow_front_.of.x[i + 60];
+    //       }
+    //       for (uint32_t i = 0; i < 120-N_points ; i++)
+    //       {
+    //           // right 0 to 40
+    //           of[i + N_points - 60] = LQm->flow_back_.of.x[i];
+    //       }
+    //   break;
+
+    //   case 2:
+    //       strcpy(name, "OF_2");
+    //       for (uint32_t i = 0; i < 2 * N_points - 120 ; i++)
+    //       {
+    //           // right 41 to 78
+    //           of[i] = LQm->flow_back_.of.x[i + 120 - N_points];
+    //       }
+
+    //       // for (uint32_t i = 0; i < 2; i++)
+    //       // {
+
+    //       //     of[i + 2 * N_points - 120] = 0.0f;//ahrs.angular_speed[2];
+    //       // }
+
+    //       for (uint32_t i = 0; i < 180 - 2 * N_points; i++)
+    //       {
+
+    //           of[i + 2 * N_points - 120] = 0.0f;
+    //       }
+    //   break;
+    // }
     switch (step)
     {
       case 0:
@@ -123,36 +170,10 @@ void flow_telemetry_send(const LEQuad_merk* LQm, const Mavlink_stream* mavlink_s
 
       case 1:
           strcpy(name, "OF_1");
-          for (uint32_t i = 0; i < N_points - 60; i++)
-          {
-              // left 60 to 78
-              of[i] = LQm->flow_front_.of.x[i + 60];
-          }
-          for (uint32_t i = 0; i < 120-N_points ; i++)
+          for (uint32_t i = 0; i < 60 ; i++)
           {
               // right 0 to 40
-              of[i + N_points - 60] = LQm->flow_back_.of.x[i];
-          }
-      break;
-
-      case 2:
-          strcpy(name, "OF_2");
-          for (uint32_t i = 0; i < 2 * N_points - 120 ; i++)
-          {
-              // right 41 to 78
-              of[i] = LQm->flow_back_.of.x[i + 120 - N_points];
-          }
-
-          // for (uint32_t i = 0; i < 2; i++)
-          // {
-
-          //     of[i + 2 * N_points - 120] = 0.0f;//ahrs.angular_speed[2];
-          // }
-
-          for (uint32_t i = 0; i < 180 - 2 * N_points; i++)
-          {
-
-              of[i + 2 * N_points - 120] = 0.0f;
+              of[i] = LQm->flow_back_.of.x[i];
           }
       break;
     }
@@ -228,6 +249,7 @@ bool LEQuad_merk::main_task(void)
 
             // Copy paste control from saccade controller
             controls.tvel[Z] = saccade_controller_.velocity_command_.xyz[Z];
+            controls.theading = saccade_controller_.movement_direction_;
 
             controls.control_mode = VELOCITY_COMMAND_MODE;
             controls.yaw_mode     = YAW_RELATIVE;
