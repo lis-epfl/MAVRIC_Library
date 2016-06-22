@@ -108,23 +108,6 @@ public:
      */
     static inline Ahrs_ekf::conf_t default_config();
 
-    /**
-     * \brief   Gets the state vector. Used for additional kalman updates. Known
-     * submodules that call it:
-     *      - Ahrs_ekf_mocap
-     *
-     * \return  The state vector
-     */
-    Mat<7,1>& x();
-
-    /**
-     * \brief   Gets the state covariance. Used for additional kalman updates.
-     * Known submodules that call it:
-     *      - Ahrs_ekf_mocap
-     *
-     * \return  The state covariance
-     */
-    Mat<7,7>& P();
 protected:
 
     /**

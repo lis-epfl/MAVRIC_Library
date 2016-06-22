@@ -77,13 +77,20 @@ public:
     };
 
     /**
-     * \brief   AHRS EKF controller
+     * \brief   AHRS EKF MOCAP telemetry
      *
      * \param   message_handler The Mavlink message handler
      * \param   ahrs_ekf        The reference to the ahrs_ekf object
      * \param   config          Configuration structure for the mocap
      */
     Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, Ahrs_ekf& ahrs_ekf, const conf_t config_ = Ahrs_ekf_mocap::default_config());
+
+    /**
+     * \brief   Initializes the mocap telemetry message and callback
+     *
+     * \return  Success
+     */
+    bool init();
 
     /**
      * \brief   Default configuration structure
@@ -102,10 +109,12 @@ protected:
      */
     static void callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg);
 
-    Mat<7,1>& x_;       ///< State
-    Mat<7,7>& P_;       ///< State covariance
-    const Mat<7,7> I_;  ///< Identity matrix
-    Mat<4,4> R_mocap_;  ///< The mocap measurement noise matrix
+    Ahrs_ekf& ahrs_ekf_;                        ///< AHRS extended callman filter
+    Mavlink_message_handler& message_handler_;  ///< State covariance
+    Mat<4,4> R_mocap_;                          ///< The mocap measurement noise matrix
+    Mat<4, 7> H_;                               ///< The measurement matrix
+    Mat<4, 1> z_;                                ///< The measurement vector
+    bool is_init_;                              ///< Boolean flag stating if this module has been initialized
 
     conf_t config_;                                     ///< The config structure for the EKF mocap module
 
