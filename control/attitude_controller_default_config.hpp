@@ -55,35 +55,35 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     // ------ ROLL RATE PID --------------------------------------------
     // -----------------------------------------------------------------
     conf.rate_pid_config[ROLL]                           = {};
-    conf.rate_pid_config[ROLL].p_gain                    = 0.03f;
+    conf.rate_pid_config[ROLL].p_gain                    = 0.07f;
     conf.rate_pid_config[ROLL].clip_min                  = -0.9f;
     conf.rate_pid_config[ROLL].clip_max                  = 0.9f;
     conf.rate_pid_config[ROLL].integrator                = {};
-    conf.rate_pid_config[ROLL].integrator.gain           = 0.015f;
-    conf.rate_pid_config[ROLL].integrator.clip_pre       = 1.0f;
+    conf.rate_pid_config[ROLL].integrator.gain           = 0.125f;
+    conf.rate_pid_config[ROLL].integrator.clip_pre       = 6.0f;
     conf.rate_pid_config[ROLL].integrator.accumulator    = 0.0f;
-    conf.rate_pid_config[ROLL].integrator.clip           = 0.02f;
+    conf.rate_pid_config[ROLL].integrator.clip           = 0.3f;
     conf.rate_pid_config[ROLL].differentiator            = {};
-    conf.rate_pid_config[ROLL].differentiator.gain       = 0.0045f;
+    conf.rate_pid_config[ROLL].differentiator.gain       = 0.008f;
     conf.rate_pid_config[ROLL].differentiator.previous   = 0.0f;
-    conf.rate_pid_config[ROLL].differentiator.clip       = 0.02f;
+    conf.rate_pid_config[ROLL].differentiator.clip       = 0.14f;
     conf.rate_pid_config[ROLL].soft_zone_width           = 0.0f;
     // -----------------------------------------------------------------
     // ------ PITCH RATE PID -------------------------------------------
     // -----------------------------------------------------------------
     conf.rate_pid_config[PITCH]                          = {};
-    conf.rate_pid_config[PITCH].p_gain                   = 0.03f;
+    conf.rate_pid_config[PITCH].p_gain                   = 0.07f;
     conf.rate_pid_config[PITCH].clip_min                 = -0.9f;
     conf.rate_pid_config[PITCH].clip_max                 = 0.9f;
     conf.rate_pid_config[PITCH].integrator               = {};
-    conf.rate_pid_config[PITCH].integrator.gain          = 0.015f,
-                                           conf.rate_pid_config[PITCH].integrator.clip_pre      = 1.0f;
+    conf.rate_pid_config[PITCH].integrator.gain          = 0.125f,
+    conf.rate_pid_config[PITCH].integrator.clip_pre      = 6.0f;
     conf.rate_pid_config[PITCH].integrator.accumulator   = 0.0f;
-    conf.rate_pid_config[PITCH].integrator.clip          = 0.02f;
+    conf.rate_pid_config[PITCH].integrator.clip          = 0.3f;
     conf.rate_pid_config[PITCH].differentiator           = {};
-    conf.rate_pid_config[PITCH].differentiator.gain      = 0.0045f;
+    conf.rate_pid_config[PITCH].differentiator.gain      = 0.008f;
     conf.rate_pid_config[PITCH].differentiator.previous  = 0.0f;
-    conf.rate_pid_config[PITCH].differentiator.clip      = 0.02f;
+    conf.rate_pid_config[PITCH].differentiator.clip      = 0.14f;
     conf.rate_pid_config[PITCH].soft_zone_width          = 0.0f;
     // -----------------------------------------------------------------
     // ------ YAW RATE PID ---------------------------------------------
@@ -93,10 +93,10 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     conf.rate_pid_config[YAW].clip_min                   = -0.3f;
     conf.rate_pid_config[YAW].clip_max                   = 0.3f;
     conf.rate_pid_config[YAW].integrator                 = {};
-    conf.rate_pid_config[YAW].integrator.gain            = 0.15f;
+    conf.rate_pid_config[YAW].integrator.gain            = 0.075f;
     conf.rate_pid_config[YAW].integrator.clip_pre        = 1.0f;
     conf.rate_pid_config[YAW].integrator.accumulator     = 0.0f;
-    conf.rate_pid_config[YAW].integrator.clip            = 0.09f;
+    conf.rate_pid_config[YAW].integrator.clip            = 0.045f;
     conf.rate_pid_config[YAW].differentiator             = {};
     conf.rate_pid_config[YAW].differentiator.gain        = 0.0f;
     conf.rate_pid_config[YAW].differentiator.previous    = 0.0f;
@@ -111,8 +111,8 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     // -----------------------------------------------------------------
     conf.angle_pid_config[ROLL]                          = {};
     conf.angle_pid_config[ROLL].p_gain                   = 4.0f;
-    conf.angle_pid_config[ROLL].clip_min                 = -1.2f;
-    conf.angle_pid_config[ROLL].clip_max                 = 1.2f;
+    conf.angle_pid_config[ROLL].clip_min                 = -12.0f;
+    conf.angle_pid_config[ROLL].clip_max                 = 12.0f;
     conf.angle_pid_config[ROLL].integrator               = {};
     conf.angle_pid_config[ROLL].integrator.gain          = 0.0f;
     conf.angle_pid_config[ROLL].integrator.clip_pre      = 0.0f;
@@ -128,8 +128,8 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     // -----------------------------------------------------------------
     conf.angle_pid_config[PITCH]                         = {};
     conf.angle_pid_config[PITCH].p_gain                  = 4.0f;
-    conf.angle_pid_config[PITCH].clip_min                = -1.2f;
-    conf.angle_pid_config[PITCH].clip_max                = 1.2f;
+    conf.angle_pid_config[PITCH].clip_min                = -12.0f;
+    conf.angle_pid_config[PITCH].clip_max                = 12.0f;
     conf.angle_pid_config[PITCH].integrator              = {};
     conf.angle_pid_config[PITCH].integrator.gain         = 0.0f;
     conf.angle_pid_config[PITCH].integrator.clip_pre     = 0.0f;
