@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
+ * \author Matthew Douglas
  *
  * \brief Extended Kalman Filter attitude estimation, mixing accelerometer and magnetometer
  * x[0] : bias_x
@@ -78,13 +79,13 @@ void Ahrs_ekf::init_kalman(void)
 
     // Initalisation of the state
 
-    x_state_(0,0) = 0.0f;
-    x_state_(1,0) = 0.0f;
-    x_state_(2,0) = 0.0f;
-    x_state_(3,0) = 1.0f;
-    x_state_(4,0) = 0.0f;
-    x_state_(5,0) = 0.0f;
-    x_state_(6,0) = 0.0f;
+    x_(0,0) = 0.0f;
+    x_(1,0) = 0.0f;
+    x_(2,0) = 0.0f;
+    x_(3,0) = 1.0f;
+    x_(4,0) = 0.0f;
+    x_(5,0) = 0.0f;
+    x_(6,0) = 0.0f;
 
     R_acc_ = Mat<3,3>(config_.R_acc,true);
 
@@ -103,7 +104,7 @@ void Ahrs_ekf::predict_step(void)
 
     float w_sqr = w_x*w_x + w_y*w_y + w_z*w_z;
 
-    Mat<7,1> x_k1k1 = x_state_;
+    Mat<7,1> x_k1k1 = x_;
 
     Mat<7,1> x_kk1;
     // x(k,k-1) = f(x(k-1,k-1),u(k)); // with zero-order Taylor expansion
@@ -221,18 +222,18 @@ void Ahrs_ekf::predict_step(void)
     quat.v[2] = x_kk1(6,0);
 
     quat = quaternions_normalise(quat);
-    x_state_ = x_kk1;
-    x_state_(3,0) = quat.s;
-    x_state_(4,0) = quat.v[0];
-    x_state_(5,0) = quat.v[1];
-    x_state_(6,0) = quat.v[2];
+    x_ = x_kk1;
+    x_(3,0) = quat.s;
+    x_(4,0) = quat.v[0];
+    x_(5,0) = quat.v[1];
+    x_(6,0) = quat.v[2];
 }
 
 void Ahrs_ekf::update_step_acc(void)
 {
     uint16_t i;
 
-    Mat<7,1> x_kk1 = x_state_;
+    Mat<7,1> x_kk1 = x_;
 
     Mat<3,1> z_acc;
     for (i = 0; i < 3; ++i)
@@ -243,10 +244,11 @@ void Ahrs_ekf::update_step_acc(void)
     float acc_z_global = -1.0f;
 
     // h_acc(x(k,k-1))
+    // These equations come from rotating the gravity vector to the local frame
     Mat<3,1> h_acc_xkk1;
-    h_acc_xkk1(0,0) = -2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0)) * acc_z_global;
-    h_acc_xkk1(1,0) = -2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0)) * acc_z_global;
-    h_acc_xkk1(2,0) = -(1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0))) * acc_z_global;
+    h_acc_xkk1(0,0) = 2.0f*(-x_kk1(3,0)*x_kk1(5,0) + x_kk1(4,0)*x_kk1(6,0)) * acc_z_global;
+    h_acc_xkk1(1,0) = 2.0f*(x_kk1(3,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(6,0)) * acc_z_global;
+    h_acc_xkk1(2,0) = (1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0))) * acc_z_global;
 
     // H_acc(k) = jacobian(h_acc(x(k,k-1)))
     Mat<3,7> H_acc_k;
@@ -295,22 +297,21 @@ void Ahrs_ekf::update_step_acc(void)
     quat.v[2] = x_kk(6,0);
 
     quat = quaternions_normalise(quat);
-    x_state_ = x_kk;
-    x_state_(3,0) = quat.s;
-    x_state_(4,0) = quat.v[0];
-    x_state_(5,0) = quat.v[1];
-    x_state_(6,0) = quat.v[2];
+    x_ = x_kk;
+    x_(3,0) = quat.s;
+    x_(4,0) = quat.v[0];
+    x_(5,0) = quat.v[1];
+    x_(6,0) = quat.v[2];
 
     // Update covariance estimate
-    P_ = (Id_ - (K_acc % H_acc_k)) % P_;
-
+    P_ = (I_ - (K_acc % H_acc_k)) % P_;
 }
 
 void Ahrs_ekf::update_step_mag(void)
 {
     uint16_t i;
 
-    Mat<7,1> x_kk1 = x_state_;
+    Mat<7,1> x_kk1 = x_;
 
     std::array<float, 3> mag_global = imu_.magnetic_north();
 
@@ -322,26 +323,26 @@ void Ahrs_ekf::update_step_mag(void)
 
     // h_mag(x(k,k-1))
     Mat<3,1> h_mag_xkk1;
-    h_mag_xkk1(0,0) = (1.0f - 2.0f*(x_kk1(5,0)*x_kk1(5,0) + x_kk1(6,0)*x_kk1(6,0)))*mag_global[0] + 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global[2];
-    h_mag_xkk1(1,0) = 2.0f*(x_kk1(4,0)*x_kk1(5,0) - x_kk1(3,0)*x_kk1(6,0))*mag_global[0] + 2.0f*(x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0))*mag_global[2];
-    h_mag_xkk1(2,0) = 2.0f*(x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0))*mag_global[0] + (1.0f - 2.0f*(x_kk1(4,0)*x_kk1(4,0) + x_kk1(5,0)*x_kk1(5,0)))*mag_global[2];
+    h_mag_xkk1(0,0) = (1.0f + 2.0f*(-x_kk1(5,0)*x_kk1(5,0) - x_kk1(6,0)*x_kk1(6,0)))* mag_global[0] +         2.0f*( x_kk1(3,0)*x_kk1(6,0) + x_kk1(4,0)*x_kk1(5,0)) * mag_global[1] +         2.0f*( x_kk1(4,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(5,0)) * mag_global[2];
+    h_mag_xkk1(1,0) =         2.0f*( x_kk1(4,0)*x_kk1(5,0) - x_kk1(3,0)*x_kk1(6,0)) * mag_global[0] + (1.0f + 2.0f*(-x_kk1(4,0)*x_kk1(4,0) - x_kk1(6,0)*x_kk1(6,0)))* mag_global[1] +         2.0f*( x_kk1(5,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(4,0)) * mag_global[2];
+    h_mag_xkk1(2,0) =         2.0f*( x_kk1(4,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(5,0)) * mag_global[0] +         2.0f*( x_kk1(5,0)*x_kk1(6,0) - x_kk1(3,0)*x_kk1(4,0)) * mag_global[1] + (1.0f + 2.0f*(-x_kk1(4,0)*x_kk1(4,0) - x_kk1(5,0)*x_kk1(5,0)))* mag_global[2];
 
     Mat<3,7> H_mag_k;
 
-    H_mag_k(0,3) = -2.0f * x_kk1(5,0) * mag_global[2];
-    H_mag_k(0,4) = 2.0f * x_kk1(6,0) * mag_global[2];
-    H_mag_k(0,5) = -4.0f * x_kk1(5,0) * mag_global[0] - 2.0f * x_kk1(3,0) * mag_global[2];
-    H_mag_k(0,6) = -4.0f * x_kk1(6,0) * mag_global[0] + 2.0f * x_kk1(4,0) * mag_global[2];
+    H_mag_k(0,3) =                                  2.0f*x_kk1(6,0)*mag_global[1] - 2.0f*x_kk1(5,0)*mag_global[2];
+    H_mag_k(0,4) =                                  2.0f*x_kk1(5,0)*mag_global[1] + 2.0f*x_kk1(6,0)*mag_global[2];
+    H_mag_k(0,5) = -4.0f*x_kk1(5,0)*mag_global[0] + 2.0f*x_kk1(4,0)*mag_global[1] - 2.0f*x_kk1(3,0)*mag_global[2];
+    H_mag_k(0,6) = -4.0f*x_kk1(6,0)*mag_global[0] + 2.0f*x_kk1(3,0)*mag_global[1] + 2.0f*x_kk1(4,0)*mag_global[2];
 
-    H_mag_k(1,3) = -2.0f * x_kk1(6,0) * mag_global[0] + 2.0f * x_kk1(4,0) * mag_global[2];
-    H_mag_k(1,4) = 2.0f * x_kk1(5,0) * mag_global[0] + 2.0f * x_kk1(3,0) * mag_global[2];
-    H_mag_k(1,5) = 2.0f * x_kk1(4,0) * mag_global[0] + 2.0f * x_kk1(6,0) * mag_global[2];
-    H_mag_k(1,6) = -2.0f * x_kk1(3,0) * mag_global[0] + 2.0f * x_kk1(5,0) * mag_global[2];
+    H_mag_k(1,3) = -2.0f*x_kk1(6,0)*mag_global[0]                                 + 2.0f*x_kk1(4,0)*mag_global[2];
+    H_mag_k(1,4) =  2.0f*x_kk1(5,0)*mag_global[0] - 4.0f*x_kk1(4,0)*mag_global[1] + 2.0f*x_kk1(3,0)*mag_global[2];
+    H_mag_k(1,5) =  2.0f*x_kk1(4,0)*mag_global[0]                                 + 2.0f*x_kk1(6,0)*mag_global[2];
+    H_mag_k(1,6) = -2.0f*x_kk1(3,0)*mag_global[0] - 4.0f*x_kk1(6,0)*mag_global[1] + 2.0f*x_kk1(5,0)*mag_global[2];
 
-    H_mag_k(2,3) = -2.0f * x_kk1(5,0) * mag_global[0];
-    H_mag_k(2,4) = 2.0f * x_kk1(6,0) * mag_global[0] - 4.0f * x_kk1(4,0) * mag_global[2];
-    H_mag_k(2,5) = -2.0f * x_kk1(3,0) * mag_global[0] - 4.0f * x_kk1(5,0) * mag_global[2];
-    H_mag_k(2,6) = 2.0f * x_kk1(4,0) * mag_global[0];
+    H_mag_k(2,3) =  2.0f*x_kk1(5,0)*mag_global[0] - 2.0f*x_kk1(4,0)*mag_global[1];
+    H_mag_k(2,4) =  2.0f*x_kk1(6,0)*mag_global[0] - 2.0f*x_kk1(3,0)*mag_global[1] - 4.0f*x_kk1(4,0)*mag_global[2];
+    H_mag_k(2,5) =  2.0f*x_kk1(3,0)*mag_global[0] + 2.0f*x_kk1(6,0)*mag_global[1] - 4.0f*x_kk1(5,0)*mag_global[2];
+    H_mag_k(2,6) =  2.0f*x_kk1(4,0)*mag_global[0] + 2.0f*x_kk1(5,0)*mag_global[1];
 
     // Innovation y(k) = z(k) - h(x(k,k-1))
     Mat<3,1> yk_mag = z_mag - h_mag_xkk1;
@@ -365,15 +366,14 @@ void Ahrs_ekf::update_step_mag(void)
     quat.v[2] = x_kk(6,0);
 
     quat = quaternions_normalise(quat);
-    x_state_ = x_kk;
-    x_state_(3,0) = quat.s;
-    x_state_(4,0) = quat.v[0];
-    x_state_(5,0) = quat.v[1];
-    x_state_(6,0) = quat.v[2];
+    x_ = x_kk;
+    x_(3,0) = quat.s;
+    x_(4,0) = quat.v[0];
+    x_(5,0) = quat.v[1];
+    x_(6,0) = quat.v[2];
 
     // Update covariance estimate
-    P_ = (Id_ - (K_mag % H_mag_k)) % P_;
-
+    P_ = (I_ - (K_mag % H_mag_k)) % P_;
 }
 
 
@@ -382,8 +382,7 @@ void Ahrs_ekf::update_step_mag(void)
 //------------------------------------------------------------------------------
 
 Ahrs_ekf::Ahrs_ekf(const Imu& imu, ahrs_t& ahrs, const Ahrs_ekf::conf_t config):
-    Id_(Mat<7,7>(1.0f,true)),
-    dt_s_(0.0f),
+    Kalman<7, 0, 3>(),
     last_update_s_(0.0f),
     config_(config),
     imu_(imu),
@@ -434,7 +433,7 @@ bool Ahrs_ekf::update(void)
         P_ = Mat<7,7>(1.0f,true);
         update_step_acc();
         update_step_mag();
-        Mat<7,1> state_previous = x_state_;
+        Mat<7,1> state_previous = x_;
 
         // Re-init kalman to keep covariance high: ie we follow the raw accelero and magneto without
         // believing them.
@@ -442,7 +441,7 @@ bool Ahrs_ekf::update(void)
         init_kalman();
         for (int i = 3; i < 7; ++i)
         {
-            x_state_(i,0) = state_previous(i,0);
+            x_(i,0) = state_previous(i,0);
         }
     }
 
@@ -450,15 +449,15 @@ bool Ahrs_ekf::update(void)
     ahrs_.last_update_s = last_update_s_;
 
     // Attitude
-    ahrs_.qe.s = x_state_(3,0);
-    ahrs_.qe.v[0] = x_state_(4,0);
-    ahrs_.qe.v[1] = x_state_(5,0);
-    ahrs_.qe.v[2] = x_state_(6,0);
+    ahrs_.qe.s = x_(3,0);
+    ahrs_.qe.v[0] = x_(4,0);
+    ahrs_.qe.v[1] = x_(5,0);
+    ahrs_.qe.v[2] = x_(6,0);
 
     // Angular speed
-    ahrs_.angular_speed[X] = imu_.gyro()[X] - x_state_(0,0);
-    ahrs_.angular_speed[Y] = imu_.gyro()[Y] - x_state_(1,0);
-    ahrs_.angular_speed[Z] = imu_.gyro()[Z] - x_state_(2,0);
+    ahrs_.angular_speed[X] = imu_.gyro()[X] - x_(0,0);
+    ahrs_.angular_speed[Y] = imu_.gyro()[Y] - x_(1,0);
+    ahrs_.angular_speed[Z] = imu_.gyro()[Z] - x_(2,0);
 
     // Linear acceleration
     float up[3] = {0.0f, 0.0f, -1.0f};

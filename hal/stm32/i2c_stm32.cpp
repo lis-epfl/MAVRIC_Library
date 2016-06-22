@@ -104,7 +104,8 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
     //send write/read bit
     if (direction_is_transmit)
     {
-        I2C_DR(i2c_) = address & ~((uint16_t)0x0001);
+        //using 7bits addressing instead of 8bits R/W format
+        I2C_DR(i2c_) = address<<1 & ~((uint16_t)0x0001);
 
         //wait till finished
         timeout = i2c_timeout_;
@@ -118,7 +119,8 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
     }
     else
     {
-        I2C_DR(i2c_) = address | ((uint16_t)0x0001);
+        //using 7bits addressing instead of 8bits R/W format
+        I2C_DR(i2c_) = address<<1 | ((uint16_t)0x0001);
 
         //wait till received
         timeout = i2c_timeout_;

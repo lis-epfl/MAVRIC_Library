@@ -61,6 +61,7 @@ const uint8_t MEASUREMENT_CONTINUOUS  = 0x00;       ///< Continuous measurement 
 const uint8_t MEASUREMENT_SINGLE_SHOT = 0x01;       ///< Single Shot measurement Mode
 const uint8_t MEASUREMENT_IDLE        = 0x03;           ///< Idle Mode
 
+//using 7bits addressing instead of 8bits R/W format
 const uint8_t HMC5883_SLAVE_ADDRESS   = 0x1E;       ///< HMC5883L
 
 
