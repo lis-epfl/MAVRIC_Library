@@ -96,7 +96,7 @@ public:
      *
      * \return  true if success
      */
-    bool predict_and_update(void);
+    bool update(void);
 
     /**
      * \brief   Performs the north vector calibration

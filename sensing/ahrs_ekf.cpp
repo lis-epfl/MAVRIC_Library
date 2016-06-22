@@ -393,7 +393,7 @@ Ahrs_ekf::Ahrs_ekf(const Imu& imu, ahrs_t& ahrs, const Ahrs_ekf::conf_t config):
     ahrs_.internal_state = AHRS_INITIALISING;
 }
 
-bool Ahrs_ekf::predict_and_update(void)
+bool Ahrs_ekf::update(void)
 {
     bool task_return = true;
 
