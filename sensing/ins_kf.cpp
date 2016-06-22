@@ -240,8 +240,16 @@ bool INS_kf::update(void)
         if (last_accel_update_s_ < ahrs_.last_update_s)
         {
             // run kalman prediciton using accelerometers
-            predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
-            // predict({0.0f, 0.0f, 0.0f});
+            // predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
+
+            // Rotate body acceleration to NED frame
+            float accel_lf[3];
+            quaternions_rotate_vector(quaternions_inverse(ahrs_.qe),
+                                      ahrs_.linear_acc,
+                                      accel_lf);
+
+            // Predict next state
+            predict({accel_lf[0], accel_lf[1], accel_lf[2]});
 
             // update timimg
             last_accel_update_s_ = ahrs_.last_update_s;
@@ -318,11 +326,11 @@ bool INS_kf::update(void)
         if (last_flow_update_s_ < flow_.last_update_s())
         {
             // run kalman update on velocity
+            float vel_lf[3];
             float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
-            // float vel_lf[3];
-            // quaternions_rotate_vector(quaternions_inverse(ahrs_.qe), vel_bf, vel_lf);
-            // Kalman<8,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
-            Kalman<8,3,3>::update(Mat<3,1>({vel_bf[0], vel_bf[1], flow_.ground_distance()}),
+            quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_lf);
+            Kalman<8,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
+            // Kalman<8,3,3>::update(Mat<3,1>({vel_bf[0], vel_bf[1], flow_.ground_distance()}),
                                   H_flow_,
                                   R_flow_);
 
