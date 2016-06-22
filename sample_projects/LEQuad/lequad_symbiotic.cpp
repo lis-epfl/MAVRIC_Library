@@ -83,7 +83,7 @@ bool LEQuad_symbiotic::main_task(void)
 	//print_util_dbg_print("\r\n");
 
 	//if the mode is manual set the current mode to manual
-	if(manual_control.control_source() != Manual_control::CONTROL_SOURCE_JOYSTICK && remote_check(&manual_control.remote) != SIGNAL_LOST && (((int) mode_remote.bits() == 80) || ((int) mode_remote.bits() == 208)))
+	if(manual_control.control_source() == Manual_control::CONTROL_SOURCE_JOYSTICK && remote_check(&manual_control.remote) != SIGNAL_LOST && (((int) mode_remote.bits() == 80) || ((int) mode_remote.bits() == 208)))
 	{
 		state.mav_mode_.set_ctrl_mode(Mav_mode::ATTITUDE);
 		manual_control.set_mode_source(Manual_control::MODE_SOURCE_REMOTE);
@@ -104,18 +104,18 @@ bool LEQuad_symbiotic::main_task(void)
                 //if still on ground, don't move and wait on takeoff
 				if(navigation.internal_state_ == Navigation::NAV_ON_GND)
 				{
+					controls.rpy[ROLL] = 0.0f;
+					controls.rpy[PITCH] = 0.0f;
+					controls.rpy[YAW] = 0.0f;
+					controls.thrust = -0.7f;
+					controls.yaw_mode = YAW_RELATIVE;
+					controls.control_mode = ATTITUDE_COMMAND_MODE;
 					/*controls.rpy[ROLL] = 0.0f;
 					controls.rpy[PITCH] = 0.0f;
 					controls.rpy[YAW] = 0.0f;
 					controls.thrust = -0.7f;
 					controls.yaw_mode = YAW_RELATIVE;
-					controls.control_mode = ATTITUDE_COMMAND_MODE;*/
-					controls.rpy[ROLL] = 0.0f;
-					controls.rpy[PITCH] = 0.0f;
-					controls.rpy[YAW] = 0.0f;
-					controls.thrust = -1.0f;
-					controls.yaw_mode = YAW_RELATIVE;
-					controls.control_mode = RATE_COMMAND_MODE;
+					controls.control_mode = RATE_COMMAND_MODE;*/
 				}
 
                 // if no waypoints are set, we do position hold therefore the yaw mode is absolute
@@ -191,7 +191,7 @@ bool LEQuad_symbiotic::main_task(void)
 				float out[3];
 
 				bool in_drone_dome_fence = false;
-				bool outside_fence = true;
+				bool outside_fence = false;
 
 				if(in_drone_dome_fence) //ideal speed 0.5 to 0.7 m/s
 				{
@@ -207,7 +207,7 @@ bool LEQuad_symbiotic::main_task(void)
 					//center point (0,0,-10.0)
 					z_min = -5.0f;//[m]
 					z_max = -20.0f;//[m]
-					xy_max = 15.0f; //radius [m]
+					xy_max = 20.0f; //radius [m]
 					dist_to_limit = 5.0f; //[m]
 					compute_repulsion = true;
 				}

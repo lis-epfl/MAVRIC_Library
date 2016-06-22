@@ -154,8 +154,8 @@ bool LEQuad::init_main_task(void)
     ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&LEQuad::main_task_func, (Scheduler_task::task_argument_t)this, Scheduler_task::PRIORITY_HIGHEST);
 
     // DOWN link
-    //alex ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats, &scheduler);
-    //alex ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats_all, &scheduler);
+    //ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats, &scheduler);
+    //ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats_all, &scheduler);
 
     return ret;
 }
@@ -230,7 +230,7 @@ bool LEQuad::init_gps(void)
     ret &= gps_telemetry_init(&gps, mavlink_communication.p_message_handler());
 
     // DOWN telemetry
-    //alex ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, (Mavlink_communication::send_msg_function_t)&gps_telemetry_send_raw, &gps);
+    //ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, (Mavlink_communication::send_msg_function_t)&gps_telemetry_send_raw, &gps);
 
     // Task
     ret &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_gps_update, (Scheduler_task::task_argument_t)&gps, Scheduler_task::PRIORITY_HIGH);
@@ -250,7 +250,7 @@ bool LEQuad::init_imu(void)
     ret &= imu_telemetry_init(&imu, mavlink_communication.p_message_handler());
 
     // DOWN telemetry
-    //alex ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_IMU, 250000, (Mavlink_communication::send_msg_function_t)&imu_telemetry_send_scaled, &imu);
+    //ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_IMU, 250000, (Mavlink_communication::send_msg_function_t)&imu_telemetry_send_scaled, &imu);
 
     // Parameters
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->gyroscope.bias[X],     "BIAS_GYRO_X");
@@ -278,7 +278,7 @@ bool LEQuad::init_barometer(void)
     bool ret = true;
 
     // DOWN telemetry
-    //alex ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_PRESSURE, 500000, (Mavlink_communication::send_msg_function_t)&barometer_telemetry_send, &barometer);
+    //ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_PRESSURE, 500000, (Mavlink_communication::send_msg_function_t)&barometer_telemetry_send, &barometer);
 
     // Task
     ret &= scheduler.add_task(15000, (Scheduler_task::task_function_t)&task_barometer_update, (Scheduler_task::task_argument_t)&barometer, Scheduler_task::PRIORITY_HIGH);
@@ -312,7 +312,7 @@ bool LEQuad::init_attitude_estimation(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_ATTITUDE,            50000, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude,            &ahrs);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_ATTITUDE,            33000, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude,            &ahrs);
     //ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude_quaternion, &ahrs);
 
     return ret;
@@ -329,7 +329,7 @@ bool LEQuad::init_position_estimation(void)
     ret &= position_estimation_telemetry_init(&position_estimation, mavlink_communication.p_message_handler());
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  50000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_position,        &position_estimation);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  33000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_position,        &position_estimation);
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_global_position, &position_estimation);
 
     // Parameters
@@ -470,7 +470,7 @@ bool LEQuad::init_hud(void)
     ret &= hud_telemetry_init(&hud_structure, &position_estimation, &controls, &ahrs);
 
     // DOWN telemetry
-    //alex ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_VFR_HUD, 500000, (Mavlink_communication::send_msg_function_t)&hud_telemetry_send_message, &hud_structure);
+    //ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_VFR_HUD, 500000, (Mavlink_communication::send_msg_function_t)&hud_telemetry_send_message, &hud_structure);
 
     return ret;
 }
@@ -489,10 +489,10 @@ bool LEQuad::init_servos(void)
                                           &servo_0, &servo_1, &servo_2, &servo_3);
 
     // DOWN telemetry
-    //alex ret &= servos_telemetry_init(&servos_telemetry,
+    //ret &= servos_telemetry_init(&servos_telemetry,
     //                             &servo_0, &servo_1, &servo_2, &servo_3,
     //                             &servo_4, &servo_5, &servo_6, &servo_7);
-    //alex ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SERVO_OUTPUT_RAW, 1000000, (Mavlink_communication::send_msg_function_t)&servos_telemetry_mavlink_send, &servos_telemetry);
+    //ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SERVO_OUTPUT_RAW, 1000000, (Mavlink_communication::send_msg_function_t)&servos_telemetry_mavlink_send, &servos_telemetry);
 
     return ret;
 }
