@@ -230,7 +230,7 @@ bool Hexhog::main_task(void)
             break;
 
             case Mav_mode::RATE:
-                manual_control.get_attitude_command(0.2f, &command.attitude, 1.0f);
+                manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
                 manual_control.get_thrust_command(&command.thrust);
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
@@ -250,11 +250,14 @@ bool Hexhog::main_task(void)
     {
         if (state.is_custom())
         {
-            command.thrust3D.xyz[Y] = controls.rpy[ROLL];
-            controls.rpy[ROLL] = 0.0f;
+            // Convert attitude command to lateral thrust
+            command.thrust3D.xyz[Y]     = command.attitude.rpy[ROLL];
+            command.thrust3D.xyz[X]     = - command.attitude.rpy[PITCH];
 
-            command.thrust3D.xyz[X] = -controls.rpy[PITCH];
-            controls.rpy[PITCH] = 0.0f;
+            // Level attitude
+            command.attitude.rpy[ROLL]  = 0.0f;
+            command.attitude.rpy[PITCH] = 0.0f;
+            command.attitude.quat = coord_conventions_quaternion_from_rpy(command.attitude.rpy);
         }
         else
         {
