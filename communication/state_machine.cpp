@@ -364,6 +364,8 @@ bool State_machine::set_ctrl_mode(Mav_mode mode)
     if(success)
     {
         state_.mav_mode_.set_ctrl_mode(static_cast<Mav_mode::ctrl_mode_t>(mode.bits()));
+        state_.mav_mode_.set_custom_flag(mode.is_custom());
+        state_.mav_mode_.set_test_flag(mode.is_test());
     }
 
     return success;
