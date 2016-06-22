@@ -168,37 +168,43 @@ public:
     bool is_healthy() const;
 
     // Getters and setters
-    const bool& is_camera_running() const;
-    bool has_camera_state_changed() const;
-    void camera_state_has_changed(bool isChanged);
+    const ahrs_t& ahrs() const;
+    const Position_estimation& position_estimation() const;
+    Mavlink_communication& mavlink_communication();
+    Mavlink_waypoint_handler_tag& waypoint_handler();
+
     int camera_id() const;
-    const int16_t& picture_count() const;
-    float allowable_horizontal_tag_offset_sqr() const;
-    float max_acc_drone_height_from_camera_mm() const;
-    float tag_search_timeout_us() const;
     int camera_x_resolution() const;
     int camera_y_resolution() const;
     float camera_rotation() const;
     float camera_x_fov() const;
     float camera_y_fov() const;
-    local_position_t& tag_location();
+
+    float allowable_horizontal_tag_offset_sqr() const;
+    float max_acc_drone_height_from_camera_mm() const;
+    float tag_search_timeout_us() const;
+
+    const bool& is_camera_running() const;
+    bool has_camera_state_changed() const;
+    void camera_state_has_changed(bool isChanged);
     land_on_tag_behavior_t land_on_tag_behavior() const;
     void land_on_tag_behavior(land_on_tag_behavior_t land_on_tag_behavior);
-    const ahrs_t& ahrs() const;
-    Mavlink_communication& mavlink_communication();
-    const Position_estimation& position_estimation() const;
-    Mavlink_waypoint_handler_tag& waypoint_handler();
+
+    const int16_t& picture_count() const;
+    local_position_t& tag_location();
+
     const int offboard_threads() const;
     const local_position_t position_at_photo(int index) const;
     const ahrs_t ahrs_at_photo(int index) const;
     void set_position_at_photo(int index);
+    
 protected:
     Offboard_Tag_Search();
 
     static const int offboard_threads_ = 1;                 ///< The number of threads that can be running on the offboard computer
     local_position_t position_at_photo_[offboard_threads_]; ///< The local position when the photo was taken
     ahrs_t ahrs_at_photo_[offboard_threads_];               ///< The ahrs vector when the photo was taken
-    
+
     offboard_tag_search_conf_t conf_;                       ///< The configuration of the offboard tag search object
     bool is_camera_running_;                                ///< States whether the camera should be running
     bool has_camera_state_changed_;                         ///< Boolean flag stating if the state has changed and should be send to the camera
