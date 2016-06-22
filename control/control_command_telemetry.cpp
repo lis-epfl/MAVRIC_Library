@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file control_command_telemetry.c
+ * \file control_command_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,11 +40,16 @@
  ******************************************************************************/
 
 
-#include "control/control_command_telemetry.h"
+#include "control/control_command_telemetry.hpp"
 #include "hal/common/time_keeper.hpp"
 
+extern "C"
+{
+#include "util/print_util.h"
+}
 
-void control_command_telemetry_send(const command_t* command, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+
+void control_command_telemetry_send(const command_t* command, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     float quat[4] = {   command->attitude.quat.s,
                         command->attitude.quat.v[0],
@@ -63,4 +68,6 @@ void control_command_telemetry_send(const command_t* command, const mavlink_stre
                                      quat,
                                      command->position.xyz,
                                      command->velocity.xyz);
+
+    print_util_dbg_print(" send command\r\n");
 }

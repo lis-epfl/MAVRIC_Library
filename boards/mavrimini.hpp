@@ -42,14 +42,16 @@
 #ifndef MAVRIMINI_HPP_
 #define MAVRIMINI_HPP_
 
-#include "drivers/spektrum_satellite.hpp"
+#include "hal/stm32/gpio_stm32.hpp"
+#include "hal/stm32/i2c_stm32.hpp"
+#include "hal/stm32/pwm_stm32.hpp"
+#include "hal/stm32/serial_stm32.hpp"
+
+#include "drivers/airspeed_analog.hpp"
 #include "drivers/battery.hpp"
 #include "drivers/servo.hpp"
-#include "drivers/airspeed_analog.hpp"
-
-#include "hal/stm32/gpio_stm32.hpp"
-#include "hal/stm32/serial_stm32.hpp"
-#include "hal/stm32/pwm_stm32.hpp"
+#include "drivers/sonar_i2cxl.hpp"
+#include "drivers/spektrum_satellite.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
@@ -68,6 +70,18 @@ extern "C"
 }
 
 
+// Preprocessor definitions
+
+/*
+ * Should the ESC be calibrated?
+ * 0 for false (normal flight)
+ * 1 for true (calibration)
+ * !!!IMPORTANT!!!
+ * IF CALIBRATING, TAKE OFF PROPS
+ */
+#define CALIBRATE_ESC 0
+
+
 /**
  * \brief   Configuration structure
  */
@@ -79,6 +93,8 @@ typedef struct
     gpio_stm32_conf_t       red_led_gpio_config;
     serial_stm32_conf_t     serial_1_config;
     serial_stm32_conf_t     serial_2_config;
+    i2c_stm32_conf_t        i2c_1_config;
+    i2c_stm32_conf_t        i2c_2_config;
     imu_conf_t              imu_config;
     Pwm_stm32::config_t     pwm_config[8];
     servo_conf_t            servo_config[8];
@@ -118,39 +134,43 @@ public:
     /**
      * Public Members
      */
-    Gpio_stm32          dsm_receiver_gpio;
-    Gpio_stm32          dsm_power_gpio;
-    Gpio_stm32          green_led_gpio;
-    Gpio_stm32          red_led_gpio;
-    Led_gpio            green_led;
-    Led_gpio            red_led;
-    File_dummy          file_flash;
-    Serial_stm32        serial_1;
-    Serial_stm32        serial_2;
-    Spektrum_satellite  spektrum_satellite;
-    Adc_dummy           adc_battery;
-    Battery             battery;
-    Adc_dummy           adc_airspeed;
-    Airspeed_analog     airspeed_analog;
-    Pwm_stm32           pwm_0;
-    Pwm_stm32           pwm_1;
-    Pwm_stm32           pwm_2;
-    Pwm_stm32           pwm_3;
-    Pwm_stm32           pwm_4;
-    Pwm_stm32           pwm_5;
-    Pwm_dummy           pwm_6;
-    Pwm_dummy           pwm_7;
-    Servo               servo_0;
-    Servo               servo_1;
-    Servo               servo_2;
-    Servo               servo_3;
-    Servo               servo_4;
-    Servo               servo_5;
-    Servo               servo_6;
-    Servo               servo_7;
+    Gpio_stm32              dsm_receiver_gpio;
+    Gpio_stm32              dsm_power_gpio;
+    Gpio_stm32              green_led_gpio;
+    Gpio_stm32              red_led_gpio;
+    Led_gpio                green_led;
+    Led_gpio                red_led;
+    File_dummy              file_flash;
+    Serial_stm32            serial_1;
+    Serial_stm32            serial_2;
+    I2c_stm32               i2c_1;
+    I2c_stm32               i2c_2;
+    Spektrum_satellite      spektrum_satellite;
+    Sonar_i2cxl             sonar_i2cxl;
+    Adc_dummy               adc_battery;
+    Battery                 battery;
+    Adc_dummy               adc_airspeed;
+    Airspeed_analog         airspeed_analog;
+    Pwm_stm32               pwm_0;
+    Pwm_stm32               pwm_1;
+    Pwm_stm32               pwm_2;
+    Pwm_stm32               pwm_3;
+    Pwm_stm32               pwm_4;
+    Pwm_stm32               pwm_5;
+    Pwm_dummy               pwm_6;
+    Pwm_dummy               pwm_7;
+    Servo                   servo_0;
+    Servo                   servo_1;
+    Servo                   servo_2;
+    Servo                   servo_3;
+    Servo                   servo_4;
+    Servo                   servo_5;
+    Servo                   servo_6;
+    Servo                   servo_7;
     Dynamic_model_quad_diag sim_model;
     Simulation              sim;
     Imu                     imu;
+    
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
@@ -231,6 +251,39 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.serial_2_config.tx_pin         = GPIO_STM32_PIN_2;
     conf.serial_2_config.tx_af          = GPIO_STM32_AF_7;
 
+    // -------------------------------------------------------------------------
+    // I2C config
+    // -------------------------------------------------------------------------
+    conf.i2c_1_config                       = i2c_stm32_default_config();
+    conf.i2c_1_config.i2c_device_config     = STM32_I2C1;
+    conf.i2c_1_config.rcc_i2c_config        = RCC_I2C1;
+    conf.i2c_1_config.rcc_sda_port_config   = RCC_GPIOB;
+    conf.i2c_1_config.sda_config.port       = GPIO_STM32_PORT_B;
+    conf.i2c_1_config.sda_config.pin        = GPIO_STM32_PIN_7;
+    conf.i2c_1_config.sda_config.alt_fct    = GPIO_STM32_AF_4;
+    conf.i2c_1_config.rcc_clk_port_config   = RCC_GPIOB;
+    conf.i2c_1_config.clk_config.port       = GPIO_STM32_PORT_B;
+    conf.i2c_1_config.clk_config.pin        = GPIO_STM32_PIN_6;
+    conf.i2c_1_config.clk_config.alt_fct    = GPIO_STM32_AF_4;
+    conf.i2c_1_config.clk_speed             = 400000;
+    conf.i2c_1_config.tenbit_config         = false; // 10 bits address is not supported
+
+    // -------------------------------------------------------------------------
+    // I2C config
+    // -------------------------------------------------------------------------
+    conf.i2c_2_config                       = i2c_stm32_default_config();
+    conf.i2c_2_config.i2c_device_config     = STM32_I2C2;
+    conf.i2c_2_config.rcc_i2c_config        = RCC_I2C2;
+    conf.i2c_2_config.rcc_sda_port_config   = RCC_GPIOB;
+    conf.i2c_2_config.sda_config.port       = GPIO_STM32_PORT_B;
+    conf.i2c_2_config.sda_config.pin        = GPIO_STM32_PIN_11;
+    conf.i2c_2_config.sda_config.alt_fct    = GPIO_STM32_AF_4;
+    conf.i2c_2_config.rcc_clk_port_config   = RCC_GPIOB;
+    conf.i2c_2_config.clk_config.port       = GPIO_STM32_PORT_B;
+    conf.i2c_2_config.clk_config.pin        = GPIO_STM32_PIN_10;
+    conf.i2c_2_config.clk_config.alt_fct    = GPIO_STM32_AF_4;
+    conf.i2c_2_config.clk_speed             = 100000;
+    conf.i2c_2_config.tenbit_config         = false; // 10 bits address is not supported
     
     // -------------------------------------------------------------------------
     // PWM config
