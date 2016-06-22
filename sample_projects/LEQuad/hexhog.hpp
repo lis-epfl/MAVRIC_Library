@@ -177,7 +177,7 @@ bool Hexhog::init_ins(void)
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, (Mavlink_communication::send_msg_function_t)&ins_telemetry_send, &ins_kf_);
 
     // Task
-    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&task_ins_kf_update, (Scheduler_task::task_argument_t)&ins_kf_);
+    // ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&task_ins_kf_update, (Scheduler_task::task_argument_t)&ins_kf_);
 
     return ret;
 }
@@ -193,7 +193,7 @@ bool Hexhog::init_controllers(void)
                              &command.attitude,
                              &command.rate,
                              &command.torque);
-                             
+
     velocity_controller_copter_init(&velocity_controller_,
                                     velocity_controller_copter_default_config(),
                                     &ahrs,
@@ -224,13 +224,13 @@ bool Hexhog::main_task(void)
             case Mav_mode::POSITION_HOLD:
             case Mav_mode::VELOCITY:
             case Mav_mode::ATTITUDE:
-                manual_control.get_velocity_command(&command.velocity, 0.0f);
+                manual_control.get_velocity_command(&command.velocity, 1.0f);
                 velocity_controller_copter_update(&velocity_controller_);
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
 
             case Mav_mode::RATE:
-                manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
+                manual_control.get_attitude_command(0.2f, &command.attitude, 1.0f);
                 manual_control.get_thrust_command(&command.thrust);
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
@@ -262,6 +262,7 @@ bool Hexhog::main_task(void)
             command.thrust3D.xyz[X] = 0.0f;
         }
 
+        attitude_controller_.mode = ATTITUDE_CONTROLLER_MODE_DEFAULT;
         attitude_controller_update(&attitude_controller_);
 
         servos_mix_.update();
