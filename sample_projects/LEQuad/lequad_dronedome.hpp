@@ -81,6 +81,7 @@ public:
           gps_mocap_(mavlink_communication.message_handler()),
           ahrs_ekf_mocap_(mavlink_communication.message_handler(), ahrs_ekf)
       {
+    	 init(); //should be moved from here and put in main_symbiotic
       }
 
       bool init()
