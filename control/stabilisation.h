@@ -76,9 +76,9 @@ typedef enum
  */
 typedef struct
 {
-    float rpy[3];                               ///< roll pitch yaw rates/angles
+    float rpy[3];                               ///< roll pitch yaw rates/angles in [rad]/[rad/s]
     float thrust;                               ///< thrust
-    float tvel[3];                              ///< target velocity in m/s (semi-local frame)
+    float tvel[3];                              ///< target velocity in [m/s] (semi-local frame)
     float theading;                             ///< absolute target heading
     control_mode_t control_mode;                ///< control mode
     yaw_mode_t     yaw_mode;                    ///< yaw mode

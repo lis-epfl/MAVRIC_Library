@@ -178,13 +178,14 @@ bool LEQuad_symbiotic::main_task(void)
             	manual_control.manual_control_get_from_joystick_symbiotic(&controls);
 
 				float max_vel_z = 4.0f; //[m/s]
-				float max_vel_y = 4.0f; //[m/s]
+				//float max_vel_y = 4.0f; //[m/s]
+				float max_yaw_rate = 0.4; //[rad/s]
 
 				// fence avoidance
 				bool compute_repulsion = false;
 				float xy_dist;
 				float z_dist;
-				float norm_ctrl_vel_xy_sqr;
+				//float norm_ctrl_vel_xy_sqr;
 				float z_min, z_max, xy_max, dist_to_limit;
 				float origin2quad[3];
 				float quadOrientation[3];
@@ -227,11 +228,11 @@ bool LEQuad_symbiotic::main_task(void)
 
 					float decrease_factor_Y = 1.0f;
 					if(SCP(origin2quad,quadOrientation) < 0.0f) //the drone as a velocity toward the center => decrease the avoidance speed
-						decrease_factor_Y = 0.2f;
+						decrease_factor_Y = 0.3f;
 
-					print_util_dbg_print("Y then Z\r\n");
-					print_util_dbg_putfloat(decrease_factor_Y,3);
-					print_util_dbg_print("\r\n");
+					//print_util_dbg_print("Y then Z\r\n");
+					//print_util_dbg_putfloat(decrease_factor_Y,3);
+					//print_util_dbg_print("\r\n");
 
 					origin2quad[0] = 0.0f;
 					origin2quad[1] = 0.0f;
@@ -244,13 +245,13 @@ bool LEQuad_symbiotic::main_task(void)
 					if(SCP(origin2quad,quadOrientation) < 0.0f) //the drone as a velocity toward the center => decrease the avoidance speed
 						decrease_factor_Z = 0.3f;
 
-					print_util_dbg_putfloat(decrease_factor_Z,3);
-					print_util_dbg_print("\r\n");
+					//print_util_dbg_putfloat(decrease_factor_Z,3);
+					//print_util_dbg_print("\r\n");
 
 
 					xy_dist = position_estimation.position_estimation_get_xy_distance_from_fence_origin();
 					z_dist = position_estimation.position_estimation_get_z_distance_from_fence_origin();
-					norm_ctrl_vel_xy_sqr = SQR(controls.tvel[X]) + SQR(controls.tvel[Y]);
+					//norm_ctrl_vel_xy_sqr = SQR(controls.tvel[X]) + SQR(controls.tvel[Y]);
 
 					//Vertical fence
 					//float ratioXZ_vel = 1.0f;
@@ -268,7 +269,7 @@ bool LEQuad_symbiotic::main_task(void)
 					}
 					if(z_dist > (z_min - dist_to_limit)) //if too low => tvel_z_added is negatif
 					{
-						float tvel_z_added = -maths_f_abs(z_dist - (z_min-dist_to_limit)) / dist_to_limit * max_vel_z;
+						float tvel_z_added = -SQR(z_dist - (z_min-dist_to_limit)) / dist_to_limit * max_vel_z;
 						tvel_z_added = tvel_z_added*decrease_factor_Z;
 
 						//if(maths_f_abs(tvel_z_added + central_data->controls.tvel[Z])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXZ_vel)
@@ -281,50 +282,56 @@ bool LEQuad_symbiotic::main_task(void)
 					}
 
 
-					float tvel_y_added;
-					float ratioXY_vel = 0.6f; //should be between 0.0f and 1.0f
+					float yaw_rate_added;
+					//float ratioXY_vel = 0.6f; //should be between 0.0f and 1.0f
 					if(xy_dist > (xy_max - dist_to_limit))
 					{
-						//compute repulsion velocity y
-						tvel_y_added = sign(out[2])*SQR(xy_dist - (xy_max-dist_to_limit)) / dist_to_limit * max_vel_y;
-						tvel_y_added = tvel_y_added*decrease_factor_Y;
+						//compute repulsion yaw rate
+						yaw_rate_added = sign(out[2])*maths_f_abs(xy_dist - (xy_max-dist_to_limit)) / dist_to_limit * max_yaw_rate;
+						yaw_rate_added = yaw_rate_added*decrease_factor_Y;
 
 						//troncate repulsion velocity y to the norm of the total speed
-						if(maths_f_abs(tvel_y_added + controls.tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
-							tvel_y_added = sign(tvel_y_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - controls.tvel[Y];
+						//if(maths_f_abs(yaw_rate_added + controls.tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
+						//	yaw_rate_added = sign(yaw_rate_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - controls.tvel[Y];
 
-						controls.tvel[Y] += tvel_y_added;
+						//controls.tvel[Y] += yaw_rate_added;
+						controls.rpy[YAW] += yaw_rate_added;
+
+						//do this to ensure that whatever input in rpy[YAW] we have the rpy[YAW] output not bigger than max_yaw_rate
+						if(controls.rpy[YAW] > max_yaw_rate)
+							controls.rpy[YAW] = max_yaw_rate;
+						else if(controls.rpy[YAW] < -max_yaw_rate)
+							controls.rpy[YAW] = -max_yaw_rate;
 
 						//do this to ensure that whatever input in tvel[Y] we have the tvel[Y] output not bigger than the norm
-						if(controls.tvel[Y] > 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
-							controls.tvel[Y] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
-						else if(controls.tvel[Y] < 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
-							controls.tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
+						//if(controls.tvel[Y] > 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
+						//	controls.tvel[Y] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
+						//else if(controls.tvel[Y] < 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
+						//	controls.tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
 
-						//print_util_dbg_print("tvel_y_added \r\n");
-						//print_util_dbg_putfloat(tvel_y_added,3);
+						//print_util_dbg_print("yaw_rate_added \r\n");
+						//print_util_dbg_putfloat(yaw_rate_added,3);
 						//print_util_dbg_print("\r\n");
 
 						//reduce the speed on tvel[X] in order to keep the norm of the speed constant
-						controls.tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(controls.tvel[Y]));
+						//controls.tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(controls.tvel[Y]));
 					}
 				}
 
-				/*print_util_dbg_print("vel cmd\r\n");
+				print_util_dbg_print("vel cmd\r\n");
 				print_util_dbg_print("Vx ");
 				print_util_dbg_putfloat(controls.tvel[X],3);
-				print_util_dbg_print("  Vy ");
-				print_util_dbg_putfloat(controls.tvel[Y],3);
+				print_util_dbg_print("  Y_r ");
+				print_util_dbg_putfloat(controls.rpy[YAW],3);
 				print_util_dbg_print("  Vz ");
 				print_util_dbg_putfloat(controls.tvel[Z],3);
-				print_util_dbg_print("  Yaw ");
-				print_util_dbg_putfloat(controls.rpy[YAW],3);
-				print_util_dbg_print("\r\n");*/
+				print_util_dbg_print("\r\n");
 
-				controls.control_mode = VELOCITY_COMMAND_MODE;
 
 				//YAW_COORDINATED to have the yaw in the axis of the velocity speed
-				controls.yaw_mode = YAW_COORDINATED;
+				//YAW_RELATIVE to align the yaw according to the relative yaw input
+				controls.control_mode = VELOCITY_COMMAND_MODE;
+				controls.yaw_mode = YAW_RELATIVE;
 
 				break;
 			}

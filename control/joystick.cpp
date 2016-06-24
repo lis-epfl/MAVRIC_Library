@@ -140,7 +140,8 @@ void joystick_get_velocity_vector_version2(const joystick_t* joystick, control_c
 {
 	//all joystick inputs are [-1;1]
     controls->tvel[X] 	= joystick->channels.x;
-    controls->tvel[Y] 	= joystick->channels.y;
+    controls->rpy[YAW] 	= joystick->channels.y;
+    //controls->tvel[Y] 	= joystick->channels.y;
     controls->tvel[Z] 	= joystick->channels.z;
     //controls->rpy[YAW] = joystick->channels.r;
 }
