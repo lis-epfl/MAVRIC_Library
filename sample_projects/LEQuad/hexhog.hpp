@@ -224,6 +224,7 @@ bool Hexhog::main_task(void)
             case Mav_mode::POSITION_HOLD:
             case Mav_mode::VELOCITY:
             case Mav_mode::ATTITUDE:
+                manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
                 manual_control.get_velocity_command(&command.velocity, 1.0f);
                 velocity_controller_copter_update(&velocity_controller_);
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
@@ -231,6 +232,7 @@ bool Hexhog::main_task(void)
 
             case Mav_mode::RATE:
                 manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
+                // manual_control.get_attitude_command_absolute_yaw(&command.attitude, 1.0f);
                 manual_control.get_thrust_command(&command.thrust);
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
@@ -243,6 +245,8 @@ bool Hexhog::main_task(void)
     else
     {
         failsafe = true;    // undefined behaviour -> failsafe
+        command.attitude.quat = ahrs.qe;
+        coord_conventions_rpy_from_quaternion(ahrs.qe, command.attitude.rpy);
     }
 
     // if behaviour defined, execute controller and mix; otherwise: set servos to failsafe
