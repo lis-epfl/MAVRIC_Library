@@ -123,6 +123,15 @@ quat_t coord_conventions_quaternion_from_rpy(const float rpy[3])
     return quat;
 }
 
+
+void coord_conventions_rpy_from_quaternion(const quat_t& qe, float rpy[3])
+{
+    rpy[0] = atan2(2 * (qe.s * qe.v[0] + qe.v[1] * qe.v[2]) , (qe.s * qe.s - qe.v[0] * qe.v[0] - qe.v[1] * qe.v[1] + qe.v[2] * qe.v[2]));
+    rpy[1] = -asin(2 * (qe.v[0] * qe.v[2] - qe.s * qe.v[1]));
+    rpy[2] = atan2(2 * (qe.s * qe.v[2] + qe.v[0] * qe.v[1]) , (qe.s * qe.s + qe.v[0] * qe.v[0] - qe.v[1] * qe.v[1] - qe.v[2] * qe.v[2]));
+}
+
+
 float coord_conventions_get_yaw(quat_t qe)
 {
     return  atan2(2 * (qe.s * qe.v[2] + qe.v[0] * qe.v[1]) , (qe.s * qe.s + qe.v[0] * qe.v[0] - qe.v[1] * qe.v[1] - qe.v[2] * qe.v[2]));
