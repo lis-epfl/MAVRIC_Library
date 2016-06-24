@@ -131,6 +131,15 @@ quat_t coord_conventions_quaternion_from_rpy(const float rpy[3]);
 
 
 /**
+ * \brief         Converts attitude quaternion to roll, pitch and yaw angles (with the aeronautics conventions)
+ *
+ * \param quat    Attitude quaternion
+ * \param rpy     Roll, pitch and yaw angles
+ */
+void coord_conventions_rpy_from_quaternion(const quat_t& quat, float rpy[3]);
+
+
+/**
  * \brief      Computes the yaw angle from an attitude quaternion
  *
  * \param qe   Attitude quaternion
