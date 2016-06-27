@@ -132,6 +132,7 @@ protected:
     Px4flow_i2c bottom_flow_;
 
     INS_kf ins_kf_;
+    pid_controller_t altitude_pid_;
 
     velocity_controller_copter_t velocity_controller_;
     attitude_controller_t attitude_controller_;
@@ -187,6 +188,7 @@ bool Hexhog::init_controllers(void)
 {
     bool ret = true;
 
+    // Attitude
     attitude_controller_init(&attitude_controller_,
                              attitude_controller_default_config(),
                              &ahrs,
@@ -194,6 +196,7 @@ bool Hexhog::init_controllers(void)
                              &command.rate,
                              &command.torque);
 
+    // Velocity
     velocity_controller_copter_conf_t velocity_controller_config = velocity_controller_copter_default_config();
     velocity_controller_config.thrust_hover_point = 0.0f;
     velocity_controller_copter_init(&velocity_controller_,
@@ -203,6 +206,22 @@ bool Hexhog::init_controllers(void)
                                     &command.velocity,
                                     &command.attitude,
                                     &command.thrust);
+
+    // Position
+    pid_controller_conf_t pid_config = {};
+    pid_config.p_gain   = 1.0f;
+    pid_config.clip_min = -0.5f;
+    pid_config.clip_max = 0.5f;
+    pid_config.integrator.gain        = 0.0f;
+    pid_config.integrator.accumulator = 0.0f;
+    pid_config.integrator.clip_pre    = 0.0f;
+    pid_config.integrator.clip        = 0.0f;
+    pid_config.differentiator.gain      = 0.0f;
+    pid_config.differentiator.previous  = 0.0f;
+    pid_config.differentiator.clip      = 0.0f;
+    pid_controller_init(&altitude_pid_, &pid_config);
+
+
 
     return ret;
 }
@@ -223,8 +242,6 @@ bool Hexhog::main_task(void)
         switch (state.mav_mode().ctrl_mode())
         {
             case Mav_mode::GPS_NAV:
-            case Mav_mode::POSITION_HOLD:
-            case Mav_mode::VELOCITY:
                 manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
                 manual_control.get_velocity_command(&command.velocity, 1.0f);
                 velocity_controller_copter_update(&velocity_controller_);
@@ -232,9 +249,26 @@ bool Hexhog::main_task(void)
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
 
+            case Mav_mode::POSITION_HOLD:
+            case Mav_mode::VELOCITY:
+                // Vertical velocity from altitude PID
+                manual_control.get_velocity_command(&command.velocity, 1.0f);
+                command.velocity.xyz[Z] = pid_controller_update(&altitude_pid_, (-0.5f - ins_kf_.position_lf()[Z]));
+
+                // Run velocity control
+                velocity_controller_copter_update(&velocity_controller_);
+
+                // Attitude from remote
+                manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
+
+                // Convert output to 3D thrust
+                command.thrust3D.xyz[Z] = command.thrust.thrust;
+            break;
+
             case Mav_mode::ATTITUDE:
                 manual_control.get_velocity_command(&command.velocity, 1.0f);
                 velocity_controller_copter_update(&velocity_controller_);
+
                 manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
 
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
