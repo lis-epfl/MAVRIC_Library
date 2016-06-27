@@ -227,6 +227,8 @@ bool Hexhog::main_task(void)
                 manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
                 manual_control.get_velocity_command(&command.velocity, 1.0f);
                 velocity_controller_copter_update(&velocity_controller_);
+
+                manual_control.get_thrust_command(&command.thrust);
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
 
