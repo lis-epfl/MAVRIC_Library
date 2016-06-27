@@ -67,14 +67,7 @@ INS_kf::INS_kf(const Gps& gps,
                     0, 0, 0, 0, 0,         1,         0,         0,
                     0, 0, 0, 0, 0,         0,         1,         0,
                     0, 0, 0, 0, 0,         0,         0,         1},                                // F
-                  { 0, 0, 0, 0, 0,     0,     0,     0,
-                    0, 0, 0, 0, 0,     0,     0,     0,
-                    0, 0, 0, 0, 0,     0,     0,     0,
-                    0, 0, 0, 0, 0,     0,     0,     0,
-                    0, 0, 0, 0, 0.05f, 0,     0,     0,
-                    0, 0, 0, 0, 0,     0.05f, 0,     0,
-                    0, 0, 0, 0, 0,     0,     0.05f, 0,
-                    0, 0, 0, 0, 0,     0,     0,     0.01f},                                        // Q
+                  (0.0f),                                        // Q
                   { 1, 0, 0, 0, 0, 0, 0, 0,
                     0, 1, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 1, 0, 0, 0, 0 },                                                       // H1
@@ -98,9 +91,9 @@ INS_kf::INS_kf(const Gps& gps,
     H_gpsvel_({ 0, 0, 0, 0, 1, 0, 0, 0,
                 0, 0, 0, 0, 0, 1, 0, 0,
                 0, 0, 0, 0, 0, 0, 1, 0, }),
-    R_gpsvel_({ 5, 0,    0,
-                0,    5, 0,
-                0,    0,    5}),
+    R_gpsvel_({ 0.001f, 0,    0,
+                0,    0.001f, 0,
+                0,    0,    0.001f}), // low value for Optitrack
     H_baro_({0, 0, 0, 1, 0, 0, 0, 1}),
     R_baro_({100.0f}),
     H_sonar_({0, 0, -1, 0, 0, 0, 0, 0}),
@@ -110,7 +103,7 @@ INS_kf::INS_kf(const Gps& gps,
              0, 0, -1, 0, 0, 0, 0, 0}),
     R_flow_({ 0.005f, 0,       0,
               0,       0.005f, 0,
-              0,       0,       0.0001f}),
+              0,       0,       0.001f}),
     last_accel_update_s_(0.0f),
     last_sonar_update_s_(0.0f),
     last_flow_update_s_(0.0f),
@@ -118,26 +111,41 @@ INS_kf::INS_kf(const Gps& gps,
     last_gps_pos_update_s_(0.0f),
     last_gps_vel_update_s_(0.0f)
 {
-    float sigma_acc = 0.7f;
+    // float sigma_acc = 0.7f;
+    // float sigma_acc = 10.0f;
+    // float sigma_acc = 0.1f;
+    float sigma_acc = 1e-4f;
     float dt  = config.dt;
-    float dt2  = SQR(dt);
-    float dt32 = 0.5f * dt * dt * dt;
-    float dt44 = 0.25f * SQR(dt2);
+    // float dt2  = SQR(dt);
+    // float dt32 = 0.5f * dt * dt * dt;
+    // float dt44 = 0.25f * SQR(dt2);
+    //
+    // Q_ = SQR(sigma_acc) * Mat<8,8>({ dt44, 0,    0,    0, dt32, 0,    0,    0,
+    //                                  0,    dt44, 0,    0, 0,    dt32, 0,    0,
+    //                                  0,    0,    dt44, 0, 0,    0,    dt32, 0,
+    //                                  0,    0,    0,    0, 0,    0,    0,    0,
+    //                                  dt32, 0,    0,    0, dt2,  0,    0,    0,
+    //                                  0,    dt32, 0,    0, 0,    dt2,  0,    0,
+    //                                  0,    0,    dt32, 0, 0,    0,    dt2,  0,
+    //                                  0,    0,    0,    0, 0,    0,    0,    0});
 
-    Q_ = SQR(sigma_acc) * Mat<8,8>({ dt44, 0,    0,    0, dt32, 0,    0,    0,
-                                     0,    dt44, 0,    0, 0,    dt32, 0,    0,
-                                     0,    0,    dt44, 0, 0,    0,    dt32, 0,
-                                     0,    0,    0,    0, 0,    0,    0,    0,
-                                     dt32, 0,    0,    0, dt2,  0,    0,    0,
-                                     0,    dt32, 0,    0, 0,    dt2,  0,    0,
-                                     0,    0,    dt32, 0, 0,    0,    dt2,  0,
-                                     0,    0,    0,    0, 0,    0,    0,    0});
+    float dt22  = 0.5f * SQR(dt);
+    float dt33 = dt * dt * dt / 3.0f;
+
+    Q_ = sigma_acc * Mat<8,8>({  dt33, 0,    0,    0, dt22, 0,    0,    0,
+                                 0,    dt33, 0,    0, 0,    dt22, 0,    0,
+                                 0,    0,    dt33, 0, 0,    0,    dt22, 0,
+                                 0,    0,    0,    0, 0,    0,    0,    0,
+                                 dt22, 0,    0,    0, dt,   0,    0,    0,
+                                 0,    dt22, 0,    0, 0,    dt,   0,    0,
+                                 0,    0,    dt22, 0, 0,    0,    dt,   0,
+                                 0,    0,    0,    0, 0,    0,    0,    0});
 
     // Add ground altitude noise
-    Q_(3, 3) = 0.01f;
+    // Q_(3, 3) = 0.01f;
 
     // Add baro bias noise
-    Q_(7,7) = 0.01f;
+    // Q_(7,7) = 0.01f;
 
 }
 
@@ -244,12 +252,14 @@ bool INS_kf::update(void)
 
             // Rotate body acceleration to NED frame
             float accel_lf[3];
-            quaternions_rotate_vector(quaternions_inverse(ahrs_.qe),
+            // quaternions_rotate_vector(quaternions_inverse(ahrs_.qe),
+            quaternions_rotate_vector(ahrs_.qe,
                                       ahrs_.linear_acc,
                                       accel_lf);
 
             // Predict next state
             predict({accel_lf[0], accel_lf[1], accel_lf[2]});
+            // predict({0.0f, 0.0f, 0.0f});
 
             // update timimg
             last_accel_update_s_ = ahrs_.last_update_s;
@@ -294,16 +304,16 @@ bool INS_kf::update(void)
     // Correction from barometer
     // if (barometer_.healthy())
     {
-       if (last_baro_update_s_ < barometer_.last_update_us()*1e6)
-       {
-          // run kalman Update
-          Kalman<8,3,3>::update(Mat<1,1>(config_.home.altitude - barometer_.altitude_gf()),
-                                H_baro_,
-                                R_baro_);
-
-          // Update timing
-          last_baro_update_s_ = barometer_.last_update_us()*1e6;
-       }
+      //  if (last_baro_update_s_ < barometer_.last_update_us()*1e6)
+      //  {
+      //     // run kalman Update
+      //     Kalman<8,3,3>::update(Mat<1,1>(config_.home.altitude - barometer_.altitude_gf()),
+      //                           H_baro_,
+      //                           R_baro_);
+       //
+      //     // Update timing
+      //     last_baro_update_s_ = barometer_.last_update_us()*1e6;
+      //  }
     }
 
     // Correction from sonar

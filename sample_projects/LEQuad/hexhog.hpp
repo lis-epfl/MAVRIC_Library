@@ -194,8 +194,10 @@ bool Hexhog::init_controllers(void)
                              &command.rate,
                              &command.torque);
 
+    velocity_controller_copter_conf_t velocity_controller_config = velocity_controller_copter_default_config();
+    velocity_controller_config.thrust_hover_point = 0.0f;
     velocity_controller_copter_init(&velocity_controller_,
-                                    velocity_controller_copter_default_config(),
+                                    velocity_controller_config,
                                     &ahrs,
                                     &ins_kf_,
                                     &command.velocity,
@@ -223,18 +225,23 @@ bool Hexhog::main_task(void)
             case Mav_mode::GPS_NAV:
             case Mav_mode::POSITION_HOLD:
             case Mav_mode::VELOCITY:
-            case Mav_mode::ATTITUDE:
                 manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
                 manual_control.get_velocity_command(&command.velocity, 1.0f);
                 velocity_controller_copter_update(&velocity_controller_);
 
-                manual_control.get_thrust_command(&command.thrust);
+                command.thrust3D.xyz[Z] = command.thrust.thrust;
+            break;
+
+            case Mav_mode::ATTITUDE:
+                manual_control.get_velocity_command(&command.velocity, 1.0f);
+                velocity_controller_copter_update(&velocity_controller_);
+                manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
+
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
 
             case Mav_mode::RATE:
                 manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
-                // manual_control.get_attitude_command_absolute_yaw(&command.attitude, 1.0f);
                 manual_control.get_thrust_command(&command.thrust);
                 command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
@@ -299,8 +306,8 @@ Hexhog::conf_t Hexhog::default_config(uint8_t sysid)
     // Change the modes set from remote switches
     conf.lequad_config.remote_config.mode_config.safety_mode         = Mav_mode::RATE;
     conf.lequad_config.remote_config.mode_config.mode_switch_up      = Mav_mode::ATTITUDE;
-    conf.lequad_config.remote_config.mode_config.mode_switch_middle  = Mav_mode::ATTITUDE;
-    conf.lequad_config.remote_config.mode_config.mode_switch_down    = Mav_mode::ATTITUDE;
+    conf.lequad_config.remote_config.mode_config.mode_switch_middle  = Mav_mode::VELOCITY;
+    conf.lequad_config.remote_config.mode_config.mode_switch_down    = Mav_mode::GPS_NAV;
 
     // Define correct servo mix
     conf.servos_mix_config = Servos_mix_6dof<6>::default_config();

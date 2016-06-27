@@ -230,8 +230,13 @@ INS_kf::conf_t INS_kf::default_config(void)
 
     conf.dt = 0.004f;
 
-    conf.sigma_gps_xy = 2.0f;
-    conf.sigma_gps_z  = 3.0f;
+    // conf.sigma_gps_xy = 2.0f;
+    // conf.sigma_gps_z  = 3.0f;
+
+    // Low values for optitrack
+    conf.sigma_gps_xy = 0.001f;
+    conf.sigma_gps_z  = 0.001f;
+
 
     //default home location (EFPL Esplanade)
     conf.home.longitude           = 6.566044801857777f;
