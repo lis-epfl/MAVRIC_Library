@@ -127,7 +127,7 @@ public:
      * \param mavlink_communication Central_data's mavlink_communication
      * \param config                The offboard camera configuration
      */
-    Offboard_Tag_Search(Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
+    Offboard_Tag_Search(const Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
 
 
     /**
@@ -213,7 +213,7 @@ protected:
     local_position_t tag_location_;                         ///< The location of the tag in the local frame
     land_on_tag_behavior_t land_on_tag_behavior_;           ///< The land on tag behavior enum
 
-    Position_estimation& position_estimation_;
+    const Position_estimation& position_estimation_;
     const ahrs_t& ahrs_;
     Mavlink_communication& mavlink_communication_;
     Mavlink_waypoint_handler_tag& waypoint_handler_;
