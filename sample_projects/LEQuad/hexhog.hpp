@@ -199,15 +199,15 @@ bool Hexhog::init_controllers(void)
     // Velocity
     velocity_controller_copter_conf_t velocity_controller_config = velocity_controller_copter_default_config();
     velocity_controller_config.thrust_hover_point = -0.25f;
-    velocity_controller_config.pid_config[X].p_gain                = 0.3f;
+    velocity_controller_config.pid_config[X].p_gain                = 0.7f;
     velocity_controller_config.pid_config[X].integrator.gain       = 0.02f;
-    velocity_controller_config.pid_config[X].differentiator.gain   = 0.01f;
+    velocity_controller_config.pid_config[X].differentiator.gain   = 0.03f;
 
-    velocity_controller_config.pid_config[Y].p_gain               = 0.3f;
+    velocity_controller_config.pid_config[Y].p_gain               = 0.7f;
     velocity_controller_config.pid_config[Y].integrator.gain      = 0.02f;
-    velocity_controller_config.pid_config[Y].differentiator.gain  = 0.01f;
+    velocity_controller_config.pid_config[Y].differentiator.gain  = 0.03f;
 
-    velocity_controller_config.pid_config[Z].p_gain               = 0.2f;
+    velocity_controller_config.pid_config[Z].p_gain               = 0.3f;
     velocity_controller_config.pid_config[Z].differentiator.gain  = 0.08f;
     velocity_controller_config.pid_config[Z].differentiator.clip  = 0.1f;
 
@@ -228,7 +228,7 @@ bool Hexhog::init_controllers(void)
     pid_config.integrator.accumulator = 0.0f;
     pid_config.integrator.clip_pre    = 0.0f;
     pid_config.integrator.clip        = 0.0f;
-    pid_config.differentiator.gain      = 0.28f; //0.28f;
+    pid_config.differentiator.gain      = 0.28f;
     pid_config.differentiator.previous  = 0.0f;
     pid_config.differentiator.clip      = 0.46f;
     pid_controller_init(&altitude_pid_, &pid_config);
