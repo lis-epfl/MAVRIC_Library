@@ -49,6 +49,7 @@ static inline velocity_controller_copter_conf_t velocity_controller_copter_defau
 {
     velocity_controller_copter_conf_t conf = {};
 
+    conf.control_frame                         = VEL_CTRL_SEMI_LOCAL;
     conf.thrust_hover_point                    = -0.26f;
     // -----------------------------------------------------------------
     // ------ X PID -------------------------------------------------

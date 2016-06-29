@@ -58,11 +58,18 @@ extern "C"
 #include "control/pid_controller.h"
 }
 
+typedef enum
+{
+    VEL_CTRL_LOCAL,
+    VEL_CTRL_SEMI_LOCAL
+} velocity_control_frame_t;
+
 /**
  * \brief Velocity controller structure
  */
 typedef struct
 {
+    velocity_control_frame_t     control_frame;
     pid_controller_t             pid[3];                    ///< PID controller for velocity along X, Y and Z in global frame
     float                        thrust_hover_point;        ///< Amount of thrust required to hover (between -1 and 1)
     const ahrs_t*                ahrs;                      ///< Pointer to attitude estimation (input)
@@ -78,6 +85,7 @@ typedef struct
  */
 typedef struct
 {
+    velocity_control_frame_t control_frame;
     pid_controller_conf_t   pid_config[3];          ///< Config for PID controller on velocity along X, Y and Z in global frame
     float                   thrust_hover_point;     ///< Amount of thrust required to hover (between -1 and 1)
 } velocity_controller_copter_conf_t;
