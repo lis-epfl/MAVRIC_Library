@@ -198,7 +198,19 @@ bool Hexhog::init_controllers(void)
 
     // Velocity
     velocity_controller_copter_conf_t velocity_controller_config = velocity_controller_copter_default_config();
-    velocity_controller_config.thrust_hover_point = 0.0f;
+    velocity_controller_config.thrust_hover_point = -0.25f;
+    velocity_controller_config.pid_config[X].p_gain                = 0.3f;
+    velocity_controller_config.pid_config[X].integrator.gain       = 0.02f;
+    velocity_controller_config.pid_config[X].differentiator.gain   = 0.01f;
+
+    velocity_controller_config.pid_config[Y].p_gain               = 0.3f;
+    velocity_controller_config.pid_config[Y].integrator.gain      = 0.02f;
+    velocity_controller_config.pid_config[Y].differentiator.gain  = 0.01f;
+
+    velocity_controller_config.pid_config[Z].p_gain               = 0.2f;
+    velocity_controller_config.pid_config[Z].differentiator.gain  = 0.08f;
+    velocity_controller_config.pid_config[Z].differentiator.clip  = 0.1f;
+
     velocity_controller_copter_init(&velocity_controller_,
                                     velocity_controller_config,
                                     &ahrs,
@@ -209,18 +221,34 @@ bool Hexhog::init_controllers(void)
 
     // Position
     pid_controller_conf_t pid_config = {};
-    pid_config.p_gain   = 1.0f;
+    pid_config.p_gain   = 2.0f;
     pid_config.clip_min = -0.5f;
     pid_config.clip_max = 0.5f;
     pid_config.integrator.gain        = 0.0f;
     pid_config.integrator.accumulator = 0.0f;
     pid_config.integrator.clip_pre    = 0.0f;
     pid_config.integrator.clip        = 0.0f;
-    pid_config.differentiator.gain      = 0.0f;
+    pid_config.differentiator.gain      = 0.28f; //0.28f;
     pid_config.differentiator.previous  = 0.0f;
-    pid_config.differentiator.clip      = 0.0f;
+    pid_config.differentiator.clip      = 0.46f;
     pid_controller_init(&altitude_pid_, &pid_config);
 
+    // Parameters
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[X].p_gain, "VX_KP");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[X].differentiator.gain, "VX_KD");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[X].differentiator.clip, "VX_KD_CLIP");
+
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Y].p_gain, "VY_KP");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Y].differentiator.gain, "VY_KD");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Y].differentiator.clip, "VY_KD_CLIP");
+
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Z].p_gain, "VZ_KP");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Z].differentiator.gain, "VZ_KD");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Z].differentiator.clip, "VZ_KD_CLIP");
+
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&altitude_pid_.p_gain,              "PZ_KP");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&altitude_pid_.differentiator.gain, "PZ_KD");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&altitude_pid_.differentiator.clip, "PZ_KD_CLIP");
 
 
     return ret;
@@ -242,42 +270,31 @@ bool Hexhog::main_task(void)
         switch (state.mav_mode().ctrl_mode())
         {
             case Mav_mode::GPS_NAV:
-                manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
-                manual_control.get_velocity_command(&command.velocity, 1.0f);
-                velocity_controller_copter_update(&velocity_controller_);
-
-                command.thrust3D.xyz[Z] = command.thrust.thrust;
-            break;
-
             case Mav_mode::POSITION_HOLD:
             case Mav_mode::VELOCITY:
-                // Vertical velocity from altitude PID
+                manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
                 manual_control.get_velocity_command(&command.velocity, 1.0f);
                 command.velocity.xyz[Z] = pid_controller_update(&altitude_pid_, (-0.5f - ins_kf_.position_lf()[Z]));
 
-                // Run velocity control
+                // Run velocity control (both attitude and velocity)
                 velocity_controller_copter_update(&velocity_controller_);
-
-                // Attitude from remote
-                manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
-
-                // Convert output to 3D thrust
-                command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
 
             case Mav_mode::ATTITUDE:
+                // Vertical velocity from altitude PID
                 manual_control.get_velocity_command(&command.velocity, 1.0f);
+                // command.velocity.xyz[Z] = pid_controller_update(&altitude_pid_, (-0.5f - ins_kf_.position_lf()[Z]));
+
+                // Run velocity control (for altitude)
                 velocity_controller_copter_update(&velocity_controller_);
 
+                // Attitude from remote (override velocity control)
                 manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
-
-                command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
 
             case Mav_mode::RATE:
                 manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
                 manual_control.get_thrust_command(&command.thrust);
-                command.thrust3D.xyz[Z] = command.thrust.thrust;
             break;
 
             default:
@@ -300,6 +317,7 @@ bool Hexhog::main_task(void)
             // Convert attitude command to lateral thrust
             command.thrust3D.xyz[Y]     = command.attitude.rpy[ROLL];
             command.thrust3D.xyz[X]     = - command.attitude.rpy[PITCH];
+            command.thrust3D.xyz[Z]     = command.thrust.thrust;
 
             // Level attitude
             command.attitude.rpy[ROLL]  = 0.0f;
@@ -310,6 +328,7 @@ bool Hexhog::main_task(void)
         {
             command.thrust3D.xyz[Y] = 0.0f;
             command.thrust3D.xyz[X] = 0.0f;
+            command.thrust3D.xyz[Z] = command.thrust.thrust;
         }
 
         attitude_controller_.mode = ATTITUDE_CONTROLLER_MODE_DEFAULT;
