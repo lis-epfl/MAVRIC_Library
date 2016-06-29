@@ -101,9 +101,9 @@ INS_kf::INS_kf(const Gps& gps,
     H_flow_({0, 0, 0,  0, 1, 0, 0, 0,
              0, 0, 0,  0, 0, 1, 0, 0,
              0, 0, -1, 0, 0, 0, 0, 0}),
-    R_flow_({ 0.005f, 0,       0,
-              0,       0.005f, 0,
-              0,       0,       0.001f}),
+    R_flow_({ 0.0001f, 0,       0,
+              0,       0.0001f, 0,
+              0,       0,       0.00001f}),
     last_accel_update_s_(0.0f),
     last_sonar_update_s_(0.0f),
     last_flow_update_s_(0.0f),
@@ -140,6 +140,8 @@ INS_kf::INS_kf(const Gps& gps,
                                  0,    dt22, 0,    0, 0,    dt,   0,    0,
                                  0,    0,    dt22, 0, 0,    0,    dt,   0,
                                  0,    0,    0,    0, 0,    0,    0,    0});
+
+    Q_(6, 6) += 1e-4f * dt;
 
     // Add ground altitude noise
     // Q_(3, 3) = 0.01f;
