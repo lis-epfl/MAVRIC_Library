@@ -110,10 +110,16 @@ float static inline maths_rad_to_deg(float i)
  */
 float static inline maths_calc_smaller_angle(float angle)
 {
+    //float out = angle;
+    // while (out < -PI) out += 2.0f * PI;
+    // while (out >= PI) out -= 2.0f * PI;
+    // return out;
     float out = angle;
-    while (out < -PI) out += 2.0f * PI;
-    while (out >= PI) out -= 2.0f * PI;
+    int round_up_division = angle / 2.0f * PI;
+    out = angle - round_up_division * PI;
     return out;
+    
+
 }
 
 

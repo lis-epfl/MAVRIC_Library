@@ -54,10 +54,12 @@ LEQuad_merk::LEQuad_merk(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar,
            file1, file2, config.lequad_config),
     saccade_controller_(flow_front, flow_back, ahrs, position_estimation, state),
     flow_front_(flow_front), flow_back_(flow_back),
-    gps_mocap_(mavlink_communication.message_handler())
+    gps_mocap_(mavlink_communication.message_handler()),
+    ahrs_ekf_mocap_(mavlink_communication.message_handler(), ahrs_ekf)
 {
     // Init gps_mocap
     gps_mocap_.init();
+    ahrs_ekf_mocap_.init();
 
     init_saccade();
     init_camera();
@@ -107,7 +109,7 @@ void flow_telemetry_send(const LEQuad_merk* LQm, const Mavlink_stream* mavlink_s
 
     static uint8_t step = 0;
     step = (step + 1) % 2;
-    static const uint32_t N_points = 60;
+    // static const uint32_t N_points = 60;
     float of[60];
     char name[7];
 

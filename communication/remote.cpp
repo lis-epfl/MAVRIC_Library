@@ -62,24 +62,17 @@ extern "C"
  *
  * \return  The value of the ARMED flag
  */
-static mode_flag_armed_t get_armed_flag(remote_t* remote);
+static bool get_armed_flag(remote_t* remote);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mode_flag_armed_t get_armed_flag(remote_t* remote)
+static bool get_armed_flag(remote_t* remote)
 {
     remote_mode_t* remote_mode = &remote->mode;
-    mode_flag_armed_t armed;
-    if (mav_modes_is_armed(remote_mode->current_desired_mode))
-    {
-        armed = ARMED_ON;
-    }
-    else
-    {
-        armed = ARMED_OFF;
-    }
+    bool armed;
+    armed = remote_mode->current_desired_mode.is_armed();
 
     // Get armed flag
     if (remote_get_throttle(remote) < -0.95f &&
@@ -88,7 +81,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
             remote_get_roll(remote) > 0.9f)
     {
         // Left stick bottom left corner, right stick bottom right corner => arm
-        armed = ARMED_ON;
+        armed = true;
         remote_mode->arm_action = ARM_ACTION_ARMING;
     }
     else if (remote_get_throttle(remote) < -0.95f &&
@@ -97,7 +90,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
              remote_get_roll(remote) < -0.9f)
     {
         // Left stick bottom right corner, right stick bottom left corner => disarm
-        armed = ARMED_OFF;
+        armed = false;
         remote_mode->arm_action = ARM_ACTION_DISARMING;
     }
     else
@@ -305,8 +298,8 @@ void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t confi
 
     // Init state to safety state, disarmed
     remote_mode->current_desired_mode       = remote_mode->safety_mode;
-    remote_mode->arm_action                     = ARM_ACTION_NONE;
-    remote_mode->current_desired_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+    remote_mode->arm_action                 = ARM_ACTION_NONE;
+    remote_mode->current_desired_mode.set_armed_flag(false);
 }
 
 
@@ -338,10 +331,10 @@ void remote_mode_update(remote_t* remote)
     if (do_update == true)
     {
         // Fallback to safety
-        mav_mode_t new_desired_mode = remote_mode->safety_mode;
+        Mav_mode new_desired_mode = remote_mode->safety_mode;
 
         // Get armed flag from stick combinaison
-        mode_flag_armed_t flag_armed = get_armed_flag(remote);
+        bool flag_armed = get_armed_flag(remote);
 
         if (remote->channels[remote_mode->safety_channel] > 0)
         {
@@ -349,14 +342,7 @@ void remote_mode_update(remote_t* remote)
             new_desired_mode = remote_mode->safety_mode;
 
             // Allow arm and disarm in safety mode
-            if (flag_armed == ARMED_ON)
-            {
-                new_desired_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
-            }
-            else
-            {
-                new_desired_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
-            }
+            new_desired_mode.set_armed_flag(flag_armed);
 
         }
         else
@@ -381,46 +367,28 @@ void remote_mode_update(remote_t* remote)
                 new_desired_mode = remote_mode->mode_switch_down;
             }
 
-            // Apply custom flag
-            if (remote_mode->use_custom_switch == true)
-            {
-                if (remote->channels[remote_mode->custom_switch_channel] > 0.0f)
-                {
-                    // Custom channel at 100% => CUSTOM_ON;
-                    new_desired_mode |= MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
-                }
-                else
-                {
-                    // Custom channel at -100% => CUSTOM_OFF;
-                    new_desired_mode &= ~MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
-                }
-            }
-
-            // Apply test flag
-            if (remote_mode->use_test_switch == true)
-            {
-                if (remote->channels[remote_mode->test_switch_channel] > 0.0f)
-                {
-                    // Test channel at 100% => TEST_ON
-                    new_desired_mode |= MAV_MODE_FLAG_TEST_ENABLED;
-                }
-                else
-                {
-                    // Test channel at -100% => TEST_OFF;
-                    new_desired_mode &= ~MAV_MODE_FLAG_TEST_ENABLED;
-                }
-            }
-
             // Allow only disarm in normal mode
-            if (flag_armed == ARMED_OFF)
+            if (!flag_armed)
             {
-                new_desired_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+                new_desired_mode.set_armed_flag(false);
             }
             else
             {
                 // Keep current armed flag
-                new_desired_mode |= (remote_mode->current_desired_mode & MAV_MODE_FLAG_SAFETY_ARMED);
+                new_desired_mode.set_armed_flag(remote_mode->current_desired_mode.is_armed());
             }
+        }
+
+        // Apply custom flag
+        if (remote_mode->use_custom_switch == true)
+        {
+            new_desired_mode.set_custom_flag(remote->channels[remote_mode->custom_switch_channel] > 0.0f);
+        }
+
+        // Apply test flag
+        if (remote_mode->use_test_switch == true)
+        {
+            new_desired_mode.set_test_flag(remote->channels[remote_mode->test_switch_channel] > 0.0f);
         }
 
         // Store desired mode
@@ -429,20 +397,22 @@ void remote_mode_update(remote_t* remote)
 }
 
 
-mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t current_mode)
+Mav_mode remote_mode_get(remote_t* remote, Mav_mode current_mode)
 {
-    mav_mode_t new_mode = current_mode;
-    new_mode = (current_mode & 0b10100000) + (remote->mode.current_desired_mode & 0b01011111);
+    Mav_mode new_mode = remote->mode.current_desired_mode;
+    // copy armed and hil flag from current mode
+    new_mode.set_armed_flag(current_mode.is_armed());
+    new_mode.set_hil_flag(current_mode.is_hil());
 
     if (remote->mode.arm_action == ARM_ACTION_ARMING)
     {
-        new_mode |= MAV_MODE_FLAG_SAFETY_ARMED;
+        new_mode.set_armed_flag(true);
 
         remote->mode.arm_action = ARM_ACTION_NONE;
     }
     else if (remote->mode.arm_action == ARM_ACTION_DISARMING)
     {
-        new_mode &= ~MAV_MODE_FLAG_SAFETY_ARMED;
+        new_mode.set_armed_flag(false);
         remote->mode.arm_action = ARM_ACTION_NONE;
     }
 

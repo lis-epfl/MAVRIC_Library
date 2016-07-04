@@ -87,40 +87,6 @@ Saccade_controller::Saccade_controller( Flow& flow_front,
     attitude_command_.rpy[2]  = 0;
     intersaccade_time_ = 2000;
     is_time_initialized_ = false;
-    
-    float back_cam_positions [N_points] = {-1.5920,-1.5382,-1.4840,-1.4333,-1.3777,-1.3255,-1.2724,-1.2228,-1.1676,-1.1160,-1.0631,-1.0091,-0.9589,-0.9025,-0.8501,-0.8020,-0.7477,-0.6925,-0.6421,-0.5853,-0.5337,-0.4816,-0.4292,-0.3765,-0.3237,-0.2707,-0.2177,-0.1647,-0.1118,-0.0589,-0.0001,0.0527,0.1056,0.1586,0.2115,0.2645,0.3175,0.3704,0.4231,0.4755,0.5277,0.5851,0.6362,0.6923,0.7475,0.7964,0.8498,0.9074,0.9587,1.0138,1.0678,1.1205,1.1767,1.2271,1.2811,1.3340,1.3904,1.4416,1.4963,1.5297}
-    float front_cam_positions [N_points] = {-1.5717,-1.5188,-1.4654,-1.4117,-1.3621,-1.3074,-1.2568,-1.2057,-1.1539,-1.1014,-1.0481,-0.9940,-0.9439,-0.8931,-0.8414,-0.7889,-0.7355,-0.6812,-0.6316,-0.5813,-0.5247,-0.4732,-0.4211,-0.3686,-0.3156,-0.2624,-0.2148,-0.1611,-0.1072,-0.0533,-0.0053,0.0486,0.1025,0.1564,0.2101,0.2577,0.3110,0.3640,0.4165,0.4686,0.5259,0.5769,0.6328,0.6823,0.7366,0.7900,0.8425,0.8942,0.9501,1.0000,1.0540,1.1072,1.1596,1.2113,1.2671,1.3176,1.3721,1.4217,1.4753,1.5286}
-    // derotation_constant_ = (640*180)/(190*PI*195);
-
-    // 125 points along the 160 pixels of the camera, start at pixel number 17 finish at number 142 such that the total angle covered by the 125 points is 140.625 deg.
-    float angle_between_points = (182. / N_points);
-
-    // Init azimuth angles
-    for (uint32_t i = 0; i < N_points; ++i)
-    {
-        azimuth_[i]             = back_cam_positions[i];
-        sin_azimuth_[i] = quick_trig_sin(azimuth_[i]);
-        inv_sin_azimuth_[i]     = 1.0f/sin_azimuth_[i];
-
-        azimuth_[i]             = front_cam_positions[i];
-        sin_azimuth_[i + N_points] = quick_trig_sin(azimuth_[i + N_points]);
-        inv_sin_azimuth_[i + N_points]  = 1.0f/sin_azimuth_[i + N_points];
-
-        cos_azimuth_[i] = quick_trig_cos(azimuth_[i]);
-        cos_azimuth_[i + N_points] = quick_trig_cos(azimuth_[i + N_points]);
-
-        // derotated_flow_front_[i] = 0.0f;
-        // derotated_flow_back_[i] = 0.0f;
-        flow_front_filtered_[i] = 0.0f;
-        flow_back_filtered_[i] = 0.0f;
-
-    }
-
-    // yaw_velocity_buffer_.put_lossy(0.0f);
-    // yaw_velocity_buffer_.put_lossy(0.0f);
-    // yaw_velocity_buffer_.put_lossy(0.0f);
-
-    // last_derotation_yaw_velocity_ = 0.0f;
 
     velocity_command_.xyz[0] = 0.0f;
     velocity_command_.xyz[1] = 0.0f;
@@ -136,6 +102,51 @@ Saccade_controller::Saccade_controller( Flow& flow_front,
 
     can_filter_ = 1.0f;
     cad_filter_ = 0.077f;
+    
+    float back_cam_positions [N_points] = {-1.5920,-1.5382,-1.4840,-1.4333,-1.3777,-1.3255,-1.2724,-1.2228,-1.1676,-1.1160,-1.0631,-1.0091,-0.9589,-0.9025,-0.8501,-0.8020,-0.7477,-0.6925,-0.6421,-0.5853,-0.5337,-0.4816,-0.4292,-0.3765,-0.3237,-0.2707,-0.2177,-0.1647,-0.1118,-0.0589,-0.0001,0.0527,0.1056,0.1586,0.2115,0.2645,0.3175,0.3704,0.4231,0.4755,0.5277,0.5851,0.6362,0.6923,0.7475,0.7964,0.8498,0.9074,0.9587,1.0138,1.0678,1.1205,1.1767,1.2271,1.2811,1.3340,1.3904,1.4416,1.4963,1.5297};
+    float front_cam_positions [N_points] = {-1.5717,-1.5188,-1.4654,-1.4162,-1.3621,-1.3120,-1.2568,-1.2057,-1.1539,-1.1014,-1.0530,-0.9989,-0.9490,-0.8982,-0.8466,-0.7942,-0.7408,-0.6866,-0.6371,-0.5869,-0.5361,-0.4847,-0.4327,-0.3803,-0.3274,-0.2742,-0.2207,-0.1671,-0.1192,-0.0653,-0.0113,0.0366,0.0906,0.1444,0.1982,0.2458,0.2992,0.3522,0.4049,0.4571,0.5088,0.5600,0.6161,0.6659,0.7204,0.7741,0.8269,0.8788,0.9299,0.9851,1.0345,1.0880,1.1407,1.1926,1.2486,1.2992,1.3494,1.4037,1.4575,1.5064};
+    
+    // Timer for the presaccade state
+    
+    begin_time_ = 0.0f;
+
+
+
+    //For derotation
+
+    // derotation_constant_ = (640*180)/(190*PI*195);
+
+
+    // Init azimuth angles
+    for (uint32_t i = 0; i < N_points; ++i)
+    {
+        azimuth_[i]             = back_cam_positions[i] + PI;
+        sin_azimuth_[i] = quick_trig_sin(azimuth_[i]);
+        inv_sin_azimuth_[i]     = 1.0f/sin_azimuth_[i];
+
+        azimuth_[i + N_points]             = front_cam_positions[i];
+        sin_azimuth_[i + N_points] = quick_trig_sin(azimuth_[i + N_points]);
+        inv_sin_azimuth_[i + N_points]  = 1.0f/sin_azimuth_[i + N_points];
+
+        cos_azimuth_[i] = quick_trig_cos(azimuth_[i]);
+        cos_azimuth_[i + N_points] = quick_trig_cos(azimuth_[i + N_points]);
+
+        flow_front_filtered_[i] = 0.0f;
+        flow_back_filtered_[i] = 0.0f;
+
+        //For derotation
+        
+        // derotated_flow_front_[i] = 0.0f;
+        // derotated_flow_back_[i] = 0.0f;
+
+    }
+    //For derotation
+
+    // yaw_velocity_buffer_.put_lossy(0.0f);
+    // yaw_velocity_buffer_.put_lossy(0.0f);
+    // yaw_velocity_buffer_.put_lossy(0.0f);
+    // last_derotation_yaw_velocity_ = 0.0f;
+
 }
 
 
@@ -150,9 +161,6 @@ bool Saccade_controller::init(void)
 
 bool Saccade_controller::update()
 {
-    // Random number generation for the noise, the value of the noise is between 0 and 0.5. A new number is generated at each time.
-    // ATTENTION CHECK THAT THE NOISE IS RANDOM AND ISN'T 10 TIMES THE SAME IN 1S FOR EXAMPLE
-    // float noise = 0.0f;
 
     flow_back_.update();
     flow_front_.update();
@@ -165,9 +173,10 @@ bool Saccade_controller::update()
         flow_front_filtered_[i] = cad_filter_ * flow_front_.of.x[i] + (1-cad_filter_) * flow_front_filtered_[i];
     }
 
+    //For derotation
+
     // yaw_velocity_buffer_.put_lossy(ahrs_.angular_speed[2]);
     // yaw_velocity_buffer_ .get(last_derotation_yaw_velocity_);
-
 
     // Calculate for both back and front the sum of the relative nearnesses
     // which are each given by RN = OF/sin(angle),
@@ -219,7 +228,7 @@ bool Saccade_controller::update()
     for (uint32_t i = 0; i < N_points; ++i)
     {   
         // if(azimuth_[i] < 0 or azimuth_[i+N_points] < PI)
-        if(i<30)
+        if(i<31)
         {
             if(flow_back_filtered_[i]>0)
             {
@@ -236,7 +245,7 @@ bool Saccade_controller::update()
         }
 
         // else if(azimuth_[i] > 0 or azimuth_[i+N_points] > PI)
-        if(i>29)
+        if(i>30)
         {
             if(flow_back_filtered_[i] < 0) 
             {
@@ -251,9 +260,11 @@ bool Saccade_controller::update()
             }
         }
 
+        // relative_nearness_[i]   = maths_f_abs(flow_back_filtered_[i] * inv_sin_azimuth_[i]);
+        // relative_nearness_[i+ N_points]  = maths_f_abs(flow_front_filtered_[i] * inv_sin_azimuth_[i+ N_points]);
     }
 
-
+    relative_nearness_[30] = 0;
 
 
     // Calculate the comanv's x and y components, to then calculate can and NOD.
@@ -283,7 +294,7 @@ bool Saccade_controller::update()
 
     // Intermediate variables :
     // can is the norm of the comanv vector,
-    // nearest object direction gives the angle in radians to the azimuth_[i])
+    
 
 
     // Calculation of the CAN and the CAD
@@ -324,23 +335,26 @@ bool Saccade_controller::update()
 
     }
 
+
+
     //Current heading information used to see if the drone has finished the saccade and declaration of error variable
 
     aero_attitude_t current_rpy = coord_conventions_quat_to_aero(ahrs_.qe);
+
+    float heading_error = 0.0f;
+
+    //Altitude PID controller
 
     float altitude_error = altitude_value_ - (position_estimation_.local_position.pos[2]);
 
     velocity_command_.xyz[2] = pid_controller_update(&altitude_pid_, altitude_error);
 
-    float heading_error = 0.0f;
 
-    //Noise for the goal direction
-
-    float noise = 0.0f;
+    //Movement direction x and y components
 
     float movement_direction_x = 0.0f;
     float movement_direction_y = 0.0f;
-    float begin_time = 0.0f;
+    
 
     if(can_ > 0.5)
     {
@@ -351,6 +365,7 @@ bool Saccade_controller::update()
         intersaccade_time_ = 1200;
     }
 
+    
     //Decide between saccade and intersaccade states
 
     switch (saccade_state_)
@@ -367,36 +382,40 @@ bool Saccade_controller::update()
                 attitude_command_.rpy[2]  = movement_direction_;
 
                 heading_error = maths_f_abs( maths_calc_smaller_angle(attitude_command_.rpy[2]-current_rpy.rpy[2]) );
+
                 if(heading_error<0.1)
                 {
                     velocity_command_.xyz[0] = 0.0f;
                     velocity_command_.xyz[1] = 0.0f;
-                    velocity_command_.xyz[2] = 0.0f;
 
                     if(!is_time_initialized_)
                     {
-                        begin_time = time_keeper_get_ms();
+                        begin_time_ = time_keeper_get_ms();
                         is_time_initialized_ = true;
                     }
 
-                    if(time_keeper_get_ms()-begin_time > 2000)
+                    if(time_keeper_get_ms()-begin_time_ > 2000)
                     {
                         saccade_state_            = INTERSACCADE;
                     }
                 }
             }
 
-
-
-
         break;
+
+
         // This is the case where we are performing a saccade
 
         case SACCADE:
 
-            heading_error = maths_f_abs( maths_calc_smaller_angle(attitude_command_.rpy[2]-current_rpy.rpy[2]) );
+            heading_error = maths_calc_smaller_angle(attitude_command_.rpy[2]-current_rpy.rpy[2]);
 
-            if ( heading_error < 0.1)
+            velocity_command_.xyz[0] = velocity_value_ * quick_trig_cos(heading_error);
+            velocity_command_.xyz[1] = velocity_value_ * quick_trig_sin(heading_error);
+
+
+
+            if ( maths_f_abs(heading_error ) < 0.1)
             {
                 velocity_command_.xyz[0] = velocity_value_;
                 velocity_command_.xyz[1] = 0;
@@ -411,6 +430,7 @@ bool Saccade_controller::update()
 
                 saccade_state_            = INTERSACCADE;
             }
+
         break;
 
         // In this case, we are now in intersaccadic phase
@@ -423,22 +443,37 @@ bool Saccade_controller::update()
                 float yaw_angle = coord_conventions_get_yaw(ahrs_.qe);
 
                 // Calculation of the movement direction (in radians)
-                movement_direction_x = weighted_function_ * cad_x_unit + (1-weighted_function_) * (goal_bf[0]  + noise);
-                movement_direction_y = weighted_function_ * cad_y_unit + (1-weighted_function_) * (goal_bf[1]  + noise);
-                movement_direction_ = atan2(movement_direction_y,movement_direction_x) + yaw_angle;
+                movement_direction_x = weighted_function_ * cad_x_unit + (1-weighted_function_) * (goal_bf[0]);
+                movement_direction_y = weighted_function_ * cad_y_unit + (1-weighted_function_) * (goal_bf[1]);
+                movement_direction_ = atan2(movement_direction_y,movement_direction_x);
+
+                //If we want to stop the drone before performing the saccade, but doesn't seem to give good results
 
                 // velocity_command_.xyz[0] = 0;
                 // velocity_command_.xyz[1] = 0;
 
                 // if(time_keeper_get_ms() - last_saccade_ > intersaccade_time_ + 700)
                 // {
-                    attitude_command_.rpy[0]  = 0;
-                    attitude_command_.rpy[1]  = 0;
-                    attitude_command_.rpy[2]  = movement_direction_;
+                    // attitude_command_.rpy[0]  = 0;
+                    // attitude_command_.rpy[1]  = 0;
+                    // attitude_command_.rpy[2]  = movement_direction_;
 
-                    saccade_state_            = SACCADE;
+                    // saccade_state_            = SACCADE;
                 // }
+
+                attitude_command_.rpy[0]  = 0;
+                attitude_command_.rpy[1]  = 0;
+                attitude_command_.rpy[2]  = movement_direction_ + yaw_angle;
+
+                velocity_command_.xyz[0] = velocity_value_ * quick_trig_cos(movement_direction_);
+                velocity_command_.xyz[1] = velocity_value_ * quick_trig_sin(movement_direction_);
+
+
+                saccade_state_            = SACCADE;
+
+
             }
+
         break;
     }
 

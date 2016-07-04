@@ -145,24 +145,21 @@ public:
     float                       threshold_;                         ///< Threshold for importance of CAN
     float                       goal_direction_;                    ///< Goal direction for drone
     float                       azimuth_ [2 * N_points];            ///< Table of azimuthal angles
-    // float                       derotated_flow_front_ [N_points];   ///< Table of Relative nearness
-    // float                       derotated_flow_back_ [N_points];    ///< Table of Relative nearness
-    float                       flow_front_filtered_ [N_points];   ///< Table of Relative nearness
-    float                       flow_back_filtered_ [N_points];    ///< Table of Relative nearness
+    float                       flow_front_filtered_ [N_points];   ///< Table of filtered optical flow vectors
+    float                       flow_back_filtered_ [N_points];    ///< Table of filtered optical flow vectors
     float                       relative_nearness_ [2 * N_points];  ///< Table of Relative nearness
-    float                       inv_sin_azimuth_ [2 * N_points];
+    float                       inv_sin_azimuth_ [2 * N_points];    ///< Table of Relative nearness
     float                       cos_azimuth_[2 * N_points];
     float                       sin_azimuth_[2 * N_points];
     float                       can_;
     float                       cad_;
     float                       intersaccade_time_;
     float                       weighted_function_;
-    // float                       derotation_constant_;
-    // float                       last_derotation_yaw_velocity_;
     float                       velocity_value_;
     float                       movement_direction_;
     float                       can_filter_;
     float                       cad_filter_;
+    float                       begin_time_;
 
     uint64_t                    last_saccade_;
 
@@ -186,11 +183,20 @@ public:
 
     saccade_state_t             saccade_state_;                     ///< Saccade modes (intersaccade, saccade, presaccade)
 
-    // Buffer_tpl<3,float>         yaw_velocity_buffer_;
 
     float                       goal_lf[3];
 
     const State&                state_;                              ///< The structure with all state information
+
+    //Derotation parameters
+
+    // float                       derotation_constant_;
+    // float                       last_derotation_yaw_velocity_;
+
+    // Buffer_tpl<3,float>         yaw_velocity_buffer_;
+
+    // float                       derotated_flow_front_ [N_points];   ///< Table of Relative nearness
+    // float                       derotated_flow_back_ [N_points];    ///< Table of Relative nearness
 };
 
 

@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
     mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
     mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
-    mav_config.state_config.simulation_mode = HIL_ON;
+    mav_config.state_config.simulation_mode = true;
 
     LEQuad mav = LEQuad(board.imu,
                         board.sim.barometer(),

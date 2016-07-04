@@ -170,6 +170,7 @@ public:
 
 protected:
 
+    virtual bool init_main_task(void);
     virtual bool init_state(void);
     virtual bool init_communication(void);
     virtual bool init_data_logging(void);

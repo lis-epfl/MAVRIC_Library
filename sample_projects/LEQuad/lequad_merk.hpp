@@ -45,8 +45,9 @@
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "sample_projects/LEQuad/saccade_controller.hpp"
 #include "drivers/gps_mocap.hpp"
+#include "sensing/ahrs_ekf_mocap.hpp"
 #include "drivers/flow.hpp"
- #include "saccade_telemetry.hpp"
+#include "saccade_telemetry.hpp"
 /**
  * \brief MAV class
  */
@@ -108,6 +109,7 @@ protected:
     virtual bool init_camera(void);
 
     Gps_mocap gps_mocap_;
+    Ahrs_ekf_mocap ahrs_ekf_mocap_;
 };
 
 
