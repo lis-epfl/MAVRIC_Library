@@ -102,12 +102,12 @@ Saccade_controller::Saccade_controller( Flow& flow_front,
 
     can_filter_ = 1.0f;
     cad_filter_ = 0.077f;
-    
+
     float back_cam_positions [N_points] = {-1.5920,-1.5382,-1.4840,-1.4333,-1.3777,-1.3255,-1.2724,-1.2228,-1.1676,-1.1160,-1.0631,-1.0091,-0.9589,-0.9025,-0.8501,-0.8020,-0.7477,-0.6925,-0.6421,-0.5853,-0.5337,-0.4816,-0.4292,-0.3765,-0.3237,-0.2707,-0.2177,-0.1647,-0.1118,-0.0589,-0.0001,0.0527,0.1056,0.1586,0.2115,0.2645,0.3175,0.3704,0.4231,0.4755,0.5277,0.5851,0.6362,0.6923,0.7475,0.7964,0.8498,0.9074,0.9587,1.0138,1.0678,1.1205,1.1767,1.2271,1.2811,1.3340,1.3904,1.4416,1.4963,1.5297};
     float front_cam_positions [N_points] = {-1.5717,-1.5188,-1.4654,-1.4162,-1.3621,-1.3120,-1.2568,-1.2057,-1.1539,-1.1014,-1.0530,-0.9989,-0.9490,-0.8982,-0.8466,-0.7942,-0.7408,-0.6866,-0.6371,-0.5869,-0.5361,-0.4847,-0.4327,-0.3803,-0.3274,-0.2742,-0.2207,-0.1671,-0.1192,-0.0653,-0.0113,0.0366,0.0906,0.1444,0.1982,0.2458,0.2992,0.3522,0.4049,0.4571,0.5088,0.5600,0.6161,0.6659,0.7204,0.7741,0.8269,0.8788,0.9299,0.9851,1.0345,1.0880,1.1407,1.1926,1.2486,1.2992,1.3494,1.4037,1.4575,1.5064};
-    
+
     // Timer for the presaccade state
-    
+
     begin_time_ = 0.0f;
 
 
@@ -135,7 +135,7 @@ Saccade_controller::Saccade_controller( Flow& flow_front,
         flow_back_filtered_[i] = 0.0f;
 
         //For derotation
-        
+
         // derotated_flow_front_[i] = 0.0f;
         // derotated_flow_back_[i] = 0.0f;
 
@@ -226,7 +226,7 @@ bool Saccade_controller::update()
 
 
     for (uint32_t i = 0; i < N_points; ++i)
-    {   
+    {
         // if(azimuth_[i] < 0 or azimuth_[i+N_points] < PI)
         if(i<31)
         {
@@ -240,23 +240,23 @@ bool Saccade_controller::update()
             {
                 relative_nearness_[i+ N_points]  = maths_f_abs(flow_front_filtered_[i] * inv_sin_azimuth_[i+ N_points]);
                 // relative_nearness_[i+ N_points]  = flow_front_filtered_[i];
-                
-            }   
+
+            }
         }
 
         // else if(azimuth_[i] > 0 or azimuth_[i+N_points] > PI)
         if(i>30)
         {
-            if(flow_back_filtered_[i] < 0) 
+            if(flow_back_filtered_[i] < 0)
             {
                 relative_nearness_[i]   = maths_f_abs(flow_back_filtered_[i] * inv_sin_azimuth_[i]);
             }
-            
+
             if (flow_front_filtered_[i] > 0)
             {
                 relative_nearness_[i+ N_points]  = maths_f_abs(flow_front_filtered_[i] * inv_sin_azimuth_[i+ N_points]);
                 // relative_nearness_[i+ N_points]  = flow_front_filtered_[i];
-                
+
             }
         }
 
@@ -294,7 +294,7 @@ bool Saccade_controller::update()
 
     // Intermediate variables :
     // can is the norm of the comanv vector,
-    
+
 
 
     // Calculation of the CAN and the CAD
@@ -354,7 +354,7 @@ bool Saccade_controller::update()
 
     float movement_direction_x = 0.0f;
     float movement_direction_y = 0.0f;
-    
+
 
     if(can_ > 0.5)
     {
@@ -365,7 +365,7 @@ bool Saccade_controller::update()
         intersaccade_time_ = 1200;
     }
 
-    
+
     //Decide between saccade and intersaccade states
 
     switch (saccade_state_)
@@ -410,10 +410,8 @@ bool Saccade_controller::update()
 
             heading_error = maths_calc_smaller_angle(attitude_command_.rpy[2]-current_rpy.rpy[2]);
 
-            velocity_command_.xyz[0] = velocity_value_ * quick_trig_cos(heading_error);
-            velocity_command_.xyz[1] = velocity_value_ * quick_trig_sin(heading_error);
-
-
+            velocity_command_.xyz[0] = velocity_value_ * quick_trig_cos(heading_error) * (1.0f - maths_f_abs(heading_error) / PI );
+            velocity_command_.xyz[1] = velocity_value_ * quick_trig_sin(heading_error) * (1.0f - maths_f_abs(heading_error) / PI );
 
             if ( maths_f_abs(heading_error ) < 0.1)
             {
