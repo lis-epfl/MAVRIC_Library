@@ -199,13 +199,14 @@ bool Hexhog::init_controllers(void)
     // Velocity
     velocity_controller_copter_conf_t velocity_controller_config = velocity_controller_copter_default_config();
     velocity_controller_config.thrust_hover_point = -0.25f;
+    velocity_controller_config.control_frame = VEL_CTRL_LOCAL;
     velocity_controller_config.pid_config[X].p_gain                = 0.7f;
-    velocity_controller_config.pid_config[X].integrator.gain       = 0.02f;
-    velocity_controller_config.pid_config[X].differentiator.gain   = 0.03f;
+    velocity_controller_config.pid_config[X].integrator.gain       = 0.04f;
+    velocity_controller_config.pid_config[X].differentiator.gain   = 0.02f;
 
     velocity_controller_config.pid_config[Y].p_gain               = 0.7f;
-    velocity_controller_config.pid_config[Y].integrator.gain      = 0.02f;
-    velocity_controller_config.pid_config[Y].differentiator.gain  = 0.03f;
+    velocity_controller_config.pid_config[Y].integrator.gain      = 0.04f;
+    velocity_controller_config.pid_config[Y].differentiator.gain  = 0.02f;
 
     velocity_controller_config.pid_config[Z].p_gain               = 0.3f;
     velocity_controller_config.pid_config[Z].differentiator.gain  = 0.08f;
@@ -237,14 +238,17 @@ bool Hexhog::init_controllers(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[X].p_gain, "VX_KP");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[X].differentiator.gain, "VX_KD");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[X].differentiator.clip, "VX_KD_CLIP");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[X].integrator.gain, "VX_KI");
 
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Y].p_gain, "VY_KP");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Y].differentiator.gain, "VY_KD");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Y].differentiator.clip, "VY_KD_CLIP");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Y].integrator.gain, "VY_KI");
 
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Z].p_gain, "VZ_KP");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Z].differentiator.gain, "VZ_KD");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Z].differentiator.clip, "VZ_KD_CLIP");
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&velocity_controller_.pid[Z].integrator.gain, "VZ_KI");
 
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&altitude_pid_.p_gain,              "PZ_KP");
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&altitude_pid_.differentiator.gain, "PZ_KD");
@@ -274,7 +278,7 @@ bool Hexhog::main_task(void)
             case Mav_mode::VELOCITY:
                 manual_control.get_attitude_command(0.02f, &command.attitude, 1.0f);
                 manual_control.get_velocity_command(&command.velocity, 1.0f);
-                command.velocity.xyz[Z] = pid_controller_update(&altitude_pid_, (-0.5f - ins_kf_.position_lf()[Z]));
+                command.velocity.xyz[Z] = pid_controller_update(&altitude_pid_, (-0.7f - ins_kf_.position_lf()[Z]));
 
                 // Run velocity control (both attitude and velocity)
                 velocity_controller_copter_update(&velocity_controller_);
