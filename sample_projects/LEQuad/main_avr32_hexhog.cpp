@@ -64,6 +64,7 @@ extern "C"
 }
 
 // #include "hal/common/dbg.hpp"
+void px4_update(I2c& i2c);
 
 int main(void)
 {
@@ -198,6 +199,7 @@ int main(void)
     }
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
+mav.get_scheduler().add_task(1000000, (Scheduler_task::task_function_t)&px4_update, (Scheduler_task::task_argument_t)&board.i2c1);
 
     // -------------------------------------------------------------------------
     // Main loop
@@ -205,4 +207,83 @@ int main(void)
     mav.loop();
 
     return 0;
+}
+
+
+#define FLOW_STAT_COMMAND 50
+#define PX4_ADDRESS 0x42+3
+#define SECTOR_COUNT 6
+
+
+// struct flow_stat_frame{
+//     int16_t maxima[SECTOR_COUNT];
+//     uint8_t max_pos[SECTOR_COUNT];
+//     int16_t minima[SECTOR_COUNT];
+//     uint8_t min_pos[SECTOR_COUNT];
+//     int16_t stddev[SECTOR_COUNT];
+//     int16_t avg[SECTOR_COUNT];
+// };
+
+struct flow_stat_frame_t{
+    uint16_t maxima[SECTOR_COUNT];
+    uint8_t max_pos[SECTOR_COUNT];
+    int16_t minima[SECTOR_COUNT];
+    uint8_t min_pos[SECTOR_COUNT];
+    int16_t stddev[SECTOR_COUNT];
+    int16_t avg[SECTOR_COUNT];
+};
+
+static inline void swap_bytes(uint16_t* buffer, uint8_t size)
+{
+    uint16_t* end = buffer + size;
+    uint8_t* b1 = reinterpret_cast<uint8_t*>(buffer);
+    uint8_t* b2 = b1+1;
+    for(; buffer < end; buffer++, b1+=2, b2+=2){
+        *buffer = ((int16_t)(*b2 << 8 | *b1));
+    }
+}
+
+
+#define FLOW_STAT_FRAME_SIZE sizeof(flow_stat_frame_t)
+
+void print_frame(flow_stat_frame_t& f)
+{
+    print_util_dbg_print("Maxima:  ");
+    for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+        print_util_dbg_print_num(f.maxima[i],10);
+    print_util_dbg_print("\r\nMax Pos:  ");
+    for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+        print_util_dbg_print_num(f.max_pos[i],10);
+    print_util_dbg_print("\r\nMinima:  ");
+    for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+        print_util_dbg_print_num(f.minima[i],10);
+    print_util_dbg_print("\r\nMin Pos:  ");
+    for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+        print_util_dbg_print_num(f.min_pos[i],10);
+    print_util_dbg_print("\r\nSTDDEV:  ");
+    for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+        print_util_dbg_print_num(f.stddev[i],10);
+    print_util_dbg_print("\r\nAvg:  ");
+    for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+        print_util_dbg_print_num(f.avg[i],10);
+    print_util_dbg_print("\r\n");
+}
+
+void px4_update(I2c& i2c)
+{
+    uint8_t flow_stat_command = FLOW_STAT_COMMAND;
+    i2c.write(&flow_stat_command, 1, PX4_ADDRESS);
+
+    flow_stat_frame_t frame;
+    if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS))
+    {
+        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.maxima)), SECTOR_COUNT);
+        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.minima)), SECTOR_COUNT);
+        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.stddev)), SECTOR_COUNT);
+        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.avg)), SECTOR_COUNT);
+        
+        //swap_bytes(reinterpret_cast<uint16_t*>(&(frame.minima)), SECTOR_COUNT);
+        print_util_dbg_print("PX4 read\r\n");
+        print_frame(frame);
+    }
 }

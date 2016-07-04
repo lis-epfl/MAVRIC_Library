@@ -168,6 +168,8 @@ public:
      */
     void loop(void);
 
+    Scheduler& get_scheduler(){return scheduler;};
+
 protected:
 
     virtual bool init_main_task(void);

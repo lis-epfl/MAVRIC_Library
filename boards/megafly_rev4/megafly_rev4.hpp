@@ -289,7 +289,7 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.i2c1_config            = {};
     conf.i2c1_config.i2c_device = AVR32_I2C1;
     conf.i2c1_config.twi_opt    = twim_default_config();
-    conf.i2c1_config.twi_opt.speed = 100000;
+    conf.i2c1_config.twi_opt.speed = 400000;
     conf.i2c1_config.tenbit     = false;
     conf.i2c1_config.sda_pin    = AVR32_TWIMS1_TWD_0_0_PIN;
     conf.i2c1_config.clk_pin    = AVR32_TWIMS1_TWCK_0_0_PIN;
