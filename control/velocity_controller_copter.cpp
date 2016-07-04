@@ -175,7 +175,7 @@ bool velocity_controller_copter_update(velocity_controller_copter_t* controller)
         break;
 
         case VEL_CTRL_LOCAL:
-            quaternions_rotate_vector(q_semilocal, thrust_vector, thrust_vector);
+            quaternions_rotate_vector(quaternions_inverse(q_semilocal), thrust_vector, thrust_vector);
         break;
     }
 
