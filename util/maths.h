@@ -102,19 +102,27 @@ float static inline maths_rad_to_deg(float i)
 
 
 /**
- * \brief           For any given angle, computes an equivalent angle between -2pi and 2pi
+ * \brief           For any given angle, computes an equivalent angle between -pi and pi
  *
  * \param   angle   Input angle
  *
  * \return          Output angle
  */
-float static inline maths_calc_smaller_angle(float angle)
-{
-    float out = angle;
-    while (out < -PI) out += 2.0f * PI;
-    while (out >= PI) out -= 2.0f * PI;
-    return out;
-}
+ float static inline maths_calc_smaller_angle(float angle)
+ {
+     float out;
+
+     if (angle > 0.0f)
+     {
+         out = fmod(angle + PI, 2.0f * PI) - PI;
+     }
+     else
+     {
+         out = fmod(angle - PI, 2.0f * PI) + PI;
+     }
+
+     return out;
+ }
 
 
 /**
