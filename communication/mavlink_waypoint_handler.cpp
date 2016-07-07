@@ -39,12 +39,12 @@
  *
  ******************************************************************************/
 
-#define MAV_CMD_NAV_FENCE 40 /*Tell the program that this waypoint is a fence point*/
-#define	MAV_CMD_NAV_OUTFENCE_1 41 /*Tell the program that this waypoint is a outfence point*/
-#define	MAV_CMD_NAV_OUTFENCE_2 42 /*Tell the program that this waypoint is a outfence point*/
-#define	MAV_CMD_NAV_OUTFENCE_3 43 /*Tell the program that this waypoint is a outfence point*/
-#define	MAV_CMD_NAV_OUTFENCE_4 44 /*Tell the program that this waypoint is a outfence point*/
-#define	MAV_CMD_NAV_OUTFENCE_5 45 /*Tell the program that this waypoint is a outfence point*/
+//#define MAV_CMD_NAV_FENCE 40 /*Tell the program that this waypoint is a fence point*/
+//#define	MAV_CMD_NAV_OUTFENCE_1 41 /*Tell the program that this waypoint is a outfence point*/
+//#define	MAV_CMD_NAV_OUTFENCE_2 42 /*Tell the program that this waypoint is a outfence point*/
+//#define	MAV_CMD_NAV_OUTFENCE_3 43 /*Tell the program that this waypoint is a outfence point*/
+//#define	MAV_CMD_NAV_OUTFENCE_4 44 /*Tell the program that this waypoint is a outfence point*/
+//#define	MAV_CMD_NAV_OUTFENCE_5 45 /*Tell the program that this waypoint is a outfence point*/
 
 
 #include "communication/mavlink_waypoint_handler.hpp"
