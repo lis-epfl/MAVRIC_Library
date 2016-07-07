@@ -132,7 +132,7 @@ static void update(Mat<n,1,T>& x,
                    Mat<m,m,T>& S,  
                    Mat<n,m,T>& K,  
                    Mat<m,1,T>& y,
-                   Mat<n,n,T>& I)
+                   const Mat<n,n,T>& I)
 {
     // Innovation
     y = z - H % x;
@@ -296,7 +296,7 @@ protected:
     Mat<n,p> B_;    ///< Input
 
     Mat<m,m> S_;    ///< Innovation covariance
-    Mat<n,n> I_;    ///< Identity matrix
+    const Mat<n,n> I_;    ///< Identity matrix
     Mat<n,m> K_;    ///< Kalman gain
     Mat<m,1> y_;    ///< Innovation
 };

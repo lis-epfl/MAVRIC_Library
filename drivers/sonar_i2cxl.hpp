@@ -189,6 +189,7 @@ static inline sonar_i2cxl_conf_t sonar_i2cxl_default_config()
 {
     sonar_i2cxl_conf_t conf = {};
 
+    //using 7bits addressing instead of 8bits R/W format
     conf.i2c_address  = 0x70;
 
     // Correct range between 20cm and 7m, - safety
