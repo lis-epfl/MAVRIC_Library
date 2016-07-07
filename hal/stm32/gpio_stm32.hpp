@@ -108,7 +108,7 @@ typedef struct
     gpio_stm32_pin_t            pin;            ///< pin number
     gpio_dir_t                  dir;            ///< Direction
     gpio_pull_updown_t          pull;           ///< Pull up/down
-    gpio_stm32_alt_function_t   alt_fct;
+    gpio_stm32_alt_function_t   alt_fct;        ///< Alternate function
 } gpio_stm32_conf_t;
 
 
