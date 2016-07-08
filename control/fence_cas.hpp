@@ -26,6 +26,14 @@ extern "C"
 #include "sensing/ahrs.h"
 }
 
+typedef enum FENCE_INTERP
+{
+	LINEAR=0,
+	COSINE=1,
+	SHIFTED_COS=2
+} FENCE_INTERP;
+
+
 class Fence_CAS
 {
 public:
@@ -113,9 +121,11 @@ private:
      * \param Interception point on segment 1 (Fence segment)
      * \param Interception point on segment 2 (Quad segment)
      *
+     * \param ponter on int, 1/0/-1 = detection of leftside /on the segment / rightside of the segment
+     *
      * \return  distance between the segments
      */
-	float 	detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3]);
+	float 	detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3],int* outofseg);
 
 	Mavlink_waypoint_handler* 	waypoint_handler;			///< Waypoint handler (extract fencepoints)
 	Position_estimation*        pos_est;                    ///< Estimated position and speed (extract the velocity and the position)
