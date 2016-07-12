@@ -43,8 +43,8 @@
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
-// #include "hal/dummy/file_dummy.hpp"
-#include "hal/avr32/file_flash_avr32.hpp"
+#include "hal/dummy/file_dummy.hpp"
+// #include "hal/avr32/file_flash_avr32.hpp"
 #include "hal/avr32/serial_usb_avr32.hpp"
 
 // //uncomment to go in simulation
@@ -107,13 +107,14 @@ int main(void)
     // Board initialisation
     init_success &= board.init();
 
-    fat_fs_mounting_t fat_fs_mounting;
+    // fat_fs_mounting_t fat_fs_mounting;
 
-    fat_fs_mounting_init(&fat_fs_mounting);
+    // fat_fs_mounting_init(&fat_fs_mounting);
 
-    File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
-    File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
-
+    // File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
+    // File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
+    File_dummy file1;
+    File_dummy file2;
     // -------------------------------------------------------------------------
     // Create MAV
     // -------------------------------------------------------------------------
@@ -138,8 +139,10 @@ int main(void)
                         board.servo_5,
                         board.servo_6,
                         board.servo_7,
-                        file_log,
-                        file_stat,
+                        // file_log,
+                        // file_stat
+                        file1,
+                        file2,
                         board.i2c1,
                         mav_config );
 
@@ -210,28 +213,19 @@ mav.get_scheduler().add_task(1000000, (Scheduler_task::task_function_t)&px4_upda
 }
 
 
-#define FLOW_STAT_COMMAND 50
+#define FLOW_STAT_COMMAND 47
 #define PX4_ADDRESS 0x42+3
 #define SECTOR_COUNT 6
 
-
-// struct flow_stat_frame{
-//     int16_t maxima[SECTOR_COUNT];
-//     uint8_t max_pos[SECTOR_COUNT];
-//     int16_t minima[SECTOR_COUNT];
-//     uint8_t min_pos[SECTOR_COUNT];
-//     int16_t stddev[SECTOR_COUNT];
-//     int16_t avg[SECTOR_COUNT];
-// };
-
-struct flow_stat_frame_t{
-    uint16_t maxima[SECTOR_COUNT];
-    uint8_t max_pos[SECTOR_COUNT];
+typedef struct
+{
+    int16_t maxima[SECTOR_COUNT];
+    int16_t max_pos[SECTOR_COUNT];
     int16_t minima[SECTOR_COUNT];
-    uint8_t min_pos[SECTOR_COUNT];
+    int16_t min_pos[SECTOR_COUNT];
     int16_t stddev[SECTOR_COUNT];
     int16_t avg[SECTOR_COUNT];
-};
+} __attribute__((packed)) flow_stat_frame_t;
 
 static inline void swap_bytes(uint16_t* buffer, uint8_t size)
 {
@@ -248,25 +242,65 @@ static inline void swap_bytes(uint16_t* buffer, uint8_t size)
 
 void print_frame(flow_stat_frame_t& f)
 {
-    print_util_dbg_print("Maxima:  ");
+    print_util_dbg_print("Maxima:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.maxima[i],10);
-    print_util_dbg_print("\r\nMax Pos:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nMaxPos:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.max_pos[i],10);
-    print_util_dbg_print("\r\nMinima:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nMinima:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.minima[i],10);
-    print_util_dbg_print("\r\nMin Pos:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nMinPos:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.min_pos[i],10);
-    print_util_dbg_print("\r\nSTDDEV:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nSTDDEV:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.stddev[i],10);
-    print_util_dbg_print("\r\nAvg:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nAvg:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.avg[i],10);
+        print_util_dbg_print("\t");
+    }
+
     print_util_dbg_print("\r\n");
+    print_util_dbg_print("\r\n");
+
+    print_util_get_debug_stream()->flush(print_util_get_debug_stream());
+}
+
+void print_buffer(uint8_t* buffer, uint8_t size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        print_util_dbg_print_num(buffer[i], 10);
+        print_util_dbg_print(" ");
+    }
+    print_util_dbg_print("\r\n");
+    print_util_dbg_print("\r\n");
+
+    print_util_get_debug_stream()->flush(print_util_get_debug_stream());
 }
 
 void px4_update(I2c& i2c)
@@ -278,12 +312,36 @@ void px4_update(I2c& i2c)
     if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS))
     {
         swap_bytes(reinterpret_cast<uint16_t*>(&(frame.maxima)), SECTOR_COUNT);
+        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.max_pos)), SECTOR_COUNT);
         swap_bytes(reinterpret_cast<uint16_t*>(&(frame.minima)), SECTOR_COUNT);
+        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.min_pos)), SECTOR_COUNT);
         swap_bytes(reinterpret_cast<uint16_t*>(&(frame.stddev)), SECTOR_COUNT);
         swap_bytes(reinterpret_cast<uint16_t*>(&(frame.avg)), SECTOR_COUNT);
-        
-        //swap_bytes(reinterpret_cast<uint16_t*>(&(frame.minima)), SECTOR_COUNT);
+
         print_util_dbg_print("PX4 read\r\n");
         print_frame(frame);
+    }
+
+    uint8_t buffer[FLOW_STAT_FRAME_SIZE];
+
+    uint8_t flow_command = 0;
+    i2c.write(&flow_command, 1, PX4_ADDRESS);
+    if (i2c.read(buffer, 22, PX4_ADDRESS))
+    {
+        print_buffer(buffer, 22);
+    }
+
+    flow_command = 22;
+    i2c.write(&flow_command, 1, PX4_ADDRESS);
+    if (i2c.read(buffer, 25, PX4_ADDRESS))
+    {
+        print_buffer(buffer, 25);
+    }
+
+    flow_command = 47;
+    i2c.write(&flow_command, 1, PX4_ADDRESS);
+    if (i2c.read(buffer, FLOW_STAT_FRAME_SIZE, PX4_ADDRESS))
+    {
+        print_buffer(buffer, FLOW_STAT_FRAME_SIZE);
     }
 }
