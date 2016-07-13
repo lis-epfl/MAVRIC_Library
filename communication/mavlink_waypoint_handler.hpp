@@ -69,17 +69,21 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
+     * \param   mission_planner         The reference to the mission planner
+     * \param   navigation              The pointer to the navigation structure
      * \param   state                   The reference to the state structure
      * \param   message_handler         The reference to the message handler
      * \param   mavlink_stream          The reference to the MAVLink stream structure
+     * \param   config                  The config structure (optional)
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mavlink_waypoint_handler(
-                           State& state,
-                           Mavlink_message_handler& message_handler,
-                           const Mavlink_stream& mavlink_stream,
-                           conf_t config = default_config());
+    Mavlink_waypoint_handler(   Mission_planner& mission_planner,
+                                Navigation& navigation,
+                                State& state,
+                                Mavlink_message_handler& message_handler,
+                                const Mavlink_stream& mavlink_stream,
+                                conf_t config = default_config());
 
 
 
@@ -115,7 +119,7 @@ public:
     /**
      * \brief   Initialize a first waypoint if a flight plan is set
      *
-     * \details Is called by the constructor
+     * TODO: Change name
      */
     void nav_plan_init();
 
@@ -151,7 +155,8 @@ protected:
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure
     Mission_planner& mission_planner_;                          ///< The reference to the mission planner class
-
+    Navigation& navigation_;                                    ///< The reference to the navigation class
+    
 private:
 
     bool waypoint_sending_;                                     ///< Flag to tell whether waypoint are being sent

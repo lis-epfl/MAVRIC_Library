@@ -368,9 +368,6 @@ bool Mission_planner::mode_change()
     return mav_modes_are_equal_autonomous_modes(state_.mav_mode(), last_mode_);
 }
 
-
-
-
 void Mission_planner::dubin_state_machine(waypoint_local_struct_t* waypoint_next_)
 {
     float rel_pos[3];

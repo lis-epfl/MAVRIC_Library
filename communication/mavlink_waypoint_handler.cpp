@@ -407,7 +407,7 @@ mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mavlink_waypoi
 
     if (new_current < waypoint_handler->waypoint_count_)
     {
-        current_waypoint_index_ = 1;
+        current_waypoint_index_ = new_current;
 
         mavlink_message_t msg;
         mavlink_msg_mission_current_pack(waypoint_handler->mavlink_stream_.sysid(),
@@ -450,7 +450,7 @@ void Mavlink_waypoint_handler::clear_waypoint_list_(Mavlink_waypoint_handler* wa
             waypoint_handler->waypoint_count_ = 0;
             waypoint_handler->waypoint_onboard_count_ = 0;
             waypoint_handler->state_.nav_plan_active = false;
-            waypoint_handler->hold_waypoint_set_ = false;
+            waypoint_handler->mission_planner_.set_hold_waypoint_set(false);
 
             mavlink_message_t _msg;
             mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),
@@ -498,13 +498,15 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_planner, State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
             hold_waypoint_set_(false),
             start_wpt_time_(time_keeper_get_ms()),
             mavlink_stream_(mavlink_stream_),
             state_(state_),
+            mission_planner_(mission_planner),
+            navigation_(navigation),
             waypoint_sending_(false),
             waypoint_receiving_(false),
             sending_waypoint_num_(0),
@@ -687,16 +689,16 @@ void Mavlink_waypoint_handler::nav_plan_init()
             && (waypoint_receiving_ == false)
             && (!state_.nav_plan_active))
     {
-                waypoint_list_[current_waypoint_index_].convert_to_waypoint_local_struct(   position_estimation_.local_position.origin,
-                                                                                            &navigation_.dubin_state);
+        waypoint_list_[current_waypoint_index_].convert_to_waypoint_local_struct(   position_estimation_.local_position.origin,
+                                                                                    &navigation_.dubin_state);
 
-                state_.nav_plan_active = true;
+        state_.nav_plan_active = true;
 
-                for (uint8_t j = 0; j < 3; j++)
-                {
-                    rel_pos[j] = waypoint_list_[current_waypoint_index_].local_pos().pos[j] - position_estimation_.local_position.pos[j];
-                }
-                navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+        for (uint8_t j = 0; j < 3; j++)
+        {
+            rel_pos[j] = waypoint_list_[current_waypoint_index_].local_pos().pos[j] - position_estimation_.local_position.pos[j];
+        }
+        navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
     }
 }
 
