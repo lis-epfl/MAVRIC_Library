@@ -66,12 +66,30 @@ static inline uint16_t endian_to_little16(uint16_t data);
 
 
 /**
+ * @brief   Read a 16 bits number stored in little endian
+ *
+ * @param   data    Input in native format
+ * @return          Output in little endian
+ */
+static inline uint16_t endian_from_little16(uint16_t data);
+
+
+/**
  * @brief   Arrange a 16 bits number in big endian
  *
  * @param   data    Input in native format
  * @return          Output in big endian
  */
 static inline uint16_t endian_to_big16(uint16_t data);
+
+
+/**
+ * @brief   Read a 16 bits number stored in big endian
+ *
+ * @param   data    Input in native format
+ * @return          Output in big endian
+ */
+static inline uint16_t endian_from_big16(uint16_t data);
 
 
 /**
@@ -84,12 +102,30 @@ static inline uint32_t endian_to_little32(uint32_t data);
 
 
 /**
+ * @brief   Read a 32 bits number stored in little endian
+ *
+ * @param   data    Input in native format
+ * @return          Output in little endian
+ */
+static inline uint32_t endian_from_little32(uint32_t data);
+
+
+/**
  * @brief   Arrange a 32 bits number in big endian
  *
  * @param   data    Input in native format
  * @return          Output in big endian
  */
 static inline uint32_t endian_to_big32(uint32_t data);
+
+
+/**
+ * @brief   Read a 32 bits number stored in big endian
+ *
+ * @param   data    Input in native format
+ * @return          Output in big endian
+ */
+static inline uint32_t endian_from_big32(uint32_t data);
 
 
 /**
@@ -176,7 +212,17 @@ static inline uint16_t endian_to_little16(uint16_t data)
     return endian_rev16(data);
 }
 
+static inline uint16_t endian_from_little16(uint16_t data)
+{
+    return endian_rev16(data);
+}
+
 static inline uint16_t endian_to_big16(uint16_t data)
+{
+    return data;
+}
+
+static inline uint16_t endian_from_big16(uint16_t data)
 {
     return data;
 }
@@ -186,7 +232,17 @@ static inline uint32_t endian_to_little32(uint32_t data)
     return endian_rev32(data);
 }
 
+static inline uint32_t endian_from_little32(uint32_t data)
+{
+    return endian_rev32(data);
+}
+
 static inline uint32_t endian_to_big32(uint32_t data)
+{
+    return data;
+}
+
+static inline uint32_t endian_from_big32(uint32_t data)
 {
     return data;
 }
@@ -221,7 +277,17 @@ static inline uint16_t endian_to_little16(uint16_t data)
     return data;
 }
 
+static inline uint16_t endian_from_little16(uint16_t data)
+{
+    return data;
+}
+
 static inline uint16_t endian_to_big16(uint16_t data)
+{
+    return endian_rev16(data);
+}
+
+static inline uint16_t endian_from_big16(uint16_t data)
 {
     return endian_rev16(data);
 }
@@ -231,7 +297,17 @@ static inline uint32_t endian_to_little32(uint32_t data)
     return data;
 }
 
+static inline uint32_t endian_from_little32(uint32_t data)
+{
+    return data;
+}
+
 static inline uint32_t endian_to_big32(uint32_t data)
+{
+    return endian_rev32(data);
+}
+
+static inline uint32_t endian_from_big32(uint32_t data)
 {
     return endian_rev32(data);
 }
