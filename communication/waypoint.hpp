@@ -107,6 +107,13 @@ public:
      */
     void send(uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current);
 
+    /**
+     * \brief   Gets the waypoint in local coordinates
+     *
+     * \return  Local waypoint position
+     */
+    local_position_t local_pos() const;
+
 protected:
     uint8_t frame_;                                              ///< The reference frame of the waypoint
     uint16_t command_;                                           ///< The MAV_CMD_NAV id of the waypoint
@@ -123,7 +130,7 @@ protected:
 
     // These come from Navigation::waypoint_local_struct_t
     // TODO: Get rid of for more logical structure
-    local_position_t waypoint_;                                  ///< The local coordinates of the waypoint
+    local_position_t local_pos_;                                  ///< The local coordinates of the waypoint, was called Navigation::waypoint_local_struct_t::waypoint
     float radius_;                                               ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
     float loiter_time_;                                          ///< The loiter time at the waypoint
     dubin_t dubin_;                                              ///< The Dubin structure

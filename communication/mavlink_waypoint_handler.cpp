@@ -112,7 +112,7 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
             {
                 uint8_t isCurrent = 0;
                 if (    sending_waypoint_num_ == current_waypoint_index_ && // This is the current waypoint
-                        enRoute)                                            // And we are en route
+                        mission_planner_.waiting_at_waypoint())             // And we are en route
                 {
                     isCurrent = 1;
                 }
@@ -398,6 +398,42 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
     } //end of if this message is for this system and subsystem
 }
 
+mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+{
+    mav_result_t result;
+    uint16_t new_current = 0;
+
+    print_util_dbg_print("All MAVs: Return to first waypoint.\r\n");
+
+    if (new_current < waypoint_handler->waypoint_count_)
+    {
+        current_waypoint_index_ = 1;
+
+        mavlink_message_t msg;
+        mavlink_msg_mission_current_pack(waypoint_handler->mavlink_stream_.sysid(),
+                                         waypoint_handler->mavlink_stream_.compid(),
+                                         &msg,
+                                         new_current);
+        waypoint_handler->mavlink_stream_.send(&msg);
+
+        print_util_dbg_print("Set current waypoint to number");
+        print_util_dbg_print_num(new_current, 10);
+        print_util_dbg_print("\r\n");
+
+        waypoint_handler->start_wpt_time_ = time_keeper_get_ms();
+
+        waypoint_handler->state_.nav_plan_active = false;
+        waypoint_handler->nav_plan_init();
+
+        result = MAV_RESULT_ACCEPTED;
+    }
+    else
+    {
+        result = MAV_RESULT_DENIED;
+    }
+
+    return result;
+}
 
 void Mavlink_waypoint_handler::clear_waypoint_list_(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
@@ -532,6 +568,17 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(State& state_, Mavlink_messag
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler.add_msg_callback(&callback);
 
+    // Add callbacks for waypoint handler commands requests
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
+
+    callbackcmd.command_id = MAV_CMD_NAV_RETURN_TO_LAUNCH; // 20
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_current_waypoint_from_parameter;
+    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+
     init_homing_waypoint();
     nav_plan_init();
 
@@ -578,17 +625,17 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint_list_[0] = waypoint;
 }
 
-const Waypoint* Mavlink_waypoint_handler::current_waypoint() const
+const Waypoint& Mavlink_waypoint_handler::current_waypoint() const
 {
     // If it is a good index
     if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
     {
-        return &waypoint_list_[current_waypoint_index_];
+        return waypoint_list_[current_waypoint_index_];
     }
     else // TODO: Return an error structure
     {
         // For now, return last waypoint structure
-        return &waypoint_list_[waypoint_count_-1];
+        return waypoint_list_[waypoint_count_-1];
     }
 }
 
@@ -600,22 +647,24 @@ const Waypoint* Mavlink_waypoint_handler::next_waypoint() const
         // Check if the next waypoint exists
         if ((current_waypoint_index_ + 1) != waypoint_count_)
         {
-            return &waypoint_list_[current_waypoint_index_ + 1];
+            return waypoint_list_[current_waypoint_index_ + 1];
         }
         else // No next waypoint, set to first
         {
-            return &waypoint_list_[0];
+            return waypoint_list_[0];
         }
     }
     else // TODO: Return an error structure
     {
         // For now, set to last waypoint structure
-        return &waypoint_list_[waypoint_count_-1];
+        return waypoint_list_[waypoint_count_-1];
     }
 }
 
 void Mavlink_waypoint_handler::advance_to_next_waypoint()
 {
+    print_util_dbg_print("Continuing towards waypoint Nr");
+
     // If the current waypoint index is the last waypoint, go to first waypoint
     if (current_waypoint_index_ == (waypoint_count_-1))
     {
@@ -625,4 +674,50 @@ void Mavlink_waypoint_handler::advance_to_next_waypoint()
     {
         current_waypoint_index_++;
     }
+
+    print_util_dbg_print_num(current_waypoint_index_, 10);
+    print_util_dbg_print("\r\n");
+}
+
+void Mavlink_waypoint_handler::nav_plan_init()
+{
+    float rel_pos[3];
+
+    if (    (position_estimation_.init_gps_position || mav_modes_is_hil(state_.mav_mode()))
+            && (waypoint_receiving_ == false)
+            && (!state_.nav_plan_active))
+    {
+                waypoint_list_[current_waypoint_index_].convert_to_waypoint_local_struct(   position_estimation_.local_position.origin,
+                                                                                            &navigation_.dubin_state);
+
+                state_.nav_plan_active = true;
+
+                for (uint8_t j = 0; j < 3; j++)
+                {
+                    rel_pos[j] = waypoint_list_[current_waypoint_index_].local_pos().pos[j] - position_estimation_.local_position.pos[j];
+                }
+                navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+    }
+}
+
+void Mavlink_waypoint_handler::update_current_waypoint(global_position_t origin, dubin_state_t* dubin_state)
+{
+    if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
+    {
+        waypoint_list_[current_waypoint_index_].calculate_waypoint_local_structure(origin, dubin_state);
+
+        print_util_dbg_print("Waypoint Nr");
+        print_util_dbg_print_num(current_waypoint_index_, 10);
+        print_util_dbg_print(" set,\r\n");
+    }
+}
+
+uint16_t Mavlink_waypoint_handler::waypoint_count() const
+{
+    return waypoint_count_;
+}
+
+uint16_t Mavlink_waypoint_handler::current_waypoint_index() const
+{
+    return current_waypoint_index_;
 }

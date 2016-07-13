@@ -95,50 +95,74 @@ public:
     /**
      * \brief Gets the current waypoint
      *
-     * \details Returns a copy of the waypoint instead of a reference as
-     * the waypoint could be removed/overwritten by the GCS.
-     *
-     * \return Copy of the current waypoint
+     * \return current waypoint
      */
-    const waypoint_struct_t* current_waypoint() const;
+    const Waypoint& current_waypoint() const;
 
     /**
      * \brief Gets the next waypoint if available
      *
-     * \details Returns a copy of the waypoint instead of a reference as
-     * the waypoint could be removed/overwritten by the GCS
-     *
-     * \return Copy of the next waypoint
+     * \return next waypoint
      */
-    const waypoint_struct_t* next_waypoint() const;
+    const Waypoint& next_waypoint() const;
 
     /**
-     * \brief Sets the next waypoint as the current one. Should be called when
+     * \brief   Sets the next waypoint as the current one. Should be called when
      * the current waypoint has been reached.
      */
     void advance_to_next_waypoint();
 
+    /**
+     * \brief   Initialize a first waypoint if a flight plan is set
+     *
+     * \details Is called by the constructor
+     */
+    void nav_plan_init();
+
+    /**
+     * \brief   Updates the waypoint to calculate the local_position_t, radius,
+     * loiter_time, and dubin.
+     *
+     * This is caused by the previous Navigation::waypoint_local_struct_t.
+     * TODO: remove
+     */
+    void update_current_waypoint(global_position_t origin, dubin_state_t* dubin_state);
+
+    /**
+     * \brief   Gets the number of waypoints in the waypoint list
+     *
+     * \return  Waypoint count
+     */
+    uint16_t waypoint_count() const;
+
+    /**
+     * \brief   Gets the current waypoint index
+     *
+     * \return  Current waypoint index
+     */
+    uint16_t current_waypoint_index() const;
+
 protected:
     Waypoint waypoint_list_[MAX_WAYPOINTS];                     ///< The array of all waypoints (max MAX_WAYPOINTS)
 
-    uint16_t waypoint_count_;                                    ///< The total number of waypoints
-    uint16_t current_waypoint_index_;                            ///< The current waypoint index
-    uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
+    uint16_t waypoint_count_;                                   ///< The total number of waypoints
+    uint16_t current_waypoint_index_;                           ///< The current waypoint index
 
-    const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream
-    State& state_;                                               ///< The pointer to the state structure
+    const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
+    State& state_;                                              ///< The reference to the state structure
+    Mission_planner& mission_planner_;                          ///< The reference to the mission planner class
 
 private:
 
-    bool waypoint_sending_;                                      ///< Flag to tell whether waypoint are being sent
-    bool waypoint_receiving_;                                    ///< Flag to tell whether waypoint are being received or not
+    bool waypoint_sending_;                                     ///< Flag to tell whether waypoint are being sent
+    bool waypoint_receiving_;                                   ///< Flag to tell whether waypoint are being received or not
 
-    int32_t sending_waypoint_num_;                               ///< The ID number of the sending waypoint
-    int32_t waypoint_request_number_;                            ///< The ID number of the requested waypoint
-    uint16_t waypoint_onboard_count_;                            ///< The number of waypoint onboard
+    int32_t sending_waypoint_num_;                              ///< The ID number of the sending waypoint
+    int32_t waypoint_request_number_;                           ///< The ID number of the requested waypoint
+    uint16_t waypoint_onboard_count_;                           ///< The number of waypoint onboard
 
-    uint32_t start_timeout_;                                     ///< The start time for the waypoint timeout
-    uint32_t timeout_max_waypoint_;                              ///< The max waiting time for communication
+    uint32_t start_timeout_;                                    ///< The start time for the waypoint timeout
+    uint32_t timeout_max_waypoint_;                             ///< The max waiting time for communication
 
     conf_t config_;
 
@@ -208,6 +232,16 @@ private:
      * \param   msg                     The received MAVLink message structure with the number of the current waypoint
      */
     static void set_current_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+
+    /**
+     * \brief   Set the current waypoint to new_current
+     *
+     * \param   waypoint_handler        The pointer to the waypoint handler
+     * \param   packet                  The pointer to the decoded MAVLink message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 
     /**
      * \brief   Clears the waypoint list

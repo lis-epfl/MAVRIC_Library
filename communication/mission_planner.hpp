@@ -97,13 +97,6 @@ public:
     static bool update(Mavlink_waypoint_handler* waypoint_handler);
 
     /**
-     * \brief   Initialize a first waypoint if a flight plan is set
-     *
-     * \details Is called by the constructor
-     */
-    void nav_plan_init();
-
-    /**
      * \brief   Initialise the position hold mode
      *
      * \param   local_pos               The position where the position will be held
@@ -123,6 +116,12 @@ public:
     void set_hold_waypoint_set(bool hold_waypoint_set);
     bool hold_waypoint_set();
 
+    /**
+     * \brief   Gets a flag stating if the drone is currently waiting at a waypoint
+     *
+     * \return  Is drone waiting at a waypoint
+     */
+    bool waiting_at_waypoint() const;
 protected:
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
@@ -141,14 +140,7 @@ protected:
     Mission_planner_handler& navigating_handler_;               ///< The handler for the navigating state
     Mission_planner_handler& manual_control_handler_;           ///< The handler for the manual control state
 
-private:
-
-    waypoint_local_struct_t waypoint_coordinates_;               ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
-    waypoint_local_struct_t waypoint_critical_coordinates_;      ///< The coordinates of the waypoint in critical state
-    waypoint_local_struct_t waypoint_next_;                       ///< The coordinates of the next waypoint
-
-    waypoint_struct_t current_waypoint_;                         ///< The structure of the current waypoint
-    waypoint_struct_t next_waypoint_;                            ///< The structure of the next waypoint
+    bool waiting_at_waypoint_;                                  ///< Flag stating if the drone is currently at a waypoint waiting to advance
 
     uint32_t travel_time_;                                       ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
@@ -203,35 +195,24 @@ private:
      *      static member functions (callbacks)     *
      ************************************************/
 
-
-    /**
-     * \brief   Set the current waypoint to new_current
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler
-     * \param   packet                  The pointer to the decoded MAVLink message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
-
     /**
      * \brief   Set a new home position, origin of the local frame
      *
-     * \param   waypoint_handler        The pointer to the waypoint handler
+     * \param   mission_planner         The pointer to the waypoint handler
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the new home position
      */
-    static void set_home(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void set_home(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
 
     /**
      * \brief   Set the next waypoint as current waypoint
      *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
+     * \param   mission_planner         The pointer to the structure of the mission planner
      * \param   packet                  The pointer to the structure of the MAVLink command message long
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t continue_to_next_waypoint(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t continue_to_next_waypoint(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 
     /**
      * \brief   Sends back whether the MAV is currently stopped at a waypoint or not

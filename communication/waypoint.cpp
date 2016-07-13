@@ -132,7 +132,7 @@ void Waypoint::send_waypoint(uint32_t sysid, mavlink_message_t* msg, uint16_t se
     mavlink_stream_.send(&_msg);
 }
 
-void Mavlink_waypoint_handler::calculate_waypoint_local_structure(global_position_t origin, dubin_state_t* dubin_state)
+void Waypoint::calculate_waypoint_local_structure(global_position_t origin, dubin_state_t* dubin_state)
 {
     global_position_t waypoint_global;
     local_position_t waypoint_coor;
@@ -221,7 +221,7 @@ void Mavlink_waypoint_handler::calculate_waypoint_local_structure(global_positio
 
     }
 
-    waypoint_ = waypoint_coor;
+    local_pos_ = waypoint_coor;
     // WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
     radius_ = current_waypoint->param2;
     loiter_time_ = current_waypoint->param1;
@@ -229,4 +229,9 @@ void Mavlink_waypoint_handler::calculate_waypoint_local_structure(global_positio
     *dubin_state_ = DUBIN_INIT;
 
     return wpt;
+}
+
+local_position_t Waypoint::local_pos() const
+{
+    return local_pos_;
 }
