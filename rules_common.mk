@@ -50,6 +50,7 @@ LIB_SRCS += communication/remote_telemetry.cpp
 LIB_SRCS += communication/state.cpp
 LIB_SRCS += communication/state_machine.cpp
 LIB_SRCS += communication/state_telemetry.cpp
+LIB_SRCS += communication/waypoint.cpp
 
 
 LIB_SRCS += control/adaptive_parameter.c

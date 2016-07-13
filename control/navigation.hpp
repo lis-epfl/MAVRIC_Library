@@ -58,17 +58,6 @@ extern "C"
 
 
 /**
- * \brief   The MAV'RIC waypoint structure
- */
-typedef struct
-{
-    local_position_t waypoint;                                  ///< The local coordinates of the waypoint
-    float radius;                                               ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
-    float loiter_time;                                          ///< The loiter time at the waypoint
-    dubin_t dubin;                                              ///< The Dubin structure
-} waypoint_local_struct_t;
-
-/**
  * \brief The navigation structure
  */
 class Navigation
@@ -184,7 +173,7 @@ public:
 
     strategy_t navigation_strategy;                     ///< The type of navigation strategy
 
-    waypoint_local_struct_t goal;                       ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
+    Waypoint& goal;                                     ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
 
     float alt_lpf;                                      ///< The low-pass filtered altitude for auto-landing
     float LPF_gain;                                     ///< The value of the low-pass filter gain

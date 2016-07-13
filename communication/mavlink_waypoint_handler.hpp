@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_waypoint_handler.h
+ * \file mavlink_waypoint_handler.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -48,6 +48,7 @@
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
+#include "communication/waypoint.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
@@ -63,23 +64,6 @@ public:
     {
         float auto_take_off_altitude;                               ///< Altitude to which auto_take off flies; altitude over starting point (where auto_take off was started) should be > 0
     };
-
-    /**
-     * \brief   The MAVLink waypoint structure
-     */
-    typedef struct
-    {
-        uint8_t frame;                                              ///< The reference frame of the waypoint
-        uint16_t command;                                           ///< The MAV_CMD_NAV id of the waypoint
-        uint8_t autocontinue;                                       ///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
-        float param1;                                               ///< Parameter depending on the MAV_CMD_NAV id
-        float param2;                                               ///< Parameter depending on the MAV_CMD_NAV id
-        float param3;                                               ///< Parameter depending on the MAV_CMD_NAV id
-        float param4;                                               ///< Parameter depending on the MAV_CMD_NAV id
-        double x;                                                   ///< The value on the x axis (depends on the reference frame)
-        double y;                                                   ///< The value on the y axis (depends on the reference frame)
-        double z;                                                   ///< The value on the z axis (depends on the reference frame)
-    } waypoint_struct_t;
 
 
     /**
@@ -129,43 +113,13 @@ public:
     const waypoint_struct_t* next_waypoint() const;
 
     /**
-     * \brief Gets the current waypoints position in the local frame
-     *
-     * \param origin The local position origin
-     *
-     * \return The current waypoint local position
-     */
-    local_position_t curent_waypoint_local_position(global_position_t origin) const;
-
-    /**
-     * \brief Converts an inputted waypoint to the local frame
-     *
-     * \param wpt The waypoint desired to be in the local frame
-     * \param origin The local position origin
-     *
-     * \return The waypoint local position
-     */
-    local_position_t convert_waypoint_to_local_position(waypoint_struct_t* wpt, global_position_t origin) const;
-
-    /**
      * \brief Sets the next waypoint as the current one. Should be called when
      * the current waypoint has been reached.
      */
     void advance_to_next_waypoint();
 
-    /**
-     * \brief   Set the waypoint depending on the reference frame defined in the current_waypoint_ structure
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
-     * \param   origin                  The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
-     * \param   dubin_state             The pointer to the Dubin state
-     *
-     * \return  The waypoint in local coordinate frame
-     */
-    static waypoint_local_struct_t convert_to_waypoint_local_struct(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state);
-
 protected:
-    waypoint_struct_t waypoint_list_[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
+    Waypoint waypoint_list_[MAX_WAYPOINTS];                     ///< The array of all waypoints (max MAX_WAYPOINTS)
 
     uint16_t waypoint_count_;                                    ///< The total number of waypoints
     uint16_t current_waypoint_index_;                            ///< The current waypoint index
