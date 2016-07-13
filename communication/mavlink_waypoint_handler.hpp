@@ -124,6 +124,13 @@ public:
     void nav_plan_init();
 
     /**
+     * \brief   Control if time is over timeout and change sending/receiving flags to false
+     *
+     * \return  The task status
+     */
+    void control_time_out_waypoint_msg();
+
+    /**
      * \brief   Updates the waypoint to calculate the local_position_t, radius,
      * loiter_time, and dubin.
      *
@@ -156,7 +163,7 @@ protected:
     State& state_;                                              ///< The reference to the state structure
     Mission_planner& mission_planner_;                          ///< The reference to the mission planner class
     Navigation& navigation_;                                    ///< The reference to the navigation class
-    
+
 private:
 
     bool waypoint_sending_;                                     ///< Flag to tell whether waypoint are being sent
@@ -170,14 +177,6 @@ private:
     uint32_t timeout_max_waypoint_;                             ///< The max waiting time for communication
 
     conf_t config_;
-
-
-    /**
-     * \brief   Control if time is over timeout and change sending/receiving flags to false
-     *
-     * \return  The task status
-     */
-    void control_time_out_waypoint_msg();
 
 
     /************************************************

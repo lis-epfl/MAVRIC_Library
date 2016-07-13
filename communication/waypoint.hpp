@@ -114,6 +114,28 @@ public:
      */
     local_position_t local_pos() const;
 
+    /**
+     * \brief   Sets the waypoint in local coordinates
+     *
+     * NOTE: Does not set anything any other field in the class
+     * TODO: Set other fields in the class
+     */
+    void set_local_pos(local_position_t local_pos);
+
+    /**
+     * \brief   Gets the radius
+     *
+     * \return  radius
+     */
+    float radius() const;
+
+    /**
+     * \brief   Gets a reference to the dubin structure
+     *
+     * \return  Dubin structure for the waypoint
+     */
+    dubin_t& dubin();
+
 protected:
     uint8_t frame_;                                              ///< The reference frame of the waypoint
     uint16_t command_;                                           ///< The MAV_CMD_NAV id of the waypoint

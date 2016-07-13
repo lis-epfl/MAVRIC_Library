@@ -78,6 +78,15 @@ Waypoint::Waypoint(const Mavlink_stream& mavlink_stream_, mavlink_mission_item_t
     param2_ = packet.param2;
     param3_ = packet.param3;
     param4_ = packet.param4;
+
+    local_pos_.pos[0] = 0.0f;
+    local_pos_.pos[0] = 0.0f;
+    local_pos_.pos[0] = 0.0f;
+    local_pos_.heading = 0.0f;
+    // local_pos_.origin =; ????
+    radius_ = 0.0f;
+    loiter_time_ = 0.0f;
+    // dubin_ = ; ????
 }
 
 Waypoint::Waypoint( const Mavlink_stream& mavlink_stream_,
@@ -103,6 +112,14 @@ Waypoint::Waypoint( const Mavlink_stream& mavlink_stream_,
             z_(z),
             mavlink_stream_(mavlink_stream_)
 {
+    local_pos_.pos[0] = 0.0f;
+    local_pos_.pos[0] = 0.0f;
+    local_pos_.pos[0] = 0.0f;
+    local_pos_.heading = 0.0f;
+    // local_pos_.origin =; ????
+    radius_ = 0.0f;
+    loiter_time_ = 0.0f;
+    // dubin_ = ; ????
 }
 
 void Waypoint::send_waypoint(uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current)
@@ -234,4 +251,19 @@ void Waypoint::calculate_waypoint_local_structure(global_position_t origin, dubi
 local_position_t Waypoint::local_pos() const
 {
     return local_pos_;
+}
+
+void set_local_pos(local_position_t local_pos)
+{
+    local_pos_ = local_pos;
+}
+
+float Waypoint::radius() const
+{
+    return radius_;
+}
+
+dubin_t& Waypoint::dubin()
+{
+    return dubin_;
 }

@@ -246,11 +246,14 @@ void Mission_planner::critical_handler()
 
     if (!(critical_next_state_))
     {
+        local_position_t local_critical_pos;
+        local_critical_pos.origin = position_estimation_.origin;
+
         critical_next_state_ = true;
 
         aero_attitude_t aero_attitude;
         aero_attitude = coord_conventions_quat_to_aero(navigation_.qe);
-        waypoint_critical_coordinates_.waypoint.heading = aero_attitude.rpy[2];
+        local_critical_pos.heading = aero_attitude.rpy[2];
 
         switch (navigation_.critical_behavior)
         {
@@ -258,9 +261,9 @@ void Mission_planner::critical_handler()
                 print_util_dbg_print("Climbing to safe alt...\r\n");
                 state_.mav_mode_custom |= CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 
-                waypoint_critical_coordinates_.waypoint.pos[X] = position_estimation_.local_position.pos[X];
-                waypoint_critical_coordinates_.waypoint.pos[Y] = position_estimation_.local_position.pos[Y];
-                waypoint_critical_coordinates_.waypoint.pos[Z] = -30.0f;
+                local_critical_pos.pos[X] = position_estimation_.local_position.pos[X];
+                local_critical_pos.pos[Y] = position_estimation_.local_position.pos[Y];
+                local_critical_pos.pos[Z] = -30.0f;
 
                 break;
 
@@ -268,18 +271,18 @@ void Mission_planner::critical_handler()
                 state_.mav_mode_custom &= ~CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
                 state_.mav_mode_custom |= CUST_CRITICAL_FLY_TO_HOME_WP;
 
-                waypoint_critical_coordinates_.waypoint.pos[X] = 0.0f;
-                waypoint_critical_coordinates_.waypoint.pos[Y] = 0.0f;
-                waypoint_critical_coordinates_.waypoint.pos[Z] = -30.0f;
+                local_critical_pos.pos[X] = 0.0f;
+                local_critical_pos.pos[Y] = 0.0f;
+                local_critical_pos.pos[Z] = -30.0f;
                 break;
 
             case Navigation::HOME_LAND:
                 state_.mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
                 state_.mav_mode_custom |= CUST_CRITICAL_LAND;
 
-                waypoint_critical_coordinates_.waypoint.pos[X] = 0.0f;
-                waypoint_critical_coordinates_.waypoint.pos[Y] = 0.0f;
-                waypoint_critical_coordinates_.waypoint.pos[Z] = 5.0f;
+                local_critical_pos.pos[X] = 0.0f;
+                local_critical_pos.pos[Y] = 0.0f;
+                local_critical_pos.pos[Z] = 5.0f;
                 navigation_.alt_lpf = position_estimation_.local_position.pos[2];
                 break;
 
@@ -289,18 +292,20 @@ void Mission_planner::critical_handler()
                 state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= CUST_CRITICAL_LAND;
 
-                waypoint_critical_coordinates_.waypoint.pos[X] = position_estimation_.local_position.pos[X];
-                waypoint_critical_coordinates_.waypoint.pos[Y] = position_estimation_.local_position.pos[Y];
-                waypoint_critical_coordinates_.waypoint.pos[Z] = 5.0f;
+                local_critical_pos.pos[X] = position_estimation_.local_position.pos[X];
+                local_critical_pos.pos[Y] = position_estimation_.local_position.pos[Y];
+                local_critical_pos.pos[Z] = 5.0f;
                 navigation_.alt_lpf = position_estimation_.local_position.pos[2];
                 break;
         }
 
         for (uint8_t i = 0; i < 3; i++)
         {
-            rel_pos[i] = waypoint_critical_coordinates_.waypoint.pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = local_critical_pos.pos[i] - position_estimation_.local_position.pos[i];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+
+        waypoint_critical_coordinates_.set_local_pos(local_critical_pos);
     }
 
     if (navigation_.critical_behavior == Navigation::CRITICAL_LAND || navigation_.critical_behavior == Navigation::HOME_LAND)
@@ -368,7 +373,7 @@ bool Mission_planner::mode_change()
     return mav_modes_are_equal_autonomous_modes(state_.mav_mode(), last_mode_);
 }
 
-void Mission_planner::dubin_state_machine(waypoint_local_struct_t* waypoint_next_)
+void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
 {
     float rel_pos[3];
 
@@ -408,7 +413,7 @@ void Mission_planner::dubin_state_machine(waypoint_local_struct_t* waypoint_next
 
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = waypoint_next_->waypoint.pos[i]- position_estimation_.local_position.pos[i];
+                rel_pos[i] = next_waypoint->local_pos().pos[i]- position_estimation_.local_position.pos[i];
             }
             rel_pos[Z] = 0.0f;
 
@@ -420,17 +425,17 @@ void Mission_planner::dubin_state_machine(waypoint_local_struct_t* waypoint_next
             {
                 vectors_normalize(rel_pos,rel_pos_norm);
 
-                dir_final[X] = -rel_pos_norm[Y]*waypoint_next_->radius;
-                dir_final[Y] = rel_pos_norm[X]*waypoint_next_->radius;
+                dir_final[X] = -rel_pos_norm[Y]*next_waypoint->radius();
+                dir_final[Y] =  rel_pos_norm[X]*next_waypoint->radius();
                 dir_final[Z] = 0.0f;
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    pos_goal[i] = waypoint_next_->waypoint.pos[i] + rel_pos_norm[i]*maths_f_abs(waypoint_next_->radius);
+                    pos_goal[i] = next_waypoint->local_pos().pos[i] + rel_pos_norm[i]*maths_f_abs(next_waypoint->radius());
                 }
                 pos_goal[Z] = 0.0f;
 
-                waypoint_next_->dubin = dubin_2d(    position_estimation_.local_position.pos,
+                next_waypoint->dubin() = dubin_2d(  position_estimation_.local_position.pos,
                                                     pos_goal,
                                                     dir_init,
                                                     dir_final,
@@ -446,9 +451,9 @@ void Mission_planner::dubin_state_machine(waypoint_local_struct_t* waypoint_next
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    waypoint_next_->dubin.circle_center_2[i] = position_estimation_.local_position.pos[i];
+                    next_waypoint->dubin().circle_center_2[i] = position_estimation_.local_position.pos[i];
                 }
-                waypoint_next_->dubin.circle_center_2[Z] = 0.0f;
+                next_waypoint->dubin().circle_center_2[Z] = 0.0f;
 
                 navigation_.dubin_state = DUBIN_CIRCLE2;
             }
@@ -457,7 +462,7 @@ void Mission_planner::dubin_state_machine(waypoint_local_struct_t* waypoint_next
         case DUBIN_CIRCLE1:
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = waypoint_next_->dubin.tangent_point_2[i] - position_estimation_.local_position.pos[i];
+                rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - position_estimation_.local_position.pos[i];
             }
             // heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
             heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(position_estimation_.vel[Y], position_estimation_.vel[X]));
@@ -470,10 +475,10 @@ void Mission_planner::dubin_state_machine(waypoint_local_struct_t* waypoint_next
         case DUBIN_STRAIGHT:
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = waypoint_next_->dubin.tangent_point_2[i] - position_estimation_.local_position.pos[i];
+                rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - position_estimation_.local_position.pos[i];
             }
 
-            scalar_product = rel_pos[X] * waypoint_next_->dubin.line_direction[X] + rel_pos[Y] * waypoint_next_->dubin.line_direction[Y];
+            scalar_product = rel_pos[X] * next_waypoint->dubin().line_direction[X] + rel_pos[Y] * next_waypoint->dubin().line_direction[Y];
             if (scalar_product < 0.0f)
             {
                 navigation_.dubin_state = DUBIN_CIRCLE2;
@@ -489,34 +494,21 @@ void Mission_planner::dubin_state_machine(waypoint_local_struct_t* waypoint_next
 //------------------------------------------------------------------------------
 
 Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
-            waypoint_count_(0),
-            current_waypoint_index_(0),
             hold_waypoint_set_(false),
             start_wpt_time_(time_keeper_get_ms()),
+            waiting_at_waypoint_(false),
+            travel_time_(0),
+            critical_next_state_(false),
+            last_mode_(state_.mav_mode()),
             mavlink_stream_(mavlink_stream_),
             state_(state_),
             navigation_(navigation_),
             position_estimation_(position_estimation_),
-            waiting_at_waypoint_(false),
-            waypoint_sending_(false),
-            waypoint_receiving_(false),
-            sending_waypoint_num_(0),
-            waypoint_request_number_(0),
-            waypoint_onboard_count_(0),
-            start_timeout_(time_keeper_get_ms()),
-            timeout_max_waypoint_(10000),
-            travel_time_(0),
-            critical_next_state_(false),
-            last_mode_(state_.mav_mode()),
             ahrs_(ahrs_),
             manual_control_(manual_control_),
             config_(config)
 {
     bool init_success = true;
-
-    // init waypoint navigation
-
-    next_waypoint_.current = 0;
 
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
@@ -554,54 +546,54 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navi
 }
 
 
-bool Mission_planner::update(Mavlink_waypoint_handler* waypoint_handler)
+bool Mission_planner::update(Mission_planner* mission_planner)
 {
-    mav_mode_t mode_local = waypoint_handler->state_.mav_mode();
+    mav_mode_t mode_local = mission_planner->state_.mav_mode();
 
 
-    switch (waypoint_handler->state_.mav_state_)
+    switch (mission_planner->state_.mav_state_)
     {
         case MAV_STATE_STANDBY:
-            waypoint_handler->navigation_.internal_state_ = Navigation::NAV_ON_GND;
-            waypoint_handler->hold_waypoint_set_ = false;
-            waypoint_handler->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-            waypoint_handler->critical_next_state_ = false;
-            waypoint_handler->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
+            mission_planner->navigation_.internal_state_ = Navigation::NAV_ON_GND;
+            mission_planner->hold_waypoint_set_ = false;
+            mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+            mission_planner->critical_next_state_ = false;
+            mission_planner->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
             break;
 
         case MAV_STATE_ACTIVE:
-            waypoint_handler->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-            waypoint_handler->critical_next_state_ = false;
+            mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+            mission_planner->critical_next_state_ = false;
 
-            if (!waypoint_handler->state_.nav_plan_active)
+            if (!mission_planner->state_.nav_plan_active)
             {
-                waypoint_handler->nav_plan_init();
+                mission_planner->waypoint_handler_.nav_plan_init();
             }
 
-            waypoint_handler->state_machine();
+            mission_planner->state_machine();
             break;
 
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
             if (mav_modes_is_stabilize(mode_local))
             {
-                if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_LANDING))
+                if ((mission_planner->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (mission_planner->navigation_.internal_state_ == Navigation::NAV_LANDING))
                 {
-                    waypoint_handler->critical_handler();
+                    mission_planner->critical_handler();
 
-                    waypoint_handler->navigation_.goal = waypoint_handler->waypoint_critical_coordinates_;
+                    mission_planner->navigation_.goal = mission_planner->waypoint_critical_coordinates_;
                 }
             }
             break;
 
         default:
-            waypoint_handler->navigation_.internal_state_ = Navigation::NAV_ON_GND;
+            mission_planner->navigation_.internal_state_ = Navigation::NAV_ON_GND;
             break;
     }
 
-    waypoint_handler->last_mode_ = mode_local;
+    mission_planner->last_mode_ = mode_local;
 
-    waypoint_handler->control_time_out_waypoint_msg();
+    mission_planner->waypoint_handler_.control_time_out_waypoint_msg();
 
     return true;
 }

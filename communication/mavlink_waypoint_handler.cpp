@@ -467,33 +467,6 @@ void Mavlink_waypoint_handler::clear_waypoint_list_(Mavlink_waypoint_handler* wa
 }
 
 
-void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
-{
-    if (waypoint_sending_ || waypoint_receiving_)
-    {
-        uint32_t tnow = time_keeper_get_ms();
-
-        if ((tnow - start_timeout_) > timeout_max_waypoint_)
-        {
-            start_timeout_ = tnow;
-            if (waypoint_sending_)
-            {
-                waypoint_sending_ = false;
-                print_util_dbg_print("Sending waypoint timeout\r\n");
-            }
-            if (waypoint_receiving_)
-            {
-                waypoint_receiving_ = false;
-
-                print_util_dbg_print("Receiving waypoint timeout\r\n");
-                waypoint_count_ = 0;
-                waypoint_onboard_count_ = 0;
-            }
-        }
-    }
-}
-
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -699,6 +672,32 @@ void Mavlink_waypoint_handler::nav_plan_init()
             rel_pos[j] = waypoint_list_[current_waypoint_index_].local_pos().pos[j] - position_estimation_.local_position.pos[j];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+    }
+}
+
+void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
+{
+    if (waypoint_sending_ || waypoint_receiving_)
+    {
+        uint32_t tnow = time_keeper_get_ms();
+
+        if ((tnow - start_timeout_) > timeout_max_waypoint_)
+        {
+            start_timeout_ = tnow;
+            if (waypoint_sending_)
+            {
+                waypoint_sending_ = false;
+                print_util_dbg_print("Sending waypoint timeout\r\n");
+            }
+            if (waypoint_receiving_)
+            {
+                waypoint_receiving_ = false;
+
+                print_util_dbg_print("Receiving waypoint timeout\r\n");
+                waypoint_count_ = 0;
+                waypoint_onboard_count_ = 0;
+            }
+        }
     }
 }
 

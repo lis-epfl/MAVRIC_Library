@@ -90,11 +90,11 @@ public:
 
 
     /**
-     * \brief   The waypoint handler tasks, gives a goal for the navigation module
+     * \brief   The mission planner tasks, gives a goal for the navigation module
      *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
+     * \param   mission_planner     The pointer to the waypoint handler structure
      */
-    static bool update(Mavlink_waypoint_handler* waypoint_handler);
+    static bool update(Mission_planner* mission_planner);
 
     /**
      * \brief   Initialise the position hold mode
@@ -123,14 +123,6 @@ public:
      */
     bool waiting_at_waypoint() const;
 protected:
-    bool hold_waypoint_set_;                                    ///< Flag to tell if the hold position waypoint is set
-    uint32_t start_wpt_time_;                                   ///< The time at which the MAV starts to travel towards its waypoint
-    const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
-
-    State& state_;                                              ///< The reference to the state structure
-    Navigation& navigation_;                                    ///< The reference to the navigation structure
-    Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
-
     Mission_planner_handler& on_ground_handler_;                ///< The handler for the on ground state
     Mission_planner_handler& takeoff_handler_;                  ///< The handler for the takeoff state
     Mission_planner_handler& landing_handler_;                  ///< The handler for the landing state
@@ -140,15 +132,21 @@ protected:
     Mission_planner_handler& navigating_handler_;               ///< The handler for the navigating state
     Mission_planner_handler& manual_control_handler_;           ///< The handler for the manual control state
 
+    bool hold_waypoint_set_;                                    ///< Flag to tell if the hold position waypoint is set
+    uint32_t start_wpt_time_;                                   ///< The time at which the MAV starts to travel towards its waypoint
     bool waiting_at_waypoint_;                                  ///< Flag stating if the drone is currently at a waypoint waiting to advance
-
     uint32_t travel_time_;                                      ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
-
     bool critical_next_state_;                                  ///< Flag to change critical state in its dedicated state machine
-
     mav_mode_t last_mode_;                                      ///< The mode of the MAV to have a memory of its evolution
+    Waypoint& waypoint_critical_coordinates_;                   ///< Waypoint for the critical state
+    
+    const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
+    State& state_;                                              ///< The reference to the state structure
+    Navigation& navigation_;                                    ///< The reference to the navigation structure
+    Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     const Manual_control& manual_control_;                      ///< The reference to the manual_control structure
+
     conf_t config_;
 
 
