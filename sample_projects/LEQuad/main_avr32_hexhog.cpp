@@ -149,7 +149,7 @@ int main(void)
     }
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
-mav.get_scheduler().add_task(100000, (Scheduler_task::task_function_t)&px4_update, (Scheduler_task::task_argument_t)&board.i2c1);
+mav.get_scheduler().add_task(500000, (Scheduler_task::task_function_t)&px4_update, (Scheduler_task::task_argument_t)&board.i2c1);
 
     // -------------------------------------------------------------------------
     // Main loop
@@ -161,7 +161,7 @@ mav.get_scheduler().add_task(100000, (Scheduler_task::task_function_t)&px4_updat
 
 
 #define FLOW_STAT_COMMAND 47
-#define PX4_ADDRESS 0x42+3
+#define PX4_ADDRESS 0x42
 #define SECTOR_COUNT 6
 
 typedef struct
@@ -243,8 +243,11 @@ void px4_update(I2c& i2c)
 {
     uint8_t flow_stat_command = FLOW_STAT_COMMAND;
     flow_stat_frame_t frame;
-    i2c.write(&flow_stat_command, 1, PX4_ADDRESS);
-    if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS))
+
+    uint64_t t = time_keeper_get_us();
+
+    i2c.write(&flow_stat_command, 1, PX4_ADDRESS + 1);
+    if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS + 1))
     {
         for (size_t i = 0; i < SECTOR_COUNT; i++)
         {
@@ -256,8 +259,44 @@ void px4_update(I2c& i2c)
             frame.stddev[i]     = endian_from_little16(frame.stddev[i]);
         }
 
-        print_util_dbg_print("PX4 read\r\n");
+        print_util_dbg_print("PX4 1 read\r\n");
         print_frame(frame);
     }
 
+    i2c.write(&flow_stat_command, 1, PX4_ADDRESS + 2);
+    if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS + 2))
+    {
+        for (size_t i = 0; i < SECTOR_COUNT; i++)
+        {
+            frame.maxima[i]     = endian_from_little16(frame.maxima[i]);
+            frame.max_pos[i]    = endian_from_little16(frame.max_pos[i]);
+            frame.minima[i]     = endian_from_little16(frame.minima[i]);
+            frame.min_pos[i]    = endian_from_little16(frame.min_pos[i]);
+            frame.avg[i]        = endian_from_little16(frame.avg[i]);
+            frame.stddev[i]     = endian_from_little16(frame.stddev[i]);
+        }
+
+        print_util_dbg_print("PX4 2 read\r\n");
+        print_frame(frame);
+    }
+
+    i2c.write(&flow_stat_command, 1, PX4_ADDRESS + 3);
+    if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS + 3))
+    {
+        for (size_t i = 0; i < SECTOR_COUNT; i++)
+        {
+            frame.maxima[i]     = endian_from_little16(frame.maxima[i]);
+            frame.max_pos[i]    = endian_from_little16(frame.max_pos[i]);
+            frame.minima[i]     = endian_from_little16(frame.minima[i]);
+            frame.min_pos[i]    = endian_from_little16(frame.min_pos[i]);
+            frame.avg[i]        = endian_from_little16(frame.avg[i]);
+            frame.stddev[i]     = endian_from_little16(frame.stddev[i]);
+        }
+
+        print_util_dbg_print("PX4 3 read\r\n");
+        print_frame(frame);
+    }
+
+    print_util_dbg_print_num(time_keeper_get_us() - t, 10);
+    print_util_dbg_print("\r\n\r\n");
 }
