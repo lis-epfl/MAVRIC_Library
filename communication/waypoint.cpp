@@ -122,6 +122,39 @@ Waypoint::Waypoint( const Mavlink_stream& mavlink_stream_,
     // dubin_ = ; ????
 }
 
+Waypoint::Waypoint( const Mavlink_stream& mavlink_stream_,
+                    uint8_t frame,
+                    uint16_t command,
+                    uint8_t autocontinue,
+                    float param1,
+                    float param2,
+                    float param3,
+                    float param4,
+                    float x,
+                    float y,
+                    float z,
+                    local_position_t local_pos,
+                    float radius,
+                    float loiter_time,
+                    dubin_t dubin) :
+            frame_(frame),
+            command_(command),
+            autocontinue_(autocontinue),
+            param1_(param1),
+            param2_(param2),
+            param3_(param3),
+            param4_(param4),
+            x_(x),
+            y_(y),
+            z_(z),
+            mavlink_stream_(mavlink_stream_),
+            local_pos_(local_pos),
+            radius_(radius),
+            loiter_time_(loiter_time),
+            dubin_(dubin)
+{
+}
+
 void Waypoint::send_waypoint(uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current)
 {
     //  Prototype of the function "mavlink_msg_mission_item_send" found in mavlink_msg_mission_item.h :
@@ -240,12 +273,10 @@ void Waypoint::calculate_waypoint_local_structure(global_position_t origin, dubi
 
     local_pos_ = waypoint_coor;
     // WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
-    radius_ = current_waypoint->param2;
-    loiter_time_ = current_waypoint->param1;
+    radius_ = param2_;
+    loiter_time_ = param1_;
 
     *dubin_state_ = DUBIN_INIT;
-
-    return wpt;
 }
 
 local_position_t Waypoint::local_pos() const

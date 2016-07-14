@@ -518,6 +518,25 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navi
 {
     bool init_success = true;
 
+    // Create blank critical waypoint
+    local_position_t local_pos;
+    local_pos.heading = 0.0f;
+    local_pos.origin = position_estimation_.origin;
+    dubin_t dub;
+    for (int i = 0; i < 3; i++)
+    {
+        local_pos.pos[i] = 0.0f;
+        dub.circle_center_1[i] = 0.0f;
+        dub.tangent_point_1[i] = 0.0f;
+        dub.circle_center_2[i] = 0.0f;
+        dub.tangent_point_2[i] = 0.0f;
+        dub.line_direction[i] = 0.0f;
+    }
+    dub.sense_1 = 0;
+    dub.radius_1 = 0;
+    dub.length = 0.0f;
+    waypoint_critical_coordinates_ = Waypoint(mavlink_stream, MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10, 2, 0, 0, 0.0f, 0.0f, 0.0f, local_pos, 2.0f, 0.0f, dub);
+
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
 
@@ -551,6 +570,8 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navi
     {
         print_util_dbg_print("[MISSION_PLANNER] constructor: ERROR\r\n");
     }
+
+    waypoint_critical_coordinates_
 }
 
 

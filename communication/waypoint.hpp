@@ -87,7 +87,42 @@ public:
                 float param4,
                 float x,
                 float y,
-                float z)
+                float z);
+
+    /**
+     * \brief   Initialize the waypoint handler
+     *
+     * \param   mavlink_stream      The reference to the MAVLink stream structure
+     * \param   frame               The reference frame of the waypoint
+     * \param   command             The MAV_CMD_NAV id of the waypoint
+     * \param   autocontinue        Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
+     * \param   param1              Parameter depending on the MAV_CMD_NAV id
+     * \param   param2              Parameter depending on the MAV_CMD_NAV id
+     * \param   param3              Parameter depending on the MAV_CMD_NAV id
+     * \param   param4              Parameter depending on the MAV_CMD_NAV id
+     * \param   x                   The value on the x axis (depends on the reference frame)
+     * \param   y                   The value on the y axis (depends on the reference frame)
+     * \param   z                   The value on the z axis (depends on the reference frame)
+     * \param   local_pos           The local position of the waypoint
+     * \param   radius              The radius of the waypoint
+     * \param   loiter_time         The time to loiter at the waypoint
+     * \param   dubin               The dubin structure for the waypoint
+     */
+    Waypoint(   const Mavlink_stream& mavlink_stream_,
+                uint8_t frame,
+                uint16_t command,
+                uint8_t autocontinue,
+                float param1,
+                float param2,
+                float param3,
+                float param4,
+                float x,
+                float y,
+                float z,
+                local_position_t local_pos,
+                float radius,
+                float loiter_time,
+                dubin_t dubin);
 
     /**
      * \brief   Calculates the information required for waypoint local structure
