@@ -56,8 +56,10 @@ State_display_mavrinux::State_display_mavrinux()
 
 bool State_display_mavrinux::update(void)
 {
-	bool init = state_old_ != state_;
+	bool init;
+
 	state_ = *state_ptr_;
+	init = state_old_ != state_;
 
 	if(init)
 	{

@@ -55,8 +55,9 @@ State_display_mavrimini::State_display_mavrimini(Led& led_green, Led& led_red) :
 
 bool State_display_mavrimini::update()
 {
-	bool init = state_old_ != state_;
+	bool init;
 	state_ = *state_ptr_;
+	init = state_old_ != state_;
 
 	switch(state_)
  	{

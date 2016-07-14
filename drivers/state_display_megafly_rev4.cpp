@@ -55,8 +55,9 @@ State_display_megafly_rev4::State_display_megafly_rev4(Led& led_green, Led& led_
 
 bool State_display_megafly_rev4::update(void)
 {
-	bool init = state_old_ != state_;
+	bool init;
 	state_ = *state_ptr_;
+	init = state_old_ != state_;
 
 	switch(state_)
  	{
