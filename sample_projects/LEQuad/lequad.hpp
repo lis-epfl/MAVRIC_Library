@@ -73,6 +73,8 @@
 #include "drivers/gps.hpp"
 #include "drivers/sonar.hpp"
 #include "drivers/servos_telemetry.hpp"
+#include "drivers/state_display.hpp"
+   #include "drivers/state_display_megafly_rev4.hpp"
 
 #include "hal/common/file.hpp"
 #include "hal/common/led.hpp"
@@ -147,7 +149,7 @@ public:
                   Sonar& sonar,
                   Serial& serial_mavlink,
                   Satellite& satellite,
-                  Led& led,
+                  State_display& state_display,
                   File& file_flash,
                   Battery& battery,
                   Servo& servo_0,
@@ -198,7 +200,7 @@ protected:
     Sonar&          sonar;              ///< Reference to sonar
     Serial&         serial_mavlink;     ///< Reference to telemetry serial
     Satellite&      satellite;          ///< Reference to remote control satellite
-    Led&            led;                ///< Reference to the leds
+    State_display&  state_display_;     ///< Reference to the state display
     File&           file_flash;         ///< Reference to flash storage
     Battery&        battery;            ///< Reference to battery
     Servo&          servo_0;            ///< Reference to servos structure

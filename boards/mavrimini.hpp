@@ -52,6 +52,7 @@
 #include "drivers/servo.hpp"
 #include "drivers/sonar_i2cxl.hpp"
 #include "drivers/spektrum_satellite.hpp"
+#include "drivers/state_display_mavrimini.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
@@ -170,6 +171,7 @@ public:
     Dynamic_model_quad_diag sim_model;
     Simulation              sim;
     Imu                     imu;
+    State_display_mavrimini state_display_mavrimini_;
     
 
 private:

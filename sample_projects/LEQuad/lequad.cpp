@@ -64,14 +64,14 @@ extern "C"
 
 
 
-LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):
+LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, State_display& state_display, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
     sonar(sonar),
     serial_mavlink(serial_mavlink),
     satellite(satellite),
-    led(led),
+    state_display_(state_display),
     file_flash(file_flash),
     battery(battery),
     servo_0(servo_0),
@@ -136,6 +136,7 @@ void LEQuad::loop(void)
 
     // Init mav state
     state.mav_state_ = MAV_STATE_STANDBY;  // TODO check if this is necessary
+    state_display_.state_ptr_ = &state.mav_state_;
 
     while (1)
     {
@@ -180,7 +181,7 @@ bool LEQuad::init_state(void)
 
     // Task
     ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);
-    ret &= scheduler.add_task(500000, (Scheduler_task::task_function_t)&task_led_toggle,       (Scheduler_task::task_argument_t)&led, Scheduler_task::PRIORITY_LOW);
+    ret &= scheduler.add_task( 83333, (Scheduler_task::task_function_t)&task_state_display_update, (Scheduler_task::task_argument_t)&state_display_);
 
     return ret;
 }

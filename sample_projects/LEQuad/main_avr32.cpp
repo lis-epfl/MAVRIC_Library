@@ -96,7 +96,7 @@ int main(void)
                         board.sonar_i2cxl,      // Warning:
                         board.uart0,
                         board.spektrum_satellite,
-                        board.green_led,
+                        board.state_display_megafly_rev4_,
                         board.file_flash,
                         board.battery,
                         board.servo_0,
@@ -166,14 +166,14 @@ int main(void)
 
     if (init_success)
     {
-        piezo_speaker_quick_startup();
+        //piezo_speaker_quick_startup();
 
         // Switch off red LED
         board.red_led.off();
     }
     else
     {
-        piezo_speaker_critical_error_melody();
+        //piezo_speaker_critical_error_melody();
     }
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");

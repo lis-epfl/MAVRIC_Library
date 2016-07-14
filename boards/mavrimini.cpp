@@ -106,7 +106,8 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     servo_7(pwm_7, config.servo_config[7]),
     sim_model(servo_0, servo_1, servo_2, servo_3),
     sim(sim_model),
-    imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer())
+    imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer()),
+    state_display_mavrimini_(green_led, red_led)
 {}
 
 

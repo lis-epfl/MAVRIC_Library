@@ -61,6 +61,7 @@
 #include "drivers/servo.hpp"
 #include "drivers/sonar_i2cxl.hpp"
 #include "drivers/spektrum_satellite.hpp"
+#include "drivers/state_display_megafly_rev4.hpp"
 
 #include "sensing/imu.hpp"
 
@@ -174,6 +175,8 @@ public:
     Servo               servo_5;
     Servo               servo_6;
     Servo               servo_7;
+    
+    State_display_megafly_rev4  state_display_megafly_rev4_;
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
