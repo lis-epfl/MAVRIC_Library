@@ -48,6 +48,7 @@
 #include "communication/mavlink_communication.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
+#include "communication/waypoint.hpp"
 #include "control/dubin.hpp"
 extern "C"
 {
@@ -289,7 +290,7 @@ Navigation::conf_t Navigation::default_wing_config()
 
     conf.cruise_speed                                = 12.0f;
     conf.max_climb_rate                              = 6.0f;
-    
+
     conf.safe_altitude                               = -60.0f;
     conf.minimal_radius                              = 45.0f;
     // conf.heading_acceptance                          = PI/6.0f;  //TODO should this be adapted for the wing
