@@ -52,24 +52,24 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   Navigation& navigation_,
-                                                                        State& state_,
-                                                                        const Manual_control& manual_control_):
-            state_(state_),
-            navigation_(navigation_),
-            manual_control_(manual_control_)
+Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   Navigation& navigation,
+                                                                        State& state,
+                                                                        const Manual_control& manual_control):
+            navigation_(navigation),
+            state_(state),
+            manual_control_(manual_control)
 {
 
 }
 
 Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
 {
-    mav_mode_t mode_local = state_.mav_mode();
+    Mav_mode mode_local = state_.mav_mode();
     float thrust = manual_control_.get_thrust();
 
     if (thrust > -0.7f)
     {
-        if (mav_modes_is_guided(mode_local) || mav_modes_is_auto(mode_local))
+        if (!mode_local.is_manual())
         {
             mission_planner.set_hold_waypoint_set(false);
             navigation_.internal_state_ = Navigation::NAV_TAKEOFF;

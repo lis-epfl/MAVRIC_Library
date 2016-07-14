@@ -52,25 +52,25 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( Position_estimation& position_estimation_,
-                                                                                Navigation& navigation_,
-                                                                                State& state_):
-            position_estimation_(position_estimation_),
-            state_(state_),
-            navigation_(navigation_)
+Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( Position_estimation& position_estimation,
+                                                                                Navigation& navigation,
+                                                                                State& state):
+            position_estimation_(position_estimation),
+            navigation_(navigation),
+            state_(state)
 {
 
 }
 
 Mission_planner_handler_manual_control::handle(Mission_planner& mission_planner)
 {
-    mav_mode_t mode_local = state_.mav_mode();
+    Mav_mode mode_local = state_.mav_mode();
 
-    if (mav_modes_is_auto(mode_local))
+    if (mode_local.is_auto())
     {
         navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
     }
-    else if (mav_modes_is_guided(mode_local))
+    else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
     {
         print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
         hold_init(position_estimation_.local_position);

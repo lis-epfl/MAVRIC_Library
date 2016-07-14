@@ -62,16 +62,22 @@ public:
     /**
      * \brief   Initialize the navigating mission planner handler
      *
-     * \param   position_estimation     The pointer to the position estimator structure
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
-     * \param   mavlink_stream          The reference to the MAVLink stream structure
-     * \param   message_handler         The reference to the mavlink message handler
+     * \param   position_estimation                 The pointer to the position estimator structure
+     * \param   navigation                          The reference to the navigation structure
+     * \param   state                               The reference to the state structure
+     * \param   mission_planner                     The reference to the mission planner
+     * \param   mavlink_stream                      The reference to the MAVLink stream structure
+     * \param   mavlink_waypoint_handler            The handler for the manual control state
+     * \param   mission_planner_handler_landing     The reference to the landing handler
+     * \param   message_handler                     The reference to the mavlink message handler
      */
      Mission_planner_handler_navigating(    Position_estimation& position_estimation,
-                                            Navigation& navigation_,
-                                            State& state_,
+                                            Navigation& navigation,
+                                            State& state,
+                                            Mission_planner& mission_planner,
                                             const Mavlink_stream& mavlink_stream,
+                                            Mavlink_waypoint_handler& mavlink_waypoint_handler,
+                                            Mission_planner_handler_landing& mission_planner_handler_landing,
                                             Mavlink_message_handler& message_handler);
 
 
@@ -84,18 +90,25 @@ public:
     virtual void handle(Mission_planner& mission_planner);
 
 protected:
-    Position_estimation& position_estimation_;                   ///< The reference to the position estimation object
-    Navigation& navigation_;                                     ///< The reference to the navigation object
-    State& state_;                                               ///< The reference to the state object
-    const Mavlink_stream& mavlink_stream_;                      ///< The reference to the mavlink object
+    Position_estimation& position_estimation_;                          ///< The reference to the position estimation object
+    Navigation& navigation_;                                            ///< The reference to the navigation object
+    State& state_;                                                      ///< The reference to the state object
+    Mission_planner& mission_planner_;                                  ///< The reference to the mission_planner
+    const Mavlink_stream& mavlink_stream_;                              ///< The reference to the mavlink object
+    Mavlink_waypoint_handler& mavlink_waypoint_handler_;                ///< The reference to the mavlink waypoint handler
+    Mission_planner_handler_landing& mission_planner_handler_landing;   ///< The reference to the landing handler
+
+    uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
     /**
      * \brief   Drives the GPS navigation procedure
      *
-     * \param   mission_planner     The reference to the misison planner that is
+     * \param   mission_planner         The reference to the misison planner that is
      * handling the request.
+     * \param   reset_hold_wpt          Resets the hold waypoint
+     * \param   waypoint_coordinates    Output: Waypoint that we are navigating to
      */
-    void waypoint_navigating_handler(Mission_planner& mission_planner, bool reset_hold_wpt);
+    void waypoint_navigating_handler(Mission_planner& mission_planner, bool reset_hold_wpt, Waypoint& waypoint_coordinates);
 
     /**
      * \brief   Start/Stop the navigation
@@ -106,6 +119,15 @@ protected:
      * \return  The MAV_RESULT of the command
      */
     static mav_result_t start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+
+    /**
+     * \brief   Sends the travel time between the last two waypoints
+     *
+     * \param   waypoint_handler        The pointer to the waypoint handler structure
+     * \param   mavlink_stream          The pointer to the MAVLink stream structure
+     * \param   msg                     The pointer to the MAVLink message
+     */
+    void send_nav_time(const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 };
 
 

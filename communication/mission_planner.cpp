@@ -368,9 +368,142 @@ void Mission_planner::critical_handler()
     }
 }
 
-bool Mission_planner::mode_change()
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Mission_planner::Mission_planner(Position_estimation& position_estimation, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_planner_handler& on_ground_handler, Mission_planner_handler_takeoff& takeoff_handler, Mission_planner_handler_landing& landing_handler, Mission_planner_handler_hold_position& hold_position_handler, Mission_planner_handler_stop_on_position& stop_on_position_handler, Mission_planner_handler_stop_there& stop_there_handler, mission_planner_handler_navigating& navigating_handler, Mission_planner_handler_manual_control& manual_control_handler, Mavlink_waypoint_handler& mavlink_waypoint_handler, conf_t config):
+            on_ground_handler_(on_ground_handler),
+            takeoff_handler_(takeoff_handler),
+            landing_handler_(landing_handler),
+            hold_position_handler_(hold_position_handler),
+            stop_on_position_handler_(stop_on_position_handler),
+            stop_there_handler_(stop_there_handler),
+            navigating_handler_(navigating_handler),
+            manual_control_handler_(manual_control_handler),
+            mavlink_waypoint_handler_(mavlink_waypoint_handler),
+            hold_waypoint_set_(false),
+            start_wpt_time_(time_keeper_get_ms()),
+            waiting_at_waypoint_(false),
+            critical_next_state_(false),
+            last_mode_(state_.mav_mode()),
+            mavlink_stream_(mavlink_stream),
+            state_(state),
+            navigation_(navigation),
+            position_estimation_(position_estimation),
+            ahrs_(ahrs),
+            manual_control_(manual_control),
+            config_(config)
 {
-    return mav_modes_are_equal_autonomous_modes(state_.mav_mode(), last_mode_);
+    bool init_success = true;
+
+    // Create blank critical waypoint
+    local_position_t local_pos;
+    local_pos.heading = 0.0f;
+    local_pos.origin = position_estimation_.origin;
+    dubin_t dub;
+    for (int i = 0; i < 3; i++)
+    {
+        local_pos.pos[i] = 0.0f;
+        dub.circle_center_1[i] = 0.0f;
+        dub.tangent_point_1[i] = 0.0f;
+        dub.circle_center_2[i] = 0.0f;
+        dub.tangent_point_2[i] = 0.0f;
+        dub.line_direction[i] = 0.0f;
+    }
+    dub.sense_1 = 0;
+    dub.radius_1 = 0;
+    dub.length = 0.0f;
+    waypoint_critical_coordinates_ = Waypoint(mavlink_stream, MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10, 2, 0, 0, 0.0f, 0.0f, 0.0f, local_pos, 2.0f, 0.0f, dub);
+
+    // Add callbacks for waypoint handler messages requests
+    Mavlink_message_handler::msg_callback_t callback;
+
+    callback.message_id     = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN; // 48
+    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
+    callback.compid_filter  = MAV_COMP_ID_ALL;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_home;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler.add_msg_callback(&callback);
+
+    // Add callbacks for waypoint handler commands requests
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
+
+    callbackcmd.command_id = MAV_CMD_MISSION_START; // 300
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &continue_to_next_waypoint;
+    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+
+    callbackcmd.command_id = MAV_CMD_CONDITION_DISTANCE; // 114
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &is_arrived;
+    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+
+    if(!init_success)
+    {
+        print_util_dbg_print("[MISSION_PLANNER] constructor: ERROR\r\n");
+    }
+
+    waypoint_critical_coordinates_
+}
+
+
+bool Mission_planner::update(Mission_planner* mission_planner)
+{
+    mav_mode_t mode_local = mission_planner->state_.mav_mode();
+
+
+    switch (mission_planner->state_.mav_state_)
+    {
+        case MAV_STATE_STANDBY:
+            mission_planner->navigation_.internal_state_ = Navigation::NAV_ON_GND;
+            mission_planner->hold_waypoint_set_ = false;
+            mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+            mission_planner->critical_next_state_ = false;
+            mission_planner->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
+            break;
+
+        case MAV_STATE_ACTIVE:
+            mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+            mission_planner->critical_next_state_ = false;
+
+            if (!mission_planner->state_.nav_plan_active)
+            {
+                mission_planner->waypoint_handler_.nav_plan_init();
+            }
+
+            mission_planner->state_machine();
+            break;
+
+        case MAV_STATE_CRITICAL:
+            // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
+            if (mav_modes_is_stabilize(mode_local))
+            {
+                if ((mission_planner->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (mission_planner->navigation_.internal_state_ == Navigation::NAV_LANDING))
+                {
+                    mission_planner->critical_handler();
+
+                    mission_planner->navigation_.goal = mission_planner->waypoint_critical_coordinates_;
+                }
+            }
+            break;
+
+        default:
+            mission_planner->navigation_.internal_state_ = Navigation::NAV_ON_GND;
+            break;
+    }
+
+    mission_planner->last_mode_ = mode_local;
+
+    mission_planner->waypoint_handler_.control_time_out_waypoint_msg();
+
+    return true;
 }
 
 void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
@@ -489,152 +622,9 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
     }
 }
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, Mission_planner_handler& on_ground_handler, Mission_planner_handler& takeoff_handler, Mission_planner_handler& landing_handler, Mission_planner_handler& hold_position_handler, Mission_planner_handler& stop_on_position_handler, Mission_planner_handler& stop_there_handler, Mission_planner_handler& navigating_handler, Mission_planner_handler& manual_control_handler, conf_t config):
-            on_ground_handler_(on_ground_handler),
-            takeoff_handler_(takeoff_handler),
-            landing_handler_(landing_handler),
-            hold_position_handler_(hold_position_handler),
-            stop_on_position_handler_(stop_on_position_handler),
-            stop_there_handler_(stop_there_handler),
-            navigating_handler_(navigating_handler),
-            manual_control_handler_(manual_control_handler),
-            hold_waypoint_set_(false),
-            start_wpt_time_(time_keeper_get_ms()),
-            waiting_at_waypoint_(false),
-            travel_time_(0),
-            critical_next_state_(false),
-            last_mode_(state_.mav_mode()),
-            mavlink_stream_(mavlink_stream_),
-            state_(state_),
-            navigation_(navigation_),
-            position_estimation_(position_estimation_),
-            ahrs_(ahrs_),
-            manual_control_(manual_control_),
-            config_(config)
+bool Mission_planner::mode_change()
 {
-    bool init_success = true;
-
-    // Create blank critical waypoint
-    local_position_t local_pos;
-    local_pos.heading = 0.0f;
-    local_pos.origin = position_estimation_.origin;
-    dubin_t dub;
-    for (int i = 0; i < 3; i++)
-    {
-        local_pos.pos[i] = 0.0f;
-        dub.circle_center_1[i] = 0.0f;
-        dub.tangent_point_1[i] = 0.0f;
-        dub.circle_center_2[i] = 0.0f;
-        dub.tangent_point_2[i] = 0.0f;
-        dub.line_direction[i] = 0.0f;
-    }
-    dub.sense_1 = 0;
-    dub.radius_1 = 0;
-    dub.length = 0.0f;
-    waypoint_critical_coordinates_ = Waypoint(mavlink_stream, MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10, 2, 0, 0, 0.0f, 0.0f, 0.0f, local_pos, 2.0f, 0.0f, dub);
-
-    // Add callbacks for waypoint handler messages requests
-    Mavlink_message_handler::msg_callback_t callback;
-
-    callback.message_id     = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN; // 48
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_home;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
-
-    // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_MISSION_START; // 300
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &continue_to_next_waypoint;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
-
-    callbackcmd.command_id = MAV_CMD_CONDITION_DISTANCE; // 114
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &is_arrived;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
-
-    if(!init_success)
-    {
-        print_util_dbg_print("[MISSION_PLANNER] constructor: ERROR\r\n");
-    }
-
-    waypoint_critical_coordinates_
-}
-
-
-bool Mission_planner::update(Mission_planner* mission_planner)
-{
-    mav_mode_t mode_local = mission_planner->state_.mav_mode();
-
-
-    switch (mission_planner->state_.mav_state_)
-    {
-        case MAV_STATE_STANDBY:
-            mission_planner->navigation_.internal_state_ = Navigation::NAV_ON_GND;
-            mission_planner->hold_waypoint_set_ = false;
-            mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-            mission_planner->critical_next_state_ = false;
-            mission_planner->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
-            break;
-
-        case MAV_STATE_ACTIVE:
-            mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-            mission_planner->critical_next_state_ = false;
-
-            if (!mission_planner->state_.nav_plan_active)
-            {
-                mission_planner->waypoint_handler_.nav_plan_init();
-            }
-
-            mission_planner->state_machine();
-            break;
-
-        case MAV_STATE_CRITICAL:
-            // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mav_modes_is_stabilize(mode_local))
-            {
-                if ((mission_planner->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (mission_planner->navigation_.internal_state_ == Navigation::NAV_LANDING))
-                {
-                    mission_planner->critical_handler();
-
-                    mission_planner->navigation_.goal = mission_planner->waypoint_critical_coordinates_;
-                }
-            }
-            break;
-
-        default:
-            mission_planner->navigation_.internal_state_ = Navigation::NAV_ON_GND;
-            break;
-    }
-
-    mission_planner->last_mode_ = mode_local;
-
-    mission_planner->waypoint_handler_.control_time_out_waypoint_msg();
-
-    return true;
-}
-
-void Mission_planner::send_nav_time(const Mavlink_stream* mavlink_stream_, mavlink_message_t* msg)
-{
-    mavlink_msg_named_value_int_pack(mavlink_stream_->sysid(),
-                                     mavlink_stream_->compid(),
-                                     msg,
-                                     time_keeper_get_ms(),
-                                     "travel_time_",
-                                     travel_time_);
+    return mav_modes_are_equal_autonomous_modes(state_.mav_mode(), last_mode_);
 }
 
 void Mission_planner::set_hold_waypoint_set(bool hold_waypoint_set)
@@ -642,7 +632,7 @@ void Mission_planner::set_hold_waypoint_set(bool hold_waypoint_set)
     hold_waypoint_set_ = hold_waypoint_set;
 }
 
-bool Mission_planner::hold_waypoint_set()
+bool Mission_planner::hold_waypoint_set() const
 {
     return hold_waypoint_set_;
 }
@@ -650,4 +640,14 @@ bool Mission_planner::hold_waypoint_set()
 bool Mission_planner::waiting_at_waypoint() const
 {
     return waiting_at_waypoint_;
+}
+
+void set_waiting_at_waypoint(bool waiting_at_waypoint)
+{
+    waiting_at_waypoint_ = waiting_at_waypoint;
+}
+
+Mav_mode last_mode() const
+{
+    return last_mode_;
 }

@@ -68,8 +68,8 @@ public:
      * \param   message_handler         The reference to the mavlink message handler
      */
      Mission_planner_handler_landing(   Position_estimation& position_estimation,
-                                        Navigation& navigation_,
-                                        State& state_,
+                                        Navigation& navigation,
+                                        State& state,
                                         Mavlink_message_handler& message_handler);
 
 
@@ -81,6 +81,16 @@ public:
      */
     virtual void handle(Mission_planner& mission_planner);
 
+    /**
+     * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
+     *
+     * \param   landing_handler         The pointer to the structure of the MAVLink waypoint handler
+     * \param   packet                  The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t set_auto_landing(Mission_planner_handler_landing* landing_handler, mavlink_command_long_t* packet);
+    
 protected:
     Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
     Navigation& navigation_;                                     ///< The reference to the navigation structure
@@ -95,16 +105,6 @@ protected:
      * handling the request.
      */
     void auto_landing_handler(Mission_planner& mission_planner);
-
-    /**
-     * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
-     *
-     * \param   landing_handler         The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_auto_landing(Mission_planner_handler_landing* landing_handler, mavlink_command_long_t* packet);
 };
 
 

@@ -69,9 +69,9 @@ public:
      * \param   message_handler         The reference to the mavlink message handler
      */
      Mission_planner_handler_takeoff(   Position_estimation& position_estimation,
-                                        Navigation& navigation_,
+                                        Navigation& navigation,
                                         const ahrs_t& ahrs,
-                                        State& state_,
+                                        State& state,
                                         Mavlink_message_handler& message_handler);
 
 

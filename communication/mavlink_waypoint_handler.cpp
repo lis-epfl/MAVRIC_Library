@@ -112,7 +112,7 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
             {
                 uint8_t isCurrent = 0;
                 if (    sending_waypoint_num_ == current_waypoint_index_ && // This is the current waypoint
-                        mission_planner_.waiting_at_waypoint())             // And we are en route
+                        !mission_planner_.waiting_at_waypoint())             // And we are en route
                 {
                     isCurrent = 1;
                 }

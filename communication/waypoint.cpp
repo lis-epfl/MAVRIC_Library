@@ -279,6 +279,11 @@ void Waypoint::calculate_waypoint_local_structure(global_position_t origin, dubi
     *dubin_state_ = DUBIN_INIT;
 }
 
+uint16_t Waypoint::command() const
+{
+    return command_;
+}
+
 local_position_t Waypoint::local_pos() const
 {
     return local_pos_;

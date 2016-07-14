@@ -64,9 +64,9 @@ public:
      * \param   state                   The pointer to the state structure
      * \param   manual_control          The pointer to the manual control structure
      */
-     Mission_planner_handler_on_ground( Navigation& navigation_,
-                                        State& state_,
-                                        const Manual_control& manual_control_);
+     Mission_planner_handler_on_ground( Navigation& navigation,
+                                        State& state,
+                                        const Manual_control& manual_control);
 
 
     /**

@@ -143,6 +143,76 @@ public:
     void send(uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current);
 
     /**
+     * \brief   Gets the frame of the waypoint
+     *
+     * \return  frame
+     */
+    uint8_t frame() const;
+
+    /**
+     * \brief   Gets the command of the waypoint
+     *
+     * \return  command
+     */
+    uint16_t command() const;
+
+    /**
+     * \brief   Gets the autocontinue state of the waypoint
+     *
+     * \return  autocontinue
+     */
+    uint8_t autocontinue() const;
+
+    /**
+     * \brief   Gets param1 of the waypoint
+     *
+     * \return  param1
+     */
+    float param1() const;
+
+    /**
+     * \brief   Gets param2 of the waypoint
+     *
+     * \return  param2
+     */
+    float param2() const;
+
+    /**
+     * \brief   Gets param3 of the waypoint
+     *
+     * \return  param3
+     */
+    float param3() const;
+
+    /**
+     * \brief   Gets param4 of the waypoint
+     *
+     * \return  param4
+     */
+    float param4() const;
+
+    /**
+     * \brief   Gets the x coordinate of the waypoint
+     *
+     * \return  x
+     */
+    double x() const;
+
+    /**
+     * \brief   Gets the y coordinate of the waypoint
+     *
+     * \return  y
+     */
+    double y() const;
+
+    /**
+     * \brief   Gets the z coordinate of the waypoint
+     *
+     * \return  z
+     */
+    double z() const;
+
+    /**
      * \brief   Gets the waypoint in local coordinates
      *
      * \return  Local waypoint position

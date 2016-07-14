@@ -52,32 +52,32 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_hold_position::Mission_planner_handler_hold_position(   Navigation& navigation_,
-                                                                                State& state_):
-            state_(state_)
-            navigation_(navigation_)
+Mission_planner_handler_hold_position::Mission_planner_handler_hold_position(   Navigation& navigation,
+                                                                                State& state):
+            navigation_(navigation),
+            state_(state)
 {
 
 }
 
 Mission_planner_handler_hold_position::handle(Mission_planner& mission_planner)
 {
-    mav_mode_t mode_local = state_.mav_mode();
+    Mav_mode mode_local = state_.mav_mode();
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        dubin_state_machine(&(mission_planner.waypoint_hold_coordinates));
+        mission_planner.dubin_state_machine(&(mission_planner.waypoint_hold_coordinates));
     }
 
     navigation_.goal = mission_planner.waypoint_hold_coordinates;
 
-    if (mav_modes_is_auto(mode_local))
+    if (mode_local.is_auto())
     {
         print_util_dbg_print("Switching to NAV_NAVIGATING from NAV_HOLD_POSITION\r\n");
         navigation_.dubin_state = DUBIN_INIT;
         navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
     }
-    else if (!mav_modes_is_guided(mode_local))
+    else if (mode_local.is_manual())
     {
         print_util_dbg_print("Switching to Navigation::NAV_MANUAL_CTRL from Navigation::NAV_HOLD_POSITION\r\n");
         navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;

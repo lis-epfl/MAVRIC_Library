@@ -72,30 +72,29 @@ void Mission_planner_handler_stop_there::stopping_handler(Mission_planner& missi
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_stop_there::Mission_planner_handler_stop_there( Position_estimation& position_estimation_,
-                                                                        Navigation& navigation_,
-                                                                        State& state_):
-            position_estimation_(position_estimation_),
-            state_(state_),
-            navigation_(navigation_)
+Mission_planner_handler_stop_there::Mission_planner_handler_stop_there( Position_estimation& position_estimation,
+                                                                        Navigation& navigation,
+                                                                        State& state):
+            position_estimation_(position_estimation),
+            navigation_(navigation),
+            state_(state)
 {
 
 }
 
 Mission_planner_handler_stop_on_position::handle(Mission_planner& mission_planner)
 {
-    mav_mode_t mode_local = state_.mav_mode();
+    Mav_mode mode_local = state_.mav_mode();
 
     stopping_handler();
-
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        dubin_state_machine(&(mission_planner.waypoint_hold_coordinates));
+        mission_planner.dubin_state_machine(&waypoint_hold_coordinates);
     }
 
     navigation_.goal = mission_planner.waypoint_hold_coordinates;
 
-    if ((!mav_modes_is_auto(mode_local)) && (!mav_modes_is_guided(mode_local)))
+    if (mode_local.is_manual())
     {
         navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
     }

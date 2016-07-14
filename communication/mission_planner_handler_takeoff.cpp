@@ -56,6 +56,7 @@ extern "C"
 bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_planner)
 {
     bool result = false;
+    float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
 
     if (!mission_planner.hold_waypoint_set())
     {
@@ -64,29 +65,31 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
         print_util_dbg_print(", ");
         print_util_dbg_print_num(position_estimation_.local_position.pos[Y], 10);
         print_util_dbg_print(", ");
-        print_util_dbg_print_num(-10.0f, 10);
+        print_util_dbg_print_num(navigation_.takeoff_altitude, 10);
         print_util_dbg_print("), with heading of: ");
         print_util_dbg_print_num((int32_t)(position_estimation_.local_position.heading * 180.0f / 3.14f), 10);
         print_util_dbg_print("\r\n");
 
-        mission_planner.waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
-        mission_planner.waypoint_hold_coordinates.waypoint.pos[Z] = navigation_.takeoff_altitude;
+        local_position_t takeoff_pos = position_estimation_.local_position;
+        takeoff_pos.pos[Z] = navigation_.takeoff_altitude;
 
         aero_attitude_t aero_attitude;
         aero_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
-        mission_planner.waypoint_hold_coordinates.waypoint.heading = aero_attitude.rpy[2];
+        takeoff_pos.heading = aero_attitude.rpy[2];
+
+        mission_planner.waypoint_hold_coordinates.set_local_pos(takeoff_pos);
 
         navigation_.dist2wp_sqr = mission_planner.waypoint_hold_coordinates.waypoint.pos[Z] * mission_planner.waypoint_hold_coordinates.waypoint.pos[Z];
 
         mission_planner.set_hold_waypoint_set(true);
     }
 
-    if (mode_change())
+    if (mission_planner.mode_change())
     {
         switch(navigation_.navigation_strategy)
         {
             case Navigation::strategy_t::DIRECT_TO:
-               if (navigation_.dist2wp_sqr <= 16.0f)
+               if (navigation_.dist2wp_sqr <= waypoint_radius)
                 {
                     result = true;
                 }
@@ -95,7 +98,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
             case Navigation::strategy_t::DUBIN:
                 if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
                 {
-                    if (navigation_.dist2wp_sqr <= 16.0f)
+                    if (navigation_.dist2wp_sqr <= waypoint_radius)
                     {
                         result = true;
                     }
@@ -113,6 +116,12 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
         if (result)
         {
             navigation_.dubin_state = DUBIN_INIT;
+            /*
+            if (!state_.nav_plan_active)
+            {
+                waypoint_coordinates_ = mission_planner.waypoint_hold_coordinates;
+                waypoint_coordinates_.radius = 0.0f;
+            }*/
 
             print_util_dbg_print("Automatic take-off finished.\r\n");
         }
@@ -145,16 +154,15 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Position_estimation& position_estimation_,
-                                                                    Navigation& navigation_,
-                                                                    const ahrs_t& ahrs_,
-                                                                    State& state_,
+Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Position_estimation& position_estimation,
+                                                                    Navigation& navigation,
+                                                                    const ahrs_t& ahrs,
+                                                                    State& state,
                                                                     Mavlink_message_handler& message_handler):
-            position_estimation_(position_estimation_),
-            state_(state_),
-            ahrs_(ahrs_),
-            navigation_(navigation_),
-            manual_control_(manual_control_)
+            position_estimation_(position_estimation),
+            navigation_(navigation),
+            ahrs_(ahrs),
+            state_(state)
 {
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;
@@ -170,24 +178,25 @@ Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Position_est
 
 Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
 {
-    mav_mode_t mode_local = state_.mav_mode();
+    Mav_mode mode_local = state_.mav_mode();
 
-    takeoff_result = take_off_handler();
+    bool takeoff_result = take_off_handler();
+
     navigation_.goal = mission_planner.waypoint_hold_coordinates;
 
     if (takeoff_result)
     {
-        if (mav_modes_is_auto(mode_local))
+        if (mode_local.is_auto())
         {
             navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
         }
-        else if (mav_modes_is_guided(mode_local))
+        else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
         {
             navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
         }
     }
 
-    if ((!mav_modes_is_guided(mode_local)) && (!mav_modes_is_auto(mode_local)))
+    if (mode_local.is_manual())
     {
         print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_TAKEOFF\r\n");
         navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;

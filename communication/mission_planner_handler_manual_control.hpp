@@ -66,8 +66,8 @@ public:
      * \param   state                   The reference to the state structure
      */
      Mission_planner_handler_manual_control(    Position_estimation& position_estimation,
-                                                Navigation& navigation_,
-                                                State& state_);
+                                                Navigation& navigation,
+                                                State& state);
 
 
     /**

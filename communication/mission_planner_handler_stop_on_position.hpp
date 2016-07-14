@@ -62,8 +62,8 @@ public:
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      */
-     Mission_planner_handler_stop_on_position(  Navigation& navigation_,
-                                                State& state_);
+     Mission_planner_handler_stop_on_position(  Navigation& navigation,
+                                                State& state);
 
 
     /**
