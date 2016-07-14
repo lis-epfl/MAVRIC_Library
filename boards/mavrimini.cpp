@@ -79,6 +79,7 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     red_led_gpio(config.red_led_gpio_config),
     green_led(green_led_gpio),
     red_led(red_led_gpio),
+    state_display_mavrimini_(green_led, red_led),
     file_flash(),
     serial_1(config.serial_1_config),
     serial_2(config.serial_2_config),
@@ -106,8 +107,7 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     servo_7(pwm_7, config.servo_config[7]),
     sim_model(servo_0, servo_1, servo_2, servo_3),
     sim(sim_model),
-    imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer()),
-    state_display_mavrimini_(green_led, red_led)
+    imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer())
 {}
 
 

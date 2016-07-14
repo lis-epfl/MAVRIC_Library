@@ -48,6 +48,7 @@
 #include "hal/dummy/gpio_dummy.hpp"
 #include "hal/dummy/serial_dummy.hpp"
 #include "drivers/spektrum_satellite.hpp"
+#include "drivers/state_display_mavrinux.hpp"
 
 #include "simulation/simulation.hpp"
 #include "simulation/dynamic_model_quad_diag.hpp"
@@ -151,6 +152,8 @@ public:
     Serial_linux_io     debug_serial;
 
     File_linux          file_flash;
+
+    State_display_mavrinux  state_display_mavrinux_;
 
 private:
     mavrinux_conf_t config_;        ///< Configuration

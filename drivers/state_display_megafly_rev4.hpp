@@ -55,7 +55,7 @@ class State_display_megafly_rev4 : public State_display
 
 	 /**
      * \brief   Main update function
-     * \detail  Reads new state 
+     * \detail  Displays state 
      *
      * \return  Success
      */

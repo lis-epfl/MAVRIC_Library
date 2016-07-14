@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Jean-François Burnier
  *
- * \brief Interface class for state display for ???
+ * \brief Interface class for state display for linux sim
  *
  ******************************************************************************/
 
@@ -43,7 +43,6 @@
 #define STATE_DISPLAY_MAVRINUX_HPP_
 
 #include "drivers/state_display.hpp"
-#include "hal/common/led.hpp"
 
 class State_display_mavrinux : public State_display
 {
@@ -51,20 +50,14 @@ class State_display_mavrinux : public State_display
 	 /**
      * \brief Constructor
      */
-	State_display_mavrinux(Led& led);
-
+	State_display_mavrinux();
 	 /**
      * \brief   Main update function
-     * \detail  Reads new state 
+     * \detail  Displays state 
      *
      * \return  Success
      */
-	bool update();
-
-	private:
-		Led& led_;
-		
-
+	bool update(void);
 
 };
 

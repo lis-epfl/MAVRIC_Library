@@ -55,10 +55,8 @@ State_display_mavrimini::State_display_mavrimini(Led& led_green, Led& led_red) :
 
 bool State_display_mavrimini::update()
 {
-	state_ = *state_ptr_;
 	bool init = state_old_ != state_;
-
-	//piezo_speaker_quick_startup();
+	state_ = *state_ptr_;
 
 	switch(state_)
  	{

@@ -41,13 +41,9 @@
 
 #include "drivers/state_display_megafly_rev4.hpp"
 
-extern "C"
-{
-	#include "hal/piezo_speaker.h"
-}
-
-//State_display_megafly_rev4::State_display_megafly_rev4(Led& led_green, Led& led_red) : State_display(), led_green_(led_green), led_red_(led_red), idle_(0)
-//{}
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 State_display_megafly_rev4::State_display_megafly_rev4(Led& led_green, Led& led_red) : led_green_(led_green), led_red_(led_red)
 {
@@ -59,10 +55,8 @@ State_display_megafly_rev4::State_display_megafly_rev4(Led& led_green, Led& led_
 
 bool State_display_megafly_rev4::update(void)
 {
-	state_ = *state_ptr_;
 	bool init = state_old_ != state_;
-
-	//piezo_speaker_quick_startup();
+	state_ = *state_ptr_;
 
 	switch(state_)
  	{

@@ -35,37 +35,60 @@
  * \author MAV'RIC Team
  * \author Jean-François Burnier
  *
- * \brief Interface class for state display for ???
+ * \brief Interface class for state display for linux sim
  *
  ******************************************************************************/
 
  #include "drivers/state_display_mavrinux.hpp"
+ #include "util/print_util.h"
 
-State_display_mavrinux::State_display_mavrinux(Led& led) : State_display(), led_(led)
-{}
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-bool State_display_mavrinux::update()
+State_display_mavrinux::State_display_mavrinux()
 {
-	switch(state_)
- 	{
- 		case MAV_STATE_CALIBRATING:
- 			break;
+	state_ 	   	= MAV_STATE_CALIBRATING;
+	state_old_ 	= MAV_STATE_ACTIVE;
+	state_ptr_ 	= NULL;
+	idle_ 		= 0;
+}
 
- 		case MAV_STATE_STANDBY:
- 			break;
+bool State_display_mavrinux::update(void)
+{
+	bool init = state_old_ != state_;
+	state_ = *state_ptr_;
 
- 		case MAV_STATE_ACTIVE:
- 			break;
+	if(init)
+	{
+		print_util_dbg_print("Mav entering new state:\t");
 
- 		case MAV_STATE_CRITICAL:
- 			break;
+		switch(state_)
+	 	{
+	 		case MAV_STATE_CALIBRATING:
+	 			print_util_dbg_print("Calibrating\n");
+	 			break;
 
- 		case MAV_STATE_EMERGENCY:
- 			break;
+	 		case MAV_STATE_STANDBY:
+	 			print_util_dbg_print("Standby\n");
+	 			break;
 
- 		default:
- 			break;
+	 		case MAV_STATE_ACTIVE:
+	 			print_util_dbg_print("Active\n");
+	 			break;
+
+	 		case MAV_STATE_CRITICAL:
+	 			print_util_dbg_print("Critical\n");
+	 			break;
+
+	 		case MAV_STATE_EMERGENCY:
+	 			print_util_dbg_print("Emergency\n");
+
+	 		default:
+	 			break;
+	 	}
  	}
 
+ 	state_old_ = state_;
  	return true;
 }

@@ -74,7 +74,6 @@
 #include "drivers/sonar.hpp"
 #include "drivers/servos_telemetry.hpp"
 #include "drivers/state_display.hpp"
-   #include "drivers/state_display_megafly_rev4.hpp"
 
 #include "hal/common/file.hpp"
 #include "hal/common/led.hpp"

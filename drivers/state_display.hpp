@@ -44,13 +44,6 @@
 
 #include "communication/mav_modes.hpp"
 
-/*
-extern "C"
-{
-    #include "libs/mavlink/include/common/mavlink.h"
-}
-*/
-
 /**
  * \brief   Interface class for state display
  */
@@ -58,26 +51,12 @@ class State_display
 {
 	public:
 	 /**
-     * \brief Constructor
-     */
-    //State_display();
-
-	 /**
      * \brief   Main update function
-     * \detail  Reads new state 
+     * \detail  Displays state 
      *
      * \return  Success
      */
-    //virtual bool update(void){return true;};
     virtual bool update(void) = 0;
-
-    /**
-     * \brief   Set new state
-     * \param   new_state  new state of MAV
-     *
-     * \return  Success
-     */
-    //bool set_state(mav_state_t state_new);
 
     mav_state_t* state_ptr_;
 
