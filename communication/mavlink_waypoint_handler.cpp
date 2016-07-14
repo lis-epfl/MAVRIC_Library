@@ -42,6 +42,7 @@
 
 
 #include "communication/mavlink_waypoint_handler.hpp"
+#include "communication/mission_planner.hpp"
 #include <cstdlib>
 #include "hal/common/time_keeper.hpp"
 
@@ -111,13 +112,13 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
             if (waypoint_handler->sending_waypoint_num_ < waypoint_handler->waypoint_count_)
             {
                 uint8_t isCurrent = 0;
-                if (    sending_waypoint_num_ == current_waypoint_index_ && // This is the current waypoint
-                        !mission_planner_.waiting_at_waypoint())             // And we are en route
+                if (    waypoint_handler->sending_waypoint_num_ == waypoint_handler->current_waypoint_index_ && // This is the current waypoint
+                        !waypoint_handler->mission_planner_.waiting_at_waypoint())             // And we are en route
                 {
                     isCurrent = 1;
                 }
 
-                waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].send_waypoint(sysid, msg, packet.seq, isCurrent);
+                waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].send(sysid, msg, packet.seq, isCurrent);
 
                 print_util_dbg_print("Sending waypoint ");
                 print_util_dbg_print_num(waypoint_handler->sending_waypoint_num_, 10);
@@ -214,7 +215,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
     {
         waypoint_handler->start_timeout_ = time_keeper_get_ms();
 
-        Waypoint new_waypoint(mavlink_stream_, packet);
+        Waypoint new_waypoint(&waypoint_handler->mavlink_stream_, packet);
 
         print_util_dbg_print("New waypoint received ");
         //print_util_dbg_print("(");
@@ -301,7 +302,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                         waypoint_handler->waypoint_receiving_ = false;
                         waypoint_handler->waypoint_onboard_count_ = waypoint_handler->waypoint_count_;
 
-                        waypoint_handler->start_wpt_time_ = time_keeper_get_ms();
+                        waypoint_handler->mission_planner_.set_start_wpt_time();
 
                         waypoint_handler->state_.nav_plan_active = false;
                         waypoint_handler->nav_plan_init();
@@ -366,7 +367,7 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
     {
         if (packet.seq < waypoint_handler->waypoint_count_)
         {
-            current_waypoint_index_ = packet.seq;
+            waypoint_handler->current_waypoint_index_ = packet.seq;
 
             mavlink_message_t _msg;
             mavlink_msg_mission_current_pack(sysid,
@@ -379,7 +380,7 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
             print_util_dbg_print_num(packet.seq, 10);
             print_util_dbg_print("\r\n");
 
-            waypoint_handler->start_wpt_time_ = time_keeper_get_ms();
+            waypoint_handler->mission_planner_.set_start_wpt_time();
 
             waypoint_handler->state_.nav_plan_active = false;
             waypoint_handler->nav_plan_init();
@@ -398,7 +399,7 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
     } //end of if this message is for this system and subsystem
 }
 
-mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mavlink_waypoint_handler::set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result;
     uint16_t new_current = 0;
@@ -407,7 +408,7 @@ mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mavlink_waypoi
 
     if (new_current < waypoint_handler->waypoint_count_)
     {
-        current_waypoint_index_ = new_current;
+        waypoint_handler->current_waypoint_index_ = new_current;
 
         mavlink_message_t msg;
         mavlink_msg_mission_current_pack(waypoint_handler->mavlink_stream_.sysid(),
@@ -420,7 +421,7 @@ mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mavlink_waypoi
         print_util_dbg_print_num(new_current, 10);
         print_util_dbg_print("\r\n");
 
-        waypoint_handler->start_wpt_time_ = time_keeper_get_ms();
+        waypoint_handler->mission_planner_.set_start_wpt_time();
 
         waypoint_handler->state_.nav_plan_active = false;
         waypoint_handler->nav_plan_init();
@@ -435,7 +436,7 @@ mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mavlink_waypoi
     return result;
 }
 
-void Mavlink_waypoint_handler::clear_waypoint_list_(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_mission_clear_all_t packet;
 
@@ -471,12 +472,11 @@ void Mavlink_waypoint_handler::clear_waypoint_list_(Mavlink_waypoint_handler* wa
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_planner, State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_planner, Position_estimation& position_estimation, Navigation& navigation, State& state_, Mavlink_message_handler& message_handler, Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
-            hold_waypoint_set_(false),
-            start_wpt_time_(time_keeper_get_ms()),
             mavlink_stream_(mavlink_stream_),
+            position_estimation_(position_estimation),
             state_(state_),
             mission_planner_(mission_planner),
             navigation_(navigation),
@@ -532,7 +532,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_plan
     callback.message_id     = MAVLINK_MSG_ID_MISSION_CLEAR_ALL; // 45
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &clear_waypoint_list_;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &clear_waypoint_list;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler.add_msg_callback(&callback);
 
@@ -581,26 +581,27 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     float y,
     float z
     */
-    Waypoint waypoint(  mavlink_stream_,
+    Waypoint waypoint(  &mavlink_stream_,
                         MAV_FRAME_LOCAL_NED,
                         MAV_CMD_NAV_WAYPOINT,
                         0,
-                        10,
-                        2,
-                        0,
-                        0,
+                        10.0f,
                         0.0f,
                         0.0f,
-                        -config_.auto_take_off_altitude);
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        navigation_.takeoff_altitude);
 
     waypoint_count_ = 1;
     waypoint_onboard_count_ = waypoint_count_;
+    mission_planner_.set_waiting_at_waypoint(false);
     current_waypoint_index_ = 0;
 
     waypoint_list_[0] = waypoint;
 }
 
-const Waypoint& Mavlink_waypoint_handler::current_waypoint() const
+Waypoint& Mavlink_waypoint_handler::current_waypoint()
 {
     // If it is a good index
     if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
@@ -614,7 +615,7 @@ const Waypoint& Mavlink_waypoint_handler::current_waypoint() const
     }
 }
 
-const Waypoint* Mavlink_waypoint_handler::next_waypoint() const
+Waypoint& Mavlink_waypoint_handler::next_waypoint()
 {
     // If it is a good index
     if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
@@ -658,12 +659,16 @@ void Mavlink_waypoint_handler::nav_plan_init()
 {
     float rel_pos[3];
 
-    if (    (position_estimation_.init_gps_position || mav_modes_is_hil(state_.mav_mode()))
+    if (    (position_estimation_.init_gps_position || state_.mav_mode().is_hil())
             && (waypoint_receiving_ == false)
             && (!state_.nav_plan_active))
     {
-        waypoint_list_[current_waypoint_index_].convert_to_waypoint_local_struct(   position_estimation_.local_position.origin,
+        waypoint_list_[current_waypoint_index_].calculate_waypoint_local_structure( position_estimation_.local_position.origin,
                                                                                     &navigation_.dubin_state);
+
+        print_util_dbg_print("Waypoint Nr");
+        print_util_dbg_print_num(current_waypoint_index_, 10);
+        print_util_dbg_print(" set,\r\n");
 
         state_.nav_plan_active = true;
 
@@ -711,11 +716,6 @@ void Mavlink_waypoint_handler::update_current_waypoint(global_position_t origin,
         print_util_dbg_print_num(current_waypoint_index_, 10);
         print_util_dbg_print(" set,\r\n");
     }
-}
-
-uint16_t Mavlink_waypoint_handler::waypoint_count() const
-{
-    return waypoint_count_;
 }
 
 uint16_t Mavlink_waypoint_handler::current_waypoint_index() const

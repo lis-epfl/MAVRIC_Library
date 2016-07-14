@@ -56,20 +56,20 @@ extern "C"
 Mission_planner_handler_stop_on_position::Mission_planner_handler_stop_on_position( Navigation& navigation,
                                                                                     State& state):
             navigation_(navigation),
-            state_(state),
+            state_(state)
 {
 
 }
 
-Mission_planner_handler_stop_on_position::handle(Mission_planner& mission_planner)
+void Mission_planner_handler_stop_on_position::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        dubin_state_machine(&waypoint_hold_coordinates);
+        mission_planner.dubin_state_machine(&mission_planner.waypoint_hold_coordinates);
     }
-    mission_planner.navigation_.goal = waypoint_hold_coordinates;
+    navigation_.goal = mission_planner.waypoint_hold_coordinates;
 
     if ( mode_local.is_manual())
     {

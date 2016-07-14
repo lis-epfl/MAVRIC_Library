@@ -62,7 +62,7 @@ Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( 
 
 }
 
-Mission_planner_handler_manual_control::handle(Mission_planner& mission_planner)
+void Mission_planner_handler_manual_control::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
 
@@ -73,11 +73,11 @@ Mission_planner_handler_manual_control::handle(Mission_planner& mission_planner)
     else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
     {
         print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
-        hold_init(position_estimation_.local_position);
+        mission_planner.hold_init(position_estimation_.local_position);
         navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
     }
 
     navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-    critical_next_state_ = false;
+    mission_planner.set_critical_next_state(false);
     navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
 }

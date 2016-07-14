@@ -79,7 +79,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
 
         mission_planner.waypoint_hold_coordinates.set_local_pos(takeoff_pos);
 
-        navigation_.dist2wp_sqr = mission_planner.waypoint_hold_coordinates.waypoint.pos[Z] * mission_planner.waypoint_hold_coordinates.waypoint.pos[Z];
+        navigation_.dist2wp_sqr = mission_planner.waypoint_hold_coordinates.local_pos().pos[Z] * mission_planner.waypoint_hold_coordinates.local_pos().pos[Z];
 
         mission_planner.set_hold_waypoint_set(true);
     }
@@ -138,7 +138,7 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
     {
         print_util_dbg_print("Starting automatic take-off from button\r\n");
         takeoff_handler->navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
-        takeoff_handler->mission_planner.set_hold_waypoint_set(false);
+        takeoff_handler->mission_planner_.set_hold_waypoint_set(false);
 
         result = MAV_RESULT_ACCEPTED;
     }
@@ -154,16 +154,20 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Position_estimation& position_estimation,
+Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Mission_planner& mission_planner,
+                                                                    Position_estimation& position_estimation,
                                                                     Navigation& navigation,
                                                                     const ahrs_t& ahrs,
                                                                     State& state,
                                                                     Mavlink_message_handler& message_handler):
+            mission_planner_(mission_planner),
             position_estimation_(position_estimation),
             navigation_(navigation),
             ahrs_(ahrs),
             state_(state)
 {
+    bool init_success = true;
+
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;
 
@@ -174,13 +178,18 @@ Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Position_est
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_takeoff;
     callbackcmd.module_struct =                                 this;
     init_success &= message_handler.add_cmd_callback(&callbackcmd);
+
+    if(!init_success)
+    {
+        print_util_dbg_print("[MISSION_PLANNER_HANDLER_TAKEOFF] constructor: ERROR\r\n");
+    }
 }
 
-Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
+void Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
 
-    bool takeoff_result = take_off_handler();
+    bool takeoff_result = take_off_handler(mission_planner);
 
     navigation_.goal = mission_planner.waypoint_hold_coordinates;
 

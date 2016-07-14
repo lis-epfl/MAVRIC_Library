@@ -43,9 +43,9 @@
 #ifndef MISSION_PLANNER_HANDLER_LANDING__
 #define MISSION_PLANNER_HANDLER_LANDING__
 
+#include "communication/mavlink_message_handler.hpp"
 #include "communication/mission_planner_handler.hpp"
 #include "communication/state.hpp"
-#include "communication/mavlink_message_handler.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 #include "sensing/position_estimation.hpp"
@@ -62,12 +62,14 @@ public:
     /**
      * \brief   Initialize the landing mission planner handler
      *
-     * \param   position_estimation     The pointer to the position estimator structure
+     * \param   mission_planner         The reference to the mission planner
+     * \param   position_estimation     The reference to the position estimator structure
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      * \param   message_handler         The reference to the mavlink message handler
      */
-     Mission_planner_handler_landing(   Position_estimation& position_estimation,
+     Mission_planner_handler_landing(   Mission_planner& mission_planner,
+                                        Position_estimation& position_estimation,
                                         Navigation& navigation,
                                         State& state,
                                         Mavlink_message_handler& message_handler);
@@ -90,13 +92,14 @@ public:
      * \return  The MAV_RESULT of the command
      */
     static mav_result_t set_auto_landing(Mission_planner_handler_landing* landing_handler, mavlink_command_long_t* packet);
-    
-protected:
-    Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
-    Navigation& navigation_;                                     ///< The reference to the navigation structure
-    State& state_;                                               ///< The reference to the state structure
 
-    bool auto_landing_next_state_;                               ///< Flag to change critical state in its dedicated state machine
+protected:
+    Mission_planner& mission_planner_;                          ///< The reference to the mission planner
+    Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
+    Navigation& navigation_;                                    ///< The reference to the navigation structure
+    State& state_;                                              ///< The reference to the state structure
+
+    bool auto_landing_next_state_;                              ///< Flag to change critical state in its dedicated state machine
 
     /**
      * \brief   Drives the auto-landing navigation behavior

@@ -47,6 +47,9 @@
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
 
+#include "util/coord_conventions.h"
+#include "control/dubin.hpp"
+
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
@@ -55,17 +58,22 @@ class Waypoint
 {
 public:
     /**
-     * \brief   Initialize the waypoint handler
-     *
-     * \param   mavlink_stream          The reference to the MAVLink stream structure
-     * \param   packet                  The received packet for creating a waypoint
+     * \brief   Create a blank constructor
      */
-    Waypoint(const Mavlink_stream& mavlink_stream, mavlink_mission_item_t packet);
+     Waypoint();
 
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   mavlink_stream      The reference to the MAVLink stream structure
+     * \param   mavlink_stream          The pointer to the MAVLink stream structure
+     * \param   packet                  The received packet for creating a waypoint
+     */
+    Waypoint(Mavlink_stream* mavlink_stream, mavlink_mission_item_t& packet);
+
+    /**
+     * \brief   Initialize the waypoint handler
+     *
+     * \param   mavlink_stream      The pointer to the MAVLink stream structure
      * \param   frame               The reference frame of the waypoint
      * \param   command             The MAV_CMD_NAV id of the waypoint
      * \param   autocontinue        Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
@@ -77,7 +85,7 @@ public:
      * \param   y                   The value on the y axis (depends on the reference frame)
      * \param   z                   The value on the z axis (depends on the reference frame)
      */
-    Waypoint(   const Mavlink_stream& mavlink_stream_,
+    Waypoint(   Mavlink_stream* mavlink_stream_,
                 uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
@@ -92,7 +100,7 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   mavlink_stream      The reference to the MAVLink stream structure
+     * \param   mavlink_stream      The pointer to the MAVLink stream structure
      * \param   frame               The reference frame of the waypoint
      * \param   command             The MAV_CMD_NAV id of the waypoint
      * \param   autocontinue        Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
@@ -108,7 +116,7 @@ public:
      * \param   loiter_time         The time to loiter at the waypoint
      * \param   dubin               The dubin structure for the waypoint
      */
-    Waypoint(   const Mavlink_stream& mavlink_stream_,
+    Waypoint(   Mavlink_stream* mavlink_stream_,
                 uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
@@ -217,7 +225,7 @@ public:
      *
      * \return  Local waypoint position
      */
-    local_position_t local_pos() const;
+    local_position_t& local_pos();
 
     /**
      * \brief   Sets the waypoint in local coordinates
@@ -235,6 +243,27 @@ public:
     float radius() const;
 
     /**
+     * \brief   Sets the radius
+     *
+     * \param   radius
+     */
+    void set_radius(float radius);
+
+    /**
+     * \brief   Gets the loiter time of the waypoint
+     *
+     * \return  Loiter time
+     */
+    float loiter_time() const;
+
+    /**
+     * \brief   Sets the loiter time
+     *
+     * \param   loiter time
+     */
+    void set_loiter_time(float loiter_time);
+
+    /**
      * \brief   Gets a reference to the dubin structure
      *
      * \return  Dubin structure for the waypoint
@@ -242,25 +271,25 @@ public:
     dubin_t& dubin();
 
 protected:
-    uint8_t frame_;                                              ///< The reference frame of the waypoint
-    uint16_t command_;                                           ///< The MAV_CMD_NAV id of the waypoint
-    uint8_t autocontinue_;                                       ///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
-    float param1_;                                               ///< Parameter depending on the MAV_CMD_NAV id
-    float param2_;                                               ///< Parameter depending on the MAV_CMD_NAV id
-    float param3_;                                               ///< Parameter depending on the MAV_CMD_NAV id
-    float param4_;                                               ///< Parameter depending on the MAV_CMD_NAV id
-    double x_;                                                   ///< The value on the x axis (depends on the reference frame)
-    double y_;                                                   ///< The value on the y axis (depends on the reference frame)
-    double z_;                                                   ///< The value on the z axis (depends on the reference frame)
+    uint8_t frame_;                                             ///< The reference frame of the waypoint
+    uint16_t command_;                                          ///< The MAV_CMD_NAV id of the waypoint
+    uint8_t autocontinue_;                                      ///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
+    float param1_;                                              ///< Parameter depending on the MAV_CMD_NAV id
+    float param2_;                                              ///< Parameter depending on the MAV_CMD_NAV id
+    float param3_;                                              ///< Parameter depending on the MAV_CMD_NAV id
+    float param4_;                                              ///< Parameter depending on the MAV_CMD_NAV id
+    double x_;                                                  ///< The value on the x axis (depends on the reference frame)
+    double y_;                                                  ///< The value on the y axis (depends on the reference frame)
+    double z_;                                                  ///< The value on the z axis (depends on the reference frame)
 
-    const Mavlink_stream& mavlink_stream_;                      ///< The mavlink stream
+    Mavlink_stream* mavlink_stream_;                            ///< The mavlink stream
 
     // These come from Navigation::waypoint_local_struct_t
     // TODO: Get rid of for more logical structure
-    local_position_t local_pos_;                                  ///< The local coordinates of the waypoint, was called Navigation::waypoint_local_struct_t::waypoint
-    float radius_;                                               ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
-    float loiter_time_;                                          ///< The loiter time at the waypoint
-    dubin_t dubin_;                                              ///< The Dubin structure
+    local_position_t local_pos_;                                ///< The local coordinates of the waypoint, was called Navigation::waypoint_local_struct_t::waypoint
+    float radius_;                                              ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
+    float loiter_time_;                                         ///< The loiter time at the waypoint
+    dubin_t dubin_;                                             ///< The Dubin structure
 };
 
 

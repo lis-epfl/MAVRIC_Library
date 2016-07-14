@@ -49,6 +49,9 @@
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
 #include "communication/waypoint.hpp"
+#include "control/navigation.hpp"
+
+class Mission_planner;
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
@@ -70,7 +73,8 @@ public:
      * \brief   Initialize the waypoint handler
      *
      * \param   mission_planner         The reference to the mission planner
-     * \param   navigation              The pointer to the navigation structure
+     * \param   position_estimation     The reference to the mission planner
+     * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      * \param   message_handler         The reference to the message handler
      * \param   mavlink_stream          The reference to the MAVLink stream structure
@@ -79,10 +83,11 @@ public:
      * \return  True if the init succeed, false otherwise
      */
     Mavlink_waypoint_handler(   Mission_planner& mission_planner,
+                                Position_estimation& position_estimation,
                                 Navigation& navigation,
                                 State& state,
                                 Mavlink_message_handler& message_handler,
-                                const Mavlink_stream& mavlink_stream,
+                                Mavlink_stream& mavlink_stream,
                                 conf_t config = default_config());
 
 
@@ -101,14 +106,14 @@ public:
      *
      * \return current waypoint
      */
-    const Waypoint& current_waypoint() const;
+    Waypoint& current_waypoint();
 
     /**
      * \brief Gets the next waypoint if available
      *
      * \return next waypoint
      */
-    const Waypoint& next_waypoint() const;
+    Waypoint& next_waypoint();
 
     /**
      * \brief   Sets the next waypoint as the current one. Should be called when
@@ -140,13 +145,6 @@ public:
     void update_current_waypoint(global_position_t origin, dubin_state_t* dubin_state);
 
     /**
-     * \brief   Gets the number of waypoints in the waypoint list
-     *
-     * \return  Waypoint count
-     */
-    uint16_t waypoint_count() const;
-
-    /**
      * \brief   Gets the current waypoint index
      *
      * \return  Current waypoint index
@@ -159,10 +157,11 @@ protected:
     uint16_t waypoint_count_;                                   ///< The total number of waypoints
     uint16_t current_waypoint_index_;                           ///< The current waypoint index
 
-    const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
-    State& state_;                                              ///< The reference to the state structure
-    Mission_planner& mission_planner_;                          ///< The reference to the mission planner class
-    Navigation& navigation_;                                    ///< The reference to the navigation class
+    Mavlink_stream& mavlink_stream_;                            ///< The reference to MAVLink stream object
+    Position_estimation& position_estimation_;                  ///< The reference to the position estimation object
+    State& state_;                                              ///< The reference to the state object
+    Mission_planner& mission_planner_;                          ///< The reference to the mission planner object
+    Navigation& navigation_;                                    ///< The reference to the navigation object
 
 private:
 
@@ -178,13 +177,6 @@ private:
 
     conf_t config_;
 
-
-    /**
-     * \brief   Initialise the position hold mode in Dubin navigation
-     *
-     * \param   local_pos               The position where the position will be held
-     */
-    void dubin_hold_init(local_position_t local_pos);
 
     /************************************************
      *      static member functions (callbacks)     *

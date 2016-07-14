@@ -62,7 +62,23 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Waypoint::Waypoint(const Mavlink_stream& mavlink_stream_, mavlink_mission_item_t packet):
+Waypoint::Waypoint() :
+            frame_(MAV_FRAME_LOCAL_NED),
+            command_(MAV_CMD_NAV_WAYPOINT),
+            autocontinue_(0),
+            param1_(10),
+            param2_(2),
+            param3_(0),
+            param4_(0),
+            x_(0.0f),
+            y_(0.0f),
+            z_(0.0f),
+            mavlink_stream_(NULL)
+{
+
+}
+
+Waypoint::Waypoint(Mavlink_stream* mavlink_stream_, mavlink_mission_item_t& packet):
             mavlink_stream_(mavlink_stream_)
 {
     command_ = packet.command;
@@ -72,7 +88,7 @@ Waypoint::Waypoint(const Mavlink_stream& mavlink_stream_, mavlink_mission_item_t
     z_ = packet.z; // altitude
 
     autocontinue_ = packet.autocontinue;
-    frame_ = packet.frame
+    frame_ = packet.frame;
 
     param1_ = packet.param1;
     param2_ = packet.param2;
@@ -89,7 +105,7 @@ Waypoint::Waypoint(const Mavlink_stream& mavlink_stream_, mavlink_mission_item_t
     // dubin_ = ; ????
 }
 
-Waypoint::Waypoint( const Mavlink_stream& mavlink_stream_,
+Waypoint::Waypoint( Mavlink_stream* mavlink_stream_,
                     uint8_t frame,
                     uint16_t command,
                     uint8_t autocontinue,
@@ -122,7 +138,7 @@ Waypoint::Waypoint( const Mavlink_stream& mavlink_stream_,
     // dubin_ = ; ????
 }
 
-Waypoint::Waypoint( const Mavlink_stream& mavlink_stream_,
+Waypoint::Waypoint( Mavlink_stream* mavlink_stream_,
                     uint8_t frame,
                     uint16_t command,
                     uint8_t autocontinue,
@@ -155,31 +171,34 @@ Waypoint::Waypoint( const Mavlink_stream& mavlink_stream_,
 {
 }
 
-void Waypoint::send_waypoint(uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current)
+void Waypoint::send(uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current)
 {
-    //  Prototype of the function "mavlink_msg_mission_item_send" found in mavlink_msg_mission_item.h :
-    // mavlink_msg_mission_item_send (  mavlink_channel_t chan, uint8_t target_system, uint8_t target_component, uint16_t seq,
-    //                                  uint8_t frame, uint16_t command, uint8_t current, uint8_t autocontinue, float param1,
-    //                                  float param2, float param3, float param4, float x, float y, float z)
-    mavlink_message_t _msg;
-    mavlink_msg_mission_item_pack(sysid,
-                                  mavlink_stream_.compid(),
-                                  &_msg,
-                                  msg->sysid,
-                                  msg->compid,
-                                  seq,
-                                  frame_,
-                                  command_,
-                                  current,
-                                  autocontinue_,
-                                  param1_,
-                                  param2_,
-                                  param3_,
-                                  param4_,
-                                  x_,
-                                  y_,
-                                  z_);
-    mavlink_stream_.send(&_msg);
+    if (mavlink_stream_ != NULL)
+    {
+        //  Prototype of the function "mavlink_msg_mission_item_send" found in mavlink_msg_mission_item.h :
+        // mavlink_msg_mission_item_send (  mavlink_channel_t chan, uint8_t target_system, uint8_t target_component, uint16_t seq,
+        //                                  uint8_t frame, uint16_t command, uint8_t current, uint8_t autocontinue, float param1,
+        //                                  float param2, float param3, float param4, float x, float y, float z)
+        mavlink_message_t _msg;
+        mavlink_msg_mission_item_pack(sysid,
+                                      mavlink_stream_->compid(),
+                                      &_msg,
+                                      msg->sysid,
+                                      msg->compid,
+                                      seq,
+                                      frame_,
+                                      command_,
+                                      current,
+                                      autocontinue_,
+                                      param1_,
+                                      param2_,
+                                      param3_,
+                                      param4_,
+                                      x_,
+                                      y_,
+                                      z_);
+        mavlink_stream_->send(&_msg);
+    }
 }
 
 void Waypoint::calculate_waypoint_local_structure(global_position_t origin, dubin_state_t* dubin_state)
@@ -276,7 +295,7 @@ void Waypoint::calculate_waypoint_local_structure(global_position_t origin, dubi
     radius_ = param2_;
     loiter_time_ = param1_;
 
-    *dubin_state_ = DUBIN_INIT;
+    *dubin_state = DUBIN_INIT;
 }
 
 uint16_t Waypoint::command() const
@@ -284,12 +303,12 @@ uint16_t Waypoint::command() const
     return command_;
 }
 
-local_position_t Waypoint::local_pos() const
+local_position_t& Waypoint::local_pos()
 {
     return local_pos_;
 }
 
-void set_local_pos(local_position_t local_pos)
+void Waypoint::set_local_pos(local_position_t local_pos)
 {
     local_pos_ = local_pos;
 }
@@ -297,6 +316,21 @@ void set_local_pos(local_position_t local_pos)
 float Waypoint::radius() const
 {
     return radius_;
+}
+
+void Waypoint::set_radius(float radius)
+{
+    radius_ = radius;
+}
+
+float Waypoint::loiter_time() const
+{
+    return loiter_time_;
+}
+
+void Waypoint::set_loiter_time(float loiter_time)
+{
+    loiter_time_ = loiter_time;
 }
 
 dubin_t& Waypoint::dubin()

@@ -45,6 +45,7 @@
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
@@ -52,6 +53,16 @@
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 #include "control/dubin.hpp"
+
+class Mission_planner_handler_takeoff;
+class Mission_planner_handler_landing;
+class Mission_planner_handler_on_ground;
+class Mission_planner_handler_navigating;
+class Mission_planner_handler_stop_there;
+class Mission_planner_handler_stop_on_position;
+class Mission_planner_handler_takeoff;
+class Mission_planner_handler_manual_control;
+class Mission_planner_handler_hold_position;
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -84,7 +95,7 @@ public:
      * \param   stop_there_handler          The handler for the stop there state
      * \param   navigating_handler          The handler for the navigating state
      * \param   manual_control_handler      The handler for the manual control state
-     * \param   mavlink_waypoint_handler    The handler for the manual control state
+     * \param   waypoint_handler    The handler for the manual control state
      *
      * \return  True if the init succeed, false otherwise
      */
@@ -94,7 +105,7 @@ public:
                         State& state,
                         const Manual_control& manual_control,
                         Mavlink_message_handler& message_handler,
-                        const Mavlink_stream& mavlink_stream,
+                        Mavlink_stream& mavlink_stream,
                         Mission_planner_handler_on_ground& on_ground_handler,
                         Mission_planner_handler_takeoff& takeoff_handler,
                         Mission_planner_handler_landing& landing_handler,
@@ -103,7 +114,7 @@ public:
                         Mission_planner_handler_stop_there& stop_there_handler,
                         Mission_planner_handler_navigating& navigating_handler,
                         Mission_planner_handler_manual_control& manual_control_handler,
-                        Mavlink_waypoint_handler& mavlink_waypoint_handler,
+                        Mavlink_waypoint_handler& waypoint_handler,
                         conf_t config = default_config());
 
 
@@ -130,6 +141,13 @@ public:
     void dubin_state_machine(Waypoint* waypoint_next_);
 
     /**
+     * \brief   Initialise the position hold mode in Dubin navigation
+     *
+     * \param   local_pos               The position where the position will be held
+     */
+    void dubin_hold_init(local_position_t local_pos);
+
+    /**
      * \brief   Check if the nav mode is equal to the state mav mode
      *
      * \return  True if the flag STABILISE, GUIDED and ARMED are equal, false otherwise
@@ -149,6 +167,7 @@ public:
     void set_hold_waypoint_set(bool hold_waypoint_set);
     bool hold_waypoint_set() const;
     Mav_mode last_mode() const;
+    void set_critical_next_state(bool critical_next_state);
 
     /**
      * \brief   Gets a flag stating if the drone is currently waiting at a waypoint
@@ -162,6 +181,17 @@ public:
      */
     void set_waiting_at_waypoint(bool waiting_at_waypoint);
 
+    /**
+     * \brief   Sets the start_wpt_time_ to the current time
+     */
+    void set_start_wpt_time();
+
+    /**
+     * \brief   Gets the time that the drone started to move towards the waypoint
+     *
+     * \return  start_wpt_time
+     */
+    uint32_t start_wpt_time() const;
 protected:
     Mission_planner_handler_on_ground& on_ground_handler_;                  ///< The handler for the on ground state
     Mission_planner_handler_takeoff& takeoff_handler_;                      ///< The handler for the takeoff state
@@ -172,7 +202,7 @@ protected:
     Mission_planner_handler_navigating& navigating_handler_;                ///< The handler for the navigating state
     Mission_planner_handler_manual_control& manual_control_handler_;        ///< The handler for the manual control state
 
-    Mavlink_waypoint_handler& mavlink_waypoint_handler_;        ///< The reference to the mavlink waypoint handler
+    Mavlink_waypoint_handler& waypoint_handler_;        ///< The reference to the mavlink waypoint handler
 
     bool hold_waypoint_set_;                                    ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                   ///< The time at which the MAV starts to travel towards its waypoint
@@ -181,7 +211,7 @@ protected:
     Mav_mode last_mode_;                                        ///< The mode of the MAV to have a memory of its evolution
     Waypoint waypoint_critical_coordinates_;                    ///< Waypoint for the critical state
 
-    const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
+    Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
@@ -236,11 +266,11 @@ protected:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t is_arrived(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t is_arrived(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 };
 
 
-Mission_planner::conf_t Mavlink_waypoint_handler::default_config()
+Mission_planner::conf_t Mission_planner::default_config()
 {
     conf_t conf                                                = {};
 

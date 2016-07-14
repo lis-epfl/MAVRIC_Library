@@ -44,6 +44,15 @@
 #include <cstdlib>
 #include "hal/common/time_keeper.hpp"
 
+#include "communication/mission_planner_handler_takeoff.hpp"
+#include "communication/mission_planner_handler_landing.hpp"
+#include "communication/mission_planner_handler_on_ground.hpp"
+#include "communication/mission_planner_handler_navigating.hpp"
+#include "communication/mission_planner_handler_stop_there.hpp"
+#include "communication/mission_planner_handler_stop_on_position.hpp"
+#include "communication/mission_planner_handler_manual_control.hpp"
+#include "communication/mission_planner_handler_hold_position.hpp"
+
 extern "C"
 {
 #include "util/print_util.h"
@@ -101,7 +110,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
 {
     mav_result_t result;
     bool force_next = false;
-    uint32_t time_from_start_wpt = time_keeper_get_ms() - waypoint_handler->start_wpt_time_;
+    uint32_t time_from_start_wpt = time_keeper_get_ms() - mission_planner->start_wpt_time_;
     uint32_t time_wpt_limit = 5000;
 
     if (packet->param3 == 1)
@@ -122,15 +131,14 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
 
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
 
-        mission_planner->waypoint_handler_.convert_to_waypoint_local_struct(&waypoint_handler->current_waypoint_,
-                                                                            waypoint_handler->position_estimation_.local_position.origin,
-                                                                            &waypoint_handler->navigation_.dubin_state);
+        mission_planner->waypoint_handler_.current_waypoint().calculate_waypoint_local_structure(   mission_planner->position_estimation_.local_position.origin,
+                                                                                                    &mission_planner->navigation_.dubin_state);
 
         mavlink_message_t msg;
         mavlink_msg_mission_current_pack(mission_planner->mavlink_stream_.sysid(),
                                          mission_planner->mavlink_stream_.compid(),
                                          &msg,
-                                         mission_planner->waypoint_handler.current_waypoint_index());
+                                         mission_planner->waypoint_handler_.current_waypoint_index());
         mission_planner->mavlink_stream_.send(&msg);
 
         mission_planner->state_.nav_plan_active = true;
@@ -155,13 +163,13 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
     return result;
 }
 
-mav_result_t Mission_planner::is_arrived(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::is_arrived(Mission_planner* mission_planner, mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
     if (packet->param2 == 32)
     {
-        if (waiting_at_waypoint_)
+        if (mission_planner->waiting_at_waypoint_)
         {
             result = MAV_RESULT_ACCEPTED;
         }
@@ -181,45 +189,38 @@ mav_result_t Mission_planner::is_arrived(Mavlink_waypoint_handler* waypoint_hand
 
 void Mission_planner::state_machine()
 {
-    mav_mode_t mode_local = state_.mav_mode();
-
-    float thrust;
-
-    bool takeoff_result = false;
-    bool new_mode = true;
-
     switch (navigation_.internal_state_)
     {
         case Navigation::NAV_ON_GND:
-            on_ground_handler_.handle(this);
+            on_ground_handler_.handle(*this);
             break;
 
         case Navigation::NAV_TAKEOFF:
-            takeoff_handler_.handle(this);
+            takeoff_handler_.handle(*this);
             break;
 
         case Navigation::NAV_MANUAL_CTRL:
-            manual_control_handler_.handle(this);
+            manual_control_handler_.handle(*this);
             break;
 
         case Navigation::NAV_NAVIGATING:
-            navigating_handler_.handle(this);
+            navigating_handler_.handle(*this);
             break;
 
         case Navigation::NAV_HOLD_POSITION:
-            hold_position_handler_.handle(this);
+            hold_position_handler_.handle(*this);
             break;
 
         case Navigation::NAV_STOP_ON_POSITION:
-            stop_on_position_handler_.handle(this);
+            stop_on_position_handler_.handle(*this);
             break;
 
         case Navigation::NAV_STOP_THERE:
-            stop_there_handler_.handle(this);
+            stop_there_handler_.handle(*this);
             break;
 
         case Navigation::NAV_LANDING:
-            landing_handler_.handle(this);
+            landing_handler_.handle(*this);
             break;
     }
 }
@@ -244,12 +245,12 @@ void Mission_planner::critical_handler()
         }
     }
 
-    if (!(critical_next_state_))
+    if (!critical_next_state_)
     {
-        local_position_t local_critical_pos;
-        local_critical_pos.origin = position_estimation_.origin;
-
         critical_next_state_ = true;
+
+        local_position_t local_critical_pos;
+        local_critical_pos.origin = position_estimation_.local_position.origin;
 
         aero_attitude_t aero_attitude;
         aero_attitude = coord_conventions_quat_to_aero(navigation_.qe);
@@ -259,7 +260,7 @@ void Mission_planner::critical_handler()
         {
             case Navigation::CLIMB_TO_SAFE_ALT:
                 print_util_dbg_print("Climbing to safe alt...\r\n");
-                state_.mav_mode_custom |= CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 
                 local_critical_pos.pos[X] = position_estimation_.local_position.pos[X];
                 local_critical_pos.pos[Y] = position_estimation_.local_position.pos[Y];
@@ -268,8 +269,8 @@ void Mission_planner::critical_handler()
                 break;
 
             case Navigation::FLY_TO_HOME_WP:
-                state_.mav_mode_custom &= ~CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
-                state_.mav_mode_custom |= CUST_CRITICAL_FLY_TO_HOME_WP;
+                state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
 
                 local_critical_pos.pos[X] = 0.0f;
                 local_critical_pos.pos[Y] = 0.0f;
@@ -277,8 +278,8 @@ void Mission_planner::critical_handler()
                 break;
 
             case Navigation::HOME_LAND:
-                state_.mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
-                state_.mav_mode_custom |= CUST_CRITICAL_LAND;
+                state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
+                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
                 local_critical_pos.pos[X] = 0.0f;
                 local_critical_pos.pos[Y] = 0.0f;
@@ -288,9 +289,8 @@ void Mission_planner::critical_handler()
 
             case Navigation::CRITICAL_LAND:
                 print_util_dbg_print("Critical land...\r\n");
-
-                state_.mav_mode_custom &= static_cast<mav_mode_custom_t>(0xFFFFFFE0);
-                state_.mav_mode_custom |= CUST_CRITICAL_LAND;
+                state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
                 local_critical_pos.pos[X] = position_estimation_.local_position.pos[X];
                 local_critical_pos.pos[Y] = position_estimation_.local_position.pos[Y];
@@ -299,13 +299,13 @@ void Mission_planner::critical_handler()
                 break;
         }
 
+        waypoint_critical_coordinates_.set_local_pos(local_critical_pos);
+
         for (uint8_t i = 0; i < 3; i++)
         {
-            rel_pos[i] = local_critical_pos.pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = waypoint_critical_coordinates_.local_pos().pos[i] - position_estimation_.local_position.pos[i];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
-
-        waypoint_critical_coordinates_.set_local_pos(local_critical_pos);
     }
 
     if (navigation_.critical_behavior == Navigation::CRITICAL_LAND || navigation_.critical_behavior == Navigation::HOME_LAND)
@@ -342,11 +342,11 @@ void Mission_planner::critical_handler()
                     //stop auto navigation_, to prevent going out of fence 1 again
                     waypoint_hold_coordinates = waypoint_critical_coordinates_;
                     navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
-                    stopping_handler();
+                    stop_there_handler_.stopping_handler(*this);
                     state_.out_of_fence_1 = false;
                     navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
                     state_.mav_state_ = MAV_STATE_ACTIVE;
-                    state_.mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
+                    state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
                 }
                 else
                 {
@@ -372,7 +372,8 @@ void Mission_planner::critical_handler()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner::Mission_planner(Position_estimation& position_estimation, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_planner_handler& on_ground_handler, Mission_planner_handler_takeoff& takeoff_handler, Mission_planner_handler_landing& landing_handler, Mission_planner_handler_hold_position& hold_position_handler, Mission_planner_handler_stop_on_position& stop_on_position_handler, Mission_planner_handler_stop_there& stop_there_handler, mission_planner_handler_navigating& navigating_handler, Mission_planner_handler_manual_control& manual_control_handler, Mavlink_waypoint_handler& mavlink_waypoint_handler, conf_t config):
+Mission_planner::Mission_planner(Position_estimation& position_estimation, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, Mavlink_stream& mavlink_stream, Mission_planner_handler_on_ground& on_ground_handler, Mission_planner_handler_takeoff& takeoff_handler, Mission_planner_handler_landing& landing_handler, Mission_planner_handler_hold_position& hold_position_handler, Mission_planner_handler_stop_on_position& stop_on_position_handler, Mission_planner_handler_stop_there& stop_there_handler, Mission_planner_handler_navigating& navigating_handler, Mission_planner_handler_manual_control& manual_control_handler, Mavlink_waypoint_handler& waypoint_handler, conf_t config):
+            waypoint_hold_coordinates(),
             on_ground_handler_(on_ground_handler),
             takeoff_handler_(takeoff_handler),
             landing_handler_(landing_handler),
@@ -381,7 +382,7 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
             stop_there_handler_(stop_there_handler),
             navigating_handler_(navigating_handler),
             manual_control_handler_(manual_control_handler),
-            mavlink_waypoint_handler_(mavlink_waypoint_handler),
+            waypoint_handler_(waypoint_handler),
             hold_waypoint_set_(false),
             start_wpt_time_(time_keeper_get_ms()),
             waiting_at_waypoint_(false),
@@ -400,7 +401,7 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
     // Create blank critical waypoint
     local_position_t local_pos;
     local_pos.heading = 0.0f;
-    local_pos.origin = position_estimation_.origin;
+    local_pos.origin = position_estimation_.local_position.origin;
     dubin_t dub;
     for (int i = 0; i < 3; i++)
     {
@@ -414,7 +415,7 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
     dub.sense_1 = 0;
     dub.radius_1 = 0;
     dub.length = 0.0f;
-    waypoint_critical_coordinates_ = Waypoint(mavlink_stream, MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10, 2, 0, 0, 0.0f, 0.0f, 0.0f, local_pos, 2.0f, 0.0f, dub);
+    waypoint_critical_coordinates_ = Waypoint(&mavlink_stream, MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, local_pos, 2.0f, 0.0f, dub);
 
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
@@ -449,14 +450,12 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
     {
         print_util_dbg_print("[MISSION_PLANNER] constructor: ERROR\r\n");
     }
-
-    waypoint_critical_coordinates_
 }
 
 
 bool Mission_planner::update(Mission_planner* mission_planner)
 {
-    mav_mode_t mode_local = mission_planner->state_.mav_mode();
+    Mav_mode mode_local = mission_planner->state_.mav_mode();
 
 
     switch (mission_planner->state_.mav_state_)
@@ -483,7 +482,7 @@ bool Mission_planner::update(Mission_planner* mission_planner)
 
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mav_modes_is_stabilize(mode_local))
+            if (mode_local.is_guided())
             {
                 if ((mission_planner->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (mission_planner->navigation_.internal_state_ == Navigation::NAV_LANDING))
                 {
@@ -523,9 +522,9 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
     {
         case DUBIN_INIT:
             print_util_dbg_print("DUBIN_INIT\r\n");
-            if (state_.nav_plan_active)
+            if (state_.nav_plan_active && (navigation_.goal.radius() >= navigation_.minimal_radius))
             {
-                init_radius = maths_f_abs(navigation_.goal.radius);
+                init_radius = maths_f_abs(navigation_.goal.radius());
             }
             else
             {
@@ -558,13 +557,23 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
             {
                 vectors_normalize(rel_pos,rel_pos_norm);
 
-                dir_final[X] = -rel_pos_norm[Y]*next_waypoint->radius();
-                dir_final[Y] =  rel_pos_norm[X]*next_waypoint->radius();
+                float end_radius;
+                if (next_waypoint->radius() < navigation_.minimal_radius)
+                {
+                    end_radius = navigation_.minimal_radius;
+                }
+                else
+                {
+                    end_radius = next_waypoint->radius();
+                }
+
+                dir_final[X] = -rel_pos_norm[Y]*end_radius;
+                dir_final[Y] = rel_pos_norm[X]*end_radius;
                 dir_final[Z] = 0.0f;
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    pos_goal[i] = next_waypoint->local_pos().pos[i] + rel_pos_norm[i]*maths_f_abs(next_waypoint->radius());
+                    pos_goal[i] = next_waypoint->local_pos().pos[i] + rel_pos_norm[i]*maths_f_abs(end_radius);
                 }
                 pos_goal[Z] = 0.0f;
 
@@ -572,7 +581,7 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
                                                     pos_goal,
                                                     dir_init,
                                                     dir_final,
-                                                    maths_sign(waypoint_next_->radius));
+                                                    maths_sign(end_radius));
 
                 navigation_.dubin_state = DUBIN_CIRCLE1;
             }
@@ -593,6 +602,7 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
 
             break;
         case DUBIN_CIRCLE1:
+            //print_util_dbg_print("DUBIN_CIRCLE1\r\n");
             for (uint8_t i = 0; i < 2; ++i)
             {
                 rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - position_estimation_.local_position.pos[i];
@@ -606,6 +616,7 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
             }
             break;
         case DUBIN_STRAIGHT:
+            //print_util_dbg_print("DUBIN_STRAIGHT\r\n");
             for (uint8_t i = 0; i < 2; ++i)
             {
                 rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - position_estimation_.local_position.pos[i];
@@ -618,13 +629,101 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
             }
 
         case DUBIN_CIRCLE2:
+            //print_util_dbg_print("DUBIN_CIRCLE2\r\n");
+        break;
+    }
+}
+
+void Mission_planner::hold_init(local_position_t local_pos)
+{
+    hold_waypoint_set_ = true;
+
+    waypoint_hold_coordinates.local_pos() = local_pos;
+
+    // New waypoint with minimal radius
+    waypoint_hold_coordinates.set_radius(navigation_.minimal_radius);
+    navigation_.dubin_state = DUBIN_INIT;
+
+    print_util_dbg_print("Position hold at: (");
+    print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[X], 10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Y], 10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Z], 10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.local_pos().heading * 180.0f / 3.14f), 10);
+    print_util_dbg_print(")\r\n");
+}
+
+void Mission_planner::dubin_hold_init(local_position_t local_pos)
+{
+    switch (navigation_.dubin_state)
+    {
+        case DUBIN_INIT:
+        case DUBIN_CIRCLE1:
+            // Staying on the waypoint
+            for (int i = 0; i < 3; ++i)
+            {
+                waypoint_hold_coordinates.dubin().circle_center_2[i] = navigation_.goal.dubin().circle_center_1[i];
+            }
+
+            waypoint_hold_coordinates.set_radius(navigation_.goal.dubin().radius_1);
+
+            navigation_.dubin_state = DUBIN_CIRCLE2;
+
+            print_util_dbg_print("DUBINCIRCLE1: Position hold at: (");
+            print_util_dbg_print_num(waypoint_hold_coordinates.dubin().circle_center_2[X],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_hold_coordinates.dubin().circle_center_2[Y],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_hold_coordinates.dubin().circle_center_2[Z],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.local_pos().heading*180.0f/3.14f),10);
+            print_util_dbg_print(")\r\n");
+        break;
+
+        case DUBIN_STRAIGHT:
+            navigation_.dubin_state = DUBIN_INIT;
+            waypoint_hold_coordinates.local_pos() = local_pos;
+
+            waypoint_hold_coordinates.set_loiter_time(0.0f);
+            waypoint_hold_coordinates.set_radius(navigation_.minimal_radius);
+
+            print_util_dbg_print("DUBINSTRAIGHT: Position hold at: (");
+            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[X],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Y],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Z],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.local_pos().heading*180.0f/3.14f),10);
+            print_util_dbg_print(")\r\n");
+        break;
+
+        case DUBIN_CIRCLE2:
+            // Staying on the waypoint
+            /*if (state_.nav_plan_active)
+            {
+                waypoint_hold_coordinates = navigation_.goal;
+            }*/
+            waypoint_hold_coordinates = navigation_.goal;
+
+            print_util_dbg_print("DUBIN_CIRCLE2: Position hold at: (");
+            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[X],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Y],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Z],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.local_pos().heading*180.0f/3.14f),10);
+            print_util_dbg_print(")\r\n");
         break;
     }
 }
 
 bool Mission_planner::mode_change()
 {
-    return mav_modes_are_equal_autonomous_modes(state_.mav_mode(), last_mode_);
+    return state_.mav_mode().ctrl_mode() == last_mode_.ctrl_mode();
 }
 
 void Mission_planner::set_hold_waypoint_set(bool hold_waypoint_set)
@@ -642,12 +741,27 @@ bool Mission_planner::waiting_at_waypoint() const
     return waiting_at_waypoint_;
 }
 
-void set_waiting_at_waypoint(bool waiting_at_waypoint)
+void Mission_planner::set_waiting_at_waypoint(bool waiting_at_waypoint)
 {
     waiting_at_waypoint_ = waiting_at_waypoint;
 }
 
-Mav_mode last_mode() const
+Mav_mode Mission_planner::last_mode() const
 {
     return last_mode_;
+}
+
+void Mission_planner::set_start_wpt_time()
+{
+    start_wpt_time_ = time_keeper_get_ms();
+}
+
+uint32_t Mission_planner::start_wpt_time() const
+{
+    return start_wpt_time_;
+}
+
+void Mission_planner::set_critical_next_state(bool critical_next_state)
+{
+    critical_next_state_ = critical_next_state;
 }

@@ -41,12 +41,8 @@
 
 
 #include "communication/mission_planner_handler.hpp"
-#include <cstdlib>
-#include "hal/common/time_keeper.hpp"
+#include "communication/mission_planner.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
-#include "util/maths.h"
-#include "util/constants.h"
 }

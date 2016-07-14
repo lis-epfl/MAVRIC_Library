@@ -43,9 +43,10 @@
 #ifndef MISSION_PLANNER_HANDLER_TAKEOFF__
 #define MISSION_PLANNER_HANDLER_TAKEOFF__
 
+#include "communication/mavlink_message_handler.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/mission_planner_handler.hpp"
 #include "communication/state.hpp"
-#include "communication/mavlink_message_handler.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 #include "sensing/position_estimation.hpp"
@@ -62,13 +63,15 @@ public:
     /**
      * \brief   Initialize the takeoff mission planner handler
      *
-     * \param   position_estimation     The pointer to the position estimator structure
+     * \param   mission_planner         The reference to the position estimator structure
+     * \param   position_estimation     The reference to the position estimator structure
      * \param   navigation              The reference to the navigation structure
-     * \param   ahrs                    The pointer to the attitude estimation structure
+     * \param   ahrs                    The reference to the attitude estimation structure
      * \param   state                   The reference to the state structure
      * \param   message_handler         The reference to the mavlink message handler
      */
-     Mission_planner_handler_takeoff(   Position_estimation& position_estimation,
+     Mission_planner_handler_takeoff(   Mission_planner& mission_planner,
+                                        Position_estimation& position_estimation,
                                         Navigation& navigation,
                                         const ahrs_t& ahrs,
                                         State& state,
@@ -84,10 +87,11 @@ public:
     virtual void handle(Mission_planner& mission_planner);
 
 protected:
-    Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
-    Navigation& navigation_;                                     ///< The reference to the navigation structure
-    const ahrs_t& ahrs_;                                         ///< The reference to the attitude estimation structure
-    State& state_;                                               ///< The reference to the state structure
+    Mission_planner& mission_planner_;                          ///< The reference to the mission planner
+    Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
+    Navigation& navigation_;                                    ///< The reference to the navigation structure
+    const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
+    State& state_;                                              ///< The reference to the state structure
 
     /**
      * \brief   Drives the automatic takeoff procedure
@@ -95,7 +99,7 @@ protected:
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
      */
-    bool take_off_handler(Mission_planner& mission_planner.);
+    bool take_off_handler(Mission_planner& mission_planner);
 
     /**
      * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF

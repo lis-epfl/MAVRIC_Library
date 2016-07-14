@@ -77,11 +77,6 @@ public:
      */
     virtual void handle(Mission_planner& mission_planner);
 
-protected:
-    Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
-    Navigation& navigation_;                                     ///< The reference to the navigation structure
-    State& state_;                                               ///< The reference to the state structure
-
     /**
      * \brief   Drives the stopping behavior
      *
@@ -89,6 +84,11 @@ protected:
      * handling the request.
      */
     void stopping_handler(Mission_planner& mission_planner);
+
+protected:
+    Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
+    Navigation& navigation_;                                     ///< The reference to the navigation structure
+    State& state_;                                               ///< The reference to the state structure
 };
 
 

@@ -62,7 +62,7 @@ Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   Navigati
 
 }
 
-Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
+void Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
     float thrust = manual_control_.get_thrust();

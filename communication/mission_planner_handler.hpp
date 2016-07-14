@@ -43,15 +43,7 @@
 #ifndef MISSION_PLANNER_HANDLER__
 #define MISSION_PLANNER_HANDLER__
 
-#include "communication/mavlink_communication.hpp"
-#include "communication/mavlink_stream.hpp"
-#include "sensing/position_estimation.hpp"
-#include "communication/mavlink_message_handler.hpp"
-#include "communication/state.hpp"
-#include "sensing/qfilter.hpp"
-#include "control/manual_control.hpp"
-#include "control/navigation.hpp"
-#include "control/dubin.hpp"
+#include "communication/mission_planner.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"

@@ -43,12 +43,15 @@
 #ifndef MISSION_PLANNER_HANDLER_NAVIGATING__
 #define MISSION_PLANNER_HANDLER_NAVIGATING__
 
+#include "communication/mavlink_message_handler.hpp"
 #include "communication/mission_planner_handler.hpp"
 #include "communication/state.hpp"
-#include "communication/mavlink_message_handler.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 #include "sensing/position_estimation.hpp"
+
+class Mavlink_waypoint_handler;
+class Mission_planner_handler_landing;
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -67,7 +70,7 @@ public:
      * \param   state                               The reference to the state structure
      * \param   mission_planner                     The reference to the mission planner
      * \param   mavlink_stream                      The reference to the MAVLink stream structure
-     * \param   mavlink_waypoint_handler            The handler for the manual control state
+     * \param   waypoint_handler            The handler for the manual control state
      * \param   mission_planner_handler_landing     The reference to the landing handler
      * \param   message_handler                     The reference to the mavlink message handler
      */
@@ -75,8 +78,8 @@ public:
                                             Navigation& navigation,
                                             State& state,
                                             Mission_planner& mission_planner,
-                                            const Mavlink_stream& mavlink_stream,
-                                            Mavlink_waypoint_handler& mavlink_waypoint_handler,
+                                            Mavlink_stream& mavlink_stream,
+                                            Mavlink_waypoint_handler& waypoint_handler,
                                             Mission_planner_handler_landing& mission_planner_handler_landing,
                                             Mavlink_message_handler& message_handler);
 
@@ -94,9 +97,9 @@ protected:
     Navigation& navigation_;                                            ///< The reference to the navigation object
     State& state_;                                                      ///< The reference to the state object
     Mission_planner& mission_planner_;                                  ///< The reference to the mission_planner
-    const Mavlink_stream& mavlink_stream_;                              ///< The reference to the mavlink object
-    Mavlink_waypoint_handler& mavlink_waypoint_handler_;                ///< The reference to the mavlink waypoint handler
-    Mission_planner_handler_landing& mission_planner_handler_landing;   ///< The reference to the landing handler
+    Mavlink_stream& mavlink_stream_;                                    ///< The reference to the mavlink object
+    Mavlink_waypoint_handler& waypoint_handler_;                        ///< The reference to the mavlink waypoint handler
+    Mission_planner_handler_landing& mission_planner_handler_landing_;  ///< The reference to the landing handler
 
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
@@ -113,12 +116,12 @@ protected:
     /**
      * \brief   Start/Stop the navigation
      *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
+     * \param   navigating_handler      The pointer to the structure of the navigating handler
      * \param   packet                  The pointer to the structure of the MAVLink command message long
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t start_stop_navigation(Mission_planner_handler_navigating* navigating_handler, mavlink_command_long_t* packet);
 
     /**
      * \brief   Sends the travel time between the last two waypoints

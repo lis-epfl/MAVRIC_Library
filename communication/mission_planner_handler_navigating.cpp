@@ -42,9 +42,12 @@
 
 #include "communication/mission_planner_handler_navigating.hpp"
 
+#include "communication/mavlink_waypoint_handler.hpp"
+#include "communication/mission_planner_handler_landing.hpp"
+
 extern "C"
 {
-
+#include "hal/common/time_keeper.hpp"
 }
 
 
@@ -56,7 +59,7 @@ extern "C"
 void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_planner& mission_planner, bool reset_hold_wpt, Waypoint& waypoint_coordinates)
 {
     // Set current waypoint to the one we are travelling to
-    waypoint_coordinates = mavlink_waypoint_handler_.current_waypoint();
+    waypoint_coordinates = waypoint_handler_.current_waypoint();
 
     if (!reset_hold_wpt)
     {
@@ -81,7 +84,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
 
         // Add margin if necessary
         float margin = 0.0f;
-        if ((mavlink_waypoint_handler_.current_waypoint().command() == MAV_CMD_NAV_LAND) || (mavlink_waypoint_handler_.current_waypoint().param2() == 0.0f))
+        if ((waypoint_handler_.current_waypoint().command() == MAV_CMD_NAV_LAND) || (waypoint_handler_.current_waypoint().param2() == 0.0f))
         //we need to add that since Landing waypoint doesn't have the param2
         //=> the param2 = 0 => never passing next condition
         {
@@ -89,7 +92,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
         }
 
         // If we are near the waypoint or are doing dubin circles
-        if (navigation_.dist2wp_sqr < (mavlink_waypoint_handler_.current_waypoint().param2() * mavlink_waypoint_handler_.current_waypoint().param2() + margin) ||
+        if (navigation_.dist2wp_sqr < (waypoint_handler_.current_waypoint().param2() * waypoint_handler_.current_waypoint().param2() + margin) ||
                (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
         {
             // If we are near the waypoint but the flag has not been set, do this once ...
@@ -97,11 +100,11 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
             {
                 // Send debug log ...
                 print_util_dbg_print("Waypoint Nr");
-                print_util_dbg_print_num(mavlink_waypoint_handler_.current_waypoint_index(), 10);
+                print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(), 10);
                 print_util_dbg_print(" reached, distance:");
                 print_util_dbg_print_num(sqrt(navigation_.dist2wp_sqr), 10);
                 print_util_dbg_print(" less than :");
-                print_util_dbg_print_num(SQR(mavlink_waypoint_handler_.current_waypoint().param2()), 10);
+                print_util_dbg_print_num(SQR(waypoint_handler_.current_waypoint().param2()), 10);
                 print_util_dbg_print(".\r\n");
 
                 // ... as well as a mavlink message ...
@@ -109,18 +112,18 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 mavlink_msg_mission_item_reached_pack(mavlink_stream_.sysid(),
                                                       mavlink_stream_.compid(),
                                                       &msg,
-                                                      mavlink_waypoint_handler_.current_waypoint_index());
+                                                      waypoint_handler_.current_waypoint_index());
                 mavlink_stream_.send(&msg);
 
                 // ... and record the travel time ...
-                travel_time_ = time_keeper_get_ms() - start_wpt_time_;
+                travel_time_ = time_keeper_get_ms() - mission_planner.start_wpt_time();
 
                 // ... and set to waiting at waypoint
                 mission_planner_.set_waiting_at_waypoint(true);
             }
 
             // If we are supposed to land, then land
-            if (mavlink_waypoint_handler_.current_waypoint().command() == MAV_CMD_NAV_LAND)
+            if (waypoint_handler_.current_waypoint().command() == MAV_CMD_NAV_LAND)
             {
                 print_util_dbg_print("Stop & land\r\n");
 
@@ -131,39 +134,40 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 dummy_packet.param5 = waypoint_coordinates.local_pos().pos[X];
                 dummy_packet.param6 = waypoint_coordinates.local_pos().pos[Y];
                 dummy_packet.param7 = waypoint_coordinates.local_pos().pos[Z];
-                Mission_planner_handler_landing::set_auto_landing(mission_planner_handler_landing_, &dummy_packet);
+                Mission_planner_handler_landing::set_auto_landing(&mission_planner_handler_landing_, &dummy_packet);
             }
 
             // If we can autocontinue...
-            if ((mavlink_waypoint_handler_.current_waypoint().autocontinue() == 1) && (mavlink_waypoint_handler_.waypoint_count() > 1))
+            if ((waypoint_handler_.current_waypoint().autocontinue() == 1) && (waypoint_handler_.waypoint_count() > 1))
             {
                 // Get references for calculations
-                Waypoint& current = mavlink_waypoint_handler_.current_waypoint();
-                Waypoint& next = mavlink_waypoint_handler_.next_waypoint();
+                //Waypoint& current = mavlink_waypoint_handler_.current_waypoint();
+                //Waypoint& next = mavlink_waypoint_handler_.next_waypoint();
 
                 // Set new waypoint to advance
                 if (mission_planner_.waiting_at_waypoint())
                 {
-                    mavlink_waypoint_handler_.advance_to_next_waypoint();
+                    waypoint_handler_.advance_to_next_waypoint();
                     dubin_state_t dubin_state;
-                    mavlink_waypoint_handler_.update_current_waypoint(position_estimation_.local_position.origin, &dubin_state);
+                    waypoint_handler_.update_current_waypoint(position_estimation_.local_position.origin, &dubin_state);
                     mission_planner_.set_waiting_at_waypoint(false);
 
                     // Update output to be the new waypoint
-                    waypoint_coordinates = mavlink_waypoint_handler_.current_waypoint();
+                    waypoint_coordinates = waypoint_handler_.current_waypoint();
 
                     // Temporary
                     print_util_dbg_print("Autocontinue towards waypoint Nr");
-                    print_util_dbg_print_num(mavlink_waypoint_handler_.current_waypoint_index(),10);
+                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
                     print_util_dbg_print("\r\n");
                     navigation_.dubin_state = DUBIN_INIT;
-                    start_wpt_time_ = time_keeper_get_ms();
+                    mission_planner.set_start_wpt_time();
+
                     // Send message
                     mavlink_message_t msg;
                     mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
                                                      mavlink_stream_.compid(),
                                                      &msg,
-                                                     current_waypoint_index_);
+                                                     waypoint_handler_.current_waypoint_index());
                     mavlink_stream_.send(&msg);
                     // End temporary
 
@@ -227,16 +231,16 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
     }
     else    // Nav plan is not active, set hold waypoint if necessary
     {
-        if (!hold_waypoint_set_)
+        if (!mission_planner_.hold_waypoint_set())
         {
-            hold_init(position_estimation_.local_position);
-            waypoint_coordinates = waypoint_hold_coordinates;
-            hold_waypoint_set_ = true;
+            mission_planner_.hold_init(position_estimation_.local_position);
+            waypoint_coordinates = mission_planner_.waypoint_hold_coordinates;
+            mission_planner_.set_hold_waypoint_set(true);
         }
     }
 }
 
-mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_planner_handler_navigating* mission_planner_handler_navigating, mavlink_command_long_t* packet)
+mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_planner_handler_navigating* navigating_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
 
@@ -244,15 +248,15 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
     {
         if (packet->param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION)
         {
-            mission_planner_handler_navigating->mission_planner_.hold_init(waypoint_handler->position_estimation_.local_position);
+            navigating_handler->mission_planner_.hold_init(navigating_handler->position_estimation_.local_position);
 
-            mission_planner_handler_navigating->navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
+            navigating_handler->navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
 
             result = MAV_RESULT_ACCEPTED;
         }
         else if (packet->param2 == MAV_GOTO_HOLD_AT_SPECIFIED_POSITION)
         {
-            mission_planner_handler_navigating->navigation_.internal_state_ = Navigation::NAV_STOP_THERE;
+            navigating_handler->navigation_.internal_state_ = Navigation::NAV_STOP_THERE;
 
             /*
             waypoint.frame = packet->param3;
@@ -261,29 +265,29 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
             waypoint.y = packet->param6;
             waypoint.z = packet->param7;
             */
-            Waypoint waypoint(mavlink_stream_, packet->param3, MAV_CMD_NAV_WAYPOINT, 0, packet->param1, packet->param2, packet->param3, packet->param4, packet->param5, packet->param6, packet->param7)
+            Waypoint waypoint(&navigating_handler->mavlink_stream_, (MAV_FRAME)packet->param3, MAV_CMD_NAV_WAYPOINT, 0, packet->param1, packet->param2, packet->param3, packet->param4, packet->param5, packet->param6, packet->param7);
 
-            waypoint.calculate_waypoint_local_structure(waypoint_handler->position_estimation_.local_position.origin, &waypoint_handler->navigation_.dubin_state);
+            waypoint.calculate_waypoint_local_structure(navigating_handler->position_estimation_.local_position.origin, &navigating_handler->navigation_.dubin_state);
 
-            mission_planner_handler_navigating->mission_planner_.hold_init(waypoint.local_pos());
+            navigating_handler->mission_planner_.hold_init(waypoint.local_pos());
 
             result = MAV_RESULT_ACCEPTED;
         }
     }
     else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
     {
-        if ( (mission_planner_handler_navigating->navigation_.internal_state_ == Navigation::NAV_STOP_THERE) || (mission_planner_handler_navigating->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) )
+        if ( (navigating_handler->navigation_.internal_state_ == Navigation::NAV_STOP_THERE) || (navigating_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) )
         {
-            mission_planner_handler_navigating->navigation_.dubin_state = DUBIN_INIT;
+            navigating_handler->navigation_.dubin_state = DUBIN_INIT;
         }
 
-        if (mission_planner_handler_navigating->last_mode_.is_auto())  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        if (navigating_handler->mission_planner_.last_mode().is_auto())  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         {
-            mission_planner_handler_navigating->navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
+            navigating_handler->navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
         }
-        else if (mission_planner_handler_navigating->last_mode_.ctrl_mode() == Mav_mode::POSITION_HOLD)  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        else if (navigating_handler->mission_planner_.last_mode().ctrl_mode() == Mav_mode::POSITION_HOLD)  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         {
-            mission_planner_handler_navigating->navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
+            navigating_handler->navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
         }
 
         result = MAV_RESULT_ACCEPTED;
@@ -293,7 +297,7 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
 }
 
 
-void Mission_planner::send_nav_time(const Mavlink_stream* mavlink_stream_, mavlink_message_t* msg)
+void Mission_planner_handler_navigating::send_nav_time(const Mavlink_stream* mavlink_stream_, mavlink_message_t* msg)
 {
     mavlink_msg_named_value_int_pack(mavlink_stream_->sysid(),
                                      mavlink_stream_->compid(),
@@ -311,17 +315,21 @@ Mission_planner_handler_navigating::Mission_planner_handler_navigating( Position
                                                                         Navigation& navigation,
                                                                         State& state,
                                                                         Mission_planner& mission_planner,
-                                                                        const Mavlink_stream& mavlink_stream,
-                                                                        Mavlink_waypoint_handler& mavlink_waypoint_handler,
+                                                                        Mavlink_stream& mavlink_stream,
+                                                                        Mavlink_waypoint_handler& waypoint_handler,
+                                                                        Mission_planner_handler_landing& mission_planner_handler_landing,
                                                                         Mavlink_message_handler& message_handler):
             position_estimation_(position_estimation),
             navigation_(navigation),
             state_(state),
             mission_planner_(mission_planner),
             mavlink_stream_(mavlink_stream),
-            mavlink_waypoint_handler_(mavlink_waypoint_handler),
+            waypoint_handler_(waypoint_handler),
+            mission_planner_handler_landing_(mission_planner_handler_landing),
             travel_time_(0)
 {
+    bool init_success = true;
+
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;
 
@@ -332,19 +340,24 @@ Mission_planner_handler_navigating::Mission_planner_handler_navigating( Position
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &start_stop_navigation;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler.add_cmd_callback(&callbackcmd);
+
+    if(!init_success)
+    {
+        print_util_dbg_print("[MISSION_PLANNER_HANDLER_NAVIGATING] constructor: ERROR\r\n");
+    }
 }
 
-Mission_planner_handler_navigating::handle(Mission_planner& mission_planner)
+void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
     bool new_mode = true;
 
-    if (!mission_planner.last_mode()).is_auto())
+    if (!mission_planner.last_mode().is_auto())
     {
         new_mode = mission_planner.mode_change();
     }
-    Waypoint& waypoint_coordinates;
-    waypoint_navigation_handler(mission_planner, new_mode, waypoint_coordinates);
+    Waypoint waypoint_coordinates;
+    waypoint_navigating_handler(mission_planner, new_mode, waypoint_coordinates);
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
