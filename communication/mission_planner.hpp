@@ -69,13 +69,21 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   position_estimation     The pointer to the position estimator structure
-     * \param   navigation              The pointer to the navigation structure
-     * \param   ahrs                    The pointer to the attitude estimation structure
-     * \param   state                   The pointer to the state structure
-     * \param   manual_control          The pointer to the manual control structure
-     * \param   mavlink_communication   The pointer to the MAVLink communication structure
-     * \param   mavlink_stream          The pointer to the MAVLink stream structure
+     * \param   position_estimation         The pointer to the position estimator structure
+     * \param   navigation                  The pointer to the navigation structure
+     * \param   ahrs                        The pointer to the attitude estimation structure
+     * \param   state                       The pointer to the state structure
+     * \param   manual_control              The pointer to the manual control structure
+     * \param   mavlink_communication       The pointer to the MAVLink communication structure
+     * \param   mavlink_stream              The pointer to the MAVLink stream structure
+     * \param   on_ground_handler           The handler for the on ground state
+     * \param   takeoff_handler             The handler for the takeoff state
+     * \param   landing_handler             The handler for the landing state
+     * \param   hold_position_handler       The handler for the hold position state
+     * \param   stop_on_position_handler    The handler for the stop on position state
+     * \param   stop_there_handler          The handler for the stop there state
+     * \param   navigating_handler          The handler for the navigating state
+     * \param   manual_control_handler      The handler for the manual control state
      *
      * \return  True if the init succeed, false otherwise
      */
@@ -86,6 +94,14 @@ public:
                         const Manual_control& manual_control,
                         Mavlink_message_handler& message_handler,
                         const Mavlink_stream& mavlink_stream,
+                        Mission_planner_handler& on_ground_handler,
+                        Mission_planner_handler& takeoff_handler,
+                        Mission_planner_handler& landing_handler,
+                        Mission_planner_handler& hold_position_handler,
+                        Mission_planner_handler& stop_on_position_handler,
+                        Mission_planner_handler& stop_there_handler,
+                        Mission_planner_handler& navigating_handler,
+                        Mission_planner_handler& manual_control_handler,
                         conf_t config = default_config());
 
 
@@ -111,7 +127,7 @@ public:
     static inline conf_t default_config();
 
 
-    waypoint_local_struct_t waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+    Waypoint waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
 
     void set_hold_waypoint_set(bool hold_waypoint_set);
     bool hold_waypoint_set();
@@ -138,8 +154,8 @@ protected:
     uint32_t travel_time_;                                      ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
     bool critical_next_state_;                                  ///< Flag to change critical state in its dedicated state machine
     mav_mode_t last_mode_;                                      ///< The mode of the MAV to have a memory of its evolution
-    Waypoint& waypoint_critical_coordinates_;                   ///< Waypoint for the critical state
-    
+    Waypoint waypoint_critical_coordinates_;                    ///< Waypoint for the critical state
+
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure

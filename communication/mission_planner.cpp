@@ -493,7 +493,15 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
+Mission_planner::Mission_planner(Position_estimation& position_estimation_, Navigation& navigation_, const ahrs_t& ahrs_, State& state_, const Manual_control& manual_control_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, Mission_planner_handler& on_ground_handler, Mission_planner_handler& takeoff_handler, Mission_planner_handler& landing_handler, Mission_planner_handler& hold_position_handler, Mission_planner_handler& stop_on_position_handler, Mission_planner_handler& stop_there_handler, Mission_planner_handler& navigating_handler, Mission_planner_handler& manual_control_handler, conf_t config):
+            on_ground_handler_(on_ground_handler),
+            takeoff_handler_(takeoff_handler),
+            landing_handler_(landing_handler),
+            hold_position_handler_(hold_position_handler),
+            stop_on_position_handler_(stop_on_position_handler),
+            stop_there_handler_(stop_there_handler),
+            navigating_handler_(navigating_handler),
+            manual_control_handler_(manual_control_handler),
             hold_waypoint_set_(false),
             start_wpt_time_(time_keeper_get_ms()),
             waiting_at_waypoint_(false),
