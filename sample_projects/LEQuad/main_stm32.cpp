@@ -64,8 +64,8 @@ int main(int argc, char** argv)
     init_success &= board.init();
 
     // Create dummy files
-    File_dummy dummy_file1;
-    File_dummy dummy_file2;
+    File_dummy dummy_file_log;
+    File_dummy dummy_file_stat;
 
     // -------------------------------------------------------------------------
     // Create MAV
@@ -73,26 +73,69 @@ int main(int argc, char** argv)
     // Create MAV using simulated sensors
     LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
     LEQuad mav = LEQuad(board.imu,
-                                   board.sim.barometer(),
-                                   board.sim.gps(),
-                                   board.sim.sonar(),
-                                   board.serial_1,
-                                   // board.serial_2,
-                                   board.spektrum_satellite,
-                                   board.green_led,
-                                   board.file_flash,
-                                   board.battery,
-                                   board.servo_0,
-                                   board.servo_1,
-                                   board.servo_2,
-                                   board.servo_3,
-                                   board.servo_4,
-                                   board.servo_5,
-                                   board.servo_6,
-                                   board.servo_7,
-                                   dummy_file1,
-                                   dummy_file2,
-                                   mav_config );
+                        board.sim.barometer(),
+                        board.sim.gps(),
+                        board.sonar_i2cxl,
+                        board.serial_1,
+                        // board.serial_2,
+                        board.spektrum_satellite,
+                        board.green_led,
+                        board.file_flash,
+                        board.battery,
+                        board.servo_0,
+                        board.servo_1,
+                        board.servo_2,
+                        board.servo_3,
+                        board.servo_4,
+                        board.servo_5,
+                        board.servo_6,
+                        board.servo_7,
+                        dummy_file_log,
+                        dummy_file_stat,
+                        mav_config );
+
+    // -------------------------------------------------------------------------
+    // Create simulation
+    // -------------------------------------------------------------------------
+    // // Simulated servos
+    // Pwm_dummy pwm[4];
+    // Servo sim_servo_0(pwm[0], servo_default_config_esc());
+    // Servo sim_servo_1(pwm[1], servo_default_config_esc());
+    // Servo sim_servo_2(pwm[2], servo_default_config_esc());
+    // Servo sim_servo_3(pwm[3], servo_default_config_esc());
+
+    // // Simulated dynamic model
+    // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
+    // Simulation sim                       = Simulation(sim_model);
+
+    // // Simulated battery
+    // Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
+    // Battery      sim_battery     = Battery(sim_adc_battery);
+
+    // // Simulated IMU
+    // Imu      sim_imu         = Imu(  sim.accelerometer(),
+    //                                  sim.gyroscope(),
+    //                                  sim.magnetometer() );
+
+    // // set the flag to simulation
+    // mav_config.state_config.simulation_mode = HIL_ON;
+    // LEQuad mav = LEQuad( MAVLINK_SYS_ID,
+    //                              sim_imu,
+    //                              sim.barometer(),
+    //                              sim.gps(),
+    //                              sim.sonar(),
+    //                              board.serial_1,                // mavlink serial
+    //                              board.spektrum_satellite,
+    //                              board.green_led,
+    //                              board.file_flash,
+    //                              sim_battery,
+    //                              sim_servo_0,
+    //                              sim_servo_1,
+    //                              sim_servo_2,
+    //                              sim_servo_3 ,
+    //                              dummy_file_log,
+    //                              dummy_file_stat,
+    //                              mav_config );
 
     if (init_success)
     {

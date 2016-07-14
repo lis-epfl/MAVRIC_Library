@@ -87,30 +87,9 @@ public:
     static bool update(State_machine* state_machine);
 
     /**
-     * \brief   tries to change state.mav_mode to guided/unguided
-     *
-     * \details tries to set/clear the MAV_MODE_FLAG_GUIDED_ENABLED
-     *          The following checks are performed:
-     *          - position_estimation.healthy to pass to guided
-     *
-     * \param   guided      true to pass to guided, false to pass to unguided
-     *
-     * \return true if desired state was accepted; false if refused
+     * \brief
      */
-    bool set_mode_guided(bool guided);
-
-    /**
-     * \brief   tries to change state.mav_mode to stabilize/not stabilize
-     *
-     * \details tries to set/clear the MAV_MODE_FLAG_GUIDED_ENABLED
-     *          The following checks are performed:
-     *          - position_estimation.healthy to pass to stabilize
-     *
-     * \param   stabilize      true to pass to stabilize, false to pass to unguided
-     *
-     * \return true if desired state was accepted; false if refused
-     */
-    bool set_mode_stabilize(bool stabilize);
+    bool set_ctrl_mode(Mav_mode mode);
 
     State& state_;                                       ///< Pointer to the state structure
     const Position_estimation& position_estimation_;      ///< Pointer to the gps structure
@@ -125,7 +104,34 @@ private:
      * \param current_custom_mode       Pointer to the current MAV custom mode
      * \param current_state             Pointer to the current MAV state
      */
-    void set_custom_mode(mav_mode_custom_t *current_custom_mode, mav_state_t *current_state);
+    void set_custom_mode(Mav_mode::custom_mode_t *current_custom_mode, mav_state_t *current_state);
+
+    /**
+     * \brief   checks if it is possible to set/clear guided flag
+     *                                                                                                                                                                                                                                                                                                   
+     * \details checks if it is possible to set/clear the MAV_MODE_FLAG_GUIDED_ENABLED of state_.mav_mode_
+     *          The following checks are performed:
+     *          - position_estimation.healthy to set guided
+     *
+     * \param   guided      true to set guided flag, false to clear unguided flag
+     *
+     * \return true if desired state is allowed, false otherwise
+     */
+    bool is_set_guided_allowed(bool guided);
+
+    /**
+     * \brief   checks if it is possible to set/clear stabilize flag
+     *                                                                                                                                                                                                                                                                                                   
+     * \details checks if it is possible to set/clear the MAV_MODE_FLAG_STABILIZE of state_.mav_mode_
+     *          The following checks are performed:
+     *          - imu is ready to set stabilize
+     *          - ahrs is ready to set stabilize
+     *
+     * \param   stabilize      true to set stabilize flag, false to clear flag
+     *
+     * \return true if desired state is allowed, false otherwise
+     */
+    bool is_set_stabilize_allowed(bool stabilize);
 };
 
 

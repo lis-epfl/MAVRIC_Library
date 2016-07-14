@@ -124,7 +124,7 @@ bool Scheduler::add_task(uint32_t repeat_period,
 }
 
 
-bool Scheduler::sort_tasks()
+bool Scheduler::sort_tasks(void)
 {
     bool sorted = false;
 
@@ -170,7 +170,7 @@ bool Scheduler::sort_tasks()
 }
 
 
-int32_t Scheduler::update()
+int32_t Scheduler::update(void)
 {
     int32_t realtime_violation = 0;
 
@@ -246,7 +246,7 @@ void Scheduler::suspend_all_tasks(uint32_t delay)
 }
 
 
-void Scheduler::run_all_tasks_now()
+void Scheduler::run_all_tasks_now(void)
 {
     for(uint32_t i = 0; i < task_count_; i++)
     {
@@ -254,12 +254,16 @@ void Scheduler::run_all_tasks_now()
     }
 }
 
+uint32_t Scheduler::task_count(void) const
+{
+    return task_count_;
+}
 
 /*************************************************************************
  *                 static member functions                               *
  ************************************************************************/
 
-Scheduler::conf_t Scheduler::default_config()
+Scheduler::conf_t Scheduler::default_config(void)
 {
     Scheduler::conf_t conf  = {};
 

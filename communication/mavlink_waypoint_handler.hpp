@@ -62,7 +62,7 @@ public:
 
     struct conf_t
     {
-        float auto_take_off_altitude;                               ///< Altitude to which auto_take off flies; altitude over starting point (where auto_take off was started) should be > 0
+        ;
     };
 
 
@@ -179,6 +179,13 @@ private:
     conf_t config_;
 
 
+    /**
+     * \brief   Initialise the position hold mode in Dubin navigation
+     *
+     * \param   local_pos               The position where the position will be held
+     */
+    void dubin_hold_init(local_position_t local_pos);
+
     /************************************************
      *      static member functions (callbacks)     *
      ************************************************/
@@ -269,8 +276,6 @@ private:
 Mavlink_waypoint_handler::conf_t Mavlink_waypoint_handler::default_config()
 {
     conf_t conf                                                = {};
-
-    conf.auto_take_off_altitude                                = 10;
 
     return conf;
 };

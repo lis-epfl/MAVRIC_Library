@@ -90,7 +90,7 @@ void Navigation::set_speed_command(float rel_pos[])
     float dir_desired_sg[3];
     float rel_heading;
 
-    mav_mode_t mode = state.mav_mode();
+    Mav_mode mode = state.mav_mode();
 
     norm_rel_dist = sqrt(dist2wp_sqr);
 
@@ -114,7 +114,7 @@ void Navigation::set_speed_command(float rel_pos[])
     dir_desired_sg[Y] /= norm_rel_dist;
     dir_desired_sg[Z] /= norm_rel_dist;
 
-    if ((mav_modes_is_auto(mode) && ((state.nav_plan_active && (internal_state_ == NAV_NAVIGATING)) || (internal_state_ == NAV_STOP_THERE))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
+    if ((mode.is_auto() && ((state.nav_plan_active && (internal_state_ == NAV_NAVIGATING)) || (internal_state_ == NAV_STOP_THERE))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
     {
 
         if (((maths_f_abs(rel_pos[X]) <= 1.0f) && (maths_f_abs(rel_pos[Y]) <= 1.0f)) || ((maths_f_abs(rel_pos[X]) <= 5.0f) && (maths_f_abs(rel_pos[Y]) <= 5.0f) && (maths_f_abs(rel_pos[Z]) >= 3.0f)))
@@ -255,7 +255,16 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
     controls_nav.tvel[Z] = dir_desired_sg[Z];
 
     float rel_heading;
-    rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - position_estimation.local_position.heading);
+    if ((SQR(goal.waypoint.pos[X] - position_estimation.local_position.pos[X]) + SQR(goal.waypoint.pos[Y] - position_estimation.local_position.pos[Y])) <= 25.0f)
+    {
+        rel_heading = 0.0f;
+    }
+    else
+    {
+        rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - position_estimation.local_position.heading);
+    }
+    //rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - position_estimation.local_position.heading);
+    
 
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 }
@@ -279,9 +288,17 @@ void Navigation::run()
         case Navigation::strategy_t::DUBIN:
             if (state.autopilot_type == MAV_TYPE_QUADROTOR)
             {
-                if ( (internal_state_ == NAV_NAVIGATING) || (internal_state_ == NAV_HOLD_POSITION) )
+                if (internal_state_ == NAV_NAVIGATING)
                 {
-                    set_dubin_velocity( &goal.dubin);
+                    if (goal.radius > 0.0f)
+                    {
+                        set_dubin_velocity( &goal.dubin);
+                    }
+                    else
+                    {
+                        set_speed_command(rel_pos);
+                    }
+                    
                 }
                 else
                 {
@@ -368,7 +385,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
 
 bool Navigation::update(Navigation* navigation)
 {
-    mav_mode_t mode_local = navigation->state.mav_mode();
+    Mav_mode mode_local = navigation->state.mav_mode();
 
     uint32_t t = time_keeper_get_us();
 
@@ -392,7 +409,7 @@ bool Navigation::update(Navigation* navigation)
 
         case MAV_STATE_CRITICAL:
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mav_modes_is_stabilize(mode_local))
+            if (mode_local.is_guided())
             {
                 if ((navigation->internal_state_ == NAV_NAVIGATING) || (navigation->internal_state_ == NAV_LANDING))
                 {

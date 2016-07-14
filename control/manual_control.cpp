@@ -50,16 +50,6 @@ extern "C"
 }
 
 //------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
@@ -297,15 +287,13 @@ void Manual_control::get_velocity_command(velocity_command_t* command, float sca
 }
 
 
-mav_mode_t Manual_control::get_mode_from_source(mav_mode_t mode_current)
+Mav_mode Manual_control::get_mode_from_source(Mav_mode mode_current)
 {
-    mav_mode_t new_mode = mode_current;
+    Mav_mode new_mode = mode_current;
 
     switch (mode_source_)
     {
         case MODE_SOURCE_GND_STATION:
-            new_mode = mode_current;
-            //joystick.mav_mode_desired = mode_current;
             break;
         case MODE_SOURCE_REMOTE:
             if (remote_check(&remote) != SIGNAL_LOST)
@@ -325,7 +313,7 @@ mav_mode_t Manual_control::get_mode_from_source(mav_mode_t mode_current)
 }
 
 
-void Manual_control::set_mode_of_source(mav_mode_t mode)
+void Manual_control::set_mode_of_source(Mav_mode mode)
 {
     // override internal mav_mode of joystick
     joystick.mav_mode_desired = mode;
