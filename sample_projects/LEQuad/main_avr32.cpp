@@ -149,7 +149,7 @@ int main(void)
     //                      sim.sonar(),
     //                      board.uart0,                // mavlink serial
     //                      board.spektrum_satellite,
-    //                      board.green_led,
+    //                      board.state_display_megafly_rev4_,
     //                      board.file_flash,
     //                      sim_battery,
     //                      sim_servo_0,

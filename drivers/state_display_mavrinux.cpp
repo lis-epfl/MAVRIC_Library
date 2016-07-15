@@ -61,11 +61,11 @@ bool State_display_mavrinux::update(void)
 	state_ = *state_ptr_;
 	init = state_old_ != state_;
 
-	if(init)
+	if (init)
 	{
 		print_util_dbg_print("Mav entering new state:\t");
 
-		switch(state_)
+		switch (state_)
 	 	{
 	 		case MAV_STATE_CALIBRATING:
 	 			print_util_dbg_print("Calibrating\n");
@@ -87,6 +87,7 @@ bool State_display_mavrinux::update(void)
 	 			print_util_dbg_print("Emergency\n");
 
 	 		default:
+	 			print_util_dbg_print("Unknow State\n");
 	 			break;
 	 	}
  	}

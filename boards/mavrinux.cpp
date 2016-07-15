@@ -76,8 +76,8 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
     led(),
     mavlink_serial(config.serial_udp_config),
     file_flash(),
-    config_(config),
-    state_display_mavrinux_()
+    state_display_mavrinux_(),
+    config_(config)
 {}
 
 

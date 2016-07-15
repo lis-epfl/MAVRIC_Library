@@ -45,7 +45,9 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-State_display_mavrimini::State_display_mavrimini(Led& led_green, Led& led_red) : led_green_(led_green), led_red_(led_red)
+State_display_mavrimini::State_display_mavrimini(Led& led_green, Led& led_red):
+	led_green_(led_green),
+	led_red_(led_red)
 {
 	state_ 		= MAV_STATE_CALIBRATING;
 	state_old_ 	= MAV_STATE_CALIBRATING;
@@ -59,85 +61,94 @@ bool State_display_mavrimini::update()
 	state_ = *state_ptr_;
 	init = state_old_ != state_;
 
-	switch(state_)
+	switch (state_)
  	{
  		case MAV_STATE_CALIBRATING:
- 			if(init)
+ 			if (init)
  			{
  				led_green_.on();
  				led_red_.off();
  				idle_ = 0;
  			}
- 			else if(idle_ >= 6)
+ 			else if (idle_ >= 6)
  			{
  				led_green_.toggle();
  				led_red_.toggle();
  				idle_ = 0;
  			}
  			else
+ 			{
  				idle_++;
+ 			}
  			break;
 
  		case MAV_STATE_STANDBY:
- 			if(init)
+ 			if (init)
  			{
  				led_red_.off();
  				idle_ = 0;
  			}
- 			else if(idle_ >= 6)
+ 			else if (idle_ >= 6)
  			{
  				led_green_.toggle();
  				idle_ = 0;
  			}
  			else
+ 			{
  				idle_++;
-
+ 			}
  			break;
 
  		case MAV_STATE_ACTIVE:
- 			if(init)
+ 			if (init)
  			{
  				led_red_.off();
  				idle_ = 0;
  			}
- 			else if(idle_ >= 2)
+ 			else if (idle_ >= 2)
  			{
  				led_green_.toggle();
  				idle_ = 0;
  			}
  			else
+ 			{
  				idle_++;
-
+ 			}
  			break;
 
  		case MAV_STATE_CRITICAL:
- 			if(init)
+ 			if (init)
  			{
  				led_red_.on();
  				idle_ = 0;
  			}
- 			else if(idle_ >= 2)
+ 			else if (idle_ >= 2)
  			{
  				led_green_.toggle();
  				idle_ = 0;
  			}
  			else
+ 			{
  				idle_++;
-
+ 			}
  			break;
 
  		case MAV_STATE_EMERGENCY:
  			led_red_.toggle();
- 			if(idle_ >= 2)
+ 			if (idle_ >= 2)
  			{
  				led_green_.toggle();
  				idle_ = 0;
  			}
  			else
+ 			{
  				idle_++;
+ 			}
  			break;
 
  		default:
+ 			led_red_.on();
+ 			led_green_.on();
  			break;
  	}
 
