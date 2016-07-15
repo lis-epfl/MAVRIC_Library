@@ -51,15 +51,12 @@ State_display_mavrimini::State_display_mavrimini(Led& led_green, Led& led_red):
 {
 	state_ 		= MAV_STATE_CALIBRATING;
 	state_old_ 	= MAV_STATE_CALIBRATING;
-	state_ptr_	= NULL;
 	idle_ 		= 0;
 }
 
 bool State_display_mavrimini::update()
 {
-	bool init;
-	state_ = *state_ptr_;
-	init = state_old_ != state_;
+	bool init = state_old_ != state_;
 
 	switch (state_)
  	{

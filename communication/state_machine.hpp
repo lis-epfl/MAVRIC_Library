@@ -47,8 +47,10 @@
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
+#include "drivers/state_display.hpp"
 #include "sensing/position_estimation.hpp"
 #include "sensing/imu.hpp"
+
 
 extern "C"
 {
@@ -75,7 +77,8 @@ public:
                     const Position_estimation& position_estimation,
                     const Imu& imu,
                     const ahrs_t& ahrs,
-                    Manual_control& manual_control);
+                    Manual_control& manual_control,
+                    State_display& state_display);
 
     /**
      * \brief   Updates the state machine
@@ -96,6 +99,7 @@ public:
     const Imu& imu_;                                     ///< Pointer to the imu structure
     const ahrs_t& ahrs_;                                 ///< Pointer to the attitude estimation structure
     Manual_control& manual_control_;                     ///< Pointer to the manual_control structure
+    State_display& state_display_;                       ///< Reference to the state display
 
 private:
     /**

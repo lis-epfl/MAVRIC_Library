@@ -91,7 +91,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
-    state_machine(state, position_estimation, imu, ahrs, manual_control),
+    state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(mavlink_communication.sysid()),
@@ -136,7 +136,6 @@ void LEQuad::loop(void)
 
     // Init mav state
     state.mav_state_ = MAV_STATE_STANDBY;  // TODO check if this is necessary
-    state_display_.state_ptr_ = &state.mav_state_;
 
     while (1)
     {

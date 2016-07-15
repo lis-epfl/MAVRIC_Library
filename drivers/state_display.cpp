@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_display.hpp
+ * \file state_display.cpp
  *
  * \author MAV'RIC Team
  * \author Jean-François Burnier
@@ -39,48 +39,15 @@
  *
  ******************************************************************************/
 
-#ifndef STATE_DISPLAY_HPP_
-#define STATE_DISPLAY_HPP_
+#include "drivers/state_display.hpp"
 
-#include "communication/mav_modes.hpp"
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-/**
- * \brief   Interface class for state display
- */
-class State_display
-{
-	public:
-	 /**
-     * \brief   Main update function
-     * \detail  Displays state 
-     *
-     * \return  Success
-     */
-    virtual bool update(void) = 0;
-
-     /**
-     * \brief   Set state function
-     * \detail  Set the state to be displayed
-     * \param   state_new  new state to display
-     *
-     * \return  Success
-     */
-    bool set_state(const mav_state_t state_new);
-
-	protected:
-		mav_state_t state_;
-		mav_state_t state_old_;
-        uint8_t idle_;
-
-};
-
-/**
- * \brief  Glue method for scheduler
- */
-static inline bool task_state_display_update(State_display* state_display)
-{
-    return state_display->update();
-};
-
-
-#endif /* STATE_DISPLAY_HPP_ */
+ bool State_display::set_state(const mav_state_t state_new)
+ {
+ 	state_ = state_new;
+ 	return true;
+ }
+ 

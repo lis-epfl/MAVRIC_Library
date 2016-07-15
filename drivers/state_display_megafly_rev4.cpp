@@ -51,15 +51,12 @@ State_display_megafly_rev4::State_display_megafly_rev4(Led& led_green, Led& led_
 {
 	state_ 	   	= MAV_STATE_CALIBRATING;
 	state_old_ 	= MAV_STATE_CALIBRATING;
-	state_ptr_ 	= NULL;
 	idle_ 		= 0;
 }
 
 bool State_display_megafly_rev4::update(void)
 {
-	bool init;
-	state_ = *state_ptr_;
-	init = state_old_ != state_;
+	bool init = state_old_ != state_;
 
 	switch (state_)
  	{

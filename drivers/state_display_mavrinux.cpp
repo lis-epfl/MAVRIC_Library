@@ -50,16 +50,12 @@ State_display_mavrinux::State_display_mavrinux()
 {
 	state_ 	   	= MAV_STATE_CALIBRATING;
 	state_old_ 	= MAV_STATE_ACTIVE;
-	state_ptr_ 	= NULL;
 	idle_ 		= 0;
 }
 
 bool State_display_mavrinux::update(void)
 {
-	bool init;
-
-	state_ = *state_ptr_;
-	init = state_old_ != state_;
+	bool init = state_old_ != state_;
 
 	if (init)
 	{

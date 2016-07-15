@@ -154,12 +154,14 @@ State_machine::State_machine(State& state,
                             const Position_estimation& position_estimation,
                             const Imu& imu,
                             const ahrs_t& ahrs,
-                            Manual_control& manual_control) :
+                            Manual_control& manual_control,
+                            State_display& state_display) :
     state_(state),
     position_estimation_(position_estimation),
     imu_(imu),
     ahrs_(ahrs),
-    manual_control_(manual_control)
+    manual_control_(manual_control),
+    state_display_(state_display)
 {}
 
 bool State_machine::update(State_machine* state_machine)
@@ -331,10 +333,10 @@ bool State_machine::update(State_machine* state_machine)
             break;
     }
 
-
     // Finally, write new modes and states
     state_machine->state_.mav_state_       = state_new;
     state_machine->state_.mav_mode_custom = mode_custom_new;
+    state_machine->state_display_.set_state(state_new);
 
     // overwrite internal state of joystick
     state_machine->manual_control_.set_mode_of_source(state_machine->state_.mav_mode_);
