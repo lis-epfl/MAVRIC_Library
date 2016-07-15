@@ -50,7 +50,7 @@ State_display_megafly_rev4::State_display_megafly_rev4(Led& led_green, Led& led_
 	led_red_(led_red)
 {
 	state_ 	   	= MAV_STATE_CALIBRATING;
-	state_old_ 	= MAV_STATE_CALIBRATING;
+	state_old_ 	= MAV_STATE_POWEROFF;
 	idle_ 		= 0;
 }
 

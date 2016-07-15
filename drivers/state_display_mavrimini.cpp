@@ -50,7 +50,7 @@ State_display_mavrimini::State_display_mavrimini(Led& led_green, Led& led_red):
 	led_red_(led_red)
 {
 	state_ 		= MAV_STATE_CALIBRATING;
-	state_old_ 	= MAV_STATE_CALIBRATING;
+	state_old_ 	= MAV_STATE_POWEROFF;
 	idle_ 		= 0;
 }
 

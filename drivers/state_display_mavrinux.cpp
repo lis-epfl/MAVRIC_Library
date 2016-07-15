@@ -49,7 +49,7 @@
 State_display_mavrinux::State_display_mavrinux()
 {
 	state_ 	   	= MAV_STATE_CALIBRATING;
-	state_old_ 	= MAV_STATE_ACTIVE;
+	state_old_ 	= MAV_STATE_POWEROFF;
 	idle_ 		= 0;
 }
 

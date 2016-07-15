@@ -180,6 +180,7 @@ bool LEQuad::init_state(void)
 
     // Task
     ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);
+    // Leds blinks at 1, 3 and 6Hz, then smallest half period is 83333us
     ret &= scheduler.add_task( 83333, (Scheduler_task::task_function_t)&task_state_display_update, (Scheduler_task::task_argument_t)&state_display_);
 
     return ret;
