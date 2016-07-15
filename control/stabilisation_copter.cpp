@@ -81,7 +81,7 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
     return init_success;
 }
 
-void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* position_estimation)
+void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, Mission_planner* mission_planner, const Position_estimation* position_estimation)
 {
     aero_attitude_t attitude_yaw_inverse;
     quat_t q_rot;
@@ -94,9 +94,9 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
     q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
 
     float pos_error[4];
-    pos_error[X] = waypoint_handler->waypoint_hold_coordinates.waypoint.pos[X] - position_estimation->local_position.pos[X];
-    pos_error[Y] = waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Y] - position_estimation->local_position.pos[Y];
-    pos_error[3] = -(waypoint_handler->waypoint_hold_coordinates.waypoint.pos[Z] - position_estimation->local_position.pos[Z]);
+    pos_error[X] = mission_planner->waypoint_hold_coordinates.local_pos().pos[X] - position_estimation->local_position.pos[X];
+    pos_error[Y] = mission_planner->waypoint_hold_coordinates.local_pos().pos[Y] - position_estimation->local_position.pos[Y];
+    pos_error[3] = -(mission_planner->waypoint_hold_coordinates.local_pos().pos[Z] - position_estimation->local_position.pos[Z]);
 
     pos_error[YAW] = input->rpy[YAW];
 

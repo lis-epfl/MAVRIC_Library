@@ -64,7 +64,7 @@ extern "C"
  *
  * \return              waypoint in NED coordinates
  */
-static Mavlink_waypoint_handler::waypoint_struct_t convert_waypoint_to_local_ned(const Mavlink_waypoint_handler::waypoint_struct_t* waypoint, const global_position_t* origin);
+static Waypoint convert_waypoint_to_local_ned(const Waypoint* waypoint, const global_position_t* origin);
 
 
 /**
@@ -141,32 +141,32 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static Mavlink_waypoint_handler::waypoint_struct_t convert_waypoint_to_local_ned(const Mavlink_waypoint_handler::waypoint_struct_t* waypoint_in, const global_position_t* origin)
+static Waypoint convert_waypoint_to_local_ned(const Waypoint* waypoint_in, const global_position_t* origin)
 {
     global_position_t waypoint_global;
     local_position_t waypoint_local;
 
     // Init new waypoint
-    Mavlink_waypoint_handler::waypoint_struct_t waypoint = *waypoint_in;
-    waypoint.command    = waypoint_in->command;
-    waypoint.param1     = waypoint_in->param1;
-    waypoint.param2     = waypoint_in->param2;
-    waypoint.param3     = waypoint_in->param3;
-    waypoint.param4     = waypoint_in->param4;
+    Waypoint waypoint = *waypoint_in;
+    waypoint.set_command(waypoint_in->command());
+    waypoint.set_param1(waypoint_in->param1());
+    waypoint.set_param2(waypoint_in->param2());
+    waypoint.set_param3(waypoint_in->param3());
+    waypoint.set_param4(waypoint_in->param4());
 
-    switch (waypoint_in->frame)
+    switch (waypoint_in->frame())
     {
         case MAV_FRAME_GLOBAL:                  /* Global coordinate frame, WGS84 coordinate system. First value / x: latitude, second value / y: longitude, third value / z: positive altitude over mean sea level (MSL) | */
 
-            waypoint_global.latitude    = waypoint_in->x;
-            waypoint_global.longitude   = waypoint_in->y;
-            waypoint_global.altitude    = waypoint_in->z;
+            waypoint_global.latitude    = waypoint_in->x();
+            waypoint_global.longitude   = waypoint_in->y();
+            waypoint_global.altitude    = waypoint_in->z();
             waypoint_local              = coord_conventions_global_to_local_position(waypoint_global, *origin);
 
-            waypoint.frame  = MAV_FRAME_LOCAL_NED;
-            waypoint.x      = waypoint_local.pos[X];
-            waypoint.y      = waypoint_local.pos[Y];
-            waypoint.z      = waypoint_local.pos[Z];
+            waypoint.set_frame(MAV_FRAME_LOCAL_NED);
+            waypoint.set_x(waypoint_local.pos[X]);
+            waypoint.set_y(waypoint_local.pos[Y]);
+            waypoint.set_z(waypoint_local.pos[Z]);
 
             break;
 
@@ -180,7 +180,7 @@ static Mavlink_waypoint_handler::waypoint_struct_t convert_waypoint_to_local_ned
         case MAV_FRAME_GLOBAL_TERRAIN_ALT:      /* Global coordinate frame with above terrain level altitude. WGS84 coordinate system, relative altitude over terrain with respect to the waypoint coordinate. First value / x: latitude in degrees, second value / y: longitude in degrees, third value / z: positive altitude in meters with 0 being at ground level in terrain model. | */
         case MAV_FRAME_ENUM_END:
             // do not use this waypoint
-            waypoint.command = 0;
+            waypoint.set_command(0);
             break;
     }
 
@@ -439,7 +439,7 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* pos_est, velocity_command_t* velocity_command)
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* pos_est, velocity_command_t* velocity_command)
 {
     // Init dependencies
     vector_field->waypoint_handler  = waypoint_handler;
@@ -475,21 +475,21 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
     for (uint16_t i = 0; i < vector_field->waypoint_handler->waypoint_count(); ++i)
     {
         // Get waypoint in NED coordinates
-        Mavlink_waypoint_handler::waypoint_struct_t waypoint = convert_waypoint_to_local_ned(&vector_field->waypoint_handler->waypoint_list[i],
+        Waypoint waypoint = convert_waypoint_to_local_ned(&vector_field->waypoint_handler->waypoint_from_index(i),
                                      &vector_field->pos_est->local_position.origin);
 
         // Get object position
-        pos_obj[X] = waypoint.x;
-        pos_obj[Y] = waypoint.y;
-        pos_obj[Z] = waypoint.z;
+        pos_obj[X] = waypoint.x();
+        pos_obj[Y] = waypoint.y();
+        pos_obj[Z] = waypoint.z();
 
-        switch (waypoint.command)
+        switch (waypoint.command())
         {
             // Attractive object
             case 22:
                 vector_field_attractor(vector_field->pos_est->local_position.pos,
                                        pos_obj,
-                                       waypoint.param1,     // attractiveness
+                                       waypoint.param1(),     // attractiveness
                                        tmp_vector);
                 break;
 
@@ -497,9 +497,9 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
             case 17:
                 vector_field_repulsor_cylinder(vector_field->pos_est->local_position.pos,
                                                pos_obj,
-                                               waypoint.param1,     // repulsiveness
-                                               waypoint.param2,     // max_range
-                                               waypoint.param3,     // safety_radius
+                                               waypoint.param1(),     // repulsiveness
+                                               waypoint.param2(),     // max_range
+                                               waypoint.param3(),     // safety_radius
                                                tmp_vector);
                 break;
 
@@ -507,9 +507,9 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
             case 18:
                 vector_field_repulsor_sphere(vector_field->pos_est->local_position.pos,
                                              pos_obj,
-                                             waypoint.param1,   // repulsiveness
-                                             waypoint.param2,   // max_range
-                                             waypoint.param3,   // safety_radius
+                                             waypoint.param1(),   // repulsiveness
+                                             waypoint.param2(),   // max_range
+                                             waypoint.param3(),   // safety_radius
                                              tmp_vector);
                 break;
 
@@ -517,9 +517,9 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
             case 16:
                 vector_field_circular_waypoint(vector_field->pos_est->local_position.pos,
                                                pos_obj,
-                                               waypoint.param1,     // attractiveness
-                                               waypoint.param2,     // cruise_speed
-                                               waypoint.param3, // radius
+                                               waypoint.param1(),     // attractiveness
+                                               waypoint.param2(),     // cruise_speed
+                                               waypoint.param3(), // radius
                                                tmp_vector);
                 break;
 

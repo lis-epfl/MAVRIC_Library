@@ -68,7 +68,7 @@ public:
      * \param   mavlink_stream          The pointer to the MAVLink stream structure
      * \param   packet                  The received packet for creating a waypoint
      */
-    Waypoint(Mavlink_stream* mavlink_stream, mavlink_mission_item_t& packet);
+    Waypoint(const Mavlink_stream* mavlink_stream, mavlink_mission_item_t& packet);
 
     /**
      * \brief   Initialize the waypoint handler
@@ -85,7 +85,7 @@ public:
      * \param   y                   The value on the y axis (depends on the reference frame)
      * \param   z                   The value on the z axis (depends on the reference frame)
      */
-    Waypoint(   Mavlink_stream* mavlink_stream_,
+    Waypoint(   const Mavlink_stream* mavlink_stream_,
                 uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
@@ -116,7 +116,7 @@ public:
      * \param   loiter_time         The time to loiter at the waypoint
      * \param   dubin               The dubin structure for the waypoint
      */
-    Waypoint(   Mavlink_stream* mavlink_stream_,
+    Waypoint(   const Mavlink_stream* mavlink_stream_,
                 uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
@@ -158,11 +158,25 @@ public:
     uint8_t frame() const;
 
     /**
+     * \brief   Sets the frame
+     *
+     * \param   frame
+     */
+    void set_frame(uint8_t frame);
+
+    /**
      * \brief   Gets the command of the waypoint
      *
      * \return  command
      */
     uint16_t command() const;
+
+    /**
+     * \brief   Sets the command
+     *
+     * \param   command
+     */
+    void set_command(uint16_t command);
 
     /**
      * \brief   Gets the autocontinue state of the waypoint
@@ -179,11 +193,25 @@ public:
     float param1() const;
 
     /**
+     * \brief   Sets param1
+     *
+     * \param   param1
+     */
+    void set_param1(float param1);
+
+    /**
      * \brief   Gets param2 of the waypoint
      *
      * \return  param2
      */
     float param2() const;
+
+    /**
+     * \brief   Sets param2
+     *
+     * \param   param2
+     */
+    void set_param2(float param2);
 
     /**
      * \brief   Gets param3 of the waypoint
@@ -193,11 +221,25 @@ public:
     float param3() const;
 
     /**
+     * \brief   Sets param3
+     *
+     * \param   param3
+     */
+    void set_param3(float param3);
+
+    /**
      * \brief   Gets param4 of the waypoint
      *
      * \return  param4
      */
     float param4() const;
+
+    /**
+     * \brief   Sets param4
+     *
+     * \param   param4
+     */
+    void set_param4(float param4);
 
     /**
      * \brief   Gets the x coordinate of the waypoint
@@ -207,6 +249,13 @@ public:
     double x() const;
 
     /**
+     * \brief   Sets x
+     *
+     * \param   x
+     */
+    void set_x(double x);
+
+    /**
      * \brief   Gets the y coordinate of the waypoint
      *
      * \return  y
@@ -214,11 +263,25 @@ public:
     double y() const;
 
     /**
+     * \brief   Sets y
+     *
+     * \param   y
+     */
+    void set_y(double y);
+
+    /**
      * \brief   Gets the z coordinate of the waypoint
      *
      * \return  z
      */
     double z() const;
+
+    /**
+     * \brief   Sets z
+     *
+     * \param   z
+     */
+    void set_z(double z);
 
     /**
      * \brief   Gets the waypoint in local coordinates
@@ -282,7 +345,7 @@ protected:
     double y_;                                                  ///< The value on the y axis (depends on the reference frame)
     double z_;                                                  ///< The value on the z axis (depends on the reference frame)
 
-    Mavlink_stream* mavlink_stream_;                            ///< The mavlink stream
+    const Mavlink_stream* mavlink_stream_;                            ///< The mavlink stream
 
     // These come from Navigation::waypoint_local_struct_t
     // TODO: Get rid of for more logical structure

@@ -78,7 +78,7 @@ Waypoint::Waypoint() :
 
 }
 
-Waypoint::Waypoint(Mavlink_stream* mavlink_stream_, mavlink_mission_item_t& packet):
+Waypoint::Waypoint(const Mavlink_stream* mavlink_stream_, mavlink_mission_item_t& packet):
             mavlink_stream_(mavlink_stream_)
 {
     command_ = packet.command;
@@ -105,7 +105,7 @@ Waypoint::Waypoint(Mavlink_stream* mavlink_stream_, mavlink_mission_item_t& pack
     // dubin_ = ; ????
 }
 
-Waypoint::Waypoint( Mavlink_stream* mavlink_stream_,
+Waypoint::Waypoint( const Mavlink_stream* mavlink_stream_,
                     uint8_t frame,
                     uint16_t command,
                     uint8_t autocontinue,
@@ -138,7 +138,7 @@ Waypoint::Waypoint( Mavlink_stream* mavlink_stream_,
     // dubin_ = ; ????
 }
 
-Waypoint::Waypoint( Mavlink_stream* mavlink_stream_,
+Waypoint::Waypoint( const Mavlink_stream* mavlink_stream_,
                     uint8_t frame,
                     uint16_t command,
                     uint8_t autocontinue,
@@ -298,14 +298,104 @@ void Waypoint::calculate_waypoint_local_structure(global_position_t origin, dubi
     *dubin_state = DUBIN_INIT;
 }
 
+uint8_t Waypoint::frame() const
+{
+    return frame_;
+}
+
+void Waypoint::set_frame(uint8_t frame)
+{
+    frame_ = frame;
+}
+
 uint16_t Waypoint::command() const
 {
     return command_;
 }
 
+void Waypoint::set_command(uint16_t command)
+{
+    command_ = command;
+}
+
+uint8_t Waypoint::autocontinue() const
+{
+    return autocontinue_;
+}
+
+float Waypoint::param1() const
+{
+    return param1_;
+}
+
+void Waypoint::set_param1(float param1)
+{
+    param1_ = param1;
+}
+
+float Waypoint::param2() const
+{
+    return param2_;
+}
+
+void Waypoint::set_param2(float param2)
+{
+    param2_ = param2;
+}
+
+float Waypoint::param3() const
+{
+    return param3_;
+}
+
+void Waypoint::set_param3(float param3)
+{
+    param3_ = param3;
+}
+
+float Waypoint::param4() const
+{
+    return param4_;
+}
+
+void Waypoint::set_param4(float param4)
+{
+    param4_ = param4;
+}
+
 local_position_t& Waypoint::local_pos()
 {
     return local_pos_;
+}
+
+double Waypoint::x() const
+{
+    return x_;
+}
+
+void Waypoint::set_x(double x)
+{
+    x_ = x;
+}
+
+double Waypoint::y() const
+{
+    return y_;
+}
+
+void Waypoint::set_y(double y)
+{
+    y_ = y;
+}
+
+double Waypoint::z() const
+{
+    return z_;
+}
+
+void Waypoint::set_z(double z)
+{
+    z_ = z;
 }
 
 void Waypoint::set_local_pos(local_position_t local_pos)

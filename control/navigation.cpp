@@ -198,7 +198,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
         case DUBIN_INIT:
             dubin_circle(   dir_desired,
                             dubin->circle_center_1,
-                            goal.radius,
+                            goal.radius(),
                             position_estimation.local_position.pos,
                             cruise_speed,
                             one_over_scaling );
@@ -224,14 +224,14 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
         case DUBIN_CIRCLE2:
             dubin_circle(   dir_desired,
                             dubin->circle_center_2,
-                            goal.radius,
+                            goal.radius(),
                             position_estimation.local_position.pos,
                             cruise_speed,
                             one_over_scaling );
         break;
     }
 
-    float vert_vel = vertical_vel_gain * (goal.waypoint.pos[Z] - position_estimation.local_position.pos[Z]);
+    float vert_vel = vertical_vel_gain * (goal.local_pos().pos[Z] - position_estimation.local_position.pos[Z]);
 
     if (maths_f_abs(vert_vel) > max_climb_rate)
     {
@@ -255,7 +255,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
     controls_nav.tvel[Z] = dir_desired_sg[Z];
 
     float rel_heading;
-    if ((SQR(goal.waypoint.pos[X] - position_estimation.local_position.pos[X]) + SQR(goal.waypoint.pos[Y] - position_estimation.local_position.pos[Y])) <= 25.0f)
+    if ((SQR(goal.local_pos().pos[X] - position_estimation.local_position.pos[X]) + SQR(goal.local_pos().pos[Y] - position_estimation.local_position.pos[Y])) <= 25.0f)
     {
         rel_heading = 0.0f;
     }
@@ -264,7 +264,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
         rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - position_estimation.local_position.heading);
     }
     //rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - position_estimation.local_position.heading);
-    
+
 
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 }
@@ -275,7 +275,7 @@ void Navigation::run()
     float rel_pos[3];
 
     // Control in translational speed of the platform
-    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(goal.waypoint.pos,
+    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(goal.local_pos().pos,
                               rel_pos,
                               position_estimation.local_position.pos);
 
@@ -290,15 +290,15 @@ void Navigation::run()
             {
                 if (internal_state_ == NAV_NAVIGATING)
                 {
-                    if (goal.radius > 0.0f)
+                    if (goal.radius() > 0.0f)
                     {
-                        set_dubin_velocity( &goal.dubin);
+                        set_dubin_velocity( &goal.dubin());
                     }
                     else
                     {
                         set_speed_command(rel_pos);
                     }
-                    
+
                 }
                 else
                 {
@@ -307,13 +307,13 @@ void Navigation::run()
             }
             else
             {
-                set_dubin_velocity(&goal.dubin);
+                set_dubin_velocity(&goal.dubin());
             }
             // Add here other types of navigation strategies
         break;
     }
 
-    controls_nav.theading = goal.waypoint.heading;
+    controls_nav.theading = goal.local_pos().heading;
 }
 
 //------------------------------------------------------------------------------
@@ -340,10 +340,10 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     controls_nav.control_mode = VELOCITY_COMMAND_MODE;
     controls_nav.yaw_mode = YAW_ABSOLUTE;
 
-    goal.waypoint.pos[X] = 0.0f;
-    goal.waypoint.pos[Y] = 0.0f;
-    goal.waypoint.pos[Z] = 0.0f;
-    goal.waypoint.heading = 0.0f;
+    goal.local_pos().pos[X] = 0.0f;
+    goal.local_pos().pos[Y] = 0.0f;
+    goal.local_pos().pos[Z] = 0.0f;
+    goal.local_pos().heading = 0.0f;
 
     last_update = 0;
 

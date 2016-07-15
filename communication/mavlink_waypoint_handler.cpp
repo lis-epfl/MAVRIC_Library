@@ -472,7 +472,7 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_planner, Position_estimation& position_estimation, Navigation& navigation, State& state_, Mavlink_message_handler& message_handler, Mavlink_stream& mavlink_stream_, conf_t config):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_planner, Position_estimation& position_estimation, Navigation& navigation, State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
             mavlink_stream_(mavlink_stream_),
@@ -633,6 +633,18 @@ Waypoint& Mavlink_waypoint_handler::next_waypoint()
     else // TODO: Return an error structure
     {
         // For now, set to last waypoint structure
+        return waypoint_list_[waypoint_count_-1];
+    }
+}
+
+Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i)
+{
+    if (i >= 0 && i < waypoint_count_)
+    {
+        return waypoint_list_[i];
+    }
+    else
+    {
         return waypoint_list_[waypoint_count_-1];
     }
 }

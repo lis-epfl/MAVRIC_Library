@@ -44,7 +44,7 @@
 #ifndef STABILISATION_COPTER_H_
 #define STABILISATION_COPTER_H_
 
-#include "communication/mavlink_waypoint_handler.hpp"
+#include "communication/mission_planner.hpp"
 #include "sensing/position_estimation.hpp"
 
 extern "C"
@@ -123,7 +123,7 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
  * \param   waypoint_handler        The waypoint handler structure, to get hold_position coordinates
  * \param   position_estimation     The position estimator structure to compute position error
  */
-void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* position_estimation);
+void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, Mission_planner* mission_planner, const Position_estimation* position_estimation);
 
 /**
  * \brief                           Main Controller for controlling and stabilizing the quad

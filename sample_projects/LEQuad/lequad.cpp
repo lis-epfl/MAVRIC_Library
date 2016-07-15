@@ -90,7 +90,16 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
-    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
+    waypoint_handler(mission_planner, position_estimation, navigation, state, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
+    hold_position_handler(navigation, state),
+    landing_handler(mission_planner, position_estimation, navigation, state, mavlink_communication.message_handler()),
+    manual_control_handler(position_estimation, navigation, state),
+    navigating_handler(position_estimation, navigation, state, mission_planner, mavlink_communication.mavlink_stream(), waypoint_handler, landing_handler, mavlink_communication.message_handler()),
+    on_ground_handler(navigation, state, manual_control),
+    stop_on_position_handler(navigation, state),
+    stop_there_handler(position_estimation, navigation, state),
+    takeoff_handler(mission_planner, position_estimation, navigation, ahrs, state, mavlink_communication.message_handler()),
+    mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), on_ground_handler, takeoff_handler, landing_handler, hold_position_handler, stop_on_position_handler, stop_there_handler, navigating_handler, manual_control_handler, waypoint_handler),
     state_machine(state, position_estimation, imu, ahrs, manual_control),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
@@ -453,8 +462,8 @@ bool LEQuad::init_navigation(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update, (Scheduler_task::task_argument_t)&waypoint_handler, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,          (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mission_planner::update,     (Scheduler_task::task_argument_t)&waypoint_handler, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }

@@ -44,6 +44,7 @@
 #define VECTOR_FIELD_WAYPOINT_H_
 
 #include "communication/mavlink_waypoint_handler.hpp"
+#include "communication/waypoint.hpp"
 #include "sensing/position_estimation.hpp"
 
 extern "C"
@@ -56,7 +57,7 @@ extern "C"
  */
 typedef struct
 {
-    const Mavlink_waypoint_handler*   waypoint_handler;             ///< Waypoint list (input)
+    Mavlink_waypoint_handler*   waypoint_handler;             ///< Waypoint list (input)
     const Position_estimation*        pos_est;                      ///< Estimated position and speed (input)
     velocity_command_t*                 velocity_command;           ///< Velocity command (output)
 } vector_field_waypoint_t;
@@ -79,7 +80,7 @@ typedef struct
  * \param   pos_est             Pointer to the estimated speed and position (input)
  * \param   velocity_command    Pointer to velocity command (output)
  */
-bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* pos_est, velocity_command_t* velocity_command);
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* pos_est, velocity_command_t* velocity_command);
 
 
 /**

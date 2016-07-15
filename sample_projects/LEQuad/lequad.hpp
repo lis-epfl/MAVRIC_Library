@@ -52,6 +52,15 @@
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
+#include "communication/mission_planner.hpp"
+#include "communication/mission_planner_handler_hold_position.hpp"
+#include "communication/mission_planner_handler_landing.hpp"
+#include "communication/mission_planner_handler_manual_control.hpp"
+#include "communication/mission_planner_handler_navigating.hpp"
+#include "communication/mission_planner_handler_on_ground.hpp"
+#include "communication/mission_planner_handler_stop_on_position.hpp"
+#include "communication/mission_planner_handler_stop_there.hpp"
+#include "communication/mission_planner_handler_takeoff.hpp"
 #include "communication/onboard_parameters.hpp"
 #include "communication/state.hpp"
 #include "communication/state_machine.hpp"
@@ -229,7 +238,18 @@ protected:
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation
-    Mavlink_waypoint_handler waypoint_handler;
+
+    Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
+    Mission_planner_handler_hold_position hold_position_handler;
+    Mission_planner_handler_landing landing_handler;
+    Mission_planner_handler_manual_control manual_control_handler;
+    Mission_planner_handler_navigating navigating_handler;
+    Mission_planner_handler_on_ground on_ground_handler;
+    Mission_planner_handler_stop_on_position stop_on_position_handler;
+    Mission_planner_handler_stop_there stop_there_handler;
+    Mission_planner_handler_takeoff takeoff_handler;
+    Mission_planner mission_planner;                            ///< Controls the mission plan
+
 
     State_machine state_machine;                                ///< The structure for the state machine
 

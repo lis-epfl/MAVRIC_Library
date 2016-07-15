@@ -87,7 +87,7 @@ public:
                                 Navigation& navigation,
                                 State& state,
                                 Mavlink_message_handler& message_handler,
-                                Mavlink_stream& mavlink_stream,
+                                const Mavlink_stream& mavlink_stream,
                                 conf_t config = default_config());
 
 
@@ -114,6 +114,13 @@ public:
      * \return next waypoint
      */
     Waypoint& next_waypoint();
+
+    /**
+     * \brief   Returns a waypoint from the list from a specific index
+     *
+     * \return  waypoint_list_[i]
+     */
+    Waypoint& waypoint_from_index(int i);
 
     /**
      * \brief   Sets the next waypoint as the current one. Should be called when
@@ -157,7 +164,7 @@ protected:
     uint16_t waypoint_count_;                                   ///< The total number of waypoints
     uint16_t current_waypoint_index_;                           ///< The current waypoint index
 
-    Mavlink_stream& mavlink_stream_;                            ///< The reference to MAVLink stream object
+    const Mavlink_stream& mavlink_stream_;                            ///< The reference to MAVLink stream object
     Position_estimation& position_estimation_;                  ///< The reference to the position estimation object
     State& state_;                                              ///< The reference to the state object
     Mission_planner& mission_planner_;                          ///< The reference to the mission planner object

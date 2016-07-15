@@ -78,7 +78,7 @@ public:
                                             Navigation& navigation,
                                             State& state,
                                             Mission_planner& mission_planner,
-                                            Mavlink_stream& mavlink_stream,
+                                            const Mavlink_stream& mavlink_stream,
                                             Mavlink_waypoint_handler& waypoint_handler,
                                             Mission_planner_handler_landing& mission_planner_handler_landing,
                                             Mavlink_message_handler& message_handler);
@@ -97,7 +97,7 @@ protected:
     Navigation& navigation_;                                            ///< The reference to the navigation object
     State& state_;                                                      ///< The reference to the state object
     Mission_planner& mission_planner_;                                  ///< The reference to the mission_planner
-    Mavlink_stream& mavlink_stream_;                                    ///< The reference to the mavlink object
+    const Mavlink_stream& mavlink_stream_;                                    ///< The reference to the mavlink object
     Mavlink_waypoint_handler& waypoint_handler_;                        ///< The reference to the mavlink waypoint handler
     Mission_planner_handler_landing& mission_planner_handler_landing_;  ///< The reference to the landing handler
 

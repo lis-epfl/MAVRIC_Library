@@ -105,7 +105,7 @@ public:
                         State& state,
                         const Manual_control& manual_control,
                         Mavlink_message_handler& message_handler,
-                        Mavlink_stream& mavlink_stream,
+                        const Mavlink_stream& mavlink_stream,
                         Mission_planner_handler_on_ground& on_ground_handler,
                         Mission_planner_handler_takeoff& takeoff_handler,
                         Mission_planner_handler_landing& landing_handler,
@@ -211,7 +211,7 @@ protected:
     Mav_mode last_mode_;                                        ///< The mode of the MAV to have a memory of its evolution
     Waypoint waypoint_critical_coordinates_;                    ///< Waypoint for the critical state
 
-    Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
+    const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure

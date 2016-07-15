@@ -181,7 +181,7 @@ public:
 
     strategy_t navigation_strategy;                     ///< The type of navigation strategy
 
-    Waypoint& goal;                                     ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
+    Waypoint goal;                                     ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
 
     float alt_lpf;                                      ///< The low-pass filtered altitude for auto-landing
     float LPF_gain;                                     ///< The value of the low-pass filter gain

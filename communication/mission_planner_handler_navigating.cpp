@@ -315,7 +315,7 @@ Mission_planner_handler_navigating::Mission_planner_handler_navigating( Position
                                                                         Navigation& navigation,
                                                                         State& state,
                                                                         Mission_planner& mission_planner,
-                                                                        Mavlink_stream& mavlink_stream,
+                                                                        const Mavlink_stream& mavlink_stream,
                                                                         Mavlink_waypoint_handler& waypoint_handler,
                                                                         Mission_planner_handler_landing& mission_planner_handler_landing,
                                                                         Mavlink_message_handler& message_handler):
