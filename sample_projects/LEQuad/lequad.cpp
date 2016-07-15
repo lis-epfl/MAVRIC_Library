@@ -450,15 +450,25 @@ bool LEQuad::init_navigation(void)
 
     // Initialize
     ret &= waypoint_handler.init();
+    print_util_dbg_print("waypoint_handler Initialized");
     ret &= mission_planner.init();
+    print_util_dbg_print("mission_planner Initialized");
     ret &= hold_position_handler.init();
+    print_util_dbg_print("hold_position_handler Initialized");
     ret &= landing_handler.init();
+    print_util_dbg_print("landing_handler Initialized");
     ret &= manual_control_handler.init();
+    print_util_dbg_print("manual_control_handler Initialized");
     ret &= navigating_handler.init();
+    print_util_dbg_print("navigating_handler Initialized");
     ret &= on_ground_handler.init();
+    print_util_dbg_print("on_ground_handler Initialized");
     ret &= stop_on_position_handler.init();
+    print_util_dbg_print("stop_on_position_handler Initialized");
     ret &= stop_there_handler.init();
+    print_util_dbg_print("stop_there_handler Initialized");
     ret &= takeoff_handler.init();
+    print_util_dbg_print("takeoff_handler Initialized");
 
     // Parameters
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.dist2vel_gain,                           "NAV_DIST2VEL"    );
