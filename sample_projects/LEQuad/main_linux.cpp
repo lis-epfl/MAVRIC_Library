@@ -96,7 +96,7 @@ int main(int argc, char** argv)
                         board.sim.sonar(),
                         board.mavlink_serial,
                         board.spektrum_satellite,
-                        board.led,
+                        board.state_display_mavrinux_,
                         board.file_flash,
                         board.battery,
                         board.servo_0,

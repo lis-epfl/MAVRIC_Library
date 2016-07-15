@@ -52,6 +52,7 @@
 #include "drivers/servo.hpp"
 #include "drivers/sonar_i2cxl.hpp"
 #include "drivers/spektrum_satellite.hpp"
+#include "drivers/state_display_mavrimini.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
@@ -140,6 +141,7 @@ public:
     Gpio_stm32              red_led_gpio;
     Led_gpio                green_led;
     Led_gpio                red_led;
+    State_display_mavrimini state_display_mavrimini_;
     File_dummy              file_flash;
     Serial_stm32            serial_1;
     Serial_stm32            serial_2;
@@ -170,7 +172,6 @@ public:
     Dynamic_model_quad_diag sim_model;
     Simulation              sim;
     Imu                     imu;
-    
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
