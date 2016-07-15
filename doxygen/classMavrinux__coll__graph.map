@@ -1,25 +1,27 @@
 <map id="G" name="G">
 <area shape="rect" id="node2" href="$classSerial__udp.html" title="{Serial_udp\n||+ Serial_udp()\l+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l}" alt="" coords="5,341,107,547"/>
 <area shape="rect" id="node4" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="147,31,240,238"/>
-<area shape="rect" id="node20" href="$classSerial__dummy.html" title="{Serial_dummy\n||+ Serial_dummy()\l+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l}" alt="" coords="131,341,256,547"/>
-<area shape="rect" id="node35" href="$classSerial__linux__io.html" title="Implementation of serial peripheral for avr32." alt="" coords="280,332,405,556"/>
+<area shape="rect" id="node24" href="$classSerial__dummy.html" title="{Serial_dummy\n||+ Serial_dummy()\l+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l}" alt="" coords="131,341,256,547"/>
+<area shape="rect" id="node39" href="$classSerial__linux__io.html" title="Implementation of serial peripheral for avr32." alt="" coords="280,332,405,556"/>
 <area shape="rect" id="node6" href="$classSimulation.html" title="Simulated dynamics of a quadcopter in diag configuration." alt="" coords="429,332,560,556"/>
 <area shape="rect" id="node8" href="$classSpektrum__satellite.html" title="{Spektrum_satellite\n||+ Spektrum_satellite()\l+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l+ handle_interrupt()\l}" alt="" coords="584,349,733,539"/>
 <area shape="rect" id="node10" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="604,57,713,212"/>
 <area shape="rect" id="node12" href="$classGpio__dummy.html" title="{Gpio_dummy\n||+ Gpio_dummy()\l+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="757,341,875,547"/>
 <area shape="rect" id="node14" href="$classGpio.html" title="{Gpio\n||+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="769,40,863,229"/>
 <area shape="rect" id="node16" href="$classAirspeed__analog.html" title="{Airspeed_analog\n||+ Airspeed_analog()\l+ start_calibration()\l+ stop_calibration()\l+ update()\l+ get_airspeed()\l+ get_last_airspeed()\l}" alt="" coords="899,358,1043,530"/>
-<area shape="rect" id="node18" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="1067,323,1213,565"/>
-<area shape="rect" id="node23" href="$classFile__linux.html" title="File objects on linux platforms." alt="" coords="1237,315,1333,573"/>
-<area shape="rect" id="node25" href="$classFile.html" title="Base class for file objects." alt="" coords="1243,5,1328,264"/>
-<area shape="rect" id="node27" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1357,367,1440,521"/>
-<area shape="rect" id="node29" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1464,315,1595,573"/>
-<area shape="rect" id="node31" href="$classLed__dummy.html" title="{Led_dummy\n||+ Led_dummy()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1619,375,1731,513"/>
-<area shape="rect" id="node33" href="$classLed.html" title="{Led\n||+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1636,75,1713,195"/>
-<area shape="rect" id="node38" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1755,384,1912,504"/>
-<area shape="rect" id="node40" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1755,75,1912,195"/>
-<area shape="rect" id="node42" href="$classAdc__dummy.html" title="{Adc_dummy\n||+ Adc_dummy()\l+ init()\l+ update()\l+ voltage()\l}" alt="" coords="1936,375,2051,513"/>
-<area shape="rect" id="node44" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="1952,75,2035,195"/>
-<area shape="rect" id="node46" href="$classDynamic__model__quad__diag.html" title="Simulated dynamics of a quadcopter in diag configuration." alt="" coords="2075,332,2277,556"/>
-<area shape="rect" id="node48" href="$classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model." alt="" coords="2099,31,2253,238"/>
+<area shape="rect" id="node18" href="$classState__display__mavrinux.html" title="{State_display_mavrinux\n||+ State_display_mavrinux()\l+ update()\l}" alt="" coords="1067,393,1248,495"/>
+<area shape="rect" id="node20" href="$classState__display.html" title="Interface class for state display." alt="" coords="1107,66,1208,203"/>
+<area shape="rect" id="node22" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="1272,323,1419,565"/>
+<area shape="rect" id="node27" href="$classFile__linux.html" title="File objects on linux platforms." alt="" coords="1443,315,1539,573"/>
+<area shape="rect" id="node29" href="$classFile.html" title="Base class for file objects." alt="" coords="1448,5,1533,264"/>
+<area shape="rect" id="node31" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1563,367,1645,521"/>
+<area shape="rect" id="node33" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1669,315,1800,573"/>
+<area shape="rect" id="node35" href="$classLed__dummy.html" title="{Led_dummy\n||+ Led_dummy()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1824,375,1936,513"/>
+<area shape="rect" id="node37" href="$classLed.html" title="{Led\n||+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1841,75,1919,195"/>
+<area shape="rect" id="node42" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1960,384,2117,504"/>
+<area shape="rect" id="node44" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1960,75,2117,195"/>
+<area shape="rect" id="node46" href="$classAdc__dummy.html" title="{Adc_dummy\n||+ Adc_dummy()\l+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2141,375,2256,513"/>
+<area shape="rect" id="node48" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2157,75,2240,195"/>
+<area shape="rect" id="node50" href="$classDynamic__model__quad__diag.html" title="Simulated dynamics of a quadcopter in diag configuration." alt="" coords="2280,332,2483,556"/>
+<area shape="rect" id="node52" href="$classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model." alt="" coords="2304,31,2459,238"/>
 </map>

@@ -8,21 +8,23 @@
 <area shape="rect" id="node14" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="656,323,803,565"/>
 <area shape="rect" id="node16" href="$classFile__dummy.html" title="File objects on linux platforms." alt="" coords="827,315,939,573"/>
 <area shape="rect" id="node18" href="$classFile.html" title="Base class for file objects." alt="" coords="840,5,925,264"/>
-<area shape="rect" id="node20" href="$classPwm__stm32.html" title="{Pwm_stm32\n||+ Pwm_stm32()\l+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="963,375,1120,513"/>
-<area shape="rect" id="node22" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1053,75,1211,195"/>
-<area shape="rect" id="node40" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1144,384,1301,504"/>
-<area shape="rect" id="node24" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1325,367,1408,521"/>
-<area shape="rect" id="node26" href="$classGpio__stm32.html" title="{Gpio_stm32\n||+ Gpio_stm32()\l+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="1432,341,1544,547"/>
-<area shape="rect" id="node28" href="$classGpio.html" title="{Gpio\n||+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="1441,40,1535,229"/>
-<area shape="rect" id="node30" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1568,315,1699,573"/>
-<area shape="rect" id="node32" href="$classSerial__stm32.html" title="Implementation of serial peripheral for avr32." alt="" coords="1723,332,1840,556"/>
-<area shape="rect" id="node34" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="1735,31,1828,238"/>
-<area shape="rect" id="node36" href="$classLed__gpio.html" title="{Led_gpio\n||+ Led_gpio()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1864,375,1957,513"/>
-<area shape="rect" id="node38" href="$classLed.html" title="{Led\n||+ on()\l+ off()\l+ toggle()\l}" alt="" coords="1872,75,1949,195"/>
-<area shape="rect" id="node43" href="$classI2c__stm32.html" title="I2C peripheral driver for STM32." alt="" coords="1981,367,2083,521"/>
-<area shape="rect" id="node45" href="$classI2c.html" title="{I2c\n||+ init()\l+ probe()\l+ write()\l+ read()\l}" alt="" coords="1995,66,2069,203"/>
-<area shape="rect" id="node47" href="$classDynamic__model__quad__diag.html" title="Simulated dynamics of a quadcopter in diag configuration." alt="" coords="2107,332,2309,556"/>
-<area shape="rect" id="node49" href="$classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model." alt="" coords="2131,31,2285,238"/>
-<area shape="rect" id="node51" href="$classAdc__dummy.html" title="{Adc_dummy\n||+ Adc_dummy()\l+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2333,375,2448,513"/>
-<area shape="rect" id="node53" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2349,75,2432,195"/>
+<area shape="rect" id="node20" href="$classState__display__mavrimini.html" title="{State_display_mavrimini\n||+ State_display_mavrimini()\l+ update()\l}" alt="" coords="963,393,1147,495"/>
+<area shape="rect" id="node22" href="$classState__display.html" title="Interface class for state display." alt="" coords="1004,66,1105,203"/>
+<area shape="rect" id="node24" href="$classPwm__stm32.html" title="{Pwm_stm32\n||+ Pwm_stm32()\l+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1171,375,1328,513"/>
+<area shape="rect" id="node26" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1261,75,1419,195"/>
+<area shape="rect" id="node44" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="1352,384,1509,504"/>
+<area shape="rect" id="node28" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1533,367,1616,521"/>
+<area shape="rect" id="node30" href="$classGpio__stm32.html" title="{Gpio_stm32\n||+ Gpio_stm32()\l+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="1640,341,1752,547"/>
+<area shape="rect" id="node32" href="$classGpio.html" title="{Gpio\n||+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="1649,40,1743,229"/>
+<area shape="rect" id="node34" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1776,315,1907,573"/>
+<area shape="rect" id="node36" href="$classSerial__stm32.html" title="Implementation of serial peripheral for avr32." alt="" coords="1931,332,2048,556"/>
+<area shape="rect" id="node38" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="1943,31,2036,238"/>
+<area shape="rect" id="node40" href="$classLed__gpio.html" title="{Led_gpio\n||+ Led_gpio()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="2072,375,2165,513"/>
+<area shape="rect" id="node42" href="$classLed.html" title="{Led\n||+ on()\l+ off()\l+ toggle()\l}" alt="" coords="2080,75,2157,195"/>
+<area shape="rect" id="node47" href="$classI2c__stm32.html" title="I2C peripheral driver for STM32." alt="" coords="2189,367,2291,521"/>
+<area shape="rect" id="node49" href="$classI2c.html" title="{I2c\n||+ init()\l+ probe()\l+ write()\l+ read()\l}" alt="" coords="2203,66,2277,203"/>
+<area shape="rect" id="node51" href="$classDynamic__model__quad__diag.html" title="Simulated dynamics of a quadcopter in diag configuration." alt="" coords="2315,332,2517,556"/>
+<area shape="rect" id="node53" href="$classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model." alt="" coords="2339,31,2493,238"/>
+<area shape="rect" id="node55" href="$classAdc__dummy.html" title="{Adc_dummy\n||+ Adc_dummy()\l+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2541,375,2656,513"/>
+<area shape="rect" id="node57" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2557,75,2640,195"/>
 </map>

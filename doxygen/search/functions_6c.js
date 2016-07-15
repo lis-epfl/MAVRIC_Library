@@ -19,7 +19,7 @@ var searchData=
   ['led_5ftest',['LED_Test',['../led_8c.html#a359e6f6bc7043c16a0094145c4fba370',1,'LED_Test(uint32_t leds):&#160;led.c'],['../led_8h.html#a359e6f6bc7043c16a0094145c4fba370',1,'LED_Test(uint32_t leds):&#160;led.c']]],
   ['led_5ftoggle',['LED_Toggle',['../led_8c.html#a27336aae34072b90559f0a59147302d0',1,'LED_Toggle(uint32_t leds):&#160;led.c'],['../led_8h.html#a27336aae34072b90559f0a59147302d0',1,'LED_Toggle(uint32_t leds):&#160;led.c']]],
   ['length',['length',['../classFile__fat__fs.html#afe7149ff00eda8e1b5c6ecc9a44fded0',1,'File_fat_fs::length()'],['../classFile__flash__avr32.html#a0fe29627a2ba7af9d600189d3f699b5c',1,'File_flash_avr32::length()'],['../classFile.html#a230c72c26d75daa2da7e1876b3cf2888',1,'File::length()'],['../classFile__dummy.html#ad71b3725485a2aefdaacb68aed6eebbc',1,'File_dummy::length()'],['../classFile__linux.html#a9c352b48d85565a3abc82286d30f9c71',1,'File_linux::length()']]],
-  ['lequad',['LEQuad',['../classLEQuad.html#a7a04343b84a01166bef1cb572a7476fb',1,'LEQuad']]],
+  ['lequad',['LEQuad',['../classLEQuad.html#accaeed2b2f5626b45848455163998481',1,'LEQuad']]],
   ['lequad_5fdronedome',['LEQuad_dronedome',['../classLEQuad__dronedome.html#ab3f76a746327f749741411915d0209a1',1,'LEQuad_dronedome']]],
   ['level',['level',['../classBattery.html#a13fa2e56c1eb27945cfd604e8a03dc5b',1,'Battery']]],
   ['loop',['loop',['../classLEQuad.html#acc67075f90c55b09726bef35c0313cdf',1,'LEQuad']]],

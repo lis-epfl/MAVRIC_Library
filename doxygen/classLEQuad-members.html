@@ -113,8 +113,7 @@ This is the complete list of members for <a class="el" href="classLEQuad.html">L
   <tr bgcolor="#f0f0f0"><td><b>init_sonar</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_stabilisers</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_state</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classLEQuad.html#adf2a261c2296249877f55a67e1db4772">led</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classLEQuad.html#a7a04343b84a01166bef1cb572a7476fb">LEQuad</a>(Imu &amp;imu, Barometer &amp;barometer, Gps &amp;gps, Sonar &amp;sonar, Serial &amp;serial_mavlink, Satellite &amp;satellite, Led &amp;led, File &amp;file_flash, Battery &amp;battery, Servo &amp;servo_0, Servo &amp;servo_1, Servo &amp;servo_2, Servo &amp;servo_3, Servo &amp;servo_4, Servo &amp;servo_5, Servo &amp;servo_6, Servo &amp;servo_7, File &amp;file1, File &amp;file2, const conf_t &amp;config=default_config())</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classLEQuad.html#accaeed2b2f5626b45848455163998481">LEQuad</a>(Imu &amp;imu, Barometer &amp;barometer, Gps &amp;gps, Sonar &amp;sonar, Serial &amp;serial_mavlink, Satellite &amp;satellite, State_display &amp;state_display, File &amp;file_flash, Battery &amp;battery, Servo &amp;servo_0, Servo &amp;servo_1, Servo &amp;servo_2, Servo &amp;servo_3, Servo &amp;servo_4, Servo &amp;servo_5, Servo &amp;servo_6, Servo &amp;servo_7, File &amp;file1, File &amp;file2, const conf_t &amp;config=default_config())</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf">loop</a>(void)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>main_task</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>main_task_func</b>(LEQuad *mav) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [inline, protected, static]</code></td></tr>
@@ -138,6 +137,7 @@ This is the complete list of members for <a class="el" href="classLEQuad.html">L
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d">sonar</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#ac926ff33577f58202f891541b2a1713b">stabilisation_copter</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#a84f847a89b139e56f1a0f8c2ab1fbf05">state</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classLEQuad.html#a39193f372eda8874cbd98f51677becdb">state_display_</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#aca96fddc8a43b0ca4b51cdffcdf79718">state_machine</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#a886784d5864c65cf442460cac47d48d3">sysid_</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>waypoint_handler</b> (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
@@ -159,7 +159,7 @@ This is the complete list of members for <a class="el" href="classLEQuad.html">L
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 7 2016 14:44:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jul 15 2016 15:59:49 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

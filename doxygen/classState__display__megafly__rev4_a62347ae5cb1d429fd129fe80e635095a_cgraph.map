@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classLed.html#a446a6c7a635f05e539027318d870b5a2" title="Switch led on." alt="" coords="300,5,364,35"/>
+<area shape="rect" id="node5" href="$classLed.html#a75337e867b5a430379ce084996ae1998" title="Switch led off." alt="" coords="299,59,365,88"/>
+<area shape="rect" id="node7" href="$classLed.html#abbd7d3886b09f62466969cc20c6daccc" title="Toggle led." alt="" coords="289,112,375,141"/>
+</map>

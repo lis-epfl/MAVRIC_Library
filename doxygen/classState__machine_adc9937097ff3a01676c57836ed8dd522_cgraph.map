@@ -15,7 +15,8 @@
 <area shape="rect" id="node38" href="$classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))" alt="" coords="241,688,436,717"/>
 <area shape="rect" id="node41" href="$classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd" title="Returns if position estimation is healthy." alt="" coords="245,741,432,771"/>
 <area shape="rect" id="node47" href="$classMav__mode.html#a3c4235b6649dcabb00a41d8aa3cf16a4" title="returns whether in manual mode (MAV_MODE_FLAG_MANUAL_INPUT_ENABLED set)" alt="" coords="263,795,415,824"/>
-<area shape="rect" id="node49" href="$classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick." alt="" coords="220,848,457,877"/>
+<area shape="rect" id="node49" href="$classState__display.html#a153183db41405626c97ad8e70d1b3113" title="Set state function &#160;Set the state to be displayed." alt="" coords="257,848,420,877"/>
+<area shape="rect" id="node51" href="$classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick." alt="" coords="220,901,457,931"/>
 <area shape="rect" id="node11" href="$classAdc.html#a7c7ee3f985b2b67990d61893faae8b32" title="Update function." alt="" coords="587,192,677,221"/>
 <area shape="rect" id="node13" href="$classAdc.html#a9733298b7e9cde8e5b91b64a1ca2b586" title="Get the voltage in volts." alt="" coords="585,139,679,168"/>
 <area shape="rect" id="node23" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="575,481,689,511"/>

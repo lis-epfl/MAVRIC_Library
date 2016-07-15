@@ -5,14 +5,14 @@
 <area shape="rect" id="node8" href="$classLed.html" title="{Led\n||+ on()\l+ off()\l+ toggle()\l}" alt="" coords="140,368,217,488"/>
 <area shape="rect" id="node10" href="$classAirspeed__analog.html" title="{Airspeed_analog\n||+ Airspeed_analog()\l+ start_calibration()\l+ stop_calibration()\l+ update()\l+ get_airspeed()\l+ get_last_airspeed()\l}" alt="" coords="253,713,397,885"/>
 <area shape="rect" id="node12" href="$classSpektrum__satellite.html" title="{Spektrum_satellite\n||+ Spektrum_satellite()\l+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l+ handle_interrupt()\l}" alt="" coords="421,704,571,893"/>
-<area shape="rect" id="node14" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="372,351,481,505"/>
+<area shape="rect" id="node14" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="415,351,524,505"/>
 <area shape="rect" id="node16" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="595,643,725,954"/>
-<area shape="rect" id="node18" href="$classLsm330dlc__acc.html" title="Intermediate interface class for the accelero inside LSM330DLC." alt="" coords="505,377,617,479"/>
-<area shape="rect" id="node20" href="$classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="485,6,616,213"/>
-<area shape="rect" id="node22" href="$classLsm330dlc__gyr.html" title="Intermediate interface class for the gyro inside LSM330DLC." alt="" coords="641,377,751,479"/>
-<area shape="rect" id="node24" href="$classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="640,6,771,213"/>
+<area shape="rect" id="node18" href="$classLsm330dlc__acc.html" title="Intermediate interface class for the accelero inside LSM330DLC." alt="" coords="548,377,660,479"/>
+<area shape="rect" id="node20" href="$classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="528,6,659,213"/>
+<area shape="rect" id="node22" href="$classLsm330dlc__gyr.html" title="Intermediate interface class for the gyro inside LSM330DLC." alt="" coords="684,377,793,479"/>
+<area shape="rect" id="node24" href="$classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="683,6,813,213"/>
 <area shape="rect" id="node26" href="$classSonar__i2cxl.html" title="{Sonar_i2cxl\n||+ Sonar_i2cxl()\l+ init()\l+ update()\l+ last_update_us()\l+ orientation_bf()\l+ distance()\l+ velocity()\l+ healthy()\l}" alt="" coords="749,695,880,902"/>
-<area shape="rect" id="node28" href="$classSonar.html" title="Abstarct class for sonars." alt="" coords="775,333,905,523"/>
+<area shape="rect" id="node28" href="$classSonar.html" title="Abstarct class for sonars." alt="" coords="817,333,948,523"/>
 <area shape="rect" id="node30" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="904,678,1051,919"/>
 <area shape="rect" id="node32" href="$classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="1075,669,1285,928"/>
 <area shape="rect" id="node34" href="$classGps.html" title="Abstract class for GPS." alt="" coords="1075,299,1285,557"/>
@@ -23,15 +23,17 @@
 <area shape="rect" id="node45" href="$classGpio.html" title="{Gpio\n||+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="1620,333,1713,523"/>
 <area shape="rect" id="node47" href="$classFile__flash__avr32.html" title="File objects on linux platforms." alt="" coords="1744,669,1880,928"/>
 <area shape="rect" id="node49" href="$classFile.html" title="Base class for file objects." alt="" coords="1769,299,1855,557"/>
-<area shape="rect" id="node51" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1904,721,1987,876"/>
-<area shape="rect" id="node53" href="$structanalog__monitor__t.html" title="Analog monitor structure." alt="" coords="2011,730,2131,867"/>
-<area shape="rect" id="node55" href="$classBmp085.html" title="Driver for the BMP085 barometer." alt="" coords="2155,739,2245,859"/>
-<area shape="rect" id="node57" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="2077,264,2251,592"/>
-<area shape="rect" id="node59" href="$classPwm__avr32.html" title="{Pwm_avr32\n||+ Pwm_avr32()\l+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="2269,730,2427,867"/>
-<area shape="rect" id="node61" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="2275,368,2432,488"/>
-<area shape="rect" id="node63" href="$classAdc__avr32.html" title="Implementation of Analog to digital converters on avr32 *." alt="" coords="2451,730,2555,867"/>
-<area shape="rect" id="node65" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2461,368,2544,488"/>
-<area shape="rect" id="node67" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="2579,669,2709,928"/>
-<area shape="rect" id="node69" href="$classHmc5883l.html" title="Driver for HMC5883L magnetometer." alt="" coords="2733,687,2864,911"/>
-<area shape="rect" id="node71" href="$classMagnetometer.html" title="Abstract class for magnetometers." alt="" coords="2733,325,2864,531"/>
+<area shape="rect" id="node51" href="$classState__display__megafly__rev4.html" title="{State_display_megafly_rev4\n||+ State_display_megafly_rev4()\l+ update()\l}" alt="" coords="1904,747,2109,850"/>
+<area shape="rect" id="node53" href="$classState__display.html" title="Interface class for state display." alt="" coords="1956,359,2057,497"/>
+<area shape="rect" id="node55" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="2133,721,2216,876"/>
+<area shape="rect" id="node57" href="$structanalog__monitor__t.html" title="Analog monitor structure." alt="" coords="2240,730,2360,867"/>
+<area shape="rect" id="node59" href="$classBmp085.html" title="Driver for the BMP085 barometer." alt="" coords="2384,739,2475,859"/>
+<area shape="rect" id="node61" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="2307,264,2480,592"/>
+<area shape="rect" id="node63" href="$classPwm__avr32.html" title="{Pwm_avr32\n||+ Pwm_avr32()\l+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="2499,730,2656,867"/>
+<area shape="rect" id="node65" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="2504,368,2661,488"/>
+<area shape="rect" id="node67" href="$classAdc__avr32.html" title="Implementation of Analog to digital converters on avr32 *." alt="" coords="2680,730,2784,867"/>
+<area shape="rect" id="node69" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2691,368,2773,488"/>
+<area shape="rect" id="node71" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="2808,669,2939,928"/>
+<area shape="rect" id="node73" href="$classHmc5883l.html" title="Driver for HMC5883L magnetometer." alt="" coords="2963,687,3093,911"/>
+<area shape="rect" id="node75" href="$classMagnetometer.html" title="Abstract class for magnetometers." alt="" coords="2963,325,3093,531"/>
 </map>

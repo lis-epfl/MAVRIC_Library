@@ -1,18 +1,19 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classManual__control.html" title="The manual control structure." alt="" coords="237,1286,443,1597"/>
+<area shape="rect" id="node2" href="$classManual__control.html" title="The manual control structure." alt="" coords="183,1286,388,1597"/>
 <area shape="rect" id="node4" href="$structjoystick__t.html" title="The structure for the joystick." alt="" coords="152,582,299,719"/>
 <area shape="rect" id="node6" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="361,5,543,264"/>
 <area shape="rect" id="node14" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="323,495,557,806"/>
-<area shape="rect" id="node31" href="$classState.html" title="The MAV state." alt="" coords="891,400,1069,901"/>
+<area shape="rect" id="node33" href="$classState.html" title="The MAV state." alt="" coords="927,400,1105,901"/>
 <area shape="rect" id="node8" href="$structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="5,66,141,203"/>
 <area shape="rect" id="node10" href="$unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="165,5,285,264"/>
 <area shape="rect" id="node12" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="364,969,516,1210"/>
 <area shape="rect" id="node17" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="581,573,691,728"/>
-<area shape="rect" id="node19" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="467,1277,683,1605"/>
-<area shape="rect" id="node21" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="580,1029,692,1149"/>
+<area shape="rect" id="node19" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="412,1277,628,1605"/>
+<area shape="rect" id="node21" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="621,1029,733,1149"/>
 <area shape="rect" id="node23" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="715,582,832,719"/>
-<area shape="rect" id="node25" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="707,1355,824,1527"/>
-<area shape="rect" id="node27" href="$structquat__t.html" title="Unit quaternion." alt="" coords="736,1038,795,1141"/>
-<area shape="rect" id="node29" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="848,1312,979,1571"/>
-<area shape="rect" id="node33" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="939,57,1021,212"/>
+<area shape="rect" id="node25" href="$classState__display.html" title="Interface class for state display." alt="" coords="652,1373,753,1510"/>
+<area shape="rect" id="node27" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="777,1355,895,1527"/>
+<area shape="rect" id="node29" href="$structquat__t.html" title="Unit quaternion." alt="" coords="807,1038,865,1141"/>
+<area shape="rect" id="node31" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="919,1312,1049,1571"/>
+<area shape="rect" id="node35" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="975,57,1057,212"/>
 </map>
