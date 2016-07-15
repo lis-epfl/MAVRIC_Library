@@ -90,22 +90,24 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
-    waypoint_handler(mission_planner, position_estimation, navigation, state, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
-    hold_position_handler(navigation, state),
-    landing_handler(mission_planner, position_estimation, navigation, state, mavlink_communication.message_handler()),
-    manual_control_handler(position_estimation, navigation, state),
-    navigating_handler(position_estimation, navigation, state, mission_planner, mavlink_communication.mavlink_stream(), waypoint_handler, landing_handler, mavlink_communication.message_handler()),
-    on_ground_handler(navigation, state, manual_control),
-    stop_on_position_handler(navigation, state),
-    stop_there_handler(position_estimation, navigation, state),
-    takeoff_handler(mission_planner, position_estimation, navigation, ahrs, state, mavlink_communication.message_handler()),
-    mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), on_ground_handler, takeoff_handler, landing_handler, hold_position_handler, stop_on_position_handler, stop_there_handler, navigating_handler, manual_control_handler, waypoint_handler),
     state_machine(state, position_estimation, imu, ahrs, manual_control),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(mavlink_communication.sysid()),
     config_(config)
 {
+    waypoint_handler = Mavlink_waypoint_handler(mission_planner, position_estimation, navigation, state, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
+    hold_position_handler = Mission_planner_handler_hold_position(navigation, state),
+    landing_handler = Mission_planner_handler_landing(mission_planner, position_estimation, navigation, state, mavlink_communication.message_handler()),
+    manual_control_handler = Mission_planner_handler_manual_control(position_estimation, navigation, state),
+    navigating_handler = Mission_planner_handler_navigating(position_estimation, navigation, state, mission_planner, mavlink_communication.mavlink_stream(), waypoint_handler, landing_handler, mavlink_communication.message_handler()),
+    on_ground_handler = Mission_planner_handler_on_ground(navigation, state, manual_control),
+    stop_on_position_handler = Mission_planner_handler_stop_on_position(navigation, state),
+    stop_there_handler = Mission_planner_handler_stop_there(position_estimation, navigation, state),
+    takeoff_handler = Mission_planner_handler_takeoff(mission_planner, position_estimation, navigation, ahrs, state, mavlink_communication.message_handler()),
+    mission_planner = Mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), on_ground_handler, takeoff_handler, landing_handler, hold_position_handler, stop_on_position_handler, stop_there_handler, navigating_handler, manual_control_handler, waypoint_handler),
+
+
     // Init main task first
     init_main_task();
 
