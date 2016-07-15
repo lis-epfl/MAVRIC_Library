@@ -83,6 +83,8 @@ public:
      */
     virtual void handle(Mission_planner& mission_planner);
 
+    virtual bool init();
+
     /**
      * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
      *
@@ -98,7 +100,8 @@ protected:
     Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure
-
+    Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
+    
     bool auto_landing_next_state_;                              ///< Flag to change critical state in its dedicated state machine
 
     /**

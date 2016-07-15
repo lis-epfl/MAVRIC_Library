@@ -86,13 +86,16 @@ public:
      */
     virtual void handle(Mission_planner& mission_planner);
 
+    virtual bool init();
+
 protected:
     Mission_planner& mission_planner_;                          ///< The reference to the mission planner
     Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     State& state_;                                              ///< The reference to the state structure
-
+    Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
+    
     /**
      * \brief   Drives the automatic takeoff procedure
      *

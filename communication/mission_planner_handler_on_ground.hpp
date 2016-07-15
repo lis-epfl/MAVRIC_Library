@@ -78,6 +78,8 @@ public:
      */
     virtual void handle(Mission_planner& mission_planner);
 
+    virtual bool init();
+    
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure

@@ -77,6 +77,8 @@ public:
      */
     virtual void handle(Mission_planner& mission_planner);
 
+    virtual bool init();
+
     /**
      * \brief   Drives the stopping behavior
      *

@@ -394,7 +394,12 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
             position_estimation_(position_estimation),
             ahrs_(ahrs),
             manual_control_(manual_control),
+            message_handler_(message_handler),
             config_(config)
+{
+}
+
+bool Mission_planner::init()
 {
     bool init_success = true;
 
@@ -415,7 +420,7 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
     dub.sense_1 = 0;
     dub.radius_1 = 0;
     dub.length = 0.0f;
-    waypoint_critical_coordinates_ = Waypoint(&mavlink_stream, MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, local_pos, 2.0f, 0.0f, dub);
+    waypoint_critical_coordinates_ = Waypoint(&mavlink_stream_, MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, local_pos, 2.0f, 0.0f, dub);
 
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
@@ -425,7 +430,7 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_home;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(&callback);
 
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;
@@ -436,7 +441,7 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
     callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &continue_to_next_waypoint;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     callbackcmd.command_id = MAV_CMD_CONDITION_DISTANCE; // 114
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
@@ -444,14 +449,15 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
     callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &is_arrived;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     if(!init_success)
     {
         print_util_dbg_print("[MISSION_PLANNER] constructor: ERROR\r\n");
     }
-}
 
+    return init_success;
+}
 
 bool Mission_planner::update(Mission_planner* mission_planner)
 {

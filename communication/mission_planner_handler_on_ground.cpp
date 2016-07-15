@@ -62,6 +62,11 @@ Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   Navigati
 
 }
 
+bool Mission_planner_handler_on_ground::init()
+{
+    return true;
+}
+
 void Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();

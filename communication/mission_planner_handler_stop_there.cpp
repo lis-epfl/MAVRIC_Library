@@ -67,6 +67,11 @@ Mission_planner_handler_stop_there::Mission_planner_handler_stop_there( Position
 
 }
 
+bool Mission_planner_handler_stop_there::init()
+{
+    return true;
+}
+
 void Mission_planner_handler_stop_there::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();

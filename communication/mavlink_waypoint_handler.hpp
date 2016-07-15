@@ -90,7 +90,7 @@ public:
                                 const Mavlink_stream& mavlink_stream,
                                 conf_t config = default_config());
 
-
+    bool init();
 
     inline uint16_t waypoint_count() const {return waypoint_count_;};
 
@@ -164,12 +164,12 @@ protected:
     uint16_t waypoint_count_;                                   ///< The total number of waypoints
     uint16_t current_waypoint_index_;                           ///< The current waypoint index
 
-    const Mavlink_stream& mavlink_stream_;                            ///< The reference to MAVLink stream object
+    const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream object
     Position_estimation& position_estimation_;                  ///< The reference to the position estimation object
     State& state_;                                              ///< The reference to the state object
     Mission_planner& mission_planner_;                          ///< The reference to the mission planner object
     Navigation& navigation_;                                    ///< The reference to the navigation object
-
+    Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 private:
 
     bool waypoint_sending_;                                     ///< Flag to tell whether waypoint are being sent

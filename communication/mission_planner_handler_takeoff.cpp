@@ -164,7 +164,13 @@ Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Mission_plan
             position_estimation_(position_estimation),
             navigation_(navigation),
             ahrs_(ahrs),
-            state_(state)
+            state_(state),
+            message_handler_(message_handler)
+{
+
+}
+
+bool Mission_planner_handler_takeoff::init()
 {
     bool init_success = true;
 
@@ -177,12 +183,14 @@ Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Mission_plan
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_takeoff;
     callbackcmd.module_struct =                                 this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     if(!init_success)
     {
         print_util_dbg_print("[MISSION_PLANNER_HANDLER_TAKEOFF] constructor: ERROR\r\n");
     }
+
+    return init_success;
 }
 
 void Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)

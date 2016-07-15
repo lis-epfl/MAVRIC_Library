@@ -62,6 +62,11 @@ Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( 
 
 }
 
+bool Mission_planner_handler_manual_control::init()
+{
+    return true;
+}
+
 void Mission_planner_handler_manual_control::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();

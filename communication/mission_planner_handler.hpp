@@ -61,6 +61,8 @@ public:
      * handling the request.
      */
     virtual void handle(Mission_planner& mission_planner) = 0;
+
+    virtual bool init() = 0;
 };
 
 

@@ -326,7 +326,13 @@ Mission_planner_handler_navigating::Mission_planner_handler_navigating( Position
             mavlink_stream_(mavlink_stream),
             waypoint_handler_(waypoint_handler),
             mission_planner_handler_landing_(mission_planner_handler_landing),
+            message_handler_(message_handler),
             travel_time_(0)
+{
+
+}
+
+bool Mission_planner_handler_navigating::init()
 {
     bool init_success = true;
 
@@ -339,12 +345,14 @@ Mission_planner_handler_navigating::Mission_planner_handler_navigating( Position
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &start_stop_navigation;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     if(!init_success)
     {
         print_util_dbg_print("[MISSION_PLANNER_HANDLER_NAVIGATING] constructor: ERROR\r\n");
     }
+
+    return init_success;
 }
 
 void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner)

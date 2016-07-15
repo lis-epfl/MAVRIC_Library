@@ -218,7 +218,13 @@ Mission_planner_handler_landing::Mission_planner_handler_landing(   Mission_plan
             position_estimation_(position_estimation),
             navigation_(navigation),
             state_(state),
+            message_handler_(message_handler),
             auto_landing_next_state_(false)
+{
+
+}
+
+bool Mission_planner_handler_landing::init()
 {
     bool init_success = true;
 
@@ -231,12 +237,14 @@ Mission_planner_handler_landing::Mission_planner_handler_landing(   Mission_plan
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_landing;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     if(!init_success)
     {
         print_util_dbg_print("[MISSION_PLANNER_HANDLER_LANDING] constructor: ERROR\r\n");
     }
+
+    return init_success;
 }
 
 void Mission_planner_handler_landing::handle(Mission_planner& mission_planner)

@@ -117,6 +117,7 @@ public:
                         Mavlink_waypoint_handler& waypoint_handler,
                         conf_t config = default_config());
 
+    bool init();
 
     /**
      * \brief   The mission planner tasks, gives a goal for the navigation module
@@ -217,6 +218,7 @@ protected:
     Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     const Manual_control& manual_control_;                      ///< The reference to the manual_control structure
+    Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 
     conf_t config_;
 

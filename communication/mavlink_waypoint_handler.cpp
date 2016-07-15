@@ -480,6 +480,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_plan
             state_(state_),
             mission_planner_(mission_planner),
             navigation_(navigation),
+            message_handler_(message_handler),
             waypoint_sending_(false),
             waypoint_receiving_(false),
             sending_waypoint_num_(0),
@@ -488,6 +489,10 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_plan
             start_timeout_(time_keeper_get_ms()),
             timeout_max_waypoint_(10000),
             config_(config)
+{
+}
+
+bool Mavlink_waypoint_handler::init()
 {
     bool init_success = true;
 
@@ -499,49 +504,49 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_plan
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &receive_waypoint;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_REQUEST; // 40
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &send_waypoint;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_SET_CURRENT; // 41
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_current_waypoint;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_REQUEST_LIST; // 43
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &send_count;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_COUNT; // 44
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &receive_count;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_CLEAR_ALL; // 45
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &clear_waypoint_list;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_ACK; // 47
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &receive_ack_msg;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(&callback);
 
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;
@@ -552,7 +557,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_plan
     callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_current_waypoint_from_parameter;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     init_homing_waypoint();
     nav_plan_init();
@@ -561,8 +566,9 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_plan
     {
         print_util_dbg_print("[MAVLINK_WAYPOINT_HANDLER] constructor: ERROR\r\n");
     }
-}
 
+    return init_success;
+}
 
 void Mavlink_waypoint_handler::init_homing_waypoint()
 {

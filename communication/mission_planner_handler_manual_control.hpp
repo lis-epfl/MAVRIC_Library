@@ -78,6 +78,8 @@ public:
      */
     virtual void handle(Mission_planner& mission_planner);
 
+    virtual bool init();
+    
 protected:
     Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
     Navigation& navigation_;                                     ///< The reference to the navigation structure

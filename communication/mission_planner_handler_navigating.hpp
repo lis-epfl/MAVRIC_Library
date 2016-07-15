@@ -92,6 +92,8 @@ public:
      */
     virtual void handle(Mission_planner& mission_planner);
 
+    virtual bool init();
+
 protected:
     Position_estimation& position_estimation_;                          ///< The reference to the position estimation object
     Navigation& navigation_;                                            ///< The reference to the navigation object
@@ -100,7 +102,8 @@ protected:
     const Mavlink_stream& mavlink_stream_;                                    ///< The reference to the mavlink object
     Mavlink_waypoint_handler& waypoint_handler_;                        ///< The reference to the mavlink waypoint handler
     Mission_planner_handler_landing& mission_planner_handler_landing_;  ///< The reference to the landing handler
-
+    Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
+    
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
     /**
