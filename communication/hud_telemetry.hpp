@@ -53,7 +53,7 @@
  */
 typedef struct
 {
-    const INS* ins;                         ///< The pointer to the position estimator structure
+    const INS* ins;                         ///< The pointer to the Inertial Navigation System
     const control_command_t* controls;      ///< The pointer to the control structure
     const ahrs_t* ahrs;                     ///< The pointer to the attitude estimation structure
     const Mavlink_stream* mavlink_stream;   ///< The pointer to the MAVLink stream structure
@@ -63,7 +63,7 @@ typedef struct
  * \brief   Initialise the HUD structure
  *
  * \param   hud          The pointer to the HUD structure
- * \param   ins          The pointer to the position estimation structure
+ * \param   ins          The pointer to the Inertial Navigation System
  * \param   controls     The pointer to the controls structure
  * \param   ahrs         The pointer to the attitude estimation structure
  *
