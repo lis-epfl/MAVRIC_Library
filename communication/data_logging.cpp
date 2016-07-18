@@ -43,7 +43,7 @@
 #include "communication/data_logging.hpp"
 
 #include <cstdlib>
-#include <stdbool.h>
+// #include <stdbool.h>
 #include <math.h>
 #include <string>
 
