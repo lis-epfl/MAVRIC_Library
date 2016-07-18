@@ -160,10 +160,6 @@ mav.get_scheduler().add_task(500000, (Scheduler_task::task_function_t)&px4_updat
 }
 
 
-#define FLOW_STAT_COMMAND 47
-#define PX4_ADDRESS 0x42
-#define SECTOR_COUNT 6
-
 typedef struct
 {
     int16_t maxima[SECTOR_COUNT];
@@ -174,7 +170,13 @@ typedef struct
     int16_t avg[SECTOR_COUNT];
 } __attribute__((packed)) flow_stat_frame_t;
 
+// #define FLOW_STAT_FRAME_SIZE 18
+// #define FLOW_STAT_COMMAND 47 + sizeof(flow_stat_frame_t) - FLOW_STAT_FRAME_SIZE
+
 #define FLOW_STAT_FRAME_SIZE sizeof(flow_stat_frame_t)
+#define FLOW_STAT_COMMAND 47
+#define PX4_ADDRESS 0x42
+#define SECTOR_COUNT 6
 
 void print_frame(flow_stat_frame_t& f)
 {
