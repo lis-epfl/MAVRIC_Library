@@ -68,6 +68,7 @@ typedef struct
     int camera_id;                                      ///< The camera id to send to the offboard camera computer
     bool initial_camera_state;                          ///< The starting on/off state of the camera
     float allowable_horizontal_tag_offset_sqr;          ///< The square distance from the drone to the center of the tag that is acceptable
+    float descent_to_gnd_altitude;                      ///< The altitude that the landing algorithm should switch from descent to small altitude to descent to ground
     float max_acc_drone_height_from_camera_mm;          ///< The maximum acceptable drone height where the code will trust the cameras height estimation
     int camera_res_x;                                   ///< The x resolution of the offboard camera
     int camera_res_y;                                   ///< The y resolution of the offboard camera
@@ -84,7 +85,8 @@ static inline offboard_tag_search_conf_t offboard_tag_search_conf_default() {
 
     conf.camera_id                               = 1;
     conf.initial_camera_state                    = false;
-    conf.allowable_horizontal_tag_offset_sqr     = 1.0f;
+    conf.allowable_horizontal_tag_offset_sqr     = 0.25f;
+    conf.descent_to_gnd_altitude                 = -0.5f;
     conf.max_acc_drone_height_from_camera_mm     = 15000.0f;
     conf.tag_search_timeout_us                   = 60000000.0f;                 // 1 minute
     conf.camera_res_x                            = 1280;                        // Suitable for picamera
@@ -127,7 +129,7 @@ public:
      * \param mavlink_communication Central_data's mavlink_communication
      * \param config                The offboard camera configuration
      */
-    Offboard_Tag_Search(Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
+    Offboard_Tag_Search(const Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
 
 
     /**
@@ -181,6 +183,7 @@ public:
     float camera_y_fov() const;
 
     float allowable_horizontal_tag_offset_sqr() const;
+    float descent_to_gnd_altitude() const;
     float max_acc_drone_height_from_camera_mm() const;
     float tag_search_timeout_us() const;
 
@@ -213,7 +216,7 @@ protected:
     local_position_t tag_location_;                         ///< The location of the tag in the local frame
     land_on_tag_behavior_t land_on_tag_behavior_;           ///< The land on tag behavior enum
 
-    Position_estimation& position_estimation_;
+    const Position_estimation& position_estimation_;
     const ahrs_t& ahrs_;
     Mavlink_communication& mavlink_communication_;
     Mavlink_waypoint_handler_tag& waypoint_handler_;

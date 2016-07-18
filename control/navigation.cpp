@@ -179,7 +179,7 @@ void Navigation::set_speed_command(float rel_pos[])
     controls_nav.tvel[Z] = dir_desired_sg[Z];
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 
-    if ((internal_state_ == NAV_LANDING) && (auto_landing_behavior == Navigation::DESCENT_TO_GND))
+    if (((internal_state_ == NAV_LANDING) || (internal_state_ == NAV_LAND_ON_TAG)) && (auto_landing_behavior == Navigation::DESCENT_TO_GND))
     {
         // Constant velocity to the ground
         controls_nav.tvel[Z] = 0.3f;

@@ -52,7 +52,7 @@ extern "C"
 
 
 
-Offboard_Tag_Search::Offboard_Tag_Search(Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config):
+Offboard_Tag_Search::Offboard_Tag_Search(const Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config):
     conf_(config),
     is_camera_running_(config.initial_camera_state),
     has_camera_state_changed_(true),
@@ -197,6 +197,11 @@ int Offboard_Tag_Search::camera_id() const
 float  Offboard_Tag_Search::allowable_horizontal_tag_offset_sqr() const
 {
     return conf_.allowable_horizontal_tag_offset_sqr;
+}
+
+float Offboard_Tag_Search::descent_to_gnd_altitude() const
+{
+    return conf_.descent_to_gnd_altitude;
 }
 
 float Offboard_Tag_Search::max_acc_drone_height_from_camera_mm() const
