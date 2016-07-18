@@ -1450,7 +1450,6 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
 {
     global_position_t waypoint_global;
     waypoint_local_struct_t wpt;
-    // local_position_t waypoint_coor;
     global_position_t origin_relative_alt;
 
     for (uint8_t i = 0; i < 3; i++)
