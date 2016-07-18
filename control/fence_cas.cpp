@@ -172,18 +172,16 @@ bool Fence_CAS::update(void)
 	this->maxsens=dmin+this->r_pz;
 //	this->maxradius = this->maxsens;
 	this->maxradius =4*Vval+1.5 /*radius distance*/ ;
+	//interpolation from MATLAB
+	this->maxradius =getrad(Vval); /*radius distance*/ ;
 
 	int interp_type = SHIFTED_COS;						// Define the interpolation type of the repulsion
 
-//	/*OLD S*/
-//	for(int i =0; i<3;i++)
-//	{
-//		S[i]= C[i] + Vnorm[i] * (this->r_pz/*protection zone*/ + SCP(V,V)/(2*this->a_max)/*dstop*/ + dmin/*dmin*/ + this->tahead * Vval /*d_ahead*/);
-//	}
+
 //	/*NEW S*/
 	for(int i =0; i<3;i++)
 	{
-		H[i]= C[i] + Vnorm[i] * (this->r_pz/*platform radius*/ + 4*Vval+1.5 /*radius distance*/ + dmin/*dmin*/);
+		H[i]= C[i] + Vnorm[i] * (this->r_pz/*platform radius*/ + Vval*Vval/getacc(Vval) /*radius distance*/ + dmin/*dmin*/);
 	}
 	for(int i =0; i<3;i++)
 	{
@@ -354,10 +352,10 @@ bool Fence_CAS::update(void)
 					this->coef_roll=1.0;
 					this->maxradius = oldmaxradius; //set the original avlue back
 					angle_detected=true;
-					print_util_dbg_print(" Arep:");
-					print_util_dbg_putfloat(i+1,0);
-					print_util_dbg_putfloat(pointrep,3);print_util_dbg_print(" :");
-					print_util_dbg_print("\r\n");
+//					print_util_dbg_print(" Arep:");
+//					print_util_dbg_putfloat(i+1,0);
+//					print_util_dbg_putfloat(pointrep,3);print_util_dbg_print(" :");
+//					print_util_dbg_print("\r\n");
 
 				}
 				else
@@ -383,7 +381,11 @@ bool Fence_CAS::update(void)
 				}
 				dist[i]*= IC[1];
 			}
-			if((dist[i] < this->maxsens)&&(angle_detected==false))
+			if((CurAngle_list[i]>=PI&&outofseg==-1)||(CurAngle_list[j]>=PI&&outofseg==1)) //avoid convex fences to parasite
+			{
+				;
+			}
+			else if((dist[i] < this->maxsens)&&(angle_detected==false))
 			{
 				//direction of repulsion
 				float rep[3]={A[1]-B[1],B[0]-A[0],0.0};						// Repulsion local frame
@@ -414,21 +416,15 @@ bool Fence_CAS::update(void)
 				else
 				{
 					float fratio = (dist[i]-this->r_pz)/dmin;
-					if((CurAngle_list[i]>=PI&&outofseg==-1)||(CurAngle_list[j]>=PI&&outofseg==1))
-					{
-						;
-					}
-					else
-					{
-						fencerep +=-rep[1]*this->coef_roll*this->max_vel_y*interpolate(fratio,interp_type);
-					}
+
+					fencerep +=-rep[1]*this->coef_roll*this->max_vel_y*interpolate(fratio,interp_type);
 					this->coef_roll=1.0;
-					print_util_dbg_print(" Frep:");
-					print_util_dbg_putfloat(i+1,0);
-					print_util_dbg_putfloat(fencerep,3);print_util_dbg_print(" :");
-					print_util_dbg_putfloat(dist[i],3);print_util_dbg_print(" :");
-					print_util_dbg_putfloat(outofseg,0);
-					print_util_dbg_print("\r\n");
+//					print_util_dbg_print(" Frep:");
+//					print_util_dbg_putfloat(i+1,0);
+//					print_util_dbg_putfloat(fencerep,3);print_util_dbg_print(" :");
+//					print_util_dbg_putfloat(dist[i],3);print_util_dbg_print(" :");
+//					print_util_dbg_putfloat(outofseg,0);
+//					print_util_dbg_print("\r\n");
 				}
 
 			}
@@ -546,6 +542,18 @@ bool Fence_CAS::clip_repulsion(control_command_t command_t)
 	 this->repulsion[0] = command_t.tvel[X];
 
 	 return true;
+}
+float Fence_CAS::getacc(float normvel)
+{
+	float acc=0.0;
+	acc = -0.0666 * normvel*normvel*normvel + 0.3269 * normvel*normvel + 0.0965 * normvel + 0.0292;
+	return acc;
+}
+float Fence_CAS::getrad(float normvel)
+{
+	float rad=0.0;
+	rad = 0.5066 * normvel*normvel*normvel - 2.5669 * normvel*normvel + 5.3125 * normvel - 0.4791;
+	return rad;
 }
 float Fence_CAS::get_repulsion(int axis)
 {

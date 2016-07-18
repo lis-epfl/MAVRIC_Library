@@ -96,6 +96,23 @@ public:
      * \return  interpolation value
      */
 	float 	interpolate(float r, int type);
+    /**
+     * \brief   Return the angular acceleration in function of the norm of the velocity
+     *
+     * \param norm of the velocity
+     *
+     * \return  acceleration value
+     */
+	float getacc(float normvel);
+    /**
+     * \brief   Return the maximal possible radius in function of the norm of the velocity
+     *
+     * \param norm of the velocity
+     *
+     * \return  radius value
+     */
+	float getrad(float normvel);
+
 
 	float	maxsens;	///< Maximal detection distance, 		typically 10
 	float	a_max; 		///< Maximal deceleration [m/s^2], 		typically 1
