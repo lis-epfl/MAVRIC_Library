@@ -169,7 +169,7 @@ bool Fence_CAS::update(void)
 
 	float dmin=2*this->r_pz; 					// Safe zone around the drone ,can be adjusted
 	//NEW
-	this->maxsens=dmin+this->r_pz;
+//	this->maxsens=dmin+this->r_pz;
 //	this->maxradius = this->maxsens;
 	this->maxradius =4*Vval+1.5 /*radius distance*/ ;
 	//interpolation from MATLAB
@@ -266,51 +266,19 @@ bool Fence_CAS::update(void)
 				float Am[3]={0,0,0};
 				float distAS = detect_seg(A,A,C,S,V,I,J,&outofseg);	// Compute distance from drone to fencepoint.
 				float ecart = (this->maxradius+this->maxsens)/quick_trig_tan(CurAngle_list[i]/2.0);
-				//test id ecart is smaller than |ab| and |ad|
+				//test if ecart is smaller than |ab| and |ad|
 
 				float oldmaxradius = this->maxradius; //save value for set it back
-
-
-
-//				test is the angle is asymmetric and ensure the repulsion area isn't bigger than the angle area
-//				doesn't work... the dorne fly out of the fence by an angle
-//							if(ecart >= ABnorm)
-//				{
-//					ecart= ABnorm;
-//					this->maxradius = (ecart-this->maxsens)*quick_trig_tan(CurAngle_list[i]/2.0);
-//				}
-//				if(ecart >= ADnorm)
-//				{
-//					ecart= ADnorm;
-//					this->maxradius = (ecart-this->maxsens)*quick_trig_tan(CurAngle_list[i]/2.0);
-//				}
-
 
 				for(int k=0;k<3;k++)
 				{
 					Am[k] = A[k] + ecart*(AB[k]);
 					M[k] = Am[k] + (this->maxradius+this->maxsens)*pAB[k];
 				}
-
-//				print_util_dbg_print("AB:");
-//				print_util_dbg_putfloat(ABnorm,3);
-//				print_util_dbg_print(" AD:");
-//				print_util_dbg_putfloat(ADnorm,3);
-//				print_util_dbg_print(" ecart:");
-//				print_util_dbg_putfloat(ecart,3);
-//				print_util_dbg_print(" A:");
-//				print_util_dbg_putfloat(A[0],3);print_util_dbg_print(";");print_util_dbg_putfloat(A[1],3);
-//				print_util_dbg_print(" B:");
-//				print_util_dbg_putfloat(B[0],3);print_util_dbg_print(";");print_util_dbg_putfloat(B[1],3);
-//				print_util_dbg_print(" M:");
-//				print_util_dbg_putfloat(M[0],3);print_util_dbg_print(";");print_util_dbg_putfloat(M[1],3);
-//				print_util_dbg_print("\r\n");
-
 				float AAm[3] = {A[0]-Am[0],A[1]-Am[1],0.0};
 				float distAAm=vectors_norm(AAm);
 
 				float MS[3] = {S[0]-M[0],S[1]-M[1],0.0};
-//				float distMC=detect_seg(M,M,C,S,V,I,J);
 				float distMC=vectors_norm(MS);
 
 				if((distAS <= (distAAm))&&(distMC >= this->maxradius)&&(angle_detected==false)&&n==0)
@@ -322,41 +290,16 @@ bool Fence_CAS::update(void)
 					//amplitude of repulsion
 					float CI[3]={0,0,0};
 					float HI[3]={0,0,0};
-//					float IJ[3]={0,0,0};
 					for(int k=0;k<3;k++)
 					{
 						CI[k] = I[k]-C[k];
 						HI[k] = I[k]-H[k];
-//						IJ[3] = J[k]-I[k];
-					}
-					if(vectors_norm(CI)>= CHnorm && vectors_norm(CI)<= CHnorm+HSnorm )
-					{
-//						float axratio = (vectors_norm(HI)-this->r_pz)/(HSnorm+dmin+this->r_pz);
-//						gftobftransform(C, S, IJ);
-//						float ayratio = IJ[1]/(dmin+this->r_pz);
-//						float xrep = interpolate(axratio,interp_type);
-//						float yrep = interpolate(ayratio,interp_type);
-//						pointrep += -rep[1]*this->coef_roll*this->max_vel_y*maths_fast_sqrt(xrep*xrep+yrep*yrep); // Add repulsion
-//						float aratio=((vectors_norm(HI) - this->r_pz)/(HSnorm+dmin+this->r_pz));
-//						pointrep += -rep[1]*this->coef_roll*this->max_vel_y*interpolate(aratio,interp_type); // Add repulsion
-//						this->coef_roll = interpolate((vectors_norm(HI)+this->r_pz)/(HSnorm + this->r_pz + dmin),LINEAR);
-					}
-					else
-					{
-//						float aratio=1-((distMC - this->maxradius)/this->maxsens);	// Compute ratio for interpolation, ratio is only for the first maxsens, then saturates at 1
-						//NEW
-
 					}
 					float aratio=1-((distMC + this->r_pz)/dmin);
 					pointrep += -rep[1]*this->coef_roll*this->max_vel_y*interpolate(aratio,SHIFTED_COS); // Add repulsion
 					this->coef_roll=1.0;
 					this->maxradius = oldmaxradius; //set the original avlue back
 					angle_detected=true;
-//					print_util_dbg_print(" Arep:");
-//					print_util_dbg_putfloat(i+1,0);
-//					print_util_dbg_putfloat(pointrep,3);print_util_dbg_print(" :");
-//					print_util_dbg_print("\r\n");
-
 				}
 				else
 				{
@@ -392,48 +335,33 @@ bool Fence_CAS::update(void)
 				gftobftransform(C, S, rep);									// Repulsion body frame
 				rep[1]=(rep[1]>=0?1:-1); 									// Extract repulsion direction in body frame, 1 = clockwise / -1 = counterclockwise
 
-
 				//amplitude of repulsion
 				float CI[3]={0,0,0};
 				float HI[3]={0,0,0};
-//				float IJ[3]={0,0,0};
 				for(int k=0;k<3;k++)
 				{
 					CI[k] = I[k]-C[k];
-					HI[k] = I[k]-H[k];
-//					IJ[3] = J[k]-I[k];
 				}
 				if(vectors_norm(CI)>= CHnorm && vectors_norm(CI)<= CHnorm+HSnorm )
 				{
-//					float fxratio = (vectors_norm(HI)-this->r_pz)/(HSnorm+dmin+this->r_pz);
-//					gftobftransform(C, S, IJ);
-//					float fyratio = IJ[1]/(dmin+this->r_pz);
-//					float xrep = interpolate(fxratio,interp_type);
-//					float yrep = interpolate(fyratio,interp_type);
-//					fencerep += -rep[1]*this->coef_roll*this->max_vel_y*maths_fast_sqrt(xrep*xrep+yrep*yrep); // Add repulsion
 					this->coef_roll = interpolate((vectors_norm(HI)+this->r_pz)/(HSnorm + this->r_pz + dmin),SHIFTED_COS);
 				}
 				else
 				{
-					float fratio = (dist[i]-this->r_pz)/dmin;
-
-					fencerep +=-rep[1]*this->coef_roll*this->max_vel_y*interpolate(fratio,interp_type);
 					this->coef_roll=1.0;
-//					print_util_dbg_print(" Frep:");
-//					print_util_dbg_putfloat(i+1,0);
-//					print_util_dbg_putfloat(fencerep,3);print_util_dbg_print(" :");
-//					print_util_dbg_putfloat(dist[i],3);print_util_dbg_print(" :");
-//					print_util_dbg_putfloat(outofseg,0);
-//					print_util_dbg_print("\r\n");
 				}
-
+				float fratio = (dist[i]-this->r_pz)/dmin;
+				fencerep +=-rep[1]*this->coef_roll*this->max_vel_y*interpolate(fratio,interp_type);
+				if(nbFencePoints==2) //allow to define 2 points fences (a segment with repulsion in every direction)
+				{
+					fencerep+=-IC[1]*rep[1]*this->coef_roll*this->max_vel_y*interpolate(fratio,interp_type);
+				}
 			}
 			else
 			{
 				;
 			}
 		}
-
 		/*END Fence repulsion*/
 		//check which repulsion has been detected. Angle repulsion wins
 		if(angle_detected==true)
@@ -456,9 +384,6 @@ bool Fence_CAS::update(void)
 	{
 		this->repulsion[1]=-this->max_vel_y;
 	}
-
-//	//FAKE MAXIMAL REPULSION
-//	this->repulsion[1]=this->max_vel_y;
 	return true;
 }
 float Fence_CAS::interpolate(float r, int type) // type=x, 0: linear, 1: cos, 2:cos2
