@@ -40,9 +40,10 @@
  ******************************************************************************/
 
 
+ #include "communication/mavlink_waypoint_handler.hpp"
+
 #include <cstdlib>
 
-#include "communication/mavlink_waypoint_handler.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"
 
@@ -714,7 +715,7 @@ bool Mavlink_waypoint_handler::take_off_handler()
                 waypoint_coordinates_ = waypoint_hold_coordinates;
                 waypoint_coordinates_.radius = 0.0f;
             }
-            
+
             print_util_dbg_print("Automatic take-off finished.\r\n");
         }
     }
