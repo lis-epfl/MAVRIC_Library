@@ -885,7 +885,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
                 state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
                 waypoint_hold_coordinates.position[Z] = 0.0f;
-                navigation_.alt_lpf = ins_.position_lf()[2];
+                navigation_.alt_lpf = ins_.position_lf()[Z];
                 break;
         }
 
@@ -1176,7 +1176,7 @@ void Mavlink_waypoint_handler::critical_handler()
                 waypoint_critical_coordinates_.position[X] = 0.0f;
                 waypoint_critical_coordinates_.position[Y] = 0.0f;
                 waypoint_critical_coordinates_.position[Z] = 5.0f;
-                navigation_.alt_lpf = ins_.position_lf()[2];
+                navigation_.alt_lpf = ins_.position_lf()[Z];
                 break;
 
             case Navigation::CRITICAL_LAND:
