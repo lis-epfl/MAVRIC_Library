@@ -44,8 +44,8 @@
 #define SONAR_HPP_
 
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 #include <array>
 
 extern "C"

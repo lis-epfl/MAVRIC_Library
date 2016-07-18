@@ -43,9 +43,13 @@
 #ifndef GIMBAL_CONTROLLER_H_
 #define GIMBAL_CONTROLLER_H_
 
-#include "control/control_command.h"
-#include "control/pid_controller.h"
+#include "control/pid_controller.hpp"
 #include "drivers/servo.hpp"
+
+extern "C"
+{
+#include "control/control_command.h"
+}
 
 /**
  * \brief Gimbal controller configuration

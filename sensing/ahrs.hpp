@@ -43,8 +43,8 @@
 #ifndef AHRS_HPP_
 #define AHRS_HPP_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 #include "util/quaternions.h"
 
 

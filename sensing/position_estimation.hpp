@@ -55,7 +55,7 @@
 
 extern "C"
 {
-#include <stdbool.h>
+#include <cstdbool>
 #include "sensing/ahrs.hpp"
 }
 

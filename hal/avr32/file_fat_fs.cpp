@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 #include <cstdlib>
-#include <stdbool.h>
+#include <cstdbool>
 
 #include "hal/avr32/file_fat_fs.hpp"
 

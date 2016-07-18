@@ -43,7 +43,7 @@
 #ifndef MPU_6050_H_
 #define MPU_6050_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "drivers/accelerometer.hpp"
 #include "drivers/gyroscope.hpp"

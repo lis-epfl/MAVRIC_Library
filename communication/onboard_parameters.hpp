@@ -43,7 +43,7 @@
 #ifndef ONBOARD_PARAMETERS_H_
 #define ONBOARD_PARAMETERS_H_
 
-#include <stdbool.h>
+#include <cstdbool>
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"

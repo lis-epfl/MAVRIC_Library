@@ -45,7 +45,7 @@
 #ifndef AIRSPEED_ANALOG_H_
 #define AIRSPEED_ANALOG_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include "hal/common/adc.hpp"
 
 

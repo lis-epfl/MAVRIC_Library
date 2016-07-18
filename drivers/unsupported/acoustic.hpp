@@ -43,8 +43,8 @@
 #ifndef ACOUSTIC_H_
 #define ACOUSTIC_H_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "control/stabilisation_copter.hpp"

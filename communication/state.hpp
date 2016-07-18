@@ -43,8 +43,8 @@
 #ifndef STATE_H_
 #define STATE_H_
 
-#include "stdint.h"
-#include <stdbool.h>
+#include "cstdint"
+#include <cstdbool>
 
 #include "communication/mav_modes.hpp"
 #include "communication/mavlink_stream.hpp"

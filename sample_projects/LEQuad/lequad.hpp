@@ -42,8 +42,8 @@
 #ifndef LEQUAD_HPP_
 #define LEQUAD_HPP_
 
-#include <stdbool.h>
-#include <stdint.h>
+#include <cstdbool>
+#include <cstdint>
 
 
 #include "communication/data_logging.hpp"
@@ -94,7 +94,6 @@ extern "C"
 {
 #include "sensing/ahrs.hpp"
 #include "sensing/altitude.h"
-#include "control/pid_controller.h"
 #include "util/print_util.h"
 }
 

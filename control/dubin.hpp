@@ -42,8 +42,8 @@
 #ifndef DUBIN_H_
 #define DUBIN_H_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 #include "util/constants.hpp"
 
 extern "C"

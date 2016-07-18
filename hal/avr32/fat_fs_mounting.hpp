@@ -45,7 +45,7 @@
 
 extern "C"
 {
-#include <stdint.h>
+#include <cstdint>
 #include "libs/FatFs/src/ff.h"
 }
 

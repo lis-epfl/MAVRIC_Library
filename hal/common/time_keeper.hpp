@@ -49,7 +49,6 @@ extern "C" {
 
 #include <stdint.h>
 
-
 /**
  * \brief   This function initialize the clock of the microcontroller
  */

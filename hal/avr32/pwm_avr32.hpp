@@ -45,8 +45,8 @@
 #ifndef PWM_SERVOS_AVR32_H_
 #define PWM_SERVOS_AVR32_H_
 
-#include <stdbool.h>
-#include <stdint.h>
+#include <cstdbool>
+#include <cstdint>
 
 #include "hal/common/pwm.hpp"
 

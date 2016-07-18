@@ -42,7 +42,7 @@
 
 
  #include <cstdlib>
- #include <stdbool.h>
+ #include <cstdbool>
 
 #include "communication/mavlink_message_handler.hpp"
 #include "util/print_util.h"

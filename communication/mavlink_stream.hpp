@@ -43,8 +43,8 @@
 #ifndef MAVLINK_STREAM_H_
 #define MAVLINK_STREAM_H_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 #include "hal/common/serial.hpp"
 
 extern "C"

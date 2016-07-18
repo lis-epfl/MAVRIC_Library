@@ -46,7 +46,7 @@
 
 extern "C"
 {
-#include <stdint.h>
+#include <cstdint>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 }

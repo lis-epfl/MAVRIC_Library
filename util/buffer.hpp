@@ -44,8 +44,8 @@
 #ifndef BUFFER_HPP_
 #define BUFFER_HPP_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 
 
 /**

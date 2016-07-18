@@ -52,9 +52,13 @@
 #define ATTITUDE_CONTROLLER_H_
 
 #include "control/attitude_error_estimator.hpp"
-#include "control/control_command.h"
+#include "control/pid_controller.hpp"
 #include "sensing/ahrs.hpp"
-#include "control/pid_controller.h"
+
+extern "C"
+{
+#include "control/control_command.h"
+}
 
 /**
  * \brief Control mode (attitude or rate)

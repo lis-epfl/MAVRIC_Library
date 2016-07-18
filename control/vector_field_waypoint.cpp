@@ -46,7 +46,7 @@
 
 extern "C"
 {
-#include "stdint.h"
+#include "cstdint"
 #include "util/vectors.h"
 
 #include "util/print_util.h"

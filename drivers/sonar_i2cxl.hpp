@@ -43,7 +43,7 @@
 #ifndef I2CXL_SONAR_H_
 #define I2CXL_SONAR_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "drivers/sonar.hpp"
 #include "hal/common/i2c.hpp"

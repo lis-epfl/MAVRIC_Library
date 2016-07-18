@@ -43,7 +43,7 @@
 #ifndef COORD_CONVENTIONS_H_
 #define COORD_CONVENTIONS_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 
 #include "util/quaternions.h"

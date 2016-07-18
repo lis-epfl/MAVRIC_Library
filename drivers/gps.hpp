@@ -43,8 +43,10 @@
 #ifndef GPS_HPP_
 #define GPS_HPP_
 
-
+#include <cstdint>
+#include <cstdbool>
 #include <array>
+
 #include "util/coord_conventions.hpp"
 
 

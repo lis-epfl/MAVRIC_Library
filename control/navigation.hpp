@@ -43,17 +43,18 @@
 #ifndef NAVIGATION_H_
 #define NAVIGATION_H_
 
-#include <stdbool.h>
+#include <cstdbool>
 
 #include "communication/mavlink_communication.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
 #include "control/dubin.hpp"
 #include "control/stabilisation.hpp"
+#include "control/pid_controller.hpp"
+
 extern "C"
 {
 #include "util/quaternions.h"
-#include "control/pid_controller.h"
 }
 
 

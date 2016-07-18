@@ -42,7 +42,7 @@
 #define GPIO_AVR32_H_
 
 #include "hal/common/gpio.hpp"
-#include <stdint.h>
+#include <cstdint>
 
 /**
  *  Configuration structure

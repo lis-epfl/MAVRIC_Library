@@ -42,7 +42,7 @@
 #ifndef PX4FLOW_I2C_HPP_
 #define PX4FLOW_I2C_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 #include "hal/common/i2c.hpp"
 #include "util/buffer.hpp"
 

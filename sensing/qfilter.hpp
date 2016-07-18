@@ -47,7 +47,7 @@
 
 extern "C"
 {
-#include <stdint.h>
+#include <cstdint>
 #include "sensing/ahrs.hpp"
 }
 

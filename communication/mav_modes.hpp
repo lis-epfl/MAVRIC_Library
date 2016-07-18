@@ -43,8 +43,8 @@
 #ifndef MAV_MODE_H
 #define MAV_MODE_H
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 
 #include "communication/mavlink_stream.hpp"
 

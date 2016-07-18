@@ -45,8 +45,8 @@
 #define BATTERY_HPP_
 
 
-#include <stdbool.h>
-#include <stdint.h>
+#include <cstdbool>
+#include <cstdint>
 
 #include "hal/common/adc.hpp"
 

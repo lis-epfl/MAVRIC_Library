@@ -43,9 +43,9 @@
 #ifndef STABILISATION_H_
 #define STABILISATION_H_
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "control/pid_controller.h"
+#include <cstdint>
+#include <cstdbool>
+#include "control/pid_controller.hpp"
 
 /**
  * \brief   The control mode enum

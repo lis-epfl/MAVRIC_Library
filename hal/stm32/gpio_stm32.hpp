@@ -43,7 +43,7 @@
 
 #include <libopencm3/stm32/gpio.h>
 #include "hal/common/gpio.hpp"
-#include <stdint.h>
+#include <cstdint>
 
 
 typedef enum
