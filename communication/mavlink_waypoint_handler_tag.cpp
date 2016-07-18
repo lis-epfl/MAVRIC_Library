@@ -99,22 +99,26 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
 
     print_util_dbg_print("Attempting to land\r\n");
 
-    //if ((waypoint_handler->navigation_.internal_state == NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state == NAV_HOLD_POSITION))
+    if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_HOLD_POSITION)
+        || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_THERE))
     {
         // Set waypoint to search for tag and land
         waypoint_handler->navigation_.internal_state_ = Navigation::internal_state_t::NAV_LAND_ON_TAG;
+        waypoint_handler->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
+        waypoint_handler->auto_landing_next_state_ = false;
         print_util_dbg_print("internal_state = NAV_LAND_ON_TAG\r\n");
 
         // Set hold position point and set tag location
         waypoint_handler->waypoint_hold_coordinates.waypoint.pos[0] = waypoint_handler->position_estimation_.local_position.pos[0];
         waypoint_handler->waypoint_hold_coordinates.waypoint.pos[1] = waypoint_handler->position_estimation_.local_position.pos[1];
-        waypoint_handler->tag_search_altitude_ = -10.0f;
+        waypoint_handler->tag_search_altitude_ = waypoint_handler->position_estimation_.local_position.pos[2];
         waypoint_handler->waypoint_hold_coordinates.waypoint.pos[2] = waypoint_handler->tag_search_altitude_;
         waypoint_handler->offboard_tag_search_.tag_location().pos[0] = 0.0f;
         waypoint_handler->offboard_tag_search_.tag_location().pos[1] = 0.0f;
         waypoint_handler->offboard_tag_search_.tag_location().pos[2] = 0.0f;
         waypoint_handler->offboard_tag_search_.tag_location().heading = waypoint_handler->position_estimation_.local_position.heading;
         waypoint_handler->offboard_tag_search_.tag_location().origin = waypoint_handler->position_estimation_.local_position.origin;
+        waypoint_handler->offboard_tag_search_.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND);
 
         // Set new tag search start time
         waypoint_handler->tag_search_start_time_ = time_keeper_get_us();
@@ -135,6 +139,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
 {
     float tag_pos[3];
     float cur_pos[3];
+    float rel_pos[3];
 
     // Set position vectors to shorten code later
     for (uint8_t i = 0; i < 3; i++)
@@ -160,35 +165,81 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
         // If we are not above tag
         if (horizontal_distance_to_tag_sqr > offboard_tag_search_.allowable_horizontal_tag_offset_sqr())
         {
-            // Stay at tag search altitude
-            waypoint_hold_coordinates.waypoint.pos[2] = tag_search_altitude_;
+            // Stay at tag search altitude if in descent to ground state
+            switch (navigation_.auto_landing_behavior)
+            {
+                case Navigation::DESCENT_TO_SMALL_ALTITUDE:
+                    state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+                    state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
+                    waypoint_hold_coordinates.waypoint.pos[2] = tag_search_altitude_;
+                    break;
 
+                case Navigation::DESCENT_TO_GND:
+                    print_util_dbg_print("Cust: descent to gnd");
+                    state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+                    state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
+                    waypoint_hold_coordinates.waypoint.pos[Z] = 0.0f;
+                    break;
+            }
         }
         else // Descend to ground
         {
-            waypoint_hold_coordinates.waypoint.pos[2] = 0.0f;
+            switch (navigation_.auto_landing_behavior)
+            {
+                case Navigation::DESCENT_TO_SMALL_ALTITUDE:
+                    state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+                    state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
+                    waypoint_hold_coordinates.waypoint.pos[Z] = offboard_tag_search_.descent_to_gnd_altitude();
+                    break;
+
+                case Navigation::DESCENT_TO_GND:
+                    print_util_dbg_print("Cust: descent to gnd");
+                    state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+                    state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
+                    waypoint_hold_coordinates.waypoint.pos[Z] = 0.0f;
+                    break;
+            }
 
             // Set tag search altitude to current height, so it will reposition itself at this altitude if it drifts away
             tag_search_altitude_ = navigation_.alt_lpf;
         }
+
+        for (uint8_t i = 0; i < 3; i++)
+        {
+            rel_pos[i] = waypoint_hold_coordinates.waypoint.pos[i] - position_estimation_.local_position.pos[i];
+        }
+
+        navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
     }
     else if (offboard_tag_search_.land_on_tag_behavior() == Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND)// Else we need to search for the tag ...
     {
         // Don't change the hold coordinates
     }
 
-    // Calculate low-pass filter altitude for when to turn off motors
     navigation_.alt_lpf = navigation_.LPF_gain * (navigation_.alt_lpf) + (1.0f - navigation_.LPF_gain) * position_estimation_.local_position.pos[2];
-    if ((position_estimation_.local_position.pos[2] > -0.1f) && (maths_f_abs(position_estimation_.local_position.pos[2] - navigation_.alt_lpf) <= 0.2f))
+    if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_GND)
     {
-        // Disarming
-        next_state = true;
+        // Calculate low-pass filter altitude for when to turn off motors
+        if ((position_estimation_.local_position.pos[2] > -0.1f) && (maths_f_abs(position_estimation_.local_position.pos[2] - navigation_.alt_lpf) <= 0.2f))
+        {
+            // Disarming
+            next_state = true;
+        }
+    }
+    else if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
+    {
+        // Check if near altitude to switch to descent to ground
+        if (maths_f_abs(position_estimation_.local_position.pos[2] - offboard_tag_search_.descent_to_gnd_altitude()) < 0.25f)
+        {
+            next_state = true;
+        }
     }
 
     // If the tag search has gone on too long, set mode to landing
     if ((time_keeper_get_us() - tag_search_start_time_) > offboard_tag_search_.tag_search_timeout_us())
     {
         print_util_dbg_print("Auto-landing on tag: Timeout: Switch to normal landing\r\n");
+        auto_landing_next_state_ = false;
         navigation_.internal_state_ = Navigation::internal_state_t::NAV_LANDING;
         navigation_.auto_landing_behavior = Navigation::auto_landing_behavior_t::DESCENT_TO_SMALL_ALTITUDE;
         offboard_tag_search_.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND);

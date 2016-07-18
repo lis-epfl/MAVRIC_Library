@@ -68,6 +68,7 @@ typedef struct
     int camera_id;                                      ///< The camera id to send to the offboard camera computer
     bool initial_camera_state;                          ///< The starting on/off state of the camera
     float allowable_horizontal_tag_offset_sqr;          ///< The square distance from the drone to the center of the tag that is acceptable
+    float descent_to_gnd_altitude;                      ///< The altitude that the landing algorithm should switch from descent to small altitude to descent to ground
     float max_acc_drone_height_from_camera_mm;          ///< The maximum acceptable drone height where the code will trust the cameras height estimation
     int camera_res_x;                                   ///< The x resolution of the offboard camera
     int camera_res_y;                                   ///< The y resolution of the offboard camera
@@ -84,7 +85,8 @@ static inline offboard_tag_search_conf_t offboard_tag_search_conf_default() {
 
     conf.camera_id                               = 1;
     conf.initial_camera_state                    = false;
-    conf.allowable_horizontal_tag_offset_sqr     = 1.0f;
+    conf.allowable_horizontal_tag_offset_sqr     = 0.25f;
+    conf.descent_to_gnd_altitude                 = -0.5f;
     conf.max_acc_drone_height_from_camera_mm     = 15000.0f;
     conf.tag_search_timeout_us                   = 60000000.0f;                 // 1 minute
     conf.camera_res_x                            = 1280;                        // Suitable for picamera
@@ -181,6 +183,7 @@ public:
     float camera_y_fov() const;
 
     float allowable_horizontal_tag_offset_sqr() const;
+    float descent_to_gnd_altitude() const;
     float max_acc_drone_height_from_camera_mm() const;
     float tag_search_timeout_us() const;
 

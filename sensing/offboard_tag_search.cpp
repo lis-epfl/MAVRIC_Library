@@ -198,6 +198,11 @@ float  Offboard_Tag_Search::allowable_horizontal_tag_offset_sqr() const
     return conf_.allowable_horizontal_tag_offset_sqr;
 }
 
+float Offboard_Tag_Search::descent_to_gnd_altitude() const
+{
+    return conf_.descent_to_gnd_altitude;
+}
+
 float Offboard_Tag_Search::max_acc_drone_height_from_camera_mm() const
 {
     return conf_.max_acc_drone_height_from_camera_mm;
