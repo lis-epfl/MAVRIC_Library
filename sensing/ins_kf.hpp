@@ -154,14 +154,6 @@ public:
 
 
     /**
-     * \brief     Position of origin in global coordinates
-     *
-     * \return    origin
-     */
-    // virtual global_position_t origin(void) const = 0;
-
-
-    /**
      * \brief     Velocity in meters/seconds in NED frame
      *
      * \return    velocity
