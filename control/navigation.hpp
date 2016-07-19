@@ -165,6 +165,32 @@ public:
      */
     static inline conf_t default_wing_config();
 
+    /**
+     * \brief   Sets the start_wpt_time_ to the current time
+     */
+    void set_start_wpt_time();
+
+    /**
+     * \brief   Gets the time that the drone started to move towards the waypoint
+     *
+     * \return  start_wpt_time
+     */
+    uint32_t start_wpt_time() const;
+
+    /**
+     * \brief   Gets a flag stating if the drone is currently waiting at a waypoint
+     *
+     * \return  Is drone waiting at a waypoint
+     */
+    bool waiting_at_waypoint() const;
+
+    /**
+     * \brief   Sets the flag stating if the drone is currently waiting at a waypoint
+     */
+    void set_waiting_at_waypoint(bool waiting_at_waypoint);
+
+
+
     dubin_state_t dubin_state;                          ///< The internal Dubin state
     float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
     pid_controller_t hovering_controller;               ///< hovering controller
@@ -188,7 +214,6 @@ public:
 
     float dist2wp_sqr;                                  ///< The square of the distance to the waypoint
 
-
     internal_state_t internal_state_;                   ///< The internal state of the navigation module
     critical_behavior_enum critical_behavior;           ///< The critical behavior enum
     auto_landing_behavior_t auto_landing_behavior;      ///< The autolanding behavior enum
@@ -196,6 +221,9 @@ public:
     const quat_t& qe;                                   ///< The pointer to the attitude quaternion structure
 
 private:
+    bool waiting_at_waypoint_;                          ///< Flag stating if the drone is currently at a waypoint waiting to advance
+    uint32_t start_wpt_time_;                           ///< The time at which the MAV starts to travel towards its waypoint
+
     float dt;                                           ///< The time interval between two navigation updates
     uint32_t last_update;                               ///< The time of the last navigation update in ms
     uint32_t loop_count;                                ///< A counter for sending MAVLink messages at a lower rate than the function

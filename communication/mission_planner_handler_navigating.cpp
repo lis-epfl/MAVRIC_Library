@@ -96,7 +96,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
         {
             // If we are near the waypoint but the flag has not been set, do this once ...
-            if (!mission_planner_.waiting_at_waypoint())
+            if (!navigation_.waiting_at_waypoint())
             {
                 // Send debug log ...
                 print_util_dbg_print("Waypoint Nr");
@@ -116,10 +116,10 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 mavlink_stream_.send(&msg);
 
                 // ... and record the travel time ...
-                travel_time_ = time_keeper_get_ms() - mission_planner.start_wpt_time();
+                travel_time_ = time_keeper_get_ms() - navigation_.start_wpt_time();
 
                 // ... and set to waiting at waypoint
-                mission_planner_.set_waiting_at_waypoint(true);
+                navigation_.set_waiting_at_waypoint(true);
             }
 
             // If we are supposed to land, then land
@@ -145,12 +145,12 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 //Waypoint& next = mavlink_waypoint_handler_.next_waypoint();
 
                 // Set new waypoint to advance
-                if (mission_planner_.waiting_at_waypoint())
+                if (navigation_.waiting_at_waypoint())
                 {
                     waypoint_handler_.advance_to_next_waypoint();
                     dubin_state_t dubin_state;
                     waypoint_handler_.update_current_waypoint(position_estimation_.local_position.origin, &dubin_state);
-                    mission_planner_.set_waiting_at_waypoint(false);
+                    navigation_.set_waiting_at_waypoint(false);
 
                     // Update output to be the new waypoint
                     waypoint_coordinates = waypoint_handler_.current_waypoint();
@@ -160,7 +160,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                     print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
                     print_util_dbg_print("\r\n");
                     navigation_.dubin_state = DUBIN_INIT;
-                    mission_planner.set_start_wpt_time();
+                    navigation_.set_start_wpt_time();
 
                     // Send message
                     mavlink_message_t msg;

@@ -72,7 +72,6 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   mission_planner         The reference to the mission planner
      * \param   position_estimation     The reference to the mission planner
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
@@ -82,8 +81,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mavlink_waypoint_handler(   Mission_planner& mission_planner,
-                                Position_estimation& position_estimation,
+    Mavlink_waypoint_handler(   Position_estimation& position_estimation,
                                 Navigation& navigation,
                                 State& state,
                                 Mavlink_message_handler& message_handler,
@@ -167,7 +165,6 @@ protected:
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream object
     Position_estimation& position_estimation_;                  ///< The reference to the position estimation object
     State& state_;                                              ///< The reference to the state object
-    Mission_planner& mission_planner_;                          ///< The reference to the mission planner object
     Navigation& navigation_;                                    ///< The reference to the navigation object
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 private:

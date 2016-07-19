@@ -113,7 +113,7 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
             {
                 uint8_t isCurrent = 0;
                 if (    waypoint_handler->sending_waypoint_num_ == waypoint_handler->current_waypoint_index_ && // This is the current waypoint
-                        !waypoint_handler->mission_planner_.waiting_at_waypoint())             // And we are en route
+                        !waypoint_handler->navigation_.waiting_at_waypoint())                                   // And we are en route
                 {
                     isCurrent = 1;
                 }
@@ -302,7 +302,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                         waypoint_handler->waypoint_receiving_ = false;
                         waypoint_handler->waypoint_onboard_count_ = waypoint_handler->waypoint_count_;
 
-                        waypoint_handler->mission_planner_.set_start_wpt_time();
+                        waypoint_handler->navigation_.set_start_wpt_time();
 
                         waypoint_handler->state_.nav_plan_active = false;
                         waypoint_handler->nav_plan_init();
@@ -380,7 +380,7 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
             print_util_dbg_print_num(packet.seq, 10);
             print_util_dbg_print("\r\n");
 
-            waypoint_handler->mission_planner_.set_start_wpt_time();
+            waypoint_handler->navigation_.set_start_wpt_time();
 
             waypoint_handler->state_.nav_plan_active = false;
             waypoint_handler->nav_plan_init();
@@ -421,7 +421,7 @@ mav_result_t Mavlink_waypoint_handler::set_current_waypoint_from_parameter(Mavli
         print_util_dbg_print_num(new_current, 10);
         print_util_dbg_print("\r\n");
 
-        waypoint_handler->mission_planner_.set_start_wpt_time();
+        waypoint_handler->navigation_.set_start_wpt_time();
 
         waypoint_handler->state_.nav_plan_active = false;
         waypoint_handler->nav_plan_init();
@@ -451,7 +451,7 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
             waypoint_handler->waypoint_count_ = 0;
             waypoint_handler->waypoint_onboard_count_ = 0;
             waypoint_handler->state_.nav_plan_active = false;
-            waypoint_handler->mission_planner_.set_hold_waypoint_set(false);
+            //waypoint_handler->mission_planner_.set_hold_waypoint_set(false); Is this neeeded, should the hold waypoint be reset if we just clear the list?
 
             mavlink_message_t _msg;
             mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),
@@ -472,13 +472,12 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Mission_planner& mission_planner, Position_estimation& position_estimation, Navigation& navigation, State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation, Navigation& navigation, State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
             mavlink_stream_(mavlink_stream_),
             position_estimation_(position_estimation),
             state_(state_),
-            mission_planner_(mission_planner),
             navigation_(navigation),
             message_handler_(message_handler),
             waypoint_sending_(false),
@@ -601,7 +600,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     waypoint_count_ = 1;
     waypoint_onboard_count_ = waypoint_count_;
-    mission_planner_.set_waiting_at_waypoint(false);
+    navigation_.set_waiting_at_waypoint(false);
     current_waypoint_index_ = 0;
 
     waypoint_list_[0] = waypoint;

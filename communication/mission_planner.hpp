@@ -170,29 +170,6 @@ public:
     Mav_mode last_mode() const;
     void set_critical_next_state(bool critical_next_state);
 
-    /**
-     * \brief   Gets a flag stating if the drone is currently waiting at a waypoint
-     *
-     * \return  Is drone waiting at a waypoint
-     */
-    bool waiting_at_waypoint() const;
-
-    /**
-     * \brief   Sets the flag stating if the drone is currently waiting at a waypoint
-     */
-    void set_waiting_at_waypoint(bool waiting_at_waypoint);
-
-    /**
-     * \brief   Sets the start_wpt_time_ to the current time
-     */
-    void set_start_wpt_time();
-
-    /**
-     * \brief   Gets the time that the drone started to move towards the waypoint
-     *
-     * \return  start_wpt_time
-     */
-    uint32_t start_wpt_time() const;
 protected:
     Mission_planner_handler_on_ground& on_ground_handler_;                  ///< The handler for the on ground state
     Mission_planner_handler_takeoff& takeoff_handler_;                      ///< The handler for the takeoff state
@@ -206,8 +183,6 @@ protected:
     Mavlink_waypoint_handler& waypoint_handler_;        ///< The reference to the mavlink waypoint handler
 
     bool hold_waypoint_set_;                                    ///< Flag to tell if the hold position waypoint is set
-    uint32_t start_wpt_time_;                                   ///< The time at which the MAV starts to travel towards its waypoint
-    bool waiting_at_waypoint_;                                  ///< Flag stating if the drone is currently at a waypoint waiting to advance
     bool critical_next_state_;                                  ///< Flag to change critical state in its dedicated state machine
     Mav_mode last_mode_;                                        ///< The mode of the MAV to have a memory of its evolution
     Waypoint waypoint_critical_coordinates_;                    ///< Waypoint for the critical state

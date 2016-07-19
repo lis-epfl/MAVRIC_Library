@@ -348,6 +348,8 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     last_update = 0;
 
     dist2wp_sqr = 0.0f;
+    waiting_at_waypoint_ = false;
+    start_wpt_time_ = time_keeper_get_ms();
 
     wpt_nav_controller = nav_config.wpt_nav_controller;
     hovering_controller = nav_config.hovering_controller;
@@ -434,4 +436,24 @@ bool Navigation::update(Navigation* navigation)
     }
 
     return true;
+}
+
+void Navigation::set_start_wpt_time()
+{
+    start_wpt_time_ = time_keeper_get_ms();
+}
+
+uint32_t Navigation::start_wpt_time() const
+{
+    return start_wpt_time_;
+}
+
+bool Navigation::waiting_at_waypoint() const
+{
+    return waiting_at_waypoint_;
+}
+
+void Navigation::set_waiting_at_waypoint(bool waiting_at_waypoint)
+{
+    waiting_at_waypoint_ = waiting_at_waypoint;
 }

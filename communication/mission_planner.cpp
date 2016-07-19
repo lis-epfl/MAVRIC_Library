@@ -110,7 +110,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
 {
     mav_result_t result;
     bool force_next = false;
-    uint32_t time_from_start_wpt = time_keeper_get_ms() - mission_planner->start_wpt_time_;
+    uint32_t time_from_start_wpt = time_keeper_get_ms() - mission_planner->navigation_.start_wpt_time();
     uint32_t time_wpt_limit = 5000;
 
     if (packet->param3 == 1)
@@ -127,7 +127,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
     {
         print_util_dbg_print("All vehicles: Navigating to next waypoint.\r\n");
 
-        mission_planner->start_wpt_time_ = time_keeper_get_ms();
+        mission_planner->navigation_.set_start_wpt_time();
 
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
 
@@ -169,7 +169,7 @@ mav_result_t Mission_planner::is_arrived(Mission_planner* mission_planner, mavli
 
     if (packet->param2 == 32)
     {
-        if (mission_planner->waiting_at_waypoint_)
+        if (mission_planner->navigation_.waiting_at_waypoint())
         {
             result = MAV_RESULT_ACCEPTED;
         }
@@ -384,8 +384,6 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
             manual_control_handler_(manual_control_handler),
             waypoint_handler_(waypoint_handler),
             hold_waypoint_set_(false),
-            start_wpt_time_(time_keeper_get_ms()),
-            waiting_at_waypoint_(false),
             critical_next_state_(false),
             last_mode_(state_.mav_mode()),
             mavlink_stream_(mavlink_stream),
@@ -742,29 +740,9 @@ bool Mission_planner::hold_waypoint_set() const
     return hold_waypoint_set_;
 }
 
-bool Mission_planner::waiting_at_waypoint() const
-{
-    return waiting_at_waypoint_;
-}
-
-void Mission_planner::set_waiting_at_waypoint(bool waiting_at_waypoint)
-{
-    waiting_at_waypoint_ = waiting_at_waypoint;
-}
-
 Mav_mode Mission_planner::last_mode() const
 {
     return last_mode_;
-}
-
-void Mission_planner::set_start_wpt_time()
-{
-    start_wpt_time_ = time_keeper_get_ms();
-}
-
-uint32_t Mission_planner::start_wpt_time() const
-{
-    return start_wpt_time_;
 }
 
 void Mission_planner::set_critical_next_state(bool critical_next_state)
