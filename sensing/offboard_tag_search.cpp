@@ -54,8 +54,7 @@ extern "C"
 
 Offboard_Tag_Search::Offboard_Tag_Search(const Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config):
     conf_(config),
-    is_camera_running_(config.initial_camera_state),
-    has_camera_state_changed_(true),
+    is_camera_running_(false),
     last_update_us_(time_keeper_get_us()),
     position_estimation_(position_estimation),
     ahrs_(ahrs),
@@ -87,6 +86,8 @@ Offboard_Tag_Search::Offboard_Tag_Search(const Position_estimation& position_est
         ahrs_at_photo_[i].internal_state = ahrs_state_t::AHRS_READY;
         ahrs_at_photo_[i].last_update_s = 0.0f;
         ahrs_at_photo_[i].dt_s = 0.0f;
+
+        has_photo_been_taken_[i] = false;
     }
 }
 
@@ -96,20 +97,21 @@ bool Offboard_Tag_Search::update(const Scheduler* scheduler, bool camera_state)
     bool success = true;
 
     // Switch camera on and off
+    bool has_camera_state_changed = false;
     if (camera_state != is_camera_running_)
     {
-        has_camera_state_changed_ = true;
+        has_camera_state_changed = true;
     }
     is_camera_running_ = camera_state;
 
-    // Update timing
-    uint32_t t      = time_keeper_get_us();
-    //dt_s_           = (float)(t - last_update_us_) / 1000000.0f;
-    last_update_us_ = t;
-
     // Send the message now if needed
-    if (has_camera_state_changed_)
+    if (has_camera_state_changed)
     {
+        // Update timing
+        uint32_t t      = time_keeper_get_us();
+        //dt_s_           = (float)(t - last_update_us_) / 1000000.0f;
+        last_update_us_ = t;
+
         mavlink_message_t msg;
         offboard_tag_search_telemetry_send_start_stop(this, &(mavlink_communication().mavlink_stream()), &msg);
         mavlink_communication().mavlink_stream().send(&msg);
@@ -177,16 +179,6 @@ const float& Offboard_Tag_Search::last_update_us(void) const
 const bool& Offboard_Tag_Search::is_camera_running() const
 {
     return is_camera_running_;
-}
-
-bool Offboard_Tag_Search::has_camera_state_changed() const
-{
-    return has_camera_state_changed_;
-}
-
-void Offboard_Tag_Search::camera_state_has_changed(bool isChanged)
-{
-    has_camera_state_changed_ = isChanged;
 }
 
 int Offboard_Tag_Search::camera_id() const
@@ -287,4 +279,19 @@ const Position_estimation& Offboard_Tag_Search::position_estimation() const
 Mavlink_waypoint_handler_tag& Offboard_Tag_Search::waypoint_handler()
 {
     return waypoint_handler_;
+}
+
+bool Offboard_Tag_Search::has_photo_been_taken(int index) const
+{
+    return has_photo_been_taken_[index];
+}
+
+void Offboard_Tag_Search::set_has_photo_been_taken(int index, bool state)
+{
+    has_photo_been_taken_[index] = state;
+}
+
+void Offboard_Tag_Search::set_is_camera_running(bool is_camera_running)
+{
+    is_camera_running_ = is_camera_running;
 }

@@ -150,9 +150,8 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
 
     bool next_state = false;
 
-    // If the camera has detected the tag and the data is healthy...
-    if ((offboard_tag_search_.land_on_tag_behavior() == Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND) &&
-        (offboard_tag_search_.is_healthy()))
+    // If the camera has detected the tag...
+    if (offboard_tag_search_.land_on_tag_behavior() == Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND)
     {
         // The hold coordinates has been already been updated during the tag location reading...
         // Changed the z goal to ground if we are positioned directly above the tag
@@ -162,8 +161,8 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
         waypoint_hold_coordinates.waypoint.pos[0] = offboard_tag_search_.tag_location().pos[0];
         waypoint_hold_coordinates.waypoint.pos[1] = offboard_tag_search_.tag_location().pos[1];
 
-        // If we are not above tag
-        if (horizontal_distance_to_tag_sqr > offboard_tag_search_.allowable_horizontal_tag_offset_sqr())
+        // If we are not above tag or are not healthy
+        if (horizontal_distance_to_tag_sqr > offboard_tag_search_.allowable_horizontal_tag_offset_sqr() || !offboard_tag_search_.is_healthy())
         {
             // Stay at tag search altitude if in descent to ground state
             switch (navigation_.auto_landing_behavior)
@@ -182,7 +181,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
                     break;
             }
         }
-        else // Descend to ground
+        else // Descend to ground if still healthy and above tag
         {
             switch (navigation_.auto_landing_behavior)
             {
@@ -243,6 +242,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
         navigation_.internal_state_ = Navigation::internal_state_t::NAV_LANDING;
         navigation_.auto_landing_behavior = Navigation::auto_landing_behavior_t::DESCENT_TO_SMALL_ALTITUDE;
         offboard_tag_search_.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND);
+        offboard_tag_search_.set_is_camera_running(false);       // Dont send messages to take photos
     }
 
     if (next_state)
@@ -262,6 +262,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
                 //state_.mav_mode_custom = CUSTOM_BASE_MODE;
                 hold_waypoint_set_ = false;
                 navigation_.internal_state_ = Navigation::NAV_ON_GND;
+                offboard_tag_search_.set_is_camera_running(false);       // Dont send messages to take photos
                 state_.set_armed(false);
                 state_.mav_state_ = MAV_STATE_STANDBY;
                 break;

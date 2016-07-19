@@ -77,6 +77,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
     mav_result_t result;
 
     int thread_index = packet->param2;
+    offboard_tag_search.set_has_photo_been_taken(thread_index, false);
 
     // If a tag had actually been detected
     if ((packet->param3 > -999.0f || packet->param3 < -1001.0f) ||    // Use range due to float errors
@@ -220,10 +221,13 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
         }
     }
 
-    // Send message to take new photo
-    mavlink_message_t msg;
-    offboard_tag_search_telemetry_send_take_new_photo(thread_index, &offboard_tag_search, &(offboard_tag_search.mavlink_communication().mavlink_stream()), &msg);
-    offboard_tag_search.mavlink_communication().mavlink_stream().send(&msg);
+    // Send message to take new photo if camera is running
+    if (offboard_tag_search.is_camera_running() && !offboard_tag_search.has_photo_been_taken(thread_index))
+    {
+        mavlink_message_t msg;
+        offboard_tag_search_telemetry_send_take_new_photo(thread_index, &offboard_tag_search, &(offboard_tag_search.mavlink_communication().mavlink_stream()), &msg);
+        offboard_tag_search.mavlink_communication().mavlink_stream().send(&msg);
+    }
 
     result = MAV_RESULT_ACCEPTED;
     return result;
@@ -276,62 +280,59 @@ void offboard_tag_search_goal_location_telemetry_send(Offboard_Tag_Search* offbo
 
 void offboard_tag_search_telemetry_send_take_new_photo(int index, Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    // Send message
-    mavlink_msg_command_long_pack(  mavlink_stream->sysid(),        // system_id
-                                    mavlink_stream->compid(),       // component_id
-                                    msg,                            // mavlink_msg
-                                    0,                              // target_system
-                                    0,                              // target_component
-                                    MAV_CMD_DO_CONTROL_VIDEO,       // command
-                                    0,                              // confirmation
-                                    camera->camera_id(),            // param1
-                                    camera->is_camera_running(),    // param2
-                                    index,                          // param3
-                                    0,                              // param4
-                                    0,                              // param5
-                                    0,                              // param6
-                                    0);                             // param7
+    if (!camera->has_photo_been_taken(index) && camera->is_camera_running())
+    {
+        // Send message
+        camera->set_has_photo_been_taken(index, true);
+        mavlink_msg_command_long_pack(  mavlink_stream->sysid(),        // system_id
+                                        mavlink_stream->compid(),       // component_id
+                                        msg,                            // mavlink_msg
+                                        0,                              // target_system
+                                        0,                              // target_component
+                                        MAV_CMD_DO_CONTROL_VIDEO,       // command
+                                        0,                              // confirmation
+                                        camera->camera_id(),            // param1
+                                        camera->is_camera_running(),    // param2
+                                        index,                          // param3
+                                        0,                              // param4
+                                        0,                              // param5
+                                        0,                              // param6
+                                        0);                             // param7
 
-    // Record position
-    camera->set_position_at_photo(index);
+        // Record position
+        camera->set_position_at_photo(index);
+    }
 }
 
 void offboard_tag_search_telemetry_send_start_stop(Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    // Only send message if the change is new
-    if (camera->has_camera_state_changed())
+    // Switch boolean to int as mavlink sends ints/flaots
+    switch(camera->is_camera_running())
     {
-        camera->camera_state_has_changed(false);
-
-        int is_camera_running = -1;
-        // Switch boolean to int as mavlink sends ints/flaots
-        switch(camera->is_camera_running())
-        {
-            case true: // Send 1 message per thread to take photo and start
-                is_camera_running = 1;
-                // Send thread message
-                for (int i = 0; i < camera->offboard_threads(); i++)
-                {
-                    offboard_tag_search_telemetry_send_take_new_photo(i, camera, mavlink_stream, msg);
-                }
-                break;
-            case false: // Send message to stop
-                is_camera_running = 0;
-                mavlink_msg_command_long_pack(  mavlink_stream->sysid(),        // system_id
-                                                mavlink_stream->compid(),       // component_id
-                                                msg,                            // mavlink_msg
-                                                0,                              // target_system
-                                                0,                              // target_component
-                                                MAV_CMD_DO_CONTROL_VIDEO,       // command
-                                                0,                              // confirmation
-                                                camera->camera_id(),            // param1
-                                                camera->is_camera_running(),    // param2
-                                                0,                              // param3
-                                                0,                              // param4
-                                                0,                              // param5
-                                                0,                              // param6
-                                                0);                             // param7
-                break;
-        }
+        case true: // Send 1 message per thread to take photo and start
+            // Send thread message
+            for (int i = 0; i < camera->offboard_threads(); i++)
+            {
+                offboard_tag_search_telemetry_send_take_new_photo(i, camera, mavlink_stream, msg);
+            }
+            break;
+        case false: // Send message to stop
+        /*
+            mavlink_msg_command_long_pack(  mavlink_stream->sysid(),        // system_id
+                                            mavlink_stream->compid(),       // component_id
+                                            msg,                            // mavlink_msg
+                                            0,                              // target_system
+                                            0,                              // target_component
+                                            MAV_CMD_DO_CONTROL_VIDEO,       // command
+                                            0,                              // confirmation
+                                            camera->camera_id(),            // param1
+                                            camera->is_camera_running(),    // param2
+                                            0,                              // param3
+                                            0,                              // param4
+                                            0,                              // param5
+                                            0,                              // param6
+                                            0);                             // param7
+                                            */
+            break;
     }
 }

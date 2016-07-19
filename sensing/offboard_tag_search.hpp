@@ -66,7 +66,6 @@ extern "C"
 typedef struct
 {
     int camera_id;                                      ///< The camera id to send to the offboard camera computer
-    bool initial_camera_state;                          ///< The starting on/off state of the camera
     float allowable_horizontal_tag_offset_sqr;          ///< The square distance from the drone to the center of the tag that is acceptable
     float descent_to_gnd_altitude;                      ///< The altitude that the landing algorithm should switch from descent to small altitude to descent to ground
     float max_acc_drone_height_from_camera_mm;          ///< The maximum acceptable drone height where the code will trust the cameras height estimation
@@ -84,7 +83,6 @@ static inline offboard_tag_search_conf_t offboard_tag_search_conf_default() {
     offboard_tag_search_conf_t conf;
 
     conf.camera_id                               = 1;
-    conf.initial_camera_state                    = false;
     conf.allowable_horizontal_tag_offset_sqr     = 0.25f;
     conf.descent_to_gnd_altitude                 = -0.5f;
     conf.max_acc_drone_height_from_camera_mm     = 15000.0f;
@@ -188,8 +186,7 @@ public:
     float tag_search_timeout_us() const;
 
     const bool& is_camera_running() const;
-    bool has_camera_state_changed() const;
-    void camera_state_has_changed(bool isChanged);
+    void set_is_camera_running(bool is_camera_running);
     land_on_tag_behavior_t land_on_tag_behavior() const;
     void land_on_tag_behavior(land_on_tag_behavior_t land_on_tag_behavior);
 
@@ -199,6 +196,8 @@ public:
     const int offboard_threads() const;
     const local_position_t position_at_photo(int index) const;
     const ahrs_t ahrs_at_photo(int index) const;
+    bool has_photo_been_taken(int index) const;
+    void set_has_photo_been_taken(int index, bool state);
     void set_position_at_photo(int index);
     
 protected:
@@ -210,7 +209,7 @@ protected:
 
     offboard_tag_search_conf_t conf_;                       ///< The configuration of the offboard tag search object
     bool is_camera_running_;                                ///< States whether the camera should be running
-    bool has_camera_state_changed_;                         ///< Boolean flag stating if the state has changed and should be send to the camera
+    bool has_photo_been_taken_[offboard_threads_];           ///< Boolean array stating if the thread has taken a photo
     float last_update_us_;                                  ///< Last update time in microseconds
     int16_t picture_count_;                                 ///< The count of the pictures received
     local_position_t tag_location_;                         ///< The location of the tag in the local frame
