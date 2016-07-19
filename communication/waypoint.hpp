@@ -43,12 +43,12 @@
 #ifndef WAYPOINT__
 #define WAYPOINT__
 
+#include "control/dubin.hpp"
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-
+#include "sensing/position_estimation.hpp"
 #include "util/coord_conventions.h"
-#include "control/dubin.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -58,21 +58,34 @@ class Waypoint
 {
 public:
     /**
-     * \brief   Create a blank constructor
+     * \brief   Creates a blank waypoint
+     *
+     * SHOULD ONLY BE USED FOR CONSTRUCTORS DONE BY COMPILER FOR TEMPORARY
+     * VARIABLES. USE ONE OF THE OTHER CONSTRUCTORS
      */
-     Waypoint();
+    Waypoint();
+
+    /**
+     * \brief   Creates a blank waypoint
+     *
+     * \param   position_estimation     The reference to the position estimation
+     * \param   mavlink_stream          The pointer to the MAVLink stream structure
+     */
+    Waypoint(const Position_estimation* position_estimation, const Mavlink_stream* mavlink_stream);
 
     /**
      * \brief   Initialize the waypoint handler
      *
+     * \param   position_estimation     The reference to the position estimation
      * \param   mavlink_stream          The pointer to the MAVLink stream structure
      * \param   packet                  The received packet for creating a waypoint
      */
-    Waypoint(const Mavlink_stream* mavlink_stream, mavlink_mission_item_t& packet);
+    Waypoint(const Position_estimation* position_estimation, const Mavlink_stream* mavlink_stream, mavlink_mission_item_t& packet);
 
     /**
      * \brief   Initialize the waypoint handler
      *
+     * \param   position_estimation The reference to the position estimation
      * \param   mavlink_stream      The pointer to the MAVLink stream structure
      * \param   frame               The reference frame of the waypoint
      * \param   command             The MAV_CMD_NAV id of the waypoint
@@ -85,7 +98,8 @@ public:
      * \param   y                   The value on the y axis (depends on the reference frame)
      * \param   z                   The value on the z axis (depends on the reference frame)
      */
-    Waypoint(   const Mavlink_stream* mavlink_stream_,
+    Waypoint(   const Position_estimation* position_estimation,
+                const Mavlink_stream* mavlink_stream,
                 uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
@@ -100,6 +114,7 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
+     * \param   position_estimation The reference to the position estimation
      * \param   mavlink_stream      The pointer to the MAVLink stream structure
      * \param   frame               The reference frame of the waypoint
      * \param   command             The MAV_CMD_NAV id of the waypoint
@@ -111,12 +126,12 @@ public:
      * \param   x                   The value on the x axis (depends on the reference frame)
      * \param   y                   The value on the y axis (depends on the reference frame)
      * \param   z                   The value on the z axis (depends on the reference frame)
-     * \param   local_pos           The local position of the waypoint
      * \param   radius              The radius of the waypoint
      * \param   loiter_time         The time to loiter at the waypoint
      * \param   dubin               The dubin structure for the waypoint
      */
-    Waypoint(   const Mavlink_stream* mavlink_stream_,
+    Waypoint(   const Position_estimation* position_estimation,
+                const Mavlink_stream* mavlink_stream,
                 uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
@@ -127,7 +142,6 @@ public:
                 float x,
                 float y,
                 float z,
-                local_position_t local_pos,
                 float radius,
                 float loiter_time,
                 dubin_t dubin);
@@ -135,10 +149,9 @@ public:
     /**
      * \brief   Calculates the information required for waypoint local structure
      *
-     * \param   origin                  The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
      * \param   dubin_state             The pointer to the Dubin state
      */
-    void calculate_waypoint_local_structure(global_position_t origin, dubin_state_t* dubin_state);
+    void calculate_waypoint_local_structure(dubin_state_t* dubin_state);
 
     /**
      * \brief   Sends a given waypoint via a MAVLink message
@@ -242,59 +255,14 @@ public:
     void set_param4(float param4);
 
     /**
-     * \brief   Gets the x coordinate of the waypoint
-     *
-     * \return  x
-     */
-    double x() const;
-
-    /**
-     * \brief   Sets x
-     *
-     * \param   x
-     */
-    void set_x(double x);
-
-    /**
-     * \brief   Gets the y coordinate of the waypoint
-     *
-     * \return  y
-     */
-    double y() const;
-
-    /**
-     * \brief   Sets y
-     *
-     * \param   y
-     */
-    void set_y(double y);
-
-    /**
-     * \brief   Gets the z coordinate of the waypoint
-     *
-     * \return  z
-     */
-    double z() const;
-
-    /**
-     * \brief   Sets z
-     *
-     * \param   z
-     */
-    void set_z(double z);
-
-    /**
      * \brief   Gets the waypoint in local coordinates
      *
      * \return  Local waypoint position
      */
-    local_position_t& local_pos();
+    local_position_t local_pos() const;
 
     /**
      * \brief   Sets the waypoint in local coordinates
-     *
-     * NOTE: Does not set anything any other field in the class
-     * TODO: Set other fields in the class
      */
     void set_local_pos(local_position_t local_pos);
 
@@ -341,18 +309,41 @@ protected:
     float param2_;                                              ///< Parameter depending on the MAV_CMD_NAV id
     float param3_;                                              ///< Parameter depending on the MAV_CMD_NAV id
     float param4_;                                              ///< Parameter depending on the MAV_CMD_NAV id
-    double x_;                                                  ///< The value on the x axis (depends on the reference frame)
-    double y_;                                                  ///< The value on the y axis (depends on the reference frame)
-    double z_;                                                  ///< The value on the z axis (depends on the reference frame)
-
-    const Mavlink_stream* mavlink_stream_;                            ///< The mavlink stream
-
-    // These come from Navigation::waypoint_local_struct_t
-    // TODO: Get rid of for more logical structure
-    local_position_t local_pos_;                                ///< The local coordinates of the waypoint, was called Navigation::waypoint_local_struct_t::waypoint
+    global_position_t wpt_position_;                            ///< The global position of the waypoint
     float radius_;                                              ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
     float loiter_time_;                                         ///< The loiter time at the waypoint
     dubin_t dubin_;                                             ///< The Dubin structure
+
+    const Position_estimation* position_estimation_;            ///< The position estimation
+    const Mavlink_stream* mavlink_stream_;                      ///< The mavlink stream
+
+    /**
+     * \brief   Determines the global position of the waypoint based on the frame
+     * and x, y, z, coordinates
+     *
+     * \param frame     The MAV_FRAME of the x, y, z coordinates
+     * \param x         The x coordinate
+     * \param y         The y coordinate
+     * \param z         The z coordinate
+     * \param heading   The heading of the waypoint in radians
+     * \param origin    The origin of the local frame (if needed)
+     *
+     * \return  Global frame position
+     */
+    static global_position_t get_global_position(uint8_t frame, double x, double y, double z, float heading, global_position_t origin);
+
+    /**
+     * \brief   Determines the position of the waypoint based in the
+     * desired frame
+     *
+     * If position estimation is NULL, returns (0, 0, 0)
+     *
+     * \param x     x coordinate in desired frame (output)
+     * \param y     y coordinate in desired frame (output)
+     * \param z     z coordinate in desired frame (output)
+     * \param frame The desired frame
+     */
+    void get_waypoint_parameters(double& x, double& y, double& z, uint8_t frame) const;
 };
 
 

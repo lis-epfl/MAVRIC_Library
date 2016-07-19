@@ -255,7 +255,8 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
     controls_nav.tvel[Z] = dir_desired_sg[Z];
 
     float rel_heading;
-    if ((SQR(goal.local_pos().pos[X] - position_estimation.local_position.pos[X]) + SQR(goal.local_pos().pos[Y] - position_estimation.local_position.pos[Y])) <= 25.0f)
+    local_position_t goal_local_pos = goal.local_pos();
+    if ((SQR(goal_local_pos.pos[X] - position_estimation.local_position.pos[X]) + SQR(goal_local_pos.pos[Y] - position_estimation.local_position.pos[Y])) <= 25.0f)
     {
         rel_heading = 0.0f;
     }
@@ -340,10 +341,12 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     controls_nav.control_mode = VELOCITY_COMMAND_MODE;
     controls_nav.yaw_mode = YAW_ABSOLUTE;
 
-    goal.local_pos().pos[X] = 0.0f;
-    goal.local_pos().pos[Y] = 0.0f;
-    goal.local_pos().pos[Z] = 0.0f;
-    goal.local_pos().heading = 0.0f;
+    local_position_t new_goal_local_pos;
+    new_goal_local_pos.pos[X] = 0.0f;
+    new_goal_local_pos.pos[Y] = 0.0f;
+    new_goal_local_pos.pos[Z] = 0.0f;
+    new_goal_local_pos.heading = 0.0f;
+    goal.set_local_pos(new_goal_local_pos);
 
     last_update = 0;
 

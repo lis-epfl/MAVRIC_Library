@@ -215,7 +215,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
     {
         waypoint_handler->start_timeout_ = time_keeper_get_ms();
 
-        Waypoint new_waypoint(&waypoint_handler->mavlink_stream_, packet);
+        Waypoint new_waypoint(&waypoint_handler->position_estimation_, &waypoint_handler->mavlink_stream_, packet);
 
         print_util_dbg_print("New waypoint received ");
         //print_util_dbg_print("(");
@@ -472,12 +472,12 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation, Navigation& navigation, State& state_, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream_, conf_t config):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation, Navigation& navigation, State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
-            mavlink_stream_(mavlink_stream_),
+            mavlink_stream_(mavlink_stream),
             position_estimation_(position_estimation),
-            state_(state_),
+            state_(state),
             navigation_(navigation),
             message_handler_(message_handler),
             waypoint_sending_(false),
@@ -489,6 +489,10 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
             timeout_max_waypoint_(10000),
             config_(config)
 {
+    for (int i = 0; i < MAX_WAYPOINTS; i++)
+    {
+        waypoint_list_[i] = Waypoint(&position_estimation_, &mavlink_stream_);
+    }
 }
 
 bool Mavlink_waypoint_handler::init()
@@ -574,7 +578,8 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     /*
     Constructor order:
 
-    mavlink_stream_
+    position_estimation_,
+    mavlink_stream_,
     uint8_t frame,
     uint16_t command,
     uint8_t autocontinue,
@@ -586,7 +591,8 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     float y,
     float z
     */
-    Waypoint waypoint(  &mavlink_stream_,
+    Waypoint waypoint(  &position_estimation_,
+                        &mavlink_stream_,
                         MAV_FRAME_LOCAL_NED,
                         MAV_CMD_NAV_WAYPOINT,
                         0,
@@ -613,7 +619,7 @@ Waypoint& Mavlink_waypoint_handler::current_waypoint()
     {
         return waypoint_list_[current_waypoint_index_];
     }
-    else // TODO: Return an error structure
+    else // TODO: Return an error
     {
         // For now, return last waypoint structure
         return waypoint_list_[waypoint_count_-1];
@@ -635,7 +641,7 @@ Waypoint& Mavlink_waypoint_handler::next_waypoint()
             return waypoint_list_[0];
         }
     }
-    else // TODO: Return an error structure
+    else // TODO: Return an error
     {
         // For now, set to last waypoint structure
         return waypoint_list_[waypoint_count_-1];
@@ -680,12 +686,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
             && (waypoint_receiving_ == false)
             && (!state_.nav_plan_active))
     {
-        waypoint_list_[current_waypoint_index_].calculate_waypoint_local_structure( position_estimation_.local_position.origin,
-                                                                                    &navigation_.dubin_state);
-
-        print_util_dbg_print("Waypoint Nr");
-        print_util_dbg_print_num(current_waypoint_index_, 10);
-        print_util_dbg_print(" set,\r\n");
+        update_current_waypoint(&navigation_.dubin_state);
 
         state_.nav_plan_active = true;
 
@@ -723,11 +724,11 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
     }
 }
 
-void Mavlink_waypoint_handler::update_current_waypoint(global_position_t origin, dubin_state_t* dubin_state)
+void Mavlink_waypoint_handler::update_current_waypoint(dubin_state_t* dubin_state)
 {
     if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
     {
-        waypoint_list_[current_waypoint_index_].calculate_waypoint_local_structure(origin, dubin_state);
+        waypoint_list_[current_waypoint_index_].calculate_waypoint_local_structure(dubin_state);
 
         print_util_dbg_print("Waypoint Nr");
         print_util_dbg_print_num(current_waypoint_index_, 10);

@@ -141,13 +141,9 @@ public:
     void control_time_out_waypoint_msg();
 
     /**
-     * \brief   Updates the waypoint to calculate the local_position_t, radius,
-     * loiter_time, and dubin.
-     *
-     * This is caused by the previous Navigation::waypoint_local_struct_t.
-     * TODO: remove
+     * \brief   Updates the waypoint if necessary and sets dubin_state to init
      */
-    void update_current_waypoint(global_position_t origin, dubin_state_t* dubin_state);
+    void update_current_waypoint(dubin_state_t* dubin_state);
 
     /**
      * \brief   Gets the current waypoint index
@@ -158,7 +154,6 @@ public:
 
 protected:
     Waypoint waypoint_list_[MAX_WAYPOINTS];                     ///< The array of all waypoints (max MAX_WAYPOINTS)
-
     uint16_t waypoint_count_;                                   ///< The total number of waypoints
     uint16_t current_waypoint_index_;                           ///< The current waypoint index
 

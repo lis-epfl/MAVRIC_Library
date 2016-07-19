@@ -56,16 +56,6 @@ extern "C"
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-/**
- * \brief   Converts GPS Waypoint coordinates to local NED frame
- *
- * \param   waypoint    Input waypoint
- * \param   origin      Origin of the local NED frame
- *
- * \return              waypoint in NED coordinates
- */
-static Waypoint convert_waypoint_to_local_ned(const Waypoint* waypoint, const global_position_t* origin);
-
 
 /**
  * \brief       Vector field for floor avoidance
@@ -140,52 +130,6 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
-static Waypoint convert_waypoint_to_local_ned(const Waypoint* waypoint_in, const global_position_t* origin)
-{
-    global_position_t waypoint_global;
-    local_position_t waypoint_local;
-
-    // Init new waypoint
-    Waypoint waypoint = *waypoint_in;
-    waypoint.set_command(waypoint_in->command());
-    waypoint.set_param1(waypoint_in->param1());
-    waypoint.set_param2(waypoint_in->param2());
-    waypoint.set_param3(waypoint_in->param3());
-    waypoint.set_param4(waypoint_in->param4());
-
-    switch (waypoint_in->frame())
-    {
-        case MAV_FRAME_GLOBAL:                  /* Global coordinate frame, WGS84 coordinate system. First value / x: latitude, second value / y: longitude, third value / z: positive altitude over mean sea level (MSL) | */
-
-            waypoint_global.latitude    = waypoint_in->x();
-            waypoint_global.longitude   = waypoint_in->y();
-            waypoint_global.altitude    = waypoint_in->z();
-            waypoint_local              = coord_conventions_global_to_local_position(waypoint_global, *origin);
-
-            waypoint.set_frame(MAV_FRAME_LOCAL_NED);
-            waypoint.set_x(waypoint_local.pos[X]);
-            waypoint.set_y(waypoint_local.pos[Y]);
-            waypoint.set_z(waypoint_local.pos[Z]);
-
-            break;
-
-        case MAV_FRAME_LOCAL_NED:               /* Local coordinate frame, Z-up (x: north, y: east, z: down). | */
-        case MAV_FRAME_MISSION:                 /* NOT a coordinate frame, indicates a mission command. | */
-        case MAV_FRAME_GLOBAL_RELATIVE_ALT:     /* Global coordinate frame, WGS84 coordinate system, relative altitude over ground with respect to the home position. First value / x: latitude, second value / y: longitude, third value / z: positive altitude with 0 being at the altitude of the home location. | */
-        case MAV_FRAME_LOCAL_ENU:               /* Local coordinate frame, Z-down (x: east, y: north, z: up) | */
-        case MAV_FRAME_LOCAL_OFFSET_NED:        /* Offset to the current local frame. Anything expressed in this frame should be added to the current local frame position. | */
-        case MAV_FRAME_BODY_NED:                /* Setpoint in body NED frame. This makes sense if all position control is externalized - e.g. useful to command 2 m/s^2 acceleration to the right. | */
-        case MAV_FRAME_BODY_OFFSET_NED:         /* Offset in body NED frame. This makes sense if adding setpoints to the current flight path, to avoid an obstacle - e.g. useful to command 2 m/s^2 acceleration to the east. | */
-        case MAV_FRAME_GLOBAL_TERRAIN_ALT:      /* Global coordinate frame with above terrain level altitude. WGS84 coordinate system, relative altitude over terrain with respect to the waypoint coordinate. First value / x: latitude in degrees, second value / y: longitude in degrees, third value / z: positive altitude in meters with 0 being at ground level in terrain model. | */
-        case MAV_FRAME_ENUM_END:
-            // do not use this waypoint
-            waypoint.set_command(0);
-            break;
-    }
-
-    return waypoint;
-}
 
 
 /**
@@ -474,14 +418,13 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
     // Go through waypoint list
     for (uint16_t i = 0; i < vector_field->waypoint_handler->waypoint_count(); ++i)
     {
-        // Get waypoint in NED coordinates
-        Waypoint waypoint = convert_waypoint_to_local_ned(&vector_field->waypoint_handler->waypoint_from_index(i),
-                                     &vector_field->pos_est->local_position.origin);
+        Waypoint& waypoint = vector_field->waypoint_handler->waypoint_from_index(i);
+        local_position_t local_wpt = waypoint.local_pos();
 
         // Get object position
-        pos_obj[X] = waypoint.x();
-        pos_obj[Y] = waypoint.y();
-        pos_obj[Z] = waypoint.z();
+        pos_obj[X] = local_wpt.pos[X];
+        pos_obj[Y] = local_wpt.pos[Y];
+        pos_obj[Z] = local_wpt.pos[Z];
 
         switch (waypoint.command())
         {

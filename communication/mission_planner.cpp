@@ -131,8 +131,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
 
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
 
-        mission_planner->waypoint_handler_.current_waypoint().calculate_waypoint_local_structure(   mission_planner->position_estimation_.local_position.origin,
-                                                                                                    &mission_planner->navigation_.dubin_state);
+        mission_planner->waypoint_handler_.current_waypoint().calculate_waypoint_local_structure(&mission_planner->navigation_.dubin_state);
 
         mavlink_message_t msg;
         mavlink_msg_mission_current_pack(mission_planner->mavlink_stream_.sysid(),

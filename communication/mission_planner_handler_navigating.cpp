@@ -149,7 +149,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 {
                     waypoint_handler_.advance_to_next_waypoint();
                     dubin_state_t dubin_state;
-                    waypoint_handler_.update_current_waypoint(position_estimation_.local_position.origin, &dubin_state);
+                    waypoint_handler_.update_current_waypoint(&dubin_state);
                     navigation_.set_waiting_at_waypoint(false);
 
                     // Update output to be the new waypoint
