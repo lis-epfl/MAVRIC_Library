@@ -45,12 +45,12 @@
 
 #include "drivers/unsupported/acoustic.hpp"
 #include "communication/mavlink_stream.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "uart_int.h"
 #include "util/print_util.h"
-#include "util/constants.hpp"
 #include "util/quick_trig.h"
 }
 
