@@ -49,7 +49,7 @@ INS::INS(global_position_t origin)
     INS::origin_ = origin;
 };
 
-const global_position_t& INS::origin(void) const
+const global_position_t& INS::origin(void)
 {
     return origin_;
 }

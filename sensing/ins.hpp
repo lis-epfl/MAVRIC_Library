@@ -129,7 +129,7 @@ public:
      *
      * \return    origin
      */
-    const global_position_t& origin(void) const;
+    static const global_position_t& origin(void);
 
 private:
     static global_position_t origin_;
