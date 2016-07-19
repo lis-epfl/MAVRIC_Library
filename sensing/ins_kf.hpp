@@ -52,6 +52,7 @@
 #include "sensing/ins.hpp"
 
 #include "util/kalman.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
@@ -230,9 +231,7 @@ INS_kf::conf_t INS_kf::default_config(void)
 
 
     //default home location (EFPL Esplanade)
-    conf.home.longitude           = 6.566044801857777f;
-    conf.home.latitude            = 46.51852236174565f;
-    conf.home.altitude            = 400.0f;
+    conf.home = ORIGIN_EPFL;
 
     return conf;
 };

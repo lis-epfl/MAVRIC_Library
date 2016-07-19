@@ -336,9 +336,7 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         sonar(sonar)
 {
     // default GPS home position
-    origin_.longitude =  config.origin.longitude;
-    origin_.latitude =   config.origin.latitude;
-    origin_.altitude =   config.origin.altitude;
+    origin_ =  config.origin;
 
     for(uint8_t i = 0; i < 3; i++)
     {
@@ -478,12 +476,10 @@ Position_estimation::conf_t Position_estimation::default_config()
 {
     conf_t conf = {};
 
-    conf.origin                     = {};
-    //default home location (EFPL Esplanade)
-    conf.origin.longitude           = 6.566044801857777f;
-    conf.origin.latitude            = 46.51852236174565f;
-    conf.origin.altitude            = 400.0f;
-    conf.gravity                    = 9.81f;
+    // default home location (EFPL Esplanade)
+    conf.origin        = ORIGIN_EPFL;
+
+    conf.gravity       = 9.81f;
 
     conf.kp_pos_gps[X] = 2.0f;
     conf.kp_pos_gps[Y] = 2.0f;

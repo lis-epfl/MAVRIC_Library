@@ -50,6 +50,7 @@
 #include "communication/mavlink_message_handler.hpp"
 
 #include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
 
 
 /**
@@ -244,9 +245,7 @@ inline Gps_mocap::conf_t Gps_mocap::default_config()
     conf_t conf = {};
 
     // EPFL esplanade
-    conf.origin.latitude  = 46.51852236174565f;
-    conf.origin.longitude = 6.566044801857777f;
-    conf.origin.altitude  = 400.0f;
+    conf.origin = ORIGIN_EPFL;
 
     // Accuracy
     conf.horizontal_position_accuracy = 0.001f;
