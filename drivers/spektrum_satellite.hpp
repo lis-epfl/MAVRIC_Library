@@ -50,11 +50,8 @@
 #include "hal/common/gpio.hpp"
 #include "util/buffer.hpp"
 
-extern "C"
-{
 #include <cstdint>
 #include <cstdbool>
-}
 
 
 /**
