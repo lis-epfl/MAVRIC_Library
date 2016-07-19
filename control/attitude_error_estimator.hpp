@@ -51,8 +51,8 @@
  ******************************************************************************/
 
 
-#ifndef ATTITUDE_ERROR_ESTIMATOR_H_
-#define ATTITUDE_ERROR_ESTIMATOR_H_
+#ifndef ATTITUDE_ERROR_ESTIMATOR_HPP_
+#define ATTITUDE_ERROR_ESTIMATOR_HPP_
 
 #include "util/coord_conventions.hpp"
 #include "util/quaternions.h"
@@ -117,4 +117,4 @@ void attitude_error_estimator_set_quat_ref_from_rpy(attitude_error_estimator_t* 
 bool attitude_error_estimator_update(attitude_error_estimator_t* estimator);
 
 
-#endif /* ATTITUDE_ERROR_ESTIMATOR_H_ */
+#endif /* ATTITUDE_ERROR_ESTIMATOR_HPP_ */

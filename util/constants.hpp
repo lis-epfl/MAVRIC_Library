@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#ifndef MATH_UTIL_HPP_
+#define MATH_UTIL_HPP_
 
 #include "util/coord_conventions.hpp"
 
@@ -116,4 +116,4 @@ typedef enum
 const global_position_t ORIGIN_EPFL = {6.566044801857777f, 46.51852236174565f, 400.0f};
 
 
-#endif /* MATH_UTIL_H_ */
+#endif /* MATH_UTIL_HPP_ */

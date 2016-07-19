@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef AHRS_MADGWICK_DEFAULT_CONFIG_H_
-#define AHRS_MADGWICK_DEFAULT_CONFIG_H_
+#ifndef AHRS_MADGWICK_DEFAULT_CONFIG_HPP_
+#define AHRS_MADGWICK_DEFAULT_CONFIG_HPP_
 
 
 
@@ -59,4 +59,4 @@ static inline ahrs_madgwick_conf_t ahrs_madgwick_default_config()
 };
 
 
-#endif /* AHRS_MADGWICK_DEFAULT_CONFIG_H_ */
+#endif /* AHRS_MADGWICK_DEFAULT_CONFIG_HPP_ */

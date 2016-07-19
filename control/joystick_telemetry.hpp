@@ -40,8 +40,8 @@
  *
  ******************************************************************************/
 
-#ifndef JOYSTICK_TELEMETRY_H_
-#define JOYSTICK_TELEMETRY_H_
+#ifndef JOYSTICK_TELEMETRY_HPP_
+#define JOYSTICK_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -68,4 +68,4 @@ bool joystick_telemetry_init(joystick_t* joystick, Mavlink_message_handler* mess
 void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* JOYSTICK_TELEMETRY_H_ */
+#endif /* JOYSTICK_TELEMETRY_HPP_ */

@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef SONAR_I2CXL_TELEMETRY_H_
-#define SONAR_I2CXL_TELEMETRY_H_
+#ifndef SONAR_I2CXL_TELEMETRY_HPP_
+#define SONAR_I2CXL_TELEMETRY_HPP_
 
 
 #include "drivers/sonar.hpp"
@@ -56,4 +56,4 @@
  */
 void sonar_telemetry_send(const Sonar* sonar, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* SONAR_I2CXL_TELEMETRY_H_ */
+#endif /* SONAR_I2CXL_TELEMETRY_HPP_ */

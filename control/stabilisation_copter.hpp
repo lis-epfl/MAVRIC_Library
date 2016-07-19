@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef STABILISATION_COPTER_H_
-#define STABILISATION_COPTER_H_
+#ifndef STABILISATION_COPTER_HPP_
+#define STABILISATION_COPTER_HPP_
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "control/stabilisation.hpp"
@@ -125,4 +125,4 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
 void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisation_copter);
 
 
-#endif /* STABILISATION_COPTER_H_ */
+#endif /* STABILISATION_COPTER_HPP_ */

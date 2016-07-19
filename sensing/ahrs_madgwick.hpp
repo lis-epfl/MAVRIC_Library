@@ -55,8 +55,8 @@
  */
 
 
-#ifndef AHRS_MADGWICK_H_
-#define AHRS_MADGWICK_H_
+#ifndef AHRS_MADGWICK_HPP_
+#define AHRS_MADGWICK_HPP_
 
 #include "sensing/imu.hpp"
 #include "drivers/airspeed_analog.hpp"
@@ -114,4 +114,4 @@ bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf
  */
 void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick);
 
-#endif /* AHRS_MADGWICK_H_ */
+#endif /* AHRS_MADGWICK_HPP_ */

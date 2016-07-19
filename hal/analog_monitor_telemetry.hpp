@@ -40,8 +40,8 @@
  *
  ******************************************************************************/
 
-#ifndef ANALOG_MONITOR_TELEMETRY_H_
-#define ANALOG_MONITOR_TELEMETRY_H_
+#ifndef ANALOG_MONITOR_TELEMETRY_HPP_
+#define ANALOG_MONITOR_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 
@@ -59,4 +59,4 @@ extern "C"
  */
 void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* ANALOG_MONITOR_TELEMETRY_H_ */
+#endif /* ANALOG_MONITOR_TELEMETRY_HPP_ */

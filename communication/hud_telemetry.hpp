@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef HUD_TELEMETRY_H__
-#define HUD_TELEMETRY_H__
+#ifndef HUD_TELEMETRY_HPP__
+#define HUD_TELEMETRY_HPP__
 
 #include "sensing/ins.hpp"
 #include "sensing/ahrs.hpp"
@@ -81,4 +81,4 @@ bool hud_telemetry_init(hud_telemetry_t* hud_telemetry_structure, const INS* ins
 void hud_telemetry_send_message(const hud_telemetry_t* hud, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif //HUD_TELEMETRY_H__
+#endif //HUD_TELEMETRY_HPP__

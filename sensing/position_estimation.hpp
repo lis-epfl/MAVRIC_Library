@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef POSITION_ESTIMATION_H__
-#define POSITION_ESTIMATION_H__
+#ifndef POSITION_ESTIMATION_HPP__
+#define POSITION_ESTIMATION_HPP__
 
 
 #include "communication/state.hpp"
@@ -271,4 +271,4 @@ private:
     void fence_control();
 
 };
-#endif // POSITION_ESTIMATION_H__
+#endif // POSITION_ESTIMATION_HPP__

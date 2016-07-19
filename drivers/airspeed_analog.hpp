@@ -42,8 +42,8 @@
  ******************************************************************************/
 
 
-#ifndef AIRSPEED_ANALOG_H_
-#define AIRSPEED_ANALOG_H_
+#ifndef AIRSPEED_ANALOG_HPP_
+#define AIRSPEED_ANALOG_HPP_
 
 #include <cstdint>
 #include "hal/common/adc.hpp"
@@ -158,4 +158,4 @@ static inline airspeed_analog_conf_t airspeed_analog_default_config()
     return conf;
 }
 
-#endif /* AIRSPEED_ANALOG_H_ */
+#endif /* AIRSPEED_ANALOG_HPP_ */

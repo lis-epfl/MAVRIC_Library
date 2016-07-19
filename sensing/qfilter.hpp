@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef QFILTER_H_
-#define QFILTER_H_
+#ifndef QFILTER_HPP_
+#define QFILTER_HPP_
 
 #include "sensing/imu.hpp"
 
@@ -102,4 +102,4 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t config, const Imu* imu, ah
 void qfilter_update(qfilter_t* qf);
 
 
-#endif /* QFILTER_H_ */
+#endif /* QFILTER_HPP_ */

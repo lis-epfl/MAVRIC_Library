@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef STABILISATION_H_
-#define STABILISATION_H_
+#ifndef STABILISATION_HPP_
+#define STABILISATION_HPP_
 
 #include <cstdint>
 #include <cstdbool>
@@ -120,4 +120,4 @@ void stabilisation_run(stabiliser_t* stabiliser, float dt, float errors[]);
  */
 void stabilisation_run_feedforward(stabiliser_t *stabiliser, float dt, float errors[], float feedforward[]);
 
-#endif /* STABILISATION_H_ */
+#endif /* STABILISATION_HPP_ */

@@ -40,8 +40,8 @@
  *
  ******************************************************************************/
 
-#ifndef ACOUSTIC_H_
-#define ACOUSTIC_H_
+#ifndef ACOUSTIC_HPP_
+#define ACOUSTIC_HPP_
 
 #include <cstdint>
 #include <cstdbool>

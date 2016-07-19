@@ -48,8 +48,8 @@
  ******************************************************************************/
 
 
-#ifndef ATTITUDE_CONTROLLER_H_
-#define ATTITUDE_CONTROLLER_H_
+#ifndef ATTITUDE_CONTROLLER_HPP_
+#define ATTITUDE_CONTROLLER_HPP_
 
 #include "control/attitude_error_estimator.hpp"
 #include "control/pid_controller.hpp"
@@ -123,4 +123,4 @@ bool attitude_controller_init(attitude_controller_t* controller, attitude_contro
 bool attitude_controller_update(attitude_controller_t* controller);
 
 
-#endif /* ATTITUDE_CONTROLLER_H_ */
+#endif /* ATTITUDE_CONTROLLER_HPP_ */

@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef ATMEL_STATUS_CODES_H_
-#define ATMEL_STATUS_CODES_H_
+#ifndef ATMEL_STATUS_CODES_HPP_
+#define ATMEL_STATUS_CODES_HPP_
 
 #ifdef __cplusplus
 extern "C" {
@@ -140,4 +140,4 @@ bool status_code_to_bool(status_code_t status, bool debug = false)
 }
 #endif
 
-#endif /* ATMEL_STATUS_CODES_H_ */
+#endif /* ATMEL_STATUS_CODES_HPP_ */

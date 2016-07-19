@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_YWING_H_
-#define SERVOS_MIX_YWING_H_
+#ifndef SERVOS_MIX_YWING_HPP_
+#define SERVOS_MIX_YWING_HPP_
 
 #ifdef __cplusplus
 extern "C" {

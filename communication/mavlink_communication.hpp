@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef MAVLINK_COMMUNICATION_H_
-#define MAVLINK_COMMUNICATION_H_
+#ifndef MAVLINK_COMMUNICATION_HPP_
+#define MAVLINK_COMMUNICATION_HPP_
 
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_stream.hpp"
@@ -242,4 +242,4 @@ Mavlink_communication::conf_t Mavlink_communication::default_config(uint8_t sysi
 };
 
 
-#endif /* MAVLINK_COMMUNICATION_H_ */
+#endif /* MAVLINK_COMMUNICATION_HPP_ */

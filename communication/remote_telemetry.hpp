@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef REMOTE_TELEMETRY_H_
-#define REMOTE_TELEMETRY_H_
+#ifndef REMOTE_TELEMETRY_HPP_
+#define REMOTE_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -80,4 +80,4 @@ void remote_telemetry_send_raw(const remote_t* remote, Mavlink_stream* mavlink_s
  */
 void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* REMOTE_TELEMETRY_H_ */
+#endif /* REMOTE_TELEMETRY_HPP_ */

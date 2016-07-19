@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef STATE_MACHINE_H_
-#define STATE_MACHINE_H_
+#ifndef STATE_MACHINE_HPP_
+#define STATE_MACHINE_HPP_
 
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
@@ -147,4 +147,4 @@ private:
 
 
 
-#endif // STATE_MACHINE_H_
+#endif // STATE_MACHINE_HPP_

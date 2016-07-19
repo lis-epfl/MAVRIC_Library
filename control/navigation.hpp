@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef NAVIGATION_H_
-#define NAVIGATION_H_
+#ifndef NAVIGATION_HPP_
+#define NAVIGATION_HPP_
 
 #include <cstdbool>
 
@@ -311,4 +311,4 @@ Navigation::conf_t Navigation::default_wing_config()
     return conf;
 };
 
-#endif // NAVIGATION_H_
+#endif // NAVIGATION_HPP_

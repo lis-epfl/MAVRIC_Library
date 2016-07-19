@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef COORD_CONVENTIONS_H_
-#define COORD_CONVENTIONS_H_
+#ifndef COORD_CONVENTIONS_HPP_
+#define COORD_CONVENTIONS_HPP_
 
 #include <cstdint>
 #include <array>
@@ -149,4 +149,4 @@ void coord_conventions_rpy_from_quaternion(const quat_t& quat, float rpy[3]);
 float coord_conventions_get_yaw(quat_t qe);
 
 
-#endif /* STABILISATION_H_ */
+#endif /* STABILISATION_HPP_ */

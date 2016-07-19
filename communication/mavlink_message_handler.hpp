@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef MAVLINK_MESSAGE_HANDLING_H_
-#define MAVLINK_MESSAGE_HANDLING_H_
+#ifndef MAVLINK_MESSAGE_HANDLING_HPP_
+#define MAVLINK_MESSAGE_HANDLING_HPP_
 
 // #include "onboard_parameters.h"
 #include "communication/mavlink_stream.hpp"

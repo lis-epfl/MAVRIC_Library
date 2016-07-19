@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef SERVOS_TELEMETRY_H_
-#define SERVOS_TELEMETRY_H_
+#ifndef SERVOS_TELEMETRY_HPP_
+#define SERVOS_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "drivers/servo.hpp"
@@ -81,4 +81,4 @@ bool servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0,
  */
 void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, Mavlink_stream* Mavlink_stream, mavlink_message_t* msg);
 
-#endif /* SERVOS_TELEMETRY_H_ */
+#endif /* SERVOS_TELEMETRY_HPP_ */

@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef SERIAL_UDP_H_
-#define SERIAL_UDP_H_
+#ifndef SERIAL_UDP_HPP_
+#define SERIAL_UDP_HPP_
 
 #include "hal/common/serial.hpp"
 #include "util/buffer.hpp"
@@ -183,4 +183,4 @@ static inline serial_udp_conf_t serial_udp_default_config()
 }
 
 
-#endif /* SERIAL_UDP_H_ */
+#endif /* SERIAL_UDP_HPP_ */

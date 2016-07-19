@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#ifndef IMU_CONFIG_H_
-#define IMU_CONFIG_H_
+#ifndef IMU_CONFIG_HPP_
+#define IMU_CONFIG_HPP_
 
 extern "C"
 {
@@ -103,4 +103,4 @@ static inline imu_conf_t imu_config(void)
 }
 #endif
 
-#endif /* IMU_CONFIG_H_ */
+#endif /* IMU_CONFIG_HPP_ */

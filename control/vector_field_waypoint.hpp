@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef VECTOR_FIELD_WAYPOINT_H_
-#define VECTOR_FIELD_WAYPOINT_H_
+#ifndef VECTOR_FIELD_WAYPOINT_HPP_
+#define VECTOR_FIELD_WAYPOINT_HPP_
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "sensing/position_estimation.hpp"
@@ -90,4 +90,4 @@ bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vec
 bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field);
 
 
-#endif /* VECTOR_FIELD_WAYPOINT_H_ */
+#endif /* VECTOR_FIELD_WAYPOINT_HPP_ */

@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef ACOUSTIC_TELEMETRY_H_
-#define ACOUSTIC_TELEMETRY_H_
+#ifndef ACOUSTIC_TELEMETRY_HPP_
+#define ACOUSTIC_TELEMETRY_HPP_
 
 #include "drivers/unsupported/acoustic.hpp"
 #include "communication/mavlink_stream.hpp"

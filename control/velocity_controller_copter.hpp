@@ -46,8 +46,8 @@
  ******************************************************************************/
 
 
-#ifndef VELOCITY_CONTROLLER_COPTER_H_
-#define VELOCITY_CONTROLLER_COPTER_H_
+#ifndef VELOCITY_CONTROLLER_COPTER_HPP_
+#define VELOCITY_CONTROLLER_COPTER_HPP_
 
 #include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
@@ -105,4 +105,4 @@ bool velocity_controller_copter_init(velocity_controller_copter_t* controller, v
 bool velocity_controller_copter_update(velocity_controller_copter_t* controller);
 
 
-#endif /* VELOCITY_CONTROLLER_COPTER_H_ */
+#endif /* VELOCITY_CONTROLLER_COPTER_HPP_ */
