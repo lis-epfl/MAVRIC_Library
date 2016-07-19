@@ -909,7 +909,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
 
     if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
     {
-        if (maths_f_abs(ins_.position_lf()[2] - waypoint_hold_coordinates.position[2]) < 0.5f)
+        if (maths_f_abs(ins_.position_lf()[Z] - waypoint_hold_coordinates.position[Z]) < 0.5f)
         {
             next_state_ = true;
         }
