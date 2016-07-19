@@ -48,14 +48,10 @@
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
 #include "drivers/state_display.hpp"
+#include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
 #include "sensing/imu.hpp"
 
-
-extern "C"
-{
-#include "sensing/ahrs.hpp"
-}
 
 /**
  * \brief Defines the state machine structure

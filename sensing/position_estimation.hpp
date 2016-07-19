@@ -49,6 +49,7 @@
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
 
+#include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
@@ -56,7 +57,6 @@
 extern "C"
 {
 #include <cstdbool>
-#include "sensing/ahrs.hpp"
 }
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)

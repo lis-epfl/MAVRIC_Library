@@ -44,12 +44,9 @@
 #ifndef AHRS_TELEMETRY_HPP_
 #define AHRS_TELEMETRY_HPP_
 
+#include "sensing/ahrs.hpp"
 #include "communication/mavlink_stream.hpp"
 
-extern "C"
-{
-#include "sensing/ahrs.hpp"
-}
 
 /**
  * \brief   Function to send the MAVLink attitude message

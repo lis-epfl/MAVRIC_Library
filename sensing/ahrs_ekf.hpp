@@ -50,14 +50,10 @@
 #ifndef __AHRS_EKF_HPP__
 #define __AHRS_EKF_HPP__
 
-#include "util/matrix.hpp"
+#include "sensing/ahrs.hpp"
 #include "sensing/imu.hpp"
 #include "util/kalman.hpp"
-
-extern "C"
-{
-#include "sensing/ahrs.hpp"
-}
+#include "util/matrix.hpp"
 
 
 /**

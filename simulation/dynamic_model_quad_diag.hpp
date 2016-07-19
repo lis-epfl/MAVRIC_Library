@@ -47,11 +47,7 @@
 #include "simulation/dynamic_model.hpp"
 #include "drivers/servo.hpp"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
-
-extern "C"
-{
 #include "util/constants.hpp"
-}
 
 
 /**

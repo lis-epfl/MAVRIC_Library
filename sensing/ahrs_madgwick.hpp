@@ -58,13 +58,9 @@
 #ifndef AHRS_MADGWICK_HPP_
 #define AHRS_MADGWICK_HPP_
 
+#include "sensing/ahrs.hpp"
 #include "sensing/imu.hpp"
 #include "drivers/airspeed_analog.hpp"
-
-extern "C"
-{
-#include "sensing/ahrs.hpp"
-}
 
 
 /**

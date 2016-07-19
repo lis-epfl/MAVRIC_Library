@@ -56,7 +56,6 @@
 extern "C"
 {
 #include "sensing/altitude.h"
-#include "sensing/ahrs.hpp"
 }
 
 /**

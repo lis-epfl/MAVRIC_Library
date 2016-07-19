@@ -43,10 +43,6 @@
 #ifndef SERVOS_MIX_YWING_HPP_
 #define SERVOS_MIX_YWING_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "drivers/servo.hpp"
 #include "util/constants.hpp"
 
@@ -122,9 +118,5 @@ bool servo_mix_ywing_init(servo_mix_ywing_t* mix,
  */
 void servos_mix_ywing_update(servo_mix_ywing_t* mix);
 
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

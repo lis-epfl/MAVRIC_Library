@@ -52,10 +52,6 @@
 #include "hal/common/serial.hpp"
 #include "util/buffer.hpp"
 
-extern "C"
-{
-}
-
 
 /**
  * \brief   Configuration structure

@@ -43,13 +43,11 @@
 #ifndef QFILTER_HPP_
 #define QFILTER_HPP_
 
+#include <cstdint>
+
+#include "sensing/ahrs.hpp"
 #include "sensing/imu.hpp"
 
-extern "C"
-{
-#include <cstdint>
-#include "sensing/ahrs.hpp"
-}
 
 /**
  * \brief The structure for configuring the quaternion-based attitude estimation
