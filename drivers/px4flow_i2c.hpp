@@ -66,44 +66,101 @@ public:
      */
     bool healthy(void) const;
 
+    /**
+     * \brief   Main update function
+     *
+     * \return  success
+     */
     bool update(void);
 
+    /**
+     * \brief   Glue function used for scheduler
+     *
+     * \param   flow  Pointer to flow object
+
+     * \return  success
+     */
     static bool update_task(Px4flow_i2c* flow)
     {
         return flow->update();
     }
 
+    /**
+     * \brief   Default configuration
+     *
+     * \return  Configuration structure
+     */
     static inline conf_t default_config(void);
 
+    /**
+     * \brief   Get flow in x direction
+     *
+     * \return  Value
+     */
     float flow_x(void) const;
 
+    /**
+     * \brief   Get flow in y direction
+     *
+     * \return  Value
+     */
     float flow_y(void) const;
 
+    /**
+     * \brief   Get flow quality
+     *
+     * \return  Value
+     */
     uint8_t flow_quality(void) const;
 
+    /**
+     * \brief   Get velocity in x direction
+     *
+     * \return  Value
+     */
     float velocity_x(void) const;
 
+    /**
+     * \brief   Get velocity in y direction
+     *
+     * \return  Value
+     */
     float velocity_y(void) const;
 
+    /**
+     * \brief   Get ground distance
+     *
+     * \return  Value
+     */
     float ground_distance(void) const;
 
+    /**
+     * \brief   Get last update time in seconds
+     *
+     * \return  Value
+     */
     float last_update_s(void) const;
 
 private:
-    float               flow_x_;
-    float               flow_y_;
-    uint8_t             flow_quality_;
-    float               velocity_x_;
-    float               velocity_y_;
-    float               ground_distance_;
-    Buffer_tpl<3,float> ground_distance_buffer_;
-    float               last_update_s_;
+    float               flow_x_;                    ///< Optic flow in x direction (rad/s)
+    float               flow_y_;                    ///< Optic flow in y direction (rad/s)
+    uint8_t             flow_quality_;              ///< Quality of optic flow measurement (between 0 and 255)
+    float               velocity_x_;                ///< Velocity in x direction (m/s)
+    float               velocity_y_;                ///< Velocity in y direction (m/s)
+    float               ground_distance_;           ///< Ground distance (m)
+    Buffer_tpl<3,float> ground_distance_buffer_;    ///< Buffer used to filter sonar measurement
+    float               last_update_s_;             ///< Last update time in seconds
 
-    I2c&                i2c_;
-    conf_t              config_;
+    I2c&                i2c_;                       ///< reference to I2C
+    conf_t              config_;                    ///< Configuration
 };
 
 
+/**
+ * \brief   Default configuration
+ *
+ * \return  Configuration structure
+ */
 Px4flow_i2c::conf_t Px4flow_i2c::default_config(void)
 {
     conf_t conf = {};
