@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_estimation_telemetry.c
+ * \file position_estimation_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse

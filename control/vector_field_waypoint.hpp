@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file vector_field_waypoint.h
+ * \file vector_field_waypoint.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur

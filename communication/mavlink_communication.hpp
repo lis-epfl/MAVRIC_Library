@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_communication.h
+ * \file mavlink_communication.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur

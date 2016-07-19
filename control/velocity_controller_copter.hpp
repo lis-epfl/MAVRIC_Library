@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file velocity_controller_copter.h
+ * \file velocity_controller_copter.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill

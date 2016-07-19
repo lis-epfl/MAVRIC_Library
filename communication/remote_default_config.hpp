@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file remote_default_config.h
+ * \file remote_default_config.hpp
  *
  * \author MAV'RIC Team
  * \author Gregoire Heitz

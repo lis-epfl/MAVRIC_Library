@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_machine.h
+ * \file state_machine.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -60,14 +60,14 @@ class State_machine
 {
 public:
     /**
-     * \brief Initialize the state machine
+     * \brief Constructor
      *
-     * \param state                     Pointer to the state structure
-     * \param gps                       Pointer to the gps structure
-     * \param imu                       Pointer to the imu structure
-     * \param manual_control            Pointer to the manual_control structure
-     *
-     * \return  True if the init succeed, false otherwise
+     * \param state                     Reference to the state
+     * \param ins                       Reference to the ins
+     * \param imu                       Reference to the imu
+     * \param ahrs                      Reference to the ahrs
+     * \param manual_control            Reference to the manual_control
+     * \param state_display             Reference to the state display
      */
     State_machine(  State& state,
                     const INS& ins,

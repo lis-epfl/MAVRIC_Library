@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file scheduler_telemetry.h
+ * \file scheduler_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse

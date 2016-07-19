@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_diag.h
+ * \file servos_mix_quadcopter_diag.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_copter_default_config.h
+ * \file stabilisation_copter_default_config.hpp
  *
  * \author MAV'RIC Team
  *

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file analog_monitor_telemetry.h
+ * \file analog_monitor_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse

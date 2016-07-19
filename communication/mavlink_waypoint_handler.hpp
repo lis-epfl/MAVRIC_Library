@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_waypoint_handler.h
+ * \file mavlink_waypoint_handler.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse

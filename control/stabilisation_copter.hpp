@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_copter.h
+ * \file stabilisation_copter.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
