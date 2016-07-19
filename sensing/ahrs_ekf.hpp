@@ -130,8 +130,8 @@ protected:
     Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
 
-    float dt_s_;
-    float last_update_s_;
+    float dt_s_;                                        ///< Time interval since last update in seconds
+    float last_update_s_;                               ///< Last update time in seconds
 
     conf_t config_;                                     ///< The config structure for the EKF module
 
