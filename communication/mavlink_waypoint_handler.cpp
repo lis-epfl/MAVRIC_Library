@@ -1449,12 +1449,12 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
 static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_waypoint_handler::waypoint_struct_t* current_waypoint, global_position_t origin, dubin_state_t* dubin_state)
 {
     global_position_t waypoint_global;
-    waypoint_local_struct_t wpt;
+    waypoint_local_struct_t wpt_local;
     global_position_t origin_relative_alt;
 
     for (uint8_t i = 0; i < 3; i++)
     {
-        wpt.position[i] = 0.0f;
+        wpt_local.position[i] = 0.0f;
     }
 
     switch (current_waypoint->frame)
@@ -1463,7 +1463,7 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
             waypoint_global.latitude    = current_waypoint->x;
             waypoint_global.longitude   = current_waypoint->y;
             waypoint_global.altitude    = current_waypoint->z;
-            coord_conventions_global_to_local_position(waypoint_global, origin, wpt.position);
+            coord_conventions_global_to_local_position(waypoint_global, origin, wpt_local.position);
 
             print_util_dbg_print("waypoint_global: lat (x1e7):");
             print_util_dbg_print_num(waypoint_global.latitude * 10000000, 10);
@@ -1472,11 +1472,11 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
             print_util_dbg_print(" alt (x1000):");
             print_util_dbg_print_num(waypoint_global.altitude * 1000, 10);
             print_util_dbg_print(" waypoint_coor: x (x100):");
-            print_util_dbg_print_num(wpt.position[X] * 100, 10);
+            print_util_dbg_print_num(wpt_local.position[X] * 100, 10);
             print_util_dbg_print(", y (x100):");
-            print_util_dbg_print_num(wpt.position[Y] * 100, 10);
+            print_util_dbg_print_num(wpt_local.position[Y] * 100, 10);
             print_util_dbg_print(", z (x100):");
-            print_util_dbg_print_num(wpt.position[Z] * 100, 10);
+            print_util_dbg_print_num(wpt_local.position[Z] * 100, 10);
             print_util_dbg_print(" localOrigin lat (x1e7):");
             print_util_dbg_print_num(origin.latitude * 10000000, 10);
             print_util_dbg_print(" long (x1e7):");
@@ -1487,9 +1487,9 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
             break;
 
         case MAV_FRAME_LOCAL_NED:
-            wpt.position[X] = current_waypoint->x;
-            wpt.position[Y] = current_waypoint->y;
-            wpt.position[Z] = current_waypoint->z;
+            wpt_local.position[X] = current_waypoint->x;
+            wpt_local.position[Y] = current_waypoint->y;
+            wpt_local.position[Z] = current_waypoint->z;
             break;
 
         case MAV_FRAME_MISSION:
@@ -1504,7 +1504,7 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
 
             origin_relative_alt = origin;
             origin_relative_alt.altitude = 0.0f;
-            coord_conventions_global_to_local_position(waypoint_global, origin_relative_alt, wpt.position);
+            coord_conventions_global_to_local_position(waypoint_global, origin_relative_alt, wpt_local.position);
 
             print_util_dbg_print("LocalOrigin: lat (x1e7):");
             print_util_dbg_print_num(origin_relative_alt.latitude * 10000000, 10);
@@ -1513,11 +1513,11 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
             print_util_dbg_print(" global alt (x1000):");
             print_util_dbg_print_num(origin.altitude * 1000, 10);
             print_util_dbg_print(" waypoint_coor: x (x100):");
-            print_util_dbg_print_num(wpt.position[X] * 100, 10);
+            print_util_dbg_print_num(wpt_local.position[X] * 100, 10);
             print_util_dbg_print(", y (x100):");
-            print_util_dbg_print_num(wpt.position[Y] * 100, 10);
+            print_util_dbg_print_num(wpt_local.position[Y] * 100, 10);
             print_util_dbg_print(", z (x100):");
-            print_util_dbg_print_num(wpt.position[Z] * 100, 10);
+            print_util_dbg_print_num(wpt_local.position[Z] * 100, 10);
             print_util_dbg_print("\r\n");
 
             break;
@@ -1529,13 +1529,13 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
     }
 
     // WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
-    wpt.heading     = maths_deg_to_rad(current_waypoint->param4);
-    wpt.radius      = current_waypoint->param2;
-    wpt.loiter_time = current_waypoint->param1;
+    wpt_local.heading     = maths_deg_to_rad(current_waypoint->param4);
+    wpt_local.radius      = current_waypoint->param2;
+    wpt_local.loiter_time = current_waypoint->param1;
 
     *dubin_state = DUBIN_INIT;
 
-    return wpt;
+    return wpt_local;
 }
 
 void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* waypoint_next_)
