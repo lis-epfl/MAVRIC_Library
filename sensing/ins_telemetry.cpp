@@ -30,109 +30,34 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.hpp
+ * \file ins_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief   Telemetry for Inertial Navigation System
  *
  ******************************************************************************/
 
+#include "sensing/ins_telemetry.hpp"
 
-#ifndef INS_HPP_
-#define INS_HPP_
-
-#include <array>
-#include "communication/mavlink_stream.hpp"
-#include "hal/common/time_keeper.hpp"
-#include "util/coord_conventions.hpp"
-#include "util/constants.hpp"
-
-class INS
+static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-public:
-    /**
-      * \brief Constructor
-      */
-    INS(global_position_t origin = ORIGIN_EPFL);
-
-    /**
-     * \brief   Main update function
-     *
-     * \return  Success
-     */
-    virtual bool update(void) = 0;
-
-
-    /**
-     * \brief     Last update in seconds
-     *
-     * \return    time
-     */
-    virtual float last_update_s(void) const = 0;
-
-
-    /**
-     * \brief     3D Position in meters (NED frame)
-     *
-     * \return    position
-     */
-    virtual local_position_t position_lf(void) const = 0;
-
-
-    /**
-     * \brief     Velocity in meters/seconds in NED frame
-     *
-     * \return    velocity
-     */
-    virtual std::array<float,3> velocity_lf(void) const = 0;
-
-
-    /**
-     * \brief     Absolute altitude above sea level in meters (>=0)
-     *
-     * \return    altitude
-     */
-    virtual float absolute_altitude(void) const = 0;
-
-
-    /**
-     * \brief     Enumeration of potential healthy estimates
-     */
-    enum healthy_t
-    {
-        XY_VELOCITY,
-        Z_VELOCITY,
-        XYZ_VELOCITY,
-        XY_REL_POSITION,
-        Z_REL_POSITION,
-        XYZ_REL_POSITION,
-        XY_ABS_POSITION,
-        Z_ABS_POSITION,
-        XYZ_ABS_POSITION
-    };
-
-
-    /**
-    * \brief   Indicates which estimate can be trusted
-    *
-    * \param   type    Type of estimate
-    *
-    * \return  boolean
-    */
-    virtual bool is_healthy(INS::healthy_t type) const = 0;
-
-
-    /**
-     * \brief     Position of origin in global coordinates
-     *
-     * \return    origin
-     */
-    static const global_position_t& origin(void);
-
-private:
-    static global_position_t origin_;
-};
-
-#endif /* INS_HPP_ */
+    float cov[45];
+    mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
+                                            mavlink_stream->compid(),
+                                            msg,
+                                            time_keeper_get_ms(),
+                                            time_keeper_get_ms(),
+                                            0,
+                                            ins->position_lf()[0],
+                                            ins->position_lf()[1],
+                                            ins->position_lf()[2],
+                                            ins->velocity_lf()[0],
+                                            ins->velocity_lf()[1],
+                                            ins->velocity_lf()[2],
+                                            0.0f,
+                                            0.0f,
+                                            ins->absolute_altitude(),
+                                            cov);
+}
