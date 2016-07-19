@@ -147,12 +147,12 @@ public:
     /**
      * \brief   Constructor
      *
-     * \param   controls_nav            The pointer to the control structure
-     * \param   qe                      The pointer to the attitude quaternion structure
-     * \param   ins                     The pointer to the position estimation structure
-     * \param   state                   The pointer to the state structure
-     * \param   mavlink_stream          The pointer to the MAVLink_stream structure
-     * \param   nav_config              The pointer to the config structure
+     * \param   controls_nav            Reference to the control structure
+     * \param   qe                      Reference to the attitude quaternion structure
+     * \param   ins                     Reference to the Inertial navigation system
+     * \param   state                   Reference to the state structure
+     * \param   mavlink_stream          Reference to the MAVLink_stream structure
+     * \param   nav_config              Reference to the config structure
      */
     Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config = default_config());
 

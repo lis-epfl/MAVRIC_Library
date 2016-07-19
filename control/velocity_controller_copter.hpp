@@ -89,7 +89,7 @@ typedef struct
  * \param   controller          Pointer to data structure
  * \param   config              Configuration
  * \param   ahrs                Pointer to the estimated attitude
- * \param   ins                 Pointer to the estimated speed and position
+ * \param   ins                 Pointer to the inertial navigation system
  * \param   velocity_command    Pointer to velocity command (input)
  * \param   attitude_command    Pointer to attitude command (output)
  * \param   thrust_command      Pointer to thrust command (output)
