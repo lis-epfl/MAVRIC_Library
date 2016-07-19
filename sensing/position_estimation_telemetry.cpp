@@ -117,12 +117,12 @@ void position_estimation_telemetry_send_position(const Position_estimation* pos_
                                         mavlink_stream->compid(),
                                         msg,
                                         time_keeper_get_ms(),
-                                        pos[0],
-                                        pos[1],
-                                        pos[2],
-                                        vel[0],
-                                        vel[1],
-                                        vel[2]);
+                                        pos[X],
+                                        pos[Y],
+                                        pos[Z],
+                                        vel[X],
+                                        vel[Y],
+                                        vel[Z]);
 }
 
 void position_estimation_telemetry_send_global_position(const Position_estimation* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
@@ -143,9 +143,9 @@ void position_estimation_telemetry_send_global_position(const Position_estimatio
                                          gpos.latitude * 10000000,
                                          gpos.longitude * 10000000,
                                          gpos.altitude * 1000.0f,
-                                         -pos[2] * 1000,
-                                         vel[0] * 100.0f,
-                                         vel[1] * 100.0f,
-                                         vel[2] * 100.0f,
+                                         -pos[Z] * 1000,
+                                         vel[X] * 100.0f,
+                                         vel[Y] * 100.0f,
+                                         vel[Z] * 100.0f,
                                          0.0f);
 }
