@@ -45,7 +45,6 @@
 
 #include "control/stabilisation_copter.hpp"
 #include "communication/mavlink_stream.hpp"
-#include "control/stabilisation.hpp"
 
 
 /**
