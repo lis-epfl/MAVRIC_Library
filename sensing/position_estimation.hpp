@@ -43,6 +43,7 @@
 #ifndef POSITION_ESTIMATION_HPP__
 #define POSITION_ESTIMATION_HPP__
 
+#include <cstdbool>
 
 #include "communication/state.hpp"
 #include "drivers/gps.hpp"
@@ -53,11 +54,6 @@
 #include "sensing/ins.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
-#include <cstdbool>
-}
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f
