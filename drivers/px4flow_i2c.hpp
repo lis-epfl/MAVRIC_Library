@@ -90,17 +90,17 @@ public:
     float last_update_s(void) const;
 
 private:
-    float       flow_x_;
-    float       flow_y_;
-    uint8_t     flow_quality_;
-    float       velocity_x_;
-    float       velocity_y_;
-    float       ground_distance_;
+    float               flow_x_;
+    float               flow_y_;
+    uint8_t             flow_quality_;
+    float               velocity_x_;
+    float               velocity_y_;
+    float               ground_distance_;
     Buffer_tpl<3,float> ground_distance_buffer_;
-    float       last_update_s_;
+    float               last_update_s_;
 
-    I2c&        i2c_;
-    conf_t      config_;
+    I2c&                i2c_;
+    conf_t              config_;
 };
 
 
