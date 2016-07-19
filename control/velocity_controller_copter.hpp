@@ -66,7 +66,7 @@ typedef struct
     pid_controller_t             pid[3];                    ///< PID controller for velocity along X, Y and Z in global frame
     float                        thrust_hover_point;        ///< Amount of thrust required to hover (between -1 and 1)
     const ahrs_t*                ahrs;                      ///< Pointer to attitude estimation (input)
-    const INS*                   ins;                       ///< Speed and position estimation (input)
+    const INS*                   ins;                       ///< Pointer to INS (input)
     const velocity_command_t*    velocity_command;          ///< Pointer to velocity command (input)
     attitude_command_t*          attitude_command;          ///< Pointer to attitude command (output)
     thrust_command_t*            thrust_command;            ///< Pointer to thrust command (output)

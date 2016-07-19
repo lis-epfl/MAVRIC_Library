@@ -212,9 +212,9 @@ private:
     uint32_t last_update;                               ///< The time of the last navigation update in ms
     uint32_t loop_count;                                ///< A counter for sending MAVLink messages at a lower rate than the function
     control_command_t& controls_nav;                    ///< Reference to the navigation control structure
-    const INS& ins;                                     ///< The pointer to the position estimation structure
-    State& state;                                       ///< The pointer to the state structure
-    const Mavlink_stream& mavlink_stream;               ///< The pointer to the MAVLink stream structure
+    const INS& ins;                                     ///< Reference to the inertial navigation system
+    State& state;                                       ///< Reference to the state
+    const Mavlink_stream& mavlink_stream;               ///< Reference to the MAVLink stream
 
     /**
      * \brief                   Sets the Robot speed to reach waypoint
