@@ -1608,7 +1608,7 @@ void Mavlink_waypoint_handler::dubin_state_machine(waypoint_local_struct_t* wayp
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    pos_goal[i] = waypoint_next_->position[i] + rel_pos_norm[i] * maths_f_abs(waypoint_next_->radius);
+                    pos_goal[i] = waypoint_next_->position[i] + (rel_pos_norm[i] * maths_f_abs(waypoint_next_->radius));
                 }
                 pos_goal[Z] = 0.0f;
 
