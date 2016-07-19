@@ -111,6 +111,7 @@ public:
     /**
      * \brief   Position estimation update step, performing position estimation then position correction (function to be used)
      *
+     * \return Success
      */
     bool update(void);
 
