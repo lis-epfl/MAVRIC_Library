@@ -1359,8 +1359,8 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
                 vectors_normalize(rel_pos, rel_pos_norm);
 
                 float outter_pt[3];
-                outter_pt[X] = waypoint_next_.position[X] + rel_pos_norm[Y] * waypoint_next_.radius;
-                outter_pt[Y] = waypoint_next_.position[Y] - rel_pos_norm[X] * waypoint_next_.radius;
+                outter_pt[X] = waypoint_next_.position[X] + (rel_pos_norm[Y] * waypoint_next_.radius);
+                outter_pt[Y] = waypoint_next_.position[Y] - (rel_pos_norm[X] * waypoint_next_.radius);
                 outter_pt[Z] = 0.0f;
 
                 for (i=0;i<3;i++)
