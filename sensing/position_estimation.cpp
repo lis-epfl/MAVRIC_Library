@@ -148,7 +148,7 @@ void Position_estimation::position_correction()
         baro_gain = 1.0f;
 
         baro_alt_error = last_alt  - local_position[Z];
-        baro_vel_error = barometer.vertical_speed_lf() - vel[2];
+        baro_vel_error = barometer.vertical_speed_lf() - vel[Z];
     }
     else
     {
