@@ -107,11 +107,11 @@ typedef struct
  *
  * \param   stabilisation_copter    The pointer to the stabilisation copter structure
  * \param   stabiliser_conf         The pointer to structure with all PID controllers
- * \param   control_input           The pointer to the controlling inputs
+ * \param   controls                The pointer to the controlling inputs
  * \param   ahrs                    The pointer to the attitude estimation structure
- * \param   pos_est                 The pointer to the position estimation structure
- * \param   torque_command          The pointer to the torque command values structure
- * \param   thrust_command          The pointer to the thrust command values structure
+ * \param   ins                     The pointer to the INS structure
+ * \param   torque                  The pointer to the torque command values structure
+ * \param   thrust                  The pointer to the thrust command values structure
  *
  * \return  True if the init succeed, false otherwise
  */
