@@ -70,10 +70,10 @@ bool Px4flow_i2c::update(void)
 
     // Send command
     uint8_t buff = GET_FRAME_COMMAND;
-    res = i2c_.write(&buff, 1, config_.i2c_address);
+    res &= i2c_.write(&buff, 1, config_.i2c_address);
 
     uint8_t rec[22];
-    res = i2c_.read(rec, 22, config_.i2c_address);
+    res &= i2c_.read(rec, 22, config_.i2c_address);
 
     if (res == true)
     {
