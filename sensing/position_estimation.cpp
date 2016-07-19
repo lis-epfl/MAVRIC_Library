@@ -519,7 +519,7 @@ std::array<float,3> Position_estimation::velocity_lf(void) const
 
 float Position_estimation::absolute_altitude(void) const
 {
-    return origin_.altitude - local_position[Z];
+    return (origin_.altitude - local_position[Z]);
 }
 
 
