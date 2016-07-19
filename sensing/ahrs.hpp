@@ -45,8 +45,11 @@
 
 #include <cstdint>
 #include <cstdbool>
-#include "util/quaternions.h"
 
+extern "C"
+{
+#include "util/quaternions.h"
+}
 
 /**
  * \brief The calibration level of the filter
