@@ -51,6 +51,8 @@
 class Barometer
 {
 public:
+    Barometer();
+
     /**
      * \brief   Initialise the sensor
      *
@@ -111,6 +113,12 @@ public:
      */
     const float& temperature(void) const;
 
+    /**
+     * \brief   Gets the flag stating if the barometer has been calibrated
+     *
+     * \return  has_been_read_
+     */
+    bool has_been_calibrated() const;
 
     /**
      * \brief   Correct altitude offset using current altitude
@@ -131,7 +139,6 @@ public:
      */
     static float altitude_from_pressure(float pressure, float altitude_bias = 0);
 
-
 protected:
 
     float pressure_;            ///< Measured pressure
@@ -141,7 +148,8 @@ protected:
     float altitude_bias_gf_;    ///< Offset of the barometer sensor for matching GPS altitude value
     float speed_lf_;            ///< Vario altitude speed (ned frame)
     float last_update_us_;      ///< Time of the last update of the barometer
-
+    bool has_been_read_;        ///< Flag stating if there has been at least one read from the barometer
+    bool has_been_calibrated_;  ///< Flag stating if the barometer has been calibrated
 };
 
 /**

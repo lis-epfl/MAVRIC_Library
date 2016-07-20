@@ -157,10 +157,13 @@ void Position_estimation::position_correction()
     else
     {
         // Correct barometer bias
-        float current_altitude_gf = - local_position.pos[Z]
+        if (!barometer.has_been_calibrated())
+        {
+            float current_altitude_gf = - local_position.pos[Z]
                                     + local_position.origin.altitude;
-        barometer.calibrate_bias(current_altitude_gf);
-        init_barometer = true;
+            barometer.calibrate_bias(current_altitude_gf);
+            init_barometer = true;
+        }
     }
 
     if (init_gps_position)
@@ -411,18 +414,21 @@ void Position_estimation::reset_home_position()
     //}
 
     // Correct barometer bias
-    float current_altitude_gf = - local_position.pos[Z]
-                                + local_position.origin.altitude;
-    barometer.calibrate_bias(current_altitude_gf);
-    init_barometer = true;
+    if (!barometer.has_been_calibrated())
+    {
+        float current_altitude_gf = - local_position.pos[Z]
+                                    + local_position.origin.altitude;
+        barometer.calibrate_bias(current_altitude_gf);
+        init_barometer = true;
 
-    print_util_dbg_print("Offset of the barometer set to the GPS altitude, new altitude of:");
-    print_util_dbg_print_num(barometer.altitude_gf(), 10);
-    print_util_dbg_print(" ( ");
-    print_util_dbg_print_num(local_position.pos[2], 10);
-    print_util_dbg_print("  ");
-    print_util_dbg_print_num(local_position.origin.altitude, 10);
-    print_util_dbg_print(" )\r\n");
+        print_util_dbg_print("Offset of the barometer set to the GPS altitude, new altitude of:");
+        print_util_dbg_print_num(barometer.altitude_gf(), 10);
+        print_util_dbg_print(" ( ");
+        print_util_dbg_print_num(local_position.pos[2], 10);
+        print_util_dbg_print("  ");
+        print_util_dbg_print_num(local_position.origin.altitude, 10);
+        print_util_dbg_print(" )\r\n");
+    }
 
     // reset position estimator
     last_alt = 0;
