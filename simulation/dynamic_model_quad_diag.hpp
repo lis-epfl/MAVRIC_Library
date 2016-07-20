@@ -47,11 +47,7 @@
 #include "simulation/dynamic_model.hpp"
 #include "drivers/servo.hpp"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
-
-extern "C"
-{
 #include "util/constants.hpp"
-}
 
 
 /**
@@ -79,8 +75,6 @@ typedef struct
 
     float wind_x;                       ///< X component of wind in global frame in m/s
     float wind_y;                       ///< Y component of wind in global frame in m/s
-
-    global_position_t origin;           ///< Home coordinates in global frame (GPS, latitude, longitude, altitude in degrees and meters)
 
     float gravity;                      ///< Gravity value used for the simulated forces
     float air_density;                  ///< Air density in kg/m3
@@ -251,11 +245,6 @@ static inline dynamic_model_quad_diag_conf_t dynamic_model_quad_diag_default_con
     conf.wind_y                 = 0.0f;                 ///< Wind in y axis, global frame
     conf.gravity                = 9.8f;                 ///< Simulation gravity
     conf.air_density            = 1.2f;                 ///< Air density
-
-    //default home location (EFPL Esplanade)
-    conf.origin.latitude    = 46.51852236174565f;   ///< Latitude of the simulation home waypoint
-    conf.origin.longitude   = 6.566044801857777f;   ///< Longitude of the simulation home waypoint
-    conf.origin.altitude    = 400.0f;               ///< Altitude of the simulation home waypoint
 
     conf.servos_mix_config = servos_mix_quadcopter_diag_default_config();
 

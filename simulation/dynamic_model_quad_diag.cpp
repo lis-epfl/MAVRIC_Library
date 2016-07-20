@@ -42,6 +42,7 @@
 
 
 #include "simulation/dynamic_model_quad_diag.hpp"
+#include "sensing/ins.hpp"
 
 extern "C"
 {
@@ -81,7 +82,7 @@ Dynamic_model_quad_diag::Dynamic_model_quad_diag(Servo& servo_rear_left,
     local_position_[2]  = 0.0f;
 
     // Init global position
-    coord_conventions_local_to_global_position(local_position_, config_.origin, global_position_);
+    coord_conventions_local_to_global_position(local_position_, INS::origin(), global_position_);
 }
 
 
@@ -189,7 +190,7 @@ bool Dynamic_model_quad_diag::update(void)
         local_position_[i] = local_position_[i] + vel_[i] * dt_s_;
     }
 
-    coord_conventions_local_to_global_position(local_position_, config_.origin, global_position_);
+    coord_conventions_local_to_global_position(local_position_, INS::origin(), global_position_);
 
     return true;
 }

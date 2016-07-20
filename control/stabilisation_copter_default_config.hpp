@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_copter_default_config.h
+ * \file stabilisation_copter_default_config.hpp
  *
  * \author MAV'RIC Team
  *
@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#ifndef STABILISATION_COPTER_DEFAULT_CONFIG_H_
-#define STABILISATION_COPTER_DEFAULT_CONFIG_H_
+#ifndef STABILISATION_COPTER_DEFAULT_CONFIG_HPP_
+#define STABILISATION_COPTER_DEFAULT_CONFIG_HPP_
 
 #include "control/stabilisation_copter.hpp"
 
@@ -466,4 +466,4 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 };
 
 
-#endif /* STABILISATION_COPTER_DEFAULT_CONFIG_H_ */
+#endif /* STABILISATION_COPTER_DEFAULT_CONFIG_HPP_ */

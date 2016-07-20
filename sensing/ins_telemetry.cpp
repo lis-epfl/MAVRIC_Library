@@ -30,55 +30,34 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file hud_telemetry.hpp
+ * \file ins_telemetry.cpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief This file sends the MAVLink HUD message
+ * \brief   Telemetry for Inertial Navigation System
  *
  ******************************************************************************/
 
+#include "sensing/ins_telemetry.hpp"
 
-#ifndef HUD_TELEMETRY_HPP__
-#define HUD_TELEMETRY_HPP__
-
-#include "sensing/ins.hpp"
-#include "sensing/ahrs.hpp"
-#include "control/stabilisation.hpp"
-
-
-/**
- * \brief   The HUD structure to send the MAVLink HUD message
- */
-typedef struct
+static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    const INS* ins;                         ///< The pointer to the Inertial Navigation System
-    const control_command_t* controls;      ///< The pointer to the control structure
-    const ahrs_t* ahrs;                     ///< The pointer to the attitude estimation structure
-    const Mavlink_stream* mavlink_stream;   ///< The pointer to the MAVLink stream structure
-} hud_telemetry_t;
-
-/**
- * \brief   Initialise the HUD structure
- *
- * \param   hud          The pointer to the HUD structure
- * \param   ins          The pointer to the Inertial Navigation System
- * \param   controls     The pointer to the controls structure
- * \param   ahrs         The pointer to the attitude estimation structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool hud_telemetry_init(hud_telemetry_t* hud_telemetry_structure, const INS* ins, const control_command_t* controls, const ahrs_t* ahrs);
-
-/**
- * \brief   Function to send the MAVLink HUD message
- *
- * \param   hud                 The pointer to the HUD structure
- * \param   mavlink_stream      The pointer to the MAVLink stream structure
- * \param   msg                 The pointer to the MAVLink message
- */
-void hud_telemetry_send_message(const hud_telemetry_t* hud, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
-
-
-#endif //HUD_TELEMETRY_HPP__
+    float cov[45];
+    mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
+                                            mavlink_stream->compid(),
+                                            msg,
+                                            time_keeper_get_ms(),
+                                            time_keeper_get_ms(),
+                                            0,
+                                            ins->position_lf()[0],
+                                            ins->position_lf()[1],
+                                            ins->position_lf()[2],
+                                            ins->velocity_lf()[0],
+                                            ins->velocity_lf()[1],
+                                            ins->velocity_lf()[2],
+                                            0.0f,
+                                            0.0f,
+                                            ins->absolute_altitude(),
+                                            cov);
+}

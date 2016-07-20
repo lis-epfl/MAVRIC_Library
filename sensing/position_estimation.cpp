@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_estimation.c
+ * \file position_estimation.cpp
  *
  * \author MAV'RIC Team
  *
@@ -148,7 +148,7 @@ void Position_estimation::position_correction()
         baro_gain = 1.0f;
 
         baro_alt_error = last_alt  - local_position[Z];
-        baro_vel_error = barometer.vertical_speed_lf() - vel[2];
+        baro_vel_error = barometer.vertical_speed_lf() - vel[Z];
     }
     else
     {
@@ -336,9 +336,7 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         sonar(sonar)
 {
     // default GPS home position
-    origin_.longitude =  config.origin.longitude;
-    origin_.latitude =   config.origin.latitude;
-    origin_.altitude =   config.origin.altitude;
+    origin_ =  config.origin;
 
     for(uint8_t i = 0; i < 3; i++)
     {
@@ -478,12 +476,10 @@ Position_estimation::conf_t Position_estimation::default_config()
 {
     conf_t conf = {};
 
-    conf.origin                     = {};
-    //default home location (EFPL Esplanade)
-    conf.origin.longitude           = 6.566044801857777f;
-    conf.origin.latitude            = 46.51852236174565f;
-    conf.origin.altitude            = 400.0f;
-    conf.gravity                    = 9.81f;
+    // default home location (EFPL Esplanade)
+    conf.origin        = ORIGIN_EPFL;
+
+    conf.gravity       = 9.81f;
 
     conf.kp_pos_gps[X] = 2.0f;
     conf.kp_pos_gps[Y] = 2.0f;
@@ -523,7 +519,7 @@ std::array<float,3> Position_estimation::velocity_lf(void) const
 
 float Position_estimation::absolute_altitude(void) const
 {
-    return origin_.altitude - local_position[Z];
+    return (origin_.altitude - local_position[Z]);
 }
 
 

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file vector_field_waypoint.h
+ * \file vector_field_waypoint.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef VECTOR_FIELD_WAYPOINT_H_
-#define VECTOR_FIELD_WAYPOINT_H_
+#ifndef VECTOR_FIELD_WAYPOINT_HPP_
+#define VECTOR_FIELD_WAYPOINT_HPP_
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "sensing/position_estimation.hpp"
@@ -76,7 +76,7 @@ typedef struct
  * \param   vector_field        Pointer to data structure
  * \param   config              Pointer to configuration
  * \param   waypoint_handler    Pointer to waypoint list (input)
- * \param   ins                 Pointer to the estimated speed and position (input)
+ * \param   ins                 Pointer to the intertial navigation system (input)
  * \param   velocity_command    Pointer to velocity command (output)
  */
 bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command);
@@ -90,4 +90,4 @@ bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vec
 bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field);
 
 
-#endif /* VECTOR_FIELD_WAYPOINT_H_ */
+#endif /* VECTOR_FIELD_WAYPOINT_HPP_ */

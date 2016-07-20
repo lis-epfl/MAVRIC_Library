@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef VELOCITY_CONTROLLER_COPTER_DEFAULT_CONFIG_H_
-#define VELOCITY_CONTROLLER_COPTER_DEFAULT_CONFIG_H_
+#ifndef VELOCITY_CONTROLLER_COPTER_DEFAULT_CONFIG_HPP_
+#define VELOCITY_CONTROLLER_COPTER_DEFAULT_CONFIG_HPP_
 
 #include "control/velocity_controller_copter.hpp"
 
@@ -105,4 +105,4 @@ static inline velocity_controller_copter_conf_t velocity_controller_copter_defau
     return conf;
 };
 
-#endif // VELOCITY_CONTROLLER_COPTER_DEFAULT_CONFIG_H_
+#endif // VELOCITY_CONTROLLER_COPTER_DEFAULT_CONFIG_HPP_

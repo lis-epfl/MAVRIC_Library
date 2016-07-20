@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_copter.c
+ * \file stabilisation_copter.cpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -104,7 +104,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
                     up);
 
     // Get current velocity
-    std::array<float,3> vel = stabilisation_copter->ins->velocity_lf();
+    std::array<float,3> vel_lf = stabilisation_copter->ins->velocity_lf();
 
     // set the controller input
     input = *stabilisation_copter->controls;
@@ -129,23 +129,23 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
             input.tvel[Y] = input_global.v[Y];
             input.tvel[Z] = input_global.v[Z];
 
-            rpyt_errors[X] = input.tvel[X] - vel[X];
-            rpyt_errors[Y] = input.tvel[Y] - vel[Y];
-            rpyt_errors[3] = -(input.tvel[Z] - vel[Z]);
+            rpyt_errors[X] = input.tvel[X] - vel_lf[X];
+            rpyt_errors[Y] = input.tvel[Y] - vel_lf[Y];
+            rpyt_errors[3] = -(input.tvel[Z] - vel_lf[Z]);
 
             if (stabilisation_copter->controls->yaw_mode == YAW_COORDINATED)
             {
                 float rel_heading_coordinated;
-                if ((maths_f_abs(vel[X]) < 0.001f) && (maths_f_abs(vel[Y]) < 0.001f))
+                if ((maths_f_abs(vel_lf[X]) < 0.001f) && (maths_f_abs(vel_lf[Y]) < 0.001f))
                 {
                     rel_heading_coordinated = 0.0f;
                 }
                 else
                 {
-                    rel_heading_coordinated = atan2(vel[Y], vel[X]);
+                    rel_heading_coordinated = atan2(vel_lf[Y], vel_lf[X]);
                 }
 
-                float w = 0.5f * (maths_sigmoid(vectors_norm(vel.data()) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
+                float w = 0.5f * (maths_sigmoid(vectors_norm(vel_lf.data()) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
                 input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
             }
 

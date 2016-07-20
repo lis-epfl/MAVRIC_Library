@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file acoustic.h
+ * \file acoustic.hpp
  *
  * \author MAV'RIC Team
  * \author Meysam Basiri
@@ -40,24 +40,24 @@
  *
  ******************************************************************************/
 
-#ifndef ACOUSTIC_H_
-#define ACOUSTIC_H_
+#ifndef ACOUSTIC_HPP_
+#define ACOUSTIC_HPP_
 
 #include <cstdint>
 #include <cstdbool>
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "control/stabilisation_copter.hpp"
+#include "control/stabilisation.hpp"
 #include "control/navigation.hpp"
+#include "sensing/ahrs.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/remote.hpp"
 
 extern "C"
 {
-#include "sensing/ahrs.hpp"
 #include "util/streams.h"
 #include "buffer.h"
-#include "control/stabilisation.hpp"
 }
 
 #define STORE_SIZE          4       ///< number of azimuth/elevation values stored for reliability test

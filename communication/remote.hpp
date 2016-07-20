@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file remote.h
+ * \file remote.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef REMOTE_H__
-#define REMOTE_H__
+#ifndef REMOTE_HPP__
+#define REMOTE_HPP__
 
 #include "communication/mav_modes.hpp"
 #include "drivers/satellite.hpp"

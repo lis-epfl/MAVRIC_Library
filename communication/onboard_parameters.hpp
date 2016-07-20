@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file onboard_parameters.h
+ * \file onboard_parameters.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef ONBOARD_PARAMETERS_H_
-#define ONBOARD_PARAMETERS_H_
+#ifndef ONBOARD_PARAMETERS_HPP_
+#define ONBOARD_PARAMETERS_HPP_
 
 #include <cstdbool>
 

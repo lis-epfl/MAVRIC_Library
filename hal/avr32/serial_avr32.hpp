@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef SERIAL_AVR32_H_
-#define SERIAL_AVR32_H_
+#ifndef SERIAL_AVR32_HPP_
+#define SERIAL_AVR32_HPP_
 
 #include "hal/common/serial.hpp"
 #include "util/buffer.hpp"
@@ -227,4 +227,4 @@ private:
 };
 
 
-#endif /* SERIAL_AVR32_H_ */
+#endif /* SERIAL_AVR32_HPP_ */

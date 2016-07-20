@@ -42,7 +42,11 @@
 
 #include "control/pid_controller.hpp"
 #include "hal/common/time_keeper.hpp"
+
+extern "C"
+{
 #include "util/maths.h"
+}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

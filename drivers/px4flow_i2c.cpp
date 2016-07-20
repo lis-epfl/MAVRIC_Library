@@ -70,15 +70,18 @@ bool Px4flow_i2c::update(void)
 
     // Send command
     uint8_t buff = GET_FRAME_COMMAND;
-    res = i2c_.write(&buff, 1, config_.i2c_address);
+    res &= i2c_.write(&buff, 1, config_.i2c_address);
 
     uint8_t rec[22];
-    res = i2c_.read(rec, 22, config_.i2c_address);
+    res &= i2c_.read(rec, 22, config_.i2c_address);
 
     if (res == true)
     {
+        // Read optic flow and convert from decirad/s to rad/s
         flow_x_       = 0.1f * (float)((int16_t)(rec[3] << 8 | rec[2]));
         flow_y_       = 0.1f * (float)((int16_t)(rec[5] << 8 | rec[4]));
+
+        // Read velocity and convert from mm/s to m/s
         velocity_x_ = 0.001f * (float)((int16_t)(rec[7] << 8 | rec[6]));
         velocity_y_ = 0.001f * (float)((int16_t)(rec[9] << 8 | rec[8]));
         flow_quality_ = (uint8_t)((int16_t)(rec[11] << 8 | rec[10]));

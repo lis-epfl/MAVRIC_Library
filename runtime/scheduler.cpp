@@ -45,7 +45,11 @@
 
 #include "runtime/scheduler.hpp"
 #include "hal/common/time_keeper.hpp"
+
+extern "C"
+{
 #include "util/print_util.h"
+}
 
 Scheduler::Scheduler(const Scheduler::conf_t config) :
     schedule_strategy_(config.schedule_strategy),

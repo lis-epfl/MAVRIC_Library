@@ -30,55 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file hud_telemetry.hpp
+ * \file ins_telemetry.hpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief This file sends the MAVLink HUD message
+ * \brief   Telemetry for Inertial Navigation System
  *
  ******************************************************************************/
 
 
-#ifndef HUD_TELEMETRY_HPP__
-#define HUD_TELEMETRY_HPP__
+#ifndef INS_TELEMETRY_HPP_
+#define INS_TELEMETRY_HPP_
 
 #include "sensing/ins.hpp"
-#include "sensing/ahrs.hpp"
-#include "control/stabilisation.hpp"
-
+#include "communication/mavlink_stream.hpp"
 
 /**
- * \brief   The HUD structure to send the MAVLink HUD message
- */
-typedef struct
-{
-    const INS* ins;                         ///< The pointer to the Inertial Navigation System
-    const control_command_t* controls;      ///< The pointer to the control structure
-    const ahrs_t* ahrs;                     ///< The pointer to the attitude estimation structure
-    const Mavlink_stream* mavlink_stream;   ///< The pointer to the MAVLink stream structure
-} hud_telemetry_t;
-
-/**
- * \brief   Initialise the HUD structure
+ * \brief Telemetry
  *
- * \param   hud          The pointer to the HUD structure
- * \param   ins          The pointer to the Inertial Navigation System
- * \param   controls     The pointer to the controls structure
- * \param   ahrs         The pointer to the attitude estimation structure
+ * \brief   Function to send the MAVLink position estimation message
  *
- * \return  True if the init succeed, false otherwise
+ * \param   ins                     The pointer to the ins
+ * \param   mavlink_stream          The pointer to the MAVLink stream
+ * \param   msg                     The pointer to the MAVLink message
  */
-bool hud_telemetry_init(hud_telemetry_t* hud_telemetry_structure, const INS* ins, const control_command_t* controls, const ahrs_t* ahrs);
+static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-/**
- * \brief   Function to send the MAVLink HUD message
- *
- * \param   hud                 The pointer to the HUD structure
- * \param   mavlink_stream      The pointer to the MAVLink stream structure
- * \param   msg                 The pointer to the MAVLink message
- */
-void hud_telemetry_send_message(const hud_telemetry_t* hud, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
-
-
-#endif //HUD_TELEMETRY_HPP__
+#endif /* INS_TELEMETRY_HPP_ */

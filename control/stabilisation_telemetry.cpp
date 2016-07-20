@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_telemetry.c
+ * \file stabilisation_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse

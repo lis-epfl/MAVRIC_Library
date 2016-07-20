@@ -43,8 +43,8 @@
  ******************************************************************************/
 
 
-#ifndef LSM330DLC_H_
-#define LSM330DLC_H_
+#ifndef LSM330DLC_HPP_
+#define LSM330DLC_HPP_
 
 #include <cstdint>
 #include <array>

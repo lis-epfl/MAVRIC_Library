@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef GPIO_AVR32_H_
-#define GPIO_AVR32_H_
+#ifndef GPIO_AVR32_HPP_
+#define GPIO_AVR32_HPP_
 
 #include "hal/common/gpio.hpp"
 #include <cstdint>
@@ -160,4 +160,4 @@ static inline gpio_avr32_conf_t gpio_avr32_default_config()
     return conf;
 }
 
-#endif /* GPIO_AVR32_H_ */
+#endif /* GPIO_AVR32_HPP_ */

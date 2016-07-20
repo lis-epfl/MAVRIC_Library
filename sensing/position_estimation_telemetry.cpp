@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_estimation_telemetry.c
+ * \file position_estimation_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -111,28 +111,28 @@ bool position_estimation_telemetry_init(Position_estimation* pos_est, Mavlink_me
 
 void position_estimation_telemetry_send_position(const Position_estimation* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    local_position_t pos    = pos_est->position_lf();
-    std::array<float,3> vel = pos_est->velocity_lf();
+    local_position_t pos_lf    = pos_est->position_lf();
+    std::array<float,3> vel_lf = pos_est->velocity_lf();
     mavlink_msg_local_position_ned_pack(mavlink_stream->sysid(),
                                         mavlink_stream->compid(),
                                         msg,
                                         time_keeper_get_ms(),
-                                        pos[0],
-                                        pos[1],
-                                        pos[2],
-                                        vel[0],
-                                        vel[1],
-                                        vel[2]);
+                                        pos_lf[X],
+                                        pos_lf[Y],
+                                        pos_lf[Z],
+                                        vel_lf[X],
+                                        vel_lf[Y],
+                                        vel_lf[Z]);
 }
 
 void position_estimation_telemetry_send_global_position(const Position_estimation* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     // send integrated position (for now there is no GPS error correction...!!!)
-    local_position_t pos    = pos_est->position_lf();
-    std::array<float,3> vel = pos_est->velocity_lf();
+    local_position_t pos_lf    = pos_est->position_lf();
+    std::array<float,3> vel_lf = pos_est->velocity_lf();
 
-    global_position_t gpos;
-    coord_conventions_local_to_global_position(pos, pos_est->origin(), gpos);
+    global_position_t pos_gf;
+    coord_conventions_local_to_global_position(pos_lf, pos_est->origin(), pos_gf);
 
 
     //mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
@@ -140,12 +140,12 @@ void position_estimation_telemetry_send_global_position(const Position_estimatio
                                          mavlink_stream->compid(),
                                          msg,
                                          time_keeper_get_ms(),
-                                         gpos.latitude * 10000000,
-                                         gpos.longitude * 10000000,
-                                         gpos.altitude * 1000.0f,
-                                         -pos[2] * 1000,
-                                         vel[0] * 100.0f,
-                                         vel[1] * 100.0f,
-                                         vel[2] * 100.0f,
+                                         pos_gf.latitude * 10000000,
+                                         pos_gf.longitude * 10000000,
+                                         pos_gf.altitude * 1000.0f,
+                                         -pos_lf[Z] * 1000,
+                                         vel_lf[X] * 100.0f,
+                                         vel_lf[Y] * 100.0f,
+                                         vel_lf[Z] * 100.0f,
                                          0.0f);
 }

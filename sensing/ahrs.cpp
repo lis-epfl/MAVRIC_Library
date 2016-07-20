@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.c
+ * \file ahrs.cpp
  *
  * \author MAV'RIC Team
  * \author Gregoire Heitz
@@ -75,7 +75,7 @@ bool ahrs_init(ahrs_t* ahrs)
     ahrs->linear_acc[Z] = 0.0f;
 
     ahrs->last_update_s = 0.0f;
-    
+
     ahrs->internal_state = AHRS_INITIALISING;
 
     return init_success;

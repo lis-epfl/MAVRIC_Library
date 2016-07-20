@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef I2CXL_SONAR_H_
-#define I2CXL_SONAR_H_
+#ifndef I2CXL_SONAR_HPP_
+#define I2CXL_SONAR_HPP_
 
 #include <cstdint>
 

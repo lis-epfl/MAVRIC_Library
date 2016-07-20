@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MPU_6050_H_
-#define MPU_6050_H_
+#ifndef MPU_6050_HPP_
+#define MPU_6050_HPP_
 
 #include <cstdint>
 
