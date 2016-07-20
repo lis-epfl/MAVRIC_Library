@@ -131,7 +131,7 @@ public:
      */
     const global_position_t& origin(void) const;
 
-private:
+protected:
     static global_position_t origin_;
 };
 
