@@ -237,14 +237,13 @@ Waypoint::Waypoint() :
             param4_(0.0f),
             radius_(0.0f),
             loiter_time_(0.0f),
-            position_estimation_(NULL),
-            mavlink_stream_(NULL)
+            position_estimation_(NULL)
 {
     /* SHOULD ONLY BE USED FOR CONSTRUCTORS DONE BY COMPILER FOR TEMPORARY
        VARIABLES. USE ONE OF THE OTHER CONSTRUCTORS */
 }
 
-Waypoint::Waypoint(const Position_estimation* position_estimation, const Mavlink_stream* mavlink_stream) :
+Waypoint::Waypoint(const Position_estimation* position_estimation) :
             frame_(MAV_FRAME_LOCAL_NED),
             command_(MAV_CMD_NAV_WAYPOINT),
             autocontinue_(0),
@@ -254,15 +253,13 @@ Waypoint::Waypoint(const Position_estimation* position_estimation, const Mavlink
             param4_(0.0f),
             radius_(0.0f),
             loiter_time_(0.0f),
-            position_estimation_(position_estimation),
-            mavlink_stream_(mavlink_stream)
+            position_estimation_(position_estimation)
 {
     wpt_position_ = get_global_position(frame_, 0.0, 0.0, 0.0, maths_deg_to_rad(param4_), position_estimation->local_position.origin);
 }
 
-Waypoint::Waypoint(const Position_estimation* position_estimation, const Mavlink_stream* mavlink_stream, mavlink_mission_item_t& packet):
-            position_estimation_(position_estimation),
-            mavlink_stream_(mavlink_stream)
+Waypoint::Waypoint(const Position_estimation* position_estimation, mavlink_mission_item_t& packet):
+            position_estimation_(position_estimation)
 {
     command_ = packet.command;
 
@@ -285,7 +282,6 @@ Waypoint::Waypoint(const Position_estimation* position_estimation, const Mavlink
 }
 
 Waypoint::Waypoint( const Position_estimation* position_estimation,
-                    const Mavlink_stream* mavlink_stream,
                     uint8_t frame,
                     uint16_t command,
                     uint8_t autocontinue,
@@ -305,15 +301,13 @@ Waypoint::Waypoint( const Position_estimation* position_estimation,
             param4_(param4),
             radius_(param2),
             loiter_time_(param1),
-            position_estimation_(position_estimation),
-            mavlink_stream_(mavlink_stream)
+            position_estimation_(position_estimation)
 {
     wpt_position_ = get_global_position(frame, x, y, z, maths_deg_to_rad(param4), position_estimation->local_position.origin);
     // dubin_ = ???;
 }
 
 Waypoint::Waypoint( const Position_estimation* position_estimation,
-                    const Mavlink_stream* mavlink_stream,
                     uint8_t frame,
                     uint16_t command,
                     uint8_t autocontinue,
@@ -337,46 +331,42 @@ Waypoint::Waypoint( const Position_estimation* position_estimation,
             radius_(radius),
             loiter_time_(loiter_time),
             dubin_(dubin),
-            position_estimation_(position_estimation),
-            mavlink_stream_(mavlink_stream)
+            position_estimation_(position_estimation)
 {
     wpt_position_ = get_global_position(frame, x, y, z, maths_deg_to_rad(param4), position_estimation->local_position.origin);
 }
 
-void Waypoint::send(uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current)
+void Waypoint::send(const Mavlink_stream& mavlink_stream, uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current)
 {
-    if (mavlink_stream_ != NULL)
-    {
-        // These are outputs
-        double x = 0.0;
-        double y = 0.0;
-        double z = 0.0;
-        get_waypoint_parameters(x, y, z, frame_);
+    // These are outputs
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
+    get_waypoint_parameters(x, y, z, frame_);
 
-        //  Prototype of the function "mavlink_msg_mission_item_send" found in mavlink_msg_mission_item.h :
-        // mavlink_msg_mission_item_send (  mavlink_channel_t chan, uint8_t target_system, uint8_t target_component, uint16_t seq,
-        //                                  uint8_t frame, uint16_t command, uint8_t current, uint8_t autocontinue, float param1,
-        //                                  float param2, float param3, float param4, float x, float y, float z)
-        mavlink_message_t _msg;
-        mavlink_msg_mission_item_pack(sysid,
-                                      mavlink_stream_->compid(),
-                                      &_msg,
-                                      msg->sysid,
-                                      msg->compid,
-                                      seq,
-                                      frame_,
-                                      command_,
-                                      current,
-                                      autocontinue_,
-                                      param1_,
-                                      param2_,
-                                      param3_,
-                                      param4_,
-                                      x,
-                                      y,
-                                      z);
-        mavlink_stream_->send(&_msg);
-    }
+    //  Prototype of the function "mavlink_msg_mission_item_send" found in mavlink_msg_mission_item.h :
+    // mavlink_msg_mission_item_send (  mavlink_channel_t chan, uint8_t target_system, uint8_t target_component, uint16_t seq,
+    //                                  uint8_t frame, uint16_t command, uint8_t current, uint8_t autocontinue, float param1,
+    //                                  float param2, float param3, float param4, float x, float y, float z)
+    mavlink_message_t _msg;
+    mavlink_msg_mission_item_pack(sysid,
+                                  mavlink_stream.compid(),
+                                  &_msg,
+                                  msg->sysid,
+                                  msg->compid,
+                                  seq,
+                                  frame_,
+                                  command_,
+                                  current,
+                                  autocontinue_,
+                                  param1_,
+                                  param2_,
+                                  param3_,
+                                  param4_,
+                                  x,
+                                  y,
+                                  z);
+    mavlink_stream.send(&_msg);
 }
 
 void Waypoint::calculate_waypoint_local_structure(dubin_state_t* dubin_state)
@@ -466,7 +456,7 @@ local_position_t Waypoint::local_pos() const
     pos.origin.latitude = 0.0f;
     pos.origin.altitude = 0.0f;
     pos.origin.heading = 0.0f;
-    
+
     if (position_estimation_ != NULL)
     {
         // These are outputs

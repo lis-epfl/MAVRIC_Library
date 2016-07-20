@@ -118,7 +118,7 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
                     isCurrent = 1;
                 }
 
-                waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].send(sysid, msg, packet.seq, isCurrent);
+                waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].send(waypoint_handler->mavlink_stream_, sysid, msg, packet.seq, isCurrent);
 
                 print_util_dbg_print("Sending waypoint ");
                 print_util_dbg_print_num(waypoint_handler->sending_waypoint_num_, 10);
@@ -215,7 +215,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
     {
         waypoint_handler->start_timeout_ = time_keeper_get_ms();
 
-        Waypoint new_waypoint(&waypoint_handler->position_estimation_, &waypoint_handler->mavlink_stream_, packet);
+        Waypoint new_waypoint(&waypoint_handler->position_estimation_, packet);
 
         print_util_dbg_print("New waypoint received ");
         //print_util_dbg_print("(");
@@ -491,7 +491,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
 {
     for (int i = 0; i < MAX_WAYPOINTS; i++)
     {
-        waypoint_list_[i] = Waypoint(&position_estimation_, &mavlink_stream_);
+        waypoint_list_[i] = Waypoint(&position_estimation_);
     }
 }
 
@@ -592,7 +592,6 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     float z
     */
     Waypoint waypoint(  &position_estimation_,
-                        &mavlink_stream_,
                         MAV_FRAME_LOCAL_NED,
                         MAV_CMD_NAV_WAYPOINT,
                         0,

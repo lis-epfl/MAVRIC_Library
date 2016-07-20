@@ -69,24 +69,21 @@ public:
      * \brief   Creates a blank waypoint
      *
      * \param   position_estimation     The reference to the position estimation
-     * \param   mavlink_stream          The pointer to the MAVLink stream structure
      */
-    Waypoint(const Position_estimation* position_estimation, const Mavlink_stream* mavlink_stream);
+    Waypoint(const Position_estimation* position_estimation);
 
     /**
      * \brief   Initialize the waypoint handler
      *
      * \param   position_estimation     The reference to the position estimation
-     * \param   mavlink_stream          The pointer to the MAVLink stream structure
      * \param   packet                  The received packet for creating a waypoint
      */
-    Waypoint(const Position_estimation* position_estimation, const Mavlink_stream* mavlink_stream, mavlink_mission_item_t& packet);
+    Waypoint(const Position_estimation* position_estimation, mavlink_mission_item_t& packet);
 
     /**
      * \brief   Initialize the waypoint handler
      *
      * \param   position_estimation The reference to the position estimation
-     * \param   mavlink_stream      The pointer to the MAVLink stream structure
      * \param   frame               The reference frame of the waypoint
      * \param   command             The MAV_CMD_NAV id of the waypoint
      * \param   autocontinue        Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
@@ -99,7 +96,6 @@ public:
      * \param   z                   The value on the z axis (depends on the reference frame)
      */
     Waypoint(   const Position_estimation* position_estimation,
-                const Mavlink_stream* mavlink_stream,
                 uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
@@ -115,7 +111,6 @@ public:
      * \brief   Initialize the waypoint handler
      *
      * \param   position_estimation The reference to the position estimation
-     * \param   mavlink_stream      The pointer to the MAVLink stream structure
      * \param   frame               The reference frame of the waypoint
      * \param   command             The MAV_CMD_NAV id of the waypoint
      * \param   autocontinue        Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
@@ -131,7 +126,6 @@ public:
      * \param   dubin               The dubin structure for the waypoint
      */
     Waypoint(   const Position_estimation* position_estimation,
-                const Mavlink_stream* mavlink_stream,
                 uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
@@ -156,12 +150,13 @@ public:
     /**
      * \brief   Sends a given waypoint via a MAVLink message
      *
+     * \param   mavlink_stream          The mavlink stream to send the message through
      * \param   sysid                   The system ID
      * \param   msg                     The pointer to the received MAVLink message structure asking for a waypoint
      * \param   seq                     The sequence number of the packet
      * \param   current                 States if the waypoint is the current waypoint (If is the waypoint we are heading towards and are current en route to waypoint)
      */
-    void send(uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current);
+    void send(const Mavlink_stream& mavlink_stream, uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current);
 
     /**
      * \brief   Gets the frame of the waypoint
@@ -315,7 +310,6 @@ protected:
     dubin_t dubin_;                                             ///< The Dubin structure
 
     const Position_estimation* position_estimation_;            ///< The position estimation
-    const Mavlink_stream* mavlink_stream_;                      ///< The mavlink stream
 
     /**
      * \brief   Determines the global position of the waypoint based on the frame
