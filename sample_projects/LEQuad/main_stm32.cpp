@@ -79,7 +79,7 @@ int main(int argc, char** argv)
                         board.serial_1,
                         // board.serial_2,
                         board.spektrum_satellite,
-                        board.green_led,
+                        board.state_display_mavrimini_,
                         board.file_flash,
                         board.battery,
                         board.servo_0,
@@ -126,7 +126,7 @@ int main(int argc, char** argv)
     //                              sim.sonar(),
     //                              board.serial_1,                // mavlink serial
     //                              board.spektrum_satellite,
-    //                              board.green_led,
+    //                              board.state_display_mavrimini_,
     //                              board.file_flash,
     //                              sim_battery,
     //                              sim_servo_0,
