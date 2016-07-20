@@ -55,39 +55,39 @@
 INS_kf::INS_kf(const Gps& gps,
                      const Barometer& barometer,
                      const Sonar& sonar,
-                     const Px4flow_i2c& flow,
+                     //const Px4flow_i2c& flow,
                      const ahrs_t& ahrs,
                      const conf_t config):
+    Kalman<11,3,3>( {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},                                              // x
+                    Mat<11,11>(100, true),                                                          // P
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                                              // F (will be updated)
+                      0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    (0.0f),                                                                           // Q (will be updated)
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                                                // H (GPS pos)
+                      0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
+                    {SQR(config.sigma_gps_xy), 0,                        0,                           // R (GPS pos)
+                     0,                        SQR(config.sigma_gps_xy), 0,
+                     0,                        0,                        SQR(config.sigma_gps_z)},
+                    Mat<11,3>(0.0f)),                                                                 // B (will be updated)
     INS(config.origin),
-    Kalman<11,3,3>({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},                                               // x
-                  Mat<11,11>(100, true),                                                            // P
-                  { 1, 0, 0, 0, config.dt, 0,         0,         0, 0, 0, 0,                        // F (will be updated)
-                    0, 1, 0, 0, 0,         config.dt, 0,         0, 0, 0, 0,
-                    0, 0, 1, 0, 0,         0,         config.dt, 0, 0, 0, 0,
-                    0, 0, 0, 1, 0,         0,         0,         0, 0, 0, 0,
-                    0, 0, 0, 0, 1,         0,         0,         0, 0, 0, 0,
-                    0, 0, 0, 0, 0,         1,         0,         0, 0, 0, 0,
-                    0, 0, 0, 0, 0,         0,         1,         0, 0, 0, 0,
-                    0, 0, 0, 0, 0,         0,         0,         1, 0, 0, 0,
-                    0, 0, 0, 0, 0,         0,         0,         0, 1, 0, 0,
-                    0, 0, 0, 0, 0,         0,         0,         0, 0, 1, 0,
-                    0, 0, 0, 0, 0,         0,         0,         0, 0, 0, 1 },
-                  (0.0f),                                                                           // Q (will be updated)
-                  { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                                                // H (GPS pos)
-                    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-                  {SQR(config.sigma_gps_xy), 0,                        0,                           // R (GPS pos)
-                   0,                        SQR(config.sigma_gps_xy), 0,
-                   0,                        0,                        SQR(config.sigma_gps_z)},
-                  Mat<11,3>(0.0f)),                                                                 // B (will be updated)
+    config_(config),
     gps_(gps),
     barometer_(barometer),
     sonar_(sonar),
-    flow_(flow),
+    //flow_(flow),
     ahrs_(ahrs),
-    config_(config),
-    H_gpsvel_({ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0
-                0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0
+    H_gpsvel_({ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0}),
     R_gpsvel_({ SQR(config.sigma_gps_velx), 0,                          0,
                 0,                          SQR(config.sigma_gps_vely), 0,
@@ -96,18 +96,20 @@ INS_kf::INS_kf(const Gps& gps,
     R_baro_({SQR(config.sigma_baro)}),
     H_sonar_({0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0}),
     R_sonar_({SQR(config.sigma_sonar)}),
-    H_flow_({0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0
-             0, 0, 0,  0, 0, 1, 0, 0, 0, 0, 0
-             0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0}),
-    R_flow_({ 0.0001f, 0,       0,
-              0,       0.0001f, 0,
-              0,       0,       0.00001f}),
+    //H_flow_({0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0,
+    //         0, 0, 0,  0, 0, 1, 0, 0, 0, 0, 0,
+    //         0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0}),
+    //R_flow_({ 0.0001f, 0,       0,
+    //          0,       0.0001f, 0,
+     //         0,       0,       0.00001f}),
     last_accel_update_s_(0.0f),
     last_sonar_update_s_(0.0f),
-    last_flow_update_s_(0.0f),
+    //last_flow_update_s_(0.0f),
     last_baro_update_s_(0.0f),
     last_gps_pos_update_s_(0.0f),
-    last_gps_vel_update_s_(0.0f)
+    last_gps_vel_update_s_(0.0f),
+    dt_(0.0f),
+    last_update_(0.0f)
 {
 }
 
@@ -117,7 +119,7 @@ float INS_kf::last_update_s(void) const
     float last_update_s = 0.0f;
 
     last_update_s = maths_f_max(last_update_s, last_sonar_update_s_);
-    last_update_s = maths_f_max(last_update_s, last_flow_update_s_);
+    //last_update_s = maths_f_max(last_update_s, last_flow_update_s_);
     last_update_s = maths_f_max(last_update_s, last_baro_update_s_);
     last_update_s = maths_f_max(last_update_s, last_gps_pos_update_s_);
     last_update_s = maths_f_max(last_update_s, last_gps_vel_update_s_);
@@ -154,34 +156,39 @@ bool INS_kf::is_healthy(INS::healthy_t type) const
     switch(type)
     {
         case INS::healthy_t::XY_VELOCITY:
-            ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_vel_update_s_) < timeout) ) ||
-                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) );
+            ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_vel_update_s_) < timeout) )
+              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) 
+              );
         break;
 
         case INS::healthy_t::Z_VELOCITY:
             ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_vel_update_s_) < timeout) ) ||
-                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) ||
+                    //( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) ||
                     ( sonar_.healthy()     && ( (now - last_sonar_update_s_)   < timeout) ) );
         break;
 
         case INS::healthy_t::XYZ_VELOCITY:
-            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_vel_update_s_) < timeout) ) ||
-                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) );
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_vel_update_s_) < timeout) )
+              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) )
+              );
         break;
 
         case INS::healthy_t::XY_REL_POSITION:
-            ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_pos_update_s_) < timeout) ) ||
-                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) );
+            ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_pos_update_s_) < timeout) )
+              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) )
+              );
         break;
 
         case INS::healthy_t::Z_REL_POSITION:
-            ret = ( ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) ||
+            ret = ( 
+                    //( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) ||
                     ( sonar_.healthy()     && ( (now - last_sonar_update_s_)   < timeout) ) );
         break;
 
         case INS::healthy_t::XYZ_REL_POSITION:
-            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) ) ||
-                    ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) );
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) )
+              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) )
+              );
         break;
 
         case INS::healthy_t::XY_ABS_POSITION:
@@ -209,6 +216,11 @@ bool INS_kf::update(void)
     {
         if (last_accel_update_s_ < ahrs_.last_update_s)
         {
+            // Update the delta time (in second)
+            float now       = time_keeper_get_s();
+            dt_             = now - last_update_;
+            last_update_    = now;
+
             // TODO: Implement ekf formulation for speed improvement (no matrix as lot of 0, but directly functions)
             // if(config_.use_ekf)
             // {
@@ -228,6 +240,9 @@ bool INS_kf::update(void)
     {
         // Reset covariance matrix
         P_ = Mat<11,11>(100.0f, true);
+
+        // Update last time to avoid glitches at initilaization
+        last_update_ = time_keeper_get_s();
     }
 
 
@@ -275,7 +290,9 @@ bool INS_kf::update(void)
     }
 
     // Measure from barometer
-    if (barometer_.healthy())
+    // TODO: Add healthy function into barometer
+    //if (barometer_.healthy())
+    if(true)
     {
        if (last_baro_update_s_ < barometer_.last_update_us()*1e6)
        {
@@ -343,7 +360,7 @@ void INS_kf::predict_kf(void)
 {
     // Recompute the variable model matrices
     // Get time
-    float dt = config_.dt;
+    float dt = dt_;
     float dt2 = (dt*dt)/2.0f;
 
     // Get attitude quaternion
@@ -354,18 +371,21 @@ void INS_kf::predict_kf(void)
     float q3 = q.v[2];
 
     // Compute coefficients
-    ax = q0*q0 + q1*q1 - q2*q2 - q3*q3;
-    bx = 2.0f*(-q0*q3 + q1*q2);
-    cx = 2.0f*(q0*q2 + q1*q3);
-    ay = 2.0f*(q0*q3 + q1*q2);
-    by = q0*q0 - q1*q1 + q2*q2 - q3*q3;
-    cy = 2.0f*(-q0*q1 + q2*q3);
-    az = 2.0f*(-q0*q2 + q1*q3);
-    bz = 2.0f*(q0*q1 + q2*q3);
-    cz = q0*q0 - q1*q1 - q2*q2 - q3*q3;
+    float ax = q0*q0 + q1*q1 - q2*q2 - q3*q3;
+    float bx = 2.0f*(-q0*q3 + q1*q2);
+    float cx = 2.0f*(q0*q2 + q1*q3);
+    float ay = 2.0f*(q0*q3 + q1*q2);
+    float by = q0*q0 - q1*q1 + q2*q2 - q3*q3;
+    float cy = 2.0f*(-q0*q1 + q2*q3);
+    float az = 2.0f*(-q0*q2 + q1*q3);
+    float bz = 2.0f*(q0*q1 + q2*q3);
+    float cz = q0*q0 - q1*q1 - q2*q2 - q3*q3;
 
     // Model dynamics (modify only the non-constant terms)
     // TODO: Implement block copy in matrix lib
+    F_(0,4) = dt;
+    F_(1,5) = dt;
+    F_(2,6) = dt;
     F_(0,7) = -ax*dt2;
     F_(0,8) = -bx*dt2;
     F_(0,9) = -cx*dt2;
@@ -408,17 +428,17 @@ void INS_kf::predict_kf(void)
 
     // Recompute process noise matrix
     // Coefficients
-    axx = ax*ax + bx*bx + cx*cx;
-    ayy = ay*ay + by*by + cy*cy;
-    azz = az*az + bz+bz + cz*cz;
-    axy = ax*ay + bx*by + cx*cy;
-    axz = ax*az + bx*bz + cx*cz;
-    ayz = ay*az + by*bz + cy*cz;
-    sz2 = SQR(config_.sigma_z_gnd);
-    sa2 = SQR(config_.sigma_bias_acc);
-    sb2 = SQR(config_.sigma_bias_baro);
-    su2 = SQR(config_.sigma_acc);
-    sau2 = sa2 + su2;
+    float axx = ax*ax + bx*bx + cx*cx;
+    float ayy = ay*ay + by*by + cy*cy;
+    float azz = az*az + bz+bz + cz*cz;
+    float axy = ax*ay + bx*by + cx*cy;
+    float axz = ax*az + bx*bz + cx*cz;
+    float ayz = ay*az + by*bz + cy*cz;
+    float sz2 = SQR(config_.sigma_z_gnd);
+    float sa2 = SQR(config_.sigma_bias_acc);
+    float sb2 = SQR(config_.sigma_bias_baro);
+    float su2 = SQR(config_.sigma_acc);
+    float sau2 = sa2 + su2;
 
     // Time constants
     float dt520 = (dt*dt*dt*dt*dt)/20.0f;
@@ -439,15 +459,14 @@ void INS_kf::predict_kf(void)
                       -dt36*ax*sa2,   -dt36*ay*sa2,   -dt36*az*sa2,   0,      -dt22*ax*sa2,   -dt22*ay*sa2,   -dt22*az*sa2,   dt*sa2,       0,            0,            0,
                       -dt36*bx*sa2,   -dt36*by*sa2,   -dt36*bz*sa2,   0,      -dt22*bx*sa2,   -dt22*by*sa2,   -dt22*bz*sa2,   0,            dt*sa2,       0,            0,
                       -dt36*cx*sa2,   -dt36*cy*sa2,   -dt36*cz*sa2,   0,      -dt22*cx*sa2,   -dt22*cy*sa2,   -dt22*cz*sa2,   0,            0,            dt*sa2,       0,
-                      0,              0,              0,              0,      0,              0,              0,              0,            0,            0,            dt*sb2 })
+                      0,              0,              0,              0,      0,              0,              0,              0,            0,            0,            dt*sb2 });
 
 
 
 
 
     // Compute default KF prediciton step (using local accelerations as input)
-    float acc[3] = ahrs_.linear_acc;
-    predict({acc[0], acc[1], acc[2]});
+    predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
 }
 
 

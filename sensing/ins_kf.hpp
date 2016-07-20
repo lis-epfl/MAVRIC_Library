@@ -129,8 +129,6 @@ public:
      */
     struct conf_t
     {
-        // Sampling time
-        float dt;
         // Process covariance
         float sigma_bias_acc;
         float sigma_z_gnd;
@@ -157,7 +155,7 @@ public:
     INS_kf(const Gps& gps,
               const Barometer& barometer,
               const Sonar& sonar,
-              const Px4flow_i2c& flow,
+              //const Px4flow_i2c& flow,
               const ahrs_t& ahrs,
               const conf_t config = default_config() );
 
@@ -218,14 +216,15 @@ public:
     static inline INS_kf::conf_t default_config(void);
 
 
+    conf_t config_;                      ///< Configuration (public, to be used as onboard param)
+
+
 private:
     const Gps&          gps_;             ///< Gps (input)
     const Barometer&    barometer_;       ///< Barometer (input)
     const Sonar&        sonar_;           ///< Sonar, must be downward facing (input)
-    const Px4flow_i2c&  flow_;            ///< Optical flow sensor (input)
+    //const Px4flow_i2c&  flow_;            ///< Optical flow sensor (input)
     const ahrs_t&       ahrs_;            ///< Attitude and acceleration (input)
-
-    conf_t config_;                      ///< Configuration
 
     std::array<float,3> pos_;
     std::array<float,3> vel_;
@@ -237,15 +236,18 @@ private:
     Mat<1,1> R_baro_;
     Mat<1,11> H_sonar_;
     Mat<1,1> R_sonar_;
-    Mat<3,11> H_flow_;
-    Mat<3,3> R_flow_;
+    //Mat<3,11> H_flow_;
+    //Mat<3,3> R_flow_;
 
-    float last_accel_update_s_;          ///< Last time we updated the estimate using accelerometer
-    float last_sonar_update_s_;          ///< Last time we updated the estimate using sonar
-    float last_flow_update_s_;           ///< Last time we updated the estimate using optical flow
-    float last_baro_update_s_;           ///< Last time we updated the estimate using barometer
-    float last_gps_pos_update_s_;        ///< Last time we updated the estimate using gps position
-    float last_gps_vel_update_s_;        ///< Last time we updated the estimate using gps velocity
+    float last_accel_update_s_;             ///< Last time we updated the estimate using accelerometer
+    float last_sonar_update_s_;             ///< Last time we updated the estimate using sonar
+    //float last_flow_update_s_;            ///< Last time we updated the estimate using optical flow
+    float last_baro_update_s_;              ///< Last time we updated the estimate using barometer
+    float last_gps_pos_update_s_;           ///< Last time we updated the estimate using gps position
+    float last_gps_vel_update_s_;           ///< Last time we updated the estimate using gps velocity
+
+    float dt_;                              ///< Time interval since last update in seconds
+    float last_update_;                     ///< Last update time in seconds
 
     /**
      * \brief   Performs the prediction step of the Kalman filter, using linear formulation (KF, non-constant matrices)
@@ -263,8 +265,6 @@ INS_kf::conf_t INS_kf::default_config(void)
 {
     INS_kf::conf_t conf = {};
 
-    conf.dt = 0.004f;
-
     // Process covariance (noise from state and input)
     conf.sigma_z_gnd        = 0.001f;
     conf.sigma_bias_acc     = 0.01f;
@@ -280,8 +280,8 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.sigma_baro     = 10.0f;
     conf.sigma_sonar    = 0.1f;
 
-    //default home location (EFPL Esplanade)
-    conf.home = ORIGIN_EPFL;
+    //default origin location (EFPL Esplanade)
+    conf.origin = ORIGIN_EPFL;
 
     // Logic parameters
     conf.use_ekf = false;
