@@ -51,6 +51,7 @@
 #include "sensing/imu_telemetry.hpp"
 #include "sensing/ahrs_telemetry.hpp"
 #include "sensing/position_estimation_telemetry.hpp"
+#include "sensing/ins_telemetry.hpp"
 
 #include "control/manual_control_telemetry.hpp"
 
@@ -89,6 +90,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
+    ins_kf(gps, barometer, sonar, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
@@ -110,6 +112,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     init_sonar();
     init_attitude_estimation();
     init_position_estimation();
+    init_ins_kf();
     init_stabilisers();
     init_navigation();
     init_hud();
@@ -356,6 +359,40 @@ bool LEQuad::init_position_estimation(void)
 }
 
 // -------------------------------------------------------------------------
+// Kalman INS
+// -------------------------------------------------------------------------
+bool LEQuad::init_ins_kf(void)
+{
+    bool ret = true;
+
+    // DOWN telemetry
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, (Mavlink_communication::send_msg_function_t)&ins_telemetry_send,   &ins_kf);
+
+    // Parameters
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_z_gnd,      "INS_X_Z_GND"       );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_bias_acc,   "INS_X_BIAS_ACC"    );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_bias_baro,  "INS_X_BIAS_BARO"   );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_acc,        "INS_U_ACC"         );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_xy,     "INS_Z_POS_XY"      );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_z,      "INS_Z_GPS_Z"       );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_velx,   "INS_Z_VEL_X"       );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_vely,   "INS_Z_VEL_Y"       );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_velz,   "INS_Z_VEL_Z"       );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_baro,       "INS_Z_BARO"        );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_sonar,      "INS_Z_SONAR"       );
+
+    // Data logging
+    // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[0], "local_x", 3);
+    // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[1], "local_y", 3);
+    // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[2], "local_z", 3);
+    // ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.latitude,  "origin_lat", 7);
+    // ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.longitude, "origin_lon", 7);
+    // ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.altitude,  "origin_alt", 3);
+
+    return ret;
+}
+
+// -------------------------------------------------------------------------
 // Stabilisers
 // -------------------------------------------------------------------------
 bool LEQuad::init_stabilisers(void)
@@ -533,6 +570,7 @@ bool LEQuad::main_task(void)
     imu.update();
     ahrs_ekf.update();
     position_estimation.update();
+    ins_kf.update();
 
     bool failsafe = false;
 

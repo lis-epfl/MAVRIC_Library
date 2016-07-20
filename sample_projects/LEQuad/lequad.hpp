@@ -86,6 +86,7 @@
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/position_estimation.hpp"
+ #include "sensing/ins_kf.hpp"
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
 
@@ -180,6 +181,7 @@ protected:
     virtual bool init_sonar(void);
     virtual bool init_attitude_estimation(void);
     virtual bool init_position_estimation(void);
+    virtual bool init_ins_kf(void);
     virtual bool init_stabilisers(void);
     virtual bool init_navigation(void);
     virtual bool init_hud(void);
@@ -223,6 +225,7 @@ protected:
     Ahrs_ekf ahrs_ekf;
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
+    INS_kf ins_kf;                                              ///< The Kalman INS structure, used for position estimation
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
