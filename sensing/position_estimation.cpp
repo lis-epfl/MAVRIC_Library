@@ -139,7 +139,7 @@ void Position_estimation::position_correction()
     // uint32_t t_inter_baro;
     int32_t i;
 
-    if (init_barometer)
+    if (barometer.has_been_calibrated())
     {
         // altimeter correction
         if (time_last_barometer_msg < barometer.last_update_us())
@@ -157,13 +157,9 @@ void Position_estimation::position_correction()
     else
     {
         // Correct barometer bias
-        if (!barometer.has_been_calibrated())
-        {
-            float current_altitude_gf = - local_position.pos[Z]
-                                    + local_position.origin.altitude;
-            barometer.calibrate_bias(current_altitude_gf);
-            init_barometer = true;
-        }
+        float current_altitude_gf = - local_position.pos[Z]
+                                + local_position.origin.altitude;
+        barometer.calibrate_bias(current_altitude_gf);
     }
 
     if (init_gps_position)
@@ -329,7 +325,7 @@ bool Position_estimation::healthy() const
 
 bool Position_estimation::altitude_healthy() const
 {
-    return init_barometer;
+    return barometer.has_been_calibrated();
 }
 
 //------------------------------------------------------------------------------
@@ -347,7 +343,6 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         time_last_gps_velned_msg(0),
         time_last_barometer_msg(0),
         init_gps_position(false),
-        init_barometer(false),
         last_alt(0),
         last_vel{0.0f,0.0f,0.0f},
         fence_set(config.fence_set),
@@ -419,7 +414,6 @@ void Position_estimation::reset_home_position()
         float current_altitude_gf = - local_position.pos[Z]
                                     + local_position.origin.altitude;
         barometer.calibrate_bias(current_altitude_gf);
-        init_barometer = true;
 
         print_util_dbg_print("Offset of the barometer set to the GPS altitude, new altitude of:");
         print_util_dbg_print_num(barometer.altitude_gf(), 10);
