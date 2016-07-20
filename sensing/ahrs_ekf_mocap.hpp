@@ -56,10 +56,6 @@
 #include "util/matrix.hpp"
 #include "communication/mavlink_communication.hpp"
 
-extern "C"
-{
-}
-
 
 /**
  * \brief The AHRS EKF class

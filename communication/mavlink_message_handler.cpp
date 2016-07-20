@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_message_handler.c
+ * \file mavlink_message_handler.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur

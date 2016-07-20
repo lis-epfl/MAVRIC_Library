@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_machine.h
+ * \file state_machine.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -41,21 +41,17 @@
  ******************************************************************************/
 
 
-#ifndef STATE_MACHINE_H_
-#define STATE_MACHINE_H_
+#ifndef STATE_MACHINE_HPP_
+#define STATE_MACHINE_HPP_
 
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
 #include "drivers/state_display.hpp"
+#include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
 #include "sensing/imu.hpp"
 
-
-extern "C"
-{
-#include "sensing/ahrs.hpp"
-}
 
 /**
  * \brief Defines the state machine structure
@@ -64,14 +60,14 @@ class State_machine
 {
 public:
     /**
-     * \brief Initialize the state machine
+     * \brief Constructor
      *
-     * \param state                     Pointer to the state structure
-     * \param gps                       Pointer to the gps structure
-     * \param imu                       Pointer to the imu structure
-     * \param manual_control            Pointer to the manual_control structure
-     *
-     * \return  True if the init succeed, false otherwise
+     * \param state                     Reference to the state
+     * \param ins                       Reference to the ins
+     * \param imu                       Reference to the imu
+     * \param ahrs                      Reference to the ahrs
+     * \param manual_control            Reference to the manual_control
+     * \param state_display             Reference to the state display
      */
     State_machine(  State& state,
                     const INS& ins,
@@ -147,4 +143,4 @@ private:
 
 
 
-#endif // STATE_MACHINE_H_
+#endif // STATE_MACHINE_HPP_

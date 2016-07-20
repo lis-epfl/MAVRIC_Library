@@ -312,7 +312,7 @@ bool INS_kf::update(void)
                                  R_sonar_);
 
           // Update timing
-          last_sonar_update_s_ = sonar_.last_update_us()*1e6;
+          last_sonar_update_s_ = sonar_.last_update_us() * 1e6f;
        }
     }
 

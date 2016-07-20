@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_WING_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_WING_DEFAULT_CONFIG_H_
+#ifndef SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
+#define SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
 
 
 #include "control/servos_mix_wing.hpp"
@@ -70,4 +70,4 @@ static inline servos_mix_wing_conf_t servos_mix_wing_default_config()
 	return conf;
 };
 
-#endif // SERVOS_MIX_WING_DEFAULT_CONFIG_H_
+#endif // SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_

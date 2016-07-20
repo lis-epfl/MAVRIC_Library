@@ -327,15 +327,15 @@ void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick)
     // Quaternion rotation to express the result in the MAVRIC FRAME
     quat_t q_nwu;
     q_nwu.s = q0;
-    q_nwu.v[0] = q1;
-    q_nwu.v[1] = q2;
-    q_nwu.v[2] = q3;                // Current quaternion in madgwick frame
+    q_nwu.v[X] = q1;
+    q_nwu.v[Y] = q2;
+    q_nwu.v[Z] = q3;                // Current quaternion in madgwick frame
 
     quat_t q_nwu2ned;
     q_nwu2ned.s = 0;
-    q_nwu2ned.v[0] = 1.0f;
-    q_nwu2ned.v[1] =  0.0f;
-    q_nwu2ned.v[2] =  0.0f;       // Quaternion used for transformation
+    q_nwu2ned.v[X] = 1.0f;
+    q_nwu2ned.v[Y] =  0.0f;
+    q_nwu2ned.v[Z] =  0.0f;       // Quaternion used for transformation
 
     quat_t qinv, qtmp;                                      // Transformation q_rot^(-1) * q * q_rot
     qinv = quaternions_inverse(q_nwu2ned);

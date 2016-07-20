@@ -81,6 +81,7 @@
 
 #include "simulation/simulation.hpp"
 
+#include "sensing/ahrs.hpp"
 #include "sensing/ahrs_ekf.hpp"
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
@@ -92,7 +93,6 @@
 
 extern "C"
 {
-#include "sensing/ahrs.hpp"
 #include "sensing/altitude.h"
 #include "util/print_util.h"
 }

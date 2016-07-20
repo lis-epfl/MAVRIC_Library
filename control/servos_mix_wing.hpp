@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_WING_H_
-#define SERVOS_MIX_WING_H_
+#ifndef SERVOS_MIX_WING_HPP_
+#define SERVOS_MIX_WING_HPP_
 
 #include "drivers/servo.hpp"
 #include "util/constants.hpp"

@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MANUAL_CONTROL_H_
-#define MANUAL_CONTROL_H_
+#ifndef MANUAL_CONTROL_HPP_
+#define MANUAL_CONTROL_HPP_
 
 #include "communication/remote.hpp"
 #include "control/joystick.hpp"
@@ -288,4 +288,4 @@ Manual_control::conf_t Manual_control::default_config()
 
 
 
-#endif /* MANUAL_CONTROL_H_ */
+#endif /* MANUAL_CONTROL_HPP_ */

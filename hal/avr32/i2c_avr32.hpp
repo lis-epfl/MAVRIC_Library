@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef I2C_AVR32_H_
-#define I2C_AVR32_H_
+#ifndef I2C_AVR32_HPP_
+#define I2C_AVR32_HPP_
 
 #include "hal/common/i2c.hpp"
 
@@ -139,4 +139,4 @@ private:
 };
 
 
-#endif /* I2C_AVR32_H_ */
+#endif /* I2C_AVR32_HPP_ */

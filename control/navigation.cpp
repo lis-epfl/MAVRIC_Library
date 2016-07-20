@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file navigation.c
+ * \file navigation.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -289,7 +289,7 @@ void Navigation::run()
                     {
                         set_speed_command(rel_pos);
                     }
-                    
+
                 }
                 else
                 {

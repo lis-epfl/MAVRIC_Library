@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file scheduler_telemetry.h
+ * \file scheduler_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef SCHEDULER_TELEMETRY_H_
-#define SCHEDULER_TELEMETRY_H_
+#ifndef SCHEDULER_TELEMETRY_HPP_
+#define SCHEDULER_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "runtime/scheduler.hpp"
@@ -67,4 +67,4 @@ void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink
  */
 void scheduler_telemetry_send_rt_stats_all(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* SCHEDULER_TELEMETRY_H_ */
+#endif /* SCHEDULER_TELEMETRY_HPP_ */

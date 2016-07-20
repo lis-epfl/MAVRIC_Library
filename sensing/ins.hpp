@@ -129,37 +129,10 @@ public:
      *
      * \return    origin
      */
-    const global_position_t& origin(void) const;
+    static const global_position_t& origin(void);
 
 protected:
     static global_position_t origin_;
 };
-
-
-/**
- * \brief Telemetry
- *
- * TODO: move to separate file
- */
-static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
-{
-    float cov[45];
-    mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
-                                            mavlink_stream->compid(),
-                                            msg,
-                                            time_keeper_get_ms(),
-                                            time_keeper_get_ms(),
-                                            0,
-                                            ins->position_lf()[0],
-                                            ins->position_lf()[1],
-                                            ins->position_lf()[2],
-                                            ins->velocity_lf()[0],
-                                            ins->velocity_lf()[1],
-                                            ins->velocity_lf()[2],
-                                            0.0f,
-                                            0.0f,
-                                            ins->absolute_altitude(),
-                                            cov);
-}
 
 #endif /* INS_HPP_ */

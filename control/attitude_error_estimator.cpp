@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file attitude_error_estimator.c
+ * \file attitude_error_estimator.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur

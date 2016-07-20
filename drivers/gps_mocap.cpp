@@ -42,10 +42,10 @@
 
 #include "drivers/gps_mocap.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "util/constants.hpp"
 #include "util/quick_trig.h"
 }
 

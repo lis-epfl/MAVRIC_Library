@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef GIMBAL_CONTROLLER_H_
-#define GIMBAL_CONTROLLER_H_
+#ifndef GIMBAL_CONTROLLER_HPP_
+#define GIMBAL_CONTROLLER_HPP_
 
 #include "control/pid_controller.hpp"
 #include "drivers/servo.hpp"
@@ -139,4 +139,4 @@ static inline gimbal_controller_conf_t gimbal_controller_default_config()
     return conf;
 };
 
-#endif /* GIMBAL_CONTROLLER_H_ */
+#endif /* GIMBAL_CONTROLLER_HPP_ */

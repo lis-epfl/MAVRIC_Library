@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef STABILISATION_WING_H_
-#define STABILISATION_WING_H_
+#ifndef STABILISATION_WING_HPP_
+#define STABILISATION_WING_HPP_
 
 #include "control/navigation.hpp"
 #include "control/stabilisation.hpp"
@@ -135,4 +135,4 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const sta
 void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wing);
 
 
-#endif /* STABILISATION_WING_H_ */
+#endif /* STABILISATION_WING_HPP_ */

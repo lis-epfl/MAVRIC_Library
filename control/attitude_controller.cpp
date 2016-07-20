@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file attitude_controller.c
+ * \file attitude_controller.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur

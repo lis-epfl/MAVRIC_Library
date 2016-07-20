@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file navigation.h
+ * \file navigation.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef NAVIGATION_H_
-#define NAVIGATION_H_
+#ifndef NAVIGATION_HPP_
+#define NAVIGATION_HPP_
 
 #include <cstdbool>
 
@@ -147,12 +147,12 @@ public:
     /**
      * \brief   Constructor
      *
-     * \param   controls_nav            The pointer to the control structure
-     * \param   qe                      The pointer to the attitude quaternion structure
-     * \param   ins                     The pointer to the position estimation structure
-     * \param   state                   The pointer to the state structure
-     * \param   mavlink_stream          The pointer to the MAVLink_stream structure
-     * \param   nav_config              The pointer to the config structure
+     * \param   controls_nav            Reference to the control structure
+     * \param   qe                      Reference to the attitude quaternion structure
+     * \param   ins                     Reference to the Inertial navigation system
+     * \param   state                   Reference to the state structure
+     * \param   mavlink_stream          Reference to the MAVLink_stream structure
+     * \param   nav_config              Reference to the config structure
      */
     Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config = default_config());
 
@@ -212,9 +212,9 @@ private:
     uint32_t last_update;                               ///< The time of the last navigation update in ms
     uint32_t loop_count;                                ///< A counter for sending MAVLink messages at a lower rate than the function
     control_command_t& controls_nav;                    ///< Reference to the navigation control structure
-    const INS& ins;                                     ///< The pointer to the position estimation structure
-    State& state;                                       ///< The pointer to the state structure
-    const Mavlink_stream& mavlink_stream;               ///< The pointer to the MAVLink stream structure
+    const INS& ins;                                     ///< Reference to the inertial navigation system
+    State& state;                                       ///< Reference to the state
+    const Mavlink_stream& mavlink_stream;               ///< Reference to the MAVLink stream
 
     /**
      * \brief                   Sets the Robot speed to reach waypoint
@@ -311,4 +311,4 @@ Navigation::conf_t Navigation::default_wing_config()
     return conf;
 };
 
-#endif // NAVIGATION_H_
+#endif // NAVIGATION_HPP_

@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#ifndef FILE_FAT_FS_H_
-#define FILE_FAT_FS_H_
+#ifndef FILE_FAT_FS_HPP_
+#define FILE_FAT_FS_HPP_
 
 #include "hal/common/file.hpp"
 #include "hal/avr32/fat_fs_mounting.hpp"
@@ -165,4 +165,4 @@ public:
     bool flush();
 };
 
-#endif /* FILE_FAT_FS_H_ */
+#endif /* FILE_FAT_FS_HPP_ */

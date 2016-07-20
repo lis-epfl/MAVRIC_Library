@@ -42,8 +42,8 @@
  ******************************************************************************/
 
 
-#ifndef PWM_SERVOS_AVR32_H_
-#define PWM_SERVOS_AVR32_H_
+#ifndef PWM_SERVOS_AVR32_HPP_
+#define PWM_SERVOS_AVR32_HPP_
 
 #include <cstdbool>
 #include <cstdint>
@@ -106,4 +106,4 @@ private:
     static uint32_t period_us_[8];
 };
 
-#endif /* PWM_AVR32_H_ */
+#endif /* PWM_AVR32_HPP_ */

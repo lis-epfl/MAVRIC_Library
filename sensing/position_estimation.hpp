@@ -40,24 +40,20 @@
  ******************************************************************************/
 
 
-#ifndef POSITION_ESTIMATION_H__
-#define POSITION_ESTIMATION_H__
+#ifndef POSITION_ESTIMATION_HPP__
+#define POSITION_ESTIMATION_HPP__
 
+#include <cstdbool>
 
 #include "communication/state.hpp"
 #include "drivers/gps.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
 
+#include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
-#include <cstdbool>
-#include "sensing/ahrs.hpp"
-}
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f
@@ -115,6 +111,7 @@ public:
     /**
      * \brief   Position estimation update step, performing position estimation then position correction (function to be used)
      *
+     * \return Success
      */
     bool update(void);
 
@@ -271,4 +268,4 @@ private:
     void fence_control();
 
 };
-#endif // POSITION_ESTIMATION_H__
+#endif // POSITION_ESTIMATION_HPP__

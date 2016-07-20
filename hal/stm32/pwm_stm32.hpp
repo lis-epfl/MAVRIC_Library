@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef PWM_SERVOS_STM32_H_
-#define PWM_SERVOS_STM32_H_
+#ifndef PWM_SERVOS_STM32_HPP_
+#define PWM_SERVOS_STM32_HPP_
 
 #include <cstdbool>
 #include <cstdint>
@@ -138,4 +138,4 @@ private:
     uint32_t duty_cyle_;    ///< pulse length in us
 };
 
-#endif /* PWM_STM32_H_ */
+#endif /* PWM_STM32_HPP_ */
