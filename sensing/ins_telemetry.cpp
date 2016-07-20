@@ -41,7 +41,7 @@
 
 #include "sensing/ins_telemetry.hpp"
 
-static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     float cov[45];
     mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),

@@ -55,6 +55,6 @@
  * \param   mavlink_stream          The pointer to the MAVLink stream
  * \param   msg                     The pointer to the MAVLink message
  */
-static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* INS_TELEMETRY_HPP_ */
