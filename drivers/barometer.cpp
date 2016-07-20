@@ -49,8 +49,8 @@ extern "C"
 }
 
 Barometer::Barometer() :
-	has_been_read_(false),
-	has_been_calibrated_(false)
+    has_been_read_(false),
+    has_been_calibrated_(false)
 {
 
 }
@@ -86,17 +86,17 @@ const float& Barometer::temperature(void) const
 
 bool Barometer::has_been_calibrated() const
 {
-	return has_been_calibrated_;
+    return has_been_calibrated_;
 }
 
 void Barometer::calibrate_bias(float current_altitude_gf)
 {
-	if (has_been_read_)
-	{
-		altitude_bias_gf_ = altitude_filtered - current_altitude_gf;
-    	altitude_gf_ = current_altitude_gf;
-    	has_been_calibrated_ = true;
-	}
+    if (has_been_read_)
+    {
+        altitude_bias_gf_ = altitude_filtered - current_altitude_gf;
+        altitude_gf_ = current_altitude_gf;
+        has_been_calibrated_ = true;
+    }
 }
 
 
