@@ -59,31 +59,19 @@ class Waypoint
 public:
     /**
      * \brief   Creates a blank waypoint
-     *
-     * SHOULD ONLY BE USED FOR CONSTRUCTORS DONE BY COMPILER FOR TEMPORARY
-     * VARIABLES. USE ONE OF THE OTHER CONSTRUCTORS
      */
     Waypoint();
 
     /**
-     * \brief   Creates a blank waypoint
-     *
-     * \param   position_estimation     The reference to the position estimation
-     */
-    Waypoint(const Position_estimation* position_estimation);
-
-    /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   position_estimation     The reference to the position estimation
      * \param   packet                  The received packet for creating a waypoint
      */
-    Waypoint(const Position_estimation* position_estimation, mavlink_mission_item_t& packet);
+    Waypoint(mavlink_mission_item_t& packet);
 
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   position_estimation The reference to the position estimation
      * \param   frame               The reference frame of the waypoint
      * \param   command             The MAV_CMD_NAV id of the waypoint
      * \param   autocontinue        Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
@@ -95,8 +83,7 @@ public:
      * \param   y                   The value on the y axis (depends on the reference frame)
      * \param   z                   The value on the z axis (depends on the reference frame)
      */
-    Waypoint(   const Position_estimation* position_estimation,
-                uint8_t frame,
+    Waypoint(   uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
                 float param1,
@@ -110,7 +97,6 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   position_estimation The reference to the position estimation
      * \param   frame               The reference frame of the waypoint
      * \param   command             The MAV_CMD_NAV id of the waypoint
      * \param   autocontinue        Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
@@ -125,8 +111,7 @@ public:
      * \param   loiter_time         The time to loiter at the waypoint
      * \param   dubin               The dubin structure for the waypoint
      */
-    Waypoint(   const Position_estimation* position_estimation,
-                uint8_t frame,
+    Waypoint(   uint8_t frame,
                 uint16_t command,
                 uint8_t autocontinue,
                 float param1,
@@ -308,8 +293,6 @@ protected:
     float radius_;                                              ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
     float loiter_time_;                                         ///< The loiter time at the waypoint
     dubin_t dubin_;                                             ///< The Dubin structure
-
-    const Position_estimation* position_estimation_;            ///< The position estimation
 
     /**
      * \brief   Determines the global position of the waypoint based on the frame

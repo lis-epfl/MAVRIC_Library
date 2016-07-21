@@ -215,7 +215,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
     {
         waypoint_handler->start_timeout_ = time_keeper_get_ms();
 
-        Waypoint new_waypoint(&waypoint_handler->position_estimation_, packet);
+        Waypoint new_waypoint(packet);
 
         print_util_dbg_print("New waypoint received ");
         //print_util_dbg_print("(");
@@ -491,7 +491,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
 {
     for (int i = 0; i < MAX_WAYPOINTS; i++)
     {
-        waypoint_list_[i] = Waypoint(&position_estimation_);
+        waypoint_list_[i] = Waypoint();
     }
 }
 
@@ -591,8 +591,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     float y,
     float z
     */
-    Waypoint waypoint(  &position_estimation_,
-                        MAV_FRAME_LOCAL_NED,
+    Waypoint waypoint(  MAV_FRAME_LOCAL_NED,
                         MAV_CMD_NAV_WAYPOINT,
                         0,
                         10.0f,
@@ -727,7 +726,8 @@ void Mavlink_waypoint_handler::update_current_waypoint(dubin_state_t* dubin_stat
 {
     if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
     {
-        waypoint_list_[current_waypoint_index_].calculate_waypoint_local_structure(dubin_state);
+        //waypoint_list_[current_waypoint_index_].update();
+        *dubin_state = DUBIN_INIT;
 
         print_util_dbg_print("Waypoint Nr");
         print_util_dbg_print_num(current_waypoint_index_, 10);

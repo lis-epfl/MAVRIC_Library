@@ -128,10 +128,8 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
         print_util_dbg_print("All vehicles: Navigating to next waypoint.\r\n");
 
         mission_planner->navigation_.set_start_wpt_time();
-
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
-
-        mission_planner->waypoint_handler_.current_waypoint().calculate_waypoint_local_structure(&mission_planner->navigation_.dubin_state);
+        mission_planner->navigation_.dubin_state = DUBIN_INIT;
 
         mavlink_message_t msg;
         mavlink_msg_mission_current_pack(mission_planner->mavlink_stream_.sysid(),
@@ -401,13 +399,9 @@ bool Mission_planner::init()
     bool init_success = true;
 
     // Create blank critical waypoint
-    local_position_t local_pos;
-    local_pos.heading = 0.0f;
-    local_pos.origin = position_estimation_.local_position.origin;
     dubin_t dub;
     for (int i = 0; i < 3; i++)
     {
-        local_pos.pos[i] = 0.0f;
         dub.circle_center_1[i] = 0.0f;
         dub.tangent_point_1[i] = 0.0f;
         dub.circle_center_2[i] = 0.0f;
@@ -417,7 +411,7 @@ bool Mission_planner::init()
     dub.sense_1 = 0;
     dub.radius_1 = 0;
     dub.length = 0.0f;
-    waypoint_critical_coordinates_ = Waypoint(&mavlink_stream_, MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, local_pos, 2.0f, 0.0f, dub);
+    waypoint_critical_coordinates_ = Waypoint(MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f, dub);
 
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;

@@ -146,7 +146,7 @@ void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t 
             break;
 
         case MAV_FRAME_LOCAL_ENU:
-        {
+        {/*
             if (position_estimation_ != NULL)
             {
                 local_position_t pos = coord_conventions_global_to_local_position(wpt_position_, position_estimation_->local_position.origin);
@@ -159,12 +159,12 @@ void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t 
                 x = 0.0;
                 y = 0.0;
                 z = 0.0;
-            }
+            } TODO */
         }
             break;
 
         case MAV_FRAME_LOCAL_NED:
-        {
+        {/*
             if (position_estimation_ != NULL)
             {
                 local_position_t pos = coord_conventions_global_to_local_position(wpt_position_, position_estimation_->local_position.origin);
@@ -177,7 +177,7 @@ void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t 
                 x = 0.0;
                 y = 0.0;
                 z = 0.0;
-            }
+            } TODO */
         }
             break;
 
@@ -188,7 +188,7 @@ void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t 
 
         case MAV_FRAME_GLOBAL_TERRAIN_ALT_INT:
         case MAV_FRAME_GLOBAL_RELATIVE_ALT_INT:
-            if (position_estimation_ != NULL)
+            /*if (position_estimation_ != NULL)
             {
                 // Convert from int to degrees
                 x = wpt_position_.longitude * 10000000.0f;
@@ -200,12 +200,12 @@ void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t 
                 x = 0.0;
                 y = 0.0;
                 z = 0.0;
-            }
+            } TODO */
             break;
 
         case MAV_FRAME_GLOBAL_TERRAIN_ALT:
         case MAV_FRAME_GLOBAL_RELATIVE_ALT:
-            if (position_estimation_ != NULL)
+            /*if (position_estimation_ != NULL)
             {
                 x = wpt_position_.longitude;
                 y = wpt_position_.latitude;
@@ -216,7 +216,7 @@ void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t 
                 x = 0.0;
                 y = 0.0;
                 z = 0.0;
-            }
+            } TODO */
             break;
     }
 }
@@ -225,8 +225,6 @@ void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t 
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-/* SHOULD ONLY BE USED FOR CONSTRUCTORS DONE BY COMPILER FOR TEMPORARY
-   VARIABLES. USE ONE OF THE OTHER CONSTRUCTORS */
 Waypoint::Waypoint() :
             frame_(MAV_FRAME_LOCAL_NED),
             command_(MAV_CMD_NAV_WAYPOINT),
@@ -236,30 +234,11 @@ Waypoint::Waypoint() :
             param3_(0.0f),
             param4_(0.0f),
             radius_(0.0f),
-            loiter_time_(0.0f),
-            position_estimation_(NULL)
+            loiter_time_(0.0f)
 {
-    /* SHOULD ONLY BE USED FOR CONSTRUCTORS DONE BY COMPILER FOR TEMPORARY
-       VARIABLES. USE ONE OF THE OTHER CONSTRUCTORS */
 }
 
-Waypoint::Waypoint(const Position_estimation* position_estimation) :
-            frame_(MAV_FRAME_LOCAL_NED),
-            command_(MAV_CMD_NAV_WAYPOINT),
-            autocontinue_(0),
-            param1_(0.0f),
-            param2_(0.0f),
-            param3_(0.0f),
-            param4_(0.0f),
-            radius_(0.0f),
-            loiter_time_(0.0f),
-            position_estimation_(position_estimation)
-{
-    wpt_position_ = get_global_position(frame_, 0.0, 0.0, 0.0, maths_deg_to_rad(param4_), position_estimation->local_position.origin);
-}
-
-Waypoint::Waypoint(const Position_estimation* position_estimation, mavlink_mission_item_t& packet):
-            position_estimation_(position_estimation)
+Waypoint::Waypoint(mavlink_mission_item_t& packet)
 {
     command_ = packet.command;
 
@@ -275,14 +254,13 @@ Waypoint::Waypoint(const Position_estimation* position_estimation, mavlink_missi
     param3_ = packet.param3;
     param4_ = packet.param4;
 
-    wpt_position_ = get_global_position(frame_, x, y, z, maths_deg_to_rad(packet.param4), position_estimation->local_position.origin);
+    //wpt_position_ = get_global_position(frame_, x, y, z, maths_deg_to_rad(packet.param4), position_estimation->local_position.origin);
     radius_ = param2_;
     loiter_time_ = param1_;
     // dubin_ = ???;
 }
 
-Waypoint::Waypoint( const Position_estimation* position_estimation,
-                    uint8_t frame,
+Waypoint::Waypoint( uint8_t frame,
                     uint16_t command,
                     uint8_t autocontinue,
                     float param1,
@@ -300,15 +278,13 @@ Waypoint::Waypoint( const Position_estimation* position_estimation,
             param3_(param3),
             param4_(param4),
             radius_(param2),
-            loiter_time_(param1),
-            position_estimation_(position_estimation)
+            loiter_time_(param1)
 {
-    wpt_position_ = get_global_position(frame, x, y, z, maths_deg_to_rad(param4), position_estimation->local_position.origin);
+    //wpt_position_ = get_global_position(frame, x, y, z, maths_deg_to_rad(param4), position_estimation->local_position.origin);
     // dubin_ = ???;
 }
 
-Waypoint::Waypoint( const Position_estimation* position_estimation,
-                    uint8_t frame,
+Waypoint::Waypoint( uint8_t frame,
                     uint16_t command,
                     uint8_t autocontinue,
                     float param1,
@@ -330,10 +306,9 @@ Waypoint::Waypoint( const Position_estimation* position_estimation,
             param4_(param4),
             radius_(radius),
             loiter_time_(loiter_time),
-            dubin_(dubin),
-            position_estimation_(position_estimation)
+            dubin_(dubin)
 {
-    wpt_position_ = get_global_position(frame, x, y, z, maths_deg_to_rad(param4), position_estimation->local_position.origin);
+    //wpt_position_ = get_global_position(frame, x, y, z, maths_deg_to_rad(param4), position_estimation->local_position.origin);
 }
 
 void Waypoint::send(const Mavlink_stream& mavlink_stream, uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current)
@@ -457,21 +432,18 @@ local_position_t Waypoint::local_pos() const
     pos.origin.altitude = 0.0f;
     pos.origin.heading = 0.0f;
 
-    if (position_estimation_ != NULL)
-    {
-        // These are outputs
-        double x = 0.0;
-        double y = 0.0;
-        double z = 0.0;
-        get_waypoint_parameters(x, y, z, MAV_FRAME_LOCAL_NED);
+    // These are outputs
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
+    get_waypoint_parameters(x, y, z, MAV_FRAME_LOCAL_NED);
 
 
-        pos.pos[X] = x;
-        pos.pos[Y] = y;
-        pos.pos[Z] = z;
-        pos.heading = param4_;
-        pos.origin = position_estimation_->local_position.origin;
-    }
+    pos.pos[X] = x;
+    pos.pos[Y] = y;
+    pos.pos[Z] = z;
+    pos.heading = param4_;
+    // pos.origin = position_estimation_->local_position.origin; TODO
 
     return pos;
 }
