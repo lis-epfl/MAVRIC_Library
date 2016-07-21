@@ -344,14 +344,6 @@ void Waypoint::send(const Mavlink_stream& mavlink_stream, uint32_t sysid, mavlin
     mavlink_stream.send(&_msg);
 }
 
-void Waypoint::calculate_waypoint_local_structure(dubin_state_t* dubin_state)
-{
-    // Need to update coordinates for body frame???
-
-    // Initialize dubin
-    *dubin_state = DUBIN_INIT;
-}
-
 uint8_t Waypoint::frame() const
 {
     return frame_;

@@ -126,13 +126,6 @@ public:
                 dubin_t dubin);
 
     /**
-     * \brief   Calculates the information required for waypoint local structure
-     *
-     * \param   dubin_state             The pointer to the Dubin state
-     */
-    void calculate_waypoint_local_structure(dubin_state_t* dubin_state);
-
-    /**
      * \brief   Sends a given waypoint via a MAVLink message
      *
      * \param   mavlink_stream          The mavlink stream to send the message through
