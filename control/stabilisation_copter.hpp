@@ -89,6 +89,7 @@ typedef struct
     const Position_estimation* pos_est;                         ///< The pointer to the position estimation structure
     torque_command_t* torque_command;                           ///< The pointer to the torque command structure
     thrust_command_t* thrust_command;                           ///< The pointer to the thrust command structure
+    float w_;													// coefficient for yaw following
 } stabilisation_copter_t;
 
 /**

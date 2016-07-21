@@ -123,11 +123,11 @@ bool Gimbal_controller::update(Gimbal_controller *gimbal_controller)
 
 	//compute the angle according to the velocity
 	att_mimick_plane.rpy[0] = 0.0f;
-	att_mimick_plane.rpy[1] = 0.0f; //-maths_rad_to_deg(atan2(semilocal_vel[2], semilocal_vel[0])); // - maths_rad_to_deg(aero_attitude.rpy[PITCH]);
+	att_mimick_plane.rpy[1] = -maths_rad_to_deg(atan2(semilocal_vel[2], semilocal_vel[0])); // - maths_rad_to_deg(aero_attitude.rpy[PITCH]);
 	att_mimick_plane.rpy[2] = 0.0f;
 
 	//apply the angle correction only if the quad as a given forward velocity
-	if(semilocal_vel[0] < 0.3f) //m/s
+	if(semilocal_vel[0] < 1.0f) //m/s
 		att_mimick_plane.rpy[1] = 0.0f;
 
 	/*print_util_dbg_print("semilocal_vel\r\n");

@@ -78,6 +78,8 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
 
     stabilisation_copter->thrust_hover_point = stabiliser_conf.thrust_hover_point;
 
+    stabilisation_copter->w_ = 0.6f;
+
     return init_success;
 }
 
@@ -173,9 +175,9 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
                     rel_heading_coordinated = atan2(stabilisation_copter->pos_est->vel_bf[Y], stabilisation_copter->pos_est->vel_bf[X]);
                 }
 
-                float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
+                //float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
                 //w = 0.3f;
-                input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
+                input.rpy[YAW] = (1.0f - stabilisation_copter->w_) * input.rpy[YAW] + stabilisation_copter->w_ * rel_heading_coordinated;
             }
 
             rpyt_errors[YAW] = input.rpy[YAW];
