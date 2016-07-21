@@ -341,6 +341,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     controls_nav.control_mode = VELOCITY_COMMAND_MODE;
     controls_nav.yaw_mode = YAW_ABSOLUTE;
 
+    goal = Waypoint();
     local_position_t new_goal_local_pos;
     new_goal_local_pos.pos[X] = 0.0f;
     new_goal_local_pos.pos[Y] = 0.0f;
