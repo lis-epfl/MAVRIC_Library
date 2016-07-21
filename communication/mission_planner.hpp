@@ -148,9 +148,6 @@ public:
      */
     static inline conf_t default_config();
 
-
-    Waypoint waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
-
     void set_hold_waypoint_set(bool hold_waypoint_set);
     bool hold_waypoint_set() const;
     Mav_mode last_mode() const;

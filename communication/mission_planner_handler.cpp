@@ -54,28 +54,6 @@ extern "C"
 bool Mission_planner_handler::hold_waypoint_set_ = false;
 Waypoint Mission_planner_handler::hold_waypoint_ = Waypoint();
 
-void Mission_planner_handler::reset_hold_waypoint()
-{
-    hold_waypoint_set_ = false;
-}
-
-bool Mission_planner_handler::hold_waypoint_set() const
-{
-    return hold_waypoint_set_;
-}
-
-void Mission_planner_handler::set_hold_waypoint(const local_position_t hold_position)
-{
-    hold_waypoint_.set_local_pos(hold_position);
-    hold_waypoint_set_ = true;
-}
-
-void Mission_planner_handler::set_hold_waypoint(const Waypoint wpt)
-{
-    hold_waypoint_ = wpt;
-    hold_waypoint_set_ = true;
-}
-
 Waypoint& Mission_planner_handler::hold_waypoint()
 {
     if (!hold_waypoint_set_)
@@ -95,4 +73,26 @@ Mission_planner_handler::Mission_planner_handler(const Position_estimation& posi
         position_estimation_(position_estimation)
 {
 
+}
+
+void Mission_planner_handler::reset_hold_waypoint()
+{
+    hold_waypoint_set_ = false;
+}
+
+bool Mission_planner_handler::hold_waypoint_set()
+{
+    return hold_waypoint_set_;
+}
+
+void Mission_planner_handler::set_hold_waypoint(const local_position_t hold_position)
+{
+    hold_waypoint_.set_local_pos(hold_position);
+    hold_waypoint_set_ = true;
+}
+
+void Mission_planner_handler::set_hold_waypoint(const Waypoint wpt)
+{
+    hold_waypoint_ = wpt;
+    hold_waypoint_set_ = true;
 }

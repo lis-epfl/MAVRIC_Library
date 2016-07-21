@@ -73,36 +73,36 @@ public:
 
     virtual bool init() = 0;
 
-protected:
     /**
      * \brief   Resets the hold position waypoint
      *
      * If the drone tries to access the hold position waypoint and it has not
      * been set, the waypoint will be set to the current position estimation.
      */
-    void reset_hold_waypoint();
+    static void reset_hold_waypoint();
 
     /**
      * \brief   Gets the flag stating if the hold waypoint has been set
      *
      * \return  hold_waypoint_set_
      */
-    bool hold_waypoint_set() const;
+    static bool hold_waypoint_set();
 
     /**
      * \brief   Sets the hold waypoint to the hold position
      *
      * \param   hold_position   The new desired hold position
      */
-    void set_hold_waypoint(const local_position_t hold_position);
+    static void set_hold_waypoint(const local_position_t hold_position);
 
     /**
      * \brief   Sets the hold waypoint to the inputted waypoint
      *
      * \param   wpt     The new waypoint
      */
-    void set_hold_waypoint(const Waypoint wpt);
+    static void set_hold_waypoint(const Waypoint wpt);
 
+protected:
     /**
      * \brief   Gets the hold waypoint
      *

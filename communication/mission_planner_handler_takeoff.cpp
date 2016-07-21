@@ -77,11 +77,9 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
         aero_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
         takeoff_pos.heading = aero_attitude.rpy[2];
 
-        mission_planner.waypoint_hold_coordinates.set_local_pos(takeoff_pos);
+        set_hold_waypoint(takeoff_pos);
 
-        navigation_.dist2wp_sqr = mission_planner.waypoint_hold_coordinates.local_pos().pos[Z] * mission_planner.waypoint_hold_coordinates.local_pos().pos[Z];
-
-        mission_planner.set_hold_waypoint_set(true);
+        navigation_.dist2wp_sqr = hold_waypoint().local_pos().pos[Z] * hold_waypoint().local_pos().pos[Z];
     }
 
     if (!mission_planner.has_mode_change())

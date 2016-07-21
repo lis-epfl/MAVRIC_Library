@@ -337,7 +337,7 @@ void Mission_planner::critical_handler()
                 if (state_.out_of_fence_1)
                 {
                     //stop auto navigation_, to prevent going out of fence 1 again
-                    waypoint_hold_coordinates = waypoint_critical_coordinates_;
+                    //waypoint_hold_coordinates = waypoint_critical_coordinates_; TODO
                     navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
                     stop_there_handler_.stopping_handler(*this);
                     state_.out_of_fence_1 = false;
@@ -370,7 +370,6 @@ void Mission_planner::critical_handler()
 //------------------------------------------------------------------------------
 
 Mission_planner::Mission_planner(Position_estimation& position_estimation, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_planner_handler_on_ground& on_ground_handler, Mission_planner_handler_takeoff& takeoff_handler, Mission_planner_handler_landing& landing_handler, Mission_planner_handler_hold_position& hold_position_handler, Mission_planner_handler_stop_on_position& stop_on_position_handler, Mission_planner_handler_stop_there& stop_there_handler, Mission_planner_handler_navigating& navigating_handler, Mission_planner_handler_manual_control& manual_control_handler, Mavlink_waypoint_handler& waypoint_handler, conf_t config):
-            waypoint_hold_coordinates(),
             on_ground_handler_(on_ground_handler),
             takeoff_handler_(takeoff_handler),
             landing_handler_(landing_handler),
