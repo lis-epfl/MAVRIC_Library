@@ -44,6 +44,10 @@
 
 #include "hal/linux/serial_udp.hpp"
 
+ #ifndef FASYNC
+ #define FASYNC _FASYNC
+ #endif
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
