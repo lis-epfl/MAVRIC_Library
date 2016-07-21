@@ -64,14 +64,14 @@ extern "C"
 
 
 
-LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):
+LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, State_display& state_display, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
     sonar(sonar),
     serial_mavlink(serial_mavlink),
     satellite(satellite),
-    led(led),
+    state_display_(state_display),
     file_flash(file_flash),
     battery(battery),
     servo_0(servo_0),
@@ -91,7 +91,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
-    state_machine(state, position_estimation, imu, ahrs, manual_control),
+    state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(mavlink_communication.sysid()),
@@ -180,7 +180,8 @@ bool LEQuad::init_state(void)
 
     // Task
     ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);
-    ret &= scheduler.add_task(500000, (Scheduler_task::task_function_t)&task_led_toggle,       (Scheduler_task::task_argument_t)&led, Scheduler_task::PRIORITY_LOW);
+    // Leds blinks at 1, 3 and 6Hz, then smallest half period is 83333us
+    ret &= scheduler.add_task( 83333, (Scheduler_task::task_function_t)&task_state_display_update, (Scheduler_task::task_argument_t)&state_display_);
 
     return ret;
 }

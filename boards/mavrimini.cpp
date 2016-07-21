@@ -79,6 +79,7 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     red_led_gpio(config.red_led_gpio_config),
     green_led(green_led_gpio),
     red_led(red_led_gpio),
+    state_display_mavrimini_(green_led, red_led),
     file_flash(),
     serial_1(config.serial_1_config),
     serial_2(config.serial_2_config),

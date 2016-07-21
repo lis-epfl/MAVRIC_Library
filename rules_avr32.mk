@@ -3,6 +3,8 @@ CXXFLAGS += -D__MAVRIC_ENDIAN_BIG__
 
 LIB_SRCS += boards/megafly_rev4/megafly_rev4.cpp
 
+LIB_SRCS += drivers/state_display_megafly_rev4.cpp
+
 LIB_SRCS += hal/avr32/adc_avr32.cpp
 LIB_SRCS += hal/avr32/adc_int.c
 LIB_SRCS += hal/avr32/analog_monitor.c
