@@ -44,6 +44,11 @@
 
 #include "hal/linux/serial_udp.hpp"
 
+//FASYNC is an existing flag on linux, missing in cygwin
+#ifndef FASYNC
+#define FASYNC _FASYNC
+#endif
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
