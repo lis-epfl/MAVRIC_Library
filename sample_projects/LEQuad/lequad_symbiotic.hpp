@@ -102,6 +102,14 @@ public:
             File& file2,
             const conf_t& config = default_config());
 
+    //Fence configuration
+	float z_min;//[m]
+	float z_max;//[m]
+	float xy_max; //radius [m]
+	float dist_to_limit_lat; //[m]
+	float dist_to_limit_ver; //[m]
+	float _f_outside; //if 1, outside fence enabled, if 0, disabled
+
 protected:
 
     Gimbal_controller				gimbal_controller;			///< The class gimbal control
@@ -118,7 +126,7 @@ LEQuad_symbiotic::conf_t LEQuad_symbiotic::default_config(uint8_t sysid)
     conf.lequad_config = LEQuad::default_config(sysid);
     conf.gimbal_controller_config = Gimbal_controller::default_config();
 
-    conf.lequad_config.navigation_config.takeoff_altitude = -10.0f;
+    //conf.lequad_config.navigation_config.takeoff_altitude = -15.0f;
 
     return conf;
 };
