@@ -59,10 +59,12 @@ public:
     /**
      * \brief   Initialize the hold position mission planner handler
      *
+     * \param   position_estimation     The reference to the position estimation
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      */
-     Mission_planner_handler_hold_position( Navigation& navigation,
+     Mission_planner_handler_hold_position( const Position_estimation& position_estimation,
+                                            Navigation& navigation,
                                             State& state);
 
 

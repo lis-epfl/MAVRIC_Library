@@ -62,14 +62,12 @@ public:
     /**
      * \brief   Initialize the landing mission planner handler
      *
-     * \param   mission_planner         The reference to the mission planner
      * \param   position_estimation     The reference to the position estimator structure
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      * \param   message_handler         The reference to the mavlink message handler
      */
-     Mission_planner_handler_landing(   Mission_planner& mission_planner,
-                                        Position_estimation& position_estimation,
+     Mission_planner_handler_landing(   const Position_estimation& position_estimation,
                                         Navigation& navigation,
                                         State& state,
                                         Mavlink_message_handler& message_handler);
@@ -96,13 +94,9 @@ public:
     static mav_result_t set_auto_landing(Mission_planner_handler_landing* landing_handler, mavlink_command_long_t* packet);
 
 protected:
-    Mission_planner& mission_planner_;                          ///< The reference to the mission planner
-    Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
-    
-    bool auto_landing_next_state_;                              ///< Flag to change critical state in its dedicated state machine
 
     /**
      * \brief   Drives the auto-landing navigation behavior
@@ -111,6 +105,14 @@ protected:
      * handling the request.
      */
     void auto_landing_handler(Mission_planner& mission_planner);
+
+    void dubin_hold_init(local_position_t local_pos);
+
+private:
+    /**
+     * \brief   Handles the behavior changes
+     */
+    void set_behavior();
 };
 
 

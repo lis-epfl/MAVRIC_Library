@@ -60,11 +60,11 @@ public:
     /**
      * \brief   Initialize the stop there mission planner handler
      *
-     * \param   position_estimation     The pointer to the position estimator structure
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
+     * \param   position_estimation     The reference to the position estimator class
+     * \param   navigation              The reference to the navigation class
+     * \param   state                   The reference to the state class
      */
-     Mission_planner_handler_stop_there(    Position_estimation& position_estimation,
+     Mission_planner_handler_stop_there(    const Position_estimation& position_estimation,
                                             Navigation& navigation,
                                             State& state);
 
@@ -88,7 +88,6 @@ public:
     void stopping_handler(Mission_planner& mission_planner);
 
 protected:
-    Position_estimation& position_estimation_;                   ///< The reference to the position estimation structure
     Navigation& navigation_;                                     ///< The reference to the navigation structure
     State& state_;                                               ///< The reference to the state structure
 };

@@ -127,13 +127,6 @@ public:
     static bool update(Mission_planner* mission_planner);
 
     /**
-     * \brief   Initialise the position hold mode
-     *
-     * \param   local_pos               The position where the position will be held
-     */
-    void hold_init(local_position_t local_pos);
-
-    /**
      * \brief   Computes the state machine for the Dubin navigation type
      *
      * \param   waypoint_handler        The pointer to the waypoint handler structure
@@ -142,18 +135,11 @@ public:
     void dubin_state_machine(Waypoint* waypoint_next_);
 
     /**
-     * \brief   Initialise the position hold mode in Dubin navigation
+     * \brief   Check if the nav mode is not equal to the state mav mode
      *
-     * \param   local_pos               The position where the position will be held
+     * \return  False if the flag STABILISE, GUIDED and ARMED are equal, true otherwise
      */
-    void dubin_hold_init(local_position_t local_pos);
-
-    /**
-     * \brief   Check if the nav mode is equal to the state mav mode
-     *
-     * \return  True if the flag STABILISE, GUIDED and ARMED are equal, false otherwise
-     */
-    bool mode_change();
+    bool has_mode_change();
 
     /**
      * \brief   Default configuration

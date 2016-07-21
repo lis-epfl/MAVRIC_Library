@@ -52,9 +52,11 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   Navigation& navigation,
+Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   const Position_estimation& position_estimation,
+                                                                        Navigation& navigation,
                                                                         State& state,
                                                                         const Manual_control& manual_control):
+            Mission_planner_handler(position_estimation),
             navigation_(navigation),
             state_(state),
             manual_control_(manual_control)
@@ -76,7 +78,7 @@ void Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
     {
         if (!mode_local.is_manual())
         {
-            mission_planner.set_hold_waypoint_set(false);
+            reset_hold_waypoint();
             navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
         }
         else

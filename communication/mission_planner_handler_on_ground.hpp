@@ -60,11 +60,13 @@ public:
     /**
      * \brief   Initialize the on ground mission planner handler
      *
-     * \param   navigation              The pointer to the navigation structure
-     * \param   state                   The pointer to the state structure
-     * \param   manual_control          The pointer to the manual control structure
+     * \param   position_estimation     The reference to the position estimation class
+     * \param   navigation              The reference to the navigation class
+     * \param   state                   The reference to the state class
+     * \param   manual_control          The reference to the manual control class
      */
-     Mission_planner_handler_on_ground( Navigation& navigation,
+     Mission_planner_handler_on_ground( const Position_estimation& position_estimation,
+                                        Navigation& navigation,
                                         State& state,
                                         const Manual_control& manual_control);
 

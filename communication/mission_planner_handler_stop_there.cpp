@@ -57,10 +57,10 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_stop_there::Mission_planner_handler_stop_there( Position_estimation& position_estimation,
+Mission_planner_handler_stop_there::Mission_planner_handler_stop_there( const Position_estimation& position_estimation,
                                                                         Navigation& navigation,
                                                                         State& state):
-            position_estimation_(position_estimation),
+            Mission_planner_handler(position_estimation),
             navigation_(navigation),
             state_(state)
 {
@@ -79,10 +79,10 @@ void Mission_planner_handler_stop_there::handle(Mission_planner& mission_planner
     stopping_handler(mission_planner);
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        mission_planner.dubin_state_machine(&mission_planner.waypoint_hold_coordinates);
+        mission_planner.dubin_state_machine(&hold_waypoint());
     }
 
-    navigation_.goal = mission_planner.waypoint_hold_coordinates;
+    navigation_.goal = hold_waypoint();
 
     if (mode_local.is_manual())
     {
@@ -95,9 +95,10 @@ void Mission_planner_handler_stop_there::stopping_handler(Mission_planner& missi
     float dist2wp_sqr;
     float rel_pos[3];
 
-    rel_pos[X] = (float)(mission_planner.waypoint_hold_coordinates.local_pos().pos[X] - position_estimation_.local_position.pos[X]);
-    rel_pos[Y] = (float)(mission_planner.waypoint_hold_coordinates.local_pos().pos[Y] - position_estimation_.local_position.pos[Y]);
-    rel_pos[Z] = (float)(mission_planner.waypoint_hold_coordinates.local_pos().pos[Z] - position_estimation_.local_position.pos[Z]);
+    local_position_t local_pos = hold_waypoint().local_pos();
+    rel_pos[X] = (float)(local_pos.pos[X] - position_estimation_.local_position.pos[X]);
+    rel_pos[Y] = (float)(local_pos.pos[Y] - position_estimation_.local_position.pos[Y]);
+    rel_pos[Z] = (float)(local_pos.pos[Z] - position_estimation_.local_position.pos[Z]);
 
     dist2wp_sqr = vectors_norm_sqr(rel_pos);
     if (dist2wp_sqr < 25.0f)

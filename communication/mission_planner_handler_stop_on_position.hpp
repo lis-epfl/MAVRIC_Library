@@ -59,10 +59,12 @@ public:
     /**
      * \brief   Initialize the stop on position mission planner handler
      *
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
+     * \param   position_estimation     The reference to the position estimation class
+     * \param   navigation              The reference to the navigation class
+     * \param   state                   The reference to the state class
      */
-     Mission_planner_handler_stop_on_position(  Navigation& navigation,
+     Mission_planner_handler_stop_on_position(  const Position_estimation& position_estimation,
+                                                Navigation& navigation,
                                                 State& state);
 
 

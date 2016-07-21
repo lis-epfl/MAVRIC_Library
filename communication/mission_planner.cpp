@@ -631,96 +631,9 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
     }
 }
 
-void Mission_planner::hold_init(local_position_t local_pos)
+bool Mission_planner::has_mode_change()
 {
-    hold_waypoint_set_ = true;
-
-    waypoint_hold_coordinates.local_pos() = local_pos;
-
-    // New waypoint with minimal radius
-    waypoint_hold_coordinates.set_radius(navigation_.minimal_radius);
-    navigation_.dubin_state = DUBIN_INIT;
-
-    print_util_dbg_print("Position hold at: (");
-    print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[X], 10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Y], 10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Z], 10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.local_pos().heading * 180.0f / 3.14f), 10);
-    print_util_dbg_print(")\r\n");
-}
-
-void Mission_planner::dubin_hold_init(local_position_t local_pos)
-{
-    switch (navigation_.dubin_state)
-    {
-        case DUBIN_INIT:
-        case DUBIN_CIRCLE1:
-            // Staying on the waypoint
-            for (int i = 0; i < 3; ++i)
-            {
-                waypoint_hold_coordinates.dubin().circle_center_2[i] = navigation_.goal.dubin().circle_center_1[i];
-            }
-
-            waypoint_hold_coordinates.set_radius(navigation_.goal.dubin().radius_1);
-
-            navigation_.dubin_state = DUBIN_CIRCLE2;
-
-            print_util_dbg_print("DUBINCIRCLE1: Position hold at: (");
-            print_util_dbg_print_num(waypoint_hold_coordinates.dubin().circle_center_2[X],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_hold_coordinates.dubin().circle_center_2[Y],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_hold_coordinates.dubin().circle_center_2[Z],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.local_pos().heading*180.0f/3.14f),10);
-            print_util_dbg_print(")\r\n");
-        break;
-
-        case DUBIN_STRAIGHT:
-            navigation_.dubin_state = DUBIN_INIT;
-            waypoint_hold_coordinates.local_pos() = local_pos;
-
-            waypoint_hold_coordinates.set_loiter_time(0.0f);
-            waypoint_hold_coordinates.set_radius(navigation_.minimal_radius);
-
-            print_util_dbg_print("DUBINSTRAIGHT: Position hold at: (");
-            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[X],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Y],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Z],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.local_pos().heading*180.0f/3.14f),10);
-            print_util_dbg_print(")\r\n");
-        break;
-
-        case DUBIN_CIRCLE2:
-            // Staying on the waypoint
-            /*if (state_.nav_plan_active)
-            {
-                waypoint_hold_coordinates = navigation_.goal;
-            }*/
-            waypoint_hold_coordinates = navigation_.goal;
-
-            print_util_dbg_print("DUBIN_CIRCLE2: Position hold at: (");
-            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[X],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Y],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(waypoint_hold_coordinates.local_pos().pos[Z],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num((int32_t)(waypoint_hold_coordinates.local_pos().heading*180.0f/3.14f),10);
-            print_util_dbg_print(")\r\n");
-        break;
-    }
-}
-
-bool Mission_planner::mode_change()
-{
-    return state_.mav_mode().ctrl_mode() == last_mode_.ctrl_mode();
+    return state_.mav_mode().ctrl_mode() != last_mode_.ctrl_mode();
 }
 
 void Mission_planner::set_hold_waypoint_set(bool hold_waypoint_set)

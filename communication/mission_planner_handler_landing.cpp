@@ -53,50 +53,57 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& mission_planner)
+void Mission_planner_handler_landing::set_behavior()
 {
-    float rel_pos[3];
+    local_position_t local_pos;
 
-    bool next_state = false;
-
-    if (!auto_landing_next_state_)
+    // Change states and landing height appropriately
+    switch (navigation_.auto_landing_behavior)
     {
-        auto_landing_next_state_ = true;
-
-        switch (navigation_.auto_landing_behavior)
+        case Navigation::DESCENT_TO_SMALL_ALTITUDE:
         {
-            case Navigation::DESCENT_TO_SMALL_ALTITUDE:
-            {
-                print_util_dbg_print("Cust: descent to small alt");
-                state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
-                state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
-                local_position_t local_pos = position_estimation_.local_position;
-                local_pos.pos[Z] = navigation_.takeoff_altitude/2.0f;
-                mission_planner.waypoint_hold_coordinates.set_local_pos(local_pos);
-                break;
-            }
-
-            case Navigation::DESCENT_TO_GND:
-            {
-                print_util_dbg_print("Cust: descent to gnd");
-                state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
-                state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
-                local_position_t local_pos = mission_planner.waypoint_hold_coordinates.local_pos();
-                local_pos.pos[Z] = 0.0f;
-                mission_planner.waypoint_hold_coordinates.set_local_pos(local_pos);
-                navigation_.alt_lpf = position_estimation_.local_position.pos[2];
-                break;
-            }
+            print_util_dbg_print("Cust: descent to small alt");
+            state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+            state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
+            local_pos = hold_waypoint().local_pos();
+            local_pos.pos[Z] = navigation_.takeoff_altitude/2.0f;
+            set_hold_waypoint(local_pos);
+            break;
         }
 
-        for (uint8_t i = 0; i < 3; i++)
+        case Navigation::DESCENT_TO_GND:
         {
-            rel_pos[i] = mission_planner.waypoint_hold_coordinates.local_pos().pos[i] - position_estimation_.local_position.pos[i];
+            print_util_dbg_print("Cust: descent to gnd");
+            state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+            state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
+            local_pos = hold_waypoint().local_pos();
+            local_pos.pos[Z] = 0.0f;
+            set_hold_waypoint(local_pos);
+            navigation_.alt_lpf = position_estimation_.local_position.pos[2];
+            break;
         }
-
-        navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
     }
 
+    // Update navigation dist2wp_sqr
+    float rel_pos[3];
+    for (uint8_t i = 0; i < 3; i++)
+    {
+        rel_pos[i] = local_pos.pos[i] - position_estimation_.local_position.pos[i];
+    }
+    navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+}
+
+void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& mission_planner)
+{
+    bool next_state = false;
+
+    // If there has not been a waypoint set for some reason, land on spot
+    if (!hold_waypoint_set())
+    {
+        set_behavior();
+    }
+
+    // Determine if we should switch between the landing states
     if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_GND)
     {
         navigation_.alt_lpf = navigation_.LPF_gain * (navigation_.alt_lpf) + (1.0f - navigation_.LPF_gain) * position_estimation_.local_position.pos[2];
@@ -109,7 +116,7 @@ void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& miss
 
     if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
     {
-        if (maths_f_abs(position_estimation_.local_position.pos[2] - mission_planner.waypoint_hold_coordinates.local_pos().pos[2]) < 0.5f)
+        if (maths_f_abs(position_estimation_.local_position.pos[2] - hold_waypoint().local_pos().pos[2]) < 0.5f)
         {
             next_state = true;
         }
@@ -117,13 +124,12 @@ void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& miss
 
     if (next_state)
     {
-        auto_landing_next_state_ = false;
-
         switch (navigation_.auto_landing_behavior)
         {
             case Navigation::DESCENT_TO_SMALL_ALTITUDE:
                 print_util_dbg_print("Automatic-landing: descent_to_GND\r\n");
                 navigation_.auto_landing_behavior = Navigation::DESCENT_TO_GND;
+                set_behavior(); // Set behavior as we are still landing
                 break;
 
             case Navigation::DESCENT_TO_GND:
@@ -131,10 +137,11 @@ void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& miss
                 navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
                 //Do not reset custom flag here, to be able to check after landing
                 // in case something went wrong. Is reset while arming
-                mission_planner.set_hold_waypoint_set(false);
+                reset_hold_waypoint();
                 navigation_.internal_state_ = Navigation::NAV_ON_GND;
                 state_.set_armed(false);
                 state_.mav_state_ = MAV_STATE_STANDBY;
+                // Dont need to set behavior, state switched to NAV_ON_GND
                 break;
         }
     }
@@ -144,7 +151,7 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
 {
     mav_result_t result;
 
-
+    // Only land if we are in an appropriate navigation state already
     if (   (landing_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING)
         || (landing_handler->navigation_.internal_state_ == Navigation::NAV_HOLD_POSITION)
         || (landing_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION)
@@ -153,8 +160,6 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
         result = MAV_RESULT_ACCEPTED;
 
         landing_handler->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
-        landing_handler->auto_landing_next_state_ = false;
-
         landing_handler->navigation_.internal_state_ = Navigation::NAV_LANDING;
 
         //waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
@@ -178,24 +183,27 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
 
         if (landing_handler->navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
         {
-            landing_handler->mission_planner_.dubin_hold_init(landing_position);
+            landing_handler->dubin_hold_init(landing_position);
         }
         else
         {
-            landing_handler->mission_planner_.waypoint_hold_coordinates.set_local_pos(landing_position);
+            landing_handler->set_hold_waypoint(landing_position);
         }
 
         print_util_dbg_print("Auto-landing procedure initialised.\r\n");
 
         print_util_dbg_print("Landing at: (");
-        print_util_dbg_print_num(landing_handler->mission_planner_.waypoint_hold_coordinates.local_pos().pos[X], 10);
+        local_position_t local_pos = landing_handler->hold_waypoint().local_pos();
+        print_util_dbg_print_num(local_pos.pos[X], 10);
         print_util_dbg_print(", ");
-        print_util_dbg_print_num(landing_handler->mission_planner_.waypoint_hold_coordinates.local_pos().pos[Y], 10);
+        print_util_dbg_print_num(local_pos.pos[Y], 10);
         print_util_dbg_print(", ");
-        print_util_dbg_print_num(landing_handler->mission_planner_.waypoint_hold_coordinates.local_pos().pos[Z], 10);
+        print_util_dbg_print_num(local_pos.pos[Z], 10);
         print_util_dbg_print(", ");
-        print_util_dbg_print_num((int32_t)(landing_handler->mission_planner_.waypoint_hold_coordinates.local_pos().heading * 180.0f / 3.14f), 10);
+        print_util_dbg_print_num((int32_t)(local_pos.heading * 180.0f / 3.14f), 10);
         print_util_dbg_print(")\r\n");
+
+        landing_handler->set_behavior();
     }
     else
     {
@@ -205,23 +213,85 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
     return result;
 }
 
+void Mission_planner_handler_landing::dubin_hold_init(local_position_t local_pos)
+{
+    switch (navigation_.dubin_state)
+    {
+        case DUBIN_INIT:
+        case DUBIN_CIRCLE1:
+            // Staying on the waypoint
+            for (int i = 0; i < 3; ++i)
+            {
+                hold_waypoint().dubin().circle_center_2[i] = navigation_.goal.dubin().circle_center_1[i];
+            }
+
+            hold_waypoint().set_radius(navigation_.goal.dubin().radius_1);
+
+            navigation_.dubin_state = DUBIN_CIRCLE2;
+
+            print_util_dbg_print("DUBINCIRCLE1: Position hold at: (");
+            print_util_dbg_print_num(hold_waypoint().dubin().circle_center_2[X],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(hold_waypoint().dubin().circle_center_2[Y],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(hold_waypoint().dubin().circle_center_2[Z],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num((int32_t)(hold_waypoint().local_pos().heading*180.0f/3.14f),10);
+            print_util_dbg_print(")\r\n");
+        break;
+
+        case DUBIN_STRAIGHT:
+            navigation_.dubin_state = DUBIN_INIT;
+            set_hold_waypoint(local_pos);
+
+            hold_waypoint().set_loiter_time(0.0f);
+            hold_waypoint().set_radius(navigation_.minimal_radius);
+
+            print_util_dbg_print("DUBINSTRAIGHT: Position hold at: (");
+            print_util_dbg_print_num(hold_waypoint().local_pos().pos[X],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(hold_waypoint().local_pos().pos[Y],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(hold_waypoint().local_pos().pos[Z],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num((int32_t)(hold_waypoint().local_pos().heading*180.0f/3.14f),10);
+            print_util_dbg_print(")\r\n");
+        break;
+
+        case DUBIN_CIRCLE2:
+            // Staying on the waypoint
+            /*if (state_.nav_plan_active)
+            {
+                waypoint_hold_coordinates = navigation_.goal;
+            }*/
+            set_hold_waypoint(navigation_.goal);
+
+            print_util_dbg_print("DUBIN_CIRCLE2: Position hold at: (");
+            print_util_dbg_print_num(hold_waypoint().local_pos().pos[X],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(hold_waypoint().local_pos().pos[Y],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num(hold_waypoint().local_pos().pos[Z],10);
+            print_util_dbg_print(", ");
+            print_util_dbg_print_num((int32_t)(hold_waypoint().local_pos().heading*180.0f/3.14f),10);
+            print_util_dbg_print(")\r\n");
+        break;
+    }
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_landing::Mission_planner_handler_landing(   Mission_planner& mission_planner,
-                                                                    Position_estimation& position_estimation,
+Mission_planner_handler_landing::Mission_planner_handler_landing(   const Position_estimation& position_estimation,
                                                                     Navigation& navigation,
                                                                     State& state,
                                                                     Mavlink_message_handler& message_handler):
-            mission_planner_(mission_planner),
-            position_estimation_(position_estimation),
+            Mission_planner_handler(position_estimation),
             navigation_(navigation),
             state_(state),
-            message_handler_(message_handler),
-            auto_landing_next_state_(false)
+            message_handler_(message_handler)
 {
-
 }
 
 bool Mission_planner_handler_landing::init()
@@ -255,10 +325,10 @@ void Mission_planner_handler_landing::handle(Mission_planner& mission_planner)
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        mission_planner.dubin_state_machine(&mission_planner.waypoint_hold_coordinates);
+        mission_planner.dubin_state_machine(&hold_waypoint());
     }
 
-    navigation_.goal = mission_planner.waypoint_hold_coordinates;
+    navigation_.goal = hold_waypoint();
 
     if (mode_local.is_manual())
     {

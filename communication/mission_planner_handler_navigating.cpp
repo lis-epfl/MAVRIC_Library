@@ -67,7 +67,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
         {
             navigation_.dubin_state = DUBIN_INIT;
         }
-        mission_planner.set_hold_waypoint_set(false);
+        reset_hold_waypoint();
     }
 
     if (state_.nav_plan_active)
@@ -76,9 +76,10 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
         uint16_t i;
 
         // Determine distance to the waypoint
+        local_position_t wpt_pos = waypoint_coordinates.local_pos();
         for (i = 0; i < 3; i++)
         {
-            rel_pos[i] = waypoint_coordinates.local_pos().pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = wpt_pos.pos[i] - position_estimation_.local_position.pos[i];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
@@ -231,12 +232,9 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
     }
     else    // Nav plan is not active, set hold waypoint if necessary
     {
-        if (!mission_planner_.hold_waypoint_set())
-        {
-            mission_planner_.hold_init(position_estimation_.local_position);
-            waypoint_coordinates = mission_planner_.waypoint_hold_coordinates;
-            mission_planner_.set_hold_waypoint_set(true);
-        }
+        waypoint_coordinates = hold_waypoint();
+        waypoint_coordinates.set_radius(navigation_.minimal_radius);
+        navigation_.dubin_state = DUBIN_INIT;
     }
 }
 
@@ -248,8 +246,7 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
     {
         if (packet->param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION)
         {
-            navigating_handler->mission_planner_.hold_init(navigating_handler->position_estimation_.local_position);
-
+            navigating_handler->set_hold_waypoint(navigating_handler->position_estimation_.local_position);
             navigating_handler->navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
 
             result = MAV_RESULT_ACCEPTED;
@@ -265,11 +262,11 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
             waypoint.y = packet->param6;
             waypoint.z = packet->param7;
             */
-            Waypoint waypoint(&navigating_handler->mavlink_stream_, (MAV_FRAME)packet->param3, MAV_CMD_NAV_WAYPOINT, 0, packet->param1, packet->param2, packet->param3, packet->param4, packet->param5, packet->param6, packet->param7);
-
-            waypoint.calculate_waypoint_local_structure(navigating_handler->position_estimation_.local_position.origin, &navigating_handler->navigation_.dubin_state);
-
-            navigating_handler->mission_planner_.hold_init(waypoint.local_pos());
+            Waypoint waypoint(packet->param3, MAV_CMD_NAV_WAYPOINT, 0, packet->param1, packet->param2, packet->param3, packet->param4, packet->param5, packet->param6, packet->param7);
+            navigating_handler->navigation_.dubin_state = DUBIN_INIT;
+            navigating_handler->set_hold_waypoint(waypoint);
+            navigating_handler->hold_waypoint().set_radius(navigating_handler->navigation_.minimal_radius);
+            navigating_handler->navigation_.dubin_state = DUBIN_INIT;
 
             result = MAV_RESULT_ACCEPTED;
         }
@@ -281,11 +278,13 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
             navigating_handler->navigation_.dubin_state = DUBIN_INIT;
         }
 
-        if (navigating_handler->mission_planner_.last_mode().is_auto())  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        //if (navigating_handler->mission_planner_.last_mode().is_auto())  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        if (navigating_handler->state_.is_auto())
         {
             navigating_handler->navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
         }
-        else if (navigating_handler->mission_planner_.last_mode().ctrl_mode() == Mav_mode::POSITION_HOLD)  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        //else if (navigating_handler->mission_planner_.last_mode().ctrl_mode() == Mav_mode::POSITION_HOLD)  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
+        else if (navigating_handler->state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD)
         {
             navigating_handler->navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
         }
@@ -311,18 +310,16 @@ void Mission_planner_handler_navigating::send_nav_time(const Mavlink_stream* mav
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_navigating::Mission_planner_handler_navigating( Position_estimation& position_estimation,
+Mission_planner_handler_navigating::Mission_planner_handler_navigating( const Position_estimation& position_estimation,
                                                                         Navigation& navigation,
                                                                         State& state,
-                                                                        Mission_planner& mission_planner,
                                                                         const Mavlink_stream& mavlink_stream,
                                                                         Mavlink_waypoint_handler& waypoint_handler,
                                                                         Mission_planner_handler_landing& mission_planner_handler_landing,
                                                                         Mavlink_message_handler& message_handler):
-            position_estimation_(position_estimation),
+            Mission_planner_handler(position_estimation),
             navigation_(navigation),
             state_(state),
-            mission_planner_(mission_planner),
             mavlink_stream_(mavlink_stream),
             waypoint_handler_(waypoint_handler),
             mission_planner_handler_landing_(mission_planner_handler_landing),
@@ -362,8 +359,9 @@ void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner
 
     if (!mission_planner.last_mode().is_auto())
     {
-        new_mode = mission_planner.mode_change();
+        new_mode = !mission_planner.has_mode_change();
     }
+
     Waypoint waypoint_coordinates;
     waypoint_navigating_handler(mission_planner, new_mode, waypoint_coordinates);
 
@@ -384,7 +382,9 @@ void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner
         else
         {
             print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_NAVIGATING\r\n");
-            mission_planner.hold_init(position_estimation_.local_position);
+            set_hold_waypoint(position_estimation_.local_position);
+            hold_waypoint().set_radius(navigation_.minimal_radius);
+            navigation_.dubin_state = DUBIN_INIT;
             navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
         }
     }

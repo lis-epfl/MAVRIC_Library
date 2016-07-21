@@ -53,8 +53,10 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_stop_on_position::Mission_planner_handler_stop_on_position( Navigation& navigation,
+Mission_planner_handler_stop_on_position::Mission_planner_handler_stop_on_position( const Position_estimation& position_estimation,
+                                                                                    Navigation& navigation,
                                                                                     State& state):
+            Mission_planner_handler(position_estimation),
             navigation_(navigation),
             state_(state)
 {
@@ -72,9 +74,9 @@ void Mission_planner_handler_stop_on_position::handle(Mission_planner& mission_p
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        mission_planner.dubin_state_machine(&mission_planner.waypoint_hold_coordinates);
+        mission_planner.dubin_state_machine(&hold_waypoint());
     }
-    navigation_.goal = mission_planner.waypoint_hold_coordinates;
+    navigation_.goal = hold_waypoint();
 
     if ( mode_local.is_manual())
     {

@@ -58,7 +58,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
     bool result = false;
     float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
 
-    if (!mission_planner.hold_waypoint_set())
+    if (!hold_waypoint_set())
     {
         print_util_dbg_print("Automatic take-off, will hold position at: (");
         print_util_dbg_print_num(position_estimation_.local_position.pos[X], 10);
@@ -84,7 +84,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
         mission_planner.set_hold_waypoint_set(true);
     }
 
-    if (mission_planner.mode_change())
+    if (!mission_planner.has_mode_change())
     {
         switch(navigation_.navigation_strategy)
         {
@@ -116,13 +116,13 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
         if (result)
         {
             navigation_.dubin_state = DUBIN_INIT;
-            /*
+/*
             if (!state_.nav_plan_active)
             {
-                waypoint_coordinates_ = mission_planner.waypoint_hold_coordinates;
-                waypoint_coordinates_.radius = 0.0f;
-            }*/
-
+                waypoint_coordinates_ = hold_waypoint();
+                waypoint_coordinates_.set_radius(0.0f);
+            }
+*/
             print_util_dbg_print("Automatic take-off finished.\r\n");
         }
     }
@@ -138,7 +138,7 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
     {
         print_util_dbg_print("Starting automatic take-off from button\r\n");
         takeoff_handler->navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
-        takeoff_handler->mission_planner_.set_hold_waypoint_set(false);
+        takeoff_handler->reset_hold_waypoint();
 
         result = MAV_RESULT_ACCEPTED;
     }
@@ -154,14 +154,12 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   Mission_planner& mission_planner,
-                                                                    Position_estimation& position_estimation,
+Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   const Position_estimation& position_estimation,
                                                                     Navigation& navigation,
                                                                     const ahrs_t& ahrs,
                                                                     State& state,
                                                                     Mavlink_message_handler& message_handler):
-            mission_planner_(mission_planner),
-            position_estimation_(position_estimation),
+            Mission_planner_handler(position_estimation),
             navigation_(navigation),
             ahrs_(ahrs),
             state_(state),
@@ -199,7 +197,7 @@ void Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
 
     bool takeoff_result = take_off_handler(mission_planner);
 
-    navigation_.goal = mission_planner.waypoint_hold_coordinates;
+    navigation_.goal = hold_waypoint();
 
     if (takeoff_result)
     {

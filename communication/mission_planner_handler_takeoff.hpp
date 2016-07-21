@@ -63,15 +63,13 @@ public:
     /**
      * \brief   Initialize the takeoff mission planner handler
      *
-     * \param   mission_planner         The reference to the position estimator structure
-     * \param   position_estimation     The reference to the position estimator structure
-     * \param   navigation              The reference to the navigation structure
-     * \param   ahrs                    The reference to the attitude estimation structure
-     * \param   state                   The reference to the state structure
+     * \param   position_estimation     The reference to the position estimator class
+     * \param   navigation              The reference to the navigation class
+     * \param   ahrs                    The reference to the attitude estimation class
+     * \param   state                   The reference to the state class
      * \param   message_handler         The reference to the mavlink message handler
      */
-     Mission_planner_handler_takeoff(   Mission_planner& mission_planner,
-                                        Position_estimation& position_estimation,
+     Mission_planner_handler_takeoff(   const Position_estimation& position_estimation,
                                         Navigation& navigation,
                                         const ahrs_t& ahrs,
                                         State& state,
@@ -89,13 +87,11 @@ public:
     virtual bool init();
 
 protected:
-    Mission_planner& mission_planner_;                          ///< The reference to the mission planner
-    Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     State& state_;                                              ///< The reference to the state structure
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
-    
+
     /**
      * \brief   Drives the automatic takeoff procedure
      *

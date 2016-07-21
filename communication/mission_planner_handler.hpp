@@ -44,6 +44,8 @@
 #define MISSION_PLANNER_HANDLER__
 
 #include "communication/mission_planner.hpp"
+#include "communication/waypoint.hpp"
+#include "sensing/position_estimation.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -52,6 +54,13 @@
 class Mission_planner_handler
 {
 public:
+    /**
+     * \brief   Constructor
+     *
+     * \param   position_estimation         The reference to the position estimation class
+     */
+    Mission_planner_handler(const Position_estimation& position_estimation);
+
     /**
      * \brief   The handler for the mission planner. This is called by the state
      * machine in Mission_planner. It should check which subprocess (e.g. land,
@@ -63,8 +72,52 @@ public:
     virtual void handle(Mission_planner& mission_planner) = 0;
 
     virtual bool init() = 0;
-};
 
+protected:
+    /**
+     * \brief   Resets the hold position waypoint
+     *
+     * If the drone tries to access the hold position waypoint and it has not
+     * been set, the waypoint will be set to the current position estimation.
+     */
+    void reset_hold_waypoint();
+
+    /**
+     * \brief   Gets the flag stating if the hold waypoint has been set
+     *
+     * \return  hold_waypoint_set_
+     */
+    bool hold_waypoint_set() const;
+
+    /**
+     * \brief   Sets the hold waypoint to the hold position
+     *
+     * \param   hold_position   The new desired hold position
+     */
+    void set_hold_waypoint(const local_position_t hold_position);
+
+    /**
+     * \brief   Sets the hold waypoint to the inputted waypoint
+     *
+     * \param   wpt     The new waypoint
+     */
+    void set_hold_waypoint(const Waypoint wpt);
+
+    /**
+     * \brief   Gets the hold waypoint
+     *
+     * If no waypoint has been assigned to the hold waypoint, this function will
+     * set the current position estimation to the waypoint and return it.
+     */
+    Waypoint& hold_waypoint();
+
+    const Position_estimation& position_estimation_;    ///< The position estimation reference
+
+private:
+
+    static bool hold_waypoint_set_;             ///< Flag stating if the hold waypoint has been set. If it hasn't, set to current position estimation when first called
+    static Waypoint hold_waypoint_;             ///< The hold waypoint, used by various child classes to set the hold position
+};
 
 
 
