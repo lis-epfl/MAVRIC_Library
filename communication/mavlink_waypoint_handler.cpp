@@ -816,17 +816,21 @@ mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler
         //waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
 
         local_position_t landing_position = waypoint_handler->ins_.position_lf();
-        landing_position[Z] = -5.0f;
-        if (packet->param1 == 1)
+        
+        // Usage of empty param2 in order to specify the landing position
+        if (packet->param2 == 1)
         {
             print_util_dbg_print("Landing at a given location\r\n");
 
             landing_position[X] = packet->param5;
             landing_position[Y] = packet->param6;
+            landing_position[Z] = packet->param7;
         }
         else
         {
             print_util_dbg_print("Landing on the spot\r\n");
+            // No need to overwrite the landing_position, as it is already filled before the if
+            landing_position[Z] = waypoint_handler->navigation_.waypoint_landing_altitude;
         }
 
         if (waypoint_handler->navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
@@ -836,7 +840,14 @@ mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler
         else
         {
             waypoint_handler->waypoint_hold_coordinates.position = landing_position;
-            waypoint_handler->waypoint_hold_coordinates.heading  = coord_conventions_get_yaw(waypoint_handler->ahrs_.qe);
+            if (packet->param2 == 1)
+            {
+                waypoint_handler->waypoint_hold_coordinates.heading  = packet->param4;
+            }
+            else
+            {
+                waypoint_handler->waypoint_hold_coordinates.heading  = coord_conventions_get_yaw(waypoint_handler->ahrs_.qe);
+            }
         }
 
         print_util_dbg_print("Auto-landing procedure initialised.\r\n");
@@ -875,9 +886,9 @@ void Mavlink_waypoint_handler::auto_landing_handler()
                 print_util_dbg_print("Cust: descent to small alt");
                 state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
-                waypoint_hold_coordinates.position    = ins_.position_lf();
-                waypoint_hold_coordinates.position[Z] = navigation_.takeoff_altitude / 2.0f;
-                waypoint_hold_coordinates.heading     = coord_conventions_get_yaw(ahrs_.qe);
+                // waypoint_hold_coordinates.position    = ins_.position_lf();
+                // waypoint_hold_coordinates.position[Z] = navigation_.takeoff_altitude / 2.0f;
+                // waypoint_hold_coordinates.heading     = coord_conventions_get_yaw(ahrs_.qe);
                 break;
 
             case Navigation::DESCENT_TO_GND:
@@ -909,7 +920,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
 
     if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
     {
-        if (maths_f_abs(ins_.position_lf()[Z] - waypoint_hold_coordinates.position[Z]) < 0.5f)
+        if (maths_f_abs(ins_.position_lf()[Z] - navigation_.waypoint_landing_altitude) < 0.5f)
         {
             next_state_ = true;
         }
@@ -1321,11 +1332,14 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
 
                 //auto landing is not using the packet,
                 //so we can declare a dummy one.
+                // param2 = 1 indicates that it should land on the given position
+                // (otherwise it will land at the current position)
                 mavlink_command_long_t dummy_packet;
-                dummy_packet.param1 = 1;
+                dummy_packet.param2 = 1;
+                dummy_packet.param4 = waypoint_coordinates_.heading;
                 dummy_packet.param5 = waypoint_coordinates_.position[X];
                 dummy_packet.param6 = waypoint_coordinates_.position[Y];
-                dummy_packet.param7 = waypoint_coordinates_.position[Z];
+                dummy_packet.param7 = navigation_.waypoint_landing_altitude;
                 set_auto_landing(this, &dummy_packet);
             }
             if ((current_waypoint_.autocontinue == 1) && (waypoint_count_ > 1))
@@ -1529,7 +1543,7 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
     }
 
     // WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
-    wpt_local.heading     = maths_deg_to_rad(current_waypoint->param4);
+    wpt_local.heading     = current_waypoint->param4;
     wpt_local.radius      = current_waypoint->param2;
     wpt_local.loiter_time = current_waypoint->param1;
 

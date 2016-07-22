@@ -350,6 +350,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     heading_acceptance = nav_config.heading_acceptance;
     vertical_vel_gain = nav_config.vertical_vel_gain;
     takeoff_altitude = nav_config.takeoff_altitude;
+    waypoint_landing_altitude = nav_config.waypoint_landing_altitude;
 
     soft_zone_size = nav_config.soft_zone_size;
 
