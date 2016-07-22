@@ -59,7 +59,7 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-global_position_t Waypoint::get_global_position(uint8_t frame, double x, double y, double z, float heading, global_position_t origin)
+global_position_t Waypoint::get_global_position(uint8_t frame, double x, double y, double z, global_position_t origin)
 {
     global_position_t waypoint_global;
     local_position_t waypoint_local;

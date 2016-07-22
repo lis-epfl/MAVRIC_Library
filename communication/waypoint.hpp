@@ -320,12 +320,11 @@ protected:
      * \param x         The x coordinate
      * \param y         The y coordinate
      * \param z         The z coordinate
-     * \param heading   The heading of the waypoint in radians
      * \param origin    The origin of the local frame (if needed)
      *
      * \return  Global frame position
      */
-    static global_position_t get_global_position(uint8_t frame, double x, double y, double z, float heading, global_position_t origin);
+    static global_position_t get_global_position(uint8_t frame, double x, double y, double z, global_position_t origin);
 
     /**
      * \brief   Determines the position of the waypoint based in the
