@@ -156,10 +156,14 @@ void Position_estimation::position_correction()
     }
     else
     {
-        // Correct barometer bias
-        float current_altitude_gf = - local_position.pos[Z]
-                                + local_position.origin.altitude;
-        barometer.calibrate_bias(current_altitude_gf);
+        // Wait for gps to initialized as we need an absolute altitude
+        if (init_gps_position)
+        {
+            // Correct barometer bias
+            float current_altitude_gf = - local_position.pos[Z]
+                                    + local_position.origin.altitude;
+            barometer.calibrate_bias(current_altitude_gf);
+        }
     }
 
     if (init_gps_position)
@@ -409,7 +413,8 @@ void Position_estimation::reset_home_position()
     //}
 
     // Correct barometer bias
-    if (!barometer.has_been_calibrated())
+    // Wait for gps to initialized as we need an absolute altitude
+    if (init_gps_position)
     {
         float current_altitude_gf = - local_position.pos[Z]
                                     + local_position.origin.altitude;

@@ -148,7 +148,6 @@ protected:
     float altitude_bias_gf_;    ///< Offset of the barometer sensor for matching GPS altitude value
     float speed_lf_;            ///< Vario altitude speed (ned frame)
     float last_update_us_;      ///< Time of the last update of the barometer
-    bool has_been_read_;        ///< Flag stating if there has been at least one read from the barometer
     bool has_been_calibrated_;  ///< Flag stating if the barometer has been calibrated
 };
 

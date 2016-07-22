@@ -85,7 +85,6 @@ bool Barometer_sim::update(void)
         // Get altitude
         float altitude_filtered_old = altitude_filtered;
         altitude_filtered = dynamic_model_.position_gf().altitude;
-        has_been_read_ = true;
         
         // Get variation of altitude
         speed_lf_       = - (altitude_filtered - altitude_filtered_old) / dt_s;
