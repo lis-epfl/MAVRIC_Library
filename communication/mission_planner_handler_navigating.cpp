@@ -75,6 +75,9 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
         float rel_pos[3];
         uint16_t i;
 
+        // Set hold waypoint to be the current position
+        set_hold_waypoint(ins_.position_lf());
+
         // Determine distance to the waypoint
         local_position_t wpt_pos = waypoint_coordinates.local_pos();
         for (i = 0; i < 3; i++)
@@ -119,8 +122,11 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 // ... and record the travel time ...
                 travel_time_ = time_keeper_get_ms() - navigation_.start_wpt_time();
 
-                // ... and set to waiting at waypoint
+                // ... and set to waiting at waypoint ...
                 navigation_.set_waiting_at_waypoint(true);
+
+                // ... and set the hold position to be the waypoint we just arrived at
+                set_hold_waypoint(waypoint_handler_.current_waypoint());
             }
 
             // If we are supposed to land, then land
