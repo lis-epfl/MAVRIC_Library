@@ -42,7 +42,10 @@
 #include <fcntl.h>
 #include "hal/linux/serial_udp.hpp"
 
-#include <stdio.h>
+ #ifndef FASYNC
+ #define FASYNC _FASYNC
+ #endif
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -75,7 +78,6 @@ Serial_udp::Serial_udp(serial_udp_conf_t config)
     }
 
     // Attempt to make it non blocking
-    if (fcntl(socket_, F_SETFL, O_NONBLOCK | _FASYNC) < 0)
     {
         close(socket_);
         throw std::runtime_error("could set non blocking UDP socket");
