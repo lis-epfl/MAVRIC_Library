@@ -129,7 +129,7 @@ global_position_t Waypoint::get_global_position(uint8_t frame, double x, double 
 
 void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t frame) const
 {
-    switch (frame_)
+    switch (frame)
     {
         case MAV_FRAME_GLOBAL_INT:
             // Convert from int to degrees
