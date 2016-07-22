@@ -1,4 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classBarometer__sim.html" title="Simulation for barometers." alt="" coords="5,381,136,501"/>
-<area shape="rect" id="node5" href="$classBmp085.html" title="Driver for the BMP085 barometer." alt="" coords="160,381,251,501"/>
+<area shape="rect" id="node3" href="$classBarometer__sim.html" title="Simulation for barometers." alt="" coords="5,435,136,555"/>
+<area shape="rect" id="node5" href="$classBmp085.html" title="Driver for the BMP085 barometer." alt="" coords="160,435,251,555"/>
 </map>

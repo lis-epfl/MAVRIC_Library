@@ -1,4 +1,5 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classPosition__estimation.html#a358ae802e65eede79495c339689813c8" title="Returns if altitude estimation is healthy." alt="" coords="240,5,475,35"/>
-<area shape="rect" id="node5" href="$classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="309,59,405,88"/>
+<area shape="rect" id="node7" href="$classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="309,59,405,88"/>
+<area shape="rect" id="node5" href="$classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359" title="Gets the flag stating if the barometer has been calibrated." alt="" coords="524,5,732,35"/>
 </map>

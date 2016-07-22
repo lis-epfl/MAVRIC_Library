@@ -96,7 +96,7 @@ Inheritance diagram for Barometer:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBarometer__inherit__graph.png" border="0" usemap="#Barometer_inherit__map" alt="Inheritance graph"/></div>
 <map name="Barometer_inherit__map" id="Barometer_inherit__map">
-<area shape="rect" id="node3" href="classBarometer__sim.html" title="Simulation for barometers." alt="" coords="5,381,136,501"/><area shape="rect" id="node5" href="classBmp085.html" title="Driver for the BMP085 barometer." alt="" coords="160,381,251,501"/></map>
+<area shape="rect" id="node3" href="classBarometer__sim.html" title="Simulation for barometers." alt="" coords="5,435,136,555"/><area shape="rect" id="node5" href="classBmp085.html" title="Driver for the BMP085 barometer." alt="" coords="160,435,251,555"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classBarometer-members.html">List of all members.</a></p>
@@ -117,6 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the vertical speed in meters/second.  <a href="#ac46c1624fc97af9797dd2b2f2ae4f9cd"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const float &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#ac4ade496a58afa9317ed9921a41edf95">temperature</a> (void) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get sensor temperature.  <a href="#ac4ade496a58afa9317ed9921a41edf95"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359">has_been_calibrated</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the flag stating if the barometer has been calibrated.  <a href="#a39b6b8ce5ce4bce0eaf002ed4f53d359"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a4d978549f2dbc110a0e92c7d6c8a7ce4">calibrate_bias</a> (float current_altitude_gf)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Correct altitude offset using current altitude.  <a href="#a4d978549f2dbc110a0e92c7d6c8a7ce4"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
@@ -146,6 +148,9 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a63c4bcc303bc908beafd88c443012985"></a><!-- doxytag: member="Barometer::last_update_us_" ref="a63c4bcc303bc908beafd88c443012985" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a63c4bcc303bc908beafd88c443012985">last_update_us_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Time of the last update of the barometer. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abdf5e59e29258d4a9d71db2f5be41daa"></a><!-- doxytag: member="Barometer::has_been_calibrated_" ref="abdf5e59e29258d4a9d71db2f5be41daa" args="" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#abdf5e59e29258d4a9d71db2f5be41daa">has_been_calibrated_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag stating if the barometer has been calibrated. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Interface class for barometers. </p>
@@ -239,6 +244,34 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a39b6b8ce5ce4bce0eaf002ed4f53d359"></a><!-- doxytag: member="Barometer::has_been_calibrated" ref="a39b6b8ce5ce4bce0eaf002ed4f53d359" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359">Barometer::has_been_calibrated</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the flag stating if the barometer has been calibrated. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>has_been_read_ </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classBarometer_a39b6b8ce5ce4bce0eaf002ed4f53d359_icgraph.png" border="0" usemap="#classBarometer_a39b6b8ce5ce4bce0eaf002ed4f53d359_icgraph" alt=""/></div>
+<map name="classBarometer_a39b6b8ce5ce4bce0eaf002ed4f53d359_icgraph" id="classBarometer_a39b6b8ce5ce4bce0eaf002ed4f53d359_icgraph">
+<area shape="rect" id="node3" href="classPosition__estimation.html#a358ae802e65eede79495c339689813c8" title="Returns if altitude estimation is healthy." alt="" coords="264,5,499,35"/><area shape="rect" id="node5" href="classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd" title="Returns if position estimation is healthy." alt="" coords="547,5,733,35"/><area shape="rect" id="node7" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="783,5,937,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -389,7 +422,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 21 2016 16:22:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jul 22 2016 08:28:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

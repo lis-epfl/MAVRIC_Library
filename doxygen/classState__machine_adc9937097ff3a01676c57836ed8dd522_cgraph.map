@@ -7,19 +7,20 @@
 <area shape="rect" id="node17" href="$classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60" title="set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, GPS_NAV);" alt="" coords="251,272,427,301"/>
 <area shape="rect" id="node19" href="$classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a" title="returns the ctrl_mode (defined by manual, stabilize, guided and auto flag)" alt="" coords="264,325,413,355"/>
 <area shape="rect" id="node21" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="277,480,400,509"/>
-<area shape="rect" id="node25" href="$classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="797,429,944,459"/>
+<area shape="rect" id="node25" href="$classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="829,429,976,459"/>
 <area shape="rect" id="node27" href="$classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="577,428,687,457"/>
 <area shape="rect" id="node29" href="$classMav__mode.html#a4b5399cd7da6c1decbc0c1ee2501aa2d" title="set armed flag" alt="" coords="541,535,723,564"/>
 <area shape="rect" id="node31" href="$classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="533,588,731,617"/>
 <area shape="rect" id="node35" href="$classImu.html#a066f63054b730605afc31ee0c19daae1" title="Get the readiness of the IMU." alt="" coords="288,635,389,664"/>
 <area shape="rect" id="node38" href="$classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))" alt="" coords="241,688,436,717"/>
 <area shape="rect" id="node41" href="$classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd" title="Returns if position estimation is healthy." alt="" coords="245,741,432,771"/>
-<area shape="rect" id="node47" href="$classMav__mode.html#a3c4235b6649dcabb00a41d8aa3cf16a4" title="returns whether in manual mode (MAV_MODE_FLAG_MANUAL_INPUT_ENABLED set)" alt="" coords="263,795,415,824"/>
-<area shape="rect" id="node49" href="$classState__display.html#a153183db41405626c97ad8e70d1b3113" title="Set state function &#160;Set the state to be displayed." alt="" coords="257,848,420,877"/>
-<area shape="rect" id="node51" href="$classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick." alt="" coords="220,901,457,931"/>
+<area shape="rect" id="node49" href="$classMav__mode.html#a3c4235b6649dcabb00a41d8aa3cf16a4" title="returns whether in manual mode (MAV_MODE_FLAG_MANUAL_INPUT_ENABLED set)" alt="" coords="263,795,415,824"/>
+<area shape="rect" id="node51" href="$classState__display.html#a153183db41405626c97ad8e70d1b3113" title="Set state function &#160;Set the state to be displayed." alt="" coords="257,848,420,877"/>
+<area shape="rect" id="node53" href="$classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick." alt="" coords="220,901,457,931"/>
 <area shape="rect" id="node11" href="$classAdc.html#a7c7ee3f985b2b67990d61893faae8b32" title="Update function." alt="" coords="587,192,677,221"/>
 <area shape="rect" id="node13" href="$classAdc.html#a9733298b7e9cde8e5b91b64a1ca2b586" title="Get the voltage in volts." alt="" coords="585,139,679,168"/>
 <area shape="rect" id="node23" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="575,481,689,511"/>
 <area shape="rect" id="node43" href="$classPosition__estimation.html#a358ae802e65eede79495c339689813c8" title="Returns if altitude estimation is healthy." alt="" coords="515,768,749,797"/>
-<area shape="rect" id="node45" href="$classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="584,715,680,744"/>
+<area shape="rect" id="node47" href="$classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="584,715,680,744"/>
+<area shape="rect" id="node45" href="$classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359" title="Gets the flag stating if the barometer has been calibrated." alt="" coords="799,768,1007,797"/>
 </map>
