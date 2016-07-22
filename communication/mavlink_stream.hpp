@@ -97,7 +97,7 @@ public:
     /**
      * \brief Constructor
      */
-    Mavlink_stream(Serial& serial, const conf_t& config);
+    Mavlink_stream(Serial& serial, const conf_t& config = default_config());
 
 
     /**
@@ -137,7 +137,7 @@ public:
      */
     inline uint32_t compid() const {return compid_;};    // inline for higher exec speed
 
-    uint32_t sysid_;             ///< System ID 
+    uint32_t sysid_;             ///< System ID
 
 private:
 

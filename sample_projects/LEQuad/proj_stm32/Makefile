@@ -12,11 +12,8 @@ PROJ_NAME=LEQuadST
 # ------------------------------------------------------------------------------
 # Project source files (*.c and *.cpp)
 # LIB_SRCS += sample_projects/LEQuad/main_stm32.cpp
-# LIB_SRCS += sample_projects/LEQuad/main_sparky.cpp
+LIB_SRCS += sample_projects/LEQuad/main_sparky.cpp
 LIB_SRCS += sample_projects/LEQuad/lequad.cpp
-
-# LIB_SRCS += sample_projects/LEQuad/proj_stm32/paparazzi_usb_serial.c
-LIB_SRCS += sample_projects/LEQuad/proj_stm32/cdcacm.c
 
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
