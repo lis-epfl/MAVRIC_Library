@@ -128,6 +128,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
         print_util_dbg_print("All vehicles: Navigating to next waypoint.\r\n");
 
         mission_planner->navigation_.set_start_wpt_time();
+        mission_planner->navigation_.set_waiting_at_waypoint(false);
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
         mission_planner->navigation_.dubin_state = DUBIN_INIT;
 
