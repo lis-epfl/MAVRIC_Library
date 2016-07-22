@@ -87,7 +87,7 @@ public:
             Sonar& sonar,
             Serial& serial_mavlink,
             Satellite& satellite,
-            Led& led,
+			State_display& state_display,
             File& file_flash,
             Battery& battery,
             Servo& servo_0,

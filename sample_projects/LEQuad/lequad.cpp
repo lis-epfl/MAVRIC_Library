@@ -251,7 +251,7 @@ bool LEQuad::init_imu(void)
     ret &= imu_telemetry_init(&imu, mavlink_communication.p_message_handler());
 
     // DOWN telemetry
-    //ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_IMU, 250000, (Mavlink_communication::send_msg_function_t)&imu_telemetry_send_scaled, &imu);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_IMU, 250000, (Mavlink_communication::send_msg_function_t)&imu_telemetry_send_scaled, &imu);
 
     // Parameters
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->gyroscope.bias[X],     "BIAS_GYRO_X");

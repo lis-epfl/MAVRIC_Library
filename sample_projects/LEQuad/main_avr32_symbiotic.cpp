@@ -97,7 +97,7 @@ int main(void)
                         board.sonar_i2cxl,      // Warning:
                         board.uart0,
                         board.spektrum_satellite,
-                        board.green_led,
+                        board.state_display_megafly_rev4_,
                         board.file_flash,
                         board.battery,
                         board.servo_0,

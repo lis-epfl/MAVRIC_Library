@@ -64,8 +64,8 @@ void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const Mavlink_stream* mavl
                               aero_attitude.rpy[2],
                               ahrs->angular_speed[0],
                               ahrs->angular_speed[1],
-							  dbg_alex); //Alex Debug
-                              //ahrs->angular_speed[2]);
+							  //dbg_alex); //Alex Debug
+                              ahrs->angular_speed[2]);
 }
 
 void ahrs_telemetry_send_attitude_quaternion(const ahrs_t* ahrs, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)

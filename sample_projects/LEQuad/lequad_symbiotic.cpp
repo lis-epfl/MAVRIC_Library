@@ -44,12 +44,12 @@
 
 LEQuad_symbiotic::LEQuad_symbiotic(
 	Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink,
-    Satellite& satellite, Led& led, File& file_flash, Battery& battery,
+    Satellite& satellite, State_display& state_display, File& file_flash, Battery& battery,
     Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4,
     Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):
 
 	Base_class(
-	imu, barometer, gps, sonar, serial_mavlink, satellite, led, file_flash,
+	imu, barometer, gps, sonar, serial_mavlink, satellite, state_display, file_flash,
     battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
     file1, file2, config.lequad_config
 	),
@@ -176,6 +176,17 @@ bool LEQuad_symbiotic::main_task(void)
             case Mav_mode::COSTUM:
 			{
             	manual_control.manual_control_get_from_joystick_symbiotic(&controls);
+
+            	//print_util_dbg_print("vel cmd - from user \r\n");
+				//print_util_dbg_print("Vx ");
+				//print_util_dbg_putfloat(controls.tvel[X],3);
+				//print_util_dbg_print("  Vy ");
+				//print_util_dbg_putfloat(controls.tvel[Y],3);
+				//print_util_dbg_print("  Vz ");
+				//print_util_dbg_putfloat(controls.tvel[Z],3);
+				//print_util_dbg_print("  Yaw ");
+				//print_util_dbg_putfloat(controls.rpy[YAW],3);
+				//print_util_dbg_print("\r\n");
 
 				float max_vel_z = 5.5f; //[m/s]
 				float max_vel_y = 5.5f; //[m/s]
@@ -328,7 +339,7 @@ bool LEQuad_symbiotic::main_task(void)
 						if(ratio > 1.0f)
 							ratio = 1.0f;
 
-						//decrease ratio if coming back to the center
+						//If completely out of the fence, decrease ratio if coming back toward the fence area
 						if(xy_dist > xy_max)
 						{
 							float origin2quad_normalized[3];
@@ -370,16 +381,16 @@ bool LEQuad_symbiotic::main_task(void)
 					}
 				}
 
-				/*print_util_dbg_print("vel cmd\r\n");
+				print_util_dbg_print("vel cmd - with repulsion \r\n");
 				print_util_dbg_print("Vx ");
 				print_util_dbg_putfloat(controls.tvel[X],3);
 				print_util_dbg_print("  Vy ");
 				print_util_dbg_putfloat(controls.tvel[Y],3);
 				print_util_dbg_print("  Vz ");
 				print_util_dbg_putfloat(controls.tvel[Z],3);
-				print_util_dbg_print("  Yaw ");
-				print_util_dbg_putfloat(controls.rpy[YAW],3);
-				print_util_dbg_print("\r\n");*/
+				//print_util_dbg_print("  Yaw ");
+				//print_util_dbg_putfloat(controls.rpy[YAW],3);
+				print_util_dbg_print("\r\n");
 
 				controls.control_mode = VELOCITY_COMMAND_MODE;
 
