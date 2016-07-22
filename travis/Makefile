@@ -12,7 +12,7 @@ all: sample_projects doc
 sample_projects: LEQuad_linux LEQuad_stm32 LEQuad_avr32
 
 LEQuad_linux:
-	cd ../sample_projects/LEQuad/proj_linux && make clean && make && make clean
+	cd ../sample_projects/LEQuad/proj_linux && makema clean && make && make clean
 
 LEQuad_avr32:
 	cd ../sample_projects/LEQuad/proj_avr32 && make clean && make && make clean

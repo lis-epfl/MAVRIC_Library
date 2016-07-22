@@ -43,6 +43,7 @@
 #include "util/print_util.h"
 #include <stdlib.h>
 #include <stdbool.h>
+//#include <stdio.h>
 
 byte_stream_t* deb_stream;
 
@@ -324,18 +325,21 @@ void print_util_print_matrix(byte_stream_t* out_stream, float const v[], int32_t
 void print_util_dbg_print(const char* s)
 {
     print_util_putstring(deb_stream, s);
+    //printf(s);
 }
 
 
 void print_util_dbg_print_num(int32_t c, char base)
 {
     print_util_putnum(deb_stream, c, base);
+    //printf("%d",c);
 }
 
 
 void print_util_dbg_putfloat(float c, int32_t after_digits)
 {
     print_util_putfloat(deb_stream, c, after_digits);
+    //printf("%f",c);
 }
 
 

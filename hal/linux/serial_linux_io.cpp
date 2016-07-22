@@ -44,6 +44,9 @@
 #include "hal/linux/serial_linux_io.hpp"
 #include <iostream>
 
+//#include <stdio.h>
+//#include <ostream>
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -91,8 +94,14 @@ bool Serial_linux_io::attach(serial_interrupt_callback_t func)
 
 bool Serial_linux_io::write(const uint8_t* bytes, const uint32_t size)
 {
+	/*for(uint32_t j=0;j < size;j++)
+	{
+		printf("%c",bytes[j]);
+	}*/
+
     const char* text = (char*)bytes;
     std::cout.write(text, size);
+
     return true;
 }
 

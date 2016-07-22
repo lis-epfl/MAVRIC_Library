@@ -3,3 +3,7 @@ build
 *.bin
 *.hex
 *.map
+*.o
+*.d
+/LEQuad/proj_linux/build
+/LEQuad/proj_linux/src

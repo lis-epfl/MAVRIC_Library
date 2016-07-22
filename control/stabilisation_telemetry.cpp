@@ -47,6 +47,7 @@ extern "C"
 {
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.h"
+#include "util/print_util.h"
 }
 
 void  stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
@@ -169,4 +170,47 @@ void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_cop
                                 stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[PITCH] * 1000,
                                 stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[YAW] * 1000);
     mavlink_stream->send(msg);
+}
+
+void  sensors_set_telemetry_send(Central_data *central_data, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+
+	float semilocal_vel[3];
+	aero_attitude_t aero_attitude;
+
+	//compute the semilocal velocity
+	central_data->navigation.position_estimation_get_semilocal_velocity(semilocal_vel);
+
+	//navigation.qe is the body attitude in quaternion
+	aero_attitude = coord_conventions_quat_to_aero(central_data->navigation.qe);
+
+	/*mavlink_msg_angle_rate_velocity_sensors_pack(mavlink_stream->sysid,
+            mavlink_stream->compid,
+            msg,
+            time_keeper_get_ms(),
+			aero_attitude.rpy,
+            central_data->ahrs.angular_speed,
+			semilocal_vel[X],
+			semilocal_vel[Y],
+			semilocal_vel[Z],
+			0.0f);*/
+
+	mavlink_msg_highres_imu_pack(mavlink_stream->sysid(),
+			mavlink_stream->compid(),
+			msg,
+			time_keeper_get_ms(),
+			maths_rad_to_deg(aero_attitude.rpy[0]),
+			maths_rad_to_deg(aero_attitude.rpy[1]),
+			maths_rad_to_deg(aero_attitude.rpy[2]),
+			central_data->ahrs.angular_speed[0],
+			central_data->ahrs.angular_speed[1],
+			central_data->ahrs.angular_speed[2],
+			semilocal_vel[X],
+			semilocal_vel[Y],
+			semilocal_vel[Z],
+			central_data->gimbal_controller.attitude_output_.rpy[0], //[°]
+			central_data->gimbal_controller.attitude_output_.rpy[1], //[°]
+			central_data->gimbal_controller.attitude_output_.rpy[2], //[°]
+			0.0f, //float
+			0); //uint16_t
 }

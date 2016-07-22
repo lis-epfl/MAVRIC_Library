@@ -41,6 +41,7 @@
 #include "boards/mavrinux.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
 
+
 extern "C"
 {
 #include "util/print_util.h"

@@ -1707,6 +1707,12 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
             last_mode_(state_.mav_mode()),
             ahrs_(ahrs_),
             manual_control_(manual_control_),
+			number_of_fence_points(0),
+			number_of_outfence_1_points(0),
+			number_of_outfence_2_points(0),
+			number_of_outfence_3_points(0),
+			number_of_outfence_4_points(0),
+			number_of_outfence_5_points(0),
             config_(config)
 {
     bool init_success = true;
@@ -1826,6 +1832,28 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
     init_success &= message_handler.add_cmd_callback(&callbackcmd);
 
     init_homing_waypoint();
+
+    all_fence_points[0] = &number_of_fence_points;
+    all_fence_points[1] = &number_of_outfence_1_points;
+    all_fence_points[2] = &number_of_outfence_2_points;
+    all_fence_points[3] = &number_of_outfence_3_points;
+    all_fence_points[4] = &number_of_outfence_4_points;
+    all_fence_points[5] = &number_of_outfence_5_points; ///< Table with the total number of waypoints for a outfence
+
+    all_fences[0] = fence_list;
+    all_fences[1] = outfence_1_list;
+    all_fences[2] = outfence_2_list;
+    all_fences[3] = outfence_3_list;
+    all_fences[4] = outfence_4_list;
+    all_fences[5] = outfence_5_list;
+
+    all_fence_angles[0] = fence_angle_list;
+    all_fence_angles[1] = outfence_1_angle_list;
+    all_fence_angles[2] = outfence_2_angle_list;
+    all_fence_angles[3] = outfence_3_angle_list;
+    all_fence_angles[4] = outfence_4_angle_list;
+    all_fence_angles[5] = outfence_5_angle_list;
+
     nav_plan_init();
 
     if(!init_success)
@@ -1911,6 +1939,28 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint.param4 = 0.0f; // Desired yaw angle at MISSION (rotary wing)
 
     waypoint_list[0] = waypoint;
+
+    waypoint_count_ ++;
+
+    waypoint_onboard_count_ = waypoint_count_;
+
+    //CYSTU
+    //1
+    /*waypoint.autocontinue = 0;
+    waypoint.current = 0;
+    waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+    waypoint.command = MAV_CMD_NAV_FENCE; //40
+
+    waypoint.x = 46.5188720f;
+    waypoint.y = 6.5656400f;
+    waypoint.z = 0.0f;
+
+    waypoint.param1 = 0; // Hold time in decimal seconds
+    waypoint.param2 = 0; // Acceptance radius in meters
+    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
+
+    waypoint_list[1] = waypoint;*/
 }
 
 
@@ -1945,6 +1995,10 @@ void Mavlink_waypoint_handler::nav_plan_init()
                 navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
             }
         }
+        //cystu compute fencepoint angle
+        for(int n=0;n<MAX_OUTFENCE+1;n++)
+        {
+        	fencepoint_angle(all_fences[n],*all_fence_points[n],all_fence_angles[n]);
     }
 }
 
@@ -2043,4 +2097,49 @@ void Mavlink_waypoint_handler::dubin_hold_init(local_position_t local_pos)
             print_util_dbg_print(")\r\n");
         break;
     }
+}
+
+void Mavlink_waypoint_handler::fencepoint_angle(waypoint_struct_t* fence_list, uint16_t number_of_fence_points,float* fence_angle_list )
+{
+	for (int i=0; i < number_of_fence_points; i++) //loop through all pair of fence points
+		{
+			int j=0;
+			if (i == number_of_fence_points - 1)
+			{
+				j=0;
+			}
+			else
+			{
+				j=i+1;
+			}
+			int k=0;
+			if (i == number_of_fence_points - 1)
+			{
+				k=1;
+			}
+			else if (i == number_of_fence_points - 2)
+			{
+				k=0;
+			}
+			else
+			{
+				k=i+2;
+			}
+
+			float ij[3]=   {(float)fence_list[j].x-(float)fence_list[i].x,
+					(float)fence_list[j].y-(float)fence_list[i].y,
+					(float)fence_list[j].z-(float)fence_list[i].z};
+
+			float jk[3]=   {(float)fence_list[j].x-(float)fence_list[k].x,
+					(float)fence_list[j].y-(float)fence_list[k].y,
+					(float)fence_list[j].z-(float)fence_list[k].z};
+
+			float angle = atan2(ij[1], ij[0]) - atan2( jk[1], jk[0]);
+			if(angle<0)
+			{
+				angle += 2*PI;
+			}
+
+			fence_angle_list[j]=angle;
+		}
 }

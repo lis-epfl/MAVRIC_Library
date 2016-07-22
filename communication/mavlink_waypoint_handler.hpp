@@ -53,8 +53,10 @@
 #include "control/navigation.hpp"
 #include "control/dubin.hpp"
 
-#define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
+//#include "control/fence.hpp"
 
+#define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
+#define MAX_OUTFENCE 5 			///< The maximal number of outterfences
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
@@ -109,7 +111,6 @@ public:
                            const Mavlink_stream& mavlink_stream,
                            conf_t config = default_config());
 
-
     /**
      * \brief   The waypoint handler tasks, gives a goal for the navigation module
      *
@@ -148,14 +149,51 @@ public:
      */
     static inline conf_t default_config();
 
+	/**
+     * \brief   Compute angle between fence points
+     * \return  Angle formed with the two adjacent fencepoints in radians
+     */
+    void fencepoint_angle(waypoint_struct_t* fence_list, uint16_t number_of_fence_points,float* fence_angle_list );
+
     
     waypoint_local_struct_t waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
     
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
 
+    waypoint_struct_t fence_list[MAX_WAYPOINTS];             	///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float fence_angle_list[MAX_WAYPOINTS];						///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+
+    waypoint_struct_t outfence_1_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_1_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+    waypoint_struct_t outfence_2_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_2_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+    waypoint_struct_t outfence_3_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_3_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+    waypoint_struct_t outfence_4_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_4_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+    waypoint_struct_t outfence_5_list[MAX_WAYPOINTS];           ///< The array of all fencepoints (max MAX_WAYPOINTS)
+    float outfence_5_angle_list[MAX_WAYPOINTS];					///< The array of angle or all fencepoints (max MAX_WAYPOINTS)
+
+    waypoint_struct_t current_waypoint;                         ///< The structure of the current waypoint
+    uint16_t number_of_waypoints;                               ///< The total number of waypoints
+    uint16_t number_of_fence_points;							///< The total number of waypoints
+    uint16_t number_of_outfence_1_points;						///< The total number of waypoints
+    uint16_t number_of_outfence_2_points;						///< The total number of waypoints
+    uint16_t number_of_outfence_3_points;						///< The total number of waypoints
+    uint16_t number_of_outfence_4_points;						///< The total number of waypoints
+    uint16_t number_of_outfence_5_points;						///< The total number of waypoints
+
+    uint16_t* all_fence_points[MAX_OUTFENCE+1];			///< Table with the total number of waypoints for a outfence
+
+    waypoint_struct_t* all_fences[MAX_OUTFENCE+1];
+
+    float* all_fence_angles[MAX_OUTFENCE+1];
+
+    int8_t current_waypoint_count;                              ///< The number of the current waypoint
+    uint16_t waypoint_count_;
+    uint16_t current_waypoint_index_;
+
 protected:
-    uint16_t waypoint_count_;                                    ///< The total number of waypoints
-    int8_t current_waypoint_index_;                              ///< The number of the current waypoint
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
     const Mavlink_stream& mavlink_stream_;                       ///< The pointer to MAVLink stream

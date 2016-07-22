@@ -71,7 +71,7 @@ typedef struct
  */
 typedef struct
 {
-    float pos[3];               ///<    Current position x, y and z
+    float pos[3];               ///<    Current position x, y and z [m]
     float heading;              ///<    Current heading (equal to heading in global frame)
     global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
 } local_position_t;

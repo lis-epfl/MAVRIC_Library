@@ -188,6 +188,9 @@ public:
     float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
     float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
 
+    //cystu Is private
+    local_position_t last_gps_pos;          ///< Coordinates of the last GPS position
+
 private:
     float kp_alt_sonar;                     ///< Gain to correct the Z position estimation from the sonar
     float kp_vel_sonar;                     ///< Gain to correct the Z velocity estimation from the sonar

@@ -43,8 +43,13 @@
 #include "control/joystick_telemetry.hpp"
 
 //#include "hal/common/time_keeper.hpp"
-//#include "util/print_util.h"
+#include "util/print_util.h"
 //#include "util/constants.h"
+
+extern "C"
+{
+#include "hal/common/time_keeper.hpp"
+}
 
 
 //------------------------------------------------------------------------------
@@ -70,15 +75,38 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
     mavlink_manual_control_t packet;
     mavlink_msg_manual_control_decode(msg, &packet);
 
+    /*print_util_dbg_print("packet:\r\n");
+    print_util_dbg_putfloat(packet.x,10);
+    print_util_dbg_print("\r\n");
+    print_util_dbg_putfloat(packet.y,10);
+	print_util_dbg_print("\r\n");
+	print_util_dbg_putfloat(packet.z,10);
+	print_util_dbg_print("\r\n");*/
+
     if ((uint8_t)packet.target == (uint8_t)sysid)
     {
         joystick->channels.x = packet.x / 1000.0f;
         joystick->channels.y = packet.y / 1000.0f;
-        joystick->channels.r = packet.r / 1000.0f;
         joystick->channels.z = packet.z / 1000.0f;
+        joystick->channels.r = packet.r / 1000.0f;
+
+        //--- Alex for test frequency purpose
+        print_util_dbg_putfloat((float) joystick->commTrigger,0);
+                print_util_dbg_print("\r\n");
+
+       	joystick->commTrigger = time_keeper_get_us()/1000.0f;
+        //--- Alex end
 
         joystick_button_update(joystick, packet.buttons);
     }
+
+    /*print_util_dbg_print("joystick:\r\n");
+    print_util_dbg_putfloat(joystick->channels.x,10);
+    print_util_dbg_print("\r\n");
+    print_util_dbg_putfloat(joystick->channels.y,10);
+	print_util_dbg_print("\r\n");
+	print_util_dbg_putfloat(joystick->channels.z,10);
+	print_util_dbg_print("\r\n");*/
 }
 
 

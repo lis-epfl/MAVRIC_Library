@@ -138,6 +138,7 @@ public:
      */
     bool set_armed(bool arming);
 
+    void set_mode(mav_mode_t new_mav_mode);
 
     /**
      * \brief                   returns whether armed

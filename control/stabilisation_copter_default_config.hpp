@@ -262,7 +262,7 @@ static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
     // -----------------------------------------------------------------
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].p_gain           = 0.15f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].clip_min         = -0.5f;
-    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].clip_max         = 0.5f;
+    conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].clip_max         = 0.5f; //if 0.5 => 45° because it acts on the norm of upvector
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator       = {};
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator.gain      = 0.0125f;
     conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator.clip_pre  = 1.0f;

@@ -44,6 +44,7 @@
 extern "C"
 {
 #include "util/print_util.h"
+#include "util/maths.h"
 }
 
 //------------------------------------------------------------------------------
@@ -55,21 +56,33 @@ void Gimbal_controller::gimbal_controller_mix_to_servos(void)
     float pwm_output[3];
 
     //pwm range = [-1;1] which is set to corresponds to angles [-90°;90°]
-    for (int i = 1; i < 3; i++)
+    for (int i = 0; i < 3; i++)
     {
-    	print_util_dbg_putfloat(attitude_output_.rpy[i],3);
+    	//print_util_dbg_putfloat(attitude_output_.rpy[i],3);
         pwm_output[i] = attitude_output_.rpy[i] / 90.0f;
     }
 
-    servo_pitch_.write(pwm_output[1], true);
-    servo_yaw_.write(pwm_output[2], true);
+	/*print_util_dbg_print("gimbal output\r\n");
+	print_util_dbg_print(" pitch ");
+	print_util_dbg_putfloat(attitude_output_.rpy[PITCH],3);
+	print_util_dbg_print(" val ");
+	print_util_dbg_putfloat(pwm_output[PITCH],3);
+	print_util_dbg_print(" yaw ");
+	print_util_dbg_putfloat(attitude_output_.rpy[YAW],3);
+	print_util_dbg_print(" val ");
+	print_util_dbg_putfloat(pwm_output[YAW],3);
+	print_util_dbg_print("\r\n");*/
+
+    servo_pitch_.write(-pwm_output[PITCH], true); //[-1;1]
+    servo_yaw_.write(pwm_output[YAW], true);   //[-1;1]
 }
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Gimbal_controller::Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const gimbal_controller_conf_t config):
+Gimbal_controller::Gimbal_controller(Navigation& navigation, Servo& servo_pitch, Servo& servo_yaw, Gimbal_controller::conf_t config):
+    navigation_(navigation),
     servo_pitch_(servo_pitch),
     servo_yaw_(servo_yaw)
 {
@@ -81,28 +94,55 @@ Gimbal_controller::Gimbal_controller(Servo& servo_pitch, Servo& servo_yaw, const
 }
 
 
-bool Gimbal_controller::update(void)
+bool Gimbal_controller::update(Gimbal_controller *gimbal_controller)
 {
 
-    //Set directly the desired input as output commands ensuring that they are in the allowed range (no controller here)
+	attitude_command_t 	att_user_head;
+	attitude_command_t	att_mimick_plane;
+	float 				semilocal_vel[3];
+
+	// get user head movements
+	att_user_head = gimbal_controller->attitude_command_desired_;
+
+	//get semilocal velocity
+	gimbal_controller->navigation_.position_estimation_get_semilocal_velocity(semilocal_vel);
+
+	//compute the angle according to the velocity
+	att_mimick_plane.rpy[0] = 0.0f;
+	att_mimick_plane.rpy[1] = -maths_rad_to_deg(atan2(semilocal_vel[2], semilocal_vel[0])); // - maths_rad_to_deg(aero_attitude.rpy[PITCH]);
+	att_mimick_plane.rpy[2] = 0.0f;
+
+	//apply the angle correction only if the quad as a given forward velocity
+	if(semilocal_vel[0] < 0.5f) //0.5m/s
+		att_mimick_plane.rpy[1] = 0.0f;
+
+	/*print_util_dbg_print("semilocal_vel\r\n");
+	print_util_dbg_print(" x ");
+	print_util_dbg_putfloat(semilocal_vel[0],3);
+	print_util_dbg_print(" y ");
+	print_util_dbg_putfloat(semilocal_vel[1],3);
+	print_util_dbg_print(" z ");
+	print_util_dbg_putfloat(semilocal_vel[2],3);
+	print_util_dbg_print(" corr angle ");
+	print_util_dbg_putfloat(att_mimick_plane.rpy[1],3);
+	print_util_dbg_print("\r\n");*/
+
+
+    //Clip the desired value and set them as commands value (no controller here)
     for (int i = 0; i < 3; i++)
     {
-        if (attitude_command_desired_.rpy[i] < attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i])
-        {
-            attitude_output_.rpy[i] = attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i];
-        }
-        else if (attitude_command_desired_.rpy[i] > attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i])
-        {
-            attitude_output_.rpy[i] = attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i];
-        }
+    	gimbal_controller->attitude_command_desired_.rpy[i] = att_mimick_plane.rpy[i] + att_user_head.rpy[i];
+
+        if (gimbal_controller->attitude_command_desired_.rpy[i] < gimbal_controller->attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i])
+        	gimbal_controller->attitude_output_.rpy[i] = gimbal_controller->attitude_command_range_[MIN_RANGE_GIMBAL].rpy[i];
+        else if (gimbal_controller->attitude_command_desired_.rpy[i] > gimbal_controller->attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i])
+        	gimbal_controller->attitude_output_.rpy[i] = gimbal_controller->attitude_command_range_[MAX_RANGE_GIMBAL].rpy[i];
         else
-        {
-            attitude_output_.rpy[i] = attitude_command_desired_.rpy[i];
-        }
+        	gimbal_controller->attitude_output_.rpy[i] = gimbal_controller->attitude_command_desired_.rpy[i];
     }
 
     // send attitude output to servos (pwm)
-    gimbal_controller_mix_to_servos();
+    gimbal_controller->gimbal_controller_mix_to_servos();
 
     return true;
 }
