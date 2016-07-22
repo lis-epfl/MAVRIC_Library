@@ -47,16 +47,18 @@ extern "C"
 #include "util/print_util.h"
 }
 
+extern "C"
+{
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
+}
 
-int main(int argc, char** argv)
+static void clock_setup(void)
 {
-    // #############################################################################################
-    // #############  Clock Setup ##################################################################
-    // #############################################################################################
     // Set STM32 to 168 MHz
-    rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
+    // rcc_clock_setup_hse_3v3(&rcc_hse_25mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
+    rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
+
 
     // Enable GPIO clock
     rcc_periph_clock_enable(RCC_GPIOA);
@@ -64,7 +66,43 @@ int main(int argc, char** argv)
     rcc_periph_clock_enable(RCC_GPIOC);
     rcc_periph_clock_enable(RCC_GPIOD);
 
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE,
+                    GPIO11 | GPIO12);
+    gpio_set_af(GPIOA, GPIO_AF10, GPIO11 | GPIO12);
+
+    /* USB clock */
+    rcc_periph_clock_enable(RCC_OTGFS);
+
+
     time_keeper_init();
+}
+
+extern "C"
+{
+#include "sample_projects/LEQuad/proj_stm32/paparazzi_usb_serial.h"
+}
+
+// #############################################################################################
+// #############################################################################################
+// #############################################################################################
+// ####################  MAIN ##################################################################
+// #############################################################################################
+// #############################################################################################
+// #############################################################################################
+
+
+
+int main(int argc, char** argv)
+{
+    // #############################################################################################
+    // #############  Clock Setup ##################################################################
+    // #############################################################################################
+    clock_setup();
+
+    // #############################################################################################
+    // #############  USB Setup ##################################################################
+    // #############################################################################################
+    VCOM_init();
 
     // #############################################################################################
     // #############  LED Setup ##################################################################
@@ -90,29 +128,36 @@ int main(int argc, char** argv)
     Gpio_stm32 led_err_gpio(led_err_gpio_config);
     Gpio_stm32 led_stat_gpio(led_stat_gpio_config);
     Gpio_stm32 led_rf_gpio(led_rf_gpio_config);
-    Led_gpio led_err(led_err_gpio);
-    Led_gpio led_stat(led_stat_gpio);
-    Led_gpio led_rf(led_rf_gpio);
+    Led_gpio led_err(led_err_gpio, false);
+    Led_gpio led_stat(led_stat_gpio, false);
+    Led_gpio led_rf(led_rf_gpio, false);
 
     led_err_gpio.init();
     led_stat_gpio.init();
     led_rf_gpio.init();
 
+
+
+
     // #############################################################################################
     // #############  Blink ! ######################################################################
     // #############################################################################################
     led_err.off();
-    led_stat.off();
+    led_stat.on();
     led_rf.off();
 
     while (1)
     {
-        time_keeper_delay_ms(100);
+        time_keeper_delay_ms(10);
         led_rf.toggle();
-        time_keeper_delay_ms(100);
+        time_keeper_delay_ms(10);
         led_stat.toggle();
-        time_keeper_delay_ms(100);
+        time_keeper_delay_ms(10);
         led_err.toggle();
+
+        time_keeper_delay_ms(10);
+        VCOM_event();
+        // VCOM_putchar(1);
     }
 
     return 0;
