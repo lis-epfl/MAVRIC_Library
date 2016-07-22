@@ -247,12 +247,14 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
         if (packet->param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION)
         {
             navigating_handler->set_hold_waypoint(navigating_handler->ins_.position_lf());
+            print_util_dbg_print("Switching to NAV_STOP_ON_POSITION\r\n");
             navigating_handler->navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
 
             result = MAV_RESULT_ACCEPTED;
         }
         else if (packet->param2 == MAV_GOTO_HOLD_AT_SPECIFIED_POSITION)
         {
+            print_util_dbg_print("Switching to NAV_STOP_THERE\r\n");
             navigating_handler->navigation_.internal_state_ = Navigation::NAV_STOP_THERE;
 
             /*
@@ -281,11 +283,13 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
         //if (navigating_handler->mission_planner_.last_mode().is_auto())  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         if (navigating_handler->state_.is_auto())
         {
+            print_util_dbg_print("Switching to NAV_NAVIGATING\r\n");
             navigating_handler->navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
         }
         //else if (navigating_handler->mission_planner_.last_mode().ctrl_mode() == Mav_mode::POSITION_HOLD)  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         else if (navigating_handler->state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD)
         {
+            print_util_dbg_print("Switching to NAV_HOLD_POSITION\r\n");
             navigating_handler->navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
         }
 
@@ -376,12 +380,12 @@ void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner
     {
         if (mode_local.is_manual())
         {
-            print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_NAVIGATING\r\n");
+            print_util_dbg_print("Switching from NAV_NAVIGATING to NAV_MANUAL_CTRL\r\n");
             navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
         }
         else
         {
-            print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_NAVIGATING\r\n");
+            print_util_dbg_print("Switching from NAV_NAVIGATING to NAV_HOLD_POSITION\r\n");
             set_hold_waypoint(ins_.position_lf());
             hold_waypoint().set_radius(navigation_.minimal_radius);
             navigation_.dubin_state = DUBIN_INIT;

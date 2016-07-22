@@ -196,17 +196,19 @@ void Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
     {
         if (mode_local.is_auto())
         {
+            print_util_dbg_print("Switching from NAV_TAKEOFF to NAV_NAVIGATING\r\n");
             navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
         }
         else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
         {
+            print_util_dbg_print("Switching from NAV_TAKEOFF to NAV_HOLD_POSITION\r\n");
             navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
         }
     }
 
     if (mode_local.is_manual())
     {
-        print_util_dbg_print("Switching to NAV_MANUAL_CTRL from NAV_TAKEOFF\r\n");
+        print_util_dbg_print("Switching from NAV_TAKEOFF to NAV_MANUAL_CTRL\r\n");
         navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
     }
 }

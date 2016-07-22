@@ -137,6 +137,7 @@ void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& miss
                 //Do not reset custom flag here, to be able to check after landing
                 // in case something went wrong. Is reset while arming
                 reset_hold_waypoint();
+                print_util_dbg_print("Switching from NAV_LANDING to NAV_ON_GND\r\n");
                 navigation_.internal_state_ = Navigation::NAV_ON_GND;
                 state_.set_armed(false);
                 state_.mav_state_ = MAV_STATE_STANDBY;
@@ -159,6 +160,7 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
         result = MAV_RESULT_ACCEPTED;
 
         landing_handler->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
+        print_util_dbg_print("Switching to NAV_LANDING\r\n");
         landing_handler->navigation_.internal_state_ = Navigation::NAV_LANDING;
 
         //waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
@@ -334,6 +336,7 @@ void Mission_planner_handler_landing::handle(Mission_planner& mission_planner)
 
     if (mode_local.is_manual())
     {
+        print_util_dbg_print("Switching from NAV_LANDING to NAV_MANUAL_CTRL\r\n");
         navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
     }
 }

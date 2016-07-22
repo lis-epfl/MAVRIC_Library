@@ -86,6 +86,7 @@ void Mission_planner_handler_stop_there::handle(Mission_planner& mission_planner
 
     if (mode_local.is_manual())
     {
+        print_util_dbg_print("Switching from NAV_STOP_THERE to NAV_MANUAL_CTRL\r\n");
         navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
     }
 }

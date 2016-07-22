@@ -79,10 +79,12 @@ void Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
         if (!mode_local.is_manual())
         {
             reset_hold_waypoint();
+            print_util_dbg_print("Switching from NAV_ON_GND to NAV_TAKEOFF\r\n");
             navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
         }
         else
         {
+            print_util_dbg_print("Switching from NAV_ON_GND to NAV_MANUAL_CTRL\r\n");
             navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
         }
     }
