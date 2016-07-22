@@ -1999,6 +1999,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
         for(int n=0;n<MAX_OUTFENCE+1;n++)
         {
         	fencepoint_angle(all_fences[n],*all_fence_points[n],all_fence_angles[n]);
+        }
     }
 }
 

@@ -505,29 +505,6 @@ void Position_estimation::set_new_fence_origin()
     fence_position = coord_conventions_global_to_local_position(fence_position.origin, local_position.origin);
 }
 
-
-float Position_estimation::position_estimation_get_xy_distance_from_fence_origin()
-{
-	float dist_xy_sqr;
-	dist_xy_sqr = SQR(local_position.pos[X] - fence_position.pos[X]) + SQR(local_position.pos[Y] - fence_position.pos[Y]);
-
-	return maths_fast_sqrt(dist_xy_sqr);
-	//return dist_xy_sqr;
-}
-
-float Position_estimation::position_estimation_get_z_distance_from_fence_origin()
-{
-	float dist_z;
-	dist_z = local_position.pos[Z] - fence_position.pos[Z];
-
-	return dist_z;
-}
-
-local_position_t Position_estimation::get_fence_position()
-{
-	return fence_position;
-}
-
 Position_estimation::conf_t Position_estimation::default_config()
 {
     conf_t conf = {};
