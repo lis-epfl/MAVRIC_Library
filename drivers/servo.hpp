@@ -209,7 +209,7 @@ static inline servo_conf_t servo_default_config_esc()
 
 
 /**
- * \brief   Default configuration for ESCs (motor controller)
+ * \brief   Default configuration for Brushed motors (DC motor)
  *
  * \return  Conf structure
  */
