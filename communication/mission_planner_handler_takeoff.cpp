@@ -66,6 +66,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
         print_util_dbg_print_num(ins_.position_lf()[Y], 10);
         print_util_dbg_print(", ");
         print_util_dbg_print_num(navigation_.takeoff_altitude, 10);
+        print_util_dbg_print(")\r\n");
 
         local_position_t takeoff_pos = ins_.position_lf();
         takeoff_pos[Z] = navigation_.takeoff_altitude;
