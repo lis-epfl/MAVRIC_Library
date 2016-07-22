@@ -32,8 +32,8 @@ static const struct usb_device_descriptor dev = {
 	.bDeviceSubClass = 0,
 	.bDeviceProtocol = 0,
 	.bMaxPacketSize0 = 64,
-	.idVendor = 0x0483,
-    .idProduct = 0x5740,
+    .idVendor = 0xe9f1,   // e9f1 = EPFL
+    .idProduct = 0x0002,  // 0002 = Sparky
 	.bcdDevice = 0x0200,
 	.iManufacturer = 1,
 	.iProduct = 2,
@@ -159,9 +159,9 @@ static const struct usb_config_descriptor config = {
 };
 
 static const char * usb_strings[] = {
-	"Black Sphere Technologies",
-	"CDC-ACM Demo",
-	"DEMO",
+	"MAVRIC Autopilot",
+	"Sparky 2.0",
+	"STM32F4 USB CDC",
 };
 
 /* Buffer to be used for control requests. */
