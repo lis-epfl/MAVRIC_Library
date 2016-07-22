@@ -219,7 +219,7 @@ Waypoint::Waypoint(mavlink_mission_item_t& packet)
     param3_ = packet.param3;
     param4_ = packet.param4;
 
-    wpt_position_ = get_global_position(frame_, x, y, z, maths_deg_to_rad(packet.param4), INS::origin());
+    wpt_position_ = get_global_position(frame_, x, y, z, INS::origin());
     radius_ = param2_;
     loiter_time_ = param1_;
     // dubin_ = ???;
@@ -245,7 +245,7 @@ Waypoint::Waypoint( uint8_t frame,
             radius_(param2),
             loiter_time_(param1)
 {
-    wpt_position_ = get_global_position(frame, x, y, z, maths_deg_to_rad(param4), INS::origin());
+    wpt_position_ = get_global_position(frame, x, y, z, INS::origin());
     // dubin_ = ???;
 }
 
@@ -273,7 +273,7 @@ Waypoint::Waypoint( uint8_t frame,
             loiter_time_(loiter_time),
             dubin_(dubin)
 {
-    wpt_position_ = get_global_position(frame, x, y, z, maths_deg_to_rad(param4), INS::origin());
+    wpt_position_ = get_global_position(frame, x, y, z, INS::origin());
 }
 
 void Waypoint::send(const Mavlink_stream& mavlink_stream, uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current)
@@ -404,7 +404,7 @@ local_position_t Waypoint::local_pos() const
 
 void Waypoint::set_local_pos(local_position_t local_pos)
 {
-    wpt_position_ = get_global_position(MAV_FRAME_LOCAL_NED, local_pos[X], local_pos[Y], local_pos[Z], heading(), INS::origin());
+    wpt_position_ = get_global_position(MAV_FRAME_LOCAL_NED, local_pos[X], local_pos[Y], local_pos[Z], INS::origin());
 }
 
 void Waypoint::set_local_pos(local_position_t local_pos, float heading)
