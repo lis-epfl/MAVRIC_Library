@@ -43,7 +43,6 @@
 #ifndef STABILISATION_TELEMETRY_H_
 #define STABILISATION_TELEMETRY_H_
 
-#include "../../src/central_data.hpp"
 #include "control/stabilisation_copter.hpp"
 #include "communication/mavlink_stream.hpp"
 
