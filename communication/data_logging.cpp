@@ -42,15 +42,15 @@
 
 #include "communication/data_logging.hpp"
 
+#include <cstdlib>
+#include <math.h>
 #include <string>
+
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
-#include <stdbool.h>
-#include <stdlib.h>
-#include <math.h>
 }
 
 //------------------------------------------------------------------------------

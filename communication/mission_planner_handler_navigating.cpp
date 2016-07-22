@@ -79,7 +79,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
         local_position_t wpt_pos = waypoint_coordinates.local_pos();
         for (i = 0; i < 3; i++)
         {
-            rel_pos[i] = wpt_pos.pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
@@ -132,9 +132,9 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 //so we can declare a dummy one.
                 mavlink_command_long_t dummy_packet;
                 dummy_packet.param1 = 1;
-                dummy_packet.param5 = waypoint_coordinates.local_pos().pos[X];
-                dummy_packet.param6 = waypoint_coordinates.local_pos().pos[Y];
-                dummy_packet.param7 = waypoint_coordinates.local_pos().pos[Z];
+                dummy_packet.param5 = waypoint_coordinates.local_pos()[X];
+                dummy_packet.param6 = waypoint_coordinates.local_pos()[Y];
+                dummy_packet.param7 = waypoint_coordinates.local_pos()[Z];
                 Mission_planner_handler_landing::set_auto_landing(&mission_planner_handler_landing_, &dummy_packet);
             }
 
@@ -177,24 +177,24 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 // Determine geometry information between waypoints
                 for (i=0;i<3;i++)
                 {
-                    rel_pos[i] = next.local_pos().pos[i] - waypoint_coordinates_.waypoint.pos[i];
+                    rel_pos[i] = next.local_pos()[i] - waypoint_coordinates_.waypoint[i];
                 }
 
                 float rel_pos_norm[3];
                 vectors_normalize(rel_pos, rel_pos_norm);
 
                 float outter_pt[3];
-                outter_pt[X] = next.local_pos().pos[X] + rel_pos_norm[Y]*next.radius();
-                outter_pt[Y] = next.local_pos().pos[Y] - rel_pos_norm[X]*next.radius();
+                outter_pt[X] = next.local_pos()[X] + rel_pos_norm[Y]*next.radius();
+                outter_pt[Y] = next.local_pos()[Y] - rel_pos_norm[X]*next.radius();
                 outter_pt[Z] = 0.0f;
 
                 for (i=0;i<3;i++)
                 {
-                    rel_pos[i] = outter_pt[i]-position_estimation_.local_position.pos[i];
+                    rel_pos[i] = outter_pt[i]-ins_.position_lf()[i];
                 }
 
                 // float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
-                float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(position_estimation_.vel[Y], position_estimation_.vel[X]));
+                float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(vel[Y], vel[X]));
 
                 if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) ||
                     (current_waypoint_.command == MAV_CMD_NAV_LAND) ||
@@ -246,7 +246,7 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
     {
         if (packet->param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION)
         {
-            navigating_handler->set_hold_waypoint(navigating_handler->position_estimation_.local_position);
+            navigating_handler->set_hold_waypoint(navigating_handler->ins_.position_lf());
             navigating_handler->navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
 
             result = MAV_RESULT_ACCEPTED;
@@ -310,14 +310,14 @@ void Mission_planner_handler_navigating::send_nav_time(const Mavlink_stream* mav
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_navigating::Mission_planner_handler_navigating( const Position_estimation& position_estimation,
+Mission_planner_handler_navigating::Mission_planner_handler_navigating( const INS& ins,
                                                                         Navigation& navigation,
                                                                         State& state,
                                                                         const Mavlink_stream& mavlink_stream,
                                                                         Mavlink_waypoint_handler& waypoint_handler,
                                                                         Mission_planner_handler_landing& mission_planner_handler_landing,
                                                                         Mavlink_message_handler& message_handler):
-            Mission_planner_handler(position_estimation),
+            Mission_planner_handler(ins),
             navigation_(navigation),
             state_(state),
             mavlink_stream_(mavlink_stream),
@@ -382,7 +382,7 @@ void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner
         else
         {
             print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_NAVIGATING\r\n");
-            set_hold_waypoint(position_estimation_.local_position);
+            set_hold_waypoint(ins_.position_lf());
             hold_waypoint().set_radius(navigation_.minimal_radius);
             navigation_.dubin_state = DUBIN_INIT;
             navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;

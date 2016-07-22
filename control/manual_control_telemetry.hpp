@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef MANUAL_CONTROL_TELEMETRY_H_
-#define MANUAL_CONTROL_TELEMETRY_H_
+#ifndef MANUAL_CONTROL_TELEMETRY_HPP_
+#define MANUAL_CONTROL_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -69,4 +69,4 @@ bool manual_control_telemetry_init(Manual_control* manual_control, Mavlink_messa
  */
 void manual_control_telemetry_send(const Manual_control* manual_control, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* MANUAL_CONTROL_TELEMETRY_H_ */
+#endif /* MANUAL_CONTROL_TELEMETRY_HPP_ */

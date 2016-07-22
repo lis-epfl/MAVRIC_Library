@@ -40,22 +40,20 @@
  ******************************************************************************/
 
 
-#ifndef POSITION_ESTIMATION_H__
-#define POSITION_ESTIMATION_H__
+#ifndef POSITION_ESTIMATION_HPP__
+#define POSITION_ESTIMATION_HPP__
 
+#include <cstdbool>
 
 #include "communication/state.hpp"
 #include "drivers/gps.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
 
-extern "C"
-{
-#include <stdbool.h>
-#include "sensing/ahrs.h"
-#include "util/coord_conventions.h"
-#include "util/constants.h"
-}
+#include "sensing/ahrs.hpp"
+#include "sensing/ins.hpp"
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f
@@ -63,7 +61,7 @@ extern "C"
 
 
 
-class Position_estimation
+class Position_estimation: public INS
 {
 public:
 
@@ -72,11 +70,10 @@ public:
     /**
      * \brief The position estimator structure
      */
-    typedef struct
+    struct conf_t
     {
         global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
         float gravity;              ///<    value of the Gravity for position estimation correction
-        bool fence_set;
 
         float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
         float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
@@ -86,7 +83,7 @@ public:
 
         float kp_alt_baro;                      ///< Gain to correct the Z position estimation from the barometer
         float kp_vel_baro;                      ///< Gain to correct the Z velocity estimation from the barometer
-    }conf_t;
+    };
 
     enum fence_violation_state_t
     {
@@ -110,11 +107,13 @@ public:
      */
     Position_estimation(State& state, Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config = default_config());
 
+
     /**
      * \brief   Position estimation update step, performing position estimation then position correction (function to be used)
      *
+     * \return Success
      */
-    void update();
+    bool update(void);
 
     /**
      * \brief   Returns fence violation state
@@ -153,48 +152,68 @@ public:
      */
     bool set_home_to_current_position();
 
-    /**
-     * \brief   Reset the origin of the fence (e.g. common for many entities or when armed)
-     *
-     * \details Switches the fence on!
-     *
-     * \param   pos_est                 The pointer to the position estimation structure
-     */
-    void set_new_fence_origin();
 
     /**
-     * \brief   Returns if position estimation is healthy
+     * \brief     Last update in seconds
      *
-     * \details Checks if gps is healthy and initialized and altitude is healthy (see altitude_healthy())
-     *
-     * \return   healthy     whether 3D position estimation is healthy
+     * \return    time
      */
-    bool healthy() const;
+    float last_update_s(void) const;
+
 
     /**
-     * \brief   Returns if altitude estimation is healthy
+     * \brief     3D Position in meters (NED frame)
      *
-     * \details Checks if barometer is initialized
-     *
-     * \return   healthy     whether altitude estimation is healthy
+     * \return    position
      */
-    bool altitude_healthy() const;
+    std::array<float,3> position_lf(void) const;
 
-    local_position_t local_position;        ///< Local position
-    float vel[3];                           ///< 3D velocity in global frame
-    float vel_bf[3];                        ///< 3D velocity in body frame
+
+    /**
+     * \brief     Velocity in meters/seconds in NED frame
+     *
+     * \return    velocity
+     */
+    std::array<float,3> velocity_lf(void) const;
+
+
+    /**
+     * \brief     Absolute altitude above sea level in meters (>=0)
+     *
+     * \return    altitude
+     */
+    float absolute_altitude(void) const;
+
+
+    /**
+    * \brief   Indicates which estimate can be trusted
+    *
+    * \param   type    Type of estimate
+    *
+    * \return  boolean
+    */
+    bool is_healthy(INS::healthy_t type) const;
+
+
+
     float kp_alt_baro;                      ///< Gain to correct the Z position estimation from the barometer
     float kp_vel_baro;                      ///< Gain to correct the Z velocity estimation from the barometer
     float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
     float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
-
-private:
     float kp_alt_sonar;                     ///< Gain to correct the Z position estimation from the sonar
     float kp_vel_sonar;                     ///< Gain to correct the Z velocity estimation from the sonar
+
+private:
+    local_position_t local_position;        ///< Local position
+    global_position_t origin_;              ///< Local position
+    std::array<float,3> vel;                ///< 3D velocity in ned frame
+    std::array<float,3> vel_bf;             ///< 3D velocity in body frame
 
     uint32_t time_last_gps_posllh_msg;      ///< Time at which we received the last GPS POSLLH message in ms
     uint32_t time_last_gps_velned_msg;      ///< Time at which we received the last GPS VELNED message in ms
     uint32_t time_last_barometer_msg;       ///< Time at which we received the last barometer message in ms
+    float dt_s_;                            ///< Time interval between updates
+    float last_update_s_;                   ///< Last update time in seconds
     bool init_gps_position;                 ///< Boolean flag ensuring that the GPS was initialized
     bool init_barometer;                    ///< Boolean flag ensuring that the barometer was initialized
 
@@ -204,7 +223,6 @@ private:
 
     local_position_t last_gps_pos;          ///< Coordinates of the last GPS position
 
-    bool fence_set;                         ///< Indicates if fence is set
     local_position_t fence_position;        ///< Position of the fence
 
     float gravity;                          ///< Value of the gravity
@@ -250,4 +268,4 @@ private:
     void fence_control();
 
 };
-#endif // POSITION_ESTIMATION_H__
+#endif // POSITION_ESTIMATION_HPP__

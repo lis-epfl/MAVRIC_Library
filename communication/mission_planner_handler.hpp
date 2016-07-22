@@ -45,7 +45,7 @@
 
 #include "communication/mission_planner.hpp"
 #include "communication/waypoint.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -57,9 +57,9 @@ public:
     /**
      * \brief   Constructor
      *
-     * \param   position_estimation         The reference to the position estimation class
+     * \param   ins     The reference to the ins class
      */
-    Mission_planner_handler(const Position_estimation& position_estimation);
+    Mission_planner_handler(const INS& ins);
 
     /**
      * \brief   The handler for the mission planner. This is called by the state
@@ -96,6 +96,14 @@ public:
     static void set_hold_waypoint(const local_position_t hold_position);
 
     /**
+     * \brief   Sets the hold waypoint to the hold position
+     *
+     * \param   hold_position   The new desired hold position
+     * \param   heading         The desired heading of the waypoint
+     */
+    static void set_hold_waypoint(const local_position_t hold_position, float heading);
+
+    /**
      * \brief   Sets the hold waypoint to the inputted waypoint
      *
      * \param   wpt     The new waypoint
@@ -111,7 +119,7 @@ protected:
      */
     Waypoint& hold_waypoint();
 
-    const Position_estimation& position_estimation_;    ///< The position estimation reference
+    const INS& ins_;                            ///< The ins reference
 
 private:
 

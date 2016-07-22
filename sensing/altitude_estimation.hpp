@@ -46,13 +46,12 @@
 
 #include "drivers/sonar.hpp"
 #include "drivers/barometer.hpp"
-
+#include "sensing/ahrs.hpp"
 #include "util/kalman.hpp"
 
 extern "C"
 {
 #include "sensing/altitude.h"
-#include "sensing/ahrs.h"
 }
 
 
@@ -66,7 +65,7 @@ typedef struct
 
 /**
  * \brief   Default configuration
- * 
+ *
  * \return  Configuration structure
  */
 static inline altitude_estimation_conf_t altitude_estimation_default_config(void);
@@ -78,15 +77,15 @@ static inline altitude_estimation_conf_t altitude_estimation_default_config(void
 class Altitude_estimation: public Kalman<3,1,1>
 {
 public:
-    Altitude_estimation(Sonar& sonar, 
-                        Barometer& barometer, 
-                        ahrs_t& ahrs, 
-                        altitude_t& altitude, 
+    Altitude_estimation(Sonar& sonar,
+                        Barometer& barometer,
+                        ahrs_t& ahrs,
+                        altitude_t& altitude,
                         altitude_estimation_conf_t config = altitude_estimation_default_config() );
 
     /**
      * \brief   Initialization
-     * 
+     *
      * \return  Success
      */
     bool init(void);
@@ -94,7 +93,7 @@ public:
 
     /**
      * \brief   Main update function
-     * 
+     *
      * \return  Success
      */
     bool update(void);

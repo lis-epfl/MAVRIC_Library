@@ -40,15 +40,15 @@
  ******************************************************************************/
 
 
-#ifndef MAVLINK_STREAM_H_
-#define MAVLINK_STREAM_H_
+#ifndef MAVLINK_STREAM_HPP_
+#define MAVLINK_STREAM_HPP_
 
+#include <cstdint>
+#include <cstdbool>
 #include "hal/common/serial.hpp"
 
 extern "C"
 {
-#include <stdint.h>
-#include <stdbool.h>
 #include "hal/common/mavric_endian.h"
 }
 
@@ -137,7 +137,7 @@ public:
      */
     inline uint32_t compid() const {return compid_;};    // inline for higher exec speed
 
-    uint32_t sysid_;             ///< System ID 
+    uint32_t sysid_;             ///< System ID
 
 private:
 

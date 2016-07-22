@@ -30,85 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.h
+ * \file stabilisation.cpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Felix Schill
  *
- * \brief This file implements data structure for attitude estimate
+ * \brief Executing the PID controllers for stabilization
  *
  ******************************************************************************/
 
 
-#ifndef AHRS_H_
-#define AHRS_H_
+#include "control/stabilisation.hpp"
+#include "util/print_util.h"
+#include "util/constants.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "util/quaternions.h"
-
-
-/**
- * \brief The calibration level of the filter
- */
-typedef enum
+bool stabilisation_init(control_command_t* controls)
 {
-    AHRS_INITIALISING   = 0,    ///< Calibration level: Not initialised
-    AHRS_LEVELING       = 1,    ///< Calibration level: No calibration, attitude estimation correction by accelero/magneto measurements
-    AHRS_CONVERGING     = 2,    ///< Calibration level: leveling, correction of gyro biais
-    AHRS_READY          = 3,    ///< Calibration level: leveled
-} ahrs_state_t;
+    bool init_success = true;
 
+    controls->control_mode = ATTITUDE_COMMAND_MODE;
+    controls->yaw_mode = YAW_RELATIVE;
 
+    controls->rpy[ROLL] = 0.0f;
+    controls->rpy[PITCH] = 0.0f;
+    controls->rpy[YAW] = 0.0f;
+    controls->tvel[X] = 0.0f;
+    controls->tvel[Y] = 0.0f;
+    controls->tvel[Z] = 0.0f;
+    controls->theading = 0.0f;
+    controls->thrust = -1.0f;
 
-/**
- * \brief Structure containing the Attitude and Heading Reference System
- */
-typedef struct
-{
-    quat_t  qe;                         ///< quaternion defining the Attitude estimation of the platform
-
-    float   angular_speed[3];           ///< Gyro rates
-    float   linear_acc[3];              ///< Acceleration WITHOUT gravity
-
-    // quat_t up_vec;                       ///< The quaternion of the up vector
-    // quat_t north_vec;                    ///< The quaternion of the north vector
-
-    ahrs_state_t internal_state;        ///< Leveling state of the ahrs
-    float        last_update_s;            ///< The time of the last IMU update in ms
-    float        dt_s;                  ///< The time interval between two IMU updates
-} ahrs_t;
-
-
-
-
-
-/**
- * \brief   Initialiases the ahrs structure
- *
- * \param   ahrs                Pointer to ahrs structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool ahrs_init(ahrs_t* ahrs);
-
-
-/**
- * \brief   Returns an initialized ahrs_t
- *
- * \detail  Used to initialize ahrs in initalizer list
- *
- * \return  Initialized ahrs_t
- */
-ahrs_t ahrs_initialized(void);
-
-
-#ifdef __cplusplus
+    return init_success;
 }
-#endif
 
-#endif /* AHRS_H_ */
+void stabilisation_run(stabiliser_t* stabiliser, float dt, float errors[])
+{
+    for (int32_t i = 0; i < 3; i++)
+    {
+        stabiliser->output.rpy[i] = pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
+    }
+    stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
+}
+
+void stabilisation_run_feedforward(stabiliser_t *stabiliser, float dt, float errors[], float feedforward[])
+{
+    for (int32_t i = 0; i < 3; i++)
+    {
+        stabiliser->output.rpy[i] = pid_controller_update_feedforward_dt(&(stabiliser->rpy_controller[i]),  errors[i], feedforward[i], dt);
+    }
+    stabiliser->output.thrust = pid_controller_update_feedforward_dt(&(stabiliser->thrust_controller),  errors[3], feedforward[3], dt);
+}

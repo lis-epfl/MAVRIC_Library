@@ -40,15 +40,12 @@
  ******************************************************************************/
 
 
-#ifndef COORD_CONVENTIONS_H_
-#define COORD_CONVENTIONS_H_
+#ifndef COORD_CONVENTIONS_HPP_
+#define COORD_CONVENTIONS_HPP_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+#include <cstdint>
+#include <array>
 
-#include <stdint.h>
 #include "util/quaternions.h"
 
 #define EARTH_RADIUS 6378137.0f                 ///< radius of the earth in meters
@@ -59,23 +56,12 @@ extern "C"
  */
 typedef struct
 {
-    double longitude;           ///<    Current longitude
-    double latitude;            ///<    Current latitude
-    float altitude;             ///<    Current altitude
-    float heading;              ///<    Current heading
+    double longitude;           ///< Longitude in degrees
+    double latitude;            ///< Latitude in degrees
+    float altitude;             ///< Altitude above sea level in meters (>0)
 } global_position_t;
 
-
-/**
- * \brief       Local coordinates structure
- */
-typedef struct
-{
-    float pos[3];               ///<    Current position x, y and z
-    float heading;              ///<    Current heading (equal to heading in global frame)
-    global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
-} local_position_t;
-
+typedef std::array<float,3> local_position_t;
 
 /*
  * \brief       Attitude with aeronautics convention
@@ -96,22 +82,23 @@ typedef struct
  * \brief           Convert local NED coordinates to global GPS coordinates
  * \details         (relative to origin given in local coordinate frame)
  *
- * \param input     Local position
+ * \param input      Local position
+ * \param origin     Origin in global frame
+ * \param output     Global position
  *
  * \return          Global position
  */
-global_position_t coord_conventions_local_to_global_position(local_position_t input);
+void coord_conventions_local_to_global_position(const local_position_t& input, const global_position_t& origin, global_position_t& output);
 
 
 /**
  * \brief           Convert global GPS coordinates to local NED coordinate
  *
- * \param position  Global position
+ * \param input     Global position
  * \param origin    Global coordinates of the local frame's origin
- *
- * \return          Local position
+ * \param output    Local coordinates
  */
-local_position_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin);
+void coord_conventions_global_to_local_position(const global_position_t& input, const global_position_t& origin, local_position_t& output);
 
 
 /**
@@ -133,6 +120,24 @@ aero_attitude_t coord_conventions_quat_to_aero(quat_t qe);
  */
 quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero);
 
+/**
+ * \brief       Converts roll, pitch and yaw angles (with the aeronautics conventions) to an attitude quaternion
+ *
+ * \param rpy  Roll, pitch and yaw angles
+ *
+ * \return      Attitude quaternion
+ */
+quat_t coord_conventions_quaternion_from_rpy(const float rpy[3]);
+
+
+/**
+ * \brief         Converts attitude quaternion to roll, pitch and yaw angles (with the aeronautics conventions)
+ *
+ * \param quat    Attitude quaternion
+ * \param rpy     Roll, pitch and yaw angles
+ */
+void coord_conventions_rpy_from_quaternion(const quat_t& quat, float rpy[3]);
+
 
 /**
  * \brief      Computes the yaw angle from an attitude quaternion
@@ -144,21 +149,4 @@ quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero);
 float coord_conventions_get_yaw(quat_t qe);
 
 
-/**
- * \brief           Changes the origin of the local position
- *
- * \details         THIS IS EVIL!!!
- *
- * \param position  pointer to position whose origin is changed
- *
- * \param origin    new origin
- *
- */
-void coord_conventions_change_origin(local_position_t* position, global_position_t origin);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* STABILISATION_H_ */
+#endif /* STABILISATION_HPP_ */

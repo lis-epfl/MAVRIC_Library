@@ -41,12 +41,12 @@
 
 
 #include "control/vector_field_waypoint.hpp"
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "util/coord_conventions.h"
-#include "stdint.h"
-#include "util/constants.h"
+#include "cstdint"
 #include "util/vectors.h"
 
 #include "util/print_util.h"
@@ -383,11 +383,12 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, Mavlink_waypoint_handler* waypoint_handler, const Position_estimation* pos_est, velocity_command_t* velocity_command)
+
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command)
 {
     // Init dependencies
     vector_field->waypoint_handler  = waypoint_handler;
-    vector_field->pos_est           = pos_est;
+    vector_field->ins               = ins;
     vector_field->velocity_command  = velocity_command;
 
     return true;
@@ -406,7 +407,7 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
     vector_field->velocity_command->xyz[Z]  = 0.0f;
 
     // Compute vector field for floor avoidance
-    vector_field_floor(vector_field->pos_est->local_position.pos,
+    vector_field_floor(vector_field->ins->position_lf().data(),
                        20,
                        tmp_vector);
 
@@ -430,7 +431,7 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
         {
             // Attractive object
             case 22:
-                vector_field_attractor(vector_field->pos_est->local_position.pos,
+                vector_field_attractor(vector_field->ins->position_lf().data(),
                                        pos_obj,
                                        waypoint.param1(),     // attractiveness
                                        tmp_vector);
@@ -438,7 +439,7 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 
             // Cylindrical repulsive object
             case 17:
-                vector_field_repulsor_cylinder(vector_field->pos_est->local_position.pos,
+                vector_field_repulsor_cylinder(vector_field->ins->position_lf().data(),
                                                pos_obj,
                                                waypoint.param1(),     // repulsiveness
                                                waypoint.param2(),     // max_range
@@ -448,7 +449,7 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 
             // Spherical repulsive object
             case 18:
-                vector_field_repulsor_sphere(vector_field->pos_est->local_position.pos,
+                vector_field_repulsor_sphere(vector_field->ins->position_lf().data(),
                                              pos_obj,
                                              waypoint.param1(),   // repulsiveness
                                              waypoint.param2(),   // max_range
@@ -457,8 +458,8 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
                 break;
 
             // Circular waypoint
-            case 16:
-                vector_field_circular_waypoint(vector_field->pos_est->local_position.pos,
+          case 16:
+                vector_field_circular_waypoint(vector_field->ins->position_lf().data(),
                                                pos_obj,
                                                waypoint.param1(),     // attractiveness
                                                waypoint.param2(),     // cruise_speed

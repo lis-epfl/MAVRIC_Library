@@ -40,13 +40,10 @@
  ******************************************************************************/
 
 
-#ifndef ATTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
-#define ATTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
+#ifndef ATTITUDE_CONTROLLER_DEFAULT_CONFIG_HPP_
+#define ATTITUDE_CONTROLLER_DEFAULT_CONFIG_HPP_
 
-extern "C"
-{
-#include "control/attitude_controller.h"
-}
+#include "control/attitude_controller.hpp"
 
 static inline attitude_controller_conf_t attitude_controller_default_config()
 {
@@ -164,4 +161,4 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
     return conf;
 };
 
-#endif // ATTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
+#endif // ATTITUDE_CONTROLLER_DEFAULT_CONFIG_HPP_

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file spektrum_satellite.c
+ * \file spektrum_satellite.cpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -42,10 +42,10 @@
 
 
 #include "drivers/spektrum_satellite.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
 }
 
@@ -324,5 +324,3 @@ void Spektrum_satellite::switch_off(void)
     power_pin_.configure(GPIO_OUTPUT, GPIO_PULL_UPDOWN_NONE);
     power_pin_.set_high();
 }
-
-

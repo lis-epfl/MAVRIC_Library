@@ -42,7 +42,7 @@
 #ifndef SCHEDULER_TASK_HPP_
 #define SCHEDULER_TASK_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 
 
 /**

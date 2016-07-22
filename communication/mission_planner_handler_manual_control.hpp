@@ -47,7 +47,7 @@
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -61,11 +61,11 @@ public:
     /**
      * \brief   Initialize the manual control mission planner handler
      *
-     * \param   position_estimation     The pointer to the position estimator structure
+     * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      */
-     Mission_planner_handler_manual_control(    const Position_estimation& position_estimation,
+     Mission_planner_handler_manual_control(    const INS& ins,
                                                 Navigation& navigation,
                                                 State& state);
 

@@ -52,10 +52,10 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( const Position_estimation& position_estimation,
+Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( const INS& ins,
                                                                                 Navigation& navigation,
                                                                                 State& state):
-            Mission_planner_handler(position_estimation),
+            Mission_planner_handler(ins),
             navigation_(navigation),
             state_(state)
 {
@@ -78,7 +78,7 @@ void Mission_planner_handler_manual_control::handle(Mission_planner& mission_pla
     else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
     {
         print_util_dbg_print("Switching to NAV_HOLD_POSITION from NAV_MANUAL_CTRL\r\n");
-        set_hold_waypoint(position_estimation_.local_position);
+        set_hold_waypoint(ins_.position_lf());
         hold_waypoint().set_radius(navigation_.minimal_radius);
         navigation_.dubin_state = DUBIN_INIT;
         navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;

@@ -47,7 +47,6 @@
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "sensing/position_estimation.hpp"
 #include "util/coord_conventions.h"
 
 /*
@@ -228,6 +227,22 @@ public:
     void set_param4(float param4);
 
     /**
+     * \brief   Gets the heading of the waypoint
+     *
+     * Usually param4_
+     *
+     * \return  heading
+     */
+    float heading() const;
+
+    /**
+     * \brief   Sets heading
+     *
+     * \param   heading
+     */
+    void set_heading(float heading);
+
+    /**
      * \brief   Gets the waypoint in local coordinates
      *
      * \return  Local waypoint position
@@ -236,8 +251,18 @@ public:
 
     /**
      * \brief   Sets the waypoint in local coordinates
+     *
+     * \param   local_pos       The local position of the waypoint
      */
     void set_local_pos(local_position_t local_pos);
+
+    /**
+     * \brief   Sets the waypoint in local coordinates
+     *
+     * \param   local_pos       The locaiton position of the waypoint
+     * \param   heading         The desired heading of the waypoint
+     */
+    void set_local_pos(local_position_t local_pos, float heading);
 
     /**
      * \brief   Gets the radius

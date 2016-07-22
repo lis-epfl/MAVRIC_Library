@@ -80,13 +80,13 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   position_estimation         The pointer to the position estimator structure
-     * \param   navigation                  The pointer to the navigation structure
-     * \param   ahrs                        The pointer to the attitude estimation structure
-     * \param   state                       The pointer to the state structure
-     * \param   manual_control              The pointer to the manual control structure
-     * \param   mavlink_communication       The pointer to the MAVLink communication structure
-     * \param   mavlink_stream              The pointer to the MAVLink stream structure
+     * \param   ins                         The reference to the ins structure
+     * \param   navigation                  The reference to the navigation structure
+     * \param   ahrs                        The reference to the attitude estimation structure
+     * \param   state                       The reference to the state structure
+     * \param   manual_control              The reference to the manual control structure
+     * \param   mavlink_communication       The reference to the MAVLink communication structure
+     * \param   mavlink_stream              The reference to the MAVLink stream structure
      * \param   on_ground_handler           The handler for the on ground state
      * \param   takeoff_handler             The handler for the takeoff state
      * \param   landing_handler             The handler for the landing state
@@ -95,11 +95,11 @@ public:
      * \param   stop_there_handler          The handler for the stop there state
      * \param   navigating_handler          The handler for the navigating state
      * \param   manual_control_handler      The handler for the manual control state
-     * \param   waypoint_handler    The handler for the manual control state
+     * \param   waypoint_handler            The handler for the waypoints
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mission_planner(    Position_estimation& position_estimation,
+    Mission_planner(    INS& ins,
                         Navigation& navigation,
                         const ahrs_t& ahrs,
                         State& state,
@@ -173,7 +173,7 @@ protected:
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure
-    Position_estimation& position_estimation_;                  ///< The reference to the position estimation structure
+    INS& ins;                                                   ///< The reference to the ins structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     const Manual_control& manual_control_;                      ///< The reference to the manual_control structure
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
@@ -199,14 +199,14 @@ protected:
      *      static member functions (callbacks)     *
      ************************************************/
 
-    /**
-     * \brief   Set a new home position, origin of the local frame
-     *
-     * \param   mission_planner         The pointer to the waypoint handler
-     * \param   sysid                   The system ID
-     * \param   msg                     The received MAVLink message structure with the new home position
-     */
-    static void set_home(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
+//     /**
+//      * \brief   Set a new home position, origin of the local frame
+//      *
+//      * \param   mission_planner         The pointer to the waypoint handler
+//      * \param   sysid                   The system ID
+//      * \param   msg                     The received MAVLink message structure with the new home position
+//      */
+//     static void set_home(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
 
     /**
      * \brief   Set the next waypoint as current waypoint

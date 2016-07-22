@@ -40,7 +40,7 @@
  *
  ******************************************************************************/
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "drivers/battery.hpp"
 

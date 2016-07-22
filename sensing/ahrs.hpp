@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.c
+ * \file ahrs.hpp
  *
  * \author MAV'RIC Team
  * \author Gregoire Heitz
@@ -40,51 +40,62 @@
  ******************************************************************************/
 
 
-#include "sensing/ahrs.h"
-#include "util/print_util.h"
-#include "util/constants.h"
+#ifndef AHRS_HPP_
+#define AHRS_HPP_
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
+#include <cstdint>
+#include <cstdbool>
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool ahrs_init(ahrs_t* ahrs)
+extern "C"
 {
-    bool init_success = true;
-
-    // Init structure
-    ahrs->qe.s = 1.0f;
-    ahrs->qe.v[X] = 0.0f;
-    ahrs->qe.v[Y] = 0.0f;
-    ahrs->qe.v[Z] = 0.0f;
-
-    ahrs->angular_speed[X] = 0.0f;
-    ahrs->angular_speed[Y] = 0.0f;
-    ahrs->angular_speed[Z] = 0.0f;
-
-    ahrs->linear_acc[X] = 0.0f;
-    ahrs->linear_acc[Y] = 0.0f;
-    ahrs->linear_acc[Z] = 0.0f;
-
-    ahrs->last_update_s = 0.0f;
-    ahrs->dt_s          = 1.0f;
-
-    ahrs->internal_state = AHRS_INITIALISING;
-
-    return init_success;
+#include "util/quaternions.h"
 }
 
-ahrs_t ahrs_initialized()
+/**
+ * \brief The calibration level of the filter
+ */
+typedef enum
 {
-    ahrs_t ahrs;
-    ahrs_init(&ahrs);
-    return ahrs;
-}
+    AHRS_INITIALISING   = 0,    ///< Calibration level: Not initialised
+    AHRS_LEVELING       = 1,    ///< Calibration level: No calibration, attitude estimation correction by accelero/magneto measurements
+    AHRS_CONVERGING     = 2,    ///< Calibration level: leveling, correction of gyro biais
+    AHRS_READY          = 3,    ///< Calibration level: leveled
+} ahrs_state_t;
+
+
+/**
+ * \brief Structure containing the Attitude and Heading Reference System
+ */
+typedef struct
+{
+    quat_t  qe;                         ///< quaternion defining the Attitude estimation of the platform
+
+    float   angular_speed[3];           ///< Gyro rates
+    float   linear_acc[3];              ///< Acceleration WITHOUT gravity
+
+    ahrs_state_t internal_state;        ///< Leveling state of the ahrs
+    float        last_update_s;         ///< The time of the last IMU update in s
+} ahrs_t;
+
+
+/**
+ * \brief   Initialiases the ahrs structure
+ *
+ * \param   ahrs                Pointer to ahrs structure
+ *
+ * \return  True if the init succeed, false otherwise
+ */
+bool ahrs_init(ahrs_t* ahrs);
+
+
+/**
+ * \brief   Returns an initialized ahrs_t
+ *
+ * \detail  Used to initialize ahrs in initalizer list
+ *
+ * \return  Initialized ahrs_t
+ */
+ahrs_t ahrs_initialized(void);
+
+
+#endif /* AHRS_HPP_ */

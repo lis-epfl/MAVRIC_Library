@@ -46,7 +46,6 @@
 #include "communication/mission_planner_handler.hpp"
 #include "communication/state.hpp"
 #include "control/navigation.hpp"
-#include "sensing/position_estimation.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -60,11 +59,11 @@ public:
     /**
      * \brief   Initialize the stop there mission planner handler
      *
-     * \param   position_estimation     The reference to the position estimator class
+     * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation class
      * \param   state                   The reference to the state class
      */
-     Mission_planner_handler_stop_there(    const Position_estimation& position_estimation,
+     Mission_planner_handler_stop_there(    const INS& ins,
                                             Navigation& navigation,
                                             State& state);
 

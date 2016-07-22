@@ -30,95 +30,34 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file ins_telemetry.cpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *
- * \brief Useful constants
+ * \brief   Telemetry for Inertial Navigation System
  *
  ******************************************************************************/
 
+#include "sensing/ins_telemetry.hpp"
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
-
-#ifdef __cplusplus
-extern "C"
+static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-#endif
-
-
-#define GRAVITY 9.81f           ///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    X = 0,
-    Y = 1,
-    Z = 2,
-} constants_orientation_t;
-
-
-/**
- * \brief Enumerates the Roll, Pitch and Yaw orientations
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    ROLL    = 0,
-    PITCH   = 1,
-    YAW     = 2,
-} constants_roll_pitch_yaw_t;
-
-
-/**
- * \brief Enumerates the up vector orientation
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    UPVECTOR_X = 0,
-    UPVECTOR_Y = 0,
-    UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-    OFF = 0,
-    ON  = 1,
-} constants_on_off_t;
-
-
-/**
- * \brief Enumerate the turn direction of a motor
- */
-typedef enum
-{
-    CCW =  1,                    ///< Counter Clock wise
-    CW  = -1                     ///< Clock wise
-} rot_dir_t;
-
-
-/**
- * \brief Enumerate the turn direction of a flap
- */
-typedef enum
-{
-    FLAP_NORMAL     = 1,    ///< Positive roll or positive pitch or positive yaw
-    FLAP_INVERTED   = -1    ///< Negative roll or negative pitch or negative yaw
-} flap_dir_t;
-
-
-#ifdef __cplusplus
+    float cov[45];
+    mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
+                                            mavlink_stream->compid(),
+                                            msg,
+                                            time_keeper_get_ms(),
+                                            time_keeper_get_ms(),
+                                            0,
+                                            ins->position_lf()[0],
+                                            ins->position_lf()[1],
+                                            ins->position_lf()[2],
+                                            ins->velocity_lf()[0],
+                                            ins->velocity_lf()[1],
+                                            ins->velocity_lf()[2],
+                                            0.0f,
+                                            0.0f,
+                                            ins->absolute_altitude(),
+                                            cov);
 }
-#endif
-
-#endif /* MATH_UTIL_H_ */

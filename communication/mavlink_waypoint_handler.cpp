@@ -43,14 +43,16 @@
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/mission_planner.hpp"
+
 #include <cstdlib>
+
 #include "hal/common/time_keeper.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
 #include "util/maths.h"
-#include "util/constants.h"
 }
 
 
@@ -472,11 +474,11 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position_estimation, Navigation& navigation, State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, conf_t config):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(INS& ins, Navigation& navigation, State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
             mavlink_stream_(mavlink_stream),
-            position_estimation_(position_estimation),
+            ins_(ins),
             state_(state),
             navigation_(navigation),
             message_handler_(message_handler),
@@ -542,7 +544,6 @@ bool Mavlink_waypoint_handler::init()
     callback.compid_filter  = MAV_COMP_ID_ALL;
     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &clear_waypoint_list;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_ACK; // 47
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
@@ -680,7 +681,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
 {
     float rel_pos[3];
 
-    if (    (position_estimation_.init_gps_position || state_.mav_mode().is_hil())
+    if (    (ins_.is_healthy(INS::healthy_t::XYZ_ABS_POSITION) || state_.mav_mode().is_hil())
             && (waypoint_receiving_ == false)
             && (!state_.nav_plan_active))
     {
@@ -690,7 +691,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
 
         for (uint8_t j = 0; j < 3; j++)
         {
-            rel_pos[j] = waypoint_list_[current_waypoint_index_].local_pos().pos[j] - position_estimation_.local_position.pos[j];
+            rel_pos[j] = waypoint_list_[current_waypoint_index_].local_pos()[j] - ins_.position_lf()[j];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
     }

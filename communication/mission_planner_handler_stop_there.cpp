@@ -57,10 +57,10 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_stop_there::Mission_planner_handler_stop_there( const Position_estimation& position_estimation,
+Mission_planner_handler_stop_there::Mission_planner_handler_stop_there( const INS& ins,
                                                                         Navigation& navigation,
                                                                         State& state):
-            Mission_planner_handler(position_estimation),
+            Mission_planner_handler(ins),
             navigation_(navigation),
             state_(state)
 {
@@ -96,9 +96,9 @@ void Mission_planner_handler_stop_there::stopping_handler(Mission_planner& missi
     float rel_pos[3];
 
     local_position_t local_pos = hold_waypoint().local_pos();
-    rel_pos[X] = (float)(local_pos.pos[X] - position_estimation_.local_position.pos[X]);
-    rel_pos[Y] = (float)(local_pos.pos[Y] - position_estimation_.local_position.pos[Y]);
-    rel_pos[Z] = (float)(local_pos.pos[Z] - position_estimation_.local_position.pos[Z]);
+    rel_pos[X] = (float)(local_pos[X] - ins_.position_lf()[X]);
+    rel_pos[Y] = (float)(local_pos[Y] - ins_.position_lf()[Y]);
+    rel_pos[Z] = (float)(local_pos[Z] - ins_.position_lf()[Z]);
 
     dist2wp_sqr = vectors_norm_sqr(rel_pos);
     if (dist2wp_sqr < 25.0f)

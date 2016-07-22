@@ -61,25 +61,19 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
     if (!hold_waypoint_set())
     {
         print_util_dbg_print("Automatic take-off, will hold position at: (");
-        print_util_dbg_print_num(position_estimation_.local_position.pos[X], 10);
+        print_util_dbg_print_num(ins_.position_lf()[X]10);
         print_util_dbg_print(", ");
-        print_util_dbg_print_num(position_estimation_.local_position.pos[Y], 10);
+        print_util_dbg_print_num(ins_.position_lf()[Y], 10);
         print_util_dbg_print(", ");
         print_util_dbg_print_num(navigation_.takeoff_altitude, 10);
-        print_util_dbg_print("), with heading of: ");
-        print_util_dbg_print_num((int32_t)(position_estimation_.local_position.heading * 180.0f / 3.14f), 10);
-        print_util_dbg_print("\r\n");
 
-        local_position_t takeoff_pos = position_estimation_.local_position;
-        takeoff_pos.pos[Z] = navigation_.takeoff_altitude;
+        local_position_t takeoff_pos = ins_.position_lf();
+        takeoff_pos[Z] = navigation_.takeoff_altitude;
+        float heading = coord_conventions_get_yaw(ahrs_.qe);
 
-        aero_attitude_t aero_attitude;
-        aero_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
-        takeoff_pos.heading = aero_attitude.rpy[2];
+        set_hold_waypoint(takeoff_pos, heading);
 
-        set_hold_waypoint(takeoff_pos);
-
-        navigation_.dist2wp_sqr = hold_waypoint().local_pos().pos[Z] * hold_waypoint().local_pos().pos[Z];
+        navigation_.dist2wp_sqr = SQR(hold_waypoint().local_pos()[Z]);
     }
 
     if (!mission_planner.has_mode_change())
@@ -103,7 +97,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
                 }
                 else
                 {
-                    if (position_estimation_.local_position.pos[Z] <= navigation_.takeoff_altitude)
+                    if (ins_.position_lf()[Z] <= navigation_.takeoff_altitude)
                     {
                         result = true;
                     }
@@ -152,12 +146,12 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   const Position_estimation& position_estimation,
+Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   const INS& ins,
                                                                     Navigation& navigation,
                                                                     const ahrs_t& ahrs,
                                                                     State& state,
                                                                     Mavlink_message_handler& message_handler):
-            Mission_planner_handler(position_estimation),
+            Mission_planner_handler(ins),
             navigation_(navigation),
             ahrs_(ahrs),
             state_(state),

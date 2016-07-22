@@ -53,10 +53,10 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_stop_on_position::Mission_planner_handler_stop_on_position( const Position_estimation& position_estimation,
+Mission_planner_handler_stop_on_position::Mission_planner_handler_stop_on_position( const INS& ins,
                                                                                     Navigation& navigation,
                                                                                     State& state):
-            Mission_planner_handler(position_estimation),
+            Mission_planner_handler(ins),
             navigation_(navigation),
             state_(state)
 {

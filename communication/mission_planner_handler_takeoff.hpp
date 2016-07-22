@@ -49,7 +49,6 @@
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
-#include "sensing/position_estimation.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -63,13 +62,13 @@ public:
     /**
      * \brief   Initialize the takeoff mission planner handler
      *
-     * \param   position_estimation     The reference to the position estimator class
+     * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation class
      * \param   ahrs                    The reference to the attitude estimation class
      * \param   state                   The reference to the state class
      * \param   message_handler         The reference to the mavlink message handler
      */
-     Mission_planner_handler_takeoff(   const Position_estimation& position_estimation,
+     Mission_planner_handler_takeoff(   const INS& ins,
                                         Navigation& navigation,
                                         const ahrs_t& ahrs,
                                         State& state,

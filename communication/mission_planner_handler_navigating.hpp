@@ -48,7 +48,6 @@
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
-#include "sensing/position_estimation.hpp"
 
 class Mavlink_waypoint_handler;
 class Mission_planner_handler_landing;
@@ -65,16 +64,16 @@ public:
     /**
      * \brief   Initialize the navigating mission planner handler
      *
-     * \param   position_estimation                 The pointer to the position estimator structure
+     * \param   ins                                 The reference to the ins
      * \param   navigation                          The reference to the navigation structure
      * \param   state                               The reference to the state structure
      * \param   mission_planner                     The reference to the mission planner
      * \param   mavlink_stream                      The reference to the MAVLink stream structure
-     * \param   waypoint_handler            The handler for the manual control state
+     * \param   waypoint_handler                    The handler for the manual control state
      * \param   mission_planner_handler_landing     The reference to the landing handler
      * \param   message_handler                     The reference to the mavlink message handler
      */
-     Mission_planner_handler_navigating(    const Position_estimation& position_estimation,
+     Mission_planner_handler_navigating(    const INS& ins,
                                             Navigation& navigation,
                                             State& state,
                                             const Mavlink_stream& mavlink_stream,

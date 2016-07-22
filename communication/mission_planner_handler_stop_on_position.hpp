@@ -59,11 +59,11 @@ public:
     /**
      * \brief   Initialize the stop on position mission planner handler
      *
-     * \param   position_estimation     The reference to the position estimation class
+     * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation class
      * \param   state                   The reference to the state class
      */
-     Mission_planner_handler_stop_on_position(  const Position_estimation& position_estimation,
+     Mission_planner_handler_stop_on_position(  const INS& ins,
                                                 Navigation& navigation,
                                                 State& state);
 
@@ -77,7 +77,7 @@ public:
     virtual void handle(Mission_planner& mission_planner);
 
     virtual bool init();
-    
+
 protected:
     Navigation& navigation_;                                     ///< The reference to the navigation structure
     State& state_;                                               ///< The reference to the state structure

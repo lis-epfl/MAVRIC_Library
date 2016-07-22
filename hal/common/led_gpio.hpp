@@ -42,7 +42,7 @@
 #ifndef LED_GPIO_HPP_
 #define LED_GPIO_HPP_
 
-#include <stdbool.h>
+#include <cstdbool>
 
 #include "hal/common/led.hpp"
 #include "hal/common/gpio.hpp"

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file qfilter.c
+ * \file qfilter.cpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -40,16 +40,16 @@
  ******************************************************************************/
 
 
+ #include "hal/common/time_keeper.hpp"
 #include "sensing/qfilter.hpp"
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "util/coord_conventions.h"
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 #include <math.h>
 #include "util/maths.h"
-#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------
@@ -108,9 +108,7 @@ void qfilter_update(qfilter_t* qf)
     float dt_s     = (float)(now_s - qf->ahrs->last_update_s);
 
     // Write to ahrs structure
-    qf->ahrs->dt_s          = dt_s;
     qf->ahrs->last_update_s = now_s;
-
 
     // up_bf = qe^-1 *(0,0,0,-1) * qe
     up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;

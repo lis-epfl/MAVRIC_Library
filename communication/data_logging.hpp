@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_H__
-#define DATA_LOGGING_H__
+#ifndef DATA_LOGGING_HPP__
+#define DATA_LOGGING_HPP__
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/state.hpp"
@@ -298,4 +298,4 @@ static inline bool task_data_logging_update(Data_logging* data_logging)
     return data_logging->update();
 }
 
-#endif /* DATA_LOGGING_H__ */
+#endif /* DATA_LOGGING_HPP__ */

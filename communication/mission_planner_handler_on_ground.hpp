@@ -60,12 +60,12 @@ public:
     /**
      * \brief   Initialize the on ground mission planner handler
      *
-     * \param   position_estimation     The reference to the position estimation class
+     * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation class
      * \param   state                   The reference to the state class
      * \param   manual_control          The reference to the manual control class
      */
-     Mission_planner_handler_on_ground( const Position_estimation& position_estimation,
+     Mission_planner_handler_on_ground( const INS& ins,
                                         Navigation& navigation,
                                         State& state,
                                         const Manual_control& manual_control);
@@ -81,7 +81,7 @@ public:
     virtual void handle(Mission_planner& mission_planner);
 
     virtual bool init();
-    
+
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure

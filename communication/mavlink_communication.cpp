@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_communication.c
+ * \file mavlink_communication.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -41,13 +41,11 @@
  ******************************************************************************/
 
 
+ #include <cstdlib>
+
 #include "communication/mavlink_communication.hpp"
 #include "util/print_util.h"
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-#include <stdlib.h>
-}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION

@@ -66,45 +66,45 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_planner::set_home(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg)
-{
-    mavlink_set_gps_global_origin_t packet;
-
-    if (!mission_planner->state_.is_armed())
-    {
-        mavlink_msg_set_gps_global_origin_decode(msg, &packet);
-
-        // Check if this message is for this system and subsystem
-        // Due to possible bug from QGroundControl, no check of target_component and compid
-        if ((uint8_t)packet.target_system == (uint8_t)sysid)
-        {
-            print_util_dbg_print("Set new home location.\r\n");
-            mission_planner->position_estimation_.local_position.origin.latitude = (double) packet.latitude / 10000000.0f;
-            mission_planner->position_estimation_.local_position.origin.longitude = (double) packet.longitude / 10000000.0f;
-            mission_planner->position_estimation_.local_position.origin.altitude = (float) packet.altitude / 1000.0f;
-
-            print_util_dbg_print("New Home location: (");
-            print_util_dbg_print_num(mission_planner->position_estimation_.local_position.origin.latitude * 10000000.0f, 10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(mission_planner->position_estimation_.local_position.origin.longitude * 10000000.0f, 10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(mission_planner->position_estimation_.local_position.origin.altitude * 1000.0f, 10);
-            print_util_dbg_print(")\r\n");
-
-
-            mission_planner->position_estimation_.set_new_fence_origin();
-
-            mavlink_message_t _msg;
-            mavlink_msg_gps_global_origin_pack(mission_planner->mavlink_stream_.sysid(),
-                                               mission_planner->mavlink_stream_.compid(),
-                                               &_msg,
-                                               mission_planner->position_estimation_.local_position.origin.latitude * 10000000.0f,
-                                               mission_planner->position_estimation_.local_position.origin.longitude * 10000000.0f,
-                                               mission_planner->position_estimation_.local_position.origin.altitude * 1000.0f);
-            mission_planner->mavlink_stream_.send(&_msg);
-        }
-    }
-}
+// void Mission_planner::set_home(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg)
+// {
+//     mavlink_set_gps_global_origin_t packet;
+//
+//     if (!mission_planner->state_.is_armed())
+//     {
+//         mavlink_msg_set_gps_global_origin_decode(msg, &packet);
+//
+//         // Check if this message is for this system and subsystem
+//         // Due to possible bug from QGroundControl, no check of target_component and compid
+//         if ((uint8_t)packet.target_system == (uint8_t)sysid)
+//         {
+//             print_util_dbg_print("Set new home location.\r\n");
+//             mission_planner->position_estimation_.local_position.origin.latitude = (double) packet.latitude / 10000000.0f;
+//             mission_planner->position_estimation_.local_position.origin.longitude = (double) packet.longitude / 10000000.0f;
+//             mission_planner->position_estimation_.local_position.origin.altitude = (float) packet.altitude / 1000.0f;
+//
+//             print_util_dbg_print("New Home location: (");
+//             print_util_dbg_print_num(mission_planner->position_estimation_.local_position.origin.latitude * 10000000.0f, 10);
+//             print_util_dbg_print(", ");
+//             print_util_dbg_print_num(mission_planner->position_estimation_.local_position.origin.longitude * 10000000.0f, 10);
+//             print_util_dbg_print(", ");
+//             print_util_dbg_print_num(mission_planner->position_estimation_.local_position.origin.altitude * 1000.0f, 10);
+//             print_util_dbg_print(")\r\n");
+//
+//
+//             mission_planner->position_estimation_.set_new_fence_origin();
+//
+//             mavlink_message_t _msg;
+//             mavlink_msg_gps_global_origin_pack(mission_planner->mavlink_stream_.sysid(),
+//                                                mission_planner->mavlink_stream_.compid(),
+//                                                &_msg,
+//                                                mission_planner->position_estimation_.local_position.origin.latitude * 10000000.0f,
+//                                                mission_planner->position_estimation_.local_position.origin.longitude * 10000000.0f,
+//                                                mission_planner->position_estimation_.local_position.origin.altitude * 1000.0f);
+//             mission_planner->mavlink_stream_.send(&_msg);
+//         }
+//     }
+// }
 
 mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission_planner, mavlink_command_long_t* packet)
 {
@@ -233,7 +233,7 @@ void Mission_planner::critical_handler()
     if (state_.battery_.is_low() ||
             state_.connection_lost ||
             state_.out_of_fence_2 ||
-            position_estimation_.healthy() == false)
+            ins_.is_healthy(INS::healthy_t::XYZ_REL_POSITION) == false)
     {
         if (navigation_.critical_behavior != Navigation::CRITICAL_LAND)
         {
@@ -247,11 +247,8 @@ void Mission_planner::critical_handler()
         critical_next_state_ = true;
 
         local_position_t local_critical_pos;
-        local_critical_pos.origin = position_estimation_.local_position.origin;
 
-        aero_attitude_t aero_attitude;
-        aero_attitude = coord_conventions_quat_to_aero(navigation_.qe);
-        local_critical_pos.heading = aero_attitude.rpy[2];
+        waypoint_critical_coordinates_.set_heading(coord_conventions_get_yaw(ahrs_.qe));
 
         switch (navigation_.critical_behavior)
         {
@@ -259,9 +256,9 @@ void Mission_planner::critical_handler()
                 print_util_dbg_print("Climbing to safe alt...\r\n");
                 state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 
-                local_critical_pos.pos[X] = position_estimation_.local_position.pos[X];
-                local_critical_pos.pos[Y] = position_estimation_.local_position.pos[Y];
-                local_critical_pos.pos[Z] = -30.0f;
+                local_critical_pos[X] = ins_.position_lf()[X];
+                local_critical_pos[Y] = ins_.position_lf()[Y];
+                local_critical_pos[Z] = -30.0f;
 
                 break;
 
@@ -269,19 +266,19 @@ void Mission_planner::critical_handler()
                 state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
                 state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
 
-                local_critical_pos.pos[X] = 0.0f;
-                local_critical_pos.pos[Y] = 0.0f;
-                local_critical_pos.pos[Z] = -30.0f;
+                local_critical_pos[X] = 0.0f;
+                local_critical_pos[Y] = 0.0f;
+                local_critical_pos[Z] = -30.0f;
                 break;
 
             case Navigation::HOME_LAND:
                 state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
                 state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
-                local_critical_pos.pos[X] = 0.0f;
-                local_critical_pos.pos[Y] = 0.0f;
-                local_critical_pos.pos[Z] = 5.0f;
-                navigation_.alt_lpf = position_estimation_.local_position.pos[2];
+                local_critical_pos[X] = 0.0f;
+                local_critical_pos[Y] = 0.0f;
+                local_critical_pos[Z] = 5.0f;
+                navigation_.alt_lpf = ins_.position_lf()[Z];
                 break;
 
             case Navigation::CRITICAL_LAND:
@@ -289,10 +286,10 @@ void Mission_planner::critical_handler()
                 state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
-                local_critical_pos.pos[X] = position_estimation_.local_position.pos[X];
-                local_critical_pos.pos[Y] = position_estimation_.local_position.pos[Y];
-                local_critical_pos.pos[Z] = 5.0f;
-                navigation_.alt_lpf = position_estimation_.local_position.pos[2];
+                local_critical_pos[X] = ins_.position_lf()[X];
+                local_critical_pos[Y] = ins_.position_lf()[Y];
+                local_critical_pos[Z] = 5.0f;
+                navigation_.alt_lpf = ins_.position_lf()[Z];
                 break;
         }
 
@@ -300,15 +297,15 @@ void Mission_planner::critical_handler()
 
         for (uint8_t i = 0; i < 3; i++)
         {
-            rel_pos[i] = waypoint_critical_coordinates_.local_pos().pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = waypoint_critical_coordinates_.local_pos()[i] - ins_.position_lf()[i];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
     }
 
     if (navigation_.critical_behavior == Navigation::CRITICAL_LAND || navigation_.critical_behavior == Navigation::HOME_LAND)
     {
-        navigation_.alt_lpf = navigation_.LPF_gain * navigation_.alt_lpf + (1.0f - navigation_.LPF_gain) * position_estimation_.local_position.pos[2];
-        if ((position_estimation_.local_position.pos[2] > -0.1f) && (maths_f_abs(position_estimation_.local_position.pos[2] - navigation_.alt_lpf) <= 0.2f))
+        navigation_.alt_lpf = navigation_.LPF_gain * navigation_.alt_lpf + (1.0f - navigation_.LPF_gain) * ins_.position_lf()[Z];
+        if ((ins_.position_lf()[Z] > -0.1f) && (maths_f_abs(ins_.position_lf()[Z] - navigation_.alt_lpf) <= 0.2f))
         {
             // Disarming
             next_state_ = true;
@@ -369,7 +366,7 @@ void Mission_planner::critical_handler()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner::Mission_planner(Position_estimation& position_estimation, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_planner_handler_on_ground& on_ground_handler, Mission_planner_handler_takeoff& takeoff_handler, Mission_planner_handler_landing& landing_handler, Mission_planner_handler_hold_position& hold_position_handler, Mission_planner_handler_stop_on_position& stop_on_position_handler, Mission_planner_handler_stop_there& stop_there_handler, Mission_planner_handler_navigating& navigating_handler, Mission_planner_handler_manual_control& manual_control_handler, Mavlink_waypoint_handler& waypoint_handler, conf_t config):
+Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_planner_handler_on_ground& on_ground_handler, Mission_planner_handler_takeoff& takeoff_handler, Mission_planner_handler_landing& landing_handler, Mission_planner_handler_hold_position& hold_position_handler, Mission_planner_handler_stop_on_position& stop_on_position_handler, Mission_planner_handler_stop_there& stop_there_handler, Mission_planner_handler_navigating& navigating_handler, Mission_planner_handler_manual_control& manual_control_handler, Mavlink_waypoint_handler& waypoint_handler, conf_t config):
             on_ground_handler_(on_ground_handler),
             takeoff_handler_(takeoff_handler),
             landing_handler_(landing_handler),
@@ -385,7 +382,7 @@ Mission_planner::Mission_planner(Position_estimation& position_estimation, Navig
             mavlink_stream_(mavlink_stream),
             state_(state),
             navigation_(navigation),
-            position_estimation_(position_estimation),
+            ins_(ins),
             ahrs_(ahrs),
             manual_control_(manual_control),
             message_handler_(message_handler),
@@ -412,15 +409,15 @@ bool Mission_planner::init()
     dub.length = 0.0f;
     waypoint_critical_coordinates_ = Waypoint(MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f, dub);
 
-    // Add callbacks for waypoint handler messages requests
-    Mavlink_message_handler::msg_callback_t callback;
-
-    callback.message_id     = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN; // 48
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_home;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_msg_callback(&callback);
+//     // Add callbacks for waypoint handler messages requests
+//     Mavlink_message_handler::msg_callback_t callback;
+//
+//     callback.message_id     = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN; // 48
+//     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
+//     callback.compid_filter  = MAV_COMP_ID_ALL;
+//     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_home;
+//     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
+//     init_success &= message_handler_.add_msg_callback(&callback);
 
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;
@@ -513,6 +510,8 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
 
     quat_t q_rot;
     aero_attitude_t attitude_yaw;
+    local_position_t pos    = ins_.position_lf();
+    std::array<float,3> vel = ins_.velocity_lf();
 
     switch(navigation_.dubin_state)
     {
@@ -541,7 +540,7 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
 
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = next_waypoint->local_pos().pos[i]- position_estimation_.local_position.pos[i];
+                rel_pos[i] = next_waypoint->local_pos()[i]- pos[i];
             }
             rel_pos[Z] = 0.0f;
 
@@ -569,11 +568,11 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    pos_goal[i] = next_waypoint->local_pos().pos[i] + rel_pos_norm[i]*maths_f_abs(end_radius);
+                    pos_goal[i] = next_waypoint->local_pos()[i] + (rel_pos_norm[i] * maths_f_abs(next_waypoint->radius()));
                 }
                 pos_goal[Z] = 0.0f;
 
-                next_waypoint->dubin() = dubin_2d(  position_estimation_.local_position.pos,
+                next_waypoint->dubin() = dubin_2d(  pos.data(),
                                                     pos_goal,
                                                     dir_init,
                                                     dir_final,
@@ -589,7 +588,7 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    next_waypoint->dubin().circle_center_2[i] = position_estimation_.local_position.pos[i];
+                    next_waypoint->dubin().circle_center_2[i] = pos[i];
                 }
                 next_waypoint->dubin().circle_center_2[Z] = 0.0f;
 
@@ -601,10 +600,9 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
             //print_util_dbg_print("DUBIN_CIRCLE1\r\n");
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - position_estimation_.local_position.pos[i];
+                rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - pos[i];
             }
-            // heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
-            heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(position_estimation_.vel[Y], position_estimation_.vel[X]));
+            heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(vel[Y], vel[X]));
 
             if (maths_f_abs(heading_diff) < navigation_.heading_acceptance)
             {
@@ -615,7 +613,7 @@ void Mission_planner::dubin_state_machine(Waypoint* next_waypoint)
             //print_util_dbg_print("DUBIN_STRAIGHT\r\n");
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - position_estimation_.local_position.pos[i];
+                rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - pos[i];
             }
 
             scalar_product = rel_pos[X] * next_waypoint->dubin().line_direction[X] + rel_pos[Y] * next_waypoint->dubin().line_direction[Y];

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_copter.h
+ * \file stabilisation_copter.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -41,15 +41,15 @@
  ******************************************************************************/
 
 
-#ifndef STABILISATION_COPTER_H_
-#define STABILISATION_COPTER_H_
+#ifndef STABILISATION_COPTER_HPP_
+#define STABILISATION_COPTER_HPP_
 
-#include "communication/mission_planner.hpp"
-#include "sensing/position_estimation.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
+#include "control/stabilisation.hpp"
+#include "sensing/ins.hpp"
 
 extern "C"
 {
-#include "control/stabilisation.h"
 #include "control/control_command.h"
 }
 
@@ -83,9 +83,11 @@ typedef struct
     float thrust_hover_point;                                   ///< The hover point of the thrust
     quadcopter_motor_layout_t motor_layout;                     ///< Motor layout (cross or diag)
     stabiliser_stack_copter_t stabiliser_stack;                 ///< The pointer to the PID parameters values for the stacked controller
+    float dt_s;                                                 ///< Time interval between to updates
+    float last_update_s;                                        ///< Last update in seconds
     control_command_t* controls;                                ///< The pointer to the control structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
-    const Position_estimation* pos_est;                         ///< The pointer to the position estimation structure
+    const INS* ins;                                             ///< The pointer to the INS
     torque_command_t* torque_command;                           ///< The pointer to the torque command structure
     thrust_command_t* thrust_command;                           ///< The pointer to the thrust command structure
 } stabilisation_copter_t;
@@ -105,15 +107,16 @@ typedef struct
  *
  * \param   stabilisation_copter    The pointer to the stabilisation copter structure
  * \param   stabiliser_conf         The pointer to structure with all PID controllers
- * \param   control_input           The pointer to the controlling inputs
+ * \param   controls                The pointer to the controlling inputs
  * \param   ahrs                    The pointer to the attitude estimation structure
- * \param   pos_est                 The pointer to the position estimation structure
- * \param   torque_command          The pointer to the torque command values structure
- * \param   thrust_command          The pointer to the thrust command values structure
+ * \param   ins                     The pointer to the INS structure
+ * \param   torque                  The pointer to the torque command values structure
+ * \param   thrust                  The pointer to the thrust command values structure
  *
  * \return  True if the init succeed, false otherwise
  */
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const Position_estimation* pos_est, torque_command_t* torque, thrust_command_t* thrust);
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const INS* ins, torque_command_t* torque, thrust_command_t* thrust);
+
 
 /**
  * \brief                           Main Controller for controlling and stabilizing the quad
@@ -123,4 +126,4 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, con
 void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisation_copter);
 
 
-#endif /* STABILISATION_COPTER_H_ */
+#endif /* STABILISATION_COPTER_HPP_ */

@@ -41,7 +41,7 @@
 #ifndef SERIAL_HPP_
 #define SERIAL_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 
 class Serial;
 typedef void(*serial_interrupt_callback_t)(Serial* serial);

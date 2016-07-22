@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick.h
+ * \file joystick.hpp
  *
  * \author MAV'RIC Team
  *
@@ -39,14 +39,14 @@
  ******************************************************************************/
 
 
-#ifndef JOYSTICK_H_
-#define JOYSTICK_H_
+#ifndef JOYSTICK_HPP_
+#define JOYSTICK_HPP_
 
 #include "communication/state.hpp"
+#include "control/stabilisation.hpp"
 
 extern "C"
 {
-#include "control/stabilisation.h"
 #include "control/control_command.h"
 }
 
@@ -313,4 +313,4 @@ void joystick_get_attitude_command_absolute_yaw(const joystick_t* joystick, atti
 void joystick_get_attitude_command_vtol(const joystick_t* joystick, const float ki_yaw, attitude_command_t* command, float scale, float reference_pitch);
 
 
-#endif // JOYSTICK_H_
+#endif // JOYSTICK_HPP_

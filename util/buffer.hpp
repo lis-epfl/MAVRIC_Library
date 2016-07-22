@@ -44,8 +44,8 @@
 #ifndef BUFFER_HPP_
 #define BUFFER_HPP_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 
 
 /**
@@ -135,6 +135,14 @@ public:
      * \return          Boolean, 1 if empty, 0 if not
      */
     bool empty(void) const;
+
+
+    /**
+     * \brief     Get value of i-th element in buffer, but does not modify anything
+     *
+     * \return    success (false if does not exist)
+     */
+    bool get_element(uint32_t index, T& elem) const;
 
 
 private:

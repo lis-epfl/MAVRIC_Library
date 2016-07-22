@@ -58,7 +58,7 @@ Waypoint& Mission_planner_handler::hold_waypoint()
 {
     if (!hold_waypoint_set_)
     {
-        hold_waypoint_.set_local_pos(position_estimation_.local_position);
+        hold_waypoint_.set_local_pos(ins_.position_lf());
         hold_waypoint_set_ = true;
     }
 
@@ -88,6 +88,12 @@ bool Mission_planner_handler::hold_waypoint_set()
 void Mission_planner_handler::set_hold_waypoint(const local_position_t hold_position)
 {
     hold_waypoint_.set_local_pos(hold_position);
+    hold_waypoint_set_ = true;
+}
+
+void Mission_planner_handler::set_hold_waypoint(const local_position_t hold_position, float heading)
+{
+    hold_waypoint_.set_local_pos(hold_position, heading);
     hold_waypoint_set_ = true;
 }
 

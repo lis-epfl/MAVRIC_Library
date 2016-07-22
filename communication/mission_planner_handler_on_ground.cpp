@@ -52,11 +52,11 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   const Position_estimation& position_estimation,
+Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   const INS& ins,
                                                                         Navigation& navigation,
                                                                         State& state,
                                                                         const Manual_control& manual_control):
-            Mission_planner_handler(position_estimation),
+            Mission_planner_handler(ins),
             navigation_(navigation),
             state_(state),
             manual_control_(manual_control)
