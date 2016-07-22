@@ -683,7 +683,8 @@ void Mavlink_waypoint_handler::nav_plan_init()
 
     if (    (ins_.is_healthy(INS::healthy_t::XYZ_ABS_POSITION) || state_.mav_mode().is_hil())
             && (waypoint_receiving_ == false)
-            && (!state_.nav_plan_active))
+            && (!state_.nav_plan_active)
+            && (!navigation_.waiting_at_waypoint()))
     {
         update_current_waypoint(&navigation_.dubin_state);
 
