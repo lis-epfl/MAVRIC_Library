@@ -334,7 +334,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     goal = Waypoint();
     local_position_t new_goal_local_pos = {{0.0f, 0.0f, 0.0f}};
     goal.set_local_pos(new_goal_local_pos);
-    goal.set_param4(0.0f);
+    goal.set_heading(0.0f);
 
     last_update = 0;
 
