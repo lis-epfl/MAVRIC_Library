@@ -130,6 +130,7 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
     if (takeoff_handler->navigation_.internal_state_ == Navigation::NAV_ON_GND)
     {
         print_util_dbg_print("Starting automatic take-off from button\r\n");
+        print_util_dbg_print("Switching to NAV_TAKEOFF\r\n");
         takeoff_handler->navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
         takeoff_handler->reset_hold_waypoint();
 
