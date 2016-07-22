@@ -61,7 +61,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
     if (!hold_waypoint_set())
     {
         print_util_dbg_print("Automatic take-off, will hold position at: (");
-        print_util_dbg_print_num(ins_.position_lf()[X]10);
+        print_util_dbg_print_num(ins_.position_lf()[X], 10);
         print_util_dbg_print(", ");
         print_util_dbg_print_num(ins_.position_lf()[Y], 10);
         print_util_dbg_print(", ");

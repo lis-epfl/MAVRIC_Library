@@ -92,7 +92,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, state, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
     hold_position_handler(position_estimation, navigation, state),
-    landing_handler(position_estimation, navigation, state, mavlink_communication.message_handler()),
+    landing_handler(position_estimation, navigation, ahrs, state, mavlink_communication.message_handler()),
     manual_control_handler(position_estimation, navigation, state),
     navigating_handler(position_estimation, navigation, state, mavlink_communication.mavlink_stream(), waypoint_handler, landing_handler, mavlink_communication.message_handler()),
     on_ground_handler(position_estimation, navigation, state, manual_control),

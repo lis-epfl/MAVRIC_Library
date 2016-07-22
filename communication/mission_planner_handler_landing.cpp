@@ -164,7 +164,7 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
         //waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
 
         local_position_t landing_position = landing_handler->ins_.position_lf();
-        landing_position.pos[Z] = -5.0f;
+        landing_position[Z] = -5.0f;
         if (packet->param1 == 1)
         {
             print_util_dbg_print("Landing at a given location\r\n");
@@ -184,7 +184,7 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
         }
         else
         {
-            float heading = coord_conventions_get_yaw(waypoint_handler->ahrs_.qe);
+            float heading = coord_conventions_get_yaw(landing_handler->ahrs_.qe);
             landing_handler->set_hold_waypoint(landing_position, heading);
         }
 
@@ -285,10 +285,12 @@ void Mission_planner_handler_landing::dubin_hold_init(local_position_t local_pos
 
 Mission_planner_handler_landing::Mission_planner_handler_landing(   const INS& ins,
                                                                     Navigation& navigation,
+                                                                    const ahrs_t& ahrs,
                                                                     State& state,
                                                                     Mavlink_message_handler& message_handler):
             Mission_planner_handler(ins),
             navigation_(navigation),
+            ahrs_(ahrs),
             state_(state),
             message_handler_(message_handler)
 {

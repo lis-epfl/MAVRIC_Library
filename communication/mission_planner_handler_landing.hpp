@@ -68,6 +68,7 @@ public:
      */
      Mission_planner_handler_landing(   const INS& ins,
                                         Navigation& navigation,
+                                        const ahrs_t& ahrs,
                                         State& state,
                                         Mavlink_message_handler& message_handler);
 
@@ -94,6 +95,7 @@ public:
 
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
+    const ahrs_t& ahrs_;
     State& state_;                                              ///< The reference to the state structure
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 

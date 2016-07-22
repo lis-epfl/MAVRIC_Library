@@ -51,7 +51,7 @@ extern "C"
 {
 #include "util/print_util.h"
 #include "util/maths.h"
-#include "util/constants.h"
+#include "util/constants.hpp"
 }
 
 
@@ -75,7 +75,6 @@ global_position_t Waypoint::get_global_position(uint8_t frame, double x, double 
             waypoint_global.latitude    = x;
             waypoint_global.longitude   = y;
             waypoint_global.altitude    = z;
-            waypoint_global.heading     = heading;
             break;
 
         case MAV_FRAME_LOCAL_ENU:
@@ -90,12 +89,10 @@ global_position_t Waypoint::get_global_position(uint8_t frame, double x, double 
         }
             // NO BREAK, NEED TO CONVERT FROM NED TO GLOBAL
         case MAV_FRAME_LOCAL_NED:
-            waypoint_local.pos[X]   = x;
-            waypoint_local.pos[Y]   = y;
-            waypoint_local.pos[Z]   = z;
-            waypoint_local.heading  = heading;
-            waypoint_local.origin   = origin;
-            waypoint_global         = coord_conventions_local_to_global_position(waypoint_local);
+            waypoint_local[X]   = x;
+            waypoint_local[Y]   = y;
+            waypoint_local[Z]   = z;
+            coord_conventions_local_to_global_position(waypoint_local, origin, waypoint_global);
             break;
 
 /*          THIS WOULD NEED TO BE CALCULATED AT THE INSTANT THAT IT IS NEEDED
@@ -124,7 +121,6 @@ global_position_t Waypoint::get_global_position(uint8_t frame, double x, double 
             waypoint_global.latitude    = x;
             waypoint_global.longitude   = y;
             waypoint_global.altitude    = z + origin.altitude;
-            waypoint_global.heading     = heading;
             break;
     }
 
@@ -150,19 +146,21 @@ void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t 
 
         case MAV_FRAME_LOCAL_ENU:
         {
-            local_position_t pos = coord_conventions_global_to_local_position(wpt_position_, INS::origin());
-            x =  pos.pos[1];
-            y =  pos.pos[0];
-            z = -pos.pos[2];
+            local_position_t pos;
+            coord_conventions_global_to_local_position(wpt_position_, INS::origin(), pos);
+            x =  pos[1];
+            y =  pos[0];
+            z = -pos[2];
         }
             break;
 
         case MAV_FRAME_LOCAL_NED:
         {
-            local_position_t pos = coord_conventions_global_to_local_position(wpt_position_, INS::origin());
-            x = pos.pos[0];
-            y = pos.pos[1];
-            z = pos.pos[2];
+            local_position_t pos;
+            coord_conventions_global_to_local_position(wpt_position_, INS::origin(), pos);
+            x = pos[0];
+            y = pos[1];
+            z = pos[2];
         }
             break;
 
@@ -409,7 +407,7 @@ void Waypoint::set_local_pos(local_position_t local_pos)
     wpt_position_ = get_global_position(MAV_FRAME_LOCAL_NED, local_pos[X], local_pos[Y], local_pos[Z], heading(), INS::origin());
 }
 
-void set_local_pos(local_position_t local_pos, float heading)
+void Waypoint::set_local_pos(local_position_t local_pos, float heading)
 {
     set_heading(heading);
     set_local_pos(local_pos);

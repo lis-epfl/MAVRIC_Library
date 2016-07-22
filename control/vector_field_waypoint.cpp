@@ -384,7 +384,7 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 //------------------------------------------------------------------------------
 
 
-bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command)
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command)
 {
     // Init dependencies
     vector_field->waypoint_handler  = waypoint_handler;
@@ -423,9 +423,9 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
         local_position_t local_wpt = waypoint.local_pos();
 
         // Get object position
-        pos_obj[X] = local_wpt.pos[X];
-        pos_obj[Y] = local_wpt.pos[Y];
-        pos_obj[Z] = local_wpt.pos[Z];
+        pos_obj[X] = local_wpt[X];
+        pos_obj[Y] = local_wpt[Y];
+        pos_obj[Z] = local_wpt[Z];
 
         switch (waypoint.command())
         {

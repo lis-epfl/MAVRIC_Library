@@ -173,7 +173,7 @@ protected:
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure
-    INS& ins;                                                   ///< The reference to the ins structure
+    INS& ins_;                                                   ///< The reference to the ins structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     const Manual_control& manual_control_;                      ///< The reference to the manual_control structure
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler

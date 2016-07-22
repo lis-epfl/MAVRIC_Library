@@ -57,7 +57,7 @@ extern "C"
 {
 #include "util/print_util.h"
 #include "util/maths.h"
-#include "util/constants.h"
+#include "util/constants.hpp"
 }
 
 

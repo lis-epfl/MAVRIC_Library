@@ -231,7 +231,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
         break;
     }
 
-    float vert_vel = vertical_vel_gain * (goal.local_pos().pos[Z] - ins.position_lf()[Z]);
+    float vert_vel = vertical_vel_gain * (goal.local_pos()[Z] - ins.position_lf()[Z]);
 
     if (maths_f_abs(vert_vel) > max_climb_rate)
     {
@@ -332,7 +332,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     controls_nav.yaw_mode = YAW_ABSOLUTE;
 
     goal = Waypoint();
-    local_position_t new_goal_local_pos = {0.0f, 0.0f, 0.0f};
+    local_position_t new_goal_local_pos = {{0.0f, 0.0f, 0.0f}};
     goal.set_local_pos(new_goal_local_pos);
     goal.set_param4(0.0f);
 

@@ -69,8 +69,8 @@ Waypoint& Mission_planner_handler::hold_waypoint()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler::Mission_planner_handler(const Position_estimation& position_estimation) :
-        position_estimation_(position_estimation)
+Mission_planner_handler::Mission_planner_handler(const INS& ins) :
+        ins_(ins)
 {
 
 }
