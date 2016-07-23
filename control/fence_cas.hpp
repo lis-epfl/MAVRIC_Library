@@ -62,7 +62,7 @@ public:
      *
      * \return true
      */
-	float*	get_repulsion_velocity(control_command_t* command);
+	float*	get_repulsion_velocity(control_command_t command);
 
     /**
      * \brief   Returns the maximal y speed per update

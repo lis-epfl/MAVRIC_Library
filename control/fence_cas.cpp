@@ -427,7 +427,7 @@ void Fence_CAS::gftobftransform(float C[3], float S[3], float rep[3])
 	rep[2]=0.0;
 }
 
-float* Fence_CAS::get_repulsion_velocity(control_command_t* command)
+float* Fence_CAS::get_repulsion_velocity(control_command_t command)
 {
 	repulsion_velocity[Y] = repulsion[Y];
 	repulsion_velocity[Z] = 0.0f;
@@ -439,9 +439,9 @@ float* Fence_CAS::get_repulsion_velocity(control_command_t* command)
 		repulsion[Y] = -max_vel_y;
 
 	//Clip the repulsion velocity according to the actual velocity commands of the platform
-	 float norm_ctrl_vel_xy_sqr = command->tvel[Y]*command->tvel[Y]+command->tvel[X]*command->tvel[X];
-	 if(maths_f_abs(repulsion[Y] + command->tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
-		 repulsion_velocity[Y] = sign(repulsion[Y])*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - command->tvel[Y];
+	 float norm_ctrl_vel_xy_sqr = command.tvel[Y]*command.tvel[Y]+command.tvel[X]*command.tvel[X];
+	 if(maths_f_abs(repulsion[Y] + command.tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
+		 repulsion_velocity[Y] = sign(repulsion[Y])*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - command.tvel[Y];
 
 	 //Do this to ensure that whatever input in tvel[Y] we have the tvel[Y] output not bigger than the norm
 	//if(command.tvel[Y] > 0.0f && SQR(command.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
@@ -450,7 +450,7 @@ float* Fence_CAS::get_repulsion_velocity(control_command_t* command)
 	//	command.tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
 
 	 //reduce the speed on tvel[X] in order to keep the norm of the speed constant
-	 repulsion_velocity[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(command->tvel[Y])) - command->tvel[X];
+	 repulsion_velocity[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(command.tvel[Y])) - command.tvel[X];
 
 	 return repulsion_velocity;
 }
