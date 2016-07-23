@@ -37,8 +37,6 @@
  * \brief Main file
  *
  ******************************************************************************/
-#define linuxSimu
-
 #include "boards/mavrinux.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "sample_projects/LEQuad/lequad_symbiotic.hpp"
