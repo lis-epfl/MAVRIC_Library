@@ -310,75 +310,10 @@ bool LEQuad_symbiotic::main_task(void)
 
 					// ------------------------- Lateral Fence --------------------------
 
-					origin2quad[0] = position_estimation.local_position.pos[X] - fence_origin_local.pos[X];
-					origin2quad[1] = position_estimation.local_position.pos[Y] - fence_origin_local.pos[Y];
-					//origin2quad[0] = position_estimation.local_position.pos[X] - position_estimation.get_fence_position().pos[X];
-					//origin2quad[1] = position_estimation.local_position.pos[Y] - position_estimation.get_fence_position().pos[Y];
-					origin2quad[2] = 0.0f;
-
-					quadOrientation[0] = position_estimation.vel[0];
-					quadOrientation[1] = position_estimation.vel[1];
-					quadOrientation[2] = 0.0f;
-
-					CROSS(origin2quad,quadOrientation,out);
-
-					float decrease_factor_Y = 1.0f;
-					if(SCP(origin2quad,quadOrientation) < 0.0f) //the drone as a velocity toward the center => decrease the avoidance speed
-						decrease_factor_Y = 0.4f;
-
-					//print_util_dbg_print("Y then Z\r\n");
-					//print_util_dbg_putfloat(decrease_factor_Y,3);
+					//print_util_dbg_print("tvel_y_added \r\n");
+					//print_util_dbg_putfloat(tvel_y_added,3);
 					//print_util_dbg_print("\r\n");
 
-					float tvel_y_added;
-					float ratioXY_vel = 0.6f; //should be between 0.0f and 1.0f
-					if(xy_dist > (xy_max - dist_to_limit_lat))
-					{
-						//compute repulsion velocity y
-						float ratio = maths_f_abs(xy_dist - (xy_max-dist_to_limit_lat)) / dist_to_limit_lat;
-						if(ratio > 1.0f)
-							ratio = 1.0f;
-
-						//If completely out of the fence, decrease ratio if coming back toward the fence area
-						if(xy_dist > xy_max)
-						{
-							float origin2quad_normalized[3];
-							float quadOrientation_normalized[3];
-							vectors_normalize(origin2quad,origin2quad_normalized);
-							vectors_normalize(quadOrientation,quadOrientation_normalized);
-							float scp = SCP(origin2quad_normalized,quadOrientation_normalized); //-1 if opposite direction, 1 same direction
-
-							if(scp < 0.0f) //going toward the center
-								ratio = ratio * (1 + scp);
-						}
-						else
-							ratio = ratio * decrease_factor_Y;
-
-						print_util_dbg_print("ratio \r\n");
-						print_util_dbg_putfloat(ratio,3);
-						print_util_dbg_print("\r\n");
-
-						tvel_y_added = sign(out[2])* ratio * max_vel_y;
-
-						//troncate total velocity y to a ratio of the norm of the total desired speed
-						if(maths_f_abs(tvel_y_added + controls.tvel[Y])/maths_fast_sqrt(norm_ctrl_vel_xy_sqr) > ratioXY_vel)
-							tvel_y_added = sign(tvel_y_added)*maths_fast_sqrt(norm_ctrl_vel_xy_sqr)*ratioXY_vel - controls.tvel[Y];
-
-						controls.tvel[Y] += tvel_y_added;
-
-						//do this to ensure that whatever input in tvel[Y] we have the tvel[Y] output not bigger than the norm
-						if(controls.tvel[Y] > 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
-							controls.tvel[Y] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
-						else if(controls.tvel[Y] < 0.0f && SQR(controls.tvel[Y]) > norm_ctrl_vel_xy_sqr + 0.001f)
-							controls.tvel[Y] = -maths_fast_sqrt(norm_ctrl_vel_xy_sqr);
-
-						print_util_dbg_print("tvel_y_added \r\n");
-						print_util_dbg_putfloat(tvel_y_added,3);
-						print_util_dbg_print("\r\n");
-
-						//reduce the speed on tvel[X] in order to keep the norm of the speed constant
-						controls.tvel[X] = maths_fast_sqrt(norm_ctrl_vel_xy_sqr - SQR(controls.tvel[Y]));
-					}
 				}
 
 				print_util_dbg_print("vel cmd - with repulsion \r\n");
