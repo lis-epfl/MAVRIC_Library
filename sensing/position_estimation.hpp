@@ -180,26 +180,6 @@ public:
      */
     bool altitude_healthy() const;
 
-    /**
-     * \brief   Get the square distance in the xy plan from the fence origin
-     *
-     * \param   pos_est                 The pointer to the position estimation structure
-     *
-     * \return  Square distance from the fence origin [m^2]
-     */
-    float position_estimation_get_xy_distance_from_fence_origin();
-
-    /**
-     * \brief   Get the square distance on the z axis from the fence origin
-     *
-     * \param   pos_est                 The pointer to the position estimation structure
-     *
-     * \return  Square distance from the fence origin [m^2]
-     */
-    float position_estimation_get_z_distance_from_fence_origin();
-
-    local_position_t get_fence_position();
-
     local_position_t local_position;        ///< Local position
     float vel[3];                           ///< 3D velocity in global frame
     float vel_bf[3];                        ///< 3D velocity in body frame
@@ -267,8 +247,6 @@ private:
      * \return  void
      */
     void fence_control();
-
-
 
 };
 #endif // POSITION_ESTIMATION_H__

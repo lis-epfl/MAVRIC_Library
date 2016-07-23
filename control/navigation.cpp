@@ -439,27 +439,3 @@ bool Navigation::update(Navigation* navigation)
 
     return true;
 }
-
-void Navigation::position_estimation_get_semilocal_velocity(float semilocal_vel[3])
-{
-	aero_attitude_t semilocal_rotation;
-	float global_vel[3];
-
-	//navigation.qe is the body attitude in quaternion
-	semilocal_rotation = coord_conventions_quat_to_aero(qe);
-
-	//only the yaw is kept for the semi-local rotation
-	semilocal_rotation.rpy[0] = 0.0f;
-	semilocal_rotation.rpy[1] = 0.0f;
-
-	//q_rot is yaw attitude angle in quaternion (from earth frame to body frame)
-	quat_t q_semilocal = coord_conventions_quaternion_from_aero(semilocal_rotation);
-
-	//get global frame velocity
-	global_vel[X] = position_estimation.vel[X];
-	global_vel[Y] = position_estimation.vel[Y];
-	global_vel[Z] = position_estimation.vel[Z];
-
-	//transform velocity in global frame to velocity in semi-local frame
-	quaternions_rotate_vector(quaternions_inverse(q_semilocal),global_vel,semilocal_vel);
-}

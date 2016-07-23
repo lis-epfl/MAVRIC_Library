@@ -75,6 +75,8 @@ LIB_SRCS += control/vector_field_waypoint.cpp
 LIB_SRCS += control/velocity_controller_copter.cpp
 LIB_SRCS += control/gimbal_controller.cpp
 LIB_SRCS += control/gimbal_controller_telemetry.cpp
+LIB_SRCS += control/fence_cas.cpp
+
 
 
 LIB_SRCS += drivers/airspeed_analog.cpp

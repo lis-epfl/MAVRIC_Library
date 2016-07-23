@@ -53,7 +53,6 @@
 
 Serial_udp::Serial_udp(serial_udp_conf_t config)
 {
-
     // Copy config
     config_ = config;
 

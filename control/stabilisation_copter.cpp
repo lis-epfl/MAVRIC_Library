@@ -175,8 +175,8 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
                     rel_heading_coordinated = atan2(stabilisation_copter->pos_est->vel_bf[Y], stabilisation_copter->pos_est->vel_bf[X]);
                 }
 
-                //float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
-                //w = 0.3f;
+                float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf) - stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
+                w = 0.65f;
                 input.rpy[YAW] = (1.0f - stabilisation_copter->w_) * input.rpy[YAW] + stabilisation_copter->w_ * rel_heading_coordinated;
             }
 
@@ -250,3 +250,4 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
     stabilisation_copter->torque_command->xyz[2] = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[YAW];
     stabilisation_copter->thrust_command->thrust = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.thrust;
 }
+
