@@ -117,15 +117,231 @@ float Fence_CAS::detect_seg(float A[3], float B[3], float C[3], float S[3] , flo
 	return vectors_norm(dp);
 }
 
+void Fence_CAS::compute_repulsion()
+{
+	for (int k=0;k<3;k++)									// Reset the repulsion command
+		{
+			repulsion[k]=0.0;
+		}
+
+		// Initialization of variables
+		bool angle_detected=false;									// Flag to reset the ROLL command
+		int outofseg=0;
+
+		float C[3]={position_estimation.local_position.pos[0],position_estimation.local_position.pos[1],position_estimation.local_position.pos[2]};	// Position of the Quad
+		float S[3]={0,0,0};		// Position of the heading
+		float H[3]={0,0,0};
+		float CH[3]={0,0,0};
+		float HS[3]={0,0,0};
+
+		float I[3]={0,0,0};	// Detected point on fence segment
+		float J[3]={0,0,0}; // Detected point on quad segment
+
+		float V[3]={0,0,0};	// Velocity in local frame
+		for (int k=0;k<3;k++)
+		{
+			V[k]=position_estimation.vel[k];
+		}
+
+		float Vnorm[3]={0,0,0};
+		vectors_normalize(V,Vnorm);
+		float Vval = vectors_norm(V);
+
+		float dmin=2*this->r_pz; 					// Safe zone around the drone ,can be adjusted
+
+		this->maxsens=dmin+this->r_pz;
+		//interpolation from MATLAB
+		this->maxradius = getrad(Vval); /*radius distance*/ ;
+		if(this->maxradius <= 0)
+		{
+			this->maxradius = 0;
+		}
+
+		int interp_type = COSINE; //SHIFTED_COS;						// Define the interpolation type of the repulsion
+
+		for(int i =0; i<3;i++)
+		{
+			H[i]= C[i] + Vnorm[i] * (this->r_pz/*platform radius*/ + Vval*Vval/getacc(Vval) /*radius distance*/ + dmin/*dmin*/);
+		}
+		for(int i =0; i<3;i++)
+		{
+			CH[i]= H[i] - C[i];
+		}
+		float CHnorm = vectors_norm(CH);
+		for(int i =0; i<3;i++)
+		{
+			S[i]= H[i] + Vnorm[i] * this->tahead * Vval /*look ahead distance*/;
+		}
+		for(int i =0; i<3;i++)
+		{
+			HS[i]= S[i] - H[i];
+		}
+		float HSnorm = vectors_norm(HS);
+
+		/*FOR EACH FENCE*/
+		for(int n=0;n<MAX_OUTFENCE+1;n++)
+		{
+			uint16_t nbFencePoints = *waypoint_handler.all_fence_points[n];
+			Mavlink_waypoint_handler::waypoint_struct_t* CurFence_list  = this->waypoint_handler.all_fences[n];
+			float* CurAngle_list = waypoint_handler.all_fence_angles[n];
+
+			float dist[nbFencePoints];	// Table of distance to each fence
+			float fencerep=0.0f;		// Repulsion from fences
+			float pointrep=0.0f;		// Repulsion from angles
+
+			for (int i=0; i < nbFencePoints; i++) 	// loop through all pair of fence points
+			{
+				/*INIT*/
+				int j=0;
+				if (i == nbFencePoints - 1)
+				{
+					j=0;
+				}
+				else
+				{
+					j=i+1;
+				}
+				// First point A, second point B, precedent A point = D
+				global_position_t Agpoint = {CurFence_list[i].y, CurFence_list[i].x,(float)CurFence_list[i].z, 0.0f};
+				global_position_t Bgpoint = {CurFence_list[j].y, CurFence_list[j].x,(float)CurFence_list[j].z, 0.0f};
+
+				local_position_t Alpoint = coord_conventions_global_to_local_position(Agpoint,position_estimation.local_position.origin);
+				local_position_t Blpoint = coord_conventions_global_to_local_position(Bgpoint,position_estimation.local_position.origin);
+
+				float A[3]={Alpoint.pos[0],Alpoint.pos[1],Alpoint.pos[2]};
+				float B[3]={Blpoint.pos[0],Blpoint.pos[1],Blpoint.pos[2]};
+				// Only 2D detection:
+				A[2]=C[2];B[2]=C[2];
+
+				float AB[3]={B[0]-A[0],B[1]-A[1],0.0};
+
+				float pAB[3]={-AB[1],AB[0],0.0};
+
+				vectors_normalize(AB,AB);
+				vectors_normalize(pAB,pAB);
+
+				/*END INIT*/
+
+				/*Fencepoint repulsion*/
+				/*Min radius method*/
+				if(CurAngle_list[i]<=PI)
+				{
+					float M[3]={0,0,0};
+					float Am[3]={0,0,0};
+					float distAS = detect_seg(A,A,C,S,V,I,J,&outofseg);	// Compute distance from drone to fencepoint.
+					float ecart = (this->maxradius+this->maxsens)/quick_trig_tan(CurAngle_list[i]/2.0);
+					//test if ecart is smaller than |ab| and |ad|
+
+					float oldmaxradius = this->maxradius; //save value for set it back
+
+					for(int k=0;k<3;k++)
+					{
+						Am[k] = A[k] + ecart*(AB[k]);
+						M[k] = Am[k] + (this->maxradius+this->maxsens)*pAB[k];
+					}
+					float AAm[3] = {A[0]-Am[0],A[1]-Am[1],0.0};
+					float distAAm=vectors_norm(AAm);
+
+					float MS[3] = {S[0]-M[0],S[1]-M[1],0.0};
+					float distMC=vectors_norm(MS);
+
+					if((distAS <= (distAAm))&&(distMC >= this->maxradius)&&(angle_detected==false)&&n==0)
+					{
+						//direction of repulsion
+						float rep[3]={MS[0],MS[1],0.0};					// Repulsion local frame
+						gftobftransform(C, S, rep);						// Repulsion body frame
+						rep[1]=(rep[1]>=0?-1:1) ;						// Extract repulsion direction in body frame
+						//amplitude of repulsion
+						float aratio=1-((distMC + this->r_pz)/dmin);
+						pointrep += -rep[1]*this->coef_roll*this->ratioXY_vel*position_estimation.vel[X]*interpolate(aratio,interp_type); // Add repulsion
+						this->coef_roll=1.0;
+						this->maxradius = oldmaxradius; //set the original avlue back
+						angle_detected=true;
+					}
+					else
+					{
+						;
+					}
+
+				}
+				/*END Min radius method*/
+
+				/*Fence repulsion*/
+				dist[i] = detect_seg(A,B,H,S,V,I,J,&outofseg);
+
+				float IC[3]={I[0]-C[0],I[1]-C[1],0.0}; //detects if the distance is positive or negative
+				gftobftransform(A,B,IC);
+				IC[1]=(IC[1]>=0?1:-1);
+
+				if(n==0) //for the first fence
+				{
+					if(IC[1]==-1) //out of fence
+					{
+						;
+					}
+					dist[i]*= IC[1];
+				}
+				if((CurAngle_list[i]>=PI&&outofseg==-1)||(CurAngle_list[j]>=PI&&outofseg==1)) //avoid convex fences to parasite
+				{
+					;
+				}
+				else if((dist[i] < this->maxsens+HSnorm)&&(angle_detected==false))
+				{
+					//direction of repulsion
+					float rep[3]={A[1]-B[1],B[0]-A[0],0.0};						// Repulsion local frame
+					gftobftransform(C, S, rep);									// Repulsion body frame
+					rep[1]=(rep[1]>=0?1:-1); 									// Extract repulsion direction in body frame, 1 = clockwise / -1 = counterclockwise
+
+					//amplitude of repulsion
+					float CI[3]={0,0,0};
+					float HI[3]={0,0,0};
+					for(int k=0;k<3;k++)
+					{
+						CI[k] = I[k]-C[k];
+					}
+					if(vectors_norm(CI)>= CHnorm && vectors_norm(CI)<= CHnorm+HSnorm )
+					{
+						this->coef_roll = interpolate((vectors_norm(HI)+this->r_pz)/(HSnorm + this->r_pz + dmin),SHIFTED_COS);
+					}
+					else
+					{
+						this->coef_roll=1.0;
+					}
+					float fratio = (dist[i])/(HSnorm+this->maxsens);
+					fencerep +=-rep[1]*coef_roll*ratioXY_vel*position_estimation.vel[X]*interpolate(fratio,interp_type);
+					if(nbFencePoints==2 && n!=0) //allow to define 2 points fences (a segment with repulsion in every direction)
+					{
+						fencerep+=-IC[1]*rep[1]*coef_roll*ratioXY_vel*position_estimation.vel[X]*interpolate(fratio,interp_type);
+					}
+				}
+				else
+				{
+					;
+				}
+			}
+			/*END Fence repulsion*/
+			//check which repulsion has been detected. Angle repulsion wins
+			if(angle_detected==true)
+			{
+				angle_detected=false;
+				this->repulsion[1] += pointrep;
+			}
+			else
+			{
+				this->repulsion[1] += fencerep;
+			}
+		}
+		/*END FOR EACH FENCE*/
+}
+
 // ------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 // ------------------------------------------------------------------------------
-Fence_CAS::Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estimation* postion_estimation,ahrs_t* ahrs)
+Fence_CAS::Fence_CAS(const Mavlink_waypoint_handler& waypoint_handler, const Position_estimation& position_estimation)
 :	a_max(1.0),
 	r_pz(1.0),
 	waypoint_handler(waypoint_handler),
-	pos_est(postion_estimation),
-	ahrs(ahrs),
+	position_estimation(position_estimation),
 	tahead(1.2),
 	coef_roll(1),
 	maxsens(10.0),
@@ -141,222 +357,12 @@ Fence_CAS::~Fence_CAS(void)
 {
 	// Eraser
 }
-bool Fence_CAS::update(void)
+
+
+
+bool Fence_CAS::update(Fence_CAS* fence_avoidance)
 {
-	for (int k=0;k<3;k++)									// Reset the repulsion command
-	{
-		this->repulsion[k]=0.0;
-	}
-
-	// Initialization of variables
-	bool angle_detected=false;									// Flag to reset the ROLL command
-	int outofseg=0;
-
-	float C[3]={pos_est->local_position.pos[0],pos_est->local_position.pos[1],pos_est->local_position.pos[2]};	// Position of the Quad
-	float S[3]={0,0,0};		// Position of the heading
-	float H[3]={0,0,0};
-	float CH[3]={0,0,0};
-	float HS[3]={0,0,0};
-
-	float I[3]={0,0,0};	// Detected point on fence segment
-	float J[3]={0,0,0}; // Detected point on quad segment
-
-	float V[3]={0,0,0};	// Velocity in local frame
-	for (int k=0;k<3;k++)
-	{
-		V[k]=pos_est->vel[k];
-	}
-
-	float Vnorm[3]={0,0,0};
-	vectors_normalize(V,Vnorm);
-	float Vval = vectors_norm(V);
-
-	float dmin=2*this->r_pz; 					// Safe zone around the drone ,can be adjusted
-
-	this->maxsens=dmin+this->r_pz;
-	//interpolation from MATLAB
-	this->maxradius = getrad(Vval); /*radius distance*/ ;
-	if(this->maxradius <= 0)
-	{
-		this->maxradius = 0;
-	}
-
-	int interp_type = COSINE; //SHIFTED_COS;						// Define the interpolation type of the repulsion
-
-	for(int i =0; i<3;i++)
-	{
-		H[i]= C[i] + Vnorm[i] * (this->r_pz/*platform radius*/ + Vval*Vval/getacc(Vval) /*radius distance*/ + dmin/*dmin*/);
-	}
-	for(int i =0; i<3;i++)
-	{
-		CH[i]= H[i] - C[i];
-	}
-	float CHnorm = vectors_norm(CH);
-	for(int i =0; i<3;i++)
-	{
-		S[i]= H[i] + Vnorm[i] * this->tahead * Vval /*look ahead distance*/;
-	}
-	for(int i =0; i<3;i++)
-	{
-		HS[i]= S[i] - H[i];
-	}
-	float HSnorm = vectors_norm(HS);
-
-	/*FOR EACH FENCE*/
-	for(int n=0;n<MAX_OUTFENCE+1;n++)
-	{
-		uint16_t nbFencePoints = *waypoint_handler->all_fence_points[n];
-		Mavlink_waypoint_handler::waypoint_struct_t* CurFence_list  = this->waypoint_handler->all_fences[n];
-		float* CurAngle_list = waypoint_handler->all_fence_angles[n];
-
-		float dist[nbFencePoints];	// Table of distance to each fence
-		float fencerep=0.0f;		// Repulsion from fences
-		float pointrep=0.0f;		// Repulsion from angles
-
-		for (int i=0; i < nbFencePoints; i++) 	// loop through all pair of fence points
-		{
-			/*INIT*/
-			int j=0;
-			if (i == nbFencePoints - 1)
-			{
-				j=0;
-			}
-			else
-			{
-				j=i+1;
-			}
-			// First point A, second point B, precedent A point = D
-			global_position_t Agpoint = {CurFence_list[i].y, CurFence_list[i].x,(float)CurFence_list[i].z, 0.0f};
-			global_position_t Bgpoint = {CurFence_list[j].y, CurFence_list[j].x,(float)CurFence_list[j].z, 0.0f};
-
-			local_position_t Alpoint = coord_conventions_global_to_local_position(Agpoint,this->pos_est->local_position.origin);
-			local_position_t Blpoint = coord_conventions_global_to_local_position(Bgpoint,this->pos_est->local_position.origin);
-
-			float A[3]={Alpoint.pos[0],Alpoint.pos[1],Alpoint.pos[2]};
-			float B[3]={Blpoint.pos[0],Blpoint.pos[1],Blpoint.pos[2]};
-			// Only 2D detection:
-			A[2]=C[2];B[2]=C[2];
-
-			float AB[3]={B[0]-A[0],B[1]-A[1],0.0};
-
-			float pAB[3]={-AB[1],AB[0],0.0};
-
-			vectors_normalize(AB,AB);
-			vectors_normalize(pAB,pAB);
-
-			/*END INIT*/
-
-			/*Fencepoint repulsion*/
-			/*Min radius method*/
-			if(CurAngle_list[i]<=PI)
-			{
-				float M[3]={0,0,0};
-				float Am[3]={0,0,0};
-				float distAS = detect_seg(A,A,C,S,V,I,J,&outofseg);	// Compute distance from drone to fencepoint.
-				float ecart = (this->maxradius+this->maxsens)/quick_trig_tan(CurAngle_list[i]/2.0);
-				//test if ecart is smaller than |ab| and |ad|
-
-				float oldmaxradius = this->maxradius; //save value for set it back
-
-				for(int k=0;k<3;k++)
-				{
-					Am[k] = A[k] + ecart*(AB[k]);
-					M[k] = Am[k] + (this->maxradius+this->maxsens)*pAB[k];
-				}
-				float AAm[3] = {A[0]-Am[0],A[1]-Am[1],0.0};
-				float distAAm=vectors_norm(AAm);
-
-				float MS[3] = {S[0]-M[0],S[1]-M[1],0.0};
-				float distMC=vectors_norm(MS);
-
-				if((distAS <= (distAAm))&&(distMC >= this->maxradius)&&(angle_detected==false)&&n==0)
-				{
-					//direction of repulsion
-					float rep[3]={MS[0],MS[1],0.0};					// Repulsion local frame
-					gftobftransform(C, S, rep);						// Repulsion body frame
-					rep[1]=(rep[1]>=0?-1:1) ;						// Extract repulsion direction in body frame
-					//amplitude of repulsion
-					float aratio=1-((distMC + this->r_pz)/dmin);
-					pointrep += -rep[1]*this->coef_roll*this->ratioXY_vel*pos_est->vel[X]*interpolate(aratio,interp_type); // Add repulsion
-					this->coef_roll=1.0;
-					this->maxradius = oldmaxradius; //set the original avlue back
-					angle_detected=true;
-				}
-				else
-				{
-					;
-				}
-
-			}
-			/*END Min radius method*/
-
-			/*Fence repulsion*/
-			dist[i] = detect_seg(A,B,H,S,V,I,J,&outofseg);
-
-			float IC[3]={I[0]-C[0],I[1]-C[1],0.0}; //detects if the distance is positive or negative
-			gftobftransform(A,B,IC);
-			IC[1]=(IC[1]>=0?1:-1);
-
-			if(n==0) //for the first fence
-			{
-				if(IC[1]==-1) //out of fence
-				{
-					;
-				}
-				dist[i]*= IC[1];
-			}
-			if((CurAngle_list[i]>=PI&&outofseg==-1)||(CurAngle_list[j]>=PI&&outofseg==1)) //avoid convex fences to parasite
-			{
-				;
-			}
-			else if((dist[i] < this->maxsens+HSnorm)&&(angle_detected==false))
-			{
-				//direction of repulsion
-				float rep[3]={A[1]-B[1],B[0]-A[0],0.0};						// Repulsion local frame
-				gftobftransform(C, S, rep);									// Repulsion body frame
-				rep[1]=(rep[1]>=0?1:-1); 									// Extract repulsion direction in body frame, 1 = clockwise / -1 = counterclockwise
-
-				//amplitude of repulsion
-				float CI[3]={0,0,0};
-				float HI[3]={0,0,0};
-				for(int k=0;k<3;k++)
-				{
-					CI[k] = I[k]-C[k];
-				}
-				if(vectors_norm(CI)>= CHnorm && vectors_norm(CI)<= CHnorm+HSnorm )
-				{
-					this->coef_roll = interpolate((vectors_norm(HI)+this->r_pz)/(HSnorm + this->r_pz + dmin),SHIFTED_COS);
-				}
-				else
-				{
-					this->coef_roll=1.0;
-				}
-				float fratio = (dist[i])/(HSnorm+this->maxsens);
-				fencerep +=-rep[1]*this->coef_roll*this->ratioXY_vel*pos_est->vel[X]*interpolate(fratio,interp_type);
-				if(nbFencePoints==2 && n!=0) //allow to define 2 points fences (a segment with repulsion in every direction)
-				{
-					fencerep+=-IC[1]*rep[1]*this->coef_roll*this->ratioXY_vel*pos_est->vel[X]*interpolate(fratio,interp_type);
-				}
-			}
-			else
-			{
-				;
-			}
-		}
-		/*END Fence repulsion*/
-		//check which repulsion has been detected. Angle repulsion wins
-		if(angle_detected==true)
-		{
-			angle_detected=false;
-			this->repulsion[1] += pointrep;
-		}
-		else
-		{
-			this->repulsion[1] += fencerep;
-		}
-	}
-	/*END FOR EACH FENCE*/
-
+	fence_avoidance->compute_repulsion();
 
 	return true;
 }
@@ -424,6 +430,7 @@ void Fence_CAS::gftobftransform(float C[3], float S[3], float rep[3])
 float* Fence_CAS::get_repulsion_velocity(control_command_t* command)
 {
 	repulsion_velocity[Y] = repulsion[Y];
+	repulsion_velocity[Z] = 0.0f;
 
 	// Clip the repulsion according to an absolute maximum
 	if(repulsion[Y] > max_vel_y)

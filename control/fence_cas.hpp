@@ -44,14 +44,15 @@ public:
      * \param   position_estimation For position and speed
      * \param   controls            For resetting the roll command
      */
-	Fence_CAS(Mavlink_waypoint_handler* waypoint_handler, Position_estimation* postion_estimation,ahrs_t* ahrs );
+	Fence_CAS(const Mavlink_waypoint_handler& waypoint_handler, const Position_estimation& position_estimation);
 	~Fence_CAS(void);
+
     /**
      * \brief   Main update function - compute the repulsion with the fences
      *
      * \return  success
      */
-	bool 	update(void);
+	static bool 	update(Fence_CAS* fence_avoidance);
 
     /**
      * \brief  Returns the repulsion velocity on on the choose axis after clipping it
@@ -120,6 +121,10 @@ public:
 	float 	repulsion_velocity[3]; ///< Final repulsion velocity to add [m/s] for X and Y axis
 
 private:
+
+	const Position_estimation& position_estimation;     ///< The pointer to the position estimation structure
+	const Mavlink_waypoint_handler& 	waypoint_handler;		///< Waypoint handler (extract fencepoints)
+
     /**
      * \brief Detect the point of intersection of two segment and return the smallest distance between them
      *
@@ -140,9 +145,8 @@ private:
      */
 	float 	detect_seg(float A[3], float B[3], float C[3], float S[3] , float V[3], float I[3],float J[3],int* outofseg);
 
-	Mavlink_waypoint_handler* 	waypoint_handler;			///< Waypoint handler (extract fencepoints)
-	Position_estimation*        pos_est;                    ///< Estimated position and speed (extract the velocity and the position)
-	ahrs_t* 					ahrs ;						///< Accelaration
+
+	void compute_repulsion();
 
 };
 
