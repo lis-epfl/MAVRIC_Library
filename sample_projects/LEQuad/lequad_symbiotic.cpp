@@ -313,6 +313,9 @@ bool LEQuad_symbiotic::main_task(void)
 					float repulsion_velocity[3];
 					fence_avoidance.get_repulsion_velocity(controls);
 
+					controls.tvel[X] += repulsion_velocity[X];
+					controls.tvel[Y] += repulsion_velocity[Y];
+
 					print_util_dbg_print("repulsion_velocity[Y] \r\n");
 					print_util_dbg_putfloat(repulsion_velocity[Y],3);
 					print_util_dbg_print("\r\n");
