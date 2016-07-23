@@ -68,6 +68,7 @@
 #include "control/velocity_controller_copter.hpp"
 #include "control/velocity_controller_copter_default_config.hpp"
 #include "control/vector_field_waypoint.hpp"
+#include "control/fence_cas.hpp"
 
 #include "drivers/battery.hpp"
 #include "drivers/gps.hpp"
@@ -186,6 +187,7 @@ protected:
     virtual bool init_hud(void);
     virtual bool init_servos(void);
     virtual bool init_ground_control(void);
+    virtual bool init_fence_avoidance(void);
 
     virtual bool main_task(void);
     static inline bool main_task_func(LEQuad* mav)
@@ -239,6 +241,8 @@ protected:
 
     Data_logging    data_logging_continuous;
     Data_logging    data_logging_stat;
+
+    Fence_CAS		fence_avoidance;
 
     command_t                       command;
     // attitude_controller_t           attitude_controller;

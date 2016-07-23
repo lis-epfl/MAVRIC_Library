@@ -94,7 +94,8 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
-    sysid_(mavlink_communication.sysid()),
+    fence_avoidance(waypoint_handler,position_estimation),
+	sysid_(mavlink_communication.sysid()),
     config_(config)
 {
     // Init main task first
@@ -115,6 +116,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     init_hud();
     init_servos();
     init_ground_control();
+    init_fence_avoidance();
 }
 
 
@@ -520,6 +522,19 @@ bool LEQuad::init_ground_control(void)
 
     // Task
     ret &= scheduler.add_task(20000, (Scheduler_task::task_function_t)&remote_update, (Scheduler_task::task_argument_t)&manual_control.remote, Scheduler_task::PRIORITY_HIGH);
+
+    return ret;
+}
+
+// -------------------------------------------------------------------------
+// Fence Avoidance
+// -------------------------------------------------------------------------
+bool LEQuad::init_fence_avoidance(void)
+{
+    bool ret = true;
+
+    // Task
+    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&Fence_CAS::update, (Scheduler_task::task_argument_t)&fence_avoidance, Scheduler_task::PRIORITY_NORMAL);
 
     return ret;
 }
