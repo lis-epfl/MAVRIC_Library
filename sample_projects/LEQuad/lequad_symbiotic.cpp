@@ -308,11 +308,14 @@ bool LEQuad_symbiotic::main_task(void)
 					}
 
 
-					// ------------------------- Lateral Fence --------------------------
+					// ------------------------- Lateral Fence Avoidance --------------------------
 
-					//print_util_dbg_print("tvel_y_added \r\n");
-					//print_util_dbg_putfloat(tvel_y_added,3);
-					//print_util_dbg_print("\r\n");
+					float repulsion_velocity[3];
+					fence_avoidance.get_repulsion_velocity(controls);
+
+					print_util_dbg_print("repulsion_velocity[Y] \r\n");
+					print_util_dbg_putfloat(repulsion_velocity[Y],3);
+					print_util_dbg_print("\r\n");
 
 				}
 
