@@ -46,11 +46,15 @@
 
 extern "C"
 {
-#include "util/print_util.h"
-#include "util/maths.h"
-#include "util/constants.h"
+	#include "util/print_util.h"
+	#include "util/maths.h"
+	#include "util/constants.h"
+	#include "util/quick_trig.h"
 }
 
+#define HOMEX 46.51852236174565f
+#define HOMEY 6.566044801857777f
+#define STEPX 0.000900f
 /**
  * \brief   Set the waypoint depending on the reference frame defined in the current_waypoint_ structure
  *
@@ -186,7 +190,12 @@ void Mavlink_waypoint_handler::receive_count(Mavlink_waypoint_handler* waypoint_
         if (waypoint_handler->waypoint_receiving_ == false)
         {
             // comment these lines if you want to add new waypoints to the list instead of overwriting them
-            waypoint_handler->waypoint_onboard_count_ = 0;
+            waypoint_handler->number_of_fence_points = 0;
+            waypoint_handler->number_of_outfence_1_points = 0;
+            waypoint_handler->number_of_outfence_2_points = 0;
+            waypoint_handler->number_of_outfence_3_points = 0;
+            waypoint_handler->number_of_outfence_4_points = 0;
+            waypoint_handler->number_of_outfence_5_points = 0;            waypoint_handler->waypoint_onboard_count_ = 0;
             waypoint_handler->waypoint_count_ = 0;
             //---//
 
@@ -324,7 +333,37 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
 
                     waypoint_handler->waypoint_list[waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_] = new_waypoint;
                     waypoint_handler->waypoint_request_number_++;
-
+                    //CYSTU
+                    if(new_waypoint.command==MAV_CMD_NAV_FENCE)//40
+                    {
+                    	waypoint_handler->fence_list[waypoint_handler->number_of_fence_points] = new_waypoint;
+                    	waypoint_handler->number_of_fence_points++;
+                    }
+                    else if(new_waypoint.command==MAV_CMD_NAV_OUTFENCE_1)//41
+                    {
+                    	waypoint_handler->outfence_1_list[waypoint_handler->number_of_outfence_1_points] = new_waypoint;
+                    	waypoint_handler->number_of_outfence_1_points++;
+                    }
+                    else if(new_waypoint.command==MAV_CMD_NAV_OUTFENCE_2)//42
+                    {
+                    	waypoint_handler->outfence_2_list[waypoint_handler->number_of_outfence_2_points] = new_waypoint;
+                    	waypoint_handler->number_of_outfence_2_points++;
+                    }
+                    else if(new_waypoint.command==MAV_CMD_NAV_OUTFENCE_3)//43
+                    {
+                    	waypoint_handler->outfence_3_list[waypoint_handler->number_of_outfence_3_points] = new_waypoint;
+                    	waypoint_handler->number_of_outfence_3_points++;
+                    }
+                    else if(new_waypoint.command==MAV_CMD_NAV_OUTFENCE_4)//44
+                    {
+                    	waypoint_handler->outfence_4_list[waypoint_handler->number_of_outfence_4_points] = new_waypoint;
+                    	waypoint_handler->number_of_outfence_4_points++;
+                    }
+                    else if(new_waypoint.command==MAV_CMD_NAV_OUTFENCE_5)//45
+                    {
+                    	waypoint_handler->outfence_5_list[waypoint_handler->number_of_outfence_5_points] = new_waypoint;
+                    	waypoint_handler->number_of_outfence_5_points++;
+                    }
                     if ((waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_) == waypoint_handler->waypoint_count_)
                     {
                         MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
@@ -345,7 +384,13 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
 
                         waypoint_handler->state_.nav_plan_active = false;
                         waypoint_handler->nav_plan_init();
-                    }
+						
+						//cystu compute fencepoint angle
+                        for(int n=0;n<MAX_OUTFENCE+1;n++)
+                        {
+                        	waypoint_handler->fencepoint_angle(waypoint_handler->all_fences[n], *waypoint_handler->all_fence_points[n],waypoint_handler->all_fence_angles[n]);
+                        	//mpoints
+                        }                    }
                     else
                     {
                         mavlink_message_t _msg;
@@ -501,7 +546,11 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
             waypoint_handler->waypoint_onboard_count_ = 0;
             waypoint_handler->state_.nav_plan_active = false;
             waypoint_handler->hold_waypoint_set_ = false;
-
+            waypoint_handler->number_of_outfence_1_points = 0;
+            waypoint_handler->number_of_outfence_2_points = 0;
+            waypoint_handler->number_of_outfence_3_points = 0;
+            waypoint_handler->number_of_outfence_4_points = 0;
+            waypoint_handler->number_of_outfence_5_points = 0;
             mavlink_message_t _msg;
             mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),
                                          waypoint_handler->mavlink_stream_.compid(),
@@ -1395,6 +1444,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
                     waypoint_coordinates_ = waypoint_next_;
                     navigation_.dubin_state = DUBIN_INIT;
 
+					//waypoint_coordinates_ = waypoint_handler_set_waypoint_from_frame(&current_waypoint_, position_estimation_.local_position.origin);
                     mavlink_message_t msg;
                     mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
                                                      mavlink_stream_.compid(),
@@ -1403,11 +1453,24 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
                     mavlink_stream_.send(&msg);
                 }
             }
-            else
-            {
-                state_.nav_plan_active = false;
-                print_util_dbg_print("Stop\r\n");
-            }
+			//CYSTU
+			else if (waypoint_list[current_waypoint_count+1].command == MAV_CMD_NAV_FENCE) //40
+			{
+				print_util_dbg_print("This waypoint is a fence point, use next waypoint\r\n");
+				if (current_waypoint_count == (number_of_waypoints - 1))
+				{
+					current_waypoint_count = 0;
+				}
+				else
+				{
+					current_waypoint_count++;
+				}
+			}
+			else
+			{
+				state_.nav_plan_active = false;
+				print_util_dbg_print("Stop\r\n");
+			}
         }
     }
     else
@@ -1417,6 +1480,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
             hold_init(position_estimation_.local_position);
             waypoint_coordinates_ = waypoint_hold_coordinates;
             hold_waypoint_set_ = true;
+			//waypoint_coordinates_ = position_estimation_.local_position;
         }
     }
 }
@@ -1856,6 +1920,11 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(Position_estimation& position
 
     nav_plan_init();
 
+	//cystu compute fencepoint angle
+	for(int n=0;n<MAX_OUTFENCE+1;n++)
+	{
+		fencepoint_angle(all_fences[n], *all_fence_points[n],all_fence_angles[n]);
+	}
     if(!init_success)
     {
         print_util_dbg_print("[MAVLINK_WAYPOINT_HANDLER] constructor: ERROR\r\n");
@@ -1938,6 +2007,9 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
     waypoint.param4 = 0.0f; // Desired yaw angle at MISSION (rotary wing)
 
+	//CYSTU modification for test in simulation
+    waypoint.z = 0.0f;
+    waypoint.param1 = 0;
     waypoint_list[0] = waypoint;
 
     waypoint_count_ ++;
@@ -1946,13 +2018,17 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
     //CYSTU
     //1
-    /*waypoint.autocontinue = 0;
+    float x = HOMEX;
+    float y = HOMEY;
+    float xsize = STEPX;
+    float ysize = -0.005000f;
+    waypoint.autocontinue = 0;
     waypoint.current = 0;
     waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
     waypoint.command = MAV_CMD_NAV_FENCE; //40
 
-    waypoint.x = 46.5188720f;
-    waypoint.y = 6.5656400f;
+    waypoint.x = x+xsize;
+    waypoint.y = y+ysize;
     waypoint.z = 0.0f;
 
     waypoint.param1 = 0; // Hold time in decimal seconds
@@ -1960,7 +2036,64 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
     waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
 
-    waypoint_list[1] = waypoint;*/
+        waypoint_list[1] = waypoint;
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+    //2
+    waypoint.autocontinue = 0;
+    waypoint.current = 0;
+    waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+    waypoint.command = MAV_CMD_NAV_FENCE; //40
+
+    waypoint.x = x+xsize;
+    waypoint.y = y-ysize;
+    waypoint.z = 0.0f;
+
+    waypoint.param1 = 0; // Hold time in decimal seconds
+    waypoint.param2 = 0; // Acceptance radius in meters
+    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
+
+    waypoint_list[2] = waypoint;
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+    //3
+    waypoint.autocontinue = 0;
+    waypoint.current = 0;
+    waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+    waypoint.command = MAV_CMD_NAV_FENCE; //40
+
+    waypoint.x = x-xsize;
+    waypoint.y = y-ysize;
+    waypoint.z = 0.0f;
+
+    waypoint.param1 = 0; // Hold time in decimal seconds
+    waypoint.param2 = 0; // Acceptance radius in meters
+    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
+
+    waypoint_list[3] = waypoint;
+    waypoint_count_ ++;
+    waypoint_onboard_count_ = waypoint_count_;
+    //4
+    waypoint.autocontinue = 0;
+    waypoint.current = 0;
+    waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+    waypoint.command = MAV_CMD_NAV_FENCE; //40
+
+    waypoint.x = x-xsize;
+    waypoint.y = y+ysize;
+    waypoint.z = 0.0f;
+
+    waypoint.param1 = 0; // Hold time in decimal seconds
+    waypoint.param2 = 0; // Acceptance radius in meters
+    waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+    waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
+
+    waypoint_list[4] = waypoint;
+//    waypoint_count_ ++;
+//    waypoint_onboard_count_ = waypoint_count_;
+    sort_fencepoints();
 }
 
 
@@ -2143,4 +2276,68 @@ void Mavlink_waypoint_handler::fencepoint_angle(waypoint_struct_t* fence_list, u
 
 			fence_angle_list[j]=angle;
 		}
+}
+
+void Mavlink_waypoint_handler::rotate_fencepoint(float new_angle)
+{
+	//rotation
+	float angle = new_angle;
+	this->fence_angle = new_angle;
+    float x = HOMEX + STEPX;
+    float y = HOMEY;
+	float a = x;
+	float b = y;
+	for(int pt=1; pt<=4;pt++)
+	{
+		float X = waypoint_list[pt].x - a;
+		float Y = waypoint_list[pt].y - b;
+		waypoint_list[pt].x = a + X * quick_trig_cos(angle) - Y * quick_trig_sin(angle);
+		waypoint_list[pt].y = b + X * quick_trig_sin(angle) + Y * quick_trig_cos(angle);
+	}
+}
+
+void Mavlink_waypoint_handler::sort_fencepoints()
+{
+	//CYSTU
+	number_of_fence_points=0;
+	number_of_outfence_1_points=0;
+	number_of_outfence_2_points=0;
+	number_of_outfence_3_points=0;
+	number_of_outfence_4_points=0;
+	number_of_outfence_5_points=0;
+
+
+	for(int nbwp=0;nbwp <= waypoint_count_;nbwp++ )
+	{
+		if(waypoint_list[nbwp].command==MAV_CMD_NAV_FENCE)//40
+		{
+			fence_list[number_of_fence_points] = waypoint_list[nbwp];
+			number_of_fence_points++;
+		}
+		else if(waypoint_list[nbwp].command==MAV_CMD_NAV_OUTFENCE_1)//41
+		{
+			outfence_1_list[number_of_outfence_1_points] = waypoint_list[nbwp];
+			number_of_outfence_1_points++;
+		}
+		else if(waypoint_list[nbwp].command==MAV_CMD_NAV_OUTFENCE_2)//42
+		{
+			outfence_2_list[number_of_outfence_2_points] = waypoint_list[nbwp];
+			number_of_outfence_2_points++;
+		}
+		else if(waypoint_list[nbwp].command==MAV_CMD_NAV_OUTFENCE_3)//43
+		{
+			outfence_3_list[number_of_outfence_3_points] = waypoint_list[nbwp];
+			number_of_outfence_3_points++;
+		}
+		else if(waypoint_list[nbwp].command==MAV_CMD_NAV_OUTFENCE_4)//44
+		{
+			outfence_4_list[number_of_outfence_4_points] = waypoint_list[nbwp];
+			number_of_outfence_4_points++;
+		}
+		else if(waypoint_list[nbwp].command==MAV_CMD_NAV_OUTFENCE_5)//45
+		{
+			outfence_5_list[number_of_outfence_5_points] = waypoint_list[nbwp];
+			number_of_outfence_5_points++;
+		}
+	}
 }

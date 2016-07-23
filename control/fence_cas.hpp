@@ -67,7 +67,7 @@ public:
      *
      * \return true
      */
-	bool 	clip_repulsion(control_command_t command_t);
+	bool 	clip_repulsion(control_command_t* command_t);
     /**
      * \brief   Returns the maximal y speed per update
      *
@@ -113,15 +113,15 @@ public:
      */
 	float getrad(float normvel);
 
-
-	float	maxsens;	///< Maximal detection distance, 		typically 10
-	float	a_max; 		///< Maximal deceleration [m/s^2], 		typically 1
-	float	r_pz; 		///< Radius of Protection Zone, 		typically 0.5
-	float	comfort; 	///< [0,1] Intensity of the reaction, 	typically 0.5
-	float	tahead; 	///< [0,3] Intensity of the reaction, 	typically = 3*comfort
-	float	coef_roll; 	///< [0,1] Intensity of the reaction, 	typically 1
-	float	maxradius; 	///< [0,100] Maximal radius of curvature, 	typically 5
-	float	max_vel_y;  ///< [0,2] Maximal speed in y direction, 	typically 1
+	float 	repulsion[3];				///< Repulsion vector in semi-local frame (only act on ROLL, rep[1])
+	float	maxsens;	///< Maximal detection distance
+	float	a_max; 		///< Maximal deceleration [m/s^2]
+	float	r_pz; 		///< Radius of Protection Zone
+	float	tahead; 	///< [0,6] Intensity of the reaction, 	typically = 3
+	float	coef_roll; 	///< [0,1] Intensity of the reaction
+	float	maxradius; 	///< [Maximal radius of curvature
+	float	max_vel_y;  ///<  Maximal speed in y direction,
+	float 	ratioXY_vel;
 
 private:
     /**
@@ -147,7 +147,7 @@ private:
 	Mavlink_waypoint_handler* 	waypoint_handler;			///< Waypoint handler (extract fencepoints)
 	Position_estimation*        pos_est;                    ///< Estimated position and speed (extract the velocity and the position)
 	ahrs_t* 					ahrs ;						///< Accelaration
-	float 						repulsion[3];				///< Repulsion vector in semi-local frame (only act on ROLL, rep[1])
+
 };
 
 #endif /*FENCE_CAS_H_*/

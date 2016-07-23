@@ -155,7 +155,15 @@ public:
      */
     void fencepoint_angle(waypoint_struct_t* fence_list, uint16_t number_of_fence_points,float* fence_angle_list );
 
-    
+    /**
+     * \brief   Rotate all the points around the first waypoint
+     * \param  Angle of rotation in radians
+     */
+    void rotate_fencepoint(float fence_angle);
+    /**
+	 * \brief   Sort the fence points in their own list
+	 */
+    void sort_fencepoints();    
     waypoint_local_struct_t waypoint_hold_coordinates;           ///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
     
     waypoint_struct_t waypoint_list[MAX_WAYPOINTS];              ///< The array of all waypoints (max MAX_WAYPOINTS)
@@ -192,7 +200,8 @@ public:
     int8_t current_waypoint_count;                              ///< The number of the current waypoint
     uint16_t waypoint_count_;
     uint16_t current_waypoint_index_;
-
+	uint16_t waypoint_onboard_count_;                            ///< The number of waypoint onboard
+    float fence_angle;	
 protected:
     bool hold_waypoint_set_;                                     ///< Flag to tell if the hold position waypoint is set
     uint32_t start_wpt_time_;                                    ///< The time at which the MAV starts to travel towards its waypoint
@@ -216,7 +225,7 @@ private:
 
     int32_t sending_waypoint_num_;                               ///< The ID number of the sending waypoint
     int32_t waypoint_request_number_;                            ///< The ID number of the requested waypoint
-    uint16_t waypoint_onboard_count_;                            ///< The number of waypoint onboard
+    //uint16_t waypoint_onboard_count_;                            ///< The number of waypoint onboard
 
     uint32_t start_timeout_;                                     ///< The start time for the waypoint timeout
     uint32_t timeout_max_waypoint_;                              ///< The max waiting time for communication
