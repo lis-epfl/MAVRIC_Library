@@ -52,22 +52,17 @@ public:
      * \return  success
      */
 	bool 	update(void);
+
     /**
-     * \brief   Returns the repulsion on the choose axis
+     * \brief  Returns the repulsion velocity on on the choose axis after clipping it
+     * \the velocity on x-axis has also to be taken into account
      *
-     * \param index of the axis [0,1,2] = [X,ROLL,Z]
-     *
-     * \return  repulsion value
-     */
-	float 	get_repulsion(int axis);
-    /**
-     * \brief   clip the repulsion in function of actual velocity norm
-     *
-     * \param pointer on control_command_t to know the actual velocity norm
+     * \param command_t  commands of the desired velocity
      *
      * \return true
      */
-	bool 	clip_repulsion(control_command_t* command_t);
+	float*	get_repulsion_velocity(control_command_t* command);
+
     /**
      * \brief   Returns the maximal y speed per update
      *
@@ -120,8 +115,9 @@ public:
 	float	tahead; 	///< [0,6] Intensity of the reaction, 	typically = 3
 	float	coef_roll; 	///< [0,1] Intensity of the reaction
 	float	maxradius; 	///< [Maximal radius of curvature
-	float	max_vel_y;  ///<  Maximal speed in y direction,
+	float	max_vel_y;  ///< Absolute maximum lateral velocity
 	float 	ratioXY_vel;
+	float 	repulsion_velocity[3]; ///< Final repulsion velocity to add [m/s] for X and Y axis
 
 private:
     /**
