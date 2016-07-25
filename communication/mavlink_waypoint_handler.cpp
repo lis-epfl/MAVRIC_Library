@@ -820,20 +820,22 @@ mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler
         //waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
 
         local_position_t landing_position = waypoint_handler->position_estimation_.local_position;
-        landing_position.pos[Z] = -5.0f;
-        if (packet->param1 == 1)
+        // Usage of empty param2 in order to specify the landing position
+        if (packet->param2 == 1)
         {
             print_util_dbg_print("Landing at a given location\r\n");
 
-            landing_position.pos[X] = packet->param5;
-            landing_position.pos[Y] = packet->param6;
-            
-            landing_position.heading = waypoint_handler->position_estimation_.local_position.heading;
-
+            landing_position.pos[X]     = packet->param5;
+            landing_position.pos[Y]     = packet->param6;
+            landing_position.pos[Z]     = packet->param7;
+            landing_position.heading    = packet->param4;
         }
         else
         {
             print_util_dbg_print("Landing on the spot\r\n");
+            // No need to overwrite the landing_position, as it is already filled before the if
+            landing_position.pos[Z]     = waypoint_handler->navigation_.waypoint_landing_altitude;
+            landing_position.heading    = waypoint_handler->position_estimation_.local_position.heading;
         }
 
         if (waypoint_handler->navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
@@ -881,8 +883,8 @@ void Mavlink_waypoint_handler::auto_landing_handler()
                 print_util_dbg_print("Cust: descent to small alt");
                 state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                 state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
-                waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
-                waypoint_hold_coordinates.waypoint.pos[Z] = navigation_.takeoff_altitude/2.0f;
+                // waypoint_hold_coordinates.waypoint = position_estimation_.local_position;
+                // waypoint_hold_coordinates.waypoint.pos[Z] = navigation_.takeoff_altitude/2.0f;
                 break;
 
             case Navigation::DESCENT_TO_GND:
@@ -914,7 +916,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
 
     if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
     {
-        if (maths_f_abs(position_estimation_.local_position.pos[2] - waypoint_hold_coordinates.waypoint.pos[2]) < 0.5f)
+        if (maths_f_abs(position_estimation_.local_position.pos[2] - navigation_.waypoint_landing_altitude) < 0.5f)
         {
             next_state_ = true;
         }
@@ -1328,11 +1330,14 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
 
                 //auto landing is not using the packet, 
                 //so we can declare a dummy one.
+                // param2 = 1 indicates that it should land on the given position
+                // (otherwise it will land at the current position)
                 mavlink_command_long_t dummy_packet;
-                dummy_packet.param1 = 1;
+                dummy_packet.param2 = 1;
+                dummy_packet.param4 = waypoint_coordinates_.waypoint.heading;
                 dummy_packet.param5 = waypoint_coordinates_.waypoint.pos[X];
                 dummy_packet.param6 = waypoint_coordinates_.waypoint.pos[Y];
-                dummy_packet.param7 = waypoint_coordinates_.waypoint.pos[Z];
+                dummy_packet.param7 = navigation_.waypoint_landing_altitude;
                 set_auto_landing(this, &dummy_packet);
             }
             if ((current_waypoint_.autocontinue == 1) && (waypoint_count_ > 1))
@@ -1544,8 +1549,9 @@ static waypoint_local_struct_t waypoint_handler_set_waypoint_from_frame(Mavlink_
 
     wpt.waypoint = waypoint_coor;
     // WARNING: Acceptance radius (param2) is used as the waypoint radius (should be param3) for a fixed-wing
-    wpt.radius = current_waypoint->param2;
-    wpt.loiter_time = current_waypoint->param1;
+    wpt.waypoint.heading    = current_waypoint->param4;
+    wpt.radius              = current_waypoint->param2;
+    wpt.loiter_time         = current_waypoint->param1;
 
     *dubin_state = DUBIN_INIT;
 

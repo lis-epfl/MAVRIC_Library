@@ -139,6 +139,8 @@ public:
 
         float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
 
+        float waypoint_landing_altitude;                    ///< Height at which the fast descend should be stopped, during landing on a waypoint.
+
         strategy_t navigation_strategy;                  ///< The type of navigation strategy
     };
 
@@ -188,6 +190,7 @@ public:
     float minimal_radius;                               ///< The minimal circle radius
     float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
     float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing
+    float waypoint_landing_altitude;                    ///< Height at which the fast descend should be stopped, during landing on a waypoint.
 
     strategy_t navigation_strategy;                     ///< The type of navigation strategy
 
@@ -289,6 +292,7 @@ Navigation::conf_t Navigation::default_config()
     conf.heading_acceptance                          = PI/6.0f;
     conf.vertical_vel_gain                           = 1.0f;
     conf.takeoff_altitude                            = -10.0f;
+    conf.waypoint_landing_altitude                   = -5.0f;
     // conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
     conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
     return conf;
