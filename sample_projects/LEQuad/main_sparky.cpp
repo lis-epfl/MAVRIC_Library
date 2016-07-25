@@ -66,14 +66,6 @@ static void clock_setup(void)
     rcc_periph_clock_enable(RCC_GPIOC);
     rcc_periph_clock_enable(RCC_GPIOD);
 
-    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE,
-                    GPIO11 | GPIO12);
-    gpio_set_af(GPIOA, GPIO_AF10, GPIO11 | GPIO12);
-
-    /* USB clock */
-    rcc_periph_clock_enable(RCC_OTGFS);
-
-
     time_keeper_init();
 }
 
