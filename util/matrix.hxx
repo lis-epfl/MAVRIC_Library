@@ -430,6 +430,22 @@ Mat<N,P,T> Mat<N,P,T>::inv(bool& success) const
     return inverse(success);
 }
 
+// template<uint32_t N, uint32_t P, typename T, uint32_t M, uint32_t Q>
+// Mat<N,P,T> Mat<N,P,T>::insert(Mat<M,Q,T> m, uint32_t i, uint32_t j, bool& success) const
+// {
+//     Mat<N,P,T> res;
+//     success = mat::op::insert(*this, m, i, j, res);
+//     return res;
+// }
+
+// template<uint32_t N, uint32_t P, typename T, uint32_t M, uint32_t Q>
+// Mat<N,P,T> Mat<N,P,T>::insert(Mat<M,Q,T> m, uint32_t i, uint32_t j) const
+// {
+//     Mat<N,P,T> res;
+//     mat::op::insert(*this, m, i, j, res);
+//     return res;
+// }
+
 
 namespace mat
 {
@@ -600,6 +616,41 @@ void op::dot(const Mat<N,P,T>& m1, const Mat<P,Q,T>& m2, Mat<N,Q,T>& res)
     // return aug.template slice <N,N*2> ();
 //     return  false;
 // }
+
+
+template<uint32_t M, uint32_t N, uint32_t P, uint32_t Q, typename T>
+bool op::insert(const Mat<M,N,T>& m1, const Mat<P,Q,T>& m2, uint32_t i_start, uint32_t j_start, Mat<M,N,T>& res)
+{
+    bool ret = true;
+
+    // Compute stop indices
+    uint32_t i_stop = i_start + m2.rows() - 1;
+    uint32_t j_stop = j_start + m2.cols() - 1;
+
+    // Adjust indexes if inserted matrix is too big
+    if(i_stop >= m1.rows())
+    {
+        i_stop = m1.rows() - 1;
+        ret = false;
+    }
+    if(j_stop >= m1.cols())
+    {
+        j_stop = m1.cols() - 1;
+        ret = false;
+    }
+
+    // Insert the matrix
+    for(uint32_t i = i_start; i <= i_stop; i++)
+    {
+        for(uint32_t j = j_start; j <= j_stop; j++)
+        {
+            m1(i,j) = m2(i-i_start,j-j_start);
+        }
+    }
+
+
+    return ret;
+}
 
 
 }
