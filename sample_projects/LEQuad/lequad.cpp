@@ -625,12 +625,12 @@ bool LEQuad::main_task(void)
   //
   // // Velocity controller
   // ret &= velocity_controller_copter_init(&velocity_controller,
-  //                                        config_.velocity_controller_copter_config,
   //                                        &ahrs,
   //                                        &position_estimation,
   //                                        &command.velocity,
   //                                        &command.attitude,
-  //                                        &command.thrust);
+  //                                        &command.thrust
+  //                                        config_.velocity_controller_copter_config);
   //
   // // Vector field
   // ret &= vector_field_waypoint_init(&vector_field_waypoint,
