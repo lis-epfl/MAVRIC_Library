@@ -151,6 +151,12 @@ const std::array<float, 3>& Imu::gyro(void) const
 }
 
 
+const std::array<float, 3>& Imu::gyro_raw(void) const
+{
+    return oriented_gyro_;
+}
+
+
 const std::array<float, 3>& Imu::mag(void) const
 {
     return scaled_mag_;

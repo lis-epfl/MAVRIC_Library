@@ -167,6 +167,14 @@ public:
 
 
     /**
+     * \brief   Get X, Y and Z components of angular velocity in rad/s (raw oriented values)
+     *
+     * \return  Value
+     */
+    const std::array<float, 3>& gyro_raw(void) const;
+
+
+    /**
      * \brief   Get X, Y and Z components of magnetic field (normalized)
      *
      * \return  Value
