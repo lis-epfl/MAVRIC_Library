@@ -98,7 +98,7 @@ Collaboration diagram for Navigation:</div>
 <div class="dyncontent">
 <div class="center"><img src="classNavigation__coll__graph.png" border="0" usemap="#Navigation_coll__map" alt="Collaboration graph"/></div>
 <map name="Navigation_coll__map" id="Navigation_coll__map">
-<area shape="rect" id="node2" href="structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="64,538,221,675"/><area shape="rect" id="node4" href="structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="5,211,131,418"/><area shape="rect" id="node6" href="structlocal__position__t.html" title="Local coordinates structure." alt="" coords="155,255,267,375"/><area shape="rect" id="node8" href="structglobal__position__t.html" title="Global position structure." alt="" coords="152,6,269,143"/><area shape="rect" id="node10" href="structquat__t.html" title="Unit quaternion." alt="" coords="245,555,304,658"/><area shape="rect" id="node12" href="structpid__controller__t.html" title="PID controller." alt="" coords="328,486,456,727"/><area shape="rect" id="node14" href="structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="320,255,424,375"/><area shape="rect" id="node16" href="structintegrator__t.html" title="Integrator part of PID." alt="" coords="448,246,552,383"/></map>
+<area shape="rect" id="node2" href="structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="5,324,163,479"/><area shape="rect" id="node4" href="structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="21,6,147,213"/><area shape="rect" id="node6" href="structquat__t.html" title="Unit quaternion." alt="" coords="187,350,245,453"/><area shape="rect" id="node8" href="structpid__controller__t.html" title="PID controller." alt="" coords="269,281,397,522"/><area shape="rect" id="node10" href="structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="225,49,329,169"/><area shape="rect" id="node12" href="structintegrator__t.html" title="Integrator part of PID." alt="" coords="353,41,457,178"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classNavigation-members.html">List of all members.</a></p>
@@ -136,8 +136,8 @@ Public Types</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The auto-landing enum.  <a href="classNavigation.html#ad3c50bdf8fc3a032d75c8fa15fdd5729">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavigation.html#aeca1e629c6fabdfd121c9dd423086e10">Navigation</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> &amp;controls_nav, const <a class="el" href="structquat__t.html">quat_t</a> &amp;<a class="el" href="classNavigation.html#adec383e734cabf3b54eac22ea5d7a050">qe</a>, const <a class="el" href="classPosition__estimation.html">Position_estimation</a> &amp;position_estimation, <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, <a class="el" href="structNavigation_1_1conf__t.html">conf_t</a> nav_config=<a class="el" href="classNavigation.html#ae543077183979429089096e96040a537">default_config</a>())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#aeca1e629c6fabdfd121c9dd423086e10"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavigation.html#a5dc7f44df595781bb3e725249c823f44">Navigation</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> &amp;controls_nav, const <a class="el" href="structquat__t.html">quat_t</a> &amp;<a class="el" href="classNavigation.html#adec383e734cabf3b54eac22ea5d7a050">qe</a>, const <a class="el" href="classINS.html">INS</a> &amp;ins, <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, <a class="el" href="structNavigation_1_1conf__t.html">conf_t</a> nav_config=<a class="el" href="classNavigation.html#ae543077183979429089096e96040a537">default_config</a>())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a5dc7f44df595781bb3e725249c823f44"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavigation.html#ade9f978504febc6325012ae8bf5ff19f">update</a> (<a class="el" href="classNavigation.html">Navigation</a> *navigation)</td></tr>
@@ -278,12 +278,12 @@ const <a class="el" href="structquat__t.html">quat_t</a> &amp;&#160;</td><td cla
 </div>
 </div>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aeca1e629c6fabdfd121c9dd423086e10"></a><!-- doxytag: member="Navigation::Navigation" ref="aeca1e629c6fabdfd121c9dd423086e10" args="(control_command_t &amp;controls_nav, const quat_t &amp;qe, const Position_estimation &amp;position_estimation, State &amp;state, Mavlink_stream &amp;mavlink_stream, conf_t nav_config=default_config())" -->
+<a class="anchor" id="a5dc7f44df595781bb3e725249c823f44"></a><!-- doxytag: member="Navigation::Navigation" ref="a5dc7f44df595781bb3e725249c823f44" args="(control_command_t &amp;controls_nav, const quat_t &amp;qe, const INS &amp;ins, State &amp;state, Mavlink_stream &amp;mavlink_stream, conf_t nav_config=default_config())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classNavigation.html#aeca1e629c6fabdfd121c9dd423086e10">Navigation::Navigation</a> </td>
+          <td class="memname"><a class="el" href="classNavigation.html#a5dc7f44df595781bb3e725249c823f44">Navigation::Navigation</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> &amp;&#160;</td>
           <td class="paramname"><em>controls_nav</em>, </td>
@@ -297,8 +297,8 @@ const <a class="el" href="structquat__t.html">quat_t</a> &amp;&#160;</td><td cla
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classPosition__estimation.html">Position_estimation</a> &amp;&#160;</td>
-          <td class="paramname"><em>position_estimation</em>, </td>
+          <td class="paramtype">const <a class="el" href="classINS.html">INS</a> &amp;&#160;</td>
+          <td class="paramname"><em>ins</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -330,12 +330,12 @@ const <a class="el" href="structquat__t.html">quat_t</a> &amp;&#160;</td><td cla
 <p>Constructor. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">controls_nav</td><td>The pointer to the control structure </td></tr>
-    <tr><td class="paramname">qe</td><td>The pointer to the attitude quaternion structure </td></tr>
-    <tr><td class="paramname">position_estimation</td><td>The pointer to the position estimation structure </td></tr>
-    <tr><td class="paramname">state</td><td>The pointer to the state structure </td></tr>
-    <tr><td class="paramname">mavlink_stream</td><td>The pointer to the MAVLink_stream structure </td></tr>
-    <tr><td class="paramname">nav_config</td><td>The pointer to the config structure </td></tr>
+    <tr><td class="paramname">controls_nav</td><td>Reference to the control structure </td></tr>
+    <tr><td class="paramname">qe</td><td>Reference to the attitude quaternion structure </td></tr>
+    <tr><td class="paramname">ins</td><td>Reference to the Inertial navigation system </td></tr>
+    <tr><td class="paramname">state</td><td>Reference to the state structure </td></tr>
+    <tr><td class="paramname">mavlink_stream</td><td>Reference to the MAVLink_stream structure </td></tr>
+    <tr><td class="paramname">nav_config</td><td>Reference to the config structure </td></tr>
   </table>
   </dd>
 </dl>
@@ -451,7 +451,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 25 2016 06:37:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 25 2016 09:17:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -89,12 +89,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Position_estimation Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Position_estimation" --><div class="dynheader">
+<!-- doxytag: class="Position_estimation" --><!-- doxytag: inherits="INS" --><div class="dynheader">
+Inheritance diagram for Position_estimation:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPosition__estimation__inherit__graph.png" border="0" usemap="#Position__estimation_inherit__map" alt="Inheritance graph"/></div>
+<map name="Position__estimation_inherit__map" id="Position__estimation_inherit__map">
+<area shape="rect" id="node2" href="classINS.html" title="{INS\n|# origin_\l|+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l}" alt="" coords="44,6,183,213"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
 Collaboration diagram for Position_estimation:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPosition__estimation__coll__graph.png" border="0" usemap="#Position__estimation_coll__map" alt="Collaboration graph"/></div>
 <map name="Position__estimation_coll__map" id="Position__estimation_coll__map">
-<area shape="rect" id="node2" href="structlocal__position__t.html" title="Local coordinates structure." alt="" coords="57,211,169,331"/><area shape="rect" id="node4" href="structglobal__position__t.html" title="Global position structure." alt="" coords="55,6,172,143"/></map>
+<area shape="rect" id="node2" href="classINS.html" title="{INS\n|# origin_\l|+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l}" alt="" coords="44,193,183,399"/><area shape="rect" id="node4" href="structglobal__position__t.html" title="Global position structure." alt="" coords="55,5,172,125"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classPosition__estimation-members.html">List of all members.</a></p>
@@ -113,36 +120,30 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a920c4a264457690d29fbd658ec791f99">Position_estimation</a> (<a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="classBarometer.html">Barometer</a> &amp;barometer, const <a class="el" href="classSonar.html">Sonar</a> &amp;sonar, const <a class="el" href="classGps.html">Gps</a> &amp;gps, const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, const <a class="el" href="structPosition__estimation_1_1conf__t.html">conf_t</a> config=default_config())</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the position estimation module.  <a href="#a920c4a264457690d29fbd658ec791f99"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8856c10ee31f3aab47c029bf798906d0"></a><!-- doxytag: member="Position_estimation::update" ref="a8856c10ee31f3aab47c029bf798906d0" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a8856c10ee31f3aab47c029bf798906d0">update</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Position estimation update step, performing position estimation then position correction (function to be used) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a4889621f84bbf2dad7c6591a68e4ece5">update</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Position estimation update step, performing position estimation then position correction (function to be used)  <a href="#a4889621f84bbf2dad7c6591a68e4ece5"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">fence_violation_state_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#afc390dc784894a423625bae9deffba5c">get_fence_violation_state</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns fence violation state.  <a href="#afc390dc784894a423625bae9deffba5c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0">set_home_position_global</a> (<a class="el" href="structglobal__position__t.html">global_position_t</a> new_home_pos)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">set the home position and altitude  <a href="#a983d61358e48bd9b9a09a3192110ecc0"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21">set_home_to_current_position</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">set the home position and altitude to currrent position  <a href="#a430f64e917b2dd5cfb1a995bcdfdfc21"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a179579cd27313fe0f8bb38695124d431">set_new_fence_origin</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the origin of the fence (e.g. common for many entities or when armed)  <a href="#a179579cd27313fe0f8bb38695124d431"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd">healthy</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns if position estimation is healthy.  <a href="#acfba651f81761b71f06b06efd701d0bd"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a358ae802e65eede79495c339689813c8">altitude_healthy</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns if altitude estimation is healthy.  <a href="#a358ae802e65eede79495c339689813c8"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a26712a2884be95e68f3e7e57c79ed6e2">last_update_s</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Last update in seconds.  <a href="#a26712a2884be95e68f3e7e57c79ed6e2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::array&lt; float, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#af177fdbf47265574602db4137edb3a4f">position_lf</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">3D Position in meters (NED frame)  <a href="#af177fdbf47265574602db4137edb3a4f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::array&lt; float, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#ac5323a4e1d37bc97777757ede0bb5629">velocity_lf</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity in meters/seconds in NED frame.  <a href="#ac5323a4e1d37bc97777757ede0bb5629"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a5abf9309fcf42e92b59f9b313991a78c">absolute_altitude</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Absolute altitude above sea level in meters (&gt;=0)  <a href="#a5abf9309fcf42e92b59f9b313991a78c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#aa0962c38f66141d91755fdc614c994a3">is_healthy</a> (<a class="el" href="classINS.html#ac9fe239752c8cce15ed745015b0a29a2">INS::healthy_t</a> type) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates which estimate can be trusted.  <a href="#aa0962c38f66141d91755fdc614c994a3"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf60adf67f89709d4b55296b42078b2c"></a><!-- doxytag: member="Position_estimation::default_config" ref="acf60adf67f89709d4b55296b42078b2c" args="()" -->
 static <a class="el" href="structPosition__estimation_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>default_config</b> ()</td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8f0c9743ec556fa02af892f3888315a4"></a><!-- doxytag: member="Position_estimation::local_position" ref="a8f0c9743ec556fa02af892f3888315a4" args="" -->
-<a class="el" href="structlocal__position__t.html">local_position_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a8f0c9743ec556fa02af892f3888315a4">local_position</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Local position. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a262d92f8796197abc6e939a37733d79a"></a><!-- doxytag: member="Position_estimation::vel" ref="a262d92f8796197abc6e939a37733d79a" args="[3]" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a262d92f8796197abc6e939a37733d79a">vel</a> [3]</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">3D velocity in global frame <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac58e608149cd1fda3bc0c4bdb44eb39c"></a><!-- doxytag: member="Position_estimation::vel_bf" ref="ac58e608149cd1fda3bc0c4bdb44eb39c" args="[3]" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#ac58e608149cd1fda3bc0c4bdb44eb39c">vel_bf</a> [3]</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">3D velocity in body frame <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9bd64901feb3e3140cfd1115145760e3"></a><!-- doxytag: member="Position_estimation::kp_alt_baro" ref="a9bd64901feb3e3140cfd1115145760e3" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a9bd64901feb3e3140cfd1115145760e3">kp_alt_baro</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gain to correct the Z position estimation from the barometer. <br/></td></tr>
@@ -155,6 +156,12 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a117c86efc1f9d8ff9d0979d68626dc86"></a><!-- doxytag: member="Position_estimation::kp_vel_gps" ref="a117c86efc1f9d8ff9d0979d68626dc86" args="[3]" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a117c86efc1f9d8ff9d0979d68626dc86">kp_vel_gps</a> [3]</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gain to correct the velocity estimation from the GPS. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9c464843210a81ae05248775a7291e2e"></a><!-- doxytag: member="Position_estimation::kp_alt_sonar" ref="a9c464843210a81ae05248775a7291e2e" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#a9c464843210a81ae05248775a7291e2e">kp_alt_sonar</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gain to correct the Z position estimation from the sonar. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acac5d9260bf7de5cbb9dd9079cae4832"></a><!-- doxytag: member="Position_estimation::kp_vel_sonar" ref="acac5d9260bf7de5cbb9dd9079cae4832" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__estimation.html#acac5d9260bf7de5cbb9dd9079cae4832">kp_vel_sonar</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gain to correct the Z velocity estimation from the sonar. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6841454a51b14ffb025e07a169c609d"></a><!-- doxytag: member="Position_estimation::Mavlink_waypoint_handler" ref="ad6841454a51b14ffb025e07a169c609d" args="" -->
@@ -227,41 +234,25 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Mavlink_waypoint_han
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a358ae802e65eede79495c339689813c8"></a><!-- doxytag: member="Position_estimation::altitude_healthy" ref="a358ae802e65eede79495c339689813c8" args="() const " -->
+<a class="anchor" id="a5abf9309fcf42e92b59f9b313991a78c"></a><!-- doxytag: member="Position_estimation::absolute_altitude" ref="a5abf9309fcf42e92b59f9b313991a78c" args="(void) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classPosition__estimation.html#a358ae802e65eede79495c339689813c8">Position_estimation::altitude_healthy</a> </td>
+          <td class="memname">float <a class="el" href="classPosition__estimation.html#a5abf9309fcf42e92b59f9b313991a78c">Position_estimation::absolute_altitude</a> </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Returns if altitude estimation is healthy. </p>
-<p>Checks if barometer is initialized</p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>healthy whether altitude estimation is healthy </dd></dl>
+<p>Absolute altitude above sea level in meters (&gt;=0) </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>altitude </dd></dl>
 
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classPosition__estimation_a358ae802e65eede79495c339689813c8_cgraph.png" border="0" usemap="#classPosition__estimation_a358ae802e65eede79495c339689813c8_cgraph" alt=""/></div>
-<map name="classPosition__estimation_a358ae802e65eede79495c339689813c8_cgraph" id="classPosition__estimation_a358ae802e65eede79495c339689813c8_cgraph">
-<area shape="rect" id="node3" href="classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359" title="Gets the flag stating if the barometer has been calibrated." alt="" coords="289,5,497,35"/></map>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classPosition__estimation_a358ae802e65eede79495c339689813c8_icgraph.png" border="0" usemap="#classPosition__estimation_a358ae802e65eede79495c339689813c8_icgraph" alt=""/></div>
-<map name="classPosition__estimation_a358ae802e65eede79495c339689813c8_icgraph" id="classPosition__estimation_a358ae802e65eede79495c339689813c8_icgraph">
-<area shape="rect" id="node3" href="classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd" title="Returns if position estimation is healthy." alt="" coords="288,5,475,35"/><area shape="rect" id="node5" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="524,5,679,35"/></map>
-</div>
-</p>
+<p>Implements <a class="el" href="classINS.html#af8a125150d36bd77f1253a700d627af7">INS</a>.</p>
 
 </div>
 </div>
@@ -285,42 +276,75 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="acfba651f81761b71f06b06efd701d0bd"></a><!-- doxytag: member="Position_estimation::healthy" ref="acfba651f81761b71f06b06efd701d0bd" args="() const " -->
+<a class="anchor" id="aa0962c38f66141d91755fdc614c994a3"></a><!-- doxytag: member="Position_estimation::is_healthy" ref="aa0962c38f66141d91755fdc614c994a3" args="(INS::healthy_t type) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd">Position_estimation::healthy</a> </td>
+          <td class="memname">bool <a class="el" href="classPosition__estimation.html#aa0962c38f66141d91755fdc614c994a3">Position_estimation::is_healthy</a> </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype"><a class="el" href="classINS.html#ac9fe239752c8cce15ed745015b0a29a2">INS::healthy_t</a>&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Returns if position estimation is healthy. </p>
-<p>Checks if gps is healthy and initialized and altitude is healthy (see <a class="el" href="classPosition__estimation.html#a358ae802e65eede79495c339689813c8" title="Returns if altitude estimation is healthy.">altitude_healthy()</a>)</p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>healthy whether 3D position estimation is healthy </dd></dl>
+<p>Indicates which estimate can be trusted. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>Type of estimate</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>boolean </dd></dl>
 
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classPosition__estimation_acfba651f81761b71f06b06efd701d0bd_cgraph.png" border="0" usemap="#classPosition__estimation_acfba651f81761b71f06b06efd701d0bd_cgraph" alt=""/></div>
-<map name="classPosition__estimation_acfba651f81761b71f06b06efd701d0bd_cgraph" id="classPosition__estimation_acfba651f81761b71f06b06efd701d0bd_cgraph">
-<area shape="rect" id="node3" href="classPosition__estimation.html#a358ae802e65eede79495c339689813c8" title="Returns if altitude estimation is healthy." alt="" coords="240,5,475,35"/><area shape="rect" id="node7" href="classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="309,59,405,88"/><area shape="rect" id="node5" href="classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359" title="Gets the flag stating if the barometer has been calibrated." alt="" coords="524,5,732,35"/></map>
-</div>
-</p>
+<p>Implements <a class="el" href="classINS.html#a4806a6d39547e538c4554c1b6aa7eba2">INS</a>.</p>
 
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classPosition__estimation_acfba651f81761b71f06b06efd701d0bd_icgraph.png" border="0" usemap="#classPosition__estimation_acfba651f81761b71f06b06efd701d0bd_icgraph" alt=""/></div>
-<map name="classPosition__estimation_acfba651f81761b71f06b06efd701d0bd_icgraph" id="classPosition__estimation_acfba651f81761b71f06b06efd701d0bd_icgraph">
-<area shape="rect" id="node3" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="241,5,396,35"/></map>
 </div>
-</p>
+</div>
+<a class="anchor" id="a26712a2884be95e68f3e7e57c79ed6e2"></a><!-- doxytag: member="Position_estimation::last_update_s" ref="a26712a2884be95e68f3e7e57c79ed6e2" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classPosition__estimation.html#a26712a2884be95e68f3e7e57c79ed6e2">Position_estimation::last_update_s</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Last update in seconds. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>time </dd></dl>
+
+<p>Implements <a class="el" href="classINS.html#a0bf7a26bbc93e85ed87c744e550644da">INS</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af177fdbf47265574602db4137edb3a4f"></a><!-- doxytag: member="Position_estimation::position_lf" ref="af177fdbf47265574602db4137edb3a4f" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; float, 3 &gt; <a class="el" href="classPosition__estimation.html#af177fdbf47265574602db4137edb3a4f">Position_estimation::position_lf</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>3D Position in meters (NED frame) </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>position </dd></dl>
+
+<p>Implements <a class="el" href="classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0">INS</a>.</p>
 
 </div>
 </div>
@@ -354,7 +378,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPosition__estimation_a983d61358e48bd9b9a09a3192110ecc0_cgraph.png" border="0" usemap="#classPosition__estimation_a983d61358e48bd9b9a09a3192110ecc0_cgraph" alt=""/></div>
 <map name="classPosition__estimation_a983d61358e48bd9b9a09a3192110ecc0_cgraph" id="classPosition__estimation_a983d61358e48bd9b9a09a3192110ecc0_cgraph">
-<area shape="rect" id="node3" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="428,5,543,35"/><area shape="rect" id="node7" href="classPosition__estimation.html#a179579cd27313fe0f8bb38695124d431" title="Reset the origin of the fence (e.g. common for many entities or when armed)" alt="" coords="351,59,620,88"/><area shape="rect" id="node5" href="classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="669,5,816,35"/></map>
+<area shape="rect" id="node3" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="349,5,464,35"/><area shape="rect" id="node5" href="classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="512,5,659,35"/></map>
 </div>
 </p>
 
@@ -392,43 +416,62 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPosition__estimation_a430f64e917b2dd5cfb1a995bcdfdfc21_cgraph.png" border="0" usemap="#classPosition__estimation_a430f64e917b2dd5cfb1a995bcdfdfc21_cgraph" alt=""/></div>
 <map name="classPosition__estimation_a430f64e917b2dd5cfb1a995bcdfdfc21_cgraph" id="classPosition__estimation_a430f64e917b2dd5cfb1a995bcdfdfc21_cgraph">
-<area shape="rect" id="node3" href="classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="375,32,668,61"/><area shape="rect" id="node5" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="796,5,911,35"/><area shape="rect" id="node9" href="classPosition__estimation.html#a179579cd27313fe0f8bb38695124d431" title="Reset the origin of the fence (e.g. common for many entities or when armed)" alt="" coords="719,59,988,88"/><area shape="rect" id="node7" href="classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="1037,5,1184,35"/></map>
+<area shape="rect" id="node3" href="classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="375,5,668,35"/><area shape="rect" id="node5" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="717,5,832,35"/><area shape="rect" id="node7" href="classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="880,5,1027,35"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a179579cd27313fe0f8bb38695124d431"></a><!-- doxytag: member="Position_estimation::set_new_fence_origin" ref="a179579cd27313fe0f8bb38695124d431" args="()" -->
+<a class="anchor" id="a4889621f84bbf2dad7c6591a68e4ece5"></a><!-- doxytag: member="Position_estimation::update" ref="a4889621f84bbf2dad7c6591a68e4ece5" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classPosition__estimation.html#a179579cd27313fe0f8bb38695124d431">Position_estimation::set_new_fence_origin</a> </td>
+          <td class="memname">bool <a class="el" href="classPosition__estimation.html#a4889621f84bbf2dad7c6591a68e4ece5">Position_estimation::update</a> </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Reset the origin of the fence (e.g. common for many entities or when armed) </p>
-<p>Switches the fence on!</p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pos_est</td><td>The pointer to the position estimation structure </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Position estimation update step, performing position estimation then position correction (function to be used) </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
+
+<p>Implements <a class="el" href="classINS.html#a091756ab3fd40d57c71a476b605f93e0">INS</a>.</p>
 
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classPosition__estimation_a179579cd27313fe0f8bb38695124d431_icgraph.png" border="0" usemap="#classPosition__estimation_a179579cd27313fe0f8bb38695124d431_icgraph" alt=""/></div>
-<map name="classPosition__estimation_a179579cd27313fe0f8bb38695124d431_icgraph" id="classPosition__estimation_a179579cd27313fe0f8bb38695124d431_icgraph">
-<area shape="rect" id="node3" href="classPosition__estimation.html#a8856c10ee31f3aab47c029bf798906d0" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="383,5,564,35"/><area shape="rect" id="node5" href="classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="327,59,620,88"/><area shape="rect" id="node7" href="classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21" title="set the home position and altitude to currrent position" alt="" coords="671,59,988,88"/></map>
+<div class="center"><img src="classPosition__estimation_a4889621f84bbf2dad7c6591a68e4ece5_cgraph.png" border="0" usemap="#classPosition__estimation_a4889621f84bbf2dad7c6591a68e4ece5_cgraph" alt=""/></div>
+<map name="classPosition__estimation_a4889621f84bbf2dad7c6591a68e4ece5_cgraph" id="classPosition__estimation_a4889621f84bbf2dad7c6591a68e4ece5_cgraph">
+<area shape="rect" id="node3" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="237,5,352,35"/><area shape="rect" id="node5" href="classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="400,5,547,35"/></map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="ac5323a4e1d37bc97777757ede0bb5629"></a><!-- doxytag: member="Position_estimation::velocity_lf" ref="ac5323a4e1d37bc97777757ede0bb5629" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; float, 3 &gt; <a class="el" href="classPosition__estimation.html#ac5323a4e1d37bc97777757ede0bb5629">Position_estimation::velocity_lf</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Velocity in meters/seconds in NED frame. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>velocity </dd></dl>
+
+<p>Implements <a class="el" href="classINS.html#a6be12f73aed4742471ff86bd045f3630">INS</a>.</p>
 
 </div>
 </div>
@@ -454,7 +497,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 25 2016 06:37:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 25 2016 09:17:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

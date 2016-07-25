@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classGps.html#a9925b04afe52bf7211cd631415606620" title="Indicates whether fix are received." alt="" coords="223,5,289,35"/>
+<area shape="rect" id="node5" href="$classPx4flow__i2c.html#a08460836c10b0f71090686429a2531ba" title="Indicates whether the measurements can be trusted." alt="" coords="185,59,327,88"/>
+<area shape="rect" id="node7" href="$classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="203,112,309,141"/>
+</map>

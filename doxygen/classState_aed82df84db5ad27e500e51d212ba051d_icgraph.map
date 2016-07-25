@@ -3,7 +3,7 @@
 <area shape="rect" id="node5" href="$classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data." alt="" coords="251,59,381,88"/>
 <area shape="rect" id="node7" href="$classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data." alt="" coords="251,112,381,141"/>
 <area shape="rect" id="node9" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="255,165,377,195"/>
-<area shape="rect" id="node13" href="$classPosition__estimation.html#a8856c10ee31f3aab47c029bf798906d0" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="225,219,407,248"/>
+<area shape="rect" id="node13" href="$classPosition__estimation.html#a4889621f84bbf2dad7c6591a68e4ece5" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="225,219,407,248"/>
 <area shape="rect" id="node15" href="$classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="169,272,463,301"/>
 <area shape="rect" id="node11" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="595,165,749,195"/>
 <area shape="rect" id="node17" href="$classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21" title="set the home position and altitude to currrent position" alt="" coords="513,272,831,301"/>

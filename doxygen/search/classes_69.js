@@ -10,6 +10,8 @@ var searchData=
   ['imu',['Imu',['../classImu.html',1,'']]],
   ['imu_5fconf_5ft',['imu_conf_t',['../structimu__conf__t.html',1,'']]],
   ['imu_5fsensor_5fconfig_5ft',['imu_sensor_config_t',['../structimu__sensor__config__t.html',1,'']]],
+  ['ins',['INS',['../classINS.html',1,'']]],
+  ['ins_5fkf',['INS_kf',['../classINS__kf.html',1,'']]],
   ['integrator_5ft',['integrator_t',['../structintegrator__t.html',1,'']]],
   ['intersection',['Intersection',['../classraytracing_1_1Intersection.html',1,'raytracing']]]
 ];

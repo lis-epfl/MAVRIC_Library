@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="199,5,367,35"/>
+<area shape="rect" id="node3" href="$classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="213,5,352,35"/>
+<area shape="rect" id="node7" href="$classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="199,59,367,88"/>
+<area shape="rect" id="node5" href="$classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler." alt="" coords="417,5,588,35"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="57,211,169,331"/>
-<area shape="rect" id="node4" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="55,6,172,143"/>
+<area shape="rect" id="node2" href="$classINS.html" title="{INS\n|# origin_\l|+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l}" alt="" coords="44,193,183,399"/>
+<area shape="rect" id="node4" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="55,5,172,125"/>
 </map>

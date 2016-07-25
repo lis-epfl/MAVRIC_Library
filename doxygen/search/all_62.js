@@ -20,6 +20,7 @@ var searchData=
   ['buffer_5ftpl',['Buffer_tpl',['../classBuffer__tpl.html',1,'Buffer_tpl&lt; S, T &gt;'],['../classBuffer__tpl.html#a5dd15ace97f59be37f1f6918eb70d426',1,'Buffer_tpl::Buffer_tpl()']]],
   ['buffer_5ftpl_3c_201024_20_3e',['Buffer_tpl< 1024 >',['../classBuffer__tpl.html',1,'']]],
   ['buffer_5ftpl_3c_20256_2c_20uint8_5ft_20_3e',['Buffer_tpl< 256, uint8_t >',['../classBuffer__tpl.html',1,'']]],
+  ['buffer_5ftpl_3c_203_2c_20float_20_3e',['Buffer_tpl< 3, float >',['../classBuffer__tpl.html',1,'']]],
   ['buttons',['buttons',['../structjoystick__t.html#a1fb9188dc836a688fa85b2045e1fa596',1,'joystick_t']]],
   ['byte_5fstream_5ft',['byte_stream_t',['../structbyte__stream__t.html',1,'']]],
   ['bytes_5favailable',['bytes_available',['../structbyte__stream__t.html#a5a6ee8f42e5e1426dbfe115eb368b476',1,'byte_stream_t']]]

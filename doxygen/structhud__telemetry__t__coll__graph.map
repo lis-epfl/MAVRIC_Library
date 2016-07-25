@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="5,201,139,391"/>
+<area shape="rect" id="node4" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="163,210,299,382"/>
+<area shape="rect" id="node6" href="$classINS.html" title="{INS\n|# origin_\l|+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l}" alt="" coords="323,193,461,399"/>
+<area shape="rect" id="node8" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="333,5,451,125"/>
+<area shape="rect" id="node10" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="485,219,603,373"/>
+<area shape="rect" id="node12" href="$structquat__t.html" title="Unit quaternion." alt="" coords="515,14,573,117"/>
+</map>

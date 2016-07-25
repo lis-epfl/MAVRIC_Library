@@ -13,7 +13,7 @@ var searchData=
   ['mav_5fmode_5fdesired',['mav_mode_desired',['../structjoystick__t.html#a18a08174abcaf082b23be9f182c9804b',1,'joystick_t']]],
   ['mav_5fstate',['mav_state',['../structState_1_1conf__t.html#a0201cf6ef69aec6ecf890cabcd54c6a3',1,'State::conf_t']]],
   ['mav_5fstate_5f',['mav_state_',['../classState.html#aacaa15cd7016181bf7c4a056cfd85008',1,'State']]],
-  ['mavlink_5fstream',['mavlink_stream',['../structhud__telemetry__structure__t.html#ad48c62c283db758721d4fe01487b10d6',1,'hud_telemetry_structure_t::mavlink_stream()'],['../structdaler__dc__motor__ctrl__t.html#a4b4ad743e32377fa62a253f3db541f8c',1,'daler_dc_motor_ctrl_t::mavlink_stream()'],['../structepuck__communication__t.html#a1238203d85ff8ab20ff1634bde27473e',1,'epuck_communication_t::mavlink_stream()']]],
+  ['mavlink_5fstream',['mavlink_stream',['../structhud__telemetry__t.html#a615f9a147dba5e6f27572ea55236134d',1,'hud_telemetry_t::mavlink_stream()'],['../structdaler__dc__motor__ctrl__t.html#a4b4ad743e32377fa62a253f3db541f8c',1,'daler_dc_motor_ctrl_t::mavlink_stream()'],['../structepuck__communication__t.html#a1238203d85ff8ab20ff1634bde27473e',1,'epuck_communication_t::mavlink_stream()']]],
   ['mavlink_5fstream_5f',['mavlink_stream_',['../classMavlink__waypoint__handler.html#a0bf5554cb1e38fd1e588ffc45400bee4',1,'Mavlink_waypoint_handler']]],
   ['mavlink_5fstream_5fconfig',['mavlink_stream_config',['../structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036',1,'Mavlink_communication::conf_t']]],
   ['max',['max',['../structservo__conf__t.html#a1c29b650ee4bb5c33348f538ccf6ea15',1,'servo_conf_t']]],

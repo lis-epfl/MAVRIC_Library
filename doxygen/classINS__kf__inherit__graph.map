@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classKalman.html" title="{Kalman\&lt; 8, 3, 3 \&gt;\n|# x_\l# P_\l# F_\l# Q_\l# H_\l# R_\l# B_\l# S_\l# I_\l# K_\l# y_\l|+ Kalman()\l+ Kalman()\l+ x()\l+ P()\l+ predict()\l+ predict()\l+ update()\l+ update()\l}" alt="" coords="5,6,131,386"/>
+<area shape="rect" id="node4" href="$classINS.html" title="{INS\n|# origin_\l|+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l}" alt="" coords="155,93,293,299"/>
+</map>

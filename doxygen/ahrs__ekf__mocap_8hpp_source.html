@@ -138,53 +138,49 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00056"></a>00056 <span class="preprocessor">#include &quot;util/matrix.hpp&quot;</span>
 <a name="l00057"></a>00057 <span class="preprocessor">#include &quot;communication/mavlink_communication.hpp&quot;</span>
 <a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
-<a name="l00060"></a>00060 {
-<a name="l00061"></a>00061 }
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063 
-<a name="l00067"></a><a class="code" href="classAhrs__ekf__mocap.html">00067</a> <span class="keyword">class </span><a class="code" href="classAhrs__ekf__mocap.html" title="The AHRS EKF class.">Ahrs_ekf_mocap</a>
-<a name="l00068"></a>00068 {
-<a name="l00069"></a>00069 <span class="keyword">public</span>:
-<a name="l00070"></a>00070 
-<a name="l00074"></a><a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html">00074</a>     <span class="keyword">struct </span><a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">conf_t</a>
-<a name="l00075"></a>00075     {
-<a name="l00076"></a><a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5">00076</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5" title="The variance of the accelerometer.">R_mocap</a>;                                  
-<a name="l00077"></a>00077     };
-<a name="l00078"></a>00078 
-<a name="l00086"></a>00086     <a class="code" href="classAhrs__ekf__mocap.html#ad4fe1366dcf1d5c15392bb7dfef409cf" title="AHRS EKF MOCAP telemetry.">Ahrs_ekf_mocap</a>(<a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>&amp; message_handler, <a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a>&amp; ahrs_ekf, <span class="keyword">const</span> <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">conf_t</a> <a class="code" href="classAhrs__ekf__mocap.html#a8fd4644f73f813bcf55637580f1926cf" title="The config structure for the EKF mocap module.">config_</a> = <a class="code" href="classAhrs__ekf__mocap.html#a6ae28ee1eeef4401409606205caf7ddc" title="Default configuration structure.">Ahrs_ekf_mocap::default_config</a>());
-<a name="l00087"></a>00087 
-<a name="l00093"></a>00093     <span class="keywordtype">bool</span> <a class="code" href="classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback.">init</a>();
-<a name="l00094"></a>00094 
-<a name="l00098"></a>00098     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">conf_t</a> <a class="code" href="classAhrs__ekf__mocap.html#a6ae28ee1eeef4401409606205caf7ddc" title="Default configuration structure.">default_config</a>();
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101 <span class="keyword">protected</span>:
-<a name="l00102"></a>00102 
-<a name="l00110"></a>00110     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf__mocap.html#ab2a10400f1040c8de6aa1b8dea8619da" title="Method used to update internal state when a message is received.">callback</a>(<a class="code" href="classAhrs__ekf__mocap.html" title="The AHRS EKF class.">Ahrs_ekf_mocap</a>* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg);
-<a name="l00111"></a>00111 
-<a name="l00112"></a><a class="code" href="classAhrs__ekf__mocap.html#a17f9f416b18fb4bad1587a6a6dc1e208">00112</a>     <a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a>&amp; <a class="code" href="classAhrs__ekf__mocap.html#a17f9f416b18fb4bad1587a6a6dc1e208" title="AHRS extended callman filter.">ahrs_ekf_</a>;                        
-<a name="l00113"></a><a class="code" href="classAhrs__ekf__mocap.html#a3a7f52ad8378bf8db0c2d03749fa1766">00113</a>     <a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>&amp; <a class="code" href="classAhrs__ekf__mocap.html#a3a7f52ad8378bf8db0c2d03749fa1766" title="State covariance.">message_handler_</a>;  
-<a name="l00114"></a><a class="code" href="classAhrs__ekf__mocap.html#a6699c1dfcf24e77b31a8b423764dadfb">00114</a>     <a class="code" href="classMat.html">Mat&lt;4,4&gt;</a> <a class="code" href="classAhrs__ekf__mocap.html#a6699c1dfcf24e77b31a8b423764dadfb" title="The mocap measurement noise matrix.">R_mocap_</a>;                          
-<a name="l00115"></a><a class="code" href="classAhrs__ekf__mocap.html#ae92cd37094e7f67ad9851bdb86f3e6a8">00115</a>     <a class="code" href="classMat.html">Mat&lt;4, 7&gt;</a> <a class="code" href="classAhrs__ekf__mocap.html#ae92cd37094e7f67ad9851bdb86f3e6a8" title="The measurement matrix.">H_</a>;                               
-<a name="l00116"></a><a class="code" href="classAhrs__ekf__mocap.html#a3a953a235b71e35758ecbfd238839c4f">00116</a>     <a class="code" href="classMat.html">Mat&lt;4, 1&gt;</a> <a class="code" href="classAhrs__ekf__mocap.html#a3a953a235b71e35758ecbfd238839c4f" title="The measurement vector.">z_</a>;                                
-<a name="l00117"></a><a class="code" href="classAhrs__ekf__mocap.html#a3fad9de5c2b36fd7836e38f1bb00e88e">00117</a>     <span class="keywordtype">bool</span> <a class="code" href="classAhrs__ekf__mocap.html#a3fad9de5c2b36fd7836e38f1bb00e88e" title="Boolean flag stating if this module has been initialized.">is_init_</a>;                              
-<a name="l00118"></a>00118 
-<a name="l00119"></a><a class="code" href="classAhrs__ekf__mocap.html#a8fd4644f73f813bcf55637580f1926cf">00119</a>     <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">conf_t</a> <a class="code" href="classAhrs__ekf__mocap.html#a8fd4644f73f813bcf55637580f1926cf" title="The config structure for the EKF mocap module.">config_</a>;                                     
-<a name="l00120"></a>00120 
-<a name="l00121"></a><a class="code" href="classAhrs__ekf__mocap.html#a73505a89f74869aac417ffa96f84fb56">00121</a>     <span class="keywordtype">float</span> <a class="code" href="classAhrs__ekf__mocap.html#a73505a89f74869aac417ffa96f84fb56" title="The last time the mocap was updated.">last_update_us_</a>;                              
-<a name="l00122"></a>00122 };
+<a name="l00059"></a>00059 
+<a name="l00063"></a><a class="code" href="classAhrs__ekf__mocap.html">00063</a> <span class="keyword">class </span><a class="code" href="classAhrs__ekf__mocap.html" title="The AHRS EKF class.">Ahrs_ekf_mocap</a>
+<a name="l00064"></a>00064 {
+<a name="l00065"></a>00065 <span class="keyword">public</span>:
+<a name="l00066"></a>00066 
+<a name="l00070"></a><a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html">00070</a>     <span class="keyword">struct </span><a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">conf_t</a>
+<a name="l00071"></a>00071     {
+<a name="l00072"></a><a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5">00072</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5" title="The variance of the accelerometer.">R_mocap</a>;                                  
+<a name="l00073"></a>00073     };
+<a name="l00074"></a>00074 
+<a name="l00082"></a>00082     <a class="code" href="classAhrs__ekf__mocap.html#ad4fe1366dcf1d5c15392bb7dfef409cf" title="AHRS EKF MOCAP telemetry.">Ahrs_ekf_mocap</a>(<a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>&amp; message_handler, <a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a>&amp; ahrs_ekf, <span class="keyword">const</span> <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">conf_t</a> <a class="code" href="classAhrs__ekf__mocap.html#a8fd4644f73f813bcf55637580f1926cf" title="The config structure for the EKF mocap module.">config_</a> = <a class="code" href="classAhrs__ekf__mocap.html#a6ae28ee1eeef4401409606205caf7ddc" title="Default configuration structure.">Ahrs_ekf_mocap::default_config</a>());
+<a name="l00083"></a>00083 
+<a name="l00089"></a>00089     <span class="keywordtype">bool</span> <a class="code" href="classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback.">init</a>();
+<a name="l00090"></a>00090 
+<a name="l00094"></a>00094     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">conf_t</a> <a class="code" href="classAhrs__ekf__mocap.html#a6ae28ee1eeef4401409606205caf7ddc" title="Default configuration structure.">default_config</a>();
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097 <span class="keyword">protected</span>:
+<a name="l00098"></a>00098 
+<a name="l00106"></a>00106     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf__mocap.html#ab2a10400f1040c8de6aa1b8dea8619da" title="Method used to update internal state when a message is received.">callback</a>(<a class="code" href="classAhrs__ekf__mocap.html" title="The AHRS EKF class.">Ahrs_ekf_mocap</a>* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg);
+<a name="l00107"></a>00107 
+<a name="l00108"></a><a class="code" href="classAhrs__ekf__mocap.html#a17f9f416b18fb4bad1587a6a6dc1e208">00108</a>     <a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a>&amp; <a class="code" href="classAhrs__ekf__mocap.html#a17f9f416b18fb4bad1587a6a6dc1e208" title="AHRS extended callman filter.">ahrs_ekf_</a>;                        
+<a name="l00109"></a><a class="code" href="classAhrs__ekf__mocap.html#a3a7f52ad8378bf8db0c2d03749fa1766">00109</a>     <a class="code" href="classMavlink__message__handler.html" title="Main message handler structure.">Mavlink_message_handler</a>&amp; <a class="code" href="classAhrs__ekf__mocap.html#a3a7f52ad8378bf8db0c2d03749fa1766" title="State covariance.">message_handler_</a>;  
+<a name="l00110"></a><a class="code" href="classAhrs__ekf__mocap.html#a6699c1dfcf24e77b31a8b423764dadfb">00110</a>     <a class="code" href="classMat.html">Mat&lt;4,4&gt;</a> <a class="code" href="classAhrs__ekf__mocap.html#a6699c1dfcf24e77b31a8b423764dadfb" title="The mocap measurement noise matrix.">R_mocap_</a>;                          
+<a name="l00111"></a><a class="code" href="classAhrs__ekf__mocap.html#ae92cd37094e7f67ad9851bdb86f3e6a8">00111</a>     <a class="code" href="classMat.html">Mat&lt;4, 7&gt;</a> <a class="code" href="classAhrs__ekf__mocap.html#ae92cd37094e7f67ad9851bdb86f3e6a8" title="The measurement matrix.">H_</a>;                               
+<a name="l00112"></a><a class="code" href="classAhrs__ekf__mocap.html#a3a953a235b71e35758ecbfd238839c4f">00112</a>     <a class="code" href="classMat.html">Mat&lt;4, 1&gt;</a> <a class="code" href="classAhrs__ekf__mocap.html#a3a953a235b71e35758ecbfd238839c4f" title="The measurement vector.">z_</a>;                                
+<a name="l00113"></a><a class="code" href="classAhrs__ekf__mocap.html#a3fad9de5c2b36fd7836e38f1bb00e88e">00113</a>     <span class="keywordtype">bool</span> <a class="code" href="classAhrs__ekf__mocap.html#a3fad9de5c2b36fd7836e38f1bb00e88e" title="Boolean flag stating if this module has been initialized.">is_init_</a>;                              
+<a name="l00114"></a>00114 
+<a name="l00115"></a><a class="code" href="classAhrs__ekf__mocap.html#a8fd4644f73f813bcf55637580f1926cf">00115</a>     <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">conf_t</a> <a class="code" href="classAhrs__ekf__mocap.html#a8fd4644f73f813bcf55637580f1926cf" title="The config structure for the EKF mocap module.">config_</a>;                                     
+<a name="l00116"></a>00116 
+<a name="l00117"></a><a class="code" href="classAhrs__ekf__mocap.html#a73505a89f74869aac417ffa96f84fb56">00117</a>     <span class="keywordtype">float</span> <a class="code" href="classAhrs__ekf__mocap.html#a73505a89f74869aac417ffa96f84fb56" title="The last time the mocap was updated.">last_update_us_</a>;                              
+<a name="l00118"></a>00118 };
+<a name="l00119"></a>00119 
+<a name="l00120"></a><a class="code" href="classAhrs__ekf__mocap.html#a6ae28ee1eeef4401409606205caf7ddc">00120</a> <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">Ahrs_ekf_mocap::conf_t</a> <a class="code" href="classAhrs__ekf__mocap.html#a6ae28ee1eeef4401409606205caf7ddc" title="Default configuration structure.">Ahrs_ekf_mocap::default_config</a>()
+<a name="l00121"></a>00121 {
+<a name="l00122"></a>00122     <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">Ahrs_ekf_mocap::conf_t</a> conf = {};
 <a name="l00123"></a>00123 
-<a name="l00124"></a><a class="code" href="classAhrs__ekf__mocap.html#a6ae28ee1eeef4401409606205caf7ddc">00124</a> <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">Ahrs_ekf_mocap::conf_t</a> <a class="code" href="classAhrs__ekf__mocap.html#a6ae28ee1eeef4401409606205caf7ddc" title="Default configuration structure.">Ahrs_ekf_mocap::default_config</a>()
-<a name="l00125"></a>00125 {
-<a name="l00126"></a>00126     <a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html" title="The AHRS EKF MOCAP config structure.">Ahrs_ekf_mocap::conf_t</a> conf = {};
-<a name="l00127"></a>00127 
-<a name="l00128"></a>00128     conf.<a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5" title="The variance of the accelerometer.">R_mocap</a> = 0.000001f;
-<a name="l00129"></a>00129 
-<a name="l00130"></a>00130     <span class="keywordflow">return</span> conf;
-<a name="l00131"></a>00131 };
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133 <span class="preprocessor">#endif // __AHRS_EKF_MOCAP_HPP__</span>
+<a name="l00124"></a>00124     conf.<a class="code" href="structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5" title="The variance of the accelerometer.">R_mocap</a> = 0.000001f;
+<a name="l00125"></a>00125 
+<a name="l00126"></a>00126     <span class="keywordflow">return</span> conf;
+<a name="l00127"></a>00127 };
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129 <span class="preprocessor">#endif // __AHRS_EKF_MOCAP_HPP__</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -203,7 +199,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 25 2016 06:37:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 25 2016 09:17:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

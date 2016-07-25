@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classPosition__estimation.html#a8856c10ee31f3aab47c029bf798906d0" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="383,5,564,35"/>
-<area shape="rect" id="node5" href="$classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="327,59,620,88"/>
-<area shape="rect" id="node7" href="$classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21" title="set the home position and altitude to currrent position" alt="" coords="671,59,988,88"/>
-</map>

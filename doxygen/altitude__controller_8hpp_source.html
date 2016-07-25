@@ -125,73 +125,74 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00043"></a>00043 <span class="preprocessor">#ifndef ALTITUDE_CONTROLLER_HPP_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define ALTITUDE_CONTROLLER_HPP_</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
-<a name="l00046"></a>00046 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
-<a name="l00047"></a>00047 {
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;control/control_command.h&quot;</span>
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;control/pid_controller.h&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;sensing/altitude.h&quot;</span>
-<a name="l00051"></a>00051 }
-<a name="l00052"></a>00052 
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;control/pid_controller.hpp&quot;</span>
+<a name="l00047"></a>00047 
+<a name="l00048"></a>00048 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
+<a name="l00049"></a>00049 {
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;control/control_command.h&quot;</span>
+<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;sensing/altitude.h&quot;</span>
+<a name="l00052"></a>00052 }
 <a name="l00053"></a>00053 
-<a name="l00057"></a><a class="code" href="structaltitude__controller__conf__t.html">00057</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00058"></a>00058 {
-<a name="l00059"></a><a class="code" href="structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b">00059</a>     <span class="keywordtype">float</span>                   <a class="code" href="structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b" title="Thrust required to hover.">hover_point</a>;        
-<a name="l00060"></a><a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96">00060</a>     <a class="code" href="structpid__controller__conf__t.html" title="Configuration for PID controller.">pid_controller_conf_t</a>   <a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>;         
-<a name="l00061"></a>00061 } <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a>;
-<a name="l00062"></a>00062 
+<a name="l00054"></a>00054 
+<a name="l00058"></a><a class="code" href="structaltitude__controller__conf__t.html">00058</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00059"></a>00059 {
+<a name="l00060"></a><a class="code" href="structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b">00060</a>     <span class="keywordtype">float</span>                   <a class="code" href="structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b" title="Thrust required to hover.">hover_point</a>;        
+<a name="l00061"></a><a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96">00061</a>     <a class="code" href="structpid__controller__conf__t.html" title="Configuration for PID controller.">pid_controller_conf_t</a>   <a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>;         
+<a name="l00062"></a>00062 } <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a>;
 <a name="l00063"></a>00063 
-<a name="l00067"></a>00067 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a> altitude_controller_default_config(<span class="keywordtype">void</span>);
-<a name="l00068"></a>00068 
+<a name="l00064"></a>00064 
+<a name="l00068"></a>00068 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a> altitude_controller_default_config(<span class="keywordtype">void</span>);
 <a name="l00069"></a>00069 
-<a name="l00073"></a><a class="code" href="classAltitude__controller.html">00073</a> <span class="keyword">class </span><a class="code" href="classAltitude__controller.html" title="Altitude controller.">Altitude_controller</a>
-<a name="l00074"></a>00074 {
-<a name="l00075"></a>00075 <span class="keyword">public</span>:
-<a name="l00076"></a>00076     <a class="code" href="classAltitude__controller.html" title="Altitude controller.">Altitude_controller</a>(<span class="keyword">const</span> <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>&amp; position_command,
-<a name="l00077"></a>00077                         <span class="keyword">const</span> <a class="code" href="structaltitude__t.html" title="Structure containing the Altitude.">altitude_t</a>&amp; altitude, 
-<a name="l00078"></a>00078                         <a class="code" href="structthrust__command__t.html" title="Thrust command type.">thrust_command_t</a>&amp; thrust_command,
-<a name="l00079"></a>00079                         <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a> config = altitude_controller_default_config() );
-<a name="l00080"></a>00080 
-<a name="l00086"></a>00086     <span class="keywordtype">bool</span> <a class="code" href="classAltitude__controller.html#af34fe2b62e9f22dc672fd9e23b3f7a04" title="Initialization.">init</a>(<span class="keywordtype">void</span>);
-<a name="l00087"></a>00087 
+<a name="l00070"></a>00070 
+<a name="l00074"></a><a class="code" href="classAltitude__controller.html">00074</a> <span class="keyword">class </span><a class="code" href="classAltitude__controller.html" title="Altitude controller.">Altitude_controller</a>
+<a name="l00075"></a>00075 {
+<a name="l00076"></a>00076 <span class="keyword">public</span>:
+<a name="l00077"></a>00077     <a class="code" href="classAltitude__controller.html" title="Altitude controller.">Altitude_controller</a>(<span class="keyword">const</span> <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>&amp; position_command,
+<a name="l00078"></a>00078                         <span class="keyword">const</span> <a class="code" href="structaltitude__t.html" title="Structure containing the Altitude.">altitude_t</a>&amp; altitude,
+<a name="l00079"></a>00079                         <a class="code" href="structthrust__command__t.html" title="Thrust command type.">thrust_command_t</a>&amp; thrust_command,
+<a name="l00080"></a>00080                         <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a> config = altitude_controller_default_config() );
+<a name="l00081"></a>00081 
+<a name="l00087"></a>00087     <span class="keywordtype">bool</span> <a class="code" href="classAltitude__controller.html#af34fe2b62e9f22dc672fd9e23b3f7a04" title="Initialization.">init</a>(<span class="keywordtype">void</span>);
 <a name="l00088"></a>00088 
-<a name="l00094"></a>00094     <span class="keywordtype">bool</span> <a class="code" href="classAltitude__controller.html#aeb9ed8b249dc74b6eafccb9cd97052a9" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
-<a name="l00095"></a>00095 
+<a name="l00089"></a>00089 
+<a name="l00095"></a>00095     <span class="keywordtype">bool</span> <a class="code" href="classAltitude__controller.html#aeb9ed8b249dc74b6eafccb9cd97052a9" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
 <a name="l00096"></a>00096 
-<a name="l00097"></a>00097 <span class="keyword">private</span>:
-<a name="l00098"></a>00098     <span class="keyword">const</span> <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>&amp;   position_command_;   
-<a name="l00099"></a>00099     <span class="keyword">const</span> <a class="code" href="structaltitude__t.html" title="Structure containing the Altitude.">altitude_t</a>&amp;           altitude_;           
-<a name="l00100"></a>00100     <a class="code" href="structthrust__command__t.html" title="Thrust command type.">thrust_command_t</a>&amp;           thrust_command_;     
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>            pid_;                
-<a name="l00103"></a>00103     <span class="keywordtype">float</span>                       hover_point_;        
-<a name="l00104"></a>00104 };
-<a name="l00105"></a>00105 
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098 <span class="keyword">private</span>:
+<a name="l00099"></a>00099     <span class="keyword">const</span> <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>&amp;   position_command_;   
+<a name="l00100"></a>00100     <span class="keyword">const</span> <a class="code" href="structaltitude__t.html" title="Structure containing the Altitude.">altitude_t</a>&amp;           altitude_;           
+<a name="l00101"></a>00101     <a class="code" href="structthrust__command__t.html" title="Thrust command type.">thrust_command_t</a>&amp;           thrust_command_;     
+<a name="l00102"></a>00102 
+<a name="l00103"></a>00103     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>            pid_;                
+<a name="l00104"></a>00104     <span class="keywordtype">float</span>                       hover_point_;        
+<a name="l00105"></a>00105 };
 <a name="l00106"></a>00106 
-<a name="l00107"></a>00107 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a> altitude_controller_default_config(<span class="keywordtype">void</span>)
-<a name="l00108"></a>00108 {
-<a name="l00109"></a>00109     <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a> conf = {};
-<a name="l00110"></a>00110 
-<a name="l00111"></a>00111     conf.<a class="code" href="structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b" title="Thrust required to hover.">hover_point</a>                        = -0.28f;
-<a name="l00112"></a>00112     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>                         = {};
-<a name="l00113"></a>00113     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.p_gain                  = 0.2f;
-<a name="l00114"></a>00114     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a1161e6ecb1b8eb4beef490c9ab74461d" title="Min clipping values.">clip_min</a>                = -1.0f;
-<a name="l00115"></a>00115     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#af0f1c1a65e4560eabbec2997dc925bcf" title="Max clipping values.">clip_max</a>                = 1.0f;
-<a name="l00116"></a>00116     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>              = {};
-<a name="l00117"></a>00117     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#a56b8cfbb20b72511c329412ef464422f" title="Pregain.">gain</a>         = 0.5f;
-<a name="l00118"></a>00118     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#ac156d57488fae220e95c78232201e116" title="Accumulator.">accumulator</a>  = 0.0f;
-<a name="l00119"></a>00119     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#aa9a4c5f83a1f79f9d0fb65830f4709a7" title="Clipping value for the charging rate.">clip_pre</a>     = 0.1f;
-<a name="l00120"></a>00120     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#ac7235199ce88a94e9509286ccc6cfd6b" title="Clipping value for the accumulator.">clip</a>         = 0.5f;
-<a name="l00121"></a>00121     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>          = {};
-<a name="l00122"></a>00122     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a9422aa77a4f9e672b66f6ce5a2083cf5" title="Gain.">gain</a>     = 0.4f;
-<a name="l00123"></a>00123     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#aeb182ef453f3d4546989e9f1d81aea62" title="Previous input to the differentiator.">previous</a> = 0.0f;
-<a name="l00124"></a>00124     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a2c30df7a7674d3b06c8695512710ec8a" title="Clipping value.">clip</a>     = 0.65f;
-<a name="l00125"></a>00125     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489" title="Approximate width of a &quot;soft zone&quot; on the error input, i.e. a region of low gain around the target po...">soft_zone_width</a>         = 0.0f;
-<a name="l00126"></a>00126 
-<a name="l00127"></a>00127     <span class="keywordflow">return</span> conf;
-<a name="l00128"></a>00128 };
-<a name="l00129"></a>00129 
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a> altitude_controller_default_config(<span class="keywordtype">void</span>)
+<a name="l00109"></a>00109 {
+<a name="l00110"></a>00110     <a class="code" href="structaltitude__controller__conf__t.html" title="Altitude controller configuration.">altitude_controller_conf_t</a> conf = {};
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112     conf.<a class="code" href="structaltitude__controller__conf__t.html#a3fea75334ac1b5dc03afb47b0da0024b" title="Thrust required to hover.">hover_point</a>                        = -0.28f;
+<a name="l00113"></a>00113     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>                         = {};
+<a name="l00114"></a>00114     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.p_gain                  = 0.2f;
+<a name="l00115"></a>00115     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a1161e6ecb1b8eb4beef490c9ab74461d" title="Min clipping values.">clip_min</a>                = -1.0f;
+<a name="l00116"></a>00116     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#af0f1c1a65e4560eabbec2997dc925bcf" title="Max clipping values.">clip_max</a>                = 1.0f;
+<a name="l00117"></a>00117     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>              = {};
+<a name="l00118"></a>00118     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#a56b8cfbb20b72511c329412ef464422f" title="Pregain.">gain</a>         = 0.5f;
+<a name="l00119"></a>00119     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#ac156d57488fae220e95c78232201e116" title="Accumulator.">accumulator</a>  = 0.0f;
+<a name="l00120"></a>00120     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#aa9a4c5f83a1f79f9d0fb65830f4709a7" title="Clipping value for the charging rate.">clip_pre</a>     = 0.1f;
+<a name="l00121"></a>00121     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#ac7235199ce88a94e9509286ccc6cfd6b" title="Clipping value for the accumulator.">clip</a>         = 0.5f;
+<a name="l00122"></a>00122     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>          = {};
+<a name="l00123"></a>00123     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a9422aa77a4f9e672b66f6ce5a2083cf5" title="Gain.">gain</a>     = 0.4f;
+<a name="l00124"></a>00124     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#aeb182ef453f3d4546989e9f1d81aea62" title="Previous input to the differentiator.">previous</a> = 0.0f;
+<a name="l00125"></a>00125     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a2c30df7a7674d3b06c8695512710ec8a" title="Clipping value.">clip</a>     = 0.65f;
+<a name="l00126"></a>00126     conf.<a class="code" href="structaltitude__controller__conf__t.html#a78271d3497130378314a7eeef4157c96" title="Proportionnal gain.">pid_config</a>.<a class="code" href="structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489" title="Approximate width of a &quot;soft zone&quot; on the error input, i.e. a region of low gain around the target po...">soft_zone_width</a>         = 0.0f;
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128     <span class="keywordflow">return</span> conf;
+<a name="l00129"></a>00129 };
 <a name="l00130"></a>00130 
-<a name="l00131"></a>00131 <span class="preprocessor">#endif </span><span class="comment">/* ALTITUDE_CONTROLLER_HPP_ */</span>
+<a name="l00131"></a>00131 
+<a name="l00132"></a>00132 <span class="preprocessor">#endif </span><span class="comment">/* ALTITUDE_CONTROLLER_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -210,7 +211,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 25 2016 06:37:07 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 25 2016 09:17:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

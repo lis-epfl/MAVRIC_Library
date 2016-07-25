@@ -8,7 +8,7 @@
 <area shape="rect" id="node14" href="$classMat.html" title="{Mat\&lt; n, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="659,5,765,264"/>
 <area shape="rect" id="node16" href="$classMat.html" title="{Mat\&lt; n, m \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="789,5,896,264"/>
 <area shape="rect" id="node18" href="$classMat.html" title="{Mat\&lt; 3, 3 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="704,443,811,701"/>
-<area shape="rect" id="node20" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="835,486,952,658"/>
+<area shape="rect" id="node20" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="835,495,952,649"/>
 <area shape="rect" id="node22" href="$structquat__t.html" title="Unit quaternion." alt="" coords="920,83,979,186"/>
 <area shape="rect" id="node24" href="$structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure." alt="" coords="976,486,1104,658"/>
 <area shape="rect" id="node26" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1128,443,1259,701"/>

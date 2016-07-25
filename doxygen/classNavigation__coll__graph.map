@@ -1,10 +1,8 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="64,538,221,675"/>
-<area shape="rect" id="node4" href="$structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="5,211,131,418"/>
-<area shape="rect" id="node6" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="155,255,267,375"/>
-<area shape="rect" id="node8" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="152,6,269,143"/>
-<area shape="rect" id="node10" href="$structquat__t.html" title="Unit quaternion." alt="" coords="245,555,304,658"/>
-<area shape="rect" id="node12" href="$structpid__controller__t.html" title="PID controller." alt="" coords="328,486,456,727"/>
-<area shape="rect" id="node14" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="320,255,424,375"/>
-<area shape="rect" id="node16" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="448,246,552,383"/>
+<area shape="rect" id="node2" href="$structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="5,324,163,479"/>
+<area shape="rect" id="node4" href="$structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="21,6,147,213"/>
+<area shape="rect" id="node6" href="$structquat__t.html" title="Unit quaternion." alt="" coords="187,350,245,453"/>
+<area shape="rect" id="node8" href="$structpid__controller__t.html" title="PID controller." alt="" coords="269,281,397,522"/>
+<area shape="rect" id="node10" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="225,49,329,169"/>
+<area shape="rect" id="node12" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="353,41,457,178"/>
 </map>

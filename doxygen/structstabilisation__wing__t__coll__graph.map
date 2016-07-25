@@ -1,21 +1,21 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="5,1164,136,1249"/>
-<area shape="rect" id="node4" href="$classPosition__estimation.html" title="{Position_estimation\n|+ local_position\l+ vel\l+ vel_bf\l+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ set_new_fence_origin()\l+ healthy()\l+ altitude_healthy()\l+ default_config()\l}" alt="" coords="743,699,959,1027"/>
-<area shape="rect" id="node6" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="815,272,927,392"/>
-<area shape="rect" id="node37" href="$structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="683,537,840,674"/>
-<area shape="rect" id="node8" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="812,6,929,143"/>
-<area shape="rect" id="node10" href="$classAirspeed__analog.html" title="{Airspeed_analog\n||+ Airspeed_analog()\l+ start_calibration()\l+ stop_calibration()\l+ update()\l+ get_airspeed()\l+ get_last_airspeed()\l}" alt="" coords="832,1121,976,1293"/>
-<area shape="rect" id="node12" href="$structstabiliser__stack__wing__t.html" title="Structure containing the stacked controller." alt="" coords="229,1138,387,1275"/>
-<area shape="rect" id="node14" href="$structstabiliser__t.html" title="The structure used to control the vehicle with 4 PIDs." alt="" coords="245,545,371,665"/>
-<area shape="rect" id="node16" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="153,246,289,418"/>
-<area shape="rect" id="node18" href="$structpid__controller__t.html" title="PID controller." alt="" coords="412,211,540,453"/>
-<area shape="rect" id="node35" href="$classNavigation.html" title="The navigation structure." alt="" coords="552,1051,709,1362"/>
-<area shape="rect" id="node20" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="488,15,592,135"/>
-<area shape="rect" id="node22" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="360,6,464,143"/>
-<area shape="rect" id="node24" href="$classGps.html" title="Abstract class for GPS." alt="" coords="1000,1077,1211,1336"/>
-<area shape="rect" id="node26" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="1235,1164,1368,1249"/>
-<area shape="rect" id="node29" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="411,1121,528,1293"/>
-<area shape="rect" id="node31" href="$structquat__t.html" title="Unit quaternion." alt="" coords="433,554,492,657"/>
-<area shape="rect" id="node33" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1392,1077,1523,1336"/>
-<area shape="rect" id="node39" href="$structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="660,229,785,435"/>
+<area shape="rect" id="node2" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="5,992,136,1077"/>
+<area shape="rect" id="node4" href="$classPosition__estimation.html" title="{Position_estimation\n|+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l+ kp_alt_sonar\l+ kp_vel_sonar\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ default_config()\l}" alt="" coords="160,862,376,1207"/>
+<area shape="rect" id="node6" href="$classINS.html" title="{INS\n|# origin_\l|+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l}" alt="" coords="199,537,337,743"/>
+<area shape="rect" id="node8" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="209,272,327,392"/>
+<area shape="rect" id="node10" href="$classAirspeed__analog.html" title="{Airspeed_analog\n||+ Airspeed_analog()\l+ start_calibration()\l+ stop_calibration()\l+ update()\l+ get_airspeed()\l+ get_last_airspeed()\l}" alt="" coords="400,949,544,1121"/>
+<area shape="rect" id="node12" href="$structstabiliser__stack__wing__t.html" title="Structure containing the stacked controller." alt="" coords="623,966,780,1103"/>
+<area shape="rect" id="node14" href="$structstabiliser__t.html" title="The structure used to control the vehicle with 4 PIDs." alt="" coords="639,580,764,700"/>
+<area shape="rect" id="node16" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="547,246,683,418"/>
+<area shape="rect" id="node18" href="$structpid__controller__t.html" title="PID controller." alt="" coords="799,211,927,453"/>
+<area shape="rect" id="node35" href="$classNavigation.html" title="The navigation structure." alt="" coords="945,879,1103,1190"/>
+<area shape="rect" id="node20" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="747,15,851,135"/>
+<area shape="rect" id="node22" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="875,6,979,143"/>
+<area shape="rect" id="node24" href="$classGps.html" title="Abstract class for GPS." alt="" coords="1127,905,1337,1164"/>
+<area shape="rect" id="node26" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="1361,992,1495,1077"/>
+<area shape="rect" id="node29" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="804,957,921,1112"/>
+<area shape="rect" id="node31" href="$structquat__t.html" title="Unit quaternion." alt="" coords="839,589,897,691"/>
+<area shape="rect" id="node33" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1519,905,1649,1164"/>
+<area shape="rect" id="node37" href="$structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="1088,563,1245,717"/>
+<area shape="rect" id="node39" href="$structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="1104,229,1229,435"/>
 </map>

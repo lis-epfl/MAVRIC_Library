@@ -125,33 +125,34 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00043"></a>00043 <span class="preprocessor">#ifndef FAT_FS_MOUNTING_HPP_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define FAT_FS_MOUNTING_HPP_</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
-<a name="l00046"></a>00046 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
-<a name="l00047"></a>00047 {
-<a name="l00048"></a>00048 <span class="preprocessor">#include &lt;stdint.h&gt;</span>
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;libs/FatFs/src/ff.h&quot;</span>
-<a name="l00050"></a>00050 }
-<a name="l00051"></a>00051 
+<a name="l00046"></a>00046 <span class="preprocessor">#include &lt;cstdint&gt;</span>
+<a name="l00047"></a>00047 
+<a name="l00048"></a>00048 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
+<a name="l00049"></a>00049 {
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;libs/FatFs/src/ff.h&quot;</span>
+<a name="l00051"></a>00051 }
 <a name="l00052"></a>00052 
-<a name="l00056"></a><a class="code" href="structfat__fs__mounting__t.html">00056</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00057"></a>00057 {
-<a name="l00058"></a><a class="code" href="structfat__fs__mounting__t.html#a6559a26f8510813780bb53fad8260d02">00058</a>     FATFS <a class="code" href="structfat__fs__mounting__t.html#a6559a26f8510813780bb53fad8260d02" title="The fatfs handler.">fs</a>;                                   
-<a name="l00059"></a>00059 
-<a name="l00060"></a><a class="code" href="structfat__fs__mounting__t.html#a6593b2419c461deb6e46c3fda780333b">00060</a>     uint32_t <a class="code" href="structfat__fs__mounting__t.html#a6593b2419c461deb6e46c3fda780333b" title="Counter to try to mount the SD card many times.">loop_count</a>;                        
-<a name="l00061"></a>00061 
-<a name="l00062"></a><a class="code" href="structfat__fs__mounting__t.html#a80c89e0286934b4013a22809091d0394">00062</a>     <span class="keywordtype">bool</span> <a class="code" href="structfat__fs__mounting__t.html#a80c89e0286934b4013a22809091d0394" title="A flag to tell whether the file system is mounted.">sys_mounted</a>;                           
-<a name="l00063"></a>00063 
-<a name="l00064"></a><a class="code" href="structfat__fs__mounting__t.html#a15d4ee7f7cb176bd2a5422adffb34a98">00064</a>     uint32_t <a class="code" href="structfat__fs__mounting__t.html#a15d4ee7f7cb176bd2a5422adffb34a98" title="Number of open files to now when the system can be unmounted.">num_file_opened</a>;                   
-<a name="l00065"></a>00065 } <a class="code" href="structfat__fs__mounting__t.html" title="The fat_fs mounting structure.">fat_fs_mounting_t</a>;
-<a name="l00066"></a>00066 
-<a name="l00074"></a>00074 <span class="keywordtype">bool</span> fat_fs_mounting_init(<a class="code" href="structfat__fs__mounting__t.html" title="The fat_fs mounting structure.">fat_fs_mounting_t</a>* fat_fs_mounting);
-<a name="l00075"></a>00075 
-<a name="l00084"></a>00084 <span class="keywordtype">bool</span> fat_fs_mounting_mount(<a class="code" href="structfat__fs__mounting__t.html" title="The fat_fs mounting structure.">fat_fs_mounting_t</a>* fat_fs_mounting, <span class="keywordtype">bool</span> debug);
-<a name="l00085"></a>00085 
-<a name="l00094"></a>00094 <span class="keywordtype">bool</span> fat_fs_mounting_unmount(<a class="code" href="structfat__fs__mounting__t.html" title="The fat_fs mounting structure.">fat_fs_mounting_t</a>* fat_fs_mounting, <span class="keywordtype">bool</span> debug);
-<a name="l00095"></a>00095 
-<a name="l00101"></a>00101 <span class="keywordtype">void</span> fat_fs_mounting_print_error_signification(FRESULT fr);
-<a name="l00102"></a>00102 
-<a name="l00103"></a>00103 <span class="preprocessor">#endif </span><span class="comment">/* FAT_FS_MOUNTING_HPP_ */</span>
+<a name="l00053"></a>00053 
+<a name="l00057"></a><a class="code" href="structfat__fs__mounting__t.html">00057</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00058"></a>00058 {
+<a name="l00059"></a><a class="code" href="structfat__fs__mounting__t.html#a6559a26f8510813780bb53fad8260d02">00059</a>     FATFS <a class="code" href="structfat__fs__mounting__t.html#a6559a26f8510813780bb53fad8260d02" title="The fatfs handler.">fs</a>;                                   
+<a name="l00060"></a>00060 
+<a name="l00061"></a><a class="code" href="structfat__fs__mounting__t.html#a6593b2419c461deb6e46c3fda780333b">00061</a>     uint32_t <a class="code" href="structfat__fs__mounting__t.html#a6593b2419c461deb6e46c3fda780333b" title="Counter to try to mount the SD card many times.">loop_count</a>;                        
+<a name="l00062"></a>00062 
+<a name="l00063"></a><a class="code" href="structfat__fs__mounting__t.html#a80c89e0286934b4013a22809091d0394">00063</a>     <span class="keywordtype">bool</span> <a class="code" href="structfat__fs__mounting__t.html#a80c89e0286934b4013a22809091d0394" title="A flag to tell whether the file system is mounted.">sys_mounted</a>;                           
+<a name="l00064"></a>00064 
+<a name="l00065"></a><a class="code" href="structfat__fs__mounting__t.html#a15d4ee7f7cb176bd2a5422adffb34a98">00065</a>     uint32_t <a class="code" href="structfat__fs__mounting__t.html#a15d4ee7f7cb176bd2a5422adffb34a98" title="Number of open files to now when the system can be unmounted.">num_file_opened</a>;                   
+<a name="l00066"></a>00066 } <a class="code" href="structfat__fs__mounting__t.html" title="The fat_fs mounting structure.">fat_fs_mounting_t</a>;
+<a name="l00067"></a>00067 
+<a name="l00075"></a>00075 <span class="keywordtype">bool</span> fat_fs_mounting_init(<a class="code" href="structfat__fs__mounting__t.html" title="The fat_fs mounting structure.">fat_fs_mounting_t</a>* fat_fs_mounting);
+<a name="l00076"></a>00076 
+<a name="l00085"></a>00085 <span class="keywordtype">bool</span> fat_fs_mounting_mount(<a class="code" href="structfat__fs__mounting__t.html" title="The fat_fs mounting structure.">fat_fs_mounting_t</a>* fat_fs_mounting, <span class="keywordtype">bool</span> debug);
+<a name="l00086"></a>00086 
+<a name="l00095"></a>00095 <span class="keywordtype">bool</span> fat_fs_mounting_unmount(<a class="code" href="structfat__fs__mounting__t.html" title="The fat_fs mounting structure.">fat_fs_mounting_t</a>* fat_fs_mounting, <span class="keywordtype">bool</span> debug);
+<a name="l00096"></a>00096 
+<a name="l00102"></a>00102 <span class="keywordtype">void</span> fat_fs_mounting_print_error_signification(FRESULT fr);
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104 <span class="preprocessor">#endif </span><span class="comment">/* FAT_FS_MOUNTING_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -170,7 +171,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 25 2016 06:37:07 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 25 2016 09:17:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,10 +1,10 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structattitude__controller__t.html" title="Attitude controller structure." alt="" coords="385,983,555,1190"/>
+<area shape="rect" id="node2" href="$structattitude__controller__t.html" title="Attitude controller structure." alt="" coords="385,966,555,1207"/>
 <area shape="rect" id="node4" href="$structrate__command__t.html" title="Rate command structure." alt="" coords="473,684,590,769"/>
 <area shape="rect" id="node34" href="$structcommand__t.html" title="Global command structure." alt="" coords="997,983,1087,1190"/>
 <area shape="rect" id="node6" href="$structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="126,667,297,787"/>
 <area shape="rect" id="node8" href="$structquat__t.html" title="Unit quaternion." alt="" coords="182,6,241,109"/>
-<area shape="rect" id="node10" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="30,219,147,391"/>
+<area shape="rect" id="node10" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="30,228,147,383"/>
 <area shape="rect" id="node15" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="614,675,753,778"/>
 <area shape="rect" id="node13" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="777,684,910,769"/>
 <area shape="rect" id="node19" href="$structpid__controller__t.html" title="PID controller." alt="" coords="321,606,449,847"/>

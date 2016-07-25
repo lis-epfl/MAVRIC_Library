@@ -88,13 +88,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Attitude controller structure.  
  <a href="structattitude__controller__t.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="attitude__controller_8h_source.html">attitude_controller.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="attitude__controller_8hpp_source.html">attitude_controller.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for attitude_controller_t:</div>
 <div class="dyncontent">
 <div class="center"><img src="structattitude__controller__t__coll__graph.png" border="0" usemap="#attitude__controller__t_coll__map" alt="Collaboration graph"/></div>
 <map name="attitude__controller__t_coll__map" id="attitude__controller__t_coll__map">
-<area shape="rect" id="node2" href="structrate__command__t.html" title="Rate command structure." alt="" coords="5,580,123,665"/><area shape="rect" id="node4" href="structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="147,563,317,683"/><area shape="rect" id="node6" href="structquat__t.html" title="Unit quaternion." alt="" coords="335,6,393,109"/><area shape="rect" id="node8" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="305,177,423,349"/><area shape="rect" id="node13" href="structattitude__command__t.html" title="Attitude command structure." alt="" coords="388,374,527,477"/><area shape="rect" id="node11" href="structtorque__command__t.html" title="Torque command structure." alt="" coords="579,580,712,665"/><area shape="rect" id="node17" href="structpid__controller__t.html" title="PID controller." alt="" coords="736,502,864,743"/><area shape="rect" id="node19" href="structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="684,203,788,323"/><area shape="rect" id="node21" href="structintegrator__t.html" title="Integrator part of PID." alt="" coords="812,194,916,331"/></map>
+<area shape="rect" id="node2" href="structrate__command__t.html" title="Rate command structure." alt="" coords="5,561,123,647"/><area shape="rect" id="node4" href="structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="147,544,317,664"/><area shape="rect" id="node6" href="structquat__t.html" title="Unit quaternion." alt="" coords="335,6,393,109"/><area shape="rect" id="node8" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="305,176,423,331"/><area shape="rect" id="node13" href="structattitude__command__t.html" title="Attitude command structure." alt="" coords="388,355,527,458"/><area shape="rect" id="node11" href="structtorque__command__t.html" title="Torque command structure." alt="" coords="579,561,712,647"/><area shape="rect" id="node17" href="structpid__controller__t.html" title="PID controller." alt="" coords="736,483,864,725"/><area shape="rect" id="node19" href="structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="684,193,788,313"/><area shape="rect" id="node21" href="structintegrator__t.html" title="Integrator part of PID." alt="" coords="812,185,916,322"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="structattitude__controller__t-members.html">List of all members.</a></p>
@@ -113,6 +113,12 @@ Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2648ea38954aa403a0fc78701b1aa7e6"></a><!-- doxytag: member="attitude_controller_t::mode" ref="a2648ea38954aa403a0fc78701b1aa7e6" args="" -->
 attitude_controller_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structattitude__controller__t.html#a2648ea38954aa403a0fc78701b1aa7e6">mode</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Control mode: Angle (default), or rate. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acae8bd2e8fa3263abd841e2702dec0ac"></a><!-- doxytag: member="attitude_controller_t::dt_s" ref="acae8bd2e8fa3263abd841e2702dec0ac" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structattitude__controller__t.html#acae8bd2e8fa3263abd841e2702dec0ac">dt_s</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The time interval between two updates. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adc45b702c70db2a4021acad055658aff"></a><!-- doxytag: member="attitude_controller_t::last_update_s" ref="adc45b702c70db2a4021acad055658aff" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structattitude__controller__t.html#adc45b702c70db2a4021acad055658aff">last_update_s</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The time of the last update in s. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aed54250d8ad11b4345150fe001dd2e45"></a><!-- doxytag: member="attitude_controller_t::ahrs" ref="aed54250d8ad11b4345150fe001dd2e45" args="" -->
 const <a class="el" href="structahrs__t.html">ahrs_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structattitude__controller__t.html#aed54250d8ad11b4345150fe001dd2e45">ahrs</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to attitude estimation (input) <br/></td></tr>
@@ -129,7 +135,7 @@ const <a class="el" href="structattitude__command__t.html">attitude_command_t</a
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Attitude controller structure. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="attitude__controller_8h_source.html">attitude_controller.h</a></li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="attitude__controller_8hpp_source.html">attitude_controller.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -149,7 +155,7 @@ const <a class="el" href="structattitude__command__t.html">attitude_command_t</a
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 25 2016 06:37:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 25 2016 09:17:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

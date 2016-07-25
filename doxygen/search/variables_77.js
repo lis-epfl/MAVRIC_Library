@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['waypoint',['waypoint',['../structwaypoint__local__struct__t.html#a2732e3d5ed1b30d6f57757b75912ba7d',1,'waypoint_local_struct_t']]],
   ['waypoint_5fcount_5f',['waypoint_count_',['../classMavlink__waypoint__handler.html#ad51da8037c94579106d1c8ed0229e12b',1,'Mavlink_waypoint_handler']]],
   ['waypoint_5fhandler',['waypoint_handler',['../structvector__field__waypoint__t.html#a615d14139918184f6f586a0e5f5e5fb6',1,'vector_field_waypoint_t::waypoint_handler()'],['../structaudio__t.html#a215990230451a63cf5461974e3a1a2f0',1,'audio_t::waypoint_handler()']]],
   ['waypoint_5fhold_5fcoordinates',['waypoint_hold_coordinates',['../classMavlink__waypoint__handler.html#a46d0ab0d22e138e9e9030e1596a6719b',1,'Mavlink_waypoint_handler']]],

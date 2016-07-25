@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="399,5,689,35"/>
-<area shape="rect" id="node5" href="$classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="399,59,689,88"/>
-<area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a6e65a0cfc44b105f003a62c4790348ab" title="Initialize a home waypoint at (0,0,0) at start up." alt="" coords="391,112,697,141"/>
-<area shape="rect" id="node9" href="$classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="415,165,673,195"/>
-<area shape="rect" id="node11" href="$classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="747,139,872,168"/>
-<area shape="rect" id="node13" href="$classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="748,192,871,221"/>
-</map>

@@ -83,27 +83,40 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="classPosition__estimation.html">Position_estimation</a>, including all inherited members.<table>
-  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a358ae802e65eede79495c339689813c8">altitude_healthy</a>() const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a5abf9309fcf42e92b59f9b313991a78c">absolute_altitude</a>(void) const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>default_config</b>() (defined in <a class="el" href="classPosition__estimation.html">Position_estimation</a>)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [static]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>fence_violation_state_t</b> enum name (defined in <a class="el" href="classPosition__estimation.html">Position_estimation</a>)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#afc390dc784894a423625bae9deffba5c">get_fence_violation_state</a>() const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#acfba651f81761b71f06b06efd701d0bd">healthy</a>() const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS.html#ac9fe239752c8cce15ed745015b0a29a2">healthy_t</a> enum name</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>IN_FENCE</b> enum value (defined in <a class="el" href="classPosition__estimation.html">Position_estimation</a>)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS.html#a72b551f6ce6cf46b33d1699618b44937">INS</a>(global_position_t origin=ORIGIN_EPFL)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#aa0962c38f66141d91755fdc614c994a3">is_healthy</a>(INS::healthy_t type) const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a9bd64901feb3e3140cfd1115145760e3">kp_alt_baro</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a9c464843210a81ae05248775a7291e2e">kp_alt_sonar</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a573eecd2064aacfd7150051ee13102c4">kp_pos_gps</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a5378f164008abb6f8b8bb67edf5165f2">kp_vel_baro</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a117c86efc1f9d8ff9d0979d68626dc86">kp_vel_gps</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a8f0c9743ec556fa02af892f3888315a4">local_position</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#acac5d9260bf7de5cbb9dd9079cae4832">kp_vel_sonar</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a26712a2884be95e68f3e7e57c79ed6e2">last_update_s</a>(void) const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>Mavlink_waypoint_handler</b> (defined in <a class="el" href="classPosition__estimation.html">Position_estimation</a>)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [friend]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS.html#a1d62705e3a33594ccdf182680ce52647">origin</a>(void)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [static]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>OUTSIDE_FENCE1</b> enum value (defined in <a class="el" href="classPosition__estimation.html">Position_estimation</a>)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>OUTSIDE_FENCE2</b> enum value (defined in <a class="el" href="classPosition__estimation.html">Position_estimation</a>)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a920c4a264457690d29fbd658ec791f99">Position_estimation</a>(State &amp;state, Barometer &amp;barometer, const Sonar &amp;sonar, const Gps &amp;gps, const ahrs_t &amp;ahrs, const conf_t config=default_config())</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#af177fdbf47265574602db4137edb3a4f">position_lf</a>(void) const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0">set_home_position_global</a>(global_position_t new_home_pos)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21">set_home_to_current_position</a>()</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a179579cd27313fe0f8bb38695124d431">set_new_fence_origin</a>()</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a8856c10ee31f3aab47c029bf798906d0">update</a>()</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a262d92f8796197abc6e939a37733d79a">vel</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#ac58e608149cd1fda3bc0c4bdb44eb39c">vel_bf</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a4889621f84bbf2dad7c6591a68e4ece5">update</a>(void)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#ac5323a4e1d37bc97777757ede0bb5629">velocity_lf</a>(void) const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>XY_ABS_POSITION</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>XY_REL_POSITION</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>XY_VELOCITY</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>XYZ_ABS_POSITION</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>XYZ_REL_POSITION</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>XYZ_VELOCITY</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>Z_ABS_POSITION</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>Z_REL_POSITION</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>Z_VELOCITY</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -122,7 +135,7 @@ This is the complete list of members for <a class="el" href="classPosition__esti
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 25 2016 06:37:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 25 2016 09:17:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

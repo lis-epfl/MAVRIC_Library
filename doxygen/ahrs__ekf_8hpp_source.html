@@ -132,75 +132,74 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00050"></a>00050 <span class="preprocessor">#ifndef __AHRS_EKF_HPP__</span>
 <a name="l00051"></a>00051 <span class="preprocessor"></span><span class="preprocessor">#define __AHRS_EKF_HPP__</span>
 <a name="l00052"></a>00052 <span class="preprocessor"></span>
-<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;util/matrix.hpp&quot;</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;sensing/ahrs.hpp&quot;</span>
 <a name="l00054"></a>00054 <span class="preprocessor">#include &quot;sensing/imu.hpp&quot;</span>
 <a name="l00055"></a>00055 <span class="preprocessor">#include &quot;util/kalman.hpp&quot;</span>
-<a name="l00056"></a>00056 
-<a name="l00057"></a>00057 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
-<a name="l00058"></a>00058 {
-<a name="l00059"></a>00059 <span class="preprocessor">#include &quot;sensing/ahrs.h&quot;</span>
-<a name="l00060"></a>00060 }
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 
-<a name="l00066"></a><a class="code" href="classAhrs__ekf.html">00066</a> <span class="keyword">class </span><a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a> : <span class="keyword">public</span> <a class="code" href="classKalman.html" title="Templated linear kalman filter.">Kalman</a>&lt;7, 0, 3&gt;
-<a name="l00067"></a>00067 {
-<a name="l00068"></a>00068 <span class="keyword">public</span>:
-<a name="l00069"></a>00069 
-<a name="l00073"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html">00073</a>     <span class="keyword">struct </span><a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">conf_t</a>
-<a name="l00074"></a>00074     {
-<a name="l00075"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a3088f1e150ec081b2938c68a1cbdd622">00075</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a3088f1e150ec081b2938c68a1cbdd622" title="The square of the variance on the gyro bias.">sigma_w_sqr</a>;                            
-<a name="l00076"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a0a823d587bfcc11d8b3a5b9eecafff48">00076</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a0a823d587bfcc11d8b3a5b9eecafff48" title="The square of the variance on the quaternion.">sigma_r_sqr</a>;                            
-<a name="l00077"></a>00077 
-<a name="l00078"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a36cabd431a469abf42bafa07d626e458">00078</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a36cabd431a469abf42bafa07d626e458" title="The noise gain depending on the norm of the acceleration.">acc_norm_noise</a>;                         
-<a name="l00079"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a2d37c89f7d801eaa935f16dee06a35b3">00079</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a2d37c89f7d801eaa935f16dee06a35b3" title="The multiplication factor in the computation of the noise for the accelerometer.">acc_multi_noise</a>;                        
+<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;util/matrix.hpp&quot;</span>
+<a name="l00057"></a>00057 
+<a name="l00058"></a>00058 
+<a name="l00062"></a><a class="code" href="classAhrs__ekf.html">00062</a> <span class="keyword">class </span><a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a> : <span class="keyword">public</span> <a class="code" href="classKalman.html" title="Templated linear kalman filter.">Kalman</a>&lt;7, 0, 3&gt;
+<a name="l00063"></a>00063 {
+<a name="l00064"></a>00064 <span class="keyword">public</span>:
+<a name="l00065"></a>00065 
+<a name="l00069"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html">00069</a>     <span class="keyword">struct </span><a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">conf_t</a>
+<a name="l00070"></a>00070     {
+<a name="l00071"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a3088f1e150ec081b2938c68a1cbdd622">00071</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a3088f1e150ec081b2938c68a1cbdd622" title="The square of the variance on the gyro bias.">sigma_w_sqr</a>;                            
+<a name="l00072"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a0a823d587bfcc11d8b3a5b9eecafff48">00072</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a0a823d587bfcc11d8b3a5b9eecafff48" title="The square of the variance on the quaternion.">sigma_r_sqr</a>;                            
+<a name="l00073"></a>00073 
+<a name="l00074"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a36cabd431a469abf42bafa07d626e458">00074</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a36cabd431a469abf42bafa07d626e458" title="The noise gain depending on the norm of the acceleration.">acc_norm_noise</a>;                         
+<a name="l00075"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a2d37c89f7d801eaa935f16dee06a35b3">00075</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a2d37c89f7d801eaa935f16dee06a35b3" title="The multiplication factor in the computation of the noise for the accelerometer.">acc_multi_noise</a>;                        
+<a name="l00076"></a>00076 
+<a name="l00077"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#ac8f6b0a369bbe3938e2fef1c27bf6923">00077</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#ac8f6b0a369bbe3938e2fef1c27bf6923" title="The variance of the accelerometer.">R_acc</a>;                                  
+<a name="l00078"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a59eed74ea7158ec728b841224a976b37">00078</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a59eed74ea7158ec728b841224a976b37" title="The variance of the magnetometer.">R_mag</a>;                                  
+<a name="l00079"></a>00079     };
 <a name="l00080"></a>00080 
-<a name="l00081"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#ac8f6b0a369bbe3938e2fef1c27bf6923">00081</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#ac8f6b0a369bbe3938e2fef1c27bf6923" title="The variance of the accelerometer.">R_acc</a>;                                  
-<a name="l00082"></a><a class="code" href="structAhrs__ekf_1_1conf__t.html#a59eed74ea7158ec728b841224a976b37">00082</a>         <span class="keywordtype">float</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html#a59eed74ea7158ec728b841224a976b37" title="The variance of the magnetometer.">R_mag</a>;                                  
-<a name="l00083"></a>00083     };
-<a name="l00084"></a>00084 
-<a name="l00092"></a>00092     <a class="code" href="classAhrs__ekf.html#a567f82bf68fc47184b925469682842df" title="AHRS EKF controller.">Ahrs_ekf</a>(<span class="keyword">const</span> <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; imu, <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; ahrs, <span class="keyword">const</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> config = <a class="code" href="classAhrs__ekf.html#aa4bd8caad7860c437f48f32349d6beb3" title="Default configuration structure.">default_config</a>());
-<a name="l00093"></a>00093 
-<a name="l00099"></a>00099     <span class="keywordtype">bool</span> <a class="code" href="classAhrs__ekf.html#af35c5a2e2b038e9196a159a025b98514" title="Performs the EKF algorithm.">update</a>(<span class="keywordtype">void</span>);
-<a name="l00100"></a>00100 
-<a name="l00104"></a>00104     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#a4cec1cbd87e6f6b2798ce3a8d925d92a" title="Performs the north vector calibration.">calibrating_north_vector</a>(<span class="keywordtype">void</span>);
-<a name="l00105"></a>00105 
-<a name="l00109"></a>00109     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> <a class="code" href="classAhrs__ekf.html#aa4bd8caad7860c437f48f32349d6beb3" title="Default configuration structure.">default_config</a>();
-<a name="l00110"></a>00110 
-<a name="l00111"></a>00111 <span class="keyword">protected</span>:
-<a name="l00112"></a>00112 
-<a name="l00116"></a>00116     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#a34bf0aa2624445871420e136fe5ca6e8" title="Initialize the state and matrix of the EKF.">init_kalman</a>(<span class="keywordtype">void</span>);
-<a name="l00117"></a>00117 
-<a name="l00121"></a>00121     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#ab55831ecb83b835af170ca26ad06645a" title="Performs the prediction step of the EKF.">predict_step</a>(<span class="keywordtype">void</span>);
-<a name="l00122"></a>00122 
-<a name="l00126"></a>00126     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#a1082675156077a49347c08de17ecf680" title="Performs the update step with the accelerometer.">update_step_acc</a>(<span class="keywordtype">void</span>);
-<a name="l00127"></a>00127 
-<a name="l00131"></a>00131     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#a7d50407800194659141e770b04b32c63" title="Performs the update step with the magnetometer.">update_step_mag</a>(<span class="keywordtype">void</span>);
+<a name="l00088"></a>00088     <a class="code" href="classAhrs__ekf.html#a567f82bf68fc47184b925469682842df" title="AHRS EKF controller.">Ahrs_ekf</a>(<span class="keyword">const</span> <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; imu, <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; ahrs, <span class="keyword">const</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> config = <a class="code" href="classAhrs__ekf.html#aa4bd8caad7860c437f48f32349d6beb3" title="Default configuration structure.">default_config</a>());
+<a name="l00089"></a>00089 
+<a name="l00095"></a>00095     <span class="keywordtype">bool</span> <a class="code" href="classAhrs__ekf.html#af35c5a2e2b038e9196a159a025b98514" title="Performs the EKF algorithm.">update</a>(<span class="keywordtype">void</span>);
+<a name="l00096"></a>00096 
+<a name="l00100"></a>00100     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#a4cec1cbd87e6f6b2798ce3a8d925d92a" title="Performs the north vector calibration.">calibrating_north_vector</a>(<span class="keywordtype">void</span>);
+<a name="l00101"></a>00101 
+<a name="l00105"></a>00105     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> <a class="code" href="classAhrs__ekf.html#aa4bd8caad7860c437f48f32349d6beb3" title="Default configuration structure.">default_config</a>();
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 <span class="keyword">protected</span>:
+<a name="l00108"></a>00108 
+<a name="l00112"></a>00112     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#a34bf0aa2624445871420e136fe5ca6e8" title="Initialize the state and matrix of the EKF.">init_kalman</a>(<span class="keywordtype">void</span>);
+<a name="l00113"></a>00113 
+<a name="l00117"></a>00117     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#ab55831ecb83b835af170ca26ad06645a" title="Performs the prediction step of the EKF.">predict_step</a>(<span class="keywordtype">void</span>);
+<a name="l00118"></a>00118 
+<a name="l00122"></a>00122     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#a1082675156077a49347c08de17ecf680" title="Performs the update step with the accelerometer.">update_step_acc</a>(<span class="keywordtype">void</span>);
+<a name="l00123"></a>00123 
+<a name="l00127"></a>00127     <span class="keywordtype">void</span> <a class="code" href="classAhrs__ekf.html#a7d50407800194659141e770b04b32c63" title="Performs the update step with the magnetometer.">update_step_mag</a>(<span class="keywordtype">void</span>);
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129 
+<a name="l00130"></a><a class="code" href="classAhrs__ekf.html#aa2a95f757b64e7ab2f174b30bf0efb60">00130</a>     <a class="code" href="classMat.html">Mat&lt;3,3&gt;</a> <a class="code" href="classAhrs__ekf.html#aa2a95f757b64e7ab2f174b30bf0efb60" title="The accelerometer measruement noise matrix.">R_acc_</a>;                                    
+<a name="l00131"></a><a class="code" href="classAhrs__ekf.html#a9e938afcc9a479378e43a951beb2ab39">00131</a>     <a class="code" href="classMat.html">Mat&lt;3,3&gt;</a> <a class="code" href="classAhrs__ekf.html#a9e938afcc9a479378e43a951beb2ab39" title="The magnetometer measurement noise matrix.">R_mag_</a>;                                    
 <a name="l00132"></a>00132 
-<a name="l00133"></a>00133 
-<a name="l00134"></a><a class="code" href="classAhrs__ekf.html#aa2a95f757b64e7ab2f174b30bf0efb60">00134</a>     <a class="code" href="classMat.html">Mat&lt;3,3&gt;</a> <a class="code" href="classAhrs__ekf.html#aa2a95f757b64e7ab2f174b30bf0efb60" title="The accelerometer measruement noise matrix.">R_acc_</a>;                                    
-<a name="l00135"></a><a class="code" href="classAhrs__ekf.html#a9e938afcc9a479378e43a951beb2ab39">00135</a>     <a class="code" href="classMat.html">Mat&lt;3,3&gt;</a> <a class="code" href="classAhrs__ekf.html#a9e938afcc9a479378e43a951beb2ab39" title="The magnetometer measurement noise matrix.">R_mag_</a>;                                    
-<a name="l00136"></a>00136 
-<a name="l00137"></a><a class="code" href="classAhrs__ekf.html#a4397f86d12af33aff0cf75f2bbf2e493">00137</a>     <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">conf_t</a> <a class="code" href="classAhrs__ekf.html#a4397f86d12af33aff0cf75f2bbf2e493" title="The config structure for the EKF module.">config_</a>;                                     
-<a name="l00138"></a>00138 
-<a name="l00139"></a><a class="code" href="classAhrs__ekf.html#a6d9f583f20ab9ebe162b824810c52d71">00139</a>     <span class="keyword">const</span> <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; <a class="code" href="classAhrs__ekf.html#a6d9f583f20ab9ebe162b824810c52d71" title="The Reference to the IMU structure.">imu_</a>;                                    
-<a name="l00140"></a><a class="code" href="classAhrs__ekf.html#a5f6241d7aafb87775ca3a551002a803c">00140</a>     <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; <a class="code" href="classAhrs__ekf.html#a5f6241d7aafb87775ca3a551002a803c" title="The pointer to the ahrs structure.">ahrs_</a>;                                      
-<a name="l00141"></a>00141 };
-<a name="l00142"></a>00142 
-<a name="l00143"></a><a class="code" href="classAhrs__ekf.html#aa4bd8caad7860c437f48f32349d6beb3">00143</a> <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> <a class="code" href="classAhrs__ekf.html#aa4bd8caad7860c437f48f32349d6beb3" title="Default configuration structure.">Ahrs_ekf::default_config</a>()
-<a name="l00144"></a>00144 {
-<a name="l00145"></a>00145     <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> conf = {};
-<a name="l00146"></a>00146 
-<a name="l00147"></a>00147     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a3088f1e150ec081b2938c68a1cbdd622" title="The square of the variance on the gyro bias.">sigma_w_sqr</a> = 0.0000000001f;
-<a name="l00148"></a>00148     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a0a823d587bfcc11d8b3a5b9eecafff48" title="The square of the variance on the quaternion.">sigma_r_sqr</a> = 0.000001f;
-<a name="l00149"></a>00149     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#ac8f6b0a369bbe3938e2fef1c27bf6923" title="The variance of the accelerometer.">R_acc</a> = 0.004f;
-<a name="l00150"></a>00150     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a59eed74ea7158ec728b841224a976b37" title="The variance of the magnetometer.">R_mag</a> = 0.040f;
-<a name="l00151"></a>00151     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a36cabd431a469abf42bafa07d626e458" title="The noise gain depending on the norm of the acceleration.">acc_norm_noise</a> = 0.05f;
-<a name="l00152"></a>00152     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a2d37c89f7d801eaa935f16dee06a35b3" title="The multiplication factor in the computation of the noise for the accelerometer.">acc_multi_noise</a> = 4.0f;
-<a name="l00153"></a>00153 
-<a name="l00154"></a>00154     <span class="keywordflow">return</span> conf;
-<a name="l00155"></a>00155 };
-<a name="l00156"></a>00156 
-<a name="l00157"></a>00157 <span class="preprocessor">#endif // __AHRS_EKF_HPP__</span>
+<a name="l00133"></a><a class="code" href="classAhrs__ekf.html#a687dd587c462cb12a615a16565eb0af1">00133</a>     <span class="keywordtype">float</span> <a class="code" href="classAhrs__ekf.html#a687dd587c462cb12a615a16565eb0af1" title="Time interval since last update in seconds.">dt_s_</a>;                                        
+<a name="l00134"></a><a class="code" href="classAhrs__ekf.html#afb043bb727110606b0c6739ed43e71b4">00134</a>     <span class="keywordtype">float</span> <a class="code" href="classAhrs__ekf.html#afb043bb727110606b0c6739ed43e71b4" title="Last update time in seconds.">last_update_s_</a>;                               
+<a name="l00135"></a>00135 
+<a name="l00136"></a><a class="code" href="classAhrs__ekf.html#a4397f86d12af33aff0cf75f2bbf2e493">00136</a>     <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">conf_t</a> <a class="code" href="classAhrs__ekf.html#a4397f86d12af33aff0cf75f2bbf2e493" title="The config structure for the EKF module.">config_</a>;                                     
+<a name="l00137"></a>00137 
+<a name="l00138"></a><a class="code" href="classAhrs__ekf.html#a6d9f583f20ab9ebe162b824810c52d71">00138</a>     <span class="keyword">const</span> <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; <a class="code" href="classAhrs__ekf.html#a6d9f583f20ab9ebe162b824810c52d71" title="The Reference to the IMU structure.">imu_</a>;                                    
+<a name="l00139"></a><a class="code" href="classAhrs__ekf.html#a5f6241d7aafb87775ca3a551002a803c">00139</a>     <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; <a class="code" href="classAhrs__ekf.html#a5f6241d7aafb87775ca3a551002a803c" title="The pointer to the ahrs structure.">ahrs_</a>;                                      
+<a name="l00140"></a>00140 };
+<a name="l00141"></a>00141 
+<a name="l00142"></a><a class="code" href="classAhrs__ekf.html#aa4bd8caad7860c437f48f32349d6beb3">00142</a> <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> <a class="code" href="classAhrs__ekf.html#aa4bd8caad7860c437f48f32349d6beb3" title="Default configuration structure.">Ahrs_ekf::default_config</a>()
+<a name="l00143"></a>00143 {
+<a name="l00144"></a>00144     <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> conf = {};
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a3088f1e150ec081b2938c68a1cbdd622" title="The square of the variance on the gyro bias.">sigma_w_sqr</a> = 0.0000000001f;
+<a name="l00147"></a>00147     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a0a823d587bfcc11d8b3a5b9eecafff48" title="The square of the variance on the quaternion.">sigma_r_sqr</a> = 0.000001f;
+<a name="l00148"></a>00148     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#ac8f6b0a369bbe3938e2fef1c27bf6923" title="The variance of the accelerometer.">R_acc</a> = 0.004f;
+<a name="l00149"></a>00149     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a59eed74ea7158ec728b841224a976b37" title="The variance of the magnetometer.">R_mag</a> = 0.040f;
+<a name="l00150"></a>00150     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a36cabd431a469abf42bafa07d626e458" title="The noise gain depending on the norm of the acceleration.">acc_norm_noise</a> = 0.05f;
+<a name="l00151"></a>00151     conf.<a class="code" href="structAhrs__ekf_1_1conf__t.html#a2d37c89f7d801eaa935f16dee06a35b3" title="The multiplication factor in the computation of the noise for the accelerometer.">acc_multi_noise</a> = 4.0f;
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153     <span class="keywordflow">return</span> conf;
+<a name="l00154"></a>00154 };
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156 <span class="preprocessor">#endif // __AHRS_EKF_HPP__</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -219,7 +218,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 25 2016 06:37:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 25 2016 09:17:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

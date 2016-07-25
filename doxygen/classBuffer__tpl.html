@@ -113,6 +113,8 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests whether the buffer is full.  <a href="#a57211bac33f215dd9e1fd5b69f763d06"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBuffer__tpl.html#a8f0ba93f400f92c3327c891800d97c22">empty</a> (void) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests whether the buffer is empty.  <a href="#a8f0ba93f400f92c3327c891800d97c22"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBuffer__tpl.html#a2623ac57d3c66d6a7ddaa33cbd2212be">get_element</a> (uint32_t index, T &amp;elem) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get value of i-th element in buffer, but does not modify anything.  <a href="#a2623ac57d3c66d6a7ddaa33cbd2212be"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><h3>template&lt;uint32_t S = 256, typename T = uint8_t&gt;<br/>
@@ -254,6 +256,54 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="a2623ac57d3c66d6a7ddaa33cbd2212be"></a><!-- doxytag: member="Buffer_tpl::get_element" ref="a2623ac57d3c66d6a7ddaa33cbd2212be" args="(uint32_t index, T &amp;elem) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t S, typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classBuffer__tpl.html">Buffer_tpl</a>&lt; S, T &gt;::<a class="el" href="classBuffer__tpl.html#a2623ac57d3c66d6a7ddaa33cbd2212be">get_element</a> </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T &amp;&#160;</td>
+          <td class="paramname"><em>elem</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get value of i-th element in buffer, but does not modify anything. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>Index of the element to read (input) </td></tr>
+    <tr><td class="paramname">elem</td><td>Returned element (output)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success (false if does not exist) </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classBuffer__tpl_a2623ac57d3c66d6a7ddaa33cbd2212be_icgraph.png" border="0" usemap="#classBuffer__tpl_a2623ac57d3c66d6a7ddaa33cbd2212be_icgraph" alt=""/></div>
+<map name="classBuffer__tpl_a2623ac57d3c66d6a7ddaa33cbd2212be_icgraph" id="classBuffer__tpl_a2623ac57d3c66d6a7ddaa33cbd2212be_icgraph">
+<area shape="rect" id="node3" href="classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="212,5,351,35"/><area shape="rect" id="node5" href="classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler." alt="" coords="401,5,572,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
 <a class="anchor" id="a3e6e6b58528f9e82dde45f3d43d2186c"></a><!-- doxytag: member="Buffer_tpl::put" ref="a3e6e6b58528f9e82dde45f3d43d2186c" args="(const T &amp;data)" -->
 <div class="memitem">
 <div class="memproto">
@@ -322,7 +372,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBuffer__tpl_a526cfc106b641c84b9fe378a95366250_icgraph.png" border="0" usemap="#classBuffer__tpl_a526cfc106b641c84b9fe378a95366250_icgraph" alt=""/></div>
 <map name="classBuffer__tpl_a526cfc106b641c84b9fe378a95366250_icgraph" id="classBuffer__tpl_a526cfc106b641c84b9fe378a95366250_icgraph">
-<area shape="rect" id="node3" href="classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="199,5,367,35"/></map>
+<area shape="rect" id="node3" href="classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="213,5,352,35"/><area shape="rect" id="node7" href="classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="199,59,367,88"/><area shape="rect" id="node5" href="classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler." alt="" coords="417,5,588,35"/></map>
 </div>
 </p>
 
@@ -412,7 +462,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 25 2016 06:37:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 25 2016 09:17:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

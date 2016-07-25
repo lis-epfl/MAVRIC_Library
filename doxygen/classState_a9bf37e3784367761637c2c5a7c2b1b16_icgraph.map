@@ -3,5 +3,5 @@
 <area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="179,57,437,87"/>
 <area shape="rect" id="node10" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="231,111,385,140"/>
 <area shape="rect" id="node12" href="$classNavigation.html#ade9f978504febc6325012ae8bf5ff19f" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode." alt="" coords="243,164,373,193"/>
-<area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a282ebac433d0071b0f90862593979225" title="Initialize the waypoint handler." alt="" coords="485,59,821,88"/>
+<area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="485,59,821,88"/>
 </map>

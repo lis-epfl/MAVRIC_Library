@@ -10,5 +10,5 @@
 <area shape="rect" id="node18" href="$unioncurvace__roi__coord__t.html" title="List of viewing direction for each Region of interest (ROI)" alt="" coords="744,289,883,444"/>
 <area shape="rect" id="node20" href="$structviewing__direction__t.html" title="Direction at which a ROI is pointed." alt="" coords="740,41,873,143"/>
 <area shape="rect" id="node22" href="$structquat__t.html" title="Unit quaternion." alt="" coords="949,41,1008,143"/>
-<area shape="rect" id="node24" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1020,281,1137,453"/>
+<area shape="rect" id="node24" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1020,289,1137,444"/>
 </map>

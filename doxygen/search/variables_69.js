@@ -17,6 +17,8 @@ var searchData=
   ['inf_5fmsg_5fmask6',['inf_msg_mask6',['../structubx__cfg__inf__t.html#a50c303568dda8dd15c2244ea741589e9',1,'ubx_cfg_inf_t']]],
   ['ini_5ffix_5f3d',['ini_fix_3d',['../structubx__cfg__nav__expert__settings__t.html#a71a18555a13e21e8ade6acb6db3de35b',1,'ubx_cfg_nav_expert_settings_t']]],
   ['init_5fdone',['init_done',['../structsd__spi__t.html#a4fcec872bef23282f9479756eb4e5b1b',1,'sd_spi_t']]],
+  ['ins',['ins',['../structhud__telemetry__t.html#a73d2497ecc5fc29b78a9eda0a863ab81',1,'hud_telemetry_t::ins()'],['../structstabilisation__copter__t.html#a67129cbbb32d7d320cb279878ab9bc7a',1,'stabilisation_copter_t::ins()'],['../structvector__field__waypoint__t.html#a158ed6de0e2e5743c8f02bd3c5e70d00',1,'vector_field_waypoint_t::ins()'],['../structvelocity__controller__copter__t.html#aea6a7bf8bd2d46ba8d28d30bf50e10ca',1,'velocity_controller_copter_t::ins()']]],
+  ['ins_5f',['ins_',['../classMavlink__waypoint__handler.html#a6fd5cd678d57cbb3ae7b9446e1c924ce',1,'Mavlink_waypoint_handler::ins_()'],['../classState__machine.html#a51239d573ed43470ad330e91a7fa640c',1,'State_machine::ins_()']]],
   ['integrator',['integrator',['../structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83',1,'pid_controller_conf_t::integrator()'],['../structpid__controller__t.html#afec426f1733f04074b98327c0071f537',1,'pid_controller_t::integrator()']]],
   ['internal_5fstate',['internal_state',['../structahrs__t.html#a32c9e3036aa967ffaa534570e20f4ae0',1,'ahrs_t']]],
   ['internal_5fstate_5f',['internal_state_',['../classNavigation.html#af1f6f101be169f793743fa3ee2bc2d47',1,'Navigation']]],

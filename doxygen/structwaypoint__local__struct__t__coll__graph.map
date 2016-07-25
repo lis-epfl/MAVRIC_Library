@@ -1,5 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="5,211,131,418"/>
-<area shape="rect" id="node4" href="$structlocal__position__t.html" title="Local coordinates structure." alt="" coords="155,255,267,375"/>
-<area shape="rect" id="node6" href="$structglobal__position__t.html" title="Global position structure." alt="" coords="152,6,269,143"/>
+<area shape="rect" id="node2" href="$structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="21,6,147,213"/>
 </map>

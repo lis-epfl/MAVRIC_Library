@@ -1,11 +1,11 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structrate__command__t.html" title="Rate command structure." alt="" coords="5,580,123,665"/>
-<area shape="rect" id="node4" href="$structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="147,563,317,683"/>
+<area shape="rect" id="node2" href="$structrate__command__t.html" title="Rate command structure." alt="" coords="5,561,123,647"/>
+<area shape="rect" id="node4" href="$structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="147,544,317,664"/>
 <area shape="rect" id="node6" href="$structquat__t.html" title="Unit quaternion." alt="" coords="335,6,393,109"/>
-<area shape="rect" id="node8" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="305,177,423,349"/>
-<area shape="rect" id="node13" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="388,374,527,477"/>
-<area shape="rect" id="node11" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="579,580,712,665"/>
-<area shape="rect" id="node17" href="$structpid__controller__t.html" title="PID controller." alt="" coords="736,502,864,743"/>
-<area shape="rect" id="node19" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="684,203,788,323"/>
-<area shape="rect" id="node21" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="812,194,916,331"/>
+<area shape="rect" id="node8" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="305,176,423,331"/>
+<area shape="rect" id="node13" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="388,355,527,458"/>
+<area shape="rect" id="node11" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="579,561,712,647"/>
+<area shape="rect" id="node17" href="$structpid__controller__t.html" title="PID controller." alt="" coords="736,483,864,725"/>
+<area shape="rect" id="node19" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="684,193,788,313"/>
+<area shape="rect" id="node21" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="812,185,916,322"/>
 </map>

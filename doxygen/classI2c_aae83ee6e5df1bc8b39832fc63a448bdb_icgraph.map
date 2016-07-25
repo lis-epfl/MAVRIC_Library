@@ -4,4 +4,6 @@
 <area shape="rect" id="node7" href="$classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6" title="Main update function." alt="" coords="128,112,288,141"/>
 <area shape="rect" id="node9" href="$classMpu__6050.html#acac68dd3f9ff860aa1c6b9e66e2eda88" title="Initialise the sensor." alt="" coords="155,165,261,195"/>
 <area shape="rect" id="node11" href="$classMpu__6050.html#ae23ffc947827a02f18f0f8c7dccc3a57" title="Main update function." alt="" coords="129,219,287,248"/>
+<area shape="rect" id="node13" href="$classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="139,272,277,301"/>
+<area shape="rect" id="node15" href="$classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler." alt="" coords="337,272,508,301"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="5,219,123,391"/>
+<area shape="rect" id="node2" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="5,228,123,383"/>
 <area shape="rect" id="node4" href="$structquat__t.html" title="Unit quaternion." alt="" coords="35,6,93,109"/>
 <area shape="rect" id="node6" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="147,176,277,435"/>
 </map>

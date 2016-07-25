@@ -1,7 +1,7 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classDynamic__model.html#a356054acea6bcdc56b10ac25f57bf848" title="Main update function &#160;Reads new values from sensor." alt="" coords="209,5,372,35"/>
 <area shape="rect" id="node5" href="$classDynamic__model.html#a94d2db69b0f3d3c6d95bc9f80339093a" title="Get attitude quaternion." alt="" coords="208,59,373,88"/>
-<area shape="rect" id="node7" href="$classDynamic__model.html#a1405fb3172d89b11f4d0b867a649c8bb" title="Get X, Y and Z position in local frame (centered on home)" alt="" coords="200,112,381,141"/>
+<area shape="rect" id="node7" href="$classDynamic__model.html#a6d7cb0093af457480245374b27c70a53" title="Get X, Y and Z position in local frame (centered on home)" alt="" coords="200,112,381,141"/>
 <area shape="rect" id="node9" href="$classSonar__sim.html#a53ce1c938e428e4b92beba5974094334" title="Get sensor orientation relative to the platform (in body frame)" alt="" coords="205,165,376,195"/>
 <area shape="rect" id="node11" href="$classDynamic__model.html#a55f5c7d41f09676d0c258898478ad50d" title="Get last update time in microseconds." alt="" coords="185,219,396,248"/>
 </map>
