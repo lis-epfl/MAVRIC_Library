@@ -115,7 +115,7 @@ public:
         float dt;
         float sigma_gps_xy;
         float sigma_gps_z;
-        global_position_t home;
+        global_position_t origin;
     };
 
     /**
@@ -230,8 +230,8 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.sigma_gps_z  = 0.001f;
 
 
-    //default home location (EFPL Esplanade)
-    conf.home = ORIGIN_EPFL;
+    //default origin location (EFPL Esplanade)
+    conf.origin = ORIGIN_EPFL;
 
     return conf;
 };
