@@ -41,7 +41,7 @@
 #ifndef I2C_HPP_
 #define I2C_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 
 class I2c
 {

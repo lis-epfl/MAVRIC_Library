@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef QFILTER_DEFAULT_CONFIG_H_
-#define QFILTER_DEFAULT_CONFIG_H_
+#ifndef QFILTER_DEFAULT_CONFIG_HPP_
+#define QFILTER_DEFAULT_CONFIG_HPP_
 
 #include "sensing/qfilter.hpp"
 
@@ -56,4 +56,4 @@ static inline qfilter_conf_t qfilter_default_config()
     return conf;
 };
 
-#endif /* QFILTER_DEFAULT_CONFIG_H_ */
+#endif /* QFILTER_DEFAULT_CONFIG_HPP_ */

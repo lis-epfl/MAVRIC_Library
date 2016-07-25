@@ -45,7 +45,8 @@
 #ifndef PWM_HPP_
 #define PWM_HPP_
 
-#include <stdbool.h>
+#include <cstdbool>
+#include <cstdint>
 
 class Pwm
 {

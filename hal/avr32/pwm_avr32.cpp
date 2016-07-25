@@ -43,14 +43,15 @@
  *
  ******************************************************************************/
 
+
 #include "hal/avr32/pwm_avr32.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
+#include <math.h>
 #include "libs/asf/avr32/drivers/gpio/gpio.h"
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
-#include <math.h>
 }
 
 //------------------------------------------------------------------------------
@@ -237,7 +238,7 @@ void Pwm_avr32::write_channel(void)
     // Set update frequency per channel with conservative method:
     // if two servos on the same channel ask for two different frequencies,
     // then the lowest frequecy is used
-    int32_t period  = max(period_us_[2 * channel_id_],
+    int32_t period  = max_asm(period_us_[2 * channel_id_],
                           period_us_[2 * channel_id_ + 1]);
 
     int32_t pulse_us_a = pulse_us_[2 * channel_id_];

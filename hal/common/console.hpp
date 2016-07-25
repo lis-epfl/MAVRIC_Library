@@ -50,7 +50,7 @@
 #ifndef CONSOLE_HPP_
 #define CONSOLE_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 #include "util/string_util.hpp"
 
 

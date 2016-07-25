@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file dubin.h
+ * \file dubin.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -39,17 +39,17 @@
  *
  ******************************************************************************/
 
-#ifndef DUBIN_H_
-#define DUBIN_H_
+#ifndef DUBIN_HPP_
+#define DUBIN_HPP_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/vectors.h"
 #include "util/maths.h"
-#include "util/constants.h"
 }
 
 typedef enum
@@ -116,4 +116,4 @@ void dubin_circle(float tvel[3], const float circle[3], float radius_mavlink, co
  */
 dubin_t dubin_2d(const float wp1[3], const float wp2[3], const float d1[3], const float d2[3], float sense_mavlink);
 
-#endif /* DUBIN_H_ */
+#endif /* DUBIN_HPP_ */

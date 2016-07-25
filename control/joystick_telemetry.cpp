@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick_telemetry.c
+ * \file joystick_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -44,7 +44,7 @@
 
 //#include "hal/common/time_keeper.hpp"
 //#include "util/print_util.h"
-//#include "util/constants.h"
+//#include "util/constants.hpp"
 
 
 //------------------------------------------------------------------------------

@@ -30,85 +30,34 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.h
+ * \file ins_telemetry.cpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief This file implements data structure for attitude estimate
+ * \brief   Telemetry for Inertial Navigation System
  *
  ******************************************************************************/
 
+#include "sensing/ins_telemetry.hpp"
 
-#ifndef AHRS_H_
-#define AHRS_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "util/quaternions.h"
-
-
-/**
- * \brief The calibration level of the filter
- */
-typedef enum
+static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    AHRS_INITIALISING   = 0,    ///< Calibration level: Not initialised
-    AHRS_LEVELING       = 1,    ///< Calibration level: No calibration, attitude estimation correction by accelero/magneto measurements
-    AHRS_CONVERGING     = 2,    ///< Calibration level: leveling, correction of gyro biais
-    AHRS_READY          = 3,    ///< Calibration level: leveled
-} ahrs_state_t;
-
-
-
-/**
- * \brief Structure containing the Attitude and Heading Reference System
- */
-typedef struct
-{
-    quat_t  qe;                         ///< quaternion defining the Attitude estimation of the platform
-
-    float   angular_speed[3];           ///< Gyro rates
-    float   linear_acc[3];              ///< Acceleration WITHOUT gravity
-
-    // quat_t up_vec;                       ///< The quaternion of the up vector
-    // quat_t north_vec;                    ///< The quaternion of the north vector
-
-    ahrs_state_t internal_state;        ///< Leveling state of the ahrs
-    float        last_update_s;            ///< The time of the last IMU update in ms
-    float        dt_s;                  ///< The time interval between two IMU updates
-} ahrs_t;
-
-
-
-
-
-/**
- * \brief   Initialiases the ahrs structure
- *
- * \param   ahrs                Pointer to ahrs structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool ahrs_init(ahrs_t* ahrs);
-
-
-/**
- * \brief   Returns an initialized ahrs_t
- *
- * \detail  Used to initialize ahrs in initalizer list
- *
- * \return  Initialized ahrs_t
- */
-ahrs_t ahrs_initialized(void);
-
-
-#ifdef __cplusplus
+    float cov[45];
+    mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
+                                            mavlink_stream->compid(),
+                                            msg,
+                                            time_keeper_get_ms(),
+                                            time_keeper_get_ms(),
+                                            0,
+                                            ins->position_lf()[0],
+                                            ins->position_lf()[1],
+                                            ins->position_lf()[2],
+                                            ins->velocity_lf()[0],
+                                            ins->velocity_lf()[1],
+                                            ins->velocity_lf()[2],
+                                            0.0f,
+                                            0.0f,
+                                            ins->absolute_altitude(),
+                                            cov);
 }
-#endif
-
-#endif /* AHRS_H_ */

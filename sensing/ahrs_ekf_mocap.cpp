@@ -51,15 +51,15 @@
 #include "sensing/ahrs_ekf_mocap.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/kalman.hpp"
+#include "util/constants.hpp"
+#include "util/coord_conventions.hpp"
 
 extern "C"
 {
-#include "util/constants.h"
 #include "util/print_util.h"
 #include "util/maths.h"
 #include "util/vectors.h"
 #include "util/quaternions.h"
-#include "util/coord_conventions.h"
 }
 
 

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.h
+ * \file stabilisation.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -40,16 +40,12 @@
  ******************************************************************************/
 
 
-#ifndef STABILISATION_H_
-#define STABILISATION_H_
+#ifndef STABILISATION_HPP_
+#define STABILISATION_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "control/pid_controller.h"
+#include <cstdint>
+#include <cstdbool>
+#include "control/pid_controller.hpp"
 
 /**
  * \brief   The control mode enum
@@ -116,7 +112,7 @@ void stabilisation_run(stabiliser_t* stabiliser, float dt, float errors[]);
 
 /**
  * \brief               Execute the PID controllers used for stabilization
- * 
+ *
  * \param   stabiliser  Pointer to the structure containing the PID controllers
  * \param   dt          Timestep
  * \param   errors      Array containing the errors of the controlling variables
@@ -124,8 +120,4 @@ void stabilisation_run(stabiliser_t* stabiliser, float dt, float errors[]);
  */
 void stabilisation_run_feedforward(stabiliser_t *stabiliser, float dt, float errors[], float feedforward[]);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* STABILISATION_H_ */
+#endif /* STABILISATION_HPP_ */

@@ -41,7 +41,7 @@
 #ifndef FILE_HPP_
 #define FILE_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 
 
 /**

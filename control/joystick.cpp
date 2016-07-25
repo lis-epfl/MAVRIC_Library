@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick.c
+ * \file joystick.cpp
  *
  * \author MAV'RIC Team
  *
@@ -40,12 +40,12 @@
 
 
 #include "control/joystick.hpp"
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "util/constants.h"
-#include "util/coord_conventions.h"
 #include "util/quick_trig.h"
 }
 
@@ -188,7 +188,7 @@ void joystick_button_update(joystick_t* joystick, uint16_t buttons)
         }
     }
 
-    // set ctrl mode according to buttons (precedence for ctrl mode if several buttons are pressed: 
+    // set ctrl mode according to buttons (precedence for ctrl mode if several buttons are pressed:
     // ATTIUDE -> VELOCITY -> POSITION_HOLD -> GPS_NAV
     if((buttons & 0x0004) == 0x0004)        // check if ATTITUDE button pressed
     {

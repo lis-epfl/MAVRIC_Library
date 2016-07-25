@@ -39,8 +39,8 @@
  *
  ******************************************************************************/
 
-#ifndef I2C_STM32_H_
-#define I2C_STM32_H_
+#ifndef I2C_STM32_HPP_
+#define I2C_STM32_HPP_
 
 #include "hal/common/i2c.hpp"
 #include "hal/stm32/gpio_stm32.hpp"
@@ -216,4 +216,4 @@ static inline  i2c_stm32_conf_t i2c_stm32_default_config()
 }
 
 
-#endif /* I2C_STM32_H_ */
+#endif /* I2C_STM32_HPP_ */

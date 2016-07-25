@@ -46,7 +46,7 @@
 #ifndef HMC5883L_HPP_
 #define HMC5883L_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 
 #include "drivers/magnetometer.hpp"

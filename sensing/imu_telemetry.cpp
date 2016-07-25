@@ -42,12 +42,12 @@
  ******************************************************************************/
 
 #include "sensing/imu_telemetry.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
-#include "util/constants.h"
 }
 
 

@@ -40,8 +40,8 @@
  *
  ******************************************************************************/
 
-#ifndef SERIAL_LINUX_IO_H_
-#define SERIAL_LINUX_IO_H_
+#ifndef SERIAL_LINUX_IO_HPP_
+#define SERIAL_LINUX_IO_HPP_
 
 #include "hal/common/serial.hpp"
 
@@ -171,4 +171,4 @@ static inline serial_linux_io_conf_t serial_linux_io_default_config()
     return conf;
 }
 
-#endif /* SERIAL_LINUX_IO_H_ */
+#endif /* SERIAL_LINUX_IO_HPP_ */

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file pid_control.h
+ * \file pid_control.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -40,15 +40,11 @@
  ******************************************************************************/
 
 
-#ifndef PID_CONTROL_H_
-#define PID_CONTROL_H_
+#ifndef PID_CONTROL_HPP_
+#define PID_CONTROL_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 #include <math.h>
 
 
@@ -170,8 +166,4 @@ float pid_controller_update_dt(pid_controller_t* controller, float error, float 
 float pid_controller_update_feedforward_dt(pid_controller_t* controller, float error, float feedforward, float dt);
 
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* PID_CONTROL_H_ */
+#endif /* PID_CONTROL_HPP_ */

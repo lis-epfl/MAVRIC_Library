@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file onboard_parameters.c
+ * \file onboard_parameters.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -39,13 +39,13 @@
  *
  ******************************************************************************/
 
+#include <cstdlib>
 
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_communication.hpp"
 extern "C"
 {
 #include "util/print_util.h"
-#include <stdlib.h>
 }
 
 //------------------------------------------------------------------------------

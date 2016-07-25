@@ -44,8 +44,8 @@
 #ifndef BMP085_HPP_
 #define BMP085_HPP_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 
 #include "hal/common/i2c.hpp"
 #include "drivers/barometer.hpp"
