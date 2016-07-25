@@ -93,9 +93,9 @@ INS_kf::INS_kf(const Gps& gps,
                 0,                          SQR(config.sigma_gps_vely), 0,
                 0,                          0,                          SQR(config.sigma_gps_velz)}),
     H_baro_({0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1}),
-    R_baro_({SQR(config.sigma_baro)}),
+    R_baro_({ SQR(config.sigma_baro) }),
     H_sonar_({0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0}),
-    R_sonar_({SQR(config.sigma_sonar)}),
+    R_sonar_({ SQR(config.sigma_sonar) }),
     //H_flow_({0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0,
     //         0, 0, 0,  0, 0, 1, 0, 0, 0, 0, 0,
     //         0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0}),
@@ -111,6 +111,9 @@ INS_kf::INS_kf(const Gps& gps,
     dt_(0.0f),
     last_update_(0.0f)
 {
+    P_(7,7) = 0.0f;
+    P_(8,8) = 0.0f;
+    P_(9,9) = 0.0f;
 }
 
 
@@ -221,15 +224,7 @@ bool INS_kf::update(void)
             dt_             = now - last_update_;
             last_update_    = now;
 
-            // TODO: Implement ekf formulation for speed improvement (no matrix as lot of 0, but directly functions)
-            // if(config_.use_ekf)
-            // {
-            //     predict_ekf();
-            // }
-            // else
-            // {
-            //     predict_kf();
-            // }
+            // Make the prediciton
             predict_kf();
 
             // update timimg
@@ -240,6 +235,9 @@ bool INS_kf::update(void)
     {
         // Reset covariance matrix
         P_ = Mat<11,11>(100.0f, true);
+        P_(7,7) = 0.0f;
+        P_(8,8) = 0.0f;
+        P_(9,9) = 0.0f;
 
         // Update last time to avoid glitches at initilaization
         last_update_ = time_keeper_get_s();
@@ -251,55 +249,68 @@ bool INS_kf::update(void)
     if (gps_.healthy())
     {
         // GPS Position
-        if (last_gps_pos_update_s_ < gps_.last_position_update_us()*1e6)
+        if (last_gps_pos_update_s_ < gps_.last_position_update_us()/1e6)
         {
             // Get local position from gps
-            local_position_t local_pos;
+            //local_position_t local_pos;
             coord_conventions_global_to_local_position(gps_.position_gf(), origin(), local_pos);
 
             // Update the measurement noise if needed
-            if(config_.constant_covar)
+            if(!config_.constant_covar)
             {
                 // TODO: Implement this!
+
+                // Recompute the measurement noise matrix
+                R_ = Mat<3,3>({ SQR(config_.sigma_gps_xy), 0,                         0,
+                                0,                         SQR(config_.sigma_gps_xy), 0,
+                                0,                         0,                         SQR(config_.sigma_gps_z)});
             }
 
             // Run kalman update using default matrices
             Kalman<11,3,3>::update({local_pos[0], local_pos[1], local_pos[2]});
 
             // Update timing
-            last_gps_pos_update_s_ = gps_.last_position_update_us()*1e6;
+            last_gps_pos_update_s_ = gps_.last_position_update_us()/1e6;
         }
 
         // GPS velocity
-        if (last_gps_vel_update_s_ < gps_.last_velocity_update_us()*1e6)
+        if (last_gps_vel_update_s_ < gps_.last_velocity_update_us()/1e6)
         {
             // Update the measurement noise if needed
-            if(config_.constant_covar)
+            if(!config_.constant_covar)
             {
                 // TODO: Implement this!
+
+                // Recompute the measurement noise matrix
+                R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velx), 0,                           0,
+                                       0,                           SQR(config_.sigma_gps_vely), 0,
+                                       0,                           0,                           SQR(config_.sigma_gps_velz)});
             }
 
             // Run kalman update
+            gps_velocity = gps_.velocity_lf();
             Kalman<11,3,3>::update(Mat<3,1>(gps_.velocity_lf()),
                                    H_gpsvel_,
                                    R_gpsvel_);
 
             // Update timing
-            last_gps_vel_update_s_ = gps_.last_velocity_update_us()*1e6;
+            last_gps_vel_update_s_ = gps_.last_velocity_update_us()/1e6;
         }
     }
 
     // Measure from barometer
     // TODO: Add healthy function into barometer
-    //if (barometer_.healthy())
     if(true)
     {
-       if (last_baro_update_s_ < barometer_.last_update_us()*1e6)
+       if (last_baro_update_s_ < barometer_.last_update_us()/1e6)
        {
           // Update the measurement noise if needed
-          if(config_.constant_covar)
+          if(!config_.constant_covar)
           {
               // TODO: Implement this!
+
+              // Recompute the measurement noise matrix
+              R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
           }
 
           // Run kalman Update
@@ -308,19 +319,22 @@ bool INS_kf::update(void)
                                  R_baro_);
        
           // Update timing
-          last_baro_update_s_ = barometer_.last_update_us()*1e6;
+          last_baro_update_s_ = barometer_.last_update_us()/1e6;
        }
     }
 
     // Measure from sonar
     if (sonar_.healthy())
     {
-       if (last_sonar_update_s_ < sonar_.last_update_us()*1e6)
+       if (last_sonar_update_s_ < sonar_.last_update_us()/1e6)
        {
           // Update the measurement noise if needed
-          if(config_.constant_covar)
+          if(!config_.constant_covar)
           {
               // TODO: Implement this!
+
+              // Recompute the measurement noise matrix
+              R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
           }
 
           // Run kalman Update
@@ -329,7 +343,7 @@ bool INS_kf::update(void)
                                  R_sonar_);
 
           // Update timing
-          last_sonar_update_s_ = sonar_.last_update_us() * 1e6f;
+          last_sonar_update_s_ = sonar_.last_update_us()/1e6f;
        }
     }
 
@@ -360,6 +374,7 @@ void INS_kf::predict_kf(void)
 {
     // Recompute the variable model matrices
     // Get time
+    //float dt = 0.004; //dt_;
     float dt = dt_;
     float dt2 = (dt*dt)/2.0f;
 
@@ -382,7 +397,22 @@ void INS_kf::predict_kf(void)
     float cz = q0*q0 - q1*q1 - q2*q2 - q3*q3;
 
     // Model dynamics (modify only the non-constant terms)
-    // TODO: Implement block copy in matrix lib
+    // TODO: Test block insertion method
+    // F_.insert(Mat<3,3>({ dt,  0,  0,
+    //                      0,   dt, 0,
+    //                      0,   0,  dt }),
+    //           0,
+    //           4);
+    // F_.insert(Mat<3,3>({ -ax*dt2, -bx*dt2,  -cx*dt2,
+    //                      -ay*dt2, -by*dt2,  -cy*dt2,
+    //                      -az*dt2, -bz*dt2,  -cz*dt2 }),
+    //           0,
+    //           7);
+    // F_.insert(Mat<3,3>({ -ax*dt,  -bx*dt, -cx*dt,
+    //                      -ay*dt,  -by*dt, -cy*dt,
+    //                      -az*dt,  -bz*dt, -cz*dt}),
+    //           4,
+    //           7);
     F_(0,4) = dt;
     F_(1,5) = dt;
     F_(2,6) = dt;
@@ -406,6 +436,16 @@ void INS_kf::predict_kf(void)
     F_(6,9) = -cz*dt;
 
     // Input (modify only the non-constant terms)
+    // B_.insert(Mat<3,3>({ ax*dt2, bx*dt2, cx*dt2,
+    //                      ay*dt2, by*dt2, cy*dt2,
+    //                      az*dt2, bz*dt2, cz*dt2 }),
+    //           0,
+    //           0);
+    // B_.insert(Mat<3,3>({ ax*dt, bx*dt,  cx*dt,
+    //                      ay*dt, by*dt,  cy*dt,
+    //                      az*dt, bz*dt,  cz*dt }),
+    //           4,
+    //           0);
     B_(0,0) = ax*dt2;
     B_(0,1) = bx*dt2;
     B_(0,2) = cx*dt2;
@@ -467,9 +507,4 @@ void INS_kf::predict_kf(void)
 
     // Compute default KF prediciton step (using local accelerations as input)
     predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
-}
-
-
-void INS_kf::predict_ekf(void)
-{
 }

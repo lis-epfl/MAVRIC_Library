@@ -123,6 +123,7 @@ extern "C"
  */
 class INS_kf: public Kalman<11,3,3>, public INS
 {
+    friend void ins_telemetry_send(const INS_kf* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 public:
     /**
      * \brief   Configuration structure
@@ -145,7 +146,6 @@ public:
         // Position of the origin
         global_position_t origin;
         // Logic flags
-        bool use_ekf;
         bool constant_covar;
     };
 
@@ -217,6 +217,8 @@ public:
 
 
     conf_t config_;                      ///< Configuration (public, to be used as onboard param)
+    local_position_t local_pos;
+    std::array<float,3> gps_velocity;
 
 
 private:
@@ -253,11 +255,6 @@ private:
      * \brief   Performs the prediction step of the Kalman filter, using linear formulation (KF, non-constant matrices)
      */
     void predict_kf(void);
-
-    /**
-     * \brief   Performs the prediction step of the Kalman filter, using extended formulation (EKF)
-     */
-    void predict_ekf(void);
 };
 
 
@@ -267,7 +264,7 @@ INS_kf::conf_t INS_kf::default_config(void)
 
     // Process covariance (noise from state and input)
     conf.sigma_z_gnd        = 0.001f;
-    conf.sigma_bias_acc     = 0.01f;
+    conf.sigma_bias_acc     = 0.0f;
     conf.sigma_bias_baro    = 0.001f;
     conf.sigma_acc          = 0.01f;    // Input
 
@@ -284,8 +281,7 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.origin = ORIGIN_EPFL;
 
     // Logic parameters
-    conf.use_ekf = false;
-    conf.constant_covar = true;
+    conf.constant_covar = false;
 
     return conf;
 };
