@@ -91,7 +91,7 @@ public:
     bool set_ctrl_mode(Mav_mode mode);
 
     State& state_;                                       ///< State structure
-    const INS& ins_;                                     ///< Position and velocity estimation
+    const INS& ins_;                                     ///< Inertial Navigation System
     const Imu& imu_;                                     ///< Inertial measurement unit
     const ahrs_t& ahrs_;                                 ///< Attitude estimation
     Manual_control& manual_control_;                     ///< Manual_control

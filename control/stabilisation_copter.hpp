@@ -87,7 +87,7 @@ typedef struct
     float last_update_s;                                        ///< Last update in seconds
     control_command_t* controls;                                ///< The pointer to the control structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
-    const INS* ins;                                             ///< The pointer to the INS
+    const INS* ins;                                             ///< The pointer to the Inertial Navigation System
     torque_command_t* torque_command;                           ///< The pointer to the torque command structure
     thrust_command_t* thrust_command;                           ///< The pointer to the thrust command structure
 } stabilisation_copter_t;
