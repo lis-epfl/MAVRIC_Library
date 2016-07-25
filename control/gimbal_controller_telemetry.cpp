@@ -42,11 +42,11 @@
 
 #include "control/gimbal_controller_telemetry.hpp"
 #include "control/gimbal_controller.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 }
 
 

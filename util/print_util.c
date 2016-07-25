@@ -39,10 +39,10 @@
  *
  ******************************************************************************/
 
-
-#include "util/print_util.h"
 #include <stdlib.h>
 #include <stdbool.h>
+
+#include "util/print_util.h"
 
 byte_stream_t* deb_stream;
 

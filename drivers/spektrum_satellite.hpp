@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file spektrum_satellite.h
+ * \file spektrum_satellite.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -50,11 +50,8 @@
 #include "hal/common/gpio.hpp"
 #include "util/buffer.hpp"
 
-extern "C"
-{
-#include <stdint.h>
-#include <stdbool.h>
-}
+#include <cstdint>
+#include <cstdbool>
 
 
 /**

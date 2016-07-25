@@ -30,61 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.c
+ * \file ins.cpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief This file implements data structure for attitude estimate
+ * \brief   Inertial Navigation System (estimates position and velocity)
  *
  ******************************************************************************/
 
 
-#include "sensing/ahrs.h"
-#include "util/print_util.h"
-#include "util/constants.h"
+#include "sensing/ins.hpp"
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+// It is a static member (meaning it is shared by all instances of that class), 
+ // => it has to be defined somewhere.
+global_position_t INS::origin_;
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
 
-bool ahrs_init(ahrs_t* ahrs)
+INS::INS(global_position_t origin)
 {
-    bool init_success = true;
+    INS::origin_ = origin;
+};
 
-    // Init structure
-    ahrs->qe.s = 1.0f;
-    ahrs->qe.v[X] = 0.0f;
-    ahrs->qe.v[Y] = 0.0f;
-    ahrs->qe.v[Z] = 0.0f;
 
-    ahrs->angular_speed[X] = 0.0f;
-    ahrs->angular_speed[Y] = 0.0f;
-    ahrs->angular_speed[Z] = 0.0f;
-
-    ahrs->linear_acc[X] = 0.0f;
-    ahrs->linear_acc[Y] = 0.0f;
-    ahrs->linear_acc[Z] = 0.0f;
-
-    ahrs->last_update_s = 0.0f;
-    ahrs->dt_s          = 1.0f;
-
-    ahrs->internal_state = AHRS_INITIALISING;
-
-    return init_success;
-}
-
-ahrs_t ahrs_initialized()
+const global_position_t& INS::origin(void)
 {
-    ahrs_t ahrs;
-    ahrs_init(&ahrs);
-    return ahrs;
+    return origin_;
 }

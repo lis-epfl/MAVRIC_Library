@@ -41,11 +41,8 @@
 
 
 #include "simulation/sonar_sim.hpp"
+#include "util/constants.hpp"
 
-extern "C"
-{
-#include "util/constants.h"
-}
 
 Sonar_sim::Sonar_sim(Dynamic_model& dynamic_model, sonar_sim_conf_t config):
     dynamic_model_(dynamic_model),
@@ -102,7 +99,7 @@ bool Sonar_sim::update(void)
 
     if (ratio > 0.707)
     {
-        float new_distance = - position.pos[Z] / ratio;
+        float new_distance = - position[Z] / ratio;
 
         if (new_distance > config_.min_distance && new_distance < config_.max_distance)
         {

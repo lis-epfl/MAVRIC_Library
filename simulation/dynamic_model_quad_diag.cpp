@@ -42,6 +42,7 @@
 
 
 #include "simulation/dynamic_model_quad_diag.hpp"
+#include "sensing/ins.hpp"
 
 extern "C"
 {
@@ -76,17 +77,12 @@ Dynamic_model_quad_diag::Dynamic_model_quad_diag(Servo& servo_rear_left,
     dt_s_(0.004f)
 {
     // Init local position
-    local_position_.pos[0]  = 0.0f;
-    local_position_.pos[1]  = 0.0f;
-    local_position_.pos[2]  = 0.0f;
-    local_position_.heading = 0.0f;
-    local_position_.origin.latitude         = config_.home_coordinates[0];
-    local_position_.origin.longitude        = config_.home_coordinates[1];
-    local_position_.origin.altitude         = config_.home_coordinates[2];
-    local_position_.origin.heading          = 0.0f;
+    local_position_[0]  = 0.0f;
+    local_position_[1]  = 0.0f;
+    local_position_[2]  = 0.0f;
 
     // Init global position
-    global_position_ = coord_conventions_local_to_global_position(local_position_);
+    coord_conventions_local_to_global_position(local_position_, INS::origin(), global_position_);
 }
 
 
@@ -143,15 +139,15 @@ bool Dynamic_model_quad_diag::update(void)
     // velocity and position integration
 
     // check altitude - if it is lower than ground, clamp everything (this is in NED, assuming negative altitude)
-    if (local_position_.pos[Z] > -0.001)
+    if (local_position_[Z] > -0.001)
     {
         // vel_[Z] = 0.0f;
-        local_position_.pos[Z] = 0.0f;
+        local_position_[Z] = 0.0f;
 
         // Add resistive force towards ground, proportionnal to distance to ground
         for (i = 0; i < 3; i++)
         {
-            lin_forces_bf_[i] += up_vec.v[i] * config_.total_mass * config_.gravity + local_position_.pos[Z] * 1000.0f;
+            lin_forces_bf_[i] += up_vec.v[i] * config_.total_mass * config_.gravity + local_position_[Z] * 1000.0f;
         }
 
         // slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
@@ -191,12 +187,10 @@ bool Dynamic_model_quad_diag::update(void)
 
     for (i = 0; i < 3; i++)
     {
-        local_position_.pos[i] = local_position_.pos[i] + vel_[i] * dt_s_;
+        local_position_[i] = local_position_[i] + vel_[i] * dt_s_;
     }
 
-    local_position_.heading = coord_conventions_get_yaw(attitude_);
-
-    global_position_ = coord_conventions_local_to_global_position(local_position_);
+    coord_conventions_local_to_global_position(local_position_, INS::origin(), global_position_);
 
     return true;
 }

@@ -44,7 +44,7 @@
 #ifndef SCHEDULER_HPP_
 #define SCHEDULER_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 #include "runtime/scheduler_task.hpp"
 
 
