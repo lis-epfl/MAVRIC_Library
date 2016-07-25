@@ -439,33 +439,3 @@ void Serial_usb_stm32::irq_handler(void)
         irq_callback(this);
     }
 }
-
-//
-// #include "hal/common/time_keeper.hpp"
-//
-// int main(void)
-// {
-//     // rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_120MHZ]);
-//     rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
-//
-// 	Serial_usb_stm32 serial;
-//     serial.init();
-//
-//     time_keeper_init();
-//
-//     uint8_t endl[8] = " endl\r\n";
-// 	while (1)
-//     {
-//         // time_keeper_delay_ms(2000);
-//
-//         uint32_t len = serial.readable();
-//
-//         if (len > 10)
-//         {
-//             uint8_t buffer[len];
-//             serial.read(buffer, len);
-//             serial.write(buffer, len);
-//             serial.write(endl, 7);
-//         }
-// 	}
-// }
