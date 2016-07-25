@@ -58,8 +58,8 @@ extern "C"
  */
 typedef enum
 {
-    QUADCOPTER_MOTOR_LAYOUT_DIAG    = 0,
-    QUADCOPTER_MOTOR_LAYOUT_CROSS   = 1,
+    QUADCOPTER_MOTOR_LAYOUT_DIAG    = 0,                    ///< Motors in diagonal layout (rear_left / front-left / front-right / rear-right)
+    QUADCOPTER_MOTOR_LAYOUT_CROSS   = 1,                    ///< Motors in cross layout (left / front / right / rear)
 } quadcopter_motor_layout_t;
 
 
