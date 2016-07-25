@@ -63,7 +63,9 @@ public:
      * \brief   Configuration structure
      */
     struct conf_t
-    {};
+    {
+        bool enable_vbus_detection;     ///< Set this flag to true if VBUS is connected to MCU, false if not
+    };
 
 
     /**
@@ -175,6 +177,10 @@ private:
 Serial_usb_stm32::conf_t Serial_usb_stm32::default_config()
 {
     Serial_usb_stm32::conf_t conf = {};
+
+    // Disable VBUS detection by default
+    conf.enable_vbus_detection = false;
+
     return conf;
 }
 

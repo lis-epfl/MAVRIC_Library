@@ -52,6 +52,7 @@
 #include <stdlib.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/otg_fs.h>
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 #include <libopencm3/cm3/scb.h>
@@ -266,9 +267,19 @@ bool Serial_usb_stm32::init(void)
     rcc_periph_clock_enable(RCC_GPIOA);
     rcc_periph_clock_enable(RCC_OTGFS);
 
-    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE,
-			GPIO8 | GPIO9 | GPIO11 | GPIO12);
-    gpio_set_af(GPIOA, GPIO_AF10, GPIO8 | GPIO9 | GPIO11 | GPIO12);
+    if (config_.enable_vbus_detection)
+    {
+        // VBUS detection
+        gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO9 | GPIO11 | GPIO12);
+        gpio_set_af(GPIOA, GPIO_AF10, GPIO9 | GPIO11 | GPIO12);
+    }
+    else
+    {
+        // No VBUS detection
+        OTG_FS_GCCFG|=OTG_GCCFG_NOVBUSSENS;
+        gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO11 | GPIO12);
+        gpio_set_af(GPIOA, GPIO_AF10, GPIO11 | GPIO12);
+    }
 
     usbd_dev = usbd_init(&otgfs_usb_driver, &dev, &config,
 			usb_strings, 3,
