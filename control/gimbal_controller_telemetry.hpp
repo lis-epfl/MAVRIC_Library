@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef GIMBAL_CONTROL_TELEMETRY_H_
-#define GIMBAL_CONTROL_TELEMETRY_H_
+#ifndef GIMBAL_CONTROL_TELEMETRY_HPP_
+#define GIMBAL_CONTROL_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -72,4 +72,4 @@ void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t s
 bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, Mavlink_message_handler* message_handler);
 
 
-#endif /* GIMBAL_CONTROL_TELEMETRY_H_ */
+#endif /* GIMBAL_CONTROL_TELEMETRY_HPP_ */

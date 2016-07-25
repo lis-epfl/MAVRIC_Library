@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef FILE_FLASH_AVR32_H_
-#define FILE_FLASH_AVR32_H_
+#ifndef FILE_FLASH_AVR32_HPP_
+#define FILE_FLASH_AVR32_HPP_
 
 #include "hal/common/file.hpp"
 
@@ -150,4 +150,4 @@ public:
     bool flush();
 };
 
-#endif /* FILE_FLASH_AVR32_H_ */
+#endif /* FILE_FLASH_AVR32_HPP_ */

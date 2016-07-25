@@ -41,11 +41,8 @@
 
 
 #include "drivers/servo.hpp"
-
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-}
+
 
 
 Servo::Servo(Pwm& pwm, const servo_conf_t config):

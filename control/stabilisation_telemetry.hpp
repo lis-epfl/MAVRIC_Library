@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_telemetry.h
+ * \file stabilisation_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -40,16 +40,11 @@
  *
  ******************************************************************************/
 
-#ifndef STABILISATION_TELEMETRY_H_
-#define STABILISATION_TELEMETRY_H_
+#ifndef STABILISATION_TELEMETRY_HPP_
+#define STABILISATION_TELEMETRY_HPP_
 
 #include "control/stabilisation_copter.hpp"
 #include "communication/mavlink_stream.hpp"
-
-extern "C"
-{
-#include "control/stabilisation.h"
-}
 
 
 /**
@@ -98,4 +93,4 @@ void stabilisation_telemetry_send_control(const control_command_t* controls, con
 void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_copter, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* STABILISATION_TELEMETRY_H_ */
+#endif /* STABILISATION_TELEMETRY_HPP_ */

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_machine.h
+ * \file state_machine.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -41,21 +41,17 @@
  ******************************************************************************/
 
 
-#ifndef STATE_MACHINE_H_
-#define STATE_MACHINE_H_
+#ifndef STATE_MACHINE_HPP_
+#define STATE_MACHINE_HPP_
 
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "communication/remote.hpp"
 #include "drivers/state_display.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ahrs.hpp"
+#include "sensing/ins.hpp"
 #include "sensing/imu.hpp"
 
-
-extern "C"
-{
-#include "sensing/ahrs.h"
-}
 
 /**
  * \brief Defines the state machine structure
@@ -64,17 +60,17 @@ class State_machine
 {
 public:
     /**
-     * \brief Initialize the state machine
+     * \brief Constructor
      *
-     * \param state                     Pointer to the state structure
-     * \param gps                       Pointer to the gps structure
-     * \param imu                       Pointer to the imu structure
-     * \param manual_control            Pointer to the manual_control structure
-     *
-     * \return  True if the init succeed, false otherwise
+     * \param state                     Reference to the state
+     * \param ins                       Reference to the ins
+     * \param imu                       Reference to the imu
+     * \param ahrs                      Reference to the ahrs
+     * \param manual_control            Reference to the manual_control
+     * \param state_display             Reference to the state display
      */
     State_machine(  State& state,
-                    const Position_estimation& position_estimation,
+                    const INS& ins,
                     const Imu& imu,
                     const ahrs_t& ahrs,
                     Manual_control& manual_control,
@@ -94,11 +90,11 @@ public:
      */
     bool set_ctrl_mode(Mav_mode mode);
 
-    State& state_;                                       ///< Pointer to the state structure
-    const Position_estimation& position_estimation_;      ///< Pointer to the gps structure
-    const Imu& imu_;                                     ///< Pointer to the imu structure
-    const ahrs_t& ahrs_;                                 ///< Pointer to the attitude estimation structure
-    Manual_control& manual_control_;                     ///< Pointer to the manual_control structure
+    State& state_;                                       ///< State structure
+    const INS& ins_;                                     ///< Inertial Navigation System
+    const Imu& imu_;                                     ///< Inertial measurement unit
+    const ahrs_t& ahrs_;                                 ///< Attitude estimation
+    Manual_control& manual_control_;                     ///< Manual_control
     State_display& state_display_;                       ///< Reference to the state display
 
 private:
@@ -112,7 +108,7 @@ private:
 
     /**
      * \brief   checks if it is possible to set/clear guided flag
-     *                                                                                                                                                                                                                                                                                                   
+     *
      * \details checks if it is possible to set/clear the MAV_MODE_FLAG_GUIDED_ENABLED of state_.mav_mode_
      *          The following checks are performed:
      *          - position_estimation.healthy to set guided
@@ -125,7 +121,7 @@ private:
 
     /**
      * \brief   checks if it is possible to set/clear stabilize flag
-     *                                                                                                                                                                                                                                                                                                   
+     *
      * \details checks if it is possible to set/clear the MAV_MODE_FLAG_STABILIZE of state_.mav_mode_
      *          The following checks are performed:
      *          - imu is ready to set stabilize
@@ -147,4 +143,4 @@ private:
 
 
 
-#endif // STATE_MACHINE_H_
+#endif // STATE_MACHINE_HPP_

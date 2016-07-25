@@ -41,7 +41,7 @@
 #ifndef STRING_UTIL_HPP_
 #define STRING_UTIL_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 #include <stddef.h>
  
 namespace str

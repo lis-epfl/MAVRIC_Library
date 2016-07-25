@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef FILE_DUMMY_H_
-#define FILE_DUMMY_H_
+#ifndef FILE_DUMMY_HPP_
+#define FILE_DUMMY_HPP_
 
 #include "hal/common/file.hpp"
 
@@ -178,4 +178,4 @@ public:
     };
 };
 
-#endif /* FILE_DUMMY_H_ */
+#endif /* FILE_DUMMY_HPP_ */

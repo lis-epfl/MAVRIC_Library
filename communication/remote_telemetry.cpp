@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file remote_telemetry.c
+ * \file remote_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -42,11 +42,8 @@
 
 #include "communication/remote_telemetry.hpp"
 #include "drivers/satellite.hpp"
-
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-}
+
 
 
 //------------------------------------------------------------------------------

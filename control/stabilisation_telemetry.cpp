@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_telemetry.c
+ * \file stabilisation_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -42,12 +42,9 @@
 
 
 #include "control/stabilisation_telemetry.hpp"
-
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-#include "util/constants.h"
-}
+#include "util/constants.hpp"
+
 
 void  stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {

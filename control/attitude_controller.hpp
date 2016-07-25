@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file attitude_controller.h
+ * \file attitude_controller.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -48,17 +48,17 @@
  ******************************************************************************/
 
 
-#ifndef ATTITUDE_CONTROLLER_H_
-#define ATTITUDE_CONTROLLER_H_
+#ifndef ATTITUDE_CONTROLLER_HPP_
+#define ATTITUDE_CONTROLLER_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "control/attitude_error_estimator.hpp"
+#include "control/pid_controller.hpp"
+#include "sensing/ahrs.hpp"
 
-#include "control/attitude_error_estimator.h"
+extern "C"
+{
 #include "control/control_command.h"
-#include "sensing/ahrs.h"
-#include "control/pid_controller.h"
+}
 
 /**
  * \brief Control mode (attitude or rate)
@@ -79,6 +79,8 @@ typedef struct
     pid_controller_t            rate_pid[3];                ///< Angular rate PID controller for roll, pitch and yaw
     pid_controller_t            angle_pid[3];               ///< Attitude PID controller for roll, pitch and yaw
     attitude_controller_mode_t  mode;                       ///< Control mode: Angle (default), or rate
+    float                       dt_s;                       ///< The time interval between two updates
+    float                       last_update_s;              ///< The time of the last update in s
     const ahrs_t*               ahrs;                       ///< Pointer to attitude estimation (input)
     const attitude_command_t*   attitude_command;           ///< Pointer to attitude command (input)
     rate_command_t*             rate_command;               ///< Pointer to rate command (input/output)
@@ -121,8 +123,4 @@ bool attitude_controller_init(attitude_controller_t* controller, attitude_contro
 bool attitude_controller_update(attitude_controller_t* controller);
 
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* ATTITUDE_CONTROLLER_H_ */
+#endif /* ATTITUDE_CONTROLLER_HPP_ */

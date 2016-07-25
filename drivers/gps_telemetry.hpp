@@ -39,8 +39,8 @@
  *
  ******************************************************************************/
 
-#ifndef GPS_TELEMETRY_H_
-#define GPS_TELEMETRY_H_
+#ifndef GPS_TELEMETRY_HPP_
+#define GPS_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -66,4 +66,4 @@ bool gps_telemetry_init(Gps* gps, Mavlink_message_handler* message_handler);
 void gps_telemetry_send_raw(const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* GPS_TELEMETRY_H_ */
+#endif /* GPS_TELEMETRY_HPP_ */

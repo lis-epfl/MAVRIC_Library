@@ -43,8 +43,8 @@
 #ifndef SERVO_HPP_
 #define SERVO_HPP_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 
 #include "hal/common/pwm.hpp"
 

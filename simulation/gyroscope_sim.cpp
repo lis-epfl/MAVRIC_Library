@@ -41,11 +41,8 @@
 
 
 #include "simulation/gyroscope_sim.hpp"
+#include "util/constants.hpp"
 
-extern "C"
-{
-#include "util/constants.h"
-}
 
 Gyroscope_sim::Gyroscope_sim(Dynamic_model& dynamic_model):
     dynamic_model_(dynamic_model),

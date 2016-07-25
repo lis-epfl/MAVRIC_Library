@@ -41,12 +41,12 @@
 
 
 #include "drivers/gps_telemetry.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/maths.h"
-#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------

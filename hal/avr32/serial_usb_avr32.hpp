@@ -46,15 +46,11 @@
  *
  ******************************************************************************/
 
-#ifndef SERIAL_USB_AVR32_H_
-#define SERIAL_USB_AVR32_H_
+#ifndef SERIAL_USB_AVR32_HPP_
+#define SERIAL_USB_AVR32_HPP_
 
 #include "hal/common/serial.hpp"
 #include "util/buffer.hpp"
-
-extern "C"
-{
-}
 
 
 /**
@@ -178,4 +174,4 @@ private:
  */
 extern "C" void usb_interupt_rx_notify();
 
-#endif /* SERIAL_USB_AVR32_H_ */
+#endif /* SERIAL_USB_AVR32_HPP_ */
