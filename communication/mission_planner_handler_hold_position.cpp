@@ -73,7 +73,7 @@ void Mission_planner_handler_hold_position::handle(Mission_planner& mission_plan
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        mission_planner.dubin_state_machine(&hold_waypoint());
+        navigation_.dubin_state_machine(&hold_waypoint());
     }
 
     navigation_.goal = hold_waypoint();

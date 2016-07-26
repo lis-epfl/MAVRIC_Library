@@ -153,6 +153,13 @@ public:
     static bool update(Navigation* navigation);
 
     /**
+     * \brief   Computes the state machine for the Dubin navigation type
+     *
+     * \param   waypoint_next           The next waypoint structure
+     */
+    void dubin_state_machine(Waypoint* waypoint_next);
+
+    /**
      * \brief   default configuration for navigation
      *
      * \return default config

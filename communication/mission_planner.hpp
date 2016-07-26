@@ -127,14 +127,6 @@ public:
     static bool update(Mission_planner* mission_planner);
 
     /**
-     * \brief   Computes the state machine for the Dubin navigation type
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
-     * \param   waypoint_next_           The next waypoint structure
-     */
-    void dubin_state_machine(Waypoint* waypoint_next_);
-
-    /**
      * \brief   Check if the nav mode is not equal to the state mav mode
      *
      * \return  False if the flag STABILISE, GUIDED and ARMED are equal, true otherwise

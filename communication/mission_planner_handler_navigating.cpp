@@ -377,7 +377,7 @@ void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner
 
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
     {
-        mission_planner.dubin_state_machine(&waypoint_coordinates);
+        navigation_.dubin_state_machine(&waypoint_coordinates);
     }
 
     navigation_.goal = waypoint_coordinates;
