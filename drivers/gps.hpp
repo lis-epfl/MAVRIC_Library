@@ -43,13 +43,12 @@
 #ifndef GPS_HPP_
 #define GPS_HPP_
 
-
+#include <cstdint>
+#include <cstdbool>
 #include <array>
 
-extern "C"
-{
-#include "util/coord_conventions.h"
-}
+#include "util/coord_conventions.hpp"
+
 
 typedef enum
 {

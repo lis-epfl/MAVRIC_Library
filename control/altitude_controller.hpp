@@ -43,10 +43,11 @@
 #ifndef ALTITUDE_CONTROLLER_HPP_
 #define ALTITUDE_CONTROLLER_HPP_
 
+#include "control/pid_controller.hpp"
+
 extern "C"
 {
 #include "control/control_command.h"
-#include "control/pid_controller.h"
 #include "sensing/altitude.h"
 }
 
@@ -74,13 +75,13 @@ class Altitude_controller
 {
 public:
     Altitude_controller(const position_command_t& position_command,
-                        const altitude_t& altitude, 
+                        const altitude_t& altitude,
                         thrust_command_t& thrust_command,
                         altitude_controller_conf_t config = altitude_controller_default_config() );
 
     /**
      * \brief   Initialization
-     * 
+     *
      * \return  Success
      */
     bool init(void);
@@ -88,7 +89,7 @@ public:
 
     /**
      * \brief   Main update function
-     * 
+     *
      * \return  Success
      */
     bool update(void);

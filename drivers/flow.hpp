@@ -44,7 +44,7 @@
 
 #include "drivers/flow.hpp"
 #include "communication/mavlink_stream.hpp"
-#include <stdint.h>
+#include <cstdint>
 #include "hal/common/serial.hpp"
 
 

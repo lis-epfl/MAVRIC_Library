@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_telemetry.h
+ * \file state_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef STATE_TELEMETRY_H_
-#define STATE_TELEMETRY_H_
+#ifndef STATE_TELEMETRY_HPP_
+#define STATE_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -78,4 +78,4 @@ void state_telemetry_send_heartbeat(const State* state, const Mavlink_stream* ma
  */
 void state_telemetry_send_status(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* STATE_TELEMETRY_H_ */
+#endif /* STATE_TELEMETRY_HPP_ */

@@ -51,7 +51,7 @@
 
 extern "C"
 {
-#include <stdint.h>
+#include <cstdint>
 #include "libs/asf/common/utils/stdio/stdio_usb/stdio_usb.h"
 #include "libs/asf/common/services/usb/class/cdc/device/udi_cdc.h"
 }

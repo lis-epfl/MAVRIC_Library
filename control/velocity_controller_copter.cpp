@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file velocity_controller_copter.c
+ * \file velocity_controller_copter.cpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -41,14 +41,16 @@
  *
  ******************************************************************************/
 
+#include <array>
+
 #include "control/velocity_controller_copter.hpp"
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/quaternions.h"
-#include "util/coord_conventions.h"
 #include "util/maths.h"
-#include "util/constants.h"
 #include "util/vectors.h"
 }
 
@@ -115,14 +117,14 @@ static void get_velocity_command_from_semilocal_to_local(const velocity_controll
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const Position_estimation* pos_est, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
+bool velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const INS* ins, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
 {
     // Init dependencies
     controller->velocity_command    = velocity_command;
     controller->attitude_command    = attitude_command;
     controller->thrust_command      = thrust_command;
     controller->ahrs                = ahrs;
-    controller->pos_est             = pos_est;
+    controller->ins                 = ins;
 
     // Init hover point
     controller->thrust_hover_point = config.thrust_hover_point;
@@ -169,14 +171,15 @@ bool velocity_controller_copter_update(velocity_controller_copter_t* controller)
     }
 
     // Compute errors in local NED frame
-    errors[X] = velocity_command_local[X] - controller->pos_est->vel[X];
-    errors[Y] = velocity_command_local[Y] - controller->pos_est->vel[Y];
-    errors[Z] = velocity_command_local[Z] - controller->pos_est->vel[Z];       // WARNING: it was multiplied by (-1) in stabilisation_copter.c
+    std::array<float,3> vel = controller->ins->velocity_lf();
+    errors[X] = velocity_command_local[X] - vel[X];
+    errors[Y] = velocity_command_local[Y] - vel[Y];
+    errors[Z] = velocity_command_local[Z] - vel[Z];       // WARNING: it was multiplied by (-1) in stabilisation_copter.c
 
     // Update PID in local frame
-    thrust_vector[X] = pid_controller_update_dt(&controller->pid[X], errors[X], controller->ahrs->dt_s);                // should be multiplied by mass
-    thrust_vector[Y] = pid_controller_update_dt(&controller->pid[Y], errors[Y], controller->ahrs->dt_s);                // should be multiplied by mass
-    thrust_vector[Z] = pid_controller_update_dt(&controller->pid[Z], errors[Z], controller->ahrs->dt_s);                // should be multiplied by mass
+    thrust_vector[X] = pid_controller_update(&controller->pid[X], errors[X]);                // should be multiplied by mass
+    thrust_vector[Y] = pid_controller_update(&controller->pid[Y], errors[Y]);                // should be multiplied by mass
+    thrust_vector[Z] = pid_controller_update(&controller->pid[Z], errors[Z]);                // should be multiplied by mass
 
     // Rotate thrust vector to next semi_local frame
     aero_attitude_t attitude_yaw_inverse;

@@ -55,7 +55,7 @@
 
 #include "hal/dummy/serial_dummy.hpp"
 #include "hal/common/console.hpp"
-#include <stdint.h>
+#include <cstdint>
 
 namespace dbg
 {

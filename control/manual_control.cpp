@@ -42,11 +42,11 @@
 
 
 #include "control/manual_control.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------

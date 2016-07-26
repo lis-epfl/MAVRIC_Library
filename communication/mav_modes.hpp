@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mav_mode.h
+ * \file mav_mode.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -43,12 +43,13 @@
 #ifndef MAV_MODE_H
 #define MAV_MODE_H
 
+#include <cstdint>
+#include <cstdbool>
+
 #include "communication/mavlink_stream.hpp"
 
 extern "C"
 {
-#include <stdint.h>
-#include <stdbool.h>
 #include "util/print_util.h"
 }
 
@@ -258,7 +259,7 @@ public:
 
     /**
      * \brief   operator overload for ==  (calls this.equal(mav_mode) )
-     * 
+     *
      * \return  true if equal, else false
      */
     bool operator == (const Mav_mode& mav_mode) const {return equal(mav_mode);};

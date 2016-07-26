@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file navigation.c
+ * \file navigation.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -43,11 +43,11 @@
 #include "control/navigation.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "control/dubin.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "util/constants.h"
 }
 
 //------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ void Navigation::set_speed_command(float rel_pos[])
         }
         else
         {
-            rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y], rel_pos[X]) - position_estimation.local_position.heading);
+            rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y], rel_pos[X]) - coord_conventions_get_yaw(qe));
         }
 
         wpt_nav_controller.clip_max = cruise_speed;
@@ -199,7 +199,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
             dubin_circle(   dir_desired,
                             dubin->circle_center_1,
                             goal.radius,
-                            position_estimation.local_position.pos,
+                            ins.position_lf().data(),
                             cruise_speed,
                             one_over_scaling );
             break;
@@ -207,7 +207,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
             dubin_circle(   dir_desired,
                             dubin->circle_center_1,
                             dubin->radius_1,
-                            position_estimation.local_position.pos,
+                            ins.position_lf().data(),
                             cruise_speed,
                             one_over_scaling );
         break;
@@ -216,7 +216,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
             dubin_line( dir_desired,
                         dubin->line_direction,
                         dubin->tangent_point_2,
-                        position_estimation.local_position.pos,
+                        ins.position_lf().data(),
                         cruise_speed,
                         one_over_scaling);
         break;
@@ -225,13 +225,13 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
             dubin_circle(   dir_desired,
                             dubin->circle_center_2,
                             goal.radius,
-                            position_estimation.local_position.pos,
+                            ins.position_lf().data(),
                             cruise_speed,
                             one_over_scaling );
         break;
     }
 
-    float vert_vel = vertical_vel_gain * (goal.waypoint.pos[Z] - position_estimation.local_position.pos[Z]);
+    float vert_vel = vertical_vel_gain * (goal.position[Z] - ins.position_lf()[Z]);
 
     if (maths_f_abs(vert_vel) > max_climb_rate)
     {
@@ -255,16 +255,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
     controls_nav.tvel[Z] = dir_desired_sg[Z];
 
     float rel_heading;
-    if ((SQR(goal.waypoint.pos[X] - position_estimation.local_position.pos[X]) + SQR(goal.waypoint.pos[Y] - position_estimation.local_position.pos[Y])) <= 25.0f)
-    {
-        rel_heading = 0.0f;
-    }
-    else
-    {
-        rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - position_estimation.local_position.heading);
-    }
-    //rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - position_estimation.local_position.heading);
-    
+    rel_heading = maths_calc_smaller_angle(atan2(dir_desired[Y],dir_desired[X]) - coord_conventions_get_yaw(qe));
 
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 }
@@ -275,9 +266,9 @@ void Navigation::run()
     float rel_pos[3];
 
     // Control in translational speed of the platform
-    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(goal.waypoint.pos,
-                              rel_pos,
-                              position_estimation.local_position.pos);
+    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp( goal.position.data(),
+                                                    rel_pos,
+                                                    ins.position_lf().data());
 
     switch(navigation_strategy)
     {
@@ -298,7 +289,7 @@ void Navigation::run()
                     {
                         set_speed_command(rel_pos);
                     }
-                    
+
                 }
                 else
                 {
@@ -313,17 +304,17 @@ void Navigation::run()
         break;
     }
 
-    controls_nav.theading = goal.waypoint.heading;
+    controls_nav.theading = goal.heading;
 }
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const Position_estimation& position_estimation, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config) :
+Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config) :
     qe(qe),
     controls_nav(controls_nav),
-    position_estimation(position_estimation),
+    ins(ins),
     state(state),
     mavlink_stream(mavlink_stream)
 {
@@ -340,10 +331,10 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     controls_nav.control_mode = VELOCITY_COMMAND_MODE;
     controls_nav.yaw_mode = YAW_ABSOLUTE;
 
-    goal.waypoint.pos[X] = 0.0f;
-    goal.waypoint.pos[Y] = 0.0f;
-    goal.waypoint.pos[Z] = 0.0f;
-    goal.waypoint.heading = 0.0f;
+    goal.position[X] = 0.0f;
+    goal.position[Y] = 0.0f;
+    goal.position[Z] = 0.0f;
+    goal.heading     = 0.0f;
 
     last_update = 0;
 

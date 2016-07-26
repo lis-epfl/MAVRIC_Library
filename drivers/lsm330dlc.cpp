@@ -44,11 +44,8 @@
 
 
 #include "drivers/lsm330dlc.hpp"
-
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-}
+
 
 //using 7bits addressing instead of 8bits R/W format
 const uint8_t LSM330_ACC_SLAVE_ADDRESS      =   0b0011000;  ///< Define the Accelerometer Address, as a slave on the i2c bus

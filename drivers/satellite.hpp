@@ -43,8 +43,8 @@
 #ifndef SATELLITE_HPP_
 #define SATELLITE_HPP_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 
 /**
  * \brief Radio protocols

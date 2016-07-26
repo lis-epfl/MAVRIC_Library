@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef FILE_LINUX_H_
-#define FILE_LINUX_H_
+#ifndef FILE_LINUX_HPP_
+#define FILE_LINUX_HPP_
 
 #include "hal/common/file.hpp"
 #include <fstream>
@@ -152,4 +152,4 @@ public:
 
 };
 
-#endif /* FILE_LINUX_H_ */
+#endif /* FILE_LINUX_HPP_ */

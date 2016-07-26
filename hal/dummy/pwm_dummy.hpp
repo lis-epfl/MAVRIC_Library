@@ -42,8 +42,8 @@
  ******************************************************************************/
 
 
-#ifndef PWM_DUMMY_H_
-#define PWM_DUMMY_H_
+#ifndef PWM_DUMMY_HPP_
+#define PWM_DUMMY_HPP_
 
 #include "hal/common/pwm.hpp"
 
@@ -88,4 +88,4 @@ public:
     };
 };
 
-#endif /* PWM_DUMMY_H_ */
+#endif /* PWM_DUMMY_HPP_ */

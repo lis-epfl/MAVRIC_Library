@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file imu.h
+ * \file imu.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -45,8 +45,8 @@
 #ifndef IMU_HPP_
 #define IMU_HPP_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 #include <array>
 
 #include "drivers/accelerometer.hpp"

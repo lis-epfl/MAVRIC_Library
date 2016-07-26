@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar_telemetry.c
+ * \file sonar_telemetry.cpp
  *
 * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -41,10 +41,10 @@
 
 
 #include "drivers/sonar_telemetry.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/maths.h"
 }
 
