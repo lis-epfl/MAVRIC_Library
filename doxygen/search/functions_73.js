@@ -9,6 +9,7 @@ var searchData=
   ['serial_5fstm32',['Serial_stm32',['../classSerial__stm32.html#af96af1f9dca0ee1f8ced7f8b31f47c10',1,'Serial_stm32']]],
   ['serial_5fudp',['Serial_udp',['../classSerial__udp.html#ae661f6b19d2f11a9ad4ac1eb3685db59',1,'Serial_udp']]],
   ['serial_5fusb_5favr32',['Serial_usb_avr32',['../classSerial__usb__avr32.html#ad54bffcb2133151b1f7fc84f9ab44ad7',1,'Serial_usb_avr32']]],
+  ['serial_5fusb_5fstm32',['Serial_usb_stm32',['../classSerial__usb__stm32.html#a5b992769f070d43a724f557c38063dd7',1,'Serial_usb_stm32']]],
   ['servo',['Servo',['../classServo.html#a2a4eacedcd7b7f4728b84e07d4645e5a',1,'Servo']]],
   ['servo_5fmax',['servo_max',['../classServo.html#adc300eff0012c5912a7bc48dcb50a743',1,'Servo']]],
   ['servo_5fmin',['servo_min',['../classServo.html#ade56632653d160c3d624dd46125cef5b',1,'Servo']]],

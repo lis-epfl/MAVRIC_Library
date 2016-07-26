@@ -6,11 +6,15 @@
 <area shape="rect" id="node13" href="$classSerial__usb__avr32.html#abc619ad16623fb467f9f33a29776a2c4" title="Read bytes from the serial line." alt="" coords="228,219,383,248"/>
 <area shape="rect" id="node15" href="$classSerial__udp.html#a01a3379d58ea2790fb91e87944084f4f" title="Test if there are bytes available to read." alt="" coords="236,272,375,301"/>
 <area shape="rect" id="node19" href="$classSerial__udp.html#ad009bc0295aa5f2034f5c5d44696e0a1" title="Sends instantaneously all outgoing bytes." alt="" coords="247,325,364,355"/>
-<area shape="rect" id="node21" href="$classSerial__udp.html#ac568375e1a82264e735fd8c6b8465b85" title="Write a byte on the serial line." alt="" coords="476,351,593,380"/>
+<area shape="rect" id="node21" href="$classSerial__udp.html#ac568375e1a82264e735fd8c6b8465b85" title="Write a byte on the serial line." alt="" coords="492,351,609,380"/>
 <area shape="rect" id="node24" href="$classSerial__stm32.html#a34e71c375f4c77a42195ec027cd62c4d" title="Test if there are bytes available to read." alt="" coords="228,429,383,459"/>
 <area shape="rect" id="node28" href="$classSerial__stm32.html#a54a8c5e1d9773cde753cee32da06d5e7" title="Write bytes on the serial line." alt="" coords="239,483,372,512"/>
 <area shape="rect" id="node30" href="$classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="221,536,389,565"/>
-<area shape="rect" id="node7" href="$classSerial__avr32.html#a060ce69893b3b60a854c13ad9e7c3307" title="Read bytes from the serial line." alt="" coords="472,59,597,88"/>
-<area shape="rect" id="node17" href="$classSerial__udp.html#a6371af0a085b26e42b4afa3bcfc79e20" title="Read bytes from the serial line." alt="" coords="477,272,592,301"/>
-<area shape="rect" id="node26" href="$classSerial__stm32.html#a38437caf66eb83e0815aeb5871ac67a3" title="Read bytes from the serial line." alt="" coords="469,429,600,459"/>
+<area shape="rect" id="node32" href="$classSerial__usb__stm32.html#a0333fb682ae62e7719b92ce3a9733c6f" title="Test if there are bytes available to read." alt="" coords="215,589,396,619"/>
+<area shape="rect" id="node34" href="$classSerial__usb__stm32.html#a0e9f0cfd59054bc3eef06f0f32a74f53" title="Sends instantaneously all outgoing bytes." alt="" coords="224,643,387,672"/>
+<area shape="rect" id="node38" href="$classSerial__usb__stm32.html#ab4e52c4a8171a45233b5ed3edf366ce7" title="Read bytes from the serial line." alt="" coords="227,696,384,725"/>
+<area shape="rect" id="node7" href="$classSerial__avr32.html#a060ce69893b3b60a854c13ad9e7c3307" title="Read bytes from the serial line." alt="" coords="488,59,613,88"/>
+<area shape="rect" id="node17" href="$classSerial__udp.html#a6371af0a085b26e42b4afa3bcfc79e20" title="Read bytes from the serial line." alt="" coords="493,272,608,301"/>
+<area shape="rect" id="node26" href="$classSerial__stm32.html#a38437caf66eb83e0815aeb5871ac67a3" title="Read bytes from the serial line." alt="" coords="485,429,616,459"/>
+<area shape="rect" id="node36" href="$classSerial__usb__stm32.html#ab7d1d23330bf4ec251a5aa81d25f6806" title="Write bytes on the serial line." alt="" coords="469,643,632,672"/>
 </map>

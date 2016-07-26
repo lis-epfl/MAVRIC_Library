@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSerial__usb__stm32.html#a88f33227c5ee2a67f9e6ad86f15b8db4" title="Test if there is space available to write bytes." alt="" coords="216,5,403,35"/>
+<area shape="rect" id="node7" href="$classBuffer__tpl.html#a3e6e6b58528f9e82dde45f3d43d2186c" title="Stores data in the buffer, until the buffer is full." alt="" coords="257,59,361,88"/>
+<area shape="rect" id="node9" href="$classSerial__usb__stm32.html#a0e9f0cfd59054bc3eef06f0f32a74f53" title="Sends instantaneously all outgoing bytes." alt="" coords="228,112,391,141"/>
+<area shape="rect" id="node5" href="$classBuffer__tpl.html#a814223c9436d3a6d799850cd38c39267" title="Returns the number of free bytes in the buffer." alt="" coords="451,5,589,35"/>
+<area shape="rect" id="node11" href="$classBuffer__tpl.html#a8f0ba93f400f92c3327c891800d97c22" title="Tests whether the buffer is empty." alt="" coords="459,59,581,88"/>
+<area shape="rect" id="node13" href="$classBuffer__tpl.html#ac3079cb00ac66e37bb14429f19ec2f6c" title="Returns the number of available bytes in the buffer." alt="" coords="453,112,587,141"/>
+<area shape="rect" id="node15" href="$classBuffer__tpl.html#a05dbe8802c953c8116321ffa26b72e58" title="Get the oldest element in the buffer." alt="" coords="468,165,572,195"/>
+</map>

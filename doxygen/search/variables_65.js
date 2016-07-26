@@ -10,6 +10,7 @@ var searchData=
   ['elev',['elev',['../structubx__nav__sv__info__t.html#aa876e1007c29e5c102a2c32999cd07a3',1,'ubx_nav_sv_info_t']]],
   ['elevation',['elevation',['../structviewing__direction__t.html#a57ae63a263affe5de4385f768b25d76b',1,'viewing_direction_t::elevation()'],['../structaudio__t.html#a4251c822048470d7684bff0b64f1560c',1,'audio_t::elevation()'],['../structcurvace__scale__factor__t.html#a1c8be1117ba84ab8548a26ba8a7585e2',1,'curvace_scale_factor_t::elevation()']]],
   ['enable',['enable',['../structanalog__monitor__conf__t.html#a03d0657cc12ebd127127f8c9c2c751f2',1,'analog_monitor_conf_t::enable()'],['../structanalog__monitor__t.html#acb2b73fae9665a9df79dc81fe13bfa32',1,'analog_monitor_t::enable()']]],
+  ['enable_5fvbus_5fdetection',['enable_vbus_detection',['../structSerial__usb__stm32_1_1conf__t.html#a0f87551b4b65647cf803bb8f8ef72735',1,'Serial_usb_stm32::conf_t']]],
   ['engine_5fnav_5fsetting',['engine_nav_setting',['../structgps__t.html#a6f3d05db0625f121ee267c502db4cdd5',1,'gps_t']]],
   ['erase_5fgroup_5fsize',['erase_group_size',['../structsd__spi__t.html#a43e1b4534aa5af64389d99d254566211',1,'sd_spi_t']]],
   ['error',['error',['../structpid__controller__t.html#a8ed90ee7713408394747f92385718212',1,'pid_controller_t']]],

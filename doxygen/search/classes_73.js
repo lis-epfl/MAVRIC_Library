@@ -17,6 +17,7 @@ var searchData=
   ['serial_5fudp_5fconf_5ft',['serial_udp_conf_t',['../structserial__udp__conf__t.html',1,'']]],
   ['serial_5fusb_5favr32',['Serial_usb_avr32',['../classSerial__usb__avr32.html',1,'']]],
   ['serial_5fusb_5favr32_5fconf_5ft',['serial_usb_avr32_conf_t',['../structserial__usb__avr32__conf__t.html',1,'']]],
+  ['serial_5fusb_5fstm32',['Serial_usb_stm32',['../classSerial__usb__stm32.html',1,'']]],
   ['servo',['Servo',['../classServo.html',1,'']]],
   ['servo_5fconf_5ft',['servo_conf_t',['../structservo__conf__t.html',1,'']]],
   ['servo_5fmix_5fbirotor_5fconf_5ft',['servo_mix_birotor_conf_t',['../structservo__mix__birotor__conf__t.html',1,'']]],
