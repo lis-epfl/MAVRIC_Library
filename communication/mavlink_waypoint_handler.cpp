@@ -688,7 +688,7 @@ void Mavlink_waypoint_handler::nav_plan_init()
             && (!state_.nav_plan_active)
             && (!navigation_.waiting_at_waypoint()))
     {
-        update_current_waypoint(&navigation_.dubin_state);
+        navigation_.dubin_state = DUBIN_INIT;
 
         state_.nav_plan_active = true;
 
@@ -723,18 +723,6 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
                 waypoint_onboard_count_ = 0;
             }
         }
-    }
-}
-
-void Mavlink_waypoint_handler::update_current_waypoint(dubin_state_t* dubin_state)
-{
-    if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
-    {
-        //waypoint_list_[current_waypoint_index_].update();
-        *dubin_state = DUBIN_INIT;
-        print_util_dbg_print("Waypoint Nr");
-        print_util_dbg_print_num(current_waypoint_index_, 10);
-        print_util_dbg_print(" set,\r\n");
     }
 }
 

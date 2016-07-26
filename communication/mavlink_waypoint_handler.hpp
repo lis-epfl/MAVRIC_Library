@@ -141,11 +141,6 @@ public:
     void control_time_out_waypoint_msg();
 
     /**
-     * \brief   Updates the waypoint if necessary and sets dubin_state to init
-     */
-    void update_current_waypoint(dubin_state_t* dubin_state);
-
-    /**
      * \brief   Gets the current waypoint index
      *
      * \return  Current waypoint index
