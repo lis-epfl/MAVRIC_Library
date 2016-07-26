@@ -148,39 +148,16 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
             if ((waypoint_handler_.current_waypoint().autocontinue() == 1) && (waypoint_handler_.waypoint_count() > 1))
             {
                 // Get references for calculations
-                //Waypoint& current = mavlink_waypoint_handler_.current_waypoint();
-                //Waypoint& next = mavlink_waypoint_handler_.next_waypoint();
+                Waypoint& current = mavlink_waypoint_handler_.current_waypoint();
+                Waypoint& next = mavlink_waypoint_handler_.next_waypoint();
 
-                // Set new waypoint to advance
+                // Set new waypoint to hold position
                 if (navigation_.waiting_at_waypoint())
                 {
-                    waypoint_handler_.advance_to_next_waypoint();
-                    dubin_state_t dubin_state;
-                    waypoint_handler_.update_current_waypoint(&dubin_state);
                     navigation_.set_waiting_at_waypoint(false);
-
-                    // Update output to be the new waypoint
-                    waypoint_coordinates = waypoint_handler_.current_waypoint();
-
-                    // Temporary
-                    print_util_dbg_print("Autocontinue towards waypoint Nr");
-                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
-                    print_util_dbg_print("\r\n");
-                    navigation_.dubin_state = DUBIN_INIT;
-                    navigation_.set_start_wpt_time();
-
-                    // Send message
-                    mavlink_message_t msg;
-                    mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
-                                                     mavlink_stream_.compid(),
-                                                     &msg,
-                                                     waypoint_handler_.current_waypoint_index());
-                    mavlink_stream_.send(&msg);
-                    // End temporary
-
                 }
-                /*
-                // Determine geometry information between waypoints
+
+                // Determine geometry information between waypoints to know if we should advance
                 for (i=0;i<3;i++)
                 {
                     rel_pos[i] = next.local_pos()[i] - waypoint_coordinates_.waypoint[i];
@@ -202,10 +179,11 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 // float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
                 float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(vel[Y], vel[X]));
 
-                if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) ||
-                    (current_waypoint_.command == MAV_CMD_NAV_LAND) ||
-                    (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) ||
-                    (current.param2() == 0.0f) )
+                // Advance if...
+                if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) ||             // We are facing the right direction if we are in dubin
+                    (current_waypoint_.command == MAV_CMD_NAV_LAND) ||                          // If we are supposed to land
+                    (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) ||   // If we are in direct to
+                    (current.param2() == 0.0f) )                                                // Or if the radius is 0 (effectively direct to) ???? TODO check
                 {
                     print_util_dbg_print("Autocontinue towards waypoint Nr");
                     print_util_dbg_print_num(current_waypoint_index_,10);
@@ -213,11 +191,11 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
 
                     start_wpt_time_ = time_keeper_get_ms();
 
-                    waypoint_list[current_waypoint_index_].current = 1;
-                    next_waypoint_.current = 0;
-                    current_waypoint_ = waypoint_list[current_waypoint_index_];
-                    waypoint_coordinates_ = waypoint_next_;
+                    waypoint_handler_.advance_to_next_waypoint();
                     navigation_.dubin_state = DUBIN_INIT;
+
+                    // Update output to be the new waypoint
+                    waypoint_coordinates = waypoint_handler_.current_waypoint();
 
                     // Send message
                     mavlink_message_t msg;
@@ -226,7 +204,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                                                      &msg,
                                                      current_waypoint_index_);
                     mavlink_stream_.send(&msg);
-                }*/
+                }
             }
             else // If no autocontinue ...
             {
