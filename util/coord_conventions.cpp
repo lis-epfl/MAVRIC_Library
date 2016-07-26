@@ -41,11 +41,16 @@
 
 
 #include "util/coord_conventions.hpp"
-#include <math.h>
+#include "util/constants.hpp"
+
+#include <cmath>
+
+extern "C"
+{
 #include "util/maths.h"
 #include "util/print_util.h"
 #include "util/quick_trig.h"
-#include "util/constants.hpp"
+}
 
 void coord_conventions_local_to_global_position(const local_position_t& input, const global_position_t& origin, global_position_t& output)
 {

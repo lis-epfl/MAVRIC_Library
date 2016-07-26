@@ -48,6 +48,11 @@ extern "C"
 #include "util/maths.h"
 }
 
+Barometer::Barometer() :
+    has_been_calibrated_(false)
+{
+
+}
 
 const float& Barometer::last_update_us(void) const
 {
@@ -78,11 +83,16 @@ const float& Barometer::temperature(void) const
     return temperature_;
 }
 
+bool Barometer::has_been_calibrated() const
+{
+    return has_been_calibrated_;
+}
 
 void Barometer::calibrate_bias(float current_altitude_gf)
 {
     altitude_bias_gf_ = altitude_filtered - current_altitude_gf;
     altitude_gf_ = current_altitude_gf;
+    has_been_calibrated_ = true;
 }
 
 

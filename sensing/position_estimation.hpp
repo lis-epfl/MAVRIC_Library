@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_estimation.h
+ * \file position_estimation.hpp
  *
  * \author MAV'RIC Team
  *
@@ -215,7 +215,6 @@ private:
     float dt_s_;                            ///< Time interval between updates
     float last_update_s_;                   ///< Last update time in seconds
     bool init_gps_position;                 ///< Boolean flag ensuring that the GPS was initialized
-    bool init_barometer;                    ///< Boolean flag ensuring that the barometer was initialized
 
 
     float last_alt;                         ///< Value of the last altitude estimation

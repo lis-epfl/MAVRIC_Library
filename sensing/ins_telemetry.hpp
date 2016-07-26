@@ -51,7 +51,7 @@
  *
  * \brief   Function to send the MAVLink position estimation message
  *
- * \param   ins                     The pointer to the ins
+ * \param   ins                     The pointer to the Inertial Navigation System
  * \param   mavlink_stream          The pointer to the MAVLink stream
  * \param   msg                     The pointer to the MAVLink message
  */

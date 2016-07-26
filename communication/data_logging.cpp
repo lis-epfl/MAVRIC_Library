@@ -43,7 +43,7 @@
 #include "communication/data_logging.hpp"
 
 #include <cstdlib>
-#include <math.h>
+#include <cmath>
 #include <string>
 
 #include "hal/common/time_keeper.hpp"

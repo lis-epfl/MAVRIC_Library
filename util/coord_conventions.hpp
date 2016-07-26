@@ -46,7 +46,11 @@
 #include <cstdint>
 #include <array>
 
+extern "C"
+{
 #include "util/quaternions.h"
+}
+
 
 #define EARTH_RADIUS 6378137.0f                 ///< radius of the earth in meters
 
