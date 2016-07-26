@@ -58,8 +58,8 @@ extern "C"
  */
 typedef enum
 {
-    QUADCOPTER_MOTOR_LAYOUT_DIAG    = 0,
-    QUADCOPTER_MOTOR_LAYOUT_CROSS   = 1,
+    QUADCOPTER_MOTOR_LAYOUT_DIAG    = 0,                    ///< Motors in diagonal layout (rear_left / front-left / front-right / rear-right)
+    QUADCOPTER_MOTOR_LAYOUT_CROSS   = 1,                    ///< Motors in cross layout (left / front / right / rear)
 } quadcopter_motor_layout_t;
 
 
@@ -87,7 +87,7 @@ typedef struct
     float last_update_s;                                        ///< Last update in seconds
     control_command_t* controls;                                ///< The pointer to the control structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
-    const INS* ins;                                             ///< The pointer to the INS
+    const INS* ins;                                             ///< The pointer to the Inertial Navigation System
     torque_command_t* torque_command;                           ///< The pointer to the torque command structure
     thrust_command_t* thrust_command;                           ///< The pointer to the thrust command structure
 } stabilisation_copter_t;
@@ -116,7 +116,6 @@ typedef struct
  * \return  True if the init succeed, false otherwise
  */
 bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const INS* ins, torque_command_t* torque, thrust_command_t* thrust);
-
 
 /**
  * \brief                           Main Controller for controlling and stabilizing the quad

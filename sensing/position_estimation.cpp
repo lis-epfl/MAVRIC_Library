@@ -135,7 +135,7 @@ void Position_estimation::position_correction()
     // uint32_t t_inter_baro;
     int32_t i;
 
-    if (init_barometer)
+    if (barometer.has_been_calibrated())
     {
         // altimeter correction
         if (time_last_barometer_msg < barometer.last_update_us())
@@ -152,10 +152,13 @@ void Position_estimation::position_correction()
     }
     else
     {
-        // Correct barometer bias
-        float current_altitude_gf = - local_position[Z] + origin_.altitude;
-        barometer.calibrate_bias(current_altitude_gf);
-        init_barometer = true;
+        // Wait for gps to initialized as we need an absolute altitude
+        if (init_gps_position)
+        {
+            // Correct barometer bias
+            float current_altitude_gf = - local_position[Z] + origin_.altitude;
+            barometer.calibrate_bias(current_altitude_gf);
+        }
     }
 
     if (init_gps_position)
@@ -325,7 +328,6 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         dt_s_(0.0f),
         last_update_s_(0.0f),
         init_gps_position(false),
-        init_barometer(false),
         last_alt(0),
         last_vel{0.0f,0.0f,0.0f},
         gravity(config.gravity),
@@ -395,18 +397,20 @@ void Position_estimation::reset_home_position()
     //}
 
     // Correct barometer bias
-    float current_altitude_gf = - local_position[Z]
-                                + origin_.altitude;
-    barometer.calibrate_bias(current_altitude_gf);
-    init_barometer = true;
+    if (init_gps_position)
+    {
+        float current_altitude_gf = - local_position[Z]
+                                    + origin_.altitude;
+        barometer.calibrate_bias(current_altitude_gf);
 
-    print_util_dbg_print("Offset of the barometer set to the GPS altitude, new altitude of:");
-    print_util_dbg_print_num(barometer.altitude_gf(), 10);
-    print_util_dbg_print(" ( ");
-    print_util_dbg_print_num(local_position[2], 10);
-    print_util_dbg_print("  ");
-    print_util_dbg_print_num(origin_.altitude, 10);
-    print_util_dbg_print(" )\r\n");
+        print_util_dbg_print("Offset of the barometer set to the GPS altitude, new altitude of:");
+        print_util_dbg_print_num(barometer.altitude_gf(), 10);
+        print_util_dbg_print(" ( ");
+        print_util_dbg_print_num(local_position[2], 10);
+        print_util_dbg_print("  ");
+        print_util_dbg_print_num(origin_.altitude, 10);
+        print_util_dbg_print(" )\r\n");
+    }
 
     // reset position estimator
     last_alt = 0;

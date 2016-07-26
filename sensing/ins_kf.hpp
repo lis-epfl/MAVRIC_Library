@@ -115,7 +115,7 @@ public:
         float dt;
         float sigma_gps_xy;
         float sigma_gps_z;
-        global_position_t home;
+        global_position_t origin;
     };
 
     /**
@@ -194,18 +194,18 @@ private:
 
     conf_t config_;                      ///< Configuration
 
-    std::array<float,3> pos_;
-    std::array<float,3> vel_;
-    float absolute_altitude_;
+    std::array<float,3> pos_;           ///< Estimated position (NED)
+    std::array<float,3> vel_;           ///< Estimated velocity (NED)
+    float absolute_altitude_;           ///< Estimated altitude above sea level
 
-    Mat<3,8> H_gpsvel_;
-    Mat<3,3> R_gpsvel_;
-    Mat<1,8> H_baro_;
-    Mat<1,1> R_baro_;
-    Mat<1,8> H_sonar_;
-    Mat<1,1> R_sonar_;
-    Mat<3,8> H_flow_;
-    Mat<3,3> R_flow_;
+    Mat<3,8> H_gpsvel_;                 ///< Measurement matrix for GPS velocity
+    Mat<3,3> R_gpsvel_;                 ///< Noise matrix for GPS velocity
+    Mat<1,8> H_baro_;                   ///< Measurement matrix for barometer
+    Mat<1,1> R_baro_;                   ///< Noise matrix for barometer
+    Mat<1,8> H_sonar_;                  ///< Measurement matrix for sonar
+    Mat<1,1> R_sonar_;                  ///< Noise matrix for sonar
+    Mat<3,8> H_flow_;                   ///< Measurement matrix for optic flow
+    Mat<3,3> R_flow_;                   ///< Noise matrix for optic flow
 
     float last_accel_update_s_;          ///< Last time we updated the estimate using accelerometer
     float last_sonar_update_s_;          ///< Last time we updated the estimate using sonar
@@ -230,8 +230,8 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.sigma_gps_z  = 0.001f;
 
 
-    //default home location (EFPL Esplanade)
-    conf.home = ORIGIN_EPFL;
+    //default origin location (EFPL Esplanade)
+    conf.origin = ORIGIN_EPFL;
 
     return conf;
 };

@@ -383,8 +383,7 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-
-bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command)
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command, const vector_field_waypoint_conf_t* config)
 {
     // Init dependencies
     vector_field->waypoint_handler  = waypoint_handler;

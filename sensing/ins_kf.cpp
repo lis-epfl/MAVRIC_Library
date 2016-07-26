@@ -82,6 +82,7 @@ INS_kf::INS_kf(const Gps& gps,
                    0,                   config.dt,           0,
                    0,                   0,                   config.dt,
                    0,                   0,                   0}),                                // B
+    INS(config.origin),
     gps_(gps),
     barometer_(barometer),
     sonar_(sonar),

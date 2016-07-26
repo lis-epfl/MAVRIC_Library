@@ -72,7 +72,7 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   ins                     The reference to the ins class
+     * \param   ins                     The reference to the Inertial Navigation System
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      * \param   message_handler         The reference to the message handler

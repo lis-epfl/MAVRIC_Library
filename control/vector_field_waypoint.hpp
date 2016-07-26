@@ -75,12 +75,12 @@ typedef struct
  * \brief                       Initialises the attitude controller structure
  *
  * \param   vector_field        Pointer to data structure
- * \param   config              Pointer to configuration
  * \param   waypoint_handler    Pointer to waypoint list (input)
- * \param   ins                 Pointer to the intertial navigation system (input)
+ * \param   ins                 Pointer to the Inertial Navigation System (input)
  * \param   velocity_command    Pointer to velocity command (output)
+ * \param   config              Pointer to configuration
  */
-bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command);
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command, const vector_field_waypoint_conf_t* config);
 
 
 /**

@@ -140,6 +140,9 @@ public:
     /**
      * \brief     Get value of i-th element in buffer, but does not modify anything
      *
+     * \param     index     Index of the element to read (input)
+     * \param     elem      Returned element (output)
+     *
      * \return    success (false if does not exist)
      */
     bool get_element(uint32_t index, T& elem) const;

@@ -731,7 +731,6 @@ void Mavlink_waypoint_handler::update_current_waypoint(dubin_state_t* dubin_stat
     {
         //waypoint_list_[current_waypoint_index_].update();
         *dubin_state = DUBIN_INIT;
-
         print_util_dbg_print("Waypoint Nr");
         print_util_dbg_print_num(current_waypoint_index_, 10);
         print_util_dbg_print(" set,\r\n");
