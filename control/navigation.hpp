@@ -167,6 +167,22 @@ public:
     static inline conf_t default_wing_config();
 
     /**
+     * \brief   Gets the reference to the goal waypoint
+     *
+     * \return  goal
+     */
+    Waypoint& goal();
+
+    /**
+     * \brief   Sets the goal to be equal to the waypoint inputted
+     *
+     * Does not override the dubin structure of the waypoint.
+     *
+     * \param   wpt     The new waypoint goal
+     */
+    void set_goal(Waypoint wpt);
+
+    /**
      * \brief   Sets the start_wpt_time_ to the current time
      */
     void set_start_wpt_time();
@@ -208,8 +224,6 @@ public:
 
     strategy_t navigation_strategy;                     ///< The type of navigation strategy
 
-    Waypoint goal;                                     ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
-
     float alt_lpf;                                      ///< The low-pass filtered altitude for auto-landing
     float LPF_gain;                                     ///< The value of the low-pass filter gain
 
@@ -224,6 +238,8 @@ public:
 private:
     bool waiting_at_waypoint_;                          ///< Flag stating if the drone is currently at a waypoint waiting to advance
     uint32_t start_wpt_time_;                           ///< The time at which the MAV starts to travel towards its waypoint
+
+    Waypoint goal_;                                     ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
 
     float dt;                                           ///< The time interval between two navigation updates
     uint32_t last_update;                               ///< The time of the last navigation update in ms

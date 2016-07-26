@@ -482,7 +482,7 @@ bool Mission_planner::update(Mission_planner* mission_planner)
                 {
                     mission_planner->critical_handler();
 
-                    mission_planner->navigation_.goal = mission_planner->waypoint_critical_coordinates_;
+                    mission_planner->navigation_.set_goal(mission_planner->waypoint_critical_coordinates_);
                 }
             }
             break;

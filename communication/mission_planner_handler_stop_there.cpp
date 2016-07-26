@@ -78,7 +78,7 @@ void Mission_planner_handler_stop_there::handle(Mission_planner& mission_planner
 
     stopping_handler(mission_planner);
 
-    navigation_.goal = hold_waypoint();
+    navigation_.set_goal(hold_waypoint());
 
     if (mode_local.is_manual())
     {

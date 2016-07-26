@@ -191,7 +191,7 @@ void Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
 
     bool takeoff_result = take_off_handler(mission_planner);
 
-    navigation_.goal = hold_waypoint();
+    navigation_.set_goal(hold_waypoint());
 
     if (takeoff_result)
     {

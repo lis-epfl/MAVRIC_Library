@@ -334,6 +334,11 @@ uint8_t Waypoint::autocontinue() const
     return autocontinue_;
 }
 
+void Waypoint::set_autocontinue(uint8_t autocontinue)
+{
+    autocontinue_ = autocontinue;
+}
+
 float Waypoint::param1() const
 {
     return param1_;

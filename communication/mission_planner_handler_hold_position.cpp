@@ -71,7 +71,7 @@ void Mission_planner_handler_hold_position::handle(Mission_planner& mission_plan
 {
     Mav_mode mode_local = state_.mav_mode();
 
-    navigation_.goal = hold_waypoint();
+    navigation_.set_goal(hold_waypoint());
 
     if (mode_local.is_auto())
     {

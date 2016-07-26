@@ -375,7 +375,7 @@ void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner
     Waypoint waypoint_coordinates;
     waypoint_navigating_handler(mission_planner, new_mode, waypoint_coordinates);
 
-    navigation_.goal = waypoint_coordinates;
+    navigation_.set_goal(waypoint_coordinates);
 
     if (!mode_local.is_auto())
     {

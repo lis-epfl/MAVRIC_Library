@@ -171,6 +171,13 @@ public:
     uint8_t autocontinue() const;
 
     /**
+     * \brief   Sets the autocontinue
+     *
+     * \param   autocontinue
+     */
+    void set_autocontinue(uint8_t autocontinue);
+
+    /**
      * \brief   Gets param1 of the waypoint
      *
      * \return  param1

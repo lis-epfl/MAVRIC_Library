@@ -222,10 +222,10 @@ void Mission_planner_handler_landing::dubin_hold_init(local_position_t local_pos
             // Staying on the waypoint
             for (int i = 0; i < 3; ++i)
             {
-                hold_waypoint().dubin().circle_center_2[i] = navigation_.goal.dubin().circle_center_1[i];
+                hold_waypoint().dubin().circle_center_2[i] = navigation_.goal().dubin().circle_center_1[i];
             }
 
-            hold_waypoint().set_radius(navigation_.goal.dubin().radius_1);
+            hold_waypoint().set_radius(navigation_.goal().dubin().radius_1);
             hold_waypoint().set_heading(coord_conventions_get_yaw(ahrs_.qe));
 
             navigation_.dubin_state = DUBIN_CIRCLE2;
@@ -266,7 +266,7 @@ void Mission_planner_handler_landing::dubin_hold_init(local_position_t local_pos
             {
                 waypoint_hold_coordinates = navigation_.goal;
             }*/
-            set_hold_waypoint(navigation_.goal);
+            set_hold_waypoint(navigation_.goal());
 
             print_util_dbg_print("DUBIN_CIRCLE2: Position hold at: (");
             print_util_dbg_print_num(hold_waypoint().local_pos()[X],10);
@@ -327,7 +327,7 @@ void Mission_planner_handler_landing::handle(Mission_planner& mission_planner)
 
     auto_landing_handler(mission_planner);
 
-    navigation_.goal = hold_waypoint();
+    navigation_.set_goal(hold_waypoint());
 
     if (mode_local.is_manual())
     {
