@@ -467,7 +467,7 @@ bool Mission_planner::update(Mission_planner* mission_planner)
             mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
             mission_planner->critical_next_state_ = false;
 
-            if (!mission_planner->state_.nav_plan_active)
+            if (!mission_planner->state_.nav_plan_active && !mission_planner->navigation_.waiting_at_waypoint())
             {
                 // Reset dubin
                 mission_planner->navigation_.dubin_state = DUBIN_INIT;
