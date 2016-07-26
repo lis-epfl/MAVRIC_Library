@@ -214,7 +214,6 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
     {
         waypoint_coordinates = hold_waypoint();
         waypoint_coordinates.set_radius(navigation_.minimal_radius);
-        navigation_.dubin_state = DUBIN_INIT;
     }
 }
 

@@ -130,6 +130,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
         mission_planner->navigation_.set_start_wpt_time();
         mission_planner->navigation_.set_waiting_at_waypoint(false);
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
+        mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
         mission_planner->navigation_.dubin_state = DUBIN_INIT;
 
         mavlink_message_t msg;

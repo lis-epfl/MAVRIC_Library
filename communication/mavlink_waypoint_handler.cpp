@@ -387,6 +387,7 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
             waypoint_handler->state_.nav_plan_active = false;
             waypoint_handler->navigation_.set_waiting_at_waypoint(false);
             waypoint_handler->nav_plan_init();
+            waypoint_handler->navigation_.set_goal(waypoint_handler->current_waypoint());
         }
         else
         {
