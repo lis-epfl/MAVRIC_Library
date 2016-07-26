@@ -175,12 +175,12 @@ private:
 
 
     /**
-     * \brief   Function to put a \r or a \n after the data logging parameter value (\r between them and \n and the end)
+     * \brief   Function to put a "," or a "\n" after the data logging parameter value ("," between them and "\n" and the end)
      *
      * \param   data_logging            The pointer to the data logging structure
      * \param   param_num               The index of the data logging parameter
      */
-    void put_r_or_n(uint16_t param_num);
+    void write_separator(uint16_t param_num);
 
 
     /**
