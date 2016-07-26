@@ -266,6 +266,7 @@ void Navigation::dubin_state_machine()
                                             dir_final,
                                             maths_sign(end_radius));
 
+                print_util_dbg_print("Entering DUBIN_CIRCLE_1\r\n");
                 dubin_state = DUBIN_CIRCLE1;
             }
             else
@@ -280,12 +281,12 @@ void Navigation::dubin_state_machine()
                 }
                 goal.dubin().circle_center_2[Z] = 0.0f;
 
+                print_util_dbg_print("Entering DUBIN_CIRCLE_2\r\n");
                 dubin_state = DUBIN_CIRCLE2;
             }
 
             break;
         case DUBIN_CIRCLE1:
-            //print_util_dbg_print("DUBIN_CIRCLE1\r\n");
             for (uint8_t i = 0; i < 2; ++i)
             {
                 rel_pos[i] = goal.dubin().tangent_point_2[i] - pos[i];
@@ -294,11 +295,11 @@ void Navigation::dubin_state_machine()
 
             if (maths_f_abs(heading_diff) < heading_acceptance)
             {
+                print_util_dbg_print("Entering DUBIN_STRAIGHT\r\n");
                 dubin_state = DUBIN_STRAIGHT;
             }
             break;
         case DUBIN_STRAIGHT:
-            //print_util_dbg_print("DUBIN_STRAIGHT\r\n");
             for (uint8_t i = 0; i < 2; ++i)
             {
                 rel_pos[i] = goal.dubin().tangent_point_2[i] - pos[i];
@@ -307,11 +308,11 @@ void Navigation::dubin_state_machine()
             scalar_product = rel_pos[X] * goal.dubin().line_direction[X] + rel_pos[Y] * goal.dubin().line_direction[Y];
             if (scalar_product < 0.0f)
             {
+                print_util_dbg_print("Entering DUBIN_CIRCLE_2\r\n");
                 dubin_state = DUBIN_CIRCLE2;
             }
 
         case DUBIN_CIRCLE2:
-            //print_util_dbg_print("DUBIN_CIRCLE2\r\n");
         break;
     }
 }
@@ -515,6 +516,12 @@ bool Navigation::update(Navigation* navigation)
     navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
     navigation->last_update = t;
 
+    // Update the dubin structure
+    if (navigation->navigation_strategy == strategy_t::DUBIN)
+    {
+        navigation->dubin_state_machine();
+    }
+
     switch (navigation->state.mav_state_)
     {
         case MAV_STATE_STANDBY:
@@ -554,11 +561,6 @@ bool Navigation::update(Navigation* navigation)
             navigation->controls_nav.tvel[Y] = 0.0f;
             navigation->controls_nav.tvel[Z] = 0.0f;
             break;
-    }
-
-    if (navigation->navigation_strategy == strategy_t::DUBIN)
-    {
-        navigation->dubin_state_machine();
     }
 
     return true;
