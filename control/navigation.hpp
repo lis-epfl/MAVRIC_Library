@@ -153,13 +153,6 @@ public:
     static bool update(Navigation* navigation);
 
     /**
-     * \brief   Computes the state machine for the Dubin navigation type
-     *
-     * \param   waypoint_next           The next waypoint structure
-     */
-    void dubin_state_machine(Waypoint* waypoint_next);
-
-    /**
      * \brief   default configuration for navigation
      *
      * \return default config
@@ -253,6 +246,13 @@ private:
     * \param   navigation          Pointer to navigation
     */
     void set_dubin_velocity(dubin_t* dubin);
+
+    /**
+     * \brief   Computes the state machine for the Dubin navigation type
+     *
+     * \param   waypoint_next           The next waypoint structure
+     */
+    void dubin_state_machine();
 
     /**
      * \brief                       Navigates the robot towards waypoint waypoint_input in 3D velocity command mode

@@ -186,7 +186,7 @@ void Navigation::set_speed_command(float rel_pos[])
     }
 }
 
-void Navigation::dubin_state_machine(Waypoint* next_waypoint)
+void Navigation::dubin_state_machine()
 {
     float rel_pos[3];
 
@@ -228,7 +228,7 @@ void Navigation::dubin_state_machine(Waypoint* next_waypoint)
 
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = next_waypoint->local_pos()[i]- pos[i];
+                rel_pos[i] = goal.local_pos()[i]- pos[i];
             }
             rel_pos[Z] = 0.0f;
 
@@ -241,13 +241,13 @@ void Navigation::dubin_state_machine(Waypoint* next_waypoint)
                 vectors_normalize(rel_pos,rel_pos_norm);
 
                 float end_radius;
-                if (next_waypoint->radius() < minimal_radius)
+                if (goal.radius() < minimal_radius)
                 {
                     end_radius = minimal_radius;
                 }
                 else
                 {
-                    end_radius = next_waypoint->radius();
+                    end_radius = goal.radius();
                 }
 
                 dir_final[X] = -rel_pos_norm[Y]*end_radius;
@@ -256,15 +256,15 @@ void Navigation::dubin_state_machine(Waypoint* next_waypoint)
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    pos_goal[i] = next_waypoint->local_pos()[i] + (rel_pos_norm[i] * maths_f_abs(next_waypoint->radius()));
+                    pos_goal[i] = goal.local_pos()[i] + (rel_pos_norm[i] * maths_f_abs(goal.radius()));
                 }
                 pos_goal[Z] = 0.0f;
 
-                next_waypoint->dubin() = dubin_2d(  pos.data(),
-                                                    pos_goal,
-                                                    dir_init,
-                                                    dir_final,
-                                                    maths_sign(end_radius));
+                goal.dubin() = dubin_2d(    pos.data(),
+                                            pos_goal,
+                                            dir_init,
+                                            dir_final,
+                                            maths_sign(end_radius));
 
                 dubin_state = DUBIN_CIRCLE1;
             }
@@ -276,9 +276,9 @@ void Navigation::dubin_state_machine(Waypoint* next_waypoint)
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    next_waypoint->dubin().circle_center_2[i] = pos[i];
+                    goal.dubin().circle_center_2[i] = pos[i];
                 }
-                next_waypoint->dubin().circle_center_2[Z] = 0.0f;
+                goal.dubin().circle_center_2[Z] = 0.0f;
 
                 dubin_state = DUBIN_CIRCLE2;
             }
@@ -288,7 +288,7 @@ void Navigation::dubin_state_machine(Waypoint* next_waypoint)
             //print_util_dbg_print("DUBIN_CIRCLE1\r\n");
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - pos[i];
+                rel_pos[i] = goal.dubin().tangent_point_2[i] - pos[i];
             }
             heading_diff = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(vel[Y], vel[X]));
 
@@ -301,10 +301,10 @@ void Navigation::dubin_state_machine(Waypoint* next_waypoint)
             //print_util_dbg_print("DUBIN_STRAIGHT\r\n");
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = next_waypoint->dubin().tangent_point_2[i] - pos[i];
+                rel_pos[i] = goal.dubin().tangent_point_2[i] - pos[i];
             }
 
-            scalar_product = rel_pos[X] * next_waypoint->dubin().line_direction[X] + rel_pos[Y] * next_waypoint->dubin().line_direction[Y];
+            scalar_product = rel_pos[X] * goal.dubin().line_direction[X] + rel_pos[Y] * goal.dubin().line_direction[Y];
             if (scalar_product < 0.0f)
             {
                 dubin_state = DUBIN_CIRCLE2;
@@ -554,6 +554,11 @@ bool Navigation::update(Navigation* navigation)
             navigation->controls_nav.tvel[Y] = 0.0f;
             navigation->controls_nav.tvel[Z] = 0.0f;
             break;
+    }
+
+    if (navigation->navigation_strategy == strategy_t::DUBIN)
+    {
+        navigation->dubin_state_machine();
     }
 
     return true;

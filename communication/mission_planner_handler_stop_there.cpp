@@ -77,10 +77,6 @@ void Mission_planner_handler_stop_there::handle(Mission_planner& mission_planner
     Mav_mode mode_local = state_.mav_mode();
 
     stopping_handler(mission_planner);
-    if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
-    {
-        navigation_.dubin_state_machine(&hold_waypoint());
-    }
 
     navigation_.goal = hold_waypoint();
 
