@@ -148,8 +148,8 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
             if ((waypoint_handler_.current_waypoint().autocontinue() == 1) && (waypoint_handler_.waypoint_count() > 1))
             {
                 // Get references for calculations
-                Waypoint& current = mavlink_waypoint_handler_.current_waypoint();
-                Waypoint& next = mavlink_waypoint_handler_.next_waypoint();
+                Waypoint& current = waypoint_handler_.current_waypoint();
+                Waypoint& next = waypoint_handler_.next_waypoint();
 
                 // Set new waypoint to hold position
                 if (navigation_.waiting_at_waypoint())
@@ -160,7 +160,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 // Determine geometry information between waypoints to know if we should advance
                 for (i=0;i<3;i++)
                 {
-                    rel_pos[i] = next.local_pos()[i] - waypoint_coordinates_.waypoint[i];
+                    rel_pos[i] = next.local_pos()[i] - waypoint_coordinates.local_pos()[i];
                 }
 
                 float rel_pos_norm[3];
@@ -177,19 +177,20 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 }
 
                 // float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
+                std::array<float,3> vel = ins_.velocity_lf();
                 float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(vel[Y], vel[X]));
 
                 // Advance if...
                 if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) ||             // We are facing the right direction if we are in dubin
-                    (current_waypoint_.command == MAV_CMD_NAV_LAND) ||                          // If we are supposed to land
+                    (current.command() == MAV_CMD_NAV_LAND) ||                          // If we are supposed to land
                     (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) ||   // If we are in direct to
                     (current.param2() == 0.0f) )                                                // Or if the radius is 0 (effectively direct to) ???? TODO check
                 {
                     print_util_dbg_print("Autocontinue towards waypoint Nr");
-                    print_util_dbg_print_num(current_waypoint_index_,10);
+                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
                     print_util_dbg_print("\r\n");
 
-                    start_wpt_time_ = time_keeper_get_ms();
+                    navigation_.set_start_wpt_time();
 
                     waypoint_handler_.advance_to_next_waypoint();
                     navigation_.dubin_state = DUBIN_INIT;
@@ -202,7 +203,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                     mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
                                                      mavlink_stream_.compid(),
                                                      &msg,
-                                                     current_waypoint_index_);
+                                                     waypoint_handler_.current_waypoint_index());
                     mavlink_stream_.send(&msg);
                 }
             }
