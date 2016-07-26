@@ -68,8 +68,7 @@ void Data_logging::add_header_name(void)
 
     uint16_t i;
 
-    init &= console_.write("time");
-    put_r_or_n(0);
+    init &= console_.write("time,");
 
     for (i = 0; i < data_logging_count_; i++)
     {
@@ -87,14 +86,14 @@ void Data_logging::add_header_name(void)
         }
         else
         {
-            put_r_or_n(i);
+            write_separator(i);
         }
     }
     file_init_ = init;
 }
 
 
-void Data_logging::put_r_or_n(uint16_t param_num)
+void Data_logging::write_separator(uint16_t param_num)
 {
     bool success = true;
 
@@ -105,7 +104,7 @@ void Data_logging::put_r_or_n(uint16_t param_num)
     }
     else
     {
-        success &= console_.write("\t");
+        success &= console_.write(",");
     }
     if (!success)
     {
@@ -125,7 +124,7 @@ void Data_logging::log_parameters(void)
     // First parameter is always time
     uint32_t time_ms = time_keeper_get_ms();
     success &=  console_.write(time_ms);
-    put_r_or_n(0);
+    success &=  console_.write(",");
 
     for (i = 0; i < data_logging_count_; i++)
     {
@@ -135,52 +134,52 @@ void Data_logging::log_parameters(void)
         {
             case MAV_PARAM_TYPE_UINT8:
                 success &= console_.write(*((uint8_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_INT8:
                 success &= console_.write(*((int8_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_UINT16:
                 success &= console_.write(*((uint16_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_INT16:
                 success &= console_.write(*((int16_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_UINT32:
                 success &= console_.write(*((uint32_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_INT32:
                 success &= console_.write(*((int32_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_UINT64:
                 success &= console_.write(*((uint64_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_INT64:
                 success &= console_.write(*((int64_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_REAL32:
                 success &= console_.write(*(float*)param->param, param->precision);
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_REAL64:
                 success &= console_.write(*((double*)param->param), param->precision);
-                put_r_or_n(i);
+                write_separator(i);
                 break;
             default:
                 success &= false;
