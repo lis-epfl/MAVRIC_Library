@@ -469,7 +469,9 @@ bool Mission_planner::update(Mission_planner* mission_planner)
 
             if (!mission_planner->state_.nav_plan_active)
             {
-                mission_planner->waypoint_handler_.nav_plan_init();
+                // Reset dubin
+                mission_planner->navigation_.dubin_state = DUBIN_INIT;
+                mission_planner->state_.nav_plan_active = true;
             }
 
             mission_planner->state_machine();

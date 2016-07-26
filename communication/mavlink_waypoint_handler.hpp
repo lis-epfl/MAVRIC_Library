@@ -127,13 +127,6 @@ public:
     void advance_to_next_waypoint();
 
     /**
-     * \brief   Initialize a first waypoint if a flight plan is set
-     *
-     * TODO: Change name
-     */
-    void nav_plan_init();
-
-    /**
      * \brief   Control if time is over timeout and change sending/receiving flags to false
      *
      * \return  The task status

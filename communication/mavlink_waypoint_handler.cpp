@@ -306,8 +306,9 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
 
                         waypoint_handler->navigation_.set_start_wpt_time();
 
-                        waypoint_handler->state_.nav_plan_active = false;
-                        waypoint_handler->nav_plan_init();
+                        waypoint_handler->state_.nav_plan_active = true;
+                        waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
+                        // TODO Should this auto start moving towards the point
                     }
                     else
                     {
@@ -384,9 +385,9 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
 
             waypoint_handler->navigation_.set_start_wpt_time();
 
-            waypoint_handler->state_.nav_plan_active = false;
+            waypoint_handler->state_.nav_plan_active = true;
             waypoint_handler->navigation_.set_waiting_at_waypoint(false);
-            waypoint_handler->nav_plan_init();
+            waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
             waypoint_handler->navigation_.set_goal(waypoint_handler->current_waypoint());
         }
         else
@@ -427,8 +428,9 @@ mav_result_t Mavlink_waypoint_handler::set_current_waypoint_from_parameter(Mavli
 
         waypoint_handler->navigation_.set_start_wpt_time();
 
-        waypoint_handler->state_.nav_plan_active = false;
-        waypoint_handler->nav_plan_init();
+        waypoint_handler->state_.nav_plan_active = true;
+        waypoint_handler->navigation_.set_waiting_at_waypoint(false);
+        waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
 
         result = MAV_RESULT_ACCEPTED;
     }
@@ -566,7 +568,6 @@ bool Mavlink_waypoint_handler::init()
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     init_homing_waypoint();
-    nav_plan_init();
 
     if(!init_success)
     {
@@ -677,27 +678,6 @@ void Mavlink_waypoint_handler::advance_to_next_waypoint()
 
     print_util_dbg_print_num(current_waypoint_index_, 10);
     print_util_dbg_print("\r\n");
-}
-
-void Mavlink_waypoint_handler::nav_plan_init()
-{
-    float rel_pos[3];
-
-    if (    (ins_.is_healthy(INS::healthy_t::XYZ_ABS_POSITION) || state_.mav_mode().is_hil())
-            && (waypoint_receiving_ == false)
-            && (!state_.nav_plan_active)
-            && (!navigation_.waiting_at_waypoint()))
-    {
-        navigation_.dubin_state = DUBIN_INIT;
-
-        state_.nav_plan_active = true;
-
-        for (uint8_t j = 0; j < 3; j++)
-        {
-            rel_pos[j] = waypoint_list_[current_waypoint_index_].local_pos()[j] - ins_.position_lf()[j];
-        }
-        navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
-    }
 }
 
 void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
