@@ -162,6 +162,7 @@ bool INS_kf::is_healthy(INS::healthy_t type) const
             ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_vel_update_s_) < timeout) )
               //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) 
               );
+
         break;
 
         case INS::healthy_t::Z_VELOCITY:
