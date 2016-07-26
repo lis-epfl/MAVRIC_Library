@@ -75,20 +75,17 @@ void Data_logging::add_header_name(void)
         data_logging_entry_t* param = &data_log_[i];
 
         init &= console_.write(reinterpret_cast<uint8_t*>(param->param_name), strlen(param->param_name));
+        write_separator(i);
 
         if (!init)
         {
-            break;
             if (debug_)
             {
                 print_util_dbg_print("Error appending header!\r\n");
             }
         }
-        else
-        {
-            write_separator(i);
-        }
     }
+
     file_init_ = init;
 }
 
@@ -97,15 +94,17 @@ void Data_logging::write_separator(uint16_t param_num)
 {
     bool success = true;
 
-    // Writes a tab character or a end of line character to the file depending on the parameter current number
     if (param_num == (data_logging_count_ - 1))
     {
+        // Last variable -> end of line
         success &= console_.write("\n");
     }
     else
     {
+        // Not last variable -> separator
         success &= console_.write(",");
     }
+
     if (!success)
     {
         if (debug_)
@@ -181,9 +180,10 @@ void Data_logging::log_parameters(void)
                 success &= console_.write(*((double*)param->param), param->precision);
                 write_separator(i);
                 break;
+
             default:
                 success &= false;
-                print_util_dbg_print("Data type not supported!\r\n");
+                write_separator(i);
                 break;
         }
 
@@ -193,7 +193,6 @@ void Data_logging::log_parameters(void)
             {
                 print_util_dbg_print("Error appending parameter! Error:");
             }
-            break;
         }
     }
 }
@@ -256,11 +255,11 @@ bool Data_logging::filename_append_extension(char* output, char* filename, uint3
         return is_success;
     }
 
-    // Add ".txt"
+    // Add ".csv"
     output[i] = '.';
-    output[i + 1] = 't';
-    output[i + 2] = 'x';
-    output[i + 3] = 't';
+    output[i + 1] = 'c';
+    output[i + 2] = 's';
+    output[i + 3] = 'v';
 
     // Add null character
     output[i + 4] = '\0';
