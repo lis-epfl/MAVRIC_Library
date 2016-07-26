@@ -225,7 +225,7 @@ mav.get_scheduler().add_task(1000000, (Scheduler_task::task_function_t)&px4_upda
 // };
 
 struct flow_stat_frame_t{
-    uint16_t maxima[SECTOR_COUNT];
+    int16_t maxima[SECTOR_COUNT];
     uint8_t max_pos[SECTOR_COUNT];
     int16_t minima[SECTOR_COUNT];
     uint8_t min_pos[SECTOR_COUNT];
