@@ -151,12 +151,6 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 Waypoint& current = waypoint_handler_.current_waypoint();
                 Waypoint& next = waypoint_handler_.next_waypoint();
 
-                // Set new waypoint to hold position
-                if (navigation_.waiting_at_waypoint())
-                {
-                    navigation_.set_waiting_at_waypoint(false);
-                }
-
                 // Determine geometry information between waypoints to know if we should advance
                 for (i=0;i<3;i++)
                 {
@@ -192,6 +186,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
 
                     navigation_.set_start_wpt_time();
 
+                    navigation_.set_waiting_at_waypoint(false);
                     waypoint_handler_.advance_to_next_waypoint();
                     navigation_.dubin_state = DUBIN_INIT;
 
