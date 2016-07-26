@@ -152,11 +152,13 @@ Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   const INS& i
                                                                     Navigation& navigation,
                                                                     const ahrs_t& ahrs,
                                                                     State& state,
+                                                                    Mavlink_waypoint_handler& waypoint_handler,
                                                                     Mavlink_message_handler& message_handler):
             Mission_planner_handler(ins),
             navigation_(navigation),
             ahrs_(ahrs),
             state_(state),
+            waypoint_handler_(waypoint_handler),
             message_handler_(message_handler)
 {
 
@@ -198,6 +200,9 @@ void Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
         if (mode_local.is_auto())
         {
             print_util_dbg_print("Switching from NAV_TAKEOFF to NAV_NAVIGATING\r\n");
+            state_.nav_plan_active = true;
+            navigation_.dubin_state = DUBIN_INIT;
+            navigation_.set_goal(waypoint_handler_.current_waypoint());
             navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
         }
         else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)

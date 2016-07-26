@@ -66,12 +66,14 @@ public:
      * \param   navigation              The reference to the navigation class
      * \param   ahrs                    The reference to the attitude estimation class
      * \param   state                   The reference to the state class
+     * \param   waypoint_handler        The reference to the mavlink waypoint handler class
      * \param   message_handler         The reference to the mavlink message handler
      */
      Mission_planner_handler_takeoff(   const INS& ins,
                                         Navigation& navigation,
                                         const ahrs_t& ahrs,
                                         State& state,
+                                        Mavlink_waypoint_handler& waypoint_handler,
                                         Mavlink_message_handler& message_handler);
 
 
@@ -89,6 +91,7 @@ protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     State& state_;                                              ///< The reference to the state structure
+    Mavlink_waypoint_handler& waypoint_handler_;                ///< The reference to the mavlink waypoint handler class
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 
     /**
