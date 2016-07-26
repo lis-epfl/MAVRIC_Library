@@ -375,19 +375,23 @@ bool LEQuad::init_ins_kf(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_acc,        "INS_U_ACC"         );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_xy,     "INS_Z_POS_XY"      );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_z,      "INS_Z_GPS_Z"       );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_velx,   "INS_Z_VEL_X"       );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_vely,   "INS_Z_VEL_Y"       );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_velxy,  "INS_Z_VEL_XY"      );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_velz,   "INS_Z_VEL_Z"       );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_baro,       "INS_Z_BARO"        );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_sonar,      "INS_Z_SONAR"       );
 
     // Data logging
-    // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[0], "local_x", 3);
-    // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[1], "local_y", 3);
-    // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[2], "local_z", 3);
-    // ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.latitude,  "origin_lat", 7);
-    // ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.longitude, "origin_lon", 7);
-    // ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.altitude,  "origin_alt", 3);
+    // ret &= data_logging_continuous.add_field(&ahrs.linear_acc[0], "ins_kf_accx", 3);
+    // ret &= data_logging_continuous.add_field(&ahrs.linear_acc[1], "ins_kf_accy", 3);
+    // ret &= data_logging_continuous.add_field(&ahrs.linear_acc[2], "ins_kf_accz", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.z_baro, "ins_kf_baro", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.z_sonar, "ins_kf_sonar", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.local_pos[0], "ins_kf_gpsx", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.local_pos[1], "ins_kf_gpsy", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.local_pos[2], "ins_kf_gpsz", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.gps_velocity[0], "ins_kf_gpsvelx", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.gps_velocity[1], "ins_kf_gpsvely", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.gps_velocity[2], "ins_kf_gpsvelz", 3);
 
     return ret;
 }

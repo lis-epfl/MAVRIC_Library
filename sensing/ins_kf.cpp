@@ -89,9 +89,9 @@ INS_kf::INS_kf(const Gps& gps,
     H_gpsvel_({ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0}),
-    R_gpsvel_({ SQR(config.sigma_gps_velx), 0,                          0,
-                0,                          SQR(config.sigma_gps_vely), 0,
-                0,                          0,                          SQR(config.sigma_gps_velz)}),
+    R_gpsvel_({ SQR(config.sigma_gps_velxy),  0,                            0,
+                0,                            SQR(config.sigma_gps_velxy),  0,
+                0,                            0,                            SQR(config.sigma_gps_velz)}),
     H_baro_({0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1}),
     R_baro_({ SQR(config.sigma_baro) }),
     H_sonar_({0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0}),
@@ -282,9 +282,9 @@ bool INS_kf::update(void)
                 // TODO: Implement this!
 
                 // Recompute the measurement noise matrix
-                R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velx), 0,                           0,
-                                       0,                           SQR(config_.sigma_gps_vely), 0,
-                                       0,                           0,                           SQR(config_.sigma_gps_velz)});
+                R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velxy),  0,                            0,
+                                       0,                             SQR(config_.sigma_gps_velxy), 0,
+                                       0,                             0,                            SQR(config_.sigma_gps_velz)});
             }
 
             // Run kalman update
@@ -314,7 +314,8 @@ bool INS_kf::update(void)
           }
 
           // Run kalman Update
-          Kalman<11,3,3>::update(Mat<1,1>(barometer_.altitude_gf() - origin_.altitude),
+          z_baro = barometer_.altitude_gf() - origin_.altitude;
+          Kalman<11,3,3>::update(Mat<1,1>(z_baro),
                                  H_baro_,
                                  R_baro_);
        
@@ -338,7 +339,8 @@ bool INS_kf::update(void)
           }
 
           // Run kalman Update
-          Kalman<11,3,3>::update(Mat<1,1>(sonar_.distance()),
+          z_sonar = sonar_.distance();
+          Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
                                  H_sonar_,
                                  R_sonar_);
 

@@ -138,8 +138,7 @@ public:
         // Measurement covariance
         float sigma_gps_xy;
         float sigma_gps_z;
-        float sigma_gps_velx;
-        float sigma_gps_vely;
+        float sigma_gps_velxy;
         float sigma_gps_velz;
         float sigma_baro;
         float sigma_sonar;
@@ -217,8 +216,12 @@ public:
 
 
     conf_t config_;                      ///< Configuration (public, to be used as onboard param)
+
+    // Measurements (used for data logging, or telemetry)
     local_position_t local_pos;
     std::array<float,3> gps_velocity;
+    float z_baro;
+    float z_sonar;
 
 
 private:
@@ -263,19 +266,18 @@ INS_kf::conf_t INS_kf::default_config(void)
     INS_kf::conf_t conf = {};
 
     // Process covariance (noise from state and input)
-    conf.sigma_z_gnd        = 0.001f;
+    conf.sigma_z_gnd        = 0.0f;
     conf.sigma_bias_acc     = 0.0f;
-    conf.sigma_bias_baro    = 0.001f;
-    conf.sigma_acc          = 0.01f;    // Input
+    conf.sigma_bias_baro    = 0.0f;
+    conf.sigma_acc          = 0.032f;       // Measured: 0.032f
 
     // Measurement covariance   (noise from measurement)
-    conf.sigma_gps_xy   = 0.001f;     // Low values for optitrack
-    conf.sigma_gps_z    = 0.001f;     // Old: conf.sigma_gps_xy = 2.0f;     conf.sigma_gps_z  = 3.0f;
-    conf.sigma_gps_velx = 0.01f;
-    conf.sigma_gps_vely = 0.01f;
-    conf.sigma_gps_velz = 0.01f;
-    conf.sigma_baro     = 10.0f;
-    conf.sigma_sonar    = 0.1f;
+    conf.sigma_gps_xy       = 0.316f;       // Measured: 0.316f
+    conf.sigma_gps_z        = 0.879f;       // Measured: 0.879f
+    conf.sigma_gps_velxy    = 0.064f;       // Measured: 0.064f
+    conf.sigma_gps_velz     = 0.342f;       // Measured: 0.342f
+    conf.sigma_baro         = 0.450f;       // Measured: 0.450f
+    conf.sigma_sonar        = 0.002f;       // Measured: 0.002f
 
     //default origin location (EFPL Esplanade)
     conf.origin = ORIGIN_EPFL;
