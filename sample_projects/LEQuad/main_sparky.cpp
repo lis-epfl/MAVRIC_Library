@@ -38,7 +38,7 @@
  *
  ******************************************************************************/
 
-#include "boards/mavrimini.hpp"
+#include "boards/sparky_v2.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "hal/common/time_keeper.hpp"
 
@@ -51,68 +51,28 @@ extern "C"
 #include <libopencm3/stm32/gpio.h>
 
 int main(int argc, char** argv)
-{
-    // #############################################################################################
-    // #############  Clock Setup ##################################################################
-    // #############################################################################################
-    // Set STM32 to 168 MHz
-    rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
+{   
 
-    // Enable GPIO clock
-    rcc_periph_clock_enable(RCC_GPIOA);
-    rcc_periph_clock_enable(RCC_GPIOB);
-    rcc_periph_clock_enable(RCC_GPIOC);
-    rcc_periph_clock_enable(RCC_GPIOD);
+    uint8_t sysid = 0;
+    bool init_success = true;
 
-    time_keeper_init();
+    // -------------------------------------------------------------------------
+    // Create board
+    // -------------------------------------------------------------------------
+    sparky_v2_conf_t board_config = sparky_v2_default_config();
+    Sparky_v2 board(board_config);
 
-    // #############################################################################################
-    // #############  LED Setup ##################################################################
-    // #############################################################################################
-    gpio_stm32_conf_t led_err_gpio_config;
-    gpio_stm32_conf_t led_stat_gpio_config;
-    gpio_stm32_conf_t led_rf_gpio_config;
-
-    led_err_gpio_config.port      = GPIO_STM32_PORT_B;
-    led_err_gpio_config.pin       = GPIO_STM32_PIN_4;
-    led_err_gpio_config.dir      = GPIO_OUTPUT;
-    led_err_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-
-    led_stat_gpio_config.port     = GPIO_STM32_PORT_B;
-    led_stat_gpio_config.pin      = GPIO_STM32_PIN_5;
-    led_stat_gpio_config.dir      = GPIO_OUTPUT;
-    led_stat_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    led_rf_gpio_config.port    = GPIO_STM32_PORT_B;
-    led_rf_gpio_config.pin     = GPIO_STM32_PIN_6;
-    led_rf_gpio_config.dir      = GPIO_OUTPUT;
-    led_rf_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-
-    Gpio_stm32 led_err_gpio(led_err_gpio_config);
-    Gpio_stm32 led_stat_gpio(led_stat_gpio_config);
-    Gpio_stm32 led_rf_gpio(led_rf_gpio_config);
-    Led_gpio led_err(led_err_gpio);
-    Led_gpio led_stat(led_stat_gpio);
-    Led_gpio led_rf(led_rf_gpio);
-
-    led_err_gpio.init();
-    led_stat_gpio.init();
-    led_rf_gpio.init();
-
-    // #############################################################################################
-    // #############  Blink ! ######################################################################
-    // #############################################################################################
-    led_err.off();
-    led_stat.off();
-    led_rf.off();
+    // Board initialisation
+    init_success &= board.init();
 
     while (1)
     {
         time_keeper_delay_ms(100);
-        led_rf.toggle();
+        board.led_rf_.toggle();
         time_keeper_delay_ms(100);
-        led_stat.toggle();
+        board.led_stat_.toggle();
         time_keeper_delay_ms(100);
-        led_err.toggle();
+        board.led_err_.toggle();
     }
 
     return 0;
