@@ -158,17 +158,16 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
     {
         result = MAV_RESULT_ACCEPTED;
 
+        // Change states
         landing_handler->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
         landing_handler->navigation_.set_internal_state(Navigation::NAV_LANDING);
 
-        //waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
-
+        // Determine landing location
         local_position_t landing_position = landing_handler->ins_.position_lf();
         landing_position[Z] = -5.0f;
         if (packet->param1 == 1)
         {
             print_util_dbg_print("Landing at a given location\r\n");
-
             landing_position[X] = packet->param5;
             landing_position[Y] = packet->param6;
 
@@ -178,18 +177,18 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
             print_util_dbg_print("Landing on the spot\r\n");
         }
 
+        // Set hold position for landing
+        float heading = coord_conventions_get_yaw(landing_handler->ahrs_.qe);
+        landing_handler->set_hold_waypoint(landing_position, heading);
+
+        // If dubin, update structure
+        /*
         if (landing_handler->navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
         {
             landing_handler->dubin_hold_init(landing_position);
-        }
-        else
-        {
-            float heading = coord_conventions_get_yaw(landing_handler->ahrs_.qe);
-            landing_handler->set_hold_waypoint(landing_position, heading);
-        }
+        }*/
 
         print_util_dbg_print("Auto-landing procedure initialised.\r\n");
-
         print_util_dbg_print("Landing at: (");
         local_position_t local_pos = landing_handler->hold_waypoint().local_pos();
         print_util_dbg_print_num(local_pos[X], 10);
@@ -210,7 +209,7 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
 
     return result;
 }
-
+/*
 void Mission_planner_handler_landing::dubin_hold_init(local_position_t local_pos)
 {
     switch (navigation_.dubin_state)
@@ -260,10 +259,10 @@ void Mission_planner_handler_landing::dubin_hold_init(local_position_t local_pos
 
         case DUBIN_CIRCLE2:
             // Staying on the waypoint
-            /*if (state_.nav_plan_active)
-            {
-                waypoint_hold_coordinates = navigation_.goal;
-            }*/
+            //if (state_.nav_plan_active)
+            //{
+            //    waypoint_hold_coordinates = navigation_.goal;
+            //}
             set_hold_waypoint(navigation_.goal());
 
             print_util_dbg_print("DUBIN_CIRCLE2: Position hold at: (");
@@ -277,7 +276,7 @@ void Mission_planner_handler_landing::dubin_hold_init(local_position_t local_pos
             print_util_dbg_print(")\r\n");
         break;
     }
-}
+}*/
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION

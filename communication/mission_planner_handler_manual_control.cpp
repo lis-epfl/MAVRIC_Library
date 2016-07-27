@@ -71,6 +71,7 @@ void Mission_planner_handler_manual_control::handle(Mission_planner& mission_pla
 {
     Mav_mode mode_local = state_.mav_mode();
 
+    // Change state if necessary
     if (mode_local.is_auto())
     {
         navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
@@ -82,6 +83,7 @@ void Mission_planner_handler_manual_control::handle(Mission_planner& mission_pla
         navigation_.set_internal_state(Navigation::NAV_HOLD_POSITION);
     }
 
+    // Reset behaviors of other states
     navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
     mission_planner.set_critical_next_state(false);
     navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;

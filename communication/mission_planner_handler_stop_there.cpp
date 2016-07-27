@@ -76,6 +76,7 @@ void Mission_planner_handler_stop_there::handle(Mission_planner& mission_planner
 {
     Mav_mode mode_local = state_.mav_mode();
 
+    // Check if we are close enough the position to switch modes
     stopping_handler(mission_planner);
 
     navigation_.set_goal(hold_waypoint());

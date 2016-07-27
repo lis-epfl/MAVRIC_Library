@@ -107,7 +107,7 @@ protected:
      */
     void auto_landing_handler(Mission_planner& mission_planner);
 
-    void dubin_hold_init(local_position_t local_pos);
+    //void dubin_hold_init(local_position_t local_pos);
 
 private:
     /**
