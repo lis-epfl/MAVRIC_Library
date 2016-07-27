@@ -600,7 +600,7 @@ void Navigation::set_internal_state(internal_state_t new_internal_state)
     {
         // Print state change
         print_util_dbg_print("Switching from ");
-        switch (new_internal_state)
+        switch (internal_state_)
         {
         case NAV_ON_GND:
             print_util_dbg_print("NAV_ON_GND");
