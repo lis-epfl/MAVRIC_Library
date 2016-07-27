@@ -176,7 +176,9 @@ public:
     /**
      * \brief   Sets the goal to be equal to the waypoint inputted
      *
-     * Does not override the dubin structure of the waypoint.
+     * Will set the dubin state to be DUBIN_INIT if there is a significant
+     * (change is waypoint locaiton, heading, or radius) change in the 
+     * goal radius.
      *
      * \param   wpt     The new waypoint goal
      */
@@ -191,9 +193,6 @@ public:
 
     /**
      * \brief   Sets the internal state of the navigation
-     *
-     * Will reset the dubin enum to DUBIN_INIT if there is a state change that
-     * requires the dubin to be recalculated
      *
      * \param   new_internal_state  The new internal state of the navigation
      */

@@ -108,7 +108,6 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
 
         if (result)
         {
-            navigation_.dubin_state = DUBIN_INIT;
 /*
             if (!state_.nav_plan_active)
             {

@@ -131,7 +131,6 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
         mission_planner->navigation_.set_waiting_at_waypoint(false);
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
         mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
-        mission_planner->navigation_.dubin_state = DUBIN_INIT;
 
         mavlink_message_t msg;
         mavlink_msg_mission_current_pack(mission_planner->mavlink_stream_.sysid(),
@@ -468,8 +467,6 @@ bool Mission_planner::update(Mission_planner* mission_planner)
 
             if (!mission_planner->state_.nav_plan_active && !mission_planner->navigation_.waiting_at_waypoint())
             {
-                // Reset dubin
-                mission_planner->navigation_.dubin_state = DUBIN_INIT;
                 mission_planner->state_.nav_plan_active = true;
             }
 

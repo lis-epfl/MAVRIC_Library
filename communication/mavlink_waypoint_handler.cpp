@@ -307,7 +307,6 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                         waypoint_handler->navigation_.set_start_wpt_time();
 
                         waypoint_handler->state_.nav_plan_active = true;
-                        waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
                         // TODO Should this auto start moving towards the point
                     }
                     else
@@ -387,7 +386,6 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
 
             waypoint_handler->state_.nav_plan_active = true;
             waypoint_handler->navigation_.set_waiting_at_waypoint(false);
-            waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
             waypoint_handler->navigation_.set_goal(waypoint_handler->current_waypoint());
         }
         else
@@ -430,7 +428,6 @@ mav_result_t Mavlink_waypoint_handler::set_current_waypoint_from_parameter(Mavli
 
         waypoint_handler->state_.nav_plan_active = true;
         waypoint_handler->navigation_.set_waiting_at_waypoint(false);
-        waypoint_handler->navigation_.dubin_state = DUBIN_INIT;
 
         result = MAV_RESULT_ACCEPTED;
     }

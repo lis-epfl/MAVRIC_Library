@@ -63,10 +63,6 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
 
     if (!reset_hold_wpt)
     {
-        if (state_.nav_plan_active)
-        {
-            navigation_.dubin_state = DUBIN_INIT;
-        }
         reset_hold_waypoint();
     }
 
@@ -188,7 +184,6 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
 
                     navigation_.set_waiting_at_waypoint(false);
                     waypoint_handler_.advance_to_next_waypoint();
-                    navigation_.dubin_state = DUBIN_INIT;
 
                     // Update output to be the new waypoint
                     waypoint_coordinates = waypoint_handler_.current_waypoint();
@@ -242,21 +237,14 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
             waypoint.z = packet->param7;
             */
             Waypoint waypoint(packet->param3, MAV_CMD_NAV_WAYPOINT, 0, packet->param1, packet->param2, packet->param3, packet->param4, packet->param5, packet->param6, packet->param7);
-            navigating_handler->navigation_.dubin_state = DUBIN_INIT;
             navigating_handler->set_hold_waypoint(waypoint);
             navigating_handler->hold_waypoint().set_radius(navigating_handler->navigation_.minimal_radius);
-            navigating_handler->navigation_.dubin_state = DUBIN_INIT;
 
             result = MAV_RESULT_ACCEPTED;
         }
     }
     else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
     {
-        if ( (navigating_handler->navigation_.internal_state() == Navigation::NAV_STOP_THERE) || (navigating_handler->navigation_.internal_state() == Navigation::NAV_STOP_ON_POSITION) )
-        {
-            navigating_handler->navigation_.dubin_state = DUBIN_INIT;
-        }
-
         //if (navigating_handler->mission_planner_.last_mode().is_auto())  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         if (navigating_handler->state_.is_auto())
         {

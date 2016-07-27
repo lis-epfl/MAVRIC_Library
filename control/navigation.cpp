@@ -569,6 +569,20 @@ bool Navigation::update(Navigation* navigation)
 
 void Navigation::set_goal(Waypoint wpt)
 {
+    // Determine if dubin should be reinitialized
+    local_position_t goal_pos = goal_.local_pos();
+    local_position_t wpt_pos = wpt.local_pos();
+    if ((maths_f_abs(goal_pos[X] - wpt_pos[X]) > 0.001f ||
+         maths_f_abs(goal_pos[Y] - wpt_pos[Y]) > 0.001f ||
+         maths_f_abs(goal_pos[Z] - wpt_pos[Z]) > 0.001f ||
+         maths_f_abs(goal_.heading() - wpt.heading()) > 0.001f ||
+         maths_f_abs(goal_.radius() - wpt.radius()) > 0.001f) &&
+        (navigation_strategy == strategy_t::DUBIN))
+    {
+        print_util_dbg_print("Waypoint changed, reinitialize dubin\r\n");
+        dubin_state = DUBIN_INIT;
+    }
+
     // Update goal based on the inputted waypoint
     goal_.set_frame(wpt.frame());
     goal_.set_command(wpt.command());
@@ -656,24 +670,6 @@ void Navigation::set_internal_state(internal_state_t new_internal_state)
             break;
         }
         print_util_dbg_print("\r\n");
-
-        // Reinitialize the dubin structure if the new state needs it
-        switch (new_internal_state)
-        {
-        case NAV_ON_GND:
-        case NAV_TAKEOFF:
-        case NAV_MANUAL_CTRL:
-            break;
-
-
-        case NAV_NAVIGATING:
-        case NAV_HOLD_POSITION:
-        case NAV_STOP_ON_POSITION:
-        case NAV_STOP_THERE:
-        case NAV_LANDING:
-            dubin_state = DUBIN_INIT;
-            break;
-        }
 
         internal_state_ = new_internal_state;
     }
