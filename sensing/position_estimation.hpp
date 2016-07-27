@@ -205,7 +205,6 @@ public:
 
 private:
     local_position_t local_position;        ///< Local position
-    global_position_t origin_;              ///< Local position
     std::array<float,3> vel;                ///< 3D velocity in ned frame
     std::array<float,3> vel_bf;             ///< 3D velocity in body frame
 
