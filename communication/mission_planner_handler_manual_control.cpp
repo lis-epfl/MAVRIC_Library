@@ -74,6 +74,7 @@ void Mission_planner_handler_manual_control::handle(Mission_planner& mission_pla
     if (mode_local.is_auto())
     {
         print_util_dbg_print("Switching from NAV_MANUAL_CTRL to NAV_NAVIGATING\r\n");
+        navigation_.dubin_state = DUBIN_INIT;
         navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
     }
     else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
