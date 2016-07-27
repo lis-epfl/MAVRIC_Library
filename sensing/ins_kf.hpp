@@ -271,13 +271,13 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.sigma_z_gnd        = 0.0f;
     conf.sigma_bias_acc     = 0.0f;
     conf.sigma_bias_baro    = 0.0f;
-    conf.sigma_acc          = 0.032f;       // Measured: 0.032f
+    conf.sigma_acc          = 0.6f;       // Measured   - At rest: 0.032f   - With motors on: 0.
 
     // Measurement covariance   (noise from measurement)
-    conf.sigma_gps_xy       = 0.316f;       // Measured: 0.316f
-    conf.sigma_gps_z        = 0.879f;       // Measured: 0.879f
-    conf.sigma_gps_velxy    = 0.064f;       // Measured: 0.064f
-    conf.sigma_gps_velz     = 0.342f;       // Measured: 0.342f
+    conf.sigma_gps_xy       = 0.001f;       // Measured: 0.316f
+    conf.sigma_gps_z        = 0.001f;       // Measured: 0.879f
+    conf.sigma_gps_velxy    = 0.001f;       // Measured: 0.064f
+    conf.sigma_gps_velz     = 0.001f;       // Measured: 0.342f
     conf.sigma_baro         = 0.450f;       // Measured: 0.450f
     conf.sigma_sonar        = 0.002f;       // Measured: 0.002f
 

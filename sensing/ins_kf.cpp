@@ -301,75 +301,75 @@ bool INS_kf::update(void)
         }
     }
 
-    // Measure from barometer
-    // TODO: Add healthy function into barometer
-    if(true)
-    {
-       if (last_baro_update_s_ < barometer_.last_update_us()/1e6)
-       {
-          // Update the measurement noise if needed
-          if(!config_.constant_covar)
-          {
-              // TODO: Implement this!
-
-              // Recompute the measurement noise matrix
-              R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
-          }
-
-          // Run kalman Update
-          z_baro = barometer_.altitude_gf() - origin_.altitude;
-          Kalman<11,3,3>::update(Mat<1,1>(z_baro),
-                                 H_baro_,
-                                 R_baro_);
-       
-          // Update timing
-          last_baro_update_s_ = barometer_.last_update_us()/1e6;
-       }
-    }
-
-    // Measure from sonar
-    if (sonar_.healthy())
-    {
-       if (last_sonar_update_s_ < sonar_.last_update_us()/1e6)
-       {
-          // Update the measurement noise if needed
-          if(!config_.constant_covar)
-          {
-              // TODO: Implement this!
-
-              // Recompute the measurement noise matrix
-              R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
-          }
-
-          // Run kalman Update
-          z_sonar = sonar_.distance();
-          Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
-                                 H_sonar_,
-                                 R_sonar_);
-
-          // Update timing
-          last_sonar_update_s_ = sonar_.last_update_us()/1e6f;
-       }
-    }
-
-    // Measure from optic-flow
-    //if (flow.healthy())
+    // // Measure from barometer
+    // // TODO: Add healthy function into barometer
+    // if(true)
     // {
-    //     if (last_flow_update_s_ < flow_.last_update_s())
-    //     {
-    //         // run kalman update on velocity
-    //         float vel_lf[3];
-    //         float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
-    //         quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_lf);
-    //         Kalman<11,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
-    //         // Kalman11,3,3>::update(Mat<3,1>({vel_bf[0], vel_bf[1], flow_.ground_distance()}),
-    //                                H_flow_,
-    //                                R_flow_);
+    //    if (last_baro_update_s_ < barometer_.last_update_us()/1e6)
+    //    {
+    //       // Update the measurement noise if needed
+    //       if(!config_.constant_covar)
+    //       {
+    //           // TODO: Implement this!
 
-    //         // Update timing
-    //         last_flow_update_s_ = flow_.last_update_s();
-    //     }
+    //           // Recompute the measurement noise matrix
+    //           R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
+    //       }
+
+    //       // Run kalman Update
+    //       z_baro = barometer_.altitude_gf() - origin_.altitude;
+    //       Kalman<11,3,3>::update(Mat<1,1>(z_baro),
+    //                              H_baro_,
+    //                              R_baro_);
+       
+    //       // Update timing
+    //       last_baro_update_s_ = barometer_.last_update_us()/1e6;
+    //    }
     // }
+
+    // // Measure from sonar
+    // if (sonar_.healthy())
+    // {
+    //    if (last_sonar_update_s_ < sonar_.last_update_us()/1e6)
+    //    {
+    //       // Update the measurement noise if needed
+    //       if(!config_.constant_covar)
+    //       {
+    //           // TODO: Implement this!
+
+    //           // Recompute the measurement noise matrix
+    //           R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
+    //       }
+
+    //       // Run kalman Update
+    //       z_sonar = sonar_.distance();
+    //       Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
+    //                              H_sonar_,
+    //                              R_sonar_);
+
+    //       // Update timing
+    //       last_sonar_update_s_ = sonar_.last_update_us()/1e6f;
+    //    }
+    // }
+
+    /*// Measure from optic-flow
+    if (flow.healthy())
+    {
+        if (last_flow_update_s_ < flow_.last_update_s())
+        {
+            // run kalman update on velocity
+            float vel_lf[3];
+            float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
+            quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_lf);
+            Kalman<11,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
+            // Kalman11,3,3>::update(Mat<3,1>({vel_bf[0], vel_bf[1], flow_.ground_distance()}),
+                                   H_flow_,
+                                   R_flow_);
+
+            // Update timing
+            last_flow_update_s_ = flow_.last_update_s();
+        }
+    }*/
 
     return true;
 }

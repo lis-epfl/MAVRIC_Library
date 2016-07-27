@@ -334,7 +334,7 @@ bool LEQuad::init_position_estimation(void)
     ret &= position_estimation_telemetry_init(&position_estimation, mavlink_communication.p_message_handler());
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_position,        &position_estimation);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  50000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_position,        &position_estimation);
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_global_position, &position_estimation);
 
     // Parameters
