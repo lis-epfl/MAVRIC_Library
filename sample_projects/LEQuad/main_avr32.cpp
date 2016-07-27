@@ -39,6 +39,8 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/lequad.hpp"
+// DOME SPECIFIC
+// #include "sample_projects/LEQuad/LEQuad_dronedome.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
@@ -110,6 +112,29 @@ int main(void)
                         file_log,
                         file_stat,
                         mav_config );
+
+    // DOME SPECIFIC
+    // LEQuad_dronedome mav = LEQuad_dronedome(board.imu,
+    //                     board.bmp085,
+    //                     board.gps_ublox,
+    //                     board.sonar_i2cxl,      // Warning:
+    //                     board.uart0,
+    //                     board.spektrum_satellite,
+    //                     board.state_display_megafly_rev4_,
+    //                     board.file_flash,
+    //                     board.battery,
+    //                     board.servo_0,
+    //                     board.servo_1,
+    //                     board.servo_2,
+    //                     board.servo_3,
+    //                     board.servo_4,
+    //                     board.servo_5,
+    //                     board.servo_6,
+    //                     board.servo_7,
+    //                     file_log,
+    //                     file_stat,
+    //                     mav_config );
+    // mav.init();
 
     // // -------------------------------------------------------------------------
     // // Create simulation
