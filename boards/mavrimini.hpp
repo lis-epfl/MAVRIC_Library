@@ -364,14 +364,20 @@ static inline mavrimini_conf_t mavrimini_default_config()
     // -------------------------------------------------------------------------
     // Servo config
     // -------------------------------------------------------------------------
-    conf.servo_config[0] = servo_default_config_esc();
-    conf.servo_config[1] = servo_default_config_esc();
-    conf.servo_config[2] = servo_default_config_esc();
-    conf.servo_config[3] = servo_default_config_esc();
-    conf.servo_config[4] = servo_default_config_esc();
-    conf.servo_config[5] = servo_default_config_esc();
-    conf.servo_config[6] = servo_default_config_esc();
-    conf.servo_config[7] = servo_default_config_esc();
+
+    // Warning: servo 0,1,3,5 are configured for a dc brush motor
+    // ,servo 2,4 are thus free but servo 1 and 2 are sharing the
+    // same clock and so are servo 3,4,5. Servos sharing the same
+    // clock cannot have different period therfore all the servos
+    // must have the same configuration for now.
+    conf.servo_config[0] = servo_default_config_brush_motor();
+    conf.servo_config[1] = servo_default_config_brush_motor();
+    conf.servo_config[2] = servo_default_config_brush_motor();
+    conf.servo_config[3] = servo_default_config_brush_motor();
+    conf.servo_config[4] = servo_default_config_brush_motor();
+    conf.servo_config[5] = servo_default_config_brush_motor();
+    conf.servo_config[6] = servo_default_config_brush_motor();
+    conf.servo_config[7] = servo_default_config_brush_motor();
 
     return conf;
 }
