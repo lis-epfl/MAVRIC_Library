@@ -326,13 +326,13 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[2].duty_cycle_config = 5000;
 
     conf.pwm_config[3].gpio_config.port = GPIO_STM32_PORT_B;
-    conf.pwm_config[3].gpio_config.pin = GPIO_STM32_PIN_8;
+    conf.pwm_config[3].gpio_config.pin = GPIO_STM32_PIN_6;
     conf.pwm_config[3].gpio_config.dir = GPIO_OUTPUT;
     conf.pwm_config[3].gpio_config.pull = GPIO_PULL_UPDOWN_NONE;
     conf.pwm_config[3].gpio_config.alt_fct = GPIO_STM32_AF_2;
     conf.pwm_config[3].timer_config = TIM4;
     conf.pwm_config[3].rcc_timer_config = RCC_TIM4;
-    conf.pwm_config[3].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_3;
+    conf.pwm_config[3].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_1;
     conf.pwm_config[3].prescaler_config = 84;
     conf.pwm_config[3].period_config = 20000; //50Hz
     conf.pwm_config[3].duty_cycle_config = 5000;
@@ -350,13 +350,13 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[4].duty_cycle_config = 5000;
 
     conf.pwm_config[5].gpio_config.port = GPIO_STM32_PORT_B;
-    conf.pwm_config[5].gpio_config.pin = GPIO_STM32_PIN_6;
+    conf.pwm_config[5].gpio_config.pin = GPIO_STM32_PIN_8;
     conf.pwm_config[5].gpio_config.dir = GPIO_OUTPUT;
     conf.pwm_config[5].gpio_config.pull = GPIO_PULL_UPDOWN_NONE;
     conf.pwm_config[5].gpio_config.alt_fct = GPIO_STM32_AF_2;
     conf.pwm_config[5].timer_config = TIM4;
     conf.pwm_config[5].rcc_timer_config = RCC_TIM4;
-    conf.pwm_config[5].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_1;
+    conf.pwm_config[5].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_3;
     conf.pwm_config[5].prescaler_config = 84;
     conf.pwm_config[5].period_config = 20000; //50Hz
     conf.pwm_config[5].duty_cycle_config = 5000;
@@ -364,6 +364,12 @@ static inline mavrimini_conf_t mavrimini_default_config()
     // -------------------------------------------------------------------------
     // Servo config
     // -------------------------------------------------------------------------
+
+    // Warning: servo 0,1,3,5 are configured for a dc brush motor
+    // ,servo 2,4 are thus free but servo 1 and 2 are sharing the
+    // same clock and so are servo 3,4,5. Servos sharing the same
+    // clock cannot have different period therfore all the servos
+    // must have the same configuration for now.
     conf.servo_config[0] = servo_default_config_brush_motor();
     conf.servo_config[1] = servo_default_config_brush_motor();
     conf.servo_config[2] = servo_default_config_brush_motor();
