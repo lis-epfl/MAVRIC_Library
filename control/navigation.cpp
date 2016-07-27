@@ -588,6 +588,97 @@ Waypoint& Navigation::goal()
     return goal_;
 }
 
+Navigation::internal_state_t Navigation::internal_state() const
+{
+    return internal_state_;
+}
+
+void Navigation::set_internal_state(internal_state_t new_internal_state)
+{
+    // Check if there has been a state change
+    if (internal_state_ != new_internal_state)
+    {
+        // Print state change
+        print_util_dbg_print("Switching from ");
+        switch (new_internal_state)
+        {
+        case NAV_ON_GND:
+            print_util_dbg_print("NAV_ON_GND");
+            break;
+        case NAV_TAKEOFF:
+            print_util_dbg_print("NAV_TAKEOFF");
+            break;
+        case NAV_MANUAL_CTRL:
+            print_util_dbg_print("NAV_MANUAL_CTRL");
+            break;
+        case NAV_NAVIGATING:
+            print_util_dbg_print("NAV_NAVIGATING");
+            break;
+        case NAV_HOLD_POSITION:
+            print_util_dbg_print("NAV_HOLD_POSITION");
+            break;
+        case NAV_STOP_ON_POSITION:
+            print_util_dbg_print("NAV_STOP_ON_POSITION");
+            break;
+        case NAV_STOP_THERE:
+            print_util_dbg_print("NAV_STOP_THERE");
+            break;
+        case NAV_LANDING:
+            print_util_dbg_print("NAV_LANDING");
+            break;
+        }
+        print_util_dbg_print(" to ");
+        switch (new_internal_state)
+        {
+        case NAV_ON_GND:
+            print_util_dbg_print("NAV_ON_GND");
+            break;
+        case NAV_TAKEOFF:
+            print_util_dbg_print("NAV_TAKEOFF");
+            break;
+        case NAV_MANUAL_CTRL:
+            print_util_dbg_print("NAV_MANUAL_CTRL");
+            break;
+        case NAV_NAVIGATING:
+            print_util_dbg_print("NAV_NAVIGATING");
+            break;
+        case NAV_HOLD_POSITION:
+            print_util_dbg_print("NAV_HOLD_POSITION");
+            break;
+        case NAV_STOP_ON_POSITION:
+            print_util_dbg_print("NAV_STOP_ON_POSITION");
+            break;
+        case NAV_STOP_THERE:
+            print_util_dbg_print("NAV_STOP_THERE");
+            break;
+        case NAV_LANDING:
+            print_util_dbg_print("NAV_LANDING");
+            break;
+        }
+        print_util_dbg_print("\r\n");
+
+        // Reinitialize the dubin structure if the new state needs it
+        switch (new_internal_state)
+        {
+        case NAV_ON_GND:
+        case NAV_TAKEOFF:
+        case NAV_MANUAL_CTRL:
+            break;
+
+
+        case NAV_NAVIGATING:
+        case NAV_HOLD_POSITION:
+        case NAV_STOP_ON_POSITION:
+        case NAV_STOP_THERE:
+        case NAV_LANDING:
+            dubin_state = DUBIN_INIT;
+            break;
+        }
+
+        internal_state_ = new_internal_state;
+    }
+}
+
 void Navigation::set_start_wpt_time()
 {
     start_wpt_time_ = time_keeper_get_ms();

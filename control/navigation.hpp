@@ -183,6 +183,23 @@ public:
     void set_goal(Waypoint wpt);
 
     /**
+     * \brief   Gets the internal state enum of the navigation
+     *
+     * \return  internal_state_
+     */
+    internal_state_t internal_state() const;
+
+    /**
+     * \brief   Sets the internal state of the navigation
+     *
+     * Will reset the dubin enum to DUBIN_INIT if there is a state change that
+     * requires the dubin to be recalculated
+     *
+     * \param   new_internal_state  The new internal state of the navigation
+     */
+    void set_internal_state(internal_state_t new_internal_state);
+
+    /**
      * \brief   Sets the start_wpt_time_ to the current time
      */
     void set_start_wpt_time();
@@ -229,7 +246,6 @@ public:
 
     float dist2wp_sqr;                                  ///< The square of the distance to the waypoint
 
-    internal_state_t internal_state_;                   ///< The internal state of the navigation module
     critical_behavior_enum critical_behavior;           ///< The critical behavior enum
     auto_landing_behavior_t auto_landing_behavior;      ///< The autolanding behavior enum
     float kp_yaw;                                       ///< The yaw gain in velocity control mode
@@ -240,6 +256,7 @@ private:
     uint32_t start_wpt_time_;                           ///< The time at which the MAV starts to travel towards its waypoint
 
     Waypoint goal_;                                     ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
+    internal_state_t internal_state_;                   ///< The internal state of the navigation module
 
     float dt;                                           ///< The time interval between two navigation updates
     uint32_t last_update;                               ///< The time of the last navigation update in ms

@@ -188,7 +188,7 @@ mav_result_t Mission_planner::is_arrived(Mission_planner* mission_planner, mavli
 
 void Mission_planner::state_machine()
 {
-    switch (navigation_.internal_state_)
+    switch (navigation_.internal_state())
     {
         case Navigation::NAV_ON_GND:
             on_ground_handler_.handle(*this);
@@ -337,7 +337,7 @@ void Mission_planner::critical_handler()
                 {
                     //stop auto navigation_, to prevent going out of fence 1 again
                     //waypoint_hold_coordinates = waypoint_critical_coordinates_; TODO
-                    navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
+                    navigation_.set_internal_state(Navigation::NAV_STOP_ON_POSITION);
                     stop_there_handler_.stopping_handler(*this);
                     state_.out_of_fence_1 = false;
                     navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
@@ -356,7 +356,7 @@ void Mission_planner::critical_handler()
                 print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
                 navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
                 //state_.mav_mode_custom = CUSTOM_BASE_MODE;
-                navigation_.internal_state_ = Navigation::NAV_ON_GND;
+                navigation_.set_internal_state(Navigation::NAV_ON_GND);
                 state_.set_armed(false);
                 state_.mav_state_ = MAV_STATE_EMERGENCY;
                 break;
@@ -378,7 +378,6 @@ Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t&
             navigating_handler_(navigating_handler),
             manual_control_handler_(manual_control_handler),
             waypoint_handler_(waypoint_handler),
-            hold_waypoint_set_(false),
             critical_next_state_(false),
             last_mode_(state_.mav_mode()),
             mavlink_stream_(mavlink_stream),
@@ -456,8 +455,8 @@ bool Mission_planner::update(Mission_planner* mission_planner)
     switch (mission_planner->state_.mav_state_)
     {
         case MAV_STATE_STANDBY:
-            mission_planner->navigation_.internal_state_ = Navigation::NAV_ON_GND;
-            mission_planner->hold_waypoint_set_ = false;
+            mission_planner->navigation_.set_internal_state(Navigation::NAV_ON_GND);
+            Mission_planner_handler::reset_hold_waypoint();
             mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
             mission_planner->critical_next_state_ = false;
             mission_planner->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
@@ -481,7 +480,7 @@ bool Mission_planner::update(Mission_planner* mission_planner)
             // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
             if (mode_local.is_guided())
             {
-                if ((mission_planner->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (mission_planner->navigation_.internal_state_ == Navigation::NAV_LANDING))
+                if ((mission_planner->navigation_.internal_state() == Navigation::NAV_NAVIGATING) || (mission_planner->navigation_.internal_state() == Navigation::NAV_LANDING))
                 {
                     mission_planner->critical_handler();
 
@@ -491,7 +490,7 @@ bool Mission_planner::update(Mission_planner* mission_planner)
             break;
 
         default:
-            mission_planner->navigation_.internal_state_ = Navigation::NAV_ON_GND;
+            mission_planner->navigation_.set_internal_state(Navigation::NAV_ON_GND);
             break;
     }
 
@@ -505,16 +504,6 @@ bool Mission_planner::update(Mission_planner* mission_planner)
 bool Mission_planner::has_mode_change()
 {
     return state_.mav_mode().ctrl_mode() != last_mode_.ctrl_mode();
-}
-
-void Mission_planner::set_hold_waypoint_set(bool hold_waypoint_set)
-{
-    hold_waypoint_set_ = hold_waypoint_set;
-}
-
-bool Mission_planner::hold_waypoint_set() const
-{
-    return hold_waypoint_set_;
 }
 
 Mav_mode Mission_planner::last_mode() const

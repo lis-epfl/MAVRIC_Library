@@ -75,13 +75,10 @@ void Mission_planner_handler_hold_position::handle(Mission_planner& mission_plan
 
     if (mode_local.is_auto())
     {
-        print_util_dbg_print("Switching from NAV_HOLD_POSITION to NAV_NAVIGATING\r\n");
-        navigation_.dubin_state = DUBIN_INIT;
-        navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
+        navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
     }
     else if (mode_local.is_manual())
     {
-        print_util_dbg_print("Switching from NAV_HOLD_POSITION to NAV_MANUAL_CTRL\r\n");
-        navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
+        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
     }
 }

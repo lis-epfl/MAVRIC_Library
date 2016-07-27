@@ -232,14 +232,14 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         input.thrust = stabilisation_wing->stabiliser_stack.velocity_stabiliser.output.thrust;
 
         // Overwrite the commands during different key phases (take-off and landing)
-        if(stabilisation_wing->navigation->internal_state_ == Navigation::NAV_TAKEOFF)
+        if(stabilisation_wing->navigation->internal_state() == Navigation::NAV_TAKEOFF)
         {
             // Take-off: fixed 0 roll angle, fixed defined pitch angle and fixed defined constant thrust value.
             input.rpy[0] = 0.0f;
             input.rpy[1] = stabilisation_wing->take_off_pitch;
             input.thrust = stabilisation_wing->take_off_thrust;
         }
-        else if(stabilisation_wing->navigation->internal_state_ == Navigation::NAV_LANDING)
+        else if(stabilisation_wing->navigation->internal_state() == Navigation::NAV_LANDING)
         {
             // Landing: Limit the roll computed by the velocity layer (navigation), shut down the motor and impose a little pitch down to assure gliding without stall.
             if(input.rpy[0] > stabilisation_wing->landing_max_roll)

@@ -82,8 +82,7 @@ void Mission_planner_handler_stop_there::handle(Mission_planner& mission_planner
 
     if (mode_local.is_manual())
     {
-        print_util_dbg_print("Switching from NAV_STOP_THERE to NAV_MANUAL_CTRL\r\n");
-        navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
+        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
     }
 }
 
@@ -100,6 +99,6 @@ void Mission_planner_handler_stop_there::stopping_handler(Mission_planner& missi
     dist2wp_sqr = vectors_norm_sqr(rel_pos);
     if (dist2wp_sqr < 25.0f)
     {
-        navigation_.internal_state_ = Navigation::NAV_STOP_ON_POSITION;
+        navigation_.set_internal_state(Navigation::NAV_STOP_ON_POSITION);
     }
 }

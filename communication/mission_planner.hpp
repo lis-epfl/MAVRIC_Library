@@ -140,8 +140,6 @@ public:
      */
     static inline conf_t default_config();
 
-    void set_hold_waypoint_set(bool hold_waypoint_set);
-    bool hold_waypoint_set() const;
     Mav_mode last_mode() const;
     void set_critical_next_state(bool critical_next_state);
 
@@ -157,7 +155,6 @@ protected:
 
     Mavlink_waypoint_handler& waypoint_handler_;        ///< The reference to the mavlink waypoint handler
 
-    bool hold_waypoint_set_;                                    ///< Flag to tell if the hold position waypoint is set
     bool critical_next_state_;                                  ///< Flag to change critical state in its dedicated state machine
     Mav_mode last_mode_;                                        ///< The mode of the MAV to have a memory of its evolution
     Waypoint waypoint_critical_coordinates_;                    ///< Waypoint for the critical state

@@ -73,17 +73,13 @@ void Mission_planner_handler_manual_control::handle(Mission_planner& mission_pla
 
     if (mode_local.is_auto())
     {
-        print_util_dbg_print("Switching from NAV_MANUAL_CTRL to NAV_NAVIGATING\r\n");
-        navigation_.dubin_state = DUBIN_INIT;
-        navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
+        navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
     }
     else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
     {
-        print_util_dbg_print("Switching from NAV_MANUAL_CTRL to NAV_HOLD_POSITION\r\n");
         set_hold_waypoint(ins_.position_lf());
         hold_waypoint().set_radius(navigation_.minimal_radius);
-        navigation_.dubin_state = DUBIN_INIT;
-        navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
+        navigation_.set_internal_state(Navigation::NAV_HOLD_POSITION);
     }
 
     navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;

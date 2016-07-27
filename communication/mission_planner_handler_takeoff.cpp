@@ -127,11 +127,11 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
 {
     mav_result_t result;
 
-    if (takeoff_handler->navigation_.internal_state_ == Navigation::NAV_ON_GND)
+    if (takeoff_handler->navigation_.internal_state() == Navigation::NAV_ON_GND)
     {
         print_util_dbg_print("Starting automatic take-off from button\r\n");
         print_util_dbg_print("Switching to NAV_TAKEOFF\r\n");
-        takeoff_handler->navigation_.internal_state_ = Navigation::NAV_TAKEOFF;
+        takeoff_handler->navigation_.set_internal_state(Navigation::NAV_TAKEOFF);
         takeoff_handler->reset_hold_waypoint();
 
         result = MAV_RESULT_ACCEPTED;
@@ -199,22 +199,18 @@ void Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
     {
         if (mode_local.is_auto())
         {
-            print_util_dbg_print("Switching from NAV_TAKEOFF to NAV_NAVIGATING\r\n");
             state_.nav_plan_active = true;
-            navigation_.dubin_state = DUBIN_INIT;
             navigation_.set_goal(waypoint_handler_.current_waypoint());
-            navigation_.internal_state_ = Navigation::NAV_NAVIGATING;
+            navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
         }
         else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
         {
-            print_util_dbg_print("Switching from NAV_TAKEOFF to NAV_HOLD_POSITION\r\n");
-            navigation_.internal_state_ = Navigation::NAV_HOLD_POSITION;
+            navigation_.set_internal_state(Navigation::NAV_HOLD_POSITION);
         }
     }
 
     if (mode_local.is_manual())
     {
-        print_util_dbg_print("Switching from NAV_TAKEOFF to NAV_MANUAL_CTRL\r\n");
-        navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
+        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
     }
 }

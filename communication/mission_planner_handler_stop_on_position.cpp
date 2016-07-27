@@ -76,7 +76,6 @@ void Mission_planner_handler_stop_on_position::handle(Mission_planner& mission_p
 
     if ( mode_local.is_manual())
     {
-        print_util_dbg_print("Switching from NAV_STOP_ON_POSITION to NAV_MANUAL_CTRL\r\n");
-        navigation_.internal_state_ = Navigation::NAV_MANUAL_CTRL;
+        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
     }
 }
