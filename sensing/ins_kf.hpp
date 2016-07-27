@@ -218,7 +218,9 @@ public:
     conf_t config_;                      ///< Configuration (public, to be used as onboard param)
 
     // Measurements (used for data logging, or telemetry)
-    local_position_t local_pos;
+    global_position_t gps_global;
+    local_position_t gps_local;
+    global_position_t ori;
     std::array<float,3> gps_velocity;
     float z_baro;
     float z_sonar;
