@@ -3979,8 +3979,8 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                 }
 
                 gps->time_gps = gps_pos_llh->itow;
-                gps->longitude = gps_pos_llh->longitude / 10000000.0f;
-                gps->latitude = gps_pos_llh->latitude / 10000000.0f;
+                gps->longitude = (double)(gps_pos_llh->longitude) / 10000000.0;
+                gps->latitude = (double)(gps_pos_llh->latitude) / 10000000.0;
                 gps->alt_elips = ((float)gps_pos_llh->altitude_ellipsoid) / 1000.0f;
                 gps->altitude = ((float)gps_pos_llh->altitude_msl) / 1000.0f;
                 gps->horizontal_accuracy = ((float)gps_pos_llh->horizontal_accuracy) / 1000.0f;
