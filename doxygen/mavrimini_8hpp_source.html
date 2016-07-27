@@ -416,20 +416,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00364"></a>00364     <span class="comment">// -------------------------------------------------------------------------</span>
 <a name="l00365"></a>00365     <span class="comment">// Servo config</span>
 <a name="l00366"></a>00366     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00367"></a>00367     conf.servo_config[0] = servo_default_config_esc();
-<a name="l00368"></a>00368     conf.servo_config[1] = servo_default_config_esc();
-<a name="l00369"></a>00369     conf.servo_config[2] = servo_default_config_esc();
-<a name="l00370"></a>00370     conf.servo_config[3] = servo_default_config_esc();
-<a name="l00371"></a>00371     conf.servo_config[4] = servo_default_config_esc();
-<a name="l00372"></a>00372     conf.servo_config[5] = servo_default_config_esc();
-<a name="l00373"></a>00373     conf.servo_config[6] = servo_default_config_esc();
-<a name="l00374"></a>00374     conf.servo_config[7] = servo_default_config_esc();
-<a name="l00375"></a>00375 
-<a name="l00376"></a>00376     <span class="keywordflow">return</span> conf;
-<a name="l00377"></a>00377 }
-<a name="l00378"></a>00378 
-<a name="l00379"></a>00379 
-<a name="l00380"></a>00380 <span class="preprocessor">#endif </span><span class="comment">/* MAVRIMINI_HPP_ */</span>
+<a name="l00367"></a>00367 
+<a name="l00368"></a>00368     <span class="comment">// Warning: servo 0,1,3,5 are configured for a dc brush motor</span>
+<a name="l00369"></a>00369     <span class="comment">// ,servo 2,4 are thus free but servo 1 and 2 are sharing the</span>
+<a name="l00370"></a>00370     <span class="comment">// same clock and so are servo 3,4,5. Servos sharing the same</span>
+<a name="l00371"></a>00371     <span class="comment">// clock cannot have different period therfore all the servos</span>
+<a name="l00372"></a>00372     <span class="comment">// must have the same configuration for now.</span>
+<a name="l00373"></a>00373     conf.servo_config[0] = servo_default_config_brush_motor();
+<a name="l00374"></a>00374     conf.servo_config[1] = servo_default_config_brush_motor();
+<a name="l00375"></a>00375     conf.servo_config[2] = servo_default_config_brush_motor();
+<a name="l00376"></a>00376     conf.servo_config[3] = servo_default_config_brush_motor();
+<a name="l00377"></a>00377     conf.servo_config[4] = servo_default_config_brush_motor();
+<a name="l00378"></a>00378     conf.servo_config[5] = servo_default_config_brush_motor();
+<a name="l00379"></a>00379     conf.servo_config[6] = servo_default_config_brush_motor();
+<a name="l00380"></a>00380     conf.servo_config[7] = servo_default_config_brush_motor();
+<a name="l00381"></a>00381 
+<a name="l00382"></a>00382     <span class="keywordflow">return</span> conf;
+<a name="l00383"></a>00383 }
+<a name="l00384"></a>00384 
+<a name="l00385"></a>00385 
+<a name="l00386"></a>00386 <span class="preprocessor">#endif </span><span class="comment">/* MAVRIMINI_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -448,7 +454,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 27 2016 13:28:26 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jul 27 2016 14:31:27 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
