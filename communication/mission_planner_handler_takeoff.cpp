@@ -105,18 +105,6 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
                 }
             break;
         }
-
-        if (result)
-        {
-/*
-            if (!state_.nav_plan_active)
-            {
-                waypoint_coordinates_ = hold_waypoint();
-                waypoint_coordinates_.set_radius(0.0f);
-            }
-*/
-            print_util_dbg_print("Automatic take-off finished.\r\n");
-        }
     }
 
     return result;
@@ -195,6 +183,8 @@ void Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
 
     if (takeoff_result)
     {
+        print_util_dbg_print("Automatic take-off finished.\r\n");
+
         if (mode_local.is_auto())
         {
             state_.nav_plan_active = true;
