@@ -177,8 +177,8 @@ public:
      * \brief   Sets the goal to be equal to the waypoint inputted
      *
      * Will set the dubin state to be DUBIN_INIT if there is a significant
-     * (change is waypoint locaiton, heading, or radius) change in the 
-     * goal radius.
+     * (change in waypoint locaiton, heading, or radius) change in the 
+     * goal.
      *
      * \param   wpt     The new waypoint goal
      */
