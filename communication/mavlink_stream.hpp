@@ -97,7 +97,7 @@ public:
     /**
      * \brief Constructor
      */
-    Mavlink_stream(Serial& serial, const conf_t& config);
+    Mavlink_stream(Serial& serial, const conf_t& config = default_config());
 
 
     /**

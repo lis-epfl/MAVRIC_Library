@@ -52,10 +52,17 @@ extern "C"
 #include "util/quick_trig.h"
 }
 
+// Definitions constants as double for precise conversion
+#define EARTH_RADIUS_DOUBLE     6378137.0
+#define PI_DOUBLE               3.141592653589793
+#define MATH_DEG_TO_RAD_DOUBLE  (PI_DOUBLE/180.0)
+#define MATH_RAD_TO_DEG_DOUBLE  (180.0/PI_DOUBLE)
+
+
 void coord_conventions_local_to_global_position(const local_position_t& input, const global_position_t& origin, global_position_t& output)
 {
-    output.latitude     = origin.latitude  + maths_rad_to_deg(input[0] / EARTH_RADIUS);
-    output.longitude    = origin.longitude + maths_rad_to_deg(input[1] / (EARTH_RADIUS * cos(maths_deg_to_rad(output.latitude))));
+    output.latitude     = origin.latitude  + MATH_RAD_TO_DEG_DOUBLE * ((double)(input[0]) / EARTH_RADIUS_DOUBLE);
+    output.longitude    = origin.longitude + MATH_RAD_TO_DEG_DOUBLE * ((double)(input[1]) / (EARTH_RADIUS_DOUBLE * cos(MATH_DEG_TO_RAD_DOUBLE * output.latitude)));
     output.altitude     = -input[2] + origin.altitude;
 }
 
@@ -64,9 +71,9 @@ void coord_conventions_global_to_local_position(const global_position_t& positio
 {
     double small_radius;
 
-    small_radius    = cos(maths_deg_to_rad(position.latitude)) * EARTH_RADIUS;
-    output[X]       = (float)(sin(maths_deg_to_rad((position.latitude - origin.latitude))) * EARTH_RADIUS);
-    output[Y]       = (float)(sin(maths_deg_to_rad((position.longitude - origin.longitude))) * small_radius);
+    small_radius    = cos(MATH_DEG_TO_RAD_DOUBLE * position.latitude) * EARTH_RADIUS_DOUBLE;
+    output[X]       = (float)(sin(MATH_DEG_TO_RAD_DOUBLE * (position.latitude  - origin.latitude))  * EARTH_RADIUS_DOUBLE);
+    output[Y]       = (float)(sin(MATH_DEG_TO_RAD_DOUBLE * (position.longitude - origin.longitude)) * small_radius);
     output[Z]       = (float)(-(position.altitude - origin.altitude));
 }
 
