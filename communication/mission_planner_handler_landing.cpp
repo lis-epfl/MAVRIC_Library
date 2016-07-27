@@ -62,7 +62,7 @@ void Mission_planner_handler_landing::set_behavior()
     {
         case Navigation::DESCENT_TO_SMALL_ALTITUDE:
         {
-            print_util_dbg_print("Cust: descent to small alt");
+            print_util_dbg_print("Cust: descent to small alt\r\n");
             state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
             state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
             local_pos[Z] = navigation_.takeoff_altitude/2.0f;
@@ -73,7 +73,7 @@ void Mission_planner_handler_landing::set_behavior()
 
         case Navigation::DESCENT_TO_GND:
         {
-            print_util_dbg_print("Cust: descent to gnd");
+            print_util_dbg_print("Cust: descent to gnd\r\n");
             state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
             state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
             local_pos[Z] = 0.0f;
