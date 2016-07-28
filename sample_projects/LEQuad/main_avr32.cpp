@@ -89,7 +89,7 @@ int main(void)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    LEQuad::conf_t mav_config = LEQuad::default_config(201);//MAVLINK_SYS_ID);
     LEQuad mav = LEQuad(board.imu,
                         board.bmp085,
                         board.gps_ublox,

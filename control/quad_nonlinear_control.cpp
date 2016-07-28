@@ -39,7 +39,7 @@
  *
  ******************************************************************************/
 
-
+//#include <math.h>
 #include "quad_nonlinear_control.hpp"
 #include "simulation/dynamic_model_quad_diag.hpp"
 
@@ -58,6 +58,13 @@ bool quad_nonlinear_control_init(quad_nonlinear_control_struct* quad_nonlinear_c
     quad_nonlinear_control->thrust_command = thrust;
     quad_nonlinear_control->torque_command = torque;
 
+    quad_nonlinear_control->gain_position = 0.1;
+    quad_nonlinear_control->gain_velocity = 1;
+    quad_nonlinear_control->gain_attitude = 30;
+    quad_nonlinear_control->gain_angvel = 1;
+    quad_nonlinear_control->gain_pos_vel = 0.1;
+    quad_nonlinear_control->gain_att_agv = 5;
+
     return init_success;
 }
 
@@ -73,22 +80,30 @@ void quad_nonlinear_control_law(quad_nonlinear_control_struct* quad_nonlinear_co
     const float g = 9.81;															    // Gravity of Earth
 
 
-    const float ka = 0.1;																// Control gains
-    const float kb = 1;
-    const float kc = 30;
-    const float kd = 1;
-    const float k2 = 0.1;
-    const float k3 = 10;
+    const float ka = quad_nonlinear_control->gain_position;																// Control gains
+    const float kb = quad_nonlinear_control->gain_velocity;
+    const float kc = quad_nonlinear_control->gain_attitude;
+    const float kd = quad_nonlinear_control->gain_angvel;
+    const float k2 = quad_nonlinear_control->gain_pos_vel;
+    const float k3 = quad_nonlinear_control->gain_att_agv;
 
     /* Current this controller stabilizes the vehicle at (0,0,0), with the desired trajectory as input, it would be able to
        follow a specific trajectory. */ 
-    const double p1 = quad_nonlinear_control->pos_est->local_position.pos[0];           // Quadrotor position
-    const double p2 = quad_nonlinear_control->pos_est->local_position.pos[1];
-    const double p3 = quad_nonlinear_control->pos_est->local_position.pos[2];
+    // const double p1 = quad_nonlinear_control->pos_est->local_position.pos[0];           // Quadrotor position
+    // const double p2 = quad_nonlinear_control->pos_est->local_position.pos[1];
+    // const double p3 = quad_nonlinear_control->pos_est->local_position.pos[2] + 10;
 
-    const double v1 = quad_nonlinear_control->pos_est->vel[0];						    // Quadrotor velocity
-    const double v2 = quad_nonlinear_control->pos_est->vel[1];
-    const double v3 = quad_nonlinear_control->pos_est->vel[2];
+    // const double v1 = quad_nonlinear_control->pos_est->vel[0];						    // Quadrotor velocity
+    // const double v2 = quad_nonlinear_control->pos_est->vel[1];
+    // const double v3 = quad_nonlinear_control->pos_est->vel[2];
+
+    const double p1 = 0.0f;           // Quadrotor position
+    const double p2 = 0.0f;
+    const double p3 = 0.0f;
+
+    const double v1 = 0.0f;                        // Quadrotor velocity
+    const double v2 = 0.0f;
+    const double v3 = 0.0f;
 
     Mat<3,3> rotation_matrix;														    // Quadrotor attitude in matrix representation
     // Covert quaternion into rotation matrix
@@ -116,8 +131,8 @@ void quad_nonlinear_control_law(quad_nonlinear_control_struct* quad_nonlinear_co
     // Convert physical torque into relative form (range from -1 to 1)
     torque_abs_to_rel(thrust, torque_roll, torque_pitch, torque_yaw);
 
-    //print_util_dbg_putfloat(p1, 4);
-    //print_util_dbg_print("\r\n");
+    /*print_util_dbg_putfloat(thrust, 4);
+    print_util_dbg_print("\r\n");*/
 
     // Assign the control law
     quad_nonlinear_control->thrust_command->thrust = thrust;

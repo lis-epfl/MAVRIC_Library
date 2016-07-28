@@ -43,7 +43,6 @@
 #ifndef QUAD_NONLINEAR_CONTROL_H_
 #define QUAD_NONLINEAR_CONTROL_H_
 
-#include <math.h>
 #include "sensing/position_estimation.hpp"
 #include "util/matrix.hpp"
 
@@ -54,6 +53,13 @@ extern "C"
 
 typedef struct
 {
+    float gain_position;
+    float gain_velocity;
+    float gain_attitude;
+    float gain_angvel;
+    float gain_pos_vel;
+    float gain_att_agv;
+
     const Position_estimation* pos_est;                         // The pointer to the position estimation structure
     const ahrs_t* ahrs;                                         // The pointer to the attitude estimation structure
     thrust_command_t* thrust_command;                           // The pointer to the thrust command structure

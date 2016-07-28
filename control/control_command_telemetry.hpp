@@ -59,4 +59,7 @@ extern "C"
 void control_command_telemetry_send(const command_t* command, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
+void control_command_2_telemetry_send(const command_t* command, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void control_command_3_telemetry_send(const command_t* command, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+
 #endif /* CONTROL_COMMAND_TELEMETRY_HPP_ */

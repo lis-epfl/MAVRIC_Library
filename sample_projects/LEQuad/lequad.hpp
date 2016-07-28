@@ -97,11 +97,12 @@ extern "C"
 #include "control/attitude_controller.h"
 }
 
-
+#include "control/quad_nonlinear_control.hpp"
 
 /**
  * \brief MAV class
  */
+
 class LEQuad
 {
 public:
@@ -226,6 +227,7 @@ protected:
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
 
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
+    quad_nonlinear_control_struct quad_nonlinear_control;
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation

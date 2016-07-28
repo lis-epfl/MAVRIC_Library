@@ -69,5 +69,31 @@ void control_command_telemetry_send(const command_t* command, const Mavlink_stre
                                      command->position.xyz,
                                      command->velocity.xyz);
 
-    print_util_dbg_print(" send command\r\n");
+    //print_util_dbg_print(" send command\r\n");
+}
+
+void control_command_2_telemetry_send(const command_t* command, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    mavlink_msg_debug_pack(mavlink_stream->sysid(),
+                                mavlink_stream->compid(),
+                                msg,
+                                time_keeper_get_ms(),
+                                0,
+                                command->thrust.thrust);
+
+    //print_util_dbg_print(" send command\r\n");
+}
+
+void control_command_3_telemetry_send(const command_t* command, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    mavlink_msg_debug_vect_pack(mavlink_stream->sysid(),
+                                mavlink_stream->compid(),
+                                msg,
+                                "torque",
+                                time_keeper_get_us(),
+                                command->torque.xyz[0],
+                                command->torque.xyz[1],
+                                command->torque.xyz[2]);
+
+    //print_util_dbg_print(" send command\r\n");
 }

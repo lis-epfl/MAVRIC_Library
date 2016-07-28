@@ -53,6 +53,7 @@
 #include "sensing/position_estimation_telemetry.hpp"
 
 #include "control/manual_control_telemetry.hpp"
+#include "control/control_command_telemetry.hpp"
 
 #include "runtime/scheduler_telemetry.hpp"
 
@@ -365,6 +366,13 @@ bool LEQuad::init_stabilisers(void)
     // Stabilisation copter
     // -------------------------------------------------------------------------
     // Module
+
+    ret &= quad_nonlinear_control_init(&quad_nonlinear_control,
+                                    &position_estimation,
+                                    &ahrs,
+                                    &command.thrust,
+                                    &command.torque);
+
     ret &= stabilisation_copter_init(&stabilisation_copter,
                                     config_.stabilisation_copter_config,
                                     &controls,
@@ -379,54 +387,66 @@ bool LEQuad::init_stabilisers(void)
     stabiliser_t* rate_stabiliser     = &stabilisation_copter.stabiliser_stack.rate_stabiliser;
     stabiliser_t* attitude_stabiliser = &stabilisation_copter.stabiliser_stack.attitude_stabiliser;
     stabiliser_t* velocity_stabiliser = &stabilisation_copter.stabiliser_stack.velocity_stabiliser;
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain,                    "ROLL_R_KP");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.clip,           "ROLL_R_I_CLIP");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.gain,           "ROLL_R_KI");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip,       "ROLL_R_D_CLIP");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain,       "ROLL_R_KD");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_A_KP");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_A_I_CLIP");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_A_KI");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.clip,   "ROLL_A_D_CLIP");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_A_KD");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].p_gain,                   "PITCH_R_KP");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.clip,          "PITCH_R_I_CLIP");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.gain,          "PITCH_R_KI");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.clip,      "PITCH_R_D_CLIP");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain,      "PITCH_R_KD");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_A_KP");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_A_I_CLIP");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_A_KI");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.clip,  "PITCH_A_D_CLIP");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_A_KD");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].p_gain,                     "YAW_R_KP");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_max,                   "YAW_R_P_CLMX");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_min,                   "YAW_R_P_CLMN");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.clip,            "YAW_R_I_CLIP");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.gain,            "YAW_R_KI");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.clip,        "YAW_R_D_CLIP");
-    ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.gain,        "YAW_R_KD");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAW_A_KP");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAW_A_P_CLMX");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAW_A_P_CLMN");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAW_A_I_CLIP");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAW_A_KI");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAW_A_D_CLIP");
-    ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAW_A_KD");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_V_KP");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip_pre,   "ROLL_V_I_CLPRE");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_V_KI");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_V_I_CLIP");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_V_KD");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_V_KP");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip_pre,  "PITCH_V_I_CLPRE");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_V_KI");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_V_I_CLIP");
-    ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_V_KD");
-    ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain,                   "THRV_KP");
-    ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.clip_pre,      "THRV_I_PREG");
-    ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain,      "THRV_KD");
-    ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width,          "THRV_SOFT");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain,                    "ROLL_R_KP");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.clip,           "ROLL_R_I_CLIP");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.gain,           "ROLL_R_KI");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip,       "ROLL_R_D_CLIP");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain,       "ROLL_R_KD");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_A_KP");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_A_I_CLIP");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_A_KI");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.clip,   "ROLL_A_D_CLIP");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_A_KD");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].p_gain,                   "PITCH_R_KP");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.clip,          "PITCH_R_I_CLIP");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.gain,          "PITCH_R_KI");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.clip,      "PITCH_R_D_CLIP");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain,      "PITCH_R_KD");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_A_KP");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_A_I_CLIP");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_A_KI");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.clip,  "PITCH_A_D_CLIP");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_A_KD");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].p_gain,                     "YAW_R_KP");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_max,                   "YAW_R_P_CLMX");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_min,                   "YAW_R_P_CLMN");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.clip,            "YAW_R_I_CLIP");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.gain,            "YAW_R_KI");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.clip,        "YAW_R_D_CLIP");
+    // ret &= op.add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.gain,        "YAW_R_KD");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAW_A_KP");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAW_A_P_CLMX");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAW_A_P_CLMN");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAW_A_I_CLIP");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAW_A_KI");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAW_A_D_CLIP");
+    // ret &= op.add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAW_A_KD");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_V_KP");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip_pre,   "ROLL_V_I_CLPRE");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_V_KI");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_V_I_CLIP");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_V_KD");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_V_KP");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip_pre,  "PITCH_V_I_CLPRE");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_V_KI");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_V_I_CLIP");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_V_KD");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain,                   "THRV_KP");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.clip_pre,      "THRV_I_PREG");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain,      "THRV_KD");
+    // ret &= op.add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width,          "THRV_SOFT");
+
+    ret &= op.add_parameter_float(&quad_nonlinear_control.gain_position,               "NONL_POS_G");
+    ret &= op.add_parameter_float(&quad_nonlinear_control.gain_velocity,               "NONL_VEL_G");
+    ret &= op.add_parameter_float(&quad_nonlinear_control.gain_attitude,               "NONL_ATT_G");
+    ret &= op.add_parameter_float(&quad_nonlinear_control.gain_angvel,                 "NONL_AGV_G");
+    ret &= op.add_parameter_float(&quad_nonlinear_control.gain_pos_vel,                "NONL_POS_VEL_G");
+    ret &= op.add_parameter_float(&quad_nonlinear_control.gain_att_agv,                "NONL_ATT_AGV_G");
+
+    // DOWN telemetry
+    // ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_CONTROL_COMMAND, 100000, (Mavlink_communication::send_msg_function_t)&control_command_telemetry_send, &command);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_DEBUG, 100000, (Mavlink_communication::send_msg_function_t)&control_command_2_telemetry_send, &command);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_DEBUG_VECT, 100000, (Mavlink_communication::send_msg_function_t)&control_command_3_telemetry_send, &command);
 
     return ret;
 }
@@ -599,7 +619,15 @@ bool LEQuad::main_task(void)
     // if behaviour defined, execute controller and mix; otherwise: set servos to failsafe
     if(!failsafe)
     {
-        stabilisation_copter_cascade_stabilise(&stabilisation_copter);
+        if (satellite.channel(6) <= 0.0f)
+        {
+            stabilisation_copter_cascade_stabilise(&stabilisation_copter);
+        }
+        else
+        {
+            quad_nonlinear_control_law(&quad_nonlinear_control);
+        }
+        
         servos_mix_quadcopter_diag_update(&servo_mix);
     }
     else
