@@ -30,11 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
-<<<<<<< HEAD
- * \file main.cpp
-=======
- * \file main_sparky.cpp
->>>>>>> master
+ * \file main_sparky_v2.cpp
  *
  * \author MAV'RIC Team
  *
@@ -50,10 +46,10 @@
 extern "C"
 {
 #include "util/print_util.h"
-}
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
+}
 
 int main(int argc, char** argv)
 {   
@@ -70,14 +66,31 @@ int main(int argc, char** argv)
     // Board initialisation
     init_success &= board.init();
 
+
+    // #############################################################################################
+    // #############  Mavlink test##################################################################
+    // #############################################################################################
+    Mavlink_stream mavlink_stream(board.serial_);
+    mavlink_message_t msg;
+
     while (1)
     {
-        time_keeper_delay_ms(100);
-        board.led_rf_.toggle();
-        time_keeper_delay_ms(100);
-        board.led_stat_.toggle();
-        time_keeper_delay_ms(100);
-        board.led_err_.toggle();
+        board.state_display_sparky_v2_.update();
+        // Warning: if too short serial does not work
+        time_keeper_delay_ms(500);
+
+        
+        // Write mavlink message
+        mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
+                                    50,     // uint8_t component_id,
+                                    &msg,   // mavlink_message_t* msg,
+                                    0,      // uint8_t type,
+                                    0,      // uint8_t autopilot,
+                                    0,      // uint8_t base_mode,
+                                    0,      // uint32_t custom_mode,
+                                    0);     //uint8_t system_status)
+        mavlink_stream.send(&msg);
+        
     }
 
     return 0;

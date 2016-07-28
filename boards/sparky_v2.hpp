@@ -43,26 +43,17 @@
 #ifndef SPARKY_V2_HPP_
 #define SPARKY_V2_HPP_
 
+#include "hal/dummy/pwm_dummy.hpp"
+
 #include "hal/stm32/gpio_stm32.hpp"
-#include "hal/stm32/i2c_stm32.hpp"
 #include "hal/stm32/pwm_stm32.hpp"
 #include "hal/stm32/serial_stm32.hpp"
+#include "hal/stm32/serial_usb_stm32.hpp"
 
-#include "drivers/airspeed_analog.hpp"
-#include "drivers/battery.hpp"
 #include "drivers/servo.hpp"
-#include "drivers/sonar_i2cxl.hpp"
-#include "drivers/spektrum_satellite.hpp"
 #include "drivers/state_display_sparky_v2.hpp"
 
-#include "simulation/dynamic_model_quad_diag.hpp"
-#include "simulation/simulation.hpp"
-
 #include "hal/dummy/serial_dummy.hpp"
-#include "hal/dummy/i2c_dummy.hpp"
-#include "hal/dummy/adc_dummy.hpp"
-#include "hal/dummy/file_dummy.hpp"
-#include "hal/dummy/pwm_dummy.hpp"
 #include "hal/dummy/gpio_dummy.hpp"
 #include "hal/common/led_gpio.hpp"
 
@@ -94,8 +85,8 @@ typedef struct
     gpio_stm32_conf_t       led_err_gpio_config;
     gpio_stm32_conf_t       led_stat_gpio_config;
     gpio_stm32_conf_t       led_rf_gpio_config;
-    //serial_stm32_conf_t     serial_1_config;
-    //serial_stm32_conf_t     serial_2_config;
+    Pwm_stm32::config_t     pwm_config[8];
+    servo_conf_t            servo_config[8];
 } sparky_v2_conf_t;
 
 
@@ -138,10 +129,24 @@ public:
     Led_gpio                led_err_;
     Led_gpio                led_stat_;
     Led_gpio                led_rf_;
+    Pwm_stm32               pwm_0_;
+    Pwm_stm32               pwm_1_;
+    Pwm_stm32               pwm_2_;
+    Pwm_stm32               pwm_3_;
+    Pwm_stm32               pwm_4_;
+    Pwm_stm32               pwm_5_;
+    Pwm_dummy               pwm_6_;
+    Pwm_dummy               pwm_7_;
+    Servo                   servo_0_;
+    Servo                   servo_1_;
+    Servo                   servo_2_;
+    Servo                   servo_3_;
+    Servo                   servo_4_;
+    Servo                   servo_5_;
+    Servo                   servo_6_;
+    Servo                   servo_7_;
     State_display_sparky_v2 state_display_sparky_v2_;
-    //File_dummy              file_flash;
-    //Serial_stm32            serial_1;
-    //Serial_stm32            serial_2;
+    Serial_usb_stm32        serial_;
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
@@ -160,7 +165,6 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // -------------------------------------------------------------------------
     // GPIO config
     // -------------------------------------------------------------------------
-
     // Error Led
     conf.led_err_gpio_config.port    = GPIO_STM32_PORT_B;
     conf.led_err_gpio_config.pin     = GPIO_STM32_PIN_4;
@@ -179,43 +183,93 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.led_rf_gpio_config.dir      = GPIO_OUTPUT;
     conf.led_rf_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
 
-    /*
     // -------------------------------------------------------------------------
-    // Serial config
+    // PWM config
     // -------------------------------------------------------------------------
-    conf.serial_1_config                = serial_stm32_default_config();
-    conf.serial_1_config.device         = SERIAL_STM32_4;
-    conf.serial_1_config.baudrate       = 57600;
-    conf.serial_1_config.databits       = SERIAL_STM32_DATABITS_8;
-    conf.serial_1_config.stopbits       = SERIAL_STM32_STOPBITS_1;
-    conf.serial_1_config.parity         = SERIAL_STM32_PARITY_NONE;
-    conf.serial_1_config.mode           = SERIAL_STM32_MODE_TX_RX;
-    conf.serial_1_config.flow_control   = SERIAL_STM32_FLOWCONTROL_NONE;
-    conf.serial_1_config.rx_port        = GPIO_STM32_PORT_A;
-    conf.serial_1_config.rx_pin         = GPIO_STM32_PIN_1;
-    conf.serial_1_config.rx_af          = GPIO_STM32_AF_8;
-    conf.serial_1_config.tx_port        = GPIO_STM32_PORT_A;
-    conf.serial_1_config.tx_pin         = GPIO_STM32_PIN_0;
-    conf.serial_1_config.tx_af          = GPIO_STM32_AF_8;
+    conf.pwm_config[0].gpio_config.port     = GPIO_STM32_PORT_B;
+    conf.pwm_config[0].gpio_config.pin      = GPIO_STM32_PIN_0;
+    conf.pwm_config[0].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[0].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[0].gpio_config.alt_fct  = GPIO_STM32_AF_2;
+    conf.pwm_config[0].timer_config         = TIM3;
+    conf.pwm_config[0].rcc_timer_config     = RCC_TIM3;
+    conf.pwm_config[0].channel_config       = Pwm_stm32::PWM_STM32_CHANNEL_3;
+    conf.pwm_config[0].prescaler_config     = 84; //since APB1 clock is main_clk/2
+    conf.pwm_config[0].period_config        = 20000; //50Hz
+    conf.pwm_config[0].duty_cycle_config    = 5000;
+
+    conf.pwm_config[1].gpio_config.port     = GPIO_STM32_PORT_B;
+    conf.pwm_config[1].gpio_config.pin      = GPIO_STM32_PIN_1;
+    conf.pwm_config[1].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[1].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[1].gpio_config.alt_fct  = GPIO_STM32_AF_2;
+    conf.pwm_config[1].timer_config         = TIM3;
+    conf.pwm_config[1].rcc_timer_config     = RCC_TIM3;
+    conf.pwm_config[1].channel_config       = Pwm_stm32::PWM_STM32_CHANNEL_4;
+    conf.pwm_config[1].prescaler_config     = 84;
+    conf.pwm_config[1].period_config        = 20000; //50Hz
+    conf.pwm_config[1].duty_cycle_config    = 5000;
+
+    conf.pwm_config[2].gpio_config.port     = GPIO_STM32_PORT_A;
+    conf.pwm_config[2].gpio_config.pin      = GPIO_STM32_PIN_3;
+    conf.pwm_config[2].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[2].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[2].gpio_config.alt_fct  = GPIO_STM32_AF_3;
+    conf.pwm_config[2].timer_config         = TIM9;
+    conf.pwm_config[2].rcc_timer_config     = RCC_TIM9;
+    conf.pwm_config[2].channel_config       = Pwm_stm32::PWM_STM32_CHANNEL_2;
+    // max timer clock freq of TIM9 is not 84 but 168 MHz
+    conf.pwm_config[2].prescaler_config     = 168;
+    conf.pwm_config[2].period_config        = 20000; //50Hz
+    conf.pwm_config[2].duty_cycle_config    = 5000;
+
+    conf.pwm_config[3].gpio_config.port     = GPIO_STM32_PORT_A;
+    conf.pwm_config[3].gpio_config.pin      = GPIO_STM32_PIN_2;
+    conf.pwm_config[3].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[3].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[3].gpio_config.alt_fct  = GPIO_STM32_AF_1;
+    conf.pwm_config[3].timer_config         = TIM2;
+    conf.pwm_config[3].rcc_timer_config     = RCC_TIM2;
+    conf.pwm_config[3].channel_config       = Pwm_stm32::PWM_STM32_CHANNEL_3;
+    conf.pwm_config[3].prescaler_config     = 84;
+    conf.pwm_config[3].period_config        = 20000; //50Hz
+    conf.pwm_config[3].duty_cycle_config    = 5000;
+
+    conf.pwm_config[4].gpio_config.port     = GPIO_STM32_PORT_A;
+    conf.pwm_config[4].gpio_config.pin      = GPIO_STM32_PIN_1;
+    conf.pwm_config[4].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[4].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[4].gpio_config.alt_fct  = GPIO_STM32_AF_2;
+    conf.pwm_config[4].timer_config         = TIM5;
+    conf.pwm_config[4].rcc_timer_config     = RCC_TIM5;
+    conf.pwm_config[4].channel_config       = Pwm_stm32::PWM_STM32_CHANNEL_2;
+    conf.pwm_config[4].prescaler_config     = 84;
+    conf.pwm_config[4].period_config        = 20000; //50Hz
+    conf.pwm_config[4].duty_cycle_config    = 5000;
+
+    conf.pwm_config[5].gpio_config.port     = GPIO_STM32_PORT_A;
+    conf.pwm_config[5].gpio_config.pin      = GPIO_STM32_PIN_0;
+    conf.pwm_config[5].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[5].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[5].gpio_config.alt_fct  = GPIO_STM32_AF_2;
+    conf.pwm_config[5].timer_config         = TIM5;
+    conf.pwm_config[5].rcc_timer_config     = RCC_TIM5;
+    conf.pwm_config[5].channel_config       = Pwm_stm32::PWM_STM32_CHANNEL_1;
+    conf.pwm_config[5].prescaler_config     = 84;
+    conf.pwm_config[5].period_config        = 20000; //50Hz
+    conf.pwm_config[5].duty_cycle_config    = 5000;
 
     // -------------------------------------------------------------------------
-    // Serial config
+    // Servo config
     // -------------------------------------------------------------------------
-    conf.serial_2_config                = serial_stm32_default_config();
-    conf.serial_2_config.device         = SERIAL_STM32_2;
-    conf.serial_2_config.baudrate       = 115200;
-    conf.serial_2_config.databits       = SERIAL_STM32_DATABITS_8;
-    conf.serial_2_config.stopbits       = SERIAL_STM32_STOPBITS_1;
-    conf.serial_2_config.parity         = SERIAL_STM32_PARITY_NONE;
-    conf.serial_2_config.mode           = SERIAL_STM32_MODE_TX_RX;
-    conf.serial_2_config.flow_control   = SERIAL_STM32_FLOWCONTROL_NONE;
-    conf.serial_2_config.rx_port        = GPIO_STM32_PORT_A;
-    conf.serial_2_config.rx_pin         = GPIO_STM32_PIN_3;
-    conf.serial_2_config.rx_af          = GPIO_STM32_AF_7;
-    conf.serial_2_config.tx_port        = GPIO_STM32_PORT_A;
-    conf.serial_2_config.tx_pin         = GPIO_STM32_PIN_2;
-    conf.serial_2_config.tx_af          = GPIO_STM32_AF_7;
-    */
+    conf.servo_config[0] = servo_default_config_esc();
+    conf.servo_config[1] = servo_default_config_esc();
+    conf.servo_config[2] = servo_default_config_esc();
+    conf.servo_config[3] = servo_default_config_esc();
+    conf.servo_config[4] = servo_default_config_esc();
+    conf.servo_config[5] = servo_default_config_esc();
+    conf.servo_config[6] = servo_default_config_esc();
+    conf.servo_config[7] = servo_default_config_esc();
 
     return conf;
 }

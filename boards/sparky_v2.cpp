@@ -63,7 +63,7 @@ uint8_t serial2stream(stream_data_t data, uint8_t byte)
 static void clock_setup(void)
 {
     // Set STM32 to 168 MHz
-    rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
+    rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
 
     // Enable GPIO clock
     rcc_periph_clock_enable(RCC_GPIOA);
@@ -77,13 +77,25 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     led_err_gpio_(config.led_err_gpio_config),
     led_stat_gpio_(config.led_stat_gpio_config),
     led_rf_gpio_(config.led_rf_gpio_config),
-    led_err_(led_err_gpio_),
-    led_stat_(led_stat_gpio_),
-    led_rf_(led_rf_gpio_),
-    state_display_sparky_v2_(led_stat_, led_err_)
-    // file_flash(),
-    // serial_1(config.serial_1_config),
-    // serial_2(config.serial_2_config)
+    led_err_(led_err_gpio_, false),
+    led_stat_(led_stat_gpio_, false),
+    led_rf_(led_rf_gpio_, false),
+    pwm_0_(config.pwm_config[0]),
+    pwm_1_(config.pwm_config[1]),
+    pwm_2_(config.pwm_config[2]),
+    pwm_3_(config.pwm_config[3]),
+    pwm_4_(config.pwm_config[4]),
+    pwm_5_(config.pwm_config[5]),
+    servo_0_(pwm_0_, config.servo_config[0]),
+    servo_1_(pwm_1_, config.servo_config[1]),
+    servo_2_(pwm_2_, config.servo_config[2]),
+    servo_3_(pwm_3_, config.servo_config[3]),
+    servo_4_(pwm_4_, config.servo_config[4]),
+    servo_5_(pwm_5_, config.servo_config[5]),
+    servo_6_(pwm_6_, config.servo_config[6]),
+    servo_7_(pwm_7_, config.servo_config[7]),
+    state_display_sparky_v2_(led_stat_, led_err_),
+    serial_()
 {}
 
 
@@ -109,21 +121,14 @@ bool Sparky_v2::init(void)
     led_rf_.on();
 
     // -------------------------------------------------------------------------
-    // Init SERIAL1
+    // Init SERIAL
     // -------------------------------------------------------------------------
-    // ret = serial_1.init();
-    // init_success &= ret;
-
-    // -------------------------------------------------------------------------
-    // Init SERIAL2
-    // -------------------------------------------------------------------------
-    // ret = serial_2.init();
+    ret &= serial_.init();
     init_success &= ret;
 
     // -------------------------------------------------------------------------
     // Init stream for USB debug stream TODO: remove
-    // p_dbg_serial        = &serial_1;
-    // //p_dbg_serial         = &serial_2;
+    // p_dbg_serial        = &serial_;
     // dbg_stream_.get     = NULL;
     // dbg_stream_.put     = &serial2stream;
     // dbg_stream_.flush   = NULL;
@@ -142,9 +147,116 @@ bool Sparky_v2::init(void)
     // print_util_dbg_sep('-');
     // p_dbg_serial->flush();
 
-    // print_util_dbg_init_msg("[SERIAL1]", ret);
-    // print_util_dbg_init_msg("[SERIAL2]", ret);
+    // print_util_dbg_init_msg("[SERIAL]", ret);
     // p_dbg_serial->flush();
+
+    // -------------------------------------------------------------------------
+    // Init Servos
+    // -------------------------------------------------------------------------
+#if CALIBRATE_ESC == 0
+    // Do not calibrate esc
+    ret = pwm_0_.init();
+    // print_util_dbg_init_msg("[PWM0]", ret);
+    init_success &= ret;
+    servo_0_.failsafe();
+    // p_dbg_serial->flush();
+    ret = pwm_1_.init();
+    // print_util_dbg_init_msg("[PWM1]", ret);
+    init_success &= ret;
+    servo_1_.failsafe();
+    // p_dbg_serial->flush();
+    ret = pwm_2_.init();
+    // print_util_dbg_init_msg("[PWM2]", ret);
+    init_success &= ret;
+    servo_2_.failsafe();
+    // p_dbg_serial->flush();
+    ret = pwm_3_.init();
+    // print_util_dbg_init_msg("[PWM3]", ret);
+    init_success &= ret;
+    servo_3_.failsafe();
+    // p_dbg_serial->flush();
+    ret = pwm_4_.init();
+    // print_util_dbg_init_msg("[PWM4]", ret);
+    init_success &= ret;
+    servo_4_.failsafe();
+    // p_dbg_serial->flush();
+    ret = pwm_5_.init();
+    // print_util_dbg_init_msg("[PWM5]", ret);
+    init_success &= ret;
+    servo_5_.failsafe();
+    // p_dbg_serial->flush();
+    init_success &= ret;
+    ret = pwm_6_.init();
+    // print_util_dbg_init_msg("[PWM6]", ret);
+    init_success &= ret;
+    servo_6_.failsafe();
+    // p_dbg_serial->flush();
+    ret = pwm_7_.init();
+    // print_util_dbg_init_msg("[PWM7]", ret);
+    init_success &= ret;
+    servo_7_.failsafe();
+    // p_dbg_serial->flush();
+#elif CALIBRATE_ESC == 1 // Calibrate the esc
+
+    ret = pwm_0_.init();
+    // print_util_dbg_init_msg("[PWM0]", ret);
+    init_success &= ret;
+    ret = pwm_1_.init();
+    // print_util_dbg_init_msg("[PWM1]", ret);
+    init_success &= ret;
+    ret = pwm_2_.init();
+    // print_util_dbg_init_msg("[PWM2]", ret);
+    init_success &= ret;
+    ret = pwm_3_.init();
+    // print_util_dbg_init_msg("[PWM3]", ret);
+    init_success &= ret;
+    ret = pwm_4_.init();
+    // print_util_dbg_init_msg("[PWM4]", ret);
+    init_success &= ret;
+    ret = pwm_5_.init();
+    // print_util_dbg_init_msg("[PWM5]", ret);
+    init_success &= ret;
+    ret = pwm_6_.init();
+    // print_util_dbg_init_msg("[PWM6]", ret);
+    init_success &= ret;
+    ret = pwm_7_.init();
+    // print_util_dbg_init_msg("[PWM7]", ret);
+    init_success &= ret;
+
+    servo_0_.set_servo_max();
+    servo_1_.set_servo_max();
+    servo_2_.set_servo_max();
+    servo_3_.set_servo_max();
+    servo_4_.set_servo_max();
+    servo_5_.set_servo_max();
+    servo_6_.set_servo_max();
+    servo_7_.set_servo_max();
+
+    time_keeper_delay_ms(3000);
+
+    servo_0_.failsafe();
+    servo_1_.failsafe();
+    servo_2_.failsafe();
+    servo_3_.failsafe();
+    servo_4_.failsafe();
+    servo_5_.failsafe();
+    servo_6_.failsafe();
+    servo_7_.failsafe();
+
+    time_keeper_delay_ms(50);
+
+#else
+
+    // print_util_dbg_init_msg("[PWM0]", false);
+    // print_util_dbg_init_msg("[PWM1]", false);
+    // print_util_dbg_init_msg("[PWM2]", false);
+    // print_util_dbg_init_msg("[PWM3]", false);
+    // print_util_dbg_init_msg("[PWM4]", false);
+    // print_util_dbg_init_msg("[PWM5]", false);
+    // print_util_dbg_init_msg("[PWM6]", false);
+    // print_util_dbg_init_msg("[PWM7]", false);
+
+#endif
 
     return init_success;
 }
