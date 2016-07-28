@@ -56,23 +56,15 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_planner& mission_planner, bool reset_hold_wpt, Waypoint& waypoint_coordinates)
+void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_planner& mission_planner, Waypoint& waypoint_coordinates)
 {
     // Set current waypoint to the one we are travelling to
     waypoint_coordinates = waypoint_handler_.current_waypoint();
-
-    if (!reset_hold_wpt)
-    {
-        reset_hold_waypoint();
-    }
 
     if (state_.nav_plan_active)
     {
         float rel_pos[3];
         uint16_t i;
-
-        // Set hold waypoint to be the current position
-        set_hold_waypoint(ins_.position_lf());
 
         // Determine distance to the waypoint
         local_position_t wpt_pos = waypoint_coordinates.local_pos();
@@ -95,6 +87,9 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
         if (navigation_.dist2wp_sqr < (waypoint_handler_.current_waypoint().param2() * waypoint_handler_.current_waypoint().param2() + margin) ||
                (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
         {
+            // Set the hold position to be the waypoint we just arrived at
+            set_hold_waypoint(waypoint_handler_.current_waypoint());
+
             // If we are near the waypoint but the flag has not been set, do this once ...
             if (!navigation_.waiting_at_waypoint())
             {
@@ -129,12 +124,9 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
 
                 // ... and set to waiting at waypoint ...
                 navigation_.set_waiting_at_waypoint(true);
-
-                // ... and set the hold position to be the waypoint we just arrived at
-                set_hold_waypoint(waypoint_handler_.current_waypoint());
             }
 
-            // If we are supposed to land, then land
+            // If we are supposed to land, then send land message to this drone
             if (waypoint_handler_.current_waypoint().command() == MAV_CMD_NAV_LAND)
             {
                 print_util_dbg_print("Stop & land\r\n");
@@ -147,6 +139,8 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 dummy_packet.param6 = waypoint_coordinates.local_pos()[Y];
                 dummy_packet.param7 = waypoint_coordinates.local_pos()[Z];
                 Mission_planner_handler_landing::set_auto_landing(&mission_planner_handler_landing_, &dummy_packet);
+
+                return;
             }
 
             // If we can autocontinue...
@@ -157,36 +151,37 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 Waypoint& next = waypoint_handler_.next_waypoint();
 
                 // Determine geometry information between waypoints to know if we should advance
+
+                // Find the direction of the next waypoint
                 for (i=0;i<3;i++)
                 {
                     rel_pos[i] = next.local_pos()[i] - waypoint_coordinates.local_pos()[i];
                 }
-
                 float rel_pos_norm[3];
                 vectors_normalize(rel_pos, rel_pos_norm);
 
+                // Find the tangent point of the next waypoint
                 float outter_pt[3];
                 outter_pt[X] = next.local_pos()[X] + rel_pos_norm[Y]*next.radius();
                 outter_pt[Y] = next.local_pos()[Y] - rel_pos_norm[X]*next.radius();
                 outter_pt[Z] = 0.0f;
 
+                // Determine the relative position to this tangent point
                 for (i=0;i<3;i++)
                 {
                     rel_pos[i] = outter_pt[i]-ins_.position_lf()[i];
                 }
 
-                // float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - position_estimation_.local_position.heading);
+                // Find angle between our x axis and line to next tangent point
                 std::array<float,3> vel = ins_.velocity_lf();
                 float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(vel[Y], vel[X]));
 
                 // Advance if...
-                if ( (maths_f_abs(rel_heading) < navigation_.heading_acceptance) ||             // We are facing the right direction if we are in dubin
-                    (current.command() == MAV_CMD_NAV_LAND) ||                          // If we are supposed to land
+                if ((maths_f_abs(rel_heading) < navigation_.heading_acceptance) ||              // We are facing the right direction if we are in dubin
                     (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) ||   // If we are in direct to
-                    (current.param2() == 0.0f) )                                                // Or if the radius is 0 (effectively direct to) ???? TODO check
+                    (current.param2() == 0.0f) )                                                // Or if the radius is 0 (effectively direct to)
                 {
                     navigation_.set_start_wpt_time();
-
                     navigation_.set_waiting_at_waypoint(false);
                     waypoint_handler_.advance_to_next_waypoint();
 
@@ -212,6 +207,11 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 state_.nav_plan_active = false;
                 print_util_dbg_print("Stop\r\n");
             }
+        }
+        else    // We have not arrived at the waypoint yet
+        {
+            // Set hold waypoint to be the current position
+            set_hold_waypoint(ins_.position_lf());
         }
     }
     else    // Nav plan is not active, set hold waypoint if necessary
@@ -254,12 +254,10 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
     }
     else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
     {
-        //if (navigating_handler->mission_planner_.last_mode().is_auto())  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         if (navigating_handler->state_.is_auto())
         {
             navigating_handler->navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
         }
-        //else if (navigating_handler->mission_planner_.last_mode().ctrl_mode() == Mav_mode::POSITION_HOLD)  // WHY USE LAST_MODE RATHER THAN STATE->MODE?
         else if (navigating_handler->state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD)
         {
             navigating_handler->navigation_.set_internal_state(Navigation::NAV_HOLD_POSITION);
@@ -331,18 +329,13 @@ bool Mission_planner_handler_navigating::init()
 void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
-    bool new_mode = true;
 
-    if (!mission_planner.last_mode().is_auto())
-    {
-        new_mode = !mission_planner.has_mode_change();
-    }
-
+    // Determine waypoint goal location
     Waypoint waypoint_coordinates;
-    waypoint_navigating_handler(mission_planner, new_mode, waypoint_coordinates);
-
+    waypoint_navigating_handler(mission_planner, waypoint_coordinates);
     navigation_.set_goal(waypoint_coordinates);
 
+    // Determine if we should change states
     if (!mode_local.is_auto())
     {
         if (mode_local.is_manual())

@@ -106,11 +106,10 @@ protected:
      * \brief   Drives the GPS navigation procedure
      *
      * \param   mission_planner         The reference to the misison planner that is
-     * handling the request.
-     * \param   reset_hold_wpt          Resets the hold waypoint
+     *                                  handling the request.
      * \param   waypoint_coordinates    Output: Waypoint that we are navigating to
      */
-    void waypoint_navigating_handler(Mission_planner& mission_planner, bool reset_hold_wpt, Waypoint& waypoint_coordinates);
+    void waypoint_navigating_handler(Mission_planner& mission_planner, Waypoint& waypoint_coordinates);
 
     /**
      * \brief   Start/Stop the navigation
