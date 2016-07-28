@@ -82,14 +82,6 @@ void Mission_planner_handler_landing::set_behavior()
             break;
         }
     }
-
-    // Update navigation dist2wp_sqr
-    float rel_pos[3];
-    for (uint8_t i = 0; i < 3; i++)
-    {
-        rel_pos[i] = local_pos[i] - ins_.position_lf()[i];
-    }
-    navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
 }
 
 void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& mission_planner)
@@ -112,8 +104,7 @@ void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& miss
             next_state = true;
         }
     }
-
-    if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
+    else if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
     {
         if (maths_f_abs(ins_.position_lf()[Z] - hold_waypoint().local_pos()[Z]) < 0.5f)
         {
@@ -181,13 +172,6 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
         float heading = coord_conventions_get_yaw(landing_handler->ahrs_.qe);
         landing_handler->set_hold_waypoint(landing_position, heading);
 
-        // If dubin, update structure
-        /*
-        if (landing_handler->navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
-        {
-            landing_handler->dubin_hold_init(landing_position);
-        }*/
-
         print_util_dbg_print("Auto-landing procedure initialised.\r\n");
         print_util_dbg_print("Landing at: (");
         local_position_t local_pos = landing_handler->hold_waypoint().local_pos();
@@ -209,74 +193,6 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
 
     return result;
 }
-/*
-void Mission_planner_handler_landing::dubin_hold_init(local_position_t local_pos)
-{
-    switch (navigation_.dubin_state)
-    {
-        case DUBIN_INIT:
-        case DUBIN_CIRCLE1:
-            // Staying on the waypoint
-            for (int i = 0; i < 3; ++i)
-            {
-                hold_waypoint().dubin().circle_center_2[i] = navigation_.goal().dubin().circle_center_1[i];
-            }
-
-            hold_waypoint().set_radius(navigation_.goal().dubin().radius_1);
-            hold_waypoint().set_heading(coord_conventions_get_yaw(ahrs_.qe));
-
-            navigation_.dubin_state = DUBIN_CIRCLE2;
-
-            print_util_dbg_print("DUBINCIRCLE1: Position hold at: (");
-            print_util_dbg_print_num(hold_waypoint().dubin().circle_center_2[X],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(hold_waypoint().dubin().circle_center_2[Y],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(hold_waypoint().dubin().circle_center_2[Z],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num((int32_t)(hold_waypoint().heading()*180.0f/3.14f),10);
-            print_util_dbg_print(")\r\n");
-        break;
-
-        case DUBIN_STRAIGHT:
-            navigation_.dubin_state = DUBIN_INIT;
-            set_hold_waypoint(local_pos);
-
-            hold_waypoint().set_loiter_time(0.0f);
-            hold_waypoint().set_radius(navigation_.minimal_radius);
-            hold_waypoint().set_heading(coord_conventions_get_yaw(ahrs_.qe));
-
-            print_util_dbg_print("DUBINSTRAIGHT: Position hold at: (");
-            print_util_dbg_print_num(hold_waypoint().local_pos()[X],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(hold_waypoint().local_pos()[Y],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(hold_waypoint().local_pos()[Z],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num((int32_t)(hold_waypoint().heading()*180.0f/3.14f),10);
-            print_util_dbg_print(")\r\n");
-        break;
-
-        case DUBIN_CIRCLE2:
-            // Staying on the waypoint
-            //if (state_.nav_plan_active)
-            //{
-            //    waypoint_hold_coordinates = navigation_.goal;
-            //}
-            set_hold_waypoint(navigation_.goal());
-
-            print_util_dbg_print("DUBIN_CIRCLE2: Position hold at: (");
-            print_util_dbg_print_num(hold_waypoint().local_pos()[X],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(hold_waypoint().local_pos()[Y],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num(hold_waypoint().local_pos()[Z],10);
-            print_util_dbg_print(", ");
-            print_util_dbg_print_num((int32_t)(hold_waypoint().heading()*180.0f/3.14f),10);
-            print_util_dbg_print(")\r\n");
-        break;
-    }
-}*/
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
