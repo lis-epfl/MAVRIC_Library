@@ -111,9 +111,8 @@ INS_kf::INS_kf(const Gps& gps,
     dt_(0.0f),
     last_update_(0.0f)
 {
-    P_(7,7) = 0.0f;
-    P_(8,8) = 0.0f;
-    P_(9,9) = 0.0f;
+    init();
+    init_flag = 0;
 }
 
 
@@ -215,161 +214,169 @@ bool INS_kf::is_healthy(INS::healthy_t type) const
 
 bool INS_kf::update(void)
 {
-    // Prediction step
-    if (ahrs_.internal_state == AHRS_READY)
+    // Check if an initialization has to be done
+    if(init_flag == 0)
     {
-        if (last_accel_update_s_ < ahrs_.last_update_s)
+        // Prediction step
+        if (ahrs_.internal_state == AHRS_READY)
         {
-            // Update the delta time (in second)
-            float now       = time_keeper_get_s();
-            dt_             = now - last_update_;
-            last_update_    = now;
+            if (last_accel_update_s_ < ahrs_.last_update_s)
+            {
+                // Update the delta time (in second)
+                float now       = time_keeper_get_s();
+                dt_             = now - last_update_;
+                last_update_    = now;
 
-            // Make the prediciton
-            predict_kf();
+                // Make the prediciton
+                predict_kf();
 
-            // update timimg
-            last_accel_update_s_ = ahrs_.last_update_s;
+                // update timimg
+                last_accel_update_s_ = ahrs_.last_update_s;
+            }
         }
+        else
+        {
+            // Reset covariance matrix
+            P_ = Mat<11,11>(100.0f, true);
+            P_(7,7) = 0.0f;
+            P_(8,8) = 0.0f;
+            P_(9,9) = 0.0f;
+
+            // Update last time to avoid glitches at initilaization
+            last_update_ = time_keeper_get_s();
+        }
+
+
+        // Update step
+        // Measure from gps
+        if (gps_.healthy())
+        {
+            // GPS Position
+            if (last_gps_pos_update_s_ < gps_.last_position_update_us()/1e6)
+            {
+                // Get local position from gps
+                //local_position_t gps_local;
+                gps_global = gps_.position_gf();
+                ori = origin();
+                coord_conventions_global_to_local_position(gps_global, origin(), gps_local);
+
+                // Update the measurement noise if needed
+                if(!config_.constant_covar)
+                {
+                    // TODO: Implement this!
+
+                    // Recompute the measurement noise matrix
+                    R_ = Mat<3,3>({ SQR(config_.sigma_gps_xy), 0,                         0,
+                                    0,                         SQR(config_.sigma_gps_xy), 0,
+                                    0,                         0,                         SQR(config_.sigma_gps_z)});
+                }
+
+                // Run kalman update using default matrices
+                Kalman<11,3,3>::update({gps_local[0], gps_local[1], gps_local[2]});
+
+                // Update timing
+                last_gps_pos_update_s_ = gps_.last_position_update_us()/1e6;
+            }
+
+            // GPS velocity
+            if (last_gps_vel_update_s_ < gps_.last_velocity_update_us()/1e6)
+            {
+                // Update the measurement noise if needed
+                if(!config_.constant_covar)
+                {
+                    // TODO: Implement this!
+
+                    // Recompute the measurement noise matrix
+                    R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velxy),  0,                            0,
+                                           0,                             SQR(config_.sigma_gps_velxy), 0,
+                                           0,                             0,                            SQR(config_.sigma_gps_velz)});
+                }
+
+                // Run kalman update
+                gps_velocity = gps_.velocity_lf();
+                Kalman<11,3,3>::update(Mat<3,1>(gps_.velocity_lf()),
+                                       H_gpsvel_,
+                                       R_gpsvel_);
+
+                // Update timing
+                last_gps_vel_update_s_ = gps_.last_velocity_update_us()/1e6;
+            }
+        }
+
+        // // Measure from barometer
+        // // TODO: Add healthy function into barometer
+        // if(true)
+        // {
+        //    if (last_baro_update_s_ < barometer_.last_update_us()/1e6)
+        //    {
+        //       // Update the measurement noise if needed
+        //       if(!config_.constant_covar)
+        //       {
+        //           // TODO: Implement this!
+
+        //           // Recompute the measurement noise matrix
+        //           R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
+        //       }
+
+        //       // Run kalman Update
+        //       z_baro = barometer_.altitude_gf() - origin_.altitude;
+        //       Kalman<11,3,3>::update(Mat<1,1>(z_baro),
+        //                              H_baro_,
+        //                              R_baro_);
+           
+        //       // Update timing
+        //       last_baro_update_s_ = barometer_.last_update_us()/1e6;
+        //    }
+        // }
+
+        // // Measure from sonar
+        // if (sonar_.healthy())
+        // {
+        //    if (last_sonar_update_s_ < sonar_.last_update_us()/1e6)
+        //    {
+        //       // Update the measurement noise if needed
+        //       if(!config_.constant_covar)
+        //       {
+        //           // TODO: Implement this!
+
+        //           // Recompute the measurement noise matrix
+        //           R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
+        //       }
+
+        //       // Run kalman Update
+        //       z_sonar = sonar_.distance();
+        //       Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
+        //                              H_sonar_,
+        //                              R_sonar_);
+
+        //       // Update timing
+        //       last_sonar_update_s_ = sonar_.last_update_us()/1e6f;
+        //    }
+        // }
+
+        /*// Measure from optic-flow
+        if (flow.healthy())
+        {
+            if (last_flow_update_s_ < flow_.last_update_s())
+            {
+                // run kalman update on velocity
+                float vel_lf[3];
+                float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
+                quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_lf);
+                Kalman<11,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
+                // Kalman11,3,3>::update(Mat<3,1>({vel_bf[0], vel_bf[1], flow_.ground_distance()}),
+                                       H_flow_,
+                                       R_flow_);
+
+                // Update timing
+                last_flow_update_s_ = flow_.last_update_s();
+            }
+        }*/
     }
     else
     {
-        // Reset covariance matrix
-        P_ = Mat<11,11>(100.0f, true);
-        P_(7,7) = 0.0f;
-        P_(8,8) = 0.0f;
-        P_(9,9) = 0.0f;
-
-        // Update last time to avoid glitches at initilaization
-        last_update_ = time_keeper_get_s();
+      init();
     }
-
-
-    // Update step
-    // Measure from gps
-    if (gps_.healthy())
-    {
-        // GPS Position
-        if (last_gps_pos_update_s_ < gps_.last_position_update_us()/1e6)
-        {
-            // Get local position from gps
-            //local_position_t gps_local;
-            gps_global = gps_.position_gf();
-            ori = origin();
-            coord_conventions_global_to_local_position(gps_global, origin(), gps_local);
-
-            // Update the measurement noise if needed
-            if(!config_.constant_covar)
-            {
-                // TODO: Implement this!
-
-                // Recompute the measurement noise matrix
-                R_ = Mat<3,3>({ SQR(config_.sigma_gps_xy), 0,                         0,
-                                0,                         SQR(config_.sigma_gps_xy), 0,
-                                0,                         0,                         SQR(config_.sigma_gps_z)});
-            }
-
-            // Run kalman update using default matrices
-            Kalman<11,3,3>::update({gps_local[0], gps_local[1], gps_local[2]});
-
-            // Update timing
-            last_gps_pos_update_s_ = gps_.last_position_update_us()/1e6;
-        }
-
-        // GPS velocity
-        if (last_gps_vel_update_s_ < gps_.last_velocity_update_us()/1e6)
-        {
-            // Update the measurement noise if needed
-            if(!config_.constant_covar)
-            {
-                // TODO: Implement this!
-
-                // Recompute the measurement noise matrix
-                R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velxy),  0,                            0,
-                                       0,                             SQR(config_.sigma_gps_velxy), 0,
-                                       0,                             0,                            SQR(config_.sigma_gps_velz)});
-            }
-
-            // Run kalman update
-            gps_velocity = gps_.velocity_lf();
-            Kalman<11,3,3>::update(Mat<3,1>(gps_.velocity_lf()),
-                                   H_gpsvel_,
-                                   R_gpsvel_);
-
-            // Update timing
-            last_gps_vel_update_s_ = gps_.last_velocity_update_us()/1e6;
-        }
-    }
-
-    // // Measure from barometer
-    // // TODO: Add healthy function into barometer
-    // if(true)
-    // {
-    //    if (last_baro_update_s_ < barometer_.last_update_us()/1e6)
-    //    {
-    //       // Update the measurement noise if needed
-    //       if(!config_.constant_covar)
-    //       {
-    //           // TODO: Implement this!
-
-    //           // Recompute the measurement noise matrix
-    //           R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
-    //       }
-
-    //       // Run kalman Update
-    //       z_baro = barometer_.altitude_gf() - origin_.altitude;
-    //       Kalman<11,3,3>::update(Mat<1,1>(z_baro),
-    //                              H_baro_,
-    //                              R_baro_);
-       
-    //       // Update timing
-    //       last_baro_update_s_ = barometer_.last_update_us()/1e6;
-    //    }
-    // }
-
-    // // Measure from sonar
-    // if (sonar_.healthy())
-    // {
-    //    if (last_sonar_update_s_ < sonar_.last_update_us()/1e6)
-    //    {
-    //       // Update the measurement noise if needed
-    //       if(!config_.constant_covar)
-    //       {
-    //           // TODO: Implement this!
-
-    //           // Recompute the measurement noise matrix
-    //           R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
-    //       }
-
-    //       // Run kalman Update
-    //       z_sonar = sonar_.distance();
-    //       Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
-    //                              H_sonar_,
-    //                              R_sonar_);
-
-    //       // Update timing
-    //       last_sonar_update_s_ = sonar_.last_update_us()/1e6f;
-    //    }
-    // }
-
-    /*// Measure from optic-flow
-    if (flow.healthy())
-    {
-        if (last_flow_update_s_ < flow_.last_update_s())
-        {
-            // run kalman update on velocity
-            float vel_lf[3];
-            float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
-            quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_lf);
-            Kalman<11,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
-            // Kalman11,3,3>::update(Mat<3,1>({vel_bf[0], vel_bf[1], flow_.ground_distance()}),
-                                   H_flow_,
-                                   R_flow_);
-
-            // Update timing
-            last_flow_update_s_ = flow_.last_update_s();
-        }
-    }*/
 
     return true;
 }
@@ -512,4 +519,17 @@ void INS_kf::predict_kf(void)
 
     // Compute default KF prediciton step (using local accelerations as input)
     predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
+}
+
+
+void INS_kf::init(void)
+{
+    // Init state
+    x_ = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    // Init covariance
+    P_ = Mat<11,11>(100, true);
+    P_(7,7) = 0.0f;
+    P_(8,8) = 0.0f;
+    P_(9,9) = 0.0f;
 }
