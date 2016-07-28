@@ -42,10 +42,10 @@
 
 #include "drivers/gps_mocap.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "util/constants.h"
 #include "util/quick_trig.h"
 }
 
@@ -84,11 +84,9 @@ Gps_mocap::Gps_mocap(Mavlink_message_handler& message_handler, conf_t config):
     is_healthy_(false),
     last_update_us_(0.0f)
 {
-    local_position_.pos[X]  = 0.0f;
-    local_position_.pos[Y]  = 0.0f;
-    local_position_.pos[Z]  = 0.0f;
-    local_position_.heading = 0.0f;
-    local_position_.origin  = config_.origin;
+    local_position_[X]  = 0.0f;
+    local_position_[Y]  = 0.0f;
+    local_position_[Z]  = 0.0f;
 
     velocity_lf_[X] = 0.0f;
     velocity_lf_[Y] = 0.0f;
@@ -131,9 +129,9 @@ void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
     float dt_s = (t - last_update_us_) / 1000000;
     if (dt_s > 0.0f)
     {
-        velocity_lf_[X] = (packet.x - local_position_.pos[X]) / dt_s;
-        velocity_lf_[Y] = (packet.y - local_position_.pos[Y]) / dt_s;
-        velocity_lf_[Z] = (packet.z - local_position_.pos[Z]) / dt_s;
+        velocity_lf_[X] = (packet.x - local_position_[X]) / dt_s;
+        velocity_lf_[Y] = (packet.y - local_position_[Y]) / dt_s;
+        velocity_lf_[Z] = (packet.z - local_position_[Z]) / dt_s;
 
         if (velocity_lf_[X] != 0.0f)
         {
@@ -142,9 +140,9 @@ void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
     }
 
     // Update position
-    local_position_.pos[X] = packet.x;
-    local_position_.pos[Y] = packet.y;
-    local_position_.pos[Z] = packet.z;
+    local_position_[X] = packet.x;
+    local_position_[Y] = packet.y;
+    local_position_[Z] = packet.z;
 
     // Update timing
     last_update_us_ = t;
@@ -194,7 +192,9 @@ float Gps_mocap::last_velocity_update_us(void) const
 
 global_position_t Gps_mocap::position_gf(void) const
 {
-    return coord_conventions_local_to_global_position(local_position_);
+    global_position_t global_position;
+    coord_conventions_local_to_global_position(local_position_, config_.origin, global_position);
+    return global_position;
 }
 
 

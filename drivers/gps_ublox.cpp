@@ -3979,8 +3979,8 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                 }
 
                 gps->time_gps = gps_pos_llh->itow;
-                gps->longitude = gps_pos_llh->longitude / 10000000.0f;
-                gps->latitude = gps_pos_llh->latitude / 10000000.0f;
+                gps->longitude = (double)(gps_pos_llh->longitude) / 10000000.0;
+                gps->latitude = (double)(gps_pos_llh->latitude) / 10000000.0;
                 gps->alt_elips = ((float)gps_pos_llh->altitude_ellipsoid) / 1000.0f;
                 gps->altitude = ((float)gps_pos_llh->altitude_msl) / 1000.0f;
                 gps->horizontal_accuracy = ((float)gps_pos_llh->horizontal_accuracy) / 1000.0f;
@@ -5314,7 +5314,7 @@ Gps_ublox::Gps_ublox(Serial& serial):
     last_update_us_(0.0f),
     last_position_update_us_(0.0f),
     last_velocity_update_us_(0.0f),
-    position_gf_( {0.0, 0.0, 0.0f, 0.0f}),
+    position_gf_({0.0, 0.0, 0.0f}),
     horizontal_position_accuracy_(0.0f),
     vertical_position_accuracy_(0.0f),
     velocity_lf_(std::array<float, 3> {{0.0f, 0.0f, 0.0f}}),
@@ -5348,7 +5348,6 @@ bool Gps_ublox::update(void)
     position_gf_.longitude      = gps.longitude;
     position_gf_.latitude       = gps.latitude;
     position_gf_.altitude       = gps.altitude;
-    position_gf_.heading        = gps.course / 100.0f;
     horizontal_position_accuracy_   = gps.horizontal_accuracy;
     vertical_position_accuracy_     = gps.vertical_accuracy;
     velocity_lf_[0]     = gps.north_speed;

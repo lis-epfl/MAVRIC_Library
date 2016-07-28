@@ -38,12 +38,12 @@
  *
  ******************************************************************************/
 
-#ifndef GPIO_STM32_H_
-#define GPIO_STM32_H_
+#ifndef GPIO_STM32_HPP_
+#define GPIO_STM32_HPP_
 
 #include <libopencm3/stm32/gpio.h>
 #include "hal/common/gpio.hpp"
-#include <stdint.h>
+#include <cstdint>
 
 
 typedef enum
@@ -217,4 +217,4 @@ static inline gpio_stm32_conf_t gpio_stm32_default_config()
     return conf;
 }
 
-#endif /* GPIO_STM32_H_ */
+#endif /* GPIO_STM32_HPP_ */

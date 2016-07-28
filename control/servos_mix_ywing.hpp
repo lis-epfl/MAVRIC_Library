@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_ywing.h
+ * \file servos_mix_ywing.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,19 +40,15 @@
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_YWING_H_
-#define SERVOS_MIX_YWING_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef SERVOS_MIX_YWING_HPP_
+#define SERVOS_MIX_YWING_HPP_
 
 #include "drivers/servo.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "control/control_command.h"
-#include "util/constants.h"
 }
 
 /**
@@ -122,9 +118,5 @@ bool servo_mix_ywing_init(servo_mix_ywing_t* mix,
  */
 void servos_mix_ywing_update(servo_mix_ywing_t* mix);
 
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

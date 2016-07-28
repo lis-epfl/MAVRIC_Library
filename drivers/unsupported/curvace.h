@@ -50,9 +50,9 @@ extern "C" {
 
 #include <stdint.h>
 #include "util/quaternions.h"
-#include "sensing/ahrs.h"
+#include "sensing/ahrs.hpp"
 #include "drivers/optic_flow.h"
-#include "util/constants.h"
+#include "util/constants.hpp"
 
 #define CURVACE_NB_OF 108
 

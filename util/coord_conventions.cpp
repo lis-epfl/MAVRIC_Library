@@ -40,39 +40,41 @@
  ******************************************************************************/
 
 
-#include "util/coord_conventions.h"
-#include <math.h>
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
+
+#include <cmath>
+
+extern "C"
+{
 #include "util/maths.h"
 #include "util/print_util.h"
 #include "util/quick_trig.h"
-#include "util/constants.h"
+}
 
-global_position_t coord_conventions_local_to_global_position(local_position_t input)
+// Definitions constants as double for precise conversion
+#define EARTH_RADIUS_DOUBLE     6378137.0
+#define PI_DOUBLE               3.141592653589793
+#define MATH_DEG_TO_RAD_DOUBLE  (PI_DOUBLE/180.0)
+#define MATH_RAD_TO_DEG_DOUBLE  (180.0/PI_DOUBLE)
+
+
+void coord_conventions_local_to_global_position(const local_position_t& input, const global_position_t& origin, global_position_t& output)
 {
-    global_position_t output;
-
-    output.latitude     = input.origin.latitude  + maths_rad_to_deg(input.pos[0] / EARTH_RADIUS);
-    output.longitude    = input.origin.longitude + maths_rad_to_deg(input.pos[1] / (EARTH_RADIUS * cos(maths_deg_to_rad(output.latitude))));
-    output.altitude     = -input.pos[2] + input.origin.altitude;
-    output.heading      = input.heading;
-
-    return output;
+    output.latitude     = origin.latitude  + MATH_RAD_TO_DEG_DOUBLE * ((double)(input[0]) / EARTH_RADIUS_DOUBLE);
+    output.longitude    = origin.longitude + MATH_RAD_TO_DEG_DOUBLE * ((double)(input[1]) / (EARTH_RADIUS_DOUBLE * cos(MATH_DEG_TO_RAD_DOUBLE * output.latitude)));
+    output.altitude     = -input[2] + origin.altitude;
 }
 
 
-local_position_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin)
+void coord_conventions_global_to_local_position(const global_position_t& position, const global_position_t& origin, local_position_t& output)
 {
-    local_position_t output;
     double small_radius;
 
-    output.origin       = origin;
-    small_radius        = cos(maths_deg_to_rad(position.latitude)) * EARTH_RADIUS;
-    output.pos[X]       = (float)(sin(maths_deg_to_rad((position.latitude - origin.latitude))) * EARTH_RADIUS);
-    output.pos[Y]       = (float)(sin(maths_deg_to_rad((position.longitude - origin.longitude))) * small_radius);
-    output.pos[Z]       = (float)(-(position.altitude - origin.altitude));
-    output.heading      = position.heading;
-
-    return output;
+    small_radius    = cos(MATH_DEG_TO_RAD_DOUBLE * position.latitude) * EARTH_RADIUS_DOUBLE;
+    output[X]       = (float)(sin(MATH_DEG_TO_RAD_DOUBLE * (position.latitude  - origin.latitude))  * EARTH_RADIUS_DOUBLE);
+    output[Y]       = (float)(sin(MATH_DEG_TO_RAD_DOUBLE * (position.longitude - origin.longitude)) * small_radius);
+    output[Z]       = (float)(-(position.altitude - origin.altitude));
 }
 
 
@@ -94,12 +96,12 @@ quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero)
 
     // intermediate values
     float cr, cp, cy, sr, sp, sy;
-    cr = quick_trig_cos(aero.rpy[0] / 2);
-    cp = quick_trig_cos(aero.rpy[1] / 2);
-    cy = quick_trig_cos(aero.rpy[2] / 2);
-    sr = quick_trig_sin(aero.rpy[0] / 2);
-    sp = quick_trig_sin(aero.rpy[1] / 2);
-    sy = quick_trig_sin(aero.rpy[2] / 2);
+    cr = quick_trig_cos(aero.rpy[0] / 2.0f);
+    cp = quick_trig_cos(aero.rpy[1] / 2.0f);
+    cy = quick_trig_cos(aero.rpy[2] / 2.0f);
+    sr = quick_trig_sin(aero.rpy[0] / 2.0f);
+    sp = quick_trig_sin(aero.rpy[1] / 2.0f);
+    sy = quick_trig_sin(aero.rpy[2] / 2.0f);
 
 
     quat.s      = (cr * cp * cy) + (sr * sp * sy);
@@ -111,15 +113,38 @@ quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero)
 }
 
 
+quat_t coord_conventions_quaternion_from_rpy(const float rpy[3])
+{
+    quat_t quat;
+
+    // intermediate values
+    float cr, cp, cy, sr, sp, sy;
+    cr = quick_trig_cos(rpy[0] / 2.0f);
+    cp = quick_trig_cos(rpy[1] / 2.0f);
+    cy = quick_trig_cos(rpy[2] / 2.0f);
+    sr = quick_trig_sin(rpy[0] / 2.0f);
+    sp = quick_trig_sin(rpy[1] / 2.0f);
+    sy = quick_trig_sin(rpy[2] / 2.0f);
+
+
+    quat.s      = (cr * cp * cy) + (sr * sp * sy);
+    quat.v[0]   = (sr * cp * cy) - (cr * sp * sy);
+    quat.v[1]   = (cr * sp * cy) + (sr * cp * sy);
+    quat.v[2]   = (cr * cp * sy) - (sr * sp * cy);
+
+    return quat;
+}
+
+
+void coord_conventions_rpy_from_quaternion(const quat_t& qe, float rpy[3])
+{
+    rpy[0] = atan2(2 * (qe.s * qe.v[0] + qe.v[1] * qe.v[2]) , (qe.s * qe.s - qe.v[0] * qe.v[0] - qe.v[1] * qe.v[1] + qe.v[2] * qe.v[2]));
+    rpy[1] = -asin(2 * (qe.v[0] * qe.v[2] - qe.s * qe.v[1]));
+    rpy[2] = atan2(2 * (qe.s * qe.v[2] + qe.v[0] * qe.v[1]) , (qe.s * qe.s + qe.v[0] * qe.v[0] - qe.v[1] * qe.v[1] - qe.v[2] * qe.v[2]));
+}
+
+
 float coord_conventions_get_yaw(quat_t qe)
 {
     return  atan2(2 * (qe.s * qe.v[2] + qe.v[0] * qe.v[1]) , (qe.s * qe.s + qe.v[0] * qe.v[0] - qe.v[1] * qe.v[1] - qe.v[2] * qe.v[2]));
-}
-
-/* THIS IS EVIL */
-void coord_conventions_change_origin(local_position_t* position, global_position_t origin)
-{
-    global_position_t global_position = coord_conventions_local_to_global_position(*position);
-    *position = coord_conventions_global_to_local_position(global_position, origin);
-
 }

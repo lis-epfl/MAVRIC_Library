@@ -44,7 +44,7 @@
 #define MATRIX_HPP__
 
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include <initializer_list>
 

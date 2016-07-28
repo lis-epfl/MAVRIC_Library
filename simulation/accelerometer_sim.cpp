@@ -42,12 +42,8 @@
 
 
 #include "simulation/accelerometer_sim.hpp"
+#include "util/constants.hpp"
 
-
-extern "C"
-{
-#include "util/constants.h"
-}
 
 
 Accelerometer_sim::Accelerometer_sim(Dynamic_model& dynamic_model):

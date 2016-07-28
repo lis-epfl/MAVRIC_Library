@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file attitude_controller_p2.c
+ * \file attitude_controller_p2.h
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -54,57 +54,59 @@
  ******************************************************************************/
 
 
-#include "control/attitude_controller_p2.h"
+#ifndef ATTITUDE_CONTROLLER_P2_HPP_
+#define ATTITUDE_CONTROLLER_P2_HPP_
 
-bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs)
+#include "control/attitude_error_estimator.hpp"
+#include "control/control_command.h"
+#include "sensing/ahrs.hpp"
+
+
+/**
+ * \brief P^2 Attitude controller structure
+ */
+typedef struct
 {
-    bool success = true;
-
-    // Init dependencies
-    controller->attitude_command = attitude_command;
-    controller->torque_command   = torque_command;
-    controller->ahrs             = ahrs;
-
-    // Init attitude error estimator
-    success &= attitude_error_estimator_init(&controller->attitude_error_estimator, ahrs);
-
-    // Init gains
-    controller->p_gain_angle[0] = config.p_gain_angle[0];
-    controller->p_gain_angle[1] = config.p_gain_angle[1];
-    controller->p_gain_angle[2] = config.p_gain_angle[2];
-    controller->p_gain_rate[0]  = config.p_gain_rate[0];
-    controller->p_gain_rate[1]  = config.p_gain_rate[1];
-    controller->p_gain_rate[2]  = config.p_gain_rate[2];
-
-    return success;
-}
+    const ahrs_t*               ahrs;                           ///< Pointer to attitude estimation (input)
+    const attitude_command_t*   attitude_command;               ///< Pointer to attitude command (input)
+    torque_command_t*           torque_command;                 ///< Pointer to torque command (output)
+    attitude_error_estimator_t  attitude_error_estimator;       ///< Attitude error estimator
+    float                       p_gain_angle[3];                ///< Proportionnal gain for angular errors
+    float                       p_gain_rate[3];                 ///< Proportionnal gain applied to gyros rates
+} attitude_controller_p2_t;
 
 
-bool attitude_controller_p2_update(attitude_controller_p2_t* controller)
+/**
+ * \brief P^2 Attitude controller configuration
+ */
+typedef struct
 {
-    float errors[3];
-    float rates[3];
-
-    // Get attitude command
-    attitude_error_estimator_set_quat_ref(&controller->attitude_error_estimator,
-                                          controller->attitude_command->quat);
+    float p_gain_angle[3];                                      ///< Proportionnal gain for angular errors
+    float p_gain_rate[3];                                       ///< Proportionnal gain applied to gyros rates
+} attitude_controller_p2_conf_t;
 
 
-    // Get local angular errors
-    attitude_error_estimator_update(&controller->attitude_error_estimator);
-    errors[0] = controller->attitude_error_estimator.rpy_errors[0];
-    errors[1] = controller->attitude_error_estimator.rpy_errors[1];
-    errors[2] = controller->attitude_error_estimator.rpy_errors[2];
+/**
+ * \brief                       Initialises the attitude controller structure
+ *
+ * \param   controller          Pointer to data structure
+ * \param   config              Pointer to configuration
+ * \param   attitude_command    Pointer to attitude command
+ * \param   ahrs                Pointer to the estimated attitude
+ *
+ * \return success
+ */
+bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs);
 
-    // Get gyro rates
-    rates[0] = controller->ahrs->angular_speed[0];
-    rates[1] = controller->ahrs->angular_speed[1];
-    rates[2] = controller->ahrs->angular_speed[2];
 
-    // Compute outputs
-    controller->torque_command->xyz[0] = controller->p_gain_angle[0] * errors[0] - controller->p_gain_rate[0] * rates[0];
-    controller->torque_command->xyz[1] = controller->p_gain_angle[1] * errors[1] - controller->p_gain_rate[1] * rates[1];
-    controller->torque_command->xyz[2] = controller->p_gain_angle[2] * errors[2] - controller->p_gain_rate[2] * rates[2];
+/**
+ * \brief                   Main update function
+ *
+ * \param   controller      Pointer to data structure
+ *
+ * \return success
+ */
+bool attitude_controller_p2_update(attitude_controller_p2_t* controller);
 
-    return true;
-}
+
+#endif /* ATTITUDE_CONTROLLER_P2_HPP_ */

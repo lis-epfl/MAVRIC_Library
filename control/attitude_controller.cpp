@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file attitude_controller.c
+ * \file attitude_controller.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#include "control/attitude_controller.h"
-#include "util/constants.h"
+#include "control/attitude_controller.hpp"
+#include "util/constants.hpp"
 #include "hal/common/time_keeper.hpp"
 
 
@@ -79,9 +79,9 @@ static void attitude_controller_rate_loop(attitude_controller_t* controller)
     errors[YAW]   = controller->rate_command->xyz[YAW]   - controller->ahrs->angular_speed[YAW];
 
     // Update PIDs
-    controller->torque_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->rate_pid[ROLL]),  errors[ROLL],  controller->ahrs->dt_s);
-    controller->torque_command->xyz[PITCH] = pid_controller_update_dt(&(controller->rate_pid[PITCH]), errors[PITCH], controller->ahrs->dt_s);
-    controller->torque_command->xyz[YAW]   = pid_controller_update_dt(&(controller->rate_pid[YAW]),   errors[YAW],   controller->ahrs->dt_s);
+    controller->torque_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->rate_pid[ROLL]),  errors[ROLL],  controller->dt_s);
+    controller->torque_command->xyz[PITCH] = pid_controller_update_dt(&(controller->rate_pid[PITCH]), errors[PITCH], controller->dt_s);
+    controller->torque_command->xyz[YAW]   = pid_controller_update_dt(&(controller->rate_pid[YAW]),   errors[YAW],   controller->dt_s);
 }
 
 
@@ -100,9 +100,9 @@ static void attitude_controller_angle_loop(attitude_controller_t* controller)
     errors[YAW]     = controller->attitude_error_estimator.rpy_errors[YAW];
 
     // Update PIDs
-    controller->rate_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->angle_pid[ROLL]),  errors[ROLL],  controller->ahrs->dt_s);
-    controller->rate_command->xyz[PITCH] = pid_controller_update_dt(&(controller->angle_pid[PITCH]), errors[PITCH], controller->ahrs->dt_s);
-    controller->rate_command->xyz[YAW]   = pid_controller_update_dt(&(controller->angle_pid[YAW]),   errors[YAW],   controller->ahrs->dt_s);
+    controller->rate_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->angle_pid[ROLL]),  errors[ROLL],  controller->dt_s);
+    controller->rate_command->xyz[PITCH] = pid_controller_update_dt(&(controller->angle_pid[PITCH]), errors[PITCH], controller->dt_s);
+    controller->rate_command->xyz[YAW]   = pid_controller_update_dt(&(controller->angle_pid[YAW]),   errors[YAW],   controller->dt_s);
 }
 
 
@@ -121,6 +121,8 @@ bool attitude_controller_init(attitude_controller_t* controller, attitude_contro
     controller->ahrs                = ahrs;
 
     // Init mode
+    controller->dt_s          = 0.0f;
+    controller->last_update_s = 0.0f;
     controller->mode = ATTITUDE_CONTROLLER_MODE_DEFAULT;
 
     // Init attitude error estimator
@@ -142,6 +144,10 @@ bool attitude_controller_init(attitude_controller_t* controller, attitude_contro
 
 bool attitude_controller_update(attitude_controller_t* controller)
 {
+    float now                 = time_keeper_get_s();
+    controller->dt_s          = now - controller->last_update_s;
+    controller->last_update_s = now;
+
     switch (controller->mode)
     {
         case ATTITUDE_CONTROLLER_MODE_DEFAULT:
@@ -153,6 +159,7 @@ bool attitude_controller_update(attitude_controller_t* controller)
             attitude_controller_rate_loop(controller);
             break;
     }
+
 
     return true;
 }

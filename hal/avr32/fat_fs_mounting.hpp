@@ -43,9 +43,10 @@
 #ifndef FAT_FS_MOUNTING_HPP_
 #define FAT_FS_MOUNTING_HPP_
 
+#include <cstdint>
+
 extern "C"
 {
-#include <stdint.h>
 #include "libs/FatFs/src/ff.h"
 }
 

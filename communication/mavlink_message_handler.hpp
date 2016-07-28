@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_message_handler.h
+ * \file mavlink_message_handler.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef MAVLINK_MESSAGE_HANDLING_H_
-#define MAVLINK_MESSAGE_HANDLING_H_
+#ifndef MAVLINK_MESSAGE_HANDLING_HPP_
+#define MAVLINK_MESSAGE_HANDLING_HPP_
 
 // #include "onboard_parameters.h"
 #include "communication/mavlink_stream.hpp"
@@ -139,7 +139,7 @@ public:
      *
      */
     Mavlink_message_handler(Mavlink_stream& mavlink_stream, const conf_t& config);
-    
+
     /**
      * \brief                       Registers a new callback for a message
      * \details                     You should call mavlink_message_handler_sort_callback function after having added all callbacks,
@@ -200,7 +200,7 @@ private:
     uint32_t cmd_callback_count_max_;                                ///<    Maximum number of command callback that can be registered
     msg_callback_t* msg_callback_list;      ///<    List of command callbacks
     cmd_callback_t* cmd_callback_list;      ///<    List of message callbacks
-    
+
     /**
     * \brief                Sort the latest added message callback
     *

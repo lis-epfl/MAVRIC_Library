@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef GPIO_DUMMY_H_
-#define GPIO_DUMMY_H_
+#ifndef GPIO_DUMMY_HPP_
+#define GPIO_DUMMY_HPP_
 
 #include "hal/common/gpio.hpp"
 
@@ -160,4 +160,4 @@ static inline gpio_dummy_conf_t gpio_dummy_default_config()
 }
 
 
-#endif /* GPIO_DUMMY_H_ */
+#endif /* GPIO_DUMMY_HPP_ */

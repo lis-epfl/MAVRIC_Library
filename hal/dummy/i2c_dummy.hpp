@@ -38,8 +38,8 @@
  *
  ******************************************************************************/
 
-#ifndef I2C_DUMMY_H_
-#define I2C_DUMMY_H_
+#ifndef I2C_DUMMY_HPP_
+#define I2C_DUMMY_HPP_
 
 #include "hal/common/i2c.hpp"
 
@@ -139,4 +139,4 @@ static inline i2c_dummy_conf_t i2c_dummy_default_config()
 }
 
 
-#endif /* I2C_DUMMY_H_ */
+#endif /* I2C_DUMMY_HPP_ */

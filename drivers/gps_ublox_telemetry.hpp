@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef GPS_UBLOX_TELEMETRY_H_
-#define GPS_UBLOX_TELEMETRY_H_
+#ifndef GPS_UBLOX_TELEMETRY_HPP_
+#define GPS_UBLOX_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -61,4 +61,4 @@
 bool gps_ublox_telemetry_init(Gps* gps, Mavlink_message_handler* message_handler);
 
 
-#endif /* GPS_UBLOX_TELEMETRY_H_ */
+#endif /* GPS_UBLOX_TELEMETRY_HPP_ */

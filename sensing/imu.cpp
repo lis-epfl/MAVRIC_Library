@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file imu.c
+ * \file imu.cpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -43,12 +43,12 @@
 
 
 #include "sensing/imu.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
-#include "util/constants.h"
 #include "util/quick_trig.h"
 }
 

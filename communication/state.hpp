@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state.h
+ * \file state.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -40,11 +40,11 @@
  ******************************************************************************/
 
 
-#ifndef STATE_H_
-#define STATE_H_
+#ifndef STATE_HPP_
+#define STATE_HPP_
 
-#include "stdint.h"
-#include <stdbool.h>
+#include "cstdint"
+#include <cstdbool>
 
 #include "communication/mav_modes.hpp"
 #include "communication/mavlink_stream.hpp"
@@ -312,4 +312,4 @@ State::conf_t State::wing_default_config()
     return conf;
 }
 
-#endif //STATE_H_
+#endif //STATE_HPP_

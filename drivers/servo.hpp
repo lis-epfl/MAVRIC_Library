@@ -43,8 +43,8 @@
 #ifndef SERVO_HPP_
 #define SERVO_HPP_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <cstdbool>
 
 #include "hal/common/pwm.hpp"
 
@@ -207,5 +207,25 @@ static inline servo_conf_t servo_default_config_esc()
     return conf;
 };
 
+
+/**
+ * \brief   Default configuration for Brushed motors (DC motor)
+ *
+ * \return  Conf structure
+ */
+static inline servo_conf_t servo_default_config_brush_motor()
+{
+    servo_conf_t conf       = {};
+
+    conf.trim               = 0.0f;
+    conf.min                = -1.0f;
+    conf.max                = 1.0f;
+    conf.failsafe           = -1.0f;
+    conf.repeat_freq        = 4000; // period = 250us
+    conf.pulse_center_us    = 125;  
+    conf.pulse_magnitude_us = 125;  // duty cycle: 0 to 100%
+
+    return conf;
+};
 
 #endif /* SERVO_HPP_ */

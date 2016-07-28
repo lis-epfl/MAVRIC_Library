@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_diag.h
+ * \file servos_mix_quadcopter_diag.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,20 +40,15 @@
  *
  ******************************************************************************/
 
-
-
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef SERVOS_MIX_BIROTOR_HPP_
+#define SERVOS_MIX_BIROTOR_HPP_
 
 #include "drivers/servo.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
 #include "control/control_command.h"
-#include "util/constants.h"
 #include "drivers/unsupported/daler_dc_motor_ctrl.h"
 }
 
@@ -121,7 +116,4 @@ bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_co
  */
 bool servos_mix_birotor_update(servo_mix_birotor_t* mix);
 
-
-#ifdef __cplusplus
-}
-#endif
+#endif // SERVOS_MIX_BIROTOR_HPP_

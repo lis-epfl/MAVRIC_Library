@@ -30,95 +30,72 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file ahrs.hpp
  *
  * \author MAV'RIC Team
+ * \author Gregoire Heitz
  *
- * \brief Useful constants
+ * \brief This file implements data structure for attitude estimate
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#ifndef AHRS_HPP_
+#define AHRS_HPP_
 
-#ifdef __cplusplus
+#include <cstdint>
+#include <cstdbool>
+
 extern "C"
 {
-#endif
-
-
-#define GRAVITY 9.81f           ///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    X = 0,
-    Y = 1,
-    Z = 2,
-} constants_orientation_t;
-
-
-/**
- * \brief Enumerates the Roll, Pitch and Yaw orientations
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    ROLL    = 0,
-    PITCH   = 1,
-    YAW     = 2,
-} constants_roll_pitch_yaw_t;
-
-
-/**
- * \brief Enumerates the up vector orientation
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    UPVECTOR_X = 0,
-    UPVECTOR_Y = 0,
-    UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-    OFF = 0,
-    ON  = 1,
-} constants_on_off_t;
-
-
-/**
- * \brief Enumerate the turn direction of a motor
- */
-typedef enum
-{
-    CCW =  1,                    ///< Counter Clock wise
-    CW  = -1                     ///< Clock wise
-} rot_dir_t;
-
-
-/**
- * \brief Enumerate the turn direction of a flap
- */
-typedef enum
-{
-    FLAP_NORMAL     = 1,    ///< Positive roll or positive pitch or positive yaw
-    FLAP_INVERTED   = -1    ///< Negative roll or negative pitch or negative yaw
-} flap_dir_t;
-
-
-#ifdef __cplusplus
+#include "util/quaternions.h"
 }
-#endif
 
-#endif /* MATH_UTIL_H_ */
+/**
+ * \brief The calibration level of the filter
+ */
+typedef enum
+{
+    AHRS_INITIALISING   = 0,    ///< Calibration level: Not initialised
+    AHRS_LEVELING       = 1,    ///< Calibration level: No calibration, attitude estimation correction by accelero/magneto measurements
+    AHRS_CONVERGING     = 2,    ///< Calibration level: leveling, correction of gyro biais
+    AHRS_READY          = 3,    ///< Calibration level: leveled
+} ahrs_state_t;
+
+
+/**
+ * \brief Structure containing the Attitude and Heading Reference System
+ */
+typedef struct
+{
+    quat_t  qe;                         ///< quaternion defining the Attitude estimation of the platform
+
+    float   angular_speed[3];           ///< Gyro rates
+    float   linear_acc[3];              ///< Acceleration WITHOUT gravity
+
+    ahrs_state_t internal_state;        ///< Leveling state of the ahrs
+    float        last_update_s;         ///< The time of the last IMU update in s
+} ahrs_t;
+
+
+/**
+ * \brief   Initialiases the ahrs structure
+ *
+ * \param   ahrs                Pointer to ahrs structure
+ *
+ * \return  True if the init succeed, false otherwise
+ */
+bool ahrs_init(ahrs_t* ahrs);
+
+
+/**
+ * \brief   Returns an initialized ahrs_t
+ *
+ * \detail  Used to initialize ahrs in initalizer list
+ *
+ * \return  Initialized ahrs_t
+ */
+ahrs_t ahrs_initialized(void);
+
+
+#endif /* AHRS_HPP_ */

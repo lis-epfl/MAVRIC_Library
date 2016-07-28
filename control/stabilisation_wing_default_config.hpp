@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef STABILISATION_WING_DEFAULT_CONFIG_H_
-#define STABILISATION_WING_DEFAULT_CONFIG_H_
+#ifndef STABILISATION_WING_DEFAULT_CONFIG_HPP_
+#define STABILISATION_WING_DEFAULT_CONFIG_HPP_
 
 #include "stabilisation_wing.hpp"
 
@@ -424,4 +424,4 @@ static inline stabilisation_wing_conf_t stabilisation_wing_default_config()
     return conf;
 };
 
-#endif /* STABILISATION_WING_DEFAULT_CONFIG_H_ */
+#endif /* STABILISATION_WING_DEFAULT_CONFIG_HPP_ */

@@ -30,7 +30,11 @@
  ******************************************************************************/
 
 /*******************************************************************************
+<<<<<<< HEAD
  * \file main.cpp
+=======
+ * \file main_sparky.cpp
+>>>>>>> master
  *
  * \author MAV'RIC Team
  *
@@ -39,6 +43,7 @@
  ******************************************************************************/
 
 #include "boards/sparky_v2.hpp"
+
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "hal/common/time_keeper.hpp"
 
