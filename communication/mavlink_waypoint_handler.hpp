@@ -140,6 +140,15 @@ public:
      */
     uint16_t current_waypoint_index() const;
 
+    /**
+     * \brief   Sets the current waypoint index if possible
+     *
+     * \param   index   The new waypoint index
+     *
+     * \return  Success
+     */
+    bool set_current_waypoint_index(int index);
+
 protected:
     Waypoint waypoint_list_[MAX_WAYPOINTS];                     ///< The array of all waypoints (max MAX_WAYPOINTS)
     uint16_t waypoint_count_;                                   ///< The total number of waypoints
@@ -213,25 +222,6 @@ private:
      * \param   msg                     The received MAVLink message structure with the waypoint
      */
     static void receive_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
-
-    /**
-     * \brief   Sets the current waypoint to num_of_waypoint
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
-     * \param   sysid                   The system ID
-     * \param   msg                     The received MAVLink message structure with the number of the current waypoint
-     */
-    static void set_current_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
-
-    /**
-     * \brief   Set the current waypoint to new_current
-     *
-     * \param   waypoint_handler        The pointer to the waypoint handler
-     * \param   packet                  The pointer to the decoded MAVLink message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 
     /**
      * \brief   Clears the waypoint list

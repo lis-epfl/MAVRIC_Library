@@ -161,6 +161,75 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
     return result;
 }
 
+void Mission_planner::set_current_waypoint(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg)
+{
+    mavlink_mission_set_current_t packet;
+
+    mavlink_msg_mission_set_current_decode(msg, &packet);
+
+    // Check if this message is for this system and subsystem
+    if (((uint8_t)packet.target_system == (uint8_t)sysid)
+            && ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
+    {
+        if (mission_planner->waypoint_handler_.set_current_waypoint_index(packet.seq))
+        {
+            mavlink_message_t _msg;
+            mavlink_msg_mission_current_pack(sysid,
+                                             mission_planner->mavlink_stream_.compid(),
+                                             &_msg,
+                                             packet.seq);
+            mission_planner->mavlink_stream_.send(&_msg);
+
+            mission_planner->navigation_.set_start_wpt_time();
+            mission_planner->state_.nav_plan_active = true;
+            mission_planner->navigation_.set_waiting_at_waypoint(false);
+            mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
+        }
+        else
+        {
+            mavlink_message_t _msg;
+            mavlink_msg_mission_ack_pack(mission_planner->mavlink_stream_.sysid(),
+                                         mission_planner->mavlink_stream_.compid(),
+                                         &_msg,
+                                         msg->sysid,
+                                         msg->compid,
+                                         MAV_CMD_ACK_ERR_ACCESS_DENIED);
+            mission_planner->mavlink_stream_.send(&_msg);
+        }
+    } //end of if this message is for this system and subsystem
+}
+
+mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+{
+    mav_result_t result;
+    uint16_t new_current = 0;
+
+    print_util_dbg_print("All MAVs: Return to first waypoint.\r\n");
+
+    if ((mission_planner->waypoint_handler_.set_current_waypoint_index(new_current)))
+    {
+        mavlink_message_t msg;
+        mavlink_msg_mission_current_pack(mission_planner->mavlink_stream_.sysid(),
+                                         mission_planner->mavlink_stream_.compid(),
+                                         &msg,
+                                         new_current);
+        mission_planner->mavlink_stream_.send(&msg);
+
+        mission_planner->navigation_.set_start_wpt_time();
+        mission_planner->state_.nav_plan_active = true;
+        mission_planner->navigation_.set_waiting_at_waypoint(false);
+        mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
+
+        result = MAV_RESULT_ACCEPTED;
+    }
+    else
+    {
+        result = MAV_RESULT_DENIED;
+    }
+
+    return result;
+}
+
 mav_result_t Mission_planner::is_arrived(Mission_planner* mission_planner, mavlink_command_long_t* packet)
 {
     mav_result_t result;
@@ -409,8 +478,8 @@ bool Mission_planner::init()
     dub.length = 0.0f;
     waypoint_critical_coordinates_ = Waypoint(MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_WAYPOINT, 0, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 2.0f, 0.0f, dub);
 
-//     // Add callbacks for waypoint handler messages requests
-//     Mavlink_message_handler::msg_callback_t callback;
+    // Add callbacks for waypoint handler messages requests
+    Mavlink_message_handler::msg_callback_t callback;
 //
 //     callback.message_id     = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN; // 48
 //     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
@@ -418,6 +487,13 @@ bool Mission_planner::init()
 //     callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_home;
 //     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
 //     init_success &= message_handler_.add_msg_callback(&callback);
+
+    callback.message_id     = MAVLINK_MSG_ID_MISSION_SET_CURRENT; // 41
+    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
+    callback.compid_filter  = MAV_COMP_ID_ALL;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_current_waypoint;
+    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler_.add_msg_callback(&callback);
 
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;
@@ -435,6 +511,14 @@ bool Mission_planner::init()
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &is_arrived;
+    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
+
+    callbackcmd.command_id = MAV_CMD_NAV_RETURN_TO_LAUNCH; // 20
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_current_waypoint_from_parameter;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 

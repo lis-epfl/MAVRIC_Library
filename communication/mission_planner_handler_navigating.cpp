@@ -99,13 +99,22 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
             if (!navigation_.waiting_at_waypoint())
             {
                 // Send debug log ...
-                print_util_dbg_print("Waypoint Nr");
-                print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(), 10);
-                print_util_dbg_print(" reached, distance:");
-                print_util_dbg_print_num(sqrt(navigation_.dist2wp_sqr), 10);
-                print_util_dbg_print(" less than :");
-                print_util_dbg_print_num(SQR(waypoint_handler_.current_waypoint().param2()), 10);
-                print_util_dbg_print(".\r\n");
+                if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
+                {
+                    print_util_dbg_print("Waypoint Nr ");
+                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(), 10);
+                    print_util_dbg_print(" reached by entering dubin circles 2.\r\n");
+                }
+                else if (navigation_.dist2wp_sqr < (waypoint_handler_.current_waypoint().param2() * waypoint_handler_.current_waypoint().param2() + margin))
+                {
+                    print_util_dbg_print("Waypoint Nr ");
+                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(), 10);
+                    print_util_dbg_print(" reached, distance: ");
+                    print_util_dbg_putfloat(sqrt(navigation_.dist2wp_sqr), 3);
+                    print_util_dbg_print(" m. Less than acceptable radius:");
+                    print_util_dbg_putfloat(sqrt(waypoint_handler_.current_waypoint().param2() * waypoint_handler_.current_waypoint().param2() + margin), 3);
+                    print_util_dbg_print(" m.\r\n");
+                }
 
                 // ... as well as a mavlink message ...
                 mavlink_message_t msg;
@@ -176,14 +185,14 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                     (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO) ||   // If we are in direct to
                     (current.param2() == 0.0f) )                                                // Or if the radius is 0 (effectively direct to) ???? TODO check
                 {
-                    print_util_dbg_print("Autocontinue towards waypoint Nr");
-                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
-                    print_util_dbg_print("\r\n");
-
                     navigation_.set_start_wpt_time();
 
                     navigation_.set_waiting_at_waypoint(false);
                     waypoint_handler_.advance_to_next_waypoint();
+
+                    print_util_dbg_print("Autocontinue towards waypoint Nr");
+                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
+                    print_util_dbg_print("\r\n");
 
                     // Update output to be the new waypoint
                     waypoint_coordinates = waypoint_handler_.current_waypoint();
