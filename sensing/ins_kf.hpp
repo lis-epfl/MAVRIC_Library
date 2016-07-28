@@ -268,10 +268,10 @@ INS_kf::conf_t INS_kf::default_config(void)
     INS_kf::conf_t conf = {};
 
     // Process covariance (noise from state and input)
-    conf.sigma_z_gnd        = 0.0f;
-    conf.sigma_bias_acc     = 0.0f;
+    conf.sigma_z_gnd        = 0.001f;
+    conf.sigma_bias_acc     = 0.000001f;
     conf.sigma_bias_baro    = 0.0f;
-    conf.sigma_acc          = 0.6f;       // Measured   - At rest: 0.032f   - With motors on: 0.
+    conf.sigma_acc          = 2.0f;       // Measured   - At rest: 0.032f   - With motors on: 0.6f
 
     // Measurement covariance   (noise from measurement)
     conf.sigma_gps_xy       = 0.001f;       // Measured: 0.316f
