@@ -86,7 +86,7 @@ static inline offboard_tag_search_conf_t offboard_tag_search_conf_default() {
     conf.allowable_horizontal_tag_offset_sqr     = 0.25f;
     conf.descent_to_gnd_altitude                 = -0.5f;
     conf.max_acc_drone_height_from_camera_mm     = 15000.0f;
-    conf.tag_search_timeout_us                   = 60000000.0f;                 // 1 minute
+    conf.tag_search_timeout_us                   = 5*60000000.0f;                 // 1 minute
     conf.camera_res_x                            = 1280;                        // Suitable for picamera
     conf.camera_res_y                            = 960;                         // Suitable for picamera
     conf.camera_rotation                         = maths_deg_to_rad(90.0f);
@@ -199,7 +199,7 @@ public:
     bool has_photo_been_taken(int index) const;
     void set_has_photo_been_taken(int index, bool state);
     void set_position_at_photo(int index);
-    
+
 protected:
     Offboard_Tag_Search();
 

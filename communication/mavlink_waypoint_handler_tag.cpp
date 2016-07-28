@@ -80,7 +80,7 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& 
     callbackcmd.command_id = MAV_CMD_NAV_LAND; // 21
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_CAMERA; // 100
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 100
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_landing;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler.add_cmd_callback(&callbackcmd);
@@ -126,10 +126,10 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
         // Land
         waypoint_handler->offboard_tag_search_.update(&(waypoint_handler->raspi_mavlink_communication_.scheduler()), true);
     }
-    /*else
+    else
     {
         result = MAV_RESULT_DENIED;
-    }*/
+    }
 
     return result;
 }

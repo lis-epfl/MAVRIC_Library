@@ -720,7 +720,7 @@ bool Mavlink_waypoint_handler::take_off_handler()
                 waypoint_coordinates_ = waypoint_hold_coordinates;
                 waypoint_coordinates_.radius = 0.0f;
             }
-            
+
             print_util_dbg_print("Automatic take-off finished.\r\n");
         }
     }
@@ -828,7 +828,7 @@ mav_result_t Mavlink_waypoint_handler::set_auto_landing(Mavlink_waypoint_handler
 
             landing_position.pos[X] = packet->param5;
             landing_position.pos[Y] = packet->param6;
-            
+
             landing_position.heading = waypoint_handler->position_estimation_.local_position.heading;
 
         }
@@ -935,7 +935,7 @@ void Mavlink_waypoint_handler::auto_landing_handler()
             case Navigation::DESCENT_TO_GND:
                 print_util_dbg_print("Auto-landing: disarming motors \r\n");
                 navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
-                //Do not reset custom flag here, to be able to check after landing 
+                //Do not reset custom flag here, to be able to check after landing
                 // in case something went wrong. Is reset while arming
                 hold_waypoint_set_ = false;
                 navigation_.internal_state_ = Navigation::NAV_ON_GND;
@@ -1294,7 +1294,7 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
         //we need to add that since Landing waypoint doesn't have the param2
         //=> the param2 = 0 => never passing next condition
         {
-            margin = 16.0f;
+            margin = 4.0f;
         }
 
         if (navigation_.dist2wp_sqr < (current_waypoint_.param2 * current_waypoint_.param2 + margin) ||
@@ -1323,12 +1323,12 @@ void Mavlink_waypoint_handler::waypoint_navigation_handler(bool reset_hold_wpt)
             }
 
             waypoint_list[current_waypoint_index_].current = 0;
-            
+
             if (current_waypoint_.command == MAV_CMD_NAV_LAND)
             {
                 print_util_dbg_print("Stop & land\r\n");
 
-                //auto landing is not using the packet, 
+                //auto landing is not using the packet,
                 //so we can declare a dummy one.
                 mavlink_command_long_t dummy_packet;
                 dummy_packet.param1 = 1;
