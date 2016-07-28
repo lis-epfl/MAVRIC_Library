@@ -53,6 +53,23 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+void Mission_planner_handler_takeoff::set_behavior()
+{
+    print_util_dbg_print("Automatic take-off, will hold position at: (");
+    print_util_dbg_print_num(ins_.position_lf()[X], 10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(ins_.position_lf()[Y], 10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(navigation_.takeoff_altitude, 10);
+    print_util_dbg_print(")\r\n");
+
+    local_position_t takeoff_pos = ins_.position_lf();
+    takeoff_pos[Z] = navigation_.takeoff_altitude;
+    float heading = coord_conventions_get_yaw(ahrs_.qe);
+
+    set_hold_waypoint(takeoff_pos, heading);
+}
+
 bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_planner)
 {
     bool result = false;
@@ -60,23 +77,19 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
 
     if (!hold_waypoint_set())
     {
-        print_util_dbg_print("Automatic take-off, will hold position at: (");
-        print_util_dbg_print_num(ins_.position_lf()[X], 10);
-        print_util_dbg_print(", ");
-        print_util_dbg_print_num(ins_.position_lf()[Y], 10);
-        print_util_dbg_print(", ");
-        print_util_dbg_print_num(navigation_.takeoff_altitude, 10);
-        print_util_dbg_print(")\r\n");
-
-        local_position_t takeoff_pos = ins_.position_lf();
-        takeoff_pos[Z] = navigation_.takeoff_altitude;
-        float heading = coord_conventions_get_yaw(ahrs_.qe);
-
-        set_hold_waypoint(takeoff_pos, heading);
-
-        navigation_.dist2wp_sqr = SQR(hold_waypoint().local_pos()[Z]);
+        set_behavior();
     }
 
+    // Determine distance to the waypoint
+    float rel_pos[3];
+    local_position_t wpt_pos = hold_waypoint().local_pos();
+    for (int i = 0; i < 3; i++)
+    {
+        rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
+    }
+    navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+
+    // Check if we are close enough to change states
     if (!mission_planner.has_mode_change())
     {
         switch(navigation_.navigation_strategy)
@@ -118,7 +131,8 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
     {
         print_util_dbg_print("Starting automatic take-off from button\r\n");
         takeoff_handler->navigation_.set_internal_state(Navigation::NAV_TAKEOFF);
-        takeoff_handler->reset_hold_waypoint();
+        takeoff_handler->set_behavior();
+        takeoff_handler->navigation_.set_goal(takeoff_handler->hold_waypoint());
 
         result = MAV_RESULT_ACCEPTED;
     }

@@ -101,13 +101,13 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 // Send debug log ...
                 if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
                 {
-                    print_util_dbg_print("Waypoint Nr ");
+                    print_util_dbg_print("Waypoint Nr");
                     print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(), 10);
                     print_util_dbg_print(" reached by entering dubin circles 2.\r\n");
                 }
                 else if (navigation_.dist2wp_sqr < (waypoint_handler_.current_waypoint().param2() * waypoint_handler_.current_waypoint().param2() + margin))
                 {
-                    print_util_dbg_print("Waypoint Nr ");
+                    print_util_dbg_print("Waypoint Nr");
                     print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(), 10);
                     print_util_dbg_print(" reached, distance: ");
                     print_util_dbg_putfloat(sqrt(navigation_.dist2wp_sqr), 3);

@@ -111,6 +111,12 @@ protected:
      * \return  The MAV_RESULT of the command
      */
     static mav_result_t set_auto_takeoff(Mission_planner_handler_takeoff* takeoff_handler, mavlink_command_long_t* packet);
+
+private:
+    /**
+     * \brief   Handles the behavior changes
+     */
+    void set_behavior();
 };
 
 

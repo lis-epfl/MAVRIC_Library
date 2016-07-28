@@ -129,6 +129,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
 
         mission_planner->navigation_.set_start_wpt_time();
         mission_planner->navigation_.set_waiting_at_waypoint(false);
+        mission_planner->state_.nav_plan_active = true;
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
         mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
 
@@ -137,9 +138,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
                                          mission_planner->mavlink_stream_.compid(),
                                          &msg,
                                          mission_planner->waypoint_handler_.current_waypoint_index());
-        mission_planner->mavlink_stream_.send(&msg);
-
-        mission_planner->state_.nav_plan_active = true;
+        mission_planner->mavlink_stream_.send(&msg);      
 
         result = MAV_RESULT_ACCEPTED;
     }
