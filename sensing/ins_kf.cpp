@@ -74,7 +74,7 @@ INS_kf::INS_kf(const Gps& gps,
                     (0.0f),                                                                           // Q (will be updated)
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                                                // H (GPS pos)
                       0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
+                      0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
                     {SQR(config.sigma_gps_xy), 0,                        0,                           // R (GPS pos)
                      0,                        SQR(config.sigma_gps_xy), 0,
                      0,                        0,                        SQR(config.sigma_gps_z)},
