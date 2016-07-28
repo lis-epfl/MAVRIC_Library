@@ -43,40 +43,44 @@
 
 void ins_telemetry_send(const INS_kf* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    // float cov[45];
-    // mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
-    //                                         mavlink_stream->compid(),
-    //                                         msg,
-    //                                         time_keeper_get_ms(),
-    //                                         time_keeper_get_ms(),
-    //                                         0,
-    //                                         ins->position_lf()[0],
-    //                                         ins->position_lf()[1],
-    //                                         ins->position_lf()[2],
-    //                                         ins->velocity_lf()[0],
-    //                                         ins->velocity_lf()[1],
-    //                                         ins->velocity_lf()[2],
-    //                                         0.0f,
-    //                                         0.0f,
-    //                                         ins->absolute_altitude(),
-    //                                         cov);
+    float cov[45];
+    for(int i = 0; i < 11; i++)
+    {
+        cov[i] = ins->P()(i,i);
+    }
+    mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
+                                            mavlink_stream->compid(),
+                                            msg,
+                                            time_keeper_get_ms(),
+                                            time_keeper_get_ms(),
+                                            0,
+                                            ins->x()[0],
+                                            ins->x()[1],
+                                            ins->x()[2],
+                                            ins->x()[4],
+                                            ins->x()[5],
+                                            ins->x()[6],
+                                            ins->x()[7],
+                                            ins->x()[8],
+                                            ins->x()[9],
+                                            cov);
 
-    mavlink_msg_hil_sensor_pack(mavlink_stream->sysid(),
-                                mavlink_stream->compid(),
-                                msg,
-                                time_keeper_get_us(),
-                                ins->x()[0],    // xacc <-> x
-                                ins->x()[1],    // yacc <-> y
-                                ins->x()[2],    // zacc <-> z
-                                ins->x()[4],    // xgyro <-> vx
-                                ins->x()[5],    // ygyro <-> vy
-                                ins->x()[6],    // zgyro <-> vz
-                                ins->x()[7],    // xmag <-> bias_accx
-                                ins->x()[8],    // ymag <-> bias_accy
-                                ins->x()[9],    // zmag <-> bias_accz
-                                ins->x()[3],    // abs_pressure <-> z_gnd
-                                ins->x()[10],   // diff_pressure <-> bias_baro
-                                0.0f,           // pressure_alt <-> 0.0f
-                                0.0f,           // temperature <-> 0.0f
-                                0);             // fields_updated <-> 0
+    // mavlink_msg_hil_sensor_pack(mavlink_stream->sysid(),
+    //                             mavlink_stream->compid(),
+    //                             msg,
+    //                             time_keeper_get_us(),
+    //                             ins->x()[0],    // xacc <-> x
+    //                             ins->x()[1],    // yacc <-> y
+    //                             ins->x()[2],    // zacc <-> z
+    //                             ins->x()[4],    // xgyro <-> vx
+    //                             ins->x()[5],    // ygyro <-> vy
+    //                             ins->x()[6],    // zgyro <-> vz
+    //                             ins->x()[7],    // xmag <-> bias_accx
+    //                             ins->x()[8],    // ymag <-> bias_accy
+    //                             ins->x()[9],    // zmag <-> bias_accz
+    //                             ins->x()[3],    // abs_pressure <-> z_gnd
+    //                             ins->x()[10],   // diff_pressure <-> bias_baro
+    //                             0.0f,           // pressure_alt <-> 0.0f
+    //                             0.0f,           // temperature <-> 0.0f
+    //                             0);             // fields_updated <-> 0
 }
