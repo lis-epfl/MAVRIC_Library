@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Felix Schill
+ * \author Basil Huber
  *
  * \brief PID controller
  *
@@ -263,4 +264,19 @@ float pid_controller_update_feedforward_dt(pid_controller_t* controller, float e
     }
 
     return controller->output;
+}
+
+
+void pid_controller_apply_config(pid_controller_t* controller, const pid_controller_conf_t* config)
+{
+    controller->p_gain          = config->p_gain;
+    controller->clip_min        = config->clip_min;
+    controller->clip_max        = config->clip_max;
+    controller->soft_zone_width = config->soft_zone_width;
+    controller->integrator.gain = config->integrator.gain;
+    controller->integrator.clip_pre = config->integrator.clip_pre;
+    controller->integrator.clip = config->integrator.clip;
+    controller->differentiator.gain = config->differentiator.gain;
+    controller->differentiator.clip = config->differentiator.clip;
+
 }

@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Felix Schill
+ * \author Basil Huber
  *
  * \brief PID controller
  *
@@ -165,5 +166,15 @@ float pid_controller_update_dt(pid_controller_t* controller, float error, float 
  */
 float pid_controller_update_feedforward_dt(pid_controller_t* controller, float error, float feedforward, float dt);
 
+
+/**
+ * \brief               Apply configuration to pid_controller without reseting the controller
+ *
+ * \details             config.integrator.accumulator and config.differentiator.previous are ignored
+ *
+ * \param   controller  Pointer to the PID controller structure
+ * \param   config      Pointer to the configuration
+ */
+void pid_controller_apply_config(pid_controller_t* controller, const pid_controller_conf_t* config);
 
 #endif /* PID_CONTROL_HPP_ */
