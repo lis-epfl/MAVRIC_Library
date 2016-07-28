@@ -366,7 +366,8 @@ bool LEQuad::init_ins_kf(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, (Mavlink_communication::send_msg_function_t)&ins_telemetry_send,   &ins_kf);
+    // ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, (Mavlink_communication::send_msg_function_t)&ins_telemetry_send,   &ins_kf);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_HIL_SENSOR,  50000, (Mavlink_communication::send_msg_function_t)&ins_telemetry_send,   &ins_kf);
 
     // Parameters
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_z_gnd,      "INS_X_Z_GND"       );
@@ -374,7 +375,7 @@ bool LEQuad::init_ins_kf(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_bias_baro,  "INS_X_BIAS_BARO"   );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_acc,        "INS_U_ACC"         );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_xy,     "INS_Z_POS_XY"      );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_z,      "INS_Z_GPS_Z"       );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_z,      "INS_Z_POS_Z"       );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_velxy,  "INS_Z_VEL_XY"      );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_gps_velz,   "INS_Z_VEL_Z"       );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&ins_kf.config_.sigma_baro,       "INS_Z_BARO"        );
