@@ -114,7 +114,7 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
 bool Mavrimini::init(void)
 {
     bool init_success = true;
-    bool ret;
+    bool ret          = true;
 
     // -------------------------------------------------------------------------
     // Init clock
