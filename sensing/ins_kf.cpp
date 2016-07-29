@@ -111,6 +111,7 @@ INS_kf::INS_kf(const Gps& gps,
     dt_(0.0f),
     last_update_(0.0f)
 {
+    // Init the filter
     init();
     init_flag = 0;
 }
@@ -253,6 +254,12 @@ bool INS_kf::update(void)
                 ori = origin();
                 coord_conventions_global_to_local_position(gps_global, origin(), gps_local);
 
+                // DOME SPECIFIC
+                // Simulate some noise on the GPS local positions (to fit measured sigma, which was directly on the local, not the global)
+                gps_local[0] = gps_local[0] + gps_noise[0](randomness_generator);
+                gps_local[1] = gps_local[1] + gps_noise[1](randomness_generator);
+                gps_local[2] = gps_local[2] + gps_noise[2](randomness_generator);
+
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
                 {
@@ -274,6 +281,15 @@ bool INS_kf::update(void)
             // GPS velocity
             if (last_gps_vel_update_s_ < gps_.last_velocity_update_us()/1e6)
             {
+                // Get velocity from GPS
+                gps_velocity = gps_.velocity_lf();
+
+                // DOME SPECIFIC
+                // Simulate some noise on the GPS local velocities (to fit measured sigma, which was directly on the local, not the global)
+                gps_velocity[0] = gps_velocity[0] + gps_noise[3](randomness_generator);
+                gps_velocity[1] = gps_velocity[1] + gps_noise[4](randomness_generator);
+                gps_velocity[2] = gps_velocity[2] + gps_noise[5](randomness_generator);
+
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
                 {
@@ -286,8 +302,7 @@ bool INS_kf::update(void)
                 }
 
                 // Run kalman update
-                gps_velocity = gps_.velocity_lf();
-                Kalman<11,3,3>::update(Mat<3,1>(gps_.velocity_lf()),
+                Kalman<11,3,3>::update(Mat<3,1>(gps_velocity),
                                        H_gpsvel_,
                                        R_gpsvel_);
 
@@ -517,6 +532,9 @@ void INS_kf::predict_kf(void)
 
 void INS_kf::init(void)
 {
+    // Initialization is done, no need to do once more
+    init_flag = 0;
+
     // Init state
     x_ = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -528,4 +546,12 @@ void INS_kf::init(void)
 
     // Update last time to avoid glitches at initilaization
     last_update_ = time_keeper_get_s();
+
+    // Init the noise (if noise changed via telemetry, init should be done!)
+    gps_noise = std::array<std::normal_distribution<float>, 6>{{std::normal_distribution<float>(0.0f, config_.sigma_gps_xy),
+                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_xy),
+                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_z),
+                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_velxy),
+                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_velxy),
+                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_velz)}};
 }

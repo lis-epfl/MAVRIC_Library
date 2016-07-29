@@ -43,11 +43,22 @@
 
 void ins_telemetry_send(const INS_kf* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
+    // Fill the covaiance array
     float cov[45];
+    // First elements are the diagonal
     for(int i = 0; i < 11; i++)
     {
         cov[i] = ins->P()(i,i);
     }
+    // Last elements are the noisy GPS postions and speed
+    cov[39] = ins->gps_local[0];
+    cov[40] = ins->gps_local[1];
+    cov[41] = ins->gps_local[2];
+    cov[42] = ins->gps_velocity[0];
+    cov[43] = ins->gps_velocity[1];
+    cov[44] = ins->gps_velocity[2];
+
+    // Send message
     mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
                                             mavlink_stream->compid(),
                                             msg,

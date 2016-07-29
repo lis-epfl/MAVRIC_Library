@@ -60,6 +60,8 @@ extern "C"
 #include "sensing/altitude.h"
 }
 
+#include <random>
+
 /**
  * \brief   Altitude estimator
  *
@@ -263,6 +265,9 @@ private:
     float dt_;                              ///< Time interval since last update in seconds
     float last_update_;                     ///< Last update time in seconds
 
+    std::mt19937 randomness_generator;
+    std::array<std::normal_distribution<float>, 6> gps_noise;    ///< Gaussian distribution to simulate noise on the GPS (0: pos_x / 1: pos_y / 2: pos_z / 3: vel_x / 4: vel_y / 5: vel_z)
+
     /**
      * \brief   Performs the prediction step of the Kalman filter, using linear formulation (KF, non-constant matrices)
      */
@@ -281,10 +286,10 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.sigma_acc          = 0.6f;         // Measured: 0.6f (at rest 0.032f)
 
     // Measurement covariance   (noise from measurement)
-    conf.sigma_gps_xy       = 0.001f;       // Measured: 0.316f
-    conf.sigma_gps_z        = 0.001f;       // Measured: 0.879f
-    conf.sigma_gps_velxy    = 0.001f;       // Measured: 0.064f
-    conf.sigma_gps_velz     = 0.001f;       // Measured: 0.342f
+    conf.sigma_gps_xy       = 0.316f;       // Measured: 0.316f
+    conf.sigma_gps_z        = 0.879f;       // Measured: 0.879f
+    conf.sigma_gps_velxy    = 0.064f;       // Measured: 0.064f
+    conf.sigma_gps_velz     = 0.342f;       // Measured: 0.342f
     conf.sigma_baro         = 0.450f;       // Measured: 0.450f
     conf.sigma_sonar        = 0.002f;       // Measured: 0.002f
 
