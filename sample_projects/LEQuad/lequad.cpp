@@ -140,8 +140,8 @@ void LEQuad::loop(void)
     }
 
     // Create log files
-    data_logging_continuous.create_new_log_file("Log_file", true, mavlink_communication.sysid());
-    data_logging_stat.create_new_log_file("Log_Stat", false, mavlink_communication.sysid());
+    data_logging_continuous.create_new_log_file("log", true, mavlink_communication.sysid());
+    data_logging_stat.create_new_log_file("stat", false, mavlink_communication.sysid());
 
     // Init mav state
     state.mav_state_ = MAV_STATE_STANDBY;  // TODO check if this is necessary
