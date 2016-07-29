@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_control.cpp
+ * \file position_control_direct.cpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
@@ -39,26 +39,23 @@
  *
  ******************************************************************************/
 
-#include "control/position_controller.hpp"
+#include "control/position_controller_direct.hpp"
 
-Position_controller::Position_controller(control_command_t& vel_command_lf, const INS& ins, const quat_t& qe, const Position_controller::conf_t& config) :
-    vel_command_lf_(vel_command_lf),
+Position_controller_direct::Position_controller_direct(control_command_t& vel_command_lf, const INS& ins, const quat_t& qe, const Position_controller_direct::conf_t& config) :
+    Position_controller(vel_command_lf, ins, qe),
     cruise_mode_(false),
-    ins_(ins),
-    qe_(qe),
     max_climb_rate_(config.max_climb_rate),
     max_rel_yaw_(config.max_rel_yaw),
     min_cruise_dist_(config.min_cruise_dist),
     cruise_pid_config_(config.cruise_pid_config),
     hover_pid_config_(config.hover_pid_config)
 {
-    pos_command_lf_ = ins_.position_lf();
     yaw_command_lf_ = coord_conventions_get_yaw(qe_);
     pid_controller_init(&pid_controller_, &hover_pid_config_);
 }
 
 
-void Position_controller::update()
+void Position_controller_direct::update()
 {
     /* get current vehicle position in local frame */
     local_position_t local_pos = ins_.position_lf();
@@ -118,26 +115,20 @@ void Position_controller::update()
 }
 
 
-void Position_controller::set_command(local_position_t pos_command_lf, float yaw_command_lf)
+void Position_controller_direct::set_command(local_position_t pos_command_lf, float yaw_command_lf)
 {
     set_position_command(pos_command_lf);
     set_yaw_command(yaw_command_lf);    
 }
 
 
-void Position_controller::set_position_command(local_position_t pos_command_lf)
-{
-    pos_command_lf_ = pos_command_lf;
-}
-
-
-void Position_controller::set_yaw_command(float yaw_command_lf)
+void Position_controller_direct::set_yaw_command(float yaw_command_lf)
 {
     yaw_command_lf_ = yaw_command_lf;
 }
 
 
-void Position_controller::set_cruise_mode(bool cruise_mode)
+void Position_controller_direct::set_cruise_mode(bool cruise_mode)
 {
     /* choose pid_config to apply to controller */
     pid_controller_conf_t* pid_config = cruise_mode_ ? &cruise_pid_config_ : &hover_pid_config_;

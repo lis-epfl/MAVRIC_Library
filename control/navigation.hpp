@@ -51,7 +51,7 @@
 #include "control/dubin.hpp"
 #include "control/stabilisation.hpp"
 #include "control/pid_controller.hpp"
-#include "control/position_controller.hpp"
+#include "control/position_controller_direct.hpp"
 
 extern "C"
 {
@@ -214,7 +214,7 @@ private:
     uint32_t loop_count;                                ///< A counter for sending MAVLink messages at a lower rate than the function
     control_command_t& controls_nav;                    ///< Reference to the navigation control structure
     const INS& ins;                                     ///< Reference to the inertial navigation system
-    Position_controller pos_ctrl_direct_;               ///< Position controller to fly directly to set position
+    Position_controller_direct pos_ctrl_direct_;        ///< Position controller to fly directly to set position
     State& state;                                       ///< Reference to the state
     const Mavlink_stream& mavlink_stream;               ///< Reference to the MAVLink stream
 
