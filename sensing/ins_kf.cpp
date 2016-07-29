@@ -236,14 +236,7 @@ bool INS_kf::update(void)
         }
         else
         {
-            // Reset covariance matrix
-            P_ = Mat<11,11>(100.0f, true);
-            P_(7,7) = 0.0f;
-            P_(8,8) = 0.0f;
-            P_(9,9) = 0.0f;
-
-            // Update last time to avoid glitches at initilaization
-            last_update_ = time_keeper_get_s();
+            init();
         }
 
 
@@ -532,4 +525,7 @@ void INS_kf::init(void)
     P_(7,7) = 0.0f;
     P_(8,8) = 0.0f;
     P_(9,9) = 0.0f;
+
+    // Update last time to avoid glitches at initilaization
+    last_update_ = time_keeper_get_s();
 }
