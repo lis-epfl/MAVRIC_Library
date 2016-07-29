@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "communication/waypoint.hpp"
+#include "control/waypoint.hpp"
 
 #include "sensing/ins.hpp"
 

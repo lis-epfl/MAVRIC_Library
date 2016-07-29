@@ -50,7 +50,6 @@ LIB_SRCS += communication/remote_telemetry.cpp
 LIB_SRCS += communication/state.cpp
 LIB_SRCS += communication/state_machine.cpp
 LIB_SRCS += communication/state_telemetry.cpp
-LIB_SRCS += communication/waypoint.cpp
 
 
 LIB_SRCS += control/adaptive_parameter.c
@@ -86,6 +85,7 @@ LIB_SRCS += control/vector_field_waypoint.cpp
 LIB_SRCS += control/velocity_controller_copter.cpp
 LIB_SRCS += control/gimbal_controller.cpp
 LIB_SRCS += control/gimbal_controller_telemetry.cpp
+LIB_SRCS += control/waypoint.cpp
 
 
 LIB_SRCS += drivers/airspeed_analog.cpp

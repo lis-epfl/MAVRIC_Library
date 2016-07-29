@@ -44,7 +44,7 @@
 #define MISSION_PLANNER_HANDLER__
 
 #include "control/mission_planner.hpp"
-#include "communication/waypoint.hpp"
+#include "control/waypoint.hpp"
 #include "sensing/ins.hpp"
 
 /*
