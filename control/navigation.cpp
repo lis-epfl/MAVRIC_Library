@@ -258,9 +258,6 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
 
     dist2wp_sqr = 0.0f;
 
-    wpt_nav_controller = nav_config.wpt_nav_controller;
-    hovering_controller = nav_config.hovering_controller;
-
     one_over_scaling = nav_config.one_over_scaling;
 
     safe_altitude = nav_config.safe_altitude;
@@ -343,4 +340,10 @@ bool Navigation::update(Navigation* navigation)
     }
 
     return true;
+}
+
+
+Position_controller_direct& Navigation::pos_ctrl_direct()
+{
+    return pos_ctrl_direct_;
 }

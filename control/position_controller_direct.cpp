@@ -44,11 +44,11 @@
 Position_controller_direct::Position_controller_direct(control_command_t& vel_command_lf, const INS& ins, const quat_t& qe, const Position_controller_direct::conf_t& config) :
     Position_controller(vel_command_lf, ins, qe),
     cruise_mode_(false),
+    cruise_pid_config_(config.cruise_pid_config),
+    hover_pid_config_(config.hover_pid_config),
     max_climb_rate_(config.max_climb_rate),
     max_rel_yaw_(config.max_rel_yaw),
-    min_cruise_dist_(config.min_cruise_dist),
-    cruise_pid_config_(config.cruise_pid_config),
-    hover_pid_config_(config.hover_pid_config)
+    min_cruise_dist_(config.min_cruise_dist)
 {
     yaw_command_lf_ = coord_conventions_get_yaw(qe_);
     pid_controller_init(&pid_controller_, &hover_pid_config_);
@@ -86,12 +86,12 @@ void Position_controller_direct::update()
     dir_desired_sg[Y] /= dist;
     dir_desired_sg[Z] /= dist;
 
-    /* if we change from cruise_mode to hover_mode or vice-versa, change pid parameters */
+    /* set cruise mode in any case since parameters of config might change */
     bool cruise_mode_new = dist > min_cruise_dist_;
-    if(cruise_mode_new != cruise_mode_)
-    {
+    //if(cruise_mode_new != cruise_mode_)
+    //{
         set_cruise_mode(cruise_mode_new);
-    }
+    //}
 
     /* get desired speed from pid controller */
     float v_desired = pid_controller_update(&pid_controller_, dist);
@@ -131,9 +131,22 @@ void Position_controller_direct::set_yaw_command(float yaw_command_lf)
 void Position_controller_direct::set_cruise_mode(bool cruise_mode)
 {
     /* choose pid_config to apply to controller */
-    pid_controller_conf_t* pid_config = cruise_mode_ ? &cruise_pid_config_ : &hover_pid_config_;
+    pid_controller_conf_t* pid_config = cruise_mode ? &cruise_pid_config_ : &hover_pid_config_;
     
     /* apply chosen configuration */
     pid_controller_apply_config(&pid_controller_, pid_config);
+
+    cruise_mode_ = cruise_mode;
+}
+
+pid_controller_conf_t& Position_controller_direct::cruise_pid_config()
+{
+    return cruise_pid_config_;
+}
+
+
+pid_controller_conf_t& Position_controller_direct::hover_pid_config()
+{
+    return hover_pid_config_;
 }
 

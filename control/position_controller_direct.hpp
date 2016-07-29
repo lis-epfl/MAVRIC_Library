@@ -74,14 +74,16 @@ public:
      */
     static inline conf_t default_config();
 
-private:
-    // const INS&          ins_;
-    // const quat_t&       qe_;                          ///< Attitude quaternion structure
-    // control_command_t&  vel_command_lf_;
-    // local_position_t    pos_command_lf_;
-    
-   
 
+    /********************************************
+     *         public Get/Set methods           *
+     *******************************************/
+    pid_controller_conf_t& cruise_pid_config(); // TODO: set return to const when onboard parameter use get/set
+    pid_controller_conf_t& hover_pid_config(); // TODO: set return to const when onboard parameter use get/set
+    /* public variables (for onboard parameters) */
+
+
+private:
     void set_cruise_mode(bool cruise_mode);
 
     float               yaw_command_lf_;
@@ -89,11 +91,11 @@ private:
     pid_controller_t    pid_controller_;
 
     /* parameters */
+    pid_controller_conf_t cruise_pid_config_;
+    pid_controller_conf_t hover_pid_config_;
     float max_climb_rate_;
     float max_rel_yaw_;
     float min_cruise_dist_;                          // minimal distance to target above which the vehicle changes to cruise mode
-    pid_controller_conf_t cruise_pid_config_;
-    pid_controller_conf_t hover_pid_config_;
 };
 
 Position_controller_direct::conf_t Position_controller_direct::default_config()

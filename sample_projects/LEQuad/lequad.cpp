@@ -447,11 +447,11 @@ bool LEQuad::init_navigation(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.takeoff_altitude,                        "NAV_TAKEOFF_ALT" );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.soft_zone_size,                          "NAV_SOFTZONE"    );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.differentiator.gain,  "NAV_WPT_DGAIN"   );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.pos_ctrl_direct().hover_pid_config().p_gain,              "NAV_HOVER_PGAIN" );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.pos_ctrl_direct().hover_pid_config().differentiator.gain, "NAV_HOVER_DGAIN" );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.pos_ctrl_direct().cruise_pid_config().p_gain,             "NAV_WPT_PGAIN"   );
+    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.pos_ctrl_direct().cruise_pid_config().differentiator.gain,"NAV_WPT_DGAIN"   );
+    // ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
     ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
