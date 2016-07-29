@@ -65,14 +65,14 @@ Pwm_stm32::Pwm_stm32(config_t pwm_config)
     timer_              = pwm_config.timer_config;
     prescaler_          = pwm_config.prescaler_config;
     period_             = pwm_config.period_config;
-    duty_cycle_         = pwm_config.duty_cycle_config;
+    pulse_us_         = pwm_config.pulse_us_config;
     channel_id_         = pwm_config.channel_config;
 }
 
 bool Pwm_stm32::init(void)
 {
     bool success = true;
-    
+
     /* Enable peripheral port & TIM clock. */
     //rcc_periph_clock_enable(RCC_GPIOx);
     rcc_periph_clock_enable(pwm_config_.rcc_timer_config);
@@ -80,7 +80,7 @@ bool Pwm_stm32::init(void)
     gpio_mode_setup(pwm_config_.gpio_config.port, GPIO_MODE_AF, GPIO_PUPD_NONE, pwm_config_.gpio_config.pin);
     gpio_set_af(pwm_config_.gpio_config.port, pwm_config_.gpio_config.alt_fct, pwm_config_.gpio_config.pin);
     gpio_set_output_options(pwm_config_.gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ, pwm_config_.gpio_config.pin);
-  
+
     //WARNING Common to all channels of that TIMER
     //select prescaler
     TIM_PSC(pwm_config_.timer_config) = prescaler_;
@@ -99,7 +99,7 @@ bool Pwm_stm32::init(void)
     if (pwm_config_.channel_config == PWM_STM32_CHANNEL_1)
     {
         //Disable channel1
-        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC1E; 
+        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC1E;
         //Reset output compare
         TIM_CCMR1(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR1_OC1M_MASK;
         TIM_CCMR1(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR1_CC1S_MASK;
@@ -112,18 +112,18 @@ bool Pwm_stm32::init(void)
         TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC1M_PWM1;
 
         //select duty cycle
-        TIM_CCR1(pwm_config_.timer_config) = duty_cycle_;
+        TIM_CCR1(pwm_config_.timer_config) = pulse_us_;
 
         //set the preload bit
         TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC1PE;
-        
+
         //enable capture/compare
         TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC1E;
     }
     else if (pwm_config_.channel_config == PWM_STM32_CHANNEL_2)
     {
         //Disable channel2
-        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC2E; 
+        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC2E;
         //Reset output compare
         TIM_CCMR1(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR1_OC2M_MASK;
         TIM_CCMR1(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR1_CC2S_MASK;
@@ -136,18 +136,18 @@ bool Pwm_stm32::init(void)
         TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC2M_PWM1;
 
         //select duty cycle
-        TIM_CCR2(pwm_config_.timer_config) = duty_cycle_;
+        TIM_CCR2(pwm_config_.timer_config) = pulse_us_;
 
         //set the preload bit
         TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC2PE;
-        
+
         //enable capture/compare
         TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC2E;
     }
     else if (pwm_config_.channel_config == PWM_STM32_CHANNEL_3)
     {
         //Disable channel3
-        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC3E; 
+        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC3E;
         //Reset output compare
         TIM_CCMR2(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR2_OC3M_MASK;
         TIM_CCMR2(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR2_CC3S_MASK;
@@ -160,18 +160,18 @@ bool Pwm_stm32::init(void)
         TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC3M_PWM1;
 
         //select duty cycle
-        TIM_CCR3(pwm_config_.timer_config) = duty_cycle_;
+        TIM_CCR3(pwm_config_.timer_config) = pulse_us_;
 
         //set the preload bit
         TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC3PE;
-        
+
         //enable capture/compare
         TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC3E;
     }
     else if (pwm_config_.channel_config == PWM_STM32_CHANNEL_4)
     {
         //Disable channel4
-        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC4E; 
+        TIM_CCER(pwm_config_.timer_config) &= (uint16_t)~TIM_CCER_CC4E;
         //Reset output compare
         TIM_CCMR2(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR2_OC4M_MASK;
         TIM_CCMR2(pwm_config_.timer_config) &= (uint16_t)~TIM_CCMR2_CC4S_MASK;
@@ -184,11 +184,11 @@ bool Pwm_stm32::init(void)
         TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC4M_PWM1;
 
         //select duty cycle
-        TIM_CCR4(pwm_config_.timer_config) = duty_cycle_;
+        TIM_CCR4(pwm_config_.timer_config) = pulse_us_;
 
         //set the preload bit
         TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC4PE;
-        
+
         //enable capture/compare
         TIM_CCER(pwm_config_.timer_config) |= TIM_CCER_CC4E;
     }
@@ -198,7 +198,7 @@ bool Pwm_stm32::init(void)
 
 bool Pwm_stm32::set_pulse_width_us(uint16_t pulse_us)
 {
-    duty_cycle_ = pulse_us;
+    pulse_us_ = pulse_us;
     write_channel();
 
     return true;
@@ -230,25 +230,25 @@ void Pwm_stm32::write_channel(void)
     {
         TIM_ARR(timer_) = period_;
     }
-    
+
     if(channel_id_ == PWM_STM32_CHANNEL_1)
     {
         //select duty cycle
-        TIM_CCR1(timer_) = duty_cycle_;
+        TIM_CCR1(timer_) = pulse_us_;
     }
     else if(channel_id_ == PWM_STM32_CHANNEL_2)
     {
         //select duty cycle
-        TIM_CCR2(timer_) = duty_cycle_;
+        TIM_CCR2(timer_) = pulse_us_;
     }
     else if(channel_id_ == PWM_STM32_CHANNEL_3)
     {
         //select duty cycle
-        TIM_CCR3(timer_) = duty_cycle_;
+        TIM_CCR3(timer_) = pulse_us_;
     }
     else if(channel_id_ == PWM_STM32_CHANNEL_4)
     {
         //select duty cycle
-        TIM_CCR4(timer_) = duty_cycle_;
+        TIM_CCR4(timer_) = pulse_us_;
     }
 }

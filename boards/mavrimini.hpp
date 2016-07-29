@@ -190,13 +190,13 @@ static inline mavrimini_conf_t mavrimini_default_config()
     // -------------------------------------------------------------------------
     // GPIO config
     // -------------------------------------------------------------------------
-    
+
     // GPIO dsm power pin configuration
     conf.dsm_power_gpio_config.port       = GPIO_STM32_PORT_A;
     conf.dsm_power_gpio_config.pin        = GPIO_STM32_PIN_4;
     conf.dsm_power_gpio_config.dir        = GPIO_OUTPUT;
     conf.dsm_power_gpio_config.pull       = GPIO_PULL_UPDOWN_NONE; //physical pull up
-    
+
     // GPIO dsm receiver pin configuration
     conf.dsm_receiver_gpio_config.port       = GPIO_STM32_PORT_A;
     conf.dsm_receiver_gpio_config.pin        = GPIO_STM32_PIN_3;
@@ -285,7 +285,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.i2c_2_config.clk_config.alt_fct    = GPIO_STM32_AF_4;
     conf.i2c_2_config.clk_speed             = 100000;
     conf.i2c_2_config.tenbit_config         = false; // 10 bits address is not supported
-    
+
     // -------------------------------------------------------------------------
     // PWM config
     // -------------------------------------------------------------------------
@@ -299,7 +299,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[0].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_2;
     conf.pwm_config[0].prescaler_config = 84; //since APB1 clock is main_clk/2
     conf.pwm_config[0].period_config = 20000; //50Hz
-    conf.pwm_config[0].duty_cycle_config = 5000;
+    conf.pwm_config[0].pulse_us_config = 5000;
 
     conf.pwm_config[1].gpio_config.port = GPIO_STM32_PORT_B;
     conf.pwm_config[1].gpio_config.pin = GPIO_STM32_PIN_4;
@@ -311,7 +311,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[1].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_1;
     conf.pwm_config[1].prescaler_config = 84;
     conf.pwm_config[1].period_config = 20000; //50Hz
-    conf.pwm_config[1].duty_cycle_config = 5000;
+    conf.pwm_config[1].pulse_us_config = 5000;
 
     conf.pwm_config[2].gpio_config.port = GPIO_STM32_PORT_B;
     conf.pwm_config[2].gpio_config.pin = GPIO_STM32_PIN_5;
@@ -323,7 +323,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[2].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_2;
     conf.pwm_config[2].prescaler_config = 84;
     conf.pwm_config[2].period_config = 20000; //50Hz
-    conf.pwm_config[2].duty_cycle_config = 5000;
+    conf.pwm_config[2].pulse_us_config = 5000;
 
     conf.pwm_config[3].gpio_config.port = GPIO_STM32_PORT_B;
     conf.pwm_config[3].gpio_config.pin = GPIO_STM32_PIN_6;
@@ -335,7 +335,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[3].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_1;
     conf.pwm_config[3].prescaler_config = 84;
     conf.pwm_config[3].period_config = 20000; //50Hz
-    conf.pwm_config[3].duty_cycle_config = 5000;
+    conf.pwm_config[3].pulse_us_config = 5000;
 
     conf.pwm_config[4].gpio_config.port = GPIO_STM32_PORT_B;
     conf.pwm_config[4].gpio_config.pin = GPIO_STM32_PIN_7;
@@ -347,7 +347,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[4].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_2;
     conf.pwm_config[4].prescaler_config = 84;
     conf.pwm_config[4].period_config = 20000; //50Hz
-    conf.pwm_config[4].duty_cycle_config = 5000;
+    conf.pwm_config[4].pulse_us_config = 5000;
 
     conf.pwm_config[5].gpio_config.port = GPIO_STM32_PORT_B;
     conf.pwm_config[5].gpio_config.pin = GPIO_STM32_PIN_8;
@@ -359,7 +359,7 @@ static inline mavrimini_conf_t mavrimini_default_config()
     conf.pwm_config[5].channel_config = Pwm_stm32::PWM_STM32_CHANNEL_3;
     conf.pwm_config[5].prescaler_config = 84;
     conf.pwm_config[5].period_config = 20000; //50Hz
-    conf.pwm_config[5].duty_cycle_config = 5000;
+    conf.pwm_config[5].pulse_us_config = 5000;
 
     // -------------------------------------------------------------------------
     // Servo config
