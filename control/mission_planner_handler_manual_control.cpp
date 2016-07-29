@@ -30,75 +30,61 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler.cpp
+ * \file mission_planner_handler_manual_control.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler
+ * \brief The MAVLink mission planner handler for the manual control state
  *
  ******************************************************************************/
 
 
-#include "communication/mission_planner_handler.hpp"
-#include "communication/mission_planner.hpp"
+#include "control/mission_planner_handler_manual_control.hpp"
 
 extern "C"
 {
+
 }
 
-//------------------------------------------------------------------------------
-// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool Mission_planner_handler::hold_waypoint_set_ = false;
-Waypoint Mission_planner_handler::hold_waypoint_ = Waypoint();
-
-Waypoint& Mission_planner_handler::hold_waypoint()
-{
-    if (!hold_waypoint_set_)
-    {
-        hold_waypoint_.set_local_pos(ins_.position_lf());
-        hold_waypoint_set_ = true;
-    }
-
-    return hold_waypoint_;
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler::Mission_planner_handler(const INS& ins) :
-        ins_(ins)
+Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( const INS& ins,
+                                                                                Navigation& navigation,
+                                                                                State& state):
+            Mission_planner_handler(ins),
+            navigation_(navigation),
+            state_(state)
 {
 
 }
 
-void Mission_planner_handler::reset_hold_waypoint()
+bool Mission_planner_handler_manual_control::init()
 {
-    hold_waypoint_set_ = false;
+    return true;
 }
 
-bool Mission_planner_handler::hold_waypoint_set()
+void Mission_planner_handler_manual_control::handle(Mission_planner& mission_planner)
 {
-    return hold_waypoint_set_;
-}
+    Mav_mode mode_local = state_.mav_mode();
 
-void Mission_planner_handler::set_hold_waypoint(const local_position_t hold_position)
-{
-    hold_waypoint_.set_local_pos(hold_position);
-    hold_waypoint_set_ = true;
-}
+    // Change state if necessary
+    if (mode_local.is_auto())
+    {
+        navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
+    }
+    else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
+    {
+        set_hold_waypoint(ins_.position_lf());
+        hold_waypoint().set_radius(navigation_.minimal_radius);
+        navigation_.set_internal_state(Navigation::NAV_HOLD_POSITION);
+    }
 
-void Mission_planner_handler::set_hold_waypoint(const local_position_t hold_position, float heading)
-{
-    hold_waypoint_.set_local_pos(hold_position, heading);
-    hold_waypoint_set_ = true;
-}
-
-void Mission_planner_handler::set_hold_waypoint(const Waypoint wpt)
-{
-    hold_waypoint_ = wpt;
-    hold_waypoint_set_ = true;
+    // Reset behaviors of other states
+    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+    mission_planner.set_critical_next_state(false);
+    navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
 }

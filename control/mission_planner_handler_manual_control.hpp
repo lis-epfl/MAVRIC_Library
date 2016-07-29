@@ -30,60 +30,65 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_on_ground.cpp
+ * \file mission_planner_handler_manual_control.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the on ground state
+ * \brief The MAVLink mission planner handler for the manual control state
  *
  ******************************************************************************/
 
 
-#include "communication/mission_planner_handler_on_ground.hpp"
+#ifndef MISSION_PLANNER_HANDLER_MANUAL_CONTROL__
+#define MISSION_PLANNER_HANDLER_MANUAL_CONTROL__
 
-extern "C"
+#include "control/mission_planner_handler.hpp"
+#include "communication/state.hpp"
+#include "control/manual_control.hpp"
+#include "control/navigation.hpp"
+#include "sensing/ins.hpp"
+
+/*
+ * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ */
+
+class Mission_planner_handler_manual_control : public Mission_planner_handler
 {
+public:
 
-}
+
+    /**
+     * \brief   Initialize the manual control mission planner handler
+     *
+     * \param   ins                     The reference to the ins
+     * \param   navigation              The reference to the navigation structure
+     * \param   state                   The reference to the state structure
+     */
+     Mission_planner_handler_manual_control(    const INS& ins,
+                                                Navigation& navigation,
+                                                State& state);
 
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+    /**
+     * \brief   The handler for the manual control state.
+     *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
+     */
+    virtual void handle(Mission_planner& mission_planner);
 
-Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   const INS& ins,
-                                                                        Navigation& navigation,
-                                                                        State& state,
-                                                                        const Manual_control& manual_control):
-            Mission_planner_handler(ins),
-            navigation_(navigation),
-            state_(state),
-            manual_control_(manual_control)
-{
+    virtual bool init();
 
-}
+protected:
+    Navigation& navigation_;                                     ///< The reference to the navigation structure
+    State& state_;                                               ///< The reference to the state structure
+};
 
-bool Mission_planner_handler_on_ground::init()
-{
-    return true;
-}
 
-void Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
-{
-    Mav_mode mode_local = state_.mav_mode();
-    float thrust = manual_control_.get_thrust();
 
-    if (thrust > -0.7f)
-    {
-        if (!mode_local.is_manual())
-        {
-            reset_hold_waypoint();
-            navigation_.set_internal_state(Navigation::NAV_TAKEOFF);
-        }
-        else
-        {
-            navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
-        }
-    }
-}
+
+
+
+
+#endif // MISSION_PLANNER_HANDLER_MANUAL_CONTROL__

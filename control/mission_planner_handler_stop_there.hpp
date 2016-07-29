@@ -30,20 +30,20 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_stop_on_position.hpp
+ * \file mission_planner_handler_stop_there.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the stop on position state
+ * \brief The MAVLink mission planner handler for the stop there state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_STOP_ON_POSITION__
-#define MISSION_PLANNER_HANDLER_STOP_ON_POSITION__
+#ifndef MISSION_PLANNER_HANDLER_STOP_THERE__
+#define MISSION_PLANNER_HANDLER_STOP_THERE__
 
-#include "communication/mission_planner_handler.hpp"
+#include "control/mission_planner_handler.hpp"
 #include "communication/state.hpp"
 #include "control/navigation.hpp"
 
@@ -51,21 +51,21 @@
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mission_planner_handler_stop_on_position : public Mission_planner_handler
+class Mission_planner_handler_stop_there : public Mission_planner_handler
 {
 public:
 
 
     /**
-     * \brief   Initialize the stop on position mission planner handler
+     * \brief   Initialize the stop there mission planner handler
      *
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation class
      * \param   state                   The reference to the state class
      */
-     Mission_planner_handler_stop_on_position(  const INS& ins,
-                                                Navigation& navigation,
-                                                State& state);
+     Mission_planner_handler_stop_there(    const INS& ins,
+                                            Navigation& navigation,
+                                            State& state);
 
 
     /**
@@ -78,6 +78,14 @@ public:
 
     virtual bool init();
 
+    /**
+     * \brief   Drives the stopping behavior
+     *
+     * \param   mission_planner     The reference to the mission planner that is
+     * handling the request.
+     */
+    void stopping_handler(Mission_planner& mission_planner);
+
 protected:
     Navigation& navigation_;                                     ///< The reference to the navigation structure
     State& state_;                                               ///< The reference to the state structure
@@ -89,4 +97,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_STOP_ON_POSITION__
+#endif // MISSION_PLANNER_HANDLER_STOP_THERE__

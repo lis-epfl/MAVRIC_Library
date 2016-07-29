@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_hold_position.hpp
+ * \file mission_planner_handler_hold_position.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -40,53 +40,48 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_HOLD_POSITION__
-#define MISSION_PLANNER_HANDLER_HOLD_POSITION__
+#include "control/mission_planner_handler_hold_position.hpp"
 
-#include "communication/mission_planner_handler.hpp"
-#include "communication/state.hpp"
-#include "control/navigation.hpp"
-
-/*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
- */
-
-class Mission_planner_handler_hold_position : public Mission_planner_handler
+extern "C"
 {
-public:
+
+}
 
 
-    /**
-     * \brief   Initialize the hold position mission planner handler
-     *
-     * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
-     */
-     Mission_planner_handler_hold_position( const INS& ins,
-                                            Navigation& navigation,
-                                            State& state);
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
+Mission_planner_handler_hold_position::Mission_planner_handler_hold_position(   const INS& ins,
+                                                                                Navigation& navigation,
+                                                                                State& state):
+            Mission_planner_handler(ins),
+            navigation_(navigation),
+            state_(state)
+{
 
-    /**
-     * \brief   The handler for the hold position state.
-     *
-     * \param   mission_planner     The reference to the misison planner that is
-     * handling the request.
-     */
-    virtual void handle(Mission_planner& mission_planner);
+}
 
-    virtual bool init();
+bool Mission_planner_handler_hold_position::init()
+{
+    return true;
+}
 
-protected:
-    Navigation& navigation_;                                     ///< The reference to the navigation structure
-    State& state_;                                               ///< The reference to the state structure
-};
+void Mission_planner_handler_hold_position::handle(Mission_planner& mission_planner)
+{
+    Mav_mode mode_local = state_.mav_mode();
 
+    // Set the goal position to be the current hold position.
+    // Do not update hold position as that can cause drift
+    navigation_.set_goal(hold_waypoint());
 
-
-
-
-
-
-#endif // MISSION_PLANNER_HANDLER_HOLD_POSITION__
+    // Change state if necessary
+    if (mode_local.is_auto())
+    {
+        navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
+    }
+    else if (mode_local.is_manual())
+    {
+        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
+    }
+}

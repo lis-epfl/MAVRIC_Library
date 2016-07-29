@@ -44,7 +44,7 @@
 #define MISSION_PLANNER_HANDLER_NAVIGATING__
 
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/mission_planner_handler.hpp"
+#include "control/mission_planner_handler.hpp"
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"

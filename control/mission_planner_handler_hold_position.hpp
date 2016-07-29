@@ -30,48 +30,46 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_manual_control.hpp
+ * \file mission_planner_handler_hold_position.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the manual control state
+ * \brief The MAVLink mission planner handler for the hold position state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_MANUAL_CONTROL__
-#define MISSION_PLANNER_HANDLER_MANUAL_CONTROL__
+#ifndef MISSION_PLANNER_HANDLER_HOLD_POSITION__
+#define MISSION_PLANNER_HANDLER_HOLD_POSITION__
 
-#include "communication/mission_planner_handler.hpp"
+#include "control/mission_planner_handler.hpp"
 #include "communication/state.hpp"
-#include "control/manual_control.hpp"
 #include "control/navigation.hpp"
-#include "sensing/ins.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mission_planner_handler_manual_control : public Mission_planner_handler
+class Mission_planner_handler_hold_position : public Mission_planner_handler
 {
 public:
 
 
     /**
-     * \brief   Initialize the manual control mission planner handler
+     * \brief   Initialize the hold position mission planner handler
      *
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      */
-     Mission_planner_handler_manual_control(    const INS& ins,
-                                                Navigation& navigation,
-                                                State& state);
+     Mission_planner_handler_hold_position( const INS& ins,
+                                            Navigation& navigation,
+                                            State& state);
 
 
     /**
-     * \brief   The handler for the manual control state.
+     * \brief   The handler for the hold position state.
      *
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
@@ -91,4 +89,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_MANUAL_CONTROL__
+#endif // MISSION_PLANNER_HANDLER_HOLD_POSITION__

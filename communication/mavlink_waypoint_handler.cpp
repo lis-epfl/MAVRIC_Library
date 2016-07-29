@@ -42,7 +42,6 @@
 
 
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "communication/mission_planner.hpp"
 
 #include <cstdlib>
 

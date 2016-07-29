@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "communication/mission_planner_handler_takeoff.hpp"
+#include "control/mission_planner_handler_takeoff.hpp"
 
 extern "C"
 {

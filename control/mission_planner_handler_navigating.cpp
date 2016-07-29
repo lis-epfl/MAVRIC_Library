@@ -40,10 +40,10 @@
  ******************************************************************************/
 
 
-#include "communication/mission_planner_handler_navigating.hpp"
+#include "control/mission_planner_handler_navigating.hpp"
 
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "communication/mission_planner_handler_landing.hpp"
+#include "control/mission_planner_handler_landing.hpp"
 
 extern "C"
 {

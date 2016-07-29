@@ -30,17 +30,17 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_manual_control.cpp
+ * \file mission_planner_handler_on_ground.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the manual control state
+ * \brief The MAVLink mission planner handler for the on ground state
  *
  ******************************************************************************/
 
 
-#include "communication/mission_planner_handler_manual_control.hpp"
+#include "control/mission_planner_handler_on_ground.hpp"
 
 extern "C"
 {
@@ -52,39 +52,38 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( const INS& ins,
-                                                                                Navigation& navigation,
-                                                                                State& state):
+Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   const INS& ins,
+                                                                        Navigation& navigation,
+                                                                        State& state,
+                                                                        const Manual_control& manual_control):
             Mission_planner_handler(ins),
             navigation_(navigation),
-            state_(state)
+            state_(state),
+            manual_control_(manual_control)
 {
 
 }
 
-bool Mission_planner_handler_manual_control::init()
+bool Mission_planner_handler_on_ground::init()
 {
     return true;
 }
 
-void Mission_planner_handler_manual_control::handle(Mission_planner& mission_planner)
+void Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
+    float thrust = manual_control_.get_thrust();
 
-    // Change state if necessary
-    if (mode_local.is_auto())
+    if (thrust > -0.7f)
     {
-        navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
+        if (!mode_local.is_manual())
+        {
+            reset_hold_waypoint();
+            navigation_.set_internal_state(Navigation::NAV_TAKEOFF);
+        }
+        else
+        {
+            navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
+        }
     }
-    else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
-    {
-        set_hold_waypoint(ins_.position_lf());
-        hold_waypoint().set_radius(navigation_.minimal_radius);
-        navigation_.set_internal_state(Navigation::NAV_HOLD_POSITION);
-    }
-
-    // Reset behaviors of other states
-    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-    mission_planner.set_critical_next_state(false);
-    navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
 }

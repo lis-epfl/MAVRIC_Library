@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_stop_there.hpp
+ * \file mission_planner_handler_stop_there.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -40,61 +40,66 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_STOP_THERE__
-#define MISSION_PLANNER_HANDLER_STOP_THERE__
+#include "control/mission_planner_handler_stop_there.hpp"
 
-#include "communication/mission_planner_handler.hpp"
-#include "communication/state.hpp"
-#include "control/navigation.hpp"
-
-/*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
- */
-
-class Mission_planner_handler_stop_there : public Mission_planner_handler
+extern "C"
 {
-public:
+
+}
 
 
-    /**
-     * \brief   Initialize the stop there mission planner handler
-     *
-     * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation class
-     * \param   state                   The reference to the state class
-     */
-     Mission_planner_handler_stop_there(    const INS& ins,
-                                            Navigation& navigation,
-                                            State& state);
+//------------------------------------------------------------------------------
+// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 
-    /**
-     * \brief   The handler for the stop on position state.
-     *
-     * \param   mission_planner     The reference to the misison planner that is
-     * handling the request.
-     */
-    virtual void handle(Mission_planner& mission_planner);
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-    virtual bool init();
+Mission_planner_handler_stop_there::Mission_planner_handler_stop_there( const INS& ins,
+                                                                        Navigation& navigation,
+                                                                        State& state):
+            Mission_planner_handler(ins),
+            navigation_(navigation),
+            state_(state)
+{
 
-    /**
-     * \brief   Drives the stopping behavior
-     *
-     * \param   mission_planner     The reference to the mission planner that is
-     * handling the request.
-     */
-    void stopping_handler(Mission_planner& mission_planner);
+}
 
-protected:
-    Navigation& navigation_;                                     ///< The reference to the navigation structure
-    State& state_;                                               ///< The reference to the state structure
-};
+bool Mission_planner_handler_stop_there::init()
+{
+    return true;
+}
 
+void Mission_planner_handler_stop_there::handle(Mission_planner& mission_planner)
+{
+    Mav_mode mode_local = state_.mav_mode();
 
+    // Check if we are close enough the position to switch modes
+    stopping_handler(mission_planner);
 
+    navigation_.set_goal(hold_waypoint());
 
+    if (mode_local.is_manual())
+    {
+        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
+    }
+}
 
+void Mission_planner_handler_stop_there::stopping_handler(Mission_planner& mission_planner)
+{
+    float dist2wp_sqr;
+    float rel_pos[3];
 
+    local_position_t local_pos = hold_waypoint().local_pos();
+    rel_pos[X] = (float)(local_pos[X] - ins_.position_lf()[X]);
+    rel_pos[Y] = (float)(local_pos[Y] - ins_.position_lf()[Y]);
+    rel_pos[Z] = (float)(local_pos[Z] - ins_.position_lf()[Z]);
 
-#endif // MISSION_PLANNER_HANDLER_STOP_THERE__
+    dist2wp_sqr = vectors_norm_sqr(rel_pos);
+    if (dist2wp_sqr < 25.0f)
+    {
+        navigation_.set_internal_state(Navigation::NAV_STOP_ON_POSITION);
+    }
+}

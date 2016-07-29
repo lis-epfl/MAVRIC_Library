@@ -30,21 +30,22 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_landing.hpp
+ * \file mission_planner_handler_takeoff.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the landing state
+ * \brief The MAVLink mission planner handler for the takeoff state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_LANDING__
-#define MISSION_PLANNER_HANDLER_LANDING__
+#ifndef MISSION_PLANNER_HANDLER_TAKEOFF__
+#define MISSION_PLANNER_HANDLER_TAKEOFF__
 
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/mission_planner_handler.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
+#include "control/mission_planner_handler.hpp"
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
@@ -53,28 +54,31 @@
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mission_planner_handler_landing : public Mission_planner_handler
+class Mission_planner_handler_takeoff : public Mission_planner_handler
 {
 public:
 
 
     /**
-     * \brief   Initialize the landing mission planner handler
+     * \brief   Initialize the takeoff mission planner handler
      *
      * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
+     * \param   navigation              The reference to the navigation class
+     * \param   ahrs                    The reference to the attitude estimation class
+     * \param   state                   The reference to the state class
+     * \param   waypoint_handler        The reference to the mavlink waypoint handler class
      * \param   message_handler         The reference to the mavlink message handler
      */
-     Mission_planner_handler_landing(   const INS& ins,
+     Mission_planner_handler_takeoff(   const INS& ins,
                                         Navigation& navigation,
                                         const ahrs_t& ahrs,
                                         State& state,
+                                        Mavlink_waypoint_handler& waypoint_handler,
                                         Mavlink_message_handler& message_handler);
 
 
     /**
-     * \brief   The handler for the landing state.
+     * \brief   The handler for the takeoff state.
      *
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
@@ -83,31 +87,30 @@ public:
 
     virtual bool init();
 
-    /**
-     * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
-     *
-     * \param   landing_handler         The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_auto_landing(Mission_planner_handler_landing* landing_handler, mavlink_command_long_t* packet);
-
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
-    const ahrs_t& ahrs_;
+    const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     State& state_;                                              ///< The reference to the state structure
+    Mavlink_waypoint_handler& waypoint_handler_;                ///< The reference to the mavlink waypoint handler class
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 
     /**
-     * \brief   Drives the auto-landing navigation behavior
+     * \brief   Drives the automatic takeoff procedure
      *
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
      */
-    void auto_landing_handler(Mission_planner& mission_planner);
+    bool take_off_handler(Mission_planner& mission_planner);
 
-    //void dubin_hold_init(local_position_t local_pos);
+    /**
+     * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
+     *
+     * \param   takeoff_handler     The pointer to the object of the Mission planner takeoff handler
+     * \param   packet              The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t set_auto_takeoff(Mission_planner_handler_takeoff* takeoff_handler, mavlink_command_long_t* packet);
 
 private:
     /**
@@ -122,4 +125,4 @@ private:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_LANDING__
+#endif // MISSION_PLANNER_HANDLER_TAKEOFF__

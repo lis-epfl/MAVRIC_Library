@@ -43,7 +43,7 @@
 #ifndef MISSION_PLANNER_HANDLER__
 #define MISSION_PLANNER_HANDLER__
 
-#include "communication/mission_planner.hpp"
+#include "control/mission_planner.hpp"
 #include "communication/waypoint.hpp"
 #include "sensing/ins.hpp"
 

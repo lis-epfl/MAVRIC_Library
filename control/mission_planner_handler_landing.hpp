@@ -30,20 +30,21 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_on_ground.hpp
+ * \file mission_planner_handler_landing.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the on ground state
+ * \brief The MAVLink mission planner handler for the landing state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_ON_GROUND__
-#define MISSION_PLANNER_HANDLER_ON_GROUND__
+#ifndef MISSION_PLANNER_HANDLER_LANDING__
+#define MISSION_PLANNER_HANDLER_LANDING__
 
-#include "communication/mission_planner_handler.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "control/mission_planner_handler.hpp"
 #include "communication/state.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
@@ -52,28 +53,28 @@
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mission_planner_handler_on_ground : public Mission_planner_handler
+class Mission_planner_handler_landing : public Mission_planner_handler
 {
 public:
 
 
     /**
-     * \brief   Initialize the on ground mission planner handler
+     * \brief   Initialize the landing mission planner handler
      *
      * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation class
-     * \param   state                   The reference to the state class
-     * \param   manual_control          The reference to the manual control class
+     * \param   navigation              The reference to the navigation structure
+     * \param   state                   The reference to the state structure
+     * \param   message_handler         The reference to the mavlink message handler
      */
-     Mission_planner_handler_on_ground( const INS& ins,
+     Mission_planner_handler_landing(   const INS& ins,
                                         Navigation& navigation,
+                                        const ahrs_t& ahrs,
                                         State& state,
-                                        const Manual_control& manual_control);
+                                        Mavlink_message_handler& message_handler);
 
 
     /**
-     * \brief   The handler for the on ground state. Checks if the trust is
-     * within a certain threshold and changes the state accordingly.
+     * \brief   The handler for the landing state.
      *
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
@@ -82,10 +83,37 @@ public:
 
     virtual bool init();
 
+    /**
+     * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
+     *
+     * \param   landing_handler         The pointer to the structure of the MAVLink waypoint handler
+     * \param   packet                  The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t set_auto_landing(Mission_planner_handler_landing* landing_handler, mavlink_command_long_t* packet);
+
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
+    const ahrs_t& ahrs_;
     State& state_;                                              ///< The reference to the state structure
-    const Manual_control& manual_control_;                      ///< The reference to the manual control class
+    Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
+
+    /**
+     * \brief   Drives the auto-landing navigation behavior
+     *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
+     */
+    void auto_landing_handler(Mission_planner& mission_planner);
+
+    //void dubin_hold_init(local_position_t local_pos);
+
+private:
+    /**
+     * \brief   Handles the behavior changes
+     */
+    void set_behavior();
 };
 
 
@@ -94,4 +122,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_ON_GROUND__
+#endif // MISSION_PLANNER_HANDLER_LANDING__
