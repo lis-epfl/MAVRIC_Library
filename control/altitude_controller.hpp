@@ -116,12 +116,10 @@ static inline altitude_controller_conf_t altitude_controller_default_config(void
     conf.pid_config.clip_max                = 1.0f;
     conf.pid_config.integrator              = {};
     conf.pid_config.integrator.gain         = 0.5f;
-    conf.pid_config.integrator.accumulator  = 0.0f;
     conf.pid_config.integrator.clip_pre     = 0.1f;
     conf.pid_config.integrator.clip         = 0.5f;
     conf.pid_config.differentiator          = {};
     conf.pid_config.differentiator.gain     = 0.4f;
-    conf.pid_config.differentiator.previous = 0.0f;
     conf.pid_config.differentiator.clip     = 0.65f;
     conf.pid_config.soft_zone_width         = 0.0f;
 

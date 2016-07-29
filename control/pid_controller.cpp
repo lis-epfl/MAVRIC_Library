@@ -66,27 +66,6 @@ static float pid_controller_integrate(integrator_t* integrator, float input, flo
 
 
 /**
- * \brief   Initialize integrator parameters
- *
- * \param   integrator  Pointer to an integrator structure
- * \param   gain        The gain of the integrator
- * \param   clip_pre    Clipping value for charging rate
- * \param   clip        Clipping value
- */
-static void pid_controller_init_integrator(integrator_t* integrator, float gain, float clip_pre, float clip);
-
-
-/**
- * \brief               Initialize Differentiator parameters
- *
- * \param   diff        Pointer to differentiator structure
- * \param   gain        The differential gain
- * \param   clip    Clipping value
- */
-static void pid_controller_init_differenciator(differentiator_t* diff, float gain, float clip);
-
-
-/**
  * \brief Differentiating
  *
  * \param   diff        Pointer to differentiator parameters
@@ -108,23 +87,6 @@ static float pid_controller_integrate(integrator_t* integrator, float input, flo
     integrator->accumulator = maths_clip(integrator->accumulator, integrator->clip);
     return integrator->accumulator;
 }
-
-
-static void pid_controller_init_integrator(integrator_t* integrator, float gain, float clip_pre, float clip)
-{
-    integrator->gain        = gain;
-    integrator->clip_pre    = clip_pre;
-    integrator->clip        = clip;
-    integrator->accumulator = 0.0f;
-}
-
-
-static void pid_controller_init_differenciator(differentiator_t* diff, float gain, float clip_val)
-{
-    diff->gain  = gain;
-    diff->clip  = clip_val;
-}
-
 
 static float pid_controller_differentiate(differentiator_t* diff, float input, float dt)
 {
@@ -152,18 +114,14 @@ bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf
 {
     float t = time_keeper_get_s();
 
-    controller->p_gain          = config->p_gain;
-    controller->clip_min        = config->clip_min;
-    controller->clip_max        = config->clip_max;
-    controller->integrator      = config->integrator;
-    controller->differentiator  = config->differentiator;
-    controller->soft_zone_width = config->soft_zone_width;
+    pid_controller_apply_config(controller, config);
 
     controller->output        = 0.0f;
     controller->error         = 0.0f;
     controller->last_update_s = t;
     controller->dt_s          = 1.0f;
-
+    controller->integrator.accumulator = 0;
+    controller->differentiator.previous = 0;
     return true;
 }
 
@@ -171,23 +129,14 @@ bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf
 
 void pid_controller_init_pass_through(pid_controller_t* controller)
 {
-    float t = time_keeper_get_s();
-
-    controller->dt_s          = 1.0f;
-    controller->last_update_s = t;
-
-    controller->p_gain      = 1.0f;
-    controller->clip_min    = -10000.0f;
-    controller->clip_max    = 10000.0f;
-    controller->error       = 0.0f;
-    controller->output      = 0.0f;
-    controller->soft_zone_width         = 0.0f;
-    controller->differentiator.previous = 0.0f;
-
-    pid_controller_init_differenciator(&(controller->differentiator),
-                                       0.0f, 0.0f);
-    pid_controller_init_integrator(&(controller->integrator),
-                                   0.0f, 0.0f, 0.0f);
+    pid_controller_conf_t config    = {};
+    config.p_gain                   = 1.0f;
+    config.clip_min                 = -10000.0f;
+    config.clip_max                 = 10000.0f;
+    config.soft_zone_width          = 0.0f;
+    config.integrator               = {};
+    config.differentiator           = {};
+    pid_controller_init(controller, &config);
 }
 
 
@@ -269,14 +218,18 @@ float pid_controller_update_feedforward_dt(pid_controller_t* controller, float e
 
 void pid_controller_apply_config(pid_controller_t* controller, const pid_controller_conf_t* config)
 {
+    /* configure proportional part of PID */
     controller->p_gain          = config->p_gain;
     controller->clip_min        = config->clip_min;
     controller->clip_max        = config->clip_max;
     controller->soft_zone_width = config->soft_zone_width;
+    
+    /* configure integrator part of PID */
     controller->integrator.gain = config->integrator.gain;
     controller->integrator.clip_pre = config->integrator.clip_pre;
     controller->integrator.clip = config->integrator.clip;
+
+    /* configure differentiator part of PID */
     controller->differentiator.gain = config->differentiator.gain;
     controller->differentiator.clip = config->differentiator.clip;
-
 }

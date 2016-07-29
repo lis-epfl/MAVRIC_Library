@@ -60,7 +60,6 @@ typedef struct
     float clip;         ///< Clipping value for the accumulator
 } integrator_t;
 
-
 /**
  * \brief Derivative part of PID
  */
@@ -73,6 +72,26 @@ typedef struct
 
 
 /**
+ * \brief Configuration for integrator part of PID controller
+ */
+typedef struct
+{
+    float gain;         ///< Pregain
+    float clip_pre;     ///< Clipping value for the charging rate
+    float clip;         ///< Clipping value for the accumulator
+} integrator_conf_t;
+
+
+/**
+ * \brief Configuration for differentiator part of PID controller
+ */
+typedef struct
+{
+    float gain;         ///< Gain
+    float clip;         ///< Clipping value
+} differentiator_conf_t;
+
+/**
  * \brief Configuration for PID controller
  */
 typedef struct
@@ -80,8 +99,8 @@ typedef struct
     float p_gain;
     float clip_min;                     ///< Min clipping values
     float clip_max;                     ///< Max clipping values
-    integrator_t integrator;            ///< Integrator parameters
-    differentiator_t differentiator;    ///< Differentiator parameters
+    integrator_conf_t integrator;       ///< Integrator parameters
+    differentiator_conf_t differentiator; ///< Differentiator parameters
     float soft_zone_width;              ///< Approximate width of a "soft zone" on the error input, i.e. a region of low gain around the target point. Value 0 -> switched off
 } pid_controller_conf_t;
 
@@ -169,8 +188,6 @@ float pid_controller_update_feedforward_dt(pid_controller_t* controller, float e
 
 /**
  * \brief               Apply configuration to pid_controller without reseting the controller
- *
- * \details             config.integrator.accumulator and config.differentiator.previous are ignored
  *
  * \param   controller  Pointer to the PID controller structure
  * \param   config      Pointer to the configuration

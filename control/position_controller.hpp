@@ -109,27 +109,19 @@ Position_controller::conf_t Position_controller::default_config()
     conf.cruise_pid_config.clip_max                 = 3.0f;
     conf.cruise_pid_config.integrator.gain          = 0.0f;
     conf.cruise_pid_config.integrator.clip_pre      = 0.0f;
-    conf.cruise_pid_config.integrator.accumulator   = 0.0f;
     conf.cruise_pid_config.integrator.clip          = 0.0f;
-    conf.cruise_pid_config.differentiator           = {};
     conf.cruise_pid_config.differentiator.gain      = 0.14f;
-    conf.cruise_pid_config.differentiator.previous  = 0.0f;
     conf.cruise_pid_config.differentiator.clip      = 0.46f;
     conf.cruise_pid_config.soft_zone_width          = 0.0f;
 
     /* config of the hover pid controller */
-    conf.hover_pid_config                         = {};
     conf.hover_pid_config.p_gain                  = 0.4f;
     conf.hover_pid_config.clip_min                = 0.0f;
     conf.hover_pid_config.clip_max                = 3.0f;
-    conf.hover_pid_config.integrator              = {};
     conf.hover_pid_config.integrator.gain         = 0.0f;
     conf.hover_pid_config.integrator.clip_pre     = 0.0f;
-    conf.hover_pid_config.integrator.accumulator  = 0.0f;
     conf.hover_pid_config.integrator.clip         = 0.0f;
-    conf.hover_pid_config.differentiator          = {};
     conf.hover_pid_config.differentiator.gain     = 0.28f;
-    conf.hover_pid_config.differentiator.previous = 0.0f;
     conf.hover_pid_config.differentiator.clip     = 0.46f;
     conf.hover_pid_config.soft_zone_width         = 0.0f;
 
