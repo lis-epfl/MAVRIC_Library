@@ -135,7 +135,7 @@ private:
     uint32_t timer_;        ///< TIMER used
     uint32_t prescaler_;    ///< clk divider
     uint32_t period_;       ///< period
-    uint32_t duty_cyle_;    ///< pulse length in us
+    uint32_t duty_cycle_;   ///< pulse length in us
 };
 
 #endif /* PWM_STM32_HPP_ */

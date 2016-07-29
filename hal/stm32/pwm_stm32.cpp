@@ -65,7 +65,7 @@ Pwm_stm32::Pwm_stm32(config_t pwm_config)
     timer_              = pwm_config.timer_config;
     prescaler_          = pwm_config.prescaler_config;
     period_             = pwm_config.period_config;
-    duty_cyle_          = pwm_config.duty_cycle_config;
+    duty_cycle_         = pwm_config.duty_cycle_config;
     channel_id_         = pwm_config.channel_config;
 }
 
@@ -112,7 +112,7 @@ bool Pwm_stm32::init(void)
         TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC1M_PWM1;
 
         //select duty cycle
-        TIM_CCR1(pwm_config_.timer_config) = duty_cyle_;
+        TIM_CCR1(pwm_config_.timer_config) = duty_cycle_;
 
         //set the preload bit
         TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC1PE;
@@ -136,7 +136,7 @@ bool Pwm_stm32::init(void)
         TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC2M_PWM1;
 
         //select duty cycle
-        TIM_CCR2(pwm_config_.timer_config) = duty_cyle_;
+        TIM_CCR2(pwm_config_.timer_config) = duty_cycle_;
 
         //set the preload bit
         TIM_CCMR1(pwm_config_.timer_config) |= TIM_CCMR1_OC2PE;
@@ -160,7 +160,7 @@ bool Pwm_stm32::init(void)
         TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC3M_PWM1;
 
         //select duty cycle
-        TIM_CCR3(pwm_config_.timer_config) = duty_cyle_;
+        TIM_CCR3(pwm_config_.timer_config) = duty_cycle_;
 
         //set the preload bit
         TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC3PE;
@@ -184,7 +184,7 @@ bool Pwm_stm32::init(void)
         TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC4M_PWM1;
 
         //select duty cycle
-        TIM_CCR4(pwm_config_.timer_config) = duty_cyle_;
+        TIM_CCR4(pwm_config_.timer_config) = duty_cycle_;
 
         //set the preload bit
         TIM_CCMR2(pwm_config_.timer_config) |= TIM_CCMR2_OC4PE;
@@ -198,7 +198,7 @@ bool Pwm_stm32::init(void)
 
 bool Pwm_stm32::set_pulse_width_us(uint16_t pulse_us)
 {
-    duty_cyle_ = pulse_us;
+    duty_cycle_ = pulse_us;
     write_channel();
 
     return true;
@@ -234,21 +234,21 @@ void Pwm_stm32::write_channel(void)
     if(channel_id_ == PWM_STM32_CHANNEL_1)
     {
         //select duty cycle
-        TIM_CCR1(timer_) = duty_cyle_;
+        TIM_CCR1(timer_) = duty_cycle_;
     }
     else if(channel_id_ == PWM_STM32_CHANNEL_2)
     {
         //select duty cycle
-        TIM_CCR2(timer_) = duty_cyle_;
+        TIM_CCR2(timer_) = duty_cycle_;
     }
     else if(channel_id_ == PWM_STM32_CHANNEL_3)
     {
         //select duty cycle
-        TIM_CCR3(timer_) = duty_cyle_;
+        TIM_CCR3(timer_) = duty_cycle_;
     }
     else if(channel_id_ == PWM_STM32_CHANNEL_4)
     {
         //select duty cycle
-        TIM_CCR4(timer_) = duty_cyle_;
+        TIM_CCR4(timer_) = duty_cycle_;
     }
 }
