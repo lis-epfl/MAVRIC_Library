@@ -60,7 +60,7 @@ extern "C"
 #include "sensing/altitude.h"
 }
 
-#include <random>
+
 
 /**
  * \brief   Altitude estimator
@@ -265,13 +265,20 @@ private:
     float dt_;                              ///< Time interval since last update in seconds
     float last_update_;                     ///< Last update time in seconds
 
-    std::mt19937 randomness_generator;
-    std::array<std::normal_distribution<float>, 6> gps_noise;    ///< Gaussian distribution to simulate noise on the GPS (0: pos_x / 1: pos_y / 2: pos_z / 3: vel_x / 4: vel_y / 5: vel_z)
-
     /**
      * \brief   Performs the prediction step of the Kalman filter, using linear formulation (KF, non-constant matrices)
      */
     void predict_kf(void);
+
+
+    /**
+     * \brief   Return a random number, simulating a uniform white noise with standard deviation sigma
+     * 
+     * \param sigma     Standard deviation of the noise to simulate
+     * 
+     * \return          Return the noise sample
+     */
+    float rand_sigma(float sigma);
 };
 
 

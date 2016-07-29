@@ -43,6 +43,9 @@
 
 #include "sensing/ins_kf.hpp"
 
+#include <cstdlib>
+#include <ctime>
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -111,6 +114,9 @@ INS_kf::INS_kf(const Gps& gps,
     dt_(0.0f),
     last_update_(0.0f)
 {
+    // Init randomness
+    srand(static_cast<unsigned>(time(0)));
+
     // Init the filter
     init();
     init_flag = 0;
@@ -256,9 +262,10 @@ bool INS_kf::update(void)
 
                 // DOME SPECIFIC
                 // Simulate some noise on the GPS local positions (to fit measured sigma, which was directly on the local, not the global)
-                gps_local[0] = gps_local[0] + gps_noise[0](randomness_generator);
-                gps_local[1] = gps_local[1] + gps_noise[1](randomness_generator);
-                gps_local[2] = gps_local[2] + gps_noise[2](randomness_generator);
+                // Taken from: http://stackoverflow.com/questions/686353/c-random-float-number-generation
+                gps_local[0] += rand_sigma(config_.sigma_gps_xy);
+                gps_local[1] += rand_sigma(config_.sigma_gps_xy);
+                gps_local[2] += rand_sigma(config_.sigma_gps_z);
 
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
@@ -286,9 +293,9 @@ bool INS_kf::update(void)
 
                 // DOME SPECIFIC
                 // Simulate some noise on the GPS local velocities (to fit measured sigma, which was directly on the local, not the global)
-                gps_velocity[0] = gps_velocity[0] + gps_noise[3](randomness_generator);
-                gps_velocity[1] = gps_velocity[1] + gps_noise[4](randomness_generator);
-                gps_velocity[2] = gps_velocity[2] + gps_noise[5](randomness_generator);
+                gps_velocity[0] += rand_sigma(config_.sigma_gps_velxy);
+                gps_velocity[1] += rand_sigma(config_.sigma_gps_velxy);
+                gps_velocity[2] += rand_sigma(config_.sigma_gps_velz);
 
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
@@ -530,6 +537,16 @@ void INS_kf::predict_kf(void)
 }
 
 
+float INS_kf::rand_sigma(float sigma)
+{
+    // Compute the approximate corresponding amplitude
+    float noise_amp = 3.45f * sigma;
+
+    // Compute the sample (generate sample between [0;1], offset it between [-0.5;0.5], scale it by the corresponding amplitude to obtain the desired sigma)
+    return noise_amp * ( (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) - 0.5f );
+}
+
+
 void INS_kf::init(void)
 {
     // Initialization is done, no need to do once more
@@ -546,12 +563,4 @@ void INS_kf::init(void)
 
     // Update last time to avoid glitches at initilaization
     last_update_ = time_keeper_get_s();
-
-    // Init the noise (if noise changed via telemetry, init should be done!)
-    gps_noise = std::array<std::normal_distribution<float>, 6>{{std::normal_distribution<float>(0.0f, config_.sigma_gps_xy),
-                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_xy),
-                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_z),
-                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_velxy),
-                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_velxy),
-                                                                std::normal_distribution<float>(0.0f, config_.sigma_gps_velz)}};
 }
