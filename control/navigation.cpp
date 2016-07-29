@@ -82,103 +82,27 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
 }
 
 
-void Navigation::set_speed_command(float rel_pos[])
+void Navigation::set_speed_command(local_position_t pos_command_lf)
 {
-    float  norm_rel_dist;
-    float v_desired = 0.0f;
-
-    float dir_desired_sg[3];
-    float rel_heading;
-
-    Mav_mode mode = state.mav_mode();
-
-    norm_rel_dist = sqrt(dist2wp_sqr);
-
-    // calculate dir_desired in local frame
-    aero_attitude_t attitude_yaw = coord_conventions_quat_to_aero(qe);
-    attitude_yaw.rpy[0] = 0.0f;
-    attitude_yaw.rpy[1] = 0.0f;
-    attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
-    quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
-
-    quaternions_rotate_vector(q_rot, rel_pos, dir_desired_sg);
-
-    // Avoiding division by zero
-    if (norm_rel_dist < 0.0005f)
+    /* get yaw command (absolute in lf):
+     * if we are in Waypoint navigation, and far from the goal position, we point yaw towards the goal position, otherwise we keep yaw constant */
+    float yaw_command_lf = coord_conventions_get_yaw(qe);          // set yaw command to current yaw
+    if ((state.mav_mode().is_auto() && ((state.nav_plan_active && (internal_state_ == NAV_NAVIGATING)) || (internal_state_ == NAV_STOP_THERE))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
     {
-        norm_rel_dist += 0.0005f;
-    }
-
-    // Normalisation of the goal direction
-    dir_desired_sg[X] /= norm_rel_dist;
-    dir_desired_sg[Y] /= norm_rel_dist;
-    dir_desired_sg[Z] /= norm_rel_dist;
-
-    if ((mode.is_auto() && ((state.nav_plan_active && (internal_state_ == NAV_NAVIGATING)) || (internal_state_ == NAV_STOP_THERE))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
-    {
-
-        if (((maths_f_abs(rel_pos[X]) <= 1.0f) && (maths_f_abs(rel_pos[Y]) <= 1.0f)) || ((maths_f_abs(rel_pos[X]) <= 5.0f) && (maths_f_abs(rel_pos[Y]) <= 5.0f) && (maths_f_abs(rel_pos[Z]) >= 3.0f)))
+        float rel_pos[3];
+        navigation_set_rel_pos_n_dist2wp(pos_command_lf.data(), rel_pos, ins.position_lf().data());
+        if (((maths_f_abs(rel_pos[X]) > 1.0f) || (maths_f_abs(rel_pos[Y]) > 1.0f))
+             && ((maths_f_abs(rel_pos[X]) > 5.0f) || (maths_f_abs(rel_pos[Y]) > 5.0f) || (maths_f_abs(rel_pos[Z]) < 3.0f)))
         {
-            rel_heading = 0.0f;
-        }
-        else
-        {
-            rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y], rel_pos[X]) - coord_conventions_get_yaw(qe));
-        }
-
-        wpt_nav_controller.clip_max = cruise_speed;
-        v_desired = pid_controller_update_dt(&wpt_nav_controller, norm_rel_dist, dt);
-    }
-    else
-    {
-        rel_heading = 0.0f;
-        hovering_controller.clip_max = cruise_speed;
-        v_desired = pid_controller_update_dt(&hovering_controller, norm_rel_dist, dt);
+            yaw_command_lf = maths_calc_smaller_angle(atan2(rel_pos[Y], rel_pos[X]));
+        }  
     }
 
-    if (v_desired *  maths_f_abs(dir_desired_sg[Z]) > max_climb_rate)
-    {
-        v_desired = max_climb_rate / maths_f_abs(dir_desired_sg[Z]);
-    }
+    /* set command in position controller and update to get velocity command */
+    pos_ctrl_direct_.set_command(pos_command_lf, yaw_command_lf);
+    pos_ctrl_direct_.update();
 
-
-    // Scaling of the goal direction by the desired speed
-    dir_desired_sg[X] *= v_desired;
-    dir_desired_sg[Y] *= v_desired;
-    dir_desired_sg[Z] *= v_desired;
-
-    // loop_count++;
-    // loop_count = loop_count % 50;
-    // if (loop_count == 0)
-    // {
-    //  // print_util_dbg_print("Desired_vel_sg(x100): (");
-    //  // print_util_dbg_print_num(dir_desired_sg[X] * 100,10);
-    //  // print_util_dbg_print_num(dir_desired_sg[Y] * 100,10);
-    //  // print_util_dbg_print_num(dir_desired_sg[Z] * 100,10);
-    //  // print_util_dbg_print("). \r\n");
-    //  print_util_dbg_print("rel_heading(x100): ");
-    //  print_util_dbg_print_num(rel_heading,10);
-    //  print_util_dbg_print("\r\n");
-    //  print_util_dbg_print("nav state: ");
-    //  print_util_dbg_print_num(internal_state_,10);
-    //  print_util_dbg_print("\r\n");
-    //  // print_util_dbg_print("Actual_vel_bf(x100): (");
-    //  // print_util_dbg_print_num(position_estimation.vel_bf[X] * 100,10);
-    //  // print_util_dbg_print_num(position_estimation.vel_bf[Y] * 100,10);
-    //  // print_util_dbg_print_num(position_estimation.vel_bf[Z] * 100,10);
-    //  // print_util_dbg_print("). \r\n");
-    //  // print_util_dbg_print("Actual_pos(x100): (");
-    //  // print_util_dbg_print_num(position_estimation.local_position.pos[X] * 100,10);
-    //  // print_util_dbg_print_num(position_estimation.local_position.pos[Y] * 100,10);
-    //  // print_util_dbg_print_num(position_estimation.local_position.pos[Z] * 100,10);
-    //  // print_util_dbg_print("). \r\n");
-    // }
-
-    controls_nav.tvel[X] = dir_desired_sg[X];
-    controls_nav.tvel[Y] = dir_desired_sg[Y];
-    controls_nav.tvel[Z] = dir_desired_sg[Z];
-    controls_nav.rpy[YAW] = kp_yaw * rel_heading;
-
+    /* Overwrite z velocity command if we are landing in DESCENT_TO_GND mode */
     if ((internal_state_ == NAV_LANDING) && (auto_landing_behavior == Navigation::DESCENT_TO_GND))
     {
         // Constant velocity to the ground
@@ -263,17 +187,10 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
 
 void Navigation::run()
 {
-    float rel_pos[3];
-
-    // Control in translational speed of the platform
-    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp( goal.position.data(),
-                                                    rel_pos,
-                                                    ins.position_lf().data());
-
     switch(navigation_strategy)
     {
         case Navigation::strategy_t::DIRECT_TO:
-            set_speed_command(rel_pos);
+            set_speed_command(goal.position);
         break;
 
         case Navigation::strategy_t::DUBIN:
@@ -287,13 +204,13 @@ void Navigation::run()
                     }
                     else
                     {
-                        set_speed_command(rel_pos);
+                        set_speed_command(goal.position);
                     }
 
                 }
                 else
                 {
-                    set_speed_command(rel_pos);
+                    set_speed_command(goal.position);
                 }
             }
             else
@@ -315,6 +232,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     qe(qe),
     controls_nav(controls_nav),
     ins(ins),
+    pos_ctrl_direct_(controls_nav, ins, qe),
     state(state),
     mavlink_stream(mavlink_stream)
 {

@@ -100,7 +100,7 @@ Position_controller::conf_t Position_controller::default_config()
 {
     conf_t conf;
     conf.max_climb_rate     = 1.0f;
-    conf.max_rel_yaw        = PI/2;
+    conf.max_rel_yaw        = 0.7f;
     conf.min_cruise_dist    = 2;            // TODO: Choose meaning full min_cruise_dist
 
     /* config of the cruise pid controller */

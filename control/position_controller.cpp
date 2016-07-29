@@ -53,8 +53,7 @@ Position_controller::Position_controller(control_command_t& vel_command_lf, cons
     hover_pid_config_(config.hover_pid_config)
 {
     pos_command_lf_ = ins_.position_lf();
-    yaw_command_lf_ = 0;    // TODO: change to actual value
-
+    yaw_command_lf_ = coord_conventions_get_yaw(qe_);
     pid_controller_init(&pid_controller_, &hover_pid_config_);
 }
 
