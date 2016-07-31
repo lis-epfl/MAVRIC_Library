@@ -62,7 +62,7 @@ uint8_t serial2stream(stream_data_t data, uint8_t byte)
 static void clock_setup(void)
 {
     // Set STM32 to 168 MHz
-    rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
+    rcc_clock_setup_hse_3v3(&rcc_hse_25mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
 
     // Enable GPIO clock
     rcc_periph_clock_enable(RCC_GPIOA);
@@ -105,7 +105,7 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     servo_5(pwm_5, config.servo_config[5]),
     servo_6(pwm_6, config.servo_config[6]),
     servo_7(pwm_7, config.servo_config[7]),
-    sim_model(servo_0, servo_1, servo_2, servo_3),
+    sim_model(servo_0, servo_1, servo_3, servo_5),
     sim(sim_model),
     imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer())
 {}
