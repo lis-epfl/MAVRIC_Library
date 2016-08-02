@@ -46,71 +46,151 @@
  ******************************************************************************/
 
 
-#ifndef VELOCITY_CONTROLLER_COPTER_H_
-#define VELOCITY_CONTROLLER_COPTER_H_
+#ifndef VELOCITY_CONTROLLER_COPTER_HPP_
+#define VELOCITY_CONTROLLER_COPTER_HPP_
 
 #include "sensing/ins.hpp"
+#include "control/pid_controller.hpp"
+#include "sensing/ahrs.hpp"
 
 extern "C"
 {
 #include "control/control_command.h"
-#include "sensing/ahrs.hpp"
-#include "control/pid_controller.h"
 }
 
-typedef enum
+
+/**
+ * \brief Velocity controller for hovering platforms
+ */
+class Velocity_controller_copter
 {
-    VEL_CTRL_LOCAL,
-    VEL_CTRL_SEMI_LOCAL
-} velocity_control_frame_t;
+public:
 
-/**
- * \brief Velocity controller structure
- */
-typedef struct
+    /**
+     * \brief Reference frame in which control is done
+     */
+    enum control_frame_t
+    {
+        VEL_CTRL_LOCAL,         ///< Local frame
+        VEL_CTRL_SEMI_LOCAL     ///< Semi-local frame
+    };
+
+    /**
+     * \brief Controller configuration
+     */
+    struct conf_t
+    {
+        control_frame_t         control_frame;          ///< Reference frame in which control is done
+        pid_controller_conf_t   pid_config[3];          ///< Config for PID controller on velocity along X, Y and Z in global frame
+        float                   thrust_hover_point;     ///< Amount of thrust required to hover (between -1 and 1)
+    };
+
+    /**
+     * \brief                       Constructor
+     *
+     * \param   ahrs                Estimated attitude
+     * \param   ins                 Estimated speed and position
+     * \param   velocity_command    Velocity command (input)
+     * \param   attitude_command    Attitude command (output)
+     * \param   thrust_command      Thrust command (output)
+     * \param   config              Configuration
+     */
+    Velocity_controller_copter( const ahrs_t& ahrs,
+                                const INS& ins,
+                                const velocity_command_t& velocity_command,
+                                attitude_command_t& attitude_command,
+                                thrust_command_t& thrust_command,
+                                conf_t config = default_config());
+
+    /**
+     * \brief   Default Configuration
+     *
+     * /return  config
+     */
+    static inline conf_t default_config(void);
+
+    /**
+     * \brief   Main update function
+     *
+     * \return  success
+     */
+    bool update(void);
+
+private:
+    const ahrs_t&                ahrs_;                      ///< Pointer to attitude estimation (input)
+    const INS&                   ins_;                       ///< Speed and position estimation (input)
+    const velocity_command_t&    velocity_command_;          ///< Velocity command (input)
+    attitude_command_t&          attitude_command_;          ///< Attitude command (output)
+    thrust_command_t&            thrust_command_;            ///< Thrust command (output)
+
+    control_frame_t              control_frame_;             ///< Reference frame in which control is done
+    pid_controller_t             pid_[3];                    ///< PID controller for velocity along X, Y and Z in global frame
+    float                        thrust_hover_point_;        ///< Amount of thrust required to hover (between -1 and 1)
+};
+
+
+Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(void)
 {
-    velocity_control_frame_t     control_frame;
-    pid_controller_t             pid[3];                    ///< PID controller for velocity along X, Y and Z in global frame
-    float                        thrust_hover_point;        ///< Amount of thrust required to hover (between -1 and 1)
-    const ahrs_t*                ahrs;                      ///< Pointer to attitude estimation (input)
-    const INS*                   ins;                       ///< Speed and position estimation (input)
-    const velocity_command_t*    velocity_command;          ///< Pointer to velocity command (input)
-    attitude_command_t*          attitude_command;          ///< Pointer to attitude command (output)
-    thrust_command_t*            thrust_command;            ///< Pointer to thrust command (output)
-} velocity_controller_copter_t;
+    conf_t conf = {};
 
+    conf.control_frame                         = VEL_CTRL_SEMI_LOCAL;
+    conf.thrust_hover_point                    = -0.26f;
+    
+    // -----------------------------------------------------------------
+    // ------ X PID ----------------------------------------------------
+    // -----------------------------------------------------------------
+    conf.pid_config[X]                         = {};
+    conf.pid_config[X].p_gain                  = 0.2f;
+    conf.pid_config[X].clip_min                = -0.5f;
+    conf.pid_config[X].clip_max                = 0.5f;
+    conf.pid_config[X].integrator              = {};
+    conf.pid_config[X].integrator.gain         = 0.0125f;
+    conf.pid_config[X].integrator.clip_pre     = 1.0f;
+    conf.pid_config[X].integrator.accumulator  = 0.0f;
+    conf.pid_config[X].integrator.clip         = 0.5f;
+    conf.pid_config[X].differentiator          = {};
+    conf.pid_config[X].differentiator.gain     = 0.001f;
+    conf.pid_config[X].differentiator.previous = 0.0f;
+    conf.pid_config[X].differentiator.clip     = 1.0f;
+    conf.pid_config[X].soft_zone_width         = 0.2f;
 
-/**
- * \brief Velocity controller configuration
- */
-typedef struct
-{
-    velocity_control_frame_t control_frame;
-    pid_controller_conf_t   pid_config[3];          ///< Config for PID controller on velocity along X, Y and Z in global frame
-    float                   thrust_hover_point;     ///< Amount of thrust required to hover (between -1 and 1)
-} velocity_controller_copter_conf_t;
+    // -----------------------------------------------------------------
+    // ------ Y PID ----------------------------------------------------
+    // -----------------------------------------------------------------
+    conf.pid_config[Y]                         = {};
+    conf.pid_config[Y].p_gain                  = 0.15f;
+    conf.pid_config[Y].clip_min                = -0.5f;
+    conf.pid_config[Y].clip_max                = 0.5f;
+    conf.pid_config[Y].integrator              = {};
+    conf.pid_config[Y].integrator.gain         = 0.0125f;
+    conf.pid_config[Y].integrator.clip_pre     = 1.0f;
+    conf.pid_config[Y].integrator.accumulator  = 0.0f;
+    conf.pid_config[Y].integrator.clip         = 0.5f;
+    conf.pid_config[Y].differentiator          = {};
+    conf.pid_config[Y].differentiator.gain     = 0.001f;
+    conf.pid_config[Y].differentiator.previous = 0.0f;
+    conf.pid_config[Y].differentiator.clip     = 1.0f;
+    conf.pid_config[Y].soft_zone_width         = 0.2f;
 
+    // ---------------------------------------------------------------------
+    // ------ Z PID --------------------------------------------------------
+    // ---------------------------------------------------------------------
+    conf.pid_config[Z]                         = {};
+    conf.pid_config[Z].p_gain                  = 0.20f;
+    conf.pid_config[Z].clip_min                = -0.9f;
+    conf.pid_config[Z].clip_max                = 0.65f;
+    conf.pid_config[Z].integrator              = {};
+    conf.pid_config[Z].integrator.gain         = 0.01f;
+    conf.pid_config[Z].integrator.clip_pre     = 2.0f;
+    conf.pid_config[Z].integrator.accumulator  = 0.0f;
+    conf.pid_config[Z].integrator.clip         = 0.3f;
+    conf.pid_config[Z].differentiator          = {};
+    conf.pid_config[Z].differentiator.gain     = 0.08f;
+    conf.pid_config[Z].differentiator.previous = 0.0f;
+    conf.pid_config[Z].differentiator.clip     = 0.04f;
+    conf.pid_config[Z].soft_zone_width         = 0.2f;
 
-/**
- * \brief                       Initialises the velocity controller structure
- *
- * \param   controller          Pointer to data structure
- * \param   config              Configuration
- * \param   ahrs                Pointer to the estimated attitude
- * \param   ins                 Pointer to the estimated speed and position
- * \param   velocity_command    Pointer to velocity command (input)
- * \param   attitude_command    Pointer to attitude command (output)
- * \param   thrust_command      Pointer to thrust command (output)
- */
-bool velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const INS* ins, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command);
+    return conf;
+}
 
-
-/**
- * \brief                   Main update function
- *
- * \param   controller      Pointer to data structure
- */
-bool velocity_controller_copter_update(velocity_controller_copter_t* controller);
-
-
-#endif /* VELOCITY_CONTROLLER_COPTER_H_ */
+#endif /* VELOCITY_CONTROLLER_COPTER_HPP_ */

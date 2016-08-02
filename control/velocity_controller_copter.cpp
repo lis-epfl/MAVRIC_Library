@@ -55,56 +55,55 @@ extern "C"
 }
 
 
-bool velocity_controller_copter_init(velocity_controller_copter_t* controller, velocity_controller_copter_conf_t config, const ahrs_t* ahrs, const INS* ins, const velocity_command_t* velocity_command, attitude_command_t* attitude_command, thrust_command_t* thrust_command)
+Velocity_controller_copter::Velocity_controller_copter( const ahrs_t& ahrs,
+                                                        const INS& ins,
+                                                        const velocity_command_t& velocity_command,
+                                                        attitude_command_t& attitude_command,
+                                                        thrust_command_t& thrust_command,
+                                                        conf_t config):
+    ahrs_(ahrs),
+    ins_(ins),
+    velocity_command_(velocity_command),
+    attitude_command_(attitude_command),
+    thrust_command_(thrust_command),
+    control_frame_(config.control_frame),
+    thrust_hover_point_(config.thrust_hover_point)
 {
-    // Init dependencies
-    controller->velocity_command    = velocity_command;
-    controller->attitude_command    = attitude_command;
-    controller->thrust_command      = thrust_command;
-    controller->ahrs                = ahrs;
-    controller->ins                 = ins;
-
-    // Init hover point
-    controller->thrust_hover_point = config.thrust_hover_point;
-    controller->control_frame      = config.control_frame;
-
     // Init PID gains
-    pid_controller_init(&controller->pid[X], &config.pid_config[X]);
-    pid_controller_init(&controller->pid[Y], &config.pid_config[Y]);
-    pid_controller_init(&controller->pid[Z], &config.pid_config[Z]);
-
-    return true;
+    pid_controller_init(&pid_[X], &config.pid_config[X]);
+    pid_controller_init(&pid_[Y], &config.pid_config[Y]);
+    pid_controller_init(&pid_[Z], &config.pid_config[Z]);
 }
 
 
-bool velocity_controller_copter_update(velocity_controller_copter_t* controller)
+bool Velocity_controller_copter::update(void)
 {
-    float velocity[3];
-    float velocity_command[3];
-    float errors[3];
-    float thrust_vector[3];
+    float velocity[3]         = {0.0f, 0.0f, 0.0f};
+    float velocity_command[3] = {0.0f, 0.0f, 0.0f};
+    float errors[3]           = {0.0f, 0.0f, 0.0f};
+    float thrust_vector[3]    = {0.0f, 0.0f, 0.0f};
 
     // Get rotation quaternion from local frame to semilocal frame
-    float rpy_semilocal[3] = {0.0f, 0.0f, coord_conventions_get_yaw(controller->ahrs->qe)};
+    float rpy_semilocal[3] = {0.0f, 0.0f, coord_conventions_get_yaw(ahrs_.qe)};
     quat_t q_semilocal = coord_conventions_quaternion_from_rpy(rpy_semilocal);
 
     // Compute velocity command
-    switch (controller->control_frame)
+    switch (control_frame_)
     {
         case VEL_CTRL_LOCAL:
             // Get the command velocity in local frame
-            switch (controller->velocity_command->mode)
+            switch (velocity_command_.mode)
             {
                 case VELOCITY_COMMAND_MODE_SEMI_LOCAL:
                     quaternions_rotate_vector(q_semilocal,
-                                              controller->velocity_command->xyz,
+                                              velocity_command_.xyz,
                                               velocity_command);
                 break;
 
                 case VELOCITY_COMMAND_MODE_LOCAL:
-                    velocity_command[X] = controller->velocity_command->xyz[X];
-                    velocity_command[Y] = controller->velocity_command->xyz[Y];
-                    velocity_command[Z] = controller->velocity_command->xyz[Z];
+                    velocity_command[X] = velocity_command_.xyz[X];
+                    velocity_command[Y] = velocity_command_.xyz[Y];
+                    velocity_command[Z] = velocity_command_.xyz[Z];
                 break;
 
                 default:
@@ -117,17 +116,17 @@ bool velocity_controller_copter_update(velocity_controller_copter_t* controller)
 
         case VEL_CTRL_SEMI_LOCAL:
             // Get the command velocity in semi local frame
-            switch (controller->velocity_command->mode)
+            switch (velocity_command_.mode)
             {
                 case VELOCITY_COMMAND_MODE_SEMI_LOCAL:
-                    velocity_command[X] = controller->velocity_command->xyz[X];
-                    velocity_command[Y] = controller->velocity_command->xyz[Y];
-                    velocity_command[Z] = controller->velocity_command->xyz[Z];
+                    velocity_command[X] = velocity_command_.xyz[X];
+                    velocity_command[Y] = velocity_command_.xyz[Y];
+                    velocity_command[Z] = velocity_command_.xyz[Z];
                 break;
 
                 case VELOCITY_COMMAND_MODE_LOCAL:
                     quaternions_rotate_vector(quaternions_inverse(q_semilocal),
-                                              controller->velocity_command->xyz,
+                                              velocity_command_.xyz,
                                               velocity_command);
                 break;
 
@@ -141,13 +140,13 @@ bool velocity_controller_copter_update(velocity_controller_copter_t* controller)
     }
 
     // Compute current velocity
-    std::array<float,3> vel = controller->ins->velocity_lf();
-    switch (controller->control_frame)
+    std::array<float,3> vel = ins_.velocity_lf();
+    switch (control_frame_)
     {
         case VEL_CTRL_SEMI_LOCAL:
             // Rotate velocity from local to semilocal
             quaternions_rotate_vector(quaternions_inverse(q_semilocal),
-                                      controller->velocity_command->xyz,
+                                      velocity_command_.xyz,
                                       velocity);
         break;
 
@@ -164,12 +163,12 @@ bool velocity_controller_copter_update(velocity_controller_copter_t* controller)
     errors[Z] = velocity_command[Z] - vel[Z];       // WARNING: it was multiplied by (-1) in stabilisation_copter.c
 
     // Update PID
-    thrust_vector[X] = pid_controller_update(&controller->pid[X], errors[X]);                // should be multiplied by mass
-    thrust_vector[Y] = pid_controller_update(&controller->pid[Y], errors[Y]);                // should be multiplied by mass
-    thrust_vector[Z] = pid_controller_update(&controller->pid[Z], errors[Z]);                // should be multiplied by mass
+    thrust_vector[X] = pid_controller_update(&pid_[X], errors[X]);                // should be multiplied by mass
+    thrust_vector[Y] = pid_controller_update(&pid_[Y], errors[Y]);                // should be multiplied by mass
+    thrust_vector[Z] = pid_controller_update(&pid_[Z], errors[Z]);                // should be multiplied by mass
 
     // Express error in semilocal frame
-    switch (controller->control_frame)
+    switch (control_frame_)
     {
         case VEL_CTRL_SEMI_LOCAL:
         break;
@@ -180,18 +179,18 @@ bool velocity_controller_copter_update(velocity_controller_copter_t* controller)
     }
 
     // Map thrust dir to attitude
-    controller->attitude_command->rpy[ROLL]  = maths_clip(thrust_vector[Y], 1);
-    controller->attitude_command->rpy[PITCH] = - maths_clip(thrust_vector[X], 1);
-    // controller->attitude_command->rpy[YAW]   = UNTOUCHED;
+    attitude_command_.rpy[ROLL]  = maths_clip(thrust_vector[Y], 1);
+    attitude_command_.rpy[PITCH] = - maths_clip(thrust_vector[X], 1);
+    // attitude_command_.rpy[YAW]   = UNTOUCHED;
 
     aero_attitude_t attitude;
-    attitude.rpy[ROLL]  = controller->attitude_command->rpy[ROLL];
-    attitude.rpy[PITCH] = controller->attitude_command->rpy[PITCH];
-    attitude.rpy[YAW]   = controller->attitude_command->rpy[YAW];
-    controller->attitude_command->quat = coord_conventions_quaternion_from_aero(attitude);
+    attitude.rpy[ROLL]  = attitude_command_.rpy[ROLL];
+    attitude.rpy[PITCH] = attitude_command_.rpy[PITCH];
+    attitude.rpy[YAW]   = attitude_command_.rpy[YAW];
+    attitude_command_.quat = coord_conventions_quaternion_from_aero(attitude);
 
     // Map PID output to thrust
-    controller->thrust_command->thrust  = controller->thrust_hover_point - thrust_vector[Z];
+    thrust_command_.thrust  = thrust_hover_point_ - thrust_vector[Z];
 
     return true;
 }
