@@ -187,6 +187,15 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
 
 void Navigation::run()
 {
+
+    /* TODO: remove this when Position_controller_dubin is finished */
+    float rel_pos[3];
+    // Control in translational speed of the platform
+    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp( goal.position.data(),
+                                                    rel_pos,
+                                                    ins.position_lf().data());
+
+
     switch(navigation_strategy)
     {
         case Navigation::strategy_t::DIRECT_TO:
@@ -340,10 +349,4 @@ bool Navigation::update(Navigation* navigation)
     }
 
     return true;
-}
-
-
-Position_controller_direct& Navigation::pos_ctrl_direct()
-{
-    return pos_ctrl_direct_;
 }

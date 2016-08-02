@@ -209,7 +209,7 @@ public:
     /********************************************
      *         public Get/Set methods           *
      *******************************************/
-     Position_controller_direct& pos_ctrl_direct(); // TODO: set return to const when onboard parameter use get/set
+     inline Position_controller_direct& pos_ctrl_direct(){return pos_ctrl_direct_;}; // TODO: set return to const when onboard parameter use get/set
 
 private:
     float dt;                                           ///< The time interval between two navigation updates
