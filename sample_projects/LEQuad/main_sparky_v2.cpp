@@ -53,8 +53,6 @@ extern "C"
 
 int main(int argc, char** argv)
 {   
-
-    uint8_t sysid = 0;
     bool init_success = true;
 
     // -------------------------------------------------------------------------
@@ -79,7 +77,7 @@ int main(int argc, char** argv)
         // Warning: if too short serial does not work
         time_keeper_delay_ms(500);
 
-        
+
         // Write mavlink message
         mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
                                     50,     // uint8_t component_id,
@@ -90,7 +88,7 @@ int main(int argc, char** argv)
                                     0,      // uint32_t custom_mode,
                                     0);     //uint8_t system_status)
         mavlink_stream.send(&msg);
-        
+
     }
 
     return 0;
