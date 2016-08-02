@@ -50,7 +50,20 @@ Position_controller_direct::Position_controller_direct(control_command_t& vel_co
     max_rel_yaw_(config.max_rel_yaw),
     min_cruise_dist_(config.min_cruise_dist)
 {
-    yaw_command_lf_ = coord_conventions_get_yaw(qe_);
+    switch(config.initial_yaw)
+    {
+        case initial_yaw_t::ZERO:
+            set_yaw_command(0.0f);
+            break;
+
+        case initial_yaw_t::INITIAL:
+            set_yaw_command(coord_conventions_get_yaw(qe_));
+            break;
+
+        case initial_yaw_t::AUTOMATIC:
+            set_yaw_automatic();
+            break;
+    }
     pid_controller_init(&pid_controller_, &hover_pid_config_);
 }
 
