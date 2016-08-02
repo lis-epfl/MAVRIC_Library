@@ -114,7 +114,7 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
 bool Mavrimini::init(void)
 {
     bool init_success = true;
-    bool ret          = true;
+    bool ret;
 
     // -------------------------------------------------------------------------
     // Init clock
@@ -125,8 +125,8 @@ bool Mavrimini::init(void)
     // -------------------------------------------------------------------------
     // Init LEDs
     // -------------------------------------------------------------------------
-    ret &= green_led_gpio.init();
-    ret &= red_led_gpio.init();
+    ret = green_led_gpio.init();
+    ret = red_led_gpio.init();
     green_led.on();
     red_led.on();
     init_success &= ret;
@@ -140,7 +140,7 @@ bool Mavrimini::init(void)
     // -------------------------------------------------------------------------
     // Init SERIAL2
     // -------------------------------------------------------------------------
-    ret &= serial_2.init();
+    ret = serial_2.init();
     init_success &= ret;
 
     // -------------------------------------------------------------------------
