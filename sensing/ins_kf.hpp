@@ -144,6 +144,11 @@ public:
         float sigma_gps_velz;
         float sigma_baro;
         float sigma_sonar;
+        // GPS noise generation
+        float noise_gps_xy;
+        float noise_gps_z;
+        float noise_gps_velxy;
+        float noise_gps_velz;
         // Position of the origin
         global_position_t origin;
         // Logic flags
@@ -288,7 +293,7 @@ INS_kf::conf_t INS_kf::default_config(void)
 
     // Process covariance (noise from state and input)
     conf.sigma_z_gnd        = 0.0f;
-    conf.sigma_bias_acc     = 0.0f;
+    conf.sigma_bias_acc     = 0.0001f;
     conf.sigma_bias_baro    = 0.0f;
     conf.sigma_acc          = 0.6f;         // Measured: 0.6f (at rest 0.032f)
 
@@ -299,6 +304,12 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.sigma_gps_velz     = 0.342f;       // Measured: 0.342f
     conf.sigma_baro         = 0.450f;       // Measured: 0.450f
     conf.sigma_sonar        = 0.002f;       // Measured: 0.002f
+
+    // Generation of GPS noise (sigma values)
+    conf.noise_gps_xy       = 0.316f;
+    conf.noise_gps_z        = 0.879f;
+    conf.noise_gps_velxy    = 0.064f;
+    conf.noise_gps_velz     = 0.342f;
 
     //default origin location (EFPL Esplanade)
     conf.origin = ORIGIN_EPFL;

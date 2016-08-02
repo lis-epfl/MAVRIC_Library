@@ -262,10 +262,9 @@ bool INS_kf::update(void)
 
                 // DOME SPECIFIC
                 // Simulate some noise on the GPS local positions (to fit measured sigma, which was directly on the local, not the global)
-                // Taken from: http://stackoverflow.com/questions/686353/c-random-float-number-generation
-                gps_local[0] += rand_sigma(config_.sigma_gps_xy);
-                gps_local[1] += rand_sigma(config_.sigma_gps_xy);
-                gps_local[2] += rand_sigma(config_.sigma_gps_z);
+                gps_local[0] += rand_sigma(config_.noise_gps_xy);
+                gps_local[1] += rand_sigma(config_.noise_gps_xy);
+                gps_local[2] += rand_sigma(config_.noise_gps_z);
 
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
@@ -293,9 +292,9 @@ bool INS_kf::update(void)
 
                 // DOME SPECIFIC
                 // Simulate some noise on the GPS local velocities (to fit measured sigma, which was directly on the local, not the global)
-                gps_velocity[0] += rand_sigma(config_.sigma_gps_velxy);
-                gps_velocity[1] += rand_sigma(config_.sigma_gps_velxy);
-                gps_velocity[2] += rand_sigma(config_.sigma_gps_velz);
+                gps_velocity[0] += rand_sigma(config_.noise_gps_velxy);
+                gps_velocity[1] += rand_sigma(config_.noise_gps_velxy);
+                gps_velocity[2] += rand_sigma(config_.noise_gps_velz);
 
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
@@ -532,8 +531,8 @@ void INS_kf::predict_kf(void)
 
 
 
-    // Compute default KF prediciton step (using local accelerations as input)
-    predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
+    // Compute default KF prediciton step (using local accelerations as input, warning z acceleration sign)
+    predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], -ahrs_.linear_acc[2]});
 }
 
 
@@ -557,9 +556,9 @@ void INS_kf::init(void)
 
     // Init covariance
     P_ = Mat<11,11>(100, true);
-    P_(7,7) = 0.0f;
-    P_(8,8) = 0.0f;
-    P_(9,9) = 0.0f;
+    // P_(7,7) = 0.0f;
+    // P_(8,8) = 0.0f;
+    // P_(9,9) = 0.0f;
 
     // Update last time to avoid glitches at initilaization
     last_update_ = time_keeper_get_s();
