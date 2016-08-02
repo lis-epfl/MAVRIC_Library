@@ -293,15 +293,15 @@ INS_kf::conf_t INS_kf::default_config(void)
 
     // Process covariance (noise from state and input)
     conf.sigma_z_gnd        = 0.0f;
-    conf.sigma_bias_acc     = 0.0001f;
+    conf.sigma_bias_acc     = 0.0002f;
     conf.sigma_bias_baro    = 0.0f;
     conf.sigma_acc          = 0.6f;         // Measured: 0.6f (at rest 0.032f)
 
     // Measurement covariance   (noise from measurement)
-    conf.sigma_gps_xy       = 0.316f;       // Measured: 0.316f
-    conf.sigma_gps_z        = 0.879f;       // Measured: 0.879f
-    conf.sigma_gps_velxy    = 0.064f;       // Measured: 0.064f
-    conf.sigma_gps_velz     = 0.342f;       // Measured: 0.342f
+    conf.sigma_gps_xy       = 0.05f;       // Measured: 0.316f
+    conf.sigma_gps_z        = 0.15f;       // Measured: 0.879f
+    conf.sigma_gps_velxy    = 0.01f;       // Measured: 0.064f
+    conf.sigma_gps_velz     = 0.06f;       // Measured: 0.342f
     conf.sigma_baro         = 0.450f;       // Measured: 0.450f
     conf.sigma_sonar        = 0.002f;       // Measured: 0.002f
 
