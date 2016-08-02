@@ -72,12 +72,22 @@ void Position_controller_direct::update()
         v_desired = max_climb_rate_ / maths_f_abs(dir_desired_sg_[Z]);
     }
 
-    /* calculate relative yaw and clip at rel_yaw */
-    float yaw_lf = coord_conventions_get_yaw(qe_);
-    float rel_yaw = maths_calc_smaller_angle(yaw_command_lf_ - yaw_lf);
-    if(rel_yaw > max_rel_yaw_)
+    /* calculate yaw */
+    float rel_yaw;
+    if(yaw_automatic_)
     {
-        rel_yaw = max_rel_yaw_;
+        /* make drone point towards goal */
+        rel_yaw = atan2(dir_desired_sg_[Y], dir_desired_sg_[X]);
+    }
+    else
+    {
+        /* use yaw_command_lf_ */
+        float yaw_lf = coord_conventions_get_yaw(qe_);
+        rel_yaw = maths_calc_smaller_angle(yaw_command_lf_ - yaw_lf);
+        if(rel_yaw > max_rel_yaw_)
+        {
+            rel_yaw = max_rel_yaw_;
+        }
     }
 
     vel_command_lf_.tvel[X] = dir_desired_sg_[X] * v_desired;
@@ -96,7 +106,14 @@ void Position_controller_direct::set_command(local_position_t pos_command_lf, fl
 
 void Position_controller_direct::set_yaw_command(float yaw_command_lf)
 {
+    yaw_automatic_ = false;  // set yaw to manual
     yaw_command_lf_ = yaw_command_lf;
+}
+
+
+void Position_controller_direct::set_yaw_automatic()
+{
+    yaw_automatic_ = true;
 }
 
 
@@ -121,4 +138,3 @@ pid_controller_conf_t& Position_controller_direct::hover_pid_config()
 {
     return hover_pid_config_;
 }
-

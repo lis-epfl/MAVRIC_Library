@@ -51,26 +51,54 @@ class Position_controller
 {
 public:
 
+    /**
+     * \brief   Constructor
+     *
+     * \param   vel_command     structure to write the velocity command to
+     * \param   ins             inertial navigation unit to use for position estimation
+     * \param   qe              attitude quaternion for attitude estimation
+     */
     Position_controller(control_command_t& vel_command, const INS& ins, const quat_t& qe);
 
+    /**
+     * \brief   Update velocity command (must be implemented in each inheriting class)
+     *
+     * \details To update internal variables, call update_internal() at the beginning of the implementation
+     */
     virtual void update() = 0;
 
+    /**
+     * \brief   Update velocity command (must be implemented in each inheriting class)
+     *
+     * \details To update internal variables, call update_internal() at the beginning of the implementation
+     */
     inline void set_position_command(local_position_t pos_command_lf){pos_command_lf_ = pos_command_lf;};
 
+    /**
+     * \brief   Returns the distance to the goal (position_command_lf)
+     *
+     * \return  distance to the goal (postion_command_lf)
+     */
     inline float goal_distance(){return goal_distance_;};
 
 protected:
 
+    /**
+     * \brief   Updates internal variables (should be called at the beginning implementation of update())
+     *
+     * \details Updates rel_goal_pos_, goal_distance_ and dir_desired_sg_
+     *
+     */
     void update_internal();
 
-    const INS&          ins_;
-    const quat_t&       qe_;                                ///< Attitude quaternion structure
+    const INS&          ins_;                               /// inertial navigation unit ti use for position estimation
+    const quat_t&       qe_;                                ///< Attitude quaternion
     
-    control_command_t&  vel_command_lf_;
-    local_position_t    pos_command_lf_;
-    float               rel_goal_pos_[3];                  ///< Relative goal position in NED (updated by update_internal() )
-    float               goal_distance_;                    ///< Distance to the goal (updated by update_internal() )
-    float               dir_desired_sg_[3];                ///< Direction to the goal in semi global frame (unit vector) (updated by update_internal() )
+    control_command_t&  vel_command_lf_;                    ///< Velocity command (output)
+    local_position_t    pos_command_lf_;                    ///< Position command (input)
+    float               rel_goal_pos_[3];                   ///< Relative goal position in NED (updated by update_internal() )
+    float               goal_distance_;                     ///< Distance to the goal (updated by update_internal() )
+    float               dir_desired_sg_[3];                 ///< Direction to the goal in semi global frame (unit vector) (updated by update_internal() )
 
 };
 
