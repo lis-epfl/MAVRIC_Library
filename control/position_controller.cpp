@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_controller.hpp
+ * \file position_controller.cpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
@@ -39,39 +39,49 @@
  *
  ******************************************************************************/
 
+#include "control/position_controller.hpp"
 
-#ifndef POSITION_CONTROLLER_HPP_
-#define POSITION_CONTROLLER_HPP_
 
-#include "control/pid_controller.hpp"
-#include "control/stabilisation.hpp"
-#include "sensing/ins.hpp"
-
-class Position_controller
+Position_controller::Position_controller(control_command_t& vel_command, const INS& ins, const quat_t& qe) : 
+                        ins_(ins), 
+                        qe_(qe),
+                        vel_command_lf_(vel_command),
+                        pos_command_lf_(ins_.position_lf())
 {
-public:
+    ;
+}
 
-    Position_controller(control_command_t& vel_command, const INS& ins, const quat_t& qe);
+void Position_controller::update_internal()
+{
+    /* get current vehicle position in local frame */
+    local_position_t local_pos = ins_.position_lf();
 
-    virtual void update() = 0;
-
-    inline void set_position_command(local_position_t pos_command_lf){pos_command_lf_ = pos_command_lf;};
-
-    inline float goal_distance(){return goal_distance_;};
-
-protected:
-
-    void update_internal();
-
-    const INS&          ins_;
-    const quat_t&       qe_;                                ///< Attitude quaternion structure
+    // get position relative to the target position
+    rel_goal_pos_[X] = pos_command_lf_[X] - local_pos[X];
+    rel_goal_pos_[Y] = pos_command_lf_[Y] - local_pos[Y];
+    rel_goal_pos_[Z] = pos_command_lf_[Z] - local_pos[Z];
     
-    control_command_t&  vel_command_lf_;
-    local_position_t    pos_command_lf_;
-    float               rel_goal_pos_[3];                  ///< Relative goal position in NED (updated by update_internal() )
-    float               goal_distance_;                    ///< Distance to the goal (updated by update_internal() )
-    float               dir_desired_sg_[3];                ///< Direction to the goal in semi global frame (unit vector) (updated by update_internal() )
+    // calculate dir_desired in semi local frame (x-axis aligned with vehicle) (turn around -yaw_lf)
+    float yaw_lf = coord_conventions_get_yaw(qe_);
+    aero_attitude_t attitude_yaw;
+    attitude_yaw.rpy[0] = 0.0f;
+    attitude_yaw.rpy[1] = 0.0f;
+    attitude_yaw.rpy[2] = -yaw_lf;
+    quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
+    quaternions_rotate_vector(q_rot, rel_goal_pos_, dir_desired_sg_);
 
-};
+    // Normalize desired direction to unit vector
+    goal_distance_ = vectors_norm(dir_desired_sg_);
+    if(goal_distance_ > 0.0005f) // Avoiding division by zero
+    {
+        dir_desired_sg_[X] /= goal_distance_;
+        dir_desired_sg_[Y] /= goal_distance_;
+        dir_desired_sg_[Z] /= goal_distance_;
+    }else
+    {
+        dir_desired_sg_[X] /= 0.0005f;
+        dir_desired_sg_[Y] /= 0.0005f;
+        dir_desired_sg_[Z] /= 0.0005f;
+    }
 
-#endif /* POSITION_CONTROLLER_HPP_ */
+}

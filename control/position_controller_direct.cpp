@@ -57,60 +57,32 @@ Position_controller_direct::Position_controller_direct(control_command_t& vel_co
 
 void Position_controller_direct::update()
 {
-    /* get current vehicle position in local frame */
-    local_position_t local_pos = ins_.position_lf();
-
-    // get position relative to the target position
-    float rel_pos[3];
-    rel_pos[X] = pos_command_lf_[X] - local_pos[X];
-    rel_pos[Y] = pos_command_lf_[Y] - local_pos[Y];
-    rel_pos[Z] = pos_command_lf_[Z] - local_pos[Z];
-    
-    // calculate dir_desired in semi local frame (x-axis aligned with vehicle) (turn around -yaw_lf)
-    float dir_desired_sg[3];
-    float yaw_lf = coord_conventions_get_yaw(qe_);
-    aero_attitude_t attitude_yaw;
-    attitude_yaw.rpy[0] = 0.0f;
-    attitude_yaw.rpy[1] = 0.0f;
-    attitude_yaw.rpy[2] = -yaw_lf;
-    quat_t q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
-    quaternions_rotate_vector(q_rot, rel_pos, dir_desired_sg);
-
-    // Normalize desired direction to unit vector
-    float dist = vectors_norm(dir_desired_sg);
-    if(dist < 0.0005f) // Avoiding division by zero
-    {
-        dist = 0.0005f;
-    }
-    dir_desired_sg[X] /= dist;
-    dir_desired_sg[Y] /= dist;
-    dir_desired_sg[Z] /= dist;
+    /* update rel_goal_pos_, goal_distance_ and dir_desired_sg_ */
+    update_internal();
 
     /* set cruise mode in any case since parameters of config might change */
-    bool cruise_mode_new = dist > min_cruise_dist_;
-    //if(cruise_mode_new != cruise_mode_)
-    //{
-        set_cruise_mode(cruise_mode_new);
-    //}
+    bool cruise_mode_new = goal_distance_ > min_cruise_dist_;
+    set_cruise_mode(cruise_mode_new);
 
     /* get desired speed from pid controller */
-    float v_desired = pid_controller_update(&pid_controller_, dist);
+    float v_desired = pid_controller_update(&pid_controller_, goal_distance_);
     // make sure maximal climb rate is not exceeded, reduce v_desired if necessary
-    if (v_desired *  maths_f_abs(dir_desired_sg[Z]) > max_climb_rate_)
+    if (v_desired *  maths_f_abs(dir_desired_sg_[Z]) > max_climb_rate_)
     {
-        v_desired = max_climb_rate_ / maths_f_abs(dir_desired_sg[Z]);
+        v_desired = max_climb_rate_ / maths_f_abs(dir_desired_sg_[Z]);
     }
 
     /* calculate relative yaw and clip at rel_yaw */
+    float yaw_lf = coord_conventions_get_yaw(qe_);
     float rel_yaw = maths_calc_smaller_angle(yaw_command_lf_ - yaw_lf);
     if(rel_yaw > max_rel_yaw_)
     {
         rel_yaw = max_rel_yaw_;
     }
 
-    vel_command_lf_.tvel[X] = dir_desired_sg[X] * v_desired;
-    vel_command_lf_.tvel[Y] = dir_desired_sg[Y] * v_desired;
-    vel_command_lf_.tvel[Z] = dir_desired_sg[Z] * v_desired;
+    vel_command_lf_.tvel[X] = dir_desired_sg_[X] * v_desired;
+    vel_command_lf_.tvel[Y] = dir_desired_sg_[Y] * v_desired;
+    vel_command_lf_.tvel[Z] = dir_desired_sg_[Z] * v_desired;
     vel_command_lf_.rpy[YAW] = rel_yaw;
 }
 
