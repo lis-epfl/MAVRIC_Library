@@ -1,4 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classGpio__stm32.html#a600901251c5001bddc1eb57382bc2547" title="Hardware initialization." alt="" coords="208,5,325,35"/>
-<area shape="rect" id="node5" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="375,5,476,35"/>
+<area shape="rect" id="node3" href="$classGpio__stm32.html#a600901251c5001bddc1eb57382bc2547" title="Hardware initialization." alt="" coords="208,32,325,61"/>
+<area shape="rect" id="node5" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="377,5,479,35"/>
+<area shape="rect" id="node7" href="$classSparky__v2.html#a3a0b29e6eb7bfdf74e914453d138e61d" title="Hardware initialisation." alt="" coords="373,59,483,88"/>
 </map>

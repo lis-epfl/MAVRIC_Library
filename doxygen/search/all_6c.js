@@ -22,6 +22,7 @@ var searchData=
   ['led_5fdisplay_5ffield',['LED_Display_Field',['../led_8c.html#ab665e386336347bb12ca86feae190bed',1,'LED_Display_Field(uint32_t field, uint32_t leds):&#160;led.c'],['../led_8h.html#ab665e386336347bb12ca86feae190bed',1,'LED_Display_Field(uint32_t field, uint32_t leds):&#160;led.c']]],
   ['led_5fdisplay_5fmask',['LED_Display_Mask',['../led_8c.html#ad2a7594ae22d1573e7aa792bf7d36711',1,'LED_Display_Mask(uint32_t mask, uint32_t leds):&#160;led.c'],['../led_8h.html#ad2a7594ae22d1573e7aa792bf7d36711',1,'LED_Display_Mask(uint32_t mask, uint32_t leds):&#160;led.c']]],
   ['led_5fdummy',['Led_dummy',['../classLed__dummy.html',1,'']]],
+  ['led_5ferr_5fgpio_5f',['led_err_gpio_',['../classSparky__v2.html#ac904c85e7a0db1699a2abd1b1b1f80d2',1,'Sparky_v2']]],
   ['led_5fget_5fintensity',['LED_Get_Intensity',['../led_8c.html#a014aa8ded1398b2ec87d4f14c91dc8c5',1,'LED_Get_Intensity(uint32_t led):&#160;led.c'],['../led_8h.html#a014aa8ded1398b2ec87d4f14c91dc8c5',1,'LED_Get_Intensity(uint32_t led):&#160;led.c']]],
   ['led_5fgpio',['Led_gpio',['../classLed__gpio.html',1,'Led_gpio'],['../classLed__gpio.html#ace75e3d9531ddffda23f709510bfd00c',1,'Led_gpio::Led_gpio()']]],
   ['led_5foff',['LED_Off',['../led_8c.html#a4002caee1c500fa2c210bc5b7fbf4cf5',1,'LED_Off(uint32_t leds):&#160;led.c'],['../led_8h.html#a4002caee1c500fa2c210bc5b7fbf4cf5',1,'LED_Off(uint32_t leds):&#160;led.c']]],

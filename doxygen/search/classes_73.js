@@ -38,6 +38,8 @@ var searchData=
   ['sonar_5fi2cxl_5fconf_5ft',['sonar_i2cxl_conf_t',['../structsonar__i2cxl__conf__t.html',1,'']]],
   ['sonar_5fsim',['Sonar_sim',['../classSonar__sim.html',1,'']]],
   ['sonar_5fsim_5fconf_5ft',['sonar_sim_conf_t',['../structsonar__sim__conf__t.html',1,'']]],
+  ['sparky_5fv2',['Sparky_v2',['../classSparky__v2.html',1,'']]],
+  ['sparky_5fv2_5fconf_5ft',['sparky_v2_conf_t',['../structsparky__v2__conf__t.html',1,'']]],
   ['spektrum_5fsatellite',['Spektrum_satellite',['../classSpektrum__satellite.html',1,'']]],
   ['sphere',['Sphere',['../classraytracing_1_1Sphere.html',1,'raytracing']]],
   ['spi',['Spi',['../classSpi.html',1,'']]],
@@ -59,5 +61,6 @@ var searchData=
   ['state_5fdisplay_5fmavrimini',['State_display_mavrimini',['../classState__display__mavrimini.html',1,'']]],
   ['state_5fdisplay_5fmavrinux',['State_display_mavrinux',['../classState__display__mavrinux.html',1,'']]],
   ['state_5fdisplay_5fmegafly_5frev4',['State_display_megafly_rev4',['../classState__display__megafly__rev4.html',1,'']]],
+  ['state_5fdisplay_5fsparky_5fv2',['State_display_sparky_v2',['../classState__display__sparky__v2.html',1,'']]],
   ['state_5fmachine',['State_machine',['../classState__machine.html',1,'']]]
 ];

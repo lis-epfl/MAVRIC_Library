@@ -37,7 +37,7 @@ var searchData=
   ['time_5fzone',['time_zone',['../structgps__t.html#a2800ff904f48c4524446ad8a7ba06442',1,'gps_t']]],
   ['timebase',['TIMEBASE',['../classScheduler.html#a342480159f74c755d5287cb3c112f95c',1,'Scheduler']]],
   ['timeout',['timeout',['../structi2c__stm32__conf__t.html#a0e8c5e464f32412ceeea286feabbbdb2',1,'i2c_stm32_conf_t']]],
-  ['timer_5fconfig',['timer_config',['../structPwm__stm32_1_1config__t.html#a3e03aa707bbc169120510858fef8c43f',1,'Pwm_stm32::config_t']]],
+  ['timer',['timer',['../structPwm__stm32_1_1config__t.html#aa41df55b498720270037a0f9d2483117',1,'Pwm_stm32::config_t']]],
   ['timeref',['timeref',['../structubx__cfg__nav__rate__t.html#a7c28d25350c51ee40ef5bb8758ba2970',1,'ubx_cfg_nav_rate_t::timeref()'],['../structubx__cfg__nav__rate__send__t.html#a255e62178d8ae8983514ac63995e08b4',1,'ubx_cfg_nav_rate_send_t::timeref()']]],
   ['timing_5fmode',['timing_mode',['../classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9',1,'Scheduler_task']]],
   ['torque',['torque',['../structcommand__t.html#ad37d49bf12c3a50ffd93545adf044185',1,'command_t']]],

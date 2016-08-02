@@ -21,7 +21,7 @@ var searchData=
   ['rcc_5fclk_5fport_5fconfig',['rcc_clk_port_config',['../structi2c__stm32__conf__t.html#a13c7305ba3e4d9d52cb6c499794fa3c9',1,'i2c_stm32_conf_t']]],
   ['rcc_5fi2c_5fconfig',['rcc_i2c_config',['../structi2c__stm32__conf__t.html#a6013c3bb192cda709f16c7c619cb9ad0',1,'i2c_stm32_conf_t']]],
   ['rcc_5fsda_5fport_5fconfig',['rcc_sda_port_config',['../structi2c__stm32__conf__t.html#aff46aea5cf38f0c819b2408343d1a637',1,'i2c_stm32_conf_t']]],
-  ['rcc_5ftimer_5fconfig',['rcc_timer_config',['../structPwm__stm32_1_1config__t.html#af3f9368fa432b136b2f4d564f4e354b0',1,'Pwm_stm32::config_t']]],
+  ['rcc_5ftimer',['rcc_timer',['../structPwm__stm32_1_1config__t.html#a5aaf46b375b5efdee2fdad1598f2ff2e',1,'Pwm_stm32::config_t']]],
   ['reference_5fheading',['reference_heading',['../structstabilisation__ywing__t.html#a2f3f403498634917f01144641a04b4a4',1,'stabilisation_ywing_t']]],
   ['reference_5fpitch',['reference_pitch',['../structstabilisation__ywing__t.html#ab79e7bfd6e238b53d2cc228830153b95',1,'stabilisation_ywing_t']]],
   ['reference_5froll',['reference_roll',['../structstabilisation__ywing__t.html#a13bae8f72079ee7e98a49e67f73d608e',1,'stabilisation_ywing_t']]],

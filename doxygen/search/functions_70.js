@@ -13,5 +13,5 @@ var searchData=
   ['put',['put',['../classBuffer__tpl.html#a3e6e6b58528f9e82dde45f3d43d2186c',1,'Buffer_tpl']]],
   ['put_5flossy',['put_lossy',['../classBuffer__tpl.html#a526cfc106b641c84b9fe378a95366250',1,'Buffer_tpl']]],
   ['pwm_5favr32',['Pwm_avr32',['../classPwm__avr32.html#acf1afd8173446fc9baf4d1a6a6e7a975',1,'Pwm_avr32']]],
-  ['pwm_5fstm32',['Pwm_stm32',['../classPwm__stm32.html#a5318b50f8c825979dc41c99522578cc3',1,'Pwm_stm32']]]
+  ['pwm_5fstm32',['Pwm_stm32',['../classPwm__stm32.html#a7d39fd989e70acd33d467deedde14a20',1,'Pwm_stm32']]]
 ];

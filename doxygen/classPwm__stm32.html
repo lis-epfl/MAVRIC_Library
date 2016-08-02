@@ -117,8 +117,8 @@ Public Types</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">enum of timer channel <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPwm__stm32.html#a5318b50f8c825979dc41c99522578cc3">Pwm_stm32</a> (<a class="el" href="structPwm__stm32_1_1config__t.html">config_t</a> pwm_config)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a5318b50f8c825979dc41c99522578cc3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPwm__stm32.html#a7d39fd989e70acd33d467deedde14a20">Pwm_stm32</a> (<a class="el" href="structPwm__stm32_1_1config__t.html">config_t</a> config)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a7d39fd989e70acd33d467deedde14a20"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPwm__stm32.html#a63106f42ef20f512965b96ddc8cb0b0f">init</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the hardware line for servos.  <a href="#a63106f42ef20f512965b96ddc8cb0b0f"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPwm__stm32.html#ac9524ba2c47972d70f4779e394c21dbd">set_pulse_width_us</a> (uint16_t pulse_us)</td></tr>
@@ -127,15 +127,15 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set pulse period.  <a href="#a77b1e175ac2dbd8448947f87d5948e9c"></a><br/></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a5318b50f8c825979dc41c99522578cc3"></a><!-- doxytag: member="Pwm_stm32::Pwm_stm32" ref="a5318b50f8c825979dc41c99522578cc3" args="(config_t pwm_config)" -->
+<a class="anchor" id="a7d39fd989e70acd33d467deedde14a20"></a><!-- doxytag: member="Pwm_stm32::Pwm_stm32" ref="a7d39fd989e70acd33d467deedde14a20" args="(config_t config)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classPwm__stm32.html#a5318b50f8c825979dc41c99522578cc3">Pwm_stm32::Pwm_stm32</a> </td>
+          <td class="memname"><a class="el" href="classPwm__stm32.html#a7d39fd989e70acd33d467deedde14a20">Pwm_stm32::Pwm_stm32</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structPwm__stm32_1_1config__t.html">config_t</a>&#160;</td>
-          <td class="paramname"><em>pwm_config</em></td><td>)</td>
+          <td class="paramname"><em>config</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -145,7 +145,7 @@ Public Member Functions</h2></td></tr>
 <p>Constructor. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname"><a class="el" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a></td><td>number (between 0 and 7) </td></tr>
+    <tr><td class="paramname">config</td><td>Configuration structure </td></tr>
   </table>
   </dd>
 </dl>
@@ -178,7 +178,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPwm__stm32_a63106f42ef20f512965b96ddc8cb0b0f_icgraph.png" border="0" usemap="#classPwm__stm32_a63106f42ef20f512965b96ddc8cb0b0f_icgraph" alt=""/></div>
 <map name="classPwm__stm32_a63106f42ef20f512965b96ddc8cb0b0f_icgraph" id="classPwm__stm32_a63106f42ef20f512965b96ddc8cb0b0f_icgraph">
-<area shape="rect" id="node3" href="classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="175,5,276,35"/></map>
+<area shape="rect" id="node3" href="classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="177,5,279,35"/><area shape="rect" id="node5" href="classSparky__v2.html#a3a0b29e6eb7bfdf74e914453d138e61d" title="Hardware initialisation." alt="" coords="173,59,283,88"/></map>
 </div>
 </p>
 
@@ -262,7 +262,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 2 2016 08:16:30 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 2 2016 15:33:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
