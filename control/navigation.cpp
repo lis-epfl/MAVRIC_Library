@@ -86,20 +86,24 @@ void Navigation::set_speed_command(local_position_t pos_command_lf)
 {
     /* get yaw command (absolute in lf):
      * if we are in Waypoint navigation, and far from the goal position, we point yaw towards the goal position, otherwise we keep yaw constant */
-    float yaw_command_lf = coord_conventions_get_yaw(qe);          // set yaw command to current yaw
     if ((state.mav_mode().is_auto() && ((state.nav_plan_active && (internal_state_ == NAV_NAVIGATING)) || (internal_state_ == NAV_STOP_THERE))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
     {
         float rel_pos[3];
         navigation_set_rel_pos_n_dist2wp(pos_command_lf.data(), rel_pos, ins.position_lf().data());
-        if (((maths_f_abs(rel_pos[X]) > 1.0f) || (maths_f_abs(rel_pos[Y]) > 1.0f))
-             && ((maths_f_abs(rel_pos[X]) > 5.0f) || (maths_f_abs(rel_pos[Y]) > 5.0f) || (maths_f_abs(rel_pos[Z]) < 3.0f)))
+        //if (((maths_f_abs(rel_pos[X]) > 1.0f) || (maths_f_abs(rel_pos[Y]) > 1.0f))
+        //     && ((maths_f_abs(rel_pos[X]) > 5.0f) || (maths_f_abs(rel_pos[Y]) > 5.0f) || (maths_f_abs(rel_pos[Z]) < 3.0f)))
         {
-            yaw_command_lf = maths_calc_smaller_angle(atan2(rel_pos[Y], rel_pos[X]));
+            pos_ctrl_direct_.set_yaw_automatic();
         }  
+    }
+    else
+    {
+        // TODO: change to yaw of waypoint if possible
+        pos_ctrl_direct_.set_yaw_command(coord_conventions_get_yaw(qe)); // set yaw command to current yaw
     }
 
     /* set command in position controller and update to get velocity command */
-    pos_ctrl_direct_.set_command(pos_command_lf, yaw_command_lf);
+    pos_ctrl_direct_.set_position_command(pos_command_lf);
     pos_ctrl_direct_.update();
 
     /* Overwrite z velocity command if we are landing in DESCENT_TO_GND mode */

@@ -85,22 +85,19 @@ void Position_controller_direct::update()
         v_desired = max_climb_rate_ / maths_f_abs(dir_desired_sg_[Z]);
     }
 
-    /* calculate yaw */
-    float rel_yaw;
-    if(yaw_automatic_)
+    /* calculate yaw (if yaw mode is automatic, overwrite yaw_command_lf_ for fixed yaw when near goal)*/
+    if(yaw_automatic_ && cruise_mode_)
     {
         /* make drone point towards goal */
-        rel_yaw = atan2(dir_desired_sg_[Y], dir_desired_sg_[X]);
+        yaw_command_lf_ = atan2(rel_goal_pos_[Y], rel_goal_pos_[X]);
     }
-    else
+
+    /* convert yaw_command to relative yaw (yaw error) */
+    float yaw_lf = coord_conventions_get_yaw(qe_);
+    float rel_yaw = maths_calc_smaller_angle(yaw_command_lf_ - yaw_lf);
+    if(rel_yaw > max_rel_yaw_)
     {
-        /* use yaw_command_lf_ */
-        float yaw_lf = coord_conventions_get_yaw(qe_);
-        rel_yaw = maths_calc_smaller_angle(yaw_command_lf_ - yaw_lf);
-        if(rel_yaw > max_rel_yaw_)
-        {
-            rel_yaw = max_rel_yaw_;
-        }
+        rel_yaw = max_rel_yaw_;
     }
 
     vel_command_lf_.tvel[X] = dir_desired_sg_[X] * v_desired;
