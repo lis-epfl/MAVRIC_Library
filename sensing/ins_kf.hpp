@@ -299,9 +299,9 @@ INS_kf::conf_t INS_kf::default_config(void)
 
     // Measurement covariance   (noise from measurement)
     conf.sigma_gps_xy       = 0.05f;       // Measured: 0.316f
-    conf.sigma_gps_z        = 0.15f;       // Measured: 0.879f
+    conf.sigma_gps_z        = 0.13f;       // Measured: 0.879f
     conf.sigma_gps_velxy    = 0.01f;       // Measured: 0.064f
-    conf.sigma_gps_velz     = 0.06f;       // Measured: 0.342f
+    conf.sigma_gps_velz     = 0.05f;       // Measured: 0.342f
     conf.sigma_baro         = 0.450f;       // Measured: 0.450f
     conf.sigma_sonar        = 0.002f;       // Measured: 0.002f
 

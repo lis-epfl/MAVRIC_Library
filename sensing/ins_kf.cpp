@@ -420,7 +420,7 @@ void INS_kf::predict_kf(void)
     float cy = 2.0f*(-q0*q1 + q2*q3);
     float az = 2.0f*(-q0*q2 + q1*q3);
     float bz = 2.0f*(q0*q1 + q2*q3);
-    float cz = q0*q0 - q1*q1 - q2*q2 - q3*q3;
+    float cz = q0*q0 - q1*q1 - q2*q2 + q3*q3;
 
     // Model dynamics (modify only the non-constant terms)
     // TODO: Test block insertion method
@@ -532,7 +532,7 @@ void INS_kf::predict_kf(void)
 
 
     // Compute default KF prediciton step (using local accelerations as input, warning z acceleration sign)
-    predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], -ahrs_.linear_acc[2]});
+    predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
 }
 
 
