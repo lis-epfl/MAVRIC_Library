@@ -122,6 +122,7 @@ public:
         float kp_yaw;                                       ///< The yaw gain in velocity control mode
 
         float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
+        float critical_landing_altitude;                    ///< The altitude at which the drone will try to land in the critical state
         float minimal_radius;                               ///< The minimal circle radius
         float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
 
@@ -234,6 +235,7 @@ public:
     float one_over_scaling;                             ///< Line vector field parameter
     float vertical_vel_gain;                            ///< Gain for the vertical velocity calculation
     float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
+    float critical_landing_altitude;                    ///< The altitude at which the drone will try to land in the critical state
     float minimal_radius;                               ///< The minimal circle radius
     float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
     float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing
@@ -343,6 +345,7 @@ Navigation::conf_t Navigation::default_config()
 
     conf.one_over_scaling                            = 0.3f;
     conf.safe_altitude                               = -30.0f;
+    conf.critical_landing_altitude                   = 5.0f;
     conf.minimal_radius                              = 5.0f;
     conf.heading_acceptance                          = PI/6.0f;
     conf.vertical_vel_gain                           = 1.0f;

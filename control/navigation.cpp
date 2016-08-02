@@ -479,6 +479,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     one_over_scaling = nav_config.one_over_scaling;
 
     safe_altitude = nav_config.safe_altitude;
+    critical_landing_altitude = nav_config.critical_landing_altitude;
     minimal_radius = nav_config.minimal_radius;
     heading_acceptance = nav_config.heading_acceptance;
     vertical_vel_gain = nav_config.vertical_vel_gain;

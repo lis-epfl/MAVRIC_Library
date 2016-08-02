@@ -327,7 +327,7 @@ void Mission_planner::critical_handler()
 
                 local_critical_pos[X] = ins_.position_lf()[X];
                 local_critical_pos[Y] = ins_.position_lf()[Y];
-                local_critical_pos[Z] = -30.0f;
+                local_critical_pos[Z] = navigation_.safe_altitude;
 
                 break;
 
@@ -337,7 +337,7 @@ void Mission_planner::critical_handler()
 
                 local_critical_pos[X] = 0.0f;
                 local_critical_pos[Y] = 0.0f;
-                local_critical_pos[Z] = -30.0f;
+                local_critical_pos[Z] = navigation_.safe_altitude;
                 break;
 
             case Navigation::HOME_LAND:
@@ -346,7 +346,7 @@ void Mission_planner::critical_handler()
 
                 local_critical_pos[X] = 0.0f;
                 local_critical_pos[Y] = 0.0f;
-                local_critical_pos[Z] = 5.0f;
+                local_critical_pos[Z] = navigation_.critical_landing_altitude;
                 navigation_.alt_lpf = ins_.position_lf()[Z];
                 break;
 
@@ -357,7 +357,7 @@ void Mission_planner::critical_handler()
 
                 local_critical_pos[X] = ins_.position_lf()[X];
                 local_critical_pos[Y] = ins_.position_lf()[Y];
-                local_critical_pos[Z] = 5.0f;
+                local_critical_pos[Z] = navigation_.critical_landing_altitude;
                 navigation_.alt_lpf = ins_.position_lf()[Z];
                 break;
         }
