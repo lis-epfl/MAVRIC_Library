@@ -168,7 +168,7 @@ var searchData=
   ['start_5fwpt_5ftime_5f',['start_wpt_time_',['../classMavlink__waypoint__handler.html#a2f44517f0fb1efd1956073076b959ba8',1,'Mavlink_waypoint_handler']]],
   ['startup_5fcalib_5fduration_5fs',['startup_calib_duration_s',['../structimu__conf__t.html#a3427b18d50b8577b02f47ff9181f3c38',1,'imu_conf_t']]],
   ['startup_5fcalib_5fgyro_5fthreshold',['startup_calib_gyro_threshold',['../structimu__conf__t.html#a6249f129d8b5f05023e47c21f9be9ee7',1,'imu_conf_t']]],
-  ['state',['State',['../classState.html',1,'State'],['../classLEQuad.html#a84f847a89b139e56f1a0f8c2ab1fbf05',1,'LEQuad::state()'],['../classState.html#ad1a7b3d20f3299c0fe55986dc1a5c185',1,'State::State()']]],
+  ['state',['State',['../classState.html',1,'State'],['../classState.html#ad1a7b3d20f3299c0fe55986dc1a5c185',1,'State::State()'],['../classLEQuad.html#a84f847a89b139e56f1a0f8c2ab1fbf05',1,'LEQuad::state()']]],
   ['state_5f',['state_',['../classMavlink__waypoint__handler.html#a8f6d41542592069ceed685f693efc2d0',1,'Mavlink_waypoint_handler::state_()'],['../classState__machine.html#a1d458bc645f27269f102e6048d122e91',1,'State_machine::state_()']]],
   ['state_5fdisplay',['State_display',['../classState__display.html',1,'']]],
   ['state_5fdisplay_5f',['state_display_',['../classState__machine.html#a1b3b4a239057c04e71bbcc54acd71dbd',1,'State_machine::state_display_()'],['../classLEQuad.html#a39193f372eda8874cbd98f51677becdb',1,'LEQuad::state_display_()']]],

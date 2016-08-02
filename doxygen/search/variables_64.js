@@ -58,6 +58,5 @@ var searchData=
   ['dt_5fs_5f',['dt_s_',['../classAhrs__ekf.html#a687dd587c462cb12a615a16565eb0af1',1,'Ahrs_ekf']]],
   ['dubin',['dubin',['../structwaypoint__local__struct__t.html#aa473d67a98c26f7737a1861742a7cb63',1,'waypoint_local_struct_t']]],
   ['dubin_5fstate',['dubin_state',['../classNavigation.html#af99e4eea69cb081197bf6234b71a7d15',1,'Navigation']]],
-  ['duty_5fcycle_5fconfig',['duty_cycle_config',['../structPwm__stm32_1_1config__t.html#a6b8cc1b2ad50249d83c0ae83765f8c08',1,'Pwm_stm32::config_t']]],
   ['dyn_5fmodel',['dyn_model',['../structubx__cfg__nav__settings__t.html#a1f977a007dd8fdd10a957fa52f9f2712',1,'ubx_cfg_nav_settings_t']]]
 ];

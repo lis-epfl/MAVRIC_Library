@@ -56,6 +56,7 @@ var searchData=
   ['pulse_5flen_5fratio',['pulse_len_ratio',['../structubx__cfg__tp5__t.html#a9dd6aa518d60e775fb07d755268783e2',1,'ubx_cfg_tp5_t']]],
   ['pulse_5flen_5fratio_5flock',['pulse_len_ratio_lock',['../structubx__cfg__tp5__t.html#a9a76ea3d807f65aa55153000acc8f009',1,'ubx_cfg_tp5_t']]],
   ['pulse_5fmagnitude_5fus',['pulse_magnitude_us',['../structservo__conf__t.html#aad3e15a69e3442ea25f0b028fbcc792f',1,'servo_conf_t']]],
+  ['pulse_5fus_5fconfig',['pulse_us_config',['../structPwm__stm32_1_1config__t.html#abb77f5311d07348b68264eddb05df4cf',1,'Pwm_stm32::config_t']]],
   ['put',['put',['../structbyte__stream__t.html#a815a7b1640fa228e4b4015d3da6b72db',1,'byte_stream_t']]],
   ['pwm',['PWM',['../structtLED__DESCRIPTOR.html#a5cfd01391574158cf7edb0a5b110ec6a',1,'tLED_DESCRIPTOR']]],
   ['pwm_5f0',['pwm_0',['../classMavrinux.html#aa89c20556424714f274b0a95189e97c5',1,'Mavrinux']]]
