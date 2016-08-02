@@ -83,7 +83,7 @@ public:
         pwm_stm32_channel_t     channel_config;         ///< specify which channel is used
         uint32_t                prescaler_config;       ///< specify the clk divider
         uint32_t                period_config;          ///< specify the period of the PWM
-        uint32_t                duty_cycle_config;      ///< specify the pulse length in microseconds
+        uint32_t                pulse_us_config;        ///< specify the pulse length in microseconds
     } config_t;
 
 
@@ -135,7 +135,7 @@ private:
     uint32_t timer_;        ///< TIMER used
     uint32_t prescaler_;    ///< clk divider
     uint32_t period_;       ///< period
-    uint32_t duty_cyle_;    ///< pulse length in us
+    uint32_t pulse_us_;     ///< pulse length in us
 };
 
 #endif /* PWM_STM32_HPP_ */
