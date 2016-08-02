@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file velocity_controller_copter.hpp
+ * \file velocity_controller_copter.h
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -46,27 +46,34 @@
  ******************************************************************************/
 
 
-#ifndef VELOCITY_CONTROLLER_COPTER_HPP_
-#define VELOCITY_CONTROLLER_COPTER_HPP_
+#ifndef VELOCITY_CONTROLLER_COPTER_H_
+#define VELOCITY_CONTROLLER_COPTER_H_
 
-#include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
-#include "control/pid_controller.hpp"
 
 extern "C"
 {
 #include "control/control_command.h"
+#include "sensing/ahrs.hpp"
+#include "control/pid_controller.h"
 }
+
+typedef enum
+{
+    VEL_CTRL_LOCAL,
+    VEL_CTRL_SEMI_LOCAL
+} velocity_control_frame_t;
 
 /**
  * \brief Velocity controller structure
  */
 typedef struct
 {
+    velocity_control_frame_t     control_frame;
     pid_controller_t             pid[3];                    ///< PID controller for velocity along X, Y and Z in global frame
     float                        thrust_hover_point;        ///< Amount of thrust required to hover (between -1 and 1)
     const ahrs_t*                ahrs;                      ///< Pointer to attitude estimation (input)
-    const INS*                   ins;                       ///< Pointer to INS (input)
+    const INS*                   ins;                       ///< Speed and position estimation (input)
     const velocity_command_t*    velocity_command;          ///< Pointer to velocity command (input)
     attitude_command_t*          attitude_command;          ///< Pointer to attitude command (output)
     thrust_command_t*            thrust_command;            ///< Pointer to thrust command (output)
@@ -78,6 +85,7 @@ typedef struct
  */
 typedef struct
 {
+    velocity_control_frame_t control_frame;
     pid_controller_conf_t   pid_config[3];          ///< Config for PID controller on velocity along X, Y and Z in global frame
     float                   thrust_hover_point;     ///< Amount of thrust required to hover (between -1 and 1)
 } velocity_controller_copter_conf_t;
@@ -89,7 +97,7 @@ typedef struct
  * \param   controller          Pointer to data structure
  * \param   config              Configuration
  * \param   ahrs                Pointer to the estimated attitude
- * \param   ins                 Pointer to the inertial navigation system
+ * \param   ins                 Pointer to the estimated speed and position
  * \param   velocity_command    Pointer to velocity command (input)
  * \param   attitude_command    Pointer to attitude command (output)
  * \param   thrust_command      Pointer to thrust command (output)
@@ -105,4 +113,4 @@ bool velocity_controller_copter_init(velocity_controller_copter_t* controller, v
 bool velocity_controller_copter_update(velocity_controller_copter_t* controller);
 
 
-#endif /* VELOCITY_CONTROLLER_COPTER_HPP_ */
+#endif /* VELOCITY_CONTROLLER_COPTER_H_ */
