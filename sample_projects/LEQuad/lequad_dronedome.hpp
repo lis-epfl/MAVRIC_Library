@@ -75,7 +75,8 @@ public:
                       File& file1,
                       File& file2,
                       LEQuad::conf_t config = LEQuad::default_config() ):
-          LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, state_display, file_flash,
+          // DOME SPECIFIC
+          LEQuad(imu, barometer, gps, sonar, serial_mavlink, satellite, state_display, file_flash,
                      battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
                      file1, file2, config),
           gps_mocap_(mavlink_communication.message_handler()),

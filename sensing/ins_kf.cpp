@@ -252,7 +252,7 @@ bool INS_kf::update(void)
         if (gps_.healthy())
         {
             // GPS Position
-            if (last_gps_pos_update_s_ < gps_.last_position_update_us()/1e6)
+            if (last_gps_pos_update_s_ < (float)(gps_.last_position_update_us())/1e6f)
             {
                 // Get local position from gps
                 //local_position_t gps_local;
@@ -262,9 +262,9 @@ bool INS_kf::update(void)
 
                 // DOME SPECIFIC
                 // Simulate some noise on the GPS local positions (to fit measured sigma, which was directly on the local, not the global)
-                gps_local[0] += rand_sigma(config_.noise_gps_xy);
-                gps_local[1] += rand_sigma(config_.noise_gps_xy);
-                gps_local[2] += rand_sigma(config_.noise_gps_z);
+                // gps_local[0] += rand_sigma(config_.noise_gps_xy);
+                // gps_local[1] += rand_sigma(config_.noise_gps_xy);
+                // gps_local[2] += rand_sigma(config_.noise_gps_z);
 
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
@@ -281,20 +281,20 @@ bool INS_kf::update(void)
                 Kalman<11,3,3>::update({gps_local[0], gps_local[1], gps_local[2]});
 
                 // Update timing
-                last_gps_pos_update_s_ = gps_.last_position_update_us()/1e6;
+                last_gps_pos_update_s_ = (float)(gps_.last_position_update_us())/1e6f;
             }
 
             // GPS velocity
-            if (last_gps_vel_update_s_ < gps_.last_velocity_update_us()/1e6)
+            if (last_gps_vel_update_s_ < (float)(gps_.last_velocity_update_us())/1e6f)
             {
                 // Get velocity from GPS
                 gps_velocity = gps_.velocity_lf();
 
                 // DOME SPECIFIC
                 // Simulate some noise on the GPS local velocities (to fit measured sigma, which was directly on the local, not the global)
-                gps_velocity[0] += rand_sigma(config_.noise_gps_velxy);
-                gps_velocity[1] += rand_sigma(config_.noise_gps_velxy);
-                gps_velocity[2] += rand_sigma(config_.noise_gps_velz);
+                // gps_velocity[0] += rand_sigma(config_.noise_gps_velxy);
+                // gps_velocity[1] += rand_sigma(config_.noise_gps_velxy);
+                // gps_velocity[2] += rand_sigma(config_.noise_gps_velz);
 
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
@@ -313,7 +313,7 @@ bool INS_kf::update(void)
                                        R_gpsvel_);
 
                 // Update timing
-                last_gps_vel_update_s_ = gps_.last_velocity_update_us()/1e6;
+                last_gps_vel_update_s_ = (float)(gps_.last_velocity_update_us())/1e6f;
             }
         }
 
@@ -321,7 +321,7 @@ bool INS_kf::update(void)
         // TODO: Add healthy function into barometer
         if(true)
         {
-           if (last_baro_update_s_ < barometer_.last_update_us()/1e6)
+           if (last_baro_update_s_ < (float)(barometer_.last_update_us())/1e6f)
            {
               // Update the measurement noise if needed
               if(!config_.constant_covar)
@@ -339,14 +339,14 @@ bool INS_kf::update(void)
                                      R_baro_);
            
               // Update timing
-              last_baro_update_s_ = barometer_.last_update_us()/1e6;
+              last_baro_update_s_ = (float)(barometer_.last_update_us())/1e6f;
            }
         }
 
         // // Measure from sonar
         // if (sonar_.healthy())
         // {
-        //    if (last_sonar_update_s_ < sonar_.last_update_us()/1e6)
+        //    if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
         //    {
         //       // Update the measurement noise if needed
         //       if(!config_.constant_covar)
@@ -364,7 +364,7 @@ bool INS_kf::update(void)
         //                              R_sonar_);
 
         //       // Update timing
-        //       last_sonar_update_s_ = sonar_.last_update_us()/1e6f;
+        //       last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
         //    }
         // }
 

@@ -228,6 +228,12 @@ public:
     static inline INS_kf::conf_t default_config(void);
 
 
+    /**
+     * \brief   Configuration to use only the GPS as measurement.
+     */
+    static inline INS_kf::conf_t gps_config(void);
+
+
     conf_t config_;                     ///< Configuration (public, to be used as onboard param)
     uint32_t init_flag;                 ///< Flag used to force initialization by telemetry (0 no init, otherwise init)
 
@@ -304,6 +310,39 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.sigma_gps_velz     = 0.05f;       // Measured: 0.342f
     conf.sigma_baro         = 0.450f;       // Measured: 0.450f
     conf.sigma_sonar        = 0.002f;       // Measured: 0.002f
+
+    // Generation of GPS noise (sigma values)
+    conf.noise_gps_xy       = 0.316f;
+    conf.noise_gps_z        = 0.879f;
+    conf.noise_gps_velxy    = 0.064f;
+    conf.noise_gps_velz     = 0.342f;
+
+    //default origin location (EFPL Esplanade)
+    conf.origin = ORIGIN_EPFL;
+
+    // Logic parameters
+    conf.constant_covar = false;
+
+    return conf;
+};
+
+INS_kf::conf_t INS_kf::gps_config(void)
+{
+    INS_kf::conf_t conf = {};
+
+    // Process covariance (noise from state and input)
+    conf.sigma_z_gnd        = 0.0f;
+    conf.sigma_bias_acc     = 0.0002f;
+    conf.sigma_bias_baro    = 0.0f;
+    conf.sigma_acc          = 5.0f;         // Measured: 0.6f (at rest 0.032f)
+
+    // Measurement covariance   (noise from measurement)
+    conf.sigma_gps_xy       = 0.05f;       // Measured: 0.316f
+    conf.sigma_gps_z        = 0.13f;       // Measured: 0.879f
+    conf.sigma_gps_velxy    = 0.01f;       // Measured: 0.064f
+    conf.sigma_gps_velz     = 0.05f;       // Measured: 0.342f
+    conf.sigma_baro         = 100.0f;       // Measured: 0.450f
+    conf.sigma_sonar        = 100.0f;       // Measured: 0.002f
 
     // Generation of GPS noise (sigma values)
     conf.noise_gps_xy       = 0.316f;
