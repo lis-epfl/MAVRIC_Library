@@ -105,7 +105,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Position_estimation(State& state, Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config = default_config());
+    Position_estimation(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config = default_config());
 
 
     /**
@@ -225,10 +225,13 @@ private:
 
     float gravity;                          ///< Value of the gravity
 
+    float barometer_bias;
+    bool barometer_calibrated;
+
     const ahrs_t& ahrs;                     ///< Reference to the attitude estimation structure
     State& state;                           ///< Reference to the state structure
     const Gps& gps;                         ///< Reference to the GPS structure
-    Barometer& barometer;                   ///< Reference to the barometer structure
+    const Barometer& barometer;                   ///< Reference to the barometer structure
     const Sonar& sonar;                     ///< Reference to the sonar structure
 
     /**
@@ -264,6 +267,13 @@ private:
      * \return  void
      */
     void fence_control();
+
+    /**
+     * \brief   Calibrate the barometer (update the bias)
+     *
+     * \return  void
+     */
+    void calibrate_barometer();
 
 };
 #endif // POSITION_ESTIMATION_HPP__
