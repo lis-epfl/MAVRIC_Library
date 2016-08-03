@@ -33,6 +33,7 @@
  * \file joystick.cpp
  *
  * \author MAV'RIC Team
+ * \author Basil Huber
  *
  * \brief This file is to decode the set manual command message from MAVLink
  *
@@ -53,7 +54,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool joystick_init(joystick_t* joystick)
+bool joystick_init(joystick_t* joystick, joystick_conf_t config)
 {
     bool init_success = true;
 
@@ -68,6 +69,11 @@ bool joystick_init(joystick_t* joystick)
 
     joystick->mav_mode_desired = Mav_mode(0);
     joystick->arm_action = ARM_ACTION_NONE;
+
+    /* apply config */
+    joystick->throttle_mode = config.throttle_mode;
+    joystick->scale_attitude = config.scale_attitude;
+    joystick->scale_velocity = config.scale_velocity;
 
     return init_success;
 }
@@ -123,11 +129,18 @@ Mav_mode joystick_get_mode(joystick_t* joystick, const Mav_mode current_mode)
 
 void joystick_get_velocity_vector(const joystick_t* joystick, control_command_t* controls)
 {
-    controls->tvel[X] = -10.0f  * joystick->channels.x  * MAX_JOYSTICK_RANGE;
-    controls->tvel[Y] =  10.0f  * joystick->channels.y  * MAX_JOYSTICK_RANGE;
-    controls->tvel[Z] = -1.5f   * joystick->channels.z;
+    controls->tvel[X] = - joystick->channels.x  * joystick->scale_velocity.x;
+    controls->tvel[Y] =   joystick->channels.y  * joystick->scale_velocity.x;
 
-    controls->rpy[YAW] = joystick->channels.r * MAX_JOYSTICK_RANGE;
+    controls->rpy[YAW] =  joystick->channels.r * joystick->scale_velocity.r;
+
+    if(joystick->throttle_mode == joystick_throttle_mode_t::ZERO_CENTER)
+    {
+        controls->tvel[Z] = - joystick->channels.z * joystick->scale_velocity.z;
+    }else
+    {
+        controls->tvel[Z] = - (2 * joystick->channels.z - 1) * joystick->scale_velocity.z;
+    }
 }
 
 void joystick_get_rate_command_wing(joystick_t* joystick, control_command_t* controls)
@@ -165,10 +178,16 @@ void joystick_get_velocity_wing(const joystick_t* joystick, const float ki_yaw, 
 
 void joystick_get_control_command(const joystick_t* joystick, control_command_t* controls)
 {
-    controls->rpy[ROLL]     = joystick->channels.y * MAX_JOYSTICK_RANGE;
-    controls->rpy[PITCH]    = joystick->channels.x * MAX_JOYSTICK_RANGE;
-    controls->rpy[YAW]      = joystick->channels.r * MAX_JOYSTICK_RANGE;
-    controls->thrust        = joystick->channels.z;
+    controls->rpy[ROLL]     = joystick->channels.y * joystick->scale_attitude.y;
+    controls->rpy[PITCH]    = joystick->channels.x * joystick->scale_attitude.x;
+    controls->rpy[YAW]      = joystick->channels.r * joystick->scale_attitude.r;
+    if(joystick->throttle_mode == joystick_throttle_mode_t::ZERO_CENTER)
+    {
+        controls->thrust        = joystick->channels.z * joystick->scale_attitude.z;
+    }else
+    {
+        controls->thrust        = (2*joystick->channels.z - 1)*joystick->scale_attitude.z;
+    }
 }
 
 void joystick_button_update(joystick_t* joystick, uint16_t buttons)

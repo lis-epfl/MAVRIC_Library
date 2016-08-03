@@ -33,6 +33,7 @@
  * \file joystick.hpp
  *
  * \author MAV'RIC Team
+ * \author Basil Huber
  *
  * \brief This file is to decode the set manual command message from MAVLink
  *
@@ -62,6 +63,11 @@ typedef enum
     BUTTON_PRESSED = 1,
 } button_pressed_t;
 
+enum class joystick_throttle_mode_t
+{
+    ZERO_CENTER = 0,    //< throttle stick in center is zero throttle
+    ZERO_DOWN           //< throttle stick all the way down is zero throttle
+};
 
 /**
  * \brief   The union structure for the bit mask of the joystick buttons
@@ -125,16 +131,34 @@ typedef struct
 
 
 /**
+ * \brief  Configuration for joystick
+ */
+struct joystick_conf_t
+{
+    joystick_throttle_mode_t    throttle_mode;  ///< indicates whether zero throttle is stick in center or stick down
+    joystick_channels_t         scale_attitude; ///< scales applied to channels in attitude mode
+    joystick_channels_t         scale_velocity; ///< scales applied to channels in velocity mode
+};
+
+/**
  * \brief   The structure for the joystick
  */
 typedef struct
 {
-    joystick_button_t buttons;          ///< The bit mask of the button pressed
-    joystick_channels_t channels;       ///< Channels of the joystick
-    Mav_mode mav_mode_desired;          ///< The mav mode indicated by the remote
-    arm_action_t arm_action;
+    joystick_button_t           buttons;            ///< The bit mask of the button pressed
+    joystick_channels_t         channels;           ///< Channels of the joystick
+    Mav_mode                    mav_mode_desired;   ///< The mav mode indicated by the remote
+    arm_action_t                arm_action;
+    joystick_throttle_mode_t    throttle_mode;      ///< indicates whether zero throttle is stick in center or stick down
+    joystick_channels_t         scale_attitude;     ///< scales applied to channels in attitude mode
+    joystick_channels_t         scale_velocity;     ///< scales applied to channels in velocity mode
 } joystick_t;
 
+
+/**
+ * \brief   Default config for joystick
+ */
+static inline joystick_conf_t joystick_default_config();
 
 /**
  * \brief   Initialisation of the joystick module
@@ -143,7 +167,7 @@ typedef struct
  *
  * \return  True if succeeded
  */
-bool joystick_init(joystick_t* joystick);
+bool joystick_init(joystick_t* joystick, joystick_conf_t conf = joystick_default_config());
 
 
 /**
@@ -312,5 +336,22 @@ void joystick_get_attitude_command_absolute_yaw(const joystick_t* joystick, atti
  */
 void joystick_get_attitude_command_vtol(const joystick_t* joystick, const float ki_yaw, attitude_command_t* command, float scale, float reference_pitch);
 
+
+joystick_conf_t joystick_default_config()
+{
+    joystick_conf_t conf;
+    conf.throttle_mode = joystick_throttle_mode_t::ZERO_DOWN;
+    /* attitude scales */
+    conf.scale_attitude.x = 0.8f;   // pitch
+    conf.scale_attitude.y = 0.8f;   // roll
+    conf.scale_attitude.z = 1;      // thrust
+    conf.scale_attitude.r = 0.8f;   // yaw
+    /* velocity scales */
+    conf.scale_velocity.x = 8.0f;   // x
+    conf.scale_velocity.y = 8.0f;   // y
+    conf.scale_velocity.z = 1.5f;   // z
+    conf.scale_velocity.r = 0.8f;   // yaw
+    return conf;
+}
 
 #endif // JOYSTICK_HPP_
