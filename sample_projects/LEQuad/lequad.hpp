@@ -67,7 +67,6 @@
 #include "control/stabilisation_copter.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
 #include "control/velocity_controller_copter.hpp"
-#include "control/velocity_controller_copter_default_config.hpp"
 #include "control/vector_field_waypoint.hpp"
 
 #include "drivers/battery.hpp"
@@ -126,7 +125,7 @@ public:
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
         attitude_controller_conf_t attitude_controller_config;
-        velocity_controller_copter_conf_t velocity_controller_copter_config;
+        Velocity_controller_copter::conf_t velocity_controller_copter_config;
     };
 
     /**
@@ -285,7 +284,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.attitude_controller_config = attitude_controller_default_config();
 
-    conf.velocity_controller_copter_config = velocity_controller_copter_default_config();
+    conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
 
     /* Mavlink communication config */
     Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);
