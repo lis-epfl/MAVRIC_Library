@@ -318,30 +318,30 @@ bool INS_kf::update(void)
         }
 
         // // Measure from barometer
-        // // TODO: Add healthy function into barometer
-        // if(true)
-        // {
-        //    if (last_baro_update_s_ < barometer_.last_update_us()/1e6)
-        //    {
-        //       // Update the measurement noise if needed
-        //       if(!config_.constant_covar)
-        //       {
-        //           // TODO: Implement this!
+        // TODO: Add healthy function into barometer
+        if(true)
+        {
+           if (last_baro_update_s_ < barometer_.last_update_us()/1e6)
+           {
+              // Update the measurement noise if needed
+              if(!config_.constant_covar)
+              {
+                  // TODO: Implement this!
 
-        //           // Recompute the measurement noise matrix
-        //           R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
-        //       }
+                  // Recompute the measurement noise matrix
+                  R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
+              }
 
-        //       // Run kalman Update
-        //       z_baro = barometer_.altitude_gf() - origin_.altitude;
-        //       Kalman<11,3,3>::update(Mat<1,1>(z_baro),
-        //                              H_baro_,
-        //                              R_baro_);
+              // Run kalman Update
+              z_baro = barometer_.altitude_gf() - origin_.altitude;
+              Kalman<11,3,3>::update(Mat<1,1>(z_baro),
+                                     H_baro_,
+                                     R_baro_);
            
-        //       // Update timing
-        //       last_baro_update_s_ = barometer_.last_update_us()/1e6;
-        //    }
-        // }
+              // Update timing
+              last_baro_update_s_ = barometer_.last_update_us()/1e6;
+           }
+        }
 
         // // Measure from sonar
         // if (sonar_.healthy())
