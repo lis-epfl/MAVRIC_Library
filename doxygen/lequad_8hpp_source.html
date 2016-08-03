@@ -149,213 +149,212 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00067"></a>00067 <span class="preprocessor">#include &quot;control/stabilisation_copter.hpp&quot;</span>
 <a name="l00068"></a>00068 <span class="preprocessor">#include &quot;control/stabilisation_copter_default_config.hpp&quot;</span>
 <a name="l00069"></a>00069 <span class="preprocessor">#include &quot;control/velocity_controller_copter.hpp&quot;</span>
-<a name="l00070"></a>00070 <span class="preprocessor">#include &quot;control/velocity_controller_copter_default_config.hpp&quot;</span>
-<a name="l00071"></a>00071 <span class="preprocessor">#include &quot;control/vector_field_waypoint.hpp&quot;</span>
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073 <span class="preprocessor">#include &quot;drivers/battery.hpp&quot;</span>
-<a name="l00074"></a>00074 <span class="preprocessor">#include &quot;drivers/gps.hpp&quot;</span>
-<a name="l00075"></a>00075 <span class="preprocessor">#include &quot;drivers/sonar.hpp&quot;</span>
-<a name="l00076"></a>00076 <span class="preprocessor">#include &quot;drivers/servos_telemetry.hpp&quot;</span>
-<a name="l00077"></a>00077 <span class="preprocessor">#include &quot;drivers/state_display.hpp&quot;</span>
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079 <span class="preprocessor">#include &quot;hal/common/file.hpp&quot;</span>
-<a name="l00080"></a>00080 <span class="preprocessor">#include &quot;hal/common/led.hpp&quot;</span>
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082 <span class="preprocessor">#include &quot;simulation/simulation.hpp&quot;</span>
-<a name="l00083"></a>00083 
-<a name="l00084"></a>00084 <span class="preprocessor">#include &quot;sensing/ahrs.hpp&quot;</span>
-<a name="l00085"></a>00085 <span class="preprocessor">#include &quot;sensing/ahrs_ekf.hpp&quot;</span>
-<a name="l00086"></a>00086 <span class="preprocessor">#include &quot;sensing/altitude_estimation.hpp&quot;</span>
-<a name="l00087"></a>00087 <span class="preprocessor">#include &quot;sensing/imu.hpp&quot;</span>
-<a name="l00088"></a>00088 <span class="preprocessor">#include &quot;sensing/position_estimation.hpp&quot;</span>
-<a name="l00089"></a>00089 <span class="preprocessor">#include &quot;sensing/qfilter.hpp&quot;</span>
-<a name="l00090"></a>00090 <span class="preprocessor">#include &quot;sensing/qfilter_default_config.hpp&quot;</span>
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092 <span class="preprocessor">#include &quot;util/coord_conventions.hpp&quot;</span>
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
-<a name="l00095"></a>00095 {
-<a name="l00096"></a>00096 <span class="preprocessor">#include &quot;sensing/altitude.h&quot;</span>
-<a name="l00097"></a>00097 <span class="preprocessor">#include &quot;util/print_util.h&quot;</span>
-<a name="l00098"></a>00098 }
+<a name="l00070"></a>00070 <span class="preprocessor">#include &quot;control/vector_field_waypoint.hpp&quot;</span>
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072 <span class="preprocessor">#include &quot;drivers/battery.hpp&quot;</span>
+<a name="l00073"></a>00073 <span class="preprocessor">#include &quot;drivers/gps.hpp&quot;</span>
+<a name="l00074"></a>00074 <span class="preprocessor">#include &quot;drivers/sonar.hpp&quot;</span>
+<a name="l00075"></a>00075 <span class="preprocessor">#include &quot;drivers/servos_telemetry.hpp&quot;</span>
+<a name="l00076"></a>00076 <span class="preprocessor">#include &quot;drivers/state_display.hpp&quot;</span>
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078 <span class="preprocessor">#include &quot;hal/common/file.hpp&quot;</span>
+<a name="l00079"></a>00079 <span class="preprocessor">#include &quot;hal/common/led.hpp&quot;</span>
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081 <span class="preprocessor">#include &quot;simulation/simulation.hpp&quot;</span>
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083 <span class="preprocessor">#include &quot;sensing/ahrs.hpp&quot;</span>
+<a name="l00084"></a>00084 <span class="preprocessor">#include &quot;sensing/ahrs_ekf.hpp&quot;</span>
+<a name="l00085"></a>00085 <span class="preprocessor">#include &quot;sensing/altitude_estimation.hpp&quot;</span>
+<a name="l00086"></a>00086 <span class="preprocessor">#include &quot;sensing/imu.hpp&quot;</span>
+<a name="l00087"></a>00087 <span class="preprocessor">#include &quot;sensing/position_estimation.hpp&quot;</span>
+<a name="l00088"></a>00088 <span class="preprocessor">#include &quot;sensing/qfilter.hpp&quot;</span>
+<a name="l00089"></a>00089 <span class="preprocessor">#include &quot;sensing/qfilter_default_config.hpp&quot;</span>
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091 <span class="preprocessor">#include &quot;util/coord_conventions.hpp&quot;</span>
+<a name="l00092"></a>00092 
+<a name="l00093"></a>00093 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
+<a name="l00094"></a>00094 {
+<a name="l00095"></a>00095 <span class="preprocessor">#include &quot;sensing/altitude.h&quot;</span>
+<a name="l00096"></a>00096 <span class="preprocessor">#include &quot;util/print_util.h&quot;</span>
+<a name="l00097"></a>00097 }
+<a name="l00098"></a>00098 
 <a name="l00099"></a>00099 
 <a name="l00100"></a>00100 
-<a name="l00101"></a>00101 
-<a name="l00105"></a><a class="code" href="classLEQuad.html">00105</a> <span class="keyword">class </span><a class="code" href="classLEQuad.html" title="MAV class.">LEQuad</a>
-<a name="l00106"></a>00106 {
-<a name="l00107"></a>00107 <span class="keyword">public</span>:
-<a name="l00111"></a><a class="code" href="structLEQuad_1_1conf__t.html">00111</a>      <span class="keyword">struct </span><a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a>
-<a name="l00112"></a>00112     {
-<a name="l00113"></a>00113         <a class="code" href="structState_1_1conf__t.html" title="Configuration structure.">State::conf_t</a> state_config;
-<a name="l00114"></a>00114         <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_continuous_config;
-<a name="l00115"></a>00115         <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_stat_config;
-<a name="l00116"></a>00116         <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a> scheduler_config;
-<a name="l00117"></a>00117         <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">Mavlink_communication::conf_t</a> mavlink_communication_config;
-<a name="l00118"></a>00118         <a class="code" href="structNavigation_1_1conf__t.html" title="The navigation configuration structure.">Navigation::conf_t</a> navigation_config;
-<a name="l00119"></a>00119         <a class="code" href="structMavlink__waypoint__handler_1_1conf__t.html">Mavlink_waypoint_handler::conf_t</a> waypoint_handler_config;
-<a name="l00120"></a>00120         <a class="code" href="structqfilter__conf__t.html" title="The structure for configuring the quaternion-based attitude estimation.">qfilter_conf_t</a> qfilter_config;
-<a name="l00121"></a>00121         <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> ahrs_ekf_config;
-<a name="l00122"></a>00122         <a class="code" href="structPosition__estimation_1_1conf__t.html" title="The position estimator structure.">Position_estimation::conf_t</a> position_estimation_config;
-<a name="l00123"></a>00123         <a class="code" href="structstabilisation__copter__conf__t.html" title="Structure containing the configuration data.">stabilisation_copter_conf_t</a> stabilisation_copter_config;
-<a name="l00124"></a>00124         <a class="code" href="structservos__mix__quadcopter__diag__conf__t.html" title="The servo mix structure for a quad in cross shape.">servos_mix_quadcopter_diag_conf_t</a> servos_mix_quadcopter_diag_config;
-<a name="l00125"></a>00125         <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">Manual_control::conf_t</a> manual_control_config;
-<a name="l00126"></a>00126         <a class="code" href="structremote__conf__t.html" title="The configuration structure of the remote.">remote_conf_t</a> remote_config;
-<a name="l00127"></a>00127         <a class="code" href="structattitude__controller__conf__t.html" title="Attitude controller configuration.">attitude_controller_conf_t</a> attitude_controller_config;
-<a name="l00128"></a>00128         <a class="code" href="structvelocity__controller__copter__conf__t.html" title="Velocity controller configuration.">velocity_controller_copter_conf_t</a> velocity_controller_copter_config;
-<a name="l00129"></a>00129     };
-<a name="l00130"></a>00130 
-<a name="l00138"></a>00138     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">default_config</a>(uint8_t sysid = 1);
+<a name="l00104"></a><a class="code" href="classLEQuad.html">00104</a> <span class="keyword">class </span><a class="code" href="classLEQuad.html" title="MAV class.">LEQuad</a>
+<a name="l00105"></a>00105 {
+<a name="l00106"></a>00106 <span class="keyword">public</span>:
+<a name="l00110"></a><a class="code" href="structLEQuad_1_1conf__t.html">00110</a>      <span class="keyword">struct </span><a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a>
+<a name="l00111"></a>00111     {
+<a name="l00112"></a>00112         <a class="code" href="structState_1_1conf__t.html" title="Configuration structure.">State::conf_t</a> state_config;
+<a name="l00113"></a>00113         <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_continuous_config;
+<a name="l00114"></a>00114         <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_stat_config;
+<a name="l00115"></a>00115         <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a> scheduler_config;
+<a name="l00116"></a>00116         <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">Mavlink_communication::conf_t</a> mavlink_communication_config;
+<a name="l00117"></a>00117         <a class="code" href="structNavigation_1_1conf__t.html" title="The navigation configuration structure.">Navigation::conf_t</a> navigation_config;
+<a name="l00118"></a>00118         <a class="code" href="structMavlink__waypoint__handler_1_1conf__t.html">Mavlink_waypoint_handler::conf_t</a> waypoint_handler_config;
+<a name="l00119"></a>00119         <a class="code" href="structqfilter__conf__t.html" title="The structure for configuring the quaternion-based attitude estimation.">qfilter_conf_t</a> qfilter_config;
+<a name="l00120"></a>00120         <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> ahrs_ekf_config;
+<a name="l00121"></a>00121         <a class="code" href="structPosition__estimation_1_1conf__t.html" title="The position estimator structure.">Position_estimation::conf_t</a> position_estimation_config;
+<a name="l00122"></a>00122         <a class="code" href="structstabilisation__copter__conf__t.html" title="Structure containing the configuration data.">stabilisation_copter_conf_t</a> stabilisation_copter_config;
+<a name="l00123"></a>00123         <a class="code" href="structservos__mix__quadcopter__diag__conf__t.html" title="The servo mix structure for a quad in cross shape.">servos_mix_quadcopter_diag_conf_t</a> servos_mix_quadcopter_diag_config;
+<a name="l00124"></a>00124         <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">Manual_control::conf_t</a> manual_control_config;
+<a name="l00125"></a>00125         <a class="code" href="structremote__conf__t.html" title="The configuration structure of the remote.">remote_conf_t</a> remote_config;
+<a name="l00126"></a>00126         <a class="code" href="structattitude__controller__conf__t.html" title="Attitude controller configuration.">attitude_controller_conf_t</a> attitude_controller_config;
+<a name="l00127"></a>00127         <a class="code" href="structVelocity__controller__copter_1_1conf__t.html" title="Controller configuration.">Velocity_controller_copter::conf_t</a> velocity_controller_copter_config;
+<a name="l00128"></a>00128     };
+<a name="l00129"></a>00129 
+<a name="l00137"></a>00137     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">default_config</a>(uint8_t sysid = 1);
+<a name="l00138"></a>00138 
 <a name="l00139"></a>00139 
-<a name="l00140"></a>00140 
-<a name="l00144"></a>00144     <a class="code" href="classLEQuad.html#accaeed2b2f5626b45848455163998481" title="Constructor.">LEQuad</a>( <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; <a class="code" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2" title="Reference to IMU.">imu</a>,
-<a name="l00145"></a>00145                   <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp; <a class="code" href="classLEQuad.html#abd0a931d4efb860cf55498856440ca1a" title="Reference to barometer.">barometer</a>,
-<a name="l00146"></a>00146                   <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp; <a class="code" href="classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704" title="Reference to GPS.">gps</a>,
-<a name="l00147"></a>00147                   <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp; <a class="code" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d" title="Reference to sonar.">sonar</a>,
-<a name="l00148"></a>00148                   <a class="code" href="classSerial.html">Serial</a>&amp; <a class="code" href="classLEQuad.html#ac681527770ee9dc7f2a98594204b3a42" title="Reference to telemetry serial.">serial_mavlink</a>,
-<a name="l00149"></a>00149                   <a class="code" href="classSatellite.html">Satellite</a>&amp; <a class="code" href="classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535" title="Reference to remote control satellite.">satellite</a>,
-<a name="l00150"></a>00150                   <a class="code" href="classState__display.html" title="Interface class for state display.">State_display</a>&amp; state_display,
-<a name="l00151"></a>00151                   <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; <a class="code" href="classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5" title="Reference to flash storage.">file_flash</a>,
-<a name="l00152"></a>00152                   <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp; <a class="code" href="classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885" title="Reference to battery.">battery</a>,
-<a name="l00153"></a>00153                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#ac1d44059cbf259a74ee7bfe64a5973df" title="Reference to servos structure.">servo_0</a>,
-<a name="l00154"></a>00154                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a7db47f6468c433cc7b03641ed2424b49" title="Reference to servos structure.">servo_1</a>,
-<a name="l00155"></a>00155                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a84b1a445d42ae6aaf4b7e6d4b9684463" title="Reference to servos structure.">servo_2</a>,
-<a name="l00156"></a>00156                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#abd9225ecba6bb2976e573db8acb1b291" title="Reference to servos structure.">servo_3</a>,
-<a name="l00157"></a>00157                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a7604f86734976330548d3ba2c9353060" title="Reference to servos structure.">servo_4</a>,
-<a name="l00158"></a>00158                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a4b64c62b5914e8115b32fa5999dec1b4" title="Reference to servos structure.">servo_5</a>,
-<a name="l00159"></a>00159                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#aad0d8adce0b4eca5f8c9131cad516eb7" title="Reference to servos structure.">servo_6</a>,
-<a name="l00160"></a>00160                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a16c282996f4e2266d3f60c06996e00d3" title="Reference to servos structure.">servo_7</a>,
-<a name="l00161"></a>00161                   <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file1,
-<a name="l00162"></a>00162                   <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file2,
-<a name="l00163"></a>00163                   <span class="keyword">const</span> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a>&amp; config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">default_config</a>());
-<a name="l00164"></a>00164 
-<a name="l00169"></a>00169     <span class="keywordtype">void</span> <a class="code" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)">loop</a>(<span class="keywordtype">void</span>);
-<a name="l00170"></a>00170 
-<a name="l00171"></a>00171 <span class="keyword">protected</span>:
-<a name="l00172"></a>00172 
-<a name="l00173"></a>00173     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_main_task(<span class="keywordtype">void</span>);
-<a name="l00174"></a>00174     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_state(<span class="keywordtype">void</span>);
-<a name="l00175"></a>00175     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_communication(<span class="keywordtype">void</span>);
-<a name="l00176"></a>00176     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_data_logging(<span class="keywordtype">void</span>);
-<a name="l00177"></a>00177     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_gps(<span class="keywordtype">void</span>);
-<a name="l00178"></a>00178     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_imu(<span class="keywordtype">void</span>);
-<a name="l00179"></a>00179     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_barometer(<span class="keywordtype">void</span>);
-<a name="l00180"></a>00180     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_sonar(<span class="keywordtype">void</span>);
-<a name="l00181"></a>00181     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_attitude_estimation(<span class="keywordtype">void</span>);
-<a name="l00182"></a>00182     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_position_estimation(<span class="keywordtype">void</span>);
-<a name="l00183"></a>00183     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_stabilisers(<span class="keywordtype">void</span>);
-<a name="l00184"></a>00184     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_navigation(<span class="keywordtype">void</span>);
-<a name="l00185"></a>00185     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_hud(<span class="keywordtype">void</span>);
-<a name="l00186"></a>00186     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_servos(<span class="keywordtype">void</span>);
-<a name="l00187"></a>00187     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_ground_control(<span class="keywordtype">void</span>);
-<a name="l00188"></a>00188 
-<a name="l00189"></a>00189     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> main_task(<span class="keywordtype">void</span>);
-<a name="l00190"></a>00190     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> main_task_func(<a class="code" href="classLEQuad.html" title="MAV class.">LEQuad</a>* mav)
-<a name="l00191"></a>00191     {
-<a name="l00192"></a>00192         <span class="keywordflow">return</span> mav-&gt;main_task();
-<a name="l00193"></a><a class="code" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2">00193</a>     };
-<a name="l00194"></a>00194 
-<a name="l00195"></a>00195     <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp;            <a class="code" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2" title="Reference to IMU.">imu</a>;                
-<a name="l00196"></a><a class="code" href="classLEQuad.html#abd0a931d4efb860cf55498856440ca1a">00196</a>     <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp;      <a class="code" href="classLEQuad.html#abd0a931d4efb860cf55498856440ca1a" title="Reference to barometer.">barometer</a>;          
-<a name="l00197"></a><a class="code" href="classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704">00197</a>     <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp;            <a class="code" href="classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704" title="Reference to GPS.">gps</a>;                
-<a name="l00198"></a><a class="code" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d">00198</a>     <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp;          <a class="code" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d" title="Reference to sonar.">sonar</a>;              
-<a name="l00199"></a><a class="code" href="classLEQuad.html#ac681527770ee9dc7f2a98594204b3a42">00199</a>     <a class="code" href="classSerial.html">Serial</a>&amp;         <a class="code" href="classLEQuad.html#ac681527770ee9dc7f2a98594204b3a42" title="Reference to telemetry serial.">serial_mavlink</a>;     
-<a name="l00200"></a><a class="code" href="classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535">00200</a>     <a class="code" href="classSatellite.html">Satellite</a>&amp;      <a class="code" href="classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535" title="Reference to remote control satellite.">satellite</a>;          
-<a name="l00201"></a><a class="code" href="classLEQuad.html#a39193f372eda8874cbd98f51677becdb">00201</a>     <a class="code" href="classState__display.html" title="Interface class for state display.">State_display</a>&amp;  <a class="code" href="classLEQuad.html#a39193f372eda8874cbd98f51677becdb" title="Reference to the state display.">state_display_</a>;     
-<a name="l00202"></a><a class="code" href="classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5">00202</a>     <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp;           <a class="code" href="classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5" title="Reference to flash storage.">file_flash</a>;         
-<a name="l00203"></a><a class="code" href="classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885">00203</a>     <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp;        <a class="code" href="classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885" title="Reference to battery.">battery</a>;            
-<a name="l00204"></a><a class="code" href="classLEQuad.html#ac1d44059cbf259a74ee7bfe64a5973df">00204</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#ac1d44059cbf259a74ee7bfe64a5973df" title="Reference to servos structure.">servo_0</a>;            
-<a name="l00205"></a><a class="code" href="classLEQuad.html#a7db47f6468c433cc7b03641ed2424b49">00205</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a7db47f6468c433cc7b03641ed2424b49" title="Reference to servos structure.">servo_1</a>;            
-<a name="l00206"></a><a class="code" href="classLEQuad.html#a84b1a445d42ae6aaf4b7e6d4b9684463">00206</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a84b1a445d42ae6aaf4b7e6d4b9684463" title="Reference to servos structure.">servo_2</a>;            
-<a name="l00207"></a><a class="code" href="classLEQuad.html#abd9225ecba6bb2976e573db8acb1b291">00207</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#abd9225ecba6bb2976e573db8acb1b291" title="Reference to servos structure.">servo_3</a>;            
-<a name="l00208"></a><a class="code" href="classLEQuad.html#a7604f86734976330548d3ba2c9353060">00208</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a7604f86734976330548d3ba2c9353060" title="Reference to servos structure.">servo_4</a>;            
-<a name="l00209"></a><a class="code" href="classLEQuad.html#a4b64c62b5914e8115b32fa5999dec1b4">00209</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a4b64c62b5914e8115b32fa5999dec1b4" title="Reference to servos structure.">servo_5</a>;            
-<a name="l00210"></a><a class="code" href="classLEQuad.html#aad0d8adce0b4eca5f8c9131cad516eb7">00210</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#aad0d8adce0b4eca5f8c9131cad516eb7" title="Reference to servos structure.">servo_6</a>;            
-<a name="l00211"></a><a class="code" href="classLEQuad.html#a16c282996f4e2266d3f60c06996e00d3">00211</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a16c282996f4e2266d3f60c06996e00d3" title="Reference to servos structure.">servo_7</a>;            
-<a name="l00212"></a>00212 
-<a name="l00213"></a><a class="code" href="classLEQuad.html#ab49ef09602b739f8680bc22813d57f7c">00213</a>     <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a> <a class="code" href="classLEQuad.html#ab49ef09602b739f8680bc22813d57f7c" title="The joystick parsing structure.">manual_control</a>;                              
-<a name="l00214"></a>00214 
-<a name="l00215"></a><a class="code" href="classLEQuad.html#a84f847a89b139e56f1a0f8c2ab1fbf05">00215</a>     <a class="code" href="classState.html" title="The MAV state.">State</a> <a class="code" href="classLEQuad.html#a84f847a89b139e56f1a0f8c2ab1fbf05" title="The structure with all state information.">state</a>;                                                
-<a name="l00216"></a>00216 
-<a name="l00217"></a>00217     <a class="code" href="classScheduler.html" title="Scheduler.">Scheduler</a> scheduler;
-<a name="l00218"></a>00218     <a class="code" href="classMavlink__communication.html">Mavlink_communication</a> mavlink_communication;
-<a name="l00219"></a>00219 
-<a name="l00220"></a>00220     <a class="code" href="structservos__mix__quadcotper__diag__t.html" title="servos mix structure">servos_mix_quadcotper_diag_t</a> servo_mix;
-<a name="l00221"></a>00221 
-<a name="l00222"></a><a class="code" href="classLEQuad.html#a71c51698f364b8b97d126df5ae433a82">00222</a>     <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a> <a class="code" href="classLEQuad.html#a71c51698f364b8b97d126df5ae433a82" title="The attitude estimation structure.">ahrs</a>;                                                
-<a name="l00223"></a>00223     <a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a> ahrs_ekf;
-<a name="l00224"></a>00224 
-<a name="l00225"></a><a class="code" href="classLEQuad.html#af64cf6fcf6709d160a5525decb0ae56e">00225</a>     <a class="code" href="classPosition__estimation.html">Position_estimation</a> <a class="code" href="classLEQuad.html#af64cf6fcf6709d160a5525decb0ae56e" title="The position estimaton structure.">position_estimation</a>;                    
-<a name="l00226"></a>00226 
-<a name="l00227"></a><a class="code" href="classLEQuad.html#aab475348ea9a0b5902650881129a1d19">00227</a>     <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a> <a class="code" href="classLEQuad.html#aab475348ea9a0b5902650881129a1d19" title="The control structure used for rate and attitude modes.">controls</a>;                                 
-<a name="l00228"></a><a class="code" href="classLEQuad.html#a51771979216a0aa025801b1df565d397">00228</a>     <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a> <a class="code" href="classLEQuad.html#a51771979216a0aa025801b1df565d397" title="The control nav structure used for velocity modes.">controls_nav</a>;                             
-<a name="l00229"></a>00229 
-<a name="l00230"></a><a class="code" href="classLEQuad.html#ac926ff33577f58202f891541b2a1713b">00230</a>     <a class="code" href="structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module.">stabilisation_copter_t</a> <a class="code" href="classLEQuad.html#ac926ff33577f58202f891541b2a1713b" title="The stabilisation structure for copter.">stabilisation_copter</a>;                
-<a name="l00231"></a>00231 
-<a name="l00232"></a><a class="code" href="classLEQuad.html#a6348e3194cd2ca65550fefcd0411b20c">00232</a>     <a class="code" href="classNavigation.html" title="The navigation structure.">Navigation</a> <a class="code" href="classLEQuad.html#a6348e3194cd2ca65550fefcd0411b20c" title="The structure to perform GPS navigation.">navigation</a>;                                      
-<a name="l00233"></a>00233     <a class="code" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a> waypoint_handler;
-<a name="l00234"></a>00234 
-<a name="l00235"></a><a class="code" href="classLEQuad.html#aca96fddc8a43b0ca4b51cdffcdf79718">00235</a>     <a class="code" href="classState__machine.html" title="Defines the state machine structure.">State_machine</a> <a class="code" href="classLEQuad.html#aca96fddc8a43b0ca4b51cdffcdf79718" title="The structure for the state machine.">state_machine</a>;                                
-<a name="l00236"></a>00236 
-<a name="l00237"></a><a class="code" href="classLEQuad.html#acdc4072d2bc5f84b926e017f95dfde28">00237</a>     <a class="code" href="structhud__telemetry__t.html" title="The HUD structure to send the MAVLink HUD message.">hud_telemetry_t</a> <a class="code" href="classLEQuad.html#acdc4072d2bc5f84b926e017f95dfde28" title="The HUD structure.">hud</a>;                                        
-<a name="l00238"></a>00238     <a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a> servos_telemetry;
-<a name="l00239"></a>00239 
-<a name="l00240"></a>00240     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging_continuous;
-<a name="l00241"></a>00241     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging_stat;
-<a name="l00242"></a>00242 
-<a name="l00243"></a>00243     <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a>                       command;
-<a name="l00244"></a>00244     <span class="comment">// attitude_controller_t           attitude_controller;</span>
-<a name="l00245"></a>00245     <span class="comment">// velocity_controller_copter_t    velocity_controller;</span>
-<a name="l00246"></a>00246     <span class="comment">// vector_field_waypoint_t         vector_field_waypoint;</span>
-<a name="l00247"></a>00247 
-<a name="l00248"></a><a class="code" href="classLEQuad.html#a886784d5864c65cf442460cac47d48d3">00248</a>     uint8_t <a class="code" href="classLEQuad.html#a886784d5864c65cf442460cac47d48d3" title="System ID.">sysid_</a>;    
-<a name="l00249"></a><a class="code" href="classLEQuad.html#a6ac149d4dbcc27c9afeae31da7776a24">00249</a>     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> <a class="code" href="classLEQuad.html#a6ac149d4dbcc27c9afeae31da7776a24" title="Configuration.">config_</a>;    
-<a name="l00250"></a>00250 };
+<a name="l00143"></a>00143     <a class="code" href="classLEQuad.html#accaeed2b2f5626b45848455163998481" title="Constructor.">LEQuad</a>( <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp; <a class="code" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2" title="Reference to IMU.">imu</a>,
+<a name="l00144"></a>00144                   <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp; <a class="code" href="classLEQuad.html#abd0a931d4efb860cf55498856440ca1a" title="Reference to barometer.">barometer</a>,
+<a name="l00145"></a>00145                   <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp; <a class="code" href="classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704" title="Reference to GPS.">gps</a>,
+<a name="l00146"></a>00146                   <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp; <a class="code" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d" title="Reference to sonar.">sonar</a>,
+<a name="l00147"></a>00147                   <a class="code" href="classSerial.html">Serial</a>&amp; <a class="code" href="classLEQuad.html#ac681527770ee9dc7f2a98594204b3a42" title="Reference to telemetry serial.">serial_mavlink</a>,
+<a name="l00148"></a>00148                   <a class="code" href="classSatellite.html">Satellite</a>&amp; <a class="code" href="classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535" title="Reference to remote control satellite.">satellite</a>,
+<a name="l00149"></a>00149                   <a class="code" href="classState__display.html" title="Interface class for state display.">State_display</a>&amp; state_display,
+<a name="l00150"></a>00150                   <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; <a class="code" href="classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5" title="Reference to flash storage.">file_flash</a>,
+<a name="l00151"></a>00151                   <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp; <a class="code" href="classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885" title="Reference to battery.">battery</a>,
+<a name="l00152"></a>00152                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#ac1d44059cbf259a74ee7bfe64a5973df" title="Reference to servos structure.">servo_0</a>,
+<a name="l00153"></a>00153                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a7db47f6468c433cc7b03641ed2424b49" title="Reference to servos structure.">servo_1</a>,
+<a name="l00154"></a>00154                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a84b1a445d42ae6aaf4b7e6d4b9684463" title="Reference to servos structure.">servo_2</a>,
+<a name="l00155"></a>00155                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#abd9225ecba6bb2976e573db8acb1b291" title="Reference to servos structure.">servo_3</a>,
+<a name="l00156"></a>00156                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a7604f86734976330548d3ba2c9353060" title="Reference to servos structure.">servo_4</a>,
+<a name="l00157"></a>00157                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a4b64c62b5914e8115b32fa5999dec1b4" title="Reference to servos structure.">servo_5</a>,
+<a name="l00158"></a>00158                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#aad0d8adce0b4eca5f8c9131cad516eb7" title="Reference to servos structure.">servo_6</a>,
+<a name="l00159"></a>00159                   <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; <a class="code" href="classLEQuad.html#a16c282996f4e2266d3f60c06996e00d3" title="Reference to servos structure.">servo_7</a>,
+<a name="l00160"></a>00160                   <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file1,
+<a name="l00161"></a>00161                   <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file2,
+<a name="l00162"></a>00162                   <span class="keyword">const</span> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a>&amp; config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">default_config</a>());
+<a name="l00163"></a>00163 
+<a name="l00168"></a>00168     <span class="keywordtype">void</span> <a class="code" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)">loop</a>(<span class="keywordtype">void</span>);
+<a name="l00169"></a>00169 
+<a name="l00170"></a>00170 <span class="keyword">protected</span>:
+<a name="l00171"></a>00171 
+<a name="l00172"></a>00172     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_main_task(<span class="keywordtype">void</span>);
+<a name="l00173"></a>00173     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_state(<span class="keywordtype">void</span>);
+<a name="l00174"></a>00174     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_communication(<span class="keywordtype">void</span>);
+<a name="l00175"></a>00175     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_data_logging(<span class="keywordtype">void</span>);
+<a name="l00176"></a>00176     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_gps(<span class="keywordtype">void</span>);
+<a name="l00177"></a>00177     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_imu(<span class="keywordtype">void</span>);
+<a name="l00178"></a>00178     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_barometer(<span class="keywordtype">void</span>);
+<a name="l00179"></a>00179     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_sonar(<span class="keywordtype">void</span>);
+<a name="l00180"></a>00180     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_attitude_estimation(<span class="keywordtype">void</span>);
+<a name="l00181"></a>00181     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_position_estimation(<span class="keywordtype">void</span>);
+<a name="l00182"></a>00182     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_stabilisers(<span class="keywordtype">void</span>);
+<a name="l00183"></a>00183     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_navigation(<span class="keywordtype">void</span>);
+<a name="l00184"></a>00184     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_hud(<span class="keywordtype">void</span>);
+<a name="l00185"></a>00185     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_servos(<span class="keywordtype">void</span>);
+<a name="l00186"></a>00186     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_ground_control(<span class="keywordtype">void</span>);
+<a name="l00187"></a>00187 
+<a name="l00188"></a>00188     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> main_task(<span class="keywordtype">void</span>);
+<a name="l00189"></a>00189     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> main_task_func(<a class="code" href="classLEQuad.html" title="MAV class.">LEQuad</a>* mav)
+<a name="l00190"></a>00190     {
+<a name="l00191"></a>00191         <span class="keywordflow">return</span> mav-&gt;main_task();
+<a name="l00192"></a><a class="code" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2">00192</a>     };
+<a name="l00193"></a>00193 
+<a name="l00194"></a>00194     <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>&amp;            <a class="code" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2" title="Reference to IMU.">imu</a>;                
+<a name="l00195"></a><a class="code" href="classLEQuad.html#abd0a931d4efb860cf55498856440ca1a">00195</a>     <a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>&amp;      <a class="code" href="classLEQuad.html#abd0a931d4efb860cf55498856440ca1a" title="Reference to barometer.">barometer</a>;          
+<a name="l00196"></a><a class="code" href="classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704">00196</a>     <a class="code" href="classGps.html" title="Abstract class for GPS.">Gps</a>&amp;            <a class="code" href="classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704" title="Reference to GPS.">gps</a>;                
+<a name="l00197"></a><a class="code" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d">00197</a>     <a class="code" href="classSonar.html" title="Abstarct class for sonars.">Sonar</a>&amp;          <a class="code" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d" title="Reference to sonar.">sonar</a>;              
+<a name="l00198"></a><a class="code" href="classLEQuad.html#ac681527770ee9dc7f2a98594204b3a42">00198</a>     <a class="code" href="classSerial.html">Serial</a>&amp;         <a class="code" href="classLEQuad.html#ac681527770ee9dc7f2a98594204b3a42" title="Reference to telemetry serial.">serial_mavlink</a>;     
+<a name="l00199"></a><a class="code" href="classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535">00199</a>     <a class="code" href="classSatellite.html">Satellite</a>&amp;      <a class="code" href="classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535" title="Reference to remote control satellite.">satellite</a>;          
+<a name="l00200"></a><a class="code" href="classLEQuad.html#a39193f372eda8874cbd98f51677becdb">00200</a>     <a class="code" href="classState__display.html" title="Interface class for state display.">State_display</a>&amp;  <a class="code" href="classLEQuad.html#a39193f372eda8874cbd98f51677becdb" title="Reference to the state display.">state_display_</a>;     
+<a name="l00201"></a><a class="code" href="classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5">00201</a>     <a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp;           <a class="code" href="classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5" title="Reference to flash storage.">file_flash</a>;         
+<a name="l00202"></a><a class="code" href="classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885">00202</a>     <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>&amp;        <a class="code" href="classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885" title="Reference to battery.">battery</a>;            
+<a name="l00203"></a><a class="code" href="classLEQuad.html#ac1d44059cbf259a74ee7bfe64a5973df">00203</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#ac1d44059cbf259a74ee7bfe64a5973df" title="Reference to servos structure.">servo_0</a>;            
+<a name="l00204"></a><a class="code" href="classLEQuad.html#a7db47f6468c433cc7b03641ed2424b49">00204</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a7db47f6468c433cc7b03641ed2424b49" title="Reference to servos structure.">servo_1</a>;            
+<a name="l00205"></a><a class="code" href="classLEQuad.html#a84b1a445d42ae6aaf4b7e6d4b9684463">00205</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a84b1a445d42ae6aaf4b7e6d4b9684463" title="Reference to servos structure.">servo_2</a>;            
+<a name="l00206"></a><a class="code" href="classLEQuad.html#abd9225ecba6bb2976e573db8acb1b291">00206</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#abd9225ecba6bb2976e573db8acb1b291" title="Reference to servos structure.">servo_3</a>;            
+<a name="l00207"></a><a class="code" href="classLEQuad.html#a7604f86734976330548d3ba2c9353060">00207</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a7604f86734976330548d3ba2c9353060" title="Reference to servos structure.">servo_4</a>;            
+<a name="l00208"></a><a class="code" href="classLEQuad.html#a4b64c62b5914e8115b32fa5999dec1b4">00208</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a4b64c62b5914e8115b32fa5999dec1b4" title="Reference to servos structure.">servo_5</a>;            
+<a name="l00209"></a><a class="code" href="classLEQuad.html#aad0d8adce0b4eca5f8c9131cad516eb7">00209</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#aad0d8adce0b4eca5f8c9131cad516eb7" title="Reference to servos structure.">servo_6</a>;            
+<a name="l00210"></a><a class="code" href="classLEQuad.html#a16c282996f4e2266d3f60c06996e00d3">00210</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;          <a class="code" href="classLEQuad.html#a16c282996f4e2266d3f60c06996e00d3" title="Reference to servos structure.">servo_7</a>;            
+<a name="l00211"></a>00211 
+<a name="l00212"></a><a class="code" href="classLEQuad.html#ab49ef09602b739f8680bc22813d57f7c">00212</a>     <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a> <a class="code" href="classLEQuad.html#ab49ef09602b739f8680bc22813d57f7c" title="The joystick parsing structure.">manual_control</a>;                              
+<a name="l00213"></a>00213 
+<a name="l00214"></a><a class="code" href="classLEQuad.html#a84f847a89b139e56f1a0f8c2ab1fbf05">00214</a>     <a class="code" href="classState.html" title="The MAV state.">State</a> <a class="code" href="classLEQuad.html#a84f847a89b139e56f1a0f8c2ab1fbf05" title="The structure with all state information.">state</a>;                                                
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216     <a class="code" href="classScheduler.html" title="Scheduler.">Scheduler</a> scheduler;
+<a name="l00217"></a>00217     <a class="code" href="classMavlink__communication.html">Mavlink_communication</a> mavlink_communication;
+<a name="l00218"></a>00218 
+<a name="l00219"></a>00219     <a class="code" href="structservos__mix__quadcotper__diag__t.html" title="servos mix structure">servos_mix_quadcotper_diag_t</a> servo_mix;
+<a name="l00220"></a>00220 
+<a name="l00221"></a><a class="code" href="classLEQuad.html#a71c51698f364b8b97d126df5ae433a82">00221</a>     <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a> <a class="code" href="classLEQuad.html#a71c51698f364b8b97d126df5ae433a82" title="The attitude estimation structure.">ahrs</a>;                                                
+<a name="l00222"></a>00222     <a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a> ahrs_ekf;
+<a name="l00223"></a>00223 
+<a name="l00224"></a><a class="code" href="classLEQuad.html#af64cf6fcf6709d160a5525decb0ae56e">00224</a>     <a class="code" href="classPosition__estimation.html">Position_estimation</a> <a class="code" href="classLEQuad.html#af64cf6fcf6709d160a5525decb0ae56e" title="The position estimaton structure.">position_estimation</a>;                    
+<a name="l00225"></a>00225 
+<a name="l00226"></a><a class="code" href="classLEQuad.html#aab475348ea9a0b5902650881129a1d19">00226</a>     <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a> <a class="code" href="classLEQuad.html#aab475348ea9a0b5902650881129a1d19" title="The control structure used for rate and attitude modes.">controls</a>;                                 
+<a name="l00227"></a><a class="code" href="classLEQuad.html#a51771979216a0aa025801b1df565d397">00227</a>     <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a> <a class="code" href="classLEQuad.html#a51771979216a0aa025801b1df565d397" title="The control nav structure used for velocity modes.">controls_nav</a>;                             
+<a name="l00228"></a>00228 
+<a name="l00229"></a><a class="code" href="classLEQuad.html#ac926ff33577f58202f891541b2a1713b">00229</a>     <a class="code" href="structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module.">stabilisation_copter_t</a> <a class="code" href="classLEQuad.html#ac926ff33577f58202f891541b2a1713b" title="The stabilisation structure for copter.">stabilisation_copter</a>;                
+<a name="l00230"></a>00230 
+<a name="l00231"></a><a class="code" href="classLEQuad.html#a6348e3194cd2ca65550fefcd0411b20c">00231</a>     <a class="code" href="classNavigation.html" title="The navigation structure.">Navigation</a> <a class="code" href="classLEQuad.html#a6348e3194cd2ca65550fefcd0411b20c" title="The structure to perform GPS navigation.">navigation</a>;                                      
+<a name="l00232"></a>00232     <a class="code" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a> waypoint_handler;
+<a name="l00233"></a>00233 
+<a name="l00234"></a><a class="code" href="classLEQuad.html#aca96fddc8a43b0ca4b51cdffcdf79718">00234</a>     <a class="code" href="classState__machine.html" title="Defines the state machine structure.">State_machine</a> <a class="code" href="classLEQuad.html#aca96fddc8a43b0ca4b51cdffcdf79718" title="The structure for the state machine.">state_machine</a>;                                
+<a name="l00235"></a>00235 
+<a name="l00236"></a><a class="code" href="classLEQuad.html#acdc4072d2bc5f84b926e017f95dfde28">00236</a>     <a class="code" href="structhud__telemetry__t.html" title="The HUD structure to send the MAVLink HUD message.">hud_telemetry_t</a> <a class="code" href="classLEQuad.html#acdc4072d2bc5f84b926e017f95dfde28" title="The HUD structure.">hud</a>;                                        
+<a name="l00237"></a>00237     <a class="code" href="structservos__telemetry__t.html" title="The servo telemetry definition.">servos_telemetry_t</a> servos_telemetry;
+<a name="l00238"></a>00238 
+<a name="l00239"></a>00239     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging_continuous;
+<a name="l00240"></a>00240     <a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>    data_logging_stat;
+<a name="l00241"></a>00241 
+<a name="l00242"></a>00242     <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a>                       command;
+<a name="l00243"></a>00243     <span class="comment">// attitude_controller_t           attitude_controller;</span>
+<a name="l00244"></a>00244     <span class="comment">// velocity_controller_copter_t    velocity_controller;</span>
+<a name="l00245"></a>00245     <span class="comment">// vector_field_waypoint_t         vector_field_waypoint;</span>
+<a name="l00246"></a>00246 
+<a name="l00247"></a><a class="code" href="classLEQuad.html#a886784d5864c65cf442460cac47d48d3">00247</a>     uint8_t <a class="code" href="classLEQuad.html#a886784d5864c65cf442460cac47d48d3" title="System ID.">sysid_</a>;    
+<a name="l00248"></a><a class="code" href="classLEQuad.html#a6ac149d4dbcc27c9afeae31da7776a24">00248</a>     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> <a class="code" href="classLEQuad.html#a6ac149d4dbcc27c9afeae31da7776a24" title="Configuration.">config_</a>;    
+<a name="l00249"></a>00249 };
+<a name="l00250"></a>00250 
 <a name="l00251"></a>00251 
-<a name="l00252"></a>00252 
-<a name="l00253"></a><a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76">00253</a> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">LEQuad::conf_t</a> <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">LEQuad::default_config</a>(uint8_t sysid)
-<a name="l00254"></a>00254 {
-<a name="l00255"></a>00255     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                                                = {};
-<a name="l00256"></a>00256 
-<a name="l00257"></a>00257     conf.state_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">State::default_config</a>();
-<a name="l00258"></a>00258 
-<a name="l00259"></a>00259     conf.data_logging_continuous_config = data_logging_default_config();
-<a name="l00260"></a>00260     conf.data_logging_stat_config       = data_logging_default_config();
-<a name="l00261"></a>00261 
-<a name="l00262"></a>00262     conf.scheduler_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Scheduler::default_config</a>();
-<a name="l00263"></a>00263 
-<a name="l00264"></a>00264     conf.navigation_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Navigation::default_config</a>();
-<a name="l00265"></a>00265 
-<a name="l00266"></a>00266     conf.waypoint_handler_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Mavlink_waypoint_handler::default_config</a>();
-<a name="l00267"></a>00267 
-<a name="l00268"></a>00268     conf.qfilter_config = qfilter_default_config();
-<a name="l00269"></a>00269 
-<a name="l00270"></a>00270     conf.ahrs_ekf_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Ahrs_ekf::default_config</a>();
-<a name="l00271"></a>00271 
-<a name="l00272"></a>00272     conf.position_estimation_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Position_estimation::default_config</a>();
-<a name="l00273"></a>00273 
-<a name="l00274"></a>00274     conf.stabilisation_copter_config = stabilisation_copter_default_config();
-<a name="l00275"></a>00275 
-<a name="l00276"></a>00276     conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
-<a name="l00277"></a>00277 
-<a name="l00278"></a>00278     conf.manual_control_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Manual_control::default_config</a>();
-<a name="l00279"></a>00279 
-<a name="l00280"></a>00280     conf.remote_config = remote_default_config();
-<a name="l00281"></a>00281 
-<a name="l00282"></a>00282     conf.attitude_controller_config = attitude_controller_default_config();
-<a name="l00283"></a>00283 
-<a name="l00284"></a>00284     conf.velocity_controller_copter_config = velocity_controller_copter_default_config();
-<a name="l00285"></a>00285 
-<a name="l00286"></a>00286     <span class="comment">/* Mavlink communication config */</span>
-<a name="l00287"></a>00287     <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">Mavlink_communication::conf_t</a> mavlink_communication_config   = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Mavlink_communication::default_config</a>(sysid);
-<a name="l00288"></a>00288     mavlink_communication_config.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>.<a class="code" href="structMavlink__message__handler_1_1conf__t.html#a1edac2c7fcdf5491869ba13778db10f5" title="Indicates whether debug message are written for every incoming message.">debug</a>    = <span class="keyword">false</span>;
-<a name="l00289"></a>00289     mavlink_communication_config.<a class="code" href="structMavlink__communication_1_1conf__t.html#ade390a33759f7cd8166485b97fd5ce0c" title="Configuration for the module onboard parameters.">onboard_parameters_config</a>.<a class="code" href="structOnboard__parameters_1_1conf__t.html#a6a378df9b1df1e20a930ef041e21062b" title="Indicates if debug messages should be printed for each param change.">debug</a> = <span class="keyword">true</span>;
-<a name="l00290"></a>00290     mavlink_communication_config.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>.<a class="code" href="structMavlink__stream_1_1conf__t.html#acf2c7a3d64b1a7e58b8bfc1e5256fbed" title="Debug flag.">debug</a>     = <span class="keyword">false</span>;
-<a name="l00291"></a>00291     conf.mavlink_communication_config = mavlink_communication_config;
-<a name="l00292"></a>00292 
-<a name="l00293"></a>00293     <span class="keywordflow">return</span> conf;
-<a name="l00294"></a>00294 };
-<a name="l00295"></a>00295 
-<a name="l00296"></a>00296 <span class="preprocessor">#endif </span><span class="comment">/* LEQUAD_HPP_ */</span>
+<a name="l00252"></a><a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76">00252</a> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">LEQuad::conf_t</a> <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">LEQuad::default_config</a>(uint8_t sysid)
+<a name="l00253"></a>00253 {
+<a name="l00254"></a>00254     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                                                = {};
+<a name="l00255"></a>00255 
+<a name="l00256"></a>00256     conf.state_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">State::default_config</a>();
+<a name="l00257"></a>00257 
+<a name="l00258"></a>00258     conf.data_logging_continuous_config = data_logging_default_config();
+<a name="l00259"></a>00259     conf.data_logging_stat_config       = data_logging_default_config();
+<a name="l00260"></a>00260 
+<a name="l00261"></a>00261     conf.scheduler_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Scheduler::default_config</a>();
+<a name="l00262"></a>00262 
+<a name="l00263"></a>00263     conf.navigation_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Navigation::default_config</a>();
+<a name="l00264"></a>00264 
+<a name="l00265"></a>00265     conf.waypoint_handler_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Mavlink_waypoint_handler::default_config</a>();
+<a name="l00266"></a>00266 
+<a name="l00267"></a>00267     conf.qfilter_config = qfilter_default_config();
+<a name="l00268"></a>00268 
+<a name="l00269"></a>00269     conf.ahrs_ekf_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Ahrs_ekf::default_config</a>();
+<a name="l00270"></a>00270 
+<a name="l00271"></a>00271     conf.position_estimation_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Position_estimation::default_config</a>();
+<a name="l00272"></a>00272 
+<a name="l00273"></a>00273     conf.stabilisation_copter_config = stabilisation_copter_default_config();
+<a name="l00274"></a>00274 
+<a name="l00275"></a>00275     conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
+<a name="l00276"></a>00276 
+<a name="l00277"></a>00277     conf.manual_control_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Manual_control::default_config</a>();
+<a name="l00278"></a>00278 
+<a name="l00279"></a>00279     conf.remote_config = remote_default_config();
+<a name="l00280"></a>00280 
+<a name="l00281"></a>00281     conf.attitude_controller_config = attitude_controller_default_config();
+<a name="l00282"></a>00282 
+<a name="l00283"></a>00283     conf.velocity_controller_copter_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Velocity_controller_copter::default_config</a>();
+<a name="l00284"></a>00284 
+<a name="l00285"></a>00285     <span class="comment">/* Mavlink communication config */</span>
+<a name="l00286"></a>00286     <a class="code" href="structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication.">Mavlink_communication::conf_t</a> mavlink_communication_config   = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Mavlink_communication::default_config</a>(sysid);
+<a name="l00287"></a>00287     mavlink_communication_config.<a class="code" href="structMavlink__communication_1_1conf__t.html#aaecba32e2743d10774c7fa56fbd6139c" title="Configuration for the module message handler.">message_handler_config</a>.<a class="code" href="structMavlink__message__handler_1_1conf__t.html#a1edac2c7fcdf5491869ba13778db10f5" title="Indicates whether debug message are written for every incoming message.">debug</a>    = <span class="keyword">false</span>;
+<a name="l00288"></a>00288     mavlink_communication_config.<a class="code" href="structMavlink__communication_1_1conf__t.html#ade390a33759f7cd8166485b97fd5ce0c" title="Configuration for the module onboard parameters.">onboard_parameters_config</a>.<a class="code" href="structOnboard__parameters_1_1conf__t.html#a6a378df9b1df1e20a930ef041e21062b" title="Indicates if debug messages should be printed for each param change.">debug</a> = <span class="keyword">true</span>;
+<a name="l00289"></a>00289     mavlink_communication_config.<a class="code" href="structMavlink__communication_1_1conf__t.html#a797bac0f7a78342bce13ab528e172036" title="Configuration for the module MAVLink stream.">mavlink_stream_config</a>.<a class="code" href="structMavlink__stream_1_1conf__t.html#acf2c7a3d64b1a7e58b8bfc1e5256fbed" title="Debug flag.">debug</a>     = <span class="keyword">false</span>;
+<a name="l00290"></a>00290     conf.mavlink_communication_config = mavlink_communication_config;
+<a name="l00291"></a>00291 
+<a name="l00292"></a>00292     <span class="keywordflow">return</span> conf;
+<a name="l00293"></a>00293 };
+<a name="l00294"></a>00294 
+<a name="l00295"></a>00295 <span class="preprocessor">#endif </span><span class="comment">/* LEQUAD_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -374,7 +373,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 2 2016 15:33:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Aug 3 2016 08:54:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

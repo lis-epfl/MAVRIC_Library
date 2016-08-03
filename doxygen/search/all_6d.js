@@ -8,7 +8,7 @@ var searchData=
   ['magnetometer',['Magnetometer',['../classMagnetometer.html',1,'Magnetometer'],['../structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0',1,'imu_conf_t::magnetometer()'],['../classSimulation.html#ac45b5eab0d4031225b402079d941823b',1,'Simulation::magnetometer()']]],
   ['magnetometer_5fsim',['Magnetometer_sim',['../classMagnetometer__sim.html',1,'Magnetometer_sim'],['../classMagnetometer__sim.html#a6c85e1deb5c9b68cf8e595ae276056af',1,'Magnetometer_sim::Magnetometer_sim()']]],
   ['mak2',['mak2',['../structubx__cfg__nav__expert__settings__t.html#a03ddf27e7a4a029a3fb7a24a5865599b',1,'ubx_cfg_nav_expert_settings_t']]],
-  ['manual_5fcontrol',['Manual_control',['../classManual__control.html',1,'Manual_control'],['../classLEQuad.html#ab49ef09602b739f8680bc22813d57f7c',1,'LEQuad::manual_control()'],['../classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b',1,'Manual_control::Manual_control()']]],
+  ['manual_5fcontrol',['Manual_control',['../classManual__control.html',1,'Manual_control'],['../classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b',1,'Manual_control::Manual_control()'],['../classLEQuad.html#ab49ef09602b739f8680bc22813d57f7c',1,'LEQuad::manual_control()']]],
   ['manual_5fcontrol_5f',['manual_control_',['../classState__machine.html#a77bc60b6c71ba27ef92ccf021de2d17f',1,'State_machine']]],
   ['mask',['mask',['../structubx__cfg__nav__settings__t.html#a7affa443e519b735a2bac1197a6b67f1',1,'ubx_cfg_nav_settings_t']]],
   ['mask1',['mask1',['../structubx__cfg__nav__expert__settings__t.html#a238e1b79b8880f1f4a1ebdccf2e2bd79',1,'ubx_cfg_nav_expert_settings_t']]],

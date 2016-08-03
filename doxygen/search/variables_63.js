@@ -41,6 +41,7 @@ var searchData=
   ['configure_5fgps',['configure_gps',['../structgps__t.html#a4947c0cc205ec83fe10900273a2dc1c7',1,'gps_t']]],
   ['configure_5ftimer',['configure_timer',['../structgps__t.html#aa4d3be82d28fb99dcc48f36e93ab46e2',1,'gps_t']]],
   ['connection_5flost',['connection_lost',['../structState_1_1conf__t.html#aeb0c4f23300021dda36d418f1b577737',1,'State::conf_t::connection_lost()'],['../classState.html#aaebfe88d27bc9add93483b7a813bc427',1,'State::connection_lost()']]],
+  ['control_5fframe',['control_frame',['../structVelocity__controller__copter_1_1conf__t.html#a5363136f98233f8120e450a6f0d50902',1,'Velocity_controller_copter::conf_t']]],
   ['control_5fmode',['control_mode',['../structcontrol__command__t.html#a87d5ac00a916836b082bec211ac8bc2c',1,'control_command_t']]],
   ['control_5fsource',['control_source',['../structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392',1,'Manual_control::conf_t']]],
   ['control_5fsource_5f',['control_source_',['../classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0',1,'Manual_control']]],
