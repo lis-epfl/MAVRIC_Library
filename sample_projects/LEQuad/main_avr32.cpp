@@ -61,8 +61,9 @@ extern "C"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"
 
-#include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
+// #include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 }
+#define MAVLINK_SYS_ID 1
 
 // #include "hal/common/dbg.hpp"
 
@@ -74,7 +75,7 @@ int main(void)
     // Create board
     // -------------------------------------------------------------------------
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
-    board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
+    // board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
     Megafly_rev4 board = Megafly_rev4(board_config);
 
     // Board initialisation
