@@ -142,7 +142,6 @@ bool Bmp085::update(void)
 
     float altitude_raw_old;
     float altitude_filtered_old;
-    float altitude_median;
     float new_speed_lf_raw;
     float new_speed_lf;
 
@@ -242,19 +241,19 @@ bool Bmp085::update(void)
             last_altitudes_[2] = altitude_raw_;
 
             // Apply median filter on last 3 altitudes
-            altitude_median = maths_median_filter_3x(last_altitudes_[0], last_altitudes_[1], last_altitudes_[2]);
+            altitude_raw_ = maths_median_filter_3x(last_altitudes_[0], last_altitudes_[1], last_altitudes_[2]);
 
             // Keep old, filtered altitude
             altitude_filtered_old = altitude_filtered;
 
             // Low pass filter the altitude, only if this is not a spike
-            if (maths_f_abs(altitude_median - altitude_filtered_old) < 15.0f)
+            if (maths_f_abs(altitude_raw_ - altitude_filtered_old) < 15.0f)
             {
-                altitude_filtered = (BARO_ALT_LPF * altitude_filtered_old) + (1.0f - BARO_ALT_LPF) * altitude_median;
+                altitude_filtered = (BARO_ALT_LPF * altitude_filtered_old) + (1.0f - BARO_ALT_LPF) * altitude_raw_;
             }
             else
             {
-                altitude_filtered = altitude_median;
+                altitude_filtered = altitude_raw_;
             }
             
             // remove bias
