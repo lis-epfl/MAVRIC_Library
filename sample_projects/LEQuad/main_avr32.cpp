@@ -40,7 +40,7 @@
 
 #include "sample_projects/LEQuad/lequad.hpp"
 // DOME SPECIFIC
-#include "sample_projects/LEQuad/LEQuad_dronedome.hpp"
+#include "sample_projects/LEQuad/lequad_dronedome.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
