@@ -111,9 +111,12 @@ Bmp085::Bmp085(I2c& i2c):
     pressure_           = 0.0f;
     temperature_        = 0.0f;
     altitude_gf_        = 0.0f;
+    altitude_gf_raw_    = 0.0f;
     altitude_filtered   = 0.0f;
+    altitude_raw_       = 0.0f;
     altitude_bias_gf_   = 0.0f;
     speed_lf_           = 0.0f;
+    speed_lf_raw_       = 0.0f;
     last_update_us_     = 0.0f;
     temperature_        = 24.0f;    // Nice day
 }
@@ -137,8 +140,10 @@ bool Bmp085::update(void)
 {
     bool res            = true;
 
+    float altitude_raw_old;
     float altitude_filtered_old;
-    float altitude_raw;
+    float altitude_median;
+    float new_speed_lf_raw;
     float new_speed_lf;
 
     int32_t UT, UP, B3, B5, B6, X1, X2, X3, p;
@@ -223,39 +228,44 @@ bool Bmp085::update(void)
             // Store current pressure
             pressure_ = p;
 
+            // Keep old raw altitude value
+            altitude_raw_old = altitude_raw_;
+
             // Compute new altitude from pressure
-            altitude_raw = altitude_from_pressure(pressure_, 0);
+            altitude_raw_ = altitude_from_pressure(pressure_, 0);
 
             // Update circular buffer with last 3 altitudes
             for (int32_t i = 0; i < 2; i++)
             {
                 last_altitudes_[i] = last_altitudes_[i + 1];
             }
-            last_altitudes_[2] = altitude_raw;
+            last_altitudes_[2] = altitude_raw_;
 
             // Apply median filter on last 3 altitudes
-            altitude_raw = maths_median_filter_3x(last_altitudes_[0], last_altitudes_[1], last_altitudes_[2]);
+            altitude_median = maths_median_filter_3x(last_altitudes_[0], last_altitudes_[1], last_altitudes_[2]);
 
             // Keep old, filtered altitude
             altitude_filtered_old = altitude_filtered;
 
             // Low pass filter the altitude, only if this is not a spike
-            if (maths_f_abs(altitude_raw - altitude_filtered_old) < 15.0f)
+            if (maths_f_abs(altitude_median - altitude_filtered_old) < 15.0f)
             {
-                altitude_filtered = (BARO_ALT_LPF * altitude_filtered_old) + (1.0f - BARO_ALT_LPF) * altitude_raw;
+                altitude_filtered = (BARO_ALT_LPF * altitude_filtered_old) + (1.0f - BARO_ALT_LPF) * altitude_median;
             }
             else
             {
-                altitude_filtered = altitude_raw;
+                altitude_filtered = altitude_median;
             }
             
             // remove bias
+            altitude_gf_raw_ = altitude_raw_ - altitude_bias_gf_;
             altitude_gf_ = altitude_filtered - altitude_bias_gf_;
 
             // Time interval since last update
             dt_s_ = (time_keeper_get_us() - last_update_us_) / 1000000.0f;
 
             // Compute new vertical speed from two last filtered altitudes
+            new_speed_lf_raw = - (altitude_raw_ - altitude_raw_old) / dt_s_;
             new_speed_lf = - (altitude_filtered - altitude_filtered_old) / dt_s_;
 
             // Remove spikes
@@ -265,6 +275,7 @@ bool Bmp085::update(void)
             }
 
             // Low pass filter vertical speed
+            speed_lf_raw_ = new_speed_lf_raw;
             speed_lf_ = (VARIO_LPF) * speed_lf_ + (1.0f - VARIO_LPF) * (new_speed_lf);
 
             // Update timing

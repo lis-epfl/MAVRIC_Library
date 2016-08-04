@@ -97,6 +97,16 @@ public:
 
 
     /**
+     * \brief   Get the altitude in meters above sea level (not filtered)
+     *
+     * \detail  Global frame: (>0 means upward)
+     *
+     * \return  Value
+     */
+    const float& altitude_gf_raw(void) const;
+
+
+    /**
      * \brief   Get the vertical speed in meters/second
      *
      * \detail  NED frame: (>0 means downward)
@@ -104,6 +114,16 @@ public:
      * \return  Value
      */
     const float& vertical_speed_lf(void) const;
+
+
+    /**
+     * \brief   Get the vertical speed in meters/second (not filtered)
+     *
+     * \detail  NED frame: (>0 means downward)
+     *
+     * \return  Value
+     */
+    const float& vertical_speed_lf_raw(void) const;
 
 
     /**
@@ -121,7 +141,7 @@ public:
     bool has_been_calibrated() const;
 
     /**
-     * \brief   Correct altitude offset using current altitude
+     * \brief   Correct altitude offset using current altitude. Warning: This function uses the lopw-pass filtered altitude, so it should be used in a static environment (to be sure that the altitude converged)
      *
      * \param   current_altitude_gf     Current altitude in global frame
      */
@@ -144,9 +164,12 @@ protected:
     float pressure_;            ///< Measured pressure
     float temperature_;         ///< Measured temperature
     float altitude_gf_;         ///< Measured altitude (global frame)
-    float altitude_filtered;   ///< Measured altitude without bias removal
+    float altitude_gf_raw_;     ///< Measured altitude (global frame, not filtered)
+    float altitude_filtered;    ///< Measured altitude without bias removal
+    float altitude_raw_;        ///< Measured altitude without bias removal (not filtered)
     float altitude_bias_gf_;    ///< Offset of the barometer sensor for matching GPS altitude value
     float speed_lf_;            ///< Vario altitude speed (ned frame)
+    float speed_lf_raw_;        ///< Vario altitude speed (ned frame, not filtered)
     float last_update_us_;      ///< Time of the last update of the barometer
     bool has_been_calibrated_;  ///< Flag stating if the barometer has been calibrated
 };

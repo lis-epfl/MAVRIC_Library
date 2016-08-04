@@ -333,7 +333,7 @@ bool INS_kf::update(void)
               }
 
               // Run kalman Update
-              z_baro = barometer_.altitude_gf() - origin_.altitude;
+              z_baro = barometer_.altitude_gf_raw() - origin_.altitude;
               Kalman<11,3,3>::update(Mat<1,1>(z_baro),
                                      H_baro_,
                                      R_baro_);

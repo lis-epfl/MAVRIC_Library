@@ -72,9 +72,21 @@ const float& Barometer::altitude_gf(void) const
 }
 
 
+const float& Barometer::altitude_gf_raw(void) const
+{
+    return altitude_gf_raw_;
+}
+
+
 const float& Barometer::vertical_speed_lf(void) const
 {
     return speed_lf_;
+}
+
+
+const float& Barometer::vertical_speed_lf_raw(void) const
+{
+    return speed_lf_raw_;
 }
 
 
@@ -92,6 +104,7 @@ void Barometer::calibrate_bias(float current_altitude_gf)
 {
     altitude_bias_gf_ = altitude_filtered - current_altitude_gf;
     altitude_gf_ = current_altitude_gf;
+    altitude_gf_raw_ = current_altitude_gf;
     has_been_calibrated_ = true;
 }
 
