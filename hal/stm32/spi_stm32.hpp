@@ -61,9 +61,9 @@ extern "C"
  */
 typedef enum
 {
-    STM32_SPI1             = 0,
-    STM32_SPI2             = 1,
-    STM32_SPI3             = 2,
+    STM32_SPI1             = SPI1,
+    STM32_SPI2             = SPI2,
+    STM32_SPI3             = SPI3,
 } spi_stm32_devices_t;
 
 
@@ -125,7 +125,7 @@ public:
      * \return  true        Data successfully written
      * \return  false       Data not written
      */
-    bool write(uint8_t* bytes, uint32_t size = 1);
+    bool write(uint8_t* bytes, uint32_t nbytes = 1);
 
 
     /**
@@ -138,7 +138,7 @@ public:
      * \return  true        Data successfully read
      * \return  false       Data not read
      */
-    bool read(uint8_t* in_buffer, uint32_t nbytes);
+    bool read(uint8_t* in_buffer, uint32_t nbytes = 1);
 
     /**
      * \brief   Write and Read data to/from the SPI bus
@@ -152,16 +152,11 @@ public:
      */
     bool transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes);
 
-    /**
-    * temporary functions used to test spi
-    */
-    bool send(uint16_t value);
-    uint16_t get(int reg);
-
 
 private:
 
     spi_stm32_conf_t            config_;        ///< Configuration
+    spi_stm32_devices_t         spi_;           ///< Device ID
 
 };
 

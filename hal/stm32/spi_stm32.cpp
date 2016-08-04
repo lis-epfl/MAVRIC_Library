@@ -40,13 +40,15 @@
  ******************************************************************************/
 
 #include "hal/stm32/spi_stm32.hpp"
+#include <cstddef>
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 Spi_stm32::Spi_stm32(spi_stm32_conf_t spi_config):
-    config_(spi_config)
+    config_(spi_config),
+    spi_(spi_config.spi_device)
 {}
 
 
@@ -54,6 +56,8 @@ bool Spi_stm32::init(void)
 {
     uint32_t cr_tmp;
     bool     ret = true;
+
+    // SPI IOs configurations
 
     // MISO init
     gpio_mode_setup(config_.miso_gpio_config.port, GPIO_MODE_AF, config_.miso_gpio_config.pull, config_.miso_gpio_config.pin);
@@ -74,43 +78,44 @@ bool Spi_stm32::init(void)
     gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
     gpio_mode_setup(config_.nss_gpio_config.port, config_.nss_gpio_config.dir, config_.nss_gpio_config.pull, config_.nss_gpio_config.pin);
 
-    cr_tmp =    SPI_CR1_BAUDRATE_FPCLK_DIV_8 |
-                SPI_CR1_MSTR |
-                SPI_CR1_SPE  |
-                SPI_CR1_CPHA |
-                SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE;
+    // SPI configuration
+    cr_tmp =    SPI_CR1_BAUDRATE_FPCLK_DIV_8 |   // Clock frequency
+                SPI_CR1_MSTR |                   // Setting device as master
+                SPI_CR1_SPE  |                   // SPI enabled
+                SPI_CR1_CPHA |                   // Clock Phase
+                SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE; // Clock Polarity
 
     switch (config_.spi_device)
     {
         case STM32_SPI1:
             rcc_periph_clock_enable(RCC_SPI1);
-            SPI_CR2(SPI1) |= SPI_CR2_SSOE;
-            SPI_CR1(SPI1)  = cr_tmp;
         break;
 
         case STM32_SPI2:
             rcc_periph_clock_enable(RCC_SPI2);
-            SPI_CR2(SPI2) |= SPI_CR2_SSOE;
-            SPI_CR1(SPI2)  = cr_tmp;
         break;
 
         case STM32_SPI3:
             rcc_periph_clock_enable(RCC_SPI3);
-            SPI_CR2(SPI3) |= SPI_CR2_SSOE;
-            SPI_CR1(SPI3)  = cr_tmp;
         break;
 
         default:
             ret = false;
     }
 
-    return true;
+    // Hardware NSS management, NSS ouput enabled
+    SPI_CR2(spi_) |= SPI_CR2_SSOE;
+    SPI_CR1(spi_)  = cr_tmp;
+
+    return ret;
 }
 
 
-bool Spi_stm32::write(uint8_t* bytes, uint32_t size)
+bool Spi_stm32::write(uint8_t* bytes, uint32_t nbytes)
 {
-    bool ret = true;
+    bool ret;
+
+    ret = transfer(bytes, NULL, nbytes);
 
     return ret;
 }
@@ -118,7 +123,9 @@ bool Spi_stm32::write(uint8_t* bytes, uint32_t size)
 
 bool Spi_stm32::read(uint8_t* in_buffer, uint32_t nbytes)
 {
-    bool ret = true;
+    bool ret;
+
+    ret = transfer(NULL, in_buffer, nbytes);
 
     return ret;
 }
@@ -127,87 +134,31 @@ bool Spi_stm32::transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbyte
 {
     bool ret = true;
 
-    return ret;
-}
+    // slave select
+    gpio_clear(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
 
-bool Spi_stm32::send(uint16_t value)
-{
-    //uint16_t value  = 0x01;
-    uint16_t reg    = 0x02;
-
-    bool     ret    = true;
-
-    gpio_clear(config_.nss_gpio_config.port, config_.nss_gpio_config.pin); /* CS* select */
-
-    switch (config_.spi_device)
+    for (uint32_t i = 0; i < nbytes; i++)
     {
-        case STM32_SPI1:
-            spi_send(SPI1, reg);
-            (void) spi_read(SPI1);
-            spi_send(SPI1, value);
-            (void) spi_read(SPI1);
-        break;
-
-        case STM32_SPI2:
-            spi_send(SPI2, reg);
-            (void) spi_read(SPI2);
-            spi_send(SPI2, value);
-            (void) spi_read(SPI2);
-        break;
-
-        case STM32_SPI3:
-            spi_send(SPI3, reg);
-            (void) spi_read(SPI3);
-            spi_send(SPI3, value);
-            (void) spi_read(SPI3);
-        break;
-
-        default:
-            ret = false;
+        if (out_buffer)
+        {
+            spi_send(spi_, out_buffer[i]);
+        }
+        else
+        {
+            spi_send(spi_, 0);
+        }
+        if (in_buffer)
+        {
+            in_buffer[i] = spi_read(spi_);   
+        }
+        else
+        {
+            (void)spi_read(spi_); 
+        }
     }
 
-    gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin); /* CS* deselect */
+    // slave deselect
+    gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
+
     return ret;
-}
-
-uint16_t Spi_stm32::get(int reg)
-{
-    uint16_t d1 = 0, d2 = 0;
-
-    bool     ret = true;
-
-    gpio_clear(config_.nss_gpio_config.port, config_.nss_gpio_config.pin); /* CS* select */
-
-    switch (config_.spi_device)
-    {
-        case STM32_SPI1:
-            spi_send(SPI1, d1);
-            d2 = spi_read(SPI1);
-            d2 <<= 8;
-            spi_send(SPI1, 0);
-            d2 |= spi_read(SPI1);
-        break;
-
-        case STM32_SPI2:
-            spi_send(SPI2, d1);
-            d2 = spi_read(SPI2);
-            d2 <<= 8;
-            spi_send(SPI2, 0);
-            d2 |= spi_read(SPI2);
-        break;
-
-        case STM32_SPI3:
-            spi_send(SPI3, d1);
-            d2 = spi_read(SPI3);
-            d2 <<= 8;
-            spi_send(SPI3, 0);
-            d2 |= spi_read(SPI3);
-        break;
-
-        default:
-            ret = false;
-    }
-
-    gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin); /* CS* deselect */
-    return d2;
 }
