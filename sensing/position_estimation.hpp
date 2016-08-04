@@ -203,8 +203,9 @@ public:
     float kp_alt_sonar;                     ///< Gain to correct the Z position estimation from the sonar
     float kp_vel_sonar;                     ///< Gain to correct the Z velocity estimation from the sonar
 
-private:
+
     local_position_t local_position;        ///< Local position
+private:
     std::array<float,3> vel;                ///< 3D velocity in ned frame
     std::array<float,3> vel_bf;             ///< 3D velocity in body frame
 

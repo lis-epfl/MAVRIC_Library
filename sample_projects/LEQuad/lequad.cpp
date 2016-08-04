@@ -394,18 +394,18 @@ bool LEQuad::init_ins_kf(void)
     // ret &= data_logging_continuous.add_field(&ins_kf.ori.longitude, "ins_ori_lon", 10);
     // ret &= data_logging_continuous.add_field(&ins_kf.ori.latitude, "ins_ori_lat", 10);
     // ret &= data_logging_continuous.add_field(&ins_kf.ori.altitude, "ins_ori_alt", 10);
-    ret &= data_logging_continuous.add_field(&ins_kf.gps_local[0], "ins_loc_x", 3);
-    ret &= data_logging_continuous.add_field(&ins_kf.gps_local[1], "ins_loc_y", 3);
-    ret &= data_logging_continuous.add_field(&ins_kf.gps_local[2], "ins_loc_z", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.gps_velocity[0], "ins_kf_gpsvelx", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.gps_velocity[1], "ins_kf_gpsvely", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.gps_velocity[2], "ins_kf_gpsvelz", 3);
-    ret &= data_logging_continuous.add_field(&ins_kf.position_lf()[0], "ins_x", 3);
-    ret &= data_logging_continuous.add_field(&ins_kf.position_lf()[1], "ins_y", 3);
-    ret &= data_logging_continuous.add_field(&ins_kf.position_lf()[2], "ins_z", 3);
-    ret &= data_logging_continuous.add_field(&position_estimation.position_lf()[0], "pos_x", 3);
-    ret &= data_logging_continuous.add_field(&position_estimation.position_lf()[1], "pos_y", 3);
-    ret &= data_logging_continuous.add_field(&position_estimation.position_lf()[2], "pos_z", 3);
+
+    // ret &= data_logging_continuous.add_field(&ins_kf.gps_local[0], "ins_loc_x", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.gps_local[1], "ins_loc_y", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.gps_local[2], "ins_loc_z", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.x()[0], "ins_x", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.x()[1], "ins_y", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.x()[2], "ins_z", 3);
+    // ret &= data_logging_continuous.add_field(&position_estimation.local_position[0], "pos_x", 3);
+    // ret &= data_logging_continuous.add_field(&position_estimation.local_position[1], "pos_y", 3);
+    // ret &= data_logging_continuous.add_field(&position_estimation.local_position[2], "pos_z", 3);
+
+    ret &= data_logging_continuous.add_field(&ins_kf.z_baro, "ins_kf_baro", 3);
 
     // ret &= data_logging_continuous.add_field(&position_estimation.position_lf()[0], "pos_x", 3);
     // ret &= data_logging_continuous.add_field(&position_estimation.position_lf()[1], "pos_y", 3);
