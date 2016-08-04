@@ -342,14 +342,14 @@ joystick_conf_t joystick_default_config()
     joystick_conf_t conf;
     conf.throttle_mode = joystick_throttle_mode_t::ZERO_DOWN;
     /* attitude scales */
-    conf.scale_attitude.x = 0.8f;   // pitch
+    conf.scale_attitude.x = -0.8f;  // pitch (negativ scale to invert for QGC >= 2.9)
     conf.scale_attitude.y = 0.8f;   // roll
     conf.scale_attitude.z = 1;      // thrust
     conf.scale_attitude.r = 0.8f;   // yaw
     /* velocity scales */
     conf.scale_velocity.x = 8.0f;   // x
     conf.scale_velocity.y = 8.0f;   // y
-    conf.scale_velocity.z = 1.5f;   // z
+    conf.scale_velocity.z = -1.5f;   // z  (negativ since z is pointing down)
     conf.scale_velocity.r = 0.8f;   // yaw
     return conf;
 }

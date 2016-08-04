@@ -129,17 +129,17 @@ Mav_mode joystick_get_mode(joystick_t* joystick, const Mav_mode current_mode)
 
 void joystick_get_velocity_vector(const joystick_t* joystick, control_command_t* controls)
 {
-    controls->tvel[X] = - joystick->channels.x  * joystick->scale_velocity.x;
+    controls->tvel[X] =   joystick->channels.x  * joystick->scale_velocity.x;
     controls->tvel[Y] =   joystick->channels.y  * joystick->scale_velocity.x;
 
     controls->rpy[YAW] =  joystick->channels.r * joystick->scale_velocity.r;
 
     if(joystick->throttle_mode == joystick_throttle_mode_t::ZERO_CENTER)
     {
-        controls->tvel[Z] = - joystick->channels.z * joystick->scale_velocity.z;
+        controls->tvel[Z] = joystick->channels.z * joystick->scale_velocity.z;
     }else
     {
-        controls->tvel[Z] = - (2 * joystick->channels.z - 1) * joystick->scale_velocity.z;
+        controls->tvel[Z] = (2 * joystick->channels.z - 1) * joystick->scale_velocity.z;
     }
 }
 
