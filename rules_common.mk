@@ -82,6 +82,7 @@ LIB_SRCS += drivers/battery.cpp
 LIB_SRCS += drivers/barometer.cpp
 LIB_SRCS += drivers/barometer_telemetry.cpp
 LIB_SRCS += drivers/barometer_bmp085.cpp
+LIB_SRCS += drivers/barometer_ms5611.cpp
 LIB_SRCS += drivers/flow_px4.cpp
 LIB_SRCS += drivers/gps_ublox.cpp
 LIB_SRCS += drivers/gps_telemetry.cpp
