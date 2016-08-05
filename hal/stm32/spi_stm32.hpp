@@ -44,17 +44,11 @@
 
 #include "hal/common/spi.hpp"
 #include "hal/stm32/gpio_stm32.hpp"
+
 extern "C"
 {
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/spi.h>
 }
-
-// extern "C"
-// {
-// #include "libs/asf/avr32/drivers/spi/spi.h"
-// }
 
 /**
  * @brief   Enumerate the possible SPIs
@@ -85,6 +79,7 @@ typedef struct
 {
     spi_stm32_devices_t     spi_device;
     spi_stm32_mode_t        mode;
+    uint8_t                 clk_div;            ///< fp clock division
     gpio_stm32_conf_t       miso_gpio_config;   ///< Master Out Slave In config
     gpio_stm32_conf_t       mosi_gpio_config;   ///< Master In Slave Out config
     gpio_stm32_conf_t       nss_gpio_config;    ///< Slave Select config

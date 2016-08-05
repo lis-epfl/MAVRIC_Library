@@ -42,6 +42,12 @@
 #include "hal/stm32/spi_stm32.hpp"
 #include <cstddef>
 
+extern "C"
+{
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -79,11 +85,10 @@ bool Spi_stm32::init(void)
     gpio_mode_setup(config_.nss_gpio_config.port, config_.nss_gpio_config.dir, config_.nss_gpio_config.pull, config_.nss_gpio_config.pin);
 
     // SPI configuration
-    cr_tmp =    SPI_CR1_BAUDRATE_FPCLK_DIV_8 |   // Clock frequency
-                SPI_CR1_MSTR |                   // Setting device as master
-                SPI_CR1_SPE  |                   // SPI enabled
-                SPI_CR1_CPHA |                   // Clock Phase
-                SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE; // Clock Polarity
+    cr_tmp =    config_.clk_div |   // Clock frequency   
+                SPI_CR1_MSTR    |   // Setting device as master
+                SPI_CR1_SPE     |   // SPI enabled
+                SPI_CR1_CPHA;       // Clock Phase
 
     switch (config_.spi_device)
     {

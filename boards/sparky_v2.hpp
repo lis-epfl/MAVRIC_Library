@@ -148,7 +148,7 @@ public:
     Servo                   servo_5_;
     Servo                   servo_6_;
     Servo                   servo_7_;
-    //Spi_stm32               spi_1_;
+    Spi_stm32               spi_1_;
     Spi_stm32               spi_3_;
     State_display_sparky_v2 state_display_sparky_v2_;
 
@@ -280,7 +280,7 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // -------------------------------------------------------------------------
     conf.spi_config[0].spi_device       = STM32_SPI1;
     conf.spi_config[0].mode             = STM32_SPI_IN_OUT;
-    //conf.spi_config[0].option         = ...;
+    conf.spi_config[0].clk_div          = SPI_CR1_BAUDRATE_FPCLK_DIV_128;
 
     conf.spi_config[0].miso_gpio_config.port    = GPIO_STM32_PORT_A;
     conf.spi_config[0].miso_gpio_config.pin     = GPIO_STM32_PIN_6;
@@ -300,16 +300,16 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.spi_config[0].nss_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
     conf.spi_config[0].nss_gpio_config.alt_fct  = GPIO_STM32_AF_5;
 
-    conf.spi_config[0].sck_gpio_config.port    = GPIO_STM32_PORT_A;
-    conf.spi_config[0].sck_gpio_config.pin     = GPIO_STM32_PIN_5;
-    conf.spi_config[0].sck_gpio_config.dir     = GPIO_OUTPUT;
-    conf.spi_config[0].sck_gpio_config.pull    = GPIO_PULL_UPDOWN_DOWN;
-    conf.spi_config[0].sck_gpio_config.alt_fct = GPIO_STM32_AF_5;
+    conf.spi_config[0].sck_gpio_config.port     = GPIO_STM32_PORT_A;
+    conf.spi_config[0].sck_gpio_config.pin      = GPIO_STM32_PIN_5;
+    conf.spi_config[0].sck_gpio_config.dir      = GPIO_OUTPUT;
+    conf.spi_config[0].sck_gpio_config.pull     = GPIO_PULL_UPDOWN_DOWN;
+    conf.spi_config[0].sck_gpio_config.alt_fct  = GPIO_STM32_AF_5;
 
 
     conf.spi_config[2].spi_device               = STM32_SPI3;
     conf.spi_config[2].mode                     = STM32_SPI_IN_OUT;
-    //conf.spi_config[0].option                 = ...;
+    conf.spi_config[2].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_64;
 
     conf.spi_config[2].miso_gpio_config.port    = GPIO_STM32_PORT_C;
     conf.spi_config[2].miso_gpio_config.pin     = GPIO_STM32_PIN_11;
@@ -329,11 +329,11 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.spi_config[2].nss_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
     conf.spi_config[2].nss_gpio_config.alt_fct  = GPIO_STM32_AF_6;
 
-    conf.spi_config[2].sck_gpio_config.port    = GPIO_STM32_PORT_C;
-    conf.spi_config[2].sck_gpio_config.pin     = GPIO_STM32_PIN_10;
-    conf.spi_config[2].sck_gpio_config.dir     = GPIO_OUTPUT;
-    conf.spi_config[2].sck_gpio_config.pull    = GPIO_PULL_UPDOWN_DOWN;
-    conf.spi_config[2].sck_gpio_config.alt_fct = GPIO_STM32_AF_6;
+    conf.spi_config[2].sck_gpio_config.port     = GPIO_STM32_PORT_C;
+    conf.spi_config[2].sck_gpio_config.pin      = GPIO_STM32_PIN_10;
+    conf.spi_config[2].sck_gpio_config.dir      = GPIO_OUTPUT;
+    conf.spi_config[2].sck_gpio_config.pull     = GPIO_PULL_UPDOWN_DOWN;
+    conf.spi_config[2].sck_gpio_config.alt_fct  = GPIO_STM32_AF_6;
     return conf;
 }
 
