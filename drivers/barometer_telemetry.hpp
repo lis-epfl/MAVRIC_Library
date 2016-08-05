@@ -44,7 +44,7 @@
 #define BAROMETER_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
-#include "drivers/bmp085.hpp"
+#include "drivers/barometer.hpp"
 
 
 /**

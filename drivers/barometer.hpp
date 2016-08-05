@@ -44,6 +44,7 @@
 #ifndef BAROMETER_HPP_
 #define BAROMETER_HPP_
 
+#include <cstdint>
 
 /**
  * \brief   Interface class for barometers
@@ -75,7 +76,7 @@ public:
     *
     * \return   Value
     */
-    const float& last_update_us(void) const;
+    virtual uint64_t last_update_us(void) const = 0;
 
 
     /**
@@ -83,7 +84,7 @@ public:
      *
      * \return  Value
      */
-    const float& pressure(void)  const;
+    virtual float pressure(void)  const = 0;
 
 
     /**
@@ -93,7 +94,7 @@ public:
      *
      * \return  Value
      */
-    const float& altitude_gf(void) const;
+    virtual float altitude_gf(void) const = 0;
 
 
     /**
@@ -103,7 +104,7 @@ public:
      *
      * \return  Value
      */
-    const float& vertical_speed_lf(void) const;
+    virtual float vertical_speed_lf(void) const = 0;
 
 
     /**
@@ -111,7 +112,8 @@ public:
      *
      * \return  Value
      */
-    const float& temperature(void) const;
+    virtual float temperature(void) const = 0;
+
 
     /**
      * \brief   Gets the flag stating if the barometer has been calibrated
@@ -119,6 +121,7 @@ public:
      * \return  has_been_read_
      */
     bool has_been_calibrated() const;
+
 
     /**
      * \brief   Correct altitude offset using current altitude
@@ -141,13 +144,7 @@ public:
 
 protected:
 
-    float pressure_;            ///< Measured pressure
-    float temperature_;         ///< Measured temperature
-    float altitude_gf_;         ///< Measured altitude (global frame)
-    float altitude_filtered;   ///< Measured altitude without bias removal
     float altitude_bias_gf_;    ///< Offset of the barometer sensor for matching GPS altitude value
-    float speed_lf_;            ///< Vario altitude speed (ned frame)
-    float last_update_us_;      ///< Time of the last update of the barometer
     bool has_been_calibrated_;  ///< Flag stating if the barometer has been calibrated
 };
 

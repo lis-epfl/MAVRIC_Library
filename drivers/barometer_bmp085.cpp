@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file bmp085.cpp
+ * \file barometer_bmp085.cpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -41,7 +41,7 @@
  ******************************************************************************/
 
 
-#include "drivers/bmp085.hpp"
+#include "drivers/barometer_bmp085.hpp"
 
 extern "C"
 {
@@ -88,7 +88,7 @@ const uint8_t BMP085_READPRESSURECMD    = 0x34;         ///< Read Pressure Comma
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Bmp085::Bmp085(I2c& i2c):
+Barometer_BMP085::Barometer_BMP085(I2c& i2c):
     i2c_(i2c),
     ac1_(408),
     ac2_(-72),
@@ -119,21 +119,21 @@ Bmp085::Bmp085(I2c& i2c):
 }
 
 
-bool Bmp085::init(void)
+bool Barometer_BMP085::init(void)
 {
     bool res = true;
 
     // Test if the sensor if here
     res &= i2c_.probe(BMP085_SLAVE_ADDRESS);
 
-    // Reset Bmp085 state
+    // Reset Barometer_BMP085 state
     state_ = BMP085_IDLE;
 
     return res;
 }
 
 
-bool Bmp085::update(void)
+bool Barometer_BMP085::update(void)
 {
     bool res            = true;
 
@@ -248,7 +248,7 @@ bool Bmp085::update(void)
             {
                 altitude_filtered = altitude_raw;
             }
-            
+
             // remove bias
             altitude_gf_ = altitude_filtered - altitude_bias_gf_;
 
@@ -276,4 +276,34 @@ bool Bmp085::update(void)
     last_state_update_us_ = time_keeper_get_us();
 
     return res;
+}
+
+
+uint64_t Barometer_BMP085::last_update_us(void) const
+{
+    return last_update_us_;
+}
+
+
+float Barometer_BMP085::pressure(void)  const
+{
+    return pressure_;
+}
+
+
+float Barometer_BMP085::altitude_gf(void) const
+{
+    return altitude_gf_;
+}
+
+
+float Barometer_BMP085::vertical_speed_lf(void) const
+{
+    return speed_lf_;
+}
+
+
+float Barometer_BMP085::temperature(void) const
+{
+    return temperature_;
 }

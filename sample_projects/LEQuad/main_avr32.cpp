@@ -91,7 +91,7 @@ int main(void)
     // Create MAV using real sensors
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
     LEQuad mav = LEQuad(board.imu,
-                        board.bmp085,
+                        board.barometer,
                         board.gps_ublox,
                         board.sonar_i2cxl,      // Warning:
                         board.uart0,

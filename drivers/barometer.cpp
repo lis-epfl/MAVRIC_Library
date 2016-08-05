@@ -54,35 +54,6 @@ Barometer::Barometer() :
 
 }
 
-const float& Barometer::last_update_us(void) const
-{
-    return last_update_us_;
-}
-
-
-const float& Barometer::pressure(void)  const
-{
-    return pressure_;
-}
-
-
-const float& Barometer::altitude_gf(void) const
-{
-    return altitude_gf_;
-}
-
-
-const float& Barometer::vertical_speed_lf(void) const
-{
-    return speed_lf_;
-}
-
-
-const float& Barometer::temperature(void) const
-{
-    return temperature_;
-}
-
 bool Barometer::has_been_calibrated() const
 {
     return has_been_calibrated_;
@@ -90,8 +61,7 @@ bool Barometer::has_been_calibrated() const
 
 void Barometer::calibrate_bias(float current_altitude_gf)
 {
-    altitude_bias_gf_ = altitude_filtered - current_altitude_gf;
-    altitude_gf_ = current_altitude_gf;
+    altitude_bias_gf_ = altitude_gf() - current_altitude_gf;
     has_been_calibrated_ = true;
 }
 

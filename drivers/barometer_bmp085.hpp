@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file bmp085.hpp
+ * \file barometer_bmp085.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef BMP085_HPP_
-#define BMP085_HPP_
+#ifndef BAROMETER_BMP085_HPP_
+#define BAROMETER_BMP085_HPP_
 
 #include <cstdint>
 #include <cstdbool>
@@ -65,7 +65,7 @@ typedef enum
 /**
  * \brief   Driver for the BMP085 barometer
  */
-class Bmp085: public Barometer
+class Barometer_BMP085: public Barometer
 {
 public:
     /**
@@ -73,7 +73,7 @@ public:
      *
      * \param   i2c     Reference to I2C device
      */
-    Bmp085(I2c& i2c);
+    Barometer_BMP085(I2c& i2c);
 
 
     /**
@@ -92,7 +92,50 @@ public:
      */
     bool update(void);
 
+    /**
+    * \brief   Get the last update time in microseconds
+    *
+    * \return   Value
+    */
+    uint64_t last_update_us(void) const;
 
+
+    /**
+     * \brief   Return the pressure
+     *
+     * \return  Value
+     */
+    float pressure(void)  const;
+
+
+    /**
+     * \brief   Get the altitude in meters above sea level
+     *
+     * \detail  Global frame: (>0 means upward)
+     *
+     * \return  Value
+     */
+    float altitude_gf(void) const;
+
+
+    /**
+     * \brief   Get the vertical speed in meters/second
+     *
+     * \detail  NED frame: (>0 means downward)
+     *
+     * \return  Value
+     */
+    float vertical_speed_lf(void) const;
+
+
+    /**
+     * \brief   Get sensor temperature
+     *
+     * \return  Value
+     */
+    float temperature(void) const;
+
+    
 private:
     I2c&        i2c_;                   ///< Reference to I2C peripheral
 
@@ -111,12 +154,19 @@ private:
     uint8_t     raw_pressure_[3];       ///< Raw pressure contained in 3 uint8_t
     uint8_t     raw_temperature_[2];    ///< Raw temperature contained in 2 uint8_t
 
-    float       last_altitudes_[3];     ///< Array to store previous value of the altitude for low pass filtering the output
+    float   pressure_;              ///< Measured pressure
+    float   temperature_;           ///< Measured temperature
+    float   altitude_gf_;           ///< Measured altitude (global frame)
+    float   altitude_filtered;      ///< Measured altitude without bias removal
+    float   speed_lf_;              ///< Vario altitude speed (ned frame)
 
-    float       last_state_update_us_;  ///< Time of the last state update
-    float       dt_s_;                  ///< Time step for the derivative
+    float   last_altitudes_[3];     ///< Array to store previous value of the altitude for low pass filtering the output
 
-    bmp085_state_t  state_;             ///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
+    float   last_update_us_;        ///< Time of the last update
+    float   last_state_update_us_;  ///< Time of the last state update
+    float   dt_s_;                  ///< Time step for the derivative
+
+    bmp085_state_t  state_;         ///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 };
 
-#endif /* BMP085_HPP_ */
+#endif /* BAROMETER_BMP085_HPP_ */
