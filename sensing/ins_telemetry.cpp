@@ -51,9 +51,10 @@ void ins_telemetry_send(const INS_kf* ins, const Mavlink_stream* mavlink_stream,
         cov[i] = ins->P()(i,i);
     }
     // Last elements are the noisy GPS postions and speed
+    cov[20] = ins->x()[3];
     cov[30] = ins->x()[10];
-    cov[31] = ins->barometer_.altitude_gf() - INS::origin().altitude;
-    cov[32] = -(ins->barometer_.altitude_gf() - INS::origin().altitude + ins->x_[10]);
+    cov[31] = ins->barometer_.altitude_gf_raw() - INS::origin().altitude;
+    cov[32] = -(ins->barometer_.altitude_gf_raw() - INS::origin().altitude + ins->x_[10]);
     cov[39] = ins->gps_local[0];
     cov[40] = ins->gps_local[1];
     cov[41] = ins->gps_local[2];

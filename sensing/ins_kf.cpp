@@ -262,9 +262,9 @@ bool INS_kf::update(void)
 
                 // DOME SPECIFIC
                 // Simulate some noise on the GPS local positions (to fit measured sigma, which was directly on the local, not the global)
-                // gps_local[0] += rand_sigma(config_.noise_gps_xy);
-                // gps_local[1] += rand_sigma(config_.noise_gps_xy);
-                // gps_local[2] += rand_sigma(config_.noise_gps_z);
+                gps_local[0] += rand_sigma(config_.noise_gps_xy);
+                gps_local[1] += rand_sigma(config_.noise_gps_xy);
+                gps_local[2] += rand_sigma(config_.noise_gps_z);
 
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
@@ -292,9 +292,9 @@ bool INS_kf::update(void)
 
                 // DOME SPECIFIC
                 // Simulate some noise on the GPS local velocities (to fit measured sigma, which was directly on the local, not the global)
-                // gps_velocity[0] += rand_sigma(config_.noise_gps_velxy);
-                // gps_velocity[1] += rand_sigma(config_.noise_gps_velxy);
-                // gps_velocity[2] += rand_sigma(config_.noise_gps_velz);
+                gps_velocity[0] += rand_sigma(config_.noise_gps_velxy);
+                gps_velocity[1] += rand_sigma(config_.noise_gps_velxy);
+                gps_velocity[2] += rand_sigma(config_.noise_gps_velz);
 
                 // Update the measurement noise if needed
                 if(!config_.constant_covar)
@@ -343,30 +343,30 @@ bool INS_kf::update(void)
            }
         }
 
-        // // Measure from sonar
-        // if (sonar_.healthy())
-        // {
-        //    if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
-        //    {
-        //       // Update the measurement noise if needed
-        //       if(!config_.constant_covar)
-        //       {
-        //           // TODO: Implement this!
+        // Measure from sonar
+        if (sonar_.healthy())
+        {
+           if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
+           {
+              // Update the measurement noise if needed
+              if(!config_.constant_covar)
+              {
+                  // TODO: Implement this!
 
-        //           // Recompute the measurement noise matrix
-        //           R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
-        //       }
+                  // Recompute the measurement noise matrix
+                  R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
+              }
 
-        //       // Run kalman Update
-        //       z_sonar = sonar_.distance();
-        //       Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
-        //                              H_sonar_,
-        //                              R_sonar_);
+              // Run kalman Update
+              z_sonar = sonar_.distance();
+              Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
+                                     H_sonar_,
+                                     R_sonar_);
 
-        //       // Update timing
-        //       last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
-        //    }
-        // }
+              // Update timing
+              last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
+           }
+        }
 
         /*// Measure from optic-flow
         if (flow.healthy())
