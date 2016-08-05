@@ -26,10 +26,9 @@ var searchData=
   ['analog_5fmonitor_5fconf_5ft',['analog_monitor_conf_t',['../structanalog__monitor__conf__t.html',1,'']]],
   ['analog_5fmonitor_5ft',['analog_monitor_t',['../structanalog__monitor__t.html',1,'']]],
   ['attitude_5fcommand_5ft',['attitude_command_t',['../structattitude__command__t.html',1,'']]],
-  ['attitude_5fcontroller_5fconf_5ft',['attitude_controller_conf_t',['../structattitude__controller__conf__t.html',1,'']]],
+  ['attitude_5fcontroller',['Attitude_controller',['../classAttitude__controller.html',1,'']]],
   ['attitude_5fcontroller_5fp2_5fconf_5ft',['attitude_controller_p2_conf_t',['../structattitude__controller__p2__conf__t.html',1,'']]],
   ['attitude_5fcontroller_5fp2_5ft',['attitude_controller_p2_t',['../structattitude__controller__p2__t.html',1,'']]],
-  ['attitude_5fcontroller_5ft',['attitude_controller_t',['../structattitude__controller__t.html',1,'']]],
   ['attitude_5ferror_5festimator_5ft',['attitude_error_estimator_t',['../structattitude__error__estimator__t.html',1,'']]],
   ['audio_5ft',['audio_t',['../structaudio__t.html',1,'']]]
 ];

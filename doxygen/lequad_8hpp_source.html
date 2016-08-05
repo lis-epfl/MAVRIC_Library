@@ -140,7 +140,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00058"></a>00058 <span class="preprocessor">#include &quot;communication/remote_default_config.hpp&quot;</span>
 <a name="l00059"></a>00059 
 <a name="l00060"></a>00060 <span class="preprocessor">#include &quot;control/altitude_controller.hpp&quot;</span>
-<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;control/attitude_controller_default_config.hpp&quot;</span>
+<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;control/attitude_controller.hpp&quot;</span>
 <a name="l00062"></a>00062 <span class="preprocessor">#include &quot;control/manual_control.hpp&quot;</span>
 <a name="l00063"></a>00063 <span class="preprocessor">#include &quot;control/navigation.hpp&quot;</span>
 <a name="l00064"></a>00064 <span class="preprocessor">#include &quot;control/servos_mix_quadcopter_diag.hpp&quot;</span>
@@ -199,7 +199,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00123"></a>00123         <a class="code" href="structservos__mix__quadcopter__diag__conf__t.html" title="The servo mix structure for a quad in cross shape.">servos_mix_quadcopter_diag_conf_t</a> servos_mix_quadcopter_diag_config;
 <a name="l00124"></a>00124         <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">Manual_control::conf_t</a> manual_control_config;
 <a name="l00125"></a>00125         <a class="code" href="structremote__conf__t.html" title="The configuration structure of the remote.">remote_conf_t</a> remote_config;
-<a name="l00126"></a>00126         <a class="code" href="structattitude__controller__conf__t.html" title="Attitude controller configuration.">attitude_controller_conf_t</a> attitude_controller_config;
+<a name="l00126"></a>00126         <a class="code" href="structAttitude__controller_1_1conf__t.html" title="Attitude controller configuration.">Attitude_controller::conf_t</a> attitude_controller_config;
 <a name="l00127"></a>00127         <a class="code" href="structVelocity__controller__copter_1_1conf__t.html" title="Controller configuration.">Velocity_controller_copter::conf_t</a> velocity_controller_copter_config;
 <a name="l00128"></a>00128     };
 <a name="l00129"></a>00129 
@@ -340,7 +340,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00278"></a>00278 
 <a name="l00279"></a>00279     conf.remote_config = remote_default_config();
 <a name="l00280"></a>00280 
-<a name="l00281"></a>00281     conf.attitude_controller_config = attitude_controller_default_config();
+<a name="l00281"></a>00281     conf.attitude_controller_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Attitude_controller::default_config</a>();
 <a name="l00282"></a>00282 
 <a name="l00283"></a>00283     conf.velocity_controller_copter_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Velocity_controller_copter::default_config</a>();
 <a name="l00284"></a>00284 
@@ -373,7 +373,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 5 2016 12:08:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 5 2016 13:29:55 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

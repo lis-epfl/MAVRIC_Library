@@ -32,17 +32,17 @@
 <area shape="rect" id="node84" href="$classAhrs__ekf.html" title="The AHRS EKF class." alt="" coords="2452,1190,2631,1501"/>
 <area shape="rect" id="node56" href="$structstabiliser__stack__copter__t.html" title="Structure containing the stacked controller." alt="" coords="1187,709,1373,864"/>
 <area shape="rect" id="node58" href="$structLEQuad_1_1conf__t.html" title="Configuration structure." alt="" coords="4061,1216,4280,1475"/>
-<area shape="rect" id="node60" href="$structMavlink__waypoint__handler_1_1conf__t.html" title="{Mavlink_waypoint_handler::conf_t\n||}" alt="" coords="4239,744,4457,829"/>
-<area shape="rect" id="node62" href="$structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication." alt="" coords="4632,709,4837,864"/>
-<area shape="rect" id="node64" href="$structScheduler_1_1conf__t.html" title="Scheduler configuration." alt="" coords="4504,288,4643,408"/>
-<area shape="rect" id="node66" href="$structremote__conf__t.html" title="The configuration structure of the remote." alt="" coords="4861,735,4968,838"/>
-<area shape="rect" id="node69" href="$structattitude__controller__conf__t.html" title="Attitude controller configuration." alt="" coords="4992,735,5160,838"/>
-<area shape="rect" id="node71" href="$structqfilter__conf__t.html" title="The structure for configuring the quaternion&#45;based attitude estimation." alt="" coords="5184,718,5280,855"/>
-<area shape="rect" id="node73" href="$structdata__logging__conf__t.html" title="Configuration of the data_logging element." alt="" coords="5304,718,5483,855"/>
-<area shape="rect" id="node75" href="$structVelocity__controller__copter_1_1conf__t.html" title="Controller configuration." alt="" coords="3404,727,3620,847"/>
-<area shape="rect" id="node77" href="$structManual__control_1_1conf__t.html" title="Configuration for manual control." alt="" coords="3644,735,3799,838"/>
-<area shape="rect" id="node79" href="$structNavigation_1_1conf__t.html" title="The navigation configuration structure." alt="" coords="3823,657,3956,916"/>
-<area shape="rect" id="node81" href="$structservos__mix__quadcopter__diag__conf__t.html" title="The servo mix structure for a quad in cross shape." alt="" coords="3980,701,4215,873"/>
+<area shape="rect" id="node60" href="$structMavlink__waypoint__handler_1_1conf__t.html" title="{Mavlink_waypoint_handler::conf_t\n||}" alt="" coords="4201,744,4420,829"/>
+<area shape="rect" id="node62" href="$structMavlink__communication_1_1conf__t.html" title="Configuration of the module Mavlink Communication." alt="" coords="4595,709,4800,864"/>
+<area shape="rect" id="node64" href="$structScheduler_1_1conf__t.html" title="Scheduler configuration." alt="" coords="4467,288,4605,408"/>
+<area shape="rect" id="node66" href="$structremote__conf__t.html" title="The configuration structure of the remote." alt="" coords="4824,735,4931,838"/>
+<area shape="rect" id="node69" href="$structqfilter__conf__t.html" title="The structure for configuring the quaternion&#45;based attitude estimation." alt="" coords="4955,718,5051,855"/>
+<area shape="rect" id="node71" href="$structdata__logging__conf__t.html" title="Configuration of the data_logging element." alt="" coords="5075,718,5253,855"/>
+<area shape="rect" id="node73" href="$structVelocity__controller__copter_1_1conf__t.html" title="Controller configuration." alt="" coords="5277,727,5493,847"/>
+<area shape="rect" id="node75" href="$structManual__control_1_1conf__t.html" title="Configuration for manual control." alt="" coords="3404,735,3559,838"/>
+<area shape="rect" id="node77" href="$structNavigation_1_1conf__t.html" title="The navigation configuration structure." alt="" coords="3583,657,3716,916"/>
+<area shape="rect" id="node79" href="$structservos__mix__quadcopter__diag__conf__t.html" title="The servo mix structure for a quad in cross shape." alt="" coords="3740,701,3975,873"/>
+<area shape="rect" id="node81" href="$structPosition__estimation_1_1conf__t.html" title="The position estimator structure." alt="" coords="3999,683,4177,890"/>
 <area shape="rect" id="node87" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="2544,657,2675,916"/>
 <area shape="rect" id="node96" href="$classFile.html" title="Base class for file objects." alt="" coords="4304,1216,4389,1475"/>
 <area shape="rect" id="node99" href="$classMavlink__communication.html" title="{Mavlink_communication\n||+ Mavlink_communication()\l+ add_msg_send()\l+ suspend_downstream()\l+ sysid()\l+ scheduler()\l+ message_handler()\l+ p_message_handler()\l+ mavlink_stream()\l+ p_mavlink_stream()\l+ onboard_parameters()\l+ p_onboard_parameters()\l+ default_config()\l+ update()\l}" alt="" coords="4413,1199,4595,1492"/>

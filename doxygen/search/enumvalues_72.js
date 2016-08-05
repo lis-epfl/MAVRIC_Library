@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['rate',['RATE',['../classAttitude__controller.html#a67326779bdb24d3d25782a82d1050f76acca25b3c2ec0cdd34c9961f11b9cbdc1',1,'Attitude_controller']]],
   ['round_5frobin',['ROUND_ROBIN',['../classScheduler.html#a33c91e878162f3c20cfc799922fe1c93a16ad807367312df2f9b6b74c4395014b',1,'Scheduler']]],
   ['run_5fblocked',['RUN_BLOCKED',['../classScheduler__task.html#a79650dbee331039a9977c6b86ccd4cebae3b6672a867b5e1b90e850d6825d9b51',1,'Scheduler_task']]],
   ['run_5ferror',['RUN_ERROR',['../classScheduler__task.html#a79650dbee331039a9977c6b86ccd4ceba156a575848e61256cdbafd360dddf459',1,'Scheduler_task']]],

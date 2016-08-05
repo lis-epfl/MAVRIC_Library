@@ -1,21 +1,16 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structattitude__controller__t.html" title="Attitude controller structure." alt="" coords="385,966,555,1207"/>
-<area shape="rect" id="node4" href="$structrate__command__t.html" title="Rate command structure." alt="" coords="473,684,590,769"/>
-<area shape="rect" id="node34" href="$structcommand__t.html" title="Global command structure." alt="" coords="997,983,1087,1190"/>
-<area shape="rect" id="node6" href="$structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="126,667,297,787"/>
-<area shape="rect" id="node8" href="$structquat__t.html" title="Unit quaternion." alt="" coords="182,6,241,109"/>
-<area shape="rect" id="node10" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="30,228,147,383"/>
-<area shape="rect" id="node15" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="614,675,753,778"/>
-<area shape="rect" id="node13" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="777,684,910,769"/>
-<area shape="rect" id="node19" href="$structpid__controller__t.html" title="PID controller." alt="" coords="321,606,449,847"/>
-<area shape="rect" id="node21" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="310,245,414,365"/>
-<area shape="rect" id="node23" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="438,237,542,374"/>
-<area shape="rect" id="node25" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="1631,966,1783,1207"/>
-<area shape="rect" id="node27" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="1590,571,1825,882"/>
-<area shape="rect" id="node29" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="1617,176,1798,435"/>
-<area shape="rect" id="node31" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="1849,649,1958,804"/>
-<area shape="rect" id="node36" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="934,684,1065,769"/>
-<area shape="rect" id="node39" href="$structposition__command__t.html" title="Position command structure." alt="" coords="1089,675,1230,778"/>
-<area shape="rect" id="node43" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="1254,675,1395,778"/>
-<area shape="rect" id="node45" href="$structthrust3D__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="1419,684,1566,769"/>
+<area shape="rect" id="node2" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="239,915,391,1157"/>
+<area shape="rect" id="node4" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="5,401,240,711"/>
+<area shape="rect" id="node6" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="32,5,213,264"/>
+<area shape="rect" id="node8" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="264,479,373,633"/>
+<area shape="rect" id="node10" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="372,736,489,891"/>
+<area shape="rect" id="node12" href="$structquat__t.html" title="Unit quaternion." alt="" coords="424,83,483,186"/>
+<area shape="rect" id="node24" href="$structattitude__command__t.html" title="Attitude command structure." alt="" coords="452,505,591,607"/>
+<area shape="rect" id="node14" href="$structcommand__t.html" title="Global command structure." alt="" coords="859,933,949,1139"/>
+<area shape="rect" id="node16" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="615,513,745,599"/>
+<area shape="rect" id="node18" href="$structrate__command__t.html" title="Rate command structure." alt="" coords="769,513,887,599"/>
+<area shape="rect" id="node20" href="$structposition__command__t.html" title="Position command structure." alt="" coords="911,505,1052,607"/>
+<area shape="rect" id="node22" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="1076,513,1209,599"/>
+<area shape="rect" id="node27" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="1233,505,1375,607"/>
+<area shape="rect" id="node29" href="$structthrust3D__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="1399,513,1545,599"/>
 </map>
