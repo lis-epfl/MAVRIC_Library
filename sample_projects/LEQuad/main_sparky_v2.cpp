@@ -43,12 +43,11 @@
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "hal/common/time_keeper.hpp"
 
+#include "hal/stm32/spi_stm32.hpp"
+
 extern "C"
 {
 #include "util/print_util.h"
-
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
 }
 
 int main(int argc, char** argv)
@@ -71,11 +70,18 @@ int main(int argc, char** argv)
     Mavlink_stream mavlink_stream(board.serial_);
     mavlink_message_t msg;
 
+
+    // #############################################################################################
+    // #############  SPI test##################################################################
+    // #############################################################################################
+    uint8_t b[5] = {0x11,0x22,0x33,0x44,0x55};
+    uint8_t *bytes = b;
+    
     while (1)
     {
         board.state_display_sparky_v2_.update();
         // Warning: if too short serial does not work
-        time_keeper_delay_ms(500);
+        //time_keeper_delay_ms(1000);
 
 
         // Write mavlink message
@@ -89,6 +95,10 @@ int main(int argc, char** argv)
                                     0);     //uint8_t system_status)
         mavlink_stream.send(&msg);
 
+        board.spi_1_.write(bytes,5);
+        board.spi_3_.write(bytes,5);
+        
+        time_keeper_delay_ms(1);
     }
 
     return 0;
