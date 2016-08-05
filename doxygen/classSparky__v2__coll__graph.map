@@ -2,13 +2,15 @@
 <area shape="rect" id="node2" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="5,265,152,506"/>
 <area shape="rect" id="node4" href="$classPwm__stm32.html" title="{Pwm_stm32\n||+ Pwm_stm32()\l+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="176,317,333,454"/>
 <area shape="rect" id="node6" href="$classPwm.html" title="{Pwm\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="267,49,424,169"/>
-<area shape="rect" id="node20" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="357,325,515,445"/>
+<area shape="rect" id="node24" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="357,325,515,445"/>
 <area shape="rect" id="node8" href="$classGpio__stm32.html" title="{Gpio_stm32\n||+ Gpio_stm32()\l+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="539,282,651,489"/>
 <area shape="rect" id="node10" href="$classGpio.html" title="{Gpio\n||+ init()\l+ configure()\l+ set_high()\l+ set_low()\l+ toggle()\l+ write()\l+ read()\l}" alt="" coords="548,15,641,204"/>
 <area shape="rect" id="node12" href="$classState__display__sparky__v2.html" title="{State_display_sparky_v2\n||+ State_display_sparky_v2()\l+ update()\l}" alt="" coords="675,334,861,437"/>
 <area shape="rect" id="node14" href="$classState__display.html" title="Interface class for state display." alt="" coords="717,41,819,178"/>
 <area shape="rect" id="node16" href="$classLed__gpio.html" title="{Led_gpio\n||+ Led_gpio()\l+ on()\l+ off()\l+ toggle()\l}" alt="" coords="885,317,979,454"/>
 <area shape="rect" id="node18" href="$classLed.html" title="{Led\n||+ on()\l+ off()\l+ toggle()\l}" alt="" coords="893,49,971,169"/>
-<area shape="rect" id="node23" href="$classSerial__usb__stm32.html" title="Implementation of serial peripheral for stm32." alt="" coords="1003,265,1149,506"/>
-<area shape="rect" id="node25" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="1029,6,1123,213"/>
+<area shape="rect" id="node20" href="$classSpi__stm32.html" title="Implementation of spi peripheral for stm32." alt="" coords="1003,308,1107,463"/>
+<area shape="rect" id="node22" href="$classSpi.html" title="{Spi\n||+ init()\l+ write()\l+ read()\l+ transfer()\l}" alt="" coords="1012,41,1097,178"/>
+<area shape="rect" id="node27" href="$classSerial__usb__stm32.html" title="Implementation of serial peripheral for stm32." alt="" coords="1131,265,1277,506"/>
+<area shape="rect" id="node29" href="$classSerial.html" title="{Serial\n||+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l+ newline()\l}" alt="" coords="1157,6,1251,213"/>
 </map>

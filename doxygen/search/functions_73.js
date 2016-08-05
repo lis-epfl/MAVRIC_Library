@@ -53,6 +53,7 @@ var searchData=
   ['spektrum_5fsatellite',['Spektrum_satellite',['../classSpektrum__satellite.html#a19081fd14e2561dff2977aa7ab102c48',1,'Spektrum_satellite']]],
   ['sphere',['Sphere',['../classraytracing_1_1Sphere.html#a316fea1890e003a25c2c6bb30fc28801',1,'raytracing::Sphere']]],
   ['spi_5favr32',['Spi_avr32',['../classSpi__avr32.html#a9feb1fb0cdee80042a3d75cf59e649e1',1,'Spi_avr32']]],
+  ['spi_5fstm32',['Spi_stm32',['../classSpi__stm32.html#ab64bfcbd713da37c60bb6daef9d06941',1,'Spi_stm32']]],
   ['start',['start',['../classData__logging.html#a37f718933dd21cf2ba27f1ca98348072',1,'Data_logging']]],
   ['start_5faccelerometer_5fbias_5fcalibration',['start_accelerometer_bias_calibration',['../classImu.html#abcebc61b38b6f1281970331a2ffab0ad',1,'Imu']]],
   ['start_5fcalibration',['start_calibration',['../classAirspeed__analog.html#a5c340b25144abcd586e495977520675e',1,'Airspeed_analog']]],

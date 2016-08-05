@@ -47,6 +47,8 @@ var searchData=
   ['spi_5favr32_5fconf_5ft',['spi_avr32_conf_t',['../structspi__avr32__conf__t.html',1,'']]],
   ['spi_5favr32_5fgpio_5fmap_5ft',['spi_avr32_gpio_map_t',['../structspi__avr32__gpio__map__t.html',1,'']]],
   ['spi_5fbuffer_5ft',['spi_buffer_t',['../structspi__buffer__t.html',1,'']]],
+  ['spi_5fstm32',['Spi_stm32',['../classSpi__stm32.html',1,'']]],
+  ['spi_5fstm32_5fconf_5ft',['spi_stm32_conf_t',['../structspi__stm32__conf__t.html',1,'']]],
   ['stabilisation_5fcopter_5fconf_5ft',['stabilisation_copter_conf_t',['../structstabilisation__copter__conf__t.html',1,'']]],
   ['stabilisation_5fcopter_5ft',['stabilisation_copter_t',['../structstabilisation__copter__t.html',1,'']]],
   ['stabilisation_5fwing_5fconf_5ft',['stabilisation_wing_conf_t',['../structstabilisation__wing__conf__t.html',1,'']]],

@@ -56,7 +56,7 @@ var searchData=
   ['tow_5fsub_5fms',['tow_sub_ms',['../structubx__tim__tp__t.html#a4bdc1cf8610c61a1442f53f733f822eb',1,'ubx_tim_tp_t']]],
   ['tp_5fidx',['tp_idx',['../structubx__cfg__tp5__t.html#a6db1ca258952b26c62809baa8c4680f3',1,'ubx_cfg_tp5_t']]],
   ['traffic',['traffic',['../structspi__buffer__t.html#aacf1f53fc0f38ff833996149f6e4e601',1,'spi_buffer_t']]],
-  ['transfer',['transfer',['../classSpi__avr32.html#a9b77a081d6124525f087ad1c3a14be7d',1,'Spi_avr32::transfer()'],['../classSpi.html#aba844173351a71c52e478ab7b40127fb',1,'Spi::transfer()']]],
+  ['transfer',['transfer',['../classSpi__avr32.html#a9b77a081d6124525f087ad1c3a14be7d',1,'Spi_avr32::transfer()'],['../classSpi.html#aba844173351a71c52e478ab7b40127fb',1,'Spi::transfer()'],['../classSpi__stm32.html#a286eb8438b982cd74c1b2267c697a556',1,'Spi_stm32::transfer()']]],
   ['transmission_5fin_5fprogress',['transmission_in_progress',['../structspi__buffer__t.html#ad0e4074a63e0751cfea8401265a28d02',1,'spi_buffer_t']]],
   ['transpose',['transpose',['../classmat_1_1op.html#aa14856c43c42b883c4149db044f56c9b',1,'mat::op::transpose()'],['../classMat.html#a79925b14ac30ed956692f20c006fb998',1,'Mat::transpose()']]],
   ['trim',['trim',['../structservo__conf__t.html#a4b4099963b44d69a6ab7755374eab678',1,'servo_conf_t']]],

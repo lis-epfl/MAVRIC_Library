@@ -6,6 +6,7 @@
 <area shape="rect" id="node17" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="389,243,496,272"/>
 <area shape="rect" id="node23" href="$classPwm__dummy.html#ac5c7ca8683a55254bfb0dab284ed5947" title="Initialize the hardware line for servos." alt="" coords="177,269,303,299"/>
 <area shape="rect" id="node25" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="164,323,316,352"/>
+<area shape="rect" id="node30" href="$classSpi__stm32.html#a0b9aa2fa7e5f4144f337201994819d48" title="Hardware initialization." alt="" coords="185,376,295,405"/>
 <area shape="rect" id="node5" href="$classGpio__stm32.html#a3af5f0fc7d3cba3fef4e2ab6ece12527" title="Configures the GPIO." alt="" coords="367,5,519,35"/>
 <area shape="rect" id="node9" href="$classGpio.html#a9d4dbb47485315e99f4418d8335cb1c5" title="Write 1 to the gpio." alt="" coords="389,59,496,88"/>
 <area shape="rect" id="node11" href="$classGpio.html#aa6544871d2c18d439abbe245cc4c4034" title="Write 0 to the gpio." alt="" coords="392,112,493,141"/>

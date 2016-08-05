@@ -17,6 +17,7 @@ var searchData=
   ['scan_5fmode1',['scan_mode1',['../structubx__cfg__sbas__t.html#ac2702d288ecd8e62999532408ddba62c',1,'ubx_cfg_sbas_t']]],
   ['scan_5fmode2',['scan_mode2',['../structubx__cfg__sbas__t.html#a29f5f9a7b22e9235a4493663527f745f',1,'ubx_cfg_sbas_t']]],
   ['schedule_5fstrategy',['schedule_strategy',['../structScheduler_1_1conf__t.html#add0e17c51dba8ff62c3d9afbf8622d9e',1,'Scheduler::conf_t']]],
+  ['sck_5fgpio_5fconfig',['sck_gpio_config',['../structspi__stm32__conf__t.html#abbc33aea4183e9afcf5d1a3e34c328ca',1,'spi_stm32_conf_t']]],
   ['sck_5fpin_5fmap',['sck_pin_map',['../structspi__avr32__conf__t.html#a162b9610a095d04d41f6edb98f1137ee',1,'spi_avr32_conf_t']]],
   ['sda_5fconfig',['sda_config',['../structi2c__stm32__conf__t.html#acb3035edcfbff0db5ec4eee689b80edc',1,'i2c_stm32_conf_t']]],
   ['search_5fperiod',['search_period',['../structubx__cfg__pm__t.html#a0d2f0aaac99814b9818ef0006d5a827f',1,'ubx_cfg_pm_t::search_period()'],['../structubx__cfg__pm2__t.html#a6f411fd163a35cc9328c89cf0fa3c022',1,'ubx_cfg_pm2_t::search_period()']]],

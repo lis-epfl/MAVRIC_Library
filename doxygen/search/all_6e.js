@@ -20,6 +20,7 @@ var searchData=
   ['next_5frun',['next_run',['../classScheduler__task.html#ad1ed6dd2f1dd137b05a81b808fd97e0e',1,'Scheduler_task']]],
   ['normal',['normal',['../classraytracing_1_1Intersection.html#a108a955f2a46b82101cdbb5e2aa8bf15',1,'raytracing::Intersection::normal()'],['../classraytracing_1_1Plane.html#ac51a3082ac1da2a7262e3397680adb8d',1,'raytracing::Plane::normal()']]],
   ['north_5fspeed',['north_speed',['../structgps__t.html#aa6ae22c930094f8374a745d83b8e901f',1,'gps_t']]],
+  ['nss_5fgpio_5fconfig',['nss_gpio_config',['../structspi__stm32__conf__t.html#ac272369e78a66f425153db3b4690dc4d',1,'spi_stm32_conf_t']]],
   ['num_5fch',['num_ch',['../structubx__nav__sv__info__t.html#a59fc3d45ef9667a0b7c8ebcc93d6c9f5',1,'ubx_nav_sv_info_t']]],
   ['num_5fchannel',['num_channel',['../structubx__nav__dgps__t.html#ac35f5bdef1d1edb9a19f870dfaea93d2',1,'ubx_nav_dgps_t']]],
   ['num_5ffile_5fopened',['num_file_opened',['../structfat__fs__mounting__t.html#a15d4ee7f7cb176bd2a5422adffb34a98',1,'fat_fs_mounting_t']]],
