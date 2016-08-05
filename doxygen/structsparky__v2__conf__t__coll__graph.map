@@ -1,6 +1,6 @@
 <map id="G" name="G">
 <area shape="rect" id="node2" href="$structservo__conf__t.html" title="Configuration structure for servo." alt="" coords="5,277,157,467"/>
 <area shape="rect" id="node4" href="$structgpio__stm32__conf__t.html" title="{gpio_stm32_conf_t\n|+ port\l+ pin\l+ dir\l+ pull\l+ alt_fct\l|}" alt="" coords="383,5,513,160"/>
-<area shape="rect" id="node6" href="$structspi__stm32__conf__t.html" title="Configuration structure." alt="" coords="381,286,515,458"/>
+<area shape="rect" id="node6" href="$structspi__stm32__conf__t.html" title="Configuration structure." alt="" coords="381,277,515,467"/>
 <area shape="rect" id="node9" href="$structPwm__stm32_1_1config__t.html" title="STM32_PWM configuration structure." alt="" coords="539,277,688,467"/>
 </map>

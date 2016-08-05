@@ -32,6 +32,7 @@ var searchData=
   ['clip_5fmin',['clip_min',['../structpid__controller__conf__t.html#a1161e6ecb1b8eb4beef490c9ab74461d',1,'pid_controller_conf_t::clip_min()'],['../structpid__controller__t.html#a3910c4413c29d4f2e8a66afa291bc52e',1,'pid_controller_t::clip_min()']]],
   ['clip_5fpre',['clip_pre',['../structintegrator__t.html#aa9a4c5f83a1f79f9d0fb65830f4709a7',1,'integrator_t']]],
   ['clk_5fconfig',['clk_config',['../structi2c__stm32__conf__t.html#a015a330495aed9912011addd49545986',1,'i2c_stm32_conf_t']]],
+  ['clk_5fdiv',['clk_div',['../structspi__stm32__conf__t.html#aa587b98e56acb223eb0bdbcf4faaee19',1,'spi_stm32_conf_t']]],
   ['clk_5fspeed',['clk_speed',['../structi2c__stm32__conf__t.html#a1b812f4324284919757c7c355dcacba1',1,'i2c_stm32_conf_t']]],
   ['clock',['clock',['../structsd__spi__t.html#a0045b83e9e6b535f40a5df160f76370c',1,'sd_spi_t']]],
   ['close',['close',['../classFile__fat__fs.html#a8f9e28bd4503ba3229c2cc7861440b0c',1,'File_fat_fs::close()'],['../classFile__flash__avr32.html#ad32fad30b1e68a45efd5ff6c86a08a80',1,'File_flash_avr32::close()'],['../classFile.html#a01ba05798bfabf002236f8b2fc59d006',1,'File::close()'],['../classFile__dummy.html#a4d5c4f22fa425d314c8dbd0386adb24a',1,'File_dummy::close()'],['../classFile__linux.html#a3a8c1ec8246adf286886cbafd5e01f56',1,'File_linux::close()']]],

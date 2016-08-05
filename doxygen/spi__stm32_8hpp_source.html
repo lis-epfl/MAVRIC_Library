@@ -126,72 +126,67 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
 <a name="l00045"></a>00045 <span class="preprocessor">#include &quot;hal/common/spi.hpp&quot;</span>
 <a name="l00046"></a>00046 <span class="preprocessor">#include &quot;hal/stm32/gpio_stm32.hpp&quot;</span>
-<a name="l00047"></a>00047 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
-<a name="l00048"></a>00048 {
-<a name="l00049"></a>00049 <span class="preprocessor">#include &lt;libopencm3/stm32/gpio.h&gt;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &lt;libopencm3/stm32/rcc.h&gt;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &lt;libopencm3/stm32/spi.h&gt;</span>
-<a name="l00052"></a>00052 }
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="comment">// extern &quot;C&quot;</span>
-<a name="l00055"></a>00055 <span class="comment">// {</span>
-<a name="l00056"></a>00056 <span class="comment">// #include &quot;libs/asf/avr32/drivers/spi/spi.h&quot;</span>
-<a name="l00057"></a>00057 <span class="comment">// }</span>
-<a name="l00058"></a>00058 
-<a name="l00062"></a>00062 <span class="keyword">typedef</span> <span class="keyword">enum</span>
-<a name="l00063"></a>00063 {
-<a name="l00064"></a>00064     STM32_SPI1             = SPI1,
-<a name="l00065"></a>00065     STM32_SPI2             = SPI2,
-<a name="l00066"></a>00066     STM32_SPI3             = SPI3,
-<a name="l00067"></a>00067 } spi_stm32_devices_t;
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069 
-<a name="l00073"></a>00073 <span class="keyword">typedef</span> <span class="keyword">enum</span>
-<a name="l00074"></a>00074 {
-<a name="l00075"></a>00075     STM32_SPI_OFF       = 0,
-<a name="l00076"></a>00076     STM32_SPI_IN        = 1,
-<a name="l00077"></a>00077     STM32_SPI_OUT       = 2,
-<a name="l00078"></a>00078     STM32_SPI_IN_OUT    = 3,
-<a name="l00079"></a>00079 } spi_stm32_mode_t;
-<a name="l00080"></a>00080 
-<a name="l00084"></a><a class="code" href="structspi__stm32__conf__t.html">00084</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00085"></a>00085 {
-<a name="l00086"></a>00086     spi_stm32_devices_t     spi_device;
-<a name="l00087"></a>00087     spi_stm32_mode_t        mode;
-<a name="l00088"></a><a class="code" href="structspi__stm32__conf__t.html#a774eda3d8ac0d62b532d6728795ceb3a">00088</a>     <a class="code" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>       <a class="code" href="structspi__stm32__conf__t.html#a774eda3d8ac0d62b532d6728795ceb3a" title="Master Out Slave In config.">miso_gpio_config</a>;   
-<a name="l00089"></a><a class="code" href="structspi__stm32__conf__t.html#a32bb975b41edfd3b2649af98f7409b55">00089</a>     <a class="code" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>       <a class="code" href="structspi__stm32__conf__t.html#a32bb975b41edfd3b2649af98f7409b55" title="Master In Slave Out config.">mosi_gpio_config</a>;   
-<a name="l00090"></a><a class="code" href="structspi__stm32__conf__t.html#ac272369e78a66f425153db3b4690dc4d">00090</a>     <a class="code" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>       <a class="code" href="structspi__stm32__conf__t.html#ac272369e78a66f425153db3b4690dc4d" title="Slave Select config.">nss_gpio_config</a>;    
-<a name="l00091"></a><a class="code" href="structspi__stm32__conf__t.html#abbc33aea4183e9afcf5d1a3e34c328ca">00091</a>     <a class="code" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>       <a class="code" href="structspi__stm32__conf__t.html#abbc33aea4183e9afcf5d1a3e34c328ca" title="Serial Clock config.">sck_gpio_config</a>;    
-<a name="l00092"></a>00092 } <a class="code" href="structspi__stm32__conf__t.html" title="Configuration structure.">spi_stm32_conf_t</a>;
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094 
-<a name="l00098"></a><a class="code" href="classSpi__stm32.html">00098</a> <span class="keyword">class </span><a class="code" href="classSpi__stm32.html" title="Implementation of spi peripheral for stm32.">Spi_stm32</a>: <span class="keyword">public</span> <a class="code" href="classSpi.html">Spi</a>
-<a name="l00099"></a>00099 {
-<a name="l00100"></a>00100 <span class="keyword">public</span>:
-<a name="l00101"></a>00101 
-<a name="l00107"></a>00107     <a class="code" href="classSpi__stm32.html#ab64bfcbd713da37c60bb6daef9d06941" title="Initialises the peripheral.">Spi_stm32</a>(<a class="code" href="structspi__stm32__conf__t.html" title="Configuration structure.">spi_stm32_conf_t</a> spi_config);
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109 
-<a name="l00116"></a>00116     <span class="keywordtype">bool</span> <a class="code" href="classSpi__stm32.html#a0b9aa2fa7e5f4144f337201994819d48" title="Hardware initialization.">init</a>(<span class="keywordtype">void</span>);
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118 
-<a name="l00128"></a>00128     <span class="keywordtype">bool</span> <a class="code" href="classSpi__stm32.html#a959b740c42a3984efff930f6bbca3536" title="Write bytes on the spi line.">write</a>(uint8_t* bytes, uint32_t nbytes = 1);
-<a name="l00129"></a>00129 
-<a name="l00130"></a>00130 
-<a name="l00141"></a>00141     <span class="keywordtype">bool</span> <a class="code" href="classSpi__stm32.html#ae957e8b4c19ef53f59323383a6b55862" title="Read bytes from the spi line.">read</a>(uint8_t* in_buffer, uint32_t nbytes = 1);
-<a name="l00142"></a>00142 
-<a name="l00153"></a>00153     <span class="keywordtype">bool</span> <a class="code" href="classSpi__stm32.html#a286eb8438b982cd74c1b2267c697a556" title="Write and Read data to/from the SPI bus.">transfer</a>(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes);
-<a name="l00154"></a>00154 
+<a name="l00047"></a>00047 
+<a name="l00048"></a>00048 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
+<a name="l00049"></a>00049 {
+<a name="l00050"></a>00050 <span class="preprocessor">#include &lt;libopencm3/stm32/spi.h&gt;</span>
+<a name="l00051"></a>00051 }
+<a name="l00052"></a>00052 
+<a name="l00056"></a>00056 <span class="keyword">typedef</span> <span class="keyword">enum</span>
+<a name="l00057"></a>00057 {
+<a name="l00058"></a>00058     STM32_SPI1             = SPI1,
+<a name="l00059"></a>00059     STM32_SPI2             = SPI2,
+<a name="l00060"></a>00060     STM32_SPI3             = SPI3,
+<a name="l00061"></a>00061 } spi_stm32_devices_t;
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063 
+<a name="l00067"></a>00067 <span class="keyword">typedef</span> <span class="keyword">enum</span>
+<a name="l00068"></a>00068 {
+<a name="l00069"></a>00069     STM32_SPI_OFF       = 0,
+<a name="l00070"></a>00070     STM32_SPI_IN        = 1,
+<a name="l00071"></a>00071     STM32_SPI_OUT       = 2,
+<a name="l00072"></a>00072     STM32_SPI_IN_OUT    = 3,
+<a name="l00073"></a>00073 } spi_stm32_mode_t;
+<a name="l00074"></a>00074 
+<a name="l00078"></a><a class="code" href="structspi__stm32__conf__t.html">00078</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00079"></a>00079 {
+<a name="l00080"></a>00080     spi_stm32_devices_t     spi_device;
+<a name="l00081"></a>00081     spi_stm32_mode_t        mode;
+<a name="l00082"></a><a class="code" href="structspi__stm32__conf__t.html#aa587b98e56acb223eb0bdbcf4faaee19">00082</a>     uint8_t                 <a class="code" href="structspi__stm32__conf__t.html#aa587b98e56acb223eb0bdbcf4faaee19" title="fp clock division">clk_div</a>;            
+<a name="l00083"></a><a class="code" href="structspi__stm32__conf__t.html#a774eda3d8ac0d62b532d6728795ceb3a">00083</a>     <a class="code" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>       <a class="code" href="structspi__stm32__conf__t.html#a774eda3d8ac0d62b532d6728795ceb3a" title="Master Out Slave In config.">miso_gpio_config</a>;   
+<a name="l00084"></a><a class="code" href="structspi__stm32__conf__t.html#a32bb975b41edfd3b2649af98f7409b55">00084</a>     <a class="code" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>       <a class="code" href="structspi__stm32__conf__t.html#a32bb975b41edfd3b2649af98f7409b55" title="Master In Slave Out config.">mosi_gpio_config</a>;   
+<a name="l00085"></a><a class="code" href="structspi__stm32__conf__t.html#ac272369e78a66f425153db3b4690dc4d">00085</a>     <a class="code" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>       <a class="code" href="structspi__stm32__conf__t.html#ac272369e78a66f425153db3b4690dc4d" title="Slave Select config.">nss_gpio_config</a>;    
+<a name="l00086"></a><a class="code" href="structspi__stm32__conf__t.html#abbc33aea4183e9afcf5d1a3e34c328ca">00086</a>     <a class="code" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>       <a class="code" href="structspi__stm32__conf__t.html#abbc33aea4183e9afcf5d1a3e34c328ca" title="Serial Clock config.">sck_gpio_config</a>;    
+<a name="l00087"></a>00087 } <a class="code" href="structspi__stm32__conf__t.html" title="Configuration structure.">spi_stm32_conf_t</a>;
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089 
+<a name="l00093"></a><a class="code" href="classSpi__stm32.html">00093</a> <span class="keyword">class </span><a class="code" href="classSpi__stm32.html" title="Implementation of spi peripheral for stm32.">Spi_stm32</a>: <span class="keyword">public</span> <a class="code" href="classSpi.html">Spi</a>
+<a name="l00094"></a>00094 {
+<a name="l00095"></a>00095 <span class="keyword">public</span>:
+<a name="l00096"></a>00096 
+<a name="l00102"></a>00102     <a class="code" href="classSpi__stm32.html#ab64bfcbd713da37c60bb6daef9d06941" title="Initialises the peripheral.">Spi_stm32</a>(<a class="code" href="structspi__stm32__conf__t.html" title="Configuration structure.">spi_stm32_conf_t</a> spi_config);
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104 
+<a name="l00111"></a>00111     <span class="keywordtype">bool</span> <a class="code" href="classSpi__stm32.html#a0b9aa2fa7e5f4144f337201994819d48" title="Hardware initialization.">init</a>(<span class="keywordtype">void</span>);
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113 
+<a name="l00123"></a>00123     <span class="keywordtype">bool</span> <a class="code" href="classSpi__stm32.html#a959b740c42a3984efff930f6bbca3536" title="Write bytes on the spi line.">write</a>(uint8_t* bytes, uint32_t nbytes = 1);
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125 
+<a name="l00136"></a>00136     <span class="keywordtype">bool</span> <a class="code" href="classSpi__stm32.html#ae957e8b4c19ef53f59323383a6b55862" title="Read bytes from the spi line.">read</a>(uint8_t* in_buffer, uint32_t nbytes = 1);
+<a name="l00137"></a>00137 
+<a name="l00148"></a>00148     <span class="keywordtype">bool</span> <a class="code" href="classSpi__stm32.html#a286eb8438b982cd74c1b2267c697a556" title="Write and Read data to/from the SPI bus.">transfer</a>(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes);
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151 <span class="keyword">private</span>:
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153     <a class="code" href="structspi__stm32__conf__t.html" title="Configuration structure.">spi_stm32_conf_t</a>            config_;        
+<a name="l00154"></a>00154     spi_stm32_devices_t         spi_;           
 <a name="l00155"></a>00155 
-<a name="l00156"></a>00156 <span class="keyword">private</span>:
+<a name="l00156"></a>00156 };
 <a name="l00157"></a>00157 
-<a name="l00158"></a>00158     <a class="code" href="structspi__stm32__conf__t.html" title="Configuration structure.">spi_stm32_conf_t</a>            config_;        
-<a name="l00159"></a>00159     spi_stm32_devices_t         spi_;           
-<a name="l00160"></a>00160 
-<a name="l00161"></a>00161 };
-<a name="l00162"></a>00162 
-<a name="l00163"></a>00163 
-<a name="l00164"></a>00164 <span class="preprocessor">#endif </span><span class="comment">/* SPI_STM32_HPP_ */</span>
+<a name="l00158"></a>00158 
+<a name="l00159"></a>00159 <span class="preprocessor">#endif </span><span class="comment">/* SPI_STM32_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -210,7 +205,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 5 2016 09:24:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 5 2016 12:08:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
