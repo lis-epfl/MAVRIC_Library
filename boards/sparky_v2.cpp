@@ -86,7 +86,7 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     pwm_3_(config.pwm_config[3]),
     pwm_4_(config.pwm_config[4]),
     pwm_5_(config.pwm_config[5]),
-    serial_(),
+    serial_(config.serial_usb_config),
     servo_0_(pwm_0_, config.servo_config[0]),
     servo_1_(pwm_1_, config.servo_config[1]),
     servo_2_(pwm_2_, config.servo_config[2]),
@@ -126,6 +126,7 @@ bool Sparky_v2::init(void)
     // Init SERIAL
     // -------------------------------------------------------------------------
     ret &= serial_.init();
+    time_keeper_delay_ms(500);  // This delay is required to let the host computer initialize the usb serial interface
     init_success &= ret;
 
     // -------------------------------------------------------------------------
@@ -266,6 +267,6 @@ bool Sparky_v2::init(void)
     ret = spi_1_.init();
     ret = spi_3_.init();
     init_success &= ret;
-    
+
     return init_success;
 }
