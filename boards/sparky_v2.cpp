@@ -86,6 +86,7 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     pwm_3_(config.pwm_config[3]),
     pwm_4_(config.pwm_config[4]),
     pwm_5_(config.pwm_config[5]),
+    serial_(),
     servo_0_(pwm_0_, config.servo_config[0]),
     servo_1_(pwm_1_, config.servo_config[1]),
     servo_2_(pwm_2_, config.servo_config[2]),
@@ -94,8 +95,9 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     servo_5_(pwm_5_, config.servo_config[5]),
     servo_6_(pwm_6_, config.servo_config[6]),
     servo_7_(pwm_7_, config.servo_config[7]),
-    state_display_sparky_v2_(led_stat_, led_err_),
-    serial_()
+    //spi_1_(config.spi_config[0]),
+    spi_3_(config.spi_config[2]),
+    state_display_sparky_v2_(led_stat_, led_err_)
 {}
 
 
@@ -257,6 +259,12 @@ bool Sparky_v2::init(void)
     // print_util_dbg_init_msg("[PWM7]", false);
 
 #endif
+
+    // -------------------------------------------------------------------------
+    // Init SPIs
+    // -------------------------------------------------------------------------
+    //spi_1_.init();
+    spi_3_.init();
 
     return init_success;
 }
