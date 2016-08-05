@@ -38,9 +38,14 @@
  * \brief   Implementation of spi peripheral for stm32
  *
  ******************************************************************************/
+#include <cstddef>
+
+ extern "C"
+{
+#include <libopencm3/stm32/rcc.h>
+}
 
 #include "hal/stm32/spi_stm32.hpp"
-#include <cstddef>
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION

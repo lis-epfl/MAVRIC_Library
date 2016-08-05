@@ -44,10 +44,9 @@
 
 #include "hal/common/spi.hpp"
 #include "hal/stm32/gpio_stm32.hpp"
+ 
 extern "C"
 {
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/spi.h>
 }
 

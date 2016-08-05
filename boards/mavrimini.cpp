@@ -129,6 +129,7 @@ bool Mavrimini::init(void)
     ret = red_led_gpio.init();
     green_led.on();
     red_led.on();
+    init_success &= ret;
 
     // -------------------------------------------------------------------------
     // Init SERIAL1
