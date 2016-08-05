@@ -46,8 +46,10 @@
 
 extern "C"
 {
+#include "util/maths.h"
 #include "util/print_util.h"
 }
+#include <algorithm>
 
 const float   SONAR_I2CXL_LPF_VARIO                 = 0.4f;     ///< Low pass filter for velocity estimation
 
@@ -66,7 +68,8 @@ Sonar_i2cxl::Sonar_i2cxl(I2c& i2c, sonar_i2cxl_conf_t config):
     distance_(0.2f),
     velocity_(0.0f),
     healthy_(false),
-    last_update_us_(0.0f)
+    last_update_us_(0.0f),
+    last_distances_{0.0f, 0.0f, 0.0f}
 {}
 
 
@@ -152,6 +155,15 @@ bool Sonar_i2cxl::get_last_measure(void)
     distance_cm = (buf[0] << 8) + buf[1];
     distance_m  = ((float)distance_cm) / 100.0f;
 
+    // Store last measurements and compute median filter
+    for (int32_t i = 0; i < 4; i++)
+    {
+        last_distances_[i] = last_distances_[i + 1];
+    }
+    last_distances_[4] = distance_m;
+    distance_m = median_filter_n(last_distances_, 5);
+
+
     if (distance_m > config_.min_distance && distance_m < config_.max_distance)
     {
         dt_s = (time_us - last_update_us_) / 1000000.0f;
@@ -197,6 +209,32 @@ bool Sonar_i2cxl::get_last_measure(void)
 
 
     return res;
+}
+
+
+float Sonar_i2cxl::median_filter_n(float *in, int n)
+{
+    float middle = 0.0f;
+
+    // Make sense only if odd number of measurements
+    if(n % 2 == 1)
+    {
+        // Create a copy to avoid modifying the input array...
+        float sorted[n];
+        for(int32_t i = 0; i < n; i++)
+        {
+            sorted[i] = in[i];
+        }
+
+        // Sort the array
+        std::sort(sorted, sorted + n);
+
+        // Get median point
+        middle = sorted[(n-1)/2];
+    }
+    
+    // Return the middle value
+    return middle;
 }
 
 
