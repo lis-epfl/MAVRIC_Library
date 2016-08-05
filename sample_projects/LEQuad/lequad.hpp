@@ -225,7 +225,6 @@ protected:
 
     Position_estimation position_estimation;                    ///< The position estimaton structure
     INS_kf ins_kf;                                              ///< The Kalman INS structure, used for position estimation
-    // INS_kf ins_kf_gps;
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes

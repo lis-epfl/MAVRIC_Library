@@ -90,8 +90,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
-    ins_kf(gps, barometer, sonar, ahrs),
-    // ins_kf_gps(gps, barometer, sonar, ahrs, INS_kf::gps_config()),
+    ins_kf(state, gps, barometer, sonar, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
@@ -395,30 +394,30 @@ bool LEQuad::init_ins_kf(void)
     // ret &= data_logging_continuous.add_field(&ins_kf.ori.latitude, "ins_ori_lat", 10);
     // ret &= data_logging_continuous.add_field(&ins_kf.ori.altitude, "ins_ori_alt", 10);
 
-    // ret &= data_logging_continuous.add_field(&ins_kf.gps_local[0], "ins_loc_x", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.gps_local[1], "ins_loc_y", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.gps_local[2], "ins_loc_z", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.x()[0], "ins_x", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.x()[1], "ins_y", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.x()[2], "ins_z", 3);
+    ret &= data_logging_continuous.add_field(&ins_kf.gps_local[0], "ins_loc_x", 3);
+    ret &= data_logging_continuous.add_field(&ins_kf.gps_local[1], "ins_loc_y", 3);
+    ret &= data_logging_continuous.add_field(&ins_kf.gps_local[2], "ins_loc_z", 3);
+    ret &= data_logging_continuous.add_field(&ins_kf.x()[0], "ins_x", 3);
+    ret &= data_logging_continuous.add_field(&ins_kf.x()[1], "ins_y", 3);
+    ret &= data_logging_continuous.add_field(&ins_kf.x()[2], "ins_z", 3);
+    ret &= data_logging_continuous.add_field(&position_estimation.local_position[0], "pos_x", 3);
+    ret &= data_logging_continuous.add_field(&position_estimation.local_position[1], "pos_y", 3);
+    ret &= data_logging_continuous.add_field(&position_estimation.local_position[2], "pos_z", 3);
+
+    // ret &= data_logging_continuous.add_field(&ins_kf.z_baro, "ins_kf_baro", 3);
+
     // ret &= data_logging_continuous.add_field(&position_estimation.local_position[0], "pos_x", 3);
     // ret &= data_logging_continuous.add_field(&position_estimation.local_position[1], "pos_y", 3);
     // ret &= data_logging_continuous.add_field(&position_estimation.local_position[2], "pos_z", 3);
-
-    ret &= data_logging_continuous.add_field(&ins_kf.z_baro, "ins_kf_baro", 3);
-
-    // ret &= data_logging_continuous.add_field(&position_estimation.position_lf()[0], "pos_x", 3);
-    // ret &= data_logging_continuous.add_field(&position_estimation.position_lf()[1], "pos_y", 3);
-    // ret &= data_logging_continuous.add_field(&position_estimation.position_lf()[2], "pos_z", 3);
     // ret &= data_logging_continuous.add_field(&ins_kf.gps_local[0], "ins_loc_x", 3);
     // ret &= data_logging_continuous.add_field(&ins_kf.gps_local[1], "ins_loc_y", 3);
     // ret &= data_logging_continuous.add_field(&ins_kf.gps_local[2], "ins_loc_z", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf_gps.position_lf()[0], "ins_gps_x", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf_gps.position_lf()[1], "ins_gps_y", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf_gps.position_lf()[2], "ins_gps_z", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.position_lf()[0], "ins_x", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.position_lf()[1], "ins_y", 3);
-    // ret &= data_logging_continuous.add_field(&ins_kf.position_lf()[2], "ins_z", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf_gps.x()[0], "ins_gps_x", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf_gps.x()[1], "ins_gps_y", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf_gps.x()[2], "ins_gps_z", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.x()[0], "ins_x", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.x()[1], "ins_y", 3);
+    // ret &= data_logging_continuous.add_field(&ins_kf.x()[2], "ins_z", 3);
     // ret &= data_logging_continuous.add_field(&ins_kf.config_.sigma_baro, "sig_baro", 3);
     // ret &= data_logging_continuous.add_field(&ins_kf_gps.config_.sigma_baro, "sig_gps_baro", 3);
 
@@ -604,7 +603,6 @@ bool LEQuad::main_task(void)
     ahrs_ekf.update();
     position_estimation.update();
     ins_kf.update();
-    // ins_kf_gps.update();
 
     bool failsafe = false;
 
