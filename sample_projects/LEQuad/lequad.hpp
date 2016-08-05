@@ -58,7 +58,7 @@
 #include "communication/remote_default_config.hpp"
 
 #include "control/altitude_controller.hpp"
-#include "control/attitude_controller_default_config.hpp"
+#include "control/attitude_controller.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
@@ -123,7 +123,7 @@ public:
         servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        attitude_controller_conf_t attitude_controller_config;
+        Attitude_controller::conf_t attitude_controller_config;
         Velocity_controller_copter::conf_t velocity_controller_copter_config;
     };
 
@@ -278,7 +278,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.remote_config = remote_default_config();
 
-    conf.attitude_controller_config = attitude_controller_default_config();
+    conf.attitude_controller_config = Attitude_controller::default_config();
 
     conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
 
