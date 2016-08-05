@@ -45,6 +45,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include "util/coord_conventions.hpp"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -55,12 +56,13 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-INS_kf::INS_kf(const Gps& gps,
-                     const Barometer& barometer,
-                     const Sonar& sonar,
-                     //const Px4flow_i2c& flow,
-                     const ahrs_t& ahrs,
-                     const conf_t config):
+INS_kf::INS_kf(State& state,
+                    const Gps& gps,
+                    const Barometer& barometer,
+                    const Sonar& sonar,
+                    // const Px4flow_i2c& flow,
+                    const ahrs_t& ahrs,
+                    const conf_t config):
     Kalman<11,3,3>( {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},                                              // x
                     Mat<11,11>(100, true),                                                          // P
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                                              // F (will be updated)
@@ -84,6 +86,7 @@ INS_kf::INS_kf(const Gps& gps,
                     Mat<11,3>(0.0f)),                                                                 // B (will be updated)
     INS(config.origin),
     config_(config),
+    state_(state),
     gps_(gps),
     barometer_(barometer),
     sonar_(sonar),
@@ -266,16 +269,10 @@ bool INS_kf::update(void)
                 gps_local[1] += rand_sigma(config_.noise_gps_xy);
                 gps_local[2] += rand_sigma(config_.noise_gps_z);
 
-                // Update the measurement noise if needed
-                if(!config_.constant_covar)
-                {
-                    // TODO: Implement this!
-
-                    // Recompute the measurement noise matrix
-                    R_ = Mat<3,3>({ SQR(config_.sigma_gps_xy), 0,                         0,
-                                    0,                         SQR(config_.sigma_gps_xy), 0,
-                                    0,                         0,                         SQR(config_.sigma_gps_z)});
-                }
+                // Recompute the measurement noise matrix
+                R_ = Mat<3,3>({ SQR(config_.sigma_gps_xy), 0,                         0,
+                                0,                         SQR(config_.sigma_gps_xy), 0,
+                                0,                         0,                         SQR(config_.sigma_gps_z)});
 
                 // Run kalman update using default matrices
                 Kalman<11,3,3>::update({gps_local[0], gps_local[1], gps_local[2]});
@@ -296,16 +293,10 @@ bool INS_kf::update(void)
                 gps_velocity[1] += rand_sigma(config_.noise_gps_velxy);
                 gps_velocity[2] += rand_sigma(config_.noise_gps_velz);
 
-                // Update the measurement noise if needed
-                if(!config_.constant_covar)
-                {
-                    // TODO: Implement this!
-
-                    // Recompute the measurement noise matrix
-                    R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velxy),  0,                            0,
-                                           0,                             SQR(config_.sigma_gps_velxy), 0,
-                                           0,                             0,                            SQR(config_.sigma_gps_velz)});
-                }
+                // Recompute the measurement noise matrix
+                R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velxy),  0,                            0,
+                                       0,                             SQR(config_.sigma_gps_velxy), 0,
+                                       0,                             0,                            SQR(config_.sigma_gps_velz)});
 
                 // Run kalman update
                 Kalman<11,3,3>::update(Mat<3,1>(gps_velocity),
@@ -323,14 +314,8 @@ bool INS_kf::update(void)
         {
            if (last_baro_update_s_ < (float)(barometer_.last_update_us())/1e6f)
            {
-              // Update the measurement noise if needed
-              if(!config_.constant_covar)
-              {
-                  // TODO: Implement this!
-
-                  // Recompute the measurement noise matrix
-                  R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
-              }
+              // Recompute the measurement noise matrix
+              R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
 
               // Run kalman Update
               z_baro = barometer_.altitude_gf_raw() - origin_.altitude;
@@ -343,29 +328,65 @@ bool INS_kf::update(void)
            }
         }
 
-        // Measure from sonar
-        if (sonar_.healthy())
+        // Measure from sonar (use measurement only if healthy and if attiude smaller than 20° to avoid peaks)
+        // aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
+        // if ( sonar_.healthy() && (abs(current_attitude.rpy[ROLL]) < PI/9.0f) && (abs(current_attitude.rpy[PITCH]) < PI/9.0f) )
+        // {
+        //    if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
+        //    {
+        //       // Recompute the measurement noise matrix
+        //       R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
+
+        //       // Run kalman Update
+        //       z_sonar = sonar_.distance();
+        //       Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
+        //                              H_sonar_,
+        //                              R_sonar_);
+
+        //       // Update timing
+        //       last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
+        //    }
+        // }
+
+
+        // Measure from sonar (only if small angles, to avoid peaks)
+        float sigma_sonar;
+        aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
+        if ( (abs(current_attitude.rpy[ROLL]) < PI/9.0f) && (abs(current_attitude.rpy[PITCH]) < PI/9.0f) )
         {
-           if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
-           {
-              // Update the measurement noise if needed
-              if(!config_.constant_covar)
-              {
-                  // TODO: Implement this!
+            if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
+            {
+                // If armed, use real measurement and adapt sigma in function of healthiness
+                if(state_.is_armed())
+                {
+                    z_sonar = sonar_.distance();
+                    if(sonar_.healthy())
+                    {
+                        sigma_sonar = config_.sigma_sonar;
+                    }
+                    else
+                    {
+                        sigma_sonar = 0.3f;
+                    }
+                }
+                // If unarmed, force measurement to 0, with very good confidence
+                else
+                {
+                    z_sonar = 0.0f;
+                    sigma_sonar = 0.0001f;
+                }
 
-                  // Recompute the measurement noise matrix
-                  R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
-              }
+                // Recompute the measurement noise matrix
+                R_sonar_ = Mat<1,1>({ SQR(sigma_sonar) });
 
-              // Run kalman Update
-              z_sonar = sonar_.distance();
-              Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
-                                     H_sonar_,
-                                     R_sonar_);
+                // Run kalman Update
+                Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
+                                       H_sonar_,
+                                       R_sonar_);
 
-              // Update timing
-              last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
-           }
+                // Update timing
+                last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
+            }
         }
 
         /*// Measure from optic-flow

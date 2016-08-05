@@ -45,6 +45,7 @@
 #define INS_KF_HPP_
 
 
+#include "communication/state.hpp"
 #include "drivers/gps.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
@@ -151,19 +152,18 @@ public:
         float noise_gps_velz;
         // Position of the origin
         global_position_t origin;
-        // Logic flags
-        bool constant_covar;
     };
 
     /**
      * \brief Constructor
      */
-    INS_kf(const Gps& gps,
-              const Barometer& barometer,
-              const Sonar& sonar,
-              //const Px4flow_i2c& flow,
-              const ahrs_t& ahrs,
-              const conf_t config = default_config() );
+    INS_kf(State& state, 
+            const Gps& gps,
+            const Barometer& barometer,
+            const Sonar& sonar,
+            // const Px4flow_i2c& flow,
+            const ahrs_t& ahrs,
+            const conf_t config = default_config() );
 
 
     /**
@@ -228,12 +228,6 @@ public:
     static inline INS_kf::conf_t default_config(void);
 
 
-    /**
-     * \brief   Configuration to use only the GPS as measurement.
-     */
-    static inline INS_kf::conf_t gps_config(void);
-
-
     conf_t config_;                     ///< Configuration (public, to be used as onboard param)
     uint32_t init_flag;                 ///< Flag used to force initialization by telemetry (0 no init, otherwise init)
 
@@ -247,11 +241,12 @@ public:
 
 
 private:
-    const Gps&          gps_;             ///< Gps (input)
-    const Barometer&    barometer_;       ///< Barometer (input)
-    const Sonar&        sonar_;           ///< Sonar, must be downward facing (input)
+    State&              state_;             ///< Reference to the state structure
+    const Gps&          gps_;               ///< Gps (input)
+    const Barometer&    barometer_;         ///< Barometer (input)
+    const Sonar&        sonar_;             ///< Sonar, must be downward facing (input)
     //const Px4flow_i2c&  flow_;            ///< Optical flow sensor (input)
-    const ahrs_t&       ahrs_;            ///< Attitude and acceleration (input)
+    const ahrs_t&       ahrs_;              ///< Attitude and acceleration (input)
 
     std::array<float,3> pos_;
     std::array<float,3> vel_;
@@ -320,44 +315,10 @@ INS_kf::conf_t INS_kf::default_config(void)
     //default origin location (EFPL Esplanade)
     conf.origin = ORIGIN_EPFL;
 
-    // Logic parameters
-    conf.constant_covar = false;
-
     return conf;
 };
 
-INS_kf::conf_t INS_kf::gps_config(void)
-{
-    INS_kf::conf_t conf = {};
 
-    // Process covariance (noise from state and input)
-    conf.sigma_z_gnd        = 0.001f;
-    conf.sigma_bias_acc     = 0.0001f;
-    conf.sigma_bias_baro    = 0.0f;
-    conf.sigma_acc          = 5.0f;         // Measured: 0.6f (at rest 0.032f)
-
-    // Measurement covariance   (noise from measurement)
-    conf.sigma_gps_xy       = 0.04f;       // Measured: 0.316f
-    conf.sigma_gps_z        = 0.13f;       // Measured: 0.879f
-    conf.sigma_gps_velxy    = 0.04f;       // Measured: 0.064f
-    conf.sigma_gps_velz     = 0.02f;       // Measured: 0.342f
-    conf.sigma_baro         = 100.0f;       // Measured: 0.450f
-    conf.sigma_sonar        = 100.0f;       // Measured: 0.002f
-
-    // Generation of GPS noise (sigma values)
-    conf.noise_gps_xy       = 0.316f;
-    conf.noise_gps_z        = 0.879f;
-    conf.noise_gps_velxy    = 0.064f;
-    conf.noise_gps_velz     = 0.342f;
-
-    //default origin location (EFPL Esplanade)
-    conf.origin = ORIGIN_EPFL;
-
-    // Logic parameters
-    conf.constant_covar = false;
-
-    return conf;
-};
 
 static inline bool task_ins_kf_update(INS_kf* ins_kf)
 {
