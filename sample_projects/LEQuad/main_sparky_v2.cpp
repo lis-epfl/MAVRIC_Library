@@ -46,13 +46,11 @@
 extern "C"
 {
 #include "util/print_util.h"
-
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
 }
 
 int main(int argc, char** argv)
 {   
+
     bool init_success = true;
 
     // -------------------------------------------------------------------------
