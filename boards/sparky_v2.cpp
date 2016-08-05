@@ -95,7 +95,7 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     servo_5_(pwm_5_, config.servo_config[5]),
     servo_6_(pwm_6_, config.servo_config[6]),
     servo_7_(pwm_7_, config.servo_config[7]),
-    //spi_1_(config.spi_config[0]),
+    spi_1_(config.spi_config[0]),
     spi_3_(config.spi_config[2]),
     state_display_sparky_v2_(led_stat_, led_err_)
 {}
@@ -104,7 +104,7 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
 bool Sparky_v2::init(void)
 {
     bool init_success = true;
-    bool ret = true;
+    bool ret;
 
     // -------------------------------------------------------------------------
     // Init clock
@@ -115,9 +115,9 @@ bool Sparky_v2::init(void)
     // -------------------------------------------------------------------------
     // Init LEDs
     // -------------------------------------------------------------------------
-    ret &= led_err_gpio_.init();
-    ret &= led_stat_gpio_.init();
-    ret &= led_rf_gpio_.init();
+    ret = led_err_gpio_.init();
+    ret = led_stat_gpio_.init();
+    ret = led_rf_gpio_.init();
     led_err_.on();
     led_stat_.on();
     led_rf_.on();
@@ -263,8 +263,9 @@ bool Sparky_v2::init(void)
     // -------------------------------------------------------------------------
     // Init SPIs
     // -------------------------------------------------------------------------
-    //spi_1_.init();
-    spi_3_.init();
-
+    ret = spi_1_.init();
+    ret = spi_3_.init();
+    init_success &= ret;
+    
     return init_success;
 }
