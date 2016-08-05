@@ -65,6 +65,8 @@ extern "C"
 }
 #define MAVLINK_SYS_ID 1
 
+#define MAVLINK_SYS_ID 1
+
 // #include "hal/common/dbg.hpp"
 
 int main(void)

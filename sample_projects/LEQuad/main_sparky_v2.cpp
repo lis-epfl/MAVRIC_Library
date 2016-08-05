@@ -30,54 +30,66 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file conf_platform.h
+ * \file main_sparky_v2.cpp
  *
  * \author MAV'RIC Team
  *
- * \brief  This file configures the imu for the rev 4 of the maveric autopilot
+ * \brief Main file
  *
  ******************************************************************************/
 
+#include "boards/sparky_v2.hpp"
 
-#ifndef CONF_PLATFORM_H_
-#define CONF_PLATFORM_H_
+#include "sample_projects/LEQuad/lequad.hpp"
+#include "hal/common/time_keeper.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+extern "C"
+{
+#include "util/print_util.h"
 
-#define MAVLINK_SYS_ID 1
-
-///< Definitions of Platform configuration
-#define M_REAR_LEFT 0       ///< Define the index for the control
-#define M_FRONT_LEFT 1      ///< Define the index for the control
-#define M_FRONT_RIGHT 2     ///< Define the index for the control
-#define M_REAR_RIGHT 3      ///< Define the index for the control
-
-#define M_FR_DIR ( 1)       ///< Define the front right motor turn direction
-#define M_FL_DIR (-1)       ///< Define the front left motor turn direction
-#define M_RR_DIR (-1)       ///< Define the motor turn direction
-#define M_RL_DIR ( 1)       ///< Define the motor turn direction
-
-#define M_FRONT 0           ///< Define the index for the movement control to go front
-#define M_RIGHT 1           ///< Define the index for the movement control to go right
-#define M_REAR 2            ///< Define the index for the movement control to go backward
-#define M_LEFT 3            ///< Define the index for the movement control to go left
-
-#define M_FRONT_DIR ( 1)    ///< Define the direction of control
-#define M_RIGHT_DIR (-1)    ///< Define the direction of control
-#define M_REAR_DIR  ( 1)    ///< Define the direction of control
-#define M_LEFT_DIR  (-1)    ///< Define the direction of control
-
-#define MIN_THRUST -0.9f    ///< Define the minimum thrust to apply
-#define MAX_THRUST 1.0f     ///< Define the maximum thrust to apply
-
-///< define if servos 7 and 8 are used
-#define USE_SERVOS_7_8 false
-
-
-#ifdef __cplusplus
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
 }
-#endif
 
-#endif /* CONF_PLATFORM_H_ */
+int main(int argc, char** argv)
+{   
+    bool init_success = true;
+
+    // -------------------------------------------------------------------------
+    // Create board
+    // -------------------------------------------------------------------------
+    sparky_v2_conf_t board_config = sparky_v2_default_config();
+    Sparky_v2 board(board_config);
+
+    // Board initialisation
+    init_success &= board.init();
+
+
+    // #############################################################################################
+    // #############  Mavlink test##################################################################
+    // #############################################################################################
+    Mavlink_stream mavlink_stream(board.serial_);
+    mavlink_message_t msg;
+
+    while (1)
+    {
+        board.state_display_sparky_v2_.update();
+        // Warning: if too short serial does not work
+        time_keeper_delay_ms(500);
+
+
+        // Write mavlink message
+        mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
+                                    50,     // uint8_t component_id,
+                                    &msg,   // mavlink_message_t* msg,
+                                    0,      // uint8_t type,
+                                    0,      // uint8_t autopilot,
+                                    0,      // uint8_t base_mode,
+                                    0,      // uint32_t custom_mode,
+                                    0);     //uint8_t system_status)
+        mavlink_stream.send(&msg);
+
+    }
+
+    return 0;
+}

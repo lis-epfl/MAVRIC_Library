@@ -30,54 +30,43 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file conf_platform.h
+ * \file state_display_sparky_v2.hpp
  *
  * \author MAV'RIC Team
+ * \author Jean-François Burnier
  *
- * \brief  This file configures the imu for the rev 4 of the maveric autopilot
+ * \brief Interface class for state display for Sparky V2, stm32
  *
  ******************************************************************************/
 
+#ifndef STATE_DISPLAY_SPARKY_V2_HPP_
+#define STATE_DISPLAY_SPARKY_V2_HPP_
 
-#ifndef CONF_PLATFORM_H_
-#define CONF_PLATFORM_H_
+#include "drivers/state_display.hpp"
+#include "hal/common/led.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+class State_display_sparky_v2 : public State_display
+{
+	public:
+	 /**
+     * \brief Constructor
+     */
+	State_display_sparky_v2(Led& led_green, Led& led_red);
 
-#define MAVLINK_SYS_ID 1
+	 /**
+     * \brief   Main update function
+     * \detail  Reads new state 
+     *
+     * \return  Success
+     */
+	bool update();
 
-///< Definitions of Platform configuration
-#define M_REAR_LEFT 0       ///< Define the index for the control
-#define M_FRONT_LEFT 1      ///< Define the index for the control
-#define M_FRONT_RIGHT 2     ///< Define the index for the control
-#define M_REAR_RIGHT 3      ///< Define the index for the control
-
-#define M_FR_DIR ( 1)       ///< Define the front right motor turn direction
-#define M_FL_DIR (-1)       ///< Define the front left motor turn direction
-#define M_RR_DIR (-1)       ///< Define the motor turn direction
-#define M_RL_DIR ( 1)       ///< Define the motor turn direction
-
-#define M_FRONT 0           ///< Define the index for the movement control to go front
-#define M_RIGHT 1           ///< Define the index for the movement control to go right
-#define M_REAR 2            ///< Define the index for the movement control to go backward
-#define M_LEFT 3            ///< Define the index for the movement control to go left
-
-#define M_FRONT_DIR ( 1)    ///< Define the direction of control
-#define M_RIGHT_DIR (-1)    ///< Define the direction of control
-#define M_REAR_DIR  ( 1)    ///< Define the direction of control
-#define M_LEFT_DIR  (-1)    ///< Define the direction of control
-
-#define MIN_THRUST -0.9f    ///< Define the minimum thrust to apply
-#define MAX_THRUST 1.0f     ///< Define the maximum thrust to apply
-
-///< define if servos 7 and 8 are used
-#define USE_SERVOS_7_8 false
+	private:
+		Led& led_green_;
+		Led& led_red_;
+		
 
 
-#ifdef __cplusplus
-}
-#endif
+};
 
-#endif /* CONF_PLATFORM_H_ */
+ #endif /* STATE_DISPLAY_SPARKY_V2_HPP_ */
