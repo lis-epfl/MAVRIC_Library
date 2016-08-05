@@ -89,6 +89,7 @@ typedef struct
     Pwm_stm32::config_t     pwm_config[8];
     servo_conf_t            servo_config[8];
     spi_stm32_conf_t        spi_config[3];
+
 } sparky_v2_conf_t;
 
 
