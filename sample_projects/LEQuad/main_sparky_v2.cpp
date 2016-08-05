@@ -80,11 +80,11 @@ int main(int argc, char** argv)
     // Create devices that are not implemented in board yet
     // -------------------------------------------------------------------------
     // Dummy peripherals
-    Serial_dummy serial_dummy;
-    I2c_dummy i2c_dummy;
-    File_dummy file_dummy;
-    Gpio_dummy gpio_dummy;
-    Spektrum_satellite satellite_dummy(serial_dummy, gpio_dummy, gpio_dummy);
+    Serial_dummy        serial_dummy;
+    I2c_dummy           i2c_dummy;
+    File_dummy          file_dummy;
+    Gpio_dummy          gpio_dummy;
+    Spektrum_satellite  satellite_dummy(serial_dummy, gpio_dummy, gpio_dummy);
 
     // -------------------------------------------------------------------------
     // Create simulation
@@ -101,17 +101,17 @@ int main(int argc, char** argv)
     Servo sim_servo_7(pwm[7], servo_default_config_esc());
 
     // Simulated dynamic model
-    Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
-    Simulation sim                       = Simulation(sim_model);
+    Dynamic_model_quad_diag     sim_model(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
+    Simulation                  sim(sim_model);
 
     // Simulated battery
-    Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
-    Battery  sim_battery     = Battery(sim_adc_battery);
+    Adc_dummy   sim_adc_battery(11.1f);
+    Battery     sim_battery(sim_adc_battery);
 
     // Simulated IMU
-    Imu      sim_imu         = Imu(  sim.accelerometer(),
-                                     sim.gyroscope(),
-                                     sim.magnetometer() );
+    Imu     sim_imu( sim.accelerometer(),
+                     sim.gyroscope(),
+                     sim.magnetometer() );
 
     // set the flag to simulation
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
@@ -144,7 +144,7 @@ int main(int argc, char** argv)
     // LEQuad mav = LEQuad(board.imu,
     //                     board.bmp085,
     //                     board.gps_ublox,
-    //                     board.sonar_i2cxl,      // Warning:
+    //                     board.sonar_i2cxl,
     //                     board.uart0,
     //                     board.spektrum_satellite,
     //                     board.state_display_megafly_rev4_,
@@ -167,14 +167,7 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-
     mav.loop();
-
-    while (1)
-    {
-        board.state_display_sparky_v2_.update();
-        time_keeper_delay_ms(100);
-    }
 
     return 0;
 }
