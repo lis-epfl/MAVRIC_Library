@@ -42,11 +42,11 @@
 
 
 #include "drivers/barometer_ms5611.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/maths.h"
-#include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
 }
 
@@ -54,9 +54,10 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Barometer_MS5611::Barometer_MS5611(I2c& i2c):
+Barometer_MS5611::Barometer_MS5611(I2c& i2c, conf_t config):
     i2c_(i2c),
-    state_(IDLE),
+    config_(config),
+    state_(state_t::IDLE),
     last_state_update_us_(0.0f),
     last_update_us_(0.0f),
     dt_s_(0.1f),
@@ -74,12 +75,42 @@ Barometer_MS5611::Barometer_MS5611(I2c& i2c):
 bool Barometer_MS5611::init(void)
 {
     bool res = true;
+    uint8_t command;
 
-    // Test if the sensor if here
-    // res &= i2c_.probe(BMP085_SLAVE_ADDRESS);
+    // Reset sensor
+    command = COMMAND_RESET;
+    i2c_.probe((uint8_t)config_.address);
+    i2c_.write(&command, 1, (uint8_t)config_.address);
 
-    // Reset Barometer_MS5611 state
-    state_ = IDLE;
+    // Wait a bit
+    time_keeper_delay_ms(20);
+
+    // Test if the sensor is here
+    res = i2c_.probe((uint8_t)config_.address);
+
+    if (res)
+    {
+        // Read calibration data
+        uint8_t buffer[12];
+        command = COMMAND_GET_CALIBRATION;
+
+        i2c_.write(&command, 1, (uint8_t)config_.address);
+        i2c_.read(buffer, 12, (uint8_t)config_.address);
+
+        calib_.SENS_T1  = (buffer[0] << 8)  + buffer[1];
+        calib_.OFF_T1   = (buffer[2] << 8)  + buffer[3];
+        calib_.TCS      = (buffer[4] << 8)  + buffer[5];
+        calib_.TCO      = (buffer[6] << 8)  + buffer[7];
+        calib_.T_REF    = (buffer[8] << 8)  + buffer[9];
+        calib_.TEMPSENS = (buffer[10] << 8) + buffer[11];
+
+        state_ = state_t::IDLE;
+    }
+    else
+    {
+        // Try again later
+        state_ = state_t::INIT;
+    }
 
     return res;
 }
@@ -87,143 +118,33 @@ bool Barometer_MS5611::init(void)
 
 bool Barometer_MS5611::update(void)
 {
-    bool res            = true;
+    bool res = true;
 
-    // float altitude_filtered_old;
-    // float altitude_raw;
-    // float new_speed_lf;
-    //
-    // int32_t UT, UP, B3, B5, B6, X1, X2, X3, p;
-    // uint32_t B4, B7;
-    //
-    // uint8_t start_address;
-    //
-    // uint8_t start_command_temp [] =
-    // {
-    //     BMP085_CONTROL,
-    //     BMP085_READTEMPCMD
-    // };
-    //
-    // uint8_t start_command_pressure [] =
-    // {
-    //     BMP085_CONTROL,
-    //     BMP085_READPRESSURECMD + (BMP085_OVERSAMPLING_MODE << 6)
-    // };
-    //
-    // switch (state_)
-    // {
-    //     case BMP085_IDLE:
-    //         res &= i2c_.write((uint8_t*) &start_command_temp, 2, BMP085_SLAVE_ADDRESS);
-    //         state_ = BMP085_GET_TEMP;
-    //         break;
-    //
-    //     case BMP085_GET_TEMP:
-    //         start_address = BMP085_TEMPDATA;
-    //         res &= i2c_.write((uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS);
-    //         res &= i2c_.read((uint8_t*) & (raw_temperature_), 2, BMP085_SLAVE_ADDRESS);
-    //
-    //         res &= i2c_.write((uint8_t*) &start_command_pressure, 2, BMP085_SLAVE_ADDRESS);
-    //         state_ = BMP085_GET_PRESSURE;
-    //         break;
-    //
-    //     case BMP085_GET_PRESSURE:
-    //         start_address = BMP085_PRESSUREDATA;
-    //         res &= i2c_.write((uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS);
-    //         res &= i2c_.read((uint8_t*) & (raw_pressure_), 3, BMP085_SLAVE_ADDRESS);
-    //
-    //         UP = ((uint32_t)raw_pressure_[0] << 16 | (uint32_t)raw_pressure_[1] << 8 | (uint32_t)raw_pressure_[2]) >> (8 - BMP085_OVERSAMPLING_MODE);
-    //
-    //         UT = raw_temperature_[0] << 8 | raw_temperature_[1];
-    //
-    //         ///< step 1
-    //         X1 = (UT - (int32_t)ac6_) * ((int32_t)ac5_) / pow(2, 15);
-    //         X2 = ((int32_t)mc_ * pow(2, 11)) / (X1 + (int32_t)md_);
-    //         B5 = X1 + X2;
-    //         temperature_ = (B5 + 8) / pow(2, 4);
-    //         temperature_ /= 10;
-    //
-    //         ///< do pressure calcs
-    //         B6 = B5 - 4000;
-    //         X1 = ((int32_t)b2_ * ((B6 * B6) >> 12)) >> 11;
-    //         X2 = ((int32_t)ac2_ * B6) >> 11;
-    //         X3 = X1 + X2;
-    //         B3 = ((((int32_t)ac1_ * 4 + X3) << BMP085_OVERSAMPLING_MODE) + 2) / 4;
-    //
-    //
-    //         X1 = ((int32_t)ac3_ * B6) >> 13;
-    //         X2 = ((int32_t)b1_ * ((B6 * B6) >> 12)) >> 16;
-    //         X3 = ((X1 + X2) + 2) >> 2;
-    //         B4 = ((uint32_t)ac4_ * (uint32_t)(X3 + 32768)) >> 15;
-    //         B7 = ((uint32_t)UP - B3) * (uint32_t)(50000UL >> BMP085_OVERSAMPLING_MODE);
-    //
-    //
-    //         if (B7 < 0x80000000)
-    //         {
-    //             p = (B7 * 2) / B4;
-    //         }
-    //         else
-    //         {
-    //             p = (B7 / B4) * 2;
-    //         }
-    //
-    //         X1 = (p >> 8) * (p >> 8);
-    //         X1 = (X1 * 3038) >> 16;
-    //         X2 = (- 7357 * p) >> 16;
-    //
-    //         p = p + ((X1 + X2 + (int32_t)3791) >> 4);
-    //
-    //         // Store current pressure
-    //         pressure_ = p;
-    //
-    //         // Compute new altitude from pressure
-    //         altitude_raw = altitude_from_pressure(pressure_, 0);
-    //
-    //         // Update circular buffer with last 3 altitudes
-    //         for (int32_t i = 0; i < 2; i++)
-    //         {
-    //             last_altitudes_[i] = last_altitudes_[i + 1];
-    //         }
-    //         last_altitudes_[2] = altitude_raw;
-    //
-    //         // Apply median filter on last 3 altitudes
-    //         altitude_raw = maths_median_filter_3x(last_altitudes_[0], last_altitudes_[1], last_altitudes_[2]);
-    //
-    //         // Keep old, filtered altitude
-    //         altitude_filtered_old = altitude_filtered;
-    //
-    //         // Low pass filter the altitude, only if this is not a spike
-    //         if (maths_f_abs(altitude_raw - altitude_filtered_old) < 15.0f)
-    //         {
-    //             altitude_filtered = (BARO_ALT_LPF * altitude_filtered_old) + (1.0f - BARO_ALT_LPF) * altitude_raw;
-    //         }
-    //         else
-    //         {
-    //             altitude_filtered = altitude_raw;
-    //         }
-    //
-    //         // remove bias
-    //         altitude_gf_ = altitude_filtered - altitude_bias_gf_;
-    //
-    //         // Time interval since last update
-    //         dt_s_ = (time_keeper_get_us() - last_update_us_) / 1000000.0f;
-    //
-    //         // Compute new vertical speed from two last filtered altitudes
-    //         new_speed_lf = - (altitude_filtered - altitude_filtered_old) / dt_s_;
-    //
-    //         // Remove spikes
-    //         if (maths_f_abs(new_speed_lf) > 20)
-    //         {
-    //             new_speed_lf = 0.0f;
-    //         }
-    //
-    //         // Low pass filter vertical speed
-    //         speed_lf_ = (VARIO_LPF) * speed_lf_ + (1.0f - VARIO_LPF) * (new_speed_lf);
-    //
-    //         // Update timing
-    //         last_update_us_ = time_keeper_get_us();
-    //         state_          = BMP085_IDLE;
-    //         break;
-    // }
+    switch (state_)
+    {
+        case state_t::INIT:
+            res &= init();
+        break;
+
+        case state_t::IDLE:
+            res &= start_temperature_sampling();
+            state_ = state_t::GET_TEMPERATURE;
+        break;
+
+        case state_t::GET_TEMPERATURE:
+            res &= read_temperature();
+            res &= start_pressure_sampling();
+            state_ = state_t::GET_PRESSURE;
+        break;
+
+        case state_t::GET_PRESSURE:
+            res &= read_pressure();
+            res &= start_temperature_sampling();
+            state_ = state_t::GET_TEMPERATURE;
+        break;
+    }
+
+    speed_lf_ = (float)state_;  // TODO remove
 
     last_state_update_us_ = time_keeper_get_us();
 
@@ -258,4 +179,76 @@ float Barometer_MS5611::vertical_speed_lf(void) const
 float Barometer_MS5611::temperature(void) const
 {
     return temperature_;
+}
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool Barometer_MS5611::start_temperature_sampling(void)
+{
+    bool res = true;
+
+    uint8_t command = COMMAND_START_TEMPERATURE_CONV + (uint8_t)config_.oversampling_ratio_temperature;
+    res &= i2c_.write(&command, 1, (uint8_t)config_.address);
+
+    return res;
+}
+
+bool Barometer_MS5611::read_temperature(void)
+{
+    bool res = true;
+
+    // Get sampled data
+    uint8_t data[3];
+    uint8_t command = COMMAND_GET_DATA;
+    res &= i2c_.write(&command, 1, (uint8_t)config_.address);
+    res &= i2c_.read(data, 3, (uint8_t)config_.address);
+
+    // Convert raw data to temperature and apply calibration
+    int32_t raw_temperature      = ((uint32_t)data[0] << 16) | ((uint32_t)data[1] << 8) | ((uint32_t)data[2] << 0);
+	int64_t delta_temp           = raw_temperature - (calib_.T_REF << 8);
+    int64_t temperature_unscaled = 2000 + ((delta_temp * calib_.TEMPSENS) >> 23);
+    float temperature            = ((float)temperature_unscaled) / 100.0f;
+
+    // second order temperature compensation
+	if (temperature < 2000)
+    {
+		temperature_unscaled -= (delta_temp * delta_temp) >> 31;
+    }
+
+    // TODO
+    temperature_ = raw_temperature; // temperature_unscaled;
+
+    return res;
+}
+
+bool Barometer_MS5611::start_pressure_sampling(void)
+{
+    bool res = true;
+
+    uint8_t command = COMMAND_START_PRESSURE_CONV + (uint8_t)config_.oversampling_ratio_pressure;
+    res &= i2c_.write(&command, 1, (uint8_t)config_.address);
+
+    time_sampling_start_ms_ = time_keeper_get_ms();
+
+    return res;
+}
+
+bool Barometer_MS5611::read_pressure(void)
+{
+    bool res = true;
+
+    // Get sampled data
+    uint8_t data[3];
+    uint8_t command = COMMAND_GET_DATA;
+    res &= i2c_.write(&command, 1, (uint8_t)config_.address);
+    res &= i2c_.read(data, 3, (uint8_t)config_.address);
+
+    // TODO
+    int32_t raw_pressure      = ((uint32_t)data[0] << 16) | ((uint32_t)data[1] << 8) | ((uint32_t)data[2] << 0);
+    altitude_gf_ = raw_pressure;
+
+    return res;
 }

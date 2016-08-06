@@ -97,7 +97,10 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     servo_7_(pwm_7_, config.servo_config[7]),
     spi_1_(config.spi_config[0]),
     spi_3_(config.spi_config[2]),
-    state_display_sparky_v2_(led_stat_, led_err_)
+    i2c_1_(config.i2c_config[0]),
+    i2c_2_(config.i2c_config[1]),
+    state_display_sparky_v2_(led_stat_, led_err_),
+    barometer_(i2c_1_, config.barometer_config)
 {}
 
 
@@ -266,6 +269,19 @@ bool Sparky_v2::init(void)
     // -------------------------------------------------------------------------
     ret = spi_1_.init();
     ret = spi_3_.init();
+    init_success &= ret;
+
+    // -------------------------------------------------------------------------
+    // Init I2Cs
+    // -------------------------------------------------------------------------
+    ret = i2c_1_.init();
+    ret = i2c_2_.init();
+    init_success &= ret;
+
+    // -------------------------------------------------------------------------
+    // Init barometer
+    // -------------------------------------------------------------------------
+    ret = barometer_.init();
     init_success &= ret;
 
     return init_success;

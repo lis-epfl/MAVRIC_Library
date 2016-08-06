@@ -50,9 +50,11 @@
 #include "hal/stm32/serial_stm32.hpp"
 #include "hal/stm32/serial_usb_stm32.hpp"
 #include "hal/stm32/spi_stm32.hpp"
+#include "hal/stm32/i2c_stm32.hpp"
 
 #include "drivers/servo.hpp"
 #include "drivers/state_display_sparky_v2.hpp"
+#include "drivers/barometer_ms5611.hpp"
 
 #include "hal/dummy/serial_dummy.hpp"
 #include "hal/dummy/gpio_dummy.hpp"
@@ -90,6 +92,9 @@ typedef struct
     Serial_usb_stm32::conf_t serial_usb_config;
     servo_conf_t             servo_config[8];
     spi_stm32_conf_t         spi_config[3];
+    i2c_stm32_conf_t         i2c_config[2];
+
+    Barometer_MS5611::conf_t barometer_config;
 } sparky_v2_conf_t;
 
 
@@ -151,7 +156,11 @@ public:
     Servo                   servo_7_;
     Spi_stm32               spi_1_;
     Spi_stm32               spi_3_;
+    I2c_stm32               i2c_1_;
+    I2c_stm32               i2c_2_;
+
     State_display_sparky_v2 state_display_sparky_v2_;
+    Barometer_MS5611        barometer_;
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
@@ -340,6 +349,47 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.spi_config[2].sck_gpio_config.dir      = GPIO_OUTPUT;
     conf.spi_config[2].sck_gpio_config.pull     = GPIO_PULL_UPDOWN_DOWN;
     conf.spi_config[2].sck_gpio_config.alt_fct  = GPIO_STM32_AF_6;
+
+    // -------------------------------------------------------------------------
+    // I2C config
+    // -------------------------------------------------------------------------
+    conf.i2c_config[0]                        = i2c_stm32_default_config();
+    conf.i2c_config[0].i2c_device_config      = STM32_I2C1;
+    conf.i2c_config[0].rcc_i2c_config         = RCC_I2C1;
+    conf.i2c_config[0].rcc_sda_port_config    = RCC_GPIOB;
+    conf.i2c_config[0].sda_config.port        = GPIO_STM32_PORT_B;
+    conf.i2c_config[0].sda_config.pin         = GPIO_STM32_PIN_9;
+    conf.i2c_config[0].sda_config.alt_fct     = GPIO_STM32_AF_4;
+    conf.i2c_config[0].rcc_clk_port_config    = RCC_GPIOB;
+    conf.i2c_config[0].clk_config.port        = GPIO_STM32_PORT_B;
+    conf.i2c_config[0].clk_config.pin         = GPIO_STM32_PIN_8;
+    conf.i2c_config[0].clk_config.alt_fct     = GPIO_STM32_AF_4;
+    // conf.i2c_config[0].clk_speed              = 100000;
+    conf.i2c_config[0].clk_speed              = 400000;
+    conf.i2c_config[0].tenbit_config          = false;  // currently only support 8 bits addressing
+    // conf.i2c_config[0].timeout                = 20000;
+    conf.i2c_config[0].timeout                = 100;
+
+    conf.i2c_config[1]                        = i2c_stm32_default_config();
+    conf.i2c_config[1].i2c_device_config      = STM32_I2C2;
+    conf.i2c_config[1].rcc_i2c_config         = RCC_I2C2;
+    conf.i2c_config[1].rcc_sda_port_config    = RCC_GPIOB;
+    conf.i2c_config[1].sda_config.port        = GPIO_STM32_PORT_B;
+    conf.i2c_config[1].sda_config.pin         = GPIO_STM32_PIN_11;
+    conf.i2c_config[1].sda_config.alt_fct     = GPIO_STM32_AF_4;
+    conf.i2c_config[1].rcc_clk_port_config    = RCC_GPIOB;
+    conf.i2c_config[1].clk_config.port        = GPIO_STM32_PORT_B;
+    conf.i2c_config[1].clk_config.pin         = GPIO_STM32_PIN_10;
+    conf.i2c_config[1].clk_config.alt_fct     = GPIO_STM32_AF_4;
+    conf.i2c_config[1].clk_speed              = 100000;
+    conf.i2c_config[1].tenbit_config          = false;  // currently only support 8 bits addressing
+    conf.i2c_config[1].timeout                = 20000;
+
+    // -------------------------------------------------------------------------
+    // Barometer config
+    // -------------------------------------------------------------------------
+    conf.barometer_config = Barometer_MS5611::default_config();
+
     return conf;
 }
 

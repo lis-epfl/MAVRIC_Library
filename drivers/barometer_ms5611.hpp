@@ -58,20 +58,74 @@ public:
     /**
      * \brief Sensor state
      */
-    enum state_t
+    enum class state_t
     {
-        IDLE,                   ///< Is doing nothing
-        SAMPLING_TEMPERATURE,   ///< Is sampling temperature
-        SAMPLING_PRESSURE,      ///< Is sampling pressure
+        INIT,                  ///< Sensor is not responding, will retry
+        IDLE,                   ///< First run, start temperature sampling
+        GET_TEMPERATURE,        ///< Read temperature from sensor, start pressure sampling
+        GET_PRESSURE,           ///< Read pressure from sensor, start temperature sampling
     };
 
+    /**
+     * \bief I2C address of the sensor
+     */
+    enum class address_t
+    {
+        ADDR_CSBLOW  = 0x77,     ///< I2C address when CSB pin is connected to GND
+        ADDR_CSBHIGH = 0x76,     ///< I2C address when CSB pin is connected to VCC
+    };
+
+    /**
+     * \brief Oversampling ratio
+     */
+    enum class oversampling_ratio_t
+    {
+        OSR_256  = 0x00,            ///<  256 : resolution 0.065mbar, sampling time 0.54ms
+        OSR_512  = 0x01,            ///<  512 : resolution 0.042mbar, sampling time 1.06ms
+        OSR_1024 = 0x02,            ///< 1024 : resolution 0.027mbar, sampling time 2.08ms
+        OSR_2048 = 0x03,            ///< 2048 : resolution 0.018mbar, sampling time 4.13ms
+        OSR_4096 = 0x04,            ///< 4096 : resolution 0.012mbar, sampling time 8.22ms
+    };
+
+    struct calibration_data_t
+    {
+        uint16_t SENS_T1;
+        uint16_t OFF_T1;
+        uint16_t TCS;
+        uint16_t TCO;
+        uint16_t T_REF;
+        uint16_t TEMPSENS;
+    };
+
+    const uint8_t COMMAND_RESET                    = 0x1E;  ///< Reset sensor
+    const uint8_t COMMAND_GET_CALIBRATION          = 0xA2;  ///< Get 16bytes factory configuration from PROM
+    const uint8_t COMMAND_START_PRESSURE_CONV      = 0x40;  ///< Start pressure conversion (must add oversampling ratio to this command)
+    const uint8_t COMMAND_START_TEMPERATURE_CONV   = 0x50;  ///< Start temperature conversion (must add oversampling ratio to this command)
+    const uint8_t COMMAND_GET_DATA                 = 0x00;  ///< Get 3 bytes data (can be pressure or temperature depending of which sampling was started)
+
+    /**
+     * \brief Configuration structure
+     */
+    struct conf_t
+    {
+        address_t               address;
+        oversampling_ratio_t    oversampling_ratio_pressure;
+        oversampling_ratio_t    oversampling_ratio_temperature;
+    };
+
+    /**
+     * \brief   Default Configuration
+     *
+     * \return  config
+     */
+    static inline conf_t default_config(void);
 
     /**
      * \brief   Constructor
      *
      * \param   i2c     Reference to I2C device
      */
-    Barometer_MS5611(I2c& i2c);
+    Barometer_MS5611(I2c& i2c, conf_t config = default_config());
 
 
     /**
@@ -134,19 +188,74 @@ public:
      */
     float temperature(void) const;
 
+
 private:
     I2c&        i2c_;                   ///< Reference to I2C peripheral
+    conf_t      config_;                ///< Configuration
     state_t     state_;                 ///< Sensor state
+
+    calibration_data_t  calib_;          ///< Calibration data read from sensors PROM
+    uint8_t             i2c_address;
+
+    uint32_t time_sampling_start_ms_;
+
     float       last_state_update_us_;  ///< Time of the last state update
     float       last_update_us_;        ///< Time of the last update
     float       dt_s_;                  ///< Time step for the derivative
-
     float   pressure_;              ///< Measured pressure
     float   temperature_;           ///< Measured temperature
     float   altitude_gf_;           ///< Measured altitude (global frame)
     float   speed_lf_;              ///< Vario altitude speed (ned frame)
 
     float       last_altitudes_[3];     ///< Array to store previous value of the altitude for low pass filtering the output
+
+    /**
+     * \brief   Start temperature sampling
+     *
+     * \return  success
+     */
+    bool start_temperature_sampling(void);
+
+    /**
+     * \brief   Read pressure sampling
+     *
+     * \return  success
+     */
+    bool read_temperature(void);
+
+    /**
+     * \brief   Start pressure sampling
+     *
+     * \return  success
+     */
+    bool start_pressure_sampling(void);
+
+    /**
+     * \brief   Read pressure sampling
+     *
+     * \return  success
+     */
+    bool read_pressure(void);
 };
+
+
+/**
+ * \brief   Default Configuration
+ *
+ * \return  config
+ */
+Barometer_MS5611::conf_t Barometer_MS5611::default_config(void)
+{
+    Barometer_MS5611::conf_t config = {};
+
+    config.address                         = address_t::ADDR_CSBLOW;
+    // config.oversampling_ratio_pressure     = oversampling_ratio_t::OSR_4096;
+    // config.oversampling_ratio_temperature  = oversampling_ratio_t::OSR_4096;
+
+    config.oversampling_ratio_pressure     = oversampling_ratio_t::OSR_256;
+    config.oversampling_ratio_temperature  = oversampling_ratio_t::OSR_256;
+
+    return config;
+}
 
 #endif /* BMP085_HPP_ */
