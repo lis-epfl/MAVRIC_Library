@@ -104,7 +104,7 @@ static const struct usb_endpoint_descriptor data_endp[] =   {
                                                                 	.bEndpointAddress  = 0x01,
                                                                 	.bmAttributes      = USB_ENDPOINT_ATTR_BULK,
                                                                 	.wMaxPacketSize    = 64,
-                                                                	.bInterval         = 1,
+                                                                	.bInterval         = 0,
                                                                 },
                                                                 {
                                                                 	.bLength           = USB_DT_ENDPOINT_SIZE,
@@ -112,7 +112,7 @@ static const struct usb_endpoint_descriptor data_endp[] =   {
                                                                 	.bEndpointAddress  = 0x82,
                                                                 	.bmAttributes      = USB_ENDPOINT_ATTR_BULK,
                                                                 	.wMaxPacketSize    = 64,
-                                                                	.bInterval         = 1,
+                                                                	.bInterval         = 0,
                                                                 }
                                                             };
 
