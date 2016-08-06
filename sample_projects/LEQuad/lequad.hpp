@@ -167,7 +167,7 @@ public:
      */
     void loop(void);
 
-protected:
+// protected:
 
     virtual bool init_main_task(void);
     virtual bool init_state(void);
