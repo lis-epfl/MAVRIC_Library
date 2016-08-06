@@ -97,11 +97,11 @@ public:
         uint16_t TEMPSENS;
     };
 
-    const uint8_t COMMAND_RESET                    = 0x1E;  ///< Reset sensor
-    const uint8_t COMMAND_GET_CALIBRATION          = 0xA2;  ///< Get 16bytes factory configuration from PROM
-    const uint8_t COMMAND_START_PRESSURE_CONV      = 0x40;  ///< Start pressure conversion (must add oversampling ratio to this command)
-    const uint8_t COMMAND_START_TEMPERATURE_CONV   = 0x50;  ///< Start temperature conversion (must add oversampling ratio to this command)
-    const uint8_t COMMAND_GET_DATA                 = 0x00;  ///< Get 3 bytes data (can be pressure or temperature depending of which sampling was started)
+    static const uint8_t COMMAND_RESET                    = 0x1E;  ///< Reset sensor
+    static const uint8_t COMMAND_GET_CALIBRATION          = 0xA2;  ///< Get 16bytes factory configuration from PROM
+    static const uint8_t COMMAND_START_PRESSURE_CONV      = 0x40;  ///< Start pressure conversion (must add oversampling ratio to this command)
+    static const uint8_t COMMAND_START_TEMPERATURE_CONV   = 0x50;  ///< Start temperature conversion (must add oversampling ratio to this command)
+    static const uint8_t COMMAND_GET_DATA                 = 0x00;  ///< Get 3 bytes data (can be pressure or temperature depending of which sampling was started)
 
     /**
      * \brief Configuration structure
