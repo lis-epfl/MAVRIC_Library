@@ -39,7 +39,8 @@ CM3_LIB_DIR		= $(OPENCM3_DIR)/lib
 CM3_SCRIPT_DIR	= $(OPENCM3_DIR)/scripts
 CM3_LIBNAME 	= opencm3_stm32f4
 CM3_DEFS		= -DSTM32F4
-CM3_FP_FLAGS	?= -mfloat-abi=hard -mfpu=fpv4-sp-d16
+# CM3_FP_FLAGS	?= -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CM3_FP_FLAGS	= -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CM3_ARCH_FLAGS	= -mthumb -mcpu=cortex-m4 $(CM3_FP_FLAGS)
 # CM3_LDSCRIPT 	= $(OPENCM3_DIR)/lib/libopencm3_stm32f4.ld
 CM3_LDSCRIPT 	= mavrimini.ld
