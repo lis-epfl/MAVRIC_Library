@@ -167,7 +167,69 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-    mav.loop();
+    // mav.loop();
+
+    // #############################################################################################
+    // #############  SPI test##################################################################
+    // #############################################################################################
+    uint8_t reg  = 0x75 | 0x80; //0x75 | 0x80;
+    uint8_t fil  = 0x55;
+    uint16_t an1 =  0;
+    uint16_t an2  = 0;
+    uint8_t b[5] = {0xf5,0x00,0x33,0x44,0x55};
+    uint8_t *bytes = b;
+    uint8_t dis[2] = {0x6A,0x08};
+
+    board.spi_1_.write(dis,2);
+
+    board.led_err_.off();
+    board.led_stat_.off();
+    board.led_rf_.off();
+    
+    while (1)
+    {
+        //board.state_display_sparky_v2_.update();
+        // Warning: if too short serial does not work
+        //time_keeper_delay_ms(1000);
+
+
+        // Write mavlink message
+        // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
+        //                             50,     // uint8_t component_id,
+        //                             &msg,   // mavlink_message_t* msg,
+        //                             0,      // uint8_t type,
+        //                             0,      // uint8_t autopilot,
+        //                             0,      // uint8_t base_mode,
+        //                             0,      // uint32_t custom_mode,
+        //                             0);     //uint8_t system_status)
+        // mavlink_stream.send(&msg);
+
+        gpio_clear(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
+        //board.spi_1_.write(b,1);
+        //board.spi_1_.read(an1,1);
+        spi_send(SPI1, 0xf5);
+        an1 = spi_read(SPI1);
+        spi_send(SPI1, 0);
+        an2 = spi_read(SPI1);
+        gpio_set(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
+        // board.spi_1_.read(&an2,1);
+        // board.spi_3_.write(bytes,2);
+        // board.spi_3_.read(&an1);
+        // board.spi_3_.read(&an2);
+        
+        if (an1 == 0x71 || an2 == 0x71)
+        {
+            board.led_stat_.toggle();
+        }
+        else
+        {
+            board.led_err_.toggle();
+        }
+        //gpio_clear(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
+        time_keeper_delay_ms(500);
+        //gpio_set(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
+
+    }
 
     return 0;
 }
