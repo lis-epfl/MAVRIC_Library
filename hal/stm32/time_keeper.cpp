@@ -88,7 +88,7 @@ void time_keeper_init(void)
 double time_keeper_get_s(void)
 {
     // time in seconds since system start
-    return (float)(system_us) / 1000000.0f;
+    return (double)(system_us) / 1000000.0;
 }
 
 

@@ -45,13 +45,26 @@
 
 #include "hal/stm32/spi_stm32.hpp"
 
+#include "hal/dummy/serial_dummy.hpp"
+#include "hal/dummy/i2c_dummy.hpp"
+#include "hal/dummy/file_dummy.hpp"
+#include "hal/dummy/adc_dummy.hpp"
+#include "hal/dummy/pwm_dummy.hpp"
+
+#include "simulation/dynamic_model_quad_diag.hpp"
+#include "simulation/simulation.hpp"
+
+#include "drivers/spektrum_satellite.hpp"
+
 extern "C"
 {
 #include "util/print_util.h"
 }
 
+#define MAVLINK_SYS_ID 2
+
 int main(int argc, char** argv)
-{   
+{
     bool init_success = true;
 
     // -------------------------------------------------------------------------
@@ -63,43 +76,98 @@ int main(int argc, char** argv)
     // Board initialisation
     init_success &= board.init();
 
+    // -------------------------------------------------------------------------
+    // Create devices that are not implemented in board yet
+    // -------------------------------------------------------------------------
+    // Dummy peripherals
+    Serial_dummy        serial_dummy;
+    I2c_dummy           i2c_dummy;
+    File_dummy          file_dummy;
+    Gpio_dummy          gpio_dummy;
+    Spektrum_satellite  satellite_dummy(serial_dummy, gpio_dummy, gpio_dummy);
 
-    // #############################################################################################
-    // #############  Mavlink test##################################################################
-    // #############################################################################################
-    Mavlink_stream mavlink_stream(board.serial_);
-    mavlink_message_t msg;
+    // -------------------------------------------------------------------------
+    // Create simulation
+    // -------------------------------------------------------------------------
+    // Simulated servos
+    Pwm_dummy pwm[8];
+    Servo sim_servo_0(pwm[0], servo_default_config_esc());
+    Servo sim_servo_1(pwm[1], servo_default_config_esc());
+    Servo sim_servo_2(pwm[2], servo_default_config_esc());
+    Servo sim_servo_3(pwm[3], servo_default_config_esc());
+    Servo sim_servo_4(pwm[4], servo_default_config_esc());
+    Servo sim_servo_5(pwm[5], servo_default_config_esc());
+    Servo sim_servo_6(pwm[6], servo_default_config_esc());
+    Servo sim_servo_7(pwm[7], servo_default_config_esc());
+
+    // Simulated dynamic model
+    Dynamic_model_quad_diag     sim_model(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
+    Simulation                  sim(sim_model);
+
+    // Simulated battery
+    Adc_dummy   sim_adc_battery(11.1f);
+    Battery     sim_battery(sim_adc_battery);
+
+    // Simulated IMU
+    Imu     sim_imu( sim.accelerometer(),
+                     sim.gyroscope(),
+                     sim.magnetometer() );
+
+    // set the flag to simulation
+    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    LEQuad mav = LEQuad( sim_imu,
+                         sim.barometer(),
+                         sim.gps(),
+                         sim.sonar(),
+                         board.serial_,                // mavlink serial
+                         satellite_dummy,
+                         board.state_display_sparky_v2_,
+                        file_dummy,
+                         sim_battery,
+                         sim_servo_0,
+                         sim_servo_1,
+                         sim_servo_2,
+                         sim_servo_3 ,
+                         sim_servo_4,
+                         sim_servo_5,
+                         sim_servo_6,
+                         sim_servo_7 ,
+                         file_dummy,
+                         file_dummy,
+                         mav_config );
+
+    // -------------------------------------------------------------------------
+    // Create MAV
+    // -------------------------------------------------------------------------
+    // Create MAV using real sensors
+    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    // LEQuad mav = LEQuad(board.imu,
+    //                     board.bmp085,
+    //                     board.gps_ublox,
+    //                     board.sonar_i2cxl,
+    //                     board.uart0,
+    //                     board.spektrum_satellite,
+    //                     board.state_display_megafly_rev4_,
+    //                     board.file_flash,
+    //                     board.battery,
+    //                     board.servo_0,
+    //                     board.servo_1,
+    //                     board.servo_2,
+    //                     board.servo_3,
+    //                     board.servo_4,
+    //                     board.servo_5,
+    //                     board.servo_6,
+    //                     board.servo_7,
+    //                     file_dummy,
+    //                     file_dummy,
+    //                     mav_config );
 
 
-    // #############################################################################################
-    // #############  SPI test##################################################################
-    // #############################################################################################
-    uint8_t b[5] = {0x11,0x22,0x33,0x44,0x55};
-    uint8_t *bytes = b;
-    
-    while (1)
-    {
-        board.state_display_sparky_v2_.update();
-        // Warning: if too short serial does not work
-        //time_keeper_delay_ms(1000);
 
-
-        // Write mavlink message
-        mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
-                                    50,     // uint8_t component_id,
-                                    &msg,   // mavlink_message_t* msg,
-                                    0,      // uint8_t type,
-                                    0,      // uint8_t autopilot,
-                                    0,      // uint8_t base_mode,
-                                    0,      // uint32_t custom_mode,
-                                    0);     //uint8_t system_status)
-        mavlink_stream.send(&msg);
-
-        board.spi_1_.write(bytes,5);
-        board.spi_3_.write(bytes,5);
-        
-        time_keeper_delay_ms(1);
-    }
+    // -------------------------------------------------------------------------
+    // Main loop
+    // -------------------------------------------------------------------------
+    mav.loop();
 
     return 0;
 }

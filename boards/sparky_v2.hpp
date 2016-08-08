@@ -81,14 +81,15 @@ extern "C"
  */
 typedef struct
 {
-    gpio_stm32_conf_t       dsm_receiver_gpio_config;
-    gpio_stm32_conf_t       dsm_power_gpio_config;
-    gpio_stm32_conf_t       led_err_gpio_config;
-    gpio_stm32_conf_t       led_stat_gpio_config;
-    gpio_stm32_conf_t       led_rf_gpio_config;
-    Pwm_stm32::config_t     pwm_config[8];
-    servo_conf_t            servo_config[8];
-    spi_stm32_conf_t        spi_config[3];
+    gpio_stm32_conf_t        dsm_receiver_gpio_config;
+    gpio_stm32_conf_t        dsm_power_gpio_config;
+    gpio_stm32_conf_t        led_err_gpio_config;
+    gpio_stm32_conf_t        led_stat_gpio_config;
+    gpio_stm32_conf_t        led_rf_gpio_config;
+    Pwm_stm32::config_t      pwm_config[8];
+    Serial_usb_stm32::conf_t serial_usb_config;
+    servo_conf_t             servo_config[8];
+    spi_stm32_conf_t         spi_config[3];
 } sparky_v2_conf_t;
 
 
@@ -274,6 +275,11 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.servo_config[5] = servo_default_config_esc();
     conf.servo_config[6] = servo_default_config_esc();
     conf.servo_config[7] = servo_default_config_esc();
+
+    // -------------------------------------------------------------------------
+    // USB config
+    // -------------------------------------------------------------------------
+    conf.serial_usb_config = Serial_usb_stm32::default_config();
 
     // -------------------------------------------------------------------------
     // SPI config
