@@ -42,6 +42,7 @@
 
 
 #include "communication/mavlink_waypoint_handler.hpp"
+#include "control/mission_planner_handler.hpp"
 
 #include <cstdlib>
 
@@ -371,7 +372,7 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
             waypoint_handler->waypoint_count_ = 0;
             waypoint_handler->waypoint_onboard_count_ = 0;
             waypoint_handler->state_.nav_plan_active = false;
-            //waypoint_handler->mission_planner_.set_hold_waypoint_set(false); Is this neeeded, should the hold waypoint be reset if we just clear the list?
+            Mission_planner_handler::reset_hold_waypoint();
 
             mavlink_message_t _msg;
             mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),

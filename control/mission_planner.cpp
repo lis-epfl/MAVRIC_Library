@@ -446,7 +446,6 @@ Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t&
             manual_control_handler_(manual_control_handler),
             waypoint_handler_(waypoint_handler),
             critical_next_state_(false),
-            last_mode_(state.mav_mode()),
             mavlink_stream_(mavlink_stream),
             state_(state),
             navigation_(navigation),
@@ -456,6 +455,7 @@ Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t&
             message_handler_(message_handler),
             config_(config)
 {
+    last_mode_ = state_.mav_mode();
 }
 
 bool Mission_planner::init()
