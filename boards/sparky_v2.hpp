@@ -364,11 +364,9 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.i2c_config[0].clk_config.port        = GPIO_STM32_PORT_B;
     conf.i2c_config[0].clk_config.pin         = GPIO_STM32_PIN_8;
     conf.i2c_config[0].clk_config.alt_fct     = GPIO_STM32_AF_4;
-    // conf.i2c_config[0].clk_speed              = 100000;
-    conf.i2c_config[0].clk_speed              = 400000;
+    conf.i2c_config[0].clk_speed              = 100000;
     conf.i2c_config[0].tenbit_config          = false;  // currently only support 8 bits addressing
-    // conf.i2c_config[0].timeout                = 20000;
-    conf.i2c_config[0].timeout                = 100;
+    conf.i2c_config[0].timeout                = 20000;
 
     conf.i2c_config[1]                        = i2c_stm32_default_config();
     conf.i2c_config[1].i2c_device_config      = STM32_I2C2;
