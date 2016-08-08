@@ -20,6 +20,7 @@ var searchData=
   ['tenbit_5fconfig',['tenbit_config',['../structi2c__stm32__conf__t.html#abfadbc23b5c6967fa61ad9ce7fedb9b0',1,'i2c_stm32_conf_t']]],
   ['test_5fswitch_5fchannel',['test_switch_channel',['../structremote__mode__conf__t.html#aaa7f4c86612298d8b1483a1d6bee24c6',1,'remote_mode_conf_t::test_switch_channel()'],['../structremote__mode__t.html#a5a052e81982fd3711cc7168da0b81d41',1,'remote_mode_t::test_switch_channel()']]],
   ['theading',['theading',['../structcontrol__command__t.html#a5b9cbfe0daab8d6776c3b61f5dd4dfdc',1,'control_command_t']]],
+  ['throttle_5fmode',['throttle_mode',['../structJoystick_1_1conf__t.html#a988aef796f3214c9ff961a81f1e3e061',1,'Joystick::conf_t']]],
   ['thrust',['thrust',['../structthrust__command__t.html#a4f6e284c1e8123078ea27d39f1aaac64',1,'thrust_command_t::thrust()'],['../structcommand__t.html#a1b483cec6dd356481774b13bd50ccac8',1,'command_t::thrust()'],['../structcontrol__command__t.html#a535de6c9ed45183b59d3bfb25ad31097',1,'control_command_t::thrust()']]],
   ['thrust3d',['thrust3D',['../structcommand__t.html#a4f9e95b45576cff2772025610ee2bd08',1,'command_t']]],
   ['thrust_5fapriori',['thrust_apriori',['../structstabilisation__wing__t.html#a20b46fde4a4bec55a92857e8359b37a8',1,'stabilisation_wing_t::thrust_apriori()'],['../structstabilisation__wing__conf__t.html#a462c5a5018859b0ebde0d33ba1ba67bc',1,'stabilisation_wing_conf_t::thrust_apriori()']]],

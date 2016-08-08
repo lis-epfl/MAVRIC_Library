@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classJoystick.html#a48da533fcde8d71fa1d766a9653302e9" title="Parse joystick to rate command for the wing." alt="" coords="179,5,403,35"/>
+<area shape="rect" id="node7" href="$classJoystick.html#afde54c50e4a19d4a168157d6a36cda5f" title="Compute thrust command from the joystick." alt="" coords="191,59,391,88"/>
+<area shape="rect" id="node11" href="$classJoystick.html#a90bd1aa9caaf5b3315ed25efa6e939fe" title="Compute velocity command from the joystick." alt="" coords="184,112,397,141"/>
+<area shape="rect" id="node15" href="$classJoystick.html#a00fba7082240c85900d7eb035eb2a337" title="Compute attitude (angle) command from the joystick for the wing." alt="" coords="175,165,407,195"/>
+<area shape="rect" id="node19" href="$classManual__control.html#a57fbbf9cfad5c405ad822c9b83633357" title="Selects the source input and returns the thrust." alt="" coords="203,219,379,248"/>
+<area shape="rect" id="node5" href="$classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea" title="Selects the source input for the rate command for the wing." alt="" coords="461,5,723,35"/>
+<area shape="rect" id="node9" href="$classManual__control.html#a7ee7cc0ffb6874db132d0829154553e0" title="Compute thrust command from the manual input." alt="" coords="472,59,712,88"/>
+<area shape="rect" id="node13" href="$classManual__control.html#abe507693f441a6738193a18604591f1a" title="Compute velocity command from the manual input." alt="" coords="467,112,717,141"/>
+<area shape="rect" id="node17" href="$classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7" title="Selects the source input for the attitude command for the wing." alt="" coords="456,165,728,195"/>
+</map>

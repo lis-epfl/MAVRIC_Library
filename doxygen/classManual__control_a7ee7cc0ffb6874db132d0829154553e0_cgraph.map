@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classJoystick.html#afde54c50e4a19d4a168157d6a36cda5f" title="Compute thrust command from the joystick." alt="" coords="295,5,495,35"/>
+<area shape="rect" id="node5" href="$classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="545,5,663,35"/>
+</map>

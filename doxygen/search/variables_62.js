@@ -11,6 +11,6 @@ var searchData=
   ['bias',['bias',['../structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a',1,'imu_sensor_config_t']]],
   ['buffer',['buffer',['../structanalog__monitor__t.html#a35f8538aac910387a48b3d90d2e7d91a',1,'analog_monitor_t']]],
   ['buffer_5fempty',['buffer_empty',['../structbyte__stream__t.html#a562e6ae27ebe8ec887eb002291095cb7',1,'byte_stream_t']]],
-  ['buttons',['buttons',['../structjoystick__t.html#a1fb9188dc836a688fa85b2045e1fa596',1,'joystick_t']]],
+  ['buttons_5f',['buttons_',['../classJoystick.html#a82f6e4542c5433df087fa98a0ad99648',1,'Joystick']]],
   ['bytes_5favailable',['bytes_available',['../structbyte__stream__t.html#a5a6ee8f42e5e1426dbfe115eb368b476',1,'byte_stream_t']]]
 ];

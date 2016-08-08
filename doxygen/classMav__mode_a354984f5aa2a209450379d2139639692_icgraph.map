@@ -1,6 +1,9 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="179,32,437,61"/>
 <area shape="rect" id="node9" href="$classState.html#ac8b8b3ab65fc3cbd51f0ab3183fee949" title="returns whether in hil mode" alt="" coords="263,85,353,115"/>
+<area shape="rect" id="node11" href="$classJoystick.html#a130d49f4bd65b110c7078816c587486d" title="Returns the current desired mode value from the joystick." alt="" coords="240,139,376,168"/>
 <area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="485,5,821,35"/>
 <area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="543,59,764,88"/>
+<area shape="rect" id="node13" href="$classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7" title="Returns the value of the mode from the desired source input." alt="" coords="527,139,780,168"/>
+<area shape="rect" id="node15" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="871,139,1025,168"/>
 </map>

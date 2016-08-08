@@ -1,5 +1,8 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState.html#ad1a7b3d20f3299c0fe55986dc1a5c185" title="Constructor." alt="" coords="253,5,344,35"/>
-<area shape="rect" id="node5" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="237,59,360,88"/>
-<area shape="rect" id="node7" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="409,85,564,115"/>
+<area shape="rect" id="node3" href="$classState.html#ad1a7b3d20f3299c0fe55986dc1a5c185" title="Constructor." alt="" coords="273,5,364,35"/>
+<area shape="rect" id="node5" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="515,56,637,85"/>
+<area shape="rect" id="node7" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="753,108,908,137"/>
+<area shape="rect" id="node10" href="$classJoystick.html#a130d49f4bd65b110c7078816c587486d" title="Returns the current desired mode value from the joystick." alt="" coords="251,160,387,189"/>
+<area shape="rect" id="node15" href="$classJoystick.html#a05cda6f5e507deda040c71f116dfce96" title="Do operations when buttons are pressed." alt="" coords="239,213,399,243"/>
+<area shape="rect" id="node12" href="$classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7" title="Returns the value of the mode from the desired source input." alt="" coords="449,160,703,189"/>
 </map>

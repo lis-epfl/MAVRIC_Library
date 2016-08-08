@@ -1,6 +1,7 @@
 var searchData=
 [
   ['p',['P',['../classKalman.html#a8176df8da9236e193a0221b7ea9bfbc0',1,'Kalman']]],
+  ['pitch',['pitch',['../classJoystick.html#aced46f1cee2520fdc462ebccc95055a4',1,'Joystick']]],
   ['plane',['Plane',['../classraytracing_1_1Plane.html#a3a55442e6b747d99e6bd67b52e20c986',1,'raytracing::Plane']]],
   ['point',['point',['../classraytracing_1_1Intersection.html#a600d264348af69ace9509abccb6c31a6',1,'raytracing::Intersection']]],
   ['position_5festimation',['Position_estimation',['../classPosition__estimation.html#a920c4a264457690d29fbd658ec791f99',1,'Position_estimation']]],

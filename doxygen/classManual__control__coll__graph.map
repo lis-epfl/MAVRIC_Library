@@ -1,9 +1,9 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structjoystick__t.html" title="The structure for the joystick." alt="" coords="133,487,280,625"/>
-<area shape="rect" id="node4" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="377,5,559,264"/>
-<area shape="rect" id="node12" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="437,401,672,711"/>
-<area shape="rect" id="node6" href="$structjoystick__channels__t.html" title="Joystick Channels." alt="" coords="5,66,141,203"/>
-<area shape="rect" id="node8" href="$unionjoystick__button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="165,5,285,264"/>
-<area shape="rect" id="node10" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="283,779,435,1021"/>
-<area shape="rect" id="node15" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="304,479,413,633"/>
+<area shape="rect" id="node2" href="$classJoystick.html" title="{Joystick\n|+ buttons_\l+ channels_\l+ mav_mode_desired_\l|+ Joystick()\l+ throttle()\l+ roll()\l+ pitch()\l+ yaw()\l+ get_mode()\l+ get_velocity_vector()\l+ get_rate_command_wing()\l+ get_control_command()\l+ button_update()\land 8 more...+ default_config()\l}" alt="" coords="133,409,333,703"/>
+<area shape="rect" id="node4" href="$structJoystick_1_1channels__t.html" title="Joystick Channels." alt="" coords="5,66,147,203"/>
+<area shape="rect" id="node6" href="$unionJoystick_1_1button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="171,5,296,264"/>
+<area shape="rect" id="node8" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="352,5,533,264"/>
+<area shape="rect" id="node12" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="357,401,592,711"/>
+<area shape="rect" id="node10" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="399,779,551,1021"/>
+<area shape="rect" id="node15" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="616,479,725,633"/>
 </map>

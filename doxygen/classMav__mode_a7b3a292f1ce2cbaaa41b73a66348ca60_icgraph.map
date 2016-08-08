@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="231,5,385,35"/>
+<area shape="rect" id="node3" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="233,5,388,35"/>
+<area shape="rect" id="node5" href="$classJoystick.html#a05cda6f5e507deda040c71f116dfce96" title="Do operations when buttons are pressed." alt="" coords="231,59,391,88"/>
 </map>

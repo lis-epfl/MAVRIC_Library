@@ -154,90 +154,92 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00081"></a>00081 
 <a name="l00085"></a><a class="code" href="structManual__control_1_1conf__t.html">00085</a>     <span class="keyword">struct </span><a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">conf_t</a>
 <a name="l00086"></a>00086     {
-<a name="l00087"></a><a class="code" href="structManual__control_1_1conf__t.html#a2fff32df86cd4d84f0f6ad7d84761dba">00087</a>         <a class="code" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87" title="The source mode enum.">mode_source_t</a>       <a class="code" href="structManual__control_1_1conf__t.html#a2fff32df86cd4d84f0f6ad7d84761dba" title="The source mode.">mode_source</a>;        
-<a name="l00088"></a><a class="code" href="structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392">00088</a>         <a class="code" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d" title="Control source.">control_source_t</a>    <a class="code" href="structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392" title="Flag to tell whether the remote is active or not.">control_source</a>;     
-<a name="l00089"></a>00089     };
-<a name="l00090"></a>00090 
+<a name="l00087"></a><a class="code" href="structManual__control_1_1conf__t.html#a9bc674953ca9ce43c6506138c5c725b1">00087</a>         <a class="code" href="structJoystick_1_1conf__t.html" title="Configuration for joystick.">Joystick::conf_t</a>    <a class="code" href="structManual__control_1_1conf__t.html#a9bc674953ca9ce43c6506138c5c725b1" title="Configuration of the joystick.">joystick_config</a>;    
+<a name="l00088"></a><a class="code" href="structManual__control_1_1conf__t.html#a2fff32df86cd4d84f0f6ad7d84761dba">00088</a>         <a class="code" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87" title="The source mode enum.">mode_source_t</a>       <a class="code" href="structManual__control_1_1conf__t.html#a2fff32df86cd4d84f0f6ad7d84761dba" title="The source mode.">mode_source</a>;        
+<a name="l00089"></a><a class="code" href="structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392">00089</a>         <a class="code" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d" title="Control source.">control_source_t</a>    <a class="code" href="structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392" title="Flag to tell whether the remote is active or not.">control_source</a>;     
+<a name="l00090"></a>00090     };
 <a name="l00091"></a>00091 
-<a name="l00098"></a>00098     <a class="code" href="classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b" title="Constructor.">Manual_control</a>(<a class="code" href="classSatellite.html">Satellite</a>* sat, <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">conf_t</a> config, <a class="code" href="structremote__conf__t.html" title="The configuration structure of the remote.">remote_conf_t</a> remote_config);
-<a name="l00099"></a>00099 
-<a name="l00105"></a>00105     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#aecfe45d5c88670a64d775c9345db42b4" title="Selects the source input for the attitude command.">get_control_command</a>(<a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
-<a name="l00106"></a>00106 
+<a name="l00092"></a>00092 
+<a name="l00099"></a>00099     <a class="code" href="classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b" title="Constructor.">Manual_control</a>(<a class="code" href="classSatellite.html">Satellite</a>* sat, <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">conf_t</a> config, <a class="code" href="structremote__conf__t.html" title="The configuration structure of the remote.">remote_conf_t</a> remote_config);
+<a name="l00100"></a>00100 
+<a name="l00106"></a>00106     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#aecfe45d5c88670a64d775c9345db42b4" title="Selects the source input for the attitude command.">get_control_command</a>(<a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
 <a name="l00107"></a>00107 
-<a name="l00113"></a>00113     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a000d94be2eae9353d1ede1a21bf476f8" title="Selects the source input for the velocity command.">get_velocity_vector</a>(<a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
-<a name="l00114"></a>00114 
-<a name="l00120"></a>00120     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea" title="Selects the source input for the rate command for the wing.">get_rate_command_wing</a>(<a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
-<a name="l00121"></a>00121 
+<a name="l00108"></a>00108 
+<a name="l00114"></a>00114     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a000d94be2eae9353d1ede1a21bf476f8" title="Selects the source input for the velocity command.">get_velocity_vector</a>(<a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
+<a name="l00115"></a>00115 
+<a name="l00121"></a>00121     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea" title="Selects the source input for the rate command for the wing.">get_rate_command_wing</a>(<a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
 <a name="l00122"></a>00122 
-<a name="l00128"></a>00128     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7" title="Selects the source input for the attitude command for the wing.">get_angle_command_wing</a>(<a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
-<a name="l00129"></a>00129 
-<a name="l00136"></a>00136     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a181fd7347d5f4e9219ac8bbeb2025b23" title="Selects the source input for the velocity command for the wing.">get_velocity_vector_wing</a>(<span class="keyword">const</span> <span class="keywordtype">float</span> ki_yaw, <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
-<a name="l00137"></a>00137 
+<a name="l00123"></a>00123 
+<a name="l00129"></a>00129     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7" title="Selects the source input for the attitude command for the wing.">get_angle_command_wing</a>(<a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
+<a name="l00130"></a>00130 
+<a name="l00137"></a>00137     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a181fd7347d5f4e9219ac8bbeb2025b23" title="Selects the source input for the velocity command for the wing.">get_velocity_vector_wing</a>(<span class="keyword">const</span> <span class="keywordtype">float</span> ki_yaw, <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a>* controls);
 <a name="l00138"></a>00138 
-<a name="l00144"></a>00144     <span class="keywordtype">float</span> <a class="code" href="classManual__control.html#a57fbbf9cfad5c405ad822c9b83633357" title="Selects the source input and returns the thrust.">get_thrust</a>() <span class="keyword">const</span>;
-<a name="l00145"></a>00145 
+<a name="l00139"></a>00139 
+<a name="l00145"></a>00145     <span class="keywordtype">float</span> <a class="code" href="classManual__control.html#a57fbbf9cfad5c405ad822c9b83633357" title="Selects the source input and returns the thrust.">get_thrust</a>() <span class="keyword">const</span>;
 <a name="l00146"></a>00146 
-<a name="l00153"></a>00153     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a28d928918d8883341b5d3647b52aa9ca" title="Compute torque command from the manual input.">get_torque_command</a>(<a class="code" href="structtorque__command__t.html" title="Torque command structure.">torque_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
-<a name="l00154"></a>00154 
+<a name="l00147"></a>00147 
+<a name="l00154"></a>00154     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a28d928918d8883341b5d3647b52aa9ca" title="Compute torque command from the manual input.">get_torque_command</a>(<a class="code" href="structtorque__command__t.html" title="Torque command structure.">torque_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
 <a name="l00155"></a>00155 
-<a name="l00162"></a>00162     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a1b85adad9375f7eea177f226d7c50a26" title="Compute rate command from the manual input.">get_rate_command</a>(<a class="code" href="structrate__command__t.html" title="Rate command structure.">rate_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
-<a name="l00163"></a>00163 
+<a name="l00156"></a>00156 
+<a name="l00163"></a>00163     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a1b85adad9375f7eea177f226d7c50a26" title="Compute rate command from the manual input.">get_rate_command</a>(<a class="code" href="structrate__command__t.html" title="Rate command structure.">rate_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
 <a name="l00164"></a>00164 
-<a name="l00170"></a>00170     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a7ee7cc0ffb6874db132d0829154553e0" title="Compute thrust command from the manual input.">get_thrust_command</a>(<a class="code" href="structthrust__command__t.html" title="Thrust command type.">thrust_command_t</a>* command) <span class="keyword">const</span>;
-<a name="l00171"></a>00171 
+<a name="l00165"></a>00165 
+<a name="l00171"></a>00171     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a7ee7cc0ffb6874db132d0829154553e0" title="Compute thrust command from the manual input.">get_thrust_command</a>(<a class="code" href="structthrust__command__t.html" title="Thrust command type.">thrust_command_t</a>* command) <span class="keyword">const</span>;
 <a name="l00172"></a>00172 
-<a name="l00179"></a>00179     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a0bd378d186d7b2bfe1a09af34eda439f" title="Compute attitude command from the manual input (absolute angles)">get_attitude_command_absolute_yaw</a>(<a class="code" href="structattitude__command__t.html" title="Attitude command structure.">attitude_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
-<a name="l00180"></a>00180 
+<a name="l00173"></a>00173 
+<a name="l00180"></a>00180     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a0bd378d186d7b2bfe1a09af34eda439f" title="Compute attitude command from the manual input (absolute angles)">get_attitude_command_absolute_yaw</a>(<a class="code" href="structattitude__command__t.html" title="Attitude command structure.">attitude_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
 <a name="l00181"></a>00181 
-<a name="l00189"></a>00189     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a420f4b792173cd64d323332c244054fe" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)...">get_attitude_command</a>(<span class="keyword">const</span> <span class="keywordtype">float</span> k_yaw, <a class="code" href="structattitude__command__t.html" title="Attitude command structure.">attitude_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
-<a name="l00190"></a>00190 
+<a name="l00182"></a>00182 
+<a name="l00190"></a>00190     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a420f4b792173cd64d323332c244054fe" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)...">get_attitude_command</a>(<span class="keyword">const</span> <span class="keywordtype">float</span> k_yaw, <a class="code" href="structattitude__command__t.html" title="Attitude command structure.">attitude_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
 <a name="l00191"></a>00191 
-<a name="l00200"></a>00200     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#ad7b10226f0a5847a2265b422e1a9d12d" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)...">get_attitude_command_vtol</a>(<span class="keyword">const</span> <span class="keywordtype">float</span> ki_yaw, <a class="code" href="structattitude__command__t.html" title="Attitude command structure.">attitude_command_t</a>* command, <span class="keywordtype">float</span> scale, <span class="keywordtype">float</span> reference_pitch) <span class="keyword">const</span>;
-<a name="l00201"></a>00201 
+<a name="l00192"></a>00192 
+<a name="l00201"></a>00201     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#ad7b10226f0a5847a2265b422e1a9d12d" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)...">get_attitude_command_vtol</a>(<span class="keyword">const</span> <span class="keywordtype">float</span> ki_yaw, <a class="code" href="structattitude__command__t.html" title="Attitude command structure.">attitude_command_t</a>* command, <span class="keywordtype">float</span> scale, <span class="keywordtype">float</span> reference_pitch) <span class="keyword">const</span>;
 <a name="l00202"></a>00202 
-<a name="l00209"></a>00209     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#abe507693f441a6738193a18604591f1a" title="Compute velocity command from the manual input.">get_velocity_command</a>(<a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
-<a name="l00210"></a>00210 
+<a name="l00203"></a>00203 
+<a name="l00210"></a>00210     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#abe507693f441a6738193a18604591f1a" title="Compute velocity command from the manual input.">get_velocity_command</a>(<a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>* command, <span class="keywordtype">float</span> scale) <span class="keyword">const</span>;
 <a name="l00211"></a>00211 
-<a name="l00219"></a>00219     <a class="code" href="classMav__mode.html">Mav_mode</a> <a class="code" href="classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7" title="Returns the value of the mode from the desired source input.">get_mode_from_source</a>(<a class="code" href="classMav__mode.html">Mav_mode</a> mode_current);
-<a name="l00220"></a>00220 
+<a name="l00212"></a>00212 
+<a name="l00220"></a>00220     <a class="code" href="classMav__mode.html">Mav_mode</a> <a class="code" href="classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7" title="Returns the value of the mode from the desired source input.">get_mode_from_source</a>(<a class="code" href="classMav__mode.html">Mav_mode</a> mode_current);
 <a name="l00221"></a>00221 
-<a name="l00230"></a>00230     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick.">set_mode_of_source</a>(<a class="code" href="classMav__mode.html">Mav_mode</a> mode_current);
-<a name="l00231"></a>00231 
-<a name="l00237"></a>00237     signal_quality_t <a class="code" href="classManual__control.html#a04eb17506ddb846ef7b2783ef8026ba7" title="Returns the quality of the strength of the remote receiver.">get_signal_strength</a>();
-<a name="l00238"></a>00238 
-<a name="l00244"></a><a class="code" href="classManual__control.html#a62a53dd52299a4fc43389a9ab0a1ddfa">00244</a>     <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a62a53dd52299a4fc43389a9ab0a1ddfa" title="Set the mode source (which control source can change the mode (remote, joystick, groundstation))">set_mode_source</a>(<a class="code" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87" title="The source mode enum.">mode_source_t</a> <a class="code" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))">mode_source</a>) {<a class="code" href="classManual__control.html#ab4513d787b46d35308ecfbc8b58778dc" title="The source mode.">mode_source_</a> = <a class="code" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))">mode_source</a>;};
-<a name="l00245"></a>00245 
-<a name="l00251"></a><a class="code" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091">00251</a>     <span class="keyword">inline</span> <a class="code" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87" title="The source mode enum.">mode_source_t</a> <a class="code" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))">mode_source</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <a class="code" href="classManual__control.html#ab4513d787b46d35308ecfbc8b58778dc" title="The source mode.">mode_source_</a>;};
-<a name="l00252"></a>00252 
-<a name="l00258"></a><a class="code" href="classManual__control.html#aa4e82c0d03995afa253aac4c50caa035">00258</a>     <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#aa4e82c0d03995afa253aac4c50caa035" title="Set the control source (which control source has control (remote, joystick, none))">set_control_source</a>(<a class="code" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d" title="Control source.">control_source_t</a> <a class="code" href="classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0" title="Return the control source (which control source has control (remote, joystick, none))">control_source</a>) {<a class="code" href="classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0" title="Flag to tell whether the remote is active or not.">control_source_</a> = <a class="code" href="classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0" title="Return the control source (which control source has control (remote, joystick, none))">control_source</a>;};
-<a name="l00259"></a>00259 
-<a name="l00265"></a><a class="code" href="classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0">00265</a>     <span class="keyword">inline</span> <a class="code" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d" title="Control source.">control_source_t</a> <a class="code" href="classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0" title="Return the control source (which control source has control (remote, joystick, none))">control_source</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <a class="code" href="classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0" title="Flag to tell whether the remote is active or not.">control_source_</a>;};
-<a name="l00266"></a>00266 
+<a name="l00222"></a>00222 
+<a name="l00231"></a>00231     <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick.">set_mode_of_source</a>(<a class="code" href="classMav__mode.html">Mav_mode</a> mode_current);
+<a name="l00232"></a>00232 
+<a name="l00238"></a>00238     signal_quality_t <a class="code" href="classManual__control.html#a04eb17506ddb846ef7b2783ef8026ba7" title="Returns the quality of the strength of the remote receiver.">get_signal_strength</a>();
+<a name="l00239"></a>00239 
+<a name="l00245"></a><a class="code" href="classManual__control.html#a62a53dd52299a4fc43389a9ab0a1ddfa">00245</a>     <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#a62a53dd52299a4fc43389a9ab0a1ddfa" title="Set the mode source (which control source can change the mode (remote, joystick, groundstation))">set_mode_source</a>(<a class="code" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87" title="The source mode enum.">mode_source_t</a> <a class="code" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))">mode_source</a>) {<a class="code" href="classManual__control.html#ab4513d787b46d35308ecfbc8b58778dc" title="The source mode.">mode_source_</a> = <a class="code" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))">mode_source</a>;};
+<a name="l00246"></a>00246 
+<a name="l00252"></a><a class="code" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091">00252</a>     <span class="keyword">inline</span> <a class="code" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87" title="The source mode enum.">mode_source_t</a> <a class="code" href="classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))">mode_source</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <a class="code" href="classManual__control.html#ab4513d787b46d35308ecfbc8b58778dc" title="The source mode.">mode_source_</a>;};
+<a name="l00253"></a>00253 
+<a name="l00259"></a><a class="code" href="classManual__control.html#aa4e82c0d03995afa253aac4c50caa035">00259</a>     <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classManual__control.html#aa4e82c0d03995afa253aac4c50caa035" title="Set the control source (which control source has control (remote, joystick, none))">set_control_source</a>(<a class="code" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d" title="Control source.">control_source_t</a> <a class="code" href="classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0" title="Return the control source (which control source has control (remote, joystick, none))">control_source</a>) {<a class="code" href="classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0" title="Flag to tell whether the remote is active or not.">control_source_</a> = <a class="code" href="classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0" title="Return the control source (which control source has control (remote, joystick, none))">control_source</a>;};
+<a name="l00260"></a>00260 
+<a name="l00266"></a><a class="code" href="classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0">00266</a>     <span class="keyword">inline</span> <a class="code" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d" title="Control source.">control_source_t</a> <a class="code" href="classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0" title="Return the control source (which control source has control (remote, joystick, none))">control_source</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> <a class="code" href="classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0" title="Flag to tell whether the remote is active or not.">control_source_</a>;};
 <a name="l00267"></a>00267 
-<a name="l00268"></a>00268     <span class="keyword">static</span> <span class="keyword">inline</span> conf_t default_config();
-<a name="l00269"></a>00269 
+<a name="l00268"></a>00268 
+<a name="l00269"></a>00269     <span class="keyword">static</span> <span class="keyword">inline</span> conf_t default_config();
 <a name="l00270"></a>00270 
-<a name="l00271"></a><a class="code" href="classManual__control.html#ac5bd8680fbda07384a88506d44f163f7">00271</a>     <a class="code" href="structremote__t.html" title="The configuration structure of the remote.">remote_t</a>                <a class="code" href="classManual__control.html#ac5bd8680fbda07384a88506d44f163f7" title="The pointer to the remote structure.">remote</a>;             
-<a name="l00272"></a><a class="code" href="classManual__control.html#aa2103487ba9916640ba227ffbe3f2997">00272</a>     <a class="code" href="structjoystick__t.html" title="The structure for the joystick.">joystick_t</a>              <a class="code" href="classManual__control.html#aa2103487ba9916640ba227ffbe3f2997" title="The pointer to the joystick structure.">joystick</a>;           
-<a name="l00273"></a><a class="code" href="classManual__control.html#ab4513d787b46d35308ecfbc8b58778dc">00273</a>     <a class="code" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87" title="The source mode enum.">mode_source_t</a>           <a class="code" href="classManual__control.html#ab4513d787b46d35308ecfbc8b58778dc" title="The source mode.">mode_source_</a>;        
-<a name="l00274"></a><a class="code" href="classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0">00274</a>     <a class="code" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d" title="Control source.">control_source_t</a>        <a class="code" href="classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0" title="Flag to tell whether the remote is active or not.">control_source_</a>;     
-<a name="l00275"></a>00275 };
-<a name="l00276"></a>00276 
-<a name="l00277"></a>00277 <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">Manual_control::conf_t</a> Manual_control::default_config()
-<a name="l00278"></a>00278 {
-<a name="l00279"></a>00279     conf_t conf = {};
-<a name="l00280"></a>00280 
-<a name="l00281"></a>00281     conf.<a class="code" href="structManual__control_1_1conf__t.html#a2fff32df86cd4d84f0f6ad7d84761dba" title="The source mode.">mode_source</a> = MODE_SOURCE_REMOTE;
-<a name="l00282"></a>00282     conf.control_source = CONTROL_SOURCE_REMOTE;
-<a name="l00283"></a>00283 
-<a name="l00284"></a>00284     <span class="keywordflow">return</span> conf;
-<a name="l00285"></a>00285 };
-<a name="l00286"></a>00286 
-<a name="l00287"></a>00287 
+<a name="l00271"></a>00271 
+<a name="l00272"></a><a class="code" href="classManual__control.html#ac5bd8680fbda07384a88506d44f163f7">00272</a>     <a class="code" href="structremote__t.html" title="The configuration structure of the remote.">remote_t</a>                <a class="code" href="classManual__control.html#ac5bd8680fbda07384a88506d44f163f7" title="The pointer to the remote structure.">remote</a>;             
+<a name="l00273"></a><a class="code" href="classManual__control.html#ab1fc667b13c36d48fccc7cbda900ebcd">00273</a>     <a class="code" href="classJoystick.html">Joystick</a>                <a class="code" href="classManual__control.html#ab1fc667b13c36d48fccc7cbda900ebcd" title="The pointer to the joystick structure.">joystick</a>;           
+<a name="l00274"></a><a class="code" href="classManual__control.html#ab4513d787b46d35308ecfbc8b58778dc">00274</a>     <a class="code" href="classManual__control.html#ab80590443e946dff597b1b996bbd8c87" title="The source mode enum.">mode_source_t</a>           <a class="code" href="classManual__control.html#ab4513d787b46d35308ecfbc8b58778dc" title="The source mode.">mode_source_</a>;        
+<a name="l00275"></a><a class="code" href="classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0">00275</a>     <a class="code" href="classManual__control.html#aaabd7c3e735064a37459c0689ba8f52d" title="Control source.">control_source_t</a>        <a class="code" href="classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0" title="Flag to tell whether the remote is active or not.">control_source_</a>;     
+<a name="l00276"></a>00276 };
+<a name="l00277"></a>00277 
+<a name="l00278"></a>00278 <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">Manual_control::conf_t</a> Manual_control::default_config()
+<a name="l00279"></a>00279 {
+<a name="l00280"></a>00280     conf_t conf = {};
+<a name="l00281"></a>00281 
+<a name="l00282"></a>00282     conf.<a class="code" href="structManual__control_1_1conf__t.html#a9bc674953ca9ce43c6506138c5c725b1" title="Configuration of the joystick.">joystick_config</a> = <a class="code" href="classJoystick.html#a0e6b727acca9454b2d3e6819ba67cdce" title="Default config for joystick.">Joystick::default_config</a>();
+<a name="l00283"></a>00283     conf.mode_source = MODE_SOURCE_REMOTE;
+<a name="l00284"></a>00284     conf.control_source = CONTROL_SOURCE_REMOTE;
+<a name="l00285"></a>00285 
+<a name="l00286"></a>00286     <span class="keywordflow">return</span> conf;
+<a name="l00287"></a>00287 };
 <a name="l00288"></a>00288 
 <a name="l00289"></a>00289 
 <a name="l00290"></a>00290 
-<a name="l00291"></a>00291 <span class="preprocessor">#endif </span><span class="comment">/* MANUAL_CONTROL_HPP_ */</span>
+<a name="l00291"></a>00291 
+<a name="l00292"></a>00292 
+<a name="l00293"></a>00293 <span class="preprocessor">#endif </span><span class="comment">/* MANUAL_CONTROL_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -256,7 +258,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 5 2016 18:20:33 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 8 2016 06:24:34 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

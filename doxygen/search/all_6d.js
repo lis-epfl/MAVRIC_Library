@@ -33,7 +33,7 @@ var searchData=
   ['mav_5fmode',['Mav_mode',['../classMav__mode.html',1,'Mav_mode'],['../structState_1_1conf__t.html#a8c4495f9efd3fcb2d0dd8aa05e3795fb',1,'State::conf_t::mav_mode()'],['../classState.html#a9bf37e3784367761637c2c5a7c2b1b16',1,'State::mav_mode()']]],
   ['mav_5fmode_5f',['mav_mode_',['../classState.html#aa672801a9b348573320bf97462b3efc2',1,'State']]],
   ['mav_5fmode_5fcustom',['mav_mode_custom',['../structState_1_1conf__t.html#a272f91f8b5f43febebd17b4e3c3e0228',1,'State::conf_t::mav_mode_custom()'],['../classState.html#ab7f1f1a827b959448326885b7717a8dd',1,'State::mav_mode_custom()']]],
-  ['mav_5fmode_5fdesired',['mav_mode_desired',['../structjoystick__t.html#a18a08174abcaf082b23be9f182c9804b',1,'joystick_t']]],
+  ['mav_5fmode_5fdesired_5f',['mav_mode_desired_',['../classJoystick.html#af8d81b4dc24a7421dce50e71d962e57d',1,'Joystick']]],
   ['mav_5fstate',['mav_state',['../structState_1_1conf__t.html#a0201cf6ef69aec6ecf890cabcd54c6a3',1,'State::conf_t']]],
   ['mav_5fstate_5f',['mav_state_',['../classState.html#aacaa15cd7016181bf7c4a056cfd85008',1,'State']]],
   ['mavlink_5fcommunication',['Mavlink_communication',['../classMavlink__communication.html',1,'Mavlink_communication'],['../classMavlink__communication.html#afd98f83687a03493ef1cf2fb3e3e3a34',1,'Mavlink_communication::Mavlink_communication()']]],

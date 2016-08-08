@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="235,5,381,35"/>
+<area shape="rect" id="node5" href="$classMav__mode.html#a4b5399cd7da6c1decbc0c1ee2501aa2d" title="set armed flag" alt="" coords="217,59,399,88"/>
+<area shape="rect" id="node7" href="$classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60" title="set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, GPS_NAV);" alt="" coords="220,112,396,141"/>
+</map>

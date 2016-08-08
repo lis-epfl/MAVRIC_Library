@@ -1,3 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classKalman.html" title="Templated linear kalman filter." alt="" coords="5,5,152,35"/>
+<area shape="rect" id="node1" href="$classINS.html" title="INS" alt="" coords="47,59,92,88"/>
+<area shape="rect" id="node3" href="$classINS__kf.html" title="Altitude estimator." alt="" coords="219,5,280,35"/>
+<area shape="rect" id="node5" href="$classPosition__estimation.html" title="Position_estimation" alt="" coords="181,59,317,88"/>
+<area shape="rect" id="node6" href="$classKalman.html" title="Kalman\&lt; 8, 3, 3 \&gt;" alt="" coords="7,5,132,35"/>
 </map>

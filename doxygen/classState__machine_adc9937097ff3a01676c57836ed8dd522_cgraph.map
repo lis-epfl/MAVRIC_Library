@@ -2,22 +2,25 @@
 <area shape="rect" id="node3" href="$classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="276,5,401,35"/>
 <area shape="rect" id="node5" href="$classManual__control.html#a04eb17506ddb846ef7b2783ef8026ba7" title="Returns the quality of the strength of the remote receiver." alt="" coords="224,59,453,88"/>
 <area shape="rect" id="node7" href="$classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7" title="Returns the value of the mode from the desired source input." alt="" coords="212,112,465,141"/>
-<area shape="rect" id="node9" href="$classBattery.html#aed1638135e4a066740a8e2b184f41684" title="Updates the battery voltage level." alt="" coords="284,165,393,195"/>
-<area shape="rect" id="node15" href="$classState.html#af9414375a28112394b48994db66743b6" title="Check the connection status with the GND station." alt="" coords="256,219,421,248"/>
-<area shape="rect" id="node17" href="$classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60" title="set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, GPS_NAV);" alt="" coords="251,272,427,301"/>
-<area shape="rect" id="node19" href="$classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a" title="returns the ctrl_mode (defined by manual, stabilize, guided and auto flag)" alt="" coords="264,325,413,355"/>
-<area shape="rect" id="node21" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="277,480,400,509"/>
-<area shape="rect" id="node25" href="$classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="763,429,909,459"/>
-<area shape="rect" id="node27" href="$classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="560,428,669,457"/>
-<area shape="rect" id="node29" href="$classMav__mode.html#a4b5399cd7da6c1decbc0c1ee2501aa2d" title="set armed flag" alt="" coords="524,535,705,564"/>
-<area shape="rect" id="node31" href="$classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="516,588,713,617"/>
-<area shape="rect" id="node35" href="$classImu.html#a066f63054b730605afc31ee0c19daae1" title="Get the readiness of the IMU." alt="" coords="288,635,389,664"/>
-<area shape="rect" id="node38" href="$classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))" alt="" coords="241,688,436,717"/>
-<area shape="rect" id="node41" href="$classINS.html#a4806a6d39547e538c4554c1b6aa7eba2" title="Indicates which estimate can be trusted." alt="" coords="283,741,395,771"/>
-<area shape="rect" id="node43" href="$classMav__mode.html#a3c4235b6649dcabb00a41d8aa3cf16a4" title="returns whether in manual mode (MAV_MODE_FLAG_MANUAL_INPUT_ENABLED set)" alt="" coords="263,795,415,824"/>
-<area shape="rect" id="node45" href="$classState__display.html#a153183db41405626c97ad8e70d1b3113" title="Set state function &#160;Set the state to be displayed." alt="" coords="257,848,420,877"/>
-<area shape="rect" id="node47" href="$classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick." alt="" coords="220,901,457,931"/>
-<area shape="rect" id="node11" href="$classAdc.html#a7c7ee3f985b2b67990d61893faae8b32" title="Update function." alt="" coords="569,192,660,221"/>
-<area shape="rect" id="node13" href="$classAdc.html#a9733298b7e9cde8e5b91b64a1ca2b586" title="Get the voltage in volts." alt="" coords="568,139,661,168"/>
-<area shape="rect" id="node23" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="557,481,672,511"/>
+<area shape="rect" id="node15" href="$classMav__mode.html#a4b5399cd7da6c1decbc0c1ee2501aa2d" title="set armed flag" alt="" coords="764,165,945,195"/>
+<area shape="rect" id="node17" href="$classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="781,219,928,248"/>
+<area shape="rect" id="node19" href="$classBattery.html#aed1638135e4a066740a8e2b184f41684" title="Updates the battery voltage level." alt="" coords="284,472,393,501"/>
+<area shape="rect" id="node25" href="$classState.html#af9414375a28112394b48994db66743b6" title="Check the connection status with the GND station." alt="" coords="256,525,421,555"/>
+<area shape="rect" id="node27" href="$classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60" title="set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, GPS_NAV);" alt="" coords="251,579,427,608"/>
+<area shape="rect" id="node29" href="$classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a" title="returns the ctrl_mode (defined by manual, stabilize, guided and auto flag)" alt="" coords="264,632,413,661"/>
+<area shape="rect" id="node31" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="277,317,400,347"/>
+<area shape="rect" id="node36" href="$classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="560,371,669,400"/>
+<area shape="rect" id="node39" href="$classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="516,424,713,453"/>
+<area shape="rect" id="node43" href="$classImu.html#a066f63054b730605afc31ee0c19daae1" title="Get the readiness of the IMU." alt="" coords="288,685,389,715"/>
+<area shape="rect" id="node46" href="$classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))" alt="" coords="241,739,436,768"/>
+<area shape="rect" id="node49" href="$classINS.html#a4806a6d39547e538c4554c1b6aa7eba2" title="Indicates which estimate can be trusted." alt="" coords="283,792,395,821"/>
+<area shape="rect" id="node51" href="$classMav__mode.html#a3c4235b6649dcabb00a41d8aa3cf16a4" title="returns whether in manual mode (MAV_MODE_FLAG_MANUAL_INPUT_ENABLED set)" alt="" coords="263,845,415,875"/>
+<area shape="rect" id="node53" href="$classState__display.html#a153183db41405626c97ad8e70d1b3113" title="Set state function &#160;Set the state to be displayed." alt="" coords="257,899,420,928"/>
+<area shape="rect" id="node55" href="$classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick." alt="" coords="220,952,457,981"/>
+<area shape="rect" id="node9" href="$classJoystick.html#a130d49f4bd65b110c7078816c587486d" title="Returns the current desired mode value from the joystick." alt="" coords="547,112,683,141"/>
+<area shape="rect" id="node11" href="$classMav__mode.html#a816c0f15bb40dad471a3263365d06338" title="set HIL flag (Hardware in the loop)" alt="" coords="775,59,935,88"/>
+<area shape="rect" id="node13" href="$classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="793,112,916,141"/>
+<area shape="rect" id="node21" href="$classAdc.html#a7c7ee3f985b2b67990d61893faae8b32" title="Update function." alt="" coords="569,531,660,560"/>
+<area shape="rect" id="node23" href="$classAdc.html#a9733298b7e9cde8e5b91b64a1ca2b586" title="Get the voltage in volts." alt="" coords="568,477,661,507"/>
+<area shape="rect" id="node33" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="557,317,672,347"/>
 </map>

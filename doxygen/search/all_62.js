@@ -21,7 +21,10 @@ var searchData=
   ['buffer_5ftpl_3c_201024_20_3e',['Buffer_tpl< 1024 >',['../classBuffer__tpl.html',1,'']]],
   ['buffer_5ftpl_3c_20256_2c_20uint8_5ft_20_3e',['Buffer_tpl< 256, uint8_t >',['../classBuffer__tpl.html',1,'']]],
   ['buffer_5ftpl_3c_203_2c_20float_20_3e',['Buffer_tpl< 3, float >',['../classBuffer__tpl.html',1,'']]],
-  ['buttons',['buttons',['../structjoystick__t.html#a1fb9188dc836a688fa85b2045e1fa596',1,'joystick_t']]],
+  ['button_5fpressed_5ft',['button_pressed_t',['../classJoystick.html#a76a226fa88ae09d0d4b675b99900631f',1,'Joystick']]],
+  ['button_5ft',['button_t',['../unionJoystick_1_1button__t.html',1,'Joystick']]],
+  ['button_5fupdate',['button_update',['../classJoystick.html#a05cda6f5e507deda040c71f116dfce96',1,'Joystick']]],
+  ['buttons_5f',['buttons_',['../classJoystick.html#a82f6e4542c5433df087fa98a0ad99648',1,'Joystick']]],
   ['byte_5fstream_5ft',['byte_stream_t',['../structbyte__stream__t.html',1,'']]],
   ['bytes_5favailable',['bytes_available',['../structbyte__stream__t.html#a5a6ee8f42e5e1426dbfe115eb368b476',1,'byte_stream_t']]]
 ];

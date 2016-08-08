@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="299,5,395,35"/>
+<area shape="rect" id="node5" href="$classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="293,59,400,88"/>
+<area shape="rect" id="node7" href="$classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="296,112,397,141"/>
+</map>

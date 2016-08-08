@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['joystick',['joystick',['../classManual__control.html#aa2103487ba9916640ba227ffbe3f2997',1,'Manual_control']]],
-  ['joystick_5fbutton_5ft',['joystick_button_t',['../unionjoystick__button__t.html',1,'']]],
-  ['joystick_5fchannels_5ft',['joystick_channels_t',['../structjoystick__channels__t.html',1,'']]],
-  ['joystick_5fevent',['joystick_event',['../structjoystick__event.html',1,'']]],
-  ['joystick_5ft',['joystick_t',['../structjoystick__t.html',1,'']]]
+  ['joystick',['Joystick',['../classJoystick.html',1,'Joystick'],['../classJoystick.html#a1e1a742fae6d4a079d9619e59e8650e3',1,'Joystick::Joystick()'],['../classManual__control.html#ab1fc667b13c36d48fccc7cbda900ebcd',1,'Manual_control::joystick()']]],
+  ['joystick_5fconfig',['joystick_config',['../structManual__control_1_1conf__t.html#a9bc674953ca9ce43c6506138c5c725b1',1,'Manual_control::conf_t']]],
+  ['joystick_5fevent',['joystick_event',['../structjoystick__event.html',1,'']]]
 ];

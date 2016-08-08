@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classJoystick.html#a3c75109de94037f519786db2859641c2" title="Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)" alt="" coords="335,59,572,88"/>
+<area shape="rect" id="node5" href="$classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="627,5,723,35"/>
+<area shape="rect" id="node7" href="$classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="621,59,728,88"/>
+<area shape="rect" id="node9" href="$classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="624,112,725,141"/>
+</map>

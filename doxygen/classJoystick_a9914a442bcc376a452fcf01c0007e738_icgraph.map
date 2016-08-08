@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classJoystick.html#a48da533fcde8d71fa1d766a9653302e9" title="Parse joystick to rate command for the wing." alt="" coords="187,5,411,35"/>
+<area shape="rect" id="node7" href="$classJoystick.html#a2664e8d6e9610f934cb65f29e12032d4" title="Compute torque command from the joystick." alt="" coords="197,59,400,88"/>
+<area shape="rect" id="node11" href="$classJoystick.html#aa0221d2544fbcf53efa67b575a2a1f8b" title="Compute rate command from the joystick." alt="" coords="204,112,393,141"/>
+<area shape="rect" id="node15" href="$classJoystick.html#ad1a28e4bb798ff33b91decc0829b91fd" title="Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)" alt="" coords="193,165,404,195"/>
+<area shape="rect" id="node19" href="$classJoystick.html#a90bd1aa9caaf5b3315ed25efa6e939fe" title="Compute velocity command from the joystick." alt="" coords="192,219,405,248"/>
+<area shape="rect" id="node23" href="$classJoystick.html#a00fba7082240c85900d7eb035eb2a337" title="Compute attitude (angle) command from the joystick for the wing." alt="" coords="183,272,415,301"/>
+<area shape="rect" id="node27" href="$classJoystick.html#afc9977f82ba8cc8a603a1ed308521254" title="Compute attitude command from the joystick (absolute angles)" alt="" coords="149,325,448,355"/>
+<area shape="rect" id="node31" href="$classJoystick.html#a3c75109de94037f519786db2859641c2" title="Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)" alt="" coords="180,379,417,408"/>
+<area shape="rect" id="node5" href="$classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea" title="Selects the source input for the rate command for the wing." alt="" coords="535,5,796,35"/>
+<area shape="rect" id="node9" href="$classManual__control.html#a28d928918d8883341b5d3647b52aa9ca" title="Compute torque command from the manual input." alt="" coords="544,59,787,88"/>
+<area shape="rect" id="node13" href="$classManual__control.html#a1b85adad9375f7eea177f226d7c50a26" title="Compute rate command from the manual input." alt="" coords="551,112,780,141"/>
+<area shape="rect" id="node17" href="$classManual__control.html#a420f4b792173cd64d323332c244054fe" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="540,165,791,195"/>
+<area shape="rect" id="node21" href="$classManual__control.html#abe507693f441a6738193a18604591f1a" title="Compute velocity command from the manual input." alt="" coords="540,219,791,248"/>
+<area shape="rect" id="node25" href="$classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7" title="Selects the source input for the attitude command for the wing." alt="" coords="529,272,801,301"/>
+<area shape="rect" id="node29" href="$classManual__control.html#a0bd378d186d7b2bfe1a09af34eda439f" title="Compute attitude command from the manual input (absolute angles)" alt="" coords="497,325,833,355"/>
+<area shape="rect" id="node33" href="$classManual__control.html#ad7b10226f0a5847a2265b422e1a9d12d" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="527,379,804,408"/>
+</map>

@@ -1,3 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structstabilisation__wing__conf__t.html" title="Structure containing the configuration data." alt="" coords="5,5,173,35"/>
+<area shape="rect" id="node1" href="$structstabilisation__copter__t.html" title="Structure containing the pointers to the data needed in this module." alt="" coords="7,5,151,35"/>
 </map>

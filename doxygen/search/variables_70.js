@@ -24,7 +24,7 @@ var searchData=
   ['pins',['pins',['../structubx__cfg__ant__t.html#a8148b5a1bf0a6595c7eb672c1b331847',1,'ubx_cfg_ant_t']]],
   ['pitch_5fangle_5fapriori',['pitch_angle_apriori',['../structstabilisation__wing__t.html#ab89e9406334ac50e50a101276f742251',1,'stabilisation_wing_t::pitch_angle_apriori()'],['../structstabilisation__wing__conf__t.html#a1b9799c365b8277e2b969ddc40b2069e',1,'stabilisation_wing_conf_t::pitch_angle_apriori()']]],
   ['pitch_5fangle_5fapriori_5fgain',['pitch_angle_apriori_gain',['../structstabilisation__wing__t.html#aab8c4da7a7d03ebb1682fb6a23425409',1,'stabilisation_wing_t::pitch_angle_apriori_gain()'],['../structstabilisation__wing__conf__t.html#a42340b7e146edc4b386a7b9910269c2b',1,'stabilisation_wing_conf_t::pitch_angle_apriori_gain()']]],
-  ['port',['port',['../structgpio__stm32__conf__t.html#af4a6276ca149b211620a903f7723bccd',1,'gpio_stm32_conf_t::port()'],['../structtLED__DESCRIPTOR.html#a8667c3416593fe47da449b8f55d9f581',1,'tLED_DESCRIPTOR::PORT()']]],
+  ['port',['PORT',['../structtLED__DESCRIPTOR.html#a8667c3416593fe47da449b8f55d9f581',1,'tLED_DESCRIPTOR::PORT()'],['../structgpio__stm32__conf__t.html#af4a6276ca149b211620a903f7723bccd',1,'gpio_stm32_conf_t::port()']]],
   ['port_5fid',['port_id',['../structubx__cfg__prt__t.html#a15037ec3ab559dec206f6914acf6e0ee',1,'ubx_cfg_prt_t']]],
   ['pos_5fest',['pos_est',['../structstabilisation__wing__t.html#abb6f55d285a783cd83c9bc4f47a29d2e',1,'stabilisation_wing_t']]],
   ['position',['position',['../structcommand__t.html#a3314e8bdc60f5b2db1d3ad937be9eb55',1,'command_t::position()'],['../structwaypoint__local__struct__t.html#ad814af70ba1c34257f646cd10e56def7',1,'waypoint_local_struct_t::position()']]],

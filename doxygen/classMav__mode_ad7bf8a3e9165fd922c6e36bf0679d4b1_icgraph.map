@@ -1,11 +1,14 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="200,165,315,195"/>
-<area shape="rect" id="node13" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="789,272,944,301"/>
-<area shape="rect" id="node5" href="$classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card." alt="" coords="439,59,583,88"/>
-<area shape="rect" id="node7" href="$classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data." alt="" coords="445,112,576,141"/>
-<area shape="rect" id="node9" href="$classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data." alt="" coords="445,165,576,195"/>
-<area shape="rect" id="node11" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="449,219,572,248"/>
-<area shape="rect" id="node15" href="$classPosition__estimation.html#a4889621f84bbf2dad7c6591a68e4ece5" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="420,272,601,301"/>
-<area shape="rect" id="node17" href="$classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="364,5,657,35"/>
-<area shape="rect" id="node19" href="$classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21" title="set the home position and altitude to currrent position" alt="" coords="708,5,1025,35"/>
+<area shape="rect" id="node3" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="224,165,339,195"/>
+<area shape="rect" id="node13" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="837,324,992,353"/>
+<area shape="rect" id="node22" href="$classJoystick.html#a130d49f4bd65b110c7078816c587486d" title="Returns the current desired mode value from the joystick." alt="" coords="213,376,349,405"/>
+<area shape="rect" id="node27" href="$classJoystick.html#a05cda6f5e507deda040c71f116dfce96" title="Do operations when buttons are pressed." alt="" coords="201,429,361,459"/>
+<area shape="rect" id="node5" href="$classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card." alt="" coords="487,112,631,141"/>
+<area shape="rect" id="node7" href="$classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data." alt="" coords="493,165,624,195"/>
+<area shape="rect" id="node9" href="$classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data." alt="" coords="493,219,624,248"/>
+<area shape="rect" id="node11" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="497,272,620,301"/>
+<area shape="rect" id="node15" href="$classPosition__estimation.html#a4889621f84bbf2dad7c6591a68e4ece5" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="468,5,649,35"/>
+<area shape="rect" id="node17" href="$classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0" title="set the home position and altitude" alt="" coords="412,59,705,88"/>
+<area shape="rect" id="node19" href="$classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21" title="set the home position and altitude to currrent position" alt="" coords="756,59,1073,88"/>
+<area shape="rect" id="node24" href="$classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7" title="Returns the value of the mode from the desired source input." alt="" coords="432,376,685,405"/>
 </map>

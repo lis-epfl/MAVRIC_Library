@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structJoystick_1_1channels__t.html" title="Joystick Channels." alt="" coords="5,66,147,203"/>
+<area shape="rect" id="node4" href="$unionJoystick_1_1button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="171,5,296,264"/>
+<area shape="rect" id="node6" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="320,5,501,264"/>
+</map>
