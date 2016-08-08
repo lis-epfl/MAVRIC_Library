@@ -55,6 +55,7 @@
 #include "simulation/simulation.hpp"
 
 #include "drivers/spektrum_satellite.hpp"
+#include "util/string_util.hpp"
 
 extern "C"
 {
@@ -172,20 +173,22 @@ int main(int argc, char** argv)
     // #############################################################################################
     // #############  SPI test##################################################################
     // #############################################################################################
-    uint8_t reg  = 0x75 | 0x80; //0x75 | 0x80;
-    uint8_t fil  = 0x55;
-    uint16_t an1 =  0;
-    uint16_t an2  = 0;
-    uint8_t b[5] = {0xf5,0x00,0x33,0x44,0x55};
-    uint8_t *bytes = b;
-    uint8_t dis[2] = {0x6A,0x08};
+    // uint8_t reg  = 0x75 | 0x80; //0x75 | 0x80;
+    // uint8_t fil  = 0x55;
+    // uint8_t an1 =  10;
+    // uint8_t an2  = 20;
+    // uint8_t b[5] = {0xf5,0x00,0x33,0x44,0x55};
+    // uint8_t *bytes = b;
+    // uint8_t dis[2] = {0x6A,0x08};
 
-    board.spi_1_.write(dis,2);
+    // board.spi_1_.write(dis,2);
 
     board.led_err_.off();
     board.led_stat_.off();
     board.led_rf_.off();
-    
+
+    Console<Serial> console(board.serial_);
+
     while (1)
     {
         //board.state_display_sparky_v2_.update();
@@ -204,20 +207,45 @@ int main(int argc, char** argv)
         //                             0);     //uint8_t system_status)
         // mavlink_stream.send(&msg);
 
-        gpio_clear(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
-        //board.spi_1_.write(b,1);
-        //board.spi_1_.read(an1,1);
-        spi_send(SPI1, 0xf5);
-        an1 = spi_read(SPI1);
-        spi_send(SPI1, 0);
-        an2 = spi_read(SPI1);
-        gpio_set(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
+        // gpio_clear(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
+        // //board.spi_1_.write(b,1);
+        // //board.spi_1_.read(an1,1);
+        // spi_send(SPI1, 0xf5);
+        // an1 = spi_read(SPI1);
+        // spi_send(SPI1, 0);
+        // an2 = spi_read(SPI1);
+        // gpio_set(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
+
+        const uint8_t WRITE_FLAG = 0x7f;
+        const uint8_t READ_FLAG  = 0x80;
+
+        // Write reset
+        const uint8_t PIOS_MPU60X0_USER_CTRL_REG    = 0x6A;
+        const uint8_t PIOS_MPU60X0_PWRMGMT_IMU_RST  = 0X80;
+        uint8_t reset_command[] = {WRITE_FLAG & PIOS_MPU60X0_USER_CTRL_REG,
+                                   PIOS_MPU60X0_PWRMGMT_IMU_RST};
+        board.spi_1_.write(reset_command,
+                           sizeof(reset_command));
+
+        // Let the sensor reset
+        time_keeper_delay_ms(50);
+
+        // Read WhoAmI
+        const uint8_t PIOS_MPU60X0_WHOAMI  = 0x75;
+        const uint8_t PIOS_MPU9250_WHOAMI  = 0x71;
+        uint8_t whoami_command[] = {READ_FLAG | PIOS_MPU60X0_WHOAMI, 0};
+        uint8_t buffer[] = {12, 13};
+        board.spi_1_.transfer(  whoami_command,
+                                buffer,
+                                sizeof(whoami_command));
+        // board.spi_1_.read(buffer, 1);
+
         // board.spi_1_.read(&an2,1);
         // board.spi_3_.write(bytes,2);
         // board.spi_3_.read(&an1);
         // board.spi_3_.read(&an2);
-        
-        if (an1 == 0x71 || an2 == 0x71)
+
+        if (buffer[0] == PIOS_MPU9250_WHOAMI | buffer[1] == PIOS_MPU9250_WHOAMI)
         {
             board.led_stat_.toggle();
         }
@@ -228,6 +256,17 @@ int main(int argc, char** argv)
         //gpio_clear(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
         time_keeper_delay_ms(500);
         //gpio_set(GPIO_STM32_PORT_C, GPIO_STM32_PIN_4);
+
+        board.serial_.write(buffer, 2);
+
+        // uint8_t ser_buf[str::MAX_DIGITS10_LONG];
+        // uint8_t ser_len = 0;
+        // str::format_integer(buffer[0], ser_buf, &ser_len);
+        // board.serial_.write(ser_buf, ser_len);
+        // print_util_dbg_log_value("\r\n wai", buffer[0], 16);
+        // console.write(buffer[0]);
+        // const char* newline = "\r\n";
+        // board.serial_.write((const uint8_t*)newline, sizeof(newline));
 
     }
 

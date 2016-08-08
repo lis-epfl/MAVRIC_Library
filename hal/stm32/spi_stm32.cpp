@@ -67,8 +67,8 @@ bool Spi_stm32::init(void)
 
     // MISO init
     gpio_mode_setup(config_.miso_gpio_config.port, GPIO_MODE_AF, config_.miso_gpio_config.pull, config_.miso_gpio_config.pin);
+    // gpio_mode_setup(config_.miso_gpio_config.port, GPIO_MODE_INPUT, config_.miso_gpio_config.pull, config_.miso_gpio_config.pin);
     gpio_set_af(config_.miso_gpio_config.port, config_.miso_gpio_config.alt_fct, config_.miso_gpio_config.pin);
-    gpio_mode_setup(config_.miso_gpio_config.port, config_.miso_gpio_config.dir, config_.miso_gpio_config.pull, config_.miso_gpio_config.pin);
 
     // MOSI init
     gpio_mode_setup(config_.mosi_gpio_config.port, GPIO_MODE_AF, config_.mosi_gpio_config.pull, config_.mosi_gpio_config.pin);
@@ -84,13 +84,14 @@ bool Spi_stm32::init(void)
     //gpio_mode_setup(config_.nss_gpio_config.port, GPIO_MODE_AF, config_.nss_gpio_config.pull, config_.nss_gpio_config.pin);
     //gpio_set_af(config_.nss_gpio_config.port, config_.nss_gpio_config.alt_fct, config_.nss_gpio_config.pin);
     gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
-    gpio_mode_setup(config_.nss_gpio_config.port, config_.nss_gpio_config.dir, config_.nss_gpio_config.pull, config_.nss_gpio_config.pin);
+    gpio_mode_setup(config_.nss_gpio_config.port, GPIO_MODE_OUTPUT, config_.nss_gpio_config.pull, config_.nss_gpio_config.pin);
+    gpio_set_output_options(config_.nss_gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, config_.nss_gpio_config.pin);
 
     gpio_set(GPIO_STM32_PORT_B, GPIO_STM32_PIN_3);
     gpio_mode_setup(GPIO_STM32_PORT_B, GPIO_OUTPUT, GPIO_PULL_UPDOWN_NONE, GPIO_STM32_PIN_3);
 
     // SPI configuration
-    cr_tmp =    config_.clk_div |   // Clock frequency   
+    cr_tmp =    config_.clk_div |   // Clock frequency
                 SPI_CR1_MSTR    |   // Setting device as master
                 SPI_CR1_SPE     |   // SPI enabled
                 SPI_CR1_CPHA    |   // Clock Phase
@@ -147,30 +148,65 @@ bool Spi_stm32::transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbyte
     bool ret = true;
 
     // slave select
-    //gpio_clear(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
+    gpio_clear(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
 
-    for (uint32_t i = 0; i < nbytes; i++)
+    // for (uint32_t i = 0; i < nbytes; i++)
+    // {
+    //
+    //     if (out_buffer)
+    //     {
+    //         spi_send(spi_, out_buffer[i]);
+    //     }
+    //     else
+    //     {
+    //         spi_send(spi_, 0);
+    //     }
+    //
+    //     if (in_buffer)
+    //     {
+    //         in_buffer[i] = spi_read(spi_);
+    //     }
+    //     else
+    //     {
+    //         (void)spi_read(spi_);
+    //     }
+    //
+    // }
+
+    // (void)spi_read(spi_);
+
+    if ((out_buffer != NULL) && (in_buffer != NULL))
     {
-        if (out_buffer)
+        // TX & RX transfer
+        for (uint32_t i = 0; i < nbytes; i++)
         {
-            spi_send(spi_, out_buffer[i]);
+            in_buffer[i] = spi_xfer(spi_, out_buffer[i]);
         }
-        else
+    }
+    else if ((out_buffer == NULL) && (in_buffer != NULL))
+    {
+        // RX transfer
+        for (uint32_t i = 0; i < nbytes; i++)
         {
-            spi_send(spi_, 0);
+            in_buffer[i] = spi_xfer(spi_, 0);
         }
-        if (in_buffer)
+    }
+    else if ((out_buffer != NULL) && (in_buffer == NULL))
+    {
+        // TX transfer
+        for (uint32_t i = 0; i < nbytes; i++)
         {
-            in_buffer[i] = spi_read(spi_);
+            (void)spi_xfer(spi_, out_buffer[i]);
         }
-        else
-        {
-            (void)spi_read(spi_); 
-        }
+    }
+    else if ((out_buffer == NULL) && (in_buffer == NULL))
+    {
+        // Error
+        ret = false;
     }
 
     // slave deselect
-    //gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
+    gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
 
     return ret;
 }
