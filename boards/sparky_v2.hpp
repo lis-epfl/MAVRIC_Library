@@ -284,32 +284,32 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // -------------------------------------------------------------------------
     // SPI config
     // -------------------------------------------------------------------------
-    conf.spi_config[0].spi_device       = STM32_SPI1;
-    conf.spi_config[0].mode             = STM32_SPI_IN_OUT;
-    conf.spi_config[0].clk_div          = SPI_CR1_BAUDRATE_FPCLK_DIV_128;
+    conf.spi_config[0].spi_device               = STM32_SPI1;
+    conf.spi_config[0].mode                     = STM32_SPI_IN_OUT;
+    conf.spi_config[0].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_128; //16;
 
     conf.spi_config[0].miso_gpio_config.port    = GPIO_STM32_PORT_A;
     conf.spi_config[0].miso_gpio_config.pin     = GPIO_STM32_PIN_6;
     conf.spi_config[0].miso_gpio_config.dir     = GPIO_INPUT;
-    conf.spi_config[0].miso_gpio_config.pull    = GPIO_PULL_UPDOWN_DOWN;
+    conf.spi_config[0].miso_gpio_config.pull    = GPIO_PULL_UPDOWN_UP;//DOWN;//_UP;
     conf.spi_config[0].miso_gpio_config.alt_fct = GPIO_STM32_AF_5;
 
     conf.spi_config[0].mosi_gpio_config.port    = GPIO_STM32_PORT_A;
     conf.spi_config[0].mosi_gpio_config.pin     = GPIO_STM32_PIN_7;
     conf.spi_config[0].mosi_gpio_config.dir     = GPIO_OUTPUT;
-    conf.spi_config[0].mosi_gpio_config.pull    = GPIO_PULL_UPDOWN_DOWN;
+    conf.spi_config[0].mosi_gpio_config.pull    = GPIO_PULL_UPDOWN_UP;//DOWN;//_UP;
     conf.spi_config[0].mosi_gpio_config.alt_fct = GPIO_STM32_AF_5;
 
-    conf.spi_config[0].nss_gpio_config.port     = GPIO_STM32_PORT_A;
+    conf.spi_config[0].nss_gpio_config.port     = GPIO_STM32_PORT_C;
     conf.spi_config[0].nss_gpio_config.pin      = GPIO_STM32_PIN_4;
     conf.spi_config[0].nss_gpio_config.dir      = GPIO_OUTPUT;
-    conf.spi_config[0].nss_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.spi_config[0].nss_gpio_config.pull     = GPIO_PULL_UPDOWN_UP;//NONE;//_UP;
     conf.spi_config[0].nss_gpio_config.alt_fct  = GPIO_STM32_AF_5;
 
     conf.spi_config[0].sck_gpio_config.port     = GPIO_STM32_PORT_A;
     conf.spi_config[0].sck_gpio_config.pin      = GPIO_STM32_PIN_5;
     conf.spi_config[0].sck_gpio_config.dir      = GPIO_OUTPUT;
-    conf.spi_config[0].sck_gpio_config.pull     = GPIO_PULL_UPDOWN_DOWN;
+    conf.spi_config[0].sck_gpio_config.pull     = GPIO_PULL_UPDOWN_UP;//DOWN;//_UP;
     conf.spi_config[0].sck_gpio_config.alt_fct  = GPIO_STM32_AF_5;
 
 
