@@ -62,7 +62,7 @@ SIZER 	:= arm-none-eabi-size
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CFLAGS	+= -O0 -g -std=gnu99 -MMD -MP
+CFLAGS	+= -O3 -g -std=gnu99 -MMD -MP
 CFLAGS	+= -Wall
 # CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
 # CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
@@ -75,7 +75,7 @@ CFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CXXFLAGS	+= -O0 -g -std=c++11 -MMD -MP
+CXXFLAGS	+= -O3 -g -std=c++11 -MMD -MP
 CXXFLAGS	+= -Wall
 # CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
 CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
