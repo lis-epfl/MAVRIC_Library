@@ -71,6 +71,10 @@ public:
      */
     virtual void handle(Mission_planner& mission_planner) = 0;
 
+    /**
+     * \brief   Initializes the waypoint handler. Child classes should be creating
+     * the links to the callback classes from incoming MAVLink messages here
+     */
     virtual bool init() = 0;
 
     /**
