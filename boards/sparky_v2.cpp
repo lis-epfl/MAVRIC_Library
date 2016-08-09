@@ -277,6 +277,7 @@ bool Sparky_v2::init(void)
     ret = i2c_1_.init();
     ret = i2c_2_.init();
     init_success &= ret;
+    time_keeper_delay_ms(500);
 
     // -------------------------------------------------------------------------
     // Init barometer

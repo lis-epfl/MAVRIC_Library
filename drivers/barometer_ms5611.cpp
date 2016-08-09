@@ -79,14 +79,14 @@ bool Barometer_MS5611::init(void)
 
     // Reset sensor
     command = COMMAND_RESET;
-    i2c_.probe((uint8_t)config_.address);
-    i2c_.write(&command, 1, (uint8_t)config_.address);
+    // i2c_.probe((uint8_t)config_.address);
 
+    // i2c_.write(&command, 1, (uint8_t)config_.address);
     // Wait a bit
     time_keeper_delay_ms(20);
 
     // Test if the sensor is here
-    res = i2c_.probe((uint8_t)config_.address);
+    // res = i2c_.probe((uint8_t)config_.address);
 
     if (res)
     {
@@ -94,8 +94,8 @@ bool Barometer_MS5611::init(void)
         uint8_t buffer[12];
         command = COMMAND_GET_CALIBRATION;
 
-        i2c_.write(&command, 1, (uint8_t)config_.address);
-        i2c_.read(buffer, 12, (uint8_t)config_.address);
+        // i2c_.write(&command, 1, (uint8_t)config_.address);
+        // i2c_.read(buffer, 12, (uint8_t)config_.address);
 
         calib_.SENS_T1  = (buffer[0] << 8)  + buffer[1];
         calib_.OFF_T1   = (buffer[2] << 8)  + buffer[3];
@@ -191,7 +191,7 @@ bool Barometer_MS5611::start_temperature_sampling(void)
     bool res = true;
 
     uint8_t command = COMMAND_START_TEMPERATURE_CONV + (uint8_t)config_.oversampling_ratio_temperature;
-    res &= i2c_.write(&command, 1, (uint8_t)config_.address);
+    // res &= i2c_.write(&command, 1, (uint8_t)config_.address);
 
     return res;
 }
@@ -203,8 +203,8 @@ bool Barometer_MS5611::read_temperature(void)
     // Get sampled data
     uint8_t data[3];
     uint8_t command = COMMAND_GET_DATA;
-    res &= i2c_.write(&command, 1, (uint8_t)config_.address);
-    res &= i2c_.read(data, 3, (uint8_t)config_.address);
+    // res &= i2c_.write(&command, 1, (uint8_t)config_.address);
+    // res &= i2c_.read(data, 3, (uint8_t)config_.address);
 
     // Convert raw data to temperature and apply calibration
     int32_t raw_temperature      = ((uint32_t)data[0] << 16) | ((uint32_t)data[1] << 8) | ((uint32_t)data[2] << 0);
@@ -229,7 +229,7 @@ bool Barometer_MS5611::start_pressure_sampling(void)
     bool res = true;
 
     uint8_t command = COMMAND_START_PRESSURE_CONV + (uint8_t)config_.oversampling_ratio_pressure;
-    res &= i2c_.write(&command, 1, (uint8_t)config_.address);
+    // res &= i2c_.write(&command, 1, (uint8_t)config_.address);
 
     time_sampling_start_ms_ = time_keeper_get_ms();
 
@@ -243,8 +243,8 @@ bool Barometer_MS5611::read_pressure(void)
     // Get sampled data
     uint8_t data[3];
     uint8_t command = COMMAND_GET_DATA;
-    res &= i2c_.write(&command, 1, (uint8_t)config_.address);
-    res &= i2c_.read(data, 3, (uint8_t)config_.address);
+    // res &= i2c_.write(&command, 1, (uint8_t)config_.address);
+    // res &= i2c_.read(data, 3, (uint8_t)config_.address);
 
     // TODO
     int32_t raw_pressure      = ((uint32_t)data[0] << 16) | ((uint32_t)data[1] << 8) | ((uint32_t)data[2] << 0);
