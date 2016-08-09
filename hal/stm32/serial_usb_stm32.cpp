@@ -244,7 +244,7 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 
 	usbd_ep_setup(usbd_dev, 0x01, USB_ENDPOINT_ATTR_BULK, 64,
 			cdcacm_data_rx_cb);
-	usbd_ep_setup(usbd_dev, 0x82, USB_ENDPOINT_ATTR_BULK, 64, NULL);
+    usbd_ep_setup(usbd_dev, 0x82, USB_ENDPOINT_ATTR_BULK, 64, NULL);
 	usbd_ep_setup(usbd_dev, 0x83, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
 
 	usbd_register_control_callback(
@@ -340,11 +340,22 @@ void Serial_usb_stm32::flush(void)
         uint8_t buf[to_send];
         for (size_t i = 0; i < to_send; i++)
         {
-            tx_buffer_.get(buf[i]);
+            tx_buffer_.get_element(i, buf[i]);
         }
 
         // Send data
-        usbd_ep_write_packet(usbd_dev, 0x82, buf, to_send);
+        if (usbd_ep_write_packet(usbd_dev, 0x82, buf, to_send))
+        {
+            // Success, actually remove data from buffer
+            for (size_t i = 0; i < to_send; i++)
+            {
+                tx_buffer_.get(buf[i]);
+            }
+        }
+        else
+        {
+            return;
+        }
     }
 }
 
@@ -370,7 +381,6 @@ bool Serial_usb_stm32::write(const uint8_t* bytes, const uint32_t size)
         }
         ret = true;
     }
-
 
     // Flush
     flush();
@@ -408,6 +418,7 @@ Serial_usb_stm32* Serial_usb_stm32::instance_ = NULL;
 void otg_fs_isr(void)
 {
     usbd_poll(usbd_dev);
+    Serial_usb_stm32::irq();
 }
 
 
@@ -443,8 +454,10 @@ void Serial_usb_stm32::irq_handler(void)
     }
 
     // Call callback function if attached
-    if (irq_callback != NULL)
+    if ((len != 0) && (irq_callback != NULL))
     {
         irq_callback(this);
     }
+
+    flush();
 }
