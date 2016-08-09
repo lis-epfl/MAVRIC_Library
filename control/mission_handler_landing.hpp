@@ -67,10 +67,10 @@ public:
      * \param   message_handler         The reference to the mavlink message handler
      */
      Mission_handler_landing(   const INS& ins,
-                                        Navigation& navigation,
-                                        const ahrs_t& ahrs,
-                                        State& state,
-                                        Mavlink_message_handler& message_handler);
+                                Navigation& navigation,
+                                const ahrs_t& ahrs,
+                                State& state,
+                                Mavlink_message_handler& message_handler);
 
 
     /**
@@ -79,21 +79,56 @@ public:
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
      */
-    virtual void handle(Mission_planner& mission_planner);
-
-    virtual bool init();
+    //virtual void handle(Mission_planner& mission_planner);
 
     /**
-     * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
+     * \brief   Checks if the waypoint is a landing waypoint
+     *  
+     * \details     Checks if the inputted waypoint is a:
+     *                  MAV_CMD_NAV_LAND
      *
-     * \param   landing_handler         The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
+     * \param   mission_planner     The mission planner class
+     * \param   wpt                 The waypoint class
      *
-     * \return  The MAV_RESULT of the command
+     * \return  Can handle
      */
-    static mav_result_t set_auto_landing(Mission_handler_landing* landing_handler, mavlink_command_long_t* packet);
+    bool can_handle(Mssion_planner& mission_planner, Waypoint& wpt);
+
+    /**
+     * \brief   Sets up this handler class for a first time initialization
+     *  
+     * \details     Records the waypoint reference and sets the mav mode
+     *
+     * \param   mission_planner     The mission planner class
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Success
+     */
+    bool setup(Mssion_planner& mission_planner, Waypoint& wpt);
+
+    /**
+     * \brief   Handles the mission every iteration
+     *  
+     * \details     
+     *
+     * \param   mission_planner     The mission planner class
+     */
+    void handle(Mssion_planner& mission_planner);
+
+    /**
+     * \brief   Checks if the handler has finished the request of the waypoint
+     *  
+     * \details     
+     *
+     * \param   mission_planner     The mission planner class
+     *
+     * \return  Is finished
+     */
+    bool is_finished(Mssion_planner& mission_planner);
 
 protected:
+    Waypoint& waypoint_;                                        ///< The waypoint that we are landing under
+    
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     const ahrs_t& ahrs_;
     State& state_;                                              ///< The reference to the state structure
@@ -105,13 +140,7 @@ protected:
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
      */
-    void auto_landing_handler(Mission_planner& mission_planner);
-
-private:
-    /**
-     * \brief   Handles the behavior changes
-     */
-    void set_behavior();
+    //void auto_landing_handler(Mission_planner& mission_planner);
 };
 
 

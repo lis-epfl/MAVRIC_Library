@@ -252,6 +252,70 @@ mav_result_t Mission_planner::is_arrived(Mission_planner* mission_planner, mavli
     return result;
 }
 
+mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+{
+    mav_result_t result;
+
+    // Only land if we are in an appropriate navigation state already
+    if (   (mission_planner->navigation_.internal_state() == Navigation::MISSION)
+        || (mission_planner->navigation_.internal_state() == Navigation::PAUSED))
+    {
+        result = MAV_RESULT_ACCEPTED;
+
+        // Change states
+        mission_planner->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
+
+        // Determine landing location
+        local_position_t landing_position = mission_planner->ins_.position_lf();
+        landing_position[Z] = -5.0f;
+        if (packet->param1 == 1)
+        {
+            print_util_dbg_print("Landing at a given location\r\n");
+            landing_position[X] = packet->param5;
+            landing_position[Y] = packet->param6;
+
+        }
+        else
+        {
+            print_util_dbg_print("Landing on the spot\r\n");
+        }
+
+        // Set hold position for landing
+        float heading = coord_conventions_get_yaw(mission_planner->ahrs_.qe);
+        Waypoint landing_wpt(   MAV_FRAME_LOCAL_NED,
+                                MAV_CMD_NAV_LAND,
+                                0,
+                                0.0f,
+                                0.0f,
+                                0.0f,
+                                heading,
+                                landing_position[X],
+                                landing_position[Y],
+                                landing_position[Z]);
+        mission_planner->set_hold_waypoint(landing_position, heading);
+        mission_planner->navigation_.set_internal_state(Navigation::POSTMISSION, landing_wpt);
+
+        print_util_dbg_print("Auto-landing procedure initialised.\r\n");
+        print_util_dbg_print("Landing at: (");
+        local_position_t local_pos = landing_wpt.local_pos();
+        print_util_dbg_print_num(local_pos[X], 10);
+        print_util_dbg_print(", ");
+        print_util_dbg_print_num(local_pos[Y], 10);
+        print_util_dbg_print(", ");
+        print_util_dbg_print_num(local_pos[Z], 10);
+        print_util_dbg_print(", ");
+        print_util_dbg_print_num((int32_t)(heading * 180.0f / 3.14f), 10);
+        print_util_dbg_print(")\r\n");
+
+        mission_planner->set_behavior();
+    }
+    else
+    {
+        result = MAV_RESULT_DENIED;
+    }
+
+    return result;
+}
 
 void Mission_planner::state_machine()
 {
@@ -536,6 +600,14 @@ bool Mission_planner::init()
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_current_waypoint_from_parameter;
+    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
+
+    callbackcmd.command_id = MAV_CMD_NAV_LAND; // 21
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_landing;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
