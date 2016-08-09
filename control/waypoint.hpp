@@ -78,9 +78,9 @@ public:
      * \param   param2              Parameter depending on the MAV_CMD_NAV id
      * \param   param3              Parameter depending on the MAV_CMD_NAV id
      * \param   param4              Parameter depending on the MAV_CMD_NAV id
-     * \param   x                   The value on the x axis (depends on the reference frame)
-     * \param   y                   The value on the y axis (depends on the reference frame)
-     * \param   z                   The value on the z axis (depends on the reference frame)
+     * \param   param5              Parameter depending on the MAV_CMD_NAV id (usually x/latitude)
+     * \param   param6              Parameter depending on the MAV_CMD_NAV id (usually y/longitude)
+     * \param   param7              Parameter depending on the MAV_CMD_NAV id (usually z/altitude)
      */
     Waypoint(   uint8_t frame,
                 uint16_t command,
@@ -89,40 +89,9 @@ public:
                 float param2,
                 float param3,
                 float param4,
-                float x,
-                float y,
-                float z);
-
-    /**
-     * \brief   Initialize the waypoint handler
-     *
-     * \param   frame               The reference frame of the waypoint
-     * \param   command             The MAV_CMD_NAV id of the waypoint
-     * \param   autocontinue        Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
-     * \param   param1              Parameter depending on the MAV_CMD_NAV id
-     * \param   param2              Parameter depending on the MAV_CMD_NAV id
-     * \param   param3              Parameter depending on the MAV_CMD_NAV id
-     * \param   param4              Parameter depending on the MAV_CMD_NAV id
-     * \param   x                   The value on the x axis (depends on the reference frame)
-     * \param   y                   The value on the y axis (depends on the reference frame)
-     * \param   z                   The value on the z axis (depends on the reference frame)
-     * \param   radius              The radius of the waypoint
-     * \param   loiter_time         The time to loiter at the waypoint
-     * \param   dubin               The dubin structure for the waypoint
-     */
-    Waypoint(   uint8_t frame,
-                uint16_t command,
-                uint8_t autocontinue,
-                float param1,
-                float param2,
-                float param3,
-                float param4,
-                float x,
-                float y,
-                float z,
-                float radius,
-                float loiter_time,
-                dubin_t dubin);
+                float param5,
+                float param6,
+                float param7);
 
     /**
      * \brief   Sends a given waypoint via a MAVLink message
@@ -234,20 +203,46 @@ public:
     void set_param4(float param4);
 
     /**
-     * \brief   Gets the heading of the waypoint
+     * \brief   Gets param5 of the waypoint
      *
-     * Usually param4_
-     *
-     * \return  heading
+     * \return  param5
      */
-    float heading() const;
+    float param5() const;
 
     /**
-     * \brief   Sets heading
+     * \brief   Sets param5
      *
-     * \param   heading
+     * \param   param5
      */
-    void set_heading(float heading);
+    void set_param5(float param5);
+
+    /**
+     * \brief   Gets param6 of the waypoint
+     *
+     * \return  param6
+     */
+    float param6() const;
+
+    /**
+     * \brief   Sets param6
+     *
+     * \param   param6
+     */
+    void set_param6(float param6);
+
+    /**
+     * \brief   Gets param7 of the waypoint
+     *
+     * \return  param7
+     */
+    float param7() const;
+
+    /**
+     * \brief   Sets param7
+     *
+     * \param   param7
+     */
+    void set_param7(float param7);
 
     /**
      * \brief   Gets the waypoint in local coordinates
@@ -261,7 +256,7 @@ public:
      *
      * \param   local_pos       The local position of the waypoint
      */
-    void set_local_pos(local_position_t local_pos);
+    //void set_local_pos(local_position_t local_pos);
 
     /**
      * \brief   Sets the waypoint in local coordinates
@@ -269,42 +264,7 @@ public:
      * \param   local_pos       The locaiton position of the waypoint
      * \param   heading         The desired heading of the waypoint
      */
-    void set_local_pos(local_position_t local_pos, float heading);
-
-    /**
-     * \brief   Gets the radius
-     *
-     * \return  radius
-     */
-    float radius() const;
-
-    /**
-     * \brief   Sets the radius
-     *
-     * \param   radius
-     */
-    void set_radius(float radius);
-
-    /**
-     * \brief   Gets the loiter time of the waypoint
-     *
-     * \return  Loiter time
-     */
-    float loiter_time() const;
-
-    /**
-     * \brief   Sets the loiter time
-     *
-     * \param   loiter time
-     */
-    void set_loiter_time(float loiter_time);
-
-    /**
-     * \brief   Gets a reference to the dubin structure
-     *
-     * \return  Dubin structure for the waypoint
-     */
-    dubin_t& dubin();
+    //void set_local_pos(local_position_t local_pos, float heading);
 
 protected:
     uint8_t frame_;                                             ///< The reference frame of the waypoint
@@ -314,10 +274,9 @@ protected:
     float param2_;                                              ///< Parameter depending on the MAV_CMD_NAV id
     float param3_;                                              ///< Parameter depending on the MAV_CMD_NAV id
     float param4_;                                              ///< Parameter depending on the MAV_CMD_NAV id
-    global_position_t wpt_position_;                            ///< The global position of the waypoint
-    float radius_;                                              ///< The radius to turn around the waypoint, positive value for clockwise orbit, negative value for counter-clockwise orbit
-    float loiter_time_;                                         ///< The loiter time at the waypoint
-    dubin_t dubin_;                                             ///< The Dubin structure
+    float param5_;                                              ///< Parameter depending on the MAV_CMD_NAV id
+    float param6_;                                              ///< Parameter depending on the MAV_CMD_NAV id
+    float param7_;                                              ///< Parameter depending on the MAV_CMD_NAV id
 
     /**
      * \brief   Determines the global position of the waypoint based on the frame
