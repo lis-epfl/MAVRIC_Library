@@ -91,7 +91,7 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad_dronedome mav = LEQuad_dronedome(board.imu,
+    LEQuad mav = LEQuad(board.imu,
                         board.bmp085,
                         board.gps_ublox,
                         board.sonar_i2cxl,      // Warning:
@@ -113,7 +113,6 @@ int main(void)
                         file_stat,
                         board_config.offboard_tag_search_config,
                         mav_config );
-    mav.init();
 
     // -------------------------------------------------------------------------
     // Create simulation
