@@ -305,8 +305,6 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                         waypoint_handler->waypoint_onboard_count_ = waypoint_handler->waypoint_count_;
 
                         waypoint_handler->navigation_.set_start_wpt_time();
-
-                        waypoint_handler->state_.nav_plan_active = true;
                         // TODO Should this auto start moving towards the point
                     }
                     else
@@ -371,8 +369,7 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
         {
             waypoint_handler->waypoint_count_ = 0;
             waypoint_handler->waypoint_onboard_count_ = 0;
-            waypoint_handler->state_.nav_plan_active = false;
-            Mission_handler::reset_hold_waypoint();
+            //Mission_handler::reset_hold_waypoint(); TODO
 
             mavlink_message_t _msg;
             mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),

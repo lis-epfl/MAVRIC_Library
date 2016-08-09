@@ -159,35 +159,3 @@ bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
 
     return finished;
 }
-
-/*
-void Mission_handler_takeoff::handle(Mission_planner& mission_planner)
-{
-    Mav_mode mode_local = state_.mav_mode();
-
-    bool takeoff_result = take_off_handler(mission_planner);
-
-    navigation_.set_goal(hold_waypoint());
-
-    if (takeoff_result)
-    {
-        print_util_dbg_print("Automatic take-off finished.\r\n");
-
-        if (mode_local.is_auto())
-        {
-            state_.nav_plan_active = true;
-            navigation_.set_goal(waypoint_handler_.current_waypoint());
-            navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
-        }
-        else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
-        {
-            navigation_.set_internal_state(Navigation::NAV_HOLD_POSITION);
-        }
-    }
-
-    if (mode_local.is_manual())
-    {
-        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
-    }
-}
-*/

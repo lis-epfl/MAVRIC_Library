@@ -443,8 +443,6 @@ bool Position_estimation::set_home_position_global(global_position_t new_home_po
         print_util_dbg_print_num(origin_.altitude * 1000.0f, 10);
         print_util_dbg_print(")\r\n");
 
-        state.nav_plan_active = false;
-
         result = true;
     }
 

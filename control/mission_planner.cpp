@@ -123,13 +123,12 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
         }
     }
 
-    if ((mission_planner->waypoint_handler_.waypoint_count() > 0) && ((!mission_planner->state_.nav_plan_active) || force_next))
+    if ((mission_planner->waypoint_handler_.waypoint_count() > 0) && (mission_planner->navigation_.waiting_at_waypoint() || force_next))
     {
         print_util_dbg_print("All vehicles: Navigating to next waypoint.\r\n");
 
         mission_planner->navigation_.set_start_wpt_time();
         mission_planner->navigation_.set_waiting_at_waypoint(false);
-        mission_planner->state_.nav_plan_active = true;
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
         mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
 
@@ -180,7 +179,6 @@ void Mission_planner::set_current_waypoint(Mission_planner* mission_planner, uin
             mission_planner->mavlink_stream_.send(&_msg);
 
             mission_planner->navigation_.set_start_wpt_time();
-            mission_planner->state_.nav_plan_active = true;
             mission_planner->navigation_.set_waiting_at_waypoint(false);
             mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
         }
@@ -215,7 +213,6 @@ mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mission_planne
         mission_planner->mavlink_stream_.send(&msg);
 
         mission_planner->navigation_.set_start_wpt_time();
-        mission_planner->state_.nav_plan_active = true;
         mission_planner->navigation_.set_waiting_at_waypoint(false);
         mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
 
@@ -798,11 +795,6 @@ bool Mission_planner::update(Mission_planner* mission_planner)
         case MAV_STATE_ACTIVE:
             mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
             mission_planner->critical_next_state_ = false;
-
-            if (!mission_planner->state_.nav_plan_active && !mission_planner->navigation_.waiting_at_waypoint())
-            {
-                mission_planner->state_.nav_plan_active = true;
-            }
 
             mission_planner->state_machine();
             break;

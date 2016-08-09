@@ -205,7 +205,7 @@ void Navigation::dubin_state_machine()
     {
         case DUBIN_INIT:
             print_util_dbg_print("DUBIN_INIT\r\n");
-            if (state.nav_plan_active && (goal_radius_ >= minimal_radius))
+            if (goal_radius_ >= minimal_radius)
             {
                 init_radius = maths_f_abs(goal_radius_);
             }
