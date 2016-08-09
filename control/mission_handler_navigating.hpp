@@ -74,53 +74,72 @@ public:
      * \param   message_handler                     The reference to the mavlink message handler
      */
      Mission_handler_navigating(    const INS& ins,
-                                            Navigation& navigation,
-                                            State& state,
-                                            const Mavlink_stream& mavlink_stream,
-                                            Mavlink_waypoint_handler& waypoint_handler,
-                                            Mission_handler_landing& mission_handler_landing,
-                                            Mavlink_message_handler& message_handler);
-
+                                    Navigation& navigation,
+                                    State& state,
+                                    const Mavlink_stream& mavlink_stream,
+                                    Mavlink_waypoint_handler& waypoint_handler,
+                                    Mission_handler_landing& mission_handler_landing,
+                                    Mavlink_message_handler& message_handler);
 
     /**
-     * \brief   The handler for the takeoff state.
+     * \brief   Checks if the waypoint is a navigating waypoint
+     *  
+     * \details     Checks if the inputted waypoint is a:
+     *                  MAV_CMD_NAV_WAYPOINT
      *
-     * \param   mission_planner     The reference to the misison planner that is
-     * handling the request.
+     * \param   mission_planner     The mission planner class
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Can handle
      */
-    virtual void handle(Mission_planner& mission_planner);
+    bool can_handle(Mission_planner& mission_planner, Waypoint& wpt);
 
-    virtual bool init();
+    /**
+     * \brief   Sets up this handler class for a first time initialization
+     *  
+     * \details     Records the waypoint reference
+     *
+     * \param   mission_planner     The mission planner class
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Success
+     */
+    bool setup(Mission_planner& mission_planner, Waypoint& wpt);
+
+    /**
+     * \brief   Handles the mission every iteration
+     *  
+     * \details     
+     *
+     * \param   mission_planner     The mission planner class
+     */
+    void handle(Mission_planner& mission_planner);
+
+    /**
+     * \brief   Checks if the handler has finished the request of the waypoint
+     *  
+     * \details     Will only return true if we can autocontinue towards the
+     *              next waypoint and we are facing the right direction (dubin)
+     *              or are in direct to (or radius == 0)
+     *
+     * \param   mission_planner     The mission planner class
+     *
+     * \return  Is finished
+     */
+    bool is_finished(Mission_planner& mission_planner);
 
 protected:
     Navigation& navigation_;                                            ///< The reference to the navigation object
     State& state_;                                                      ///< The reference to the state object
     const Mavlink_stream& mavlink_stream_;                              ///< The reference to the mavlink object
     Mavlink_waypoint_handler& waypoint_handler_;                        ///< The reference to the mavlink waypoint handler
-    Mission_handler_landing& mission_handler_landing_;  ///< The reference to the landing handler
+    Mission_handler_landing& mission_handler_landing_;                  ///< The reference to the landing handler
     Mavlink_message_handler& message_handler_;                          ///< The reference to the mavlink message handler
 
+    Waypoint& waypoint_;                                                ///< The waypoint that we are heading towards
+    uint64_t start_time_;                                               ///< The start time for travelling to this waypoint
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
-
-    /**
-     * \brief   Drives the GPS navigation procedure
-     *
-     * \param   mission_planner         The reference to the misison planner that is
-     *                                  handling the request.
-     * \param   waypoint_coordinates    Output: Waypoint that we are navigating to
-     */
-    void waypoint_navigating_handler(Mission_planner& mission_planner, Waypoint& waypoint_coordinates);
-
-    /**
-     * \brief   Start/Stop the navigation
-     *
-     * \param   navigating_handler      The pointer to the structure of the navigating handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t start_stop_navigation(Mission_handler_navigating* navigating_handler, mavlink_command_long_t* packet);
-
+    bool waypoint_reached_;                                             ///< Flag stating if the waypoint has been reached
     /**
      * \brief   Sends the travel time between the last two waypoints
      *

@@ -316,6 +316,16 @@ protected:
      * \return  The MAV_RESULT of the command
      */
     static mav_result_t set_auto_landing(Mission_planner* mission_planner, mavlink_command_long_t* packet);
+
+    /**
+     * \brief   Start/Stop the navigation
+     *
+     * \param   navigating_handler      The pointer to the structure of the navigating handler
+     * \param   packet                  The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t start_stop_navigation(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 };
 
 

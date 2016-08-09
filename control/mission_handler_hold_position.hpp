@@ -74,6 +74,7 @@ public:
                         MAV_CMD_NAV_LOITER_UNLIM
                         MAV_CMD_NAV_LOITER_TIME
                         MAV_CMD_NAV_LOITER_TO_ALT
+                        MAV_CMD_OVERRIDE_GOTO if param1 == MAV_GOTO_DO_HOLD
      *
      * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class

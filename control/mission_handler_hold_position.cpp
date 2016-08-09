@@ -75,7 +75,8 @@ bool Mission_handler_hold_position::can_handle(Mission_planner& mission_planner,
     uint16_t cmd = wpt.command();
     if (cmd == MAV_CMD_NAV_LOITER_UNLIM ||
         cmd == MAV_CMD_NAV_LOITER_TIME  ||
-        cmd == MAV_CMD_NAV_LOITER_TO_ALT)
+        cmd == MAV_CMD_NAV_LOITER_TO_ALT ||
+        (cmd == MAV_CMD_OVERRIDE_GOTO && wpt.param1() == MAV_GOTO_DO_HOLD))
     {
         handleable = true;
     }
@@ -108,6 +109,10 @@ void Mission_handler_hold_position::handle(Mission_planner& mission_planner)
 
     case MAV_CMD_NAV_LOITER_TO_ALT:
         navigation_.set_goal(waypoint_.local_pos(), coord_conventions_get_yaw(ahrs.qe), waypoint_.param2());
+        break;
+
+    case MAV_CMD_OVERRIDE_GOTO:
+        navigation_.set_goal(waypoint_.local_pos(), waypoint_.param4(), 0.0f);
         break;
 
     default:
@@ -143,6 +148,9 @@ bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner
             return false;
         }
         break;
+
+    case MAV_CMD_NAV_LOITER_TO_ALT:
+        return false;
 
     default:
         return false;
