@@ -72,15 +72,6 @@ public:
         DUBIN = 1,
     };
 
-    enum internal_state_t
-    {
-        NAV_STANDBY,
-        NAV_PREMISSION,
-        NAV_MISSION,
-        NAV_POSTMISSION,
-        NAV_PAUSED
-    };
-
     /**
      * \brief   The critical behavior enum
      */
@@ -193,20 +184,6 @@ public:
     void set_goal(local_position_t goal_pos, float goal_heading, float goal_radius);
 
     /**
-     * \brief   Gets the internal state enum of the navigation
-     *
-     * \return  internal_state_
-     */
-    internal_state_t internal_state() const;
-
-    /**
-     * \brief   Sets the internal state of the navigation
-     *
-     * \param   new_internal_state  The new internal state of the navigation
-     */
-    void set_internal_state(internal_state_t new_internal_state);
-
-    /**
      * \brief   Sets the start_wpt_time_ to the current time
      */
     void set_start_wpt_time();
@@ -267,7 +244,6 @@ private:
     float goal_heading_;                                ///< The heading of the goal
     float goal_radius_;                                 ///< The goal radius
     dubin_t goal_dubin_;                                ///< The dubin structure for the goal
-    internal_state_t internal_state_;                   ///< The internal state of the navigation module
 
     float dt;                                           ///< The time interval between two navigation updates
     uint32_t last_update;                               ///< The time of the last navigation update in ms

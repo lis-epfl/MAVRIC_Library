@@ -623,61 +623,6 @@ Waypoint& Navigation::goal()
     return goal_;
 }
 
-Navigation::internal_state_t Navigation::internal_state() const
-{
-    return internal_state_;
-}
-
-void Navigation::set_internal_state(internal_state_t new_internal_state)
-{
-    // Check if there has been a state change
-    if (internal_state_ != new_internal_state)
-    {
-        // Print state change
-        print_util_dbg_print("Switching from ");
-        switch (internal_state_)
-        {
-        case NAV_STANDBY:
-            print_util_dbg_print("NAV_STANDBY");
-            break;
-        case NAV_PREMISSION:
-            print_util_dbg_print("NAV_PREMISSION");
-            break;
-        case NAV_MISSION:
-            print_util_dbg_print("NAV_MISSION");
-            break;
-        case NAV_POSTMISSION:
-            print_util_dbg_print("NAV_POSTMISSION");
-            break;
-        case NAV_PAUSED:
-            print_util_dbg_print("NAV_PAUSED");
-            break;
-        }
-        print_util_dbg_print(" to ");
-        switch (new_internal_state)
-        {
-        case NAV_STANDBY:
-            print_util_dbg_print("NAV_STANDBY");
-            break;
-        case NAV_PREMISSION:
-            print_util_dbg_print("NAV_PREMISSION");
-            break;
-        case NAV_MISSION:
-            print_util_dbg_print("NAV_MISSION");
-            break;
-        case NAV_POSTMISSION:
-            print_util_dbg_print("NAV_POSTMISSION");
-            break;
-        case NAV_PAUSED:
-            print_util_dbg_print("NAV_PAUSED");
-            break;
-        }
-        print_util_dbg_print("\r\n");
-
-        internal_state_ = new_internal_state;
-    }
-}
-
 void Navigation::set_start_wpt_time()
 {
     start_wpt_time_ = time_keeper_get_ms();

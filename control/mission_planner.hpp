@@ -64,6 +64,8 @@ class Mission_handler_takeoff;
 class Mission_handler_manual_control;
 class Mission_handler_hold_position;
 
+#define MAX_REGISTERED_MISSION_HANDLERS 20
+
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
@@ -71,6 +73,14 @@ class Mission_handler_hold_position;
 class Mission_planner
 {
 public:
+    enum internal_state_t
+    {
+        STANDBY,
+        PREMISSION,
+        MISSION,
+        POSTMISSION,
+        PAUSED
+    };
 
     struct conf_t
     {
@@ -143,17 +153,59 @@ public:
     Mav_mode last_mode() const;
     void set_critical_next_state(bool critical_next_state);
 
-protected:
-    Mission_handler_on_ground& on_ground_handler_;                  ///< The handler for the on ground state
-    Mission_handler_takeoff& takeoff_handler_;                      ///< The handler for the takeoff state
-    Mission_handler_landing& landing_handler_;                      ///< The handler for the landing state
-    Mission_handler_hold_position& hold_position_handler_;          ///< The handler for the hold position state
-    Mission_handler_stop_on_position& stop_on_position_handler_;    ///< The handler for the stop on position state
-    Mission_handler_stop_there& stop_there_handler_;                ///< The handler for the stop there state
-    Mission_handler_navigating& navigating_handler_;                ///< The handler for the navigating state
-    Mission_handler_manual_control& manual_control_handler_;        ///< The handler for the manual control state
+    /**
+     * \brief   Registers the inputted handler to the array of known
+     *          mission handlers. Performs a check to see if that
+     *          object is already within the array.
+     *
+     * \param   handler     The new mission handler
+     *
+     * \return  Success
+     */
+    bool register_mission_handler(Mission_handler& handler);
 
-    Mavlink_waypoint_handler& waypoint_handler_;        ///< The reference to the mavlink waypoint handler
+    /**
+     * \brief   Switches the mission handler to the inputted waypoint
+     *
+     * \param   waypoint
+     *
+     * \return  Success
+     */
+    bool switch_mission_handler(Waypoint& waypoint);
+
+    /**
+     * \brief   Gets the internal state enum of the navigation
+     *
+     * \return  internal_state_
+     */
+    internal_state_t internal_state() const;
+
+    /**
+     * \brief   Sets the internal state of the navigation
+     *
+     * \param   new_internal_state  The new internal state of the navigation
+     */
+    void set_internal_state(internal_state_t new_internal_state);
+
+protected:
+    Mission_handler_on_ground& on_ground_handler_;              ///< Handler for the standby state
+    Mission_handler_takeoff& takeoff_handler_;                  ///< Handler for the premission state
+    Mission_handler_landing& landing_handler_;                  ///< Handler for the postmission state
+    Mission_handler_hold_position& hold_position_handler_;      ///< Handler for the paused state
+
+    /**
+     * Array of registered mission handlers. Other classes will
+     * register a mission handler through the function
+     * Mission_planner::register_mission_handler(Mission_handler*).
+     */
+    Mission_handler& registered_mission_handlers_[MAX_REGISTERED_MISSION_HANDLERS];
+    Mission_handler* current_mission_handler_;                  ///< The currently used mission handler
+    uint8_t registered_mission_handler_count_;                  ///< The number of mission handler in the array
+    Waypoint internal_state_waypoint_;                          ///< A waypoint that is used to store the handler waypoint for internal_state handling
+
+    internal_state_t internal_state_;                           ///< The internal state of the navigation module
+
+    Mavlink_waypoint_handler& waypoint_handler_;                ///< The reference to the mavlink waypoint handler
 
     bool critical_next_state_;                                  ///< Flag to change critical state in its dedicated state machine
     Mav_mode last_mode_;                                        ///< The mode of the MAV to have a memory of its evolution
