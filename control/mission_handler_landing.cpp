@@ -72,7 +72,7 @@ Mission_handler_landing::Mission_handler_landing(   const INS& ins,
 {
 }
 
-bool Mission_handler_landing::can_handle(Mssion_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_landing::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -85,7 +85,7 @@ bool Mission_handler_landing::can_handle(Mssion_planner& mission_planner, Waypoi
     return handleable;
 }
 
-bool Mission_handler_landing::setup(Mssion_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_landing::setup(Mission_planner& mission_planner, Waypoint& wpt)
 {
     bool success = true;
 
@@ -99,7 +99,7 @@ bool Mission_handler_landing::setup(Mssion_planner& mission_planner, Waypoint& w
     return success;
 }
 
-void Mission_handler_landing::handle(Mssion_planner& mission_planner)
+void Mission_handler_landing::handle(Mission_planner& mission_planner)
 {
     // Determine waypoint position
     local_position_t local_pos = waypoint_.local_pos();
@@ -165,7 +165,7 @@ void Mission_handler_landing::handle(Mssion_planner& mission_planner)
     navigation_.set_goal(local_pos, heading, 0.0f);
 }
 
-bool Mission_handler_landing::is_finished(Mssion_planner& mission_planner)
+bool Mission_handler_landing::is_finished(Mission_planner& mission_planner)
 {
     return mission_planner.internal_state() == Mission_planner::STANDBY;
 }

@@ -92,7 +92,7 @@ public:
      *
      * \return  Can handle
      */
-    bool can_handle(Mssion_planner& mission_planner, Waypoint& wpt);
+    bool can_handle(Mission_planner& mission_planner, Waypoint& wpt);
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -104,7 +104,7 @@ public:
      *
      * \return  Success
      */
-    bool setup(Mssion_planner& mission_planner, Waypoint& wpt);
+    bool setup(Mission_planner& mission_planner, Waypoint& wpt);
 
     /**
      * \brief   Handles the mission every iteration
@@ -113,7 +113,7 @@ public:
      *
      * \param   mission_planner     The mission planner class
      */
-    void handle(Mssion_planner& mission_planner);
+    void handle(Mission_planner& mission_planner);
 
     /**
      * \brief   Checks if the handler has finished the request of the waypoint
@@ -124,7 +124,7 @@ public:
      *
      * \return  Is finished
      */
-    bool is_finished(Mssion_planner& mission_planner);
+    bool is_finished(Mission_planner& mission_planner);
 
 protected:
     Waypoint& waypoint_;                                        ///< The waypoint that we are landing under

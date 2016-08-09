@@ -68,7 +68,7 @@ bool Mission_handler_hold_position::init()
     return true;
 }
 
-bool Mission_handler_hold_position::can_handle(Mssion_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_hold_position::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -83,7 +83,7 @@ bool Mission_handler_hold_position::can_handle(Mssion_planner& mission_planner, 
     return handleable;
 }
 
-bool Mission_handler_hold_position::setup(Mssion_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, Waypoint& wpt)
 {
     bool success = true;
 
@@ -93,7 +93,7 @@ bool Mission_handler_hold_position::setup(Mssion_planner& mission_planner, Waypo
     return success;
 }
 
-void Mission_handler_hold_position::handle(Mssion_planner& mission_planner)
+void Mission_handler_hold_position::handle(Mission_planner& mission_planner)
 {
     // Set goal
     switch (waypoint_.command())
@@ -115,7 +115,7 @@ void Mission_handler_hold_position::handle(Mssion_planner& mission_planner)
     }  
 }
 
-bool Mission_handler_hold_position::is_finished(Mssion_planner& mission_planner)
+bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner)
 {
     switch (waypoint_.command())
     {

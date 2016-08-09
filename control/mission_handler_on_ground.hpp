@@ -81,7 +81,7 @@ public:
      *
      * \return  Can handle
      */
-    bool can_handle(Mssion_planner& mission_planner, Waypoint& wpt);
+    bool can_handle(Mission_planner& mission_planner, Waypoint& wpt);
 
     /**
      * \brief   Does nothing
@@ -93,7 +93,7 @@ public:
      *
      * \return  True
      */
-    bool setup(Mssion_planner& mission_planner, Waypoint& wpt);
+    bool setup(Mission_planner& mission_planner, Waypoint& wpt);
 
     /**
      * \brief   Does nothing
@@ -102,7 +102,7 @@ public:
      *
      * \param   mission_planner     The mission planner class
      */
-    void handle(Mssion_planner& mission_planner);
+    void handle(Mission_planner& mission_planner);
 
     /**
      * \brief   Returns false
@@ -114,7 +114,7 @@ public:
      *
      * \return  False
      */
-    bool is_finished(Mssion_planner& mission_planner);
+    bool is_finished(Mission_planner& mission_planner);
 
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure

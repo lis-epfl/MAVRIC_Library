@@ -84,23 +84,23 @@ void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
 }
 */
 
-bool Mission_handler_on_ground::can_handle(Mssion_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_on_ground::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
 {
     // TODO: Check if actually on ground
     return true;
 }
 
-bool Mission_handler_on_ground::setup(Mssion_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, Waypoint& wpt)
 {
     return true;
 }
 
-void Mission_handler_on_ground::handle(Mssion_planner& mission_planner)
+void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
 {
 
 }
 
-bool Mission_handler_on_ground::is_finished(Mssion_planner& mission_planner)
+bool Mission_handler_on_ground::is_finished(Mission_planner& mission_planner)
 {
     return false;
 }
