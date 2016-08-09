@@ -83,9 +83,52 @@ public:
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
      */
-    virtual void handle(Mission_planner& mission_planner);
+    //virtual void handle(Mission_planner& mission_planner);
 
-    virtual bool init();
+    /**
+     * \brief   Checks if the waypoint is a takeoff waypoint
+     *  
+     * \details     Checks if the inputted waypoint is a:
+     *                  MAV_CMD_NAV_TAKEOFF
+     *
+     * \param   mission_planner     The mission planner class
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Can handle
+     */
+    bool can_handle(Mission_planner& mission_planner, Waypoint& wpt);
+
+    /**
+     * \brief   Sets up this handler class for a first time initialization
+     *  
+     * \details     Records the waypoint reference and sets the mav mode
+     *
+     * \param   mission_planner     The mission planner class
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Success
+     */
+    bool setup(Mission_planner& mission_planner, Waypoint& wpt);
+
+    /**
+     * \brief   Handles the mission every iteration
+     *  
+     * \details     
+     *
+     * \param   mission_planner     The mission planner class
+     */
+    void handle(Mission_planner& mission_planner);
+
+    /**
+     * \brief   Checks if the handler has finished the request of the waypoint
+     *  
+     * \details     
+     *
+     * \param   mission_planner     The mission planner class
+     *
+     * \return  Is finished
+     */
+    bool is_finished(Mission_planner& mission_planner);
 
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
@@ -101,22 +144,6 @@ protected:
      * handling the request.
      */
     bool take_off_handler(Mission_planner& mission_planner);
-
-    /**
-     * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
-     *
-     * \param   takeoff_handler     The pointer to the object of the Mission planner takeoff handler
-     * \param   packet              The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t set_auto_takeoff(Mission_handler_takeoff* takeoff_handler, mavlink_command_long_t* packet);
-
-private:
-    /**
-     * \brief   Handles the behavior changes
-     */
-    void set_behavior();
 };
 
 

@@ -53,107 +53,18 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_handler_takeoff::set_behavior()
-{
-    print_util_dbg_print("Automatic take-off, will hold position at: (");
-    print_util_dbg_print_num(ins_.position_lf()[X], 10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(ins_.position_lf()[Y], 10);
-    print_util_dbg_print(", ");
-    print_util_dbg_print_num(navigation_.takeoff_altitude, 10);
-    print_util_dbg_print(")\r\n");
 
-    local_position_t takeoff_pos = ins_.position_lf();
-    takeoff_pos[Z] = navigation_.takeoff_altitude;
-    float heading = coord_conventions_get_yaw(ahrs_.qe);
-
-    set_hold_waypoint(takeoff_pos, heading);
-}
-
-bool Mission_handler_takeoff::take_off_handler(Mission_planner& mission_planner)
-{
-    bool result = false;
-    float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
-
-    if (!hold_waypoint_set())
-    {
-        set_behavior();
-    }
-
-    // Determine distance to the waypoint
-    float rel_pos[3];
-    local_position_t wpt_pos = hold_waypoint().local_pos();
-    for (int i = 0; i < 3; i++)
-    {
-        rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
-    }
-    navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
-
-    // Check if we are close enough to change states
-    if (!mission_planner.has_mode_change())
-    {
-        switch(navigation_.navigation_strategy)
-        {
-            case Navigation::strategy_t::DIRECT_TO:
-               if (navigation_.dist2wp_sqr <= waypoint_radius)
-                {
-                    result = true;
-                }
-            break;
-
-            case Navigation::strategy_t::DUBIN:
-                if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
-                {
-                    if (navigation_.dist2wp_sqr <= waypoint_radius)
-                    {
-                        result = true;
-                    }
-                }
-                else
-                {
-                    if (ins_.position_lf()[Z] <= navigation_.takeoff_altitude)
-                    {
-                        result = true;
-                    }
-                }
-            break;
-        }
-    }
-
-    return result;
-}
-
-mav_result_t Mission_handler_takeoff::set_auto_takeoff(Mission_handler_takeoff* takeoff_handler, mavlink_command_long_t* packet)
-{
-    mav_result_t result;
-
-    if (takeoff_handler->navigation_.internal_state() == Navigation::NAV_ON_GND)
-    {
-        print_util_dbg_print("Starting automatic take-off from button\r\n");
-        takeoff_handler->navigation_.set_internal_state(Navigation::NAV_TAKEOFF);
-        takeoff_handler->set_behavior();
-        takeoff_handler->navigation_.set_goal(takeoff_handler->hold_waypoint());
-
-        result = MAV_RESULT_ACCEPTED;
-    }
-    else
-    {
-        result = MAV_RESULT_DENIED;
-    }
-
-    return result;
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 Mission_handler_takeoff::Mission_handler_takeoff(   const INS& ins,
-                                                                    Navigation& navigation,
-                                                                    const ahrs_t& ahrs,
-                                                                    State& state,
-                                                                    Mavlink_waypoint_handler& waypoint_handler,
-                                                                    Mavlink_message_handler& message_handler):
+                                                    Navigation& navigation,
+                                                    const ahrs_t& ahrs,
+                                                    State& state,
+                                                    Mavlink_waypoint_handler& waypoint_handler,
+                                                    Mavlink_message_handler& message_handler):
             Mission_handler(ins),
             navigation_(navigation),
             ahrs_(ahrs),
@@ -164,29 +75,92 @@ Mission_handler_takeoff::Mission_handler_takeoff(   const INS& ins,
 
 }
 
-bool Mission_handler_takeoff::init()
+bool Mission_handler_takeoff::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
 {
-    bool init_success = true;
+    bool handleable = false;
 
-    // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_NAV_TAKEOFF; // 22
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_takeoff;
-    callbackcmd.module_struct =                                 this;
-    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
-
-    if(!init_success)
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_TAKEOFF)
     {
-        print_util_dbg_print("[MISSION_PLANNER_HANDLER_TAKEOFF] constructor: ERROR\r\n");
+        handleable = true;
     }
 
-    return init_success;
+    return handleable;
 }
 
+bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, Waypoint& wpt)
+{
+    bool success = true;
+
+    waypoint_ = wpt;
+
+    print_util_dbg_print("Automatic take-off, will hold position at: (");
+    print_util_dbg_print_num(wpt.local_pos()[X], 10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(wpt.local_pos()[Y], 10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(wpt.local_pos()[Z], 10);
+    print_util_dbg_print(")\r\n");
+
+    return success;
+}
+
+void Mission_handler_takeoff::handle(Mission_planner& mission_planner)
+{
+    local_position_t wpt_pos = waypoint_.local_pos();
+    float heading = waypoint_.param4();
+
+    // Acceptable radius for us to be between
+    float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
+
+    // Set goal
+    navigation_.set_goal(wpt_pos, heading, waypoint_radius);
+}
+
+bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
+{
+    // Determine distance to the waypoint
+    local_position_t wpt_pos = waypoint_.local_pos();
+    float rel_pos[3];
+    for (int i = 0; i < 3; i++)
+    {
+        rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
+    }
+    navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+
+    // Determine if finished
+    bool finished = false;
+    switch(navigation_.navigation_strategy)
+    {
+        case Navigation::strategy_t::DIRECT_TO:
+           if (navigation_.dist2wp_sqr <= waypoint_radius)
+            {
+                finished = true;
+            }
+        break;
+
+        case Navigation::strategy_t::DUBIN:
+            if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
+            {
+                if (navigation_.dist2wp_sqr <= waypoint_radius)
+                {
+                    finished = true;
+                }
+            }
+            else
+            {
+                if (ins_.position_lf()[Z] <= navigation_.takeoff_altitude)
+                {
+                    finished = true;
+                }
+            }
+        break;
+    }
+
+    return finished;
+}
+
+/*
 void Mission_handler_takeoff::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
@@ -216,3 +190,4 @@ void Mission_handler_takeoff::handle(Mission_planner& mission_planner)
         navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
     }
 }
+*/

@@ -297,14 +297,24 @@ protected:
     static mav_result_t set_current_waypoint_from_parameter(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 
     /**
+     * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
+     *
+     * \param   mission_planner     The pointer to the object of the Mission planner takeoff handler
+     * \param   packet              The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t set_auto_takeoff(Mission_planner* mission_planner, mavlink_command_long_t* packet);
+
+    /**
      * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
      *
-     * \param   landing_handler         The pointer to the structure of the MAVLink waypoint handler
+     * \param   mission_planner         The pointer to the structure of the MAVLink waypoint handler
      * \param   packet                  The pointer to the structure of the MAVLink command message long
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_auto_landing(Mission_handler_landing* landing_handler, mavlink_command_long_t* packet);
+    static mav_result_t set_auto_landing(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 };
 
 

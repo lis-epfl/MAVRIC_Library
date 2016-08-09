@@ -252,13 +252,43 @@ mav_result_t Mission_planner::is_arrived(Mission_planner* mission_planner, mavli
     return result;
 }
 
+mav_result_t Mission_planner::set_auto_takeoff(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+{
+    mav_result_t result;
+
+    if (mission_planner->internal_state() == Mission_planner::STANDBY)
+    {
+        Waypoint takeoff_wpt(   MAV_FRAME_LOCAL_NED,
+                                MAV_CMD_NAV_TAKEOFF,
+                                0,
+                                0.0f,
+                                0.0f,
+                                0.0f,
+                                packet->param4(),
+                                packet->param5(),
+                                packet->param6(),
+                                packet->param7());
+
+        print_util_dbg_print("Starting automatic take-off from button\r\n");
+        mission_planner->set_internal_state(Mission_planner::PREMISSION, takeoff_wpt);
+
+        result = MAV_RESULT_ACCEPTED;
+    }
+    else
+    {
+        result = MAV_RESULT_DENIED;
+    }
+
+    return result;
+}
+
 mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner, mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
     // Only land if we are in an appropriate navigation state already
-    if (   (mission_planner->navigation_.internal_state() == Navigation::MISSION)
-        || (mission_planner->navigation_.internal_state() == Navigation::PAUSED))
+    if (   (mission_planner->navigation_.internal_state() == Mission_planner::MISSION)
+        || (mission_planner->navigation_.internal_state() == Mission_planner::PAUSED))
     {
         result = MAV_RESULT_ACCEPTED;
 
@@ -292,7 +322,6 @@ mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner,
                                 landing_position[X],
                                 landing_position[Y],
                                 landing_position[Z]);
-        mission_planner->set_hold_waypoint(landing_position, heading);
         mission_planner->navigation_.set_internal_state(Navigation::POSTMISSION, landing_wpt);
 
         print_util_dbg_print("Auto-landing procedure initialised.\r\n");
@@ -609,6 +638,14 @@ bool Mission_planner::init()
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_landing;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
+
+    callbackcmd.command_id = MAV_CMD_NAV_TAKEOFF; // 22
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_takeoff;
+    callbackcmd.module_struct =                                 this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     if(!init_success)
