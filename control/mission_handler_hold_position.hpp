@@ -67,13 +67,13 @@ public:
                                     Navigation& navigation,
                                     State& state);
 
-
     /**
      * \brief   Checks if the waypoint is a hold position waypoint
      *  
-     * \details     This must be defined in the subclasses. It should perform
-     *              a check on the inputted waypoint and return true or false
-     *              if this is the appropriate handler for the waypoint.
+     * \details     Checks if this is a:
+                        MAV_CMD_NAV_LOITER_UNLIM
+                        MAV_CMD_NAV_LOITER_TIME
+                        MAV_CMD_NAV_LOITER_TO_ALT
      *
      * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
@@ -85,10 +85,8 @@ public:
     /**
      * \brief   Sets up this handler class for a first time initialization
      *  
-     * \details     This must be defined in the subclasses. It should perform
-     *              initial setup. For example, setting the hold position to
-     *              the current position of the drone, that way it is not done
-     *              every iteration
+     * \details     Stores the waypoint reference and records the starting
+                    time
      *
      * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
@@ -100,8 +98,7 @@ public:
     /**
      * \brief   Handles the mission every iteration
      *  
-     * \details     This must be defined in the subclasses. It should perform
-     *              routine checks and code that needs to be done every iteration
+     * \details     Sets the waypoint goal to the setup waypoint
      *
      * \param   mission_planner     The mission planner class
      */
@@ -110,16 +107,14 @@ public:
     /**
      * \brief   Checks if the handler has finished the request of the waypoint
      *  
-     * \details     This must be defined in the subclasses. It should perform
-     *              a check to see if the mission item has been finished. For
-     *              example, check to see if we are within acceptable radius
-     *              of the waypoint
+     * \details     Returns true or false based on the specifications of
+                    the inputted waypoint
      *
      * \param   mission_planner     The mission planner class
      *
      * \return  Is finished
      */
-    bool is_finished(Mssion_planner& mission_planner, Waypoint& wpt);
+    bool is_finished(Mssion_planner& mission_planner);
 
 protected:
     Waypoint& waypoint_;                ///< Reference to the inputted waypoint

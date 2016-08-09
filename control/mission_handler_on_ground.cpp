@@ -63,12 +63,7 @@ Mission_handler_on_ground::Mission_handler_on_ground(   const INS& ins,
 {
 
 }
-
-bool Mission_handler_on_ground::init()
-{
-    return true;
-}
-
+/*
 void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
@@ -86,4 +81,26 @@ void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
             navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
         }
     }
+}
+*/
+
+bool Mission_handler_on_ground::can_handle(Mssion_planner& mission_planner, Waypoint& wpt)
+{
+    // TODO: Check if actually on ground
+    return true;
+}
+
+bool Mission_handler_on_ground::setup(Mssion_planner& mission_planner, Waypoint& wpt)
+{
+    return true;
+}
+
+void Mission_handler_on_ground::handle(Mssion_planner& mission_planner)
+{
+
+}
+
+bool Mission_handler_on_ground::is_finished(Mssion_planner& mission_planner)
+{
+    return false;
 }

@@ -174,18 +174,26 @@ public:
     bool switch_mission_handler(Waypoint& waypoint);
 
     /**
-     * \brief   Gets the internal state enum of the navigation
+     * \brief   Gets the internal state
      *
      * \return  internal_state_
      */
     internal_state_t internal_state() const;
 
     /**
-     * \brief   Sets the internal state of the navigation
+     * \brief   Sets the internal state
      *
-     * \param   new_internal_state  The new internal state of the navigation
+     * \param   new_internal_state  The new internal state
      */
-    void set_internal_state(internal_state_t new_internal_state);
+    bool set_internal_state(internal_state_t new_internal_state);
+
+    /**
+     * \brief   Sets the internal state with additional waypoint information
+     *
+     * \param   new_internal_state  The new internal state
+     * \param   wpt                 The waypoint
+     */
+    bool set_internal_state(internal_state_t new_internal_state, Waypoint* wpt);
 
 protected:
     Mission_handler_on_ground& on_ground_handler_;              ///< Handler for the standby state

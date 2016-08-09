@@ -54,6 +54,15 @@ class Mission_handler
 {
 public:
     /**
+     * \brief   Initializes the mission handler
+     *
+     * \details Needs to be defined in subclasses
+     *
+     * \return  Success
+     */
+    virtual bool init();
+
+    /**
      * \brief   Checks if the handler is able to handle the request
      *  
      * \details     This must be defined in the subclasses. It should perform
@@ -65,7 +74,7 @@ public:
      *
      * \return  Can handle
      */
-    bool can_handle(Mssion_planner& mission_planner, Waypoint& wpt) = 0;
+    virtual bool can_handle(Mssion_planner& mission_planner, Waypoint& wpt) = 0;
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -80,7 +89,7 @@ public:
      *
      * \return  Success
      */
-    bool setup(Mssion_planner& mission_planner, Waypoint& wpt) = 0;
+    virtual bool setup(Mssion_planner& mission_planner, Waypoint& wpt) = 0;
 
     /**
      * \brief   Handles the mission every iteration
@@ -90,7 +99,7 @@ public:
      *
      * \param   mission_planner     The mission planner class
      */
-    void handle(Mssion_planner& mission_planner) = 0;
+    virtual void handle(Mssion_planner& mission_planner) = 0;
 
     /**
      * \brief   Checks if the handler has finished the request of the waypoint
@@ -104,7 +113,7 @@ public:
      *
      * \return  Is finished
      */
-    bool is_finished(Mssion_planner& mission_planner, Waypoint& wpt) = 0;
+    virtual bool is_finished(Mssion_planner& mission_planner) = 0;
 };
 
 

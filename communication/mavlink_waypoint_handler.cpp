@@ -491,9 +491,9 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     float param7    Z-axis position [m]
     */
     Waypoint waypoint(  MAV_FRAME_LOCAL_NED,
-                        MAV_CMD_NAV_TAKEOFF_LOCAL,
+                        MAV_CMD_NAV_TAKEOFF,
                         0,
-                        10.0f,
+                        0.0f,
                         0.0f,
                         0.0f,
                         0.0f,

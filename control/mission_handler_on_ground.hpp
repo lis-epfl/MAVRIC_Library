@@ -66,21 +66,55 @@ public:
      * \param   manual_control          The reference to the manual control class
      */
      Mission_handler_on_ground( const INS& ins,
-                                        Navigation& navigation,
-                                        State& state,
-                                        const Manual_control& manual_control);
+                                Navigation& navigation,
+                                State& state,
+                                const Manual_control& manual_control);
 
 
     /**
-     * \brief   The handler for the on ground state. Checks if the trust is
-     * within a certain threshold and changes the state accordingly.
+     * \brief   Checks if the waypoint is on the ground
+     *  
+     * \details     DOES NOT CURRENTLY CHECK IF WE ARE ON GROUND
      *
-     * \param   mission_planner     The reference to the misison planner that is
-     * handling the request.
+     * \param   mission_planner     The mission planner class
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Can handle
      */
-    virtual void handle(Mission_planner& mission_planner);
+    bool can_handle(Mssion_planner& mission_planner, Waypoint& wpt);
 
-    virtual bool init();
+    /**
+     * \brief   Does nothing
+     *  
+     * \details     Does nothing
+     *
+     * \param   mission_planner     The mission planner class
+     * \param   wpt                 The waypoint class
+     *
+     * \return  True
+     */
+    bool setup(Mssion_planner& mission_planner, Waypoint& wpt);
+
+    /**
+     * \brief   Does nothing
+     *  
+     * \details     Does nothing
+     *
+     * \param   mission_planner     The mission planner class
+     */
+    void handle(Mssion_planner& mission_planner);
+
+    /**
+     * \brief   Returns false
+     *  
+     * \details     Returns false as the on ground state should never
+                    end without user input from somewhere elses
+     *
+     * \param   mission_planner     The mission planner class
+     *
+     * \return  False
+     */
+    bool is_finished(Mssion_planner& mission_planner);
 
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure

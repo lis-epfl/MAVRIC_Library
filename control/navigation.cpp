@@ -567,37 +567,6 @@ bool Navigation::update(Navigation* navigation)
     return true;
 }
 
-
-void Navigation::set_goal(Waypoint wpt)
-{
-    // Determine if dubin should be reinitialized
-    local_position_t goal_pos = goal_.local_pos();
-    local_position_t wpt_pos = wpt.local_pos();
-    if ((maths_f_abs(goal_pos[X] - wpt_pos[X]) > 0.001f ||
-         maths_f_abs(goal_pos[Y] - wpt_pos[Y]) > 0.001f ||
-         maths_f_abs(goal_pos[Z] - wpt_pos[Z]) > 0.001f ||
-         maths_f_abs(goal_.heading() - wpt.heading()) > 0.001f ||
-         maths_f_abs(goal_.radius() - wpt.radius()) > 0.001f) &&
-        (navigation_strategy == strategy_t::DUBIN))
-    {
-        print_util_dbg_print("Waypoint changed, reinitialize dubin\r\n");
-        dubin_state = DUBIN_INIT;
-    }
-
-    // Update goal based on the inputted waypoint
-    goal_.set_frame(wpt.frame());
-    goal_.set_command(wpt.command());
-    goal_.set_autocontinue(wpt.autocontinue());
-    goal_.set_param1(wpt.param1());
-    goal_.set_param2(wpt.param2());
-    goal_.set_param3(wpt.param3());
-    goal_.set_param4(wpt.param4());
-    goal_.set_local_pos(wpt.local_pos());
-    goal_.set_radius(wpt.radius());
-    goal_.set_loiter_time(wpt.loiter_time());
-    // DONT RESET DUBIN
-}
-
 void Navigation::set_goal(local_position_t goal_pos, float goal_heading, float goal_radius)
 {
     // Update goal based on the inputted waypoint

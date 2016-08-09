@@ -85,10 +85,12 @@ bool Mission_handler_hold_position::can_handle(Mssion_planner& mission_planner, 
 
 bool Mission_handler_hold_position::setup(Mssion_planner& mission_planner, Waypoint& wpt)
 {
-    bool success = false;
+    bool success = true;
 
     waypoint_ = wpt;
     start_time_ = time_keeper_get_ms();
+
+    return success;
 }
 
 void Mission_handler_hold_position::handle(Mssion_planner& mission_planner)
@@ -113,7 +115,7 @@ void Mission_handler_hold_position::handle(Mssion_planner& mission_planner)
     }  
 }
 
-bool Mission_handler_hold_position::is_finished(Mssion_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_hold_position::is_finished(Mssion_planner& mission_planner)
 {
     switch (waypoint_.command())
     {
