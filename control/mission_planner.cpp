@@ -656,13 +656,21 @@ bool Mission_planner::init()
     return init_success;
 }
 
-bool Mission_planner::register_mission_handler(Mission_handler& handler)
+bool Mission_planner::register_mission_handler(Mission_handler* handler)
 {
+    // Check for maximum count
+    if (MAX_REGISTERED_MISSION_HANDLERS == registered_mission_handler_count_+1)
+    {
+        print_util_dbg_print("[MISSION_PLANNER]: Too many registed mission handlers\r\n");
+        return false;
+    }
+
     // Check for duplicates
     for (uint8_t i = 0; i < registered_mission_handler_count_; i++)
     {
-        if (&registered_mission_handlers_[i] == &handler)
+        if (registered_mission_handlers_[i] == handler)
         {
+            print_util_dbg_print("[MISSION_PLANNER]: Mission handler already registed\r\n");
             return false;
         }
     }
@@ -679,10 +687,10 @@ bool Mission_planner::switch_mission_handler(Waypoint& waypoint)
     for (uint8_t i = 0; i < registered_mission_handler_count_; i++)
     {
         // Check if proper handler
-        if (registered_mission_handlers_[i].can_handle(*this, waypoint))
+        if (registered_mission_handlers_[i]->can_handle(*this, waypoint))
         {
             // Set current handler
-            current_mission_handler_ = &registered_mission_handlers_[i];
+            current_mission_handler_ = registered_mission_handlers_[i];
             current_mission_handler_->setup(*this, waypoint);
             return true;
         }

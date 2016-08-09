@@ -53,6 +53,7 @@
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 #include "control/dubin.hpp"
+#include "control/mission_handler.hpp"
 
 class Mission_handler_takeoff;
 class Mission_handler_landing;
@@ -162,7 +163,7 @@ public:
      *
      * \return  Success
      */
-    bool register_mission_handler(Mission_handler& handler);
+    bool register_mission_handler(Mission_handler* handler);
 
     /**
      * \brief   Switches the mission handler to the inputted waypoint
@@ -206,7 +207,7 @@ protected:
      * register a mission handler through the function
      * Mission_planner::register_mission_handler(Mission_handler*).
      */
-    Mission_handler& registered_mission_handlers_[MAX_REGISTERED_MISSION_HANDLERS];
+    Mission_handler* registered_mission_handlers_[MAX_REGISTERED_MISSION_HANDLERS];
     Mission_handler* current_mission_handler_;                  ///< The currently used mission handler
     uint8_t registered_mission_handler_count_;                  ///< The number of mission handler in the array
     Waypoint internal_state_waypoint_;                          ///< A waypoint that is used to store the handler waypoint for internal_state handling
