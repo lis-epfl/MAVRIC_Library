@@ -156,13 +156,6 @@ public:
     static inline conf_t default_wing_config();
 
     /**
-     * \brief   Gets the reference to the goal waypoint
-     *
-     * \return  goal
-     */
-    Waypoint& goal();
-
-    /**
      * \brief   Sets the goal to be equal to the waypoint inputted
      *
      * Will set the dubin state to be DUBIN_INIT if there is a significant
