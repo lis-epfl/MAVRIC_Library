@@ -44,14 +44,14 @@
 #include <cstdlib>
 #include "hal/common/time_keeper.hpp"
 
-#include "control/mission_planner_handler_takeoff.hpp"
-#include "control/mission_planner_handler_landing.hpp"
-#include "control/mission_planner_handler_on_ground.hpp"
-#include "control/mission_planner_handler_navigating.hpp"
-#include "control/mission_planner_handler_stop_there.hpp"
-#include "control/mission_planner_handler_stop_on_position.hpp"
-#include "control/mission_planner_handler_manual_control.hpp"
-#include "control/mission_planner_handler_hold_position.hpp"
+#include "control/mission_handler_takeoff.hpp"
+#include "control/mission_handler_landing.hpp"
+#include "control/mission_handler_on_ground.hpp"
+#include "control/mission_handler_navigating.hpp"
+#include "control/mission_handler_stop_there.hpp"
+#include "control/mission_handler_stop_on_position.hpp"
+#include "control/mission_handler_manual_control.hpp"
+#include "control/mission_handler_hold_position.hpp"
 
 extern "C"
 {
@@ -435,7 +435,7 @@ void Mission_planner::critical_handler()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_planner_handler_on_ground& on_ground_handler, Mission_planner_handler_takeoff& takeoff_handler, Mission_planner_handler_landing& landing_handler, Mission_planner_handler_hold_position& hold_position_handler, Mission_planner_handler_stop_on_position& stop_on_position_handler, Mission_planner_handler_stop_there& stop_there_handler, Mission_planner_handler_navigating& navigating_handler, Mission_planner_handler_manual_control& manual_control_handler, Mavlink_waypoint_handler& waypoint_handler, conf_t config):
+Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_handler_on_ground& on_ground_handler, Mission_handler_takeoff& takeoff_handler, Mission_handler_landing& landing_handler, Mission_handler_hold_position& hold_position_handler, Mission_handler_stop_on_position& stop_on_position_handler, Mission_handler_stop_there& stop_there_handler, Mission_handler_navigating& navigating_handler, Mission_handler_manual_control& manual_control_handler, Mavlink_waypoint_handler& waypoint_handler, conf_t config):
             on_ground_handler_(on_ground_handler),
             takeoff_handler_(takeoff_handler),
             landing_handler_(landing_handler),
@@ -538,7 +538,7 @@ bool Mission_planner::update(Mission_planner* mission_planner)
     {
         case MAV_STATE_STANDBY:
             mission_planner->navigation_.set_internal_state(Navigation::NAV_ON_GND);
-            Mission_planner_handler::reset_hold_waypoint();
+            Mission_handler::reset_hold_waypoint();
             mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
             mission_planner->critical_next_state_ = false;
             mission_planner->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;

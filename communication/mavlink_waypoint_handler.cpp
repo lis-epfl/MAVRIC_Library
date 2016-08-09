@@ -42,7 +42,7 @@
 
 
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "control/mission_planner_handler.hpp"
+#include "control/mission_handler.hpp"
 
 #include <cstdlib>
 
@@ -372,7 +372,7 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
             waypoint_handler->waypoint_count_ = 0;
             waypoint_handler->waypoint_onboard_count_ = 0;
             waypoint_handler->state_.nav_plan_active = false;
-            Mission_planner_handler::reset_hold_waypoint();
+            Mission_handler::reset_hold_waypoint();
 
             mavlink_message_t _msg;
             mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),
@@ -479,21 +479,19 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     /*
     Constructor order:
 
-    position_estimation_,
-    mavlink_stream_,
     uint8_t frame,
     uint16_t command,
     uint8_t autocontinue,
-    float param1,   Hold time in decimal seconds
-    float param2,   Acceptance radius in meters
-    float param3,   0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-    float param4,   Desired yaw angle at MISSION (rotary wing)
-    float x,
-    float y,
-    float z
+    float param1,   Minimum pitch (if airspeed sensor present), desired pitch without sensor [rad]
+    float param2,   Empty
+    float param3,   Takeoff ascend rate [ms^-1]
+    float param4,   Yaw angle [rad] (if magnetometer or another yaw estimation source present), ignored without one of these
+    float param5,   Y-axis position [m] (I dont know why they made it this order)
+    float param6,   X-axis position [m] (I dont know why they made it this order)
+    float param7    Z-axis position [m]
     */
     Waypoint waypoint(  MAV_FRAME_LOCAL_NED,
-                        MAV_CMD_NAV_WAYPOINT,
+                        MAV_CMD_NAV_TAKEOFF_LOCAL,
                         0,
                         10.0f,
                         0.0f,

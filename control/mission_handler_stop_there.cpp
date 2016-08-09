@@ -30,75 +30,76 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler.cpp
+ * \file mission_handler_stop_there.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler
+ * \brief The MAVLink mission planner handler for the stop there state
  *
  ******************************************************************************/
 
 
-#include "control/mission_planner_handler.hpp"
-#include "control/mission_planner.hpp"
+#include "control/mission_handler_stop_there.hpp"
 
 extern "C"
 {
+
 }
+
 
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool Mission_planner_handler::hold_waypoint_set_ = false;
-Waypoint Mission_planner_handler::hold_waypoint_ = Waypoint();
-
-Waypoint& Mission_planner_handler::hold_waypoint()
-{
-    if (!hold_waypoint_set_)
-    {
-        hold_waypoint_.set_local_pos(ins_.position_lf());
-        hold_waypoint_set_ = true;
-    }
-
-    return hold_waypoint_;
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler::Mission_planner_handler(const INS& ins) :
-        ins_(ins)
+Mission_handler_stop_there::Mission_handler_stop_there( const INS& ins,
+                                                                        Navigation& navigation,
+                                                                        State& state):
+            Mission_handler(ins),
+            navigation_(navigation),
+            state_(state)
 {
 
 }
 
-void Mission_planner_handler::reset_hold_waypoint()
+bool Mission_handler_stop_there::init()
 {
-    hold_waypoint_set_ = false;
+    return true;
 }
 
-bool Mission_planner_handler::hold_waypoint_set()
+void Mission_handler_stop_there::handle(Mission_planner& mission_planner)
 {
-    return hold_waypoint_set_;
+    Mav_mode mode_local = state_.mav_mode();
+
+    // Check if we are close enough the position to switch modes
+    stopping_handler(mission_planner);
+
+    navigation_.set_goal(hold_waypoint());
+
+    if (mode_local.is_manual())
+    {
+        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
+    }
 }
 
-void Mission_planner_handler::set_hold_waypoint(const local_position_t hold_position)
+void Mission_handler_stop_there::stopping_handler(Mission_planner& mission_planner)
 {
-    hold_waypoint_.set_local_pos(hold_position);
-    hold_waypoint_set_ = true;
-}
+    float dist2wp_sqr;
+    float rel_pos[3];
 
-void Mission_planner_handler::set_hold_waypoint(const local_position_t hold_position, float heading)
-{
-    hold_waypoint_.set_local_pos(hold_position, heading);
-    hold_waypoint_set_ = true;
-}
+    local_position_t local_pos = hold_waypoint().local_pos();
+    rel_pos[X] = (float)(local_pos[X] - ins_.position_lf()[X]);
+    rel_pos[Y] = (float)(local_pos[Y] - ins_.position_lf()[Y]);
+    rel_pos[Z] = (float)(local_pos[Z] - ins_.position_lf()[Z]);
 
-void Mission_planner_handler::set_hold_waypoint(const Waypoint wpt)
-{
-    hold_waypoint_ = wpt;
-    hold_waypoint_set_ = true;
+    dist2wp_sqr = vectors_norm_sqr(rel_pos);
+    if (dist2wp_sqr < 25.0f)
+    {
+        navigation_.set_internal_state(Navigation::NAV_STOP_ON_POSITION);
+    }
 }

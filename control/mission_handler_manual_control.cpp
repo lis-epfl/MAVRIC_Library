@@ -30,17 +30,17 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_stop_there.cpp
+ * \file mission_handler_manual_control.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the stop there state
+ * \brief The MAVLink mission planner handler for the manual control state
  *
  ******************************************************************************/
 
 
-#include "control/mission_planner_handler_stop_there.hpp"
+#include "control/mission_handler_manual_control.hpp"
 
 extern "C"
 {
@@ -49,57 +49,42 @@ extern "C"
 
 
 //------------------------------------------------------------------------------
-// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_stop_there::Mission_planner_handler_stop_there( const INS& ins,
-                                                                        Navigation& navigation,
-                                                                        State& state):
-            Mission_planner_handler(ins),
+Mission_handler_manual_control::Mission_handler_manual_control( const INS& ins,
+                                                                                Navigation& navigation,
+                                                                                State& state):
+            Mission_handler(ins),
             navigation_(navigation),
             state_(state)
 {
 
 }
 
-bool Mission_planner_handler_stop_there::init()
+bool Mission_handler_manual_control::init()
 {
     return true;
 }
 
-void Mission_planner_handler_stop_there::handle(Mission_planner& mission_planner)
+void Mission_handler_manual_control::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
 
-    // Check if we are close enough the position to switch modes
-    stopping_handler(mission_planner);
-
-    navigation_.set_goal(hold_waypoint());
-
-    if (mode_local.is_manual())
+    // Change state if necessary
+    if (mode_local.is_auto())
     {
-        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
+        navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
     }
-}
-
-void Mission_planner_handler_stop_there::stopping_handler(Mission_planner& mission_planner)
-{
-    float dist2wp_sqr;
-    float rel_pos[3];
-
-    local_position_t local_pos = hold_waypoint().local_pos();
-    rel_pos[X] = (float)(local_pos[X] - ins_.position_lf()[X]);
-    rel_pos[Y] = (float)(local_pos[Y] - ins_.position_lf()[Y]);
-    rel_pos[Z] = (float)(local_pos[Z] - ins_.position_lf()[Z]);
-
-    dist2wp_sqr = vectors_norm_sqr(rel_pos);
-    if (dist2wp_sqr < 25.0f)
+    else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
     {
-        navigation_.set_internal_state(Navigation::NAV_STOP_ON_POSITION);
+        set_hold_waypoint(ins_.position_lf());
+        hold_waypoint().set_radius(navigation_.minimal_radius);
+        navigation_.set_internal_state(Navigation::NAV_HOLD_POSITION);
     }
+
+    // Reset behaviors of other states
+    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+    mission_planner.set_critical_next_state(false);
+    navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
 }

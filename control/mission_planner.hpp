@@ -54,15 +54,15 @@
 #include "control/navigation.hpp"
 #include "control/dubin.hpp"
 
-class Mission_planner_handler_takeoff;
-class Mission_planner_handler_landing;
-class Mission_planner_handler_on_ground;
-class Mission_planner_handler_navigating;
-class Mission_planner_handler_stop_there;
-class Mission_planner_handler_stop_on_position;
-class Mission_planner_handler_takeoff;
-class Mission_planner_handler_manual_control;
-class Mission_planner_handler_hold_position;
+class Mission_handler_takeoff;
+class Mission_handler_landing;
+class Mission_handler_on_ground;
+class Mission_handler_navigating;
+class Mission_handler_stop_there;
+class Mission_handler_stop_on_position;
+class Mission_handler_takeoff;
+class Mission_handler_manual_control;
+class Mission_handler_hold_position;
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -106,14 +106,14 @@ public:
                         const Manual_control& manual_control,
                         Mavlink_message_handler& message_handler,
                         const Mavlink_stream& mavlink_stream,
-                        Mission_planner_handler_on_ground& on_ground_handler,
-                        Mission_planner_handler_takeoff& takeoff_handler,
-                        Mission_planner_handler_landing& landing_handler,
-                        Mission_planner_handler_hold_position& hold_position_handler,
-                        Mission_planner_handler_stop_on_position& stop_on_position_handler,
-                        Mission_planner_handler_stop_there& stop_there_handler,
-                        Mission_planner_handler_navigating& navigating_handler,
-                        Mission_planner_handler_manual_control& manual_control_handler,
+                        Mission_handler_on_ground& on_ground_handler,
+                        Mission_handler_takeoff& takeoff_handler,
+                        Mission_handler_landing& landing_handler,
+                        Mission_handler_hold_position& hold_position_handler,
+                        Mission_handler_stop_on_position& stop_on_position_handler,
+                        Mission_handler_stop_there& stop_there_handler,
+                        Mission_handler_navigating& navigating_handler,
+                        Mission_handler_manual_control& manual_control_handler,
                         Mavlink_waypoint_handler& waypoint_handler,
                         conf_t config = default_config());
 
@@ -144,14 +144,14 @@ public:
     void set_critical_next_state(bool critical_next_state);
 
 protected:
-    Mission_planner_handler_on_ground& on_ground_handler_;                  ///< The handler for the on ground state
-    Mission_planner_handler_takeoff& takeoff_handler_;                      ///< The handler for the takeoff state
-    Mission_planner_handler_landing& landing_handler_;                      ///< The handler for the landing state
-    Mission_planner_handler_hold_position& hold_position_handler_;          ///< The handler for the hold position state
-    Mission_planner_handler_stop_on_position& stop_on_position_handler_;    ///< The handler for the stop on position state
-    Mission_planner_handler_stop_there& stop_there_handler_;                ///< The handler for the stop there state
-    Mission_planner_handler_navigating& navigating_handler_;                ///< The handler for the navigating state
-    Mission_planner_handler_manual_control& manual_control_handler_;        ///< The handler for the manual control state
+    Mission_handler_on_ground& on_ground_handler_;                  ///< The handler for the on ground state
+    Mission_handler_takeoff& takeoff_handler_;                      ///< The handler for the takeoff state
+    Mission_handler_landing& landing_handler_;                      ///< The handler for the landing state
+    Mission_handler_hold_position& hold_position_handler_;          ///< The handler for the hold position state
+    Mission_handler_stop_on_position& stop_on_position_handler_;    ///< The handler for the stop on position state
+    Mission_handler_stop_there& stop_there_handler_;                ///< The handler for the stop there state
+    Mission_handler_navigating& navigating_handler_;                ///< The handler for the navigating state
+    Mission_handler_manual_control& manual_control_handler_;        ///< The handler for the manual control state
 
     Mavlink_waypoint_handler& waypoint_handler_;        ///< The reference to the mavlink waypoint handler
 

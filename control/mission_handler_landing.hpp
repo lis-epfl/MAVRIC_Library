@@ -30,46 +30,51 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_stop_there.hpp
+ * \file mission_handler_landing.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the stop there state
+ * \brief The MAVLink mission planner handler for the landing state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_STOP_THERE__
-#define MISSION_PLANNER_HANDLER_STOP_THERE__
+#ifndef MISSION_PLANNER_HANDLER_LANDING__
+#define MISSION_PLANNER_HANDLER_LANDING__
 
-#include "control/mission_planner_handler.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "control/mission_handler.hpp"
 #include "communication/state.hpp"
+#include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mission_planner_handler_stop_there : public Mission_planner_handler
+class Mission_handler_landing : public Mission_handler
 {
 public:
 
 
     /**
-     * \brief   Initialize the stop there mission planner handler
+     * \brief   Initialize the landing mission planner handler
      *
      * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation class
-     * \param   state                   The reference to the state class
+     * \param   navigation              The reference to the navigation structure
+     * \param   state                   The reference to the state structure
+     * \param   message_handler         The reference to the mavlink message handler
      */
-     Mission_planner_handler_stop_there(    const INS& ins,
-                                            Navigation& navigation,
-                                            State& state);
+     Mission_handler_landing(   const INS& ins,
+                                        Navigation& navigation,
+                                        const ahrs_t& ahrs,
+                                        State& state,
+                                        Mavlink_message_handler& message_handler);
 
 
     /**
-     * \brief   The handler for the stop on position state.
+     * \brief   The handler for the landing state.
      *
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
@@ -79,16 +84,34 @@ public:
     virtual bool init();
 
     /**
-     * \brief   Drives the stopping behavior
+     * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
      *
-     * \param   mission_planner     The reference to the mission planner that is
-     * handling the request.
+     * \param   landing_handler         The pointer to the structure of the MAVLink waypoint handler
+     * \param   packet                  The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
      */
-    void stopping_handler(Mission_planner& mission_planner);
+    static mav_result_t set_auto_landing(Mission_handler_landing* landing_handler, mavlink_command_long_t* packet);
 
 protected:
-    Navigation& navigation_;                                     ///< The reference to the navigation structure
-    State& state_;                                               ///< The reference to the state structure
+    Navigation& navigation_;                                    ///< The reference to the navigation structure
+    const ahrs_t& ahrs_;
+    State& state_;                                              ///< The reference to the state structure
+    Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
+
+    /**
+     * \brief   Drives the auto-landing navigation behavior
+     *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
+     */
+    void auto_landing_handler(Mission_planner& mission_planner);
+
+private:
+    /**
+     * \brief   Handles the behavior changes
+     */
+    void set_behavior();
 };
 
 
@@ -97,4 +120,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_STOP_THERE__
+#endif // MISSION_PLANNER_HANDLER_LANDING__

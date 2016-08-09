@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_navigating.cpp
+ * \file mission_handler_navigating.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -40,10 +40,10 @@
  ******************************************************************************/
 
 
-#include "control/mission_planner_handler_navigating.hpp"
+#include "control/mission_handler_navigating.hpp"
 
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "control/mission_planner_handler_landing.hpp"
+#include "control/mission_handler_landing.hpp"
 
 extern "C"
 {
@@ -56,7 +56,7 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_planner& mission_planner, Waypoint& waypoint_coordinates)
+void Mission_handler_navigating::waypoint_navigating_handler(Mission_planner& mission_planner, Waypoint& waypoint_coordinates)
 {
     // Set current waypoint to the one we are travelling to
     waypoint_coordinates = waypoint_handler_.current_waypoint();
@@ -138,7 +138,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
                 dummy_packet.param5 = waypoint_coordinates.local_pos()[X];
                 dummy_packet.param6 = waypoint_coordinates.local_pos()[Y];
                 dummy_packet.param7 = waypoint_coordinates.local_pos()[Z];
-                Mission_planner_handler_landing::set_auto_landing(&mission_planner_handler_landing_, &dummy_packet);
+                Mission_handler_landing::set_auto_landing(&mission_handler_landing_, &dummy_packet);
 
                 return;
             }
@@ -221,7 +221,7 @@ void Mission_planner_handler_navigating::waypoint_navigating_handler(Mission_pla
     }
 }
 
-mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_planner_handler_navigating* navigating_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_handler_navigating::start_stop_navigation(Mission_handler_navigating* navigating_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
 
@@ -270,7 +270,7 @@ mav_result_t Mission_planner_handler_navigating::start_stop_navigation(Mission_p
 }
 
 
-void Mission_planner_handler_navigating::send_nav_time(const Mavlink_stream* mavlink_stream_, mavlink_message_t* msg)
+void Mission_handler_navigating::send_nav_time(const Mavlink_stream* mavlink_stream_, mavlink_message_t* msg)
 {
     mavlink_msg_named_value_int_pack(mavlink_stream_->sysid(),
                                      mavlink_stream_->compid(),
@@ -284,26 +284,26 @@ void Mission_planner_handler_navigating::send_nav_time(const Mavlink_stream* mav
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_navigating::Mission_planner_handler_navigating( const INS& ins,
+Mission_handler_navigating::Mission_handler_navigating( const INS& ins,
                                                                         Navigation& navigation,
                                                                         State& state,
                                                                         const Mavlink_stream& mavlink_stream,
                                                                         Mavlink_waypoint_handler& waypoint_handler,
-                                                                        Mission_planner_handler_landing& mission_planner_handler_landing,
+                                                                        Mission_handler_landing& mission_handler_landing,
                                                                         Mavlink_message_handler& message_handler):
-            Mission_planner_handler(ins),
+            Mission_handler(ins),
             navigation_(navigation),
             state_(state),
             mavlink_stream_(mavlink_stream),
             waypoint_handler_(waypoint_handler),
-            mission_planner_handler_landing_(mission_planner_handler_landing),
+            mission_handler_landing_(mission_handler_landing),
             message_handler_(message_handler),
             travel_time_(0)
 {
 
 }
 
-bool Mission_planner_handler_navigating::init()
+bool Mission_handler_navigating::init()
 {
     bool init_success = true;
 
@@ -326,7 +326,7 @@ bool Mission_planner_handler_navigating::init()
     return init_success;
 }
 
-void Mission_planner_handler_navigating::handle(Mission_planner& mission_planner)
+void Mission_handler_navigating::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
 

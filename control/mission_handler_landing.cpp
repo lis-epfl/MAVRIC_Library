@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_landing.cpp
+ * \file mission_handler_landing.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/mission_planner_handler_landing.hpp"
+#include "control/mission_handler_landing.hpp"
 
 extern "C"
 {
@@ -53,7 +53,7 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_planner_handler_landing::set_behavior()
+void Mission_handler_landing::set_behavior()
 {
     local_position_t local_pos = hold_waypoint().local_pos();;
 
@@ -84,7 +84,7 @@ void Mission_planner_handler_landing::set_behavior()
     }
 }
 
-void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& mission_planner)
+void Mission_handler_landing::auto_landing_handler(Mission_planner& mission_planner)
 {
     bool next_state = false;
 
@@ -137,7 +137,7 @@ void Mission_planner_handler_landing::auto_landing_handler(Mission_planner& miss
     }
 }
 
-mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_handler_landing* landing_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_handler_landing::set_auto_landing(Mission_handler_landing* landing_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
@@ -198,12 +198,12 @@ mav_result_t Mission_planner_handler_landing::set_auto_landing(Mission_planner_h
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_landing::Mission_planner_handler_landing(   const INS& ins,
+Mission_handler_landing::Mission_handler_landing(   const INS& ins,
                                                                     Navigation& navigation,
                                                                     const ahrs_t& ahrs,
                                                                     State& state,
                                                                     Mavlink_message_handler& message_handler):
-            Mission_planner_handler(ins),
+            Mission_handler(ins),
             navigation_(navigation),
             ahrs_(ahrs),
             state_(state),
@@ -211,7 +211,7 @@ Mission_planner_handler_landing::Mission_planner_handler_landing(   const INS& i
 {
 }
 
-bool Mission_planner_handler_landing::init()
+bool Mission_handler_landing::init()
 {
     bool init_success = true;
 
@@ -234,7 +234,7 @@ bool Mission_planner_handler_landing::init()
     return init_success;
 }
 
-void Mission_planner_handler_landing::handle(Mission_planner& mission_planner)
+void Mission_handler_landing::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
 

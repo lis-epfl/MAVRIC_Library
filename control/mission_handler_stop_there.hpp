@@ -30,61 +30,71 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_manual_control.cpp
+ * \file mission_handler_stop_there.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the manual control state
+ * \brief The MAVLink mission planner handler for the stop there state
  *
  ******************************************************************************/
 
 
-#include "control/mission_planner_handler_manual_control.hpp"
+#ifndef MISSION_PLANNER_HANDLER_STOP_THERE__
+#define MISSION_PLANNER_HANDLER_STOP_THERE__
 
-extern "C"
+#include "control/mission_handler.hpp"
+#include "communication/state.hpp"
+#include "control/navigation.hpp"
+
+/*
+ * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ */
+
+class Mission_handler_stop_there : public Mission_handler
 {
+public:
 
-}
+
+    /**
+     * \brief   Initialize the stop there mission planner handler
+     *
+     * \param   ins                     The reference to the ins
+     * \param   navigation              The reference to the navigation class
+     * \param   state                   The reference to the state class
+     */
+     Mission_handler_stop_there(    const INS& ins,
+                                            Navigation& navigation,
+                                            State& state);
 
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+    /**
+     * \brief   The handler for the stop on position state.
+     *
+     * \param   mission_planner     The reference to the misison planner that is
+     * handling the request.
+     */
+    virtual void handle(Mission_planner& mission_planner);
 
-Mission_planner_handler_manual_control::Mission_planner_handler_manual_control( const INS& ins,
-                                                                                Navigation& navigation,
-                                                                                State& state):
-            Mission_planner_handler(ins),
-            navigation_(navigation),
-            state_(state)
-{
+    virtual bool init();
 
-}
+    /**
+     * \brief   Drives the stopping behavior
+     *
+     * \param   mission_planner     The reference to the mission planner that is
+     * handling the request.
+     */
+    void stopping_handler(Mission_planner& mission_planner);
 
-bool Mission_planner_handler_manual_control::init()
-{
-    return true;
-}
+protected:
+    Navigation& navigation_;                                     ///< The reference to the navigation structure
+    State& state_;                                               ///< The reference to the state structure
+};
 
-void Mission_planner_handler_manual_control::handle(Mission_planner& mission_planner)
-{
-    Mav_mode mode_local = state_.mav_mode();
 
-    // Change state if necessary
-    if (mode_local.is_auto())
-    {
-        navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
-    }
-    else if (mode_local.ctrl_mode() == Mav_mode::POSITION_HOLD)
-    {
-        set_hold_waypoint(ins_.position_lf());
-        hold_waypoint().set_radius(navigation_.minimal_radius);
-        navigation_.set_internal_state(Navigation::NAV_HOLD_POSITION);
-    }
 
-    // Reset behaviors of other states
-    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-    mission_planner.set_critical_next_state(false);
-    navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
-}
+
+
+
+
+#endif // MISSION_PLANNER_HANDLER_STOP_THERE__

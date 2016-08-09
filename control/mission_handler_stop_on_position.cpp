@@ -30,17 +30,17 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_on_ground.cpp
+ * \file mission_handler_stop_on_position.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the on ground state
+ * \brief The MAVLink mission planner handler for the stop on position state
  *
  ******************************************************************************/
 
 
-#include "control/mission_planner_handler_on_ground.hpp"
+#include "control/mission_handler_stop_on_position.hpp"
 
 extern "C"
 {
@@ -48,42 +48,34 @@ extern "C"
 }
 
 
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_on_ground::Mission_planner_handler_on_ground(   const INS& ins,
-                                                                        Navigation& navigation,
-                                                                        State& state,
-                                                                        const Manual_control& manual_control):
-            Mission_planner_handler(ins),
+Mission_handler_stop_on_position::Mission_handler_stop_on_position( const INS& ins,
+                                                                                    Navigation& navigation,
+                                                                                    State& state):
+            Mission_handler(ins),
             navigation_(navigation),
-            state_(state),
-            manual_control_(manual_control)
+            state_(state)
 {
 
 }
 
-bool Mission_planner_handler_on_ground::init()
+bool Mission_handler_stop_on_position::init()
 {
     return true;
 }
 
-void Mission_planner_handler_on_ground::handle(Mission_planner& mission_planner)
+void Mission_handler_stop_on_position::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
-    float thrust = manual_control_.get_thrust();
 
-    if (thrust > -0.7f)
+    navigation_.set_goal(hold_waypoint());
+
+    if ( mode_local.is_manual())
     {
-        if (!mode_local.is_manual())
-        {
-            reset_hold_waypoint();
-            navigation_.set_internal_state(Navigation::NAV_TAKEOFF);
-        }
-        else
-        {
-            navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
-        }
+        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
     }
 }

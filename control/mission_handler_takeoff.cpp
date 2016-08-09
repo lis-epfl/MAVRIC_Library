@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_takeoff.cpp
+ * \file mission_handler_takeoff.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/mission_planner_handler_takeoff.hpp"
+#include "control/mission_handler_takeoff.hpp"
 
 extern "C"
 {
@@ -53,7 +53,7 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_planner_handler_takeoff::set_behavior()
+void Mission_handler_takeoff::set_behavior()
 {
     print_util_dbg_print("Automatic take-off, will hold position at: (");
     print_util_dbg_print_num(ins_.position_lf()[X], 10);
@@ -70,7 +70,7 @@ void Mission_planner_handler_takeoff::set_behavior()
     set_hold_waypoint(takeoff_pos, heading);
 }
 
-bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_planner)
+bool Mission_handler_takeoff::take_off_handler(Mission_planner& mission_planner)
 {
     bool result = false;
     float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
@@ -123,7 +123,7 @@ bool Mission_planner_handler_takeoff::take_off_handler(Mission_planner& mission_
     return result;
 }
 
-mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_handler_takeoff* takeoff_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_handler_takeoff::set_auto_takeoff(Mission_handler_takeoff* takeoff_handler, mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
@@ -148,13 +148,13 @@ mav_result_t Mission_planner_handler_takeoff::set_auto_takeoff(Mission_planner_h
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   const INS& ins,
+Mission_handler_takeoff::Mission_handler_takeoff(   const INS& ins,
                                                                     Navigation& navigation,
                                                                     const ahrs_t& ahrs,
                                                                     State& state,
                                                                     Mavlink_waypoint_handler& waypoint_handler,
                                                                     Mavlink_message_handler& message_handler):
-            Mission_planner_handler(ins),
+            Mission_handler(ins),
             navigation_(navigation),
             ahrs_(ahrs),
             state_(state),
@@ -164,7 +164,7 @@ Mission_planner_handler_takeoff::Mission_planner_handler_takeoff(   const INS& i
 
 }
 
-bool Mission_planner_handler_takeoff::init()
+bool Mission_handler_takeoff::init()
 {
     bool init_success = true;
 
@@ -187,7 +187,7 @@ bool Mission_planner_handler_takeoff::init()
     return init_success;
 }
 
-void Mission_planner_handler_takeoff::handle(Mission_planner& mission_planner)
+void Mission_handler_takeoff::handle(Mission_planner& mission_planner)
 {
     Mav_mode mode_local = state_.mav_mode();
 

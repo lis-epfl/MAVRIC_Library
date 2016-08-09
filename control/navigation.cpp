@@ -494,7 +494,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     navigation_strategy = nav_config.navigation_strategy;
     dubin_state = DUBIN_INIT;
 
-    internal_state_ = NAV_ON_GND;
+    internal_state_ = NAV_STANDBY;
     critical_behavior = CLIMB_TO_SAFE_ALT;
     auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 
@@ -598,6 +598,26 @@ void Navigation::set_goal(Waypoint wpt)
     // DONT RESET DUBIN
 }
 
+void Navigation::set_goal(local_position_t goal_pos, float goal_heading, float goal_radius)
+{
+    // Update goal based on the inputted waypoint
+    if ((maths_f_abs(goal_pos_[X] - goal_pos[X]) > 0.001f ||
+         maths_f_abs(goal_pos_[Y] - goal_pos[Y]) > 0.001f ||
+         maths_f_abs(goal_pos_[Z] - goal_pos[Z]) > 0.001f ||
+         maths_f_abs(goal_radius_ - goal_radius) > 0.001f ||
+         maths_f_abs(goal_heading_ - goal_heading) > 0.001f) &&
+        (navigation_strategy == strategy_t::DUBIN))
+    {
+        print_util_dbg_print("Waypoint changed, reinitialize dubin\r\n");
+        dubin_state = DUBIN_INIT;
+    }
+
+    // Update goal based on the inputted waypoint
+    goal_pos_ = goal_pos;
+    goal_heading_ = goal_heading;
+    goal_radius_ = goal_radius;
+}
+
 Waypoint& Navigation::goal()
 {
     return goal_;
@@ -617,57 +637,39 @@ void Navigation::set_internal_state(internal_state_t new_internal_state)
         print_util_dbg_print("Switching from ");
         switch (internal_state_)
         {
-        case NAV_ON_GND:
-            print_util_dbg_print("NAV_ON_GND");
+        case NAV_STANDBY:
+            print_util_dbg_print("NAV_STANDBY");
             break;
-        case NAV_TAKEOFF:
-            print_util_dbg_print("NAV_TAKEOFF");
+        case NAV_PREMISSION:
+            print_util_dbg_print("NAV_PREMISSION");
             break;
-        case NAV_MANUAL_CTRL:
-            print_util_dbg_print("NAV_MANUAL_CTRL");
+        case NAV_MISSION:
+            print_util_dbg_print("NAV_MISSION");
             break;
-        case NAV_NAVIGATING:
-            print_util_dbg_print("NAV_NAVIGATING");
+        case NAV_POSTMISSION:
+            print_util_dbg_print("NAV_POSTMISSION");
             break;
-        case NAV_HOLD_POSITION:
-            print_util_dbg_print("NAV_HOLD_POSITION");
-            break;
-        case NAV_STOP_ON_POSITION:
-            print_util_dbg_print("NAV_STOP_ON_POSITION");
-            break;
-        case NAV_STOP_THERE:
-            print_util_dbg_print("NAV_STOP_THERE");
-            break;
-        case NAV_LANDING:
-            print_util_dbg_print("NAV_LANDING");
+        case NAV_PAUSED:
+            print_util_dbg_print("NAV_PAUSED");
             break;
         }
         print_util_dbg_print(" to ");
         switch (new_internal_state)
         {
-        case NAV_ON_GND:
-            print_util_dbg_print("NAV_ON_GND");
+        case NAV_STANDBY:
+            print_util_dbg_print("NAV_STANDBY");
             break;
-        case NAV_TAKEOFF:
-            print_util_dbg_print("NAV_TAKEOFF");
+        case NAV_PREMISSION:
+            print_util_dbg_print("NAV_PREMISSION");
             break;
-        case NAV_MANUAL_CTRL:
-            print_util_dbg_print("NAV_MANUAL_CTRL");
+        case NAV_MISSION:
+            print_util_dbg_print("NAV_MISSION");
             break;
-        case NAV_NAVIGATING:
-            print_util_dbg_print("NAV_NAVIGATING");
+        case NAV_POSTMISSION:
+            print_util_dbg_print("NAV_POSTMISSION");
             break;
-        case NAV_HOLD_POSITION:
-            print_util_dbg_print("NAV_HOLD_POSITION");
-            break;
-        case NAV_STOP_ON_POSITION:
-            print_util_dbg_print("NAV_STOP_ON_POSITION");
-            break;
-        case NAV_STOP_THERE:
-            print_util_dbg_print("NAV_STOP_THERE");
-            break;
-        case NAV_LANDING:
-            print_util_dbg_print("NAV_LANDING");
+        case NAV_PAUSED:
+            print_util_dbg_print("NAV_PAUSED");
             break;
         }
         print_util_dbg_print("\r\n");

@@ -30,20 +30,20 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_planner_handler_hold_position.hpp
+ * \file mission_handler_stop_on_position.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the hold position state
+ * \brief The MAVLink mission planner handler for the stop on position state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_HOLD_POSITION__
-#define MISSION_PLANNER_HANDLER_HOLD_POSITION__
+#ifndef MISSION_PLANNER_HANDLER_STOP_ON_POSITION__
+#define MISSION_PLANNER_HANDLER_STOP_ON_POSITION__
 
-#include "control/mission_planner_handler.hpp"
+#include "control/mission_handler.hpp"
 #include "communication/state.hpp"
 #include "control/navigation.hpp"
 
@@ -51,25 +51,25 @@
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mission_planner_handler_hold_position : public Mission_planner_handler
+class Mission_handler_stop_on_position : public Mission_handler
 {
 public:
 
 
     /**
-     * \brief   Initialize the hold position mission planner handler
+     * \brief   Initialize the stop on position mission planner handler
      *
      * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
+     * \param   navigation              The reference to the navigation class
+     * \param   state                   The reference to the state class
      */
-     Mission_planner_handler_hold_position( const INS& ins,
-                                            Navigation& navigation,
-                                            State& state);
+     Mission_handler_stop_on_position(  const INS& ins,
+                                                Navigation& navigation,
+                                                State& state);
 
 
     /**
-     * \brief   The handler for the hold position state.
+     * \brief   The handler for the stop on position state.
      *
      * \param   mission_planner     The reference to the misison planner that is
      * handling the request.
@@ -89,4 +89,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_HOLD_POSITION__
+#endif // MISSION_PLANNER_HANDLER_STOP_ON_POSITION__

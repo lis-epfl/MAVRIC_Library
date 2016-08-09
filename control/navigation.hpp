@@ -74,14 +74,11 @@ public:
 
     enum internal_state_t
     {
-        NAV_ON_GND,
-        NAV_TAKEOFF,
-        NAV_MANUAL_CTRL,
-        NAV_NAVIGATING,
-        NAV_HOLD_POSITION,
-        NAV_STOP_ON_POSITION,
-        NAV_STOP_THERE,
-        NAV_LANDING,
+        NAV_STANDBY,
+        NAV_PREMISSION,
+        NAV_MISSION,
+        NAV_POSTMISSION,
+        NAV_PAUSED
     };
 
     /**
@@ -186,6 +183,16 @@ public:
     void set_goal(Waypoint wpt);
 
     /**
+     * \brief   Sets the goal to be equal to the waypoint inputted
+     *
+     * Will set the dubin state to be DUBIN_INIT if there is a significant
+     * (change in waypoint locaiton) change in the goal.
+     *
+     * \param   goal_pos    The new waypoint goal position
+     */
+    void set_goal(local_position_t goal_pos, float goal_heading, float goal_radius);
+
+    /**
      * \brief   Gets the internal state enum of the navigation
      *
      * \return  internal_state_
@@ -256,7 +263,10 @@ private:
     bool waiting_at_waypoint_;                          ///< Flag stating if the drone is currently at a waypoint waiting to advance
     uint32_t start_wpt_time_;                           ///< The time at which the MAV starts to travel towards its waypoint
 
-    Waypoint goal_;                                     ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
+    local_position_t goal_;                             ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
+    float goal_heading_;                                ///< The heading of the goal
+    float goal_radius_;                                 ///< The goal radius
+    dubin_t goal_dubin_;                                ///< The dubin structure for the goal
     internal_state_t internal_state_;                   ///< The internal state of the navigation module
 
     float dt;                                           ///< The time interval between two navigation updates
