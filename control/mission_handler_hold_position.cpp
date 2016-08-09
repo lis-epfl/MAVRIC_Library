@@ -156,23 +156,3 @@ bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner
         return false;
     }  
 }
-/*
-void Mission_handler_hold_position::handle(Mission_planner& mission_planner)
-{
-    Mav_mode mode_local = state_.mav_mode();
-
-    // Set the goal position to be the current hold position.
-    // Do not update hold position as that can cause drift
-    navigation_.set_goal(hold_waypoint());
-
-    // Change state if necessary
-    if (mode_local.is_auto())
-    {
-        navigation_.set_internal_state(Navigation::NAV_NAVIGATING);
-    }
-    else if (mode_local.is_manual())
-    {
-        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
-    }
-}
-*/

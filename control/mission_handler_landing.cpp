@@ -169,18 +169,3 @@ bool Mission_handler_landing::is_finished(Mission_planner& mission_planner)
 {
     return mission_planner.internal_state() == Mission_planner::STANDBY;
 }
-/*
-void Mission_handler_landing::handle(Mission_planner& mission_planner)
-{
-    Mav_mode mode_local = state_.mav_mode();
-
-    auto_landing_handler(mission_planner);
-
-    navigation_.set_goal(hold_waypoint());
-
-    if (mode_local.is_manual())
-    {
-        navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
-    }
-}
-*/

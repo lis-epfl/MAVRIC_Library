@@ -63,26 +63,6 @@ Mission_handler_on_ground::Mission_handler_on_ground(   const INS& ins,
 {
 
 }
-/*
-void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
-{
-    Mav_mode mode_local = state_.mav_mode();
-    float thrust = manual_control_.get_thrust();
-
-    if (thrust > -0.7f)
-    {
-        if (!mode_local.is_manual())
-        {
-            reset_hold_waypoint();
-            navigation_.set_internal_state(Navigation::NAV_TAKEOFF);
-        }
-        else
-        {
-            navigation_.set_internal_state(Navigation::NAV_MANUAL_CTRL);
-        }
-    }
-}
-*/
 
 bool Mission_handler_on_ground::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
 {

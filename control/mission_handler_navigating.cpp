@@ -129,7 +129,7 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
 
     // Add margin if necessary
     float margin = 0.0f;
-    if ((waypoint_handler_.current_waypoint().command() == MAV_CMD_NAV_LAND) || (waypoint_handler_.current_waypoint().param2() == 0.0f)) // Is this safe? TODO
+    if (waypoint_.param2() == 0.0f) // Is this safe? TODO
     //we need to add that since Landing waypoint doesn't have the param2
     //=> the param2 = 0 => never passing next condition
     {
@@ -137,7 +137,7 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
     }
 
     // If we are near the waypoint or are doing dubin circles
-    if (navigation_.dist2wp_sqr < (waypoint_handler_.current_waypoint().param2() * waypoint_handler_.current_waypoint().param2() + margin) ||
+    if (navigation_.dist2wp_sqr < (waypoint_.param2() * waypoint_.param2() + margin) ||
            (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
     {
         // If we are near the waypoint but the flag has not been set, do this once ...
@@ -146,18 +146,14 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
             // Send debug log ...
             if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
             {
-                print_util_dbg_print("Waypoint Nr");
-                print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(), 10);
-                print_util_dbg_print(" reached by entering dubin circles 2.\r\n");
+                print_util_dbg_print("Waypoint reached by entering dubin circles 2.\r\n");
             }
-            else if (navigation_.dist2wp_sqr < (waypoint_handler_.current_waypoint().param2() * waypoint_handler_.current_waypoint().param2() + margin))
+            else if (navigation_.dist2wp_sqr < (waypoint_.param2() * waypoint_.param2() + margin))
             {
-                print_util_dbg_print("Waypoint Nr");
-                print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(), 10);
-                print_util_dbg_print(" reached, distance: ");
+                print_util_dbg_print("Waypoint reached, distance: ");
                 print_util_dbg_putfloat(sqrt(navigation_.dist2wp_sqr), 3);
                 print_util_dbg_print(" m. Less than acceptable radius:");
-                print_util_dbg_putfloat(sqrt(waypoint_handler_.current_waypoint().param2() * waypoint_handler_.current_waypoint().param2() + margin), 3);
+                print_util_dbg_putfloat(sqrt(waypoint_.param2() * waypoint_.param2() + margin), 3);
                 print_util_dbg_print(" m.\r\n");
             }
 
