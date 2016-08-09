@@ -99,7 +99,7 @@ Inheritance diagram for LEQuad:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLEQuad__inherit__graph.png" border="0" usemap="#LEQuad_inherit__map" alt="Inheritance graph"/></div>
 <map name="LEQuad_inherit__map" id="LEQuad_inherit__map">
-<area shape="rect" id="node3" href="classLEQuad__dronedome.html" title="Central data for indoor use." alt="" coords="31,539,191,642"/></map>
+<area shape="rect" id="node3" href="classLEQuad__dronedome.html" title="Central data for indoor use." alt="" coords="31,555,191,658"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for LEQuad:</div>
@@ -122,6 +122,8 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf">loop</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function (infinite loop)  <a href="#acc67075f90c55b09726bef35c0313cdf"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMavlink__communication.html">Mavlink_communication</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLEQuad.html#a5e59ce71f4ad1e38ef00aee1367fee91">mavlink_communication</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns non-const reference to MAVLINK Communication.  <a href="#a5e59ce71f4ad1e38ef00aee1367fee91"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structLEQuad_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLEQuad.html#a1112f833422ec062edab301433a40c76">default_config</a> (uint8_t sysid=1)</td></tr>
@@ -225,8 +227,8 @@ Protected Attributes</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The structure with all state information. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a689108adb241ea49a4b84d1503976cf4"></a><!-- doxytag: member="LEQuad::scheduler" ref="a689108adb241ea49a4b84d1503976cf4" args="" -->
 <a class="el" href="classScheduler.html">Scheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scheduler</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a0322cdc072f37792a651f5424f47b2"></a><!-- doxytag: member="LEQuad::mavlink_communication" ref="a7a0322cdc072f37792a651f5424f47b2" args="" -->
-<a class="el" href="classMavlink__communication.html">Mavlink_communication</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mavlink_communication</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2be14f45cae3b57b0b7ded5114a8fad0"></a><!-- doxytag: member="LEQuad::mavlink_communication_" ref="a2be14f45cae3b57b0b7ded5114a8fad0" args="" -->
+<a class="el" href="classMavlink__communication.html">Mavlink_communication</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mavlink_communication_</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aead796eecec288f22604c7ddcb553e06"></a><!-- doxytag: member="LEQuad::servo_mix" ref="aead796eecec288f22604c7ddcb553e06" args="" -->
 <a class="el" href="structservos__mix__quadcotper__diag__t.html">servos_mix_quadcotper_diag_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>servo_mix</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a71c51698f364b8b97d126df5ae433a82"></a><!-- doxytag: member="LEQuad::ahrs" ref="a71c51698f364b8b97d126df5ae433a82" args="" -->
@@ -330,6 +332,26 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="a5e59ce71f4ad1e38ef00aee1367fee91"></a><!-- doxytag: member="LEQuad::mavlink_communication" ref="a5e59ce71f4ad1e38ef00aee1367fee91" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMavlink__communication.html">Mavlink_communication</a>&amp; <a class="el" href="classLEQuad.html#a5e59ce71f4ad1e38ef00aee1367fee91">LEQuad::mavlink_communication</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns non-const reference to MAVLINK Communication. </p>
+<p>This is used to add simulation telemetry from the main function</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>MAVLINK Communication module </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/sample_projects/LEQuad/<a class="el" href="lequad_8hpp_source.html">lequad.hpp</a></li>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/sample_projects/LEQuad/lequad.cpp</li>
@@ -352,7 +374,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 8 2016 06:24:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2016 08:50:21 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
