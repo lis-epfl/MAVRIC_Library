@@ -114,7 +114,8 @@ void Navigation::set_speed_command(float rel_pos[])
     dir_desired_sg[Y] /= norm_rel_dist;
     dir_desired_sg[Z] /= norm_rel_dist;
 
-    if ((mode.is_auto() && ((!waiting_at_waypoint_ && (internal_state_ == NAV_NAVIGATING)))) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
+    // Check if we are hovering at a waypoint
+    if ((mode.is_auto() && (!waiting_at_waypoint_)) || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)))
     {
 
         if (((maths_f_abs(rel_pos[X]) <= 1.0f) && (maths_f_abs(rel_pos[Y]) <= 1.0f)) || ((maths_f_abs(rel_pos[X]) <= 5.0f) && (maths_f_abs(rel_pos[Y]) <= 5.0f) && (maths_f_abs(rel_pos[Z]) >= 3.0f)))
