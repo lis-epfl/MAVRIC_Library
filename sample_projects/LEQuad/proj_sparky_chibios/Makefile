@@ -88,7 +88,7 @@ include $(MAVRIC_LIB)/rules_common.mk
 include $(MAVRIC_LIB)/rules_chibios.mk
 
 # Define project name here
-PROJECT = ch
+PROJECT = PROJ_NAME
 
 # Imported source files and paths
 CHIBIOS = ../../../libs/ChibiOS
@@ -97,7 +97,7 @@ include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.m
 # HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
-include $(CHIBIOS)/os/hal/boards/ST_STM32F4_DISCOVERY/board.mk
+include $(MAVRIC_LIB)/boards/sparky_v2/board.mk
 include $(CHIBIOS)/os/hal/osal/os-less/ARMCMx/osal.mk
 # RTOS files (optional).
 #include $(CHIBIOS)/os/rt/rt.mk
@@ -225,3 +225,19 @@ ULIBS =
 
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC
 include $(RULESPATH)/rules.mk
+
+
+
+##############################################################################
+# Additionnal rules to program STM32 devices
+#
+
+dfu: build/$(PROJECT).bin
+	@dfu-util --device 0x483:0xdf11 -a 0 -s 0x8000000:leave -D build/$(PROJECT).bin
+
+flash: build/$(PROJECT).bin
+	@st-flash write build/$(PROJECT).bin 0x8000000
+
+#
+# End of additionnal rules
+##############################################################################
