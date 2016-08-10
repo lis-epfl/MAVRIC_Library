@@ -7,9 +7,9 @@
 # ------------------------------------------------------------------------------
 
 # Main rule
-all: sample_projects doc	
+all: sample_projects doc
 
-sample_projects: LEQuad_linux LEQuad_stm32 LEQuad_avr32
+sample_projects: LEQuad_linux LEQuad_chibios LEQuad_stm32 LEQuad_avr32
 
 LEQuad_linux:
 	cd ../sample_projects/LEQuad/proj_linux && make clean && make && make clean
@@ -19,6 +19,9 @@ LEQuad_avr32:
 
 LEQuad_stm32:
 	cd ../sample_projects/LEQuad/proj_stm32 && make clean && make && make clean
+
+LEQuad_chibios:
+	cd ../sample_projects/LEQuad/proj_sparky_chibios && make clean && make && make clean
 
 doc: doc_doxygen doc_daux
 
