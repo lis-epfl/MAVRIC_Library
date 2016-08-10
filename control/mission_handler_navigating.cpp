@@ -107,7 +107,7 @@ bool Mission_handler_navigating::setup(Mission_planner& mission_planner, Waypoin
     bool success = true;
 
     start_time_ = time_keeper_get_ms();
-    waypoint_reached_ = false;
+    navigation_.set_waiting_at_waypoint(false);
     waypoint_ = wpt;
 
     return success;
@@ -171,16 +171,13 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
             // ... and set to waiting at waypoint ...
             navigation_.set_waiting_at_waypoint(true);
         }
-
-        // ... and set the waypoint reached flag
-        waypoint_reached_ = true;
     }
 }
 
 bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
 {
     // First check if we have reached the waypoint
-    if (waypoint_reached_)
+    if (navigation_.waiting_at_waypoint())
     {
         // Then ensure that we are in autocontinue
         if ((waypoint_.autocontinue() == 1) && (waypoint_handler_.waypoint_count() > 1))

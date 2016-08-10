@@ -82,7 +82,8 @@ public:
      * \details     This must be defined in the subclasses. It should perform
      *              initial setup. For example, setting the hold position to
      *              the current position of the drone, that way it is not done
-     *              every iteration
+     *              every iteration. Base classes are also responsible for setting
+     *              Navigation::waiting_at_waypoint
      *
      * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class

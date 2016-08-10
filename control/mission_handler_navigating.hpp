@@ -139,7 +139,7 @@ protected:
     Waypoint& waypoint_;                                                ///< The waypoint that we are heading towards
     uint64_t start_time_;                                               ///< The start time for travelling to this waypoint
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
-    bool waypoint_reached_;                                             ///< Flag stating if the waypoint has been reached
+
     /**
      * \brief   Sends the travel time between the last two waypoints
      *
