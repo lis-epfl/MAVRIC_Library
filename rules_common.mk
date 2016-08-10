@@ -52,11 +52,10 @@ LIB_SRCS += communication/state_machine.cpp
 LIB_SRCS += communication/state_telemetry.cpp
 
 
-LIB_SRCS += control/adaptive_parameter.c
 LIB_SRCS += control/altitude_controller.cpp
 LIB_SRCS += control/attitude_controller.cpp
-LIB_SRCS += control/attitude_controller_p2.c
-LIB_SRCS += control/attitude_error_estimator.c
+LIB_SRCS += control/attitude_controller_p2.cpp
+LIB_SRCS += control/attitude_error_estimator.cpp
 LIB_SRCS += control/dubin.cpp
 LIB_SRCS += control/joystick.cpp
 LIB_SRCS += control/joystick_telemetry.cpp
@@ -66,7 +65,7 @@ LIB_SRCS += control/navigation.cpp
 LIB_SRCS += control/pid_controller.cpp
 LIB_SRCS += control/servos_mix_quadcopter_cross.cpp
 LIB_SRCS += control/servos_mix_quadcopter_diag.cpp
-LIB_SRCS += control/servos_mix_wing.c
+LIB_SRCS += control/servos_mix_wing.cpp
 LIB_SRCS += control/stabilisation.cpp
 LIB_SRCS += control/stabilisation_copter.cpp
 LIB_SRCS += control/stabilisation_wing.cpp
@@ -102,13 +101,12 @@ LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
-LIB_SRCS += hal/common/dbg.cpp
 
 LIB_SRCS += runtime/scheduler.cpp
 LIB_SRCS += runtime/scheduler_task.cpp
 LIB_SRCS += runtime/scheduler_telemetry.cpp
 
-LIB_SRCS += sensing/ahrs.c
+LIB_SRCS += sensing/ahrs.cpp
 LIB_SRCS += sensing/ahrs_ekf.cpp
 LIB_SRCS += sensing/ahrs_ekf_mocap.cpp
 LIB_SRCS += sensing/ahrs_telemetry.cpp
@@ -135,7 +133,7 @@ LIB_SRCS += simulation/sonar_sim.cpp
 
 LIB_SRCS += util/coord_conventions.cpp
 LIB_SRCS += util/matrix.cpp
-LIB_SRCS += util/print_util.c
-LIB_SRCS += util/quick_trig.c
+LIB_SRCS += util/print_util.cpp
+LIB_SRCS += util/quick_trig.cpp
 LIB_SRCS += util/raytracing.cpp
 LIB_SRCS += util/string_util.cpp

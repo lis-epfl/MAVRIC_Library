@@ -47,7 +47,7 @@ extern "C"
 {
 #include "util/maths.h"
 #include "hal/common/time_keeper.hpp"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 enum

@@ -49,7 +49,7 @@
 #include "libs/asf/avr32/drivers/intc/intc.h"
 #include "libs/asf/avr32/drivers/pevc/pevc.h"
 #include "libs/asf/avr32/drivers/pdca/pdca.h"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 
 static volatile uint16_t* buffer;                   ///< pointer to the sampling buffer of the DAC
 static volatile uint16_t from, to;                  ///< (?)

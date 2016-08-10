@@ -45,7 +45,7 @@
 #include "communication/mavlink_communication.hpp"
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 //------------------------------------------------------------------------------

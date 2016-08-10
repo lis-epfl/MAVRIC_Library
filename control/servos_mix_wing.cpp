@@ -45,7 +45,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 bool servos_mix_wing_init(servos_mix_wing_t* mix,

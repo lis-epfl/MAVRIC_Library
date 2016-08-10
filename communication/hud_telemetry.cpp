@@ -46,7 +46,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 bool hud_telemetry_init(hud_telemetry_t* hud, const INS* ins, const control_command_t* controls, const ahrs_t* ahrs)

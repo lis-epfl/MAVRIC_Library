@@ -45,7 +45,7 @@
  #include <cstdbool>
 
 #include "communication/mavlink_message_handler.hpp"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 
 extern "C"
 {

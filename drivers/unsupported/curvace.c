@@ -42,7 +42,7 @@
 
 #include "drivers/unsupported/curvace.h"
 #include "util/maths.h"
-#include "util/quick_trig.h"
+#include "util/quick_trig.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "libs/asf/avr32/drivers/gpio/gpio.h"
 #include "libs/asf/avr32/drivers/spi/spi.h"

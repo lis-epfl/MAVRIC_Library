@@ -48,7 +48,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 Scheduler::Scheduler(const Scheduler::conf_t config) :

@@ -50,8 +50,8 @@
 extern "C"
 {
 #include "uart_int.h"
-#include "util/print_util.h"
-#include "util/quick_trig.h"
+#include "util/print_util.hpp"
+#include "util/quick_trig.hpp"
 }
 
 float az[STORE_SIZE] =          ///< Store pre-computed value for the azimuth

@@ -45,7 +45,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix,

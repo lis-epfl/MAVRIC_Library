@@ -43,7 +43,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 
 #include "libs/asf/common/services/clock/sysclk.h"
 #include "libs/asf/common/services/sleepmgr/sleepmgr.h"

@@ -43,7 +43,7 @@
 #include "control/gimbal_controller.hpp"
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 //------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ void Gimbal_controller::gimbal_controller_mix_to_servos(void)
 {
     float pwm_output[3];
 
-    //pwm range = [-1;1] which is set to corresponds to angles [-90°;90°]
+    //pwm range = [-1;1] which is set to corresponds to angles [-90ï¿½;90ï¿½]
     for (int i = 1; i < 3; i++)
     {
     	print_util_dbg_putfloat(attitude_output_.rpy[i],3);

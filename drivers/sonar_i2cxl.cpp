@@ -46,7 +46,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 const float   SONAR_I2CXL_LPF_VARIO                 = 0.4f;     ///< Low pass filter for velocity estimation

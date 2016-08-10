@@ -51,7 +51,7 @@ extern "C"
 {
 #include <math.h>
 #include "libs/asf/avr32/drivers/gpio/gpio.h"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 //------------------------------------------------------------------------------

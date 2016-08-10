@@ -48,8 +48,8 @@
 extern "C"
 {
 #include "util/maths.h"
-#include "util/print_util.h"
-#include "util/quick_trig.h"
+#include "util/print_util.hpp"
+#include "util/quick_trig.hpp"
 }
 
 // Definitions constants as double for precise conversion

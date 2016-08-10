@@ -49,7 +49,7 @@ extern "C"
 #include "cstdint"
 #include "util/vectors.h"
 
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 //------------------------------------------------------------------------------

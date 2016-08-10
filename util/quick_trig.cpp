@@ -40,9 +40,9 @@
  ******************************************************************************/
 
 
-#include "util/quick_trig.h"
+#include "util/quick_trig.hpp"
 
-#include <math.h>
+#include <cmath>
 #include "util/maths.h"
 
 

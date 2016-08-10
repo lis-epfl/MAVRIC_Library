@@ -43,7 +43,7 @@
 
 extern "C"
 {
-#include "util/quick_trig.h"
+#include "util/quick_trig.hpp"
 }
 
 Flow_sim::Flow_sim(Dynamic_model& dynamic_model, raytracing::World& world, float orientation_azimuth):

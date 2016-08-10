@@ -93,7 +93,7 @@
 extern "C"
 {
 #include "sensing/altitude.h"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 

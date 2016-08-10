@@ -41,7 +41,7 @@
 
 
 #include "control/stabilisation.hpp"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 #include "util/constants.hpp"
 
 bool stabilisation_init(control_command_t* controls)

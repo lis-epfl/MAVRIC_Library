@@ -42,12 +42,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 
 byte_stream_t* deb_stream;
 
 bool blocking;
-static const char alphabet[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+static const char alphabet[37] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
 //------------------------------------------------------------------------------

@@ -43,7 +43,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 #include <libopencm3/stm32/rcc.h>

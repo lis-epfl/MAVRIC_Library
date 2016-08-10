@@ -50,7 +50,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 typedef enum MAV_STATE mav_state_t;

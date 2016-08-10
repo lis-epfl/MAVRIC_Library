@@ -63,7 +63,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 }
 
 #define MAVLINK_SYS_ID 2

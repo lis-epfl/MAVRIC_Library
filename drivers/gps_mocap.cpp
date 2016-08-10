@@ -46,7 +46,7 @@
 
 extern "C"
 {
-#include "util/quick_trig.h"
+#include "util/quick_trig.hpp"
 }
 
 
