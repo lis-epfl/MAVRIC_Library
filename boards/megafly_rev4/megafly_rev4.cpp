@@ -39,11 +39,11 @@
  ******************************************************************************/
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 
 #include "libs/asf/common/services/clock/sysclk.h"
 #include "libs/asf/common/services/sleepmgr/sleepmgr.h"
@@ -79,8 +79,9 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
     lsm330dlc(i2c0),
     bmp085(i2c0),
     spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin),
-    red_led(LED_AVR32_ID_2) ,
+    red_led(LED_AVR32_ID_2),
     green_led(LED_AVR32_ID_1),
+    state_display_megafly_rev4_(green_led, red_led),
     imu(lsm330dlc, lsm330dlc, hmc5883l, config.imu_config),
     file_flash("flash.bin"),
     gps_ublox(uart3),

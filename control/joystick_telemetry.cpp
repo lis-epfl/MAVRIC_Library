@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick_telemetry.c
+ * \file joystick_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -44,7 +44,7 @@
 
 //#include "hal/common/time_keeper.hpp"
 //#include "util/print_util.h"
-//#include "util/constants.h"
+//#include "util/constants.hpp"
 
 
 //------------------------------------------------------------------------------
@@ -58,26 +58,26 @@
  * \param   sysid       The sysid of the system
  * \param   msg         The pointer to the MAVLink message received
  */
-static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, mavlink_message_t* msg);
+static void joystick_telemetry_parse_msg(Joystick* joystick, uint32_t sysid, mavlink_message_t* msg);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, mavlink_message_t* msg)
+static void joystick_telemetry_parse_msg(Joystick* joystick, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_manual_control_t packet;
     mavlink_msg_manual_control_decode(msg, &packet);
 
     if ((uint8_t)packet.target == (uint8_t)sysid)
     {
-        joystick->channels.x = packet.x / 1000.0f;
-        joystick->channels.y = packet.y / 1000.0f;
-        joystick->channels.r = packet.r / 1000.0f;
-        joystick->channels.z = packet.z / 1000.0f;
+        joystick->channels_.x = packet.x / 1000.0f;
+        joystick->channels_.y = packet.y / 1000.0f;
+        joystick->channels_.r = packet.r / 1000.0f;
+        joystick->channels_.z = packet.z / 1000.0f;
 
-        joystick_button_update(joystick, packet.buttons);
+        joystick->button_update(packet.buttons);
     }
 }
 
@@ -86,7 +86,7 @@ static void joystick_telemetry_parse_msg(joystick_t* joystick, uint32_t sysid, m
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool joystick_telemetry_init(joystick_t* joystick, Mavlink_message_handler* message_handler)
+bool joystick_telemetry_init(Joystick* joystick, Mavlink_message_handler* message_handler)
 {
     bool init_success = true;
 
@@ -104,15 +104,15 @@ bool joystick_telemetry_init(joystick_t* joystick, Mavlink_message_handler* mess
 }
 
 
-void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void joystick_telemetry_send_manual_ctrl_msg(const Joystick* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_manual_control_pack(mavlink_stream->sysid(),
                                     mavlink_stream->compid(),
                                     msg,
                                     mavlink_stream->sysid(),
-                                    joystick->channels.x * 1000,
-                                    joystick->channels.y * 1000,
-                                    joystick->channels.z * 1000,
-                                    joystick->channels.r * 1000,
-                                    joystick->buttons.button_mask);
+                                    joystick->channels_.x * 1000,
+                                    joystick->channels_.y * 1000,
+                                    joystick->channels_.z * 1000,
+                                    joystick->channels_.r * 1000,
+                                    joystick->buttons_.button_mask);
 }

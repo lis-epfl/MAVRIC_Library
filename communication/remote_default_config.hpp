@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file remote_default_config.h
+ * \file remote_default_config.hpp
  *
  * \author MAV'RIC Team
  * \author Gregoire Heitz
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef REMOTE_DEFAULT_CONFIG_H_
-#define REMOTE_DEFAULT_CONFIG_H_
+#ifndef REMOTE_DEFAULT_CONFIG_HPP_
+#define REMOTE_DEFAULT_CONFIG_HPP_
 
 #include "communication/remote.hpp"
 
@@ -78,4 +78,4 @@ static inline remote_conf_t remote_default_config()
 };
 
 
-#endif // REMOTE_DEFAULT_CONFIG_H_
+#endif // REMOTE_DEFAULT_CONFIG_HPP_

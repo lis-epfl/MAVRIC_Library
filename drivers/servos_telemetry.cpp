@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_telemetry.c
+ * \file servos_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -42,11 +42,8 @@
 
 
 #include "drivers/servos_telemetry.hpp"
-
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-}
+
 
 bool servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0, Servo* servo_1, Servo* servo_2, Servo* servo_3, Servo* servo_4, Servo* servo_5, Servo* servo_6, Servo* servo_7)
 {

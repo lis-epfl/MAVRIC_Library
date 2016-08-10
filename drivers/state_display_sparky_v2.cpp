@@ -30,85 +30,126 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.h
+ * \file state_display_sparky_v2.cpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Jean-François Burnier
  *
- * \brief This file implements data structure for attitude estimate
+ * \brief Interface class for state display for Sparky V2, stm32
  *
  ******************************************************************************/
 
+ #include "drivers/state_display_sparky_v2.hpp"
 
-#ifndef AHRS_H_
-#define AHRS_H_
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "util/quaternions.h"
-
-
-/**
- * \brief The calibration level of the filter
- */
-typedef enum
+State_display_sparky_v2::State_display_sparky_v2(Led& led_green, Led& led_red):
+	led_green_(led_green),
+	led_red_(led_red)
 {
-    AHRS_INITIALISING   = 0,    ///< Calibration level: Not initialised
-    AHRS_LEVELING       = 1,    ///< Calibration level: No calibration, attitude estimation correction by accelero/magneto measurements
-    AHRS_CONVERGING     = 2,    ///< Calibration level: leveling, correction of gyro biais
-    AHRS_READY          = 3,    ///< Calibration level: leveled
-} ahrs_state_t;
-
-
-
-/**
- * \brief Structure containing the Attitude and Heading Reference System
- */
-typedef struct
-{
-    quat_t  qe;                         ///< quaternion defining the Attitude estimation of the platform
-
-    float   angular_speed[3];           ///< Gyro rates
-    float   linear_acc[3];              ///< Acceleration WITHOUT gravity
-
-    // quat_t up_vec;                       ///< The quaternion of the up vector
-    // quat_t north_vec;                    ///< The quaternion of the north vector
-
-    ahrs_state_t internal_state;        ///< Leveling state of the ahrs
-    float        last_update_s;            ///< The time of the last IMU update in ms
-    float        dt_s;                  ///< The time interval between two IMU updates
-} ahrs_t;
-
-
-
-
-
-/**
- * \brief   Initialiases the ahrs structure
- *
- * \param   ahrs                Pointer to ahrs structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool ahrs_init(ahrs_t* ahrs);
-
-
-/**
- * \brief   Returns an initialized ahrs_t
- *
- * \detail  Used to initialize ahrs in initalizer list
- *
- * \return  Initialized ahrs_t
- */
-ahrs_t ahrs_initialized(void);
-
-
-#ifdef __cplusplus
+	state_ 		= MAV_STATE_CALIBRATING;
+	state_old_ 	= MAV_STATE_POWEROFF;
+	idle_ 		= 0;
 }
-#endif
 
-#endif /* AHRS_H_ */
+bool State_display_sparky_v2::update()
+{
+	bool init = state_old_ != state_;
+
+	switch (state_)
+ 	{
+ 		case MAV_STATE_CALIBRATING:
+ 			if (init)
+ 			{
+ 				led_green_.on();
+ 				led_red_.off();
+ 				idle_ = 0;
+ 			}
+ 			else if (idle_ >= 6)
+ 			{
+ 				led_green_.toggle();
+ 				led_red_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
+
+ 		case MAV_STATE_STANDBY:
+ 			if (init)
+ 			{
+ 				led_red_.off();
+ 				idle_ = 0;
+ 			}
+ 			else if (idle_ >= 6)
+ 			{
+ 				led_green_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
+
+ 		case MAV_STATE_ACTIVE:
+ 			if (init)
+ 			{
+ 				led_red_.off();
+ 				idle_ = 0;
+ 			}
+ 			else if (idle_ >= 2)
+ 			{
+ 				led_green_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
+
+ 		case MAV_STATE_CRITICAL:
+ 			if (init)
+ 			{
+ 				led_red_.on();
+ 				idle_ = 0;
+ 			}
+ 			else if (idle_ >= 2)
+ 			{
+ 				led_green_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
+
+ 		case MAV_STATE_EMERGENCY:
+ 			led_red_.toggle();
+ 			if (idle_ >= 2)
+ 			{
+ 				led_green_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
+
+ 		default:
+ 			led_red_.on();
+ 			led_green_.on();
+ 			break;
+ 	}
+
+ 	state_old_ = state_;
+
+ 	return true;
+}

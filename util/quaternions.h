@@ -44,11 +44,6 @@
 #ifndef QUATERNIONS_H_
 #define QUATERNIONS_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include <stdint.h>
 #include "util/maths.h"
 #include "util/vectors.h"
@@ -300,9 +295,5 @@ static inline quat_t quaternions_normalise(const quat_t q)
     return result;
 }
 
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* QUATERNIONS_H_ */

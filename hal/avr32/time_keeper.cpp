@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file time_keeper.c
+ * \file time_keeper.cpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -72,7 +72,7 @@ uint64_t time_keeper_get_s_ticks(void);
  *
  * \return  The time in seconds
  */
-float time_keeper_ticks_to_seconds(uint64_t timer_ticks);
+double time_keeper_ticks_to_seconds(uint64_t timer_ticks);
 
 
 //------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ uint64_t time_keeper_get_s_ticks(void)
 }
 
 
-float time_keeper_ticks_to_seconds(uint64_t timer_ticks)
+double time_keeper_ticks_to_seconds(uint64_t timer_ticks)
 {
     return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
 }

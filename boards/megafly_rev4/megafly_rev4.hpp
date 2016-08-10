@@ -61,7 +61,7 @@
 #include "drivers/servo.hpp"
 #include "drivers/sonar_i2cxl.hpp"
 #include "drivers/spektrum_satellite.hpp"
-#include "drivers/airspeed_analog.hpp"
+#include "drivers/state_display_megafly_rev4.hpp"
 
 #include "sensing/offboard_tag_search.hpp"
 #include "sensing/imu.hpp"
@@ -140,45 +140,46 @@ public:
     /**
      * Public Members
      */
-    Gpio_avr32          dsm_receiver_pin;
-    Gpio_avr32          dsm_power_pin;
-    Serial_avr32        uart0;
-    Serial_avr32        uart1;
-    Serial_avr32        uart3;
-    Serial_usb_avr32    uart_usb;
-    I2c_avr32           i2c0;
-    I2c_avr32           i2c1;
-    Hmc5883l            hmc5883l;
-    Lsm330dlc           lsm330dlc;
-    Bmp085              bmp085;
-    Spektrum_satellite  spektrum_satellite;
-    Led_avr32           red_led;
-    Led_avr32           green_led;
-    Imu                 imu;
-    File_flash_avr32    file_flash;
-    Gps_ublox           gps_ublox;
-    Sonar_i2cxl         sonar_i2cxl;
-    analog_monitor_t    analog_monitor;
-    Adc_avr32           adc_battery;
-    Adc_avr32           adc_airspeed;
-    Battery             battery;
-    Airspeed_analog     airspeed_analog;
-    Pwm_avr32           pwm_0;
-    Pwm_avr32           pwm_1;
-    Pwm_avr32           pwm_2;
-    Pwm_avr32           pwm_3;
-    Pwm_avr32           pwm_4;
-    Pwm_avr32           pwm_5;
-    Pwm_avr32           pwm_6;
-    Pwm_avr32           pwm_7;
-    Servo               servo_0;
-    Servo               servo_1;
-    Servo               servo_2;
-    Servo               servo_3;
-    Servo               servo_4;
-    Servo               servo_5;
-    Servo               servo_6;
-    Servo               servo_7;
+    Gpio_avr32                  dsm_receiver_pin;
+    Gpio_avr32                  dsm_power_pin;
+    Serial_avr32                uart0;
+    Serial_avr32                uart1;
+    Serial_avr32                uart3;
+    Serial_usb_avr32            uart_usb;
+    I2c_avr32                   i2c0;
+    I2c_avr32                   i2c1;
+    Hmc5883l                    hmc5883l;
+    Lsm330dlc                   lsm330dlc;
+    Bmp085                      bmp085;
+    Spektrum_satellite          spektrum_satellite;
+    Led_avr32                   red_led;
+    Led_avr32                   green_led;
+    State_display_megafly_rev4  state_display_megafly_rev4_;
+    Imu                         imu;
+    File_flash_avr32            file_flash;
+    Gps_ublox                   gps_ublox;
+    Sonar_i2cxl                 sonar_i2cxl;
+    analog_monitor_t            analog_monitor;
+    Adc_avr32                   adc_battery;
+    Adc_avr32                   adc_airspeed;
+    Battery                     battery;
+    Airspeed_analog             airspeed_analog;
+    Pwm_avr32                   pwm_0;
+    Pwm_avr32                   pwm_1;
+    Pwm_avr32                   pwm_2;
+    Pwm_avr32                   pwm_3;
+    Pwm_avr32                   pwm_4;
+    Pwm_avr32                   pwm_5;
+    Pwm_avr32                   pwm_6;
+    Pwm_avr32                   pwm_7;
+    Servo                       servo_0;
+    Servo                       servo_1;
+    Servo                       servo_2;
+    Servo                       servo_3;
+    Servo                       servo_4;
+    Servo                       servo_5;
+    Servo                       servo_6;
+    Servo                       servo_7;
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick_telemetry.h
+ * \file joystick_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -40,8 +40,8 @@
  *
  ******************************************************************************/
 
-#ifndef JOYSTICK_TELEMETRY_H_
-#define JOYSTICK_TELEMETRY_H_
+#ifndef JOYSTICK_TELEMETRY_HPP_
+#define JOYSTICK_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -51,21 +51,21 @@
 /**
  * \brief   Initialisation of the joystick telemetry module
  *
- * \param   joystick        The pointer to the joystick parsing structure
+ * \param   joystick            The pointer to the joystick parsing structure
  * \param   message_handler     The pointer to the MAVLink communication structure
  *
  * \return  True if the init succeed, false otherwise
  */
-bool joystick_telemetry_init(joystick_t* joystick, Mavlink_message_handler* message_handler);
+bool joystick_telemetry_init(Joystick* joystick, Mavlink_message_handler* message_handler);
 
 /**
  * \brief   Parse received MAVLink message in structure
  *
- * \param   joystick        The pointer to the joystick parsing structure
+ * \param   joystick                The pointer to the joystick parsing structure
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void joystick_telemetry_send_manual_ctrl_msg(const Joystick* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* JOYSTICK_TELEMETRY_H_ */
+#endif /* JOYSTICK_TELEMETRY_HPP_ */

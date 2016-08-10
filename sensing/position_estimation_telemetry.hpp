@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef POSIION_ESTIMATION_TELEMETRY_H_
-#define POSIION_ESTIMATION_TELEMETRY_H_
+#ifndef POSIION_ESTIMATION_TELEMETRY_HPP_
+#define POSIION_ESTIMATION_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -78,4 +78,4 @@ void position_estimation_telemetry_send_position(const Position_estimation* pos_
 void position_estimation_telemetry_send_global_position(const Position_estimation* pos_est, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* POSIION_ESTIMATION_TELEMETRY_H_ */
+#endif /* POSIION_ESTIMATION_TELEMETRY_HPP_ */

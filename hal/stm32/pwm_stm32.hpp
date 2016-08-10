@@ -40,14 +40,13 @@
  ******************************************************************************/
 
 
-#ifndef PWM_SERVOS_STM32_H_
-#define PWM_SERVOS_STM32_H_
+#ifndef PWM_SERVOS_STM32_HPP_
+#define PWM_SERVOS_STM32_HPP_
 
-#include <stdbool.h>
-#include <stdint.h>
+#include <cstdbool>
+#include <cstdint>
 
 #include "hal/common/pwm.hpp"
-
 #include "hal/stm32/gpio_stm32.hpp"
 
 extern "C"
@@ -77,22 +76,22 @@ public:
      */
     typedef struct
     {
-        gpio_stm32_conf_t       gpio_config;            ///< specify which gpio is used
-        uint32_t                timer_config;           ///< specify which timer is used
-        rcc_periph_clken        rcc_timer_config;       ///< rcc reference to the timer
-        pwm_stm32_channel_t     channel_config;         ///< specify which channel is used
-        uint32_t                prescaler_config;       ///< specify the clk divider
-        uint32_t                period_config;          ///< specify the period of the PWM
-        uint32_t                duty_cycle_config;      ///< specify the pulse length in microseconds
+        gpio_stm32_conf_t       gpio_config;     ///< specify which gpio is used
+        uint32_t                timer;           ///< specify which timer is used
+        rcc_periph_clken        rcc_timer;       ///< rcc reference to the timer
+        pwm_stm32_channel_t     channel;         ///< specify which channel is used
+        uint32_t                prescaler;       ///< specify the clk divider
+        uint32_t                period;          ///< specify the period of the PWM
+        uint32_t                pulse_us;        ///< specify the pulse length in microseconds
     } config_t;
 
 
     /**
      * \brief Constructor
      *
-     * \param Servo number (between 0 and 7)
+     * \param config    Configuration structure
      */
-    Pwm_stm32(config_t pwm_config);
+    Pwm_stm32(config_t config);
 
 
     /**
@@ -129,13 +128,13 @@ private:
      */
     void write_channel(void);
 
-    config_t pwm_config_;
+    config_t config_;       ///< Configuration
 
     uint8_t channel_id_;    ///< PWM channel number
     uint32_t timer_;        ///< TIMER used
     uint32_t prescaler_;    ///< clk divider
     uint32_t period_;       ///< period
-    uint32_t duty_cyle_;    ///< pulse length in us
+    uint32_t pulse_us_;     ///< pulse length in us
 };
 
-#endif /* PWM_STM32_H_ */
+#endif /* PWM_STM32_HPP_ */

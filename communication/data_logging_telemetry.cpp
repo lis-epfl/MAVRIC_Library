@@ -41,10 +41,10 @@
  ******************************************************************************/
 
 #include "communication/data_logging_telemetry.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
 }
 

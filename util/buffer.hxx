@@ -146,4 +146,23 @@ bool Buffer_tpl<S, T>::empty(void) const
     return (head_ == tail_);
 }
 
+template<uint32_t S, typename T>
+bool Buffer_tpl<S, T>::get_element(uint32_t index, T& elem) const
+{
+    if (index > S)
+    {
+        return false;
+    }
+    else if (readable() < index)
+    {
+        return false;
+    }
+    else
+    {
+        elem = buffer_[(tail_ + index)%(S+1)];
+        return true;
+    }
+}
+
+
 #endif /* BUFFER_HXX_ */

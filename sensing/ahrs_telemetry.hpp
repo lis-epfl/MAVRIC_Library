@@ -30,7 +30,7 @@
 ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs_telemetry.h
+ * \file ahrs_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -41,15 +41,12 @@
  ******************************************************************************/
 
 
-#ifndef AHRS_TELEMETRY_H_
-#define AHRS_TELEMETRY_H_
+#ifndef AHRS_TELEMETRY_HPP_
+#define AHRS_TELEMETRY_HPP_
 
+#include "sensing/ahrs.hpp"
 #include "communication/mavlink_stream.hpp"
 
-extern "C"
-{
-#include "sensing/ahrs.h"
-}
 
 /**
  * \brief   Function to send the MAVLink attitude message
@@ -71,4 +68,4 @@ void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const Mavlink_stream* mavl
 void ahrs_telemetry_send_attitude_quaternion(const ahrs_t* ahrs, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* AHRS_TELEMETRY_H_ */
+#endif /* AHRS_TELEMETRY_HPP_ */

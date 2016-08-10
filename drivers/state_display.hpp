@@ -30,53 +30,57 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file state_display.hpp
  *
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Jean-François Burnier
  *
- * \brief Executing the PID controllers for stabilization
+ * \brief Interface class for state display
  *
  ******************************************************************************/
 
+#ifndef STATE_DISPLAY_HPP_
+#define STATE_DISPLAY_HPP_
 
-#include "control/stabilisation.h"
-#include "util/print_util.h"
-#include "util/constants.h"
+#include "communication/mav_modes.hpp"
 
-bool stabilisation_init(control_command_t* controls)
+/**
+ * \brief   Interface class for state display
+ */
+class State_display
 {
-    bool init_success = true;
+	public:
+	 /**
+     * \brief   Main update function
+     * \detail  Displays state 
+     *
+     * \return  Success
+     */
+    virtual bool update(void) = 0;
 
-    controls->control_mode = ATTITUDE_COMMAND_MODE;
-    controls->yaw_mode = YAW_RELATIVE;
+     /**
+     * \brief   Set state function
+     * \detail  Set the state to be displayed
+     * \param   state_new  new state to display
+     *
+     * \return  Success
+     */
+    bool set_state(const mav_state_t state_new);
 
-    controls->rpy[ROLL] = 0.0f;
-    controls->rpy[PITCH] = 0.0f;
-    controls->rpy[YAW] = 0.0f;
-    controls->tvel[X] = 0.0f;
-    controls->tvel[Y] = 0.0f;
-    controls->tvel[Z] = 0.0f;
-    controls->theading = 0.0f;
-    controls->thrust = -1.0f;
+	protected:
+		mav_state_t state_;
+		mav_state_t state_old_;
+        uint8_t idle_;
 
-    return init_success;
-}
+};
 
-void stabilisation_run(stabiliser_t* stabiliser, float dt, float errors[])
+/**
+ * \brief  Glue method for scheduler
+ */
+static inline bool task_state_display_update(State_display* state_display)
 {
-    for (int32_t i = 0; i < 3; i++)
-    {
-        stabiliser->output.rpy[i] = pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-    }
-    stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
-}
+    return state_display->update();
+};
 
-void stabilisation_run_feedforward(stabiliser_t *stabiliser, float dt, float errors[], float feedforward[])
-{
-    for (int32_t i = 0; i < 3; i++)
-    {
-        stabiliser->output.rpy[i] = pid_controller_update_feedforward_dt(&(stabiliser->rpy_controller[i]),  errors[i], feedforward[i], dt);
-    }
-    stabiliser->output.thrust = pid_controller_update_feedforward_dt(&(stabiliser->thrust_controller),  errors[3], feedforward[3], dt);
-}
+
+#endif /* STATE_DISPLAY_HPP_ */

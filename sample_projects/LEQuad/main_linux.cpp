@@ -41,6 +41,8 @@
 #include "boards/mavrinux.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
 
+#include "hal/dummy/i2c_dummy.hpp"
+
 extern "C"
 {
 #include "util/print_util.h"
@@ -96,7 +98,7 @@ int main(int argc, char** argv)
                         board.sim.sonar(),
                         board.mavlink_serial,
                         board.spektrum_satellite,
-                        board.led,
+                        board.state_display_mavrinux_,
                         board.file_flash,
                         board.battery,
                         board.servo_0,

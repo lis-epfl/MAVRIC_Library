@@ -79,7 +79,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mavlink_waypoint_handler_tag(Position_estimation& position_estimation,
+    Mavlink_waypoint_handler_tag(INS& ins,
                            Navigation& navigation,
                            const ahrs_t& ahrs,
                            State& state,
@@ -87,7 +87,8 @@ public:
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream,
                            Offboard_Tag_Search& offboard_tag_search,
-                           Mavlink_communication& raspi_mavlink_communication);
+                           Mavlink_communication& raspi_mavlink_communication,
+                           Mavlink_waypoint_handler::conf_t config = default_config());
 
 
 

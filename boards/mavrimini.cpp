@@ -43,11 +43,11 @@
 
 
 #include "boards/mavrimini.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 }
 
 
@@ -62,7 +62,7 @@ uint8_t serial2stream(stream_data_t data, uint8_t byte)
 static void clock_setup(void)
 {
     // Set STM32 to 168 MHz
-    rcc_clock_setup_hse_3v3(&hse_25mhz_3v3[CLOCK_3V3_168MHZ]);
+    rcc_clock_setup_hse_3v3(&rcc_hse_25mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
 
     // Enable GPIO clock
     rcc_periph_clock_enable(RCC_GPIOA);
@@ -73,12 +73,13 @@ static void clock_setup(void)
 
 
 Mavrimini::Mavrimini(mavrimini_conf_t config):
-    dsm_receiver_gpio(config.dsm_receiver_gpio_config), 
+    dsm_receiver_gpio(config.dsm_receiver_gpio_config),
     dsm_power_gpio(config.dsm_power_gpio_config),
     green_led_gpio(config.green_led_gpio_config),
     red_led_gpio(config.red_led_gpio_config),
     green_led(green_led_gpio),
     red_led(red_led_gpio),
+    state_display_mavrimini_(green_led, red_led),
     file_flash(),
     serial_1(config.serial_1_config),
     serial_2(config.serial_2_config),
@@ -104,7 +105,7 @@ Mavrimini::Mavrimini(mavrimini_conf_t config):
     servo_5(pwm_5, config.servo_config[5]),
     servo_6(pwm_6, config.servo_config[6]),
     servo_7(pwm_7, config.servo_config[7]),
-    sim_model(servo_0, servo_1, servo_2, servo_3),
+    sim_model(servo_0, servo_1, servo_3, servo_5),
     sim(sim_model),
     imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer())
 {}
@@ -128,6 +129,7 @@ bool Mavrimini::init(void)
     ret = red_led_gpio.init();
     green_led.on();
     red_led.on();
+    init_success &= ret;
 
     // -------------------------------------------------------------------------
     // Init SERIAL1

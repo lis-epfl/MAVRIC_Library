@@ -49,11 +49,11 @@ extern "C"
 {
 #include "util/print_util.h"
 #include "util/maths.h"
-#include "util/constants.h"
+#include "util/constants.hpp"
 }
 
 
-Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& position_estimation,
+Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(INS& ins,
                            Navigation& navigation,
                            const ahrs_t& ahrs,
                            State& state,
@@ -61,14 +61,16 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(Position_estimation& 
                            Mavlink_message_handler& message_handler,
                            const Mavlink_stream& mavlink_stream,
                            Offboard_Tag_Search& offboard_tag_search,
-                           Mavlink_communication& raspi_mavlink_communication) :
-            Mavlink_waypoint_handler(position_estimation,
+                           Mavlink_communication& raspi_mavlink_communication,
+                           Mavlink_waypoint_handler::conf_t config) :
+            Mavlink_waypoint_handler(ins,
                                     navigation,
                                     ahrs,
                                     state,
                                     manual_control,
                                     message_handler,
-                                    mavlink_stream),
+                                    mavlink_stream,
+                                    config),
             offboard_tag_search_(offboard_tag_search),
             raspi_mavlink_communication_(raspi_mavlink_communication)
 {
@@ -109,15 +111,13 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_han
         print_util_dbg_print("internal_state = NAV_LAND_ON_TAG\r\n");
 
         // Set hold position point and set tag location
-        waypoint_handler->waypoint_hold_coordinates.waypoint.pos[0] = waypoint_handler->position_estimation_.local_position.pos[0];
-        waypoint_handler->waypoint_hold_coordinates.waypoint.pos[1] = waypoint_handler->position_estimation_.local_position.pos[1];
-        waypoint_handler->tag_search_altitude_ = waypoint_handler->position_estimation_.local_position.pos[2];
-        waypoint_handler->waypoint_hold_coordinates.waypoint.pos[2] = waypoint_handler->tag_search_altitude_;
-        waypoint_handler->offboard_tag_search_.tag_location().pos[0] = 0.0f;
-        waypoint_handler->offboard_tag_search_.tag_location().pos[1] = 0.0f;
-        waypoint_handler->offboard_tag_search_.tag_location().pos[2] = 0.0f;
-        waypoint_handler->offboard_tag_search_.tag_location().heading = waypoint_handler->position_estimation_.local_position.heading;
-        waypoint_handler->offboard_tag_search_.tag_location().origin = waypoint_handler->position_estimation_.local_position.origin;
+        waypoint_handler->waypoint_hold_coordinates.position[0] = waypoint_handler->ins_.position_lf()[0];
+        waypoint_handler->waypoint_hold_coordinates.position[1] = waypoint_handler->ins_.position_lf()[1];
+        waypoint_handler->tag_search_altitude_ = waypoint_handler->ins_.position_lf()[2];
+        waypoint_handler->waypoint_hold_coordinates.position[2] = waypoint_handler->tag_search_altitude_;
+        waypoint_handler->offboard_tag_search_.tag_location()[0] = 0.0f;
+        waypoint_handler->offboard_tag_search_.tag_location()[1] = 0.0f;
+        waypoint_handler->offboard_tag_search_.tag_location()[2] = 0.0f;
         waypoint_handler->offboard_tag_search_.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND);
 
         // Set new tag search start time
@@ -144,8 +144,8 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
     // Set position vectors to shorten code later
     for (uint8_t i = 0; i < 3; i++)
     {
-        tag_pos[i] = offboard_tag_search_.tag_location().pos[i];
-        cur_pos[i] = position_estimation_.local_position.pos[i];
+        tag_pos[i] = offboard_tag_search_.tag_location()[i];
+        cur_pos[i] = ins_.position_lf()[i];
     }
 
     bool next_state = false;
@@ -158,8 +158,8 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
         float horizontal_distance_to_tag_sqr = (cur_pos[0] - tag_pos[0]) * (cur_pos[0] - tag_pos[0]) + (cur_pos[1] - tag_pos[1]) * (cur_pos[1] - tag_pos[1]);
 
         // Set hold location to tag location
-        waypoint_hold_coordinates.waypoint.pos[0] = offboard_tag_search_.tag_location().pos[0];
-        waypoint_hold_coordinates.waypoint.pos[1] = offboard_tag_search_.tag_location().pos[1];
+        waypoint_hold_coordinates.position[0] = offboard_tag_search_.tag_location()[0];
+        waypoint_hold_coordinates.position[1] = offboard_tag_search_.tag_location()[1];
 
         // If we are not above tag or are not healthy
         if (horizontal_distance_to_tag_sqr > offboard_tag_search_.allowable_horizontal_tag_offset_sqr() || !offboard_tag_search_.is_healthy())
@@ -170,14 +170,14 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
                 case Navigation::DESCENT_TO_SMALL_ALTITUDE:
                     state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                     state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
-                    waypoint_hold_coordinates.waypoint.pos[2] = tag_search_altitude_;
+                    waypoint_hold_coordinates.position[2] = tag_search_altitude_;
                     break;
 
                 case Navigation::DESCENT_TO_GND:
                     print_util_dbg_print("Cust: descent to gnd");
                     state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                     state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
-                    waypoint_hold_coordinates.waypoint.pos[Z] = 0.0f;
+                    waypoint_hold_coordinates.position[Z] = 0.0f;
                     break;
             }
         }
@@ -188,14 +188,14 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
                 case Navigation::DESCENT_TO_SMALL_ALTITUDE:
                     state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                     state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
-                    waypoint_hold_coordinates.waypoint.pos[Z] = offboard_tag_search_.descent_to_gnd_altitude();
+                    waypoint_hold_coordinates.position[Z] = offboard_tag_search_.descent_to_gnd_altitude();
                     break;
 
                 case Navigation::DESCENT_TO_GND:
                     print_util_dbg_print("Cust: descent to gnd");
                     state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
                     state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
-                    waypoint_hold_coordinates.waypoint.pos[Z] = 0.0f;
+                    waypoint_hold_coordinates.position[Z] = 0.0f;
                     break;
             }
 
@@ -205,7 +205,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
 
         for (uint8_t i = 0; i < 3; i++)
         {
-            rel_pos[i] = waypoint_hold_coordinates.waypoint.pos[i] - position_estimation_.local_position.pos[i];
+            rel_pos[i] = waypoint_hold_coordinates.position[i] - ins_.position_lf()[i];
         }
 
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
@@ -215,11 +215,11 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
         // Don't change the hold coordinates
     }
 
-    navigation_.alt_lpf = navigation_.LPF_gain * (navigation_.alt_lpf) + (1.0f - navigation_.LPF_gain) * position_estimation_.local_position.pos[2];
+    navigation_.alt_lpf = navigation_.LPF_gain * (navigation_.alt_lpf) + (1.0f - navigation_.LPF_gain) * ins_.position_lf()[2];
     if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_GND)
     {
         // Calculate low-pass filter altitude for when to turn off motors
-        if ((position_estimation_.local_position.pos[2] > -0.1f) && (maths_f_abs(position_estimation_.local_position.pos[2] - navigation_.alt_lpf) <= 0.2f))
+        if ((ins_.position_lf()[2] > -0.1f) && (maths_f_abs(ins_.position_lf()[2] - navigation_.alt_lpf) <= 0.2f))
         {
             // Disarming
             next_state = true;
@@ -228,7 +228,7 @@ void Mavlink_waypoint_handler_tag::auto_land_on_tag_handler()
     else if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_SMALL_ALTITUDE)
     {
         // Check if near altitude to switch to descent to ground
-        if (maths_f_abs(position_estimation_.local_position.pos[2] - offboard_tag_search_.descent_to_gnd_altitude()) < 0.25f)
+        if (maths_f_abs(ins_.position_lf()[2] - offboard_tag_search_.descent_to_gnd_altitude()) < 0.25f)
         {
             next_state = true;
         }

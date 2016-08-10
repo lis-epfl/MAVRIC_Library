@@ -30,95 +30,24 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file state_display.cpp
  *
  * \author MAV'RIC Team
+ * \author Jean-François Burnier
  *
- * \brief Useful constants
+ * \brief Interface class for state display
  *
  ******************************************************************************/
 
+#include "drivers/state_display.hpp"
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-
-#define GRAVITY 9.81f           ///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    X = 0,
-    Y = 1,
-    Z = 2,
-} constants_orientation_t;
-
-
-/**
- * \brief Enumerates the Roll, Pitch and Yaw orientations
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    ROLL    = 0,
-    PITCH   = 1,
-    YAW     = 2,
-} constants_roll_pitch_yaw_t;
-
-
-/**
- * \brief Enumerates the up vector orientation
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-    UPVECTOR_X = 0,
-    UPVECTOR_Y = 0,
-    UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-    OFF = 0,
-    ON  = 1,
-} constants_on_off_t;
-
-
-/**
- * \brief Enumerate the turn direction of a motor
- */
-typedef enum
-{
-    CCW =  1,                    ///< Counter Clock wise
-    CW  = -1                     ///< Clock wise
-} rot_dir_t;
-
-
-/**
- * \brief Enumerate the turn direction of a flap
- */
-typedef enum
-{
-    FLAP_NORMAL     = 1,    ///< Positive roll or positive pitch or positive yaw
-    FLAP_INVERTED   = -1    ///< Negative roll or negative pitch or negative yaw
-} flap_dir_t;
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* MATH_UTIL_H_ */
+ bool State_display::set_state(const mav_state_t state_new)
+ {
+ 	state_ = state_new;
+ 	return true;
+ }
+ 

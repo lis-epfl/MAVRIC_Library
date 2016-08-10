@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file pid_control.c
+ * \file pid_control.cpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -40,9 +40,13 @@
  ******************************************************************************/
 
 
-#include "control/pid_controller.h"
+#include "control/pid_controller.hpp"
 #include "hal/common/time_keeper.hpp"
+
+extern "C"
+{
 #include "util/maths.h"
+}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -247,7 +251,7 @@ float pid_controller_update_feedforward_dt(pid_controller_t* controller, float e
                                 + pid_controller_integrate( &controller->integrator, controller->error, controller->dt_s)
                                 + pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt_s)
                                 + feedforward;
-    
+
     if( controller->output < controller->clip_min )
     {
         controller->output=controller->clip_min;
@@ -257,6 +261,6 @@ float pid_controller_update_feedforward_dt(pid_controller_t* controller, float e
     {
         controller->output=controller->clip_max;
     }
-    
+
     return controller->output;
 }

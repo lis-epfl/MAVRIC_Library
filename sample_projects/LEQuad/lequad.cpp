@@ -55,16 +55,16 @@
 #include "control/manual_control_telemetry.hpp"
 
 #include "runtime/scheduler_telemetry.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
 }
 
 
 
-LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, Led& led, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, offboard_tag_search_conf_t& offboard_tag_search_conf, const conf_t& config):
+LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Serial& raspi_serial_mavlink, Satellite& satellite, State_display& state_display, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, offboard_tag_search_conf_t& offboard_tag_search_conf, const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -72,7 +72,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     serial_mavlink(serial_mavlink),
     raspi_serial_mavlink(raspi_serial_mavlink),
     satellite(satellite),
-    led(led),
+    state_display_(state_display),
     file_flash(file_flash),
     battery(battery),
     servo_0(servo_0),
@@ -92,8 +92,8 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
-    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), offboard_tag_search, raspi_mavlink_communication),
-    state_machine(state, position_estimation, imu, ahrs, manual_control),
+    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), offboard_tag_search, raspi_mavlink_communication, config.waypoint_handler_config),
+    state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     offboard_tag_search(position_estimation, ahrs, waypoint_handler, raspi_mavlink_communication, offboard_tag_search_conf),
@@ -135,8 +135,8 @@ void LEQuad::loop(void)
     }
 
     // Create log files
-    data_logging_continuous.create_new_log_file("Log_file", true, mavlink_communication.sysid());
-    data_logging_stat.create_new_log_file("Log_Stat", false, mavlink_communication.sysid());
+    data_logging_continuous.create_new_log_file("log", true, mavlink_communication.sysid());
+    data_logging_stat.create_new_log_file("stat", false, mavlink_communication.sysid());
 
     // Init mav state
     state.mav_state_ = MAV_STATE_STANDBY;  // TODO check if this is necessary
@@ -184,7 +184,8 @@ bool LEQuad::init_state(void)
 
     // Task
     ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);
-    ret &= scheduler.add_task(500000, (Scheduler_task::task_function_t)&task_led_toggle,       (Scheduler_task::task_argument_t)&led, Scheduler_task::PRIORITY_LOW);
+    // Leds blinks at 1, 3 and 6Hz, then smallest half period is 83333us
+    ret &= scheduler.add_task( 83333, (Scheduler_task::task_function_t)&task_state_display_update, (Scheduler_task::task_argument_t)&state_display_);
 
     return ret;
 }
@@ -354,12 +355,12 @@ bool LEQuad::init_position_estimation(void)
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&position_estimation.kp_vel_gps[2], "POS_KP_VEL2"     );
 
     // Data logging
-    ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[0], "local_x", 3);
-    ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[1], "local_y", 3);
-    ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[2], "local_z", 3);
-    ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.latitude,  "origin_lat", 7);
-    ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.longitude, "origin_lon", 7);
-    ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.altitude,  "origin_alt", 3);
+    // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[0], "local_x", 3);
+    // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[1], "local_y", 3);
+    // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[2], "local_z", 3);
+    // ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.latitude,  "origin_lat", 7);
+    // ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.longitude, "origin_lon", 7);
+    // ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.altitude,  "origin_alt", 3);
 
     return ret;
 }
@@ -478,10 +479,10 @@ bool LEQuad::init_hud(void)
     bool ret = true;
 
     // Module
-    ret &= hud_telemetry_init(&hud_structure, &position_estimation, &controls, &ahrs);
+    ret &= hud_telemetry_init(&hud, &position_estimation, &controls, &ahrs);
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_VFR_HUD, 500000, (Mavlink_communication::send_msg_function_t)&hud_telemetry_send_message, &hud_structure);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_VFR_HUD, 500000, (Mavlink_communication::send_msg_function_t)&hud_telemetry_send_message, &hud);
 
     return ret;
 }
@@ -550,9 +551,9 @@ bool LEQuad::init_offboard_tag_search(void)
                                                         &offboard_tag_search);
 
     // Data logging
-    ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location().pos[0], "tag_x", 3);
-    ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location().pos[1], "tag_y", 3);
-    ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location().pos[2], "tag_z", 3);
+    ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location()[0], "tag_x", 3);
+    ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location()[1], "tag_y", 3);
+    ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location()[2], "tag_z", 3);
     ret &= data_logging_continuous.add_field(&offboard_tag_search.is_camera_running(), "camera_on");
     ret &= data_logging_continuous.add_field(&offboard_tag_search.picture_count(), "pic_count");
 
@@ -663,12 +664,12 @@ bool LEQuad::main_task(void)
   //
   // // Velocity controller
   // ret &= velocity_controller_copter_init(&velocity_controller,
-  //                                        config_.velocity_controller_copter_config,
   //                                        &ahrs,
   //                                        &position_estimation,
   //                                        &command.velocity,
   //                                        &command.attitude,
-  //                                        &command.thrust);
+  //                                        &command.thrust
+  //                                        config_.velocity_controller_copter_config);
   //
   // // Vector field
   // ret &= vector_field_waypoint_init(&vector_field_waypoint,

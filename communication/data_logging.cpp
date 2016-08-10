@@ -42,15 +42,15 @@
 
 #include "communication/data_logging.hpp"
 
+#include <cstdlib>
+#include <cmath>
 #include <string>
+
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
-#include <stdbool.h>
-#include <stdlib.h>
-#include <math.h>
 }
 
 //------------------------------------------------------------------------------
@@ -68,45 +68,43 @@ void Data_logging::add_header_name(void)
 
     uint16_t i;
 
-    init &= console_.write("time");
-    put_r_or_n(0);
+    init &= console_.write("time,");
 
     for (i = 0; i < data_logging_count_; i++)
     {
         data_logging_entry_t* param = &data_log_[i];
 
         init &= console_.write(reinterpret_cast<uint8_t*>(param->param_name), strlen(param->param_name));
+        write_separator(i);
 
         if (!init)
         {
-            break;
             if (debug_)
             {
                 print_util_dbg_print("Error appending header!\r\n");
             }
         }
-        else
-        {
-            put_r_or_n(i);
-        }
     }
+
     file_init_ = init;
 }
 
 
-void Data_logging::put_r_or_n(uint16_t param_num)
+void Data_logging::write_separator(uint16_t param_num)
 {
     bool success = true;
 
-    // Writes a tab character or a end of line character to the file depending on the parameter current number
     if (param_num == (data_logging_count_ - 1))
     {
+        // Last variable -> end of line
         success &= console_.write("\n");
     }
     else
     {
-        success &= console_.write("\t");
+        // Not last variable -> separator
+        success &= console_.write(",");
     }
+
     if (!success)
     {
         if (debug_)
@@ -125,7 +123,7 @@ void Data_logging::log_parameters(void)
     // First parameter is always time
     uint32_t time_ms = time_keeper_get_ms();
     success &=  console_.write(time_ms);
-    put_r_or_n(0);
+    success &=  console_.write(",");
 
     for (i = 0; i < data_logging_count_; i++)
     {
@@ -135,56 +133,57 @@ void Data_logging::log_parameters(void)
         {
             case MAV_PARAM_TYPE_UINT8:
                 success &= console_.write(*((uint8_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_INT8:
                 success &= console_.write(*((int8_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_UINT16:
                 success &= console_.write(*((uint16_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_INT16:
                 success &= console_.write(*((int16_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_UINT32:
                 success &= console_.write(*((uint32_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_INT32:
                 success &= console_.write(*((int32_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_UINT64:
                 success &= console_.write(*((uint64_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_INT64:
                 success &= console_.write(*((int64_t*)param->param));
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_REAL32:
                 success &= console_.write(*(float*)param->param, param->precision);
-                put_r_or_n(i);
+                write_separator(i);
                 break;
 
             case MAV_PARAM_TYPE_REAL64:
                 success &= console_.write(*((double*)param->param), param->precision);
-                put_r_or_n(i);
+                write_separator(i);
                 break;
+
             default:
                 success &= false;
-                print_util_dbg_print("Data type not supported!\r\n");
+                write_separator(i);
                 break;
         }
 
@@ -194,7 +193,6 @@ void Data_logging::log_parameters(void)
             {
                 print_util_dbg_print("Error appending parameter! Error:");
             }
-            break;
         }
     }
 }
@@ -257,11 +255,11 @@ bool Data_logging::filename_append_extension(char* output, char* filename, uint3
         return is_success;
     }
 
-    // Add ".txt"
+    // Add ".csv"
     output[i] = '.';
-    output[i + 1] = 't';
-    output[i + 2] = 'x';
-    output[i + 3] = 't';
+    output[i + 1] = 'c';
+    output[i + 2] = 's';
+    output[i + 3] = 'v';
 
     // Add null character
     output[i + 4] = '\0';

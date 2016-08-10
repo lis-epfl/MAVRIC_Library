@@ -30,7 +30,7 @@
 ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs_telemetry.c
+ * \file ahrs_telemetry.cpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -42,12 +42,9 @@
 
 
 #include "sensing/ahrs_telemetry.hpp"
-
-extern "C"
-{
+#include "util/coord_conventions.hpp"
 #include "hal/common/time_keeper.hpp"
-#include "util/coord_conventions.h"
-}
+
 
 void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {

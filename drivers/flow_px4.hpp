@@ -44,7 +44,7 @@
 
 #include "drivers/flow.hpp"
 #include "communication/mavlink_stream.hpp"
-#include <stdint.h>
+#include <cstdint>
 #include "hal/common/serial.hpp"
 
 const float filter_constant = (1./250.)/((1./100.) + (1./500.) );

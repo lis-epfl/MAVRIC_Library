@@ -44,8 +44,8 @@
 #define OFFBOARD_TAG_SEARCH_HPP_
 
 #include "runtime/scheduler.hpp"
-#include "util/coord_conventions.h"
-#include "sensing/ahrs.h"
+#include "util/coord_conventions.hpp"
+#include "sensing/ahrs.hpp"
 #include "sensing/position_estimation.hpp"
 #include "sensing/offboard_tag_search_telemetry.hpp"
 #include "communication/mavlink_communication.hpp"
@@ -121,13 +121,13 @@ public:
     /**
      * \brief Constructor
      *
-     * \param position_estimation   Central_data's position_estimation
-     * \param ahrs                  Central_data's ahrs
-     * \param waypoint_handler      Central_data's waypoint_handler
-     * \param mavlink_communication Central_data's mavlink_communication
-     * \param config                The offboard camera configuration
+     * \param ins                       position_estimation
+     * \param ahrs                      ahrs
+     * \param waypoint_handler          waypoint_handler
+     * \param mavlink_communication     mavlink_communication
+     * \param config                    The offboard camera configuration
      */
-    Offboard_Tag_Search(const Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
+    Offboard_Tag_Search(const INS& ins, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
 
 
     /**
@@ -169,7 +169,7 @@ public:
 
     // Getters and setters
     const ahrs_t& ahrs() const;
-    const Position_estimation& position_estimation() const;
+    const INS& ins() const;
     Mavlink_communication& mavlink_communication();
     Mavlink_waypoint_handler_tag& waypoint_handler();
 
@@ -215,7 +215,7 @@ protected:
     local_position_t tag_location_;                         ///< The location of the tag in the local frame
     land_on_tag_behavior_t land_on_tag_behavior_;           ///< The land on tag behavior enum
 
-    const Position_estimation& position_estimation_;
+    const INS& ins_;
     const ahrs_t& ahrs_;
     Mavlink_communication& mavlink_communication_;
     Mavlink_waypoint_handler_tag& waypoint_handler_;

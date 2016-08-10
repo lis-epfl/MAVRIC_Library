@@ -41,12 +41,9 @@
 
 
 #include "simulation/barometer_sim.hpp"
-
-extern "C"
-{
-#include "util/constants.h"
+#include "util/constants.hpp"
 #include "hal/common/time_keeper.hpp"
-}
+
 
 
 Barometer_sim::Barometer_sim(Dynamic_model& dynamic_model):
@@ -85,7 +82,7 @@ bool Barometer_sim::update(void)
         // Get altitude
         float altitude_filtered_old = altitude_filtered;
         altitude_filtered = dynamic_model_.position_gf().altitude;
-
+        
         // Get variation of altitude
         speed_lf_       = - (altitude_filtered - altitude_filtered_old) / dt_s;
         altitude_gf_    = altitude_filtered - altitude_bias_gf_;

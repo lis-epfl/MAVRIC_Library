@@ -110,7 +110,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
         else // Get drone_to_image_plane_dist from the local position and rotate and extend to account for increased distance due to ahrs
         {
             // Find vector facing down from the drone
-            float drone_height = offboard_tag_search.position_at_photo(thread_index).pos[2];
+            float drone_height = offboard_tag_search.position_at_photo(thread_index)[2];
             quat_t q_ahrs = offboard_tag_search.ahrs_at_photo(thread_index).qe;
             float drone_height_vector[3], rotated_drone_height_vector[3];
             drone_height_vector[0] = 0.0f;
@@ -202,13 +202,13 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
             float drone_y_offset = v_new_local_dir[1];
 
             // Get local tag position from drone position and offset
-            float tag_x_pos = offboard_tag_search.position_at_photo(thread_index).pos[0] + drone_x_offset;
-            float tag_y_pos = offboard_tag_search.position_at_photo(thread_index).pos[1] + drone_y_offset;
+            float tag_x_pos = offboard_tag_search.position_at_photo(thread_index)[0] + drone_x_offset;
+            float tag_y_pos = offboard_tag_search.position_at_photo(thread_index)[1] + drone_y_offset;
 
             // Set hold position
-            offboard_tag_search.tag_location().pos[0] = tag_x_pos;
-            offboard_tag_search.tag_location().pos[1] = tag_y_pos;
-            offboard_tag_search.tag_location().pos[2] = offboard_tag_search.waypoint_handler().tag_search_altitude();
+            offboard_tag_search.tag_location()[0] = tag_x_pos;
+            offboard_tag_search.tag_location()[1] = tag_y_pos;
+            offboard_tag_search.tag_location()[2] = offboard_tag_search.waypoint_handler().tag_search_altitude();
 
             // Update recorded time
             offboard_tag_search.update_last_update_us();
@@ -248,9 +248,9 @@ bool offboard_tag_search_telemetry_init(Offboard_Tag_Search* offboard_tag_search
     offboard_tag_search->waypoint_handler().tag_search_altitude(-10.0f);
 
     // Init tag_location vector to 0
-    offboard_tag_search->tag_location().pos[0] = 0.0f;
-    offboard_tag_search->tag_location().pos[1] = 0.0f;
-    offboard_tag_search->tag_location().pos[2] = 0.0f;
+    offboard_tag_search->tag_location()[0] = 0.0f;
+    offboard_tag_search->tag_location()[1] = 0.0f;
+    offboard_tag_search->tag_location()[2] = 0.0f;
 
     // Add callbacks for cmd
     Mavlink_message_handler::cmd_callback_t callbackcmd;
@@ -272,9 +272,9 @@ void offboard_tag_search_goal_location_telemetry_send(Offboard_Tag_Search* offbo
                                 msg,
                                 "Tag_Search_Goal_Location",
                                 time_keeper_get_us(),
-                                offboard_tag_search->tag_location().pos[0] - offboard_tag_search->position_estimation().local_position.pos[0],
-                                offboard_tag_search->tag_location().pos[1] - offboard_tag_search->position_estimation().local_position.pos[1],
-                                //offboard_tag_search->tag_location().pos[2] - offboard_tag_search->position_estimation()->local_position.pos[2]);
+                                offboard_tag_search->tag_location()[0] - offboard_tag_search->ins().position_lf()[0],
+                                offboard_tag_search->tag_location()[1] - offboard_tag_search->ins().position_lf()[1],
+                                //offboard_tag_search->tag_location()[2] - offboard_tag_search->ins().position_lf()[2]);
                                 offboard_tag_search->picture_count());
 }
 

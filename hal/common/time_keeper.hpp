@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file time_keeper.h
+ * \file time_keeper.hpp
  *
  * \author MAV'RIC Team
  * \author Felix Schill
@@ -40,15 +40,14 @@
  ******************************************************************************/
 
 
-#ifndef TIME_KEEPER_H_
-#define TIME_KEEPER_H_
+#ifndef TIME_KEEPER_HPP_
+#define TIME_KEEPER_HPP_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdint.h>
-
 
 /**
  * \brief   This function initialize the clock of the microcontroller
@@ -110,4 +109,4 @@ void time_keeper_sleep_us(uint64_t microseconds);
 }
 #endif
 
-#endif /* TIME_KEEPER_H_ */
+#endif /* TIME_KEEPER_HPP_ */

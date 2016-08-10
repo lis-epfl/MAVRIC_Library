@@ -42,8 +42,8 @@
 #ifndef LEQUAD_HPP_
 #define LEQUAD_HPP_
 
-#include <stdbool.h>
-#include <stdint.h>
+#include <cstdbool>
+#include <cstdint>
 
 
 #include "communication/data_logging.hpp"
@@ -58,27 +58,29 @@
 #include "communication/remote_default_config.hpp"
 
 #include "control/altitude_controller.hpp"
-#include "control/attitude_controller_default_config.hpp"
+#include "control/attitude_controller.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
+#include "control/stabilisation.hpp"
 #include "control/stabilisation_copter.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
 #include "control/velocity_controller_copter.hpp"
-#include "control/velocity_controller_copter_default_config.hpp"
 #include "control/vector_field_waypoint.hpp"
 
 #include "drivers/battery.hpp"
 #include "drivers/gps.hpp"
 #include "drivers/sonar.hpp"
 #include "drivers/servos_telemetry.hpp"
+#include "drivers/state_display.hpp"
 
 #include "hal/common/file.hpp"
 #include "hal/common/led.hpp"
 
 #include "simulation/simulation.hpp"
 
+#include "sensing/ahrs.hpp"
 #include "sensing/ahrs_ekf.hpp"
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
@@ -87,15 +89,12 @@
 #include "sensing/qfilter_default_config.hpp"
 #include "sensing/offboard_tag_search.hpp"
 
+#include "util/coord_conventions.hpp"
+
 extern "C"
 {
-#include "sensing/ahrs.h"
 #include "sensing/altitude.h"
-#include "control/pid_controller.h"
 #include "util/print_util.h"
-#include "util/coord_conventions.h"
-#include "control/stabilisation.h"
-#include "control/attitude_controller.h"
 }
 
 
@@ -125,8 +124,8 @@ public:
         servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        attitude_controller_conf_t attitude_controller_config;
-        velocity_controller_copter_conf_t velocity_controller_copter_config;
+        Attitude_controller::conf_t attitude_controller_config;
+        Velocity_controller_copter::conf_t velocity_controller_copter_config;
     };
 
     /**
@@ -149,7 +148,7 @@ public:
                   Serial& serial_mavlink,
                   Serial& raspi_serial_mavlink,
                   Satellite& satellite,
-                  Led& led,
+                  State_display& state_display,
                   File& file_flash,
                   Battery& battery,
                   Servo& servo_0,
@@ -203,7 +202,7 @@ protected:
     Serial&         serial_mavlink;     ///< Reference to telemetry serial
     Serial&         raspi_serial_mavlink;   ///< Reference to raspberry pi telemetry serial
     Satellite&      satellite;          ///< Reference to remote control satellite
-    Led&            led;                ///< Reference to the leds
+    State_display&  state_display_;     ///< Reference to the state display
     File&           file_flash;         ///< Reference to flash storage
     Battery&        battery;            ///< Reference to battery
     Servo&          servo_0;            ///< Reference to servos structure
@@ -228,19 +227,20 @@ protected:
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
 
+    Position_estimation position_estimation;                    ///< The position estimaton structure
+
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
 
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
-    Position_estimation position_estimation;                    ///< The position estimaton structure
     Navigation navigation;                                      ///< The structure to perform GPS navigation
 
     Mavlink_waypoint_handler_tag waypoint_handler;
 
     State_machine state_machine;                                ///< The structure for the state machine
 
-    hud_telemetry_structure_t hud_structure;                    ///< The HUD structure
+    hud_telemetry_t hud;                                        ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
     Data_logging    data_logging_continuous;
@@ -285,9 +285,9 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.remote_config = remote_default_config();
 
-    conf.attitude_controller_config = attitude_controller_default_config();
+    conf.attitude_controller_config = Attitude_controller::default_config();
 
-    conf.velocity_controller_copter_config = velocity_controller_copter_default_config();
+    conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
 
     /* Mavlink communication config */
     Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);

@@ -43,10 +43,10 @@
  ******************************************************************************/
 
 
-#ifndef LSM330DLC_H_
-#define LSM330DLC_H_
+#ifndef LSM330DLC_HPP_
+#define LSM330DLC_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 #include <array>
 #include "drivers/accelerometer.hpp"
 #include "drivers/gyroscope.hpp"

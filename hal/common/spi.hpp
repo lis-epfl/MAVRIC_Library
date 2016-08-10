@@ -42,7 +42,7 @@
 #define SPI_HPP_
 
 
-#include <stdint.h>
+#include <cstdint>
 
 
 class Spi

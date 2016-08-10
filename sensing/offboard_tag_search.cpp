@@ -46,17 +46,17 @@ extern "C"
 {
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
-#include "util/constants.h"
+#include "util/constants.hpp"
 #include "util/maths.h"
 }
 
 
 
-Offboard_Tag_Search::Offboard_Tag_Search(const Position_estimation& position_estimation, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config):
+Offboard_Tag_Search::Offboard_Tag_Search(const INS& ins, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config):
     conf_(config),
     is_camera_running_(false),
     last_update_us_(time_keeper_get_us()),
-    position_estimation_(position_estimation),
+    ins_(ins),
     ahrs_(ahrs),
     mavlink_communication_(mavlink_communication),
     waypoint_handler_(waypoint_handler)
@@ -67,11 +67,9 @@ Offboard_Tag_Search::Offboard_Tag_Search(const Position_estimation& position_est
     // Set position at photos to 0 for all threads
     for (int i = 0; i < offboard_threads_; i++)
     {
-        position_at_photo_[i].pos[0] = 0.0f;
-        position_at_photo_[i].pos[1] = 0.0f;
-        position_at_photo_[i].pos[2] = 0.0f;
-        position_at_photo_[i].heading = 0.0f;
-        position_at_photo_[i].origin = position_estimation_.local_position.origin;
+        position_at_photo_[i][0] = 0.0f;
+        position_at_photo_[i][1] = 0.0f;
+        position_at_photo_[i][2] = 0.0f;
 
         ahrs_at_photo_[i].qe.v[0] = 0.0f;
         ahrs_at_photo_[i].qe.v[1] = 0.0f;
@@ -85,7 +83,6 @@ Offboard_Tag_Search::Offboard_Tag_Search(const Position_estimation& position_est
         ahrs_at_photo_[i].linear_acc[2] = 0.0f;
         ahrs_at_photo_[i].internal_state = ahrs_state_t::AHRS_READY;
         ahrs_at_photo_[i].last_update_s = 0.0f;
-        ahrs_at_photo_[i].dt_s = 0.0f;
 
         has_photo_been_taken_[i] = false;
     }
@@ -151,10 +148,9 @@ const ahrs_t Offboard_Tag_Search::ahrs_at_photo(int index) const
 
 void Offboard_Tag_Search::set_position_at_photo(int index)
 {
-    position_at_photo_[index].pos[0] = position_estimation_.local_position.pos[0];
-    position_at_photo_[index].pos[1] = position_estimation_.local_position.pos[1];
-    position_at_photo_[index].pos[2] = position_estimation_.local_position.pos[2];
-    position_at_photo_[index].heading = position_estimation_.local_position.heading;
+    position_at_photo_[index][0] = ins_.position_lf()[0];
+    position_at_photo_[index][1] = ins_.position_lf()[1];
+    position_at_photo_[index][2] = ins_.position_lf()[2];
 
     ahrs_at_photo_[index].qe.v[0] = ahrs().qe.v[0];
     ahrs_at_photo_[index].qe.v[1] = ahrs().qe.v[1];
@@ -168,7 +164,6 @@ void Offboard_Tag_Search::set_position_at_photo(int index)
     ahrs_at_photo_[index].linear_acc[2] = ahrs().linear_acc[2];
     ahrs_at_photo_[index].internal_state = ahrs().internal_state;
     ahrs_at_photo_[index].last_update_s = ahrs().last_update_s;
-    ahrs_at_photo_[index].dt_s = ahrs().dt_s;
 }
 
 const float& Offboard_Tag_Search::last_update_us(void) const
@@ -271,9 +266,9 @@ Mavlink_communication& Offboard_Tag_Search::mavlink_communication()
     return mavlink_communication_;
 }
 
-const Position_estimation& Offboard_Tag_Search::position_estimation() const
+const INS& Offboard_Tag_Search::ins() const
 {
-    return position_estimation_;
+    return ins_;
 }
 
 Mavlink_waypoint_handler_tag& Offboard_Tag_Search::waypoint_handler()

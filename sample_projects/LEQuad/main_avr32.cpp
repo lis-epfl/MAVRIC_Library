@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/lequad.hpp"
-#include "sample_projects/LEQuad/lequad_dronedome.hpp"
+//#include "sample_projects/LEQuad/lequad_dronedome.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
@@ -52,10 +52,10 @@
 // #include "simulation/simulation.hpp"
 // #include "hal/dummy/adc_dummy.hpp"
 // #include "hal/dummy/pwm_dummy.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-#include "hal/common/time_keeper.hpp"
 #include "util/print_util.h"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"
@@ -98,7 +98,7 @@ int main(void)
                         board.uart0,
                         board.uart_usb,
                         board.spektrum_satellite,
-                        board.green_led,
+                        board.state_display_megafly_rev4_,
                         board.file_flash,
                         board.battery,
                         board.servo_0,
@@ -114,15 +114,23 @@ int main(void)
                         board_config.offboard_tag_search_config,
                         mav_config );
 
-    // -------------------------------------------------------------------------
-    // Create simulation
-    // -------------------------------------------------------------------------
-    // // Simulated servos
-    // Pwm_dummy pwm[4];
+    // // -------------------------------------------------------------------------
+    // // Create simulation
+    // // -------------------------------------------------------------------------
+
+    // // // Simulated servos
+    // Pwm_dummy pwm[8];
     // Servo sim_servo_0(pwm[0], servo_default_config_esc());
     // Servo sim_servo_1(pwm[1], servo_default_config_esc());
     // Servo sim_servo_2(pwm[2], servo_default_config_esc());
     // Servo sim_servo_3(pwm[3], servo_default_config_esc());
+    // Servo sim_servo_4(pwm[4], servo_default_config_esc());
+    // Servo sim_servo_5(pwm[5], servo_default_config_esc());
+    // Servo sim_servo_6(pwm[6], servo_default_config_esc());
+    // Servo sim_servo_7(pwm[7], servo_default_config_esc());
+
+    // // Create MAV using simulated sensors
+    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
 
     // // Simulated dynamic model
     // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
@@ -138,24 +146,26 @@ int main(void)
     //                                  sim.magnetometer() );
 
     // // set the flag to simulation
-    // mav_config.state_config.simulation_mode = HIL_ON;
-    // LEQuad mav = LEQuad( MAVLINK_SYS_ID,
-    //                              sim_imu,
-    //                              sim.barometer(),
-    //                              sim.gps(),
-    //                              sim.sonar(),
-    //                              board.uart0,                // mavlink serial
-    //                              board.spektrum_satellite,
-    //                              board.green_led,
-    //                              board.file_flash,
-    //                              sim_battery,
-    //                              sim_servo_0,
-    //                              sim_servo_1,
-    //                              sim_servo_2,
-    //                              sim_servo_3 ,
-    //                              file_log,
-    //                              file_stat,
-    //                              mav_config );
+    // LEQuad mav = LEQuad( sim_imu,
+    //                      sim.barometer(),
+    //                      sim.gps(),
+    //                      sim.sonar(),
+    //                      board.uart0,                // mavlink serial
+    //                      board.spektrum_satellite,
+    //                      board.state_display_megafly_rev4_,
+    //                      board.file_flash,
+    //                      sim_battery,
+    //                      sim_servo_0,
+    //                      sim_servo_1,
+    //                      sim_servo_2,
+    //                      sim_servo_3 ,
+    //                      sim_servo_4,
+    //                      sim_servo_5,
+    //                      sim_servo_6,
+    //                      sim_servo_7 ,
+    //                      file_log,
+    //                      file_stat,
+    //                      mav_config );
 
     if (init_success)
     {

@@ -45,7 +45,7 @@
 #ifndef LED_AVR32_HPP_
 #define LED_AVR32_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 #include "hal/common/led.hpp"
 
 

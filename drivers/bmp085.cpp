@@ -248,7 +248,7 @@ bool Bmp085::update(void)
             {
                 altitude_filtered = altitude_raw;
             }
-
+            
             // remove bias
             altitude_gf_ = altitude_filtered - altitude_bias_gf_;
 

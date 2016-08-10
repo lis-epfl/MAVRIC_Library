@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mavlink_waypoint_handler.h
+ * \file mavlink_waypoint_handler.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -90,7 +90,7 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   position_estimation     The pointer to the position estimator structure
+     * \param   ins                     The pointer to the Inertial Navigation System
      * \param   navigation              The pointer to the navigation structure
      * \param   ahrs                    The pointer to the attitude estimation structure
      * \param   state                   The pointer to the state structure
@@ -100,14 +100,14 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mavlink_waypoint_handler(Position_estimation& position_estimation,
-                           Navigation& navigation,
-                           const ahrs_t& ahrs,
-                           State& state,
-                           const Manual_control& manual_control,
-                           Mavlink_message_handler& message_handler,
-                           const Mavlink_stream& mavlink_stream,
-                           conf_t config = default_config());
+    Mavlink_waypoint_handler(   INS& ins,
+                                Navigation& navigation,
+                                const ahrs_t& ahrs,
+                                State& state,
+                                const Manual_control& manual_control,
+                                Mavlink_message_handler& message_handler,
+                                const Mavlink_stream& mavlink_stream,
+                                conf_t config = default_config());
 
 
     /**
@@ -162,7 +162,7 @@ protected:
 
     State& state_;                                               ///< The pointer to the state structure
     Navigation& navigation_;                                     ///< The pointer to the navigation structure
-    Position_estimation& position_estimation_;                   ///< The pointer to the position estimation structure
+    INS& ins_;                                                   ///< The pointer to the Inertial Navigation System
 
     waypoint_local_struct_t waypoint_coordinates_;               ///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
     waypoint_local_struct_t waypoint_critical_coordinates_;      ///< The coordinates of the waypoint in critical state
