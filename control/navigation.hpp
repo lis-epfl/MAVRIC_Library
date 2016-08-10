@@ -159,20 +159,11 @@ public:
      * \brief   Sets the goal to be equal to the waypoint inputted
      *
      * Will set the dubin state to be DUBIN_INIT if there is a significant
-     * (change in waypoint locaiton, heading, or radius) change in the 
-     * goal.
-     *
-     * \param   wpt     The new waypoint goal
-     */
-    void set_goal(Waypoint wpt);
-
-    /**
-     * \brief   Sets the goal to be equal to the waypoint inputted
-     *
-     * Will set the dubin state to be DUBIN_INIT if there is a significant
      * (change in waypoint locaiton) change in the goal.
      *
-     * \param   goal_pos    The new waypoint goal position
+     * \param   goal_pos        The new waypoint goal position
+     * \param   goal_heading    The desired heading direction of the goal
+     * \param   goal_radius     The radius of the goal
      */
     void set_goal(local_position_t goal_pos, float goal_heading, float goal_radius);
 
