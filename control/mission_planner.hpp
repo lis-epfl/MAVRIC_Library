@@ -121,10 +121,6 @@ public:
                         Mission_handler_takeoff& takeoff_handler,
                         Mission_handler_landing& landing_handler,
                         Mission_handler_hold_position& hold_position_handler,
-                        Mission_handler_stop_on_position& stop_on_position_handler,
-                        Mission_handler_stop_there& stop_there_handler,
-                        Mission_handler_navigating& navigating_handler,
-                        Mission_handler_manual_control& manual_control_handler,
                         Mavlink_waypoint_handler& waypoint_handler,
                         conf_t config = default_config());
 

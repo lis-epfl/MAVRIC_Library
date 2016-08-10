@@ -96,7 +96,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     navigating_handler(position_estimation, navigation, state, mavlink_communication.mavlink_stream(), waypoint_handler, landing_handler, mavlink_communication.message_handler()),
     on_ground_handler(position_estimation, navigation, state, manual_control),
     takeoff_handler(position_estimation, navigation, ahrs, state, waypoint_handler, mavlink_communication.message_handler()),
-    mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), on_ground_handler, takeoff_handler, landing_handler, hold_position_handler, stop_on_position_handler, stop_there_handler, navigating_handler, manual_control_handler, waypoint_handler),
+    mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), on_ground_handler, takeoff_handler, landing_handler, hold_position_handler, waypoint_handler),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
@@ -451,11 +451,8 @@ bool LEQuad::init_navigation(void)
     ret &= mission_planner.init();
     ret &= hold_position_handler.init();
     ret &= landing_handler.init();
-    ret &= manual_control_handler.init();
     ret &= navigating_handler.init();
     ret &= on_ground_handler.init();
-    ret &= stop_on_position_handler.init();
-    ret &= stop_there_handler.init();
     ret &= takeoff_handler.init();
 
     // Parameters
