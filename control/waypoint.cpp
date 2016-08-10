@@ -59,132 +59,7 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-global_position_t Waypoint::get_global_position(uint8_t frame, double x, double y, double z, global_position_t origin)
-{
-    global_position_t waypoint_global;
-    local_position_t waypoint_local;
 
-    switch (frame)
-    {
-        case MAV_FRAME_GLOBAL_INT:
-            // Convert from int to degrees
-            x = x / 10000000.0f;
-            y = x / 10000000.0f;
-            // NO BREAK, NEED TO CONVERT TO GLOBAL
-        case MAV_FRAME_GLOBAL:
-            waypoint_global.latitude    = x;
-            waypoint_global.longitude   = y;
-            waypoint_global.altitude    = z;
-            break;
-
-        case MAV_FRAME_LOCAL_ENU:
-        {
-            // convert XYZ to NED
-            double e = x;
-            double n = y;
-            double u = z;
-            x = n;
-            y = e;
-            z = -u;
-        }
-            // NO BREAK, NEED TO CONVERT FROM NED TO GLOBAL
-        case MAV_FRAME_LOCAL_NED:
-            waypoint_local[X]   = x;
-            waypoint_local[Y]   = y;
-            waypoint_local[Z]   = z;
-            coord_conventions_local_to_global_position(waypoint_local, origin, waypoint_global);
-            break;
-
-/*          THIS WOULD NEED TO BE CALCULATED AT THE INSTANT THAT IT IS NEEDED
-        case MAV_FRAME_BODY_NED:
-            waypoint_local.pos[X]   = x + position_estimation_.local_position.pos[X];
-            waypoint_local.pos[Y]   = y + position_estimation_.local_position.pos[Y];
-            waypoint_local.pos[Z]   = z + position_estimation_.local_position.pos[Z];
-            waypoint_local.heading  = maths_deg_to_rad(heading);
-            waypoint_local.origin   = origin;
-            waypoint_global         = coord_conventions_local_to_global_position(waypoint_local);
-            break;
-*/
-        case MAV_FRAME_MISSION:
-            // Problem here: rec is not defined here
-            //mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
-            break;
-
-        case MAV_FRAME_GLOBAL_TERRAIN_ALT_INT:
-        case MAV_FRAME_GLOBAL_RELATIVE_ALT_INT:
-            // Convert from int to degrees
-            x = x / 10000000.0f;
-            y = x / 10000000.0f;
-            // NO BREAK, NEED TO CONVERT FROM GLOBAL_REL_ALT TO GLOBAL
-        case MAV_FRAME_GLOBAL_TERRAIN_ALT:
-        case MAV_FRAME_GLOBAL_RELATIVE_ALT:
-            waypoint_global.latitude    = x;
-            waypoint_global.longitude   = y;
-            waypoint_global.altitude    = z + origin.altitude;
-            break;
-    }
-
-    return waypoint_global;
-}
-
-void Waypoint::get_waypoint_parameters(double& x, double& y, double& z, uint8_t frame) const
-{
-    switch (frame)
-    {
-        case MAV_FRAME_GLOBAL_INT:
-            // Convert from int to degrees
-            x = wpt_position_.longitude * 10000000.0f;
-            y = wpt_position_.latitude * 10000000.0f;
-            z = wpt_position_.altitude;
-            break;
-
-        case MAV_FRAME_GLOBAL:
-            x = wpt_position_.longitude;
-            y = wpt_position_.latitude;
-            z = wpt_position_.altitude;
-            break;
-
-        case MAV_FRAME_LOCAL_ENU:
-        {
-            local_position_t pos;
-            coord_conventions_global_to_local_position(wpt_position_, INS::origin(), pos);
-            x =  pos[1];
-            y =  pos[0];
-            z = -pos[2];
-        }
-            break;
-
-        case MAV_FRAME_LOCAL_NED:
-        {
-            local_position_t pos;
-            coord_conventions_global_to_local_position(wpt_position_, INS::origin(), pos);
-            x = pos[0];
-            y = pos[1];
-            z = pos[2];
-        }
-            break;
-
-        case MAV_FRAME_MISSION:
-            // Problem here: rec is not defined here
-            //mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
-            break;
-
-        case MAV_FRAME_GLOBAL_TERRAIN_ALT_INT:
-        case MAV_FRAME_GLOBAL_RELATIVE_ALT_INT:
-            // Convert from int to degrees
-            x = wpt_position_.longitude * 10000000.0f;
-            y = wpt_position_.latitude * 10000000.0f;
-            z = wpt_position_.altitude - INS::origin().altitude;
-            break;
-
-        case MAV_FRAME_GLOBAL_TERRAIN_ALT:
-        case MAV_FRAME_GLOBAL_RELATIVE_ALT:
-            x = wpt_position_.longitude;
-            y = wpt_position_.latitude;
-            z = wpt_position_.altitude - INS::origin().altitude;
-            break;
-    }
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -273,19 +148,9 @@ uint8_t Waypoint::frame() const
     return frame_;
 }
 
-void Waypoint::set_frame(uint8_t frame)
-{
-    frame_ = frame;
-}
-
 uint16_t Waypoint::command() const
 {
     return command_;
-}
-
-void Waypoint::set_command(uint16_t command)
-{
-    command_ = command;
 }
 
 uint8_t Waypoint::autocontinue() const
@@ -293,19 +158,9 @@ uint8_t Waypoint::autocontinue() const
     return autocontinue_;
 }
 
-void Waypoint::set_autocontinue(uint8_t autocontinue)
-{
-    autocontinue_ = autocontinue;
-}
-
 float Waypoint::param1() const
 {
     return param1_;
-}
-
-void Waypoint::set_param1(float param1)
-{
-    param1_ = param1;
 }
 
 float Waypoint::param2() const
@@ -313,19 +168,9 @@ float Waypoint::param2() const
     return param2_;
 }
 
-void Waypoint::set_param2(float param2)
-{
-    param2_ = param2;
-}
-
 float Waypoint::param3() const
 {
     return param3_;
-}
-
-void Waypoint::set_param3(float param3)
-{
-    param3_ = param3;
 }
 
 float Waypoint::param4() const
@@ -333,19 +178,9 @@ float Waypoint::param4() const
     return param4_;
 }
 
-void Waypoint::set_param4(float param4)
-{
-    param4_ = param4;
-}
-
 float Waypoint::param5() const
 {
     return param5_;
-}
-
-void Waypoint::set_param5(float param5)
-{
-    param5_ = param5;
 }
 
 float Waypoint::param6() const
@@ -353,19 +188,9 @@ float Waypoint::param6() const
     return param6_;
 }
 
-void Waypoint::set_param6(float param6)
-{
-    param6_ = param6;
-}
-
 float Waypoint::param7() const
 {
     return param7_;
-}
-
-void Waypoint::set_param7(float param7)
-{
-    param7_ = param7;
 }
 
 local_position_t Waypoint::local_pos() const

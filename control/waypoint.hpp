@@ -112,25 +112,11 @@ public:
     uint8_t frame() const;
 
     /**
-     * \brief   Sets the frame
-     *
-     * \param   frame
-     */
-    void set_frame(uint8_t frame);
-
-    /**
      * \brief   Gets the command of the waypoint
      *
      * \return  command
      */
     uint16_t command() const;
-
-    /**
-     * \brief   Sets the command
-     *
-     * \param   command
-     */
-    void set_command(uint16_t command);
 
     /**
      * \brief   Gets the autocontinue state of the waypoint
@@ -140,25 +126,11 @@ public:
     uint8_t autocontinue() const;
 
     /**
-     * \brief   Sets the autocontinue
-     *
-     * \param   autocontinue
-     */
-    void set_autocontinue(uint8_t autocontinue);
-
-    /**
      * \brief   Gets param1 of the waypoint
      *
      * \return  param1
      */
     float param1() const;
-
-    /**
-     * \brief   Sets param1
-     *
-     * \param   param1
-     */
-    void set_param1(float param1);
 
     /**
      * \brief   Gets param2 of the waypoint
@@ -168,25 +140,11 @@ public:
     float param2() const;
 
     /**
-     * \brief   Sets param2
-     *
-     * \param   param2
-     */
-    void set_param2(float param2);
-
-    /**
      * \brief   Gets param3 of the waypoint
      *
      * \return  param3
      */
     float param3() const;
-
-    /**
-     * \brief   Sets param3
-     *
-     * \param   param3
-     */
-    void set_param3(float param3);
 
     /**
      * \brief   Gets param4 of the waypoint
@@ -196,25 +154,11 @@ public:
     float param4() const;
 
     /**
-     * \brief   Sets param4
-     *
-     * \param   param4
-     */
-    void set_param4(float param4);
-
-    /**
      * \brief   Gets param5 of the waypoint
      *
      * \return  param5
      */
     float param5() const;
-
-    /**
-     * \brief   Sets param5
-     *
-     * \param   param5
-     */
-    void set_param5(float param5);
 
     /**
      * \brief   Gets param6 of the waypoint
@@ -224,13 +168,6 @@ public:
     float param6() const;
 
     /**
-     * \brief   Sets param6
-     *
-     * \param   param6
-     */
-    void set_param6(float param6);
-
-    /**
      * \brief   Gets param7 of the waypoint
      *
      * \return  param7
@@ -238,33 +175,11 @@ public:
     float param7() const;
 
     /**
-     * \brief   Sets param7
-     *
-     * \param   param7
-     */
-    void set_param7(float param7);
-
-    /**
      * \brief   Gets the waypoint in local coordinates
      *
      * \return  Local waypoint position
      */
     local_position_t local_pos() const;
-
-    /**
-     * \brief   Sets the waypoint in local coordinates
-     *
-     * \param   local_pos       The local position of the waypoint
-     */
-    //void set_local_pos(local_position_t local_pos);
-
-    /**
-     * \brief   Sets the waypoint in local coordinates
-     *
-     * \param   local_pos       The locaiton position of the waypoint
-     * \param   heading         The desired heading of the waypoint
-     */
-    //void set_local_pos(local_position_t local_pos, float heading);
 
 protected:
     uint8_t frame_;                                             ///< The reference frame of the waypoint
@@ -277,33 +192,6 @@ protected:
     float param5_;                                              ///< Parameter depending on the MAV_CMD_NAV id
     float param6_;                                              ///< Parameter depending on the MAV_CMD_NAV id
     float param7_;                                              ///< Parameter depending on the MAV_CMD_NAV id
-
-    /**
-     * \brief   Determines the global position of the waypoint based on the frame
-     * and x, y, z, coordinates
-     *
-     * \param frame     The MAV_FRAME of the x, y, z coordinates
-     * \param x         The x coordinate
-     * \param y         The y coordinate
-     * \param z         The z coordinate
-     * \param origin    The origin of the local frame (if needed)
-     *
-     * \return  Global frame position
-     */
-    static global_position_t get_global_position(uint8_t frame, double x, double y, double z, global_position_t origin);
-
-    /**
-     * \brief   Determines the position of the waypoint based in the
-     * desired frame
-     *
-     * If position estimation is NULL, returns (0, 0, 0)
-     *
-     * \param x     x coordinate in desired frame (output)
-     * \param y     y coordinate in desired frame (output)
-     * \param z     z coordinate in desired frame (output)
-     * \param frame The desired frame
-     */
-    void get_waypoint_parameters(double& x, double& y, double& z, uint8_t frame) const;
 };
 
 
