@@ -238,6 +238,8 @@ protected:
 
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
+    Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
+    
     Navigation navigation;                                      ///< The structure to perform GPS navigation
 
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints

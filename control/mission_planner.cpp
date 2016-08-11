@@ -130,7 +130,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
         mission_planner->navigation_.set_start_wpt_time();
         mission_planner->navigation_.set_waiting_at_waypoint(false);
         mission_planner->waypoint_handler_.advance_to_next_waypoint();
-        mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
+        mission_planner->navigation_.mission_planner(mission_planner->waypoint_handler_.current_waypoint());
 
         mavlink_message_t msg;
         mavlink_msg_mission_current_pack(mission_planner->mavlink_stream_.sysid(),
@@ -180,7 +180,7 @@ void Mission_planner::set_current_waypoint(Mission_planner* mission_planner, uin
 
             mission_planner->navigation_.set_start_wpt_time();
             mission_planner->navigation_.set_waiting_at_waypoint(false);
-            mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
+            mission_planner->navigation_.mission_planner(mission_planner->waypoint_handler_.current_waypoint());
         }
         else
         {
@@ -214,7 +214,7 @@ mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mission_planne
 
         mission_planner->navigation_.set_start_wpt_time();
         mission_planner->navigation_.set_waiting_at_waypoint(false);
-        mission_planner->navigation_.set_goal(mission_planner->waypoint_handler_.current_waypoint());
+        mission_planner->navigation_.switch_mission_handler(mission_planner->waypoint_handler_.current_waypoint());
 
         result = MAV_RESULT_ACCEPTED;
     }
@@ -268,7 +268,7 @@ mav_result_t Mission_handler_navigating::start_stop_navigation(Mission_planner* 
                                             ins_.position_lf()[X],
                                             ins_.position_lf()[Y],
                                             ins_.position_lf()[Z]);
-            mission_planner->set_internal_state(Navigation::MISSION, &hold_wpt);
+            mission_planner->insert_mission_waypoint(hold_wpt);
 
             result = MAV_RESULT_ACCEPTED;
         }
@@ -285,7 +285,7 @@ mav_result_t Mission_handler_navigating::start_stop_navigation(Mission_planner* 
                                             packet->param5,
                                             packet->param6,
                                             packet->param7);
-            mission_planner->set_internal_state(Mission_planner::MISSION, &hold_wpt);
+            mission_planner->insert_mission_waypoint(hold_wpt);
 
             result = MAV_RESULT_ACCEPTED;
         }
@@ -294,7 +294,8 @@ mav_result_t Mission_handler_navigating::start_stop_navigation(Mission_planner* 
     {
         if (navigating_handler->state_.is_auto())
         {
-            mission_planner->set_internal_state(Mission_planner::MISSION);
+            waypoint_handler_.advance_to_next_waypoint();
+            mission_planner->switch_mission_handler(waypoint_handler_.current_waypoint());
         }
 
         result = MAV_RESULT_ACCEPTED;
@@ -321,7 +322,7 @@ mav_result_t Mission_planner::set_auto_takeoff(Mission_planner* mission_planner,
                                 packet->param7());
 
         print_util_dbg_print("Starting automatic take-off from button\r\n");
-        mission_planner->set_internal_state(Mission_planner::PREMISSION, takeoff_wpt);
+        mission_planner->insert_mission_waypoint(takeoff_wpt);
 
         result = MAV_RESULT_ACCEPTED;
     }
@@ -373,7 +374,7 @@ mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner,
                                 landing_position[X],
                                 landing_position[Y],
                                 landing_position[Z]);
-        mission_planner->navigation_.set_internal_state(Navigation::POSTMISSION, landing_wpt);
+        mission_planner->navigation_.insert_mission_waypoint(landing_wpt);
 
         print_util_dbg_print("Auto-landing procedure initialised.\r\n");
         print_util_dbg_print("Landing at: (");
@@ -386,8 +387,6 @@ mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner,
         print_util_dbg_print(", ");
         print_util_dbg_print_num((int32_t)(heading * 180.0f / 3.14f), 10);
         print_util_dbg_print(")\r\n");
-
-        mission_planner->set_behavior();
     }
     else
     {
@@ -417,7 +416,21 @@ void Mission_planner::state_machine()
                     break;
 
                 case PREMISSION:
-                    set_internal_state(MISSION);
+                    navigation_.set_start_wpt_time();
+                    navigation_.set_waiting_at_waypoint(false);
+                    switch_mission_handler(waypoint_handler_.current_waypoint());
+
+                    print_util_dbg_print("Autocontinue towards waypoint Nr");
+                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
+                    print_util_dbg_print("\r\n");
+
+                    // Send message
+                    mavlink_message_t msg;
+                    mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
+                                                     mavlink_stream_.compid(),
+                                                     &msg,
+                                                     waypoint_handler_.current_waypoint_index());
+                    mavlink_stream_.send(&msg);
                     break;
 
                 case MISSION:
@@ -427,7 +440,7 @@ void Mission_planner::state_machine()
                     waypoint_handler_.advance_to_next_waypoint();
 
                     // Set mission again to set new waypoint
-                    set_internal_state(MISSION);
+                    switch_mission_handler(waypoint_handler_.current_waypoint());
 
                     print_util_dbg_print("Autocontinue towards waypoint Nr");
                     print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
@@ -443,10 +456,35 @@ void Mission_planner::state_machine()
                     break;
 
                 case POSTMISSION:
-                    set_internal_state(STANDBY);
+                    Waypoint wpt(   MAV_FRAME_LOCAL_NED,
+                                    0,
+                                    0,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f);
+                    insert_mission_waypoint(wpt);
                     break;
 
                 case PAUSED:
+                    navigation_.set_start_wpt_time();
+                    navigation_.set_waiting_at_waypoint(false);
+                    switch_mission_handler(waypoint_handler_.current_waypoint());
+
+                    print_util_dbg_print("Autocontinue towards waypoint Nr");
+                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
+                    print_util_dbg_print("\r\n");
+
+                    // Send message
+                    mavlink_message_t msg;
+                    mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
+                                                     mavlink_stream_.compid(),
+                                                     &msg,
+                                                     waypoint_handler_.current_waypoint_index());
+                    mavlink_stream_.send(&msg);
                     break;
                 }
             }
@@ -612,7 +650,7 @@ void Mission_planner::critical_handler()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_handler_on_ground& on_ground_handler, Mission_handler_takeoff& takeoff_handler, Mission_handler_landing& landing_handler, Mission_handler_hold_position& hold_position_handler, Mavlink_waypoint_handler& waypoint_handler, Mission_handler_registry& mission_handler_registry, conf_t config):
+Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mavlink_waypoint_handler& waypoint_handler, Mission_handler_registry& mission_handler_registry, conf_t config):
             on_ground_handler_(on_ground_handler),
             takeoff_handler_(takeoff_handler),
             landing_handler_(landing_handler),
@@ -810,137 +848,49 @@ bool Mission_planner::set_internal_state(internal_state_t new_internal_state)
 {
     if (internal_state_ != new_internal_state)
     {
-        bool ret = true;
-        
-        // Copy waypoint state in case of failure
-        Waypoint old = internal_state_waypoint_;
-
+        // Print state change
+        print_util_dbg_print("Switching from ");
+        switch (internal_state_)
+        {
+        case STANDBY:
+            print_util_dbg_print("STANDBY");
+            break;
+        case PREMISSION:
+            print_util_dbg_print("PREMISSION");
+            break;
+        case MISSION:
+            print_util_dbg_print("MISSION");
+            break;
+        case POSTMISSION:
+            print_util_dbg_print("POSTMISSION");
+            break;
+        case PAUSED:
+            print_util_dbg_print("PAUSED");
+            break;
+        }
+        print_util_dbg_print(" to ");
         switch (new_internal_state)
         {
-        case NAV_STANDBY: // On ground
-            // TODO: Actually check if we are on the ground
-            internal_state_waypoint_ = Waypoint(MAV_FRAME_LOCAL_NED,
-                                                0,
-                                                0,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f);
-            ret &= switch_mission_handler(internal_state_waypoint_);
+        case STANDBY:
+            print_util_dbg_print("STANDBY");
             break;
-
-        case NAV_PREMISSION: // Landing
-            internal_state_waypoint_ = Waypoint(MAV_FRAME_LOCAL_NED,
-                                                MAV_CMD_NAV_TAKEOFF,
-                                                0,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                INS::position_lf()[X],
-                                                INS::position_lf()[Y],
-                                                navigation_.takeoff_altitude);
-            ret &= switch_mission_handler(internal_state_waypoint_);
+        case PREMISSION:
+            print_util_dbg_print("PREMISSION");
             break;
-
-        case NAV_MISSION: // Navigating
-            // If changing to mission mode, set to current waypoint
-            ret &= switch_mission_handler(waypoint_handler_.current_waypoint());
+        case MISSION:
+            print_util_dbg_print("MISSION");
             break;
-
-        case NAV_POSTMISSION: // Landing
-            internal_state_waypoint_ = Waypoint(MAV_FRAME_LOCAL_NED,
-                                                MAV_CMD_NAV_LAND,
-                                                0,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                INS::position_lf()[X],
-                                                INS::position_lf()[Y],
-                                                INS::position_lf()[Z]);
-            ret &= switch_mission_handler(internal_state_waypoint_);
+        case POSTMISSION:
+            print_util_dbg_print("POSTMISSION");
             break;
-
-        case NAV_PAUSED: // Hold Position
-            internal_state_waypoint_ = Waypoint(MAV_FRAME_LOCAL_NED,
-                                                MAV_CMD_NAV_LOITER_UNLIM,
-                                                0,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                INS::position_lf()[X],
-                                                INS::position_lf()[Y],
-                                                INS::position_lf()[Z]);
-            ret &= switch_mission_handler(internal_state_waypoint_);
+        case PAUSED:
+            print_util_dbg_print("PAUSED");
             break;
         }
+        print_util_dbg_print("\r\n");
 
-        if (ret)
-        {
-            // Print state change
-            print_util_dbg_print("Switching from ");
-            switch (internal_state_)
-            {
-            case STANDBY:
-                print_util_dbg_print("STANDBY");
-                break;
-            case PREMISSION:
-                print_util_dbg_print("PREMISSION");
-                break;
-            case MISSION:
-                print_util_dbg_print("MISSION");
-                break;
-            case POSTMISSION:
-                print_util_dbg_print("POSTMISSION");
-                break;
-            case PAUSED:
-                print_util_dbg_print("PAUSED");
-                break;
-            }
-            print_util_dbg_print(" to ");
-            switch (new_internal_state)
-            {
-            case STANDBY:
-                print_util_dbg_print("STANDBY");
-                break;
-            case PREMISSION:
-                print_util_dbg_print("PREMISSION");
-                break;
-            case MISSION:
-                print_util_dbg_print("MISSION");
-                break;
-            case POSTMISSION:
-                print_util_dbg_print("POSTMISSION");
-                break;
-            case PAUSED:
-                print_util_dbg_print("PAUSED");
-                break;
-            }
-            print_util_dbg_print("\r\n");
-
-            // Update internal state
-            internal_state_ = new_internal_state;
-        }
-        else
-        {
-            // If not mission, reset internal_state_waypoint
-            switch (new_internal_state)
-            {
-            case STANDBY:
-            case PREMISSION:
-            case POSTMISSION:
-            case PAUSED:
-                internal_state_waypoint_ = old;
-                break;
-            default:
-                break;
-            }
-        }
+        // Update internal state
+        internal_state_ = new_internal_state;
     }
 }
 
@@ -956,30 +906,8 @@ bool Mission_planner::insert_mission_waypoint(Waypoint& wpt)
 
     if (ret)
     {
-        if (internal_state_ != MISSION)
-        {
-            print_util_dbg_print("Switching from ");
-            switch (internal_state_)
-            {
-            case STANDBY:
-                print_util_dbg_print("STANDBY");
-                break;
-            case PREMISSION:
-                print_util_dbg_print("PREMISSION");
-                break;
-            case MISSION:
-                print_util_dbg_print("MISSION");
-                break;
-            case POSTMISSION:
-                print_util_dbg_print("POSTMISSION");
-                break;
-            case PAUSED:
-                print_util_dbg_print("PAUSED");
-                break;
-            }
-            print_util_dbg_print(" to MISSION\r\n");
-            internal_state_ = MISSION;
-        }
+        // Override what the mission handler set to PAUSED
+        set_internal_state(PAUSED);
     }
     else
     {

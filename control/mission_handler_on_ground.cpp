@@ -73,12 +73,12 @@ bool Mission_handler_on_ground::can_handle(Mission_planner& mission_planner, Way
 bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, Waypoint& wpt)
 {
     navigation_.set_waiting_at_waypoint(true);
+    mission_planner.set_internal_state(Mission_planner::STANDBY);
     return true;
 }
 
 void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
 {
-
 }
 
 bool Mission_handler_on_ground::is_finished(Mission_planner& mission_planner)

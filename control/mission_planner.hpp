@@ -51,6 +51,7 @@
 #include "communication/state.hpp"
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
+#include "control/mission_handler_registry.hpp"
 #include "control/navigation.hpp"
 #include "control/dubin.hpp"
 #include "control/mission_handler.hpp"
@@ -116,10 +117,6 @@ public:
                         const Manual_control& manual_control,
                         Mavlink_message_handler& message_handler,
                         const Mavlink_stream& mavlink_stream,
-                        Mission_handler_on_ground& on_ground_handler,
-                        Mission_handler_takeoff& takeoff_handler,
-                        Mission_handler_landing& landing_handler,
-                        Mission_handler_hold_position& hold_position_handler,
                         Mavlink_waypoint_handler& waypoint_handler,
                         Mission_handler_registry& mission_handler_registry,
                         conf_t config = default_config());
@@ -181,11 +178,6 @@ public:
     bool insert_mission_waypoint(Waypoint& wpt);
 
 protected:
-    Mission_handler_on_ground& on_ground_handler_;              ///< Handler for the standby state
-    Mission_handler_takeoff& takeoff_handler_;                  ///< Handler for the premission state
-    Mission_handler_landing& landing_handler_;                  ///< Handler for the postmission state
-    Mission_handler_hold_position& hold_position_handler_;      ///< Handler for the paused state
-
     Mission_handler* current_mission_handler_;                  ///< The currently used mission handler
     Waypoint internal_state_waypoint_;                          ///< A waypoint that is used to store the handler waypoint for internal_state handling
 

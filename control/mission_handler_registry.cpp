@@ -43,6 +43,8 @@
 
 #include "control/mission_handler_registry.hpp"
 
+#include "control/mission_handler.hpp"
+ 
 extern "C"
 {
 }

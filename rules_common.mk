@@ -68,6 +68,7 @@ LIB_SRCS += control/mission_handler_hold_position.cpp
 LIB_SRCS += control/mission_handler_landing.cpp
 LIB_SRCS += control/mission_handler_navigating.cpp
 LIB_SRCS += control/mission_handler_on_ground.cpp
+LIB_SRCS += control/mission_handler_registry.cpp
 LIB_SRCS += control/mission_handler_takeoff.cpp
 LIB_SRCS += control/navigation.cpp
 LIB_SRCS += control/pid_controller.cpp

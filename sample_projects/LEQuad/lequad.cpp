@@ -89,14 +89,15 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
-    navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
+    mission_handler_registry(),
+    navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), mission_handler_registry, config.navigation_config),
     waypoint_handler(position_estimation, navigation, state, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
     hold_position_handler(position_estimation, navigation, state),
     landing_handler(position_estimation, navigation, ahrs, state, mavlink_communication.message_handler()),
     navigating_handler(position_estimation, navigation, state, mavlink_communication.mavlink_stream(), waypoint_handler, landing_handler, mavlink_communication.message_handler()),
     on_ground_handler(position_estimation, navigation, state, manual_control),
     takeoff_handler(position_estimation, navigation, ahrs, state, waypoint_handler, mavlink_communication.message_handler()),
-    mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), on_ground_handler, takeoff_handler, landing_handler, hold_position_handler, waypoint_handler),
+    mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
@@ -561,7 +562,7 @@ bool LEQuad::main_task(void)
                 controls.control_mode = VELOCITY_COMMAND_MODE;
 
                 // if no waypoints are set, we do position hold therefore the yaw mode is absolute
-                if ((((!navigation.waiting_at_waypoint() || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN)) && (navigation.internal_state() == Navigation::NAV_NAVIGATING)) || (navigation.internal_state() == Navigation::NAV_STOP_THERE))
+                if ((((!navigation.waiting_at_waypoint() || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN)) && (mission_planner.internal_state() == Mission_planner::MISSION)) || (mission_planner.internal_state() == Mission_planner::MISSION))
               	   || ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
             	{
                     controls.yaw_mode = YAW_RELATIVE;

@@ -44,7 +44,8 @@
 #ifndef MISSION_HANDLER_REGISTRY__
 #define MISSION_HANDLER_REGISTRY__
 
-#include "control/mission_handler.hpp"
+class Mission_handler;
+
 #include "control/waypoint.hpp"
 
 #define MAX_REGISTERED_MISSION_HANDLERS 20

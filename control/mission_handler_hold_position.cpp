@@ -91,6 +91,7 @@ bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, Wayp
     waypoint_ = &wpt;
     start_time_ = time_keeper_get_ms();
     navigation_.set_waiting_at_waypoint(true);
+    mission_planner.set_internal_state(Mission_planner::MISSION);
 
     return success;
 }

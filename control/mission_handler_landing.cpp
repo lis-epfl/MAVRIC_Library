@@ -94,6 +94,7 @@ bool Mission_handler_landing::setup(Mission_planner& mission_planner, Waypoint& 
     state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
     state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
     navigation_.set_waiting_at_waypoint(false);
+    mission_planner.set_internal_state(Mission_planner::PREMISSION);
 
     waypoint_ = &wpt;
 
@@ -156,7 +157,6 @@ void Mission_handler_landing::handle(Mission_planner& mission_planner)
                     navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
                     //Do not reset custom flag here, to be able to check after landing
                     // in case something went wrong. Is reset while arming
-                    mission_planner.set_internal_state(Mission_planner::STANDBY);
                     state_.set_armed(false);
                     state_.mav_state_ = MAV_STATE_STANDBY;
                     navigation_.set_waiting_at_waypoint(true);

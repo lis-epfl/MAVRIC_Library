@@ -48,6 +48,7 @@
 #include "communication/mavlink_communication.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
+#include "control/mission_handler_registry.hpp"
 #include "control/waypoint.hpp"
 #include "control/dubin.hpp"
 #include "control/stabilisation.hpp"
