@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER__
-#define MISSION_PLANNER_HANDLER__
+#ifndef MISSION_HANDLER__
+#define MISSION_HANDLER__
 
 #include "control/mission_planner.hpp"
 #include "control/waypoint.hpp"
@@ -115,6 +115,17 @@ public:
      * \return  Is finished
      */
     virtual bool is_finished(Mission_planner& mission_planner) = 0;
+
+    /**
+     * \brief   Modifies the controls command based on the desired control
+     *          behavior for this mission handler.
+     *
+     * \details Child classes can override this to provide additional
+     *          control modifications. Defaults to no changes.
+     *
+     * \param   control     Control command reference to change
+     */
+    virtual void modify_control_command(control_command_t& control);
 };
 
 
@@ -122,4 +133,4 @@ public:
 
 
 
-#endif // MISSION_PLANNER_HANDLER__
+#endif // MISSION_HANDLER__

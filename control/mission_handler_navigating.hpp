@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_NAVIGATING__
-#define MISSION_PLANNER_HANDLER_NAVIGATING__
+#ifndef MISSION_HANDLER_NAVIGATING__
+#define MISSION_HANDLER_NAVIGATING__
 
 #include "communication/mavlink_message_handler.hpp"
 #include "control/mission_handler.hpp"
@@ -136,7 +136,7 @@ protected:
     Mission_handler_landing& mission_handler_landing_;                  ///< The reference to the landing handler
     Mavlink_message_handler& message_handler_;                          ///< The reference to the mavlink message handler
 
-    Waypoint& waypoint_;                                                ///< The waypoint that we are heading towards
+    Waypoint* waypoint_;                                                ///< The waypoint that we are heading towards
     uint64_t start_time_;                                               ///< The start time for travelling to this waypoint
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
@@ -156,4 +156,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_NAVIGATING__
+#endif // MISSION_HANDLER_NAVIGATING__

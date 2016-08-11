@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_ON_GROUND__
-#define MISSION_PLANNER_HANDLER_ON_GROUND__
+#ifndef MISSION_HANDLER_ON_GROUND__
+#define MISSION_HANDLER_ON_GROUND__
 
 #include "control/mission_handler.hpp"
 #include "communication/state.hpp"
@@ -128,4 +128,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_ON_GROUND__
+#endif // MISSION_HANDLER_ON_GROUND__

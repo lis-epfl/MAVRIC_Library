@@ -30,58 +30,72 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_on_ground.cpp
+ * \file mission_handler_registry.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the on ground state
+ * \brief The mission handler registry is responsible for registering and
+ *        obtaining mission handlers based on an inputted waypoint
  *
  ******************************************************************************/
 
 
-#include "control/mission_handler_on_ground.hpp"
+#ifndef MISSION_HANDLER_REGISTRY__
+#define MISSION_HANDLER_REGISTRY__
 
-extern "C"
+#include "control/mission_handler.hpp"
+#include "control/waypoint.hpp"
+
+#define MAX_REGISTERED_MISSION_HANDLERS 20
+
+/*
+ * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ */
+
+class Mission_handler_registry
 {
+public:
+    Mission_handler_registry();
 
-}
+    /**
+     * \brief   Registers the inputted handler to the array of known
+     *          mission handlers. Performs a check to see if that
+     *          object is already within the array.
+     *
+     * \param   handler     The new mission handler
+     *
+     * \return  Success
+     */
+    bool register_mission_handler(Mission_handler* handler);
+
+    /**
+     * \brief   Attempts to get the mission handler form the registry.
+     *
+     * \details If there is a mission handler that can take the waypoint,
+     *          then the registry will return the first mission handler
+     *          that can take it. If no mission handler can take the
+     *          waypoint, then the mission handler will return NULL.
+     *
+     * \param   waypoint    The waypoint to be handled
+     *
+     * \return  The first acceptable mission handler or NULL
+     */
+    Mission_handler* get_mission_handler(Waypoint* waypoint);
+
+private:
+    /**
+     * Array of registered mission handlers. Other classes will
+     * register a mission handler through the function
+     * Mission_planner::register_mission_handler(Mission_handler*).
+     */
+    Mission_handler* registered_mission_handlers_[MAX_REGISTERED_MISSION_HANDLERS];
+    uint8_t registered_mission_handler_count_;                  ///< The number of mission handler in the array
+};
 
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
 
-Mission_handler_on_ground::Mission_handler_on_ground(   const INS& ins,
-                                                        Navigation& navigation,
-                                                        State& state,
-                                                        const Manual_control& manual_control):
-            Mission_handler(ins),
-            navigation_(navigation),
-            state_(state),
-            manual_control_(manual_control)
-{
 
-}
 
-bool Mission_handler_on_ground::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
-{
-    // TODO: Check if actually on ground
-    return wpt.command() == 0;
-}
 
-bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, Waypoint& wpt)
-{
-    navigation_.set_waiting_at_waypoint(true);
-    return true;
-}
-
-void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
-{
-
-}
-
-bool Mission_handler_on_ground::is_finished(Mission_planner& mission_planner)
-{
-    return false;
-}
+#endif // MISSION_HANDLER_REGISTRY__

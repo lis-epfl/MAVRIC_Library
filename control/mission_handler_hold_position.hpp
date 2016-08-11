@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_HOLD_POSITION__
-#define MISSION_PLANNER_HANDLER_HOLD_POSITION__
+#ifndef MISSION_HANDLER_HOLD_POSITION__
+#define MISSION_HANDLER_HOLD_POSITION__
 
 #include "control/mission_handler.hpp"
 #include "communication/state.hpp"
@@ -118,7 +118,7 @@ public:
     bool is_finished(Mission_planner& mission_planner);
 
 protected:
-    Waypoint& waypoint_;                ///< Reference to the inputted waypoint
+    Waypoint* waypoint_;                ///< Pointer to the inputted waypoint
     uint64_t start_time_;               ///< The start time of the waypoint hold
 
     const INS& ins;                     ///< The reference to the ins structure
@@ -132,4 +132,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_HOLD_POSITION__
+#endif // MISSION_HANDLER_HOLD_POSITION__

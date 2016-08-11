@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_STOP_ON_POSITION__
-#define MISSION_PLANNER_HANDLER_STOP_ON_POSITION__
+#ifndef MISSION_HANDLER_STOP_ON_POSITION__
+#define MISSION_HANDLER_STOP_ON_POSITION__
 
 #include "control/mission_handler.hpp"
 #include "communication/state.hpp"
@@ -89,4 +89,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_STOP_ON_POSITION__
+#endif // MISSION_HANDLER_STOP_ON_POSITION__

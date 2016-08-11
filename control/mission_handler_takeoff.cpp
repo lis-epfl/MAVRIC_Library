@@ -92,7 +92,7 @@ bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, Waypoint& 
 {
     bool success = true;
 
-    waypoint_ = wpt;
+    waypoint_ = &wpt;
 
     navigation_.set_waiting_at_waypoint(false);
 
@@ -109,38 +109,41 @@ bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, Waypoint& 
 
 void Mission_handler_takeoff::handle(Mission_planner& mission_planner)
 {
-    local_position_t wpt_pos = waypoint_.local_pos();
-    float heading = waypoint_.param4();
-
-    // Acceptable radius for us to be between
-    float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
-
-    // Set goal
-    navigation_.set_goal(wpt_pos, heading, waypoint_radius);
+    if (waypoint_ != NULL)
+    {
+        // Set goal
+        navigation_.set_goal(waypoint_);
+    }
 }
 
 bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
 {
-    // Determine distance to the waypoint
-    local_position_t wpt_pos = waypoint_.local_pos();
-    float rel_pos[3];
-    for (int i = 0; i < 3; i++)
-    {
-        rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
-    }
-    navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
-
-    // Determine if finished
     bool finished = false;
-    switch(navigation_.navigation_strategy)
+
+    // Determine distance to the waypoint
+    if (waypoint_ != NULL)
     {
+        float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
+
+        local_position_t wpt_pos = waypoint_->local_pos();
+        float rel_pos[3];
+        for (int i = 0; i < 3; i++)
+        {
+            rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
+        }
+        navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+
+        // Determine if finished
+        
+        switch(navigation_.navigation_strategy)
+        {
         case Navigation::strategy_t::DIRECT_TO:
            if (navigation_.dist2wp_sqr <= waypoint_radius)
             {
                 finished = true;
                 navigation_.set_waiting_at_waypoint(true);
             }
-        break;
+            break;
 
         case Navigation::strategy_t::DUBIN:
             if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
@@ -159,7 +162,8 @@ bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
                     navigation_.set_waiting_at_waypoint(true);
                 }
             }
-        break;
+            break;
+        }
     }
 
     return finished;

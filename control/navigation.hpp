@@ -125,14 +125,15 @@ public:
     /**
      * \brief   Constructor
      *
-     * \param   controls_nav            Reference to the control structure
-     * \param   qe                      Reference to the attitude quaternion structure
-     * \param   ins                     Reference to the Inertial navigation system
-     * \param   state                   Reference to the state structure
-     * \param   mavlink_stream          Reference to the MAVLink_stream structure
-     * \param   nav_config              Reference to the config structure
+     * \param   controls_nav                Reference to the control structure
+     * \param   qe                          Reference to the attitude quaternion structure
+     * \param   ins                         Reference to the Inertial navigation system
+     * \param   state                       Reference to the state structure
+     * \param   mavlink_stream              Reference to the MAVLink_stream structure
+     * \param   Mission_handler_registry    Reference to the mission handler registry
+     * \param   nav_config                  Reference to the config structure
      */
-    Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config = default_config());
+    Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, Mavlink_stream& mavlink_stream, Mission_handler_registry& mission_handler_registry, conf_t nav_config = default_config());
 
     /**
      * \brief   Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -161,11 +162,9 @@ public:
      * Will set the dubin state to be DUBIN_INIT if there is a significant
      * (change in waypoint locaiton) change in the goal.
      *
-     * \param   goal_pos        The new waypoint goal position
-     * \param   goal_heading    The desired heading direction of the goal
-     * \param   goal_radius     The radius of the goal
+     * \param   new_goal            The new waypoint goal
      */
-    void set_goal(local_position_t goal_pos, float goal_heading, float goal_radius);
+    void set_goal(Waypoint* new_goal);
 
     /**
      * \brief   Sets the start_wpt_time_ to the current time
@@ -224,9 +223,7 @@ private:
     bool waiting_at_waypoint_;                          ///< Flag stating if the drone is currently at a waypoint waiting to advance
     uint32_t start_wpt_time_;                           ///< The time at which the MAV starts to travel towards its waypoint
 
-    local_position_t goal_;                             ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
-    float goal_heading_;                                ///< The heading of the goal
-    float goal_radius_;                                 ///< The goal radius
+    Waypoint* goal_;                                    ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
     dubin_t goal_dubin_;                                ///< The dubin structure for the goal
 
     float dt;                                           ///< The time interval between two navigation updates
@@ -236,7 +233,7 @@ private:
     const INS& ins;                                     ///< Reference to the inertial navigation system
     State& state;                                       ///< Reference to the state
     const Mavlink_stream& mavlink_stream;               ///< Reference to the MAVLink stream
-
+    Mission_handler_registry& Mission_handler_registry_;///< The reference to the mission handler registry
     /**
      * \brief                   Sets the Robot speed to reach waypoint
      *

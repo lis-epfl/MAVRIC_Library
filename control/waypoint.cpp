@@ -193,6 +193,46 @@ float Waypoint::param7() const
     return param7_;
 }
 
+float Waypoint::heading() const
+{
+    switch (command_)
+    {
+    case MAV_CMD_NAV_WAYPOINT:      // 16
+    case MAV_CMD_NAV_LOITER_UNLIM:  // 17
+    case MAV_CMD_NAV_LOITER_TURNS:  // 18
+    case MAV_CMD_NAV_LOITER_TIME:   // 19
+    case MAV_CMD_NAV_LAND:          // 21
+    case MAV_CMD_NAV_TAKEOFF:       // 22
+    case MAV_CMD_OVERRIDE_GOTO:     // 252
+        return param4_;
+        
+    case MAV_CMD_NAV_LOITER_TO_ALT: // 31
+    default:
+        return 0.0f;
+    }
+}
+
+float Waypoint::radius() const
+{
+    switch (command_)
+    {
+    case MAV_CMD_NAV_WAYPOINT:      // 16
+    case MAV_CMD_NAV_LOITER_TO_ALT: // 31
+        return param2_;
+
+    case MAV_CMD_NAV_LOITER_UNLIM:  // 17
+    case MAV_CMD_NAV_LOITER_TURNS:  // 18
+    case MAV_CMD_NAV_LOITER_TIME:   // 19
+        return param3_;
+
+    case MAV_CMD_NAV_LAND:          // 21
+    case MAV_CMD_NAV_TAKEOFF:       // 22
+    case MAV_CMD_OVERRIDE_GOTO:     // 252
+    default:
+        return 0.0f;
+    }
+}
+
 local_position_t Waypoint::local_pos() const
 {
     global_position_t waypoint_global;

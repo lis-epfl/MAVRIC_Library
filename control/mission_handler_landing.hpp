@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_LANDING__
-#define MISSION_PLANNER_HANDLER_LANDING__
+#ifndef MISSION_HANDLER_LANDING__
+#define MISSION_HANDLER_LANDING__
 
 #include "communication/mavlink_message_handler.hpp"
 #include "control/mission_handler.hpp"
@@ -126,21 +126,23 @@ public:
      */
     bool is_finished(Mission_planner& mission_planner);
 
+    /**
+     * \brief   Limits the vertical velocity
+     *
+     * \details Limits the vertical velocity during the descent to ground state
+     *
+     * \param   control     Control command reference to change
+     */
+    void modify_control_command(control_command_t& control);
+
 protected:
-    Waypoint& waypoint_;                                        ///< The waypoint that we are landing under
-    
+    Waypoint* waypoint_;                                        ///< The waypoint that we are landing under
+    Waypoint landing_waypoint_;                                 ///< The waypoint that we want our drone to go
+
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     const ahrs_t& ahrs_;
     State& state_;                                              ///< The reference to the state structure
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
-
-    /**
-     * \brief   Drives the auto-landing navigation behavior
-     *
-     * \param   mission_planner     The reference to the misison planner that is
-     * handling the request.
-     */
-    //void auto_landing_handler(Mission_planner& mission_planner);
 };
 
 
@@ -149,4 +151,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_LANDING__
+#endif // MISSION_HANDLER_LANDING__

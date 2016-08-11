@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_STOP_THERE__
-#define MISSION_PLANNER_HANDLER_STOP_THERE__
+#ifndef MISSION_HANDLER_STOP_THERE__
+#define MISSION_HANDLER_STOP_THERE__
 
 #include "control/mission_handler.hpp"
 #include "communication/state.hpp"
@@ -97,4 +97,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_STOP_THERE__
+#endif // MISSION_HANDLER_STOP_THERE__

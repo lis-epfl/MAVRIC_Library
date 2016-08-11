@@ -175,6 +175,24 @@ public:
     float param7() const;
 
     /**
+     * \brief   Gets the heading of the waypoint
+     *
+     * \details Returns 0 if N/A
+     *
+     * \return  heading
+     */
+    float heading() const;
+
+    /**
+     * \brief   Gets the radius of the waypoint
+     *
+     * \details Returns 0 if N/A
+     *
+     * \return  radius
+     */
+    float radius() const;
+
+    /**
      * \brief   Gets the waypoint in local coordinates
      *
      * \return  Local waypoint position
@@ -182,16 +200,16 @@ public:
     local_position_t local_pos() const;
 
 protected:
-    uint8_t frame_;                                             ///< The reference frame of the waypoint
-    uint16_t command_;                                          ///< The MAV_CMD_NAV id of the waypoint
-    uint8_t autocontinue_;                                      ///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
-    float param1_;                                              ///< Parameter depending on the MAV_CMD_NAV id
-    float param2_;                                              ///< Parameter depending on the MAV_CMD_NAV id
-    float param3_;                                              ///< Parameter depending on the MAV_CMD_NAV id
-    float param4_;                                              ///< Parameter depending on the MAV_CMD_NAV id
-    float param5_;                                              ///< Parameter depending on the MAV_CMD_NAV id
-    float param6_;                                              ///< Parameter depending on the MAV_CMD_NAV id
-    float param7_;                                              ///< Parameter depending on the MAV_CMD_NAV id
+    const uint8_t frame_;                                           ///< The reference frame of the waypoint
+    const uint16_t command_;                                        ///< The MAV_CMD_NAV id of the waypoint
+    const uint8_t autocontinue_;                                    ///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
+    const float param1_;                                            ///< Parameter depending on the MAV_CMD_NAV id
+    const float param2_;                                            ///< Parameter depending on the MAV_CMD_NAV id
+    const float param3_;                                            ///< Parameter depending on the MAV_CMD_NAV id
+    const float param4_;                                            ///< Parameter depending on the MAV_CMD_NAV id
+    const float param5_;                                            ///< Parameter depending on the MAV_CMD_NAV id
+    const float param6_;                                            ///< Parameter depending on the MAV_CMD_NAV id
+    const float param7_;                                            ///< Parameter depending on the MAV_CMD_NAV id
 };
 
 

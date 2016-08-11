@@ -108,7 +108,7 @@ bool Mission_handler_navigating::setup(Mission_planner& mission_planner, Waypoin
 
     start_time_ = time_keeper_get_ms();
     navigation_.set_waiting_at_waypoint(false);
-    waypoint_ = wpt;
+    waypoint_ = &wpt;
 
     return success;
 }
@@ -116,60 +116,61 @@ bool Mission_handler_navigating::setup(Mission_planner& mission_planner, Waypoin
 void Mission_handler_navigating::handle(Mission_planner& mission_planner)
 {
     // Set goal
-    navigation_.set_goal(waypoint_.local_pos(), waypoint_.param4(), waypoint_.param2());
-
-    /* Check for flag to set waiting at waypoint */
-    // Find distance to waypoint
-    local_position_t wpt_pos = waypoint_.local_pos();
-    for (i = 0; i < 3; i++)
+    if (waypoint_ != NULL)
     {
-        rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
-    }
-    navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+        navigation_.set_goal(waypoint_);
 
-    // Add margin if necessary
-    float margin = 0.0f;
-    if (waypoint_.param2() == 0.0f) // Is this safe? TODO
-    //we need to add that since Landing waypoint doesn't have the param2
-    //=> the param2 = 0 => never passing next condition
-    {
-        margin = 16.0f;
-    }
-
-    // If we are near the waypoint or are doing dubin circles
-    if (navigation_.dist2wp_sqr < (waypoint_.param2() * waypoint_.param2() + margin) ||
-           (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
-    {
-        // If we are near the waypoint but the flag has not been set, do this once ...
-        if (!navigation_.waiting_at_waypoint())
+        /* Check for flag to set waiting at waypoint */
+        // Find distance to waypoint
+        local_position_t wpt_pos = waypoint_->local_pos();
+        for (i = 0; i < 3; i++)
         {
-            // Send debug log ...
-            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
+            rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
+        }
+        navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+
+        // Add margin if necessary
+        float margin = 0.0f;
+        if (waypoint_->radius() == 0.0f)
+        {
+            margin = 16.0f;
+        }
+
+        // If we are near the waypoint or are doing dubin circles
+        if (navigation_.dist2wp_sqr < (waypoint_->radius() * waypoint_->radius() + margin) ||
+               (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
+        {
+            // If we are near the waypoint but the flag has not been set, do this once ...
+            if (!navigation_.waiting_at_waypoint())
             {
-                print_util_dbg_print("Waypoint reached by entering dubin circles 2.\r\n");
+                // Send debug log ...
+                if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
+                {
+                    print_util_dbg_print("Waypoint reached by entering dubin circles 2.\r\n");
+                }
+                else if (navigation_.dist2wp_sqr < (waypoint_->radius() * waypoint_->radius() + margin))
+                {
+                    print_util_dbg_print("Waypoint reached, distance: ");
+                    print_util_dbg_putfloat(sqrt(navigation_.dist2wp_sqr), 3);
+                    print_util_dbg_print(" m. Less than acceptable radius:");
+                    print_util_dbg_putfloat(sqrt(waypoint_->radius() * waypoint_->radius() + margin), 3);
+                    print_util_dbg_print(" m.\r\n");
+                }
+
+                // ... as well as a mavlink message ...
+                mavlink_message_t msg;
+                mavlink_msg_mission_item_reached_pack(mavlink_stream_.sysid(),
+                                                      mavlink_stream_.compid(),
+                                                      &msg,
+                                                      waypoint_handler_.current_waypoint_index());
+                mavlink_stream_.send(&msg);
+
+                // ... and record the travel time ...
+                travel_time_ = time_keeper_get_ms() - navigation_.start_wpt_time();
+
+                // ... and set to waiting at waypoint ...
+                navigation_.set_waiting_at_waypoint(true);
             }
-            else if (navigation_.dist2wp_sqr < (waypoint_.param2() * waypoint_.param2() + margin))
-            {
-                print_util_dbg_print("Waypoint reached, distance: ");
-                print_util_dbg_putfloat(sqrt(navigation_.dist2wp_sqr), 3);
-                print_util_dbg_print(" m. Less than acceptable radius:");
-                print_util_dbg_putfloat(sqrt(waypoint_.param2() * waypoint_.param2() + margin), 3);
-                print_util_dbg_print(" m.\r\n");
-            }
-
-            // ... as well as a mavlink message ...
-            mavlink_message_t msg;
-            mavlink_msg_mission_item_reached_pack(mavlink_stream_.sysid(),
-                                                  mavlink_stream_.compid(),
-                                                  &msg,
-                                                  waypoint_handler_.current_waypoint_index());
-            mavlink_stream_.send(&msg);
-
-            // ... and record the travel time ...
-            travel_time_ = time_keeper_get_ms() - navigation_.start_wpt_time();
-
-            // ... and set to waiting at waypoint ...
-            navigation_.set_waiting_at_waypoint(true);
         }
     }
 }
@@ -177,17 +178,14 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
 bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
 {
     // First check if we have reached the waypoint
-    if (navigation_.waiting_at_waypoint())
+    if (navigation_.waiting_at_waypoint() && waypoint_ != NULL)
     {
         // Then ensure that we are in autocontinue
-        if ((waypoint_.autocontinue() == 1) && (waypoint_handler_.waypoint_count() > 1))
+        if ((waypoint_->autocontinue() == 1) && (waypoint_handler_.waypoint_count() > 1))
         {
-            // Get references for calculations
-            Waypoint& current = waypoint_;
-
             // Differentiate between dubin and direct to
             if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO || 
-                current.param2() == 0.0f)
+                waypoint_->radius() == 0.0f)
             {
                 return true;
             }
@@ -199,7 +197,7 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
                 // Find the direction of the next waypoint
                 for (i=0;i<3;i++)
                 {
-                    rel_pos[i] = next.local_pos()[i] - current.local_pos()[i];
+                    rel_pos[i] = next.local_pos()[i] - waypoint_->local_pos()[i];
                 }
                 float rel_pos_norm[3];
                 vectors_normalize(rel_pos, rel_pos_norm);

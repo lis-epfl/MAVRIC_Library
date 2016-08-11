@@ -59,3 +59,8 @@ bool Mission_handler::init()
 {
 	return true;
 }
+
+void Mission_handler::modify_control_command(control_command_t& control)
+{
+	return;
+}

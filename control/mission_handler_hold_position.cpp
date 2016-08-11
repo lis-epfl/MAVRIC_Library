@@ -88,7 +88,7 @@ bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, Wayp
 {
     bool success = true;
 
-    waypoint_ = wpt;
+    waypoint_ = &wpt;
     start_time_ = time_keeper_get_ms();
     navigation_.set_waiting_at_waypoint(true);
 
@@ -98,62 +98,48 @@ bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, Wayp
 void Mission_handler_hold_position::handle(Mission_planner& mission_planner)
 {
     // Set goal
-    switch (waypoint_.command())
+    if (waypoint_ != NULL)
     {
-    case MAV_CMD_NAV_LOITER_UNLIM:
-        navigation_.set_goal(waypoint_.local_pos(), waypoint_.param4(), waypoint_.param3());
-        break;
-
-    case MAV_CMD_NAV_LOITER_TIME:
-        navigation_.set_goal(waypoint_.local_pos(), waypoint_.param4(), waypoint_.param3());
-        break;
-
-    case MAV_CMD_NAV_LOITER_TO_ALT:
-        navigation_.set_goal(waypoint_.local_pos(), coord_conventions_get_yaw(ahrs.qe), waypoint_.param2());
-        break;
-
-    case MAV_CMD_OVERRIDE_GOTO:
-        navigation_.set_goal(waypoint_.local_pos(), waypoint_.param4(), 0.0f);
-        break;
-
-    default:
-        navigation_.set_goal(waypoint_.local_pos(), 0.0f, 0.0f);
-    }  
+        navigation_.set_goal(waypoint_);
+    }
 }
 
 bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner)
 {
-    switch (waypoint_.command())
+    if (waypoint_ != NULL)
     {
-    case MAV_CMD_NAV_LOITER_UNLIM:
-        return false;
+        switch (waypoint_->command())
+        {
+        case MAV_CMD_NAV_LOITER_UNLIM:
+            return false;
 
-    case MAV_CMD_NAV_LOITER_TIME:
-        if ((time_keeper_get_ms() - start_time_) * 1000.0f > waypoint_.param1())
-        {
-            return true;
-        }
-        else
-        {
+        case MAV_CMD_NAV_LOITER_TIME:
+            if ((time_keeper_get_ms() - start_time_) * 1000.0f > waypoint_->param1())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            break;
+
+        case MAV_CMD_NAV_LOITER_TO_ALT:
+            if (maths_f_abs(ins_.position_lf()[Z] - waypoint_->local_pos()[Z]) < waypoint_->param2()) // TODO: Add check for heading
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            break;
+
+        case MAV_CMD_NAV_LOITER_TO_ALT:
+            return false;
+
+        default:
             return false;
         }
-        break;
-
-    case MAV_CMD_NAV_LOITER_TO_ALT:
-        if (maths_f_abs(ins_.position_lf()[Z] - waypoint_.local_pos()[Z]) < waypoint_.param2()) // TODO: Add check for heading
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-        break;
-
-    case MAV_CMD_NAV_LOITER_TO_ALT:
-        return false;
-
-    default:
-        return false;
     }
 }

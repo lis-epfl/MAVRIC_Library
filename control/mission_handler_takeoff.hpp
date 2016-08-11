@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_TAKEOFF__
-#define MISSION_PLANNER_HANDLER_TAKEOFF__
+#ifndef MISSION_HANDLER_TAKEOFF__
+#define MISSION_HANDLER_TAKEOFF__
 
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
@@ -137,13 +137,7 @@ protected:
     Mavlink_waypoint_handler& waypoint_handler_;                ///< The reference to the mavlink waypoint handler class
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 
-    /**
-     * \brief   Drives the automatic takeoff procedure
-     *
-     * \param   mission_planner     The reference to the misison planner that is
-     * handling the request.
-     */
-    bool take_off_handler(Mission_planner& mission_planner);
+    Waypoint* waypoint_;
 };
 
 
@@ -152,4 +146,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_TAKEOFF__
+#endif // MISSION_HANDLER_TAKEOFF__

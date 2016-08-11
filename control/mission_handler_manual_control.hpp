@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER_HANDLER_MANUAL_CONTROL__
-#define MISSION_PLANNER_HANDLER_MANUAL_CONTROL__
+#ifndef MISSION_HANDLER_MANUAL_CONTROL__
+#define MISSION_HANDLER_MANUAL_CONTROL__
 
 #include "control/mission_handler.hpp"
 #include "communication/state.hpp"
@@ -91,4 +91,4 @@ protected:
 
 
 
-#endif // MISSION_PLANNER_HANDLER_MANUAL_CONTROL__
+#endif // MISSION_HANDLER_MANUAL_CONTROL__
