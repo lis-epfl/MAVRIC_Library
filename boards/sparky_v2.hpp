@@ -51,12 +51,15 @@
 #include "hal/stm32/serial_usb_stm32.hpp"
 #include "hal/stm32/spi_stm32.hpp"
 
+#include "drivers/mpu_9250.hpp"
 #include "drivers/servo.hpp"
 #include "drivers/state_display_sparky_v2.hpp"
 
 #include "hal/dummy/serial_dummy.hpp"
 #include "hal/dummy/gpio_dummy.hpp"
 #include "hal/common/led_gpio.hpp"
+
+#include "sensing/imu.hpp"
 
 extern "C"
 {
@@ -152,6 +155,8 @@ public:
     Spi_stm32               spi_1_;
     Spi_stm32               spi_3_;
     State_display_sparky_v2 state_display_sparky_v2_;
+    Mpu_9250                mpu_9250_;
+    Imu                     imu_;
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
@@ -285,8 +290,9 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // SPI config
     // -------------------------------------------------------------------------
     conf.spi_config[0].spi_device               = STM32_SPI1;
-    conf.spi_config[0].mode                     = STM32_SPI_IN_OUT;
+    conf.spi_config[0].mode                     = STM32_SPI_MODE_CPOL1_CPHA1;
     conf.spi_config[0].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_128; //16;
+    conf.spi_config[0].ss_mode_hard             = true;
 
     conf.spi_config[0].miso_gpio_config.port    = GPIO_STM32_PORT_A;
     conf.spi_config[0].miso_gpio_config.pin     = GPIO_STM32_PIN_6;
@@ -314,8 +320,9 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
 
 
     conf.spi_config[2].spi_device               = STM32_SPI3;
-    conf.spi_config[2].mode                     = STM32_SPI_IN_OUT;
+    conf.spi_config[2].mode                     = STM32_SPI_MODE_CPOL1_CPHA1;
     conf.spi_config[2].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_64;
+    conf.spi_config[2].ss_mode_hard             = true;
 
     conf.spi_config[2].miso_gpio_config.port    = GPIO_STM32_PORT_C;
     conf.spi_config[2].miso_gpio_config.pin     = GPIO_STM32_PIN_11;

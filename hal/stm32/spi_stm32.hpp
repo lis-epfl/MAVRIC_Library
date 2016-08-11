@@ -55,9 +55,9 @@ extern "C"
  */
 typedef enum
 {
-    STM32_SPI1             = SPI1,
-    STM32_SPI2             = SPI2,
-    STM32_SPI3             = SPI3,
+    STM32_SPI1  = SPI1,
+    STM32_SPI2  = SPI2,
+    STM32_SPI3  = SPI3,
 } spi_stm32_devices_t;
 
 
@@ -66,10 +66,10 @@ typedef enum
  */
 typedef enum
 {
-    STM32_SPI_OFF       = 0,
-    STM32_SPI_IN        = 1,
-    STM32_SPI_OUT       = 2,
-    STM32_SPI_IN_OUT    = 3,
+    STM32_SPI_MODE_CPOL0_CPHA0  = 0,
+    STM32_SPI_MODE_CPOL0_CPHA1  = 1,
+    STM32_SPI_MODE_CPOL1_CPHA0  = 2,
+    STM32_SPI_MODE_CPOL1_CPHA1  = 3,
 } spi_stm32_mode_t;
 
 /**
@@ -80,6 +80,7 @@ typedef struct
     spi_stm32_devices_t     spi_device;
     spi_stm32_mode_t        mode;
     uint8_t                 clk_div;            ///< fp clock division
+    bool                    ss_mode_hard;       ///< Slave Select Mode Hardware/Software
     gpio_stm32_conf_t       miso_gpio_config;   ///< Master Out Slave In config
     gpio_stm32_conf_t       mosi_gpio_config;   ///< Master In Slave Out config
     gpio_stm32_conf_t       nss_gpio_config;    ///< Slave Select config
@@ -97,7 +98,8 @@ public:
     /**
      * \brief   Initialises the peripheral
      *
-     * \param   config      Device configuration
+     * \param   config          Device configuration
+     * \param   ss_mode_soft    Slave select mode software, or hardware
      */
     Spi_stm32(spi_stm32_conf_t spi_config);
 

@@ -60,14 +60,12 @@ Spi_stm32::Spi_stm32(spi_stm32_conf_t spi_config):
 
 bool Spi_stm32::init(void)
 {
-    uint32_t cr_tmp;
     bool     ret = true;
 
     // SPI IOs configurations
 
     // MISO init
     gpio_mode_setup(config_.miso_gpio_config.port, GPIO_MODE_AF, config_.miso_gpio_config.pull, config_.miso_gpio_config.pin);
-    // gpio_mode_setup(config_.miso_gpio_config.port, GPIO_MODE_INPUT, config_.miso_gpio_config.pull, config_.miso_gpio_config.pin);
     gpio_set_af(config_.miso_gpio_config.port, config_.miso_gpio_config.alt_fct, config_.miso_gpio_config.pin);
 
     // MOSI init
@@ -81,22 +79,17 @@ bool Spi_stm32::init(void)
     gpio_set_output_options(config_.sck_gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ, config_.sck_gpio_config.pin);
 
     // NSS init
-    //gpio_mode_setup(config_.nss_gpio_config.port, GPIO_MODE_AF, config_.nss_gpio_config.pull, config_.nss_gpio_config.pin);
-    //gpio_set_af(config_.nss_gpio_config.port, config_.nss_gpio_config.alt_fct, config_.nss_gpio_config.pin);
-    gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
-    gpio_mode_setup(config_.nss_gpio_config.port, GPIO_MODE_OUTPUT, config_.nss_gpio_config.pull, config_.nss_gpio_config.pin);
-    gpio_set_output_options(config_.nss_gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, config_.nss_gpio_config.pin);
+    if (config_.ss_mode_hard)
+    {
+        gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
+        gpio_mode_setup(config_.nss_gpio_config.port, GPIO_MODE_OUTPUT, config_.nss_gpio_config.pull, config_.nss_gpio_config.pin);
+        gpio_set_output_options(config_.nss_gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, config_.nss_gpio_config.pin);
+    }
 
     gpio_set(GPIO_STM32_PORT_B, GPIO_STM32_PIN_3);
     gpio_mode_setup(GPIO_STM32_PORT_B, GPIO_OUTPUT, GPIO_PULL_UPDOWN_NONE, GPIO_STM32_PIN_3);
 
     // SPI configuration
-    cr_tmp =    config_.clk_div |   // Clock frequency
-                SPI_CR1_MSTR    |   // Setting device as master
-                SPI_CR1_SPE     |   // SPI enabled
-                SPI_CR1_CPHA    |   // Clock Phase
-                SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE |
-                SPI_CR1_SSM;
 
     switch (config_.spi_device)
     {
@@ -116,9 +109,18 @@ bool Spi_stm32::init(void)
             ret = false;
     }
 
-    // Hardware NSS management, NSS ouput enabled
-    SPI_CR2(spi_) |= SPI_CR2_SSOE;
-    SPI_CR1(spi_)  = cr_tmp;
+    if (config_.ss_mode_hard)
+    {
+        spi_disable_software_slave_management(spi_);
+        spi_enable_ss_output(spi_);
+    }
+    else
+        spi_enable_software_slave_management(spi_);
+
+    SPI_CR1(spi_) |= config_.clk_div;           // Clock frequency
+    spi_set_standard_mode(spi_, config_.mode);
+    spi_enable(spi_);
+    spi_set_master_mode(spi_);
 
     return ret;
 }
@@ -148,32 +150,10 @@ bool Spi_stm32::transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbyte
     bool ret = true;
 
     // slave select
-    gpio_clear(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
-
-    // for (uint32_t i = 0; i < nbytes; i++)
-    // {
-    //
-    //     if (out_buffer)
-    //     {
-    //         spi_send(spi_, out_buffer[i]);
-    //     }
-    //     else
-    //     {
-    //         spi_send(spi_, 0);
-    //     }
-    //
-    //     if (in_buffer)
-    //     {
-    //         in_buffer[i] = spi_read(spi_);
-    //     }
-    //     else
-    //     {
-    //         (void)spi_read(spi_);
-    //     }
-    //
-    // }
-
-    // (void)spi_read(spi_);
+    if (config_.ss_mode_hard)
+        gpio_clear(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
+    else
+        spi_set_nss_high(spi_);
 
     if ((out_buffer != NULL) && (in_buffer != NULL))
     {
@@ -206,7 +186,10 @@ bool Spi_stm32::transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbyte
     }
 
     // slave deselect
-    gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
+    if (config_.ss_mode_hard)
+        gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
+    else
+        spi_set_nss_low(spi_);
 
     return ret;
 }
