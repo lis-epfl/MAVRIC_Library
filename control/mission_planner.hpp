@@ -174,11 +174,11 @@ public:
     bool set_internal_state(internal_state_t new_internal_state);
 
     /**
-     * \brief   Sets the internal state with additional waypoint information
+     * \brief   Inserts the inputted waypoint into the mission
      *
-     * \param   wpt                 The waypoint
+     * \param   wpt     The waypoint
      */
-    bool set_internal_state(Waypoint& wpt);
+    bool insert_mission_waypoint(Waypoint& wpt);
 
 protected:
     Mission_handler_on_ground& on_ground_handler_;              ///< Handler for the standby state
