@@ -1,14 +1,14 @@
 language: cpp
 compiler: g++
 
-php: 
+php:
   - '7.0'
 
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo add-apt-repository -y ppa:ondrej/php5-oldstable
-  - sudo add-apt-repository -y ppa:terry.guo/gcc-arm-embedded
-  - sudo apt-get --yes --force-yes update -qq 
+  - sudo add-apt-repository -y ppa:team-gcc-arm-embedded/ppa
+  - sudo apt-get --yes --force-yes update -qq
 
 install:
   - sudo apt-get --yes --force-yes install -qq g++-4.8
@@ -18,7 +18,7 @@ install:
   - sudo apt-get --yes --force-yes install -qq graphviz doxygen
   - sudo apt-get --yes --force-yes install -qq php5
 
-script: 
+script:
   - cd travis
   - make sample_projects
   - make doc
