@@ -54,27 +54,17 @@ class Mission_handler
 {
 public:
     /**
-     * \brief   Initializes the mission handler
-     *
-     * \details Needs to be defined in subclasses
-     *
-     * \return  Success
-     */
-    virtual bool init();
-
-    /**
      * \brief   Checks if the handler is able to handle the request
      *  
      * \details     This must be defined in the subclasses. It should perform
      *              a check on the inputted waypoint and return true or false
      *              if this is the appropriate handler for the waypoint.
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Can handle
      */
-    virtual bool can_handle(Mission_planner& mission_planner, Waypoint& wpt) = 0;
+    virtual bool can_handle(Waypoint& wpt) = 0;
 
     /**
      * \brief   Sets up this handler class for a first time initialization

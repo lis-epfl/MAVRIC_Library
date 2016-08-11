@@ -44,8 +44,6 @@
 #define MISSION_HANDLER_ON_GROUND__
 
 #include "control/mission_handler.hpp"
-#include "communication/state.hpp"
-#include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 
 /*
@@ -60,15 +58,9 @@ public:
     /**
      * \brief   Initialize the on ground mission planner handler
      *
-     * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation class
-     * \param   state                   The reference to the state class
-     * \param   manual_control          The reference to the manual control class
      */
-     Mission_handler_on_ground( const INS& ins,
-                                Navigation& navigation,
-                                State& state,
-                                const Manual_control& manual_control);
+     Mission_handler_on_ground(Navigation& navigation);
 
 
     /**
@@ -76,12 +68,11 @@ public:
      *  
      * \details     DOES NOT CURRENTLY CHECK IF WE ARE ON GROUND
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Can handle
      */
-    bool can_handle(Mission_planner& mission_planner, Waypoint& wpt);
+    bool can_handle(Waypoint& wpt);
 
     /**
      * \brief   Does nothing
@@ -116,10 +107,15 @@ public:
      */
     bool is_finished(Mission_planner& mission_planner);
 
+    /**
+     * \brief   Sets the control command to 0
+     *
+     * \param   control     Control command
+     */
+    void modify_control_command(control_command_t& control);
+
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
-    State& state_;                                              ///< The reference to the state structure
-    const Manual_control& manual_control_;                      ///< The reference to the manual control class
 };
 
 

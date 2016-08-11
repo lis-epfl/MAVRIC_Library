@@ -56,16 +56,6 @@
 #include "control/dubin.hpp"
 #include "control/mission_handler.hpp"
 
-class Mission_handler_takeoff;
-class Mission_handler_landing;
-class Mission_handler_on_ground;
-class Mission_handler_navigating;
-class Mission_handler_stop_there;
-class Mission_handler_stop_on_position;
-class Mission_handler_takeoff;
-class Mission_handler_manual_control;
-class Mission_handler_hold_position;
-
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
@@ -97,14 +87,6 @@ public:
      * \param   manual_control              The reference to the manual control structure
      * \param   mavlink_communication       The reference to the MAVLink communication structure
      * \param   mavlink_stream              The reference to the MAVLink stream structure
-     * \param   on_ground_handler           The handler for the on ground state
-     * \param   takeoff_handler             The handler for the takeoff state
-     * \param   landing_handler             The handler for the landing state
-     * \param   hold_position_handler       The handler for the hold position state
-     * \param   stop_on_position_handler    The handler for the stop on position state
-     * \param   stop_there_handler          The handler for the stop there state
-     * \param   navigating_handler          The handler for the navigating state
-     * \param   manual_control_handler      The handler for the manual control state
      * \param   waypoint_handler            The handler for the waypoints
      * \param   mission_handler_registry    The reference to the mission handler registry
      *
@@ -144,7 +126,6 @@ public:
      */
     static inline conf_t default_config();
 
-    Mav_mode last_mode() const;
     void set_critical_next_state(bool critical_next_state);
 
     /**
@@ -168,7 +149,7 @@ public:
      *
      * \param   new_internal_state  The new internal state
      */
-    bool set_internal_state(internal_state_t new_internal_state);
+    void set_internal_state(internal_state_t new_internal_state);
 
     /**
      * \brief   Inserts the inputted waypoint into the mission
@@ -184,16 +165,15 @@ protected:
     internal_state_t internal_state_;                           ///< The internal state of the navigation module
 
     Mavlink_waypoint_handler& waypoint_handler_;                ///< The reference to the mavlink waypoint handler
-    Mission_handler_registry& Mission_handler_registry_;        ///< The reference to the mission handler registry
+    Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 
     bool critical_next_state_;                                  ///< Flag to change critical state in its dedicated state machine
-    Mav_mode last_mode_;                                        ///< The mode of the MAV to have a memory of its evolution
     Waypoint waypoint_critical_coordinates_;                    ///< Waypoint for the critical state
 
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure
     Navigation& navigation_;                                    ///< The reference to the navigation structure
-    INS& ins_;                                                   ///< The reference to the ins structure
+    INS& ins_;                                                  ///< The reference to the ins structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     const Manual_control& manual_control_;                      ///< The reference to the manual_control structure
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler

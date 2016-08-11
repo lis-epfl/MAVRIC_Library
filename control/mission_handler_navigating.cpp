@@ -43,7 +43,6 @@
 #include "control/mission_handler_navigating.hpp"
 
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "control/mission_handler_landing.hpp"
 
 extern "C"
 {
@@ -71,25 +70,20 @@ void Mission_handler_navigating::send_nav_time(const Mavlink_stream* mavlink_str
 //------------------------------------------------------------------------------
 
 Mission_handler_navigating::Mission_handler_navigating( const INS& ins,
-                                                                        Navigation& navigation,
-                                                                        State& state,
-                                                                        const Mavlink_stream& mavlink_stream,
-                                                                        Mavlink_waypoint_handler& waypoint_handler,
-                                                                        Mission_handler_landing& mission_handler_landing,
-                                                                        Mavlink_message_handler& message_handler):
-            Mission_handler(ins),
+                                                        Navigation& navigation,
+                                                        const Mavlink_stream& mavlink_stream,
+                                                        Mavlink_waypoint_handler& waypoint_handler):
+            Mission_handler(),
+            ins_(ins),
             navigation_(navigation),
-            state_(state),
             mavlink_stream_(mavlink_stream),
             waypoint_handler_(waypoint_handler),
-            mission_handler_landing_(mission_handler_landing),
-            message_handler_(message_handler),
             travel_time_(0)
 {
 
 }
 
-bool Mission_handler_navigating::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_navigating::can_handle(Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -119,12 +113,13 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
     // Set goal
     if (waypoint_ != NULL)
     {
-        navigation_.set_goal(waypoint_);
+        navigation_.set_goal(*waypoint_);
 
         /* Check for flag to set waiting at waypoint */
         // Find distance to waypoint
         local_position_t wpt_pos = waypoint_->local_pos();
-        for (i = 0; i < 3; i++)
+        float rel_pos[3];
+        for (int i = 0; i < 3; i++)
         {
             rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
         }
@@ -196,12 +191,13 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
                 Waypoint& next = waypoint_handler_.next_waypoint();
 
                 // Find the direction of the next waypoint
-                for (i=0;i<3;i++)
+                float rel_wpt_pos[3];
+                for (int i=0;i<3;i++)
                 {
-                    rel_pos[i] = next.local_pos()[i] - waypoint_->local_pos()[i];
+                    rel_wpt_pos[i] = next.local_pos()[i] - waypoint_->local_pos()[i];
                 }
                 float rel_pos_norm[3];
-                vectors_normalize(rel_pos, rel_pos_norm);
+                vectors_normalize(rel_wpt_pos, rel_pos_norm);
 
                 // Find the tangent point of the next waypoint
                 float outter_pt[3];
@@ -210,7 +206,8 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
                 outter_pt[Z] = 0.0f;
 
                 // Determine the relative position to this tangent point
-                for (i=0;i<3;i++)
+                float rel_pos[3];
+                for (int i=0;i<3;i++)
                 {
                     rel_pos[i] = outter_pt[i]-ins_.position_lf()[i];
                 }

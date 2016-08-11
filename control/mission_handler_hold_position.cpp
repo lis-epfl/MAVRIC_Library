@@ -53,22 +53,15 @@ extern "C"
 //------------------------------------------------------------------------------
 
 Mission_handler_hold_position::Mission_handler_hold_position(   const INS& ins,
-                                                                Navigation& navigation,
-                                                                State& state):
+                                                                Navigation& navigation):
             Mission_handler(),
             ins_(ins),
-            navigation_(navigation),
-            state_(state)
+            navigation_(navigation)
 {
 
 }
 
-bool Mission_handler_hold_position::init()
-{
-    return true;
-}
-
-bool Mission_handler_hold_position::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_hold_position::can_handle(Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -101,7 +94,7 @@ void Mission_handler_hold_position::handle(Mission_planner& mission_planner)
     // Set goal
     if (waypoint_ != NULL)
     {
-        navigation_.set_goal(waypoint_);
+        navigation_.set_goal(*waypoint_);
     }
 }
 
@@ -136,11 +129,10 @@ bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner
             }
             break;
 
-        case MAV_CMD_NAV_LOITER_TO_ALT:
-            return false;
-
         default:
             return false;
         }
     }
+
+    return false;
 }

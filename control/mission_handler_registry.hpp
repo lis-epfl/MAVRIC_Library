@@ -68,7 +68,7 @@ public:
      *
      * \return  Success
      */
-    bool register_mission_handler(Mission_handler* handler);
+    bool register_mission_handler(Mission_handler& handler);
 
     /**
      * \brief   Attempts to get the mission handler form the registry.
@@ -82,7 +82,7 @@ public:
      *
      * \return  The first acceptable mission handler or NULL
      */
-    Mission_handler* get_mission_handler(Waypoint* waypoint);
+    Mission_handler* get_mission_handler(Waypoint& waypoint);
 
 private:
     /**

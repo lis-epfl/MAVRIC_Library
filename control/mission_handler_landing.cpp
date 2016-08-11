@@ -61,18 +61,15 @@ extern "C"
 
 Mission_handler_landing::Mission_handler_landing(   const INS& ins,
                                                     Navigation& navigation,
-                                                    const ahrs_t& ahrs,
-                                                    State& state,
-                                                    Mavlink_message_handler& message_handler):
-            Mission_handler(ins),
+                                                    State& state):
+            Mission_handler(),
+            ins_(ins),
             navigation_(navigation),
-            ahrs_(ahrs),
-            state_(state),
-            message_handler_(message_handler)
+            state_(state)
 {
 }
 
-bool Mission_handler_landing::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_landing::can_handle(Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -123,6 +120,7 @@ void Mission_handler_landing::handle(Mission_planner& mission_planner)
         }
 
         // Determine if we should switch between the landing states
+        bool next_state = false;
         if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_GND)
         {
             navigation_.alt_lpf = navigation_.LPF_gain * (navigation_.alt_lpf) + (1.0f - navigation_.LPF_gain) * ins_.position_lf()[Z];
@@ -165,28 +163,28 @@ void Mission_handler_landing::handle(Mission_planner& mission_planner)
         }
 
         // Set goal
-        landing_waypoint = Waypoint(waypoint_->frame,
-                                    waypoint_->command,
-                                    waypoint_->autocontinue,
-                                    waypoint_->param1,
-                                    waypoint_->param2,
-                                    waypoint_->param3,
-                                    waypoint_->param4,
-                                    local_pos[X],
-                                    local_pos[Y],
-                                    local_pos[Z])
-        navigation_.set_goal(landing_waypoint);
+        landing_waypoint_ = Waypoint(   waypoint_->frame(),
+                                        waypoint_->command(),
+                                        waypoint_->autocontinue(),
+                                        waypoint_->param1(),
+                                        waypoint_->param2(),
+                                        waypoint_->param3(),
+                                        waypoint_->param4(),
+                                        local_pos[X],
+                                        local_pos[Y],
+                                        local_pos[Z]);
+        navigation_.set_goal(landing_waypoint_);
     }
 }
 
 bool Mission_handler_landing::is_finished(Mission_planner& mission_planner)
 {
-    return mission_planner.internal_state() == Mission_planner::STANDBY;
+    return false;
 }
 
 void Mission_handler_landing::modify_control_command(control_command_t& control)
 {
-    if (navigation_auto_landing_behavior == Navigation::DESCENT_TO_GND)
+    if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_GND)
     {
         // Constant velocity to the ground
         control.tvel[Z] = 0.3f;

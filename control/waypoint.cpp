@@ -300,7 +300,5 @@ local_position_t Waypoint::local_pos() const
             break;
     }
 
-    return waypoint_global;
-
-    local_position_t pos;
+    return waypoint_local;
 }

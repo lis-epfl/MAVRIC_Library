@@ -52,19 +52,14 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_on_ground::Mission_handler_on_ground(   const INS& ins,
-                                                        Navigation& navigation,
-                                                        State& state,
-                                                        const Manual_control& manual_control):
-            Mission_handler(ins),
-            navigation_(navigation),
-            state_(state),
-            manual_control_(manual_control)
+Mission_handler_on_ground::Mission_handler_on_ground(Navigation& navigation):
+            Mission_handler(),
+            navigation_(navigation)
 {
 
 }
 
-bool Mission_handler_on_ground::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_on_ground::can_handle(Waypoint& wpt)
 {
     // TODO: Check if actually on ground
     return wpt.command() == 0;
@@ -84,4 +79,13 @@ void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
 bool Mission_handler_on_ground::is_finished(Mission_planner& mission_planner)
 {
     return false;
+}
+
+void Mission_handler_on_ground::modify_control_command(control_command_t& control)
+{
+    if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_GND)
+    {
+        // Constant velocity to the ground
+        control.tvel[Z] = 0.3f;
+    }
 }

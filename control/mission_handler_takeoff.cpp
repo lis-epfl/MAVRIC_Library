@@ -61,21 +61,16 @@ extern "C"
 
 Mission_handler_takeoff::Mission_handler_takeoff(   const INS& ins,
                                                     Navigation& navigation,
-                                                    const ahrs_t& ahrs,
-                                                    State& state,
-                                                    Mavlink_waypoint_handler& waypoint_handler,
-                                                    Mavlink_message_handler& message_handler):
-            Mission_handler(ins),
+                                                    State& state):
+            Mission_handler(),
+            ins_(ins),
             navigation_(navigation),
-            ahrs_(ahrs),
-            state_(state),
-            waypoint_handler_(waypoint_handler),
-            message_handler_(message_handler)
+            state_(state)
 {
 
 }
 
-bool Mission_handler_takeoff::can_handle(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_takeoff::can_handle(Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -113,7 +108,7 @@ void Mission_handler_takeoff::handle(Mission_planner& mission_planner)
     if (waypoint_ != NULL)
     {
         // Set goal
-        navigation_.set_goal(waypoint_);
+        navigation_.set_goal(*waypoint_);
     }
 }
 

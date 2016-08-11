@@ -55,11 +55,8 @@
 #include "control/mission_planner.hpp"
 #include "control/mission_handler_hold_position.hpp"
 #include "control/mission_handler_landing.hpp"
-#include "control/mission_handler_manual_control.hpp"
 #include "control/mission_handler_navigating.hpp"
 #include "control/mission_handler_on_ground.hpp"
-#include "control/mission_handler_stop_on_position.hpp"
-#include "control/mission_handler_stop_there.hpp"
 #include "control/mission_handler_takeoff.hpp"
 #include "communication/onboard_parameters.hpp"
 #include "communication/state.hpp"
@@ -239,7 +236,7 @@ protected:
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
-    
+
     Navigation navigation;                                      ///< The structure to perform GPS navigation
 
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints

@@ -43,10 +43,8 @@
 #ifndef MISSION_HANDLER_LANDING__
 #define MISSION_HANDLER_LANDING__
 
-#include "communication/mavlink_message_handler.hpp"
-#include "control/mission_handler.hpp"
 #include "communication/state.hpp"
-#include "control/manual_control.hpp"
+#include "control/mission_handler.hpp"
 #include "control/navigation.hpp"
 
 /*
@@ -64,22 +62,10 @@ public:
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
-     * \param   message_handler         The reference to the mavlink message handler
      */
      Mission_handler_landing(   const INS& ins,
                                 Navigation& navigation,
-                                const ahrs_t& ahrs,
-                                State& state,
-                                Mavlink_message_handler& message_handler);
-
-
-    /**
-     * \brief   The handler for the landing state.
-     *
-     * \param   mission_planner     The reference to the misison planner that is
-     * handling the request.
-     */
-    //virtual void handle(Mission_planner& mission_planner);
+                                State& state);
 
     /**
      * \brief   Checks if the waypoint is a landing waypoint
@@ -87,12 +73,11 @@ public:
      * \details     Checks if the inputted waypoint is a:
      *                  MAV_CMD_NAV_LAND
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Can handle
      */
-    bool can_handle(Mission_planner& mission_planner, Waypoint& wpt);
+    bool can_handle(Waypoint& wpt);
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -116,13 +101,14 @@ public:
     void handle(Mission_planner& mission_planner);
 
     /**
-     * \brief   Checks if the handler has finished the request of the waypoint
+     * \brief   Return false
      *  
-     * \details     
+     * \details     This returns false as we do not want the drone to take off
+     *              immediately after landing
      *
      * \param   mission_planner     The mission planner class
      *
-     * \return  Is finished
+     * \return  False
      */
     bool is_finished(Mission_planner& mission_planner);
 
@@ -139,10 +125,9 @@ protected:
     Waypoint* waypoint_;                                        ///< The waypoint that we are landing under
     Waypoint landing_waypoint_;                                 ///< The waypoint that we want our drone to go
 
+    const INS& ins_;                                            ///< The reference to the ins interface
     Navigation& navigation_;                                    ///< The reference to the navigation structure
-    const ahrs_t& ahrs_;
     State& state_;                                              ///< The reference to the state structure
-    Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 };
 
 

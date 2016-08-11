@@ -43,11 +43,8 @@
 #ifndef MISSION_HANDLER_TAKEOFF__
 #define MISSION_HANDLER_TAKEOFF__
 
-#include "communication/mavlink_message_handler.hpp"
-#include "communication/mavlink_waypoint_handler.hpp"
-#include "control/mission_handler.hpp"
 #include "communication/state.hpp"
-#include "control/manual_control.hpp"
+#include "control/mission_handler.hpp"
 #include "control/navigation.hpp"
 
 /*
@@ -64,26 +61,11 @@ public:
      *
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation class
-     * \param   ahrs                    The reference to the attitude estimation class
      * \param   state                   The reference to the state class
-     * \param   waypoint_handler        The reference to the mavlink waypoint handler class
-     * \param   message_handler         The reference to the mavlink message handler
      */
      Mission_handler_takeoff(   const INS& ins,
-                                        Navigation& navigation,
-                                        const ahrs_t& ahrs,
-                                        State& state,
-                                        Mavlink_waypoint_handler& waypoint_handler,
-                                        Mavlink_message_handler& message_handler);
-
-
-    /**
-     * \brief   The handler for the takeoff state.
-     *
-     * \param   mission_planner     The reference to the misison planner that is
-     * handling the request.
-     */
-    //virtual void handle(Mission_planner& mission_planner);
+                                Navigation& navigation,
+                                State& state);
 
     /**
      * \brief   Checks if the waypoint is a takeoff waypoint
@@ -91,12 +73,11 @@ public:
      * \details     Checks if the inputted waypoint is a:
      *                  MAV_CMD_NAV_TAKEOFF
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Can handle
      */
-    bool can_handle(Mission_planner& mission_planner, Waypoint& wpt);
+    bool can_handle(Waypoint& wpt);
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -131,11 +112,9 @@ public:
     bool is_finished(Mission_planner& mission_planner);
 
 protected:
+    const INS& ins_;                                            ///< The reference to the ins interface
     Navigation& navigation_;                                    ///< The reference to the navigation structure
-    const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     State& state_;                                              ///< The reference to the state structure
-    Mavlink_waypoint_handler& waypoint_handler_;                ///< The reference to the mavlink waypoint handler class
-    Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 
     Waypoint* waypoint_;
 };

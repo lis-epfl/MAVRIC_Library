@@ -165,7 +165,7 @@ public:
      *
      * \param   new_goal            The new waypoint goal
      */
-    void set_goal(Waypoint* new_goal);
+    void set_goal(Waypoint& new_goal);
 
     /**
      * \brief   Sets the start_wpt_time_ to the current time
@@ -234,7 +234,7 @@ private:
     const INS& ins;                                     ///< Reference to the inertial navigation system
     State& state;                                       ///< Reference to the state
     const Mavlink_stream& mavlink_stream;               ///< Reference to the MAVLink stream
-    Mission_handler_registry& Mission_handler_registry_;///< The reference to the mission handler registry
+    Mission_handler_registry& mission_handler_registry_;///< The reference to the mission handler registry
     /**
      * \brief                   Sets the Robot speed to reach waypoint
      *

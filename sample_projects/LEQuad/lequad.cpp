@@ -92,11 +92,11 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     mission_handler_registry(),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), mission_handler_registry, config.navigation_config),
     waypoint_handler(position_estimation, navigation, state, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), config.waypoint_handler_config),
-    hold_position_handler(position_estimation, navigation, state),
-    landing_handler(position_estimation, navigation, ahrs, state, mavlink_communication.message_handler()),
-    navigating_handler(position_estimation, navigation, state, mavlink_communication.mavlink_stream(), waypoint_handler, landing_handler, mavlink_communication.message_handler()),
-    on_ground_handler(position_estimation, navigation, state, manual_control),
-    takeoff_handler(position_estimation, navigation, ahrs, state, waypoint_handler, mavlink_communication.message_handler()),
+    hold_position_handler(position_estimation, navigation),
+    landing_handler(position_estimation, navigation, state),
+    navigating_handler(position_estimation, navigation, mavlink_communication.mavlink_stream(), waypoint_handler),
+    on_ground_handler(navigation),
+    takeoff_handler(position_estimation, navigation, state),
     mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
@@ -450,11 +450,11 @@ bool LEQuad::init_navigation(void)
     // Initialize
     ret &= waypoint_handler.init();
     ret &= mission_planner.init();
-    ret &= hold_position_handler.init();
-    ret &= landing_handler.init();
-    ret &= navigating_handler.init();
-    ret &= on_ground_handler.init();
-    ret &= takeoff_handler.init();
+    ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
+    ret &= mission_handler_registry.register_mission_handler(landing_handler);
+    ret &= mission_handler_registry.register_mission_handler(navigating_handler);
+    ret &= mission_handler_registry.register_mission_handler(on_ground_handler);
+    ret &= mission_handler_registry.register_mission_handler(takeoff_handler);
 
     // Parameters
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.dist2vel_gain,                           "NAV_DIST2VEL"    );

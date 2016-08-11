@@ -45,12 +45,9 @@
 
 #include "communication/mavlink_message_handler.hpp"
 #include "control/mission_handler.hpp"
-#include "communication/state.hpp"
-#include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 
 class Mavlink_waypoint_handler;
-class Mission_handler_landing;
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -66,20 +63,14 @@ public:
      *
      * \param   ins                                 The reference to the ins
      * \param   navigation                          The reference to the navigation structure
-     * \param   state                               The reference to the state structure
      * \param   mission_planner                     The reference to the mission planner
      * \param   mavlink_stream                      The reference to the MAVLink stream structure
      * \param   waypoint_handler                    The handler for the manual control state
-     * \param   mission_handler_landing     The reference to the landing handler
-     * \param   message_handler                     The reference to the mavlink message handler
      */
      Mission_handler_navigating(    const INS& ins,
                                     Navigation& navigation,
-                                    State& state,
                                     const Mavlink_stream& mavlink_stream,
-                                    Mavlink_waypoint_handler& waypoint_handler,
-                                    Mission_handler_landing& mission_handler_landing,
-                                    Mavlink_message_handler& message_handler);
+                                    Mavlink_waypoint_handler& waypoint_handler);
 
     /**
      * \brief   Checks if the waypoint is a navigating waypoint
@@ -87,12 +78,11 @@ public:
      * \details     Checks if the inputted waypoint is a:
      *                  MAV_CMD_NAV_WAYPOINT
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Can handle
      */
-    bool can_handle(Mission_planner& mission_planner, Waypoint& wpt);
+    bool can_handle(Waypoint& wpt);
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -129,12 +119,10 @@ public:
     bool is_finished(Mission_planner& mission_planner);
 
 protected:
+    const INS& ins_;                                                    ///< The reference to the ins interface
     Navigation& navigation_;                                            ///< The reference to the navigation object
-    State& state_;                                                      ///< The reference to the state object
     const Mavlink_stream& mavlink_stream_;                              ///< The reference to the mavlink object
     Mavlink_waypoint_handler& waypoint_handler_;                        ///< The reference to the mavlink waypoint handler
-    Mission_handler_landing& mission_handler_landing_;                  ///< The reference to the landing handler
-    Mavlink_message_handler& message_handler_;                          ///< The reference to the mavlink message handler
 
     Waypoint* waypoint_;                                                ///< The waypoint that we are heading towards
     uint64_t start_time_;                                               ///< The start time for travelling to this waypoint

@@ -64,7 +64,7 @@ Mission_handler_registry::Mission_handler_registry() :
 
 }
 
-bool Mission_handler_registry::register_mission_handler(Mission_handler* handler)
+bool Mission_handler_registry::register_mission_handler(Mission_handler& handler)
 {
     // Check for maximum count
     if (MAX_REGISTERED_MISSION_HANDLERS == registered_mission_handler_count_)
@@ -76,7 +76,7 @@ bool Mission_handler_registry::register_mission_handler(Mission_handler* handler
     // Check for duplicates
     for (uint8_t i = 0; i < registered_mission_handler_count_; i++)
     {
-        if (registered_mission_handlers_[i] == handler)
+        if (registered_mission_handlers_[i] == &handler)
         {
             print_util_dbg_print("[MISSION_PLANNER]: Mission handler already registed\r\n");
             return false;
@@ -84,18 +84,18 @@ bool Mission_handler_registry::register_mission_handler(Mission_handler* handler
     }
 
     // Register mission
-    registered_mission_handlers_[registered_mission_handler_count_] = handler;
+    registered_mission_handlers_[registered_mission_handler_count_] = &handler;
     registered_mission_handler_count_++;
     return true;
 }
 
-Mission_handler* Mission_handler_registry::get_mission_handler(Waypoint* waypoint)
+Mission_handler* Mission_handler_registry::get_mission_handler(Waypoint& waypoint)
 {
 	// Search for the first handler than can accept this waypoint
     for (uint8_t i = 0; i < registered_mission_handler_count_; i++)
     {
         // Check if proper handler
-        if (registered_mission_handlers_[i]->can_handle(*this, waypoint))
+        if (registered_mission_handlers_[i]->can_handle(waypoint))
         {
         	return registered_mission_handlers_[i];
         }

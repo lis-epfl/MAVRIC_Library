@@ -44,7 +44,6 @@
 #define MISSION_HANDLER_HOLD_POSITION__
 
 #include "control/mission_handler.hpp"
-#include "communication/state.hpp"
 #include "control/navigation.hpp"
 
 /*
@@ -61,11 +60,9 @@ public:
      *
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
      */
      Mission_handler_hold_position( const INS& ins,
-                                    Navigation& navigation,
-                                    State& state);
+                                    Navigation& navigation);
 
     /**
      * \brief   Checks if the waypoint is a hold position waypoint
@@ -76,12 +73,11 @@ public:
                         MAV_CMD_NAV_LOITER_TO_ALT
                         MAV_CMD_OVERRIDE_GOTO if param1 == MAV_GOTO_DO_HOLD
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Can handle
      */
-    bool can_handle(Mission_planner& mission_planner, Waypoint& wpt);
+    bool can_handle(Waypoint& wpt);
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -121,9 +117,8 @@ protected:
     Waypoint* waypoint_;                ///< Pointer to the inputted waypoint
     uint64_t start_time_;               ///< The start time of the waypoint hold
 
-    const INS& ins;                     ///< The reference to the ins structure
+    const INS& ins_;                    ///< The reference to the ins structure
     Navigation& navigation_;            ///< The reference to the navigation structure
-    State& state_;                      ///< The reference to the state structure
 };
 
 
