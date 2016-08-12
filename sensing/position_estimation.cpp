@@ -527,7 +527,7 @@ float Position_estimation::absolute_altitude(void) const
 }
 
 
-bool Position_estimation::is_healthy(INS::healthy_t type) const
+bool Position_estimation::is_healthy(INS::healthy_t __attribute__((unused)) type) const
 {
     return true;
 }

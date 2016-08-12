@@ -117,7 +117,7 @@ bool Gps_mocap::init(void)
 }
 
 
-void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
+void Gps_mocap::callback(uint32_t __attribute__((unused)) sysid, mavlink_message_t* msg)
 {
     mavlink_att_pos_mocap_t packet;
     mavlink_msg_att_pos_mocap_decode(msg, &packet);

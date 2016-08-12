@@ -61,7 +61,7 @@ Spektrum_satellite* spek_sat;
  *
  * @param serial    Peripheral
  */
-void spektrum_irq_callback(Serial* serial)
+void spektrum_irq_callback(Serial __attribute((unused)) * serial)
 {
     spek_sat->handle_interrupt();
 };

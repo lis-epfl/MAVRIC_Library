@@ -445,7 +445,7 @@ void Mavlink_waypoint_handler::set_current_waypoint(Mavlink_waypoint_handler* wa
     } //end of if this message is for this system and subsystem
 }
 
-mav_result_t Mavlink_waypoint_handler::set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mavlink_waypoint_handler::set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t __attribute__((unused)) * packet)
 {
     mav_result_t result;
     uint16_t new_current = 0;
@@ -779,7 +779,7 @@ mav_result_t Mavlink_waypoint_handler::start_stop_navigation(Mavlink_waypoint_ha
     return result;
 }
 
-mav_result_t Mavlink_waypoint_handler::set_auto_takeoff(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mavlink_waypoint_handler::set_auto_takeoff(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t __attribute__((unused)) * packet)
 {
     mav_result_t result;
 
