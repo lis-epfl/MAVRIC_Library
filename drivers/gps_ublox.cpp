@@ -1605,9 +1605,8 @@ static void gps_ublox_utc_to_local(date_time_t* today_date, uint8_t time_zone);
  * \brief   Reset the gps U-Blox module
  *
  * \param   gps                     The pointer to the GPS structure
- * \param   engine_nav_setting      The GPS Nav settings
  */
-static void gps_ublox_reset(gps_t* gps, gps_engine_setting_t engine_nav_setting);
+static void gps_ublox_reset(gps_t* gps);
 
 
 /**
@@ -2944,7 +2943,7 @@ static void gps_ublox_update(gps_t* gps)
 
             gps->healthy = false;
 
-            gps_ublox_reset(gps, GPS_ENGINE_AIRBORNE_4G);
+            gps_ublox_reset(gps);
             gps->idle_timer = tnow;
         }
     }
@@ -3071,24 +3070,6 @@ static void gps_ublox_utc_to_local(date_time_t* today_date, uint8_t time_zone)
         }
     }
 
-    // Check hour range min
-    if (today_date->hour < 0)
-    {
-        today_date->hour += 24;
-        today_date->day -= 1;
-
-        if (today_date->day < 1)
-        {
-            today_date->month -= 1;
-            if (today_date->month < 1)
-            {
-                today_date->month = 12;
-                today_date->year -= 1;
-            }
-            today_date->day = days_per_month[today_date->month];
-        }
-    }
-
     // Check hour range max
     if (today_date->hour >= 24)
     {
@@ -3115,7 +3096,7 @@ static void gps_ublox_utc_to_local(date_time_t* today_date, uint8_t time_zone)
 // }
 
 
-static void gps_ublox_reset(gps_t* gps, gps_engine_setting_t engine_nav_setting)
+static void gps_ublox_reset(gps_t* gps) //, gps_engine_setting_t engine_nav_setting)
 {
     //gps_ublox_configure_gps(gps);
 
