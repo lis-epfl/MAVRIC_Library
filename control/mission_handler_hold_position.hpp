@@ -116,6 +116,7 @@ public:
 protected:
     Waypoint* waypoint_;                ///< Pointer to the inputted waypoint
     uint64_t start_time_;               ///< The start time of the waypoint hold
+    bool within_radius_;                ///< Flag stating if we are within the radius
 
     const INS& ins_;                    ///< The reference to the ins structure
     Navigation& navigation_;            ///< The reference to the navigation structure

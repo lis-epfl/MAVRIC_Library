@@ -182,15 +182,42 @@ void Navigation::set_speed_command(float rel_pos[])
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 
     // Update handler control
-    Mission_handler* handler = mission_handler_registry_.get_mission_handler(*goal_);
-    if (handler != NULL)
+    if (goal_ != NULL)
     {
-        handler->modify_control_command(controls_nav);
+        Mission_handler* handler = mission_handler_registry_.get_mission_handler(*goal_);
+        if (handler != NULL)
+        {
+            handler->modify_control_command(controls_nav);
+        }
     }
 }
 
 void Navigation::dubin_state_machine()
 {
+    // Set null case
+    if (goal_ == NULL)
+    {
+        goal_dubin_.circle_center_1[0] = 0.0f;
+        goal_dubin_.circle_center_1[1] = 0.0f;
+        goal_dubin_.circle_center_1[2] = 0.0f;
+        goal_dubin_.tangent_point_1[0] = 0.0f;
+        goal_dubin_.tangent_point_1[1] = 0.0f;
+        goal_dubin_.tangent_point_1[2] = 0.0f;
+        goal_dubin_.sense_1 = 0;
+        goal_dubin_.radius_1 = 0;
+        goal_dubin_.circle_center_2[0] = 0.0f;
+        goal_dubin_.circle_center_2[1] = 0.0f;
+        goal_dubin_.circle_center_2[2] = 0.0f;
+        goal_dubin_.tangent_point_2[0] = 0.0f;
+        goal_dubin_.tangent_point_2[1] = 0.0f;
+        goal_dubin_.tangent_point_2[2] = 0.0f;
+        goal_dubin_.line_direction[0] = 0.0f;
+        goal_dubin_.line_direction[1] = 0.0f;
+        goal_dubin_.line_direction[2] = 0.0f;
+        goal_dubin_.length = 0.0f;
+        return;
+    }
+
     float rel_pos[3];
 
     rel_pos[Z] = 0.0f;
@@ -322,6 +349,12 @@ void Navigation::dubin_state_machine()
 
 void Navigation::set_dubin_velocity(dubin_t* dubin)
 {
+    // Ensure that goal is set
+    if (goal_ == NULL)
+    {
+        return;
+    }
+
     float dir_desired[3];
 
     quat_t q_rot;
@@ -404,48 +437,51 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
 
 void Navigation::run()
 {
-    float rel_pos[3];
-
-    // Control in translational speed of the platform
-    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp( goal_->local_pos().data(),
-                                                    rel_pos,
-                                                    ins.position_lf().data());
-
-    switch(navigation_strategy)
+    if (goal_ != NULL)
     {
-        case Navigation::strategy_t::DIRECT_TO:
-            set_speed_command(rel_pos);
-        break;
+        float rel_pos[3];
 
-        case Navigation::strategy_t::DUBIN:
-            if (state.autopilot_type == MAV_TYPE_QUADROTOR)
-            {
-                //if (internal_state_ == NAV_NAVIGATING) TODO
+        // Control in translational speed of the platform
+        dist2wp_sqr = navigation_set_rel_pos_n_dist2wp( goal_->local_pos().data(),
+                                                        rel_pos,
+                                                        ins.position_lf().data());
+
+        switch(navigation_strategy)
+        {
+            case Navigation::strategy_t::DIRECT_TO:
+                set_speed_command(rel_pos);
+            break;
+
+            case Navigation::strategy_t::DUBIN:
+                if (state.autopilot_type == MAV_TYPE_QUADROTOR)
                 {
-                    if (goal_->radius() > 0.0f)
+                    //if (internal_state_ == NAV_NAVIGATING) TODO
                     {
-                        set_dubin_velocity(&goal_dubin_);
+                        if (goal_->radius() > 0.0f)
+                        {
+                            set_dubin_velocity(&goal_dubin_);
+                        }
+                        else
+                        {
+                            set_speed_command(rel_pos);
+                        }
+
                     }
-                    else
+                    /*else
                     {
                         set_speed_command(rel_pos);
-                    }
-
+                    }*/
                 }
-                /*else
+                else
                 {
-                    set_speed_command(rel_pos);
-                }*/
-            }
-            else
-            {
-                set_dubin_velocity(&goal_dubin_);
-            }
-            // Add here other types of navigation strategies
-        break;
-    }
+                    set_dubin_velocity(&goal_dubin_);
+                }
+                // Add here other types of navigation strategies
+            break;
+        }
 
-    controls_nav.theading = goal_->heading();
+        controls_nav.theading = goal_->heading();
+    }
 }
 
 //------------------------------------------------------------------------------

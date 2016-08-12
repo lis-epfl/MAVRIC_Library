@@ -81,9 +81,9 @@ bool Mission_handler_hold_position::can_handle(Waypoint& wpt)
 bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, Waypoint& wpt)
 {
     bool success = true;
-
     waypoint_ = &wpt;
     start_time_ = time_keeper_get_ms();
+    within_radius_ = false;
     navigation_.set_waiting_at_waypoint(true);
     mission_planner.set_internal_state(Mission_planner::MISSION);
 
@@ -103,6 +103,27 @@ bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner
 {
     if (waypoint_ != NULL)
     {
+        local_position_t wpt_pos = waypoint_->local_pos();
+
+        // Check if we are doing dubin circles
+        if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
+        {
+            within_radius_ = true;
+        }
+        // Or that we are at the waypoint
+        else if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO &&
+                ((wpt_pos[X]-ins_.position_lf()[X])*(wpt_pos[X]-ins_.position_lf()[X]) + (wpt_pos[Y]-ins_.position_lf()[Y])*(wpt_pos[Y]-ins_.position_lf()[Y])) < waypoint_->radius()*waypoint_->radius())
+        {
+            within_radius_ = true;
+        }
+        else
+        {
+            within_radius_ = false;
+
+            // Reset start time
+            start_time_ = time_keeper_get_ms();
+        }
+
         if (waypoint_->autocontinue() == 1)
         {
             switch (waypoint_->command())
@@ -111,7 +132,7 @@ bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner
                 return false;
 
             case MAV_CMD_NAV_LOITER_TIME:
-                if ((time_keeper_get_ms() - start_time_) * 1000.0f > waypoint_->param1())
+                if (within_radius_ && ((time_keeper_get_ms() - start_time_) > waypoint_->param1() * 1000))
                 {
                     return true;
                 }
