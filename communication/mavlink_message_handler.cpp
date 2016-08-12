@@ -335,7 +335,7 @@ void Mavlink_message_handler::receive(Mavlink_stream::msg_received_t* rec)
             cmd_default_dbg(&cmd);
         }
 
-        if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
+        if (cmd.command < MAV_CMD_ENUM_END)
         {
             // The command has valid command ID
             if ((cmd.target_system == mavlink_stream_.sysid()) || (cmd.target_system == MAV_SYS_ID_ALL))
@@ -371,7 +371,7 @@ void Mavlink_message_handler::receive(Mavlink_stream::msg_received_t* rec)
             }
         }
     }
-    else if (msg->msgid >= 0 && msg->msgid < MAV_MSG_ENUM_END)
+    else if (msg->msgid < MAV_MSG_ENUM_END)
     {
         if (debug_)
         {
