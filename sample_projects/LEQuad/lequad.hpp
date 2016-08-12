@@ -255,7 +255,8 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.state_config = State::default_config();
 
-    conf.data_logging_continuous_config = data_logging_default_config();
+    conf.data_logging_continuous_config                  = data_logging_default_config();
+    conf.data_logging_continuous_config.continuous_write = true;
     conf.data_logging_stat_config       = data_logging_default_config();
 
     conf.scheduler_config = Scheduler::default_config();

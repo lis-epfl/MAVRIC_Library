@@ -69,6 +69,7 @@ typedef struct
     uint16_t max_logs;                          ///< The max number of logged files with the same name on the SD card
     bool debug;                                 ///< Indicates if debug messages should be printed for each param change
     uint32_t log_data;                          ///< The initial state of writing a file
+    bool continuous_write;                      ///< A flag to tell whether we write continuously to the file or not
 } data_logging_conf_t;
 
 /**
@@ -97,12 +98,11 @@ public:
      * \brief   Initialise the data logging module
      *
      * \param   file_name               The pointer to name of the file to create
-     * \param   continuous_write        Boolean to state whether writing should be continous or not
      * \param   sysid                   The system identification number of the MAV
      *
      * \return  True if the init succeed, false otherwise
      */
-    bool create_new_log_file(const char* file_name_, bool continuous_write_, uint32_t sysid);
+    bool create_new_log_file(const char* file_name_, uint32_t sysid);
 
     /**
      * \brief   The task to log the data to the SD card
@@ -265,7 +265,6 @@ private:
     bool file_opened_;                           ///< A flag to tell whether a file is opened or not
     bool sys_status_;                            ///< A flag to tell whether the file system status is ok or not
 
-    bool continuous_write_;                      ///< A flag to tell whether we write continuously to the file or not
     uint32_t log_data_;                          ///< A flag to stop/start writing to file
 
     uint32_t logging_time_;                      ///< The time that we've passed logging since the last f_close
@@ -287,8 +286,8 @@ static inline data_logging_conf_t data_logging_default_config()
     conf.max_data_logging_count = 50;
     conf.max_logs               = 500;
     conf.debug                  = true;
-    conf.log_data               = 0;  // 1: log data, 0: no log data
-
+    conf.log_data               = 0;     // 1: log data, 0: no log data
+    conf.continuous_write       = false;
     return conf;
 };
 

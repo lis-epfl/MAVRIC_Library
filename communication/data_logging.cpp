@@ -544,7 +544,7 @@ Data_logging::Data_logging(File& file, State& state, data_logging_conf_t config)
     data_logging_count_ = 0;
 }
 
-bool Data_logging::create_new_log_file(const char* file_name__, bool continuous_write__, uint32_t sysid)
+bool Data_logging::create_new_log_file(const char* file_name__, uint32_t sysid)
 {
     bool init_success = true;
 
@@ -617,7 +617,7 @@ bool Data_logging::update(void)
                 }
             }
 
-            if (continuous_write_)
+            if (config_.continuous_write)
             {
                 log_parameters();
             }
