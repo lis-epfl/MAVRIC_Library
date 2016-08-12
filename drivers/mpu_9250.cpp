@@ -50,8 +50,9 @@
 uint8_t tt = 0;
 Mpu_9250::Mpu_9250(Spi& spi, const mpu_9250_conf_t config):
     spi_(spi),
-    gyro_data_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     acc_data_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    gyro_data_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    mag_data_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     temperature_(0.0f),
     last_update_us_(0.0f),
     config_(config)
@@ -148,16 +149,16 @@ bool Mpu_9250::update_gyr(void)
 {
     bool success = true;
 
-    uint8_t gyro_reg[7]    = {MPU9250_GYRO_X_OUT_MSB, 0, 0, 0, 0, 0 ,0};
-    uint8_t gyro_buffer[7] = {0};
-
-    success &= read_reg(gyro_reg, gyro_buffer, 7);
-
-    acc_data_[0] = (float)((int16_t)(gyro_buffer[1] << 8 | gyro_buffer[2]));
-    acc_data_[1] = (float)((int16_t)(gyro_buffer[3] << 8 | gyro_buffer[4]));
-    acc_data_[2] = (float)((int16_t)(gyro_buffer[5] << 8 | gyro_buffer[6]));
-
-    last_update_us_ = time_keeper_get_us();
+    // uint8_t gyro_reg[7]    = {MPU9250_GYRO_X_OUT_MSB, 0, 0, 0, 0, 0 ,0};
+    // uint8_t gyro_buffer[7] = {0};
+    //
+    // success &= read_reg(gyro_reg, gyro_buffer, 7);
+    //
+    // acc_data_[0] = (float)((int16_t)(gyro_buffer[1] << 8 | gyro_buffer[2]));
+    // acc_data_[1] = (float)((int16_t)(gyro_buffer[3] << 8 | gyro_buffer[4]));
+    // acc_data_[2] = (float)((int16_t)(gyro_buffer[5] << 8 | gyro_buffer[6]));
+    //
+    // last_update_us_ = time_keeper_get_us();
 
     return success;
 }
@@ -166,16 +167,16 @@ bool Mpu_9250::update_mag(void)
 {
     bool success = true;
 
-    uint8_t mag_reg[8]    = {MPU9250_GYRO_Z_OUT_LSB, 0, 0, 0, 0, 0 ,0, 0};
-    uint8_t mag_buffer[8] = {0};
-
-    success &= read_reg(mag_reg, mag_buffer, 8);
-
-    mag_data_[0] = (float)((int16_t)(mag_buffer[2] << 8 | mag_buffer[3]));
-    mag_data_[1] = (float)((int16_t)(mag_buffer[4] << 8 | mag_buffer[5]));
-    mag_data_[2] = (float)((int16_t)(mag_buffer[6] << 8 | mag_buffer[7]));
-
-    last_update_us_ = time_keeper_get_us();
+    // uint8_t mag_reg[8]    = {MPU9250_GYRO_Z_OUT_LSB, 0, 0, 0, 0, 0 ,0, 0};
+    // uint8_t mag_buffer[8] = {0};
+    //
+    // success &= read_reg(mag_reg, mag_buffer, 8);
+    //
+    // mag_data_[0] = (float)((int16_t)(mag_buffer[2] << 8 | mag_buffer[3]));
+    // mag_data_[1] = (float)((int16_t)(mag_buffer[4] << 8 | mag_buffer[5]));
+    // mag_data_[2] = (float)((int16_t)(mag_buffer[6] << 8 | mag_buffer[7]));
+    //
+    // last_update_us_ = time_keeper_get_us();
 
     return success;
 }

@@ -116,7 +116,7 @@ static inline mpu_9250_conf_t mpu_9250_default_config()
     conf.gyro_filter            = MPU9250_GYRO_LOWPASS_184_HZ;
     conf.gyro_range             = MPU9250_GYRO_500_DEG;
     conf.default_sample_rate    = 3;//500;
-    
+
     return conf;
 };
 
@@ -476,8 +476,8 @@ public:
 
 private:
     Spi&                 spi_;              ///< SPI peripheral
-    std::array<float, 3> gyro_data_;        ///< Gyroscope data
     std::array<float, 3> acc_data_;         ///< Accelerometer data
+    std::array<float, 3> gyro_data_;        ///< Gyroscope data
     std::array<float, 3> mag_data_;         ///< Magnetometer data
     float                temperature_;      ///< Temperature
     float                last_update_us_;   ///< Last udate time in microseconds

@@ -179,8 +179,14 @@ int main(int argc, char** argv)
 
     Console<Serial> console(board.serial_);
 
-    Mpu_9250 mpu(board.spi_1_);
-    uint8_t bo = mpu.init();
+    Mpu_9250 mpu_(board.spi_1_);
+    uint8_t bo = mpu_.init();
+    // uint8_t bo = 1;
+
+
+    // Mpu_9250& mpu = board.mpu_9250_;
+    Mpu_9250& mpu = mpu_;
+    Imu imu(mpu, mpu, mpu);
 
     while (1)
     {
@@ -212,7 +218,11 @@ int main(int argc, char** argv)
             board.led_err_.toggle();
         }
 
-        mpu.update_acc();
+
+        // mpu.update_acc();
+        mpu.update_gyr();
+        mpu.update_mag();
+        imu.update();
 
         int16_t accx = (int16_t)mpu.acc_X();
         int16_t accy = (int16_t)mpu.acc_Y();
@@ -247,6 +257,30 @@ int main(int argc, char** argv)
         time_keeper_delay_ms(25);
         console.write(accz);
         time_keeper_delay_ms(25);
+
+
+        // console.write(gyrx);
+        // time_keeper_delay_ms(25);
+        // board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        // time_keeper_delay_ms(25);
+        // console.write(gyry);
+        // time_keeper_delay_ms(25);
+        // board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        // time_keeper_delay_ms(25);
+        // console.write(gyrz);
+        // time_keeper_delay_ms(25);
+        //
+        // console.write(magx);
+        // time_keeper_delay_ms(25);
+        // board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        // time_keeper_delay_ms(25);
+        // console.write(magy);
+        // time_keeper_delay_ms(25);
+        // board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        // time_keeper_delay_ms(25);
+        // console.write(magz);
+        // time_keeper_delay_ms(25);
+
         const char* newline = "\r\n";
         board.serial_.write((const uint8_t*)newline, sizeof(newline));
 
