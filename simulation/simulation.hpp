@@ -151,7 +151,8 @@ public:
 
 private:
     Dynamic_model&      dynamic_model_;         ///< Reference to dynamic model
-
+    simulation_conf_t   config_;                ///< Configuration
+    
     Accelerometer_sim   accelerometer_;         ///< Simulated accelerometer
     Gyroscope_sim       gyroscope_;             ///< Simulated gyroscope
     Magnetometer_sim    magnetometer_;          ///< Simulated magnetometer
