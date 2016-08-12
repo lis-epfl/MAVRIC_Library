@@ -580,17 +580,19 @@ bool Navigation::update(Navigation* navigation)
 
 void Navigation::set_goal(Waypoint& new_goal)
 {
-    // Update goal based on the inputted waypoint
     if (goal_ == NULL ||                                                // If there was no goal previously
         (new_goal.command() != goal_->command() ||                      // Or there has been a slight change...
          new_goal.frame() != goal_->frame() ||
-         maths_f_abs(new_goal.param1() - goal_->param1()) > 0.001f ||
-         maths_f_abs(new_goal.param2() - goal_->param2()) > 0.001f ||
-         maths_f_abs(new_goal.param3() - goal_->param3()) > 0.001f ||
-         maths_f_abs(new_goal.param4() - goal_->param4()) > 0.001f ||
-         maths_f_abs(new_goal.param5() - goal_->param5()) > 0.001f ||
-         maths_f_abs(new_goal.param6() - goal_->param6()) > 0.001f ||
-         maths_f_abs(new_goal.param7() - goal_->param7()) > 0.001f))
+         maths_f_abs(new_goal.param1() - goal_->param1()) > 0.000001f ||
+         maths_f_abs(new_goal.param2() - goal_->param2()) > 0.000001f ||
+         maths_f_abs(new_goal.param3() - goal_->param3()) > 0.000001f ||
+         maths_f_abs(new_goal.param4() - goal_->param4()) > 0.000001f ||
+         maths_f_abs(new_goal.param5() - goal_->param5()) > 0.000001f ||
+         maths_f_abs(new_goal.param6() - goal_->param6()) > 0.000001f ||
+         maths_f_abs(new_goal.param7() - goal_->param7()) > 0.000001f ||
+         maths_f_abs(new_goal.local_pos()[X] - goal_->local_pos()[X]) > 0.000001f ||
+         maths_f_abs(new_goal.local_pos()[Y] - goal_->local_pos()[Y]) > 0.000001f ||
+         maths_f_abs(new_goal.local_pos()[Z] - goal_->local_pos()[Z]) > 0.000001f))
     {
         print_util_dbg_print("Waypoint changed\r\n");
         print_util_dbg_print("New goal: command: ");

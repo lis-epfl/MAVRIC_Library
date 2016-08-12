@@ -78,6 +78,8 @@ Mission_handler_navigating::Mission_handler_navigating( const INS& ins,
             navigation_(navigation),
             mavlink_stream_(mavlink_stream),
             waypoint_handler_(waypoint_handler),
+            waypoint_(NULL),
+            start_time_(0),
             travel_time_(0)
 {
 

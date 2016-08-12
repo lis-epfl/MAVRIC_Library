@@ -80,12 +80,3 @@ bool Mission_handler_on_ground::is_finished(Mission_planner& mission_planner)
 {
     return false;
 }
-
-void Mission_handler_on_ground::modify_control_command(control_command_t& control)
-{
-    if (navigation_.auto_landing_behavior == Navigation::DESCENT_TO_GND)
-    {
-        // Constant velocity to the ground
-        control.tvel[Z] = 0.3f;
-    }
-}

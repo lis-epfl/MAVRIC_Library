@@ -55,6 +55,7 @@ extern "C"
 Mission_handler_hold_position::Mission_handler_hold_position(   const INS& ins,
                                                                 Navigation& navigation):
             Mission_handler(),
+            waypoint_(NULL),
             ins_(ins),
             navigation_(navigation)
 {
@@ -102,37 +103,41 @@ bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner
 {
     if (waypoint_ != NULL)
     {
-        switch (waypoint_->command())
+        if (waypoint_->autocontinue() == 1)
         {
-        case MAV_CMD_NAV_LOITER_UNLIM:
-            return false;
+            switch (waypoint_->command())
+            {
+            case MAV_CMD_NAV_LOITER_UNLIM:
+                return false;
 
-        case MAV_CMD_NAV_LOITER_TIME:
-            if ((time_keeper_get_ms() - start_time_) * 1000.0f > waypoint_->param1())
-            {
-                return true;
-            }
-            else
-            {
+            case MAV_CMD_NAV_LOITER_TIME:
+                if ((time_keeper_get_ms() - start_time_) * 1000.0f > waypoint_->param1())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+                break;
+
+            case MAV_CMD_NAV_LOITER_TO_ALT:
+                if (maths_f_abs(ins_.position_lf()[Z] - waypoint_->local_pos()[Z]) < waypoint_->param2()) // TODO: Add check for heading
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+                break;
+
+            default:
                 return false;
             }
-            break;
-
-        case MAV_CMD_NAV_LOITER_TO_ALT:
-            if (maths_f_abs(ins_.position_lf()[Z] - waypoint_->local_pos()[Z]) < waypoint_->param2()) // TODO: Add check for heading
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-            break;
-
-        default:
-            return false;
         }
     }
+        
 
     return false;
 }

@@ -102,5 +102,6 @@ Mission_handler* Mission_handler_registry::get_mission_handler(Waypoint& waypoin
         }
     }
 
+    print_util_dbg_print("[MISSION_HANDLER_REGISTRY]: Handler could not be found\r\n");
     return NULL;
 }

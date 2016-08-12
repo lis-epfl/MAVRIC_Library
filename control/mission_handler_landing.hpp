@@ -124,6 +124,7 @@ public:
 protected:
     Waypoint* waypoint_;                                        ///< The waypoint that we are landing under
     Waypoint landing_waypoint_;                                 ///< The waypoint that we want our drone to go
+    bool is_landed_;                                            ///< Boolean flag stating that we have finished the landing procedure
 
     const INS& ins_;                                            ///< The reference to the ins interface
     Navigation& navigation_;                                    ///< The reference to the navigation structure

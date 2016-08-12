@@ -113,13 +113,6 @@ public:
     static bool update(Mission_planner* mission_planner);
 
     /**
-     * \brief   Check if the nav mode is not equal to the state mav mode
-     *
-     * \return  False if the flag STABILISE, GUIDED and ARMED are equal, true otherwise
-     */
-    bool has_mode_change();
-
-    /**
      * \brief   Default configuration
      *
      * \return  Config structure
@@ -127,15 +120,6 @@ public:
     static inline conf_t default_config();
 
     void set_critical_next_state(bool critical_next_state);
-
-    /**
-     * \brief   Switches the mission handler to the inputted waypoint
-     *
-     * \param   waypoint
-     *
-     * \return  Success
-     */
-    bool switch_mission_handler(Waypoint& waypoint);
 
     /**
      * \brief   Gets the internal state
@@ -147,20 +131,45 @@ public:
     /**
      * \brief   Sets the internal state based on default waypoints
      *
+     * \details     THIS SHOULD NOT BE SET AS A METHOD TO CHANGE THE
+     *              MISSION HANDLER! USE Mission_planner::switch_mission_handler()
+     *              or Mission_planner::insert_mission_waypoint()
+     *
      * \param   new_internal_state  The new internal state
      */
     void set_internal_state(internal_state_t new_internal_state);
 
     /**
+     * \brief   Switches the mission handler to the inputted waypoint
+     *
+     * \details     The current mission handler is set based on the
+     *              inputted waypoint. If the mission handler could
+     *              not be setup or found, no change is made to the
+     *              current mission handler
+     *
+     * \param   waypoint
+     *
+     * \return  Success
+     */
+    bool switch_mission_handler(Waypoint& waypoint);
+
+    /**
      * \brief   Inserts the inputted waypoint into the mission
+     * 
+     * \details     This inserts a waypoint into the mission and sets
+     *              the internal state to paused. If the insert fails,
+     *              the function returns false and does not set the
+     *              mission handler or inserted waypoint
      *
      * \param   wpt     The waypoint
+     *
+     * \return  Success
      */
-    bool insert_mission_waypoint(Waypoint& wpt);
+    bool insert_mission_waypoint(Waypoint wpt);
 
 protected:
     Mission_handler* current_mission_handler_;                  ///< The currently used mission handler
-    Waypoint internal_state_waypoint_;                          ///< A waypoint that is used to store the handler waypoint for internal_state handling
+    Waypoint inserted_waypoint_;                                ///< A waypoint that is inserted into the plan outside of the normal mission
 
     internal_state_t internal_state_;                           ///< The internal state of the navigation module
 
@@ -168,7 +177,7 @@ protected:
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 
     bool critical_next_state_;                                  ///< Flag to change critical state in its dedicated state machine
-    Waypoint waypoint_critical_coordinates_;                    ///< Waypoint for the critical state
+    Waypoint critical_waypoint_;                                ///< Waypoint for the critical state
 
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure

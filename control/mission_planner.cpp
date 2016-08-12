@@ -309,7 +309,7 @@ mav_result_t Mission_planner::set_auto_takeoff(Mission_planner* mission_planner,
     {
         Waypoint takeoff_wpt(   MAV_FRAME_LOCAL_NED,
                                 MAV_CMD_NAV_TAKEOFF,
-                                0,
+                                1,
                                 0.0f,
                                 0.0f,
                                 0.0f,
@@ -363,7 +363,7 @@ mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner,
         float heading = coord_conventions_get_yaw(mission_planner->ahrs_.qe);
         Waypoint landing_wpt(   MAV_FRAME_LOCAL_NED,
                                 MAV_CMD_NAV_LAND,
-                                0,
+                                1,
                                 0.0f,
                                 0.0f,
                                 0.0f,
@@ -404,84 +404,97 @@ void Mission_planner::state_machine()
             current_mission_handler_->handle(*this);
 
             // Check if we should be switch states
+            // This is for automatic advancement (states can also advance from callback
+            // functions from GCS or remote)
             if (current_mission_handler_->is_finished(*this))
             {
-                mavlink_message_t msg;
-                Waypoint wpt;
                 switch (internal_state())
                 {
                 case STANDBY:
-                    // DONT CHECK IF FINISHED ON GROUND
+                    // DONT ADVANCE IF FINISHED ON GROUND
                     break;
 
-                case PREMISSION:
-                    navigation_.set_start_wpt_time();
-                    navigation_.set_waiting_at_waypoint(false);
-                    switch_mission_handler(waypoint_handler_.current_waypoint());
+                case PREMISSION: // After takeoff, continue with next mission item
+                    {
+                        // Advance mission item
+                        navigation_.set_start_wpt_time();
+                        navigation_.set_waiting_at_waypoint(false);
+                        waypoint_handler_.advance_to_next_waypoint();
 
-                    print_util_dbg_print("Autocontinue towards waypoint Nr");
-                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
-                    print_util_dbg_print("\r\n");
+                        // Set mission handler
+                        switch_mission_handler(waypoint_handler_.current_waypoint());
 
-                    // Send message
-                    mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
-                                                     mavlink_stream_.compid(),
-                                                     &msg,
-                                                     waypoint_handler_.current_waypoint_index());
-                    mavlink_stream_.send(&msg);
-                    break;
+                        print_util_dbg_print("Autocontinue from takeoff towards waypoint Nr");
+                        print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
+                        print_util_dbg_print("\r\n");
 
-                case MISSION:
-                    // Advance to next waypoint
-                    navigation_.set_start_wpt_time();
-                    navigation_.set_waiting_at_waypoint(false);
-                    waypoint_handler_.advance_to_next_waypoint();
+                        // Send message
+                        mavlink_message_t msg;
+                        mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
+                                                         mavlink_stream_.compid(),
+                                                         &msg,
+                                                         waypoint_handler_.current_waypoint_index());
+                        mavlink_stream_.send(&msg);
+                        break;
+                    }
 
-                    // Set mission again to set new waypoint
-                    switch_mission_handler(waypoint_handler_.current_waypoint());
+                case MISSION: // After mission item, continue with next mission item
+                    {
+                        // Advance to next waypoint
+                        navigation_.set_start_wpt_time();
+                        navigation_.set_waiting_at_waypoint(false);
+                        waypoint_handler_.advance_to_next_waypoint();
 
-                    print_util_dbg_print("Autocontinue towards waypoint Nr");
-                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
-                    print_util_dbg_print("\r\n");
+                        // Set mission handler
+                        switch_mission_handler(waypoint_handler_.current_waypoint());
 
-                    // Send message
-                    mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
-                                                     mavlink_stream_.compid(),
-                                                     &msg,
-                                                     waypoint_handler_.current_waypoint_index());
-                    mavlink_stream_.send(&msg);
-                    break;
+                        print_util_dbg_print("Autocontinue from mission towards waypoint Nr");
+                        print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
+                        print_util_dbg_print("\r\n");
 
-                case POSTMISSION:
-                    wpt = Waypoint( MAV_FRAME_LOCAL_NED,
-                                    0,
-                                    0,
-                                    0.0f,
-                                    0.0f,
-                                    0.0f,
-                                    0.0f,
-                                    0.0f,
-                                    0.0f,
-                                    0.0f);
-                    insert_mission_waypoint(wpt);
-                    break;
+                        // Send message
+                        mavlink_message_t msg;
+                        mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
+                                                         mavlink_stream_.compid(),
+                                                         &msg,
+                                                         waypoint_handler_.current_waypoint_index());
+                        mavlink_stream_.send(&msg);
+                        break;
+                    }
 
-                case PAUSED:
-                    navigation_.set_start_wpt_time();
-                    navigation_.set_waiting_at_waypoint(false);
-                    switch_mission_handler(waypoint_handler_.current_waypoint());
+                case POSTMISSION: // After landing, set mission to standby
+                    {
+                        inserted_waypoint_ = Waypoint();
+                        // Switch, don't insert as the mission is not paused
+                        switch_mission_handler(inserted_waypoint_);
 
-                    print_util_dbg_print("Autocontinue towards waypoint Nr");
-                    print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
-                    print_util_dbg_print("\r\n");
+                        print_util_dbg_print("Autocontinue from landing to standby");
+                        print_util_dbg_print("\r\n");
+                        break;
+                    }
 
-                    // Send message
-                    mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
-                                                     mavlink_stream_.compid(),
-                                                     &msg,
-                                                     waypoint_handler_.current_waypoint_index());
-                    mavlink_stream_.send(&msg);
-                    break;
+                case PAUSED: // After paused, continue to current mission item (don't advance)
+                    {
+                        // Reset but don't advance current waypoint
+                        navigation_.set_start_wpt_time();
+                        navigation_.set_waiting_at_waypoint(false);
+
+                        // Set mission handler
+                        switch_mission_handler(waypoint_handler_.current_waypoint());
+
+                        print_util_dbg_print("Autocontinue towards waypoint Nr");
+                        print_util_dbg_print_num(waypoint_handler_.current_waypoint_index(),10);
+                        print_util_dbg_print("\r\n");
+
+                        // Send message
+                        mavlink_message_t msg;
+                        mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
+                                                         mavlink_stream_.compid(),
+                                                         &msg,
+                                                         waypoint_handler_.current_waypoint_index());
+                        mavlink_stream_.send(&msg);
+                        break;
+                    }
                 }
             }
         }
@@ -514,10 +527,11 @@ void Mission_planner::critical_handler()
 
     //Check whether we entered critical mode due to a battery low level or a lost
     // connection with the GND station or are out of fence control
+    // If one of these happens, we need to land RIGHT NOW
     if (state_.battery_.is_low() ||
-            state_.connection_lost ||
-            state_.out_of_fence_2 ||
-            ins_.is_healthy(INS::healthy_t::XYZ_REL_POSITION) == false)
+        state_.connection_lost ||
+        state_.out_of_fence_2 ||
+        ins_.is_healthy(INS::healthy_t::XYZ_REL_POSITION) == false)
     {
         if (navigation_.critical_behavior != Navigation::CRITICAL_LAND)
         {
@@ -526,66 +540,99 @@ void Mission_planner::critical_handler()
         }
     }
 
+    // Set new critical waypoint / mission handler if needed
     if (!critical_next_state_)
     {
         critical_next_state_ = true;
 
-        local_position_t local_critical_pos;
-
-        //waypoint_critical_coordinates_.set_heading(coord_conventions_get_yaw(ahrs_.qe));
-
         switch (navigation_.critical_behavior)
         {
-            case Navigation::CLIMB_TO_SAFE_ALT:
-                print_util_dbg_print("Climbing to safe alt...\r\n");
-                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+        case Navigation::CLIMB_TO_SAFE_ALT:
+            print_util_dbg_print("Climbing to safe alt...\r\n");
+            state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+            critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                            MAV_CMD_NAV_WAYPOINT,
+                                            1,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            ins_.position_lf()[X],
+                                            ins_.position_lf()[Y],
+                                            navigation_.safe_altitude);
 
-                local_critical_pos[X] = ins_.position_lf()[X];
-                local_critical_pos[Y] = ins_.position_lf()[Y];
-                local_critical_pos[Z] = navigation_.safe_altitude;
+            break;
 
-                break;
+        case Navigation::FLY_TO_HOME_WP:
+            state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+            state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
 
-            case Navigation::FLY_TO_HOME_WP:
-                state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
-                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
+            critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                            MAV_CMD_NAV_WAYPOINT,
+                                            1,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            navigation_.safe_altitude);
+            break;
 
-                local_critical_pos[X] = 0.0f;
-                local_critical_pos[Y] = 0.0f;
-                local_critical_pos[Z] = navigation_.safe_altitude;
-                break;
+        case Navigation::HOME_LAND:
+            state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
+            state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
-            case Navigation::HOME_LAND:
-                state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
-                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
+            critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                            MAV_CMD_NAV_LAND,
+                                            1,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            navigation_.critical_landing_altitude);
+            navigation_.alt_lpf = ins_.position_lf()[Z];
+            break;
 
-                local_critical_pos[X] = 0.0f;
-                local_critical_pos[Y] = 0.0f;
-                local_critical_pos[Z] = navigation_.critical_landing_altitude;
-                navigation_.alt_lpf = ins_.position_lf()[Z];
-                break;
+        case Navigation::CRITICAL_LAND:
+            print_util_dbg_print("Critical land...\r\n");
+            state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
+            state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
-            case Navigation::CRITICAL_LAND:
-                print_util_dbg_print("Critical land...\r\n");
-                state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
-                state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
-
-                local_critical_pos[X] = ins_.position_lf()[X];
-                local_critical_pos[Y] = ins_.position_lf()[Y];
-                local_critical_pos[Z] = navigation_.critical_landing_altitude;
-                navigation_.alt_lpf = ins_.position_lf()[Z];
-                break;
+            critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                            MAV_CMD_NAV_LAND,
+                                            1,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            ins_.position_lf()[X],
+                                            ins_.position_lf()[Y],
+                                            navigation_.critical_landing_altitude);
+            navigation_.alt_lpf = ins_.position_lf()[Z];
+            break;
         }
 
-        //waypoint_critical_coordinates_.set_local_pos(local_critical_pos);
+        // Set this new waypoint
+        switch_mission_handler(critical_waypoint_);
 
         for (uint8_t i = 0; i < 3; i++)
         {
-            rel_pos[i] = waypoint_critical_coordinates_.local_pos()[i] - ins_.position_lf()[i];
+            rel_pos[i] = critical_waypoint_.local_pos()[i] - ins_.position_lf()[i];
         }
         navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
     }
 
+    // Handle critical state
+    if (current_mission_handler_ != NULL)
+    {
+        current_mission_handler_->handle(*this);
+    }
+
+    // Create new check for moving to next critical state
+    // This also allows us to bypass any handlers that do not have autocontinue checks enables
     if (navigation_.critical_behavior == Navigation::CRITICAL_LAND || navigation_.critical_behavior == Navigation::HOME_LAND)
     {
         navigation_.alt_lpf = navigation_.LPF_gain * navigation_.alt_lpf + (1.0f - navigation_.LPF_gain) * ins_.position_lf()[Z];
@@ -595,8 +642,7 @@ void Mission_planner::critical_handler()
             next_state_ = true;
         }
     }
-
-    if ((navigation_.critical_behavior == Navigation::CLIMB_TO_SAFE_ALT) || (navigation_.critical_behavior == Navigation::FLY_TO_HOME_WP))
+    else if ((navigation_.critical_behavior == Navigation::CLIMB_TO_SAFE_ALT) || (navigation_.critical_behavior == Navigation::FLY_TO_HOME_WP))
     {
         if (navigation_.dist2wp_sqr < 3.0f)
         {
@@ -604,44 +650,42 @@ void Mission_planner::critical_handler()
         }
     }
 
+    // If we move to the next state, set the next state
     if (next_state_)
     {
         critical_next_state_ = false;
         switch (navigation_.critical_behavior)
         {
-            case Navigation::CLIMB_TO_SAFE_ALT:
-                print_util_dbg_print("Critical State! Flying to home waypoint.\r\n");
-                navigation_.critical_behavior = Navigation::FLY_TO_HOME_WP;
-                break;
+        case Navigation::CLIMB_TO_SAFE_ALT:
+            print_util_dbg_print("Critical State! Flying to home waypoint.\r\n");
+            navigation_.critical_behavior = Navigation::FLY_TO_HOME_WP;
+            break;
 
-            case Navigation::FLY_TO_HOME_WP:
-                if (state_.out_of_fence_1)
-                {
-                    //stop auto navigation_, to prevent going out of fence 1 again
-                    //waypoint_hold_coordinates = waypoint_critical_coordinates_; TODO
-                    //set_internal_state(Mission_planner::PAUSED); TODO
-                    //stop_there_handler_.stopping_handler(*this); TODO
-                    state_.out_of_fence_1 = false;
-                    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-                    state_.mav_state_ = MAV_STATE_ACTIVE;
-                    state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
-                }
-                else
-                {
-                    print_util_dbg_print("Critical State! Performing critical landing.\r\n");
-                    navigation_.critical_behavior = Navigation::HOME_LAND;
-                }
-                break;
-
-            case Navigation::HOME_LAND:
-            case Navigation::CRITICAL_LAND:
-                print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
+        case Navigation::FLY_TO_HOME_WP:
+            if (state_.out_of_fence_1)
+            {
+                state_.out_of_fence_1 = false;
                 navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-                //state_.mav_mode_custom = CUSTOM_BASE_MODE;
-                //set_internal_state(Mission_planner::STANDBY); TODO
-                state_.set_armed(false);
-                state_.mav_state_ = MAV_STATE_EMERGENCY;
-                break;
+                state_.mav_state_ = MAV_STATE_ACTIVE;
+                state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
+            }
+            else
+            {
+                print_util_dbg_print("Critical State! Performing critical landing.\r\n");
+                navigation_.critical_behavior = Navigation::HOME_LAND;
+            }
+            break;
+
+        case Navigation::HOME_LAND:
+        case Navigation::CRITICAL_LAND:
+            print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
+            navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+            //state_.mav_mode_custom = CUSTOM_BASE_MODE;
+            critical_waypoint_ = Waypoint();
+            switch_mission_handler(critical_waypoint_);
+            state_.set_armed(false);
+            state_.mav_state_ = MAV_STATE_EMERGENCY;
+            break;
         }
     }
 }
@@ -669,11 +713,21 @@ bool Mission_planner::init()
 {
     bool init_success = true;
 
-    internal_state_waypoint_ = Waypoint();
-    insert_mission_waypoint(internal_state_waypoint_);
+    // Set initial standby mission handler
+    inserted_waypoint_ = Waypoint();
+    switch_mission_handler(inserted_waypoint_);
 
     // Create blank critical waypoint
-    waypoint_critical_coordinates_ = Waypoint(MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_LOITER_UNLIM, 0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, navigation_.safe_altitude);
+    critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                    MAV_CMD_NAV_LAND,
+                                    1,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    navigation_.critical_landing_altitude);
 
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
@@ -751,45 +805,18 @@ bool Mission_planner::init()
     return init_success;
 }
 
-bool Mission_planner::switch_mission_handler(Waypoint& waypoint)
-{
-    Mission_handler* handler = mission_handler_registry_.get_mission_handler(waypoint);
-    if (handler == NULL)
-    {
-        return false;
-    }
-
-    // Set current handler
-    bool ret = handler->setup(*this, waypoint);
-    if (ret)
-    {
-        current_mission_handler_ = handler;
-
-        // Output debug message
-        print_util_dbg_print("Switching to waypoint command: ");
-        print_util_dbg_print_num(waypoint.command(), 10);
-        print_util_dbg_print("\r\n");
-    }
-    else
-    {
-        print_util_dbg_print("Cannot setup mission handler\r\n");
-    }
-    
-    return ret;
-}
-
 bool Mission_planner::update(Mission_planner* mission_planner)
 {
     Mav_mode mode_local = mission_planner->state_.mav_mode();
 
-    Waypoint wpt;
     switch (mission_planner->state_.mav_state_)
     {
     case MAV_STATE_STANDBY:
         if (mission_planner->internal_state() != STANDBY)
         {
-            wpt = Waypoint();
-            mission_planner->switch_mission_handler(wpt);
+            mission_planner->inserted_waypoint_ = Waypoint();
+            // Switch, don't insert as the mission isn't paused
+            mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
         }
         mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
         mission_planner->critical_next_state_ = false;
@@ -807,19 +834,16 @@ bool Mission_planner::update(Mission_planner* mission_planner)
         // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
         if (mode_local.is_guided())
         {
-            if ((mission_planner->internal_state() == Mission_planner::MISSION) || (mission_planner->internal_state() == Mission_planner::POSTMISSION)) // TODO: Why is this like this
-            {
-                mission_planner->critical_handler();
-                mission_planner->insert_mission_waypoint(mission_planner->waypoint_critical_coordinates_);
-            }
+            mission_planner->critical_handler();
         }
         break;
 
     default:
         if (mission_planner->internal_state() != STANDBY)
         {
-            wpt = Waypoint();
-            mission_planner->switch_mission_handler(wpt);
+            mission_planner->inserted_waypoint_ = Waypoint();
+            // Switch, don't insert as the mission isn't paused
+            mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
         }
         break;
     }
@@ -889,25 +913,52 @@ void Mission_planner::set_internal_state(internal_state_t new_internal_state)
     }
 }
 
-bool Mission_planner::insert_mission_waypoint(Waypoint& wpt)
+bool Mission_planner::switch_mission_handler(Waypoint& waypoint)
+{
+    Mission_handler* handler = mission_handler_registry_.get_mission_handler(waypoint);
+    if (handler == NULL)
+    {
+        return false;
+    }
+
+    // Set current handler
+    bool ret = handler->setup(*this, waypoint);
+    if (ret)
+    {
+        current_mission_handler_ = handler;
+
+        // Output debug message
+        print_util_dbg_print("Switching to waypoint command: ");
+        print_util_dbg_print_num(waypoint.command(), 10);
+        print_util_dbg_print("\r\n");
+    }
+    else
+    {
+        print_util_dbg_print("Cannot setup mission handler\r\n");
+    }
+    
+    return ret;
+}
+
+bool Mission_planner::insert_mission_waypoint(Waypoint wpt)
 {
     bool ret = true;
     
     // Copy waypoint state in case of failure
-    Waypoint old = internal_state_waypoint_;
-    internal_state_waypoint_ = wpt;
+    Waypoint old = inserted_waypoint_;
+    inserted_waypoint_ = wpt;
 
-    ret &= switch_mission_handler(internal_state_waypoint_);
+    ret &= switch_mission_handler(inserted_waypoint_);
 
     if (ret)
     {
         // Override what the mission handler set to PAUSED
-        //set_internal_state(PAUSED);
+        set_internal_state(PAUSED);
     }
     else
     {
         // Failed, revert internal state waypoint
-        internal_state_waypoint_ = old;
+        inserted_waypoint_ = old;
     }
 
     return ret;

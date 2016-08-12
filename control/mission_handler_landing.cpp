@@ -63,6 +63,7 @@ Mission_handler_landing::Mission_handler_landing(   const INS& ins,
                                                     Navigation& navigation,
                                                     State& state):
             Mission_handler(),
+            waypoint_(NULL),
             ins_(ins),
             navigation_(navigation),
             state_(state)
@@ -92,6 +93,7 @@ bool Mission_handler_landing::setup(Mission_planner& mission_planner, Waypoint& 
     state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
     navigation_.set_waiting_at_waypoint(false);
     mission_planner.set_internal_state(Mission_planner::POSTMISSION);
+    is_landed_ = false;
 
     waypoint_ = &wpt;
 
@@ -158,12 +160,13 @@ void Mission_handler_landing::handle(Mission_planner& mission_planner)
                     state_.set_armed(false);
                     state_.mav_state_ = MAV_STATE_STANDBY;
                     navigation_.set_waiting_at_waypoint(true);
+                    is_landed_ = true;
                     break;
             }
         }
 
         // Set goal
-        landing_waypoint_ = Waypoint(   waypoint_->frame(),
+        landing_waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,    // Needs to be local NED as we input the local position as param 5, 6, and 7
                                         waypoint_->command(),
                                         waypoint_->autocontinue(),
                                         waypoint_->param1(),
@@ -179,7 +182,21 @@ void Mission_handler_landing::handle(Mission_planner& mission_planner)
 
 bool Mission_handler_landing::is_finished(Mission_planner& mission_planner)
 {
-    return false;
+    if (waypoint_ != NULL)
+    {
+        if (waypoint_->autocontinue() == 1 && is_landed_)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void Mission_handler_landing::modify_control_command(control_command_t& control)

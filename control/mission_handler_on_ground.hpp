@@ -107,13 +107,6 @@ public:
      */
     bool is_finished(Mission_planner& mission_planner);
 
-    /**
-     * \brief   Sets the control command to 0
-     *
-     * \param   control     Control command
-     */
-    void modify_control_command(control_command_t& control);
-
 protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
 };
