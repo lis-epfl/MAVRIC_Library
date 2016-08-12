@@ -74,7 +74,9 @@ using namespace mat;
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg)
+void Ahrs_ekf_mocap::callback(  Ahrs_ekf_mocap* ahrs_ekf_mocap,
+                                uint32_t __attribute__((unused)) sysid,
+                                mavlink_message_t* msg)
 {
     ahrs_ekf_mocap->R_mocap_ = Mat<4, 4>(ahrs_ekf_mocap->config_.R_mocap, true);
 
