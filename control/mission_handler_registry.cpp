@@ -69,7 +69,7 @@ bool Mission_handler_registry::register_mission_handler(Mission_handler& handler
     // Check for maximum count
     if (MAX_REGISTERED_MISSION_HANDLERS == registered_mission_handler_count_)
     {
-        print_util_dbg_print("[MISSION_PLANNER]: Too many registed mission handlers\r\n");
+        print_util_dbg_print("[MISSION_HANDLER_REGISTRY]: Too many registed mission handlers\r\n");
         return false;
     }
 
@@ -78,7 +78,7 @@ bool Mission_handler_registry::register_mission_handler(Mission_handler& handler
     {
         if (registered_mission_handlers_[i] == &handler)
         {
-            print_util_dbg_print("[MISSION_PLANNER]: Mission handler already registed\r\n");
+            print_util_dbg_print("[MISSION_HANDLER_REGISTRY]: Mission handler already registed\r\n");
             return false;
         }
     }
@@ -86,6 +86,7 @@ bool Mission_handler_registry::register_mission_handler(Mission_handler& handler
     // Register mission
     registered_mission_handlers_[registered_mission_handler_count_] = &handler;
     registered_mission_handler_count_++;
+    print_util_dbg_print("[MISSION_HANDLER_REGISTRY]: Mission handler registered\r\n");
     return true;
 }
 

@@ -517,62 +517,72 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
 
 bool Navigation::update(Navigation* navigation)
 {
-    Mav_mode mode_local = navigation->state.mav_mode();
-
-    uint32_t t = time_keeper_get_us();
-
-    navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
-    navigation->last_update = t;
-
-    // Update the dubin structure
-    if (navigation->navigation_strategy == strategy_t::DUBIN)
+    if (navigation->goal_ != NULL)
     {
-        navigation->dubin_state_machine();
-    }
+        Mav_mode mode_local = navigation->state.mav_mode();
 
-    switch (navigation->state.mav_state_)
-    {
-        case MAV_STATE_STANDBY:
-            navigation->controls_nav.tvel[X] = 0.0f;
-            navigation->controls_nav.tvel[Y] = 0.0f;
-            navigation->controls_nav.tvel[Z] = 0.0f;
-            break;
+        uint32_t t = time_keeper_get_us();
 
-        case MAV_STATE_ACTIVE:
-            if (navigation->goal_->command() != 0) // If we do not have the on ground waypoint set
-            {
-                navigation->run();
-            }
-            break;
+        navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
+        navigation->last_update = t;
 
-        case MAV_STATE_CRITICAL:
-            // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-            if (mode_local.is_guided())
-            {
-                navigation->run();
+        // Update the dubin structure
+        if (navigation->navigation_strategy == strategy_t::DUBIN)
+        {
+            navigation->dubin_state_machine();
+        }
 
-                if (navigation->state.out_of_fence_2)
+        switch (navigation->state.mav_state_)
+        {
+            case MAV_STATE_STANDBY:
+                navigation->controls_nav.tvel[X] = 0.0f;
+                navigation->controls_nav.tvel[Y] = 0.0f;
+                navigation->controls_nav.tvel[Z] = 0.0f;
+                break;
+
+            case MAV_STATE_ACTIVE:
+                if (navigation->goal_->command() != 0) // If we do not have the on ground waypoint set
                 {
-                    // Constant velocity to the ground
-                    navigation->controls_nav.tvel[Z] = 1.0f;
+                    navigation->run();
                 }
-            }
-            break;
+                break;
 
-        default:
-            navigation->controls_nav.tvel[X] = 0.0f;
-            navigation->controls_nav.tvel[Y] = 0.0f;
-            navigation->controls_nav.tvel[Z] = 0.0f;
-            break;
+            case MAV_STATE_CRITICAL:
+                // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
+                if (mode_local.is_guided())
+                {
+                    navigation->run();
+
+                    if (navigation->state.out_of_fence_2)
+                    {
+                        // Constant velocity to the ground
+                        navigation->controls_nav.tvel[Z] = 1.0f;
+                    }
+                }
+                break;
+
+            default:
+                navigation->controls_nav.tvel[X] = 0.0f;
+                navigation->controls_nav.tvel[Y] = 0.0f;
+                navigation->controls_nav.tvel[Z] = 0.0f;
+                break;
+        }
     }
-
+    else
+    {
+        navigation->controls_nav.tvel[X] = 0.0f;
+        navigation->controls_nav.tvel[Y] = 0.0f;
+        navigation->controls_nav.tvel[Z] = 0.0f;
+    }
+    
     return true;
 }
 
 void Navigation::set_goal(Waypoint& new_goal)
 {
     // Update goal based on the inputted waypoint
-    if ((new_goal.command() != goal_->command() ||
+    if (goal_ == NULL ||                                                // If there was no goal previously
+        (new_goal.command() != goal_->command() ||                      // Or there has been a slight change...
          new_goal.frame() != goal_->frame() ||
          maths_f_abs(new_goal.param1() - goal_->param1()) > 0.001f ||
          maths_f_abs(new_goal.param2() - goal_->param2()) > 0.001f ||
@@ -580,11 +590,24 @@ void Navigation::set_goal(Waypoint& new_goal)
          maths_f_abs(new_goal.param4() - goal_->param4()) > 0.001f ||
          maths_f_abs(new_goal.param5() - goal_->param5()) > 0.001f ||
          maths_f_abs(new_goal.param6() - goal_->param6()) > 0.001f ||
-         maths_f_abs(new_goal.param7() - goal_->param7()) > 0.001f) &&
-        (navigation_strategy == strategy_t::DUBIN))
+         maths_f_abs(new_goal.param7() - goal_->param7()) > 0.001f))
     {
-        print_util_dbg_print("Waypoint changed, reinitialize dubin\r\n");
-        dubin_state = DUBIN_INIT;
+        print_util_dbg_print("Waypoint changed\r\n");
+        print_util_dbg_print("New goal: command: ");
+        print_util_dbg_print_num(new_goal.command(), 10);
+        print_util_dbg_print(", Position: (");
+        print_util_dbg_putfloat(new_goal.local_pos()[X], 3);
+        print_util_dbg_print(", ");
+        print_util_dbg_putfloat(new_goal.local_pos()[Y], 3);
+        print_util_dbg_print(", ");
+        print_util_dbg_putfloat(new_goal.local_pos()[Z], 3);
+        print_util_dbg_print(")\r\n");
+
+        if (navigation_strategy == strategy_t::DUBIN)
+        {
+            print_util_dbg_print("Reinitializing dubin\r\n");
+            dubin_state = DUBIN_INIT;
+        }
     }
 
     // Update goal based on the inputted waypoint

@@ -91,7 +91,7 @@ bool Mission_handler_landing::setup(Mission_planner& mission_planner, Waypoint& 
     state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
     state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
     navigation_.set_waiting_at_waypoint(false);
-    mission_planner.set_internal_state(Mission_planner::PREMISSION);
+    mission_planner.set_internal_state(Mission_planner::POSTMISSION);
 
     waypoint_ = &wpt;
 

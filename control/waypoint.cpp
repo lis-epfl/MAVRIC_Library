@@ -67,7 +67,7 @@ extern "C"
 
 Waypoint::Waypoint() :
             frame_(MAV_FRAME_LOCAL_NED),
-            command_(MAV_CMD_NAV_WAYPOINT),
+            command_(0),
             autocontinue_(0),
             param1_(0.0f),
             param2_(0.0f),
@@ -293,8 +293,8 @@ local_position_t Waypoint::local_pos() const
 
         case MAV_FRAME_GLOBAL_TERRAIN_ALT:
         case MAV_FRAME_GLOBAL_RELATIVE_ALT:
-            waypoint_global.latitude    = param5_ / 10000000.0f;
-            waypoint_global.longitude   = param6_ / 10000000.0f;
+            waypoint_global.latitude    = param5_;
+            waypoint_global.longitude   = param6_;
             waypoint_global.altitude    = param7_ + INS::origin().altitude;
             coord_conventions_global_to_local_position(waypoint_global, INS::origin(), waypoint_local);
             break;

@@ -90,7 +90,7 @@ bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, Waypoint& 
     waypoint_ = &wpt;
 
     navigation_.set_waiting_at_waypoint(false);
-    mission_planner.set_internal_state(Mission_planner::POSTMISSION);
+    mission_planner.set_internal_state(Mission_planner::PREMISSION);
 
     print_util_dbg_print("Automatic take-off, will hold position at: (");
     print_util_dbg_print_num(wpt.local_pos()[X], 10);

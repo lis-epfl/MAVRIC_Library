@@ -448,13 +448,13 @@ bool LEQuad::init_navigation(void)
     bool ret = true;
 
     // Initialize
-    ret &= waypoint_handler.init();
-    ret &= mission_planner.init();
     ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
     ret &= mission_handler_registry.register_mission_handler(landing_handler);
     ret &= mission_handler_registry.register_mission_handler(navigating_handler);
     ret &= mission_handler_registry.register_mission_handler(on_ground_handler);
     ret &= mission_handler_registry.register_mission_handler(takeoff_handler);
+    ret &= waypoint_handler.init();
+    ret &= mission_planner.init();
 
     // Parameters
     ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.dist2vel_gain,                           "NAV_DIST2VEL"    );

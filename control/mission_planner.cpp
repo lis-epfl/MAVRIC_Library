@@ -316,7 +316,7 @@ mav_result_t Mission_planner::set_auto_takeoff(Mission_planner* mission_planner,
                                 packet->param4,
                                 packet->param5,
                                 packet->param6,
-                                packet->param7);
+                                mission_planner->navigation_.takeoff_altitude); // packet->param7);
 
         print_util_dbg_print("Starting automatic take-off from button\r\n");
         mission_planner->insert_mission_waypoint(takeoff_wpt);
@@ -487,7 +487,7 @@ void Mission_planner::state_machine()
         }
         else    // If the current handler is NULL, set to paused
         {
-            set_internal_state(PAUSED);
+            //set_internal_state(PAUSED);
         }
     }
     else if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
@@ -669,6 +669,9 @@ bool Mission_planner::init()
 {
     bool init_success = true;
 
+    internal_state_waypoint_ = Waypoint();
+    insert_mission_waypoint(internal_state_waypoint_);
+
     // Create blank critical waypoint
     waypoint_critical_coordinates_ = Waypoint(MAV_FRAME_LOCAL_NED, MAV_CMD_NAV_LOITER_UNLIM, 0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, navigation_.safe_altitude);
 
@@ -765,10 +768,14 @@ bool Mission_planner::switch_mission_handler(Waypoint& waypoint)
         // Output debug message
         print_util_dbg_print("Switching to waypoint command: ");
         print_util_dbg_print_num(waypoint.command(), 10);
-
+        print_util_dbg_print("\r\n");
+    }
+    else
+    {
+        print_util_dbg_print("Cannot setup mission handler\r\n");
     }
     
-    return true;
+    return ret;
 }
 
 bool Mission_planner::update(Mission_planner* mission_planner)
@@ -779,17 +786,11 @@ bool Mission_planner::update(Mission_planner* mission_planner)
     switch (mission_planner->state_.mav_state_)
     {
     case MAV_STATE_STANDBY:
-        wpt = Waypoint( MAV_FRAME_LOCAL_NED,
-                        0,
-                        0,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f);
-        mission_planner->insert_mission_waypoint(wpt);
+        if (mission_planner->internal_state() != STANDBY)
+        {
+            wpt = Waypoint();
+            mission_planner->switch_mission_handler(wpt);
+        }
         mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
         mission_planner->critical_next_state_ = false;
         mission_planner->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
@@ -815,17 +816,11 @@ bool Mission_planner::update(Mission_planner* mission_planner)
         break;
 
     default:
-        wpt = Waypoint( MAV_FRAME_LOCAL_NED,
-                        0,
-                        0,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f);
-        mission_planner->insert_mission_waypoint(wpt);
+        if (mission_planner->internal_state() != STANDBY)
+        {
+            wpt = Waypoint();
+            mission_planner->switch_mission_handler(wpt);
+        }
         break;
     }
 
@@ -907,7 +902,7 @@ bool Mission_planner::insert_mission_waypoint(Waypoint& wpt)
     if (ret)
     {
         // Override what the mission handler set to PAUSED
-        set_internal_state(PAUSED);
+        //set_internal_state(PAUSED);
     }
     else
     {
