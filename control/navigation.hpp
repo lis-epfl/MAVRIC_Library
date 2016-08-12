@@ -165,7 +165,7 @@ public:
      *
      * \param   new_goal            The new waypoint goal
      */
-    void set_goal(Waypoint& new_goal);
+    void set_goal(const Waypoint& new_goal);
 
     /**
      * \brief   Sets the start_wpt_time_ to the current time
@@ -224,7 +224,7 @@ private:
     bool waiting_at_waypoint_;                          ///< Flag stating if the drone is currently at a waypoint waiting to advance
     uint32_t start_wpt_time_;                           ///< The time at which the MAV starts to travel towards its waypoint
 
-    Waypoint* goal_;                                    ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
+    const Waypoint* goal_;                                    ///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
     dubin_t goal_dubin_;                                ///< The dubin structure for the goal
 
     float dt;                                           ///< The time interval between two navigation updates

@@ -614,7 +614,7 @@ bool Navigation::update(Navigation* navigation)
     return true;
 }
 
-void Navigation::set_goal(Waypoint& new_goal)
+void Navigation::set_goal(const Waypoint& new_goal)
 {
     if (goal_ == NULL ||                                                // If there was no goal previously
         (new_goal.command() != goal_->command() ||                      // Or there has been a slight change...
