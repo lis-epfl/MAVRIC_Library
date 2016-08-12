@@ -171,72 +171,86 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-    mav.loop();
+    // mav.loop();
 
-    // board.led_err_.off();
-    // board.led_stat_.off();
-    // board.led_rf_.off();
+    board.led_err_.off();
+    board.led_stat_.off();
+    board.led_rf_.off();
 
-    // Console<Serial> console(board.serial_);
+    Console<Serial> console(board.serial_);
 
-    // Mpu_9250 mpu(board.spi_1_);
-    // uint8_t bo = mpu.init();
+    Mpu_9250 mpu(board.spi_1_);
+    uint8_t bo = mpu.init();
 
-    // while (1)
-    // {
-    //     //board.state_display_sparky_v2_.update();
-    //     // Warning: if too short serial does not work
-    //     //time_keeper_delay_ms(1000);
+    while (1)
+    {
+        //board.state_display_sparky_v2_.update();
+        // Warning: if too short serial does not work
+        //time_keeper_delay_ms(1000);
 
 
-    //     // Write mavlink message
-    //     // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
-    //     //                             50,     // uint8_t component_id,
-    //     //                             &msg,   // mavlink_message_t* msg,
-    //     //                             0,      // uint8_t type,
-    //     //                             0,      // uint8_t autopilot,
-    //     //                             0,      // uint8_t base_mode,
-    //     //                             0,      // uint32_t custom_mode,
-    //     //                             0);     //uint8_t system_status)
-    //     // mavlink_stream.send(&msg);
+        // Write mavlink message
+        // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
+        //                             50,     // uint8_t component_id,
+        //                             &msg,   // mavlink_message_t* msg,
+        //                             0,      // uint8_t type,
+        //                             0,      // uint8_t autopilot,
+        //                             0,      // uint8_t base_mode,
+        //                             0,      // uint32_t custom_mode,
+        //                             0);     //uint8_t system_status)
+        // mavlink_stream.send(&msg);
 
-    //     time_keeper_delay_ms(500);
+        time_keeper_delay_ms(25);
+        // time_keeper_delay_ms(500);
 
-    //     if (bo)
-    //     {
-    //         board.led_stat_.toggle();
-    //     }
-    //     else
-    //     {
-    //         board.led_err_.toggle();
-    //     }
+        if (bo)
+        {
+            board.led_stat_.toggle();
+        }
+        else
+        {
+            board.led_err_.toggle();
+        }
 
-    //     mpu.update_acc();
+        mpu.update_acc();
 
-    //     uint16_t accx = (uint16_t)mpu.acc_X();
-    //     uint16_t accy = (uint16_t)mpu.acc_Y();
-    //     uint16_t accz = (uint16_t)mpu.acc_Z();
+        int16_t accx = (int16_t)mpu.acc_X();
+        int16_t accy = (int16_t)mpu.acc_Y();
+        int16_t accz = (int16_t)mpu.acc_Z();
 
-    //     uint16_t gyrx = (uint16_t)mpu.gyro_X();
-    //     uint16_t gyry = (uint16_t)mpu.gyro_Y();
-    //     uint16_t gyrz = (uint16_t)mpu.gyro_Z();
+        int16_t gyrx = (int16_t)mpu.gyro_X();
+        int16_t gyry = (int16_t)mpu.gyro_Y();
+        int16_t gyrz = (int16_t)mpu.gyro_Z();
 
-    //     uint16_t magx = (uint16_t)mpu.mag_X();
-    //     uint16_t magy = (uint16_t)mpu.mag_Y();
-    //     uint16_t magz = (uint16_t)mpu.mag_Z();
+        int16_t magx = (int16_t)mpu.mag_X();
+        int16_t magy = (int16_t)mpu.mag_Y();
+        int16_t magz = (int16_t)mpu.mag_Z();
 
-    //     uint16_t val = magx;
+        int16_t val = accx;
 
-    //     uint8_t ser_buf[str::MAX_DIGITS10_LONG];
-    //     uint8_t ser_len = 0;
-    //     str::format_integer(val, ser_buf, &ser_len);
-    //     //board.serial_.write(ser_buf, ser_len);
-    //     //print_util_dbg_log_value("\r\n wai", val, 16);
-    //     console.write(val);
-    //     const char* newline = "\r\n";
-    //     board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        uint8_t ser_buf[str::MAX_DIGITS10_LONG];
+        uint8_t ser_len = 0;
+        str::format_integer(val, ser_buf, &ser_len);
+        //board.serial_.write(ser_buf, ser_len);
+        //print_util_dbg_log_value("\r\n wai", val, 16);
+        console.write(val);
+        // time_keeper_delay_ms(500);
+        // const char* sep = "//";
+        // board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        time_keeper_delay_ms(25);
+        const char* sep = "////";
+        board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        time_keeper_delay_ms(25);
+        console.write(accy);
+        time_keeper_delay_ms(25);
+        board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        time_keeper_delay_ms(25);
+        console.write(accz);
+        time_keeper_delay_ms(25);
+        const char* newline = "\r\n";
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
 
-    // }
+    }
 
     return 0;
 }

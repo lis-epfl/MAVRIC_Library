@@ -270,5 +270,14 @@ bool Sparky_v2::init(void)
     ret = spi_3_.init();
     init_success &= ret;
 
+    // -------------------------------------------------------------------------
+    // Init IMU
+    // -------------------------------------------------------------------------
+    ret = mpu_9250_.init();
+    init_success &= ret;
+
+    time_keeper_delay_ms(50);
+
+
     return init_success;
 }

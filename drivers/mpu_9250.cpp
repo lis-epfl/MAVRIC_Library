@@ -69,39 +69,57 @@ bool Mpu_9250::init(void)
     success &= read_reg(whoami_command, whoami_id);
     success &= whoami_id[1] == MPU9250_WHOAMI_ID ? true : false;
 
-    // Enable communication with Mag
-    uint8_t mag_com_en[] = {MPU9250_USER_CTRL_REG, (uint8_t)(MPU9250_USERCTL_I2C_MST_EN |
-                                                             MPU9250_USERCTL_DIS_I2C)};
-    success &= write_reg(mag_com_en,2);
-    success &= mag_reset();
+    uint8_t power_management[2] = {MPU9250_PWR_MGMT_REG, MPU9250_PWRMGMT_PLL_X_CLK};
+    success &= write_reg(power_management);
 
-    // Read WhoAmI for Mag
-    success &= mag_read_reg(AK8963_WHOAMI_REG, whoami_id);
-    success &= whoami_id[1] == AK8963_WHOAMI_ID ? true : false;
+    // Enable communication with Mag
+    // uint8_t mag_com_en[] = {MPU9250_USER_CTRL_REG, (uint8_t)(MPU9250_USERCTL_I2C_MST_EN |
+    //                                                          MPU9250_USERCTL_DIS_I2C)};
+    // success &= write_reg(mag_com_en,2);
+    // success &= mag_reset();
+
+    // // Read WhoAmI for Mag
+    // success &= mag_read_reg(AK8963_WHOAMI_REG, whoami_id);
+    // success &= whoami_id[1] == AK8963_WHOAMI_ID ? true : false;
 
     if (!success)
     {
         return success;
     }
 
+    /*Configuring Accelerometer and Gyroscope*/
     success  = set_acc_lpf();
-    success &= set_gyro_lpf();
+    // success &= set_gyro_lpf();
 
     success &= set_mpu_sample_rate();
 
     success &= set_acc_range();
-    success &= set_gyro_range();
+    // success &= set_gyro_range();
 
     /*Configuring Magnetometer*/
     // success &= set_mag_sample_rate(); // bug
 
-    uint8_t slv0_reg_reg[]  = {MPU9250_SLV0_REG_REG , AK8963_ST1_REG};
-    uint8_t slv0_addr_reg[] = {MPU9250_SLV0_ADDR_REG, (uint8_t)(MPU9250_AK8963_ADDR | MPU9250_READ_FLAG)};
-    uint8_t slv0_ctrl_reg[] = {MPU9250_SLV0_CTRL_REG, (uint8_t)(MPU9250_I2CSLV_EN | 8)};
+    // uint8_t slv0_reg_reg[]  = {MPU9250_SLV0_REG_REG , AK8963_ST1_REG};
+    // uint8_t slv0_addr_reg[] = {MPU9250_SLV0_ADDR_REG, (uint8_t)(MPU9250_AK8963_ADDR | MPU9250_READ_FLAG)};
+    // uint8_t slv0_ctrl_reg[] = {MPU9250_SLV0_CTRL_REG, (uint8_t)(MPU9250_I2CSLV_EN | 8)};
 
-    success &= write_reg(slv0_reg_reg);
-    success &= write_reg(slv0_addr_reg);
-    success &= write_reg(slv0_ctrl_reg);
+    // success &= write_reg(slv0_reg_reg);
+    // success &= write_reg(slv0_addr_reg);
+    // success &= write_reg(slv0_ctrl_reg);
+
+    uint8_t out_test[] = {MPU9250_ACCEL_CFG2_REG, 0};
+    uint8_t in_test[] = {0,0};
+    read_reg(out_test, in_test);
+    success &= in_test[1] == config_.acc_filter ? true : false;
+
+    // out_test[0] = MPU9250_SMPLRT_DIV_REG;
+    // read_reg(out_test, in_test);
+    // success &= in_test[1] == (uint8_t)0x09 ? true : false;
+
+    out_test[0] = MPU9250_ACCEL_CFG_REG;
+    read_reg(out_test, in_test);
+    success &= in_test[1] == config_.acc_range ? true : false;
+
 
     return success;
 }

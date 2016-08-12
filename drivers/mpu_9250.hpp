@@ -115,7 +115,7 @@ static inline mpu_9250_conf_t mpu_9250_default_config()
     conf.acc_range              = MPU9250_ACC_2G;
     conf.gyro_filter            = MPU9250_GYRO_LOWPASS_184_HZ;
     conf.gyro_range             = MPU9250_GYRO_500_DEG;
-    conf.default_sample_rate    = 500;
+    conf.default_sample_rate    = 3;//500;
     
     return conf;
 };
@@ -456,6 +456,7 @@ public:
     const uint8_t MPU9250_GYRO_Z_OUT_MSB        = 0x47;
     const uint8_t MPU9250_GYRO_Z_OUT_LSB        = 0x48;
     const uint8_t MPU9250_USER_CTRL_REG         = 0x6A;
+    const uint8_t MPU9250_PWR_MGMT_REG          = 0x6B;
     const uint8_t MPU9250_WHOAMI_REG            = 0x75;
 
     /* I2C master status register bits */
@@ -466,7 +467,8 @@ public:
     const uint8_t MPU9250_I2CSLV_EN     = 0x80;
 
     /* Power management and clock selection */
-    const uint8_t MPU9250_PWRMGMT_IMU_RST  = 0x80;
+    const uint8_t MPU9250_PWRMGMT_IMU_RST   = 0x80;
+    const uint8_t MPU9250_PWRMGMT_PLL_X_CLK = 0x01;
 
     /* User control registers */
     const uint8_t MPU9250_USERCTL_DIS_I2C    = 0x10;
