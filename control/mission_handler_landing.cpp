@@ -70,7 +70,7 @@ Mission_handler_landing::Mission_handler_landing(   const INS& ins,
 {
 }
 
-bool Mission_handler_landing::can_handle(Waypoint& wpt)
+bool Mission_handler_landing::can_handle(const Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -83,7 +83,7 @@ bool Mission_handler_landing::can_handle(Waypoint& wpt)
     return handleable;
 }
 
-bool Mission_handler_landing::setup(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_landing::setup(Mission_planner& mission_planner, const Waypoint& wpt)
 {
     bool success = true;
 

@@ -64,7 +64,7 @@ public:
      *
      * \return  Can handle
      */
-    virtual bool can_handle(Waypoint& wpt) = 0;
+    virtual bool can_handle(const Waypoint& wpt) = 0;
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -80,7 +80,7 @@ public:
      *
      * \return  Success
      */
-    virtual bool setup(Mission_planner& mission_planner, Waypoint& wpt) = 0;
+    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt) = 0;
 
     /**
      * \brief   Handles the mission every iteration

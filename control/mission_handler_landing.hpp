@@ -77,7 +77,7 @@ public:
      *
      * \return  Can handle
      */
-    bool can_handle(Waypoint& wpt);
+    bool can_handle(const Waypoint& wpt);
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -89,7 +89,7 @@ public:
      *
      * \return  Success
      */
-    bool setup(Mission_planner& mission_planner, Waypoint& wpt);
+    bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
 
     /**
      * \brief   Handles the mission every iteration
@@ -122,7 +122,7 @@ public:
     void modify_control_command(control_command_t& control);
 
 protected:
-    Waypoint* waypoint_;                                        ///< The waypoint that we are landing under
+    const Waypoint* waypoint_;                                        ///< The waypoint that we are landing under
     Waypoint landing_waypoint_;                                 ///< The waypoint that we want our drone to go
     bool is_landed_;                                            ///< Boolean flag stating that we have finished the landing procedure
 

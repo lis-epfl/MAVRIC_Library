@@ -59,13 +59,13 @@ Mission_handler_on_ground::Mission_handler_on_ground(Navigation& navigation):
 
 }
 
-bool Mission_handler_on_ground::can_handle(Waypoint& wpt)
+bool Mission_handler_on_ground::can_handle(const Waypoint& wpt)
 {
     // TODO: Check if actually on ground
     return wpt.command() == 0;
 }
 
-bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, const Waypoint& wpt)
 {
     navigation_.set_waiting_at_waypoint(true);
     mission_planner.set_internal_state(Mission_planner::STANDBY);

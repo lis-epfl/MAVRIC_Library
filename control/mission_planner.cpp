@@ -398,6 +398,9 @@ void Mission_planner::state_machine()
     // If is auto, look to the waypoints
     if (state_.mav_mode().is_auto())
     {
+        // Reset hold position flag as we are now in auto mode
+        hold_position_set_ = false;
+
         if (current_mission_handler_ != NULL)
         {
             // Handle current mission
@@ -505,8 +508,23 @@ void Mission_planner::state_machine()
     }
     else if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
     {
-        // TODO: Needs to be set
-        // TODO set to default
+        // Set hold position if needed
+        if (!hold_position_set_)
+        {
+            inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                            MAV_CMD_NAV_LOITER_UNLIM,
+                                            0,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            ins_.position_lf()[X],
+                                            ins_.position_lf()[Y],
+                                            ins_.position_lf()[Z]);
+            // Insert so we can say to go back to doing last mission item afterwords
+            insert_mission_waypoint(inserted_waypoint_);
+        }
+
         if (current_mission_handler_ != NULL)
         {
             current_mission_handler_->handle(*this);
@@ -729,6 +747,9 @@ bool Mission_planner::init()
                                     0.0f,
                                     navigation_.critical_landing_altitude);
 
+    // Manual hold position information
+    hold_position_set_ = false;
+
     // Add callbacks for waypoint handler messages requests
     Mavlink_message_handler::msg_callback_t callback;
 //
@@ -913,7 +934,7 @@ void Mission_planner::set_internal_state(internal_state_t new_internal_state)
     }
 }
 
-bool Mission_planner::switch_mission_handler(Waypoint& waypoint)
+bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)
 {
     Mission_handler* handler = mission_handler_registry_.get_mission_handler(waypoint);
     if (handler == NULL)

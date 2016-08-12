@@ -82,7 +82,7 @@ public:
      *
      * \return  The first acceptable mission handler or NULL
      */
-    Mission_handler* get_mission_handler(Waypoint& waypoint);
+    Mission_handler* get_mission_handler(const Waypoint& waypoint);
 
 private:
     /**

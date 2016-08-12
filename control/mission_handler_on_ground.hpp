@@ -72,7 +72,7 @@ public:
      *
      * \return  Can handle
      */
-    bool can_handle(Waypoint& wpt);
+    bool can_handle(const Waypoint& wpt);
 
     /**
      * \brief   Does nothing
@@ -84,7 +84,7 @@ public:
      *
      * \return  True
      */
-    bool setup(Mission_planner& mission_planner, Waypoint& wpt);
+    bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
 
     /**
      * \brief   Does nothing

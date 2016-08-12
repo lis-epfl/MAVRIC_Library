@@ -104,21 +104,21 @@ public:
      *
      * \return current waypoint
      */
-    Waypoint& current_waypoint();
+    const Waypoint& current_waypoint() const;
 
     /**
      * \brief Gets the next waypoint if available
      *
      * \return next waypoint
      */
-    Waypoint& next_waypoint();
+    const Waypoint& next_waypoint() const;
 
     /**
      * \brief   Returns a waypoint from the list from a specific index
      *
      * \return  waypoint_list_[i]
      */
-    Waypoint& waypoint_from_index(int i);
+    const Waypoint& waypoint_from_index(int i) const;
 
     /**
      * \brief   Sets the next waypoint as the current one. Should be called when

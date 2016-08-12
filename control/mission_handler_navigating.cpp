@@ -85,7 +85,7 @@ Mission_handler_navigating::Mission_handler_navigating( const INS& ins,
 
 }
 
-bool Mission_handler_navigating::can_handle(Waypoint& wpt)
+bool Mission_handler_navigating::can_handle(const Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -98,7 +98,7 @@ bool Mission_handler_navigating::can_handle(Waypoint& wpt)
     return handleable;
 }
 
-bool Mission_handler_navigating::setup(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_navigating::setup(Mission_planner& mission_planner, const Waypoint& wpt)
 {
     bool success = true;
 
@@ -190,7 +190,7 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
             else if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
             {
                 /* Check for correct heading */
-                Waypoint& next = waypoint_handler_.next_waypoint();
+                const Waypoint& next = waypoint_handler_.next_waypoint();
 
                 // Find the direction of the next waypoint
                 float rel_wpt_pos[3];

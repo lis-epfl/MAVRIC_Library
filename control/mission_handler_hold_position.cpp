@@ -62,7 +62,7 @@ Mission_handler_hold_position::Mission_handler_hold_position(   const INS& ins,
 
 }
 
-bool Mission_handler_hold_position::can_handle(Waypoint& wpt)
+bool Mission_handler_hold_position::can_handle(const Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -78,7 +78,7 @@ bool Mission_handler_hold_position::can_handle(Waypoint& wpt)
     return handleable;
 }
 
-bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, const Waypoint& wpt)
 {
     bool success = true;
     waypoint_ = &wpt;

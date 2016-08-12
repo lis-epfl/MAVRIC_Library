@@ -71,7 +71,7 @@ Mission_handler_takeoff::Mission_handler_takeoff(   const INS& ins,
 
 }
 
-bool Mission_handler_takeoff::can_handle(Waypoint& wpt)
+bool Mission_handler_takeoff::can_handle(const Waypoint& wpt)
 {
     bool handleable = false;
 
@@ -84,7 +84,7 @@ bool Mission_handler_takeoff::can_handle(Waypoint& wpt)
     return handleable;
 }
 
-bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, Waypoint& wpt)
+bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, const Waypoint& wpt)
 {
     bool success = true;
 

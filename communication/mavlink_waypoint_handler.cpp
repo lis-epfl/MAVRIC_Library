@@ -506,7 +506,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint_list_[0] = waypoint;
 }
 
-Waypoint& Mavlink_waypoint_handler::current_waypoint()
+const Waypoint& Mavlink_waypoint_handler::current_waypoint() const
 {
     // If it is a good index
     if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
@@ -520,7 +520,7 @@ Waypoint& Mavlink_waypoint_handler::current_waypoint()
     }
 }
 
-Waypoint& Mavlink_waypoint_handler::next_waypoint()
+const Waypoint& Mavlink_waypoint_handler::next_waypoint() const
 {
     // If it is a good index
     if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
@@ -542,7 +542,7 @@ Waypoint& Mavlink_waypoint_handler::next_waypoint()
     }
 }
 
-Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i)
+const Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i) const
 {
     if (i >= 0 && i < waypoint_count_)
     {

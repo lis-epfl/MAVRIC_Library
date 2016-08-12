@@ -418,7 +418,7 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
     // Go through waypoint list
     for (uint16_t i = 0; i < vector_field->waypoint_handler->waypoint_count(); ++i)
     {
-        Waypoint& waypoint = vector_field->waypoint_handler->waypoint_from_index(i);
+        const Waypoint& waypoint = vector_field->waypoint_handler->waypoint_from_index(i);
         local_position_t local_wpt = waypoint.local_pos();
 
         // Get object position

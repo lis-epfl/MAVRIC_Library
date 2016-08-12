@@ -151,7 +151,7 @@ public:
      *
      * \return  Success
      */
-    bool switch_mission_handler(Waypoint& waypoint);
+    bool switch_mission_handler(const Waypoint& waypoint);
 
     /**
      * \brief   Inserts the inputted waypoint into the mission
@@ -175,6 +175,8 @@ protected:
 
     Mavlink_waypoint_handler& waypoint_handler_;                ///< The reference to the mavlink waypoint handler
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
+
+    bool hold_position_set_;                                    ///< Flag stating if the pilot has specifically switched to hold position
 
     bool critical_next_state_;                                  ///< Flag to change critical state in its dedicated state machine
     Waypoint critical_waypoint_;                                ///< Waypoint for the critical state

@@ -90,7 +90,7 @@ bool Mission_handler_registry::register_mission_handler(Mission_handler& handler
     return true;
 }
 
-Mission_handler* Mission_handler_registry::get_mission_handler(Waypoint& waypoint)
+Mission_handler* Mission_handler_registry::get_mission_handler(const Waypoint& waypoint)
 {
 	// Search for the first handler than can accept this waypoint
     for (uint8_t i = 0; i < registered_mission_handler_count_; i++)
