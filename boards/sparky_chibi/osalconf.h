@@ -62,6 +62,9 @@
 }
 #endif
 
+#define CH_CFG_USE_MEMCORE                  FALSE
+#define CH_CFG_MEMCORE_SIZE                 0
+
 #endif /* OSALCONF_H */
 
 /** @} */
