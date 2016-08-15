@@ -91,6 +91,30 @@ public:
      * @return  false       Data not read
      */
     virtual bool read(uint8_t* buffer, uint32_t nbytes, uint32_t address) = 0;
+
+
+    /**
+     * \brief   Write then Read data to/from an I2C device
+     *
+     * \param   out_buffer  Data buffer (output)
+     * \param   ntxbytes    Number of bytes to write
+     * \param   in_buffer   Data buffer (input)
+     * \param   nrxbytes    Number of bytes to read
+     *
+     * \return  true        Success
+     * \return  false       Failed
+     */
+    virtual bool transfer(uint8_t* out_buffer, uint32_t ntxbytes, uint8_t* in_buffer, uint32_t nrxbytes, uint32_t address)
+    {
+        bool ret = true;
+
+        // By default do two separate operations for read and write
+        // Override this method if two-way transfer is supported.
+        ret &= write(out_buffer, ntxbytes, address);
+        ret &= read(in_buffer, nrxbytes, address);
+
+        return ret;
+    };
 };
 
 
