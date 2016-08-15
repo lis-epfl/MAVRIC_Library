@@ -128,7 +128,7 @@ CSRC += $(STARTUPSRC) \
 # setting.
 CPPSRC += $(BOARDCPPSRC) \
 		  $(addprefix ${MAVRIC_LIB}/, $(LIB_SRCS)) \
-         ../main_chibi_sparky.cpp \
+         ../main_chibios_sparky.cpp \
 		 ../lequad.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
