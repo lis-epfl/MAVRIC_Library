@@ -124,7 +124,7 @@ protected:
     const Mavlink_stream& mavlink_stream_;                              ///< The reference to the mavlink object
     Mavlink_waypoint_handler& waypoint_handler_;                        ///< The reference to the mavlink waypoint handler
 
-    const Waypoint* waypoint_;                                                ///< The waypoint that we are heading towards
+    Waypoint waypoint_;                                                 ///< The waypoint that we are heading towards
     uint64_t start_time_;                                               ///< The start time for travelling to this waypoint
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 

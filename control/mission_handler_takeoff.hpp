@@ -116,7 +116,7 @@ protected:
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure
 
-    const Waypoint* waypoint_;
+    Waypoint waypoint_;
 };
 
 

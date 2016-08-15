@@ -65,10 +65,18 @@ Mission_handler_takeoff::Mission_handler_takeoff(   const INS& ins,
             Mission_handler(),
             ins_(ins),
             navigation_(navigation),
-            state_(state),
-            waypoint_(NULL)
+            state_(state)
 {
-
+    waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,
+                            MAV_CMD_NAV_TAKEOFF,
+                            1,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            navigation_.takeoff_altitude);
 }
 
 bool Mission_handler_takeoff::can_handle(const Waypoint& wpt)
@@ -88,7 +96,7 @@ bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, const Wayp
 {
     bool success = true;
 
-    waypoint_ = &wpt;
+    waypoint_ = wpt;
 
     navigation_.set_waiting_at_waypoint(false);
     mission_planner.set_internal_state(Mission_planner::PREMISSION);
@@ -106,11 +114,8 @@ bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, const Wayp
 
 void Mission_handler_takeoff::handle(Mission_planner& mission_planner)
 {
-    if (waypoint_ != NULL)
-    {
-        // Set goal
-        navigation_.set_goal(*waypoint_);
-    }
+    // Set goal
+    navigation_.set_goal(waypoint_);
 }
 
 bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
@@ -118,51 +123,48 @@ bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
     bool finished = false;
 
     // Determine distance to the waypoint
-    if (waypoint_ != NULL)
+    if (waypoint_.autocontinue() == 1)
     {
-        if (waypoint_->autocontinue() == 1)
+        float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
+
+        local_position_t wpt_pos = waypoint_.local_pos();
+        float rel_pos[3];
+        for (int i = 0; i < 3; i++)
         {
-            float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
+            rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
+        }
+        navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
-            local_position_t wpt_pos = waypoint_->local_pos();
-            float rel_pos[3];
-            for (int i = 0; i < 3; i++)
+        // Determine if finished
+        
+        switch(navigation_.navigation_strategy)
+        {
+        case Navigation::strategy_t::DIRECT_TO:
+           if (navigation_.dist2wp_sqr <= waypoint_radius)
             {
-                rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
+                finished = true;
+                navigation_.set_waiting_at_waypoint(true);
             }
-            navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+            break;
 
-            // Determine if finished
-            
-            switch(navigation_.navigation_strategy)
+        case Navigation::strategy_t::DUBIN:
+            if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
             {
-            case Navigation::strategy_t::DIRECT_TO:
-               if (navigation_.dist2wp_sqr <= waypoint_radius)
+                if (navigation_.dist2wp_sqr <= waypoint_radius)
                 {
                     finished = true;
                     navigation_.set_waiting_at_waypoint(true);
                 }
-                break;
-
-            case Navigation::strategy_t::DUBIN:
-                if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
-                {
-                    if (navigation_.dist2wp_sqr <= waypoint_radius)
-                    {
-                        finished = true;
-                        navigation_.set_waiting_at_waypoint(true);
-                    }
-                }
-                else
-                {
-                    if (ins_.position_lf()[Z] <= navigation_.takeoff_altitude)
-                    {
-                        finished = true;
-                        navigation_.set_waiting_at_waypoint(true);
-                    }
-                }
-                break;
             }
+            else
+            {
+                if (ins_.position_lf()[Z] <= navigation_.takeoff_altitude)
+                {
+                    finished = true;
+                    navigation_.set_waiting_at_waypoint(true);
+                }
+            }
+            break;
         }
     }
 

@@ -182,42 +182,15 @@ void Navigation::set_speed_command(float rel_pos[])
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 
     // Update handler control
-    if (goal_ != NULL)
+    Mission_handler* handler = mission_handler_registry_.get_mission_handler(goal_);
+    if (handler != NULL)
     {
-        Mission_handler* handler = mission_handler_registry_.get_mission_handler(*goal_);
-        if (handler != NULL)
-        {
-            handler->modify_control_command(controls_nav);
-        }
+        handler->modify_control_command(controls_nav);
     }
 }
 
 void Navigation::dubin_state_machine()
 {
-    // Set null case
-    if (goal_ == NULL)
-    {
-        goal_dubin_.circle_center_1[0] = 0.0f;
-        goal_dubin_.circle_center_1[1] = 0.0f;
-        goal_dubin_.circle_center_1[2] = 0.0f;
-        goal_dubin_.tangent_point_1[0] = 0.0f;
-        goal_dubin_.tangent_point_1[1] = 0.0f;
-        goal_dubin_.tangent_point_1[2] = 0.0f;
-        goal_dubin_.sense_1 = 0;
-        goal_dubin_.radius_1 = 0;
-        goal_dubin_.circle_center_2[0] = 0.0f;
-        goal_dubin_.circle_center_2[1] = 0.0f;
-        goal_dubin_.circle_center_2[2] = 0.0f;
-        goal_dubin_.tangent_point_2[0] = 0.0f;
-        goal_dubin_.tangent_point_2[1] = 0.0f;
-        goal_dubin_.tangent_point_2[2] = 0.0f;
-        goal_dubin_.line_direction[0] = 0.0f;
-        goal_dubin_.line_direction[1] = 0.0f;
-        goal_dubin_.line_direction[2] = 0.0f;
-        goal_dubin_.length = 0.0f;
-        return;
-    }
-
     float rel_pos[3];
 
     rel_pos[Z] = 0.0f;
@@ -235,9 +208,9 @@ void Navigation::dubin_state_machine()
     {
         case DUBIN_INIT:
             print_util_dbg_print("DUBIN_INIT\r\n");
-            if (goal_->radius() >= minimal_radius)
+            if (goal_.radius() >= minimal_radius)
             {
-                init_radius = maths_f_abs(goal_->radius());
+                init_radius = maths_f_abs(goal_.radius());
             }
             else
             {
@@ -258,7 +231,7 @@ void Navigation::dubin_state_machine()
 
             for (uint8_t i = 0; i < 2; ++i)
             {
-                rel_pos[i] = goal_->local_pos()[i]- pos[i];
+                rel_pos[i] = goal_.local_pos()[i]- pos[i];
             }
             rel_pos[Z] = 0.0f;
 
@@ -271,13 +244,13 @@ void Navigation::dubin_state_machine()
                 vectors_normalize(rel_pos,rel_pos_norm);
 
                 float end_radius;
-                if (goal_->radius() < minimal_radius)
+                if (goal_.radius() < minimal_radius)
                 {
                     end_radius = minimal_radius;
                 }
                 else
                 {
-                    end_radius = goal_->radius();
+                    end_radius = goal_.radius();
                 }
 
                 dir_final[X] = -rel_pos_norm[Y]*end_radius;
@@ -286,7 +259,7 @@ void Navigation::dubin_state_machine()
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    pos_goal[i] = goal_->local_pos()[i] + (rel_pos_norm[i] * maths_f_abs(goal_->radius()));
+                    pos_goal[i] = goal_.local_pos()[i] + (rel_pos_norm[i] * maths_f_abs(goal_.radius()));
                 }
                 pos_goal[Z] = 0.0f;
 
@@ -349,12 +322,6 @@ void Navigation::dubin_state_machine()
 
 void Navigation::set_dubin_velocity(dubin_t* dubin)
 {
-    // Ensure that goal is set
-    if (goal_ == NULL)
-    {
-        return;
-    }
-
     float dir_desired[3];
 
     quat_t q_rot;
@@ -365,7 +332,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
         case DUBIN_INIT:
             dubin_circle(   dir_desired,
                             dubin->circle_center_1,
-                            goal_->radius(),
+                            goal_.radius(),
                             ins.position_lf().data(),
                             cruise_speed,
                             one_over_scaling );
@@ -391,14 +358,14 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
         case DUBIN_CIRCLE2:
             dubin_circle(   dir_desired,
                             dubin->circle_center_2,
-                            goal_->radius(),
+                            goal_.radius(),
                             ins.position_lf().data(),
                             cruise_speed,
                             one_over_scaling );
         break;
     }
 
-    float vert_vel = vertical_vel_gain * (goal_->local_pos()[Z] - ins.position_lf()[Z]);
+    float vert_vel = vertical_vel_gain * (goal_.local_pos()[Z] - ins.position_lf()[Z]);
 
     if (maths_f_abs(vert_vel) > max_climb_rate)
     {
@@ -427,7 +394,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
     controls_nav.rpy[YAW] = kp_yaw * rel_heading;
 
     // Update handler control
-    Mission_handler* handler = mission_handler_registry_.get_mission_handler(*goal_);
+    Mission_handler* handler = mission_handler_registry_.get_mission_handler(goal_);
     if (handler != NULL)
     {
         handler->modify_control_command(controls_nav);
@@ -437,51 +404,48 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
 
 void Navigation::run()
 {
-    if (goal_ != NULL)
+    float rel_pos[3];
+
+    // Control in translational speed of the platform
+    dist2wp_sqr = navigation_set_rel_pos_n_dist2wp( goal_.local_pos().data(),
+                                                    rel_pos,
+                                                    ins.position_lf().data());
+
+    switch(navigation_strategy)
     {
-        float rel_pos[3];
+        case Navigation::strategy_t::DIRECT_TO:
+            set_speed_command(rel_pos);
+        break;
 
-        // Control in translational speed of the platform
-        dist2wp_sqr = navigation_set_rel_pos_n_dist2wp( goal_->local_pos().data(),
-                                                        rel_pos,
-                                                        ins.position_lf().data());
-
-        switch(navigation_strategy)
-        {
-            case Navigation::strategy_t::DIRECT_TO:
-                set_speed_command(rel_pos);
-            break;
-
-            case Navigation::strategy_t::DUBIN:
-                if (state.autopilot_type == MAV_TYPE_QUADROTOR)
+        case Navigation::strategy_t::DUBIN:
+            if (state.autopilot_type == MAV_TYPE_QUADROTOR)
+            {
+                //if (internal_state_ == NAV_NAVIGATING) TODO
                 {
-                    //if (internal_state_ == NAV_NAVIGATING) TODO
+                    if (goal_.radius() > 0.0f)
                     {
-                        if (goal_->radius() > 0.0f)
-                        {
-                            set_dubin_velocity(&goal_dubin_);
-                        }
-                        else
-                        {
-                            set_speed_command(rel_pos);
-                        }
-
+                        set_dubin_velocity(&goal_dubin_);
                     }
-                    /*else
+                    else
                     {
                         set_speed_command(rel_pos);
-                    }*/
-                }
-                else
-                {
-                    set_dubin_velocity(&goal_dubin_);
-                }
-                // Add here other types of navigation strategies
-            break;
-        }
+                    }
 
-        controls_nav.theading = goal_->heading();
+                }
+                /*else
+                {
+                    set_speed_command(rel_pos);
+                }*/
+            }
+            else
+            {
+                set_dubin_velocity(&goal_dubin_);
+            }
+            // Add here other types of navigation strategies
+        break;
     }
+
+    controls_nav.theading = goal_.heading();
 }
 
 //------------------------------------------------------------------------------
@@ -509,7 +473,7 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     controls_nav.control_mode = VELOCITY_COMMAND_MODE;
     controls_nav.yaw_mode = YAW_ABSOLUTE;
 
-    goal_ = NULL;
+    goal_ = Waypoint();
 
     last_update = 0;
 
@@ -553,82 +517,73 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
 
 bool Navigation::update(Navigation* navigation)
 {
-    if (navigation->goal_ != NULL)
+    Mav_mode mode_local = navigation->state.mav_mode();
+
+    uint32_t t = time_keeper_get_us();
+
+    navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
+    navigation->last_update = t;
+
+    // Update the dubin structure
+    if (navigation->navigation_strategy == strategy_t::DUBIN)
     {
-        Mav_mode mode_local = navigation->state.mav_mode();
-
-        uint32_t t = time_keeper_get_us();
-
-        navigation->dt = (float)(t - navigation->last_update) / 1000000.0f;
-        navigation->last_update = t;
-
-        // Update the dubin structure
-        if (navigation->navigation_strategy == strategy_t::DUBIN)
-        {
-            navigation->dubin_state_machine();
-        }
-
-        switch (navigation->state.mav_state_)
-        {
-            case MAV_STATE_STANDBY:
-                navigation->controls_nav.tvel[X] = 0.0f;
-                navigation->controls_nav.tvel[Y] = 0.0f;
-                navigation->controls_nav.tvel[Z] = 0.0f;
-                break;
-
-            case MAV_STATE_ACTIVE:
-                if (navigation->goal_->command() != 0) // If we do not have the on ground waypoint set
-                {
-                    navigation->run();
-                }
-                break;
-
-            case MAV_STATE_CRITICAL:
-                // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-                if (mode_local.is_guided())
-                {
-                    navigation->run();
-
-                    if (navigation->state.out_of_fence_2)
-                    {
-                        // Constant velocity to the ground
-                        navigation->controls_nav.tvel[Z] = 1.0f;
-                    }
-                }
-                break;
-
-            default:
-                navigation->controls_nav.tvel[X] = 0.0f;
-                navigation->controls_nav.tvel[Y] = 0.0f;
-                navigation->controls_nav.tvel[Z] = 0.0f;
-                break;
-        }
+        navigation->dubin_state_machine();
     }
-    else
+
+    switch (navigation->state.mav_state_)
     {
-        navigation->controls_nav.tvel[X] = 0.0f;
-        navigation->controls_nav.tvel[Y] = 0.0f;
-        navigation->controls_nav.tvel[Z] = 0.0f;
+        case MAV_STATE_STANDBY:
+            navigation->controls_nav.tvel[X] = 0.0f;
+            navigation->controls_nav.tvel[Y] = 0.0f;
+            navigation->controls_nav.tvel[Z] = 0.0f;
+            break;
+
+        case MAV_STATE_ACTIVE:
+            if (navigation->goal_.command() != 0) // If we do not have the on ground waypoint set
+            {
+                navigation->run();
+            }
+            break;
+
+        case MAV_STATE_CRITICAL:
+            // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
+            if (mode_local.is_guided())
+            {
+                navigation->run();
+
+                if (navigation->state.out_of_fence_2)
+                {
+                    // Constant velocity to the ground
+                    navigation->controls_nav.tvel[Z] = 1.0f;
+                }
+            }
+            break;
+
+        default:
+            navigation->controls_nav.tvel[X] = 0.0f;
+            navigation->controls_nav.tvel[Y] = 0.0f;
+            navigation->controls_nav.tvel[Z] = 0.0f;
+            break;
     }
     
     return true;
 }
 
-void Navigation::set_goal(const Waypoint& new_goal)
+void Navigation::set_goal(Waypoint new_goal)
 {
-    if (goal_ == NULL ||                                                // If there was no goal previously
-        (new_goal.command() != goal_->command() ||                      // Or there has been a slight change...
-         new_goal.frame() != goal_->frame() ||
-         maths_f_abs(new_goal.param1() - goal_->param1()) > 0.000001f ||
-         maths_f_abs(new_goal.param2() - goal_->param2()) > 0.000001f ||
-         maths_f_abs(new_goal.param3() - goal_->param3()) > 0.000001f ||
-         maths_f_abs(new_goal.param4() - goal_->param4()) > 0.000001f ||
-         maths_f_abs(new_goal.param5() - goal_->param5()) > 0.000001f ||
-         maths_f_abs(new_goal.param6() - goal_->param6()) > 0.000001f ||
-         maths_f_abs(new_goal.param7() - goal_->param7()) > 0.000001f ||
-         maths_f_abs(new_goal.local_pos()[X] - goal_->local_pos()[X]) > 0.000001f ||
-         maths_f_abs(new_goal.local_pos()[Y] - goal_->local_pos()[Y]) > 0.000001f ||
-         maths_f_abs(new_goal.local_pos()[Z] - goal_->local_pos()[Z]) > 0.000001f))
+    // check for change in goal
+    if (new_goal.command() != goal_.command() ||
+        new_goal.frame() != goal_.frame() ||
+        maths_f_abs(new_goal.param1() - goal_.param1()) > 0.000001f ||
+        maths_f_abs(new_goal.param2() - goal_.param2()) > 0.000001f ||
+        maths_f_abs(new_goal.param3() - goal_.param3()) > 0.000001f ||
+        maths_f_abs(new_goal.param4() - goal_.param4()) > 0.000001f ||
+        maths_f_abs(new_goal.param5() - goal_.param5()) > 0.000001f ||
+        maths_f_abs(new_goal.param6() - goal_.param6()) > 0.000001f ||
+        maths_f_abs(new_goal.param7() - goal_.param7()) > 0.000001f ||
+        maths_f_abs(new_goal.local_pos()[X] - goal_.local_pos()[X]) > 0.000001f ||
+        maths_f_abs(new_goal.local_pos()[Y] - goal_.local_pos()[Y]) > 0.000001f ||
+        maths_f_abs(new_goal.local_pos()[Z] - goal_.local_pos()[Z]) > 0.000001f)
     {
         print_util_dbg_print("Waypoint changed\r\n");
         print_util_dbg_print("New goal: command: ");
@@ -649,7 +604,7 @@ void Navigation::set_goal(const Waypoint& new_goal)
     }
 
     // Update goal based on the inputted waypoint
-    goal_ = &new_goal;
+    goal_ = new_goal;
 }
 
 void Navigation::set_start_wpt_time()

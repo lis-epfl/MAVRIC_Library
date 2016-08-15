@@ -122,7 +122,7 @@ public:
     void modify_control_command(control_command_t& control);
 
 protected:
-    const Waypoint* waypoint_;                                        ///< The waypoint that we are landing under
+    Waypoint waypoint_;                                         ///< The waypoint that we are landing under
     Waypoint landing_waypoint_;                                 ///< The waypoint that we want our drone to go
     bool is_landed_;                                            ///< Boolean flag stating that we have finished the landing procedure
 

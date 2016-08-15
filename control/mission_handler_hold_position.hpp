@@ -114,7 +114,7 @@ public:
     bool is_finished(Mission_planner& mission_planner);
 
 protected:
-    const Waypoint* waypoint_;                ///< Pointer to the inputted waypoint
+    Waypoint waypoint_;                 ///< Pointer to the inputted waypoint
     uint64_t start_time_;               ///< The start time of the waypoint hold
     bool within_radius_;                ///< Flag stating if we are within the radius
 

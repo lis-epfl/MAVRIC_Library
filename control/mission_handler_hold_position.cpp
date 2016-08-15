@@ -55,11 +55,19 @@ extern "C"
 Mission_handler_hold_position::Mission_handler_hold_position(   const INS& ins,
                                                                 Navigation& navigation):
             Mission_handler(),
-            waypoint_(NULL),
             ins_(ins),
             navigation_(navigation)
 {
-
+    waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,
+                            MAV_CMD_NAV_LOITER_UNLIM,
+                            0,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f);
 }
 
 bool Mission_handler_hold_position::can_handle(const Waypoint& wpt)
@@ -81,7 +89,7 @@ bool Mission_handler_hold_position::can_handle(const Waypoint& wpt)
 bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, const Waypoint& wpt)
 {
     bool success = true;
-    waypoint_ = &wpt;
+    waypoint_ = wpt;
     start_time_ = time_keeper_get_ms();
     within_radius_ = false;
     navigation_.set_waiting_at_waypoint(true);
@@ -93,69 +101,63 @@ bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, cons
 void Mission_handler_hold_position::handle(Mission_planner& mission_planner)
 {
     // Set goal
-    if (waypoint_ != NULL)
-    {
-        navigation_.set_goal(*waypoint_);
-    }
+    navigation_.set_goal(waypoint_);
 }
 
 bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner)
 {
-    if (waypoint_ != NULL)
+    local_position_t wpt_pos = waypoint_.local_pos();
+
+    // Check if we are doing dubin circles
+    if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
     {
-        local_position_t wpt_pos = waypoint_->local_pos();
+        within_radius_ = true;
+    }
+    // Or that we are at the waypoint
+    else if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO &&
+            ((wpt_pos[X]-ins_.position_lf()[X])*(wpt_pos[X]-ins_.position_lf()[X]) + (wpt_pos[Y]-ins_.position_lf()[Y])*(wpt_pos[Y]-ins_.position_lf()[Y])) < waypoint_.radius()*waypoint_.radius())
+    {
+        within_radius_ = true;
+    }
+    else
+    {
+        within_radius_ = false;
 
-        // Check if we are doing dubin circles
-        if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
-        {
-            within_radius_ = true;
-        }
-        // Or that we are at the waypoint
-        else if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO &&
-                ((wpt_pos[X]-ins_.position_lf()[X])*(wpt_pos[X]-ins_.position_lf()[X]) + (wpt_pos[Y]-ins_.position_lf()[Y])*(wpt_pos[Y]-ins_.position_lf()[Y])) < waypoint_->radius()*waypoint_->radius())
-        {
-            within_radius_ = true;
-        }
-        else
-        {
-            within_radius_ = false;
+        // Reset start time
+        start_time_ = time_keeper_get_ms();
+    }
 
-            // Reset start time
-            start_time_ = time_keeper_get_ms();
-        }
-
-        if (waypoint_->autocontinue() == 1)
+    if (waypoint_.autocontinue() == 1)
+    {
+        switch (waypoint_.command())
         {
-            switch (waypoint_->command())
+        case MAV_CMD_NAV_LOITER_UNLIM:
+            return false;
+
+        case MAV_CMD_NAV_LOITER_TIME:
+            if (within_radius_ && ((time_keeper_get_ms() - start_time_) > waypoint_.param1() * 1000))
             {
-            case MAV_CMD_NAV_LOITER_UNLIM:
-                return false;
-
-            case MAV_CMD_NAV_LOITER_TIME:
-                if (within_radius_ && ((time_keeper_get_ms() - start_time_) > waypoint_->param1() * 1000))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-                break;
-
-            case MAV_CMD_NAV_LOITER_TO_ALT:
-                if (maths_f_abs(ins_.position_lf()[Z] - waypoint_->local_pos()[Z]) < waypoint_->param2()) // TODO: Add check for heading
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-                break;
-
-            default:
+                return true;
+            }
+            else
+            {
                 return false;
             }
+            break;
+
+        case MAV_CMD_NAV_LOITER_TO_ALT:
+            if (maths_f_abs(ins_.position_lf()[Z] - waypoint_.local_pos()[Z]) < waypoint_.param2()) // TODO: Add check for heading
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            break;
+
+        default:
+            return false;
         }
     }
         

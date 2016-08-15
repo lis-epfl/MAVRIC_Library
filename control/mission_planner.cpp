@@ -314,8 +314,8 @@ mav_result_t Mission_planner::set_auto_takeoff(Mission_planner* mission_planner,
                                 0.0f,
                                 0.0f,
                                 packet->param4,
-                                packet->param5,
-                                packet->param6,
+                                mission_planner->ins_.position_lf()[X],
+                                mission_planner->ins_.position_lf()[Y],
                                 mission_planner->navigation_.takeoff_altitude); // packet->param7);
 
         print_util_dbg_print("Starting automatic take-off from button\r\n");
@@ -363,7 +363,7 @@ mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner,
         float heading = coord_conventions_get_yaw(mission_planner->ahrs_.qe);
         Waypoint landing_wpt(   MAV_FRAME_LOCAL_NED,
                                 MAV_CMD_NAV_LAND,
-                                1,
+                                0,
                                 0.0f,
                                 0.0f,
                                 0.0f,
@@ -603,7 +603,7 @@ void Mission_planner::critical_handler()
 
             critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_LAND,
-                                            1,
+                                            0s,
                                             0.0f,
                                             0.0f,
                                             0.0f,
@@ -621,7 +621,7 @@ void Mission_planner::critical_handler()
 
             critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_LAND,
-                                            1,
+                                            0,
                                             0.0f,
                                             0.0f,
                                             0.0f,
@@ -738,7 +738,7 @@ bool Mission_planner::init()
     // Create blank critical waypoint
     critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                     MAV_CMD_NAV_LAND,
-                                    1,
+                                    0,
                                     0.0f,
                                     0.0f,
                                     0.0f,
