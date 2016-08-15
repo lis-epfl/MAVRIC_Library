@@ -107,8 +107,15 @@ public:
         PRIORITY_HIGHEST = 4        ///<    Highest priority
     };
 
+    Scheduler_task(void);
+    Scheduler_task( uint32_t repeat_period,
+                    Scheduler_task::run_mode_t run_mode,
+                    Scheduler_task::timing_mode_t timing_mode,
+                    Scheduler_task::priority_t priority,
+                    Scheduler_task::task_function_t call_function,
+                    Scheduler_task::task_argument_t function_argument,
+                    int32_t task_id);
 
-    Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, int32_t task_id);
 
     /**
      * \brief               Modifies the run mode of an existing task

@@ -96,6 +96,8 @@ LIB_SRCS += drivers/sonar_i2cxl.cpp
 LIB_SRCS += drivers/sonar_telemetry.cpp
 LIB_SRCS += drivers/spektrum_satellite.cpp
 LIB_SRCS += drivers/state_display.cpp
+LIB_SRCS += drivers/state_display_megafly_rev4.cpp
+LIB_SRCS += drivers/state_display_sparky_v2.cpp
 
 # LIB_SRCS += hal/common/dbg.cpp # -> causes link error with chibios
 LIB_SRCS += hal/common/led_gpio.cpp

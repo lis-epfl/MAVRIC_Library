@@ -86,6 +86,7 @@ endif
 MAVRIC_LIB=../../../
 include $(MAVRIC_LIB)/rules_common.mk
 include $(MAVRIC_LIB)/rules_chibios.mk
+include $(MAVRIC_LIB)/rules_dummy.mk
 
 # Define project name here
 PROJECT = PROJ_NAME
@@ -97,11 +98,12 @@ include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.m
 # HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
-include $(MAVRIC_LIB)/boards/sparky_v2/board.mk
+include $(MAVRIC_LIB)/boards/sparky_chibi/board.mk
 include $(CHIBIOS)/os/hal/osal/os-less/ARMCMx/osal.mk
+# include $(CHIBIOS)/os/hal/osal/rt/osal.mk
 # RTOS files (optional).
-#include $(CHIBIOS)/os/rt/rt.mk
-#include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+# include $(CHIBIOS)/os/rt/rt.mk
+# include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # Other files (optional).
 #include $(CHIBIOS)/test/rt/test.mk
 
@@ -112,7 +114,7 @@ LDSCRIPT= $(STARTUPLD)/STM32F407xG.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC = $(STARTUPSRC) \
+CSRC += $(STARTUPSRC) \
        $(KERNSRC) \
        $(PORTSRC) \
        $(OSALSRC) \
@@ -124,8 +126,9 @@ CSRC = $(STARTUPSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(addprefix ${MAVRIC_LIB}/, $(LIB_SRCS)) \
-         main.cpp \
+CPPSRC += $(BOARDCPPSRC) \
+		  $(addprefix ${MAVRIC_LIB}/, $(LIB_SRCS)) \
+         ../main_chibi_sparky.cpp \
 		 ../lequad.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
@@ -218,7 +221,7 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ULIBS =
+ULIBS = -lm
 
 #
 # End of user defines

@@ -186,7 +186,7 @@ private:
         handling_telemetry_module_struct_t      module_struct;          ///<    Pointer to module data structure to be given as argument to the function
     };
 
-    Scheduler                   scheduler_;                      ///<    Task set for scheduling of down messages
+    Scheduler_tpl<30>           scheduler_;                      ///<    Task set for scheduling of down messages
     Mavlink_stream              mavlink_stream_;                 ///<    Mavlink interface using streams
     Mavlink_message_handler     message_handler_;                ///<    Message handler
     Onboard_parameters          onboard_parameters_;             ///<    Onboard parameters
@@ -222,7 +222,6 @@ Mavlink_communication::conf_t Mavlink_communication::default_config(uint8_t sysi
     conf_t conf                                        = {};
 
     conf.scheduler_config                              = {};
-    conf.scheduler_config.max_task_count               = 30;
     conf.scheduler_config.schedule_strategy            = Scheduler::FIXED_PRIORITY;
     conf.scheduler_config.debug                        = false;
     conf.mavlink_stream_config                         = {};
