@@ -21,8 +21,8 @@
 
 /* I2C interface #1 */
 static const I2CConfig i2cfg1 = {
-    OPMODE_I2C,
-    400000,
+    .op_mode = OPMODE_I2C,
+    .clock_speed = 400000,
     FAST_DUTY_CYCLE_2,
 };
 
@@ -49,7 +49,12 @@ int main(void)
     I2c_chibios::conf_t i2c_config =
     {
         .driver  = &I2CD1,
-        .config  = i2cfg1,
+        .config  =
+        {
+            .op_mode     = OPMODE_I2C,
+            .clock_speed = 400000,
+            .duty_cycle  = FAST_DUTY_CYCLE_2
+        },
         .timeout = 1000,
     };
     I2c_chibios i2c(i2c_config);
@@ -64,10 +69,6 @@ int main(void)
     const uint8_t ms5611_addr       = 0x77;
     const uint8_t COMMAND_RESET     = 0x1E;  ///< Reset sensor
     const uint8_t COMMAND_GET_CALIBRATION          = 0xA2;  ///< Get 16bytes factory configuration from PROM
-
-    txbuf[0] = 0xAF; /* register address */
-    txbuf[1] = 0x1;
-    // i2c.write(txbuf, 2, ms5611_addr);
 
     /*
     * Normal main() thread activity, in this demo it just performs
