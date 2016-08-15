@@ -3,6 +3,7 @@ CXXFLAGS += -D__MAVRIC_ENDIAN_LITTLE__
 
 
 LIB_SRCS += hal/chibios/stubs.cpp
+LIB_SRCS += hal/chibios/i2c_chibios.cpp
 
 # LIB_SRCS += boards/mavrimini.cpp
 # LIB_SRCS += boards/sparky_v2.cpp
