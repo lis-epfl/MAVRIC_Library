@@ -14,12 +14,10 @@
     limitations under the License.
 */
 
-extern "C"
-{
-#include "hal.h"
-}
 
 #include "hal/chibios/i2c_chibios.hpp"
+#include "hal/common/time_keeper.hpp"
+
 
 /* I2C interface #1 */
 static const I2CConfig i2cfg1 = {
@@ -77,9 +75,9 @@ int main(void)
     */
     while (true)
     {
-        osalThreadSleepMilliseconds(500);
+        time_keeper_delay_ms(500);
         palSetPad(GPIOB, GPIOB_PIN4);       /* Orange.  */
-        osalThreadSleepMilliseconds(500);
+        time_keeper_delay_ms(500);
         palClearPad(GPIOB, GPIOB_PIN4);     /* Orange.  */
 
         // Reset sensor
@@ -87,7 +85,7 @@ int main(void)
         i2c.write(txbuf, 1, ms5611_addr);
 
         // Let time to the sensor to initialize
-        osalThreadSleepMilliseconds(20);
+        time_keeper_delay_ms(20);
 
         // Read calibration data
         for (size_t i = 0; i < 6; i++)
