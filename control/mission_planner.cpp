@@ -254,7 +254,6 @@ mav_result_t Mission_planner::start_stop_navigation(Mission_planner* mission_pla
     {
         if (packet->param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION)
         {
-            // This is an issue, waypoint will be destroyed before use TODO
             Waypoint hold_wpt = Waypoint(   packet->param3,
                                             MAV_CMD_OVERRIDE_GOTO,
                                             0,
@@ -271,7 +270,6 @@ mav_result_t Mission_planner::start_stop_navigation(Mission_planner* mission_pla
         }
         else if (packet->param2 == MAV_GOTO_HOLD_AT_SPECIFIED_POSITION)
         {
-            // This is an issue, waypoint will be destroyed before use TODO
             Waypoint hold_wpt = Waypoint(   packet->param3,
                                             MAV_CMD_OVERRIDE_GOTO,
                                             0,
