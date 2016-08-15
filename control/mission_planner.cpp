@@ -603,7 +603,7 @@ void Mission_planner::critical_handler()
 
             critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_LAND,
-                                            0s,
+                                            0,
                                             0.0f,
                                             0.0f,
                                             0.0f,

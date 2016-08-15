@@ -102,23 +102,32 @@ public:
     /**
      * \brief Gets the current waypoint
      *
+     * \details If there is no waypoints in the list, creates a hold position
+     *          waypoint as the first index in the list and returns it
+     *
      * \return current waypoint
      */
-    const Waypoint& current_waypoint() const;
+    const Waypoint& current_waypoint();
 
     /**
      * \brief Gets the next waypoint if available
      *
+     * \details If there is no waypoints in the list, creates a hold position
+     *          waypoint as the first index in the list and returns it
+     *
      * \return next waypoint
      */
-    const Waypoint& next_waypoint() const;
+    const Waypoint& next_waypoint();
 
     /**
      * \brief   Returns a waypoint from the list from a specific index
      *
+     * \details If there is no waypoints in the list, creates a hold position
+     *          waypoint as the first index in the list and returns it
+     *
      * \return  waypoint_list_[i]
      */
-    const Waypoint& waypoint_from_index(int i) const;
+    const Waypoint& waypoint_from_index(int i);
 
     /**
      * \brief   Sets the next waypoint as the current one. Should be called when

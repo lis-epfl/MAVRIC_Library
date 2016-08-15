@@ -506,8 +506,26 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint_list_[0] = waypoint;
 }
 
-const Waypoint& Mavlink_waypoint_handler::current_waypoint() const
+const Waypoint& Mavlink_waypoint_handler::current_waypoint()
 {
+    // If there are no waypoints set, create hold position
+    if (waypoint_count_ == 0)
+    {
+        waypoint_list_[0] = Waypoint(   MAV_FRAME_LOCAL_NED,
+                                        MAV_CMD_NAV_LOITER_UNLIM,
+                                        0,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        ins_.position_lf()[X],
+                                        ins_.position_lf()[Y],
+                                        ins_.position_lf()[Z]);
+        waypoint_count_ = 1;
+        current_waypoint_index_ = 0;
+        return waypoint_list_[0];
+    }
+
     // If it is a good index
     if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
     {
@@ -520,8 +538,26 @@ const Waypoint& Mavlink_waypoint_handler::current_waypoint() const
     }
 }
 
-const Waypoint& Mavlink_waypoint_handler::next_waypoint() const
+const Waypoint& Mavlink_waypoint_handler::next_waypoint()
 {
+    // If there are no waypoints set, create hold position
+    if (waypoint_count_ == 0)
+    {
+        waypoint_list_[0] = Waypoint(   MAV_FRAME_LOCAL_NED,
+                                        MAV_CMD_NAV_LOITER_UNLIM,
+                                        0,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        ins_.position_lf()[X],
+                                        ins_.position_lf()[Y],
+                                        ins_.position_lf()[Z]);
+        waypoint_count_ = 1;
+        current_waypoint_index_ = 0;
+        return waypoint_list_[0];
+    }
+
     // If it is a good index
     if (current_waypoint_index_ >= 0 && current_waypoint_index_ < waypoint_count_)
     {
@@ -542,8 +578,26 @@ const Waypoint& Mavlink_waypoint_handler::next_waypoint() const
     }
 }
 
-const Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i) const
+const Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i)
 {
+    // If there are no waypoints set, create hold position
+    if (waypoint_count_ == 0)
+    {
+        waypoint_list_[0] = Waypoint(   MAV_FRAME_LOCAL_NED,
+                                        MAV_CMD_NAV_LOITER_UNLIM,
+                                        0,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        ins_.position_lf()[X],
+                                        ins_.position_lf()[Y],
+                                        ins_.position_lf()[Z]);
+        waypoint_count_ = 1;
+        current_waypoint_index_ = 0;
+        return waypoint_list_[0];
+    }
+
     if (i >= 0 && i < waypoint_count_)
     {
         return waypoint_list_[i];
