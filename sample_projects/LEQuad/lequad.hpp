@@ -236,8 +236,8 @@ public:
     hud_telemetry_t hud;                                        ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
-    Data_logging    data_logging_continuous;
-    Data_logging    data_logging_stat;
+    Data_logging_tpl<10>    data_logging_continuous;
+    Data_logging_tpl<10>    data_logging_stat;
 
     command_t                       command;
     // attitude_controller_t           attitude_controller;

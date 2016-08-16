@@ -64,7 +64,6 @@ typedef struct
  */
 typedef struct
 {
-    uint32_t max_data_logging_count;            ///< Maximum number of parameters
     uint16_t max_logs;                          ///< The max number of logged files with the same name on the SD card
     bool debug;                                 ///< Indicates if debug messages should be printed for each param change
     uint32_t log_data;                          ///< The initial state of writing a file
@@ -78,11 +77,12 @@ typedef struct
  */
 static inline data_logging_conf_t data_logging_default_config();
 
+
 /**
- * \brief   The class of the log of the data
+ * \brief   Log data in files
  *
- * \details     data_logging_set is implemented as pointer because its memory will be
- *              allocated during initialisation
+ * \details This class is abstract and does not contains the task list,
+ *          use the child class Data_logging_tpl
  */
 class Data_logging
 {
@@ -162,6 +162,28 @@ public:
      */
     template<typename T>
     bool add_field(const T* val, const char* param_name, uint32_t precision);
+
+
+protected:
+
+    /**
+     * \brief  Get maximum number of variables to log
+     *
+     * \details     Abstract method to be implemented in child classes
+     *
+     * \return Maximum number of variables to log
+     */
+    virtual uint32_t max_count(void) = 0;
+
+
+    /**
+     * \brief  Get list of variables to log
+     *
+     * \details     Abstract method to be implemented in child classes
+     *
+     * \return list
+     */
+    virtual data_logging_entry_t* list() = 0;
 
 
 private:
@@ -255,7 +277,6 @@ private:
 
     bool debug_;                                 ///< Indicates if debug messages should be printed for each param change
     uint32_t data_logging_count_;               ///< Number of data logging parameter effectively in the array
-    data_logging_entry_t* data_log_;            ///< Data logging array, needs memory allocation
 
     char file_name_[MAX_FILENAME_LENGTH];                        ///< The file name
     char name_n_extension_[MAX_FILENAME_LENGTH];                 ///< Stores the name of the file
@@ -278,11 +299,54 @@ private:
     State& state_;                              ///< The pointer to the state structure
 };
 
+
+/**
+ * \brief   Log data in files
+ *
+ * \tparam  N   Maximum number of variables to log
+ */
+template<uint32_t N>
+class Data_logging_tpl: public Data_logging
+{
+public:
+    /**
+     * \brief   Data logging constructor
+     */
+    Data_logging_tpl(File& file, State& state, data_logging_conf_t config = data_logging_default_config()):
+        Data_logging(file, state, config)
+    {}
+
+protected:
+
+    /**
+     * \brief  Get maximum number of variables to log
+     *
+     * \return Maximum number of variables to log
+     */
+    uint32_t max_count(void)
+    {
+        return N;
+    }
+
+    /**
+     * \brief  Get list of variables to log
+     *
+     * \return list
+     */
+    data_logging_entry_t* list()
+    {
+        return list_;
+    }
+
+private:
+    data_logging_entry_t list_[N];            ///< Data logging array, needs memory allocation
+};
+
+
 static inline data_logging_conf_t data_logging_default_config()
 {
     data_logging_conf_t conf    = {};
 
-    conf.max_data_logging_count = 50;
     conf.max_logs               = 500;
     conf.debug                  = true;
     conf.log_data               = 0;     // 1: log data, 0: no log data

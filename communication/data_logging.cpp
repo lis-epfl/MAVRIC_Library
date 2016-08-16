@@ -71,7 +71,7 @@ void Data_logging::add_header_name(void)
 
     for (i = 0; i < data_logging_count_; i++)
     {
-        data_logging_entry_t* param = &data_log_[i];
+        data_logging_entry_t* param = &list()[i];
 
         init &= console_.write(reinterpret_cast<uint8_t*>(param->param_name), strlen(param->param_name));
         write_separator(i);
@@ -127,7 +127,7 @@ void Data_logging::log_parameters(void)
     for (i = 0; i < data_logging_count_; i++)
     {
         // Writing the value of the parameter to the file, separate values by tab character
-        data_logging_entry_t* param = &data_log_[i];
+        data_logging_entry_t* param = &list()[i];
         switch (param->data_type)
         {
             case MAV_PARAM_TYPE_UINT8:
@@ -434,7 +434,7 @@ bool Data_logging::checksum_control(void)
 
     for (uint32_t i = 0; i < data_logging_count_; ++i)
     {
-        data_logging_entry_t* param = &data_log_[i];
+        data_logging_entry_t* param = &list()[i];
         switch (param->data_type)
         {
             case MAV_PARAM_TYPE_UINT8:
@@ -527,21 +527,11 @@ bool Data_logging::checksum_control(void)
 
 Data_logging::Data_logging(File& file, State& state, data_logging_conf_t config):
     config_(config),
+    data_logging_count_(0),
+    log_data_(config_.log_data),
     console_(file),
     state_(state)
-{
-    data_log_ = (data_logging_entry_t*)malloc(sizeof(data_logging_entry_t[config_.max_data_logging_count]));
-
-    //in case malloc failed
-    if (data_log_ == NULL)
-    {
-        config_.max_data_logging_count = 0;
-    }
-
-    log_data_ = config_.log_data;
-
-    data_logging_count_ = 0;
-}
+{}
 
 bool Data_logging::create_new_log_file(const char* file_name__, uint32_t sysid)
 {
@@ -687,11 +677,11 @@ bool Data_logging::add_field(const uint8_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -733,11 +723,11 @@ bool Data_logging::add_field(const int8_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -779,11 +769,11 @@ bool Data_logging::add_field(const uint16_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -825,11 +815,11 @@ bool Data_logging::add_field(const int16_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -871,11 +861,11 @@ bool Data_logging::add_field(const uint32_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -917,11 +907,11 @@ bool Data_logging::add_field(const int32_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -963,11 +953,11 @@ bool Data_logging::add_field(const uint64_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -1009,11 +999,11 @@ bool Data_logging::add_field(const int64_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -1055,11 +1045,11 @@ bool Data_logging::add_field(const float* val, const char* param_name, uint32_t 
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -1102,11 +1092,11 @@ bool Data_logging::add_field(const double* val, const char* param_name, uint32_t
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = val;
                 strcpy(new_param->param_name,        param_name);
