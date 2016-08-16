@@ -107,6 +107,12 @@ bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner
 {
     local_position_t wpt_pos = waypoint_.local_pos();
 
+    float radius;
+    if (!waypoint_.radius(radius))
+    {
+        radius = 0.0f;
+    }
+    
     // Check if we are doing dubin circles
     if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
     {
@@ -114,7 +120,7 @@ bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner
     }
     // Or that we are at the waypoint
     else if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO &&
-            ((wpt_pos[X]-ins_.position_lf()[X])*(wpt_pos[X]-ins_.position_lf()[X]) + (wpt_pos[Y]-ins_.position_lf()[Y])*(wpt_pos[Y]-ins_.position_lf()[Y])) < waypoint_.radius()*waypoint_.radius())
+            ((wpt_pos[X]-ins_.position_lf()[X])*(wpt_pos[X]-ins_.position_lf()[X]) + (wpt_pos[Y]-ins_.position_lf()[Y])*(wpt_pos[Y]-ins_.position_lf()[Y])) < radius*radius)
     {
         within_radius_ = true;
     }

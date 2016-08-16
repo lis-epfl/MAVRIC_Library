@@ -204,13 +204,18 @@ void Navigation::dubin_state_machine()
     local_position_t pos    = ins.position_lf();
     std::array<float,3> vel = ins.velocity_lf();
 
+    float radius;
+    if (!goal_.radius(radius))
+    {
+        radius = 0.0f;
+    }
     switch(dubin_state)
     {
         case DUBIN_INIT:
             print_util_dbg_print("DUBIN_INIT\r\n");
-            if (goal_.radius() >= minimal_radius)
+            if (radius >= minimal_radius)
             {
-                init_radius = maths_f_abs(goal_.radius());
+                init_radius = maths_f_abs(radius);
             }
             else
             {
@@ -244,13 +249,13 @@ void Navigation::dubin_state_machine()
                 vectors_normalize(rel_pos,rel_pos_norm);
 
                 float end_radius;
-                if (goal_.radius() < minimal_radius)
+                if (radius < minimal_radius)
                 {
                     end_radius = minimal_radius;
                 }
                 else
                 {
-                    end_radius = goal_.radius();
+                    end_radius = radius;
                 }
 
                 dir_final[X] = -rel_pos_norm[Y]*end_radius;
@@ -259,7 +264,7 @@ void Navigation::dubin_state_machine()
 
                 for (uint8_t i = 0; i < 2; ++i)
                 {
-                    pos_goal[i] = goal_.local_pos()[i] + (rel_pos_norm[i] * maths_f_abs(goal_.radius()));
+                    pos_goal[i] = goal_.local_pos()[i] + (rel_pos_norm[i] * maths_f_abs(radius));
                 }
                 pos_goal[Z] = 0.0f;
 
@@ -327,12 +332,18 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
     quat_t q_rot;
     aero_attitude_t attitude_yaw;
 
+    float radius;
+    if (!goal_.radius(radius))
+    {
+        radius = 0.0f;
+    }
+
     switch(dubin_state)
     {
         case DUBIN_INIT:
             dubin_circle(   dir_desired,
                             dubin->circle_center_1,
-                            goal_.radius(),
+                            radius,
                             ins.position_lf().data(),
                             cruise_speed,
                             one_over_scaling );
@@ -358,7 +369,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
         case DUBIN_CIRCLE2:
             dubin_circle(   dir_desired,
                             dubin->circle_center_2,
-                            goal_.radius(),
+                            radius,
                             ins.position_lf().data(),
                             cruise_speed,
                             one_over_scaling );
@@ -422,7 +433,13 @@ void Navigation::run()
             {
                 //if (internal_state_ == NAV_NAVIGATING) TODO
                 {
-                    if (goal_.radius() > 0.0f)
+                    float radius;
+                    if (!goal_.radius(radius))
+                    {
+                        radius = 0.0f;
+                    }
+
+                    if (radius > 0.0f)
                     {
                         set_dubin_velocity(&goal_dubin_);
                     }
@@ -445,7 +462,12 @@ void Navigation::run()
         break;
     }
 
-    controls_nav.theading = goal_.heading();
+    float heading;
+    if (!goal_.heading(heading))
+    {
+        heading = 0.0f;
+    }
+    controls_nav.theading = heading;
 }
 
 //------------------------------------------------------------------------------

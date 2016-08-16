@@ -193,7 +193,7 @@ float Waypoint::param7() const
     return param7_;
 }
 
-float Waypoint::heading() const
+bool Waypoint::heading(float& heading) const
 {
     switch (command_)
     {
@@ -204,32 +204,37 @@ float Waypoint::heading() const
     case MAV_CMD_NAV_LAND:          // 21
     case MAV_CMD_NAV_TAKEOFF:       // 22
     case MAV_CMD_OVERRIDE_GOTO:     // 252
-        return param4_;
+        heading = param4_;
+        return true;
         
     case MAV_CMD_NAV_LOITER_TO_ALT: // 31
     default:
-        return 0.0f;
+        heading = 0.0f;
+        return false;
     }
 }
 
-float Waypoint::radius() const
+bool Waypoint::radius(float& radius) const
 {
     switch (command_)
     {
     case MAV_CMD_NAV_WAYPOINT:      // 16
     case MAV_CMD_NAV_LOITER_TO_ALT: // 31
-        return param2_;
+        radius = param2_;
+        return true;
 
     case MAV_CMD_NAV_LOITER_UNLIM:  // 17
     case MAV_CMD_NAV_LOITER_TURNS:  // 18
     case MAV_CMD_NAV_LOITER_TIME:   // 19
-        return param3_;
+        radius = param3_;
+        return true;
 
     case MAV_CMD_NAV_LAND:          // 21
     case MAV_CMD_NAV_TAKEOFF:       // 22
     case MAV_CMD_OVERRIDE_GOTO:     // 252
     default:
-        return 0.0f;
+        radius = 0.0f;
+        return false;
     }
 }
 

@@ -177,20 +177,24 @@ public:
     /**
      * \brief   Gets the heading of the waypoint
      *
-     * \details Returns 0 if N/A
+     * \details Outputs 0 if unsuccessful
      *
-     * \return  heading
+     * \param   heading     Output: heading
+     *
+     * \return  Success
      */
-    float heading() const;
+    bool heading(float& heading) const;
 
     /**
      * \brief   Gets the radius of the waypoint
      *
-     * \details Returns 0 if N/A
+     * \details Outputs 0 if unsuccessful
      *
-     * \return  radius
+     * \param   radius      Output: radius
+     *
+     * \return  Success
      */
-    float radius() const;
+    bool radius(float& radius) const;
 
     /**
      * \brief   Gets the waypoint in local coordinates

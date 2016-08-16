@@ -133,14 +133,14 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
     navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
     // Add margin if necessary
-    float margin = 0.0f;
-    if (waypoint_.radius() == 0.0f)
+    float radius;
+    if (!waypoint_.radius(radius))
     {
-        margin = 16.0f;
+        radius = 4.0f;
     }
 
     // If we are near the waypoint or are doing dubin circles
-    if (navigation_.dist2wp_sqr < (waypoint_.radius() * waypoint_.radius() + margin) ||
+    if (navigation_.dist2wp_sqr < (radius * radius) ||
            (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
     {
         // If we are near the waypoint but the flag has not been set, do this once ...
@@ -151,12 +151,12 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
             {
                 print_util_dbg_print("Waypoint reached by entering dubin circles 2.\r\n");
             }
-            else if (navigation_.dist2wp_sqr < (waypoint_.radius() * waypoint_.radius() + margin))
+            else if (navigation_.dist2wp_sqr < (radius * radius))
             {
                 print_util_dbg_print("Waypoint reached, distance: ");
                 print_util_dbg_putfloat(sqrt(navigation_.dist2wp_sqr), 3);
                 print_util_dbg_print(" m. Less than acceptable radius:");
-                print_util_dbg_putfloat(sqrt(waypoint_.radius() * waypoint_.radius() + margin), 3);
+                print_util_dbg_putfloat(sqrt(radius * radius), 3);
                 print_util_dbg_print(" m.\r\n");
             }
 
@@ -179,6 +179,12 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
 
 bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
 {
+    float radius;
+    if (!waypoint_.radius(radius))
+    {
+        radius = 0.0f;
+    }
+
     // First check if we have reached the waypoint
     if (navigation_.waiting_at_waypoint())
     {
@@ -187,7 +193,7 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
         {
             // Differentiate between dubin and direct to
             if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO || 
-                waypoint_.radius() == 0.0f)
+                radius == 0.0f)
             {
                 return true;
             }
@@ -195,6 +201,11 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
             {
                 /* Check for correct heading */
                 const Waypoint& next = waypoint_handler_.next_waypoint();
+                float next_radius;
+                if (!waypoint_.radius(next_radius))
+                {
+                    next_radius = 0.0f;
+                }
 
                 // Find the direction of the next waypoint
                 float rel_wpt_pos[3];
@@ -207,8 +218,8 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
 
                 // Find the tangent point of the next waypoint
                 float outter_pt[3];
-                outter_pt[X] = next.local_pos()[X] + rel_pos_norm[Y]*next.radius();
-                outter_pt[Y] = next.local_pos()[Y] - rel_pos_norm[X]*next.radius();
+                outter_pt[X] = next.local_pos()[X] + rel_pos_norm[Y]*next_radius;
+                outter_pt[Y] = next.local_pos()[Y] - rel_pos_norm[X]*next_radius;
                 outter_pt[Z] = 0.0f;
 
                 // Determine the relative position to this tangent point
