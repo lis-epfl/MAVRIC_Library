@@ -191,12 +191,39 @@ public:
 
 protected:
 
+    /**
+     * \brief       Get maximum number of message callbacks
+     * \details     To be overriden by child class
+     *
+     * \return      Maximum number of message callbacks
+     */
     virtual uint32_t msg_callback_max_count(void) = 0;
 
+
+    /**
+     * \brief       Get maximum number of command callbacks
+     * \details     To be overriden by child class
+     *
+     * \return      Maximum number of command callbacks
+     */
     virtual uint32_t cmd_callback_max_count(void) = 0;
 
+
+    /**
+     * \brief       Get list of message callbacks
+     * \details     To be overriden by child class
+     *
+     * \return      list
+     */
     virtual msg_callback_t* msg_callback_list(void) = 0;
 
+
+    /**
+     * \brief       Get list of command callbacks
+     * \details     To be overriden by child class
+     *
+     * \return      list
+     */
     virtual cmd_callback_t* cmd_callback_list(void) = 0;
 
 
@@ -275,7 +302,6 @@ protected:
 
     /**
      * \brief       Get maximum number of message callbacks
-     * \details     To be overriden by child class
      *
      * \return      Maximum number of message callbacks
      */
@@ -287,7 +313,6 @@ protected:
 
     /**
      * \brief       Get maximum number of command callbacks
-     * \details     To be overriden by child class
      *
      * \return      Maximum number of command callbacks
      */
@@ -299,7 +324,6 @@ protected:
 
     /**
      * \brief       Get list of message callbacks
-     * \details     To be overriden by child class
      *
      * \return      list
      */
@@ -311,7 +335,6 @@ protected:
 
     /**
      * \brief       Get list of command callbacks
-     * \details     To be overriden by child class
      *
      * \return      list
      */
