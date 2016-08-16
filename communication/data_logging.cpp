@@ -359,7 +359,7 @@ bool Data_logging::open_new_log_file(void)
             if (!successful_filename)
             {
                 print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
-                print_util_dbg_print_num(buffer_name_size_, 10);
+                print_util_dbg_print_num(MAX_FILENAME_LENGTH, 10);
                 print_util_dbg_print(" and it is ");
                 print_util_dbg_print_num(sizeof(name_n_extension_), 10);
                 print_util_dbg_print("\r\n");

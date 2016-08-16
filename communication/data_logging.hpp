@@ -257,9 +257,6 @@ private:
     uint32_t data_logging_count_;               ///< Number of data logging parameter effectively in the array
     data_logging_entry_t* data_log_;            ///< Data logging array, needs memory allocation
 
-
-    int buffer_name_size_;                       ///< The buffer for the size of the file's name
-
     char file_name_[MAX_FILENAME_LENGTH];                        ///< The file name
     char name_n_extension_[MAX_FILENAME_LENGTH];                 ///< Stores the name of the file
 
