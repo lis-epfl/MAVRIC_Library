@@ -265,7 +265,7 @@ mav_result_t Mission_planner::start_stop_navigation(Mission_planner* mission_pla
                                             mission_planner->ins_.position_lf()[X],
                                             mission_planner->ins_.position_lf()[Y],
                                             mission_planner->ins_.position_lf()[Z]);
-            mission_planner->insert_mission_waypoint(hold_wpt);
+            mission_planner->insert_ad_hoc_waypoint(hold_wpt);
 
             result = MAV_RESULT_ACCEPTED;
         }
@@ -281,7 +281,7 @@ mav_result_t Mission_planner::start_stop_navigation(Mission_planner* mission_pla
                                             packet->param5,
                                             packet->param6,
                                             packet->param7);
-            mission_planner->insert_mission_waypoint(hold_wpt);
+            mission_planner->insert_ad_hoc_waypoint(hold_wpt);
 
             result = MAV_RESULT_ACCEPTED;
         }
@@ -318,7 +318,7 @@ mav_result_t Mission_planner::set_auto_takeoff(Mission_planner* mission_planner,
                                 mission_planner->navigation_.takeoff_altitude); // packet->param7);
 
         print_util_dbg_print("Starting automatic take-off from button\r\n");
-        mission_planner->insert_mission_waypoint(takeoff_wpt);
+        mission_planner->insert_ad_hoc_waypoint(takeoff_wpt);
 
         result = MAV_RESULT_ACCEPTED;
     }
@@ -370,7 +370,7 @@ mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner,
                                 landing_position[X],
                                 landing_position[Y],
                                 landing_position[Z]);
-        mission_planner->insert_mission_waypoint(landing_wpt);
+        mission_planner->insert_ad_hoc_waypoint(landing_wpt);
 
         print_util_dbg_print("Auto-landing procedure initialised.\r\n");
         print_util_dbg_print("Landing at: (");
@@ -521,7 +521,7 @@ void Mission_planner::state_machine()
                                             ins_.position_lf()[Y],
                                             ins_.position_lf()[Z]);
             // Insert so we can say to go back to doing last mission item afterwords
-            insert_mission_waypoint(inserted_waypoint_);
+            insert_ad_hoc_waypoint(inserted_waypoint_);
         }
 
         if (current_mission_handler_ != NULL)
@@ -963,7 +963,7 @@ bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)
     return ret;
 }
 
-bool Mission_planner::insert_mission_waypoint(Waypoint wpt)
+bool Mission_planner::insert_ad_hoc_waypoint(Waypoint wpt)
 {
     bool ret = true;
     

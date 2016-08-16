@@ -155,7 +155,7 @@ public:
      *
      * \return  Success
      */
-    bool insert_mission_waypoint(Waypoint wpt);
+    bool insert_ad_hoc_waypoint(Waypoint wpt);
 
 protected:
     Mission_handler* current_mission_handler_;                  ///< The currently used mission handler
@@ -200,7 +200,7 @@ protected:
      *
      * \details     THIS SHOULD NOT BE SET AS A METHOD TO CHANGE THE
      *              MISSION HANDLER! USE Mission_planner::switch_mission_handler()
-     *              or Mission_planner::insert_mission_waypoint()
+     *              or Mission_planner::insert_ad_hoc_waypoint()
      *
      * \param   new_internal_state  The new internal state
      */
