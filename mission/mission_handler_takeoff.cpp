@@ -124,22 +124,23 @@ bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
     // Determine distance to the waypoint
     if (waypoint_.autocontinue() == 1)
     {
-        float waypoint_radius = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
+        float xy_radius_sqr = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
 
         local_position_t wpt_pos = waypoint_.local_pos();
+        float xy_dist2wp_sqr;
         float rel_pos[3];
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 2; i++)
         {
             rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
         }
-        navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+        rel_pos[2] = 0.0f;
+        xy_dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
         // Determine if finished
-        
         switch(navigation_.navigation_strategy)
         {
         case Navigation::strategy_t::DIRECT_TO:
-           if (navigation_.dist2wp_sqr <= waypoint_radius)
+           if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
             {
                 finished = true;
                 navigation_.set_waiting_at_waypoint(true);
@@ -149,7 +150,7 @@ bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
         case Navigation::strategy_t::DUBIN:
             if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
             {
-                if (navigation_.dist2wp_sqr <= waypoint_radius)
+                if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
                 {
                     finished = true;
                     navigation_.set_waiting_at_waypoint(true);
@@ -157,7 +158,7 @@ bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
             }
             else
             {
-                if (ins_.position_lf()[Z] <= navigation_.takeoff_altitude)
+                if (ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
                 {
                     finished = true;
                     navigation_.set_waiting_at_waypoint(true);
