@@ -53,6 +53,8 @@
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "mission/mission_planner.hpp"
+#include "mission/mission_handler_critical_landing.hpp"
+#include "mission/mission_handler_critical_navigating.hpp"
 #include "mission/mission_handler_hold_position.hpp"
 #include "mission/mission_handler_landing.hpp"
 #include "mission/mission_handler_navigating.hpp"
@@ -245,6 +247,8 @@ protected:
     Mission_handler_navigating navigating_handler;
     Mission_handler_on_ground on_ground_handler;
     Mission_handler_takeoff takeoff_handler;
+    Mission_handler_critical_landing critical_landing_handler;
+    Mission_handler_critical_navigating critical_navigating_handler;
     Mission_planner mission_planner;                            ///< Controls the mission plan
 
 

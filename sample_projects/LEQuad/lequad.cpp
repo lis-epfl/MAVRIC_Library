@@ -97,6 +97,8 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     navigating_handler(position_estimation, navigation, mavlink_communication.mavlink_stream(), waypoint_handler),
     on_ground_handler(navigation),
     takeoff_handler(position_estimation, navigation, state),
+    critical_landing_handler(position_estimation, navigation, state),
+    critical_navigating_handler(position_estimation, navigation, mavlink_communication.mavlink_stream(), waypoint_handler),
     mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
@@ -453,6 +455,8 @@ bool LEQuad::init_navigation(void)
     ret &= mission_handler_registry.register_mission_handler(navigating_handler);
     ret &= mission_handler_registry.register_mission_handler(on_ground_handler);
     ret &= mission_handler_registry.register_mission_handler(takeoff_handler);
+    ret &= mission_handler_registry.register_mission_handler(critical_landing_handler);
+    ret &= mission_handler_registry.register_mission_handler(critical_navigating_handler); 
     ret &= waypoint_handler.init();
     ret &= mission_planner.init();
 

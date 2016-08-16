@@ -568,7 +568,7 @@ void Mission_planner::critical_handler()
             print_util_dbg_print("Climbing to safe alt...\r\n");
             state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
             critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                            MAV_CMD_NAV_WAYPOINT,
+                                            MAV_CMD_NAV_CRITICAL_WAYPOINT,
                                             1,
                                             0.0f,
                                             0.0f,
@@ -585,7 +585,7 @@ void Mission_planner::critical_handler()
             state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
 
             critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                            MAV_CMD_NAV_WAYPOINT,
+                                            MAV_CMD_NAV_CRITICAL_WAYPOINT,
                                             1,
                                             0.0f,
                                             0.0f,
@@ -601,7 +601,7 @@ void Mission_planner::critical_handler()
             state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
             critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                            MAV_CMD_NAV_LAND,
+                                            MAV_CMD_NAV_CRITICAL_LAND,
                                             0,
                                             0.0f,
                                             0.0f,
@@ -619,7 +619,7 @@ void Mission_planner::critical_handler()
             state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
             critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                            MAV_CMD_NAV_LAND,
+                                            MAV_CMD_NAV_CRITICAL_LAND,
                                             0,
                                             0.0f,
                                             0.0f,
@@ -646,63 +646,44 @@ void Mission_planner::critical_handler()
     if (current_mission_handler_ != NULL)
     {
         current_mission_handler_->handle(*this);
-    }
 
-    // Create new check for moving to next critical state
-    // This also allows us to bypass any handlers that do not have autocontinue checks enables
-    if (navigation_.critical_behavior == Navigation::CRITICAL_LAND || navigation_.critical_behavior == Navigation::HOME_LAND)
-    {
-        navigation_.alt_lpf = navigation_.LPF_gain * navigation_.alt_lpf + (1.0f - navigation_.LPF_gain) * ins_.position_lf()[Z];
-        if ((ins_.position_lf()[Z] > -0.1f) && (maths_f_abs(ins_.position_lf()[Z] - navigation_.alt_lpf) <= 0.2f))
+        // If we move to the next state, set the next state
+        if (current_mission_handler_->is_finished(*this))
         {
-            // Disarming
-            next_state_ = true;
-        }
-    }
-    else if ((navigation_.critical_behavior == Navigation::CLIMB_TO_SAFE_ALT) || (navigation_.critical_behavior == Navigation::FLY_TO_HOME_WP))
-    {
-        if (navigation_.dist2wp_sqr < 3.0f)
-        {
-            next_state_ = true;
-        }
-    }
-
-    // If we move to the next state, set the next state
-    if (next_state_)
-    {
-        critical_next_state_ = false;
-        switch (navigation_.critical_behavior)
-        {
-        case Navigation::CLIMB_TO_SAFE_ALT:
-            print_util_dbg_print("Critical State! Flying to home waypoint.\r\n");
-            navigation_.critical_behavior = Navigation::FLY_TO_HOME_WP;
-            break;
-
-        case Navigation::FLY_TO_HOME_WP:
-            if (state_.out_of_fence_1)
+            critical_next_state_ = false;
+            switch (navigation_.critical_behavior)
             {
-                state_.out_of_fence_1 = false;
+            case Navigation::CLIMB_TO_SAFE_ALT:
+                print_util_dbg_print("Critical State! Flying to home waypoint.\r\n");
+                navigation_.critical_behavior = Navigation::FLY_TO_HOME_WP;
+                break;
+
+            case Navigation::FLY_TO_HOME_WP:
+                if (state_.out_of_fence_1)
+                {
+                    state_.out_of_fence_1 = false;
+                    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+                    state_.mav_state_ = MAV_STATE_ACTIVE;
+                    state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
+                }
+                else
+                {
+                    print_util_dbg_print("Critical State! Performing critical landing.\r\n");
+                    navigation_.critical_behavior = Navigation::HOME_LAND;
+                }
+                break;
+
+            case Navigation::HOME_LAND:
+            case Navigation::CRITICAL_LAND:
+                print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
                 navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-                state_.mav_state_ = MAV_STATE_ACTIVE;
-                state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
+                //state_.mav_mode_custom = CUSTOM_BASE_MODE;
+                critical_waypoint_ = Waypoint();
+                switch_mission_handler(critical_waypoint_);
+                state_.set_armed(false);
+                state_.mav_state_ = MAV_STATE_EMERGENCY;
+                break;
             }
-            else
-            {
-                print_util_dbg_print("Critical State! Performing critical landing.\r\n");
-                navigation_.critical_behavior = Navigation::HOME_LAND;
-            }
-            break;
-
-        case Navigation::HOME_LAND:
-        case Navigation::CRITICAL_LAND:
-            print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
-            navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
-            //state_.mav_mode_custom = CUSTOM_BASE_MODE;
-            critical_waypoint_ = Waypoint();
-            switch_mission_handler(critical_waypoint_);
-            state_.set_armed(false);
-            state_.mav_state_ = MAV_STATE_EMERGENCY;
-            break;
         }
     }
 }

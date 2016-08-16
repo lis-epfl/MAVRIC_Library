@@ -105,6 +105,8 @@ LIB_SRCS += hal/common/dbg.cpp
 
 LIB_SRCS += mission/mission_planner.cpp
 LIB_SRCS += mission/mission_handler.cpp
+LIB_SRCS += mission/mission_handler_critical_landing.cpp
+LIB_SRCS += mission/mission_handler_critical_navigating.cpp
 LIB_SRCS += mission/mission_handler_hold_position.cpp
 LIB_SRCS += mission/mission_handler_landing.cpp
 LIB_SRCS += mission/mission_handler_navigating.cpp
