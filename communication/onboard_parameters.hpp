@@ -51,9 +51,12 @@
 #include "hal/common/file.hpp"
 
 
-#define MAX_ONBOARD_PARAM_COUNT 120 // should be < 122 to fit on user page on AT32UC3C1512
-
-
+/**
+ * \brief       Onboard parameters base class
+ *
+ * \details     This class is abstract and does not contains the task list,
+ *              use the child class Onboard_parameters_tpl
+ */
 class Onboard_parameters
 {
 public:
@@ -63,9 +66,17 @@ public:
      */
     struct conf_t
     {
-        uint32_t max_param_count;                                   ///< Maximum number of parameters
         bool debug;                                                 ///< Indicates if debug messages should be printed for each param change
     };
+
+
+    /**
+     * \brief   Default configuration
+     *
+     * \return  Config
+     */
+    static inline conf_t default_config(void);
+
 
     /**
      * \brief   Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
@@ -131,7 +142,8 @@ public:
      */
     bool send_first_scheduled_parameter(void);
 
-private:
+
+protected:
 
     /**
      * \brief   Structure of onboard parameter.
@@ -146,13 +158,34 @@ private:
         bool  schedule_for_transmission;                            ///< Boolean to activate the transmission of the parameter
     };
 
+
+    /**
+     * \brief       Get maximum number of parameters
+     *
+     * \details     To be overriden by child class
+     *
+     * \return      Maximum number of parameters
+     */
+    virtual uint32_t max_count(void) = 0;
+
+
+    /**
+     * \brief       Get pointer to the list of parameters
+     *
+     * \details     Abstract method to be implemented in child classes
+     *
+     * \return      task list
+     */
+    virtual param_entry_t* parameters(void) = 0;
+
+
+private:
+
     bool debug_;                                             ///< Indicates if debug messages should be printed for each param change
     File& file_;                                             ///< File storage to keep parameters between flights
     const State& state_;                                     ///< Pointer to the state structure
     const Mavlink_stream& mavlink_stream_;                   ///< Pointer to mavlink_stream
     uint32_t param_count_;                                   ///< Number of onboard parameter effectively in the array
-    uint32_t max_param_count_;                               ///< Maximum number of parameters
-    param_entry_t* parameters_;                              ///< Onboard parameters array, needs memory allocation
 
 
     /**
@@ -216,4 +249,70 @@ private:
 
 };
 
-#endif /* ONBOARD_PARAMETERS_H */
+/**
+ * \brief       Onboard parameters
+ *
+ * \tparam N    Maximum number of parameters
+ */
+template<uint32_t N>
+class Onboard_parameters_tpl: public Onboard_parameters
+{
+public:
+    /**
+     * \brief   Constructor
+     *
+     * \param   config                  Configuration
+     * \param   scheduler               Pointer to MAVLink scheduler
+     * \param   file                    Pointer to file storage
+     * \param   state                   Pointer to the state structure
+     * \param   message_handler         Pointer to MAVLink message handler
+     *
+     * \return  True if the init succeed, false otherwise
+     */
+    Onboard_parameters_tpl(File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config):
+        Onboard_parameters(file, state, message_handler, mavlink_stream, config)
+    {}
+
+
+protected:
+
+    /**
+     * \brief       Get maximum number of parameters
+     *
+     * \return      Maximum number of parameters
+     */
+    uint32_t max_count(void)
+    {
+        return N;
+    }
+
+
+    /**
+     * \brief       Get pointer to the list of parameters
+     *
+     * \return      task list
+     */
+    param_entry_t* parameters(void)
+    {
+        return parameters_;
+    }
+
+
+private:
+    param_entry_t parameters_[N];         ///< Onboard parameters array
+};
+
+
+/**
+ * \brief   Default configuration
+ *
+ * \return  Config
+ */
+Onboard_parameters::conf_t Onboard_parameters::default_config(void)
+{
+    conf_t conf = {};
+    conf.debug = false;
+    return conf;
+}
+
+#endif /* ONBOARD_PARAMETERS_HPP_ */

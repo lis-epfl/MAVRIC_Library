@@ -148,30 +148,22 @@ private:
     Mavlink_stream                      mavlink_stream_;       ///<    Mavlink interface using streams
     Periodic_telemetry_tpl<30>          telemetry_;            ///<    Periodic telemetry
     Mavlink_message_handler_tpl<20, 20> handler_;              ///<    Message handler
-    Onboard_parameters                  parameters_;           ///<    Onboard parameters
+    Onboard_parameters_tpl<120>         parameters_;           ///<    Onboard parameters
 };
 
 
 Mavlink_communication::conf_t Mavlink_communication::default_config(uint8_t sysid)
 {
-    conf_t conf                                        = {};
+    conf_t conf                       = {};
 
-    conf.mavlink_stream_config                         = {};
-    conf.mavlink_stream_config.sysid                   = sysid;
-    conf.mavlink_stream_config.compid                  = 50;
-    conf.mavlink_stream_config.debug                   = false,
+    conf.mavlink_stream_config        = {};
+    conf.mavlink_stream_config.sysid  = sysid;
+    conf.mavlink_stream_config.compid = 50;
+    conf.mavlink_stream_config.debug  = false,
 
-    conf.telemetry_config                              = Periodic_telemetry::default_config();
-
-    conf.message_handler_config                        = {};
-    conf.message_handler_config.max_msg_callback_count = 20;
-    conf.message_handler_config.max_cmd_callback_count = 20;
-    conf.message_handler_config.debug                  = false;
-
-    conf.onboard_parameters_config                     = {};
-    conf.onboard_parameters_config.max_param_count     = MAX_ONBOARD_PARAM_COUNT;
-    conf.onboard_parameters_config.debug               = false  ;
-
+    conf.telemetry_config             = Periodic_telemetry::default_config();
+    conf.message_handler_config       = Mavlink_message_handler::default_config();
+    conf.onboard_parameters_config    = Onboard_parameters::default_config();
 
     return conf;
 };

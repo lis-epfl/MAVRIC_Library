@@ -125,10 +125,16 @@ public:
      */
     struct conf_t
     {
-        uint32_t max_msg_callback_count;                                ///<    Maximum number of message callbacks
-        uint32_t max_cmd_callback_count;                                ///<    Maximum number of command callbacks
         bool debug;                                                     ///<    Indicates whether debug message are written for every incoming message
     };
+
+    /**
+     * \brief   Default configuration
+     *
+     * \return  Config
+     */
+    static inline conf_t default_config(void);
+
 
     /**
      * \brief                       Constructor
@@ -351,6 +357,20 @@ private:
     msg_callback_t msg_callback_list_[N];       ///<    List of command callbacks
     cmd_callback_t cmd_callback_list_[P];       ///<    List of message callbacks
 };
+
+
+/**
+ * \brief   Default configuration
+ *
+ * \return  Config
+ */
+Mavlink_message_handler::conf_t Mavlink_message_handler::default_config(void)
+{
+    conf_t conf = {};
+    conf.debug  = false;
+    return conf;
+}
+
 
 
 #endif /* MAVLINK_MESSAGE_HANDLING_H */
