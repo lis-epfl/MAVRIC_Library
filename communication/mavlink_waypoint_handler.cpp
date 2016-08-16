@@ -42,7 +42,7 @@
 
 
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "control/mission_handler.hpp"
+#include "mission/mission_handler.hpp"
 
 #include <cstdlib>
 

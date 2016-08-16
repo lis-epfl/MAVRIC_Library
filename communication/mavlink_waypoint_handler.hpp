@@ -49,7 +49,7 @@
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
 #include "control/waypoint.hpp"
-#include "control/navigation.hpp"
+#include "mission/navigation.hpp"
 
 class Mission_planner;
 

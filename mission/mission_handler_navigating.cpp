@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/mission_handler_navigating.hpp"
+#include "mission/mission_handler_navigating.hpp"
 
 #include "communication/mavlink_waypoint_handler.hpp"
 
@@ -93,7 +93,7 @@ Mission_handler_navigating::Mission_handler_navigating( const INS& ins,
                             0.0f);
 }
 
-bool Mission_handler_navigating::can_handle(const Waypoint& wpt)
+bool Mission_handler_navigating::can_handle(const Waypoint& wpt) const
 {
     bool handleable = false;
 
@@ -113,7 +113,6 @@ bool Mission_handler_navigating::setup(Mission_planner& mission_planner, const W
     start_time_ = time_keeper_get_ms();
     navigation_.set_waiting_at_waypoint(false);
     waypoint_ = wpt;
-    mission_planner.set_internal_state(Mission_planner::MISSION);
 
     return success;
 }
@@ -232,4 +231,9 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
     }
 
     return false;
+}
+
+Mission_planner::internal_state_t Mission_handler_navigating::handler_mission_state() const
+{
+    return Mission_planner::MISSION;
 }

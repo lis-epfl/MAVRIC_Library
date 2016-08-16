@@ -43,7 +43,7 @@
 #ifndef STABILISATION_WING_HPP_
 #define STABILISATION_WING_HPP_
 
-#include "control/navigation.hpp"
+#include "mission/navigation.hpp"
 #include "control/stabilisation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/position_estimation.hpp"

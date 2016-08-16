@@ -48,7 +48,7 @@
 #include "communication/mavlink_communication.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
-#include "control/mission_handler_registry.hpp"
+#include "mission/mission_handler_registry.hpp"
 #include "control/waypoint.hpp"
 #include "control/dubin.hpp"
 #include "control/stabilisation.hpp"
@@ -318,7 +318,7 @@ Navigation::conf_t Navigation::default_config()
     conf.heading_acceptance                          = PI/6.0f;
     conf.vertical_vel_gain                           = 1.0f;
     conf.takeoff_altitude                            = -10.0f;
-    // conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
+    //conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
     conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
     return conf;
 };

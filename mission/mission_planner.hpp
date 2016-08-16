@@ -51,10 +51,11 @@
 #include "communication/state.hpp"
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
-#include "control/mission_handler_registry.hpp"
-#include "control/navigation.hpp"
+#include "mission/mission_handler_registry.hpp"
+#include "mission/navigation.hpp"
 #include "control/dubin.hpp"
-#include "control/mission_handler.hpp"
+
+class Mission_handler;
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -129,17 +130,6 @@ public:
     internal_state_t internal_state() const;
 
     /**
-     * \brief   Sets the internal state based on default waypoints
-     *
-     * \details     THIS SHOULD NOT BE SET AS A METHOD TO CHANGE THE
-     *              MISSION HANDLER! USE Mission_planner::switch_mission_handler()
-     *              or Mission_planner::insert_mission_waypoint()
-     *
-     * \param   new_internal_state  The new internal state
-     */
-    void set_internal_state(internal_state_t new_internal_state);
-
-    /**
      * \brief   Switches the mission handler to the inputted waypoint
      *
      * \details     The current mission handler is set based on the
@@ -205,6 +195,16 @@ protected:
      */
     void critical_handler();
 
+    /**
+     * \brief   Sets the internal state based on default waypoints
+     *
+     * \details     THIS SHOULD NOT BE SET AS A METHOD TO CHANGE THE
+     *              MISSION HANDLER! USE Mission_planner::switch_mission_handler()
+     *              or Mission_planner::insert_mission_waypoint()
+     *
+     * \param   new_internal_state  The new internal state
+     */
+    void set_internal_state(internal_state_t new_internal_state);
 
     /************************************************
      *      static member functions (callbacks)     *

@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/mission_handler_landing.hpp"
+#include "mission/mission_handler_landing.hpp"
 
 extern "C"
 {
@@ -79,7 +79,7 @@ Mission_handler_landing::Mission_handler_landing(   const INS& ins,
                             0.0f);
 }
 
-bool Mission_handler_landing::can_handle(const Waypoint& wpt)
+bool Mission_handler_landing::can_handle(const Waypoint& wpt) const
 {
     bool handleable = false;
 
@@ -101,7 +101,6 @@ bool Mission_handler_landing::setup(Mission_planner& mission_planner, const Wayp
     state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
     state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
     navigation_.set_waiting_at_waypoint(false);
-    mission_planner.set_internal_state(Mission_planner::POSTMISSION);
     is_landed_ = false;
 
     waypoint_ = wpt;
@@ -196,6 +195,11 @@ bool Mission_handler_landing::is_finished(Mission_planner& mission_planner)
     {
         return false;
     }
+}
+
+Mission_planner::internal_state_t Mission_handler_landing::handler_mission_state() const
+{
+    return Mission_planner::POSTMISSION;
 }
 
 void Mission_handler_landing::modify_control_command(control_command_t& control)

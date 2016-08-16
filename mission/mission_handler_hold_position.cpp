@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/mission_handler_hold_position.hpp"
+#include "mission/mission_handler_hold_position.hpp"
 
 extern "C"
 {
@@ -70,7 +70,7 @@ Mission_handler_hold_position::Mission_handler_hold_position(   const INS& ins,
                             0.0f);
 }
 
-bool Mission_handler_hold_position::can_handle(const Waypoint& wpt)
+bool Mission_handler_hold_position::can_handle(const Waypoint& wpt) const
 {
     bool handleable = false;
 
@@ -93,7 +93,6 @@ bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, cons
     start_time_ = time_keeper_get_ms();
     within_radius_ = false;
     navigation_.set_waiting_at_waypoint(true);
-    mission_planner.set_internal_state(Mission_planner::MISSION);
 
     return success;
 }
@@ -163,4 +162,9 @@ bool Mission_handler_hold_position::is_finished(Mission_planner& mission_planner
         
 
     return false;
+}
+
+Mission_planner::internal_state_t Mission_handler_hold_position::handler_mission_state() const
+{
+    return Mission_planner::MISSION;
 }

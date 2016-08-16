@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_on_ground.hpp
+ * \file mission_handler_on_ground.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
@@ -40,81 +40,47 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_ON_GROUND__
-#define MISSION_HANDLER_ON_GROUND__
+#include "mission/mission_handler_on_ground.hpp"
 
-#include "control/mission_handler.hpp"
-#include "control/navigation.hpp"
-
-/*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
- */
-
-class Mission_handler_on_ground : public Mission_handler
+extern "C"
 {
-public:
+
+}
 
 
-    /**
-     * \brief   Initialize the on ground mission planner handler
-     *
-     * \param   navigation              The reference to the navigation class
-     */
-     Mission_handler_on_ground(Navigation& navigation);
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
+Mission_handler_on_ground::Mission_handler_on_ground(Navigation& navigation):
+            Mission_handler(),
+            navigation_(navigation)
+{
 
-    /**
-     * \brief   Checks if the waypoint is on the ground
-     *  
-     * \details     DOES NOT CURRENTLY CHECK IF WE ARE ON GROUND
-     *
-     * \param   wpt                 The waypoint class
-     *
-     * \return  Can handle
-     */
-    bool can_handle(const Waypoint& wpt);
+}
 
-    /**
-     * \brief   Does nothing
-     *  
-     * \details     Does nothing
-     *
-     * \param   mission_planner     The mission planner class
-     * \param   wpt                 The waypoint class
-     *
-     * \return  True
-     */
-    bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
+{
+    // TODO: Check if actually on ground
+    return wpt.command() == 0;
+}
 
-    /**
-     * \brief   Does nothing
-     *  
-     * \details     Does nothing
-     *
-     * \param   mission_planner     The mission planner class
-     */
-    void handle(Mission_planner& mission_planner);
+bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+{
+    navigation_.set_waiting_at_waypoint(true);
+    return true;
+}
 
-    /**
-     * \brief   Returns false
-     *  
-     * \details     Returns false as the on ground state should never
-                    end without user input from somewhere elses
-     *
-     * \param   mission_planner     The mission planner class
-     *
-     * \return  False
-     */
-    bool is_finished(Mission_planner& mission_planner);
+void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
+{
+}
 
-protected:
-    Navigation& navigation_;                                    ///< The reference to the navigation structure
-};
+bool Mission_handler_on_ground::is_finished(Mission_planner& mission_planner)
+{
+    return false;
+}
 
-
-
-
-
-
-
-#endif // MISSION_HANDLER_ON_GROUND__
+Mission_planner::internal_state_t Mission_handler_on_ground::handler_mission_state() const
+{
+    return Mission_planner::STANDBY;
+}

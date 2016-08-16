@@ -40,10 +40,10 @@
  ******************************************************************************/
 
 
-#include "control/navigation.hpp"
+#include "mission/navigation.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "control/dubin.hpp"
-#include "control/mission_handler.hpp"
+#include "mission/mission_handler.hpp"
 #include "util/constants.hpp"
 
 extern "C"

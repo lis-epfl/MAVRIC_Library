@@ -30,105 +30,92 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_landing.hpp
+ * \file mission_handler_on_ground.hpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the landing state
+ * \brief The MAVLink mission planner handler for the on ground state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_LANDING__
-#define MISSION_HANDLER_LANDING__
+#ifndef MISSION_HANDLER_ON_GROUND__
+#define MISSION_HANDLER_ON_GROUND__
 
-#include "communication/state.hpp"
-#include "control/mission_handler.hpp"
-#include "control/navigation.hpp"
+#include "mission/mission_handler.hpp"
+#include "mission/navigation.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mission_handler_landing : public Mission_handler
+class Mission_handler_on_ground : public Mission_handler
 {
 public:
 
 
     /**
-     * \brief   Initialize the landing mission planner handler
+     * \brief   Initialize the on ground mission planner handler
      *
-     * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
+     * \param   navigation              The reference to the navigation class
      */
-     Mission_handler_landing(   const INS& ins,
-                                Navigation& navigation,
-                                State& state);
+     Mission_handler_on_ground(Navigation& navigation);
+
 
     /**
-     * \brief   Checks if the waypoint is a landing waypoint
+     * \brief   Checks if the waypoint is on the ground
      *  
-     * \details     Checks if the inputted waypoint is a:
-     *                  MAV_CMD_NAV_LAND
+     * \details     DOES NOT CURRENTLY CHECK IF WE ARE ON GROUND
      *
      * \param   wpt                 The waypoint class
      *
      * \return  Can handle
      */
-    bool can_handle(const Waypoint& wpt);
+    virtual bool can_handle(const Waypoint& wpt) const;
 
     /**
-     * \brief   Sets up this handler class for a first time initialization
+     * \brief   Does nothing
      *  
-     * \details     Records the waypoint reference and sets the mav mode
+     * \details     Does nothing
      *
      * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
-     * \return  Success
+     * \return  True
      */
-    bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
 
     /**
-     * \brief   Handles the mission every iteration
+     * \brief   Does nothing
      *  
-     * \details     
+     * \details     Does nothing
      *
      * \param   mission_planner     The mission planner class
      */
-    void handle(Mission_planner& mission_planner);
+    virtual void handle(Mission_planner& mission_planner);
 
     /**
-     * \brief   Return false
+     * \brief   Returns false
      *  
-     * \details     This returns false as we do not want the drone to take off
-     *              immediately after landing
+     * \details     Returns false as the on ground state should never
+                    end without user input from somewhere elses
      *
      * \param   mission_planner     The mission planner class
      *
      * \return  False
      */
-    bool is_finished(Mission_planner& mission_planner);
+    virtual bool is_finished(Mission_planner& mission_planner);
 
     /**
-     * \brief   Limits the vertical velocity
+     * \brief   Returns that the mission state is in STANDBY
      *
-     * \details Limits the vertical velocity during the descent to ground state
-     *
-     * \param   control     Control command reference to change
+     * \return  Mission handler's mission state
      */
-    void modify_control_command(control_command_t& control);
+    virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
-    Waypoint waypoint_;                                         ///< The waypoint that we are landing under
-    Waypoint landing_waypoint_;                                 ///< The waypoint that we want our drone to go
-    bool is_landed_;                                            ///< Boolean flag stating that we have finished the landing procedure
-
-    const INS& ins_;                                            ///< The reference to the ins interface
     Navigation& navigation_;                                    ///< The reference to the navigation structure
-    State& state_;                                              ///< The reference to the state structure
 };
 
 
@@ -137,4 +124,4 @@ protected:
 
 
 
-#endif // MISSION_HANDLER_LANDING__
+#endif // MISSION_HANDLER_ON_GROUND__

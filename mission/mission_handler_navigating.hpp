@@ -44,8 +44,8 @@
 #define MISSION_HANDLER_NAVIGATING__
 
 #include "communication/mavlink_message_handler.hpp"
-#include "control/mission_handler.hpp"
-#include "control/navigation.hpp"
+#include "mission/mission_handler.hpp"
+#include "mission/navigation.hpp"
 
 class Mavlink_waypoint_handler;
 
@@ -82,7 +82,7 @@ public:
      *
      * \return  Can handle
      */
-    bool can_handle(const Waypoint& wpt);
+    virtual bool can_handle(const Waypoint& wpt) const;
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -94,7 +94,7 @@ public:
      *
      * \return  Success
      */
-    bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
 
     /**
      * \brief   Handles the mission every iteration
@@ -103,7 +103,7 @@ public:
      *
      * \param   mission_planner     The mission planner class
      */
-    void handle(Mission_planner& mission_planner);
+    virtual void handle(Mission_planner& mission_planner);
 
     /**
      * \brief   Checks if the handler has finished the request of the waypoint
@@ -116,7 +116,14 @@ public:
      *
      * \return  Is finished
      */
-    bool is_finished(Mission_planner& mission_planner);
+    virtual bool is_finished(Mission_planner& mission_planner);
+
+    /**
+     * \brief   Returns that the mission state is in MISSION
+     *
+     * \return  Mission handler's mission state
+     */
+    virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
     const INS& ins_;                                                    ///< The reference to the ins interface

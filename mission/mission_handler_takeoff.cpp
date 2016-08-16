@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/mission_handler_takeoff.hpp"
+#include "mission/mission_handler_takeoff.hpp"
 
 extern "C"
 {
@@ -79,7 +79,7 @@ Mission_handler_takeoff::Mission_handler_takeoff(   const INS& ins,
                             navigation_.takeoff_altitude);
 }
 
-bool Mission_handler_takeoff::can_handle(const Waypoint& wpt)
+bool Mission_handler_takeoff::can_handle(const Waypoint& wpt) const
 {
     bool handleable = false;
 
@@ -99,7 +99,6 @@ bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, const Wayp
     waypoint_ = wpt;
 
     navigation_.set_waiting_at_waypoint(false);
-    mission_planner.set_internal_state(Mission_planner::PREMISSION);
 
     print_util_dbg_print("Automatic take-off, will hold position at: (");
     print_util_dbg_print_num(wpt.local_pos()[X], 10);
@@ -169,4 +168,9 @@ bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
     }
 
     return finished;
+}
+
+Mission_planner::internal_state_t Mission_handler_takeoff::handler_mission_state() const
+{
+    return Mission_planner::PREMISSION;
 }

@@ -40,15 +40,16 @@
  ******************************************************************************/
 
 
-#include "control/mission_planner.hpp"
+#include "mission/mission_planner.hpp"
 #include <cstdlib>
 #include "hal/common/time_keeper.hpp"
 
-#include "control/mission_handler_takeoff.hpp"
-#include "control/mission_handler_landing.hpp"
-#include "control/mission_handler_on_ground.hpp"
-#include "control/mission_handler_navigating.hpp"
-#include "control/mission_handler_hold_position.hpp"
+#include "mission/mission_handler.hpp"
+#include "mission/mission_handler_takeoff.hpp"
+#include "mission/mission_handler_landing.hpp"
+#include "mission/mission_handler_on_ground.hpp"
+#include "mission/mission_handler_navigating.hpp"
+#include "mission/mission_handler_hold_position.hpp"
 
 extern "C"
 {
@@ -706,6 +707,56 @@ void Mission_planner::critical_handler()
     }
 }
 
+void Mission_planner::set_internal_state(internal_state_t new_internal_state)
+{
+    if (internal_state_ != new_internal_state)
+    {
+        // Print state change
+        print_util_dbg_print("Switching from ");
+        switch (internal_state_)
+        {
+        case STANDBY:
+            print_util_dbg_print("STANDBY");
+            break;
+        case PREMISSION:
+            print_util_dbg_print("PREMISSION");
+            break;
+        case MISSION:
+            print_util_dbg_print("MISSION");
+            break;
+        case POSTMISSION:
+            print_util_dbg_print("POSTMISSION");
+            break;
+        case PAUSED:
+            print_util_dbg_print("PAUSED");
+            break;
+        }
+        print_util_dbg_print(" to ");
+        switch (new_internal_state)
+        {
+        case STANDBY:
+            print_util_dbg_print("STANDBY");
+            break;
+        case PREMISSION:
+            print_util_dbg_print("PREMISSION");
+            break;
+        case MISSION:
+            print_util_dbg_print("MISSION");
+            break;
+        case POSTMISSION:
+            print_util_dbg_print("POSTMISSION");
+            break;
+        case PAUSED:
+            print_util_dbg_print("PAUSED");
+            break;
+        }
+        print_util_dbg_print("\r\n");
+
+        // Update internal state
+        internal_state_ = new_internal_state;
+    }
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -882,56 +933,6 @@ Mission_planner::internal_state_t Mission_planner::internal_state() const
     return internal_state_;
 }
 
-void Mission_planner::set_internal_state(internal_state_t new_internal_state)
-{
-    if (internal_state_ != new_internal_state)
-    {
-        // Print state change
-        print_util_dbg_print("Switching from ");
-        switch (internal_state_)
-        {
-        case STANDBY:
-            print_util_dbg_print("STANDBY");
-            break;
-        case PREMISSION:
-            print_util_dbg_print("PREMISSION");
-            break;
-        case MISSION:
-            print_util_dbg_print("MISSION");
-            break;
-        case POSTMISSION:
-            print_util_dbg_print("POSTMISSION");
-            break;
-        case PAUSED:
-            print_util_dbg_print("PAUSED");
-            break;
-        }
-        print_util_dbg_print(" to ");
-        switch (new_internal_state)
-        {
-        case STANDBY:
-            print_util_dbg_print("STANDBY");
-            break;
-        case PREMISSION:
-            print_util_dbg_print("PREMISSION");
-            break;
-        case MISSION:
-            print_util_dbg_print("MISSION");
-            break;
-        case POSTMISSION:
-            print_util_dbg_print("POSTMISSION");
-            break;
-        case PAUSED:
-            print_util_dbg_print("PAUSED");
-            break;
-        }
-        print_util_dbg_print("\r\n");
-
-        // Update internal state
-        internal_state_ = new_internal_state;
-    }
-}
-
 bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)
 {
     Mission_handler* handler = mission_handler_registry_.get_mission_handler(waypoint);
@@ -942,8 +943,11 @@ bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)
 
     // Set current handler
     bool ret = handler->setup(*this, waypoint);
+
     if (ret)
     {
+        // Success, set mission state and current mission handler
+        set_internal_state(handler->handler_mission_state());
         current_mission_handler_ = handler;
 
         // Output debug message

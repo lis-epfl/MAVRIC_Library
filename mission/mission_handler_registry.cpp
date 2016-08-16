@@ -30,18 +30,21 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler.cpp
+ * \file mission_handler_registry.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler
+ * \brief The mission handler registry is responsible for registering and
+ *        obtaining mission handlers based on an inputted waypoint
  *
  ******************************************************************************/
 
 
-#include "control/mission_handler.hpp"
+#include "mission/mission_handler_registry.hpp"
 
+#include "mission/mission_handler.hpp"
+ 
 extern "C"
 {
 }
@@ -55,7 +58,50 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Mission_handler::modify_control_command(control_command_t& control)
+Mission_handler_registry::Mission_handler_registry() :
+		registered_mission_handler_count_(0)
 {
-	return;
+
+}
+
+bool Mission_handler_registry::register_mission_handler(Mission_handler& handler)
+{
+    // Check for maximum count
+    if (MAX_REGISTERED_MISSION_HANDLERS == registered_mission_handler_count_)
+    {
+        print_util_dbg_print("[MISSION_HANDLER_REGISTRY]: Too many registed mission handlers\r\n");
+        return false;
+    }
+
+    // Check for duplicates
+    for (uint8_t i = 0; i < registered_mission_handler_count_; i++)
+    {
+        if (registered_mission_handlers_[i] == &handler)
+        {
+            print_util_dbg_print("[MISSION_HANDLER_REGISTRY]: Mission handler already registed\r\n");
+            return false;
+        }
+    }
+
+    // Register mission
+    registered_mission_handlers_[registered_mission_handler_count_] = &handler;
+    registered_mission_handler_count_++;
+    print_util_dbg_print("[MISSION_HANDLER_REGISTRY]: Mission handler registered\r\n");
+    return true;
+}
+
+Mission_handler* Mission_handler_registry::get_mission_handler(const Waypoint& waypoint)
+{
+	// Search for the first handler than can accept this waypoint
+    for (uint8_t i = 0; i < registered_mission_handler_count_; i++)
+    {
+        // Check if proper handler
+        if (registered_mission_handlers_[i]->can_handle(waypoint))
+        {
+        	return registered_mission_handlers_[i];
+        }
+    }
+
+    print_util_dbg_print("[MISSION_HANDLER_REGISTRY]: Handler could not be found\r\n");
+    return NULL;
 }

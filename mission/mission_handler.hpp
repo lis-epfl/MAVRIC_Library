@@ -43,7 +43,7 @@
 #ifndef MISSION_HANDLER__
 #define MISSION_HANDLER__
 
-#include "control/mission_planner.hpp"
+#include "mission/mission_planner.hpp"
 #include "control/waypoint.hpp"
 
 /*
@@ -64,7 +64,7 @@ public:
      *
      * \return  Can handle
      */
-    virtual bool can_handle(const Waypoint& wpt) = 0;
+    virtual bool can_handle(const Waypoint& wpt) const = 0;
 
     /**
      * \brief   Sets up this handler class for a first time initialization
@@ -105,6 +105,23 @@ public:
      * \return  Is finished
      */
     virtual bool is_finished(Mission_planner& mission_planner) = 0;
+
+    /**
+     * \brief   Gets the mission state of this handler
+     *
+     * \details     All mission handlers are required to suggest a mission state.
+     *              The choices can be one of the follow:
+     *                  STANDBY (drone is on ground and standing by)
+     *                  PREMISSION (takeoff)
+     *                  MISSION (executing mission waypoint)
+     *                  POSTMISSION (landing)
+     *                  PAUSED (should not be selected)
+     *              Child classes should implement this function to return one
+     *              of these states.
+     *
+     * \return  Mission handler's mission state
+     */
+    virtual Mission_planner::internal_state_t handler_mission_state() const = 0;
 
     /**
      * \brief   Modifies the controls command based on the desired control
