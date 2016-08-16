@@ -400,6 +400,24 @@ void Mission_planner::state_machine()
         // Reset hold position flag as we are now in auto mode
         hold_position_set_ = false;
 
+        if (require_takeoff_ &&
+           (internal_state_ != STANDBY ||
+                (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f)))
+        {
+            inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                            MAV_CMD_NAV_TAKEOFF,
+                                            1,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            coord_conventions_get_yaw(ahrs_.qe),
+                                            ins_.position_lf()[X],
+                                            ins_.position_lf()[Y],
+                                            navigation_.takeoff_altitude);
+            insert_ad_hoc_waypoint(inserted_waypoint_);
+            require_takeoff_ = false;
+        }
+
         if (current_mission_handler_ != NULL)
         {
             // Handle current mission
@@ -500,39 +518,36 @@ void Mission_planner::state_machine()
                 }
             }
         }
-        else    // If the current handler is NULL, set to paused
-        {
-            //set_internal_state(PAUSED);
-        }
     }
-    else if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
+    else 
     {
-        // Set hold position if needed
-        if (!hold_position_set_)
-        {
-            inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                            MAV_CMD_NAV_LOITER_UNLIM,
-                                            0,
-                                            0.0f,
-                                            0.0f,
-                                            0.0f,
-                                            0.0f,
-                                            ins_.position_lf()[X],
-                                            ins_.position_lf()[Y],
-                                            ins_.position_lf()[Z]);
-            // Insert so we can say to go back to doing last mission item afterwords
-            insert_ad_hoc_waypoint(inserted_waypoint_);
-        }
+        require_takeoff_ = true;
 
-        if (current_mission_handler_ != NULL)
+        if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
         {
-            current_mission_handler_->handle(*this);
-        }
-        // DONT CHECK IF FINISHED POSITION HOLD
-    }
-    else
-    {
+            // Set hold position if needed
+            if (!hold_position_set_)
+            {
+                inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                                MAV_CMD_NAV_LOITER_UNLIM,
+                                                0,
+                                                0.0f,
+                                                0.0f,
+                                                0.0f,
+                                                0.0f,
+                                                ins_.position_lf()[X],
+                                                ins_.position_lf()[Y],
+                                                ins_.position_lf()[Z]);
+                // Insert so we can say to go back to doing last mission item afterwords
+                insert_ad_hoc_waypoint(inserted_waypoint_);
+            }
 
+            if (current_mission_handler_ != NULL)
+            {
+                current_mission_handler_->handle(*this);
+            }
+            // DONT CHECK IF FINISHED POSITION HOLD
+        }
     }
 }
 
@@ -540,7 +555,6 @@ void Mission_planner::state_machine()
 void Mission_planner::critical_handler()
 {
     float rel_pos[3];
-    bool next_state_ = false;
 
     //Check whether we entered critical mode due to a battery low level or a lost
     // connection with the GND station or are out of fence control
@@ -778,6 +792,7 @@ bool Mission_planner::init()
                                     navigation_.critical_landing_altitude);
 
     // Manual hold position information
+    require_takeoff_ = true;
     hold_position_set_ = false;
 
     // Add callbacks for waypoint handler messages requests

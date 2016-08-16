@@ -166,6 +166,7 @@ protected:
     Mavlink_waypoint_handler& waypoint_handler_;                ///< The reference to the mavlink waypoint handler
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 
+    bool require_takeoff_;                                      ///< Flag stating if we require takeoff when switching to auto, set when not auto
     bool hold_position_set_;                                    ///< Flag stating if the pilot has specifically switched to hold position
 
     bool critical_next_state_;                                  ///< Flag to change critical state in its dedicated state machine
