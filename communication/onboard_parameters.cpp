@@ -39,8 +39,6 @@
  *
  ******************************************************************************/
 
-#include <cstdlib>
-
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_communication.hpp"
 extern "C"
@@ -251,7 +249,8 @@ bool Onboard_parameters::read_from_storage()
 
     // Declare a local array large enough
     uint32_t to_read = file_.length();
-    float* values    = (float*)malloc(sizeof(uint8_t) * to_read);
+    uint8_t buffer[to_read];
+    float* values = (float*)buffer;
 
     // Read from file
     file_.seek(0, FILE_SEEK_START);
@@ -281,10 +280,6 @@ bool Onboard_parameters::read_from_storage()
         print_util_dbg_print("[FLASH] [ERROR] Failed to read\r\n");
     }
 
-    // Free memory
-    free(values);
-
-
     return success;
 }
 
@@ -301,7 +296,8 @@ bool Onboard_parameters::write_to_storage()
     uint32_t bytes_to_write = 4 * (param_count_ + 3);
 
     // Declare a local array large enough
-    float* values = (float*)malloc(sizeof(uint8_t) * bytes_to_write);
+    uint8_t buffer[bytes_to_write];
+    float* values = (float*)buffer;
 
     // Init checksums
     values[0] = param_count_;
@@ -323,8 +319,6 @@ bool Onboard_parameters::write_to_storage()
     file_.seek(0, FILE_SEEK_START);
     success &= file_.write((uint8_t*)values, bytes_to_write);
     success &= file_.flush();
-    // Free memory
-    free(values);
 
     return success;
 }
