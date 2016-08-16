@@ -107,7 +107,24 @@ public:
         PRIORITY_HIGHEST = 4        ///<    Highest priority
     };
 
+
+    /**
+     * \brief   Default Constructor
+     */
     Scheduler_task(void);
+
+
+    /**
+     * \brief   Constructor
+     *
+     * \param repeat_period         Repeat period in us
+     * \param run_mode              Run mode, defined in enum Scheduler_task::run_mode_t
+     * \param timing_mode           Timing mode, defined in Scheduler_task::timing_mode_t
+     * \param priority              Priority ,defined in Scheduler_task::priority_t
+     * \param call_function         Function to call
+     * \param function_argument     Argument of the funtion to call
+     * \param task_id               ID of the task
+     */
     Scheduler_task( uint32_t repeat_period,
                     Scheduler_task::run_mode_t run_mode,
                     Scheduler_task::timing_mode_t timing_mode,

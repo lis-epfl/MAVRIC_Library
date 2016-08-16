@@ -43,34 +43,27 @@
 #include "hal/common/time_keeper.hpp"
 #include <cstdlib>
 
-Scheduler_task::Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, int32_t task_id) :
-        task_id(task_id),
-        run_mode(run_mode),
-        timing_mode(timing_mode),
-        priority(priority),
-        repeat_period(repeat_period),
-        next_run(0),
-        execution_time(0),
-        execution_time_avg(0),
-        execution_time_var(0),
-        execution_time_max(0),
-        delay(0),
-        delay_avg(0),
-        delay_var(0),
-        delay_max(0),
-        call_function(call_function),
-        function_argument(function_argument)
+Scheduler_task::Scheduler_task(void)
 {}
 
 
-Scheduler_task::Scheduler_task( void):
-    Scheduler_task( 0,
-                    Scheduler_task::RUN_NEVER,
-                    Scheduler_task::PERIODIC_ABSOLUTE,
-                    Scheduler_task::PRIORITY_NORMAL,
-                    NULL,
-                    NULL,
-                    0)
+Scheduler_task::Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, int32_t task_id) :
+    task_id(task_id),
+    run_mode(run_mode),
+    timing_mode(timing_mode),
+    priority(priority),
+    repeat_period(repeat_period),
+    next_run(0),
+    execution_time(0),
+    execution_time_avg(0),
+    execution_time_var(0),
+    execution_time_max(0),
+    delay(0),
+    delay_avg(0),
+    delay_var(0),
+    delay_max(0),
+    call_function(call_function),
+    function_argument(function_argument)
 {}
 
 

@@ -53,7 +53,7 @@ extern "C"
 //------------------------------------------------------------------------------
 
 
-Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config) :
+Onboard_parameters::Onboard_parameters(File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config) :
         file_(file),
         state_(state),
         mavlink_stream_(mavlink_stream),
@@ -81,15 +81,6 @@ Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const S
         print_util_dbg_print_num(max_param_count_,10);
         print_util_dbg_print("\r\n");
     }
-
-    // Add onboard parameter telemetry to the scheduler
-    init_success &= scheduler.add_task(100000,
-                                       (Scheduler_task::task_function_t)&send_all_scheduled_parameters,
-                                       (Scheduler_task::task_argument_t)this,
-                                       Scheduler_task::PRIORITY_NORMAL,
-                                       Scheduler_task::PERIODIC_RELATIVE,
-                                       Scheduler_task::RUN_REGULAR,
-                                       MAVLINK_MSG_ID_PARAM_VALUE);
 
     // Add callbacks for onboard parameters requests
     Mavlink_message_handler::msg_callback_t callback;
@@ -128,7 +119,7 @@ Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const S
 }
 
 
-bool Onboard_parameters::add_parameter_uint32(uint32_t* val, const char* param_name)
+bool Onboard_parameters::add(uint32_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -175,7 +166,7 @@ bool Onboard_parameters::add_parameter_uint32(uint32_t* val, const char* param_n
 }
 
 
-bool Onboard_parameters::add_parameter_int32(int32_t* val, const char* param_name)
+bool Onboard_parameters::add(int32_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -222,7 +213,7 @@ bool Onboard_parameters::add_parameter_int32(int32_t* val, const char* param_nam
 }
 
 
-bool Onboard_parameters::add_parameter_float(float* val, const char* param_name)
+bool Onboard_parameters::add(float* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -269,7 +260,7 @@ bool Onboard_parameters::add_parameter_float(float* val, const char* param_name)
 }
 
 
-bool Onboard_parameters::read_parameters_from_storage()
+bool Onboard_parameters::read_from_storage()
 {
     bool success = false;
 
@@ -316,7 +307,7 @@ bool Onboard_parameters::read_parameters_from_storage()
 }
 
 
-bool Onboard_parameters::write_parameters_to_storage()
+bool Onboard_parameters::write_to_storage()
 {
     bool success = false;
 
@@ -356,6 +347,21 @@ bool Onboard_parameters::write_parameters_to_storage()
     return success;
 }
 
+bool Onboard_parameters::send_first_scheduled_parameter(void)
+{
+    bool success = true;
+
+    for (uint8_t i = 0; i < param_count_; i++)
+    {
+        if (parameters_[i].schedule_for_transmission)
+        {
+            success = send_one_parameter_now(i);
+            return success;
+        }
+    }
+
+    return success;
+}
 
 //------------------------------------------------------------------------------
 // PRIVATE STATIC FUNCTIONS IMPLEMENTATION (CALLBACKS)
@@ -574,7 +580,7 @@ mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_p
         {
             // read parameters from flash
             print_util_dbg_print("Reading from flashc...\r\n");
-            if (onboard_parameters->read_parameters_from_storage())
+            if (onboard_parameters->read_from_storage())
             {
                 result = MAV_RESULT_ACCEPTED;
             }
@@ -588,7 +594,7 @@ mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_p
 
             // write parameters to flash
             print_util_dbg_print("Writing to flashc\r\n");
-            onboard_parameters->write_parameters_to_storage();
+            onboard_parameters->write_to_storage();
 
             result = MAV_RESULT_ACCEPTED;
         }

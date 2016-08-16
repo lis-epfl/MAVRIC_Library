@@ -213,8 +213,8 @@ public:
 
     State state;                                                ///< The structure with all state information
 
-    Scheduler_tpl<20> scheduler;
-    Mavlink_communication mavlink_communication;
+    Scheduler_tpl<20>       scheduler;
+    Mavlink_communication   communication;
 
     servos_mix_quadcotper_diag_t servo_mix;
 

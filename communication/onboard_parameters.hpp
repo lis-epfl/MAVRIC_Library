@@ -49,7 +49,6 @@
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
 #include "hal/common/file.hpp"
-#include "runtime/scheduler.hpp"
 
 
 #define MAX_ONBOARD_PARAM_COUNT 120 // should be < 122 to fit on user page on AT32UC3C1512
@@ -79,7 +78,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Onboard_parameters(Scheduler& scheduler, File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config);
+    Onboard_parameters(File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config);
 
     /**
      * \brief   Register parameter in the internal parameter list that gets published to MAVlink
@@ -89,7 +88,7 @@ public:
      *
      * \return  True if the parameter was added, false otherwise
      */
-    bool add_parameter_uint32(uint32_t* val, const char* param_name);
+    bool add(uint32_t* val, const char* param_name);
 
     /**
      * \brief   Register parameter in the internal parameter list that gets published to MAVlink
@@ -99,7 +98,7 @@ public:
      *
      * \return  True if the parameter was added, false otherwise
      */
-    bool add_parameter_int32(int32_t* val, const char* param_name);
+    bool add(int32_t* val, const char* param_name);
 
     /**
      * \brief   Registers parameter in the internal parameter list that gets published to MAVlink
@@ -109,21 +108,28 @@ public:
      *
      * \return  True if the parameter was added, false otherwise
      */
-    bool add_parameter_float(float* val, const char* param_name);
+    bool add(float* val, const char* param_name);
 
     /**
      * \brief   Read onboard parameters from the file storage
      *
      * \return  The result of the read procedure
      */
-     bool read_parameters_from_storage();
+     bool read_from_storage();
 
-     /**
+    /**
      * \brief   Write onboard parameters to the file storage
      *
      * \return  The result of the write procedure
      */
-    bool write_parameters_to_storage();
+    bool write_to_storage();
+
+    /**
+     * \brief   Searches through the list of parameters, and send only the first scheduled parameter
+     *
+     * \return  success
+     */
+    bool send_first_scheduled_parameter(void);
 
 private:
 
@@ -147,10 +153,6 @@ private:
     uint32_t param_count_;                                   ///< Number of onboard parameter effectively in the array
     uint32_t max_param_count_;                               ///< Maximum number of parameters
     param_entry_t* parameters_;                              ///< Onboard parameters array, needs memory allocation
-
-
-
-
 
 
     /**
