@@ -177,6 +177,7 @@ bool LEQuad::init_state(void)
     // Data logging
     ret &= data_logging_stat.add_field((uint32_t*)&state.mav_state_,   "mav_state");
     ret &= data_logging_stat.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
+    ret &= data_logging_continuous.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
 
     // Task
     ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);

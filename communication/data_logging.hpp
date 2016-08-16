@@ -165,6 +165,9 @@ public:
 
 
 private:
+
+    static const uint8_t MAX_FILENAME_LENGTH = 255;    ///< Maximum length of file names
+
     /**
     * \brief    Add in the file fp the first line with the name of the parameter
     *
@@ -257,8 +260,8 @@ private:
 
     int buffer_name_size_;                       ///< The buffer for the size of the file's name
 
-    char* file_name_;                            ///< The file name
-    char* name_n_extension_;                     ///< Stores the name of the file
+    char file_name_[MAX_FILENAME_LENGTH];                        ///< The file name
+    char name_n_extension_[MAX_FILENAME_LENGTH];                 ///< Stores the name of the file
 
     bool file_init_;                             ///< A flag to tell whether a file is init or not
     bool file_opened_;                           ///< A flag to tell whether a file is opened or not

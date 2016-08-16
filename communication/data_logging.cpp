@@ -350,10 +350,10 @@ bool Data_logging::open_new_log_file(void)
             bool successful_filename = true;
 
             // Add iteration number to name_n_extension_ (does not yet have extension)
-            successful_filename &= filename_append_int(name_n_extension_, file_name_, i, buffer_name_size_);
+            successful_filename &= filename_append_int(name_n_extension_, file_name_, i, MAX_FILENAME_LENGTH);
 
             // Add extension (.txt) to name_n_extension_
-            successful_filename &= filename_append_extension(name_n_extension_, name_n_extension_, buffer_name_size_);
+            successful_filename &= filename_append_extension(name_n_extension_, name_n_extension_, MAX_FILENAME_LENGTH);
 
             // Check if there wasn't enough memory allocated to name_n_extension_
             if (!successful_filename)
@@ -551,34 +551,10 @@ bool Data_logging::create_new_log_file(const char* file_name__, uint32_t sysid)
     file_opened_ = false;
     sys_status_ = true;
 
-    // Setting the maximal size of the name string
-#if _USE_LFN
-    buffer_name_size_ = _MAX_LFN;
-#else
-#ifdef _MAX_LFN
-    buffer_name_size_ = 8;
-#else
-    buffer_name_size_ = 255;
-#endif
-#endif
-
-    // Allocating memory for the file name string
-    file_name_ = (char*)malloc(buffer_name_size_);
-    name_n_extension_ = (char*)malloc(buffer_name_size_);
-
-    if (file_name_ == NULL)
-    {
-        init_success &= false;
-    }
-    if (name_n_extension_ == NULL)
-    {
-        init_success &= false;
-    }
-
     sys_id_ = sysid;
 
     // Append sysid to filename
-    filename_append_int(file_name_, (char*)file_name__, sysid, buffer_name_size_);
+    filename_append_int(file_name_, (char*)file_name__, sysid, MAX_FILENAME_LENGTH);
 
     init_success &= open_new_log_file();
 
