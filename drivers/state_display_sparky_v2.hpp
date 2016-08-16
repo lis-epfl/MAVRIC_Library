@@ -30,42 +30,43 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick_telemetry.hpp
+ * \file state_display_sparky_v2.hpp
  *
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Jean-François Burnier
  *
- * \brief This module takes care of sending periodic telemetric messages for
- * the joystick controller
+ * \brief Interface class for state display for Sparky V2, stm32
  *
  ******************************************************************************/
 
-#ifndef JOYSTICK_TELEMETRY_HPP_
-#define JOYSTICK_TELEMETRY_HPP_
+#ifndef STATE_DISPLAY_SPARKY_V2_HPP_
+#define STATE_DISPLAY_SPARKY_V2_HPP_
 
-#include "communication/mavlink_stream.hpp"
-#include "communication/mavlink_message_handler.hpp"
-#include "control/joystick.hpp"
+#include "drivers/state_display.hpp"
+#include "hal/common/led.hpp"
+
+class State_display_sparky_v2 : public State_display
+{
+	public:
+	 /**
+     * \brief Constructor
+     */
+	State_display_sparky_v2(Led& led_green, Led& led_red);
+
+	 /**
+     * \brief   Main update function
+     * \detail  Reads new state 
+     *
+     * \return  Success
+     */
+	bool update();
+
+	private:
+		Led& led_green_;
+		Led& led_red_;
+		
 
 
-/**
- * \brief   Initialisation of the joystick telemetry module
- *
- * \param   joystick            The pointer to the joystick parsing structure
- * \param   message_handler     The pointer to the MAVLink communication structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool joystick_telemetry_init(Joystick* joystick, Mavlink_message_handler* message_handler);
+};
 
-/**
- * \brief   Parse received MAVLink message in structure
- *
- * \param   joystick                The pointer to the joystick parsing structure
- * \param   mavlink_stream          The pointer to the MAVLink stream structure
- * \param   msg                     The pointer to the MAVLink message
- */
-void joystick_telemetry_send_manual_ctrl_msg(const Joystick* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
-
-
-#endif /* JOYSTICK_TELEMETRY_HPP_ */
+ #endif /* STATE_DISPLAY_SPARKY_V2_HPP_ */

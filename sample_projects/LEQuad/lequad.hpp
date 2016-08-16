@@ -66,7 +66,7 @@
 #include "communication/remote_default_config.hpp"
 
 #include "control/altitude_controller.hpp"
-#include "control/attitude_controller_default_config.hpp"
+#include "control/attitude_controller.hpp"
 #include "control/manual_control.hpp"
 #include "mission/navigation.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
@@ -75,7 +75,6 @@
 #include "control/stabilisation_copter.hpp"
 #include "control/stabilisation_copter_default_config.hpp"
 #include "control/velocity_controller_copter.hpp"
-#include "control/velocity_controller_copter_default_config.hpp"
 #include "control/vector_field_waypoint.hpp"
 
 #include "drivers/battery.hpp"
@@ -132,8 +131,8 @@ public:
         servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        attitude_controller_conf_t attitude_controller_config;
-        velocity_controller_copter_conf_t velocity_controller_copter_config;
+        Attitude_controller::conf_t attitude_controller_config;
+        Velocity_controller_copter::conf_t velocity_controller_copter_config;
     };
 
     /**
@@ -175,6 +174,16 @@ public:
      *  \details  Performs last operations before flight, then loops on scheduler updates
      */
     void loop(void);
+
+
+    /**
+     * \brief   Returns non-const reference to MAVLINK Communication
+     * \details This is used to add simulation telemetry from the main function
+     *
+     * \return  MAVLINK Communication module
+     */
+     inline Mavlink_communication& mavlink_communication(){return mavlink_communication_;};
+
 
 protected:
 
@@ -223,7 +232,7 @@ protected:
     State state;                                                ///< The structure with all state information
 
     Scheduler scheduler;
-    Mavlink_communication mavlink_communication;
+    Mavlink_communication mavlink_communication_;
 
     servos_mix_quadcotper_diag_t servo_mix;
 
@@ -299,9 +308,9 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.remote_config = remote_default_config();
 
-    conf.attitude_controller_config = attitude_controller_default_config();
+    conf.attitude_controller_config = Attitude_controller::default_config();
 
-    conf.velocity_controller_copter_config = velocity_controller_copter_default_config();
+    conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
 
     /* Mavlink communication config */
     Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);

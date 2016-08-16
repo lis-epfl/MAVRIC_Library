@@ -30,109 +30,126 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file time_keeper.cpp
+ * \file state_display_sparky_v2.cpp
  *
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Jean-François Burnier
  *
- * \brief This file is used to interact with the clock of the microcontroller
- *
- * \detail  Implementation for STM32
- *
+ * \brief Interface class for state display for Sparky V2, stm32
  *
  ******************************************************************************/
 
-#include <libopencm3/cm3/nvic.h>
-#include <libopencm3/cm3/systick.h>
-
-#include "hal/common/time_keeper.hpp"
-
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-/**
- * \brief   Current system time in microseconds since system boot
- */
-static volatile uint64_t system_us;
-
-
-/**
- * \brief   Called when systick fires
- *
- * \details Monotonically increasing number of microseconds from reset
- */
-void sys_tick_handler(void)
-{
-    system_us++;
-}
-
+ #include "drivers/state_display_sparky_v2.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void time_keeper_init(void)
+State_display_sparky_v2::State_display_sparky_v2(Led& led_green, Led& led_red):
+	led_green_(led_green),
+	led_red_(led_red)
 {
-    /* clock rate / 1000000 to get 1uS interrupt rate */
-    systick_set_reload(168);
-    systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
-    systick_counter_enable();
-    /* this done last */
-    systick_interrupt_enable();
+	state_ 		= MAV_STATE_CALIBRATING;
+	state_old_ 	= MAV_STATE_POWEROFF;
+	idle_ 		= 0;
 }
 
-
-double time_keeper_get_s(void)
+bool State_display_sparky_v2::update()
 {
-    // time in seconds since system start
-    return (double)(system_us) / 1000000.0;
-}
+	bool init = state_old_ != state_;
 
+	switch (state_)
+ 	{
+ 		case MAV_STATE_CALIBRATING:
+ 			if (init)
+ 			{
+ 				led_green_.on();
+ 				led_red_.off();
+ 				idle_ = 0;
+ 			}
+ 			else if (idle_ >= 6)
+ 			{
+ 				led_green_.toggle();
+ 				led_red_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
 
-uint64_t time_keeper_get_ms(void)
-{
-    // milliseconds since system start
-    return system_us / 1000;
-}
+ 		case MAV_STATE_STANDBY:
+ 			if (init)
+ 			{
+ 				led_red_.off();
+ 				idle_ = 0;
+ 			}
+ 			else if (idle_ >= 6)
+ 			{
+ 				led_green_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
 
+ 		case MAV_STATE_ACTIVE:
+ 			if (init)
+ 			{
+ 				led_red_.off();
+ 				idle_ = 0;
+ 			}
+ 			else if (idle_ >= 2)
+ 			{
+ 				led_green_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
 
-uint64_t time_keeper_get_us(void)
-{
-    // microseconds since system start. Will run over after an hour.
-    return system_us;
-}
+ 		case MAV_STATE_CRITICAL:
+ 			if (init)
+ 			{
+ 				led_red_.on();
+ 				idle_ = 0;
+ 			}
+ 			else if (idle_ >= 2)
+ 			{
+ 				led_green_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
 
+ 		case MAV_STATE_EMERGENCY:
+ 			led_red_.toggle();
+ 			if (idle_ >= 2)
+ 			{
+ 				led_green_.toggle();
+ 				idle_ = 0;
+ 			}
+ 			else
+ 			{
+ 				idle_++;
+ 			}
+ 			break;
 
-void time_keeper_delay_us(uint64_t microseconds)
-{
-    uint64_t now = time_keeper_get_us();
-    while (time_keeper_get_us() < now + microseconds)
-    {
-        ;
-    }
-}
+ 		default:
+ 			led_red_.on();
+ 			led_green_.on();
+ 			break;
+ 	}
 
+ 	state_old_ = state_;
 
-void time_keeper_delay_ms(uint64_t milliseconds)
-{
-    uint64_t now = time_keeper_get_us();
-
-    while (time_keeper_get_us() < now + 1000 * milliseconds)
-    {
-        ;
-    }
-}
-
-
-void time_keeper_sleep_us(uint64_t microseconds)
-{
-    uint64_t now = time_keeper_get_us();
-
-    while (time_keeper_get_us() < now + microseconds)
-    {
-        ;
-    }
+ 	return true;
 }
