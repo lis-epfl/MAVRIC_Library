@@ -77,11 +77,6 @@ Mavlink_communication::Mavlink_communication(Serial& serial, State& state, File&
 }
 
 
-// Scheduler& Mavlink_communication::scheduler()
-// {
-//     return scheduler_;
-// }
-
 Mavlink_message_handler& Mavlink_communication::handler()
 {
     return handler_;

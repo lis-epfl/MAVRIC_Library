@@ -98,10 +98,6 @@ public:
      */
      uint32_t sysid();
 
-    /*
-     * \brief   Returns scheduler
-     */
-    // Scheduler& scheduler();
 
     /*
      * \brief   Returns periodi telemetry
@@ -109,17 +105,20 @@ public:
     Periodic_telemetry& telemetry();
     Periodic_telemetry* p_telemetry();
 
+
     /*
      * \brief   Returns message_handler
      */
     Mavlink_message_handler& handler();
     Mavlink_message_handler* p_handler();
 
+
     /*
      * \brief   Returns mavlink_stream
      */
     Mavlink_stream& stream();
     Mavlink_stream* p_stream();
+
 
     /*
      * \brief   Returns onboard_parameters struct
