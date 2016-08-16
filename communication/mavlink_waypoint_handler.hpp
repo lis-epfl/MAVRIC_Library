@@ -43,7 +43,7 @@
 #ifndef MAVLINK_WAYPOINT_HANDLER__
 #define MAVLINK_WAYPOINT_HANDLER__
 
-#include "communication/mavlink_communication.hpp"
+#include "communication/mavlink_message_handler.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/mavlink_message_handler.hpp"

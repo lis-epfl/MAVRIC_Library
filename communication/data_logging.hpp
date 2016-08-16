@@ -43,7 +43,6 @@
 #ifndef DATA_LOGGING_HPP__
 #define DATA_LOGGING_HPP__
 
-#include "communication/mavlink_communication.hpp"
 #include "communication/state.hpp"
 #include "hal/common/file.hpp"
 #include "hal/common/console.hpp"
