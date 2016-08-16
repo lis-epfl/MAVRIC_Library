@@ -72,12 +72,13 @@ public:
     /**
      * \brief   Initialize the waypoint handler
      *
-     * \param   ins                     The reference to the Inertial Navigation System
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
-     * \param   message_handler         The reference to the message handler
-     * \param   mavlink_stream          The reference to the MAVLink stream structure
-     * \param   config                  The config structure (optional)
+     * \param   ins                         The reference to the Inertial Navigation System
+     * \param   navigation                  The reference to the navigation structure
+     * \param   state                       The reference to the state structure
+     * \param   message_handler             The reference to the message handler
+     * \param   mavlink_stream              The reference to the MAVLink stream structure
+     * \param   mission_handler_registry    The reference to the mission handler registry
+     * \param   config                      The config structure (optional)
      *
      * \return  True if the init succeed, false otherwise
      */
@@ -86,6 +87,7 @@ public:
                                 State& state,
                                 Mavlink_message_handler& message_handler,
                                 const Mavlink_stream& mavlink_stream,
+                                Mission_handler_registry& mission_handler_registry,
                                 conf_t config = default_config());
 
     bool init();
@@ -168,6 +170,7 @@ protected:
     State& state_;                                              ///< The reference to the state object
     Navigation& navigation_;                                    ///< The reference to the navigation object
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
+    Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 private:
 
     bool waypoint_sending_;                                     ///< Flag to tell whether waypoint are being sent

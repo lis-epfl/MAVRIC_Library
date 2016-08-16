@@ -279,49 +279,67 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                 // check if this is the requested waypoint
                 if (packet.seq == waypoint_handler->waypoint_request_number_)
                 {
-                    print_util_dbg_print("Receiving good waypoint, number ");
-                    print_util_dbg_print_num(waypoint_handler->waypoint_request_number_, 10);
-                    print_util_dbg_print(" of ");
-                    print_util_dbg_print_num(waypoint_handler->waypoint_count_ - waypoint_handler->waypoint_onboard_count_, 10);
-                    print_util_dbg_print("\r\n");
-
-                    waypoint_handler->waypoint_list_[waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_] = new_waypoint;
-                    waypoint_handler->waypoint_request_number_++;
-
-                    if ((waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_) == waypoint_handler->waypoint_count_)
+                    if (waypoint_handler->mission_handler_registry_.get_mission_handler(new_waypoint) != NULL)
                     {
-                        MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
+                        print_util_dbg_print("Receiving good waypoint, number ");
+                        print_util_dbg_print_num(waypoint_handler->waypoint_request_number_, 10);
+                        print_util_dbg_print(" of ");
+                        print_util_dbg_print_num(waypoint_handler->waypoint_count_ - waypoint_handler->waypoint_onboard_count_, 10);
+                        print_util_dbg_print("\r\n");
+
+                        waypoint_handler->waypoint_list_[waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_] = new_waypoint;
+                        waypoint_handler->waypoint_request_number_++;
+
+                        if ((waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_) == waypoint_handler->waypoint_count_)
+                        {
+                            MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
+
+                            mavlink_message_t _msg;
+                            mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),
+                                                         waypoint_handler->mavlink_stream_.compid(),
+                                                         &_msg,
+                                                         msg->sysid,
+                                                         msg->compid, type);
+                            waypoint_handler->mavlink_stream_.send(&_msg);
+
+                            print_util_dbg_print("flight plan received!\n");
+                            waypoint_handler->waypoint_receiving_ = false;
+                            waypoint_handler->waypoint_onboard_count_ = waypoint_handler->waypoint_count_;
+
+                            waypoint_handler->navigation_.set_start_wpt_time();
+                            // TODO Should this auto start moving towards the point
+                        }
+                        else
+                        {
+                            mavlink_message_t _msg;
+                            mavlink_msg_mission_request_pack(waypoint_handler->mavlink_stream_.sysid(),
+                                                             waypoint_handler->mavlink_stream_.compid(),
+                                                             &_msg,
+                                                             msg->sysid,
+                                                             msg->compid,
+                                                             waypoint_handler->waypoint_request_number_);
+                            waypoint_handler->mavlink_stream_.send(&_msg);
+
+                            print_util_dbg_print("Asking for waypoint ");
+                            print_util_dbg_print_num(waypoint_handler->waypoint_request_number_, 10);
+                            print_util_dbg_print("\n");
+                        }
+                    }
+                    else    // No mission handler registered in registry
+                    {
+                        print_util_dbg_print("Waypoint not registered in registry\r\n");
+                        MAV_MISSION_RESULT type = MAV_MISSION_UNSUPPORTED;
 
                         mavlink_message_t _msg;
                         mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),
                                                      waypoint_handler->mavlink_stream_.compid(),
                                                      &_msg,
                                                      msg->sysid,
-                                                     msg->compid, type);
+                                                     msg->compid,
+                                                     type);
                         waypoint_handler->mavlink_stream_.send(&_msg);
-
-                        print_util_dbg_print("flight plan received!\n");
-                        waypoint_handler->waypoint_receiving_ = false;
-                        waypoint_handler->waypoint_onboard_count_ = waypoint_handler->waypoint_count_;
-
-                        waypoint_handler->navigation_.set_start_wpt_time();
-                        // TODO Should this auto start moving towards the point
                     }
-                    else
-                    {
-                        mavlink_message_t _msg;
-                        mavlink_msg_mission_request_pack(waypoint_handler->mavlink_stream_.sysid(),
-                                                         waypoint_handler->mavlink_stream_.compid(),
-                                                         &_msg,
-                                                         msg->sysid,
-                                                         msg->compid,
-                                                         waypoint_handler->waypoint_request_number_);
-                        waypoint_handler->mavlink_stream_.send(&_msg);
-
-                        print_util_dbg_print("Asking for waypoint ");
-                        print_util_dbg_print_num(waypoint_handler->waypoint_request_number_, 10);
-                        print_util_dbg_print("\n");
-                    }
+                    
                 } //end of if (packet.seq == waypoint_handler->waypoint_request_number_)
                 else
                 {
@@ -390,7 +408,7 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(INS& ins, Navigation& navigation, State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, conf_t config):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler(INS& ins, Navigation& navigation, State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_handler_registry& mission_handler_registry, conf_t config):
             waypoint_count_(0),
             current_waypoint_index_(0),
             mavlink_stream_(mavlink_stream),
@@ -398,6 +416,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(INS& ins, Navigation& navigat
             state_(state),
             navigation_(navigation),
             message_handler_(message_handler),
+            mission_handler_registry_(mission_handler_registry),
             waypoint_sending_(false),
             waypoint_receiving_(false),
             sending_waypoint_num_(0),
