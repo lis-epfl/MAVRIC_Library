@@ -62,7 +62,7 @@ Mission_handler_on_ground::Mission_handler_on_ground(Navigation& navigation):
 bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
 {
     // TODO: Check if actually on ground
-    return wpt.command() == 0;
+    return wpt.command() == MAV_CMD_NAV_ON_GROUND;
 }
 
 bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, const Waypoint& wpt)

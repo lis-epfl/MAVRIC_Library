@@ -67,7 +67,7 @@ extern "C"
 
 Waypoint::Waypoint() :
             frame_(MAV_FRAME_LOCAL_NED),
-            command_(0),
+            command_(MAV_CMD_NAV_ON_GROUND),
             autocontinue_(0),
             param1_(0.0f),
             param2_(0.0f),
