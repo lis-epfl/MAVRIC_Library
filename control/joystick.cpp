@@ -77,7 +77,13 @@ Joystick::Joystick(conf_t config)
 
 float Joystick::throttle() const
 {
-    return channels_.z;
+    if(throttle_mode_ == throttle_mode_t::ZERO_CENTER)
+    {
+        return channels_.z;
+    }else
+    {
+        return 2 * channels_.z - 1;
+    }
 }
 
 

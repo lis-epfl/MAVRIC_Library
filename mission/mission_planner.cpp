@@ -400,6 +400,7 @@ void Mission_planner::state_machine()
         // Reset hold position flag as we are now in auto mode
         hold_position_set_ = false;
 
+        // Require takeoff if we have switched out of auto, dont take off if on ground
         if (require_takeoff_ &&
            (internal_state_ != STANDBY ||
                 (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f)))
