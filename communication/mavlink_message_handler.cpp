@@ -41,7 +41,6 @@
  ******************************************************************************/
 
 
- #include <cstdlib>
  #include <cstdbool>
 
 #include "communication/mavlink_message_handler.hpp"

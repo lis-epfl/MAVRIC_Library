@@ -41,7 +41,6 @@
 
 #include "runtime/scheduler_task.hpp"
 #include "hal/common/time_keeper.hpp"
-#include <cstdlib>
 
 Scheduler_task::Scheduler_task(void)
 {}

@@ -42,7 +42,6 @@
 
 #include "communication/data_logging.hpp"
 
-#include <cstdlib>
 #include <cmath>
 #include <string>
 
@@ -547,9 +546,6 @@ Data_logging::Data_logging(File& file, State& state, data_logging_conf_t config)
 bool Data_logging::create_new_log_file(const char* file_name__, uint32_t sysid)
 {
     bool init_success = true;
-
-    // Allocate memory for the onboard data_log
-    //data_logging_set = (data_logging_set_t*)malloc(sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]));
 
     file_init_ = false;
     file_opened_ = false;

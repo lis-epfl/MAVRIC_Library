@@ -39,8 +39,6 @@
  *
  ******************************************************************************/
 
-#include <cstdlib>
-
 #include "communication/mavlink_waypoint_handler_swarm.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"

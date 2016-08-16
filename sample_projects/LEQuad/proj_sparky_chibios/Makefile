@@ -89,7 +89,7 @@ include $(MAVRIC_LIB)/rules_chibios.mk
 include $(MAVRIC_LIB)/rules_dummy.mk
 
 # Define project name here
-PROJECT = PROJ_NAME
+PROJECT = $(PROJ_NAME)
 
 # Imported source files and paths
 CHIBIOS = ../../../libs/ChibiOS

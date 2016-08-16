@@ -42,8 +42,6 @@
 
  #include "communication/mavlink_waypoint_handler.hpp"
 
-#include <cstdlib>
-
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"
 
