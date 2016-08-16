@@ -145,10 +145,10 @@ public:
     static bool update_task(Mavlink_communication* mavlink_communication);
 
 private:
-    Mavlink_stream              mavlink_stream_;       ///<    Mavlink interface using streams
-    Periodic_telemetry_tpl<30>  telemetry_;            ///<    Periodic telemetry
-    Mavlink_message_handler     handler_;              ///<    Message handler
-    Onboard_parameters          parameters_;           ///<    Onboard parameters
+    Mavlink_stream                      mavlink_stream_;       ///<    Mavlink interface using streams
+    Periodic_telemetry_tpl<30>          telemetry_;            ///<    Periodic telemetry
+    Mavlink_message_handler_tpl<20, 20> handler_;              ///<    Message handler
+    Onboard_parameters                  parameters_;           ///<    Onboard parameters
 };
 
 

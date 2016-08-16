@@ -59,10 +59,10 @@ typedef enum MAV_RESULT mav_result_t;
 
 
 /**
- * \brief       Main message handler structure
+ * \brief       Message handler base class
  *
- * \details     msg_callback_set and cmd_callback_set are implemented as pointer
- *              because their memory will be allocated during initialisation
+ * \details     This class is abstract and does not contains the lists of handlers,
+ *              use the child class Mavlink_message_handler_tpl
  */
 class Mavlink_message_handler
 {
@@ -189,16 +189,23 @@ public:
      */
     static void cmd_default_dbg(mavlink_command_long_t* cmd);
 
+protected:
+
+    virtual uint32_t msg_callback_max_count(void) = 0;
+
+    virtual uint32_t cmd_callback_max_count(void) = 0;
+
+    virtual msg_callback_t* msg_callback_list(void) = 0;
+
+    virtual cmd_callback_t* cmd_callback_list(void) = 0;
+
 
 private:
-    bool debug_;                                                     ///<    Indicates whether debug message are written for every incoming message
-    Mavlink_stream& mavlink_stream_;
-    uint32_t msg_callback_count_;                                    ///<    Number of message callback currently registered
-    uint32_t msg_callback_count_max_;                                ///<    Maximum number of message callback that can be registered
-    uint32_t cmd_callback_count_;                                    ///<    Number of command callback currently registered
-    uint32_t cmd_callback_count_max_;                                ///<    Maximum number of command callback that can be registered
-    msg_callback_t* msg_callback_list;      ///<    List of command callbacks
-    cmd_callback_t* cmd_callback_list;      ///<    List of message callbacks
+    Mavlink_stream& mavlink_stream_;        ///<    Mavlink stream
+    bool debug_;                            ///<    Indicates whether debug message are written for every incoming message
+    uint32_t msg_callback_count_;           ///<    Number of message callback currently registered
+    uint32_t cmd_callback_count_;           ///<    Number of command callback currently registered
+
 
     /**
     * \brief                Sort the latest added message callback
@@ -239,5 +246,88 @@ private:
     bool match_cmd(cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd);
 
 };
+
+
+/**
+ * \brief   Message handler
+ *
+ * \tparam  N   Maximum number of message callbacks
+ * \tparam  P   Maximum number of command callbacks
+ */
+template<uint32_t N, uint32_t P>
+class Mavlink_message_handler_tpl: public Mavlink_message_handler
+{
+public:
+
+    /**
+     * \brief                       Constructor
+     *
+     * \param   config              Config parameters
+     * \param   mavlink_stream      mavlink stream
+     *
+     */
+    Mavlink_message_handler_tpl(Mavlink_stream& mavlink_stream, const conf_t& config):
+        Mavlink_message_handler(mavlink_stream, config)
+    {}
+
+
+protected:
+
+    /**
+     * \brief       Get maximum number of message callbacks
+     * \details     To be overriden by child class
+     *
+     * \return      Maximum number of message callbacks
+     */
+    uint32_t msg_callback_max_count(void)
+    {
+        return N;
+    }
+
+
+    /**
+     * \brief       Get maximum number of command callbacks
+     * \details     To be overriden by child class
+     *
+     * \return      Maximum number of command callbacks
+     */
+    uint32_t cmd_callback_max_count(void)
+    {
+        return P;
+    }
+
+
+    /**
+     * \brief       Get list of message callbacks
+     * \details     To be overriden by child class
+     *
+     * \return      list
+     */
+    msg_callback_t* msg_callback_list(void)
+    {
+        return msg_callback_list_;
+    }
+
+
+    /**
+     * \brief       Get list of command callbacks
+     * \details     To be overriden by child class
+     *
+     * \return      list
+     */
+    cmd_callback_t* cmd_callback_list(void)
+    {
+        return cmd_callback_list_;
+    }
+
+
+private:
+
+    uint32_t msg_callback_count_max_;           ///<    Maximum number of message callback that can be registered
+    uint32_t cmd_callback_count_max_;           ///<    Maximum number of command callback that can be registered
+    msg_callback_t msg_callback_list_[N];       ///<    List of command callbacks
+    cmd_callback_t cmd_callback_list_[P];       ///<    List of message callbacks
+};
+
 
 #endif /* MAVLINK_MESSAGE_HANDLING_H */
