@@ -95,7 +95,7 @@ public:
      * \param   ahrs                    The pointer to the attitude estimation structure
      * \param   state                   The pointer to the state structure
      * \param   manual_control          The pointer to the manual control structure
-     * \param   mavlink_communication   The pointer to the MAVLink communication structure
+     * \param   message_handler         The pointer to the MAVLink message_handler structure
      * \param   mavlink_stream          The pointer to the MAVLink stream structure
      *
      * \return  True if the init succeed, false otherwise
