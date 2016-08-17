@@ -60,7 +60,7 @@ endif
 # Stack size to be allocated to the Cortex-M process stack. This stack is
 # the stack used by the main() thread.
 ifeq ($(USE_PROCESS_STACKSIZE),)
-  USE_PROCESS_STACKSIZE = 0x400
+  USE_PROCESS_STACKSIZE = 0x8000
 endif
 
 # Stack size to the allocated to the Cortex-M main/exceptions stack. This
@@ -110,7 +110,8 @@ include $(CHIBIOS)/os/hal/osal/os-less/ARMCMx/osal.mk
 
 
 # Define linker script file here
-LDSCRIPT= $(STARTUPLD)/STM32F407xG.ld
+# LDSCRIPT= $(STARTUPLD)/STM32F407xG.ld
+LDSCRIPT= $(STARTUPLD)/STM32F405xG.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -241,6 +242,9 @@ dfu: build/$(PROJECT).bin
 
 flash: build/$(PROJECT).bin
 	@st-flash write build/$(PROJECT).bin 0x8000000
+
+debug: build/$(PROJ_NAME).bin
+	debug/debug_nemiver.sh build/$(PROJECT).elf
 
 #
 # End of additionnal rules

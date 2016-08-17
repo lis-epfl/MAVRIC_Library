@@ -91,7 +91,6 @@ int main(void)
                      sim.magnetometer() );
 
 
-
     // -------------------------------------------------------------------------
     // Create MAV
     // -------------------------------------------------------------------------
@@ -147,9 +146,6 @@ int main(void)
     * Normal main() thread activity, in this demo it just performs
     * a shell respawn upon its termination.
     */
-    Scheduler_tpl<10> scheduler;
-    scheduler.add_task(1000, (Scheduler_task::task_function_t)&time_keeper_init, (void*)&sim_imu);
-
     while (true)
     {
         time_keeper_delay_ms(500);
