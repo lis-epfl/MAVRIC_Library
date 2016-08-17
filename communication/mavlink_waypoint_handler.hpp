@@ -178,7 +178,7 @@ private:
 
     int32_t sending_waypoint_num_;                              ///< The ID number of the sending waypoint
     int32_t waypoint_request_number_;                           ///< The ID number of the requested waypoint
-    uint16_t waypoint_onboard_count_;                           ///< The number of waypoint onboard
+    uint16_t requested_waypoint_count_;                         ///< The number of waypoints requested from the GCS
 
     uint32_t start_timeout_;                                    ///< The start time for the waypoint timeout
     uint32_t timeout_max_waypoint_;                             ///< The max waiting time for communication

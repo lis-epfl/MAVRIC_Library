@@ -165,7 +165,6 @@ void Mavlink_waypoint_handler::receive_count(Mavlink_waypoint_handler* waypoint_
         if (waypoint_handler->waypoint_receiving_ == false)
         {
             // comment these lines if you want to add new waypoints to the list instead of overwriting them
-            waypoint_handler->waypoint_onboard_count_ = 0;
             waypoint_handler->waypoint_count_ = 0;
             //---//
 
@@ -173,12 +172,13 @@ void Mavlink_waypoint_handler::receive_count(Mavlink_waypoint_handler* waypoint_
             {
                 packet.count = MAX_WAYPOINTS - waypoint_handler->waypoint_count_;
             }
-            waypoint_handler->waypoint_count_ =  packet.count + waypoint_handler->waypoint_count_;
+            waypoint_handler->requested_waypoint_count_ = packet.count;
+
             print_util_dbg_print("Receiving ");
             print_util_dbg_print_num(packet.count, 10);
             print_util_dbg_print(" new waypoints. ");
             print_util_dbg_print("New total number of waypoints:");
-            print_util_dbg_print_num(waypoint_handler->waypoint_count_, 10);
+            print_util_dbg_print_num(packet.count + waypoint_handler->waypoint_count_, 10);
             print_util_dbg_print("\r\n");
 
             waypoint_handler->waypoint_receiving_   = true;
@@ -219,24 +219,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
 
         Waypoint new_waypoint(packet);
 
-        print_util_dbg_print("New waypoint received ");
-        //print_util_dbg_print("(");
-        //print_util_dbg_print_num(new_waypoint.x,10);
-        //print_util_dbg_print(", ");
-        //print_util_dbg_print_num(new_waypoint.y,10);
-        //print_util_dbg_print(", ");
-        //print_util_dbg_print_num(new_waypoint.z,10);
-        //print_util_dbg_print(") Autocontinue:");
-        //print_util_dbg_print_num(new_waypoint.autocontinue,10);
-        //print_util_dbg_print(" Frame:");
-        //print_util_dbg_print_num(new_waypoint.frame,10);
-        //print_util_dbg_print(" Current :");
-        //print_util_dbg_print_num(packet.current,10);
-        //print_util_dbg_print(" Seq :");
-        //print_util_dbg_print_num(packet.seq,10);
-        //print_util_dbg_print(" command id :");
-        //print_util_dbg_print_num(packet.command,10);
-        print_util_dbg_print(" requested num :");
+        print_util_dbg_print("New waypoint received. requested num :");
         print_util_dbg_print_num(waypoint_handler->waypoint_request_number_, 10);
         print_util_dbg_print(" receiving num :");
         print_util_dbg_print_num(packet.seq, 10);
@@ -284,13 +267,14 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                         print_util_dbg_print("Receiving good waypoint, number ");
                         print_util_dbg_print_num(waypoint_handler->waypoint_request_number_, 10);
                         print_util_dbg_print(" of ");
-                        print_util_dbg_print_num(waypoint_handler->waypoint_count_ - waypoint_handler->waypoint_onboard_count_, 10);
+                        print_util_dbg_print_num(waypoint_handler->requested_waypoint_count_, 10);
                         print_util_dbg_print("\r\n");
 
-                        waypoint_handler->waypoint_list_[waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_] = new_waypoint;
+                        waypoint_handler->waypoint_list_[waypoint_handler->waypoint_count_] = new_waypoint;
                         waypoint_handler->waypoint_request_number_++;
+                        waypoint_handler->waypoint_count_++;
 
-                        if ((waypoint_handler->waypoint_onboard_count_ + waypoint_handler->waypoint_request_number_) == waypoint_handler->waypoint_count_)
+                        if (waypoint_handler->waypoint_request_number_ == waypoint_handler->requested_waypoint_count_)
                         {
                             MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
 
@@ -304,7 +288,6 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
 
                             print_util_dbg_print("flight plan received!\n");
                             waypoint_handler->waypoint_receiving_ = false;
-                            waypoint_handler->waypoint_onboard_count_ = waypoint_handler->waypoint_count_;
 
                             waypoint_handler->navigation_.set_start_wpt_time();
                             // TODO Should this auto start moving towards the point
@@ -386,7 +369,6 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
         if (waypoint_handler->waypoint_count_ > 0)
         {
             waypoint_handler->waypoint_count_ = 0;
-            waypoint_handler->waypoint_onboard_count_ = 0;
             //Mission_handler::reset_hold_waypoint(); TODO
 
             mavlink_message_t _msg;
@@ -421,7 +403,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(INS& ins, Navigation& navigat
             waypoint_receiving_(false),
             sending_waypoint_num_(0),
             waypoint_request_number_(0),
-            waypoint_onboard_count_(0),
+            requested_waypoint_count_(0),
             start_timeout_(time_keeper_get_ms()),
             timeout_max_waypoint_(10000),
             config_(config)
@@ -518,7 +500,6 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
                         navigation_.takeoff_altitude);
 
     waypoint_count_ = 1;
-    waypoint_onboard_count_ = waypoint_count_;
     navigation_.set_waiting_at_waypoint(false);
     set_current_waypoint_index(0);
 
@@ -660,7 +641,6 @@ void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
 
                 print_util_dbg_print("Receiving waypoint timeout\r\n");
                 waypoint_count_ = 0;
-                waypoint_onboard_count_ = 0;
             }
         }
     }
