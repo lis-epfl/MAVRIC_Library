@@ -115,7 +115,7 @@ static inline mpu_9250_conf_t mpu_9250_default_config()
     conf.acc_range              = MPU9250_ACC_2G;
     conf.gyro_filter            = MPU9250_GYRO_LOWPASS_184_HZ;
     conf.gyro_range             = MPU9250_GYRO_500_DEG;
-    conf.default_sample_rate    = 3;//500;
+    conf.default_sample_rate    = 500;
 
     return conf;
 };
@@ -413,6 +413,7 @@ public:
 
     const uint8_t AK8963_WHOAMI_REG     = 0x00;
     const uint8_t AK8963_ST1_REG        = 0x02;
+    const uint8_t AK8963_HXL            = 0x03;
     const uint8_t AK8963_ST2_REG        = 0x09;
     const uint8_t AK8963_WHOAMI_ID      = 0x48;
 
@@ -455,6 +456,7 @@ public:
     const uint8_t MPU9250_GYRO_Y_OUT_LSB        = 0x46;
     const uint8_t MPU9250_GYRO_Z_OUT_MSB        = 0x47;
     const uint8_t MPU9250_GYRO_Z_OUT_LSB        = 0x48;
+    const uint8_t MPU9250_EXT_SENS_DATA_00      = 0x49;
     const uint8_t MPU9250_USER_CTRL_REG         = 0x6A;
     const uint8_t MPU9250_PWR_MGMT_REG          = 0x6B;
     const uint8_t MPU9250_WHOAMI_REG            = 0x75;
@@ -471,8 +473,9 @@ public:
     const uint8_t MPU9250_PWRMGMT_PLL_X_CLK = 0x01;
 
     /* User control registers */
-    const uint8_t MPU9250_USERCTL_DIS_I2C    = 0x10;
-    const uint8_t MPU9250_USERCTL_I2C_MST_EN = 0x20;
+    const uint8_t MPU9250_USERCTL_DIS_I2C       = 0x10;
+    const uint8_t MPU9250_USERCTL_I2C_MST_EN    = 0x20;
+    const uint8_t MPU9250_USERCTL_GYRO_RST      = 0x01;
 
 private:
     Spi&                 spi_;              ///< SPI peripheral

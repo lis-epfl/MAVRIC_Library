@@ -99,7 +99,7 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     spi_3_(config.spi_config[2]),
     state_display_sparky_v2_(led_stat_, led_err_),
     mpu_9250_(spi_1_),
-    imu_(mpu_9250_, mpu_9250_, mpu_9250_)
+    imu_(mpu_9250_, mpu_9250_, mpu_9250_, config.imu_config)
 {}
 
 

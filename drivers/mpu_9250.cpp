@@ -74,14 +74,14 @@ bool Mpu_9250::init(void)
     success &= write_reg(power_management);
 
     // Enable communication with Mag
-    // uint8_t mag_com_en[] = {MPU9250_USER_CTRL_REG, (uint8_t)(MPU9250_USERCTL_I2C_MST_EN |
-    //                                                          MPU9250_USERCTL_DIS_I2C)};
-    // success &= write_reg(mag_com_en,2);
-    // success &= mag_reset();
+    uint8_t mag_com_en[] = {MPU9250_USER_CTRL_REG, (uint8_t)(MPU9250_USERCTL_I2C_MST_EN |
+                                                             MPU9250_USERCTL_DIS_I2C)};
+    success &= write_reg(mag_com_en,2);
+    success &= mag_reset();
 
-    // // Read WhoAmI for Mag
-    // success &= mag_read_reg(AK8963_WHOAMI_REG, whoami_id);
-    // success &= whoami_id[1] == AK8963_WHOAMI_ID ? true : false;
+    // Read WhoAmI for Mag
+    success &= mag_read_reg(AK8963_WHOAMI_REG, whoami_id);
+    success &= whoami_id[1] == AK8963_WHOAMI_ID ? true : false;
 
     if (!success)
     {
@@ -90,37 +90,40 @@ bool Mpu_9250::init(void)
 
     /*Configuring Accelerometer and Gyroscope*/
     success  = set_acc_lpf();
-    // success &= set_gyro_lpf();
+    success &= set_gyro_lpf();
 
     success &= set_mpu_sample_rate();
 
     success &= set_acc_range();
-    // success &= set_gyro_range();
+    success &= set_gyro_range();
 
     /*Configuring Magnetometer*/
-    // success &= set_mag_sample_rate(); // bug
+    success &= set_mag_sample_rate();
 
-    // uint8_t slv0_reg_reg[]  = {MPU9250_SLV0_REG_REG , AK8963_ST1_REG};
-    // uint8_t slv0_addr_reg[] = {MPU9250_SLV0_ADDR_REG, (uint8_t)(MPU9250_AK8963_ADDR | MPU9250_READ_FLAG)};
-    // uint8_t slv0_ctrl_reg[] = {MPU9250_SLV0_CTRL_REG, (uint8_t)(MPU9250_I2CSLV_EN | 8)};
+    uint8_t slv0_reg_reg[]  = {MPU9250_SLV0_REG_REG, AK8963_HXL}; //AK8963_ST1_REG};
+    uint8_t slv0_addr_reg[] = {MPU9250_SLV0_ADDR_REG, (uint8_t)(MPU9250_AK8963_ADDR | MPU9250_READ_FLAG)};
+    uint8_t slv0_ctrl_reg[] = {MPU9250_SLV0_CTRL_REG, (uint8_t)(MPU9250_I2CSLV_EN | 7)};
 
-    // success &= write_reg(slv0_reg_reg);
-    // success &= write_reg(slv0_addr_reg);
-    // success &= write_reg(slv0_ctrl_reg);
+    success &= write_reg(slv0_reg_reg);
+    success &= write_reg(slv0_addr_reg);
+    success &= write_reg(slv0_ctrl_reg);
 
-    uint8_t out_test[] = {MPU9250_ACCEL_CFG2_REG, 0};
-    uint8_t in_test[] = {0,0};
-    read_reg(out_test, in_test);
-    success &= in_test[1] == config_.acc_filter ? true : false;
-
-    // out_test[0] = MPU9250_SMPLRT_DIV_REG;
+    // uint8_t out_test[] = {MPU9250_SLV0_REG_REG, 0};
+    // uint8_t in_test[] = {0,0};
     // read_reg(out_test, in_test);
-    // success &= in_test[1] == (uint8_t)0x09 ? true : false;
+    // success &= in_test[1] == AK8963_ST1_REG ? true : false;
 
-    out_test[0] = MPU9250_ACCEL_CFG_REG;
-    read_reg(out_test, in_test);
-    success &= in_test[1] == config_.acc_range ? true : false;
+    // out_test[0] = MPU9250_SLV0_ADDR_REG;
+    // read_reg(out_test, in_test);
+    // success &= in_test[1] == (uint8_t)(MPU9250_AK8963_ADDR | MPU9250_READ_FLAG) ? true : false;
 
+    // out_test[0] = MPU9250_SLV0_CTRL_REG;
+    // read_reg(out_test, in_test);
+    // success &= in_test[1] == (uint8_t)(MPU9250_I2CSLV_EN | 7) ? true : false;
+
+    // Read WhoAmI for Mag
+    // success &= mag_read_reg(AK8963_WHOAMI_REG, whoami_id);
+    // success &= whoami_id[1] == AK8963_WHOAMI_ID ? true : false;
 
     return success;
 }
@@ -149,16 +152,16 @@ bool Mpu_9250::update_gyr(void)
 {
     bool success = true;
 
-    // uint8_t gyro_reg[7]    = {MPU9250_GYRO_X_OUT_MSB, 0, 0, 0, 0, 0 ,0};
-    // uint8_t gyro_buffer[7] = {0};
-    //
-    // success &= read_reg(gyro_reg, gyro_buffer, 7);
-    //
-    // acc_data_[0] = (float)((int16_t)(gyro_buffer[1] << 8 | gyro_buffer[2]));
-    // acc_data_[1] = (float)((int16_t)(gyro_buffer[3] << 8 | gyro_buffer[4]));
-    // acc_data_[2] = (float)((int16_t)(gyro_buffer[5] << 8 | gyro_buffer[6]));
-    //
-    // last_update_us_ = time_keeper_get_us();
+    uint8_t gyro_reg[7]    = {MPU9250_GYRO_X_OUT_MSB, 0, 0, 0, 0, 0 ,0};
+    uint8_t gyro_buffer[7] = {0};
+    
+    success &= read_reg(gyro_reg, gyro_buffer, 7);
+    
+    gyro_data_[0] = (float)((int16_t)(gyro_buffer[1] << 8 | gyro_buffer[2]));
+    gyro_data_[1] = (float)((int16_t)(gyro_buffer[3] << 8 | gyro_buffer[4]));
+    gyro_data_[2] = (float)((int16_t)(gyro_buffer[5] << 8 | gyro_buffer[6]));
+    
+    last_update_us_ = time_keeper_get_us();
 
     return success;
 }
@@ -167,16 +170,16 @@ bool Mpu_9250::update_mag(void)
 {
     bool success = true;
 
-    // uint8_t mag_reg[8]    = {MPU9250_GYRO_Z_OUT_LSB, 0, 0, 0, 0, 0 ,0, 0};
-    // uint8_t mag_buffer[8] = {0};
-    //
-    // success &= read_reg(mag_reg, mag_buffer, 8);
-    //
-    // mag_data_[0] = (float)((int16_t)(mag_buffer[2] << 8 | mag_buffer[3]));
-    // mag_data_[1] = (float)((int16_t)(mag_buffer[4] << 8 | mag_buffer[5]));
-    // mag_data_[2] = (float)((int16_t)(mag_buffer[6] << 8 | mag_buffer[7]));
-    //
-    // last_update_us_ = time_keeper_get_us();
+    uint8_t mag_reg[7]    = {MPU9250_EXT_SENS_DATA_00, 0, 0, 0, 0, 0 ,0};
+    uint8_t mag_buffer[7] = {0};
+    
+    success &= read_reg(mag_reg, mag_buffer, 7);
+    
+    mag_data_[0] = (float)((int16_t)(mag_buffer[2] << 8 | mag_buffer[1]));
+    mag_data_[1] = (float)((int16_t)(mag_buffer[4] << 8 | mag_buffer[3]));
+    mag_data_[2] = (float)((int16_t)(mag_buffer[6] << 8 | mag_buffer[5]));
+    
+    last_update_us_ = time_keeper_get_us();
 
     return success;
 }
@@ -269,8 +272,7 @@ bool Mpu_9250::mpu_reset(void)
     bool ret = true;
 
     // Write reset
-    uint8_t reset_command[2] = {MPU9250_USER_CTRL_REG ,MPU9250_PWRMGMT_IMU_RST};
-
+    uint8_t reset_command[2] = {MPU9250_PWR_MGMT_REG ,MPU9250_PWRMGMT_IMU_RST};
     ret &= write_reg(reset_command);
 
     // Let the sensor reset
@@ -389,18 +391,8 @@ bool Mpu_9250::set_gyro_lpf(void)
 
 bool Mpu_9250::set_mag_sample_rate(void)
 {
-    // uint8_t out_buffer[] = {AK8963_CNTL1_REG, AK8963_MODE_CONTINUOUS_FAST_16B};
-    // return mag_write_reg(out_buffer);
-    bool ret = true;
-
-    // Write reset
-     uint8_t reset_command[2]  = {AK8963_CNTL2_REG, AK8963_CNTL2_SRST};
-     ret &= mag_write_reg(reset_command);
-
-    // Let the sensor reset
-    time_keeper_delay_ms(50);
-
-    return ret;
+    uint8_t out_buffer[] = {AK8963_CNTL1_REG, AK8963_MODE_CONTINUOUS_FAST_16B};
+    return mag_write_reg(out_buffer);
 }
 
 bool Mpu_9250::set_mpu_sample_rate(void)

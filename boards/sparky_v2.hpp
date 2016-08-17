@@ -84,15 +84,16 @@ extern "C"
  */
 typedef struct
 {
-    gpio_stm32_conf_t        dsm_receiver_gpio_config;
-    gpio_stm32_conf_t        dsm_power_gpio_config;
-    gpio_stm32_conf_t        led_err_gpio_config;
-    gpio_stm32_conf_t        led_stat_gpio_config;
-    gpio_stm32_conf_t        led_rf_gpio_config;
-    Pwm_stm32::config_t      pwm_config[8];
-    Serial_usb_stm32::conf_t serial_usb_config;
-    servo_conf_t             servo_config[8];
-    spi_stm32_conf_t         spi_config[3];
+    gpio_stm32_conf_t           dsm_receiver_gpio_config;
+    gpio_stm32_conf_t           dsm_power_gpio_config;
+    gpio_stm32_conf_t           led_err_gpio_config;
+    gpio_stm32_conf_t           led_stat_gpio_config;
+    gpio_stm32_conf_t           led_rf_gpio_config;
+    imu_conf_t                  imu_config;
+    Pwm_stm32::config_t         pwm_config[8];
+    Serial_usb_stm32::conf_t    serial_usb_config;
+    servo_conf_t                servo_config[8];
+    spi_stm32_conf_t            spi_config[3];
 } sparky_v2_conf_t;
 
 
@@ -192,6 +193,67 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.led_rf_gpio_config.pin      = GPIO_STM32_PIN_6;
     conf.led_rf_gpio_config.dir      = GPIO_OUTPUT;
     conf.led_rf_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+
+    // -------------------------------------------------------------------------
+    // Imu config
+    // -------------------------------------------------------------------------
+    conf.imu_config = imu_default_config();
+    // Accelerometer
+    // Bias
+    conf.imu_config.accelerometer.bias[0] = 0.0f;           ///< Positive or negative
+    conf.imu_config.accelerometer.bias[1] = 0.0f;
+    conf.imu_config.accelerometer.bias[2] = 0.0f;
+
+    // Scale
+    conf.imu_config.accelerometer.scale_factor[0] = 16384.0f;    ///< Should be >0
+    conf.imu_config.accelerometer.scale_factor[1] = 16384.0f;
+    conf.imu_config.accelerometer.scale_factor[2] = 16384.0f;
+
+    // Axis and sign
+    conf.imu_config.accelerometer.sign[0] = -1.0f;//+1.0f;  ///< +1 or -1
+    conf.imu_config.accelerometer.sign[1] = +1.0f;//+1.0f;
+    conf.imu_config.accelerometer.sign[2] = -1.0f;
+    conf.imu_config.accelerometer.axis[0] = 0;      ///< Should be 0, 1, or 2
+    conf.imu_config.accelerometer.axis[1] = 1;
+    conf.imu_config.accelerometer.axis[2] = 2;
+
+    // Gyroscope
+    // Bias
+    conf.imu_config.gyroscope.bias[0] = 0.0f;       ///< Positive or negative
+    conf.imu_config.gyroscope.bias[1] = 0.0f;
+    conf.imu_config.gyroscope.bias[2] = 0.0f;
+
+    // Scale
+    conf.imu_config.gyroscope.scale_factor[0] = 2000.0f;      ///< Should be >0
+    conf.imu_config.gyroscope.scale_factor[1] = 2000.0f;
+    conf.imu_config.gyroscope.scale_factor[2] = 2000.0f;
+
+    // Axis and sign
+    conf.imu_config.gyroscope.sign[0] = -1.0;//+1.0f;  ///< +1 or -1
+    conf.imu_config.gyroscope.sign[1] = +1.0;//-1.0f;
+    conf.imu_config.gyroscope.sign[2] = -1.0f;
+    conf.imu_config.gyroscope.axis[0] = 0;      ///< Should be 0, 1, or 2
+    conf.imu_config.gyroscope.axis[1] = 1;
+    conf.imu_config.gyroscope.axis[2] = 2;
+
+    // Magnetometer
+    // Bias
+    conf.imu_config.magnetometer.bias[0] = 0.0f;        ///< Positive or negative
+    conf.imu_config.magnetometer.bias[1] = 0.0f;
+    conf.imu_config.magnetometer.bias[2] = 0.0f;
+
+    // Scale
+    conf.imu_config.magnetometer.scale_factor[0] = 1.0f;//250.0f;//4800.0f;//0.6f;      ///< Should be >0
+    conf.imu_config.magnetometer.scale_factor[1] = 1.0f;//250.0f;//4800.0f;//0.6f;
+    conf.imu_config.magnetometer.scale_factor[2] = 1.0f;//300.0f;//4800.0f;//0.6f;
+
+    // Axis and sign
+    conf.imu_config.magnetometer.sign[0] = -1.0f;   ///< +1 or -1
+    conf.imu_config.magnetometer.sign[1] = +1.0f;
+    conf.imu_config.magnetometer.sign[2] = +1.0f;
+    conf.imu_config.magnetometer.axis[0] = 1;//2;       ///< Should be 0, 1, or 2
+    conf.imu_config.magnetometer.axis[1] = 0;//0;
+    conf.imu_config.magnetometer.axis[2] = 2;//1;
 
     // -------------------------------------------------------------------------
     // PWM config
