@@ -116,6 +116,8 @@ public:
     struct conf_t
     {
         Gpio_chibios::conf_t      gpio_led_err;
+        Gpio_chibios::conf_t      gpio_led_stat;
+        Gpio_chibios::conf_t      gpio_led_rf;
         I2c_chibios::conf_t       i2c1;
         Barometer_MS5611::conf_t  barometer;
     };
@@ -178,18 +180,22 @@ public:
     // State_display_sparky_v2 state_display_sparky_v2_;
 
 
-    I2c_chibios             i2c1_;
 
+    Gpio_chibios            gpio_led_err_;
+    Gpio_chibios            gpio_led_stat_;
+    Gpio_chibios            gpio_led_rf_;
     Led_gpio                led_err_;
-    // Led_gpio                led_stat_;
-    // Led_gpio                led_rf_;
+    Led_gpio                led_stat_;
+    Led_gpio                led_rf_;
+
+    State_display_sparky_v2 state_display_;
+
+    I2c_chibios             i2c1_;
 
     Barometer_MS5611        barometer_;
 
 private:
-    Gpio_chibios            gpio_led_err_;
-    // Gpio_chibios            gpio_led_stat_;
-    // Gpio_chibios            gpio_led_rf_;
+
 
     // byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
 };
@@ -211,6 +217,18 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
     {
         .port  = GPIOB,
         .pin   = GPIOB_PIN4
+    };
+
+    conf.gpio_led_stat =
+    {
+        .port  = GPIOB,
+        .pin   = GPIOB_PIN5
+    };
+
+    conf.gpio_led_rf =
+    {
+        .port  = GPIOB,
+        .pin   = GPIOB_PIN6
     };
 
     // -------------------------------------------------------------------------

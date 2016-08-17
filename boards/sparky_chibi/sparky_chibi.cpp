@@ -73,13 +73,14 @@ extern "C"
 
 Sparky_chibi::Sparky_chibi(conf_t config):
     gpio_led_err_(config.gpio_led_err),
+    gpio_led_stat_(config.gpio_led_stat),
+    gpio_led_rf_(config.gpio_led_rf),
     led_err_(gpio_led_err_, false),
+    led_stat_(gpio_led_stat_, false),
+    led_rf_(gpio_led_rf_, false),
+    state_display_(led_err_, led_stat_),
     i2c1_(config.i2c1),
     barometer_(i2c1_, config.barometer)
-    // led_stat_gpio_(config.led_stat_gpio_config),
-    // led_rf_gpio_(config.led_rf_gpio_config),
-    // led_stat_(led_stat_gpio_, false),
-    // led_rf_(led_rf_gpio_, false),
     // pwm_0_(config.pwm_config[0]),
     // pwm_1_(config.pwm_config[1]),
     // pwm_2_(config.pwm_config[2]),
@@ -97,10 +98,8 @@ Sparky_chibi::Sparky_chibi(conf_t config):
     // servo_7_(pwm_7_, config.servo_config[7]),
     // spi_1_(config.spi_config[0]),
     // spi_3_(config.spi_config[2]),
-    // i2c_1_(config.i2c_config[0]),
     // i2c_2_(config.i2c_config[1]),
     // state_display_sparky_v2_(led_stat_, led_err_),
-    // barometer_(i2c_1_, config.barometer_config)
 {}
 
 
@@ -121,6 +120,16 @@ bool Sparky_chibi::init(void)
 
     // Init time keeper
     time_keeper_init();
+
+    // -------------------------------------------------------------------------
+    // Init LEDs
+    // -------------------------------------------------------------------------
+    ret = gpio_led_err_.init();
+    ret = gpio_led_stat_.init();
+    ret = gpio_led_rf_.init();
+    init_success &= ret;
+    time_keeper_delay_ms(500);
+
 
     // -------------------------------------------------------------------------
     // Init I2Cs

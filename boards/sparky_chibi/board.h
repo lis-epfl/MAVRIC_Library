@@ -418,8 +418,8 @@
                                      PIN_MODE_INPUT(GPIOB_PIN2) |           \
                                      PIN_MODE_ALTERNATE(GPIOB_SWO) |        \
                                      PIN_MODE_OUTPUT(GPIOB_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOB_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOB_PIN6) |        \
+                                     PIN_MODE_OUTPUT(GPIOB_PIN5) |           \
+                                     PIN_MODE_OUTPUT(GPIOB_PIN6) |        \
                                      PIN_MODE_INPUT(GPIOB_PIN7) |           \
                                      PIN_MODE_ALTERNATE(GPIOB_SCL) |           \
                                      PIN_MODE_ALTERNATE(GPIOB_SDA) |        \
@@ -466,8 +466,8 @@
                                      PIN_PUPDR_PULLUP(GPIOB_PIN2) |         \
                                      PIN_PUPDR_FLOATING(GPIOB_SWO) |        \
                                      PIN_PUPDR_FLOATING(GPIOB_PIN4) |         \
-                                     PIN_PUPDR_PULLUP(GPIOB_PIN5) |         \
-                                     PIN_PUPDR_PULLUP(GPIOB_PIN6) |        \
+                                     PIN_PUPDR_FLOATING(GPIOB_PIN5) |         \
+                                     PIN_PUPDR_FLOATING(GPIOB_PIN6) |        \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN7) |         \
                                      PIN_PUPDR_FLOATING(GPIOB_SCL) |         \
                                      PIN_PUPDR_FLOATING(GPIOB_SDA) |        \
@@ -482,8 +482,8 @@
                                      PIN_ODR_HIGH(GPIOB_PIN2) |             \
                                      PIN_ODR_HIGH(GPIOB_SWO) |              \
                                      PIN_ODR_LOW(GPIOB_PIN4) |             \
-                                     PIN_ODR_HIGH(GPIOB_PIN5) |             \
-                                     PIN_ODR_HIGH(GPIOB_PIN6) |              \
+                                     PIN_ODR_LOW(GPIOB_PIN5) |             \
+                                     PIN_ODR_LOW(GPIOB_PIN6) |              \
                                      PIN_ODR_HIGH(GPIOB_PIN7) |             \
                                      PIN_ODR_HIGH(GPIOB_SCL) |             \
                                      PIN_ODR_HIGH(GPIOB_SDA) |              \

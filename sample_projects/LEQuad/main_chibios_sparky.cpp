@@ -124,14 +124,8 @@ int main(void)
     // mav.loop();
 
 
-
-
-
-
-
-
+    State_display& disp = board.state_display_;
     I2c_chibios& i2c = board.i2c1_;
-    Led_gpio& led = board.led_err_;
 
     /**
     * Prepares the barometer
@@ -143,20 +137,10 @@ int main(void)
     const uint8_t COMMAND_RESET     = 0x1E;  ///< Reset sensor
     const uint8_t COMMAND_GET_CALIBRATION          = 0xA2;  ///< Get 16bytes factory configuration from PROM
 
-    /*
-    * Normal main() thread activity, in this demo it just performs
-    * a shell respawn upon its termination.
-    */
     while (true)
     {
-        time_keeper_delay_ms(500);
-        led.on();
-        time_keeper_delay_ms(500);
-        led.off();
-        time_keeper_delay_ms(500);
-        led.toggle();
-        time_keeper_delay_ms(100);
-        led.toggle();
+
+        disp.update();
         time_keeper_delay_ms(100);
 
         // Reset sensor
@@ -172,9 +156,6 @@ int main(void)
             txbuf[0] = COMMAND_GET_CALIBRATION + i * 2;
             i2c.transfer(txbuf, 1, rxbuf, 2, ms5611_addr);
         }
-
-        // scheduler.
-        // scheduler.add_task(1000, (Scheduler_task::task_function_t)&time_keeper_init, (void*)&sim_imu);
 
     }
 
