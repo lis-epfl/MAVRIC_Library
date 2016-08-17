@@ -42,7 +42,8 @@
 #include "communication/periodic_telemetry.hpp"
 #include "util/print_util.hpp"
 
-Periodic_telemetry::Periodic_telemetry(Mavlink_stream& mavlink_stream, conf_t config):
+Periodic_telemetry::Periodic_telemetry( Mavlink_stream& mavlink_stream, 
+                                        conf_t __attribute__((unused)) config):
     mavlink_stream_(mavlink_stream),
     count_(0)
 {}
