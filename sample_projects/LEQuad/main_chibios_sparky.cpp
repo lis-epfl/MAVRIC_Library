@@ -61,7 +61,6 @@ int main(void)
     Gpio_dummy          gpio_dummy;
     Spektrum_satellite  satellite_dummy(serial_dummy, gpio_dummy, gpio_dummy);
     Led_gpio            led_dummy(gpio_dummy);
-    State_display_sparky_v2 state_display_dummy(led_dummy, led_dummy);
 
     // -------------------------------------------------------------------------
     // Create simulation
@@ -102,7 +101,7 @@ int main(void)
                          sim.sonar(),
                          serial_dummy,                // mavlink serial
                          satellite_dummy,
-                         state_display_dummy,
+                         board.state_display_,
                          file_dummy,
                          sim_battery,
                          sim_servo_0,
