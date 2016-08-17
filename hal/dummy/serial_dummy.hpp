@@ -112,7 +112,7 @@ public:
      * \return  true        Success
      * \return  false       Failed
      */
-    bool attach(serial_interrupt_callback_t func)
+    bool attach(serial_interrupt_callback_t __attribute__((unused)) func)
     {
         return true;
     }
@@ -127,7 +127,7 @@ public:
      * \return  true        Data successfully written
      * \return  false       Data not written
      */
-    bool write(const uint8_t* bytes, const uint32_t size = 1)
+    bool write(const uint8_t __attribute__((unused)) * bytes, const uint32_t __attribute__((unused)) size = 1)
     {
         return true;
     };
@@ -142,7 +142,7 @@ public:
      * \return  true        Data successfully read
      * \return  false       Data not read
      */
-    bool read(uint8_t* bytes, const uint32_t size = 1)
+    bool read(uint8_t __attribute__((unused)) * bytes, const uint32_t __attribute__((unused)) size = 1)
     {
         return true;
     };

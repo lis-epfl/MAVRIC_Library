@@ -62,7 +62,7 @@ public:
      *
      * \return  true if the file is open, false otherwise
      */
-    bool open(const char* path)
+    bool open(const char __attribute__((unused)) * path)
     {
         return true;
     };
@@ -83,7 +83,7 @@ public:
      *
      * \return  1 if the file exists, 0 if the file doesn't exist, -1 if the file system is not responding properly
      */
-    int8_t exists(const char* path)
+    int8_t exists(const char __attribute__((unused)) * path)
     {
         return -1;
     }
@@ -107,7 +107,7 @@ public:
      *
      * \return  success
      */
-    bool read(uint8_t* data, uint32_t size)
+    bool read(uint8_t __attribute__((unused)) * data, uint32_t __attribute__((unused)) size)
     {
         return true;
     };
@@ -121,7 +121,7 @@ public:
      *
      * \return  success
      */
-    bool write(const uint8_t* data, uint32_t size)
+    bool write(const uint8_t __attribute__((unused)) * data, uint32_t __attribute__((unused)) size)
     {
         return true;
     };
@@ -140,7 +140,7 @@ public:
      *
      * \return  success
      */
-    bool seek(int32_t offset, file_seekfrom_t origin)
+    bool seek(int32_t __attribute__((unused)) offset, file_seekfrom_t __attribute__((unused)) origin)
     {
         return true;
     };
