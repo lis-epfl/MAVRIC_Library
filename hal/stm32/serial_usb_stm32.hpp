@@ -79,7 +79,7 @@ public:
     /**
     * \brief   Default Configuration structure
     */
-    static conf_t default_config(void);
+    static inline conf_t default_config(void);
 
 
     /**
