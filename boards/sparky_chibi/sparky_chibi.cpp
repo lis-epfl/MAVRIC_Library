@@ -72,12 +72,12 @@ extern "C"
 
 
 Sparky_chibi::Sparky_chibi(conf_t config):
+    gpio_led_err_(config.gpio_led_err),
+    led_err_(gpio_led_err_, false),
     i2c1_(config.i2c1),
     barometer_(i2c1_, config.barometer)
-    // led_err_gpio_(config.led_err_gpio_config),
     // led_stat_gpio_(config.led_stat_gpio_config),
     // led_rf_gpio_(config.led_rf_gpio_config),
-    // led_err_(led_err_gpio_, false),
     // led_stat_(led_stat_gpio_, false),
     // led_rf_(led_rf_gpio_, false),
     // pwm_0_(config.pwm_config[0]),

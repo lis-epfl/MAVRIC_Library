@@ -131,8 +131,7 @@ int main(void)
 
 
     I2c_chibios& i2c = board.i2c1_;
-
-    Gpio_chibios gpio({GPIOB, GPIOB_PIN4});
+    Led_gpio& led = board.led_err_;
 
     /**
     * Prepares the barometer
@@ -151,13 +150,13 @@ int main(void)
     while (true)
     {
         time_keeper_delay_ms(500);
-        gpio.set_high();
+        led.on();
         time_keeper_delay_ms(500);
-        gpio.set_low();
+        led.off();
         time_keeper_delay_ms(500);
-        gpio.toggle();
+        led.toggle();
         time_keeper_delay_ms(100);
-        gpio.toggle();
+        led.toggle();
         time_keeper_delay_ms(100);
 
         // Reset sensor
