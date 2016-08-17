@@ -53,6 +53,7 @@
 #include "hal/dummy/pwm_dummy.hpp"
 #include "hal/dummy/serial_dummy.hpp"
 
+#include "hal/chibios/gpio_chibios.hpp"
 #include "hal/chibios/i2c_chibios.hpp"
 
 extern "C"
