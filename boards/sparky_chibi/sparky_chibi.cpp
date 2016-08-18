@@ -128,14 +128,22 @@ bool Sparky_chibi::init(void)
     ret = gpio_led_stat_.init();
     ret = gpio_led_rf_.init();
     init_success &= ret;
-    time_keeper_delay_ms(500);
+    time_keeper_delay_ms(10);
 
     // -------------------------------------------------------------------------
     // Init I2Cs
     // -------------------------------------------------------------------------
     ret = i2c1_.init();
     init_success &= ret;
-    time_keeper_delay_ms(500);
+    time_keeper_delay_ms(10);
+
+    // -------------------------------------------------------------------------
+    // Init PWMs
+    // -------------------------------------------------------------------------
+    ret = pwm1_.init();
+    init_success &= ret;
+    time_keeper_delay_ms(10);
+
 
     // -------------------------------------------------------------------------
     // Init barometer

@@ -30,6 +30,7 @@
  * Board identifier.
  */
 #define BOARD_SPARKY_V2
+#define BOARD_ST_STM32F4_DISCOVERY
 #define BOARD_NAME                  "Sparky V2"
 
 /*
@@ -53,7 +54,12 @@
 /*
  * MCU type as defined in the ST header.
  */
-#define STM32F407xx
+#define STM32F405xx
+
+/*
+ * Indicate that USB VBUS is not connected on this board
+ */
+#define BOARD_OTG_NOVBUSSENS
 
 /*
  * IO pins assignments.

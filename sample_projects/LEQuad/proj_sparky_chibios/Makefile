@@ -106,6 +106,8 @@ include $(CHIBIOS)/os/hal/osal/os-less/ARMCMx/osal.mk
 # include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # Other files (optional).
 #include $(CHIBIOS)/test/rt/test.mk
+include $(CHIBIOS)/os/hal/lib/streams/streams.mk
+include $(CHIBIOS)/os/various/shell/shell.mk
 
 
 
@@ -123,7 +125,9 @@ CSRC += $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
-       $(TESTSRC)
+       $(TESTSRC) \
+	   $(STREAMSSRC)
+	#    $(SHELLSRC)
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

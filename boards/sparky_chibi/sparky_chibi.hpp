@@ -55,6 +55,7 @@
 
 #include "hal/chibios/gpio_chibios.hpp"
 #include "hal/chibios/i2c_chibios.hpp"
+#include "hal/chibios/pwm_chibios.hpp"
 
 extern "C"
 {
@@ -187,6 +188,8 @@ public:
     Led_gpio                led_err_;
     Led_gpio                led_stat_;
     Led_gpio                led_rf_;
+
+    Pwm_chibios             pwm1_;
 
     State_display_sparky_v2 state_display_;
 
