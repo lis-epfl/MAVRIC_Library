@@ -517,7 +517,6 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
 
     soft_zone_size = nav_config.soft_zone_size;
 
-    dist2vel_gain = nav_config.dist2vel_gain;
     cruise_speed = nav_config.cruise_speed;
     max_climb_rate = nav_config.max_climb_rate;
 

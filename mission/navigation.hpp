@@ -80,7 +80,6 @@ public:
      */
     struct conf_t
     {
-        float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
         float cruise_speed;                                 ///< The cruise speed in m/s
         float max_climb_rate;                               ///< Max climb rate in m/s
         float one_over_scaling;                             ///< Line vector field parameter
@@ -174,7 +173,6 @@ public:
 
 
     dubin_state_t dubin_state;                          ///< The internal Dubin state
-    float dist2vel_gain;                                ///< The gain linking the distance to the goal to the actual speed
     pid_controller_t hovering_controller;               ///< hovering controller
     pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
     float cruise_speed;                                 ///< The cruise speed in m/s
@@ -191,7 +189,7 @@ public:
     strategy_t navigation_strategy;                     ///< The type of navigation strategy
 
     float dist2wp_sqr;                                  ///< The square of the distance to the waypoint
-    
+
     float kp_yaw;                                       ///< The yaw gain in velocity control mode
     const quat_t& qe;                                   ///< The pointer to the attitude quaternion structure
 
@@ -242,7 +240,6 @@ Navigation::conf_t Navigation::default_config()
 {
     conf_t conf                                      = {};
 
-    conf.dist2vel_gain                               = 0.7f;
     conf.cruise_speed                                = 3.0f;
     conf.max_climb_rate                              = 1.0f;
     conf.soft_zone_size                              = 0.0f;
