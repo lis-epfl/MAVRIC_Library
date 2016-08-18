@@ -340,9 +340,6 @@ mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner,
     {
         result = MAV_RESULT_ACCEPTED;
 
-        // Change states
-        mission_planner->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
-
         // Determine landing location
         local_position_t landing_position = mission_planner->ins_.position_lf();
         landing_position[Z] = -5.0f;
@@ -565,9 +562,9 @@ void Mission_planner::critical_handler()
         state_.out_of_fence_2 ||
         ins_.is_healthy(INS::healthy_t::XYZ_REL_POSITION) == false)
     {
-        if (navigation_.critical_behavior != Navigation::CRITICAL_LAND)
+        if (critical_behavior_ != CRITICAL_LAND)
         {
-            navigation_.critical_behavior = Navigation::CRITICAL_LAND;
+            critical_behavior_ = CRITICAL_LAND;
             critical_next_state_ = false;
         }
     }
@@ -577,9 +574,9 @@ void Mission_planner::critical_handler()
     {
         critical_next_state_ = true;
 
-        switch (navigation_.critical_behavior)
+        switch (critical_behavior_)
         {
-        case Navigation::CLIMB_TO_SAFE_ALT:
+        case CLIMB_TO_SAFE_ALT:
             print_util_dbg_print("Climbing to safe alt...\r\n");
             state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
             critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
@@ -595,7 +592,7 @@ void Mission_planner::critical_handler()
 
             break;
 
-        case Navigation::FLY_TO_HOME_WP:
+        case FLY_TO_HOME_WP:
             state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
             state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
 
@@ -611,7 +608,7 @@ void Mission_planner::critical_handler()
                                             navigation_.safe_altitude);
             break;
 
-        case Navigation::HOME_LAND:
+        case HOME_LAND:
             state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
             state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
 
@@ -625,10 +622,9 @@ void Mission_planner::critical_handler()
                                             0.0f,
                                             0.0f,
                                             navigation_.critical_landing_altitude);
-            navigation_.alt_lpf = ins_.position_lf()[Z];
             break;
 
-        case Navigation::CRITICAL_LAND:
+        case CRITICAL_LAND:
             print_util_dbg_print("Critical land...\r\n");
             state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
             state_.mav_mode_custom |= Mav_mode::CUST_CRITICAL_LAND;
@@ -643,7 +639,6 @@ void Mission_planner::critical_handler()
                                             ins_.position_lf()[X],
                                             ins_.position_lf()[Y],
                                             navigation_.critical_landing_altitude);
-            navigation_.alt_lpf = ins_.position_lf()[Z];
             break;
         }
 
@@ -666,32 +661,32 @@ void Mission_planner::critical_handler()
         if (current_mission_handler_->is_finished(*this))
         {
             critical_next_state_ = false;
-            switch (navigation_.critical_behavior)
+            switch (critical_behavior_)
             {
-            case Navigation::CLIMB_TO_SAFE_ALT:
+            case CLIMB_TO_SAFE_ALT:
                 print_util_dbg_print("Critical State! Flying to home waypoint.\r\n");
-                navigation_.critical_behavior = Navigation::FLY_TO_HOME_WP;
+                critical_behavior_ = FLY_TO_HOME_WP;
                 break;
 
-            case Navigation::FLY_TO_HOME_WP:
+            case FLY_TO_HOME_WP:
                 if (state_.out_of_fence_1)
                 {
                     state_.out_of_fence_1 = false;
-                    navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+                    critical_behavior_ = CLIMB_TO_SAFE_ALT;
                     state_.mav_state_ = MAV_STATE_ACTIVE;
                     state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
                 }
                 else
                 {
                     print_util_dbg_print("Critical State! Performing critical landing.\r\n");
-                    navigation_.critical_behavior = Navigation::HOME_LAND;
+                    critical_behavior_ = HOME_LAND;
                 }
                 break;
 
-            case Navigation::HOME_LAND:
-            case Navigation::CRITICAL_LAND:
+            case HOME_LAND:
+            case CRITICAL_LAND:
                 print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
-                navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+                critical_behavior_ = CLIMB_TO_SAFE_ALT;
                 //state_.mav_mode_custom = CUSTOM_BASE_MODE;
                 critical_waypoint_ = Waypoint();
                 switch_mission_handler(critical_waypoint_);
@@ -770,6 +765,7 @@ Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t&
             message_handler_(message_handler),
             config_(config)
 {
+    critical_behavior_ = CLIMB_TO_SAFE_ALT;
 }
 
 bool Mission_planner::init()
@@ -885,13 +881,12 @@ bool Mission_planner::update(Mission_planner* mission_planner)
             // Switch, don't insert as the mission isn't paused
             mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
         }
-        mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+        mission_planner->critical_behavior_ = CLIMB_TO_SAFE_ALT;
         mission_planner->critical_next_state_ = false;
-        mission_planner->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;
         break;
 
     case MAV_STATE_ACTIVE:
-        mission_planner->navigation_.critical_behavior = Navigation::CLIMB_TO_SAFE_ALT;
+        mission_planner->critical_behavior_ = CLIMB_TO_SAFE_ALT;
         mission_planner->critical_next_state_ = false;
 
         mission_planner->state_machine();
@@ -928,6 +923,11 @@ void Mission_planner::set_critical_next_state(bool critical_next_state)
 Mission_planner::internal_state_t Mission_planner::internal_state() const
 {
     return internal_state_;
+}
+
+Mission_planner::critical_behavior_enum Mission_planner::critical_behavior() const
+{
+    return critical_behavior_;
 }
 
 bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)

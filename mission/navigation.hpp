@@ -73,25 +73,7 @@ public:
         DUBIN = 1,
     };
 
-    /**
-     * \brief   The critical behavior enum
-     */
-    enum critical_behavior_enum
-    {
-        CLIMB_TO_SAFE_ALT,                                  ///< First critical behavior
-        FLY_TO_HOME_WP,                                     ///< Second critical behavior, comes after Navigation::CLIMB_TO_SAFE_ALT
-        HOME_LAND,                                          ///< Third critical behavior, comes after Navigation::FLY_TO_HOME_WP
-        CRITICAL_LAND                                       ///< Fourth critical behavior
-    };
-
-    /**
-     * \brief   The auto-landing enum
-     */
-    typedef enum
-    {
-        DESCENT_TO_SMALL_ALTITUDE,                          ///< First auto landing behavior
-        DESCENT_TO_GND                                      ///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
-    } auto_landing_behavior_t;
+    
 
     /**
      * \brief The navigation configuration structure
@@ -106,8 +88,6 @@ public:
 
         float soft_zone_size;                               ///< Soft zone of the velocity controller
 
-        float alt_lpf;                                      ///< The low-pass filtered altitude for auto-landing
-        float LPF_gain;                                     ///< The value of the low-pass filter gain
         float kp_yaw;                                       ///< The yaw gain in velocity control mode
 
         float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
@@ -271,8 +251,6 @@ Navigation::conf_t Navigation::default_config()
     conf.cruise_speed                                = 3.0f;
     conf.max_climb_rate                              = 1.0f;
     conf.soft_zone_size                              = 0.0f;
-    conf.alt_lpf                                     = 0.0f;
-    conf.LPF_gain                                    = 0.9f;
     conf.kp_yaw                                      = 0.2f;
     conf.wpt_nav_controller                          = {};
     conf.wpt_nav_controller.p_gain                   = 0.7f;

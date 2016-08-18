@@ -73,6 +73,17 @@ public:
         PAUSED
     };
 
+    /**
+     * \brief   The critical behavior enum
+     */
+    enum critical_behavior_enum
+    {
+        CLIMB_TO_SAFE_ALT,                                  ///< First critical behavior
+        FLY_TO_HOME_WP,                                     ///< Second critical behavior, comes after Navigation::CLIMB_TO_SAFE_ALT
+        HOME_LAND,                                          ///< Third critical behavior, comes after Navigation::FLY_TO_HOME_WP
+        CRITICAL_LAND                                       ///< Fourth critical behavior
+    };
+
     struct conf_t
     {
     };
@@ -130,6 +141,13 @@ public:
     internal_state_t internal_state() const;
 
     /**
+     * \brief   Returns the critical behavior
+     *
+     * \return  Critical behavior
+     */
+    critical_behavior_enum critical_behavior() const;
+
+    /**
      * \brief   Switches the mission handler to the inputted waypoint
      *
      * \details     The current mission handler is set based on the
@@ -162,6 +180,7 @@ protected:
     Waypoint inserted_waypoint_;                                ///< A waypoint that is inserted into the plan outside of the normal mission
 
     internal_state_t internal_state_;                           ///< The internal state of the navigation module
+    critical_behavior_enum critical_behavior_;                   ///< The critical behavior enum
 
     Mavlink_waypoint_handler& waypoint_handler_;                ///< The reference to the mavlink waypoint handler
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry

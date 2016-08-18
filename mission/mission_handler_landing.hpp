@@ -54,7 +54,22 @@
 class Mission_handler_landing : public Mission_handler
 {
 public:
+    /**
+     * \brief   The auto-landing enum
+     */
+    typedef enum
+    {
+        DESCENT_TO_SMALL_ALTITUDE,                          ///< First auto landing behavior
+        DESCENT_TO_GND                                      ///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
+    } auto_landing_behavior_t;
 
+    /**
+     * \brief The landing mission handler configuration structure
+     */
+    struct conf_t
+    {
+        float LPF_gain;                                     ///< The value of the low-pass filter gain
+    };
 
     /**
      * \brief   Initialize the landing mission planner handler
@@ -62,10 +77,12 @@ public:
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
+     * \param   config                  The landing mission handler config structure
      */
      Mission_handler_landing(   const INS& ins,
                                 Navigation& navigation,
-                                State& state);
+                                State& state
+                                conf_t config = default_config());
 
     /**
      * \brief   Checks if the waypoint is a landing waypoint
@@ -128,17 +145,34 @@ public:
      */
     virtual void modify_control_command(control_command_t& control);
 
+    /**
+     * \brief   default configuration for navigation
+     *
+     * \return default config
+     */
+    static inline conf_t default_config();
+
 protected:
     Waypoint waypoint_;                                         ///< The waypoint that we are landing under
     Waypoint landing_waypoint_;                                 ///< The waypoint that we want our drone to go
     bool is_landed_;                                            ///< Boolean flag stating that we have finished the landing procedure
-
+    auto_landing_behavior_t auto_landing_behavior_;             ///< The auto landing behavior
+    float alt_lpf_;                                             ///< The low-pass filtered altitude for auto-landing
+    float LPF_gain_;                                            ///< The low-pass filter gain
+    
     const INS& ins_;                                            ///< The reference to the ins interface
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure
 };
 
+Mission_handler_landing::conf_t Mission_handler_landing::default_config()
+{
+    conf_t conf                                      = {};
 
+    conf.LPF_gain                                    = 0.9f;
+
+    return conf;
+};
 
 
 

@@ -524,11 +524,6 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     navigation_strategy = nav_config.navigation_strategy;
     dubin_state = DUBIN_INIT;
 
-    critical_behavior = CLIMB_TO_SAFE_ALT;
-    auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-
-    alt_lpf = nav_config.alt_lpf;
-    LPF_gain = nav_config.LPF_gain;
     kp_yaw = nav_config.kp_yaw;
 
     loop_count = 0;
