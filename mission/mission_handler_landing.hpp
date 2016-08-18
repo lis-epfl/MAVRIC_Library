@@ -81,7 +81,7 @@ public:
      */
      Mission_handler_landing(   const INS& ins,
                                 Navigation& navigation,
-                                State& state
+                                State& state,
                                 conf_t config = default_config());
 
     /**

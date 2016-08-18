@@ -190,13 +190,8 @@ public:
 
     strategy_t navigation_strategy;                     ///< The type of navigation strategy
 
-    float alt_lpf;                                      ///< The low-pass filtered altitude for auto-landing
-    float LPF_gain;                                     ///< The value of the low-pass filter gain
-
     float dist2wp_sqr;                                  ///< The square of the distance to the waypoint
-
-    critical_behavior_enum critical_behavior;           ///< The critical behavior enum
-    auto_landing_behavior_t auto_landing_behavior;      ///< The autolanding behavior enum
+    
     float kp_yaw;                                       ///< The yaw gain in velocity control mode
     const quat_t& qe;                                   ///< The pointer to the attitude quaternion structure
 
