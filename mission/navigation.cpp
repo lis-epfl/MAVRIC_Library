@@ -515,8 +515,6 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     vertical_vel_gain = nav_config.vertical_vel_gain;
     takeoff_altitude = nav_config.takeoff_altitude;
 
-    soft_zone_size = nav_config.soft_zone_size;
-
     cruise_speed = nav_config.cruise_speed;
     max_climb_rate = nav_config.max_climb_rate;
 

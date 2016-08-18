@@ -465,7 +465,6 @@ bool LEQuad::init_navigation(void)
     ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
     ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.takeoff_altitude,                        "NAV_TAKEOFF_ALT" );
     ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
-    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.soft_zone_size,                          "NAV_SOFTZONE"    );
     ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
     ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
     ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );

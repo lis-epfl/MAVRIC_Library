@@ -85,8 +85,6 @@ public:
         float one_over_scaling;                             ///< Line vector field parameter
         float vertical_vel_gain;                            ///< Gain for the vertical velocity calculation
 
-        float soft_zone_size;                               ///< Soft zone of the velocity controller
-
         float kp_yaw;                                       ///< The yaw gain in velocity control mode
 
         float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
@@ -177,7 +175,6 @@ public:
     pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
     float cruise_speed;                                 ///< The cruise speed in m/s
     float max_climb_rate;                               ///< Max climb rate in m/s
-    float soft_zone_size;                               ///< Soft zone of the velocity controller
     float one_over_scaling;                             ///< Line vector field parameter
     float vertical_vel_gain;                            ///< Gain for the vertical velocity calculation
     float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
@@ -242,7 +239,6 @@ Navigation::conf_t Navigation::default_config()
 
     conf.cruise_speed                                = 3.0f;
     conf.max_climb_rate                              = 1.0f;
-    conf.soft_zone_size                              = 0.0f;
     conf.kp_yaw                                      = 0.2f;
     conf.wpt_nav_controller                          = {};
     conf.wpt_nav_controller.p_gain                   = 0.7f;
