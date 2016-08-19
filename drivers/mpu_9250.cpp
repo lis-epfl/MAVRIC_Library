@@ -41,7 +41,7 @@
  ******************************************************************************/
 #include "drivers/mpu_9250.hpp"
 #include "hal/common/time_keeper.hpp"
-#include "hal/stm32/spi_stm32.hpp"
+#include "hal/common/spi.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
