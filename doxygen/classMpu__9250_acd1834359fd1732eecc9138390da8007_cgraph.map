@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classGpio.html#a96d2bc4210f864c99d01f049cd264d1d" title="Hardware initialization." alt="" coords="199,5,273,35"/>
+<area shape="rect" id="node5" href="$classMpu__9250.html#a544ddfb9e35097d5a2945c0db5daa72a" title="Reset acc and gyro." alt="" coords="373,56,523,85"/>
+<area shape="rect" id="node7" href="$classMpu__9250.html#aa7dbee20933c2a5f7115c8c5acd7b08f" title="Write register of mpu 9250." alt="" coords="585,160,727,189"/>
+<area shape="rect" id="node11" href="$classMpu__9250.html#a103a2cda23033b6608a93e0cede20a51" title="Read register of mpu 9250." alt="" coords="587,213,725,243"/>
+<area shape="rect" id="node15" href="$classMpu__9250.html#a43997cd5931037d0bf258ebfbf5168fa" title="Reset magnetometer." alt="" coords="161,212,311,241"/>
+<area shape="rect" id="node21" href="$classMpu__9250.html#a64b5a7c3859c0903af94192cb4561dfd" title="Read register from magnetometer." alt="" coords="363,160,533,189"/>
+<area shape="rect" id="node9" href="$classSpi.html#aba844173351a71c52e478ab7b40127fb" title="Write and Read data to/from the SPI bus." alt="" coords="776,187,869,216"/>
+<area shape="rect" id="node17" href="$classMpu__9250.html#afc21741a1ab9f831644d97ef3c7c0a41" title="Write values in register of ak8963." alt="" coords="361,213,535,243"/>
+</map>

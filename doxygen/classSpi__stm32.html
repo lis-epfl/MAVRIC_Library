@@ -94,14 +94,14 @@ Inheritance diagram for Spi_stm32:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSpi__stm32__inherit__graph.png" border="0" usemap="#Spi__stm32_inherit__map" alt="Inheritance graph"/></div>
 <map name="Spi__stm32_inherit__map" id="Spi__stm32_inherit__map">
-<area shape="rect" id="node2" href="classSpi.html" title="{Spi\n||+ init()\l+ write()\l+ read()\l+ transfer()\l}" alt="" coords="15,6,100,143"/></map>
+<area shape="rect" id="node2" href="classSpi.html" title="{Spi\n||+ init()\l+ write()\l+ read()\l+ transfer()\l}" alt="" coords="27,6,112,143"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Spi_stm32:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSpi__stm32__coll__graph.png" border="0" usemap="#Spi__stm32_coll__map" alt="Collaboration graph"/></div>
 <map name="Spi__stm32_coll__map" id="Spi__stm32_coll__map">
-<area shape="rect" id="node2" href="classSpi.html" title="{Spi\n||+ init()\l+ write()\l+ read()\l+ transfer()\l}" alt="" coords="15,6,100,143"/></map>
+<area shape="rect" id="node2" href="classSpi.html" title="{Spi\n||+ init()\l+ write()\l+ read()\l+ transfer()\l}" alt="" coords="27,6,112,143"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classSpi__stm32-members.html">List of all members.</a></p>
@@ -118,6 +118,12 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Read bytes from the spi line.  <a href="#ae957e8b4c19ef53f59323383a6b55862"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSpi__stm32.html#a286eb8438b982cd74c1b2267c697a556">transfer</a> (uint8_t *out_buffer, uint8_t *in_buffer, uint32_t nbytes)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Write and Read data to/from the SPI bus.  <a href="#a286eb8438b982cd74c1b2267c697a556"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a48c9f014fbc4386299593273989f2670"></a><!-- doxytag: member="Spi_stm32::select_slave" ref="a48c9f014fbc4386299593273989f2670" args="(void)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSpi__stm32.html#a48c9f014fbc4386299593273989f2670">select_slave</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Select slave. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac6f6bfe8c9435f31d3809b84bb07bce4"></a><!-- doxytag: member="Spi_stm32::unselect_slave" ref="ac6f6bfe8c9435f31d3809b84bb07bce4" args="(void)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSpi__stm32.html#ac6f6bfe8c9435f31d3809b84bb07bce4">unselect_slave</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Unselect slave. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Implementation of spi peripheral for stm32. </p>
@@ -209,9 +215,8 @@ Here is the caller graph for this function:</div>
 <p>Read bytes from the spi line. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">command</td><td>Reading command </td></tr>
     <tr><td class="paramname">bytes</td><td>Incoming bytes </td></tr>
-    <tr><td class="paramname">size</td><td>Number of bytes to read</td></tr>
+    <tr><td class="paramname">nbytes</td><td>Number of bytes to read</td></tr>
   </table>
   </dd>
 </dl>
@@ -318,7 +323,7 @@ Here is the caller graph for this function:</div>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">byte</td><td>Outgoing bytes </td></tr>
-    <tr><td class="paramname">size</td><td>Number of bytes to write</td></tr>
+    <tr><td class="paramname">nbytes</td><td>Number of bytes to write</td></tr>
   </table>
   </dd>
 </dl>
@@ -361,7 +366,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2016 08:50:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 19 2016 14:34:38 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

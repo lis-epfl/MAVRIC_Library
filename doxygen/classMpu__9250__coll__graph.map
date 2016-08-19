@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classMpu__9250__acc.html" title="Intermediate interface class for the accelero inside MPU 9250." alt="" coords="27,262,136,365"/>
+<area shape="rect" id="node4" href="$classAccelerometer.html" title="Abstract class for accelerometers." alt="" coords="5,6,136,213"/>
+<area shape="rect" id="node6" href="$classMpu__9250__gyr.html" title="Intermediate interface class for the gyro inside MPU 9250." alt="" coords="172,262,279,365"/>
+<area shape="rect" id="node8" href="$classGyroscope.html" title="Abstract class for gyroscopes." alt="" coords="160,6,291,213"/>
+<area shape="rect" id="node10" href="$classMpu__9250__mag.html" title="Intermediate interface class for the mag inside MPU 9250." alt="" coords="312,262,427,365"/>
+<area shape="rect" id="node12" href="$classMagnetometer.html" title="Abstract class for magnetometers." alt="" coords="315,6,445,213"/>
+</map>

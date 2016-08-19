@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMpu__9250.html#acd1834359fd1732eecc9138390da8007" title="Initialise the sensor." alt="" coords="621,59,728,89"/>
+<area shape="rect" id="node7" href="$classMpu__9250.html#a544ddfb9e35097d5a2945c0db5daa72a" title="Reset acc and gyro." alt="" coords="423,33,572,62"/>
+<area shape="rect" id="node10" href="$classMpu__9250.html#a64b5a7c3859c0903af94192cb4561dfd" title="Read register from magnetometer." alt="" coords="200,83,371,113"/>
+<area shape="rect" id="node13" href="$classMpu__9250.html#afc21741a1ab9f831644d97ef3c7c0a41" title="Write values in register of ak8963." alt="" coords="199,137,372,166"/>
+<area shape="rect" id="node5" href="$classSparky__v2.html#a3a0b29e6eb7bfdf74e914453d138e61d" title="Hardware initialisation." alt="" coords="776,59,885,89"/>
+<area shape="rect" id="node15" href="$classMpu__9250.html#a43997cd5931037d0bf258ebfbf5168fa" title="Reset magnetometer." alt="" coords="423,137,572,166"/>
+</map>

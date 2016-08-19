@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMpu__9250.html#a43997cd5931037d0bf258ebfbf5168fa" title="Reset magnetometer." alt="" coords="231,5,380,35"/>
+<area shape="rect" id="node5" href="$classMpu__9250.html#acd1834359fd1732eecc9138390da8007" title="Initialise the sensor." alt="" coords="429,5,536,35"/>
+<area shape="rect" id="node7" href="$classSparky__v2.html#a3a0b29e6eb7bfdf74e914453d138e61d" title="Hardware initialisation." alt="" coords="584,5,693,35"/>
+</map>

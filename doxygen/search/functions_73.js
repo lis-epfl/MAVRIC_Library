@@ -2,6 +2,7 @@ var searchData=
 [
   ['scheduler',['Scheduler',['../classScheduler.html#af47e13539e1251b50208e115b6241c37',1,'Scheduler']]],
   ['seek',['seek',['../classFile__fat__fs.html#ac382d2715701e7e48724e9b416cb972d',1,'File_fat_fs::seek()'],['../classFile__flash__avr32.html#a1db521abdd0e36a1a511906552046883',1,'File_flash_avr32::seek()'],['../classFile.html#a08f1d2f6938eaedb287ad8e9da16c130',1,'File::seek()'],['../classFile__dummy.html#a0c54bf4999f0401e21b41bf20aab4a39',1,'File_dummy::seek()'],['../classFile__linux.html#af7a32a10301b9ec20749242f46dc19a2',1,'File_linux::seek()']]],
+  ['select_5fslave',['select_slave',['../classSpi__stm32.html#a48c9f014fbc4386299593273989f2670',1,'Spi_stm32']]],
   ['send',['send',['../classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f',1,'Mavlink_stream']]],
   ['serial_5favr32',['Serial_avr32',['../classSerial__avr32.html#a742b404c20c22cc8d3cab8376fd41995',1,'Serial_avr32']]],
   ['serial_5fdummy',['Serial_dummy',['../classSerial__dummy.html#ab5275617a36c03f30cd7cabd2f03f597',1,'Serial_dummy']]],

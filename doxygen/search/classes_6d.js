@@ -35,6 +35,10 @@ var searchData=
   ['mpu_5f6050',['Mpu_6050',['../classMpu__6050.html',1,'']]],
   ['mpu_5f6050_5facc',['Mpu_6050_acc',['../classMpu__6050__acc.html',1,'']]],
   ['mpu_5f6050_5fgyr',['Mpu_6050_gyr',['../classMpu__6050__gyr.html',1,'']]],
+  ['mpu_5f9250',['Mpu_9250',['../classMpu__9250.html',1,'']]],
+  ['mpu_5f9250_5facc',['Mpu_9250_acc',['../classMpu__9250__acc.html',1,'']]],
+  ['mpu_5f9250_5fgyr',['Mpu_9250_gyr',['../classMpu__9250__gyr.html',1,'']]],
+  ['mpu_5f9250_5fmag',['Mpu_9250_mag',['../classMpu__9250__mag.html',1,'']]],
   ['msg_5fcallback_5ft',['msg_callback_t',['../structMavlink__message__handler_1_1msg__callback__t.html',1,'Mavlink_message_handler']]],
   ['msg_5freceived_5ft',['msg_received_t',['../structMavlink__stream_1_1msg__received__t.html',1,'Mavlink_stream']]]
 ];

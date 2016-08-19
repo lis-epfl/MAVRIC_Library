@@ -12,6 +12,9 @@ var searchData=
   ['last_5fupdate_5fus_5f',['last_update_us_',['../classBarometer.html#a63c4bcc303bc908beafd88c443012985',1,'Barometer::last_update_us_()'],['../classAhrs__ekf__mocap.html#a73505a89f74869aac417ffa96f84fb56',1,'Ahrs_ekf_mocap::last_update_us_()']]],
   ['latitude',['latitude',['../structubx__nav__pos__llh__t.html#a7d1ba587900afd53e25a0cf7cf17c8c0',1,'ubx_nav_pos_llh_t::latitude()'],['../structgps__t.html#af54fe11cbde7878a0727616f24dd8fc7',1,'gps_t::latitude()'],['../structglobal__position__t.html#abb11cc9a6ed7de72abdfc4eaedfb5b69',1,'global_position_t::latitude()']]],
   ['led_5ferr_5fgpio_5f',['led_err_gpio_',['../classSparky__v2.html#ac904c85e7a0db1699a2abd1b1b1f80d2',1,'Sparky_v2']]],
+  ['led_5ferr_5fgpio_5fconfig',['led_err_gpio_config',['../structsparky__v2__conf__t.html#a4dddfc858f190e29957dfab679535aab',1,'sparky_v2_conf_t']]],
+  ['led_5frf_5fgpio_5fconfig',['led_rf_gpio_config',['../structsparky__v2__conf__t.html#a17444080357e5c179690dfbc62e31ff6',1,'sparky_v2_conf_t']]],
+  ['led_5fstat_5fgpio_5fconfig',['led_stat_gpio_config',['../structsparky__v2__conf__t.html#ac698c71e31578b869a23402a4d7adfc7',1,'sparky_v2_conf_t']]],
   ['left_5fhemisphere',['left_hemisphere',['../unioncurvace__raw__data__t.html#ad9c69dfdb78cda683887357d45e5eb0a',1,'curvace_raw_data_t::left_hemisphere()'],['../unioncurvace__data__t.html#a1dcb8653cf3bce17479709d1b26eb534',1,'curvace_data_t::left_hemisphere()'],['../unioncurvace__roi__coord__t.html#ae04e01efc846c0e6e3063ee0572e6383',1,'curvace_roi_coord_t::left_hemisphere()'],['../unioncurvace__calibration__matrix__t.html#a6ce62137ce9160f1c51cea7c487720c2',1,'curvace_calibration_matrix_t::left_hemisphere()']]],
   ['length',['length',['../structdubin__t.html#aa4327e6f6647057e1ef97a34a17c41c6',1,'dubin_t::length()'],['../structubx__header__t.html#a059a05a247b43d7b7aa91942b12f1090',1,'ubx_header_t::length()'],['../structubx__cfg__tp__t.html#ac9fc1e2f26fec0aae7e968f518cd1539',1,'ubx_cfg_tp_t::length()']]],
   ['line_5fdirection',['line_direction',['../structdubin__t.html#a53d375531336f607ab33aa11858dcdb9',1,'dubin_t']]],
@@ -35,7 +38,7 @@ var searchData=
   ['lp_5fmode',['lp_mode',['../structubx__cfg__rxm__t.html#a4ff05819515300e6d25706198328411f',1,'ubx_cfg_rxm_t']]],
   ['lpf',['LPF',['../structcurvace__t.html#a1b2207f5cf259127b1af1143b047f487',1,'curvace_t']]],
   ['lpf_5facc',['lpf_acc',['../structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8',1,'imu_conf_t']]],
-  ['lpf_5fgain',['lpf_gain',['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()'],['../structNavigation_1_1conf__t.html#a684982e5d2a5858a17345546a8d8e8c8',1,'Navigation::conf_t::LPF_gain()'],['../classNavigation.html#a0829c1b675749035a36ac1a725a21e3f',1,'Navigation::LPF_gain()']]],
+  ['lpf_5fgain',['LPF_gain',['../structNavigation_1_1conf__t.html#a684982e5d2a5858a17345546a8d8e8c8',1,'Navigation::conf_t::LPF_gain()'],['../classNavigation.html#a0829c1b675749035a36ac1a725a21e3f',1,'Navigation::LPF_gain()'],['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()']]],
   ['lpf_5fgyro',['lpf_gyro',['../structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd',1,'imu_conf_t']]],
   ['lpf_5fmag',['lpf_mag',['../structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82',1,'imu_conf_t']]],
   ['lpf_5fmean',['lpf_mean',['../structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e',1,'imu_conf_t']]]

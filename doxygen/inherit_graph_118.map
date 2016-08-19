@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structMavlink__stream_1_1msg__received__t.html" title="Mavlink structures for the receive message and its status." alt="" coords="7,5,220,35"/>
+<area shape="rect" id="node1" href="$classMavlink__waypoint__handler.html" title="Mavlink_waypoint_handler" alt="" coords="7,5,180,35"/>
+<area shape="rect" id="node3" href="$classMavlink__waypoint__handler__swarm.html" title="Mavlink_waypoint_handler_swarm" alt="" coords="229,5,451,35"/>
 </map>

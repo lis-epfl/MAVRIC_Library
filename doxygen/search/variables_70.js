@@ -58,5 +58,6 @@ var searchData=
   ['pulse_5fus',['pulse_us',['../structPwm__stm32_1_1config__t.html#a7c41714bff953f5788c958a4bd016650',1,'Pwm_stm32::config_t']]],
   ['put',['put',['../structbyte__stream__t.html#a815a7b1640fa228e4b4015d3da6b72db',1,'byte_stream_t']]],
   ['pwm',['PWM',['../structtLED__DESCRIPTOR.html#a5cfd01391574158cf7edb0a5b110ec6a',1,'tLED_DESCRIPTOR']]],
-  ['pwm_5f0',['pwm_0',['../classMavrinux.html#aa89c20556424714f274b0a95189e97c5',1,'Mavrinux']]]
+  ['pwm_5f0',['pwm_0',['../classMavrinux.html#aa89c20556424714f274b0a95189e97c5',1,'Mavrinux']]],
+  ['pwm_5fconfig',['pwm_config',['../structsparky__v2__conf__t.html#a795a750b24f342bb6a2b51e8035c9f1a',1,'sparky_v2_conf_t']]]
 ];

@@ -1,4 +1,6 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classHmc5883l.html" title="Driver for HMC5883L magnetometer." alt="" coords="5,261,136,485"/>
 <area shape="rect" id="node5" href="$classMagnetometer__sim.html" title="Simulated magnetometers." alt="" coords="160,261,312,485"/>
+<area shape="rect" id="node7" href="$classMpu__9250__mag.html" title="Intermediate interface class for the mag inside MPU 9250." alt="" coords="336,322,451,425"/>
+<area shape="rect" id="node9" href="$classMpu__9250.html" title="Driver for sensor MPU 9250." alt="" coords="256,533,531,965"/>
 </map>

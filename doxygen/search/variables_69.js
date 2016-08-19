@@ -7,6 +7,7 @@ var searchData=
   ['idle_5ftimer',['idle_timer',['../structgps__t.html#aa9688b58a0154e3e4d293dfdf09d1424',1,'gps_t']]],
   ['imu',['imu',['../structstabilisation__wing__t.html#acb3cc27502cb7ccc4efdc10399827152',1,'stabilisation_wing_t::imu()'],['../classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2',1,'LEQuad::imu()'],['../structqfilter__t.html#a2cf64aec409b092ce9b1b3e7d6bced66',1,'qfilter_t::imu()']]],
   ['imu_5f',['imu_',['../classState__machine.html#a02adec4dd6e2b86ce915cd8c09b07788',1,'State_machine::imu_()'],['../classAhrs__ekf.html#a6d9f583f20ab9ebe162b824810c52d71',1,'Ahrs_ekf::imu_()']]],
+  ['imu_5fconfig',['imu_config',['../structsparky__v2__conf__t.html#aac5690b5e63c60d8c1dddba6da79f2ce',1,'sparky_v2_conf_t']]],
   ['in_5fproto_5fmask',['in_proto_mask',['../structubx__cfg__prt__t.html#ac2a34cdc2f56fb050be705242fa6fef5',1,'ubx_cfg_prt_t']]],
   ['in_5fthe_5fair',['in_the_air',['../classState.html#a47abf5b5e97a58291a32b888815214e6',1,'State']]],
   ['inf_5fmsg_5fmask1',['inf_msg_mask1',['../structubx__cfg__inf__t.html#acf0accc7f1b286786458ec804d0f1dcd',1,'ubx_cfg_inf_t']]],

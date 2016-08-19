@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMpu__9250.html#aa7dbee20933c2a5f7115c8c5acd7b08f" title="Write register of mpu 9250." alt="" coords="228,5,369,35"/>
+<area shape="rect" id="node7" href="$classMpu__9250.html#a103a2cda23033b6608a93e0cede20a51" title="Read register of mpu 9250." alt="" coords="229,59,368,88"/>
+<area shape="rect" id="node5" href="$classSpi.html#aba844173351a71c52e478ab7b40127fb" title="Write and Read data to/from the SPI bus." alt="" coords="419,32,512,61"/>
+</map>

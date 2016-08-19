@@ -1,7 +1,9 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classAccelerometer__sim.html" title="Simulated accelerometers." alt="" coords="5,261,160,485"/>
 <area shape="rect" id="node5" href="$classLsm330dlc__acc.html" title="Intermediate interface class for the accelero inside LSM330DLC." alt="" coords="184,322,296,425"/>
-<area shape="rect" id="node9" href="$classMpu__6050__acc.html" title="Intermediate interface class for the accelero inside MPU_6050." alt="" coords="329,322,439,425"/>
-<area shape="rect" id="node7" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="169,534,300,845"/>
-<area shape="rect" id="node11" href="$classMpu__6050.html" title="Driver for sensor MPU_6050 imu." alt="" coords="324,534,455,845"/>
+<area shape="rect" id="node9" href="$classMpu__6050__acc.html" title="Intermediate interface class for the accelero inside MPU_6050." alt="" coords="320,322,429,425"/>
+<area shape="rect" id="node13" href="$classMpu__9250__acc.html" title="Intermediate interface class for the accelero inside MPU 9250." alt="" coords="500,322,609,425"/>
+<area shape="rect" id="node7" href="$classLsm330dlc.html" title="Driver for sensor LSM330DLC." alt="" coords="155,594,285,905"/>
+<area shape="rect" id="node11" href="$classMpu__6050.html" title="Driver for sensor MPU_6050 imu." alt="" coords="309,594,440,905"/>
+<area shape="rect" id="node15" href="$classMpu__9250.html" title="Driver for sensor MPU 9250." alt="" coords="464,533,739,965"/>
 </map>

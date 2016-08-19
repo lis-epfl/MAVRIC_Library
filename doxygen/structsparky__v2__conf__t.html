@@ -94,7 +94,7 @@ Collaboration diagram for sparky_v2_conf_t:</div>
 <div class="dyncontent">
 <div class="center"><img src="structsparky__v2__conf__t__coll__graph.png" border="0" usemap="#sparky__v2__conf__t_coll__map" alt="Collaboration graph"/></div>
 <map name="sparky__v2__conf__t_coll__map" id="sparky__v2__conf__t_coll__map">
-<area shape="rect" id="node2" href="structservo__conf__t.html" title="Configuration structure for servo." alt="" coords="5,277,157,467"/><area shape="rect" id="node4" href="structgpio__stm32__conf__t.html" title="{gpio_stm32_conf_t\n|+ port\l+ pin\l+ dir\l+ pull\l+ alt_fct\l|}" alt="" coords="383,5,513,160"/><area shape="rect" id="node8" href="structspi__stm32__conf__t.html" title="Configuration structure." alt="" coords="381,277,515,467"/><area shape="rect" id="node11" href="structPwm__stm32_1_1config__t.html" title="STM32_PWM configuration structure." alt="" coords="539,277,688,467"/><area shape="rect" id="node6" href="structSerial__usb__stm32_1_1conf__t.html" title="Configuration structure." alt="" coords="712,329,883,415"/></map>
+<area shape="rect" id="node2" href="structimu__conf__t.html" title="The configuration IMU structure." alt="" coords="5,297,205,538"/><area shape="rect" id="node4" href="structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="35,5,176,195"/><area shape="rect" id="node6" href="structservo__conf__t.html" title="Configuration structure for servo." alt="" coords="229,323,381,512"/><area shape="rect" id="node8" href="structgpio__stm32__conf__t.html" title="{gpio_stm32_conf_t\n|+ port\l+ pin\l+ dir\l+ pull\l+ alt_fct\l|}" alt="" coords="607,23,737,177"/><area shape="rect" id="node12" href="structspi__stm32__conf__t.html" title="Configuration structure." alt="" coords="605,323,739,512"/><area shape="rect" id="node15" href="structPwm__stm32_1_1config__t.html" title="STM32_PWM configuration structure." alt="" coords="763,323,912,512"/><area shape="rect" id="node10" href="structSerial__usb__stm32_1_1conf__t.html" title="Configuration structure." alt="" coords="936,375,1107,460"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="structsparky__v2__conf__t-members.html">List of all members.</a></p>
@@ -102,23 +102,38 @@ Collaboration diagram for sparky_v2_conf_t:</div>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abbf6376636c1696528933ef0ffd6b170"></a><!-- doxytag: member="sparky_v2_conf_t::dsm_receiver_gpio_config" ref="abbf6376636c1696528933ef0ffd6b170" args="" -->
-<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>dsm_receiver_gpio_config</b></td></tr>
+<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#abbf6376636c1696528933ef0ffd6b170">dsm_receiver_gpio_config</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">DSM reveiver GPIO configuration. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af723f8bc55054c78f08d0a1699332dd0"></a><!-- doxytag: member="sparky_v2_conf_t::dsm_power_gpio_config" ref="af723f8bc55054c78f08d0a1699332dd0" args="" -->
-<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>dsm_power_gpio_config</b></td></tr>
+<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#af723f8bc55054c78f08d0a1699332dd0">dsm_power_gpio_config</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">DSM power GPIO configuration. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4dddfc858f190e29957dfab679535aab"></a><!-- doxytag: member="sparky_v2_conf_t::led_err_gpio_config" ref="a4dddfc858f190e29957dfab679535aab" args="" -->
-<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>led_err_gpio_config</b></td></tr>
+<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#a4dddfc858f190e29957dfab679535aab">led_err_gpio_config</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Error led GPIO configuration. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac698c71e31578b869a23402a4d7adfc7"></a><!-- doxytag: member="sparky_v2_conf_t::led_stat_gpio_config" ref="ac698c71e31578b869a23402a4d7adfc7" args="" -->
-<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>led_stat_gpio_config</b></td></tr>
+<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#ac698c71e31578b869a23402a4d7adfc7">led_stat_gpio_config</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Status led GPIO configuration. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a17444080357e5c179690dfbc62e31ff6"></a><!-- doxytag: member="sparky_v2_conf_t::led_rf_gpio_config" ref="a17444080357e5c179690dfbc62e31ff6" args="" -->
-<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>led_rf_gpio_config</b></td></tr>
+<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#a17444080357e5c179690dfbc62e31ff6">led_rf_gpio_config</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Rf led GPIO configuration. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa58e426f0ca87085b09b515621e43de2"></a><!-- doxytag: member="sparky_v2_conf_t::nss_gpio_config" ref="aa58e426f0ca87085b09b515621e43de2" args="[3]" -->
+<a class="el" href="structgpio__stm32__conf__t.html">gpio_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#aa58e426f0ca87085b09b515621e43de2">nss_gpio_config</a> [3]</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Slave Select configuration. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac5690b5e63c60d8c1dddba6da79f2ce"></a><!-- doxytag: member="sparky_v2_conf_t::imu_config" ref="aac5690b5e63c60d8c1dddba6da79f2ce" args="" -->
+<a class="el" href="structimu__conf__t.html">imu_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#aac5690b5e63c60d8c1dddba6da79f2ce">imu_config</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">IMU configuration. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a795a750b24f342bb6a2b51e8035c9f1a"></a><!-- doxytag: member="sparky_v2_conf_t::pwm_config" ref="a795a750b24f342bb6a2b51e8035c9f1a" args="[8]" -->
-<a class="el" href="structPwm__stm32_1_1config__t.html">Pwm_stm32::config_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pwm_config</b> [8]</td></tr>
+<a class="el" href="structPwm__stm32_1_1config__t.html">Pwm_stm32::config_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#a795a750b24f342bb6a2b51e8035c9f1a">pwm_config</a> [8]</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">PWM configuration. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb005ad3b2de5553cc1683d58cceec58"></a><!-- doxytag: member="sparky_v2_conf_t::serial_usb_config" ref="abb005ad3b2de5553cc1683d58cceec58" args="" -->
-<a class="el" href="structSerial__usb__stm32_1_1conf__t.html">Serial_usb_stm32::conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>serial_usb_config</b></td></tr>
+<a class="el" href="structSerial__usb__stm32_1_1conf__t.html">Serial_usb_stm32::conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#abb005ad3b2de5553cc1683d58cceec58">serial_usb_config</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSerial.html">Serial</a> USB configuration. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a17783e6cb7605743be44445ccbd4ff"></a><!-- doxytag: member="sparky_v2_conf_t::servo_config" ref="a4a17783e6cb7605743be44445ccbd4ff" args="[8]" -->
-<a class="el" href="structservo__conf__t.html">servo_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>servo_config</b> [8]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae20f95af841b93b23b5bf5cef7f80046"></a><!-- doxytag: member="sparky_v2_conf_t::spi_config" ref="ae20f95af841b93b23b5bf5cef7f80046" args="[3]" -->
-<a class="el" href="structspi__stm32__conf__t.html">spi_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>spi_config</b> [3]</td></tr>
+<a class="el" href="structservo__conf__t.html">servo_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#a4a17783e6cb7605743be44445ccbd4ff">servo_config</a> [8]</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a> configuration. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a984531e2113b3f10c4bab849b76561fd"></a><!-- doxytag: member="sparky_v2_conf_t::spi_config" ref="a984531e2113b3f10c4bab849b76561fd" args="[2]" -->
+<a class="el" href="structspi__stm32__conf__t.html">spi_stm32_conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsparky__v2__conf__t.html#a984531e2113b3f10c4bab849b76561fd">spi_config</a> [2]</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">SPI configuration. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Configuration structure. </p>
@@ -143,7 +158,7 @@ Public Attributes</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2016 08:50:22 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 19 2016 14:34:38 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
