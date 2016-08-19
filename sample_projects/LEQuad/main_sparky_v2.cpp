@@ -40,24 +40,23 @@
 
 #include "boards/sparky_v2.hpp"
 
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drivers/mpu_9250.hpp"
+#include "drivers/spektrum_satellite.hpp"
+
 #include "hal/common/time_keeper.hpp"
-
-#include "hal/stm32/spi_stm32.hpp"
-
 #include "hal/dummy/serial_dummy.hpp"
 #include "hal/dummy/i2c_dummy.hpp"
 #include "hal/dummy/file_dummy.hpp"
 #include "hal/dummy/adc_dummy.hpp"
 #include "hal/dummy/pwm_dummy.hpp"
+#include "hal/stm32/spi_stm32.hpp"
+
+#include "sample_projects/LEQuad/lequad.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
 
-#include "drivers/spektrum_satellite.hpp"
 #include "util/string_util.hpp"
-
- #include "drivers/mpu_9250.hpp"
 
 extern "C"
 {
@@ -137,8 +136,7 @@ int main(int argc, char** argv)
 
     // set the flag to simulation
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad( board.imu_,
-                         //sim_imu,
+    LEQuad mav = LEQuad( sim_imu,
                          sim.barometer(),
                          sim.gps(),
                          sim.sonar(),
