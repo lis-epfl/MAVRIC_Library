@@ -83,7 +83,7 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(INS& ins,
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 100
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_landing;
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_landing_tag;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler.add_cmd_callback(&callbackcmd);
 
@@ -94,7 +94,7 @@ Mavlink_waypoint_handler_tag::Mavlink_waypoint_handler_tag(INS& ins,
 }
 
 
-mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing(Mavlink_waypoint_handler_tag* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing_tag(Mavlink_waypoint_handler_tag* waypoint_handler, mavlink_command_long_t* packet)
 {
     // mav_result_t result;
     mav_result_t result = MAV_RESULT_ACCEPTED; // Testing

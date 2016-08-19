@@ -93,7 +93,7 @@ public:
 
 
 
-    static mav_result_t set_auto_landing(Mavlink_waypoint_handler_tag* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t set_auto_landing_tag(Mavlink_waypoint_handler_tag* waypoint_handler, mavlink_command_long_t* packet);
 
     const float& tag_search_altitude() const;
     const uint32_t tag_search_start_time() const;
