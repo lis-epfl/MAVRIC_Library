@@ -203,15 +203,6 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // -------------------------------------------------------------------------
     conf.imu_config = imu_default_config();
     // Accelerometer
-    // Bias
-    conf.imu_config.accelerometer.bias[0] = 0.0f;           ///< Positive or negative
-    conf.imu_config.accelerometer.bias[1] = 0.0f;
-    conf.imu_config.accelerometer.bias[2] = 0.0f;
-
-    // Scale
-    conf.imu_config.accelerometer.scale_factor[0] = 1.0f;    ///< Should be >0
-    conf.imu_config.accelerometer.scale_factor[1] = 1.0f;
-    conf.imu_config.accelerometer.scale_factor[2] = 1.0f;
 
     // Axis and sign
     conf.imu_config.accelerometer.sign[0] = -1.0f;  ///< +1 or -1
@@ -222,15 +213,6 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.imu_config.accelerometer.axis[2] = 2;
 
     // Gyroscope
-    // Bias
-    conf.imu_config.gyroscope.bias[0] = 0.0f;       ///< Positive or negative
-    conf.imu_config.gyroscope.bias[1] = 0.0f;
-    conf.imu_config.gyroscope.bias[2] = 0.0f;
-
-    // Scale
-    conf.imu_config.gyroscope.scale_factor[0] = 1.0f;      ///< Should be >0
-    conf.imu_config.gyroscope.scale_factor[1] = 1.0f;
-    conf.imu_config.gyroscope.scale_factor[2] = 1.0f;
 
     // Axis and sign
     conf.imu_config.gyroscope.sign[0] = -1.0f;  ///< +1 or -1
@@ -241,10 +223,6 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.imu_config.gyroscope.axis[2] = 2;
 
     // Magnetometer
-    // Bias
-    conf.imu_config.magnetometer.bias[0] = 0.0f;      ///< Positive or negative
-    conf.imu_config.magnetometer.bias[1] = 0.0f;
-    conf.imu_config.magnetometer.bias[2] = 0.0f;
 
     // Scale
     conf.imu_config.magnetometer.scale_factor[0] = 250.0f;      ///< Should be >0

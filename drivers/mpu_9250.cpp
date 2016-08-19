@@ -109,17 +109,17 @@ bool Mpu_9250::init(void)
 
     // Read WhoAmI for Acc and Gyr
     uint8_t whoami_answer   = 0;
-    success &= read_reg(MPU9250_WHOAMI_REG, &whoami_answer);
-    success &= whoami_answer == MPU9250_WHOAMI_ID ? true : false;
+    success &= read_reg(WHOAMI_REG, &whoami_answer);
+    success &= whoami_answer == WHOAMI_ID ? true : false;
 
     // Automatic best available clock selection
-    uint8_t power_management_cmd = MPU9250_PWRMGMT_PLL_X_CLK;
-    success &= write_reg(MPU9250_PWR_MGMT_REG, &power_management_cmd);
+    uint8_t power_management_cmd = PWRMGMT_PLL_X_CLK;
+    success &= write_reg(PWR_MGMT_REG, &power_management_cmd);
 
     // Enable communication with Mag
-    uint8_t mag_communication_en = (uint8_t)(MPU9250_USERCTL_I2C_MST_EN |
-                                             MPU9250_USERCTL_DIS_I2C);
-    success &= write_reg(MPU9250_USER_CTRL_REG, &mag_communication_en);
+    uint8_t mag_communication_en = (uint8_t)(USERCTL_I2C_MST_EN |
+                                             USERCTL_DIS_I2C);
+    success &= write_reg(USER_CTRL_REG, &mag_communication_en);
 
     // Reset magnetometer
     success &= mag_reset();
@@ -140,12 +140,12 @@ bool Mpu_9250::init(void)
     // Use slv0 to access mag raw datas (x,y,z and status 2 register)
     // burst read used
     uint8_t first_reg       = AK8963_HXL;
-    uint8_t address         = (uint8_t)(MPU9250_AK8963_ADDR | MPU9250_READ_FLAG);
-    uint8_t slv0_ctrl_reg   = (uint8_t)(MPU9250_I2CSLV_EN | 7);
+    uint8_t address         = (uint8_t)(AK8963_ADDR | READ_FLAG);
+    uint8_t slv0_ctrl_reg   = (uint8_t)(I2CSLV_EN | 7);
 
-    success &= write_reg(MPU9250_SLV0_REG_REG , &first_reg);
-    success &= write_reg(MPU9250_SLV0_ADDR_REG, &address);
-    success &= write_reg(MPU9250_SLV0_CTRL_REG, &slv0_ctrl_reg);
+    success &= write_reg(SLV0_REG_REG , &first_reg);
+    success &= write_reg(SLV0_ADDR_REG, &address);
+    success &= write_reg(SLV0_CTRL_REG, &slv0_ctrl_reg);
 
     // Configuring Accelerometer and Gyroscope
     success &= set_acc_lpf();
@@ -164,7 +164,7 @@ bool Mpu_9250::update_acc(void)
 
     // Read raw data from accelerometer (big endian)
     uint8_t acc_data_raw[6] = {0};
-    success &= read_reg(MPU9250_ACCEL_X_OUT_MSB, acc_data_raw, 6);
+    success &= read_reg(ACCEL_X_OUT_MSB, acc_data_raw, 6);
 
     acc_data_[0] = (float)((int16_t)(acc_data_raw[0] << 8 | acc_data_raw[1]));
     acc_data_[1] = (float)((int16_t)(acc_data_raw[2] << 8 | acc_data_raw[3]));
@@ -186,7 +186,7 @@ bool Mpu_9250::update_gyr(void)
 
     // Read raw data from gyroscope (big endian)
     uint8_t gyro_data_raw[6] = {0};
-    success &= read_reg(MPU9250_GYRO_X_OUT_MSB, gyro_data_raw, 6);
+    success &= read_reg(GYRO_X_OUT_MSB, gyro_data_raw, 6);
 
     gyro_data_[0] = (float)((int16_t)(gyro_data_raw[0] << 8 | gyro_data_raw[1]));
     gyro_data_[1] = (float)((int16_t)(gyro_data_raw[2] << 8 | gyro_data_raw[3]));
@@ -208,7 +208,7 @@ bool Mpu_9250::update_mag(void)
 
     // Read raw data from magnetometer (little endian)
     uint8_t mag_data_raw[6] = {0};
-    success &= read_reg(MPU9250_EXT_SENS_DATA_00, mag_data_raw, 6);
+    success &= read_reg(EXT_SENS_DATA_00, mag_data_raw, 6);
     
     mag_data_[0] = (float)((int16_t)(mag_data_raw[1] << 8 | mag_data_raw[0]));
     mag_data_[1] = (float)((int16_t)(mag_data_raw[3] << 8 | mag_data_raw[2]));
@@ -324,10 +324,10 @@ bool Mpu_9250::mpu_reset(void)
 {
     bool ret = true;
 
-    uint8_t reset_command = MPU9250_PWRMGMT_IMU_RST;
+    uint8_t reset_command = PWRMGMT_IMU_RST;
 
     // Write reset
-    ret &= write_reg(MPU9250_PWR_MGMT_REG, &reset_command);
+    ret &= write_reg(PWR_MGMT_REG, &reset_command);
 
     // Let the sensor reset
     time_keeper_delay_ms(50);
@@ -343,12 +343,12 @@ bool Mpu_9250::mag_read_reg(uint8_t reg, uint8_t* in_data)
 
     // Use of I2C SLV4 to access AK8963 (mag) registers
     uint8_t reg_to_read     = reg;
-    uint8_t address         = (uint8_t)(MPU9250_AK8963_ADDR | MPU9250_READ_FLAG);
-    uint8_t i2c_slave_en    = MPU9250_I2CSLV_EN;
+    uint8_t address         = (uint8_t)(AK8963_ADDR | READ_FLAG);
+    uint8_t i2c_slave_en    = I2CSLV_EN;
 
-    ret &= write_reg(MPU9250_SLV4_REG_REG , &reg_to_read);
-    ret &= write_reg(MPU9250_SLV4_ADDR_REG, &address);
-    ret &= write_reg(MPU9250_SLV4_CTRL_REG, &i2c_slave_en);
+    ret &= write_reg(SLV4_REG_REG , &reg_to_read);
+    ret &= write_reg(SLV4_ADDR_REG, &address);
+    ret &= write_reg(SLV4_CTRL_REG, &i2c_slave_en);
 
     // Wait for I2C transaction done
     do {
@@ -357,11 +357,11 @@ bool Mpu_9250::mag_read_reg(uint8_t reg, uint8_t* in_data)
             return false;
 
         // Check if transaction done
-        read_reg(MPU9250_I2C_MST_STATUS_REG, &status);
-    } while (!(status & MPU9250_I2C_MST_SLV4_DONE));
+        read_reg(I2C_MST_STATUS_REG, &status);
+    } while (!(status & I2C_MST_SLV4_DONE));
 
     // Read data
-    ret &= read_reg(MPU9250_SLV4_DI_REG, in_data); // TODO: allow multiple data reading
+    ret &= read_reg(SLV4_DI_REG, in_data); // TODO: allow multiple data reading
 
     return ret;
 }
@@ -374,14 +374,14 @@ bool Mpu_9250::mag_write_reg(uint8_t reg, uint8_t* out_data)
 
     // Use of I2C SLV4 to access AK8963 (mag) registers
     uint8_t reg_to_write    = reg;
-    uint8_t address         = (uint8_t)(MPU9250_AK8963_ADDR & MPU9250_WRITE_FLAG);
+    uint8_t address         = (uint8_t)(AK8963_ADDR & WRITE_FLAG);
     uint8_t data_to_write   = out_data[0];                       // TODO: allow multiple data writing
-    uint8_t i2c_slave_en    = MPU9250_I2CSLV_EN;
+    uint8_t i2c_slave_en    = I2CSLV_EN;
 
-    ret &= write_reg(MPU9250_SLV4_REG_REG , &reg_to_write);
-    ret &= write_reg(MPU9250_SLV4_ADDR_REG, &address);
-    ret &= write_reg(MPU9250_SLV4_DO_REG  , &data_to_write);
-    ret &= write_reg(MPU9250_SLV4_CTRL_REG, &i2c_slave_en);
+    ret &= write_reg(SLV4_REG_REG , &reg_to_write);
+    ret &= write_reg(SLV4_ADDR_REG, &address);
+    ret &= write_reg(SLV4_DO_REG  , &data_to_write);
+    ret &= write_reg(SLV4_CTRL_REG, &i2c_slave_en);
 
     // Wait for I2C transaction done
     do {
@@ -390,10 +390,10 @@ bool Mpu_9250::mag_write_reg(uint8_t reg, uint8_t* out_data)
             return false;
 
         // Check if transaction done
-        read_reg(MPU9250_I2C_MST_STATUS_REG, &status);
-    } while (!(status & MPU9250_I2C_MST_SLV4_DONE));
+        read_reg(I2C_MST_STATUS_REG, &status);
+    } while (!(status & I2C_MST_SLV4_DONE));
 
-    if (status & MPU9250_I2C_MST_SLV4_NACK)
+    if (status & I2C_MST_SLV4_NACK)
         return false;
 
     return ret;
@@ -402,7 +402,7 @@ bool Mpu_9250::mag_write_reg(uint8_t reg, uint8_t* out_data)
 bool Mpu_9250::read_reg(uint8_t reg, uint8_t* in_data, uint32_t nbytes)
 {
     bool ret = true;
-    reg |= MPU9250_READ_FLAG;
+    reg |= READ_FLAG;
 
     select_slave();
 
@@ -420,7 +420,7 @@ bool Mpu_9250::read_reg(uint8_t reg, uint8_t* in_data, uint32_t nbytes)
 bool Mpu_9250::write_reg(uint8_t reg, uint8_t* out_data, uint32_t nbytes)
 {
     bool ret = true;
-    reg &= MPU9250_WRITE_FLAG;
+    reg &= WRITE_FLAG;
 
     select_slave();
 
@@ -442,13 +442,13 @@ bool Mpu_9250::write_reg(uint8_t reg, uint8_t* out_data, uint32_t nbytes)
 bool Mpu_9250::set_acc_lpf(void)
 {
     uint8_t accelerometer_lpf = config_.acc_filter;
-    return write_reg(MPU9250_ACCEL_CFG2_REG, &accelerometer_lpf);
+    return write_reg(ACCEL_CFG2_REG, &accelerometer_lpf);
 }
 
 bool Mpu_9250::set_gyro_lpf(void)
 {
     uint8_t gyroscope_lpf = config_.gyro_filter;
-    return write_reg(MPU9250_DLPF_CFG_REG, &gyroscope_lpf);
+    return write_reg(DLPF_CFG_REG, &gyroscope_lpf);
 }
 
 bool Mpu_9250::set_mag_mode(void)
@@ -486,19 +486,19 @@ bool Mpu_9250::set_mpu_sample_rate(void)
     // Write sample rate divisor in register (effective divisor is sample
     // rate divisor +1)
     uint8_t sample_rate_div = (uint8_t)divisor;
-    return write_reg(MPU9250_SMPLRT_DIV_REG, &sample_rate_div);
+    return write_reg(SMPLRT_DIV_REG, &sample_rate_div);
 }
 
 bool Mpu_9250::set_acc_range(void)
 {
     uint8_t accelerometer_range = config_.acc_range;
-    return write_reg(MPU9250_ACCEL_CFG_REG, &accelerometer_range);
+    return write_reg(ACCEL_CFG_REG, &accelerometer_range);
 }
 
 bool Mpu_9250::set_gyro_range(void)
 {
     uint8_t gyroscope_range = config_.gyro_range;
-    return write_reg(MPU9250_GYRO_CFG_REG, &gyroscope_range);
+    return write_reg(GYRO_CFG_REG, &gyroscope_range);
 }
 
 void Mpu_9250::select_slave(void)
