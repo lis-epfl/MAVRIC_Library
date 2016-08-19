@@ -30,13 +30,13 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file Mpu_9250.cpp
+ * \file mpu_9250.cpp
  *
  * \author MAV'RIC Team
  * \author Jean-François Burnier
  *
- * \brief This file is the driver for the integrated 3axis gyroscope and
- *        accelerometer Mpu 9250
+ * \brief This file is the driver for the integrated 3axis gyroscope,
+ *        accelerometer and magnetometer: MPU 9250
  *
  ******************************************************************************/
 #include "drivers/mpu_9250.hpp"
@@ -102,7 +102,8 @@ bool Mpu_9250::init(void)
 {
     bool success = true;
 
-    nss_.init();
+    // Initializing Slave Select GPIO
+    success &= nss_.init();
 
     // Reset accelerometer and gyroscope
     success &= mpu_reset();
@@ -134,7 +135,8 @@ bool Mpu_9250::init(void)
         return success;
     }
 
-    // Configuring Magnetometer
+    // Configuring Magnetometer, has to be done before configuring
+    // acc and gyro in order to work
     success = set_mag_mode();
 
     // Use slv0 to access mag raw datas (x,y,z and status 2 register)
@@ -213,10 +215,6 @@ bool Mpu_9250::update_mag(void)
     mag_data_[0] = (float)((int16_t)(mag_data_raw[1] << 8 | mag_data_raw[0]));
     mag_data_[1] = (float)((int16_t)(mag_data_raw[3] << 8 | mag_data_raw[2]));
     mag_data_[2] = (float)((int16_t)(mag_data_raw[5] << 8 | mag_data_raw[4]));
-
-    // mag_data_[0] /= mag_scale_;
-    // mag_data_[1] /= mag_scale_;
-    // mag_data_[2] /= mag_scale_;
     
     last_update_us_ = time_keeper_get_us();
 
@@ -353,8 +351,10 @@ bool Mpu_9250::mag_read_reg(uint8_t reg, uint8_t* in_data)
     // Wait for I2C transaction done
     do {
         if (timeout++ > 50)
+        {
             // Returns to prevent endless loop
             return false;
+        }
 
         // Check if transaction done
         read_reg(I2C_MST_STATUS_REG, &status);
@@ -386,15 +386,19 @@ bool Mpu_9250::mag_write_reg(uint8_t reg, uint8_t* out_data)
     // Wait for I2C transaction done
     do {
         if (timeout++ > 50)
+        {
             // Return to prevent endless loop
             return false;
+        }
 
         // Check if transaction done
         read_reg(I2C_MST_STATUS_REG, &status);
     } while (!(status & I2C_MST_SLV4_DONE));
 
     if (status & I2C_MST_SLV4_NACK)
+    {
         return false;
+    }
 
     return ret;
 }
@@ -465,23 +469,31 @@ bool Mpu_9250::set_mpu_sample_rate(void)
     // check if someone want to use 250Hz DLPF and don't want 8kHz sampling
     // and politely refuse him
     if ((config_.gyro_filter == GYRO_LOWPASS_250_HZ) && (samplerate_hz != 8000))
+    {
         return false;
+    }
 
     uint16_t filter_frequency   = 1000; // Hz
 
     // limit samplerate to filter frequency
     if (samplerate_hz > filter_frequency)
+    {
         samplerate_hz = filter_frequency;
+    }
 
     // calculate divisor, round to nearest integeter
     int32_t divisor = (int32_t)(((float)filter_frequency / samplerate_hz) + 0.5f) - 1;
 
     // limit resulting divisor to register value range
     if (divisor < 0)
+    {
         divisor = 0; // samplerate = 1 kHz
+    }
 
     if (divisor > 0xff)
+    {
         divisor = 0xff; // samplerate = 3.91 Hz
+    }
 
     // Write sample rate divisor in register (effective divisor is sample
     // rate divisor +1)

@@ -36,7 +36,7 @@
  * \author Jean-François Burnier
  *
  * \brief This file is the driver for the integrated 3axis gyroscope,
- * accelerometer and magnetometer: MPU 9250
+ *        accelerometer and magnetometer: MPU 9250
  *
  ******************************************************************************/
 
@@ -173,9 +173,9 @@ public:
     typedef struct
     {
         acc_filter_t       acc_filter;         ///< Accelerometer lp filter cut off freq
-        acc_range_t        acc_range;
+        acc_range_t        acc_range;          ///< Accelerometer range
         gyro_filter_t      gyro_filter;        ///< Gyroscope lp filter cut off freq
-        gyro_range_t       gyro_range;
+        gyro_range_t       gyro_range;         ///< Gyroscope range
         uint16_t           default_sample_rate;///< Default sample rate in Herz
 
     } conf_t;
@@ -201,8 +201,9 @@ public:
     /**
      * \brief   Constructor
      *
-     * \param   spi     Reference to SPI device
-     * \param   config  Device configuration
+     * \param   spi         Reference to SPI device
+     * \param   nss_gpio    Reference to Slave Select GPIO
+     * \param   config      Device configuration
      */
     Mpu_9250(Spi& spi, Gpio& nss_gpio, const conf_t config = mpu_9250_default_config());
 
