@@ -139,7 +139,9 @@ bool Spi_stm32::init(void)
     }
     // Warning: software slave managment not tested
     else
+    {
         spi_enable_software_slave_management(spi_);
+    }
 
     SPI_CR1(spi_) |= config_.clk_div;           // Clock frequency
     spi_set_standard_mode(spi_, config_.mode);
@@ -174,7 +176,9 @@ bool Spi_stm32::transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbyte
     bool ret = true;
 
     if (!config_.ss_mode_hard)
+    {
         spi_set_nss_high(spi_);
+    }
 
     if ((out_buffer != NULL) && (in_buffer != NULL))
     {
@@ -207,7 +211,9 @@ bool Spi_stm32::transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbyte
     }
 
     if (!config_.ss_mode_hard)
+    {
         spi_set_nss_low(spi_);
+    }
 
     return ret;
 }
