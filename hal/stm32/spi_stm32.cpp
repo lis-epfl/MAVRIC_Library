@@ -65,29 +65,52 @@ bool Spi_stm32::init(void)
     // SPI IOs configurations
 
     // MISO init
-    gpio_mode_setup(config_.miso_gpio_config.port, GPIO_MODE_AF, config_.miso_gpio_config.pull, config_.miso_gpio_config.pin);
-    gpio_set_af(config_.miso_gpio_config.port, config_.miso_gpio_config.alt_fct, config_.miso_gpio_config.pin);
+    gpio_mode_setup(config_.miso_gpio_config.port,
+                    GPIO_MODE_AF,
+                    config_.miso_gpio_config.pull,
+                    config_.miso_gpio_config.pin
+                    );
+
+    gpio_set_af(config_.miso_gpio_config.port,
+                config_.miso_gpio_config.alt_fct,
+                config_.miso_gpio_config.pin
+                );
 
     // MOSI init
-    gpio_mode_setup(config_.mosi_gpio_config.port, GPIO_MODE_AF, config_.mosi_gpio_config.pull, config_.mosi_gpio_config.pin);
-    gpio_set_af(config_.mosi_gpio_config.port, config_.mosi_gpio_config.alt_fct, config_.mosi_gpio_config.pin);
-    gpio_set_output_options(config_.mosi_gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, config_.mosi_gpio_config.pin);
+    gpio_mode_setup(config_.mosi_gpio_config.port,
+                    GPIO_MODE_AF,
+                    config_.mosi_gpio_config.pull,
+                    config_.mosi_gpio_config.pin
+                    );
+
+    gpio_set_af(config_.mosi_gpio_config.port,
+                config_.mosi_gpio_config.alt_fct,
+                config_.mosi_gpio_config.pin
+                );
+
+    gpio_set_output_options(config_.mosi_gpio_config.port,
+                            GPIO_OTYPE_PP,
+                            GPIO_OSPEED_50MHZ,
+                            config_.mosi_gpio_config.pin
+                            );
 
     // SCK init
-    gpio_mode_setup(config_.sck_gpio_config.port, GPIO_MODE_AF, config_.sck_gpio_config.pull, config_.sck_gpio_config.pin);
-    gpio_set_af(config_.sck_gpio_config.port, config_.sck_gpio_config.alt_fct, config_.sck_gpio_config.pin);
-    gpio_set_output_options(config_.sck_gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ, config_.sck_gpio_config.pin);
+    gpio_mode_setup(config_.sck_gpio_config.port,
+                    GPIO_MODE_AF,
+                    config_.sck_gpio_config.pull,
+                    config_.sck_gpio_config.pin
+                    );
 
-    // NSS init
-    if (config_.ss_mode_hard)
-    {
-        gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
-        gpio_mode_setup(config_.nss_gpio_config.port, GPIO_MODE_OUTPUT, config_.nss_gpio_config.pull, config_.nss_gpio_config.pin);
-        gpio_set_output_options(config_.nss_gpio_config.port, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, config_.nss_gpio_config.pin);
-    }
+    gpio_set_af(config_.sck_gpio_config.port,
+                config_.sck_gpio_config.alt_fct,
+                config_.sck_gpio_config.pin
+                );
 
-    gpio_set(GPIO_STM32_PORT_B, GPIO_STM32_PIN_3);
-    gpio_mode_setup(GPIO_STM32_PORT_B, GPIO_OUTPUT, GPIO_PULL_UPDOWN_NONE, GPIO_STM32_PIN_3);
+    gpio_set_output_options(config_.sck_gpio_config.port,
+                            GPIO_OTYPE_PP,
+                            GPIO_OSPEED_100MHZ,
+                            config_.sck_gpio_config.pin
+                            );
 
     // SPI configuration
 
@@ -114,6 +137,7 @@ bool Spi_stm32::init(void)
         spi_disable_software_slave_management(spi_);
         spi_enable_ss_output(spi_);
     }
+    // Warning: software slave managment not tested
     else
         spi_enable_software_slave_management(spi_);
 
@@ -149,10 +173,7 @@ bool Spi_stm32::transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbyte
 {
     bool ret = true;
 
-    // slave select
-    if (config_.ss_mode_hard)
-        gpio_clear(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
-    else
+    if (!config_.ss_mode_hard)
         spi_set_nss_high(spi_);
 
     if ((out_buffer != NULL) && (in_buffer != NULL))
@@ -185,10 +206,7 @@ bool Spi_stm32::transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbyte
         ret = false;
     }
 
-    // slave deselect
-    if (config_.ss_mode_hard)
-        gpio_set(config_.nss_gpio_config.port, config_.nss_gpio_config.pin);
-    else
+    if (!config_.ss_mode_hard)
         spi_set_nss_low(spi_);
 
     return ret;

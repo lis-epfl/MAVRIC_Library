@@ -465,7 +465,7 @@ static inline imu_conf_t imu_default_config()
     conf.lpf_mean   = 0.01f;
 
     // startup calibration length
-    conf.startup_calib_gyro_threshold = 0.5f;//3.5f;//0.5f;
+    conf.startup_calib_gyro_threshold = 0.5f;
     conf.startup_calib_duration_s     = 10.0f;
 
     return conf;

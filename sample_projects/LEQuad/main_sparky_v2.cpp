@@ -74,7 +74,26 @@ int main(int argc, char** argv)
     // Create board
     // -------------------------------------------------------------------------
     sparky_v2_conf_t board_config = sparky_v2_default_config();
+
+    board_config.imu_config.accelerometer.bias[0] = -0.0327504f;
+    board_config.imu_config.accelerometer.bias[1] = -0.00344232f;
+    board_config.imu_config.accelerometer.bias[2] = +0.00931478f;
+
+    board_config.imu_config.gyroscope.bias[0] = -0.0135339f;
+    board_config.imu_config.gyroscope.bias[1] = -0.0061096f;
+    board_config.imu_config.gyroscope.bias[2] = -0.00312137f;
+
+    board_config.imu_config.magnetometer.bias[0] = +0.520405f;
+    board_config.imu_config.magnetometer.bias[1] = -0.55305f;
+    board_config.imu_config.magnetometer.bias[2] = -0.489245f;
+
+    board_config.imu_config.magnetic_north[0] = +0.268271f;
+    board_config.imu_config.magnetic_north[1] = +0.0f;
+    board_config.imu_config.magnetic_north[2] = +0.485027f;
+
     Sparky_v2 board(board_config);
+
+
 
     // Board initialisation
     init_success &= board.init();
@@ -126,7 +145,7 @@ int main(int argc, char** argv)
                          board.serial_,                // mavlink serial
                          satellite_dummy,
                          board.state_display_sparky_v2_,
-                        file_dummy,
+                         file_dummy,
                          sim_battery,
                          sim_servo_0,
                          sim_servo_1,
@@ -179,158 +198,26 @@ int main(int argc, char** argv)
 
     // Console<Serial> console(board.serial_);
 
-    // //Mpu_9250 mpu(board.spi_1_);
-    // //bool bo = mpu.init();
-    // bool bo = true;
-
-
-    // // Mpu_9250& mpu = board.mpu_9250_;
-    // Mpu_9250& mpu = board.mpu_9250_;
-    // bo &= mpu.init();
-
-    // uint8_t mag_com_en[] = {mpu.MPU9250_USER_CTRL_REG, (uint8_t)(mpu.MPU9250_USERCTL_I2C_MST_EN |
-    //                                                          mpu.MPU9250_USERCTL_DIS_I2C)};
-
-    // bo &= mpu.write_reg(mag_com_en);
-    // time_keeper_delay_ms(100);
-
-    // // mag_com_en[1] = mpu.MPU9250_USERCTL_I2C_MST_EN;
-    // // bo &= mpu.write_reg(mag_com_en);
-
-    // uint8_t whoami_id[2]      = {0};
-    // // Read WhoAmI for Mag
-    // bo &= mpu.mag_read_reg(mpu.AK8963_WHOAMI_REG, whoami_id);
-    // bo &= whoami_id[1] == mpu.AK8963_WHOAMI_ID ? true : false;
-    // bo &= mpu.mag_reset();
-
-    // uint8_t ctrl_cmd[] = {mpu.AK8963_CNTL1_REG, 0x16};
-    // bo &= mpu.mag_write_reg(ctrl_cmd);
-    // uint8_t ctrl_cmd_val[] = {0};
-    // bo &= mpu.mag_read_reg(mpu.AK8963_CNTL1_REG, ctrl_cmd_val);
-    // bo &= ctrl_cmd_val[1] == 0x16 ? true : false;
-
-    // uint8_t slv0_reg_reg[]  = {mpu.MPU9250_SLV0_REG_REG, mpu.AK8963_ST1_REG};
-    // uint8_t slv0_addr_reg[] = {mpu.MPU9250_SLV0_ADDR_REG, (uint8_t)(mpu.MPU9250_AK8963_ADDR | mpu.MPU9250_READ_FLAG)};
-    // uint8_t slv0_ctrl_reg[] = {mpu.MPU9250_SLV0_CTRL_REG, (uint8_t)(mpu.MPU9250_I2CSLV_EN | 8)}; // 8 bytes ??
-
-    // bo &= mpu.write_reg(slv0_reg_reg);
-    // bo &= mpu.write_reg(slv0_addr_reg);
-    // bo &= mpu.write_reg(slv0_ctrl_reg);
-
-    // Imu imu(mpu, mpu, mpu);
-
     // while (1)
     // {
-    //     //board.state_display_sparky_v2_.update();
-    //     // Warning: if too short serial does not work
-    //     //time_keeper_delay_ms(1000);
 
+        // Write mavlink message
+        // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
+        //                             50,     // uint8_t component_id,
+        //                             &msg,   // mavlink_message_t* msg,
+        //                             0,      // uint8_t type,
+        //                             0,      // uint8_t autopilot,
+        //                             0,      // uint8_t base_mode,
+        //                             0,      // uint32_t custom_mode,
+        //                             0);     //uint8_t system_status)
+        // mavlink_stream.send(&msg);
 
-    //     // Write mavlink message
-    //     // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
-    //     //                             50,     // uint8_t component_id,
-    //     //                             &msg,   // mavlink_message_t* msg,
-    //     //                             0,      // uint8_t type,
-    //     //                             0,      // uint8_t autopilot,
-    //     //                             0,      // uint8_t base_mode,
-    //     //                             0,      // uint32_t custom_mode,
-    //     //                             0);     //uint8_t system_status)
-    //     // mavlink_stream.send(&msg);
-
-    //     // time_keeper_delay_ms(25);
     //     time_keeper_delay_ms(500);
 
 
-    //     // mpu.update_acc();
-    //     // mpu.update_gyr();
-    //     // mpu.update_mag();
-    //     // bo = imu.update();
-    //     imu.update();
-
-    //     uint8_t out_test[] = {mpu.MPU9250_USER_CTRL_REG, 0};
-    //     uint8_t in_test[] = {0,0};
-    //     bo &= mpu.read_reg(out_test, in_test);
-    //     bo &= in_test[1] == (uint8_t)(mpu.MPU9250_USERCTL_I2C_MST_EN | mpu.MPU9250_USERCTL_DIS_I2C) ? true : false; // DIS is not reset
-
-    //     bo &= mpu.mag_read_reg(mpu.AK8963_WHOAMI_REG, whoami_id);
-    //     bo &= whoami_id[1] == mpu.AK8963_WHOAMI_ID ? true : false;
-
-    //     uint8_t in_buffer[2] = {0};
-    //     // bo &= mpu.mag_read_reg(0x02, in_buffer);
-    //     // bo &= in_buffer[1] == 0x00 ? true : false;
-
-    //     // bo &= mpu.mag_read_reg(0x03, in_buffer);
-    //     // uint8_t xl = in_buffer[1];
-    //     // bo &= mpu.mag_read_reg(0x04, in_buffer);
-
-    //     // bo &= mpu.mag_read_reg(0x02, in_buffer);
-    //     // bo &= in_buffer[1] == 0x00 ? true : false;
-
-    //     // bo &= mpu.mag_read_reg(0x09, in_buffer);
-    //     // bo &= in_buffer[1] == 0x00 ? true : false;
-
-    //     // ctrl_cmd[1] = 0x16;
-    //     // bo &= mpu.mag_write_reg(ctrl_cmd);
-    //     // bo &= mpu.mag_read_reg(mpu.AK8963_CNTL1_REG, ctrl_cmd_val);
-    //     // bo &= ctrl_cmd_val[1] == 0x16 ? true : false;
-
-    //     // bo &= mpu.mag_read_reg(0x05, in_buffer);
-    //     // uint8_t yl = in_buffer[1];
-    //     // bo &= mpu.mag_read_reg(0x06, in_buffer);
-
-    //     // bo &= mpu.mag_read_reg(0x09, in_buffer);
-    //     // bo &= in_buffer[1] == 0x00 ? true : false;
-
-    //     // ctrl_cmd[1] = 0x16;
-    //     // bo &= mpu.mag_write_reg(ctrl_cmd);
-    //     // bo &= mpu.mag_read_reg(mpu.AK8963_CNTL1_REG, ctrl_cmd_val);
-    //     // bo &= ctrl_cmd_val[1] == 0x16 ? true : false;
-
-    //     // bo &= mpu.mag_read_reg(0x07, in_buffer);
-    //     // uint8_t zl = in_buffer[1];
-    //     // bo &= mpu.mag_read_reg(0x08, in_buffer);
-
-    //     // bo &= mpu.mag_read_reg(0x09, in_buffer);
-    //     // bo &= in_buffer[1] == 0x00 ? true : false;
-
-    //     // ctrl_cmd[1] = 0x16;
-    //     // bo &= mpu.mag_write_reg(ctrl_cmd);
-    //     // bo &= mpu.mag_read_reg(mpu.AK8963_CNTL1_REG, ctrl_cmd_val);
-    //     // bo &= ctrl_cmd_val[1] == 0x16 ? true : false;
-
-    //     // int16_t accx = (int16_t)mpu.acc_X();
-    //     // int16_t accy = (int16_t)mpu.acc_Y();
-    //     // int16_t accz = (int16_t)mpu.acc_Z();
-
-    //     // int16_t gyrx = (int16_t)mpu.gyro_X();
-    //     // int16_t gyry = (int16_t)mpu.gyro_Y();
-    //     // int16_t gyrz = (int16_t)mpu.gyro_Z();
-
-    //     // int16_t magx = (int16_t)mpu.mag_X();
-    //     // int16_t magy = (int16_t)mpu.mag_Y();
-    //     // int16_t magz = (int16_t)mpu.mag_Z();
-
-    //     // uint8_t in_buffer[2] = {0};
-    //     // bo &= mpu.mag_read_reg(0x03, in_buffer);
-    //     // uint8_t xl = in_buffer[1];
-    //     // bo &= mpu.mag_read_reg(0x04, in_buffer);
-    //     // int16_t valx = (int16_t)(in_buffer[1] << 8 | xl);//accx;
-    //     // int16_t valy = (int16_t)(in_buffer[1] << 8 | yl);//accy;
-    //     // int16_t valz = (int16_t)(in_buffer[1] << 8 | zl);//accz;
-
-    //     // int16_t valx = magx;
-    //     // int16_t valy = magy;
-    //     // int16_t valz = magz;
-
     //     const char* sep = "\t";
-    //     uint64_t delay = 25;//1; //ms
+    //     uint64_t delay = 25;
 
-    //     uint8_t ser_buf[str::MAX_DIGITS10_LONG];
-    //     uint8_t ser_len = 0;
-    //     // str::format_integer(valx, ser_buf, &ser_len);
-
-    //     // board.serial_.write(ser_buf, ser_len);
-    //     //print_util_dbg_log_value("\r\n wai", val, 16);
     //     console.write(valx);
     //     time_keeper_delay_ms(delay);
     //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
@@ -341,39 +228,6 @@ int main(int argc, char** argv)
     //     time_keeper_delay_ms(delay);
     //     console.write(valz);
     //     time_keeper_delay_ms(delay);
-
-    //     // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     // time_keeper_delay_ms(delay);
-    //     // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     // time_keeper_delay_ms(delay);
-
-
-    //     // console.write(gyrx);
-    //     // time_keeper_delay_ms(delay);
-    //     // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     // time_keeper_delay_ms(delay);
-    //     // console.write(gyry);
-    //     // time_keeper_delay_ms(delay);
-    //     // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     // time_keeper_delay_ms(delay);
-    //     // console.write(gyrz);
-    //     // time_keeper_delay_ms(delay);
-
-    //     // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     // time_keeper_delay_ms(delay);
-    //     // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     // time_keeper_delay_ms(delay);
-        
-    //     // console.write(magx);
-    //     // time_keeper_delay_ms(delay);
-    //     // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     // time_keeper_delay_ms(delay);
-    //     // console.write(magy);
-    //     // time_keeper_delay_ms(delay);
-    //     // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     // time_keeper_delay_ms(delay);
-    //     // console.write(magz);
-    //     // time_keeper_delay_ms(delay);
 
     //     const char* newline = "\r\n";
     //     board.serial_.write((const uint8_t*)newline, sizeof(newline));

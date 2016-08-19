@@ -89,11 +89,12 @@ typedef struct
     gpio_stm32_conf_t           led_err_gpio_config;
     gpio_stm32_conf_t           led_stat_gpio_config;
     gpio_stm32_conf_t           led_rf_gpio_config;
+    gpio_stm32_conf_t           nss_gpio_config[3];             ///< Slave Select config
     imu_conf_t                  imu_config;
     Pwm_stm32::config_t         pwm_config[8];
     Serial_usb_stm32::conf_t    serial_usb_config;
     servo_conf_t                servo_config[8];
-    spi_stm32_conf_t            spi_config[3];
+    spi_stm32_conf_t            spi_config[2];
 } sparky_v2_conf_t;
 
 
@@ -155,6 +156,9 @@ public:
     Servo                   servo_7_;
     Spi_stm32               spi_1_;
     Spi_stm32               spi_3_;
+    Gpio_stm32              nss_1_gpio_;
+    Gpio_stm32              nss_2_gpio_;
+    Gpio_stm32              nss_3_gpio_;
     State_display_sparky_v2 state_display_sparky_v2_;
     Mpu_9250                mpu_9250_;
     Imu                     imu_;
@@ -205,16 +209,16 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.imu_config.accelerometer.bias[2] = 0.0f;
 
     // Scale
-    conf.imu_config.accelerometer.scale_factor[0] = 16384.0f;    ///< Should be >0
-    conf.imu_config.accelerometer.scale_factor[1] = 16384.0f;
-    conf.imu_config.accelerometer.scale_factor[2] = 16384.0f;
+    conf.imu_config.accelerometer.scale_factor[0] = 1.0f;    ///< Should be >0
+    conf.imu_config.accelerometer.scale_factor[1] = 1.0f;
+    conf.imu_config.accelerometer.scale_factor[2] = 1.0f;
 
     // Axis and sign
-    conf.imu_config.accelerometer.sign[0] = -1.0f;//+1.0f;  ///< +1 or -1
-    conf.imu_config.accelerometer.sign[1] = +1.0f;//+1.0f;
+    conf.imu_config.accelerometer.sign[0] = -1.0f;  ///< +1 or -1
+    conf.imu_config.accelerometer.sign[1] = -1.0f;
     conf.imu_config.accelerometer.sign[2] = -1.0f;
-    conf.imu_config.accelerometer.axis[0] = 0;      ///< Should be 0, 1, or 2
-    conf.imu_config.accelerometer.axis[1] = 1;
+    conf.imu_config.accelerometer.axis[0] = 1;      ///< Should be 0, 1, or 2
+    conf.imu_config.accelerometer.axis[1] = 0;
     conf.imu_config.accelerometer.axis[2] = 2;
 
     // Gyroscope
@@ -224,36 +228,36 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.imu_config.gyroscope.bias[2] = 0.0f;
 
     // Scale
-    conf.imu_config.gyroscope.scale_factor[0] = 2000.0f;      ///< Should be >0
-    conf.imu_config.gyroscope.scale_factor[1] = 2000.0f;
-    conf.imu_config.gyroscope.scale_factor[2] = 2000.0f;
+    conf.imu_config.gyroscope.scale_factor[0] = 1.0f;      ///< Should be >0
+    conf.imu_config.gyroscope.scale_factor[1] = 1.0f;
+    conf.imu_config.gyroscope.scale_factor[2] = 1.0f;
 
     // Axis and sign
-    conf.imu_config.gyroscope.sign[0] = -1.0;//+1.0f;  ///< +1 or -1
-    conf.imu_config.gyroscope.sign[1] = +1.0;//-1.0f;
+    conf.imu_config.gyroscope.sign[0] = -1.0f;  ///< +1 or -1
+    conf.imu_config.gyroscope.sign[1] = -1.0f;
     conf.imu_config.gyroscope.sign[2] = -1.0f;
-    conf.imu_config.gyroscope.axis[0] = 0;      ///< Should be 0, 1, or 2
-    conf.imu_config.gyroscope.axis[1] = 1;
+    conf.imu_config.gyroscope.axis[0] = 1;      ///< Should be 0, 1, or 2
+    conf.imu_config.gyroscope.axis[1] = 0;
     conf.imu_config.gyroscope.axis[2] = 2;
 
     // Magnetometer
     // Bias
-    conf.imu_config.magnetometer.bias[0] = 0.0f;        ///< Positive or negative
+    conf.imu_config.magnetometer.bias[0] = 0.0f;      ///< Positive or negative
     conf.imu_config.magnetometer.bias[1] = 0.0f;
     conf.imu_config.magnetometer.bias[2] = 0.0f;
 
     // Scale
-    conf.imu_config.magnetometer.scale_factor[0] = 1.0f;//250.0f;//4800.0f;//0.6f;      ///< Should be >0
-    conf.imu_config.magnetometer.scale_factor[1] = 1.0f;//250.0f;//4800.0f;//0.6f;
-    conf.imu_config.magnetometer.scale_factor[2] = 1.0f;//300.0f;//4800.0f;//0.6f;
+    conf.imu_config.magnetometer.scale_factor[0] = 250.0f;      ///< Should be >0
+    conf.imu_config.magnetometer.scale_factor[1] = 250.0f;
+    conf.imu_config.magnetometer.scale_factor[2] = 300.0f;
 
     // Axis and sign
     conf.imu_config.magnetometer.sign[0] = -1.0f;   ///< +1 or -1
-    conf.imu_config.magnetometer.sign[1] = +1.0f;
+    conf.imu_config.magnetometer.sign[1] = -1.0f;
     conf.imu_config.magnetometer.sign[2] = +1.0f;
-    conf.imu_config.magnetometer.axis[0] = 1;//2;       ///< Should be 0, 1, or 2
-    conf.imu_config.magnetometer.axis[1] = 0;//0;
-    conf.imu_config.magnetometer.axis[2] = 2;//1;
+    conf.imu_config.magnetometer.axis[0] = 0;       ///< Should be 0, 1, or 2
+    conf.imu_config.magnetometer.axis[1] = 1;
+    conf.imu_config.magnetometer.axis[2] = 2;
 
     // -------------------------------------------------------------------------
     // PWM config
@@ -351,64 +355,72 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // -------------------------------------------------------------------------
     // SPI config
     // -------------------------------------------------------------------------
+
+    // SPI 1 config
     conf.spi_config[0].spi_device               = STM32_SPI1;
     conf.spi_config[0].mode                     = STM32_SPI_MODE_CPOL1_CPHA1;
-    conf.spi_config[0].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_128; //16;
+    conf.spi_config[0].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_128;
     conf.spi_config[0].ss_mode_hard             = true;
 
     conf.spi_config[0].miso_gpio_config.port    = GPIO_STM32_PORT_A;
     conf.spi_config[0].miso_gpio_config.pin     = GPIO_STM32_PIN_6;
     conf.spi_config[0].miso_gpio_config.dir     = GPIO_INPUT;
-    conf.spi_config[0].miso_gpio_config.pull    = GPIO_PULL_UPDOWN_UP;//DOWN;//_UP;
+    conf.spi_config[0].miso_gpio_config.pull    = GPIO_PULL_UPDOWN_UP;
     conf.spi_config[0].miso_gpio_config.alt_fct = GPIO_STM32_AF_5;
 
     conf.spi_config[0].mosi_gpio_config.port    = GPIO_STM32_PORT_A;
     conf.spi_config[0].mosi_gpio_config.pin     = GPIO_STM32_PIN_7;
     conf.spi_config[0].mosi_gpio_config.dir     = GPIO_OUTPUT;
-    conf.spi_config[0].mosi_gpio_config.pull    = GPIO_PULL_UPDOWN_UP;//DOWN;//_UP;
+    conf.spi_config[0].mosi_gpio_config.pull    = GPIO_PULL_UPDOWN_UP;
     conf.spi_config[0].mosi_gpio_config.alt_fct = GPIO_STM32_AF_5;
-
-    conf.spi_config[0].nss_gpio_config.port     = GPIO_STM32_PORT_C;
-    conf.spi_config[0].nss_gpio_config.pin      = GPIO_STM32_PIN_4;
-    conf.spi_config[0].nss_gpio_config.dir      = GPIO_OUTPUT;
-    conf.spi_config[0].nss_gpio_config.pull     = GPIO_PULL_UPDOWN_UP;//NONE;//_UP;
-    conf.spi_config[0].nss_gpio_config.alt_fct  = GPIO_STM32_AF_5;
 
     conf.spi_config[0].sck_gpio_config.port     = GPIO_STM32_PORT_A;
     conf.spi_config[0].sck_gpio_config.pin      = GPIO_STM32_PIN_5;
     conf.spi_config[0].sck_gpio_config.dir      = GPIO_OUTPUT;
-    conf.spi_config[0].sck_gpio_config.pull     = GPIO_PULL_UPDOWN_UP;//DOWN;//_UP;
+    conf.spi_config[0].sck_gpio_config.pull     = GPIO_PULL_UPDOWN_UP;
     conf.spi_config[0].sck_gpio_config.alt_fct  = GPIO_STM32_AF_5;
 
+    // SPI 1 slave select config
+    conf.nss_gpio_config[0].port                   = GPIO_STM32_PORT_C;
+    conf.nss_gpio_config[0].pin                    = GPIO_STM32_PIN_4;
+    conf.nss_gpio_config[0].dir                    = GPIO_OUTPUT;
+    conf.nss_gpio_config[0].pull                   = GPIO_PULL_UPDOWN_UP;
 
-    conf.spi_config[2].spi_device               = STM32_SPI3;
-    conf.spi_config[2].mode                     = STM32_SPI_MODE_CPOL1_CPHA1;
-    conf.spi_config[2].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_64;
-    conf.spi_config[2].ss_mode_hard             = true;
+    // SPI 3 config
+    conf.spi_config[1].spi_device               = STM32_SPI3;
+    conf.spi_config[1].mode                     = STM32_SPI_MODE_CPOL1_CPHA1;
+    conf.spi_config[1].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_64;
+    conf.spi_config[1].ss_mode_hard             = true;
 
-    conf.spi_config[2].miso_gpio_config.port    = GPIO_STM32_PORT_C;
-    conf.spi_config[2].miso_gpio_config.pin     = GPIO_STM32_PIN_11;
-    conf.spi_config[2].miso_gpio_config.dir     = GPIO_INPUT;
-    conf.spi_config[2].miso_gpio_config.pull    = GPIO_PULL_UPDOWN_DOWN;
-    conf.spi_config[2].miso_gpio_config.alt_fct = GPIO_STM32_AF_6;
+    conf.spi_config[1].miso_gpio_config.port    = GPIO_STM32_PORT_C;
+    conf.spi_config[1].miso_gpio_config.pin     = GPIO_STM32_PIN_11;
+    conf.spi_config[1].miso_gpio_config.dir     = GPIO_INPUT;
+    conf.spi_config[1].miso_gpio_config.pull    = GPIO_PULL_UPDOWN_DOWN;
+    conf.spi_config[1].miso_gpio_config.alt_fct = GPIO_STM32_AF_6;
 
-    conf.spi_config[2].mosi_gpio_config.port    = GPIO_STM32_PORT_C;
-    conf.spi_config[2].mosi_gpio_config.pin     = GPIO_STM32_PIN_12;
-    conf.spi_config[2].mosi_gpio_config.dir     = GPIO_OUTPUT;
-    conf.spi_config[2].mosi_gpio_config.pull    = GPIO_PULL_UPDOWN_DOWN;
-    conf.spi_config[2].mosi_gpio_config.alt_fct = GPIO_STM32_AF_6;
+    conf.spi_config[1].mosi_gpio_config.port    = GPIO_STM32_PORT_C;
+    conf.spi_config[1].mosi_gpio_config.pin     = GPIO_STM32_PIN_12;
+    conf.spi_config[1].mosi_gpio_config.dir     = GPIO_OUTPUT;
+    conf.spi_config[1].mosi_gpio_config.pull    = GPIO_PULL_UPDOWN_DOWN;
+    conf.spi_config[1].mosi_gpio_config.alt_fct = GPIO_STM32_AF_6;
 
-    conf.spi_config[2].nss_gpio_config.port     = GPIO_STM32_PORT_A;
-    conf.spi_config[2].nss_gpio_config.pin      = GPIO_STM32_PIN_15;
-    conf.spi_config[2].nss_gpio_config.dir      = GPIO_OUTPUT;
-    conf.spi_config[2].nss_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    conf.spi_config[2].nss_gpio_config.alt_fct  = GPIO_STM32_AF_6;
+    conf.spi_config[1].sck_gpio_config.port     = GPIO_STM32_PORT_C;
+    conf.spi_config[1].sck_gpio_config.pin      = GPIO_STM32_PIN_10;
+    conf.spi_config[1].sck_gpio_config.dir      = GPIO_OUTPUT;
+    conf.spi_config[1].sck_gpio_config.pull     = GPIO_PULL_UPDOWN_DOWN;
+    conf.spi_config[1].sck_gpio_config.alt_fct  = GPIO_STM32_AF_6;
 
-    conf.spi_config[2].sck_gpio_config.port     = GPIO_STM32_PORT_C;
-    conf.spi_config[2].sck_gpio_config.pin      = GPIO_STM32_PIN_10;
-    conf.spi_config[2].sck_gpio_config.dir      = GPIO_OUTPUT;
-    conf.spi_config[2].sck_gpio_config.pull     = GPIO_PULL_UPDOWN_DOWN;
-    conf.spi_config[2].sck_gpio_config.alt_fct  = GPIO_STM32_AF_6;
+    // SPI 3 slaves select config
+    conf.nss_gpio_config[1].port                   = GPIO_STM32_PORT_A;
+    conf.nss_gpio_config[1].pin                    = GPIO_STM32_PIN_15;
+    conf.nss_gpio_config[1].dir                    = GPIO_OUTPUT;
+    conf.nss_gpio_config[1].pull                   = GPIO_PULL_UPDOWN_NONE;
+
+    conf.nss_gpio_config[2].port                   = GPIO_STM32_PORT_B;
+    conf.nss_gpio_config[2].pin                    = GPIO_STM32_PIN_3;
+    conf.nss_gpio_config[2].dir                    = GPIO_OUTPUT;
+    conf.nss_gpio_config[2].pull                   = GPIO_PULL_UPDOWN_NONE;
+
     return conf;
 }
 
