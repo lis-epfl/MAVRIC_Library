@@ -62,10 +62,10 @@ public:
      */
     enum channel_id_t
     {
-        CHANNEL_0 = 0,      ///< Channel 0
-        CHANNEL_1 = 1,      ///< Channel 1
-        CHANNEL_2 = 2,      ///< Channel 2
-        CHANNEL_3 = 3,      ///< Channel 3
+        CHANNEL_1 = 0,      ///< Channel 1
+        CHANNEL_2 = 1,      ///< Channel 2
+        CHANNEL_3 = 2,      ///< Channel 3
+        CHANNEL_4 = 3,      ///< Channel 4
     };
 
 
@@ -151,7 +151,7 @@ Pwm_chibios::conf_t Pwm_chibios::default_config(void)
         0,
         0
     };
-    conf.channel            = CHANNEL_0;
+    conf.channel            = CHANNEL_1;
 
     return conf;
 }

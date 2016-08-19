@@ -132,7 +132,7 @@ int main(void)
     State_display& disp = board.state_display_;
     I2c_chibios& i2c = board.i2c1_;
 
-    Pwm_chibios& pwm1 = board.pwm1_;
+    Pwm_chibios& pwm1 = board.pwm_[0];
     pwm1.set_pulse_width_us(100);
     pwm1.set_period_us(2000);
     pwm1.set_pulse_width_us(100);
