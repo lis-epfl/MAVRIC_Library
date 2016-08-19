@@ -75,21 +75,21 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     sparky_v2_conf_t board_config = sparky_v2_default_config();
 
-    board_config.imu_config.accelerometer.bias[0] = -0.0327504f;
-    board_config.imu_config.accelerometer.bias[1] = -0.00344232f;
-    board_config.imu_config.accelerometer.bias[2] = +0.00931478f;
+    // board_config.imu_config.accelerometer.bias[0] = -0.0327504f;
+    // board_config.imu_config.accelerometer.bias[1] = -0.00344232f;
+    // board_config.imu_config.accelerometer.bias[2] = +0.00931478f;
 
-    board_config.imu_config.gyroscope.bias[0] = -0.0135339f;
-    board_config.imu_config.gyroscope.bias[1] = -0.0061096f;
-    board_config.imu_config.gyroscope.bias[2] = -0.00312137f;
+    // board_config.imu_config.gyroscope.bias[0] = -0.0135339f;
+    // board_config.imu_config.gyroscope.bias[1] = -0.0061096f;
+    // board_config.imu_config.gyroscope.bias[2] = -0.00312137f;
 
-    board_config.imu_config.magnetometer.bias[0] = +0.520405f;
-    board_config.imu_config.magnetometer.bias[1] = -0.55305f;
-    board_config.imu_config.magnetometer.bias[2] = -0.489245f;
+    // board_config.imu_config.magnetometer.bias[0] = +0.520405f;
+    // board_config.imu_config.magnetometer.bias[1] = -0.55305f;
+    // board_config.imu_config.magnetometer.bias[2] = -0.489245f;
 
-    board_config.imu_config.magnetic_north[0] = +0.268271f;
-    board_config.imu_config.magnetic_north[1] = +0.0f;
-    board_config.imu_config.magnetic_north[2] = +0.485027f;
+    // board_config.imu_config.magnetic_north[0] = +0.268271f;
+    // board_config.imu_config.magnetic_north[1] = +0.0f;
+    // board_config.imu_config.magnetic_north[2] = +0.485027f;
 
     Sparky_v2 board(board_config);
 

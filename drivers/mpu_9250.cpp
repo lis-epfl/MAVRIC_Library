@@ -36,7 +36,7 @@
  * \author Jean-François Burnier
  *
  * \brief This file is the driver for the integrated 3axis gyroscope and
- * accelerometer Mpu 9250
+ *        accelerometer Mpu 9250
  *
  ******************************************************************************/
 #include "drivers/mpu_9250.hpp"

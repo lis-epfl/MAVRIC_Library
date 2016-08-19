@@ -452,79 +452,74 @@ public:
      */
     bool read_reg(uint8_t reg, uint8_t* in_data, uint32_t nbytes = 1);
 
-
-    /**
-     * Register adress and values
-     */
-
     // AK8963 register addresses
-    const uint8_t AK8963_WHOAMI_REG     = 0x00;
-    const uint8_t AK8963_ST1_REG        = 0x02;
-    const uint8_t AK8963_HXL            = 0x03;
-    const uint8_t AK8963_ST2_REG        = 0x09;
+    static const uint8_t AK8963_WHOAMI_REG     = 0x00;
+    static const uint8_t AK8963_ST1_REG        = 0x02;
+    static const uint8_t AK8963_HXL            = 0x03;
+    static const uint8_t AK8963_ST2_REG        = 0x09;
 
     // AK8963 register bits
-    const uint8_t AK8963_CNTL1_CONT_8HZ     = 0x02;
-    const uint8_t AK8963_CNTL1_CONT_100HZ   = 0x06;
-    const uint8_t AK8963_CNTL1_16BITS       = 0x10;
-    const uint8_t AK8963_CNTL1_REG          = 0x0A;
-    const uint8_t AK8963_CNTL2_REG          = 0x0B;
-    const uint8_t AK8963_CNTL2_SRST         = 0x01;
-    const uint8_t AK8963_WHOAMI_ID          = 0x48;
+    static const uint8_t AK8963_CNTL1_CONT_8HZ     = 0x02;
+    static const uint8_t AK8963_CNTL1_CONT_100HZ   = 0x06;
+    static const uint8_t AK8963_CNTL1_16BITS       = 0x10;
+    static const uint8_t AK8963_CNTL1_REG          = 0x0A;
+    static const uint8_t AK8963_CNTL2_REG          = 0x0B;
+    static const uint8_t AK8963_CNTL2_SRST         = 0x01;
+    static const uint8_t AK8963_WHOAMI_ID          = 0x48;
 
     // MPU9250 register adresses
-    const uint8_t MPU9250_AK8963_ADDR           = 0x0C;
-    const uint8_t MPU9250_SMPLRT_DIV_REG        = 0x19;
-    const uint8_t MPU9250_DLPF_CFG_REG          = 0x1A;
-    const uint8_t MPU9250_GYRO_CFG_REG          = 0x1B;
-    const uint8_t MPU9250_ACCEL_CFG_REG         = 0x1C;
-    const uint8_t MPU9250_ACCEL_CFG2_REG        = 0x1D;
-    const uint8_t MPU9250_SLV0_ADDR_REG         = 0x25;
-    const uint8_t MPU9250_SLV0_REG_REG          = 0x26;
-    const uint8_t MPU9250_SLV0_CTRL_REG         = 0x27;
-    const uint8_t MPU9250_SLV4_ADDR_REG         = 0x31;
-    const uint8_t MPU9250_SLV4_REG_REG          = 0x32;
-    const uint8_t MPU9250_SLV4_DO_REG           = 0x33;
-    const uint8_t MPU9250_SLV4_CTRL_REG         = 0x34;
-    const uint8_t MPU9250_SLV4_DI_REG           = 0x35;
-    const uint8_t MPU9250_I2C_MST_STATUS_REG    = 0x36;
-    const uint8_t MPU9250_ACCEL_X_OUT_MSB       = 0x3B;
-    const uint8_t MPU9250_ACCEL_X_OUT_LSB       = 0x3C;
-    const uint8_t MPU9250_ACCEL_Y_OUT_MSB       = 0x3D;
-    const uint8_t MPU9250_ACCEL_Y_OUT_LSB       = 0x3E;
-    const uint8_t MPU9250_ACCEL_Z_OUT_MSB       = 0x3F;
-    const uint8_t MPU9250_ACCEL_Z_OUT_LSB       = 0x40;
-    const uint8_t MPU9250_GYRO_X_OUT_MSB        = 0x43;
-    const uint8_t MPU9250_GYRO_X_OUT_LSB        = 0x44;
-    const uint8_t MPU9250_GYRO_Y_OUT_MSB        = 0x45;
-    const uint8_t MPU9250_GYRO_Y_OUT_LSB        = 0x46;
-    const uint8_t MPU9250_GYRO_Z_OUT_MSB        = 0x47;
-    const uint8_t MPU9250_GYRO_Z_OUT_LSB        = 0x48;
-    const uint8_t MPU9250_EXT_SENS_DATA_00      = 0x49;
-    const uint8_t MPU9250_USER_CTRL_REG         = 0x6A;
-    const uint8_t MPU9250_PWR_MGMT_REG          = 0x6B;
-    const uint8_t MPU9250_WHOAMI_REG            = 0x75;
+    static const uint8_t MPU9250_AK8963_ADDR           = 0x0C;
+    static const uint8_t MPU9250_SMPLRT_DIV_REG        = 0x19;
+    static const uint8_t MPU9250_DLPF_CFG_REG          = 0x1A;
+    static const uint8_t MPU9250_GYRO_CFG_REG          = 0x1B;
+    static const uint8_t MPU9250_ACCEL_CFG_REG         = 0x1C;
+    static const uint8_t MPU9250_ACCEL_CFG2_REG        = 0x1D;
+    static const uint8_t MPU9250_SLV0_ADDR_REG         = 0x25;
+    static const uint8_t MPU9250_SLV0_REG_REG          = 0x26;
+    static const uint8_t MPU9250_SLV0_CTRL_REG         = 0x27;
+    static const uint8_t MPU9250_SLV4_ADDR_REG         = 0x31;
+    static const uint8_t MPU9250_SLV4_REG_REG          = 0x32;
+    static const uint8_t MPU9250_SLV4_DO_REG           = 0x33;
+    static const uint8_t MPU9250_SLV4_CTRL_REG         = 0x34;
+    static const uint8_t MPU9250_SLV4_DI_REG           = 0x35;
+    static const uint8_t MPU9250_I2C_MST_STATUS_REG    = 0x36;
+    static const uint8_t MPU9250_ACCEL_X_OUT_MSB       = 0x3B;
+    static const uint8_t MPU9250_ACCEL_X_OUT_LSB       = 0x3C;
+    static const uint8_t MPU9250_ACCEL_Y_OUT_MSB       = 0x3D;
+    static const uint8_t MPU9250_ACCEL_Y_OUT_LSB       = 0x3E;
+    static const uint8_t MPU9250_ACCEL_Z_OUT_MSB       = 0x3F;
+    static const uint8_t MPU9250_ACCEL_Z_OUT_LSB       = 0x40;
+    static const uint8_t MPU9250_GYRO_X_OUT_MSB        = 0x43;
+    static const uint8_t MPU9250_GYRO_X_OUT_LSB        = 0x44;
+    static const uint8_t MPU9250_GYRO_Y_OUT_MSB        = 0x45;
+    static const uint8_t MPU9250_GYRO_Y_OUT_LSB        = 0x46;
+    static const uint8_t MPU9250_GYRO_Z_OUT_MSB        = 0x47;
+    static const uint8_t MPU9250_GYRO_Z_OUT_LSB        = 0x48;
+    static const uint8_t MPU9250_EXT_SENS_DATA_00      = 0x49;
+    static const uint8_t MPU9250_USER_CTRL_REG         = 0x6A;
+    static const uint8_t MPU9250_PWR_MGMT_REG          = 0x6B;
+    static const uint8_t MPU9250_WHOAMI_REG            = 0x75;
 
     // MPU9250 register bits
-    const uint8_t MPU9250_READ_FLAG     = 0x80;
-    const uint8_t MPU9250_WRITE_FLAG    = 0x7f;
-    const uint8_t MPU9250_WHOAMI_ID     = 0x71;
+    static const uint8_t MPU9250_READ_FLAG     = 0x80;
+    static const uint8_t MPU9250_WRITE_FLAG    = 0x7f;
+    static const uint8_t MPU9250_WHOAMI_ID     = 0x71;
 
     // I2C master status register bits
-    const uint8_t MPU9250_I2C_MST_SLV4_NACK = 0x10;
-    const uint8_t MPU9250_I2C_MST_SLV4_DONE = 0x40;
+    static const uint8_t MPU9250_I2C_MST_SLV4_NACK = 0x10;
+    static const uint8_t MPU9250_I2C_MST_SLV4_DONE = 0x40;
 
     // I2C SLV register bits
-    const uint8_t MPU9250_I2CSLV_EN     = 0x80;
+    static const uint8_t MPU9250_I2CSLV_EN     = 0x80;
 
     // Power management and clock selection
-    const uint8_t MPU9250_PWRMGMT_IMU_RST   = 0x80;
-    const uint8_t MPU9250_PWRMGMT_PLL_X_CLK = 0x01;
+    static const uint8_t MPU9250_PWRMGMT_IMU_RST   = 0x80;
+    static const uint8_t MPU9250_PWRMGMT_PLL_X_CLK = 0x01;
 
     // User control registers
-    const uint8_t MPU9250_USERCTL_DIS_I2C       = 0x10;
-    const uint8_t MPU9250_USERCTL_I2C_MST_EN    = 0x20;
-    const uint8_t MPU9250_USERCTL_GYRO_RST      = 0x01;
+    static const uint8_t MPU9250_USERCTL_DIS_I2C       = 0x10;
+    static const uint8_t MPU9250_USERCTL_I2C_MST_EN    = 0x20;
+    static const uint8_t MPU9250_USERCTL_GYRO_RST      = 0x01;
 
 private:
     Spi&                    spi_;              ///< SPI peripheral
