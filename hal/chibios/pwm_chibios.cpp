@@ -72,5 +72,7 @@ bool Pwm_chibios::set_pulse_width_us(uint16_t pulse_us)
 bool Pwm_chibios::set_period_us(uint16_t period_us)
 {
     pwmChangePeriodI(driver_, period_us);
+    pwmEnablePeriodicNotification(driver_);
+    
     return true;
 }

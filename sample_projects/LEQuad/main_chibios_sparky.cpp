@@ -133,8 +133,8 @@ int main(void)
     I2c_chibios& i2c = board.i2c1_;
 
     Pwm_chibios& pwm1 = board.pwm1_;
-    pwm1.set_pulse_width_us(100);
-    pwm1.set_period_us(1000);
+    pwm1.set_period_us(20000);
+    pwm1.set_pulse_width_us(1500);
 
     /**
     * Prepares the barometer

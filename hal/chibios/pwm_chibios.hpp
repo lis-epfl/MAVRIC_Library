@@ -155,8 +155,8 @@ Pwm_chibios::conf_t Pwm_chibios::default_config(void)
     conf.driver = &PWMD1;
     conf.config =
     {
-        10000,                                    /* 10kHz PWM clock frequency.   */
-        10000,                                    /* Initial PWM period 1S.       */
+        1000000,                                  // 1MHz PWM clock frequency
+        20000,                                    // Initial PWM period 20ms
         NULL,
         {
             {PWM_OUTPUT_ACTIVE_HIGH, NULL},
