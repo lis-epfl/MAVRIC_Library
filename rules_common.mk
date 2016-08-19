@@ -126,6 +126,7 @@ LIB_SRCS += sensing/qfilter.cpp
 LIB_SRCS += simulation/accelerometer_sim.cpp
 LIB_SRCS += simulation/barometer_sim.cpp
 LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
+LIB_SRCS += simulation/dynamic_model_telemetry.cpp
 LIB_SRCS += simulation/flow_sim.cpp
 LIB_SRCS += simulation/gps_sim.cpp
 LIB_SRCS += simulation/gyroscope_sim.cpp
