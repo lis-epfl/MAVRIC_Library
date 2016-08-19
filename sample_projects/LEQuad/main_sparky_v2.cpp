@@ -130,9 +130,9 @@ int main(int argc, char** argv)
     Battery     sim_battery(sim_adc_battery);
 
     // Simulated IMU
-    // Imu     sim_imu( sim.accelerometer(),
-    //                  sim.gyroscope(),
-    //                  sim.magnetometer() );
+    Imu     sim_imu( sim.accelerometer(),
+                     sim.gyroscope(),
+                     sim.magnetometer() );
 
     // set the flag to simulation
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
