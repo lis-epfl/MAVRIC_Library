@@ -104,6 +104,8 @@ mav_result_t Mavlink_waypoint_handler_tag::set_auto_landing_tag(Mavlink_waypoint
     if ((waypoint_handler->navigation_.internal_state_ == Navigation::NAV_NAVIGATING) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_HOLD_POSITION)
         || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_ON_POSITION) || (waypoint_handler->navigation_.internal_state_ == Navigation::NAV_STOP_THERE))
     {
+        waypoint_handler->offboard_tag_search_.increment_start_tag_msg_count();
+
         // Set waypoint to search for tag and land
         waypoint_handler->navigation_.internal_state_ = Navigation::internal_state_t::NAV_LAND_ON_TAG;
         waypoint_handler->navigation_.auto_landing_behavior = Navigation::DESCENT_TO_SMALL_ALTITUDE;

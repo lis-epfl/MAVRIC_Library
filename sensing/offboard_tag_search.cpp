@@ -63,6 +63,8 @@ Offboard_Tag_Search::Offboard_Tag_Search(const INS& ins, const ahrs_t& ahrs, Mav
 {
     // Set picture count to 0
     picture_count_ = 0;
+    tag_count_ = 0;
+    start_tag_msg_count_ = 0;
 
     // Set position at photos to 0 for all threads
     for (int i = 0; i < offboard_threads_; i++)
@@ -241,9 +243,29 @@ const int16_t& Offboard_Tag_Search::picture_count() const
     return picture_count_;
 }
 
+const int16_t& Offboard_Tag_Search::tag_count() const
+{
+    return tag_count_;
+}
+
+const int16_t& Offboard_Tag_Search::start_tag_msg_count() const
+{
+    return start_tag_msg_count_;
+}
+
 void Offboard_Tag_Search::increment_picture_count()
 {
     picture_count_++;
+}
+
+void Offboard_Tag_Search::increment_tag_count()
+{
+    tag_count_++;
+}
+
+void Offboard_Tag_Search::increment_start_tag_msg_count()
+{
+    start_tag_msg_count_++;
 }
 
 Offboard_Tag_Search::land_on_tag_behavior_t Offboard_Tag_Search::land_on_tag_behavior() const

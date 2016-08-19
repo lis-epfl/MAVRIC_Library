@@ -76,6 +76,8 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
 {
     mav_result_t result;
 
+    offboard_tag_search.increment_picture_count();
+
     int thread_index = packet->param2;
     offboard_tag_search.set_has_photo_been_taken(thread_index, false);
 
@@ -214,7 +216,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
             offboard_tag_search.update_last_update_us();
 
             // Increment counter
-            offboard_tag_search.increment_picture_count();
+            offboard_tag_search.increment_tag_count();
 
             // Set waypoint enum to tag found
             offboard_tag_search.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND);
@@ -272,10 +274,9 @@ void offboard_tag_search_goal_location_telemetry_send(Offboard_Tag_Search* offbo
                                 msg,
                                 "Tag_Search_Goal_Location",
                                 time_keeper_get_us(),
-                                offboard_tag_search->tag_location()[0] - offboard_tag_search->ins().position_lf()[0],
-                                offboard_tag_search->tag_location()[1] - offboard_tag_search->ins().position_lf()[1],
-                                //offboard_tag_search->tag_location()[2] - offboard_tag_search->ins().position_lf()[2]);
-                                offboard_tag_search->picture_count());
+                                offboard_tag_search->start_tag_msg_count(),
+                                offboard_tag_search->picture_count(),
+                                offboard_tag_search->tag_count());
 }
 
 void offboard_tag_search_telemetry_send_take_new_photo(int index, Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)

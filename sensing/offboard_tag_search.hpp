@@ -158,6 +158,16 @@ public:
     void increment_picture_count();
 
     /**
+     * \brief   Increments the tag count by one
+     */
+    void increment_tag_count();
+
+    /**
+     * \brief   Increments the tag count by one
+     */
+    void increment_start_tag_msg_count();
+
+    /**
      * \brief   Checks if the current tag reading is healthy.
      *
      * An unhealthy reading could be due to some of the following:
@@ -190,7 +200,9 @@ public:
     land_on_tag_behavior_t land_on_tag_behavior() const;
     void land_on_tag_behavior(land_on_tag_behavior_t land_on_tag_behavior);
 
+    const int16_t& start_tag_msg_count() const;
     const int16_t& picture_count() const;
+    const int16_t& tag_count() const;
     local_position_t& tag_location();
 
     const int offboard_threads() const;
@@ -211,7 +223,9 @@ protected:
     bool is_camera_running_;                                ///< States whether the camera should be running
     bool has_photo_been_taken_[offboard_threads_];           ///< Boolean array stating if the thread has taken a photo
     float last_update_us_;                                  ///< Last update time in microseconds
+    int16_t start_tag_msg_count_;                           ///< The count of the start tag landing msg sent
     int16_t picture_count_;                                 ///< The count of the pictures received
+    int16_t tag_count_;                                     ///< The count of the tags received
     local_position_t tag_location_;                         ///< The location of the tag in the local frame
     land_on_tag_behavior_t land_on_tag_behavior_;           ///< The land on tag behavior enum
 
