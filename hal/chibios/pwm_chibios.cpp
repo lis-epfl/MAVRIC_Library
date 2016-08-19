@@ -45,10 +45,7 @@
 Pwm_chibios::Pwm_chibios(conf_t config):
     driver_(config.driver),
     config_(config.config),
-    channel_(config.channel),
-    port_(config.port),
-    pin_(config.pin),
-    alternate_function_(config.alternate_function)
+    channel_(config.channel)
 {}
 
 
@@ -56,7 +53,6 @@ bool Pwm_chibios::init(void)
 {
     pwmStart(driver_, &config_);
     pwmEnablePeriodicNotification(driver_);
-    palSetPadMode(port_, pin_, alternate_function_);
     return true;
 }
 
@@ -73,6 +69,6 @@ bool Pwm_chibios::set_period_us(uint16_t period_us)
 {
     pwmChangePeriodI(driver_, period_us);
     pwmEnablePeriodicNotification(driver_);
-    
+
     return true;
 }

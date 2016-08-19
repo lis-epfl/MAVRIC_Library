@@ -68,16 +68,6 @@ public:
         CHANNEL_3 = 3,      ///< Channel 3
     };
 
-    /**
-     * \brief   Enumeration of possible alternate function for PWM
-     */
-    enum af_t
-    {
-        AF_1 = PAL_MODE_ALTERNATE(1),       ///< Alternate function 1
-        AF_2 = PAL_MODE_ALTERNATE(2),       ///< Alternate function 2
-        AF_3 = PAL_MODE_ALTERNATE(3),       ///< Alternate function 3
-        AF_9 = PAL_MODE_ALTERNATE(9),       ///< Alternate function 9
-    };
 
     /**
      * \brief   Configuration structure
@@ -87,9 +77,6 @@ public:
         PWMDriver*      driver;                 ///< Pointer to PWM driver
         PWMConfig       config;                 ///< Driver configuration
         channel_id_t    channel;                ///< Channel ID
-        ioportid_t      port;                   ///< Port
-        ioportmask_t    pin;                    ///< Pin
-        af_t            alternate_function;     ///< Alternate function
     };
 
     /**
@@ -137,9 +124,6 @@ private:
     PWMDriver*      driver_;                 ///< Pointer to PWM driver
     PWMConfig       config_;                 ///< Driver configuration
     channel_id_t    channel_;                ///< Channel ID
-    ioportid_t      port_;                   ///< Port
-    ioportmask_t    pin_;                    ///< Pin
-    af_t            alternate_function_;     ///< Alternate function
 };
 
 
@@ -168,9 +152,6 @@ Pwm_chibios::conf_t Pwm_chibios::default_config(void)
         0
     };
     conf.channel            = CHANNEL_0;
-    conf.port               = GPIOA;
-    conf.pin                = GPIOA_PIN8;
-    conf.alternate_function = AF_1;
 
     return conf;
 }
