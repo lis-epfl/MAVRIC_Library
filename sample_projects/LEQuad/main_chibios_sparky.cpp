@@ -132,10 +132,12 @@ int main(void)
     State_display& disp = board.state_display_;
     I2c_chibios& i2c = board.i2c1_;
 
-    Pwm_chibios& pwm1 = board.pwm_[0];
-    pwm1.set_pulse_width_us(100);
-    pwm1.set_period_us(2000);
-    pwm1.set_pulse_width_us(100);
+    // Pwm_chibios& pwm1 = board.pwm_[0];
+    // pwm1.set_pulse_width_us(100);
+    // pwm1.set_period_us(2000);
+    // pwm1.set_pulse_width_us(100);
+
+    Servo& servo = board.servo_[0];
 
 
     /**
@@ -188,24 +190,28 @@ int main(void)
 
         time_keeper_delay_ms(50);
 
-        pwm1.set_pulse_width_us(1000);
-        pwm1.set_period_us(20000);
+        // pwm1.set_pulse_width_us(1000);
+        // pwm1.set_period_us(20000);
+        servo.write(-1.0f);
 
 
         time_keeper_delay_ms(50);
 
-        pwm1.set_pulse_width_us(2000);
-        pwm1.set_period_us(20000);
+        // pwm1.set_pulse_width_us(2000);
+        // pwm1.set_period_us(20000);
+        servo.write(-0.5f);
 
         time_keeper_delay_ms(50);
 
-        pwm1.set_pulse_width_us(100);
-        pwm1.set_period_us(500);
+        // pwm1.set_pulse_width_us(100);
+        // pwm1.set_period_us(500);
+        servo.write(0.5f);
 
         time_keeper_delay_ms(50);
 
-        pwm1.set_pulse_width_us(500);
-        pwm1.set_period_us(500);
+        // pwm1.set_pulse_width_us(500);
+        servo.write(1.0f);
+        // pwm1.set_period_us(500);
         // }
         // chnWrite(&SDU1, (uint8_t *)"Hello World!\r\n", 14);
 

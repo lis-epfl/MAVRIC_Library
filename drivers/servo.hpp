@@ -95,6 +95,14 @@ public:
 
 
     /**
+     * \brief Initializes the servo
+     *
+     * \return success
+     */
+    bool init(void);
+
+
+    /**
      * \brief   Returns the current servos value
      *
      * \return  Value
@@ -222,7 +230,7 @@ static inline servo_conf_t servo_default_config_brush_motor()
     conf.max                = 1.0f;
     conf.failsafe           = -1.0f;
     conf.repeat_freq        = 4000; // period = 250us
-    conf.pulse_center_us    = 125;  
+    conf.pulse_center_us    = 125;
     conf.pulse_magnitude_us = 125;  // duty cycle: 0 to 100%
 
     return conf;

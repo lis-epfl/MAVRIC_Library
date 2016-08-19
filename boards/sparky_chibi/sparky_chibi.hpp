@@ -122,6 +122,7 @@ public:
         Gpio_chibios::conf_t      gpio_led_stat;
         Gpio_chibios::conf_t      gpio_led_rf;
         Pwm_chibios::conf_t       pwm[PWM_COUNT];
+        servo_conf_t              servo[PWM_COUNT];
         I2c_chibios::conf_t       i2c1;
         Barometer_MS5611::conf_t  barometer;
     };
@@ -194,6 +195,7 @@ public:
     Led_gpio                led_rf_;
 
     Pwm_chibios             pwm_[PWM_COUNT];
+    Servo                   servo_[PWM_COUNT];
 
     State_display_sparky_v2 state_display_;
 
@@ -247,27 +249,38 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
     }
     // TODO : Check the PWM config bellow
     // TODO : Configure the GPIOs accordingly in boards/sparky_chibi/board.h
-    conf.pwm[0].driver  = &PWMD3;
-    conf.pwm[0].channel = Pwm_chibios::CHANNEL_3;
-    conf.pwm[1].driver  = &PWMD3;
-    conf.pwm[1].channel = Pwm_chibios::CHANNEL_4;
-    conf.pwm[2].driver  = &PWMD9;
-    conf.pwm[2].channel = Pwm_chibios::CHANNEL_2;
-    conf.pwm[3].driver  = &PWMD2;
-    conf.pwm[3].channel = Pwm_chibios::CHANNEL_3;
-    conf.pwm[4].driver  = &PWMD5;
-    conf.pwm[4].channel = Pwm_chibios::CHANNEL_2;
-    conf.pwm[5].driver  = &PWMD5;
-    conf.pwm[5].channel = Pwm_chibios::CHANNEL_1;
-    conf.pwm[6].driver  = &PWMD8;// TODO
-    conf.pwm[6].channel = Pwm_chibios::CHANNEL_2;
-    conf.pwm[7].driver  = &PWMD8;
-    conf.pwm[7].channel = Pwm_chibios::CHANNEL_3;
-    conf.pwm[8].driver  = &PWMD8;
-    conf.pwm[8].channel = Pwm_chibios::CHANNEL_3;
-    conf.pwm[9].driver  = &PWMD8;
-    conf.pwm[9].channel = Pwm_chibios::CHANNEL_4;
+    // conf.pwm[0].driver  = &PWMD3;
+    // conf.pwm[0].channel = Pwm_chibios::CHANNEL_3;
+    // conf.pwm[1].driver  = &PWMD3;
+    // conf.pwm[1].channel = Pwm_chibios::CHANNEL_4;
+    // conf.pwm[2].driver  = &PWMD9;
+    // conf.pwm[2].channel = Pwm_chibios::CHANNEL_2;
+    // conf.pwm[3].driver  = &PWMD2;
+    // conf.pwm[3].channel = Pwm_chibios::CHANNEL_3;
+    // conf.pwm[4].driver  = &PWMD5;
+    // conf.pwm[4].channel = Pwm_chibios::CHANNEL_2;
+    // conf.pwm[5].driver  = &PWMD5;
+    // conf.pwm[5].channel = Pwm_chibios::CHANNEL_1;
+    // conf.pwm[6].driver  = &PWMD8;// TODO
+    // conf.pwm[6].channel = Pwm_chibios::CHANNEL_2;
+    // conf.pwm[7].driver  = &PWMD8;
+    // conf.pwm[7].channel = Pwm_chibios::CHANNEL_3;
+    // conf.pwm[8].driver  = &PWMD8;
+    // conf.pwm[8].channel = Pwm_chibios::CHANNEL_3;
+    // conf.pwm[9].driver  = &PWMD8;
+    // conf.pwm[9].channel = Pwm_chibios::CHANNEL_4;
 
+    // -------------------------------------------------------------------------
+    // PWM config
+    // -------------------------------------------------------------------------
+    for (size_t i = 0; i < 6; i++)
+    {
+        conf.servo[i] = servo_default_config_esc();
+    }
+    for (size_t i = 6; i < PWM_COUNT; i++)
+    {
+        conf.servo[i] = servo_default_config_brush_motor();
+    }
 
     // -------------------------------------------------------------------------
     // I2C config

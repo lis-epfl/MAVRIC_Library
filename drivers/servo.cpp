@@ -49,7 +49,12 @@ Servo::Servo(Pwm& pwm, const servo_conf_t config):
     pwm_(pwm),
     config_(config),
     value_(config.failsafe)
+{}
+
+
+bool Servo::init(void)
 {
+    pwm_.set_pulse_width_us(0);
     pwm_.set_period_us(1000000.0f / config_.repeat_freq);
     failsafe(true);
 }
@@ -98,6 +103,7 @@ bool Servo::failsafe(bool to_hardware)
 
     if (to_hardware == true)
     {
+        success &= pwm_.set_period_us(1000000.0f / config_.repeat_freq);
         success &= write_to_hardware();
     }
 

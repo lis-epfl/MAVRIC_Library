@@ -53,7 +53,7 @@ extern "C"
 /**
 * \brief Wrapper class for PWM using ChibiOS/HAL
 */
-class Pwm_chibios
+class Pwm_chibios: public Pwm
 {
 public:
 
