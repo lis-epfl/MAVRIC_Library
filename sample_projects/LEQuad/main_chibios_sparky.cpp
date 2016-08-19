@@ -133,8 +133,10 @@ int main(void)
     I2c_chibios& i2c = board.i2c1_;
 
     Pwm_chibios& pwm1 = board.pwm1_;
-    pwm1.set_period_us(20000);
-    pwm1.set_pulse_width_us(1500);
+    pwm1.set_pulse_width_us(100);
+    pwm1.set_period_us(2000);
+    pwm1.set_pulse_width_us(100);
+
 
     /**
     * Prepares the barometer
@@ -175,14 +177,35 @@ int main(void)
     while (true)
     {
         disp.update();
-        time_keeper_delay_ms(1);
+        // time_keeper_delay_ms(1);
         // while (true) {
-            msg_t msg = usbTransmit(&USBD1, USBD2_DATA_REQUEST_EP,
-                                  txbuf, sizeof (txbuf) - 1);
-            if (msg == MSG_RESET)
-            {
-                time_keeper_delay_ms(500);
-            }
+            // msg_t msg = usbTransmit(&USBD1, USBD2_DATA_REQUEST_EP,
+            //                       txbuf, sizeof (txbuf) - 1);
+            // if (msg == MSG_RESET)
+            // {
+            //     time_keeper_delay_ms(500);
+            // }
+
+        time_keeper_delay_ms(50);
+
+        pwm1.set_pulse_width_us(1000);
+        pwm1.set_period_us(20000);
+
+
+        time_keeper_delay_ms(50);
+
+        pwm1.set_pulse_width_us(2000);
+        pwm1.set_period_us(20000);
+
+        time_keeper_delay_ms(50);
+
+        pwm1.set_pulse_width_us(100);
+        pwm1.set_period_us(500);
+
+        time_keeper_delay_ms(50);
+
+        pwm1.set_pulse_width_us(500);
+        pwm1.set_period_us(500);
         // }
         // chnWrite(&SDU1, (uint8_t *)"Hello World!\r\n", 14);
 
