@@ -170,6 +170,16 @@ public:
      */
     void loop(void);
 
+
+    /**
+     * \brief   Returns non-const reference to MAVLINK Communication
+     * \details This is used to add simulation telemetry from the main function
+     *
+     * \return  MAVLINK Communication module
+     */
+     inline Mavlink_communication& mavlink_communication(){return mavlink_communication_;};
+
+
 protected:
 
     virtual bool init_main_task(void);
@@ -219,7 +229,8 @@ protected:
     State state;                                                ///< The structure with all state information
 
     Scheduler scheduler;
-    Mavlink_communication mavlink_communication;
+
+    Mavlink_communication mavlink_communication_;
     Mavlink_communication raspi_mavlink_communication;
 
     servos_mix_quadcotper_diag_t servo_mix;

@@ -84,20 +84,20 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     servo_6(servo_6),
     servo_7(servo_7),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
-    state(mavlink_communication.mavlink_stream(), battery, config.state_config),
+    state(mavlink_communication_.mavlink_stream(), battery, config.state_config),
     scheduler(Scheduler::default_config()),
-    mavlink_communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
+    mavlink_communication_(serial_mavlink, state, file_flash, config.mavlink_communication_config),
     raspi_mavlink_communication(raspi_serial_mavlink, state, file_flash, config.mavlink_communication_config),
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs),
-    navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication.mavlink_stream(), config.navigation_config),
-    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication.message_handler(), mavlink_communication.mavlink_stream(), offboard_tag_search, raspi_mavlink_communication, config.waypoint_handler_config),
+    navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication_.mavlink_stream(), config.navigation_config),
+    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication_.message_handler(), mavlink_communication_.mavlink_stream(), offboard_tag_search, raspi_mavlink_communication, config.waypoint_handler_config),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     offboard_tag_search(position_estimation, ahrs, waypoint_handler, raspi_mavlink_communication, offboard_tag_search_conf),
-    sysid_(mavlink_communication.sysid()),
+    sysid_(mavlink_communication_.sysid()),
     config_(config)
 {
     // Init main task first
@@ -126,17 +126,17 @@ void LEQuad::loop(void)
 {
     // Sort tasks
     scheduler.sort_tasks();
-    mavlink_communication.scheduler().sort_tasks();
+    mavlink_communication_.scheduler().sort_tasks();
 
     // Try to read from flash, if unsuccessful, write to flash
-    if (mavlink_communication.onboard_parameters().read_parameters_from_storage() == false)
+    if (mavlink_communication_.onboard_parameters().read_parameters_from_storage() == false)
     {
-        mavlink_communication.onboard_parameters().write_parameters_to_storage();
+        mavlink_communication_.onboard_parameters().write_parameters_to_storage();
     }
 
     // Create log files
-    data_logging_continuous.create_new_log_file("log", true, mavlink_communication.sysid());
-    data_logging_stat.create_new_log_file("stat", false, mavlink_communication.sysid());
+    data_logging_continuous.create_new_log_file("log", true, mavlink_communication_.sysid());
+    data_logging_stat.create_new_log_file("stat", false, mavlink_communication_.sysid());
 
     // Init mav state
     state.mav_state_ = MAV_STATE_STANDBY;  // TODO check if this is necessary
@@ -158,8 +158,8 @@ bool LEQuad::init_main_task(void)
     ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&LEQuad::main_task_func, (Scheduler_task::task_argument_t)this, Scheduler_task::PRIORITY_HIGHEST);
 
     // DOWN link
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats, &scheduler);
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats_all, &scheduler);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats, &scheduler);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, (Mavlink_communication::send_msg_function_t)&scheduler_telemetry_send_rt_stats_all, &scheduler);
 
     return ret;
 }
@@ -172,11 +172,11 @@ bool LEQuad::init_state(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= state_telemetry_init(&state_machine, mavlink_communication.p_message_handler());
+    ret &= state_telemetry_init(&state_machine, mavlink_communication_.p_message_handler());
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_HEARTBEAT,  1000000, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_heartbeat, &state);
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SYS_STATUS, 1000000, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_status,    &state);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_HEARTBEAT,  1000000, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_heartbeat, &state);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_SYS_STATUS, 1000000, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_status,    &state);
 
     // Data logging
     ret &= data_logging_stat.add_field((uint32_t*)&state.mav_state_,   "mav_state");
@@ -199,7 +199,7 @@ bool LEQuad::init_communication(void)
     bool ret = true;
 
     // Task
-    ret &= scheduler.add_task(4000,  (Scheduler_task::task_function_t)&Mavlink_communication::update,    (Scheduler_task::task_argument_t)&mavlink_communication);
+    ret &= scheduler.add_task(4000,  (Scheduler_task::task_function_t)&Mavlink_communication::update,    (Scheduler_task::task_argument_t)&mavlink_communication_);
 
     return ret;
 }
@@ -213,8 +213,8 @@ bool LEQuad::init_data_logging(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= data_logging_telemetry_init(&data_logging_continuous, mavlink_communication.p_message_handler());
-    ret &= data_logging_telemetry_init(&data_logging_stat, mavlink_communication.p_message_handler());
+    ret &= data_logging_telemetry_init(&data_logging_continuous, mavlink_communication_.p_message_handler());
+    ret &= data_logging_telemetry_init(&data_logging_stat, mavlink_communication_.p_message_handler());
 
     // Task
     ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_continuous);
@@ -232,10 +232,10 @@ bool LEQuad::init_gps(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= gps_telemetry_init(&gps, mavlink_communication.p_message_handler());
+    ret &= gps_telemetry_init(&gps, mavlink_communication_.p_message_handler());
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, (Mavlink_communication::send_msg_function_t)&gps_telemetry_send_raw, &gps);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, (Mavlink_communication::send_msg_function_t)&gps_telemetry_send_raw, &gps);
 
     // Task
     ret &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_gps_update, (Scheduler_task::task_argument_t)&gps, Scheduler_task::PRIORITY_HIGH);
@@ -252,24 +252,24 @@ bool LEQuad::init_imu(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= imu_telemetry_init(&imu, mavlink_communication.p_message_handler());
+    ret &= imu_telemetry_init(&imu, mavlink_communication_.p_message_handler());
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_IMU, 250000, (Mavlink_communication::send_msg_function_t)&imu_telemetry_send_scaled, &imu);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_SCALED_IMU, 250000, (Mavlink_communication::send_msg_function_t)&imu_telemetry_send_scaled, &imu);
 
     // Parameters
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->gyroscope.bias[X],     "BIAS_GYRO_X");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->gyroscope.bias[Y],     "BIAS_GYRO_Y");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->gyroscope.bias[Z],     "BIAS_GYRO_Z");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->accelerometer.bias[X], "BIAS_ACC_X");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->accelerometer.bias[Y], "BIAS_ACC_Y");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->accelerometer.bias[Z], "BIAS_ACC_Z");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetometer.bias[X],  "BIAS_MAG_X");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetometer.bias[Y],  "BIAS_MAG_Y");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetometer.bias[Z],  "BIAS_MAG_Z");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[X],     "NORTH_MAG_X");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[Y],     "NORTH_MAG_Y");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[Z],     "NORTH_MAG_Z");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->gyroscope.bias[X],     "BIAS_GYRO_X");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->gyroscope.bias[Y],     "BIAS_GYRO_Y");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->gyroscope.bias[Z],     "BIAS_GYRO_Z");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->accelerometer.bias[X], "BIAS_ACC_X");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->accelerometer.bias[Y], "BIAS_ACC_Y");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->accelerometer.bias[Z], "BIAS_ACC_Z");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->magnetometer.bias[X],  "BIAS_MAG_X");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->magnetometer.bias[Y],  "BIAS_MAG_Y");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->magnetometer.bias[Z],  "BIAS_MAG_Z");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[X],     "NORTH_MAG_X");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[Y],     "NORTH_MAG_Y");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&imu.get_config()->magnetic_north[Z],     "NORTH_MAG_Z");
 
     return ret;
 }
@@ -283,7 +283,7 @@ bool LEQuad::init_barometer(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SCALED_PRESSURE, 500000, (Mavlink_communication::send_msg_function_t)&barometer_telemetry_send, &barometer);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_SCALED_PRESSURE, 500000, (Mavlink_communication::send_msg_function_t)&barometer_telemetry_send, &barometer);
 
     // Task
     ret &= scheduler.add_task(15000, (Scheduler_task::task_function_t)&task_barometer_update, (Scheduler_task::task_argument_t)&barometer, Scheduler_task::PRIORITY_HIGH);
@@ -300,7 +300,7 @@ bool LEQuad::init_sonar(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_DISTANCE_SENSOR, 200000, (Mavlink_communication::send_msg_function_t)&sonar_telemetry_send, &sonar);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_DISTANCE_SENSOR, 200000, (Mavlink_communication::send_msg_function_t)&sonar_telemetry_send, &sonar);
 
 
     // Task
@@ -318,8 +318,8 @@ bool LEQuad::init_attitude_estimation(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_ATTITUDE,            200000, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude,            &ahrs);
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude_quaternion, &ahrs);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_ATTITUDE,            200000, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude,            &ahrs);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, (Mavlink_communication::send_msg_function_t)&ahrs_telemetry_send_attitude_quaternion, &ahrs);
 
     // Data logging
     ret &= data_logging_continuous.add_field(&ahrs.qe.v[0], "ahrs_v0", 3);
@@ -338,21 +338,21 @@ bool LEQuad::init_position_estimation(void)
 {
     bool ret = true;
     // UP telemetry
-    ret &= position_estimation_telemetry_init(&position_estimation, mavlink_communication.p_message_handler());
+    ret &= position_estimation_telemetry_init(&position_estimation, mavlink_communication_.p_message_handler());
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_position,        &position_estimation);
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_global_position, &position_estimation);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_position,        &position_estimation);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, (Mavlink_communication::send_msg_function_t)&position_estimation_telemetry_send_global_position, &position_estimation);
 
     // Parameters
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&position_estimation.kp_alt_baro,   "POS_KP_ALT_BARO" );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&position_estimation.kp_vel_baro,   "POS_KP_VELB"     );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&position_estimation.kp_pos_gps[0], "POS_KP_POS0"     );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&position_estimation.kp_pos_gps[1], "POS_KP_POS1"     );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&position_estimation.kp_pos_gps[2], "POS_KP_POS2"     );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&position_estimation.kp_vel_gps[0], "POS_KP_VEL0"     );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&position_estimation.kp_vel_gps[1], "POS_KP_VEL1"     );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&position_estimation.kp_vel_gps[2], "POS_KP_VEL2"     );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&position_estimation.kp_alt_baro,   "POS_KP_ALT_BARO" );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&position_estimation.kp_vel_baro,   "POS_KP_VELB"     );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&position_estimation.kp_pos_gps[0], "POS_KP_POS0"     );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&position_estimation.kp_pos_gps[1], "POS_KP_POS1"     );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&position_estimation.kp_pos_gps[2], "POS_KP_POS2"     );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&position_estimation.kp_vel_gps[0], "POS_KP_VEL0"     );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&position_estimation.kp_vel_gps[1], "POS_KP_VEL1"     );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&position_estimation.kp_vel_gps[2], "POS_KP_VEL2"     );
 
     // Data logging
     // ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[0], "local_x", 3);
@@ -386,7 +386,7 @@ bool LEQuad::init_stabilisers(void)
     ret &= stabilisation_init(&controls);
 
     // Parameters
-    Onboard_parameters& op            = mavlink_communication.onboard_parameters();
+    Onboard_parameters& op            = mavlink_communication_.onboard_parameters();
     stabiliser_t* rate_stabiliser     = &stabilisation_copter.stabiliser_stack.rate_stabiliser;
     stabiliser_t* attitude_stabiliser = &stabilisation_copter.stabiliser_stack.attitude_stabiliser;
     stabiliser_t* velocity_stabiliser = &stabilisation_copter.stabiliser_stack.velocity_stabiliser;
@@ -451,17 +451,17 @@ bool LEQuad::init_navigation(void)
     bool ret = true;
 
     // Parameters
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.dist2vel_gain,                           "NAV_DIST2VEL"    );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.cruise_speed,                            "NAV_CRUISESPEED" );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.takeoff_altitude,                        "NAV_TAKEOFF_ALT" );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.soft_zone_size,                          "NAV_SOFTZONE"    );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.differentiator.gain,  "NAV_WPT_DGAIN"   );
-    ret &= mavlink_communication.onboard_parameters().add_parameter_float(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.dist2vel_gain,                           "NAV_DIST2VEL"    );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.cruise_speed,                            "NAV_CRUISESPEED" );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.takeoff_altitude,                        "NAV_TAKEOFF_ALT" );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.soft_zone_size,                          "NAV_SOFTZONE"    );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.wpt_nav_controller.differentiator.gain,  "NAV_WPT_DGAIN"   );
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_float(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
     ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
@@ -482,7 +482,7 @@ bool LEQuad::init_hud(void)
     ret &= hud_telemetry_init(&hud, &position_estimation, &controls, &ahrs);
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_VFR_HUD, 500000, (Mavlink_communication::send_msg_function_t)&hud_telemetry_send_message, &hud);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_VFR_HUD, 500000, (Mavlink_communication::send_msg_function_t)&hud_telemetry_send_message, &hud);
 
     return ret;
 }
@@ -504,7 +504,7 @@ bool LEQuad::init_servos(void)
     ret &= servos_telemetry_init(&servos_telemetry,
                                  &servo_0, &servo_1, &servo_2, &servo_3,
                                  &servo_4, &servo_5, &servo_6, &servo_7);
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SERVO_OUTPUT_RAW, 1000000, (Mavlink_communication::send_msg_function_t)&servos_telemetry_mavlink_send, &servos_telemetry);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_SERVO_OUTPUT_RAW, 1000000, (Mavlink_communication::send_msg_function_t)&servos_telemetry_mavlink_send, &servos_telemetry);
 
     return ret;
 }
@@ -518,15 +518,15 @@ bool LEQuad::init_ground_control(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= manual_control_telemetry_init(&manual_control, mavlink_communication.p_message_handler());
+    ret &= manual_control_telemetry_init(&manual_control, mavlink_communication_.p_message_handler());
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_MANUAL_CONTROL, 500000, (Mavlink_communication::send_msg_function_t)&manual_control_telemetry_send, &manual_control);
+    ret &= mavlink_communication_.add_msg_send(MAVLINK_MSG_ID_MANUAL_CONTROL, 500000, (Mavlink_communication::send_msg_function_t)&manual_control_telemetry_send, &manual_control);
 
     // Parameters
     /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
-    ret &= mavlink_communication.onboard_parameters().add_parameter_int32((int32_t*) &manual_control.control_source_, "CTRL_CTRL_SRC");
-    ret &= mavlink_communication.onboard_parameters().add_parameter_int32((int32_t*) &manual_control.mode_source_,    "COM_RC_IN_MODE");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_int32((int32_t*) &manual_control.control_source_, "CTRL_CTRL_SRC");
+    ret &= mavlink_communication_.onboard_parameters().add_parameter_int32((int32_t*) &manual_control.mode_source_,    "COM_RC_IN_MODE");
 
     // Task
     ret &= scheduler.add_task(20000, (Scheduler_task::task_function_t)&remote_update, (Scheduler_task::task_argument_t)&manual_control.remote, Scheduler_task::PRIORITY_HIGH);
@@ -546,7 +546,7 @@ bool LEQuad::init_offboard_tag_search(void)
                     &raspi_mavlink_communication.message_handler());
 
     // DOWN telemetry
-    ret &= mavlink_communication.add_msg_send( MAVLINK_MSG_ID_DEBUG_VECT,
+    ret &= mavlink_communication_.add_msg_send( MAVLINK_MSG_ID_DEBUG_VECT,
                                                         250000, (Mavlink_communication::send_msg_function_t)&offboard_tag_search_goal_location_telemetry_send,
                                                         &offboard_tag_search);
 
